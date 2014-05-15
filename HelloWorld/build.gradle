@@ -1,16 +1,4 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.+'
-    }
-}
 apply plugin: 'android'
-
-repositories {
-    mavenCentral()
-}
 
 android {
     compileSdkVersion 19
@@ -22,6 +10,13 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    packagingOptions{
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
     buildTypes {
         release {
             runProguard false
@@ -31,6 +26,10 @@ android {
 }
 
 dependencies {
+    // module dependency
+    compile project(":arcgis-android-v10.2.3")
+    // local binary dependency
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    // remote binary dependency
     compile 'com.android.support:appcompat-v7:19.+'
 }

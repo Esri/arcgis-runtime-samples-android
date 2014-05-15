@@ -1,1 +1,1 @@
-include ':HelloWorld'
+include ':HelloWorld', ':arcgis-android-v10.2.3'
