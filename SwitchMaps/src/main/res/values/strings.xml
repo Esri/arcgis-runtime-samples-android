@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Switch Maps</string>
+    <string name="map1">Topographic Map</string>
+    <string name="map2">Streets Map</string>
+    <string name="switchToMap1ButtonText">Go to Topographic Map</string>
+    <string name="switchToMap2ButtonText">Go to Streets Map</string>
+
+</resources>

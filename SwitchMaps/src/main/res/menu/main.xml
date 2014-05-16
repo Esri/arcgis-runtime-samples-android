@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/switchToMap1Button"
+        android:orderInCategory="1"
+        android:showAsAction="ifRoom"
+        android:title="@string/switchToMap1ButtonText"
+        android:visible="false" />
+    <item
+        android:id="@+id/switchToMap2Button"
+        android:orderInCategory="2"
+        android:showAsAction="ifRoom"
+        android:title="@string/switchToMap2ButtonText"
+        android:visible="true" />
+
+</menu>
