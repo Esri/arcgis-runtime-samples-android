@@ -31,17 +31,17 @@ import com.esri.android.map.MapView;
 public class MainActivity extends Activity {
 
     // service url string
-    private final String topoUrl;
-    private final String streetsUrl;
+    String topoUrl;
+    String streetsUrl;
 
     // Action bar, and items for switching between maps. Visibility of these items
     // is changed, so that only one option is available at a time.
-    private ActionBar mActionBar;
-    private MenuItem mSwitchTo1MenuItem;
-    private MenuItem mSwitchTo2MenuItem;
+    ActionBar mActionBar;
+    MenuItem mSwitchTo1MenuItem;
+    MenuItem mSwitchTo2MenuItem;
 
     // Current map fragment state.
-    private boolean map1Active = true;
+    boolean map1Active = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
