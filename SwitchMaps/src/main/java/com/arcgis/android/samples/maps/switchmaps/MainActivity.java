@@ -13,13 +13,32 @@
 
 package com.arcgis.android.samples.maps.switchmaps;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
+/* This sample shows a way to switch between two different maps in a single app by leveraging the Android Fragments.
+ * In this app, a single MapActivity contains a MapFragment that in turn contains a MapView. When the button on the
+ * action bar is pressed, the existing MapFragment is replaced by a new instance of the MapFragment that has
+ * different map contents. The current extent of the MapView is preserved when switching between fragments, by
+ * making use of the retainState and restoreState methods on the MapView.
+ */
 public class MainActivity extends Activity {
+
+    // service url string
+    private final String topoUrl;
+    private final String streetsUrl;
+
+    // Action bar, and items for switching between maps. Visibility of these items
+    // is changed, so that only one option is available at a time.
+    private ActionBar mActionBar;
+    private MenuItem mSwitchTo1MenuItem;
+    private MenuItem mSwitchTo2MenuItem;
+
+    // Current map fragment state.
+    private boolean map1Active = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
