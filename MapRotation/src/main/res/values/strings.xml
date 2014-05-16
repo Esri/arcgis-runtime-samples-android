@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Map Rotation</string>
+    <string name="user_instruction">Rotate the map using two fingers and a pinch gesture. Single tap to reset.</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
