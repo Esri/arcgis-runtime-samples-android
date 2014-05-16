@@ -77,18 +77,55 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        // Get the basemap switching menu items.
+        mStreetsMenuItem = menu.getItem(0);
+        mTopoMenuItem = menu.getItem(1);
+        mGrayMenuItem = menu.getItem(2);
+        mOceansMenuItem = menu.getItem(3);
+
+        // Also set the topo basemap menu item to be checked, as this is the default.
+        mTopoMenuItem.setChecked(true);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        // Save the current extent of the map before changing the map.
+        mCurrentMapExtent = mMapView.getExtent();
+
+        // Handle menu item selection.
+        switch (item.getItemId()) {
+            case R.id.World_Street_Map:
+                mMapView.setMapOptions(mStreetsBasemap);
+                mStreetsMenuItem.setChecked(true);
+                return true;
+            case R.id.World_Topo:
+                mMapView.setMapOptions(mTopoBasemap);
+                mTopoMenuItem.setChecked(true);
+                return true;
+            case R.id.Gray:
+                mMapView.setMapOptions(mGrayBasemap);
+                mGrayMenuItem.setChecked(true);
+                return true;
+            case R.id.Ocean_Basemap:
+                mMapView.setMapOptions(mOceansBasemap);
+                mOceansMenuItem.setChecked(true);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
+
+    protected void onPause() {
+        super.onPause();
+        mMapView.pause();
+    }
+
+    protected void onResume() {
+        super.onResume();
+        mMapView.unpause();
+    }
+
 }
