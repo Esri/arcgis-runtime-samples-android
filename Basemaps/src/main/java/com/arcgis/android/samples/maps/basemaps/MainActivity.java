@@ -1,4 +1,4 @@
-/* Copyright 2013 ESRI
+/* Copyright 2014 ESRI
  *
  * All rights reserved under the copyright laws of the United States
  * and applicable international laws, treaties, and conventions.
@@ -11,28 +11,20 @@
  *
  */
 
-package com.arcgis.android.samples.maps.helloworld;
+package com.arcgis.android.samples.maps.basemaps;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.esri.android.map.MapView;
-
 
 public class MainActivity extends Activity {
-
-    MapView mMapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // after the content of this activity is set
-        // the map can be accessed from the layout
-        mMapView = (MapView)findViewById(R.id.map);
     }
 
 

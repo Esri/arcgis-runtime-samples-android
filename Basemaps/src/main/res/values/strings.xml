@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Basemaps</string>
+    <!-- basemap menu items -->
+    <string name="StreetMapMenu">Streets</string>
+    <string name="TopoMenu">Topographic</string>
+    <string name="GrayMenu">Gray</string>
+    <string name="OceanMenu">Oceans</string>
+
+</resources>
