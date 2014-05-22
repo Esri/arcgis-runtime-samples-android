@@ -44,15 +44,15 @@ import com.esri.core.tasks.query.QueryTask;
 public class MainActivity extends Activity {
 
     MapView mMapView;
-    ArcGISFeatureLayer featureLayer;
-    GraphicsLayer graphicsLayer;
+    ArcGISFeatureLayer mFeatureLayer;
+    GraphicsLayer mGraphicsLayer;
     private Callout mCallout;
     private Graphic mIdentifiedGraphic;
 
     private int mCalloutStyle;
-    private ViewGroup calloutContent;
+    private ViewGroup mCalloutContent;
     boolean mIsMapLoaded;
-    String featureServiceURL;
+    String mFeatureServiceURL;
 
     ProgressDialog progress;
 
@@ -71,13 +71,13 @@ public class MainActivity extends Activity {
         // Retrieve the map and initial extent from XML layout
         mMapView = (MapView) findViewById(R.id.map);
         // Get the feature service URL from values->strings.xml
-        featureServiceURL = this.getResources().getString(R.string.featureServiceURL);
+        mFeatureServiceURL = this.getResources().getString(R.string.featureServiceURL);
         // Add Feature layer to the MapView
-        featureLayer = new ArcGISFeatureLayer(featureServiceURL, ArcGISFeatureLayer.MODE.ONDEMAND);
-        mMapView.addLayer(featureLayer);
+        mFeatureLayer = new ArcGISFeatureLayer(mFeatureServiceURL, ArcGISFeatureLayer.MODE.ONDEMAND);
+        mMapView.addLayer(mFeatureLayer);
         // Add Graphics layer to the MapView
-        graphicsLayer = new GraphicsLayer();
-        mMapView.addLayer(graphicsLayer);
+        mGraphicsLayer = new GraphicsLayer();
+        mMapView.addLayer(mGraphicsLayer);
 
         // Set the Esri logo to be visible, and enable map to wrap around date line.
         mMapView.setEsriLogoVisible(true);
@@ -89,8 +89,8 @@ public class MainActivity extends Activity {
         mCallout = mMapView.getCallout();
         // Get the layout for the Callout from
         // layout->identify_callout_content.xml
-        calloutContent = (ViewGroup) inflater.inflate(R.layout.identify_callout_content, null);
-        mCallout.setContent(calloutContent);
+        mCalloutContent = (ViewGroup) inflater.inflate(R.layout.identify_callout_content, null);
+        mCallout.setContent(mCalloutContent);
 
         mMapView.setOnStatusChangedListener(new OnStatusChangedListener() {
 
@@ -169,8 +169,7 @@ public class MainActivity extends Activity {
                     ArcGISFeatureLayer fLayer = (ArcGISFeatureLayer) layer;
                     // Get the Graphic at location x,y
                     mIdentifiedGraphic = GetFeature(fLayer, x, y);
-                } else
-                    continue;
+                }
             }
         }
     }
@@ -179,6 +178,7 @@ public class MainActivity extends Activity {
      * Returns the Graphic present the location of screen tap
      *
      * @param fLayer
+     *          ArcGISFeatureLayer to get graphics ids
      * @param x
      *          x co-ordinate of point
      * @param y
@@ -192,23 +192,22 @@ public class MainActivity extends Activity {
         if (ids == null || ids.length == 0) {
             return null;
         }
-        Graphic g = fLayer.getGraphic(ids[0]);
-        return g;
+        return fLayer.getGraphic(ids[0]);
     }
 
     /**
      * Shows the Attribute values for the Graphic in the Callout
      *
-     * @param calloutView
-     * @param graphic
-     * @param mapPoint
+     * @param calloutView a callout to show
+     * @param graphic selected graphic
+     * @param mapPoint point to show callout
      */
     private void ShowCallout(Callout calloutView, Graphic graphic, Point mapPoint) {
 
         // Get the values of attributes for the Graphic
         String cityName = (String) graphic.getAttributeValue("NAME");
         String countryName = (String) graphic.getAttributeValue("COUNTRY");
-        String cityPopulationValue = ((Double) graphic.getAttributeValue("POPULATION")).toString();
+        String cityPopulationValue = graphic.getAttributeValue("POPULATION").toString();
 
         // Set callout properties
         calloutView.setCoordinates(mapPoint);
@@ -231,7 +230,7 @@ public class MainActivity extends Activity {
 
         TextView calloutTextLine2 = (TextView) findViewById(R.id.population);
         calloutTextLine2.setText(cityPopulation);
-        calloutView.setContent(calloutContent);
+        calloutView.setContent(mCalloutContent);
         calloutView.show();
     }
 
@@ -260,7 +259,7 @@ public class MainActivity extends Activity {
             mParams.setReturnGeometry(true);
 
             // Define the new instance of QueryTask
-            QueryTask queryTask = new QueryTask(featureServiceURL);
+            QueryTask queryTask = new QueryTask(mFeatureServiceURL);
             FeatureResult results;
 
             try {
@@ -277,7 +276,7 @@ public class MainActivity extends Activity {
         protected void onPostExecute(FeatureResult results) {
 
             // Remove the result from previously run query task
-            graphicsLayer.removeAll();
+            mGraphicsLayer.removeAll();
 
             // Define a new marker symbol for the result graphics
             SimpleMarkerSymbol sms = new SimpleMarkerSymbol(Color.BLUE, 10, SimpleMarkerSymbol.STYLE.CIRCLE);
@@ -295,7 +294,7 @@ public class MainActivity extends Activity {
                     // merge extent with point
                     extent.merge((Point)graphic.getGeometry());
                     // add it to the layer
-                    graphicsLayer.addGraphic(graphic);
+                    mGraphicsLayer.addGraphic(graphic);
                 }
             }
 
