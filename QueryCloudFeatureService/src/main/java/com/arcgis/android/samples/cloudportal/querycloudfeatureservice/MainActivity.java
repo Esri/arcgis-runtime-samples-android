@@ -18,12 +18,18 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.MapView;
+import com.esri.android.map.ags.ArcGISFeatureLayer;
 
 
 public class MainActivity extends Activity {
 
     MapView mMapView;
+    ArcGISFeatureLayer featureLayer;
+    GraphicsLayer graphicsLayer;
+
+    String featureServiceURL;
 
     // The query params switching menu items.
     MenuItem mQueryUsMenuItem = null;
@@ -39,6 +45,14 @@ public class MainActivity extends Activity {
 
         // Retrieve the map and initial extent from XML layout
         mMapView = (MapView) findViewById(R.id.map);
+        // Get the feature service URL from values->strings.xml
+        featureServiceURL = this.getResources().getString(R.string.featureServiceURL);
+        // Add Feature layer to the MapView
+        featureLayer = new ArcGISFeatureLayer(featureServiceURL, ArcGISFeatureLayer.MODE.ONDEMAND);
+        mMapView.addLayer(featureLayer);
+        // Add Graphics layer to the MapView
+        graphicsLayer = new GraphicsLayer();
+        mMapView.addLayer(graphicsLayer);
 
         // Set the Esri logo to be visible, and enable map to wrap around date line.
         mMapView.setEsriLogoVisible(true);
