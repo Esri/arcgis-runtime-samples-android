@@ -5,13 +5,31 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.esri.android.map.MapView;
+
 
 public class MainActivity extends Activity {
+
+    MapView mMapView;
+
+    // The query params switching menu items.
+    MenuItem mQueryUsMenuItem = null;
+    MenuItem mQueryCaMenuItem = null;
+    MenuItem mQueryFrMenuItem = null;
+    MenuItem mQueryAuMenuItem = null;
+    MenuItem mQueryBrMenuItem = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Retrieve the map and initial extent from XML layout
+        mMapView = (MapView) findViewById(R.id.map);
+
+        // Set the Esri logo to be visible, and enable map to wrap around date line.
+        mMapView.setEsriLogoVisible(true);
+        mMapView.enableWrapAround(true);
     }
 
 
@@ -19,18 +37,48 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        // Get the query params menu items.
+        mQueryUsMenuItem = menu.getItem(0);
+        mQueryCaMenuItem = menu.getItem(1);
+        mQueryFrMenuItem = menu.getItem(2);
+        mQueryAuMenuItem = menu.getItem(3);
+        mQueryBrMenuItem = menu.getItem(4);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        // Handle menu item selection.
+        switch (item.getItemId()) {
+            case R.id.Query_US:
+                mQueryUsMenuItem.setChecked(true);
+                return true;
+            case R.id.Query_CA:
+                mQueryCaMenuItem.setChecked(true);
+                return true;
+            case R.id.Query_FR:
+                mQueryFrMenuItem.setChecked(true);
+                return true;
+            case R.id.Query_AU:
+                mQueryAuMenuItem.setChecked(true);
+                return true;
+            case R.id.Query_BR:
+                mQueryBrMenuItem.setChecked(true);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+    }
+
+    protected void onPause() {
+        super.onPause();
+        mMapView.pause();
+    }
+
+    protected void onResume() {
+        super.onResume();
+        mMapView.unpause();
     }
 }
