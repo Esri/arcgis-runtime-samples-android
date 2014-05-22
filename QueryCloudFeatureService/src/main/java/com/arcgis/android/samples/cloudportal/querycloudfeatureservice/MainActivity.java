@@ -16,6 +16,7 @@ package com.arcgis.android.samples.cloudportal.querycloudfeatureservice;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,8 +37,8 @@ import com.esri.core.map.Feature;
 import com.esri.core.map.FeatureResult;
 import com.esri.core.map.Graphic;
 import com.esri.core.symbol.SimpleMarkerSymbol;
-import com.esri.core.tasks.ags.query.QueryTask;
 import com.esri.core.tasks.query.QueryParameters;
+import com.esri.core.tasks.query.QueryTask;
 
 
 public class MainActivity extends Activity {
@@ -143,7 +144,7 @@ public class MainActivity extends Activity {
         if (mIdentifiedGraphic != null) {
             Point mapPoint = mMapView.toMapPoint(x, y);
             // Show Callout
-            ShowCallout(m_callout, mIdentifiedGraphic, mapPoint);
+            ShowCallout(mCallout, mIdentifiedGraphic, mapPoint);
         }
     }
 
@@ -213,7 +214,7 @@ public class MainActivity extends Activity {
 
         // Set callout properties
         calloutView.setCoordinates(mapPoint);
-        calloutView.setStyle(m_calloutStyle);
+        calloutView.setStyle(mCalloutStyle);
         calloutView.setMaxWidth(325);
 
         // Compose the string to display the results
@@ -329,18 +330,23 @@ public class MainActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.Query_US:
                 mQueryUsMenuItem.setChecked(true);
+                new QueryFeatureLayer().execute("US");
                 return true;
             case R.id.Query_CA:
                 mQueryCaMenuItem.setChecked(true);
+                new QueryFeatureLayer().execute("Canada");
                 return true;
             case R.id.Query_FR:
                 mQueryFrMenuItem.setChecked(true);
+                new QueryFeatureLayer().execute("France");
                 return true;
             case R.id.Query_AU:
                 mQueryAuMenuItem.setChecked(true);
+                new QueryFeatureLayer().execute("Australia");
                 return true;
             case R.id.Query_BR:
                 mQueryBrMenuItem.setChecked(true);
+                new QueryFeatureLayer().execute("Brazil");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
