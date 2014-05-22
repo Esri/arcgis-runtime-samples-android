@@ -1,1 +1,1 @@
-include ':arcgis-android-v10.2.3', ':HelloWorld', ':Basemaps', ':MapRotation', ':SwitchMaps'
+include ':arcgis-android-v10.2.3', ':HelloWorld', ':Basemaps', ':MapRotation', ':SwitchMaps', ':QueryCloudFeatureService'
