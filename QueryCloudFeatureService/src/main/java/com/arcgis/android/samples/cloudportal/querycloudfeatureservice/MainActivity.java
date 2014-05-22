@@ -105,8 +105,6 @@ public class MainActivity extends Activity {
 
         mMapView.setOnSingleTapListener(new OnSingleTapListener() {
 
-            private static final long serialVersionUID = 1L;
-
             @Override
             public void onSingleTap(float x, float y) {
 
