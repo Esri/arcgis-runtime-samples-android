@@ -2,12 +2,11 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <calloutViewStyle
-        style="app:@style/darkgray_layout"
         anchor="5"
         backgroundAlpha="255"
-        backgroundColor="#7F0A0A0A"
+        backgroundColor="@android:color/white"
         cornerCurve="20"
-        frameColor="#FFC7C7C7"
+        frameColor="@android:color/black"
         maxHeight="300"
         maxWidth="500" />
 

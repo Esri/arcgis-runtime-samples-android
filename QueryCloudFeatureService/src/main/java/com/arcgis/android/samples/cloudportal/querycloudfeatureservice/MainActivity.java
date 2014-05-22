@@ -282,7 +282,7 @@ public class MainActivity extends Activity {
             graphicsLayer.removeAll();
 
             // Define a new marker symbol for the result graphics
-            SimpleMarkerSymbol sms = new SimpleMarkerSymbol(Color.BLUE, 6, SimpleMarkerSymbol.STYLE.CIRCLE);
+            SimpleMarkerSymbol sms = new SimpleMarkerSymbol(Color.BLUE, 10, SimpleMarkerSymbol.STYLE.CIRCLE);
 
             // Envelope to focus on the map extent on the results
             Envelope extent = new Envelope();
