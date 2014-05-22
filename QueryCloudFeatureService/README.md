@@ -3,7 +3,7 @@ Feature services allow you to create custom REST endpoints to store and query ge
 
 ## Features
 * QueryTask
-# QueryParameters
+* QueryParameters
 * Feature Service
 * Callout
 
