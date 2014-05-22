@@ -14,10 +14,14 @@
 package com.arcgis.android.samples.cloudportal.querycloudfeatureservice;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
+import com.esri.android.map.Callout;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.MapView;
 import com.esri.android.map.ags.ArcGISFeatureLayer;
@@ -28,8 +32,14 @@ public class MainActivity extends Activity {
     MapView mMapView;
     ArcGISFeatureLayer featureLayer;
     GraphicsLayer graphicsLayer;
+    private Callout mCallout;
 
+    private int mCalloutStyle;
+    private ViewGroup calloutContent;
+    boolean mIsMapLoaded;
     String featureServiceURL;
+
+    ProgressDialog progress;
 
     // The query params switching menu items.
     MenuItem mQueryUsMenuItem = null;
@@ -57,6 +67,16 @@ public class MainActivity extends Activity {
         // Set the Esri logo to be visible, and enable map to wrap around date line.
         mMapView.setEsriLogoVisible(true);
         mMapView.enableWrapAround(true);
+
+        // Get the MapView's callout from xml->identify_calloutstyle.xml
+        mCalloutStyle = R.xml.identify_calloutstyle;
+        LayoutInflater inflater = getLayoutInflater();
+        mCallout = mMapView.getCallout();
+        // Get the layout for the Callout from
+        // layout->identify_callout_content.xml
+        calloutContent = (ViewGroup) inflater.inflate(R.layout.identify_callout_content, null);
+        mCallout.setContent(calloutContent);
+
     }
 
 
