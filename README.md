@@ -10,3 +10,5 @@ Open your terminal, navigate to your working directory, use ```git clone``` to g
 ```
 $ git clone git@github.com:YOUR-USERNAME/arcgis-android-sdk-gradle-samples.git
 ```
+
+
