@@ -52,7 +52,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         // populate strings from resource
-        final String FEATURE_SERVICE_URL = getResources().getString(R.string.feature_service_url);
+        String FEATURE_SERVICE_URL = getResources().getString(R.string.feature_service_url);
         final String DAMAGE_FIELD_NAME = getResources().getString(R.string.damage_field_name);
         final String CAUSE_FIELD_NAME = getResources().getString(R.string.cause_field_name);
 
