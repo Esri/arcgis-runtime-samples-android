@@ -17,16 +17,108 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.esri.android.map.FeatureLayer;
+import com.esri.android.map.MapView;
+import com.esri.core.geodatabase.GeodatabaseFeatureServiceTable;
+import com.esri.core.map.CallbackListener;
+import com.esri.core.map.CodedValueDomain;
+import com.esri.core.map.Field;
 
 
 public class MainActivity extends Activity {
+
+    public FeatureLayer featureLayer;
+    public GeodatabaseFeatureServiceTable featureServiceTable;
+
+    MapView mMapView;
+
+    Spinner mDamageSpinner;
+    Spinner mCauseSpinner;
+    ArrayAdapter<String> damageAdapter;
+    ArrayAdapter<String> causeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // populate strings from resource
+        final String FEATURE_SERVICE_URL = getResources().getString(R.string.feature_service_url);
+        final String DAMAGE_FIELD_NAME = getResources().getString(R.string.damage_field_name);
+        final String CAUSE_FIELD_NAME = getResources().getString(R.string.cause_field_name);
+
+        // get reference to the map in the layout
+        mMapView = (MapView) findViewById(R.id.map);
+        // create a GeodatabaseFeatureServiceTable from a feature service url
+        featureServiceTable = new GeodatabaseFeatureServiceTable(FEATURE_SERVICE_URL, 0);
+        // initialize the GeodatabaseFeatureService and populate it with features from the service
+        featureServiceTable.initialize(new CallbackListener<GeodatabaseFeatureServiceTable.Status>() {
+
+            @Override
+            public void onCallback(GeodatabaseFeatureServiceTable.Status status) {
+                // create a FeatureLayer from teh initialized GeodatabaseFeatureServiceTable
+                featureLayer = new FeatureLayer(featureServiceTable);
+                // emphasize the selected features by increasing the selection halo size and color
+                featureLayer.setSelectionColor(-16711936);
+                featureLayer.setSelectionColorWidth(20);
+                // add feature layer to map
+                mMapView.addLayer(featureLayer);
+                // set up spinners to contain values from the layer to query against
+                setupQuerySpinners();
+                // Get the fields that will be used to query the layer.
+                Field damageField = featureServiceTable.getField(DAMAGE_FIELD_NAME);
+                Field causeField = featureServiceTable.getField(CAUSE_FIELD_NAME);
+
+                // Retrieve the possible domain values for each field and add to the spinner data adapters.
+                CodedValueDomain damageDomain = (CodedValueDomain) damageField.getDomain();
+                CodedValueDomain causeDomain = (CodedValueDomain) causeField.getDomain();
+                damageAdapter.addAll(damageDomain.getCodedValues().values());
+                causeAdapter.addAll(causeDomain.getCodedValues().values());
+
+                // On the main thread, connect up the spinners with the filled data adapters.
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDamageSpinner.setAdapter(damageAdapter);
+                        mCauseSpinner.setAdapter(causeAdapter);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                showToast("Error initializing FeatureServiceTable");
+
+            }
+        });
+
     }
 
+    public void setupQuerySpinners() {
+        // Get the spinner controls from the layout.
+        mDamageSpinner = (Spinner) findViewById(R.id.damageSpinner);
+        mCauseSpinner = (Spinner) findViewById(R.id.causeSpinner);
+
+        // Set up array adapters to contain the values in the spinners.
+        damageAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item);
+        causeAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item);
+    }
+
+    public void showToast(final String message) {
+        // Show toast message on the main thread only; this function can be
+        // called from query callbacks that run on background threads.
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -41,9 +133,6 @@ public class MainActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 }
