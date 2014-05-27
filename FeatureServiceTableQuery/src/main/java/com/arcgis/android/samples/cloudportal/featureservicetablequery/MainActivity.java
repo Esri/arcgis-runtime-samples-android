@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -26,7 +27,10 @@ import com.esri.android.map.MapView;
 import com.esri.core.geodatabase.GeodatabaseFeatureServiceTable;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.map.CodedValueDomain;
+import com.esri.core.map.Feature;
+import com.esri.core.map.FeatureResult;
 import com.esri.core.map.Field;
+import com.esri.core.tasks.query.QueryParameters;
 
 
 public class MainActivity extends Activity {
@@ -97,6 +101,55 @@ public class MainActivity extends Activity {
             }
         });
 
+    }
+
+    public void onClick_okButton(View v) {
+        // Build and execute the query.
+
+        // First, check layer exists, and clear any previous selection from the layer.
+        if (featureLayer == null) {
+            showToast("Feature layer is not set.");
+            return;
+        }
+        featureLayer.clearSelection();
+
+        // Build query predicates to construct a query where clause from selected values.
+        String damageType = String.valueOf(mDamageSpinner.getSelectedItem());
+        String primCause = String.valueOf(mCauseSpinner.getSelectedItem());
+        String whereClause = "typdamage LIKE '" + damageType + "' AND primcause LIKE '" + primCause + "'";
+
+        // Create query parameters, based on the constructed where clause.
+        QueryParameters queryParams = new QueryParameters();
+        queryParams.setWhere(whereClause);
+
+        // Execute the query and create a callback for dealing with the results of the query.
+        featureServiceTable.queryFeatures(queryParams, new CallbackListener<FeatureResult>() {
+
+            @Override
+            public void onError(Throwable ex) {
+                // Highlight errors to the user.
+                showToast("Error querying FeatureServiceTable");
+            }
+
+            @Override
+            public void onCallback(FeatureResult objs) {
+
+                // If there are no query results, inform user.
+                if (objs.featureCount() < 1) {
+                    showToast("No results");
+                    return;
+                }
+
+                // Report number of results to user.
+                showToast("Found " + objs.featureCount() + " features.");
+
+                // Iterate the results and select each feature.
+                for (Object objFeature : objs) {
+                    Feature feature = (Feature) objFeature;
+                    featureLayer.selectFeature(feature.getId());
+                }
+            }
+        });
     }
 
     public void setupQuerySpinners() {
