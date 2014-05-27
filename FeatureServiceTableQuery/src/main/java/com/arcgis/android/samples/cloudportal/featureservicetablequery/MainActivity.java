@@ -14,6 +14,7 @@
 package com.arcgis.android.samples.cloudportal.featureservicetablequery;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,7 +68,7 @@ public class MainActivity extends Activity {
                 // create a FeatureLayer from teh initialized GeodatabaseFeatureServiceTable
                 featureLayer = new FeatureLayer(featureServiceTable);
                 // emphasize the selected features by increasing the selection halo size and color
-                featureLayer.setSelectionColor(-16711936);
+                featureLayer.setSelectionColor(Color.GREEN);
                 featureLayer.setSelectionColorWidth(20);
                 // add feature layer to map
                 mMapView.addLayer(featureLayer);
