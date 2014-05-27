@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Feature Service Table Query</string>
-
+    <string name="okbutton_text">OK</string>
     <string name="action_settings">Settings</string>
 
 </resources>
