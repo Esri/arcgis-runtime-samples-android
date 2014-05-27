@@ -6,8 +6,6 @@
         backgroundAlpha="255"
         backgroundColor="@android:color/white"
         cornerCurve="20"
-        frameColor="@android:color/black"
-        maxHeight="300"
-        maxWidth="500" />
+        frameColor="@android:color/black" />
 
 </resources>
