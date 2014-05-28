@@ -13,6 +13,6 @@ To perform a query, select values in the two spinners, and then press the OK but
 
 ## Sample Design
 
-In this app, the ```FeatureServiceTableQueryActivity``` contains a ```MapView``` that contains the ```FeatureLayer```. Spinners are populated with values from two fields in the table. The values from the spinners are used to construct a where clause which is then used in the ```queryFeatures``` method call. 
+In this app, the ```MainActivity``` contains a ```MapView``` that contains the ```FeatureLayer```. Spinners are populated with values from two fields in the table. The values from the spinners are used to construct a where clause which is then used in the ```queryFeatures``` method call. 
 
 The results of the query are reported to the user in the query callback, and the features in the query result are used to select features in the ```FeatureLayer``` in the ```MapView```.
