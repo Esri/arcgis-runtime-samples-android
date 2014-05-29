@@ -10,7 +10,7 @@ The **ArcGIS Android SDK Samples** are Gradle based Android projects which can b
 ## Fork the repo
 If you haven't already, go to https://github.com/ArcGIS/arcgis-android-sdk-gradle-samples and click the **Fork** button and go to https://github.com/ArcGIS/arcgis-android-api-lib-module and click the **Fork** button.
 
-## Android Studio
+### Android Studio
 [Clone the **ArcGIS Android SDK Samples** and **ArcGIS Android API Library Module** in Android Studio](http://www.jetbrains.com/idea/webhelp/cloning-a-repository-from-github.html).
 
 1. Choose **VCS > Checkout from Version Control > GitHub** on the main menu.
@@ -20,7 +20,7 @@ If you haven't already, go to https://github.com/ArcGIS/arcgis-android-sdk-gradl
 
 ![clone](https://raw.githubusercontent.com/ArcGIS/arcgis-android-sdk-gradle-samples/master/as-clone.png?token=1308001__eyJzY29wZSI6IlJhd0Jsb2I6QXJjR0lTL2FyY2dpcy1hbmRyb2lkLXNkay1ncmFkbGUtc2FtcGxlcy9tYXN0ZXIvYXMtY2xvbmUucG5nIiwiZXhwaXJlcyI6MTQwMTkzOTc2MH0%3D--e4a9f32c5e627f5799076cb28cb16b1db5a4ddd5)
 
-## Command line Git
+### Command line Git
 [Clone the **ArcGIS Android SDK Samples** and **ArcGIS Android API Library Module**](https://help.github.com/articles/fork-a-repo#step-2-clone-your-fork)
 
 Open your terminal, navigate to your working directory, use ```git clone``` to get a copy of the repo.
@@ -28,10 +28,10 @@ Open your terminal, navigate to your working directory, use ```git clone``` to g
 ```
 # Clones your fork of the repository into the current directory in terminal
 $ git clone git@github.com:YOUR-USERNAME/arcgis-android-sdk-gradle-samples.git
-$ git clone git@github.com:YOUR-USERNAME/arcgis-android-sdk-module.git
+$ git clone git@github.com:YOUR-USERNAME/arcgis-android-api-lib-module.git
 ```
 
-**Now that we have both repos cloned locally we can begin to import our gradle samples project and add the android api library module to that project as a dependency.**
+**Now that we have both repos cloned locally we can begin to import our gradle samples project and add the **ArcGIS Android API Library Module** module to that project as a dependency.**
 
 ## Import Gradle Sample project into Android Studio
 Once the project is cloned to disk you can import into Android Studio:
@@ -44,9 +44,9 @@ This is where we start to turn our project into an ArcGIS for Android project.
 
 * Right Click your project and select **Open Module Settings**
 * Click the ```+``` sign above **SDK Location** and select **Import Existing Project** then click **Next**
-* Navigate to the folder where you cloned the ```arcgis-android-sdk-module``` repo and select the ```arcgis-android-v10.2.3``` folder which contains the library module.  Do not import the entire project, just the library module e.g. ```/[path-to-repo]/arcgis-android-sdk-module/arcgis-android-v10.2.3``` and click **OK** then **Finish** to import the library module.
+* Navigate to the folder where you cloned the ```arcgis-android-api-lib-module``` repo and select the ```arcgis-android-v10.2.3``` folder which contains the library module.  Do not import the entire project, just the library module e.g. ```/[path-to-repo]/arcgis-android-api-lib-module/arcgis-android-v10.2.3``` and click **OK** then **Finish** to import the library module.
 
-**NOTE** If you navigate to the root project directory you will see all available modules listed.  Ensure that ```arcgis-android-v10.2.3``` module is select from your project and that the app module is unchecked.
+**NOTE** If you navigate to the root project directory you will see all available modules listed.  Ensure that ```arcgis-android-v10.2.3``` module is select from your project and that the **app** module is unchecked.
 
 ## Run a sample
 You should now be able to run any of the included samples.  We will use the ```HelloWorld``` Sample as an example.  
