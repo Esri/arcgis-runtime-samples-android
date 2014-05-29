@@ -15,6 +15,8 @@ The **ArcGIS Android SDK Samples** are Gradle based Android projects which can b
 ## Fork the repo
 If you haven't already, go to https://github.com/ArcGIS/arcgis-android-sdk-gradle-samples and click the **Fork** button and go to https://github.com/ArcGIS/arcgis-android-api-lib-module and click the **Fork** button.
 
+## Clone the repo
+
 ### Android Studio
 [Clone the **ArcGIS Android SDK Samples** and **ArcGIS Android API Library Module** in Android Studio](http://www.jetbrains.com/idea/webhelp/cloning-a-repository-from-github.html).
 
