@@ -15,16 +15,31 @@ package com.arcgis.android.samples.search.placesearch;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
+
+import com.esri.android.map.MapView;
 
 
 public class MainActivity extends Activity {
+
+    MapView mMapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // after the content of this activity is set
+        // the map can be accessed from the layout
+        mMapView = (MapView)findViewById(R.id.map);
+
+        // set logo and enable wrap around
+        mMapView.setEsriLogoVisible(true);
+        mMapView.enableWrapAround(true);
+
     }
 
 
@@ -32,6 +47,10 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
         return true;
     }
 
