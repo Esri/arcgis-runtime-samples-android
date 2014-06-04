@@ -4,6 +4,6 @@
     <string name="app_name">Place Search</string>
     <string name="action_settings">Settings</string>
     <string name="action_search">Place Search</string>
-    <string name="search_hint">Search</string>
+    <string name="search_hint">Search address or place</string>
 
 </resources>
