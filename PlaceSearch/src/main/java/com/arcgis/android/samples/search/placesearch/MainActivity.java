@@ -14,8 +14,9 @@
 package com.arcgis.android.samples.search.placesearch;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
@@ -48,8 +49,13 @@ public class MainActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search);
+        // Current activity is search activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        // Do not iconify the widget; expand it by default
+        searchView.setIconifiedByDefault(false);
 
         return true;
     }
