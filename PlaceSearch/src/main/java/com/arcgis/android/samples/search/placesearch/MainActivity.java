@@ -51,7 +51,7 @@ public class MainActivity extends Activity {
 
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         // Current activity is search activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         // Do not iconify the widget; expand it by default
