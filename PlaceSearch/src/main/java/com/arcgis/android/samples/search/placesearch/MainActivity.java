@@ -17,8 +17,12 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.SearchView;
 
 import com.esri.android.map.MapView;
@@ -27,6 +31,7 @@ import com.esri.android.map.MapView;
 public class MainActivity extends Activity {
 
     MapView mMapView;
+    EditText mSearchEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +54,22 @@ public class MainActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        // Current activity is search activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        // Do not iconify the widget; expand it by default
-        searchView.setIconifiedByDefault(false);
+        // get a reference to the EditText widget for the search option
+        View searchRef = menu.findItem(R.id.action_search).getActionView();
+        mSearchEditText = (EditText) searchRef.findViewById(R.id.searchText);
+
+        // set key listener to start search if Enter key is pressed
+        mSearchEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if(keyCode == KeyEvent.KEYCODE_ENTER){
+                    onSearchButtonClicked(mSearchEditText);
+                    return true;
+                }
+
+                return false;
+            }
+        });
 
         return true;
     }
@@ -71,4 +85,20 @@ public class MainActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Called from search_layout.xml when user presses Search button
+     *
+     * @param view
+     */
+    public void onSearchButtonClicked(View view){
+        // Hide virtual keyboard
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
+        // obtain address and execute locator task
+        String address = mSearchEditText.getText().toString();
+
+    }
+
 }
