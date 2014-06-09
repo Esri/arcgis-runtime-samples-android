@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <ImageButton
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:background="#000000"
+        android:contentDescription="@string/menu_search"
+        android:onClick="onSearchButtonClicked"
+        android:src="@android:drawable/ic_menu_search" />
+
+    <EditText
+        android:id="@+id/searchText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/searchButton"
+        android:hint="@string/search_hint"
+        android:inputType="text"
+        android:minWidth="150dp" >
+
+        <requestFocus />
+    </EditText>
+
+</RelativeLayout>
