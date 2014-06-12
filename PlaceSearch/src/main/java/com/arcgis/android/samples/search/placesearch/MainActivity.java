@@ -14,23 +14,49 @@
 package com.arcgis.android.samples.search.placesearch;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.MapView;
+import com.esri.core.geometry.Envelope;
+import com.esri.core.geometry.Point;
+import com.esri.core.map.Graphic;
+import com.esri.core.symbol.SimpleMarkerSymbol;
+import com.esri.core.symbol.TextSymbol;
+import com.esri.core.tasks.geocode.Locator;
+import com.esri.core.tasks.geocode.LocatorFindParameters;
+import com.esri.core.tasks.geocode.LocatorGeocodeResult;
+
+import java.util.List;
 
 
 public class MainActivity extends Activity {
 
+    private static final String TAG = "MainActivity";
+
     MapView mMapView;
     EditText mSearchEditText;
     String mMapViewState;
+
+    // Graphics layer to show geocode and reverse geocode results
+    GraphicsLayer mLocationLayer;
+    Point mLocationLayerPoint;
+    String mLocationLayerPointString;
+
+    // UI components
+    static ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +123,119 @@ public class MainActivity extends Activity {
 
         // obtain address and execute locator task
         String address = mSearchEditText.getText().toString();
+        executeLocatorTask(address);
 
     }
+
+    /**
+     * Set up the search parameters and execute the Locator task.
+     *
+     * @param address
+     */
+    private void executeLocatorTask(String address) {
+        // Create Locator parameters from single line address string
+        LocatorFindParameters findParams = new LocatorFindParameters(address);
+
+        // Use the centre of the current map extent as the find location point
+        findParams.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
+
+        // Calculate distance for find operation
+        Envelope mapExtent = new Envelope();
+        mMapView.getExtent().queryEnvelope(mapExtent);
+        // assume map is in metres, other units wont work, double current envelope
+        double distance = (mapExtent != null && mapExtent.getWidth() > 0) ? mapExtent.getWidth() * 2 : 10000;
+        findParams.setDistance(distance);
+        findParams.setMaxLocations(2);
+
+        // Set address spatial reference to match map
+        findParams.setOutSR(mMapView.getSpatialReference());
+
+        // Execute async task to find the address
+        new LocatorAsyncTask().execute(findParams);
+        mLocationLayerPointString = address;
+    }
+
+    /*
+ * This class provides an AsyncTask that performs a geolocation request on a
+ * background thread and displays the first result on the map on the UI
+ * thread.
+ */
+    private class LocatorAsyncTask extends AsyncTask<LocatorFindParameters, Void, List<LocatorGeocodeResult>> {
+        private Exception mException;
+
+        public LocatorAsyncTask() {
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // Display progress dialog on UI thread
+            mProgressDialog.setMessage(getString(R.string.address_search));
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected List<LocatorGeocodeResult> doInBackground(LocatorFindParameters... params) {
+            // Perform routing request on background thread
+            mException = null;
+            List<LocatorGeocodeResult> results = null;
+
+            // Create locator using default online geocoding service and tell it to
+            // find the given address
+            Locator locator = Locator.createOnlineLocator();
+            try {
+                results = locator.find(params[0]);
+            } catch (Exception e) {
+                mException = e;
+            }
+            return results;
+        }
+
+        @Override
+        protected void onPostExecute(List<LocatorGeocodeResult> result) {
+            // Display results on UI thread
+            mProgressDialog.dismiss();
+            if (mException != null) {
+                Log.w(TAG, "LocatorSyncTask failed with:");
+                mException.printStackTrace();
+                Toast.makeText(MainActivity.this, getString(R.string.addressSearchFailed), Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            if (result.size() == 0) {
+                Toast.makeText(MainActivity.this, getString(R.string.noResultsFound), Toast.LENGTH_LONG).show();
+            } else {
+                // Use first result in the list
+                LocatorGeocodeResult geocodeResult = result.get(0);
+
+                // get return geometry from geocode result
+                Point resultPoint = geocodeResult.getLocation();
+                // create marker symbol to represent location
+                SimpleMarkerSymbol resultSymbol = new SimpleMarkerSymbol(Color.RED, 16, SimpleMarkerSymbol.STYLE.CROSS);
+                // create graphic object for resulting location
+                Graphic resultLocGraphic = new Graphic(resultPoint, resultSymbol);
+                // add graphic to location layer
+                mLocationLayer.addGraphic(resultLocGraphic);
+
+                // create text symbol for return address
+                String address = geocodeResult.getAddress();
+                TextSymbol resultAddress = new TextSymbol(20, address, Color.BLACK);
+                // create offset for text
+                resultAddress.setOffsetX(-4 * address.length());
+                resultAddress.setOffsetY(10);
+                // create a graphic object for address text
+                Graphic resultText = new Graphic(resultPoint, resultAddress);
+                // add address text graphic to location graphics layer
+                mLocationLayer.addGraphic(resultText);
+
+                mLocationLayerPoint = resultPoint;
+
+                // Zoom map to geocode result location
+                mMapView.zoomToResolution(geocodeResult.getLocation(), 2);
+            }
+        }
+
+    }
+
 
     @Override
     protected void onDestroy() {

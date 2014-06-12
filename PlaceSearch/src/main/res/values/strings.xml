@@ -7,4 +7,9 @@
     <string name="search_hint">Search address or place</string>
     <string name="menu_search">Search</string>
 
+    <!-- progress dialog messages -->
+    <string name="address_search">Searching for Address</string>
+    <string name="addressSearchFailed">Address search failed</string>
+    <string name="noResultsFound">No results found</string>
+
 </resources>
