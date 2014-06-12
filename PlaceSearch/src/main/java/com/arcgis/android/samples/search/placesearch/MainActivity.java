@@ -63,6 +63,15 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Setup and show progress dialog
+        mProgressDialog = new ProgressDialog(this) {
+            @Override
+            public void onBackPressed() {
+                // Back key pressed - just dismiss the dialog
+                mProgressDialog.dismiss();
+            }
+        };
+
         // after the content of this activity is set
         // the map can be accessed from the layout
         mMapView = (MapView)findViewById(R.id.map);
