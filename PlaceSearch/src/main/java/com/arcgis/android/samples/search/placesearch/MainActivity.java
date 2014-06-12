@@ -76,6 +76,9 @@ public class MainActivity extends Activity {
         // the map can be accessed from the layout
         mMapView = (MapView)findViewById(R.id.map);
 
+        mLocationLayer = new GraphicsLayer();
+        mMapView.addLayer(mLocationLayer);
+
         // set logo and enable wrap around
         mMapView.setEsriLogoVisible(true);
         mMapView.enableWrapAround(true);
