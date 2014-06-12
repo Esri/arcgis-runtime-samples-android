@@ -30,6 +30,7 @@ public class MainActivity extends Activity {
 
     MapView mMapView;
     EditText mSearchEditText;
+    String mMapViewState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,32 @@ public class MainActivity extends Activity {
         // obtain address and execute locator task
         String address = mSearchEditText.getText().toString();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        mMapViewState = mMapView.retainState();
+        mMapView.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Start the MapView running again
+        if (mMapView != null) {
+            mMapView.unpause();
+            if (mMapViewState != null) {
+                mMapView.restoreState(mMapViewState);
+            }
+        }
     }
 
 }
