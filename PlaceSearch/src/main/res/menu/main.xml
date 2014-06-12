@@ -1,14 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity" >
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
 
-    <item android:id="@+id/action_search"
+    <item
+        android:id="@+id/action_search"
+        android:actionLayout="@layout/search_layout"
         android:title="@string/action_search"
         android:icon="@drawable/abc_ic_search"
-        android:showAsAction="ifRoom|collapseActionView"
-        android:actionViewClass="android.support.v7.widget.SearchView"/>
+        android:showAsAction="ifRoom|collapseActionView" />
+
 </menu>

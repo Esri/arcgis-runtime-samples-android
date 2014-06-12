@@ -14,7 +14,6 @@
 package com.arcgis.android.samples.search.placesearch;
 
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -23,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.SearchView;
 
 import com.esri.android.map.MapView;
 
@@ -80,7 +78,7 @@ public class MainActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_search) {
             return true;
         }
         return super.onOptionsItemSelected(item);
