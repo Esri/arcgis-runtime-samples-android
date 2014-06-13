@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.MapView;
+import com.esri.android.map.event.OnStatusChangedListener;
 import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.Point;
 import com.esri.core.map.Graphic;
@@ -82,6 +83,24 @@ public class MainActivity extends Activity {
         // set logo and enable wrap around
         mMapView.setEsriLogoVisible(true);
         mMapView.enableWrapAround(true);
+
+        // Setup listener for map initialized
+        mMapView.setOnStatusChangedListener(new OnStatusChangedListener() {
+
+            @Override
+            public void onStatusChanged(Object source, STATUS status) {
+                if (source == mMapView && status == STATUS.INITIALIZED) {
+
+                    if (mMapViewState == null) {
+                        Log.i(TAG, "MapView.setOnStatusChangedListener() status=" + status.toString());
+                    } else {
+                        mMapView.restoreState(mMapViewState);
+                    }
+
+                }
+            }
+        });
+
 
     }
 
