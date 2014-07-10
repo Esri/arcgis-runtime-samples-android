@@ -25,7 +25,7 @@ If you haven't already, go to https://github.com/ArcGIS/arcgis-android-sdk-gradl
 3. In the **Folder** text box, specify the directory where the local repository for cloned sources will be set up.
 4. Click the Clone button to start cloning the sources from the specified remote repository.
 
-![clone](https://raw.githubusercontent.com/ArcGIS/arcgis-android-sdk-gradle-samples/master/as-clone.png?token=1308001__eyJzY29wZSI6IlJhd0Jsb2I6QXJjR0lTL2FyY2dpcy1hbmRyb2lkLXNkay1ncmFkbGUtc2FtcGxlcy9tYXN0ZXIvYXMtY2xvbmUucG5nIiwiZXhwaXJlcyI6MTQwMzkxOTQyMn0%3D--91542fd664239c9be373e4ecdc2df547508217a4)
+![clone](https://raw.githubusercontent.com/ArcGIS/arcgis-android-sdk-gradle-samples/master/as-clone.png?token=1308001__eyJzY29wZSI6IlJhd0Jsb2I6QXJjR0lTL2FyY2dpcy1hbmRyb2lkLXNkay1ncmFkbGUtc2FtcGxlcy9tYXN0ZXIvYXMtY2xvbmUucG5nIiwiZXhwaXJlcyI6MTQwNTYyMTAzNX0%3D--317720430054a2555c382fa5258476dad177909b)
 
 ### Command line Git
 [Clone the **ArcGIS Android SDK Samples** and **ArcGIS Android API Library Module**](https://help.github.com/articles/fork-a-repo#step-2-clone-your-fork)
