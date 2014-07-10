@@ -5,7 +5,6 @@ android {
     buildToolsVersion "19.1"
 
     defaultConfig {
-        packageName "com.arcgis.android.samples.search.placesearch"
         minSdkVersion 15
         targetSdkVersion 19
         versionCode 1
