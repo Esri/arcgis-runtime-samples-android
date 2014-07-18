@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 /**
@@ -121,14 +122,14 @@ public class BasemapListFragment extends ListFragment {
 
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+    public void onListItemClick(ListView listView, View view, int position, long id) {
+        super.onListItemClick(listView, view, position, id);
 
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
-        }
+        // Notify the active listener interface (the activity, if the fragment is attached to one)
+        // that an item has been selected
+        CharSequence text = ((TextView) view).getText();
+        mBasemapListListener.onBasemapSelected(position, text.toString());
+        mActivatedPosition = position;
     }
 
     /**
