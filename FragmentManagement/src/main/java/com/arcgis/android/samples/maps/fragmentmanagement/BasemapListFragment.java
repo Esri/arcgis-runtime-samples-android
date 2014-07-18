@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.app.ListFragment;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -37,8 +38,6 @@ public class BasemapListFragment extends ListFragment {
 
     private BasemapListListener mBasemapListListener = sDummyListener;
     private int mActivatedPosition = AdapterView.INVALID_POSITION;
-
-    private OnFragmentInteractionListener mListener;
 
     /**
      * A callback interface that all activities containing this fragment must implement.
@@ -137,6 +136,17 @@ public class BasemapListFragment extends ListFragment {
         super.onSaveInstanceState(outState);
         if (mActivatedPosition != AdapterView.INVALID_POSITION) {
             outState.putInt(KEY_ACTIVATED_POSITION, mActivatedPosition);
+        }
+    }
+
+    /**
+     * Turns on activate-on-click mode. When this mode is on, list items will be given the
+     * 'activated' state when touched.
+     */
+    public void setActivateOnItemClick(boolean activateOnItemClick) {
+        getListView().setChoiceMode(activateOnItemClick ? AbsListView.CHOICE_MODE_SINGLE : AbsListView.CHOICE_MODE_NONE);
+        if (activateOnItemClick && mActivatedPosition != AdapterView.INVALID_POSITION) {
+            getListView().setItemChecked(mActivatedPosition, true);
         }
     }
 
