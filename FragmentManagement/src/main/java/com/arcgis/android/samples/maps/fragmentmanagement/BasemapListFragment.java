@@ -115,7 +115,8 @@ public class BasemapListFragment extends ListFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        // Reset the active listener interface to the dummy implementation
+        mBasemapListListener = sDummyListener;
     }
 
 
