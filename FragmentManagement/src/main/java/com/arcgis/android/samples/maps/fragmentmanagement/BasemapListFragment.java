@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.app.ListFragment;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
@@ -74,6 +75,17 @@ public class BasemapListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
+
+        // Retrieve arguments
+        if (mActivatedPosition == AdapterView.INVALID_POSITION && getArguments().containsKey(ARG_ACTIVATED_POSITION)) {
+            mActivatedPosition = getArguments().getInt(ARG_ACTIVATED_POSITION);
+        }
+
+        // Setup list adapter
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.map_types,
+                android.R.layout.simple_list_item_activated_1);
+        setListAdapter(adapter);
+
     }
 
 
