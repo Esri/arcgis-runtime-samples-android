@@ -133,6 +133,20 @@ public class MainActivity extends Activity implements BasemapListFragment.Basema
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        getActionBar().setHomeButtonEnabled(false);
+        getActionBar().setDisplayHomeAsUpEnabled(false);
+
+        if (mOnlyTheMapIsDisplayed) {
+            // Single-pane mode and map fragment displayed - Back returns us to list fragment
+            displayListFragment();
+        } else {
+            // Otherwise Back finishes the activity
+            finish();
+        }
+    }
+
     /**
      * Displays the list fragment.
      */
