@@ -132,6 +132,14 @@ public class BasemapListFragment extends ListFragment {
         mActivatedPosition = position;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mActivatedPosition != AdapterView.INVALID_POSITION) {
+            outState.putInt(KEY_ACTIVATED_POSITION, mActivatedPosition);
+        }
+    }
+
     /**
      * Sets the activated position and highlights it in the list.
      *
