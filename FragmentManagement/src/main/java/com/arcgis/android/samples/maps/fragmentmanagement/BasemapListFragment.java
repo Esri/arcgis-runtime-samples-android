@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.app.ListFragment;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 
@@ -26,25 +27,53 @@ import android.widget.ListView;
  * which item is currently being viewed in a {@link MapFragment}.
  * Activities containing this fragment MUST implement the {@code BasemapListListener} interface.
  */
-public class BasemapListFragmentFragment extends ListFragment {
+public class BasemapListFragment extends ListFragment {
+
+    /** Fragment argument representing currently selected position in the list */
+    public static final String ARG_ACTIVATED_POSITION = "ActivatedPosition";
+    private static final String KEY_ACTIVATED_POSITION = "ActivatedPosition";
+
+    private BasemapListListener mBasemapListListener = sDummyListener;
+    private int mActivatedPosition = AdapterView.INVALID_POSITION;
 
     private OnFragmentInteractionListener mListener;
+
+    /**
+     * A callback interface that all activities containing this fragment must implement.
+     * This mechanism allows activities to be notified of basemap selections.
+     */
+    public interface BasemapListListener {
+        /**
+         * Callback for when a basemap has been selected.
+         *
+         * @param position Position of selected basemap in list.
+         * @param id String identifier of selected basemap.
+         */
+        public void onBasemapSelected(int position, String id);
+    }
+
+    /**
+     * A dummy implementation of the {@link BasemapListListener} interface that does nothing.
+     * Used only when this fragment is not attached to an activity.
+     */
+    private static BasemapListListener sDummyListener = new BasemapListListener() {
+        @Override
+        public void onBasemapSelected(int position, String id) {
+        }
+    };
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public BasemapListFragmentFragment() {
+    public BasemapListFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        // TODO: Change Adapter to display your content
-        setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS));
+        setRetainInstance(true);
     }
 
 
