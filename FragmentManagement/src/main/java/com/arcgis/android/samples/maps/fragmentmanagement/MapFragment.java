@@ -18,11 +18,14 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.esri.android.map.MapView;
 import com.esri.android.map.ags.ArcGISFeatureLayer;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
+import com.esri.core.geometry.Envelope;
+import com.esri.core.geometry.GeometryEngine;
+import com.esri.core.geometry.Point;
+import com.esri.core.geometry.SpatialReference;
 
 
 /**
@@ -78,9 +81,42 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        TextView textView = new TextView(getActivity());
+        // Reinstate saved instance state (if any)
+        if (savedInstanceState != null) {
+            mMapState = savedInstanceState.getString(KEY_MAP_STATE, null);
+        }
 
-        return textView;
+        // Restore map state (center and resolution) if a previously saved state is available,
+        // otherwise set initial extent
+        if (mMapState == null) {
+            SpatialReference mSR = SpatialReference.create(3857);
+            Point p1 = GeometryEngine.project(-120.0, 0.0, mSR);
+            Point p2 = GeometryEngine.project(-60.0, 50.0, mSR);
+            Envelope mInitExtent = new Envelope(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+            mMapView.setExtent(mInitExtent);
+        } else {
+            mMapView.restoreState(mMapState);
+        }
+
+        return null;
+    }
+
+    /**
+     * Creates a basemap layer.
+     *
+     * @param basemapName String ID of the basemap to use.
+     * @return ArcGISTiledMapServiceLayer for the requested basemap.
+     */
+    private ArcGISTiledMapServiceLayer createBasemapLayer(String basemapName) {
+        String url = "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer";
+        if (basemapName.equalsIgnoreCase(BASEMAP_NAME_STREETS)) {
+            url = "http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer";
+        } else if (basemapName.equalsIgnoreCase(BASEMAP_NAME_GRAY)) {
+            url = "http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer";
+        } else if (basemapName.equalsIgnoreCase(BASEMAP_NAME_OCEANS)) {
+            url = "http://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer";
+        }
+        return new ArcGISTiledMapServiceLayer(url);
     }
 
 }
