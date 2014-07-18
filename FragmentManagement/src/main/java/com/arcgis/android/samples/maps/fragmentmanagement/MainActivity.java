@@ -119,12 +119,16 @@ public class MainActivity extends Activity implements BasemapListFragment.Basema
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // This ID represents the Home or Up button. In the case of this activity,
+                // the Home button is shown only when we're in single-pane mode and the map
+                // fragment is displayed.
+                // Disable Home button and display list fragment in place of map fragment.
+                getActionBar().setHomeButtonEnabled(false);
+                getActionBar().setDisplayHomeAsUpEnabled(false);
+                displayListFragment();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
