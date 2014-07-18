@@ -86,6 +86,11 @@ public class MapFragment extends Fragment {
             mMapState = savedInstanceState.getString(KEY_MAP_STATE, null);
         }
 
+        // Create new MapView object. Note that, unlike Layers objects, the MapView can't be
+        // retained when the Activity is destroyed and recreated, because the old MapView
+        // is tied to the old Activity.
+        mMapView = new MapView(getActivity());
+
         // Restore map state (center and resolution) if a previously saved state is available,
         // otherwise set initial extent
         if (mMapState == null) {
@@ -98,7 +103,35 @@ public class MapFragment extends Fragment {
             mMapView.restoreState(mMapState);
         }
 
-        return null;
+        // Create layers unless retained objects are available
+        if (mBasemapLayer == null) {
+            mBasemapLayer = createBasemapLayer(mBasemapName);
+        }
+
+        if (mFeatureLayer0 == null) {
+            mFeatureLayer0 = new ArcGISFeatureLayer(
+                    "http://sampleserver5.arcgisonline.com/ArcGIS/rest/services/LocalGovernment/Recreation/FeatureServer/0",
+                    ArcGISFeatureLayer.MODE.ONDEMAND);
+        }
+
+        if (mFeatureLayer1 == null) {
+            mFeatureLayer1 = new ArcGISFeatureLayer(
+                    "http://sampleserver5.arcgisonline.com/ArcGIS/rest/services/LocalGovernment/Recreation/FeatureServer/1",
+                    ArcGISFeatureLayer.MODE.ONDEMAND);
+        }
+
+        if (mFeatureLayer2 == null) {
+            mFeatureLayer2 = new ArcGISFeatureLayer(
+                    "http://sampleserver5.arcgisonline.com/ArcGIS/rest/services/LocalGovernment/Recreation/FeatureServer/2",
+                    ArcGISFeatureLayer.MODE.ONDEMAND);
+        }
+
+        // Add layers to MapView
+        mMapView.addLayer(mBasemapLayer);
+        mMapView.addLayer(mFeatureLayer0);
+        mMapView.addLayer(mFeatureLayer1);
+        mMapView.addLayer(mFeatureLayer2);
+        return mMapView;
     }
 
     /**
