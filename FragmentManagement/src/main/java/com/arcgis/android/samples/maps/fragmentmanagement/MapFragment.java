@@ -134,6 +134,16 @@ public class MapFragment extends Fragment {
         return mMapView;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Save the map state (map center and resolution).
+        if (mMapState != null) {
+            outState.putString(KEY_MAP_STATE, mMapState);
+        }
+    }
+
     /**
      * Creates a basemap layer.
      *
