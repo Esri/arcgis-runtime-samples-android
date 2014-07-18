@@ -147,6 +147,18 @@ public class MainActivity extends Activity implements BasemapListFragment.Basema
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        int numPanes = 1;
+        if (mTwoPane) {
+            numPanes = 2;
+        }
+        outState.putInt(KEY_NUM_PANES, numPanes);
+        outState.putBoolean(KEY_ONLY_THE_MAP, mOnlyTheMapIsDisplayed);
+        outState.putInt(KEY_ACTIVATED_POSITION, mActivatedPosition);
+    }
+
     /**
      * Displays the list fragment.
      */
