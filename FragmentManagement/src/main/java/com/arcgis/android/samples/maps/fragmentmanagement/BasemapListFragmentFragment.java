@@ -17,11 +17,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.app.ListFragment;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-
-import com.arcgis.android.samples.maps.fragmentmanagement.dummy.DummyContent;
 
 /**
  * A fragment representing a list of basemaps. This fragment also supports a two-pane view by
