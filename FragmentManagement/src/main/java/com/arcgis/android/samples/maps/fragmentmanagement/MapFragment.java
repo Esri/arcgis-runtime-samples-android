@@ -144,6 +144,38 @@ public class MapFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // Save map state and pause the MapView to save battery
+        mMapState = mMapView.retainState();
+        mMapView.pause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Start the MapView threads running again
+        mMapView.unpause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        // Must remove our layers from MapView before calling recycle(), or we won't be able to reuse them
+        mMapView.removeLayer(mBasemapLayer);
+        mMapView.removeLayer(mFeatureLayer0);
+        mMapView.removeLayer(mFeatureLayer1);
+        mMapView.removeLayer(mFeatureLayer2);
+
+        // Release MapView resources
+        mMapView.recycle();
+        mMapView = null;
+    }
+
     /**
      * Creates a basemap layer.
      *
