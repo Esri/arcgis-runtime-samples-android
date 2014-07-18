@@ -109,6 +109,42 @@ public class MainActivity extends Activity implements BasemapListFragment.Basema
 
     }
 
+    /**
+     * Callback method from {@link BasemapListFragment.BasemapListListener} indicating that the basemap with the given
+     * position and ID was selected from the list.
+     */
+    @Override
+    public void onBasemapSelected(int position, String id) {
+        mActivatedPosition = position;
+        FragmentManager fragMgr = getFragmentManager();
+        boolean newFragment = false;
+
+        // Create new map fragment or pass ID of selected basemap to existing fragment
+        if (mMapFragment == null) {
+            createMapFragment(id);
+            newFragment = true;
+        } else {
+            mMapFragment.changeBasemap(id);
+        }
+
+        if (mTwoPane) {
+            // Two-pane mode - if new map fragment created, display it in map_fragment_container_twopane
+            if (newFragment) {
+                fragMgr.beginTransaction().replace(R.id.map_fragment_container_twopane, mMapFragment, TAG_MAP_FRAGMENT)
+                        .commit();
+            }
+        } else {
+            // Single-pane mode - replace the list fragment in main_fragment_container by the map fragment
+            fragMgr.beginTransaction().replace(R.id.main_fragment_container, mMapFragment, TAG_MAP_FRAGMENT).commit();
+            mOnlyTheMapIsDisplayed = true;
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        // If map fragment was previously detached from the UI, in displayListFragment(), need to attach it again
+        if (mMapFragment.isDetached()) {
+            fragMgr.beginTransaction().attach(mMapFragment).commit();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
