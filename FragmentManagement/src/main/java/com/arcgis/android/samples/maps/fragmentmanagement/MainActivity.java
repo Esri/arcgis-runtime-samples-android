@@ -159,6 +159,15 @@ public class MainActivity extends Activity implements BasemapListFragment.Basema
         outState.putInt(KEY_ACTIVATED_POSITION, mActivatedPosition);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // If in two-pane mode, tell list fragment to highlight the currently selected item
+        if (mTwoPane && mListFragment != null) {
+            mListFragment.setActivateOnItemClick(true);
+        }
+    }
+
     /**
      * Displays the list fragment.
      */
