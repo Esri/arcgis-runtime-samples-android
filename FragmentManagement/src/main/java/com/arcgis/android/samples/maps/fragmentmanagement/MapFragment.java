@@ -68,6 +68,11 @@ public class MapFragment extends Fragment {
          * objects to be retained so data will not need to be fetched from the network again.
          */
         setRetainInstance(true);
+
+        // Retrieve arguments
+        if (mBasemapName == null && getArguments().containsKey(ARG_BASEMAP_ID)) {
+            mBasemapName = getArguments().getString(ARG_BASEMAP_ID);
+        }
     }
 
     @Override
