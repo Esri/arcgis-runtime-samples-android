@@ -177,6 +177,23 @@ public class MapFragment extends Fragment {
     }
 
     /**
+     * Changes the basemap.
+     *
+     * @param basemapName String ID of the basemap to use.
+     */
+    public void changeBasemap(String basemapName) {
+        mBasemapName = basemapName;
+        if (mMapView == null) {
+            mBasemapLayer = null;
+        } else {
+            // Remove old basemap layer and add a new one as the first layer to be drawn
+            mMapView.removeLayer(mBasemapLayer);
+            mBasemapLayer = createBasemapLayer(mBasemapName);
+            mMapView.addLayer(mBasemapLayer, 0);
+        }
+    }
+
+    /**
      * Creates a basemap layer.
      *
      * @param basemapName String ID of the basemap to use.
