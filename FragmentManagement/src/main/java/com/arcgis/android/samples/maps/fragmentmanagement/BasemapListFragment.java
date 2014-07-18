@@ -88,6 +88,17 @@ public class BasemapListFragment extends ListFragment {
 
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Reinstate saved instance state (if any)
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ACTIVATED_POSITION)) {
+            setActivatedPosition(savedInstanceState.getInt(KEY_ACTIVATED_POSITION));
+        }
+
+    }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -119,18 +130,17 @@ public class BasemapListFragment extends ListFragment {
     }
 
     /**
-    * This interface must be implemented by activities that contain this
-    * fragment to allow an interaction in this fragment to be communicated
-    * to the activity and potentially other fragments contained in that
-    * activity.
-    * <p>
-    * See the Android Training lesson <a href=
-    * "http://developer.android.com/training/basics/fragments/communicating.html"
-    * >Communicating with Other Fragments</a> for more information.
-    */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+     * Sets the activated position and highlights it in the list.
+     *
+     * @param position The activated position.
+     */
+    private void setActivatedPosition(int position) {
+        if (position == AdapterView.INVALID_POSITION) {
+            getListView().setItemChecked(mActivatedPosition, false);
+        } else {
+            getListView().setItemChecked(position, true);
+        }
+        mActivatedPosition = position;
     }
 
 }
