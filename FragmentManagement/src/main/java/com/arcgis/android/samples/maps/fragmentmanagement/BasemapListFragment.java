@@ -103,12 +103,13 @@ public class BasemapListFragment extends ListFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                + " must implement OnFragmentInteractionListener");
+
+        // Check the host activity implements the mandatory callback listener.
+        if (!(activity instanceof BasemapListListener)) {
+            throw new IllegalStateException("Activity must implement BasemapListListener");
         }
+
+        mBasemapListListener = (BasemapListListener) activity;
     }
 
     @Override
