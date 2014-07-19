@@ -131,6 +131,11 @@ public class MapFragment extends Fragment {
         mMapView.addLayer(mFeatureLayer0);
         mMapView.addLayer(mFeatureLayer1);
         mMapView.addLayer(mFeatureLayer2);
+
+        // set logo and enable wrap around
+        mMapView.enableWrapAround(true);
+        mMapView.setEsriLogoVisible(true);
+
         return mMapView;
     }
 
