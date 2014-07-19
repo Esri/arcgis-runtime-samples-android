@@ -7,7 +7,7 @@ ArcGIS Runtime SDK for Android Early Access Preview Samples for Android Studio. 
 # Prerequisites
 - [JDK 6 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 - [Android Studio (Beta) 0.8.0+](https://developer.android.com/sdk/installing/studio.html) with support for gradle plugin ```0.12.+```.  
-- Android Support Library.  Ensure that your SDK Manager for Android Studio has the support library installed.  We make use of [v7 appcompat library](http://developer.android.com/tools/support-library/features.html#v7-appcompat) to follow [Android design guidelines](http://developer.android.com/design/index.html). Please ensure you have the latest version of the Android Support Library installed with your Android SDK.
+- Android Support Repository.  Ensure that your SDK Manager for Android Studio has the [support repository](https://developer.android.com/tools/support-library/setup.html) installed.  We make use of [v7 appcompat library](http://developer.android.com/tools/support-library/features.html#v7-appcompat) to follow [Android design guidelines](http://developer.android.com/design/index.html). Please ensure you have the latest version of the Android Support Library installed with your Android SDK.
 
 # Developer Instructions
 The **ArcGIS Android SDK Samples** are Gradle based Android projects which can be directly cloned and imported into Android Studio.  The **ArcGIS Android SDK Samples** require the **ArcGIS Android API Library Module** to be imported into the **ArcGIS Android SDK Samples** project.
