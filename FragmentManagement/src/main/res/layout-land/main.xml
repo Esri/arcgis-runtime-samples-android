@@ -8,7 +8,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context=".FragmentManagementActivity" >
+    tools:context=".MainActivity" >
 
     <FrameLayout
         android:id="@+id/main_fragment_container"
