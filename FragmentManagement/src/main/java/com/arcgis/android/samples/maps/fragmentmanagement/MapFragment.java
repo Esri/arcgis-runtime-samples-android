@@ -211,7 +211,7 @@ public class MapFragment extends Fragment {
         } else if (basemapName.equalsIgnoreCase(BASEMAP_NAME_GRAY)) {
             url = "http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer";
         } else if (basemapName.equalsIgnoreCase(BASEMAP_NAME_OCEANS)) {
-            url = "http://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer";
+            url = "http://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer";
         }
         return new ArcGISTiledMapServiceLayer(url);
     }
