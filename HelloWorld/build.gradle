@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.1"
+    buildToolsVersion '20.0.0'
 
     defaultConfig {
         minSdkVersion 15
@@ -27,7 +27,7 @@ android {
 
 dependencies {
     // module dependency
-    compile project(":arcgis-android-v10.2.3")
+    compile project(':arcgis-android-v10.2.3')
     // local binary dependency
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // remote binary dependency
