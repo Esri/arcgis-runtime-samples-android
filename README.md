@@ -38,7 +38,7 @@ $ git clone git@github.com:YOUR-USERNAME/arcgis-android-sdk-gradle-samples.git
 $ git clone git@github.com:YOUR-USERNAME/arcgis-android-api-lib-module.git
 ```
 
-**Now that we have both repos cloned locally we can begin to import our gradle samples project and add the **ArcGIS Android API Library Module** module to that project as a dependency.**
+** Now that we have both repos cloned locally we can begin to import our gradle samples project and add the **ArcGIS Android API Library Module** module to that project as a dependency.**
 
 ## Import Gradle Sample project into Android Studio
 Once the project is cloned to disk you can import into Android Studio:
