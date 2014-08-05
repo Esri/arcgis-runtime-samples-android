@@ -65,7 +65,7 @@ You should now be able to run any of the included samples.  We will use the ```H
 Find a bug or want to request a new feature enhancement?  Please let us know by submitting an issue.
 
 ## Contributing
-Anyone and everyone is welcome to [contribute](https://github.com/Esri/maps-app-android/blob/master/CONTRIBUTING.md). We do accept pull requests.
+Anyone and everyone is welcome to contribute. We do accept pull requests.
 
 1. Get Involved
 2. Report Issues
