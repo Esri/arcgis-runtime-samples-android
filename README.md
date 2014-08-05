@@ -1,5 +1,5 @@
 # Overview
-ArcGIS Runtime SDK for Android Early Access Preview Samples for Android Studio.  The ArcGIS Android SDK Gradle samples depends on the [ArcGIS Runtime SDK for Android library module for Android Studio](https://github.com/ArcGIS/arcgis-android-api-lib-module) you will need to clone both repositories and add the ArcGIS Android API Library Module to the gradle sample project.  
+ArcGIS Runtime SDK for Android Early Access Preview Samples for Android Studio.  The ArcGIS Android SDK Gradle samples depends on the [ArcGIS Runtime SDK for Android library module for Android Studio](https://github.com/Esri/arcgis-android-api-lib-module) you will need to clone both repositories and add the ArcGIS Android API Library Module to the gradle sample project.  
 
 # Early Access Preview
 **Caution:** The ArcGIS Android SDK Gradle samples are currently available as an **early access preview** for use with [Android Studio](http://developer.android.com/sdk/installing/studio.html) and the [ArcGIS Android API Library Module](https://github.com/ArcGIS/arcgis-android-api-lib-module).  If you are not comfortable using an unfinished product, you may want to use ArcGIS Android Samples in the Eclipse Plugin bundled with the [ArcGIS Android SDK](https://developers.arcgis.com/android/).
@@ -13,7 +13,7 @@ ArcGIS Runtime SDK for Android Early Access Preview Samples for Android Studio. 
 The **ArcGIS Android SDK Samples** are Gradle based Android projects which can be directly cloned and imported into Android Studio.  The **ArcGIS Android SDK Samples** require the **ArcGIS Android API Library Module** to be imported into the **ArcGIS Android SDK Samples** project.
 
 ## Fork the repo
-If you haven't already, go to https://github.com/ArcGIS/arcgis-android-sdk-gradle-samples and click the **Fork** button and go to https://github.com/ArcGIS/arcgis-android-api-lib-module and click the **Fork** button.
+If you haven't already, go to https://github.com/Esri/arcgis-android-sdk-gradle-samples and click the **Fork** button and go to https://github.com/Esri/arcgis-android-api-lib-module and click the **Fork** button.
 
 ## Clone the repo
 
