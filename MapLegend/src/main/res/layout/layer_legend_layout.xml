@@ -9,7 +9,7 @@
         android:id="@+id/layer_legend_title_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="@string/text" />
 
     <ListView
         android:id="@+id/layer_legend_symbols_listview"
