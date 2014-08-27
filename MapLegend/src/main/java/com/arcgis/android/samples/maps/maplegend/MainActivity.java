@@ -17,9 +17,11 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import com.esri.android.map.MapView;
 import com.esri.android.map.ags.ArcGISDynamicMapServiceLayer;
+import com.esri.core.geometry.Envelope;
 
 
 public class MainActivity extends Activity {
@@ -34,9 +36,14 @@ public class MainActivity extends Activity {
         MapView mMapView = new MapView(this);
         mDynamicServiceLayer = new ArcGISDynamicMapServiceLayer(getResources().getString(R.string.map_service_url));
         mMapView.addLayer(mDynamicServiceLayer);
+        Envelope mapExtent = new Envelope(-122.97, 26.27, -80.62, 47.99);
+        mMapView.setExtent(mapExtent);
 
         mMapView.setEsriLogoVisible(true);
         mMapView.enableWrapAround(true);
+
+        FrameLayout container = (FrameLayout) findViewById(R.id.container);
+        container.addView(mMapView);
 
     }
 
