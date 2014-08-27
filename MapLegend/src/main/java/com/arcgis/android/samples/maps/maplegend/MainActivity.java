@@ -62,6 +62,8 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_legend) {
+            // show the legend dialog
+
             return true;
         }
         return super.onOptionsItemSelected(item);
