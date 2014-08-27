@@ -63,9 +63,13 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
         if (id == R.id.action_legend) {
             // show the legend dialog
-
+            new LegendDialogFragment().show(getFragmentManager(), LegendDialogFragment.TAG);
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public ArcGISDynamicMapServiceLayer getLayer() {
+        return mDynamicServiceLayer;
     }
 }
