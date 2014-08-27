@@ -13,6 +13,34 @@
 
 package com.arcgis.android.samples.maps.maplegend;
 
+import android.app.DialogFragment;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
-public class LegendDialogFragment {
+import com.esri.android.map.ags.ArcGISDynamicMapServiceLayer;
+
+/**
+ * A dialog that shows the legend of a ArcGISDynamicMapServiceLayer.
+ */
+public class LegendDialogFragment extends DialogFragment {
+
+    public static final String TAG = LegendDialogFragment.class.getSimpleName();
+    LinearLayout mLinearLayout;
+    private ArcGISDynamicMapServiceLayer mLayer;
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mLinearLayout = (LinearLayout) inflater.inflate(R.layout.legend_dialog_fragment_layout, null);
+
+        getDialog().setTitle(getActivity().getString(R.string.legend));
+
+        mLayer = ((MainActivity) getActivity()).getLayer();
+
+        // before we can show the legend we have to fetch the legend info asynchronously
+        new FetchLegendTask().execute();
+
+        return mLinearLayout;
+    }
+
 }
