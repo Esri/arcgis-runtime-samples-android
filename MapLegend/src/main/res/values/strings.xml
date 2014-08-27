@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MapLegend</string>
+    <string name="legend">Legend</string>
+    <string name="text">TextView</string>
+    <!-- dynamic map service url -->
+    <string name="map_service_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer</string>
+
+</resources>

@@ -2,9 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '20.0.0'
+    buildToolsVersion "20.0.0"
 
     defaultConfig {
+        applicationId "com.arcgis.android.samples.maps.maplegend"
         minSdkVersion 15
         targetSdkVersion 19
         versionCode 1
@@ -20,7 +21,7 @@ android {
     buildTypes {
         release {
             runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -30,6 +31,4 @@ dependencies {
     compile project(':arcgis-android-v10.2.3')
     // local binary dependency
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    // remote binary dependency
-    compile 'com.android.support:appcompat-v7:19.+'
 }
