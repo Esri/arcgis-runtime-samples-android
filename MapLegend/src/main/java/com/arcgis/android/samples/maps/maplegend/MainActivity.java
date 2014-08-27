@@ -18,13 +18,26 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.esri.android.map.MapView;
+import com.esri.android.map.ags.ArcGISDynamicMapServiceLayer;
+
 
 public class MainActivity extends Activity {
+
+    private ArcGISDynamicMapServiceLayer mDynamicServiceLayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MapView mMapView = new MapView(this);
+        mDynamicServiceLayer = new ArcGISDynamicMapServiceLayer(getResources().getString(R.string.map_service_url));
+        mMapView.addLayer(mDynamicServiceLayer);
+
+        mMapView.setEsriLogoVisible(true);
+        mMapView.enableWrapAround(true);
+
     }
 
 
@@ -41,7 +54,7 @@ public class MainActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_legend) {
             return true;
         }
         return super.onOptionsItemSelected(item);
