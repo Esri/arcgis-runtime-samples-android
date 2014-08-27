@@ -1,1 +1,1 @@
-include ':arcgis-android-v10.2.3', ':HelloWorld', ':Basemaps', ':MapRotation', ':SwitchMaps', ':QueryCloudFeatureService', ':FeatureServiceTableQuery', ':PlaceSearch', ':FragmentManagement'
+include ':arcgis-android-v10.2.3', ':HelloWorld', ':Basemaps', ':MapRotation', ':SwitchMaps', ':QueryCloudFeatureService', ':FeatureServiceTableQuery', ':PlaceSearch', ':FragmentManagement', ':MapLegend'
