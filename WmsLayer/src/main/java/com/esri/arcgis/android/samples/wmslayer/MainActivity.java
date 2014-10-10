@@ -20,6 +20,10 @@ public class MainActivity extends Activity {
         // after the content of this activity is set
         // the map can be accessed from the layout
         mMapView = (MapView)findViewById(R.id.map);
+
+        // Set the Esri logo to be visible, and enable map to wrap around date line.
+        mMapView.setEsriLogoVisible(true);
+        mMapView.enableWrapAround(true);
     }
 
 
