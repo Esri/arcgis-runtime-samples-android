@@ -1,1 +1,1 @@
-include ':HelloWorld', ':Basemaps', ':MapRotation', ':SwitchMaps', ':QueryCloudFeatureService', ':FeatureServiceTableQuery', ':PlaceSearch', ':FragmentManagement', ':MapLegend', ':arcgis-android-v10.2.4'
+include ':HelloWorld', ':Basemaps', ':MapRotation', ':SwitchMaps', ':QueryCloudFeatureService', ':FeatureServiceTableQuery', ':PlaceSearch', ':FragmentManagement', ':MapLegend', ':arcgis-android-v10.2.4', 'WmsLayer'
