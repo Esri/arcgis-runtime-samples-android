@@ -6,11 +6,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.esri.android.map.MapView;
+import com.esri.android.map.ogc.WMSLayer;
 
 
 public class MainActivity extends Activity {
 
     MapView mMapView;
+    WMSLayer wmsLayer;
+    String wmsURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +23,15 @@ public class MainActivity extends Activity {
         // after the content of this activity is set
         // the map can be accessed from the layout
         mMapView = (MapView)findViewById(R.id.map);
+
+        wmsURL = "http://wms.openweathermap.org/service";
+        wmsLayer = new WMSLayer(wmsURL);
+        wmsLayer.setImageFormat("image/png");
+        String[] visibleLayers = {"clouds", "precipitation"};
+        wmsLayer.setVisibleLayer(visibleLayers);
+        wmsLayer.setOpacity(0.5f);
+        mMapView.addLayer(wmsLayer);
+
 
         // Set the Esri logo to be visible, and enable map to wrap around date line.
         mMapView.setEsriLogoVisible(true);
