@@ -15,7 +15,6 @@ package com.esri.arcgis.android.samples.wmslayer;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -56,7 +55,6 @@ public class MainActivity extends Activity {
         mMapView.setEsriLogoVisible(true);
         mMapView.enableWrapAround(true);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
