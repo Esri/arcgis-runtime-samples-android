@@ -1,7 +1,8 @@
 # Basemaps
-The Basemaps sample app shows how you can switch basemaps offered in the ```ActionBar``` overflow button.
 
 ![basemaps app](basemaps.png)
+
+The Basemaps sample app shows how you can switch basemaps offered in the ```ActionBar``` overflow button.
 
 ## Features
 * MapView
