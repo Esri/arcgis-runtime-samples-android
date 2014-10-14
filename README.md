@@ -50,7 +50,7 @@ Once the project is cloned to disk you can import into Android Studio:
 This is where we start to turn our project into an ArcGIS for Android project.
 
 * Right Click your project and select **Open Module Settings**
-* Click the ```+``` sign above **SDK Location** and select **Import Existing Project** then click **Next**
+* Click the ```+``` sign above **SDK Location** and select **More Modules > Import Existing Project** then click **Next**
 * Navigate to the folder where you cloned the ```arcgis-android-api-lib-module``` repo and select the ```arcgis-android-v10.2.3``` folder which contains the library module.  Do not import the entire project, just the library module e.g. ```/[path-to-repo]/arcgis-android-api-lib-module/arcgis-android-v10.2.3``` and click **OK** then **Finish** to import the library module.
 
 **NOTE** If you navigate to the root project directory you will see all available modules listed.  Ensure that ```arcgis-android-v10.2.3``` module is select from your project and that the **app** module is unchecked.
