@@ -58,7 +58,7 @@ This is where we start to turn our project into an ArcGIS for Android project.
 ## Run a sample
 You should now be able to run any of the included samples.  We will use the ```HelloWorld``` Sample as an example.  
 
-* Select ```HelloWorld``` from the **Select Run/Dubug Configuration** drop down
+* Select ```HelloWorld``` from the **Select Run/Debug Configuration** drop down
 * Click the **Run** button
 
 ## Issues
