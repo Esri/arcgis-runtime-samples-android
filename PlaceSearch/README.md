@@ -1,4 +1,7 @@
 # Place Search
+
+![Place Search App](placesearch.png)
+
 The PlaceSearch app usess the geocoding service to convert addresses to and from geographic coordinates. Search for places within a region and get places matching your search. 
 
 ## Sample Design
