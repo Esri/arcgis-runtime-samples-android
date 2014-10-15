@@ -1,6 +1,6 @@
 # Fragment Management
 
-
+![Fragment Manager App]()
 
 The purpose of this sample is two-fold: to demonstrate switching between one Fragment when in portrait orientation and two Fragments when in landscape orientation and to demonstrate use of Fragment.setRetainInstance() to retain map layer objects when orientation is changed.
 
