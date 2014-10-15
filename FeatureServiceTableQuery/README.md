@@ -1,9 +1,10 @@
 # Feature Service Table Query
 
-This sample shows how you can create a ```GeodatabaseFeatureServiceTable```, initialize it from
-a feature service, create a ```FeatureLayer``` based on that table, and also query the table. Features found by the query are then selected in the map.
+![feature service feature table query app](feature-service-table-query.png)
 
-To perform a query, select values in the two spinners, and then press the OK button. 
+This sample shows how you can create a ```GeodatabaseFeatureServiceTable```, initialize it from a feature service, create a ```FeatureLayer``` based on that table, and also query the table. Features found by the query are then selected in the map.
+
+To perform a query, select values in the two spinners, and then press the **OK** button.
 
 ## Features
 

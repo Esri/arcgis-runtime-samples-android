@@ -1,3 +1,13 @@
 # Basemaps
 
-The Basemaps sample app shows how you can switch basemaps, by showing choices on the Android options menu or action bar overflow, and using the MapOptions.MapType enum, the MapOptions class, and the setMapOptions method on the MapView. The setExtent and setOnStatusChangedListener methods on the MapView are used to preserve the current extent of the map when the basemap is changed.
+![basemaps app](basemaps.png)
+
+The Basemaps sample app shows how you can switch basemaps offered in the ```ActionBar``` overflow button.
+
+## Features
+* MapView
+* MapOptions
+* MenuItem
+
+## Sample Design
+The ```ActionBar``` overflow button lists a group of basemaps to choose from.  The Basemap types are made available from the ```MapOptions.MapType``` ```Enum```.  The ```MapView.setMapOptions()``` takes the ```MapType``` as a parameter to switch basemaps. The ```setExtent()``` and ````setOnStatusChangedListener()``` methods on the ```MapView``` are used to preserve the current extent of the map when the basemap is changed.
