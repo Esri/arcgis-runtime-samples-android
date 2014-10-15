@@ -1,4 +1,7 @@
 # Hello World
+
+![HelloWorld App](hello-world.png)
+
 The HelloWorld app is the most basic Map app for the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/en/android/). 
 It shows how to define a MapView in the layout XML of the activity. 
 Within the XML definition of the MapView, MapOptions attributes are used to populate that MapView with a basemap layer showing streets, and also the initial extent and zoom level are set. 
