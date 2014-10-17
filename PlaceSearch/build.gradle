@@ -30,6 +30,4 @@ dependencies {
     compile project(':arcgis-android-v10.2.4')
     // local binary dependency
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    // remote binary dependency
-    compile 'com.android.support:appcompat-v7:19.+'
 }

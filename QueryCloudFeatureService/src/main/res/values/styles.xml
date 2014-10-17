@@ -5,7 +5,7 @@
         <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
     </style>
     <style name="OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
-        <item name="android:src">@drawable/abc_ic_search</item>
+        <item name="android:src">@android:drawable/ic_menu_search</item>
     </style>
 
 </resources>
