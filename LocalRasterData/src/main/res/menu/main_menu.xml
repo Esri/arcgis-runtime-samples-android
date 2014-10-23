@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_layer_raster"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="always"
+        android:title="@string/menu_layer_raster"/>
+    <item
+        android:id="@+id/menu_renderer"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:showAsAction="always"
+        android:title="@string/menu_renderer">
+        <menu>
+            <item
+                android:id="@+id/menu_renderer_blend"
+                android:title="@string/menu_renderer_blend"/>
+            <item
+                android:id="@+id/menu_renderer_hillshade"
+                android:title="@string/menu_renderer_hillshade"/>
+            <item
+                android:id="@+id/menu_renderer_rgb"
+                android:title="@string/menu_renderer_rgb"/>
+            <item
+                android:id="@+id/menu_renderer_stretch"
+                android:title="@string/menu_renderer_stretch"/>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menu_dir_up"
+        android:icon="@android:drawable/ic_menu_revert"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_dir_up"
+        android:visible="false"/>
+    <item
+        android:id="@+id/menu_dir_select"
+        android:icon="@drawable/folder"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_dir_select"
+        android:visible="false"/>
+
+</menu>
