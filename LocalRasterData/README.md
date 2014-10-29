@@ -23,3 +23,12 @@ Sample opens up with a default streetmap basemap with spatial reference [4326](h
 * basemap and elevation - This option will replace your current basemap and use the raster dataset file as your basemap and source for rendering.
 * operational and elevation - This options will overlay your raster data on top of the  existing basemap and source for rendering.
 
+After you have added your raster datasets and have an elevation source set you can use the rendering.  There are 4 rendering options available from the ```ActionBar``` renderer button.
+
+* Blend renderer
+* Hillshade renderer
+* RGB renderer
+* Stretch renderer
+
+Choose which renderer you want to use and complete the renderer dialog to perform update the raster.  
+
