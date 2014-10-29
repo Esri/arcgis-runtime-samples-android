@@ -227,8 +227,8 @@ public class MainActivity extends FragmentActivity implements
 			loadRasterLayerAsBaseMapLayer(rasterPath);
 			break;
 		case OPERATIONAL_LAYER:
-      loadRasterLayerAsOperationalLayer(rasterPath);
-      break;
+            loadRasterLayerAsOperationalLayer(rasterPath);
+            break;
 		case ELEVATION_SOURCE:
 			mElevationSourcePath = rasterPath;
 			break;
@@ -237,9 +237,9 @@ public class MainActivity extends FragmentActivity implements
 			mElevationSourcePath = rasterPath;
 			break;
 		case OPERATIONAL_LAYER_AND_ELEVATION_SOURCE:
-		  loadRasterLayerAsOperationalLayer(rasterPath);
-		  mElevationSourcePath = rasterPath;
-		  break;
+		    loadRasterLayerAsOperationalLayer(rasterPath);
+		    mElevationSourcePath = rasterPath;
+		    break;
 		case NONE:
 			break;
 		}
