@@ -51,25 +51,12 @@ public class MainActivity extends FragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    // Create a map view. Load a default raster from device otherwise load a
-    // basemap from online.
+    // Create a map view.
     mMapView = new MapView(this);
-    String rasterPath = getResources().getString(R.string.default_raster_layer);
-    File file = new File(rasterPath);
-    if (file.exists()) {
-      try {
-        RasterLayer rastLayer;
-        rastLayer = new RasterLayer(new FileRasterSource(rasterPath));
-        mMapView.addLayer(rastLayer);
-      } catch (FileNotFoundException e) {
-        e.printStackTrace();
-      }
-		} else {
-			mMapView.addLayer(new ArcGISTiledMapServiceLayer(
-					getResources().getString(R.string.basemap_url)));
-		}
-		
-		setContentView(mMapView);
+    // Add streets basemap
+    mMapView.addLayer(new ArcGISTiledMapServiceLayer(
+                getResources().getString(R.string.basemap_url)));
+    setContentView(mMapView);
 
 	}
 
