@@ -1,6 +1,8 @@
 # LocalRasterData
-The LocalRasterData app showcases the raster capabilities in the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/en/android/). It aims to be a starting off point for developers looking to extend the raster features with the ArcGIS Android. It demonstrates how to read raster data stored on your device and apply a renderer to a raster layer.
 
+![Local Raster Data App](local-raster-data.png)
+
+The LocalRasterData app showcases the raster capabilities in the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/en/android/). It aims to be a starting off point for developers looking to extend the raster features with the ArcGIS Android. It demonstrates how to read raster data stored on your device and apply a renderer to a raster layer.
 
 ## Features
 * FileRasterSource
