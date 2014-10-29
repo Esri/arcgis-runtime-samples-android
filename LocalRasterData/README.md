@@ -14,9 +14,6 @@ The LocalRasterData app showcases the raster capabilities in the [ArcGIS Runtime
 ## Sample Design
 A RasterLayer is constructed using a '''FileRasterSource''' which represents the raw raster file on a device. It can be added to the map to allow the raw raster file to be rendered. The '''RasterLayer''' can be added to a '''MapView''' as basemap layer or operational layer. On-the-fly reprojection on '''FileRasterSource''' is performed before instantiating a '''RasterLayer''' from the '''FileRasterSource''' to handle different spatial references when adding the layer as operational layer.  ArcGIS Runtime Layers support changing it's renderer.  '''RasterRenderer''' is the interface that all the renderers must implement. You apply the renderer through the '''RasterLayer.setRenderer()''' method.
 
-### MainActivity
-Entry point into the app.
-
 ## How to use Sample
 Sample opens up with a default streetmap basemap with spatial reference [4326](http://spatialreference.org/ref/epsg/wgs-84/).  You can add a raster dataset in the following ways:
 
