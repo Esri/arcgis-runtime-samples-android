@@ -18,3 +18,11 @@ A RasterLayer is constructed using a '''FileRasterSource''' which represents the
 Entry point into the app.
 
 ## How to use Sample
+Sample opens up with a default streetmap basemap with spatial reference [4326](http://spatialreference.org/ref/epsg/wgs-84/).  You can add a raster dataset in the following ways:
+
+* basemap layer - This option will replace the current basemap and use the raster dataset file as your basemap
+* operational layer - This option will overlay your raster data on top of existing basemap
+* elevation source - This option will use your raster dataset as the source for rendering on an existing raster dataset.  You must have a raster dataset representing your elevation area as a basemap layer.
+* basemap and elevation - This option will replace your current basemap and use the raster dataset file as your basemap and source for rendering.
+* operational and elevation - This options will overlay your raster data on top of the  existing basemap and source for rendering.
+
