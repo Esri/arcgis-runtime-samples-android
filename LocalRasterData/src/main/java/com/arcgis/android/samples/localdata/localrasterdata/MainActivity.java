@@ -29,6 +29,8 @@ import com.esri.android.map.Layer;
 import com.esri.android.map.MapView;
 import com.esri.android.map.RasterLayer;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
+import com.esri.android.map.event.OnStatusChangedListener;
+import com.esri.core.geometry.Envelope;
 import com.esri.core.raster.FileRasterSource;
 import com.esri.core.renderer.BlendRenderer;
 import com.esri.core.renderer.HillshadeRenderer;
@@ -47,6 +49,9 @@ public class MainActivity extends FragmentActivity implements
 	private String mInitDir = Environment.getExternalStorageDirectory()
 			.getPath();
 
+    // The extent of a Raster Layer, use to set the extent when raster layer loads
+    Envelope mRasterLayerExtent = null;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -57,6 +62,20 @@ public class MainActivity extends FragmentActivity implements
     mMapView.addLayer(new ArcGISTiledMapServiceLayer(
                 getResources().getString(R.string.basemap_url)));
     setContentView(mMapView);
+
+        // Set a Listener for map status changes
+        // This will be called when adding raster layers as operational layers
+        mMapView.setOnStatusChangedListener(new OnStatusChangedListener() {
+            @Override
+            public void onStatusChanged(Object source, STATUS status) {
+                // Set the map extent once the map has been initialized and a raster layer
+                // is added or changed; this will be indicated by the source being of type
+                // RasterLayer and the initialization of the raster layer.
+                if(source instanceof RasterLayer && STATUS.LAYER_LOADED == status){
+                    mMapView.setExtent(mRasterLayerExtent, 2);
+                }
+            }
+        });
 
 	}
 
@@ -212,8 +231,11 @@ public class MainActivity extends FragmentActivity implements
 	    if ((rastLayer == null) || (!rastLayer.isInitialized())) {
         return;
       }
-	    
+
 	    mMapView.addLayer(rastLayer);
+        // set extent to raster layer
+        mRasterLayerExtent = rastLayer.getFullExtent();
+
 	}
 	
 	private void addRasterLayer(String rasterPath, RasterLayerAction action) {
