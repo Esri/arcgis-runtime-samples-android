@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Raster Analysis</string>
+    <string name="app_name">Local Raster Data</string>
     <string name="measure">Measure Tool</string>
     <string name="basemap_url">http://server.arcgisonline.com/arcgis/rest/services/ESRI_StreetMap_World_2D/MapServer</string>
     <string name="default_raster_layer">ArcGIS/data/rasters/CADRG_bilinear/hawaii.sqlite</string>
