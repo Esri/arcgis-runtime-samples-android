@@ -60,22 +60,22 @@ public class MainActivity extends FragmentActivity implements
     mMapView = new MapView(this);
     // Add streets basemap
     mMapView.addLayer(new ArcGISTiledMapServiceLayer(
-                getResources().getString(R.string.basemap_url)));
+        getResources().getString(R.string.basemap_url)));
     setContentView(mMapView);
 
-        // Set a Listener for map status changes
-        // This will be called when adding raster layers as operational layers
-        mMapView.setOnStatusChangedListener(new OnStatusChangedListener() {
-            @Override
-            public void onStatusChanged(Object source, STATUS status) {
-                // Set the map extent once the map has been initialized and a raster layer
-                // is added or changed; this will be indicated by the source being of type
-                // RasterLayer and the initialization of the raster layer.
-                if(source instanceof RasterLayer && STATUS.LAYER_LOADED == status){
-                    mMapView.setExtent(mRasterLayerExtent, 2);
-                }
-            }
-        });
+    // Set a Listener for map status changes
+    // This will be called when adding raster layers as operational layers
+    mMapView.setOnStatusChangedListener(new OnStatusChangedListener() {
+        @Override
+        public void onStatusChanged(Object source, STATUS status) {
+      // Set the map extent once the map has been initialized and a raster layer
+      // is added or changed; this will be indicated by the source being of type
+      // RasterLayer and the initialization of the raster layer.
+      if(source instanceof RasterLayer && STATUS.LAYER_LOADED == status){
+        mMapView.setExtent(mRasterLayerExtent, 2);
+      }
+        }
+    });
 
 	}
 
@@ -167,8 +167,7 @@ public class MainActivity extends FragmentActivity implements
 			mInitDir = tempFile.getPath();
 		}
 
-			mElevationSourcePath = path;
-			addRasterLayer(path, action);
+    addRasterLayer(path, action);
 	}
 
 	@Override
@@ -196,8 +195,9 @@ public class MainActivity extends FragmentActivity implements
 	  
 	  try {
 	    FileRasterSource rasterSource = new FileRasterSource(rasterPath);
-	    if (asOperationalLayer)
-	      rasterSource.project(mMapView.getSpatialReference());
+	    if (asOperationalLayer) {
+        rasterSource.project(mMapView.getSpatialReference());
+      }
 	    
       rastLayer = new RasterLayer(rasterSource);
 	  } catch (IllegalArgumentException ie) {
@@ -220,21 +220,21 @@ public class MainActivity extends FragmentActivity implements
     reset();
     mMapView.removeAll();
     mMapView.recycle();
-    mMapView = new MapView(getApplicationContext());
+    mMapView = new MapView(this);
     mMapView.addLayer(rastLayer);
 
     setContentView(mMapView);
 	}
 
 	private void loadRasterLayerAsOperationalLayer(String rasterPath) {
-	   RasterLayer rastLayer = initRasterLayer(rasterPath, true);
-	    if ((rastLayer == null) || (!rastLayer.isInitialized())) {
-        return;
-      }
+    RasterLayer rastLayer = initRasterLayer(rasterPath, true);
+    if ((rastLayer == null) || (!rastLayer.isInitialized())) {
+      return;
+    }
 
-	    mMapView.addLayer(rastLayer);
-        // set extent to raster layer
-        mRasterLayerExtent = rastLayer.getFullExtent();
+    mMapView.addLayer(rastLayer);
+    // set extent to raster layer
+    mRasterLayerExtent = rastLayer.getFullExtent();
 
 	}
 	
@@ -249,8 +249,8 @@ public class MainActivity extends FragmentActivity implements
 			loadRasterLayerAsBaseMapLayer(rasterPath);
 			break;
 		case OPERATIONAL_LAYER:
-            loadRasterLayerAsOperationalLayer(rasterPath);
-            break;
+      loadRasterLayerAsOperationalLayer(rasterPath);
+      break;
 		case ELEVATION_SOURCE:
 			mElevationSourcePath = rasterPath;
 			break;

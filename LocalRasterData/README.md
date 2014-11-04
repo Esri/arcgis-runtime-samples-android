@@ -21,11 +21,11 @@ Sample opens up with a default streetmap basemap with spatial reference [4326](h
 
 * basemap layer - This option will replace the current basemap and use the raster dataset file as your basemap
 * operational layer - This option will overlay your raster data on top of existing basemap
-* elevation source - This option will use your raster dataset as the source for rendering on an existing raster dataset.  You must have a raster dataset representing your elevation area as a basemap layer.
-* basemap and elevation - This option will replace your current basemap and use the raster dataset file as your basemap and source for rendering.
-* operational and elevation - This options will overlay your raster data on top of the  existing basemap and source for rendering.
+* elevation source - This option will use your raster dataset as the elevation source for rendering on an existing raster dataset using BlendRenderer. You must have a raster dataset representing your elevation area as a basemap layer.
+* basemap and elevation - This option will replace your current basemap and use the raster dataset file as your basemap and elevation source of applying BlendRenderer on and existing raster dataset.
+* operational and elevation - This options will overlay your raster data on top of the  existing basemap and elevation source of applying BlendRenderer on and existing raster dataset.
 
-After you have added your raster datasets and have an elevation source set you can use the rendering.  There are 4 rendering options available from the ```ActionBar``` renderer button.
+After you have added your raster datasets you can set the rendering.  There are 4 rendering options available from the ```ActionBar``` renderer button.
 
 * Blend renderer
 * Hillshade renderer
