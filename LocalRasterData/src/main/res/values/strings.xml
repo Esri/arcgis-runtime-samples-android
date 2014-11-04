@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Local Raster Data</string>
+    <string name="measure">Measure Tool</string>
+    <string name="basemap_url">http://server.arcgisonline.com/arcgis/rest/services/ESRI_StreetMap_World_2D/MapServer</string>
+    <string name="default_raster_layer">ArcGIS/data/rasters/CADRG_bilinear/hawaii.sqlite</string>
+    <string name="filebrowser_text">Current folder: \n/THis/is/a/long/path/to/test/if/this/will/span/multiple/lines</string>
+    <string name="button_select">Select</string>
+    <string name="button_up">Up</string>
+    <string name="menu_dir_up">Up to parent directory</string>
+    <string name="menu_dir_select">Select current directory</string>
+    <string name="menu_layer">Add a layer</string>
+    <string name="menu_layer_raster">Raster layer</string>
+    <string name="menu_renderer">Set renderer</string>
+    <string name="menu_renderer_blend">Blend renderer</string>
+    <string name="menu_renderer_hillshade">Hillshade renderer</string>
+    <string name="menu_renderer_rgb">RGB renderer</string>
+    <string name="menu_renderer_stretch">Stretch renderer</string>
+    <string name="menu_raster_base_layer">basemap layer</string>
+    <string name="menu_raster_operational_layer">operational layer</string>
+    <string name="menu_raster_elevation_source">elevation source</string>
+    <string name="menu_raster_base_elevation">basemap and elevation</string>
+    <string name="menu_raster_operational_elevation">operational and elevation</string>
+    <string name="select_stretch_type">Select stretch type:</string>
+    <string name="radio_stretchtype_none">NONE</string>
+    <string name="radio_stretchtype_minmax">Min Max</string>
+    <string name="radio_stretchtype_stddev">Standard Devidation</string>
+    <string name="radio_stretchtype_histogram">Histogram Equalization</string>
+    <string name="radio_stretchtype_pecentclip">Pecent Clip</string>
+    <string name="rgbrenderer_parameters_ok">OK</string>
+    <string name="rgbrenderer_parameters_cancel">Cancel</string>
+    
+    <string name="set_hillshade_renderer_parameters">Input parameters for the renderer:</string>
+    <string name="set_hillshade_altitude">Altitude: </string>
+    <string name="set_hillshade_azimuth">Azimuth: </string>
+    <string name="set_hillshade_zfactor">Z factor: </string>
+    <string name="set_hillshade_slopetype">Slope type: </string>
+    <string name="set_hillshade_pixelsizefactor">Pixel size factor: </string>
+    <string name="set_hillshade_pixelsizepower">Pixel size power: </string>
+    <string name="set_blend_gamma">Gamma:</string>
+    <string name="parameter_double_hint">0.00</string>
+		
+</resources>

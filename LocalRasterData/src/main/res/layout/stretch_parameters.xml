@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rgbrenderer_parameters"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout 
+        android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal" >
+		    <TextView
+		        android:layout_width="200dp"
+		        android:layout_height="match_parent"
+		        android:text="@string/set_blend_gamma" />
+	    	<EditText
+				    android:id="@+id/parameter_stretch_gamma"
+				    android:layout_width="100dp"
+				    android:layout_height="match_parent"
+				    android:hint="@string/parameter_double_hint"
+				    android:inputType="numberSigned|numberDecimal" 
+						android:text="-1.0" />
+	  </LinearLayout>
+	  
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/select_stretch_type" />
+
+    <RadioGroup
+        android:id="@+id/rgbrenderer_parameters_group"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RadioButton
+            android:id="@+id/radio_stretchtype_none"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_stretchtype_none" 
+            android:checked="true"/>
+        
+         <RadioButton
+            android:id="@+id/radio_stretchtype_minmax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_stretchtype_minmax" />
+
+        <RadioButton
+            android:id="@+id/radio_stretchtype_stddev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_stretchtype_stddev" />
+        
+				 <RadioButton
+            android:id="@+id/radio_stretchtype_histogram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_stretchtype_histogram" />
+       
+        <RadioButton
+            android:id="@+id/radio_stretchtype_pecentclip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_stretchtype_pecentclip" />
+    </RadioGroup>
+
+    <SeekBar
+        android:id="@+id/parameter_stddev"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:progress="2"
+        android:max="100" />
+
+    <SeekBar
+        android:id="@+id/parameter_minclip"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:progress="2"
+        android:max="100" />
+
+    <SeekBar
+        android:id="@+id/parameter_maxclip"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:progress="2"
+        android:max="100" />
+
+</LinearLayout>

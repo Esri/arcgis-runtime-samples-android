@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hillshade_renderer_parameters"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/set_hillshade_renderer_parameters" />
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal" >
+		    <TextView
+		        android:layout_width="200dp"
+		        android:layout_height="match_parent"
+		        android:text="@string/set_hillshade_altitude" />
+	    	<EditText
+				    android:id="@+id/parameter_altitude"
+				    android:layout_width="100dp"
+				    android:layout_height="match_parent"
+				    android:hint="@string/parameter_double_hint"
+				    android:inputType="numberSigned|numberDecimal"
+				    android:text="45.0" />
+	  </LinearLayout>
+	  
+    <LinearLayout 
+        android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal" >
+		    <TextView
+		        android:layout_width="200dp"
+		        android:layout_height="match_parent"
+		        android:text="@string/set_hillshade_azimuth" />
+	    	<EditText
+				    android:id="@+id/parameter_azimuth"
+				    android:layout_width="100dp"
+				    android:layout_height="match_parent"
+				    android:hint="@string/parameter_double_hint"
+				    android:inputType="numberSigned|numberDecimal" 
+				    android:text="315.0"/>
+	  </LinearLayout>
+	  
+    <LinearLayout 
+        android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal" >
+		    <TextView
+		        android:layout_width="200dp"
+		        android:layout_height="match_parent"
+		        android:text="@string/set_hillshade_zfactor" />
+	    	<EditText
+				    android:id="@+id/parameter_zfactor"
+				    android:layout_width="100dp"
+				    android:layout_height="match_parent"
+				    android:hint="@string/parameter_double_hint"
+				    android:inputType="numberSigned|numberDecimal" 
+ 						android:text="1.0" />
+	  </LinearLayout>
+	  
+    <LinearLayout 
+        android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal" >
+	    	<TextView
+		        android:layout_width="200dp"
+		        android:layout_height="match_parent"
+		        android:text="@string/set_hillshade_slopetype" />
+        <Spinner 
+            android:id="@+id/parameter_slopetype"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal" >
+		    <TextView
+		        android:layout_width="200dp"
+		        android:layout_height="match_parent"
+		        android:text="@string/set_hillshade_pixelsizefactor" />
+	    	<EditText
+				    android:id="@+id/parameter_pixelsizefactor"
+				    android:layout_width="100dp"
+				    android:layout_height="match_parent"
+				    android:hint="@string/parameter_double_hint"
+				    android:inputType="numberSigned|numberDecimal"
+						android:text="1.0" />
+	  </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal" >
+		    <TextView
+		        android:layout_width="200dp"
+		        android:layout_height="match_parent"
+		        android:text="@string/set_hillshade_pixelsizepower" />
+	    	<EditText
+				    android:id="@+id/parameter_pixelsizepower"
+				    android:layout_width="100dp"
+				    android:layout_height="match_parent"
+				    android:hint="@string/parameter_double_hint"
+				    android:inputType="numberSigned|numberDecimal" 
+						android:text="1.0" />
+	  </LinearLayout>
+    
+    <LinearLayout 
+        android:id="@+id/parameter_gamma_group"
+        android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal" 
+		    android:visibility="invisible">
+		    <TextView
+		        android:layout_width="200dp"
+		        android:layout_height="match_parent"
+		        android:text="@string/set_blend_gamma" />
+	    	<EditText
+				    android:id="@+id/parameter_gamma"
+				    android:layout_width="100dp"
+				    android:layout_height="match_parent"
+				    android:hint="@string/parameter_double_hint"
+				    android:inputType="numberSigned|numberDecimal" 
+						android:text="-1.0" />
+	  </LinearLayout>
+    
+ </LinearLayout>
+    

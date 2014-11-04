@@ -3,7 +3,7 @@
   <component name="FacetManager">
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
-        <option name="GRADLE_PROJECT_PATH" value=":MapRotation" />
+        <option name="GRADLE_PROJECT_PATH" value=":LocalRasterData" />
       </configuration>
     </facet>
     <facet type="android" name="Android">
@@ -83,6 +83,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="support-v4-19.0.1" level="project" />
     <orderEntry type="module" module-name="arcgis-android-v10.2.4" exported="" />
   </component>
 </module>
