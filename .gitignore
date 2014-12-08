@@ -6,9 +6,6 @@ local.properties
 .iml
 build/
 
-# gradle files
-.gradle
-
 # arcgis lib module
 arcgis-android-v10.2.4
 
