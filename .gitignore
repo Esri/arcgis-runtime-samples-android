@@ -3,17 +3,14 @@ local.properties
 
 # Intellij project files
 .idea
-#.idea/workspace.xml
+.iml
 build/
 
 # gradle files
 .gradle
 
 # arcgis lib module
-arcgis-android-v10.2.3/
-arcgis-android-v10.2.3.aar
 arcgis-android-v10.2.4
-arcgis-android-v10.2.4.aar
 
 # SublimeText
 /*.sublime-project
