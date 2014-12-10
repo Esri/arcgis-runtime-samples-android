@@ -30,6 +30,5 @@ android {
 
 dependencies {
     // module dependency
-    compile project(':arcgis-android-v10.2.4')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
