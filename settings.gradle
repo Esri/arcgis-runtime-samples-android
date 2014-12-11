@@ -1,1 +1,1 @@
-include ':AttributeQuery',':HelloWorld', ':Basemaps', ':MapRotation', ':SwitchMaps', ':QueryCloudFeatureService', ':FeatureServiceTableQuery', ':PlaceSearch', ':FragmentManagement', ':MapLegend', 'WmsLayer', ':LocalRasterData'
+include ':QueryTask',':HelloWorld', ':Basemaps', ':MapRotation', ':SwitchMaps', ':QueryCloudFeatureService', ':FeatureServiceTableQuery', ':PlaceSearch', ':FragmentManagement', ':MapLegend', 'WmsLayer', ':LocalRasterData'
