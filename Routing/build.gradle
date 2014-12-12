@@ -7,7 +7,9 @@ android {
     defaultConfig {
         applicationId "com.esri.arcgis.android.samples.routing"
         minSdkVersion 15
-        targetSdkVersion 19
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
     }
 
     packagingOptions{
