@@ -63,9 +63,9 @@ public class MainActivity extends Activity {
 				try {
 					geoMessages = mil2525cParser.parse(is);
 
-				} catch (XmlPullParserException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
+				} catch (XmlPullParserException ex){
+                    Log.e("ERROR", ex.getLocalizedMessage());
+                } catch (IOException e) {
 					e.printStackTrace();
 				} finally { // make sure InputStream is closed after the app is
 							// finished
@@ -112,6 +112,7 @@ public class MainActivity extends Activity {
 				Layer[] layers = messageGrLayer.getLayers();
 				for (Layer layer : layers) {
 					if (layer instanceof GraphicsLayer) {
+                        GraphicsLayer gLayer = (GraphicsLayer) layer;
 						int[] graphics = gLayer.getGraphicIDs(x, y, 50);
 						if (graphics != null && graphics.length > 0) {
 							Log.d("Test", "Graphic is found");
@@ -168,10 +169,8 @@ public class MainActivity extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+
+		return id == R.id.action_settings || super.onOptionsItemSelected(item);
 	}
 
 }
