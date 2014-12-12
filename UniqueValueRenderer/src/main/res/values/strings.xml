@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="states_URL">http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_StateCityHighway_USA/MapServer/1</string>
+    <string name="result_URL">http://services.arcgisonline.com/arcgis/rest/services/Demographics/USA_Diversity_Index/MapServer</string>
+    <string name="app_name">UniqueValueRenderer</string>
+    <string name="SUB_REGION">SUB_REGION</string>
+    <string name="STATE_NAME">STATE_NAME</string>
+    <string name="AREA">AREA</string>
+    <string name="Mtn">Mtn</string>
+    <string name="Pacific">Pacific</string>
+    <string name="N_Eng">N Eng</string>
+    <string name="S_Atl">S Atl</string>
+    <string name="Mid_Atl">Mid Atl</string>
+    <string name="E_N_Cen">E N Cen</string>
+    <string name="W_N_Cen">W N Cen</string>
+    <string name="E_S_Cen">E S Cen</string>
+    <string name="W_S_Cen">W S Cen</string>
+    <string name="NAME">Name</string>
+    <string name="LANDAREA">Land Area in Square Miles</string>
+    <string name="ID">ID</string>
+    <string name="ST_ABBREV">State Abbreviation</string>
+    <string name="TOTPOP_CY">2012 Total Population (Esri)</string>
+
+</resources>

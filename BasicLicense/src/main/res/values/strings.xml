@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BasicLicense</string>
+    <string name="action_settings">Settings</string>
+    <string name="basic_license_succeeded">"License level has been successfully set to Basic."</string>
+    <string name="valid_client_id_required">Failed to set license level to Basic. You need to provide a valid client id.\n\n
+      1. Go to https://developers.arcgis.com.\n
+      2. Sign in with your ArcGIS developer account.\n
+      3. Create an application. This will give you access to a client id string.\n
+      4. Pass the client id string to ArcGISRuntime.setClientId().</string>
+</resources>

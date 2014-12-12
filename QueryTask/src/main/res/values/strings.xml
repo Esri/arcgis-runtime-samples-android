@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">QueryTask</string>
+    <!-- Button strings -->
+    <string name="button_household">Average Household > 3.5</string>
+    <string name="button_reset">Clear Graphics</string>
+    
+    <!-- Service URL -->
+    <string name="query_service">http://services.arcgisonline.com/ArcGIS/rest/services/Demographics/USA_Average_Household_Size/MapServer</string>
+
+</resources>

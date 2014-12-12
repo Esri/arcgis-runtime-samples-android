@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.esri.android.map.MapView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/map"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    mapoptions.Center="34.056215, -117.195668"
+    mapoptions.MapType="Topo"
+    mapoptions.ZoomLevel="16" >
+</com.esri.android.map.MapView>
