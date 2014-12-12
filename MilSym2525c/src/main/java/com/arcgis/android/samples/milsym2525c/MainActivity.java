@@ -108,12 +108,10 @@ public class MainActivity extends Activity {
 
 			@Override
 			public boolean onLongPress(float x, float y) {
-
 				// get to the layer where the selected graphic is
 				Layer[] layers = messageGrLayer.getLayers();
 				for (Layer layer : layers) {
 					if (layer instanceof GraphicsLayer) {
-						GraphicsLayer gLayer = (GraphicsLayer) layer;
 						int[] graphics = gLayer.getGraphicIDs(x, y, 50);
 						if (graphics != null && graphics.length > 0) {
 							Log.d("Test", "Graphic is found");
