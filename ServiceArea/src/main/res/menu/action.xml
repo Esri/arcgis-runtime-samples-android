@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+<!-- Refresh -->
+    <item android:id="@+id/action_refresh"
+          android:icon="@drawable/ic_action_refresh"
+          android:title="@string/action_refresh"
+          android:showAsAction="ifRoom"
+           />
+    <item android:id="@+id/set_breaks"
+          android:icon="@drawable/ic_action_edit"
+          android:title="@string/set_breaks"
+          android:showAsAction="ifRoom"
+           />
+</menu>

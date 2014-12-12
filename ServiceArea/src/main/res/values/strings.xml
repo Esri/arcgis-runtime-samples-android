@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Service Area Sample</string>
+
+    <!-- na service -->
+    <string name="naservice_url">http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Network/USA/NAServer/Service%20Area</string>
+    <string name="sa_null_response">Service Area Task did not return a result!</string>
+    <string name="route_label">Press and hold map to route to that point\nClick segments for more information</string>
+    <string name="text_break1">Drive Time Minutes</string>
+    <string name="text_break2">Drive Time Minutes</string>
+    <string name="text_break3">Drive Time Minutes</string>
+    <string name="edittext1">1.0</string>
+    <string name="edittext2">2.0</string>
+    <string name="edittext3">3.0</string>
+    <string name="button_text">OK</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="set_breaks">Impedance (Cost Attribute)</string>
+    
+
+
+</resources>
