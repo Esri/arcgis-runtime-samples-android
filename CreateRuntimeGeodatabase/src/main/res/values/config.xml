@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="config.data.sdcard.offline.dir">ArcGIS/samples/CRGdb</string>
+    <string name="config.geodatabase.name">wildfire</string>
+    <string name="config.local.basemap">SanFrancisco.tpk</string>
+
+</resources>
