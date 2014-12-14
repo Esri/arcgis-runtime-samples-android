@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_add"
+        android:icon="@drawable/ic_action_new"
+        android:title="@string/action_add"
+        android:showAsAction="always|withText"/>
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/ic_action_save"
+        android:title="@string/action_save"
+        android:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_discard"
+        android:icon="@drawable/ic_action_cancel"
+        android:title="@string/action_discard"
+        android:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@drawable/ic_action_discard"
+        android:title="@string/action_delete"
+        android:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_undo"
+        android:icon="@drawable/ic_action_undo"
+        android:title="@string/action_undo"
+        android:showAsAction="ifRoom"/>
+    
+</menu>
