@@ -1,4 +1,5 @@
 include 'AddCSV2GraphicsLayer',
+        'AttributeEditor',
         'Basemaps',
         'BasicLicense',
         'ClassBreaksRenderer',

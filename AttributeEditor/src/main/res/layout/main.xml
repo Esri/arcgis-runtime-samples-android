@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.esri.android.map.MapView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/map"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  initExtent="-10868502.895856911 4470034.144641369 -10837928.084542884 4492965.25312689">  
+</com.esri.android.map.MapView>
