@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ViewShed</string>
+    <string name="go_button_text">go</string>
+    <string name="delete_button_text">delete</string>
+    <string name="image_desc">map icons</string>
+    <string name="go">Click to get the Viewshed</string>
+    <string name="delete">Delete</string>
+
+</resources>

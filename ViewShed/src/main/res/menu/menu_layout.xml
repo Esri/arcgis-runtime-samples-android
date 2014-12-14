@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/go"
+        android:icon="@drawable/ic_action_play"
+        android:showAsAction="always"
+        android:title="@string/go"/>
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/ic_action_discard"
+        android:showAsAction="always"
+        android:title="@string/delete"/>
+
+</menu>
