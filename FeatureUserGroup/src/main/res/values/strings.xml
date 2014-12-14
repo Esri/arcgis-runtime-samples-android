@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">FeaturedUserGroup Sample</string>
+    <string name="featuredGroupsTitle">Featured Groups in your portal:</string>
+    <string name="itemListTitle">Items in the selected group:</string>
+    <string name="fetchingGroups">Fetching groups…</string>
+    <string name="fetchingItems">Fetching items…</string>
+    <string name="fetchingMap">Fetching map…</string>
+    <string name="fetchDataFailed">Fetch data failed</string>
+    <string name="webmapLoadFailed">Webmap failed to load</string>
+
+</resources>
