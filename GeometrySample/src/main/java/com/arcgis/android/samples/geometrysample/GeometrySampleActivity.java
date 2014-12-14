@@ -20,7 +20,7 @@ import android.support.v4.app.FragmentTransaction;
 public class GeometrySampleActivity extends FragmentActivity implements
 		SampleListFragment.OnSampleNameSelectedListener {
 
-	ProjectFragment projectFrag;
+//	ProjectFragment projectFrag;
 
 	BufferFragment bufferFrag;
 
@@ -66,11 +66,11 @@ public class GeometrySampleActivity extends FragmentActivity implements
 
 		FragmentTransaction fragTransaction = getSupportFragmentManager().beginTransaction();
 
-		if (projectFrag != null && !projectFrag.isDetached()) {
-
-			fragTransaction.detach(projectFrag);
-			projectFrag = null;
-		}
+//		if (projectFrag != null && !projectFrag.isDetached()) {
+//
+//			fragTransaction.detach(projectFrag);
+//			projectFrag = null;
+//		}
 
 		if (bufferFrag != null && !bufferFrag.isDetached()) {
 
@@ -99,20 +99,20 @@ public class GeometrySampleActivity extends FragmentActivity implements
 		switch (position) {
 		case 0:
 
-			if (projectFrag == null || projectFrag.getShownIndex() != position) {
-				// Make new fragment to show this selection.
-				projectFrag = ProjectFragment.newInstance(position);
+//			if (projectFrag == null || projectFrag.getShownIndex() != position) {
+//				// Make new fragment to show this selection.
+//				projectFrag = ProjectFragment.newInstance(position);
 
 				// Execute a transaction, replacing any existing fragment
 				// with this one inside the frame.
 				// FragmentTransaction ft =
 				// getSupportFragmentManager().beginTransaction();
 
-				fragTransaction.replace(R.id.sample_fragment, projectFrag);
-
-				fragTransaction.setTransition(FragmentTransaction.TRANSIT_NONE);
-				fragTransaction.commit();
-			}
+//				fragTransaction.replace(R.id.sample_fragment, projectFrag);
+//
+//				fragTransaction.setTransition(FragmentTransaction.TRANSIT_NONE);
+//				fragTransaction.commit();
+//			}
 
 			break;
 

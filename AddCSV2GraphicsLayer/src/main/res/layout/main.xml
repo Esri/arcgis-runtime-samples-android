@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+ 
+	<Button android:id="@+id/datePicker1"        
+		android:layout_width="fill_parent"        
+		android:layout_height="wrap_content"        
+		android:text="@string/date" />    
+    
+    <!-- MapView layout and initial extent -->
+    <com.esri.android.map.MapView
+  		android:id="@+id/map"
+  		android:layout_width="fill_parent"
+  		android:layout_height="fill_parent"
+  		initExtent = "-139.236077, 22.187405, -60.222405, 55.825973">
+  	</com.esri.android.map.MapView>
+  	
+</LinearLayout>
