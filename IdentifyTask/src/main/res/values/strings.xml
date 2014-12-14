@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">IdentifyTask</string>
+
+    <!-- Service URL's -->
+
+    <string name="identify_task_url_for_avghouseholdsize">http://services.arcgisonline.com/arcgis/rest/services/Demographics/USA_Diversity_Index/MapServer</string>
+    <string name="identify_task_url_for_populationdensity">http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_Population_Density/MapServer</string>
+
+    <!-- Attributes -->
+    <string name="NAME">Name</string>
+    <string name="LANDAREA">Land Area in Square Miles</string>
+    <string name="ID">ID</string>
+    <string name="ST_ABBREV">State Abbreviation</string>
+    <string name="TOTPOP_CY">2012 Total Population (Esri)</string>
+
+</resources>
