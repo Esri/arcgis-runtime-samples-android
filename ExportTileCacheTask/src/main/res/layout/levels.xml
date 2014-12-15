@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <CheckBox
+        android:id="@+id/zero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0" />
+    
+    <CheckBox
+        android:id="@+id/one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1" />
+    
+    <CheckBox
+        android:id="@+id/two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2" />
+    
+    <CheckBox
+        android:id="@+id/three"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3" />
+    
+    <CheckBox
+        android:id="@+id/four"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="4" />
+    
+    <CheckBox
+        android:id="@+id/five"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5" />
+    
+    <CheckBox
+        android:id="@+id/six"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="6" />
+    
+    <CheckBox
+        android:id="@+id/seven"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="7" />
+    
+    <CheckBox
+        android:id="@+id/eight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="8" />
+    
+    <CheckBox
+        android:id="@+id/nine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="9" />
+    
+    <CheckBox
+        android:id="@+id/ten"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10" />
+    
+    <CheckBox
+        android:id="@+id/eleven"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="11" />
+    
+    <CheckBox
+        android:id="@+id/tweleve"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12" />
+    
+    <CheckBox
+        android:id="@+id/thirteen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="13" />
+    
+    <CheckBox
+        android:id="@+id/fourteen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="14" />
+    
+    <CheckBox
+        android:id="@+id/fifteen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="15" />
+    
+    <CheckBox
+        android:id="@+id/sixteen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="16" />
+    
+    <CheckBox
+        android:id="@+id/seventeen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="17" />
+    
+    <CheckBox
+        android:id="@+id/eighteen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="18" />
+    
+    <CheckBox
+        android:id="@+id/nineteen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="19" />
+    
+
+</ListView>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    tools:context=".ExportTileCacheTaskSampleActivity" >
+
+    <com.esri.android.map.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        initExtent="-1.5137565197133305E7, 101755.71598967072, -8199782.955121704, 9895591.64762938" >
+    </com.esri.android.map.MapView>
+
+</RelativeLayout>

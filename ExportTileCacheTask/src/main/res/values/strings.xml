@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- app name -->
+    <string name="app_name">Export Tiles</string>
+    <!-- services and offline dir -->
+    <string name="tileServiceURL">http://sampleserver6.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer</string>
+    <string name="offline_dir">/ArcGIS/samples/tiledcache/</string>
+    <!-- action bar menu items -->
+    <string name="selectlevel">Select Levels</string>
+    <string name="download">Download</string>
+    <string name="switch_map">Switch Maps</string>
+    <string name="load_online_layer">LoadOnlineLayer</string>
+
+</resources>
