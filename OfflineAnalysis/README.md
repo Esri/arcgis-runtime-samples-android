@@ -21,6 +21,8 @@ This sample uses **Beta** native libs that are only available in the [SDK downlo
 1. Create a **/src/main/jniLibs** directory in the sample project
 2. From the root of your SDK download directory, copy the **/libs/[platform]/librs.main.so** and **/libs/[platform]/librender_script_analysis.soo** into the **jniLibs** folder created in step 1.
 
+Where **[platform]** represents the platform architecture your device is running, e.g.  **/libs/armeabi-v7a/librs.main.so** and **/libs/armeabi-v7a/librender_script_analysis.soo** for ARM.
+
 ### Add Raster File
 You will need to provision a raster dem file to your android device prior to working with this sample.  A list of supported raster types can be found [here](https://developers.arcgis.com/android/guide/release-notes.htm#ESRI_SECTION1_74BB7A1174F74D27BB681BE5EF619C48).  You can put your raster file anywhere on your device that the app has access to.  By default the app will look for your raster file starting from the primary external storage directory returned by ```Environment.getExternalStorageDirectory()``` with **ArcGIS/samples/OfflineAnalysis/** subdirectory.  You can change the data path by editing the **string.xml** resource file.  It is mandatory that you change the raster file name variable to point to your raster file.  Open **strings.xml** and edit the following string resource variables:
 
