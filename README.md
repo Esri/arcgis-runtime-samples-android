@@ -1,16 +1,12 @@
 # Overview
-ArcGIS Runtime SDK for Android v10.2.5 samples for Android Studio.  The ArcGIS Android SDK Gradle samples depends on the [ArcGIS Runtime SDK for Android library module for Android Studio](https://github.com/Esri/arcgis-android-api-lib-module) you will need to clone both repositories and add the ArcGIS Android API Library Module to the gradle sample project.
-
-# Early Access Preview
-**Caution:** The ArcGIS Android SDK Gradle samples are currently available as an **early access preview** for use with [Android Studio](http://developer.android.com/sdk/installing/studio.html) and the [ArcGIS Android API Library Module](https://github.com/ArcGIS/arcgis-android-api-lib-module).  If you are not comfortable using an unfinished product, you may want to use ArcGIS Android Samples in the Eclipse Plugin bundled with the [ArcGIS Android SDK](https://developers.arcgis.com/android/).
+ArcGIS Runtime SDK for Android v10.2.5 samples for Android Studio.  The repo contains an [Android Studio](http://developer.android.com/sdk/index.html) project with multi-project sample app modules that can be run from within the Android Studio IDE.
 
 # Prerequisites
 - [JDK 6 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-- [Android Studio (Beta) 0.8.0+](https://developer.android.com/sdk/installing/studio.html) with support for gradle plugin ```0.12.+```.  
-- Android Support Repository.  Ensure that your SDK Manager for Android Studio has the [support repository](https://developer.android.com/tools/support-library/setup.html) installed.  We make use of [v7 appcompat library](http://developer.android.com/tools/support-library/features.html#v7-appcompat) to follow [Android design guidelines](http://developer.android.com/design/index.html). Please ensure you have the latest version of the Android Support Library installed with your Android SDK.
+- [Android Studio](http://developer.android.com/sdk/index.html)
 
 # Developer Instructions
-The **ArcGIS Android SDK Samples** are Gradle based Android projects which can be directly cloned and imported into Android Studio.  The **ArcGIS Android SDK Samples** require the **ArcGIS Android API Library Module** to be imported into the **ArcGIS Android SDK Samples** project.
+The **ArcGIS Android SDK Samples** are [Gradle](https://www.gradle.org) based Android projects which can be directly cloned and imported into Android Studio.
 
 ## Fork the repo
 If you haven't already, go to https://github.com/Esri/arcgis-android-sdk-gradle-samples and click the **Fork** button and go to https://github.com/Esri/arcgis-android-api-lib-module and click the **Fork** button.
@@ -18,17 +14,15 @@ If you haven't already, go to https://github.com/Esri/arcgis-android-sdk-gradle-
 ## Clone the repo
 
 ### Android Studio
-[Clone the **ArcGIS Android SDK Samples** and **ArcGIS Android API Library Module** in Android Studio](http://www.jetbrains.com/idea/webhelp/cloning-a-repository-from-github.html).
+[Clone the **ArcGIS Android SDK Samples** in Android Studio:
 
 1. Choose **VCS > Checkout from Version Control > GitHub** on the main menu.
 2. From the **Repository** drop-down list, select the source repository to clone the data from.
 3. In the **Folder** text box, specify the directory where the local repository for cloned sources will be set up.
 4. Click the Clone button to start cloning the sources from the specified remote repository.
 
-![clone](https://github.com/ArcGIS/arcgis-android-sdk-gradle-samples/blob/master/as-clone.png)
-
 ### Command line Git
-[Clone the **ArcGIS Android SDK Samples** and **ArcGIS Android API Library Module**](https://help.github.com/articles/fork-a-repo#step-2-clone-your-fork)
+[Clone the ArcGIS Android SDK Samples](https://help.github.com/articles/fork-a-repo#step-2-clone-your-fork)
 
 Open your terminal, navigate to your working directory, use ```git clone``` to get a copy of the repo.
 
@@ -38,22 +32,11 @@ $ git clone git@github.com:YOUR-USERNAME/arcgis-android-sdk-gradle-samples.git
 $ git clone git@github.com:YOUR-USERNAME/arcgis-android-api-lib-module.git
 ```
 
-** Now that we have both repos cloned locally we can begin to import our gradle samples project and add the **ArcGIS Android API Library Module** module to that project as a dependency.**
-
 ## Import Gradle Sample project into Android Studio
 Once the project is cloned to disk you can import into Android Studio:
 
-* From the toolbar select **File > Import Project**
-* Navigate to the root project folder, *arcgis-android-sdk-gradle-samples* and click **OK**
-
-## Add ArcGIS Android library module
-This is where we start to turn our project into an ArcGIS for Android project.
-
-* Right Click your project and select **Open Module Settings**
-* Click the ```+``` sign above **SDK Location** and select **More Modules > Import Existing Project** then click **Next**
-* Navigate to the folder where you cloned the ```arcgis-android-api-lib-module``` repo and select the ```arcgis-android-v10.2.3``` folder which contains the library module.  Do not import the entire project, just the library module e.g. ```/[path-to-repo]/arcgis-android-api-lib-module/arcgis-android-v10.2.3``` and click **OK** then **Finish** to import the library module.
-
-**NOTE** If you navigate to the root project directory you will see all available modules listed.  Ensure that ```arcgis-android-v10.2.3``` module is select from your project and that the **app** module is unchecked.
+* From the toolbar select **File > Import Project**, or **Import Non-Android Studio project** from the Welcome Quick Start.
+* Navigate to the root project folder, **arcgis-android-sdk-gradle-samples-10.2.5** directory and click **OK**
 
 ## Run a sample
 You should now be able to run any of the included samples.  We will use the ```HelloWorld``` Sample as an example.  
@@ -71,6 +54,8 @@ Anyone and everyone is welcome to contribute. We do accept pull requests.
 2. Report Issues
 3. Contribute Code
 4. Improve Documentation
+
+Please see our [guidelines for contributing doc](https://github.com/Esri/contributing/blob/master/README.md)
 
 ## Licensing
 Copyright 2014 Esri
