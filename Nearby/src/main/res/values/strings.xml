@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Nearby!</string>
+    <string name="app_name">Nearby Sample</string>
+
+    <!-- Menu titles -->
+    <string name="menu_bar">Bar</string>
+    <string name="menu_coffee">Coffee</string>
+
+    <!-- Basemap Service URL -->
+    <string name="basemap_url">http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer</string>
+
+</resources>
