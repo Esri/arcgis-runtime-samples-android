@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">LocateMGRS</string>
+    <string name="basemap_url">http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer</string>
+
+</resources>
