@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="horizontal"
+    android:paddingTop="10dp"
+    android:shrinkColumns="1"
+    android:stretchColumns="0" >
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/popup_attribute_fieldname" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/value_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="left|center_vertical"
+            android:hint="@string/ags_enter_a_date"
+            android:padding="@dimen/button_padding" />
+
+        <Button
+            android:id="@+id/now_button"
+            style="@style/now_button_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:drawableLeft="@drawable/clock_light"
+            android:ellipsize="end"
+            android:gravity="left|center_vertical"
+            android:maxLines="3"
+            android:text="@string/use_current" />
+    </TableRow>
+
+</TableLayout>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <FrameLayout
+        android:id="@+id/title_view_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/attribute_view_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </FrameLayout>
+    <LinearLayout 
+            android:id="@+id/second_inner_linearlayout"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/find_directions_button"
+            android:layout_width="wrap_content"
+    				android:layout_height="wrap_content" 
+    				android:layout_marginLeft="50dp"
+    				android:background="@null"
+    				android:contentDescription="@string/direction_btn_text"
+    				android:onClick="findDirection"
+           	android:src="@android:drawable/ic_menu_directions"/>
+        <ImageButton
+            android:id="@+id/favorite_button"
+            android:layout_width="wrap_content"
+    				android:layout_height="wrap_content" 
+    				android:layout_marginLeft="50dp"
+    				android:background="@null"
+    				android:contentDescription="@string/favorite_btn_text"
+    				android:onClick="addFavorite"
+           	android:src="@android:drawable/star_big_on"/>
+        <ImageButton
+            android:id="@+id/share_button"
+            android:layout_width="wrap_content"
+    				android:layout_height="wrap_content" 
+    				android:layout_marginLeft="50dp"
+    				android:background="@null"
+    				android:contentDescription="@string/share_btn_text"
+    				android:onClick="share"
+           	android:src="@android:drawable/ic_menu_share"/>
+    </LinearLayout>
+    <FrameLayout
+        android:id="@+id/media_view_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/attachment_view_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </FrameLayout>
+
+</LinearLayout>

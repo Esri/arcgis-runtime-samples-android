@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World!</string>
+    <string name="app_name">PopupUICustomization Demo</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_save">Save</string>
+    <string name="menu_camera">Add Attachment</string>
+    <string name="menu_delete">Delete</string>
+    <string name="attachments">Attachments</string>
+    <string name="media">Media</string>
+    <string name="use_current">Use current</string>
+    <string name="direction_btn_text">find direction</string>
+    <string name="favorite_btn_text">add favorite</string>
+    <string name="share_btn_text">share</string>
+    <string name="field_value_text">fieldvalue</string>
+    <string name="field_name_text">FIELDNAME</string>
+</resources>
