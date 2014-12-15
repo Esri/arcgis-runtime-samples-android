@@ -2,15 +2,15 @@
 The offline analysis app shows how to perform Line of Sight and Viewshed analysis on raster files provisioned on an android device.  The Analysis features are a [BETA API](https://developers.arcgis.com/android/guide/release-notes.htm#ESRI_SECTION1_A1A4B44D91824E9FB79D2E7CF32B4CA1) at v10.2.4 and are subject to change when the API goes final.  We encourage any and all feedback on the API and it's feature capability.  
 
 ## Features
-* Direct read of Raster files
+* Direct read of raster files
 * Line of Sight analysis
 * Viewshed analysis
 * Override MapOnTouchListener for custom gestures
 
 ## Sample Design
-This sample has one class, ```MainActivity```, which has two inner classes to override the ```MapOnTounchListener``` for custom gestures.  The raster file local to your device is added to a ```MapView``` in the ```onCreate``` method.  There are two ```Menu``` items added to the ```ActionBar``` in the ```OnCreateOptionsMenu``` method.  The core functionality is provided by the ```performLOS``` and ```calculateViewShed``` methods.  These show the patterns for Line of Sight and Viewshed analysis respectfully.  The high level pattern is offered below:  
+This sample has one class, ```MainActivity```, which has two inner classes to override the ```MapOnTounchListener``` for custom gestures.  The raster file local to your device is added to a ```MapView``` in the ```onCreate``` method.  There are two ```Menu``` items added to the ```ActionBar``` in the ```OnCreateOptionsMenu``` method.  The core functionality is provided by the ```performLOS``` and ```calculateViewshed``` methods.  These show the patterns for Line of Sight and Viewshed analysis respectfully.  The high level pattern is offered below:
 
-* Create an Analysis Object, ```LineOfSight``` or ```Viewshed```, from a ```Raster```
+* Create an analysis object, ```LineOfSight``` or ```Viewshed```, from a raster file
 * Create a ```(Raster)Layer``` from the analysis object
 * Set some observer features
 * Set an observer location, typically through interaction with the map, e.g. ```MapOnTounchListener```
@@ -19,7 +19,7 @@ This sample has one class, ```MainActivity```, which has two inner classes to ov
 This sample uses **Beta** native libs that are only available in the [SDK download](https://developers.arcgis.com/android).  Download the SDK and follow the instructions below to work with this sample.
 
 1. Create a **/src/main/jniLibs** directory in the sample project
-2. From the root of your SDK download directory, copy the **/libs/[platform]/librs.main.so** and **/libs/[platform]/libruntimecore_java.so** into the **jniLibs** folder created in step 1.
+2. From the root of your SDK download directory, copy the **/libs/[platform]/librs.main.so** and **/libs/[platform]/librender_script_analysis.soo** into the **jniLibs** folder created in step 1.
 
 ### Add Raster File
 You will need to provision a raster dem file to your android device prior to working with this sample.  A list of supported raster types can be found [here](https://developers.arcgis.com/android/guide/release-notes.htm#ESRI_SECTION1_74BB7A1174F74D27BB681BE5EF619C48).  You can put your raster file anywhere on your device that the app has access to.  By default the app will look for your raster file starting from the primary external storage directory returned by ```Environment.getExternalStorageDirectory()``` with **ArcGIS/samples/OfflineAnalysis/** subdirectory.  You can change the data path by editing the **string.xml** resource file.  It is mandatory that you change the raster file name variable to point to your raster file.  Open **strings.xml** and edit the following string resource variables:
@@ -47,7 +47,7 @@ $ adb push raster.tiff /sdcard/ArcGIS/samples/OfflineAnalysis/
 More information about using the Android Debug Bridget can be found [here](http://developer.android.com/tools/help/adb.html).  
 
 ## Sample Usage
-**Spatial Analysis**
+**Offline Analysis**
 This sample app supports both Line of Sight and Viewshed analysis on an elevation raster type. The app will open to with the raster file as the basemap of the map.  
 
 * Select the ```ActionBar``` overlay button
