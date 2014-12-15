@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <group android:checkableBehavior="single" >
+        <item
+            android:id="@+id/pop2007"
+            android:showAsAction="never"
+            android:title="@string/POP2007"/>
+        <item
+            android:id="@+id/pop2000"
+            android:showAsAction="never"
+            android:title="@string/POP2000"/>
+        <item
+            android:id="@+id/pop00sqmi"
+            android:showAsAction="never"
+            android:title="@string/POP00_SQMI"/>
+        <item
+            android:id="@+id/pop07sqmi"
+            android:showAsAction="never"
+            android:title="@string/POP07_SQMI"/>
+        <item
+            android:id="@+id/white"
+            android:showAsAction="never"
+            android:title="@string/WHITE"/>
+        <item
+            android:id="@+id/black"
+            android:showAsAction="never"
+            android:title="@string/BLACK"/>
+        <item
+            android:id="@+id/hispanic"
+            android:showAsAction="never"
+            android:title="@string/HISPANIC"/>
+        <item
+            android:id="@+id/ameries"
+            android:showAsAction="never"
+            android:title="@string/AMERI_ES"/>
+    </group>
+
+</menu>
