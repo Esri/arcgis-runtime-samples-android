@@ -28,7 +28,7 @@ android {
 
 dependencies {
     // module dependency
-    compile project(':arcgis-android-v10.2.4')
+    compile 'com.esri.arcgis.android:arcgis-android:10.2.5'
     // support library dependency
     compile 'com.android.support:support-v4:19.0.+'
     // local binary dependency

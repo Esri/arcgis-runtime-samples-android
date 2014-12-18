@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!--
+         Single menu item 
+         Set id, icon and Title for each menu item
+    -->
+    <item
+        android:id="@+id/avg_household"
+        android:title="@string/button_household"
+        android:icon="@drawable/ic_network_database"
+        android:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/reset"
+        android:title="@string/button_reset"
+        android:icon="@drawable/ic_action_remove"
+        android:showAsAction="ifRoom"/>
+
+</menu>

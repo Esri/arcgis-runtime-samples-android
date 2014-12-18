@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, ClassBreaksRendererActivity!</string>
+    <string name="app_name">ClassBreaksRenderer</string>
+    <string name="featurelayer_url">http://tmservices1.esri.com/arcgis/rest/services/LiveFeeds/NOAA_METAR_current_wind_speed_direction/MapServer</string>
+    <string name="station"><b>Station Name: </b></string>
+    <string name="country"><b>Country: </b></string>
+    <string name="temp"><b>Temperature: </b></string>
+    <string name="speed"><b>Wind Speed: </b></string>
+
+</resources>

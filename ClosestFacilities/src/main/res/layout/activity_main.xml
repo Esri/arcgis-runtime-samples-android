@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    
+    <!-- MapView layout and web map URL -->
+    <com.esri.android.map.MapView
+  		android:id="@+id/map"
+  		android:layout_width="fill_parent"
+  		android:layout_height="fill_parent"
+  		url = "http://geobrew.maps.arcgis.com/home/webmap/viewer.html?webmap=7f7f696d8934490b8d1784cbf8600940" >
+  		
+  	</com.esri.android.map.MapView>
+  	
+</LinearLayout>

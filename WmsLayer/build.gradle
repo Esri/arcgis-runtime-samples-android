@@ -30,6 +30,7 @@ android {
 
 dependencies {
     // module dependency
-    compile project(':arcgis-android-v10.2.4')
+    compile 'com.esri.arcgis.android:arcgis-android:10.2.5'
+    // local binary dependency
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

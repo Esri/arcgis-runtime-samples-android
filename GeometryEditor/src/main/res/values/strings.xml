@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources> 
+    <string name="app_name">GeometryEditor</string>
+    <string name="ok">OK</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="saved">New feature saved</string>
+    <string name="action_add">Add Feature</string>
+    <string name="action_save">Save</string>
+    <string name="action_discard">Discard</string>
+    <string name="action_delete">Delete Point</string>
+    <string name="action_undo">Undo</string>
+    <string name="title_add_point">Adding a Point</string>
+    <string name="title_add_polyline">Adding a Polyline</string>
+    <string name="title_add_polygon">Adding a Polygon</string>
+    <string name="title_feature_type">Select feature type</string>
+    <string name="title_confirm_discard">Discard new feature</string>
+    <string name="title_edit_failed">Saved failed</string>
+    <string name="msg_confirm_discard">Are you sure you want to discard the feature you were adding?</string>
+</resources>

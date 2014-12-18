@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StandardLicenseOffline</string>
+    <string name="action_settings">Settings</string>
+    <string name="standard_license_succeeded">Standard license level has been set successfully.</string>
+    <string name="standard_license_failed">Failed to set Standard license level.</string>
+    <string name="oauth_login_failed">OAuth authentication failed.</string>
+    <string name="standard_license_requires_connection">Failed to initialize a Standard license for the application in disconnected mode. The application needs to be restarted with internet connection enabled to retrieve a valid license from your ArcGIS Online account. Once this has succeeded you can run the application in disconnected mode.</string>
+    <string name="valid_client_id_required">Failed to set the client id. You need to provide a valid client id.\n\n
+      1. Go to https://developers.arcgis.com.\n
+      2. Sign in with your ArcGIS developer account.\n
+      3. Create an application. This will give you access to a client id string.\n
+      4. Pass the client id string to ArcGISRuntime.setClientId().</string>
+    <string name="local_data_not_found">Could not find .tpk file at:\n</string>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">RoutingTask Sample</string>
+    <string name="app_name">RoutingTask Sample</string>
+    <string name="route_label">Press and hold map to route to that point or Click on the Get Directions icon</string>
+    <string name="sound">Sound</string>
+    <string name="actionBar_direction">Get Directions</string>
+    <string name="geocode_url">http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer</string>
+    <string name="useCurrlocation">Use current Location</string>
+    <string name="routing_title">Routing</string>
+    <string name="swap_addresses">Swap addresses</string>
+    <string name="clearText">Click to clear text</string>
+    <string name="route">Route</string>
+    <string name="my_location">My Location</string>
+    
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, GeoJSONEarthquakeMapActivity!</string>
+    <string name="app_name">GeoJSONEarthquakeMap</string>
+    <string name="earthquake_url">http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson</string>
+    
+</resources>

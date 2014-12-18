@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="portal_url">https://www.arcgis.com/</string>
+    <string name="credentials_filename">serialized_credentials</string>
+    <string name="secret_key_filename">secretkey.dat</string>
+    <!-- Follow these steps to Set the client id string if you don't already have one: -->
+    <!-- Browse to the [ArcGIS developers site](https://developers.arcgis.com). -->
+    <!-- Sign in with your ArcGIS developer account. -->
+    <!-- Create an application. This will give you access to a client id string. -->
+    <!-- Replace CLIENT_ID below with the client id string and run the sample -->
+    <string name="client_id">CLIENTID</string>
+    <string name="app_name">OAuth2Sample</string>
+    <string name="login_type_dlg_message">Log in with saved credentials?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">Ok</string>
+    <string name="enter_portal_url">Enter Portal URL</string>
+    <string name="OAuth2_Sample">OAuth2 Sample</string>
+	<string name="continue_with_saved_credentials">Continue with saved Credentials?</string>
+	<string name="implement_an_encryption_pattern">THIS SAMPLE APPLICATION DOES NOT IMPLEMENT AN ENCRYPTION PATTERN. THE CREDENTIALS THAT YOU HAVE ENTERED
+	    ARE NOT STORED SECURELY. IT IS THE RESPONSIBILITY OF THE APP DEVELOPER TO IMPLEMENT AN ENCRYPTION PATTERN THAT SAVES THE CREDENTIALS ON DISK IN SECURE WAY.</string>
+	<string name="quit_app">Quit App?</string>
+</resources>

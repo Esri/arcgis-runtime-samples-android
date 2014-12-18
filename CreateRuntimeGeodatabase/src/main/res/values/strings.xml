@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Create Runtime Geodatabase</string>
+    <string name="featurelayer_url">http://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/Wildfire/FeatureServer/0</string>
+    <string name="featureservice_url">http://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/Wildfire/FeatureServer</string>
+    <!-- route action bar title -->
+    <string name="menu_download">Download</string>
+     <string name="action_settings">Settings</string>
+
+</resources>

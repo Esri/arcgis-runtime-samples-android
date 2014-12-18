@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <com.esri.android.map.MapView
+        android:id="@+id/map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        url="http://www.arcgis.com/home/webmap/viewer.html?webmap=fab9925c7c974a0aa47ea0f463535367" >
+    </com.esri.android.map.MapView>
+
+</LinearLayout>

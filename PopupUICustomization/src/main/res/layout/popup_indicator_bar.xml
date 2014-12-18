@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/indicator_bar_gridlayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:alpha="1"
+    android:columnCount="3"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/previous_popup_imageView"
+        android:layout_gravity="fill_vertical"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:scaleType="center"
+        android:src="@drawable/navigation_previous_item" />
+
+    <TextView
+        android:id="@+id/popup_indicator_textView"
+        android:layout_gravity="center"
+        android:background="@drawable/popup_number_background"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:text="1 of 1"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/slidingmenu_title_text" />
+
+    <ImageView
+        android:id="@+id/next_popup_imageView"
+        android:layout_gravity="fill_vertical"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:scaleType="center"
+        android:src="@drawable/navigation_next_item" />
+
+</GridLayout>

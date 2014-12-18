@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">OfflineAnalysis</string>
+    <!-- data paths -->
+    <string name="raster_dir">ArcGIS/samples/OfflineAnalysis</string>
+    <!-- raster file name; add your file name here -->
+    <string name="raster_file">RASTER_FILE_NAME</string>
+    <!-- menu actions -->
+    <string name="menu_analysis">Spatial analysis</string>
+    <string name="menu_analysis_los">Line of Sight</string>
+    <string name="menu_analysis_viewshed">Viewshed</string>
+
+</resources>

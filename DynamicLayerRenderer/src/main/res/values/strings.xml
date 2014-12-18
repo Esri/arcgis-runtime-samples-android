@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DynamicLayer</string>
+    <string name="server_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
+    <string name="basemap_url">http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer</string>
+    <string name="spinner_title">Dropdown</string>
+    <string name="POP2007">POP2007</string>
+    <string name="POP2000">POP2000</string>
+    <string name="POP00_SQMI">POP00_SQMI</string>
+    <string name="POP07_SQMI">POP07_SQMI</string>
+    <string name="WHITE">WHITE</string>
+    <string name="BLACK">BLACK</string>
+    <string name="AMERI_ES">AMERI_ES</string>
+    <string name="HISPANIC">HISPANIC</string>
+    <string name="reset">reset</string>
+    
+    <string-array name="render_based_on">
+        <item>@string/POP2007</item>
+        <item>@string/POP2000</item>
+        <item>@string/POP00_SQMI</item>
+        <item>@string/POP07_SQMI</item>
+        <item>@string/WHITE</item>
+        <item>@string/BLACK</item>
+        <item>@string/HISPANIC</item>
+        <item>@string/AMERI_ES</item>
+    </string-array>
+    
+</resources>

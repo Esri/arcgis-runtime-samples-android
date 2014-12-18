@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, OfflineEditorActivity!</string>
+    <string name="app_name">OfflineEditor</string>
+    <string name="action_go_offline">Go Offline</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_go_online">Go Online</string>
+    
+    <string name="geodatabase_filename">offlinedata</string>
+
+</resources>

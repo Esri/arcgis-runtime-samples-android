@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/date_picker_GridLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnCount="1"
+    android:orientation="horizontal"
+    android:rowCount="2" >
+
+    <DatePicker
+        android:id="@+id/datePicker"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:calendarViewShown="false" />
+
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_gravity="center" />
+
+</GridLayout>
