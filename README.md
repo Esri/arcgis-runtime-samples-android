@@ -9,7 +9,7 @@ ArcGIS Runtime SDK for Android v10.2.5 samples for Android Studio.  The repo con
 The **ArcGIS Android SDK Samples** are [Gradle](https://www.gradle.org) based Android projects which can be directly cloned and imported into Android Studio.
 
 ## Fork the repo
-If you haven't already, go to https://github.com/Esri/arcgis-android-sdk-gradle-samples and click the **Fork** button.
+If you haven't already, fork the [this repo](https://github.com/Esri/arcgis-android-sdk-gradle-samples/fork).
 
 ## Clone the repo
 
