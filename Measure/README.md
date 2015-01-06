@@ -1,4 +1,7 @@
 # Measure Tool
+
+![Measure App](measure.png)
+
 The Measure Tool sample follows Android's [Contexual Action Bar](http://developer.android.com/design/patterns/actionbar.html#contextual) design pattern to provide basic measuring and sketching capabilities in a self-contained tool.
 
 ## Sample Design:
