@@ -1,7 +1,7 @@
 package com.esri.arcgis.android.samples.measure;
 
+import android.app.Activity;
 import android.graphics.Color;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +15,7 @@ import com.esri.core.symbol.SimpleLineSymbol;
 import com.esri.core.symbol.SimpleMarkerSymbol;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     MapView mMapView;
 
