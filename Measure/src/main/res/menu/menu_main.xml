@@ -4,7 +4,7 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_measure"
         android:icon="@android:drawable/ic_menu_edit"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"
