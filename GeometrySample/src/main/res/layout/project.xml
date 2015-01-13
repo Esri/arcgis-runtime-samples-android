@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2013 ESRI
+ 
+  All rights reserved under the copyright laws of the United States
+  and applicable international laws, treaties, and conventions.
+ 
+  You may freely redistribute and use this sample code, with or
+  without modification, provided you include the original copyright
+  notice and use restrictions.
+ 
+  See the use restrictions 
+  http://help.arcgis.comensdk10.0usageRestrictions.htm.
+-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    
+    <LinearLayout
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+
+        <RadioGroup
+            android:id="@+id/geometrytype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@android:dimen/app_icon_size"
+            android:layout_weight="0.03"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/line" />
+
+            <RadioButton
+                android:id="@+id/polygon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/polygon" />
+            
+        </RadioGroup>
+        
+        
+        <Button
+            android:id="@+id/project"
+            style="?android:attr/buttonStyleSmall"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.03"
+            android:text="@string/project" />
+
+        <Button
+            android:id="@+id/reset"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.03"
+            android:text="@string/reset" />
+    </LinearLayout>
+    
+      
+   
+
+    <LinearLayout
+        android:id="@+id/bottombar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:orientation="horizontal" >
+		 
+        <com.esri.android.map.MapView
+            android:id="@+id/mapbottomleft"
+            android:layout_width="500dp"
+            android:layout_height="240dp"
+            android:paddingRight="10dp" >
+        </com.esri.android.map.MapView>
+ 		
+        <com.esri.android.map.MapView
+            android:id="@+id/mapbottomright"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:paddingLeft="10dp" >
+        </com.esri.android.map.MapView>
+        
+    </LinearLayout>
+    
+     <com.esri.android.map.MapView
+        android:id="@+id/maptop"
+        android:layout_below="@id/topbar"
+        android:layout_above="@id/bottombar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingBottom="10dp" />
+    
+    </RelativeLayout>

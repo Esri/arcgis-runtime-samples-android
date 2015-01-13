@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="app_name">Geometry Sample</string>
+    <string name="tileServiceURL">http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer</string>
+    
+    <!-- App UI components -->
+    <string name="line">Line</string>
+    <string name="polygon">Polygon</string>
+    <string name="project">Project</string>
+    <string name="reset">Reset</string>
+    <string name="buffer">Buffer</string>
+    <string name="point">Point</string>
+    <string name="distance_meters">3000m</string>
+    <string name="empty"></string>
+    <string name="distance">Distance</string>
+    <string name="area">Area</string>
+    <string name="plus">+</string>
+    <string name="contains">Contains</string>
+    <string name="crosses">Crosses</string>
+    <string name="equals">Equals</string>
+    <string name="touches">Touches</string>
+    <string name="within">Within</string>
+    <string name="difference">Difference</string>
+    <string name="union">Union</string>
+    
+    
+    <string-array name="sample_names">
+        <item>Buffer</item>
+        <item>Union and Difference</item>
+        <item>Spatial Relationships</item>
+    </string-array>
+    
+</resources>

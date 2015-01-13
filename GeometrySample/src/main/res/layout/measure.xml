@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2013 ESRI
+ 
+  All rights reserved under the copyright laws of the United States
+  and applicable international laws, treaties, and conventions.
+ 
+  You may freely redistribute and use this sample code, with or
+  without modification, provided you include the original copyright
+  notice and use restrictions.
+ 
+  See the use restrictions 
+  http://help.arcgis.comensdk10.0usageRestrictions.htm.
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    tools:context=".MeasureFragmentActivity" >
+
+    <!-- MapView layout and initial extent -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RadioGroup
+            android:id="@+id/geometrytype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@android:dimen/app_icon_size"
+            android:layout_weight="0.03"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/distance" />
+
+            <RadioButton
+                android:id="@+id/polygon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/area" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/result"
+            android:layout_width="150dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:background="@color/LightSlateGray"
+            android:gravity="right"
+            android:singleLine="true"
+            android:text="@string/empty"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="100dip"
+            android:layout_height="50dip"
+            android:layout_weight="0.03"
+            android:entries="@array/DistanceUnits" />
+
+        <Button
+            android:id="@+id/buffer"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.03"
+            android:text="@string/buffer"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/reset"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.03"
+            android:text="@string/reset" />
+    </LinearLayout>
+
+    <com.esri.android.map.MapView
+        android:id="@+id/map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+</LinearLayout>

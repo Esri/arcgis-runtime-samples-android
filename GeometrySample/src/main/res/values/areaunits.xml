@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2013 ESRI
+ 
+  All rights reserved under the copyright laws of the United States
+  and applicable international laws, treaties, and conventions.
+ 
+  You may freely redistribute and use this sample code, with or
+  without modification, provided you include the original copyright
+  notice and use restrictions.
+ 
+  See the use restrictions 
+  http://help.arcgis.comensdk10.0usageRestrictions.htm.
+-->
+<resources>
+
+    <string-array name="AreaUnits">
+        <item>Square Meters</item>
+        <item>Acres</item>
+        <item>Square Miles</item>
+        <item>Square Yards</item>
+        <item>Square Kilometers</item>
+    </string-array>
+
+</resources>
