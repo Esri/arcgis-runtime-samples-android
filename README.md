@@ -2,8 +2,8 @@
 ArcGIS Runtime SDK for Android v10.2.5 samples for Android Studio.  The repo contains an [Android Studio](http://developer.android.com/sdk/index.html) project with multi-project sample app modules that can be run from within the Android Studio IDE.
 
 # Prerequisites
-- [JDK 6 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-- [Android Studio](http://developer.android.com/sdk/index.html)
+* The samples are building with ```compileSdkVersion 21``` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* [Android Studio](http://developer.android.com/sdk/index.html)
 
 # Developer Instructions
 The **ArcGIS Android SDK Samples** are [Gradle](https://www.gradle.org) based Android projects which can be directly cloned and imported into Android Studio.
