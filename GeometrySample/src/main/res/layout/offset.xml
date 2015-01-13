@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2013 ESRI
+ 
+  All rights reserved under the copyright laws of the United States
+  and applicable international laws, treaties, and conventions.
+ 
+  You may freely redistribute and use this sample code, with or
+  without modification, provided you include the original copyright
+  notice and use restrictions.
+ 
+  See the use restrictions 
+  http://help.arcgis.comensdk10.0usageRestrictions.htm.
+-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    
+    <LinearLayout
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+
+        <RadioGroup
+            android:id="@+id/geometrytype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@android:dimen/app_icon_size"
+            android:layout_weight="0.03"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Line" />
+
+            <RadioButton
+                android:id="@+id/polygon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Polygon" />
+            
+        </RadioGroup>
+        
+        <RadioGroup
+            android:id="@+id/jointype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@android:dimen/app_icon_size"
+            android:layout_weight="0.03"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/miter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Mitered" />
+
+            <RadioButton
+                android:id="@+id/rounded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rounded" />
+            
+            <RadioButton
+                android:id="@+id/squared"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Squared" />
+            
+            <RadioButton
+                android:id="@+id/bevelled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bevelled" />
+            
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/offset"
+            style="?android:attr/buttonStyleSmall"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.03"
+            android:text="Offset" />
+
+        <Button
+            android:id="@+id/reset"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.03"
+            android:text="Reset" />
+    </LinearLayout>
+    
+    
+    
+    <LinearLayout
+        android:id="@+id/bottombar"
+        android:layout_alignParentBottom="true"       
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+        <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Distance:"
+                android:layout_marginLeft="25dip"
+                android:layout_marginRight="10dip"
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <SeekBar
+            android:id="@+id/distance"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.61" />
+
+        <TextView
+            android:id="@+id/distancevalue"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="40dip"
+            android:layout_weight="0.03"
+            android:text="1000m"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+        
+        <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bevel Ratio:"
+                android:layout_marginRight="10dip"
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <SeekBar
+            android:id="@+id/bevelratio"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.61" />
+
+        <TextView
+            android:id="@+id/bevelratiovalue"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:layout_weight="0.03"
+            android:textStyle="bold"
+            android:text="0.5000000m"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+        
+	</LinearLayout>   
+    
+    <com.esri.android.map.MapView
+        android:id="@+id/map"
+        android:layout_below="@id/topbar"
+        android:layout_above="@id/bottombar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+    
+    </RelativeLayout>
