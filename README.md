@@ -30,8 +30,7 @@ Open your terminal, navigate to your working directory, use ```git clone``` to g
 
 ```
 # Clones your fork of the repository into the current directory in terminal
-$ git clone git@github.com:YOUR-USERNAME/arcgis-android-sdk-gradle-samples.git
-$ git clone git@github.com:YOUR-USERNAME/arcgis-android-api-lib-module.git
+$ git clone https://github.com/YOUR-USERNAME/arcgis-runtime-samples-android.git
 ```
 
 ## Import Gradle Sample project into Android Studio
