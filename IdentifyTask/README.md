@@ -1,16 +1,12 @@
-# Geometry Sample
-This sample uses the Geometry engine in different ways to show off the capabilities the Geometry engine provides the user. The samples illustrate the use of following operations: Project, Buffer, Union, Difference, Measure and identification of Spatial Relationships. Each fragment lets the user explore these individually. The sample allows the user to draw geometries and modify them using each of the operations.
+# Identify Task
+The purpose of this sample is to show the user how to use the Identify task to query features on the map and show these results in a callout. The sample adds a tiled map service as the basemap and a dynamic map service of recent earthquakes. The dynamic map service is the same as that used for the Identify task.
 
 ## Features
-* Reproject Points and Polygons
-* Buffer Points, Lines, & Polygons
-* Find the Union and Difference between intersecting Polygons
-* Determine spatial relationships between polygons, e.g. touches, contains, etc.
-* Measure distance or area
-* Andriod Fragments
+* [IdentifyTask](https://developers.arcgis.com/en/android/api-reference/reference/com/esri/core/tasks/ags/identify/IdentifyTask.html)
+* [IdentifyResultSpinner](https://developers.arcgis.com/en/android/api-reference/reference/com/esri/android/action/IdentifyResultSpinner.html)
+* Single Tap Listener
 
-## Sample Design 
-The sample has an opening Geometry Sample Activity which presents the different geometry tools you can use in the app.  Choose a feature tool from the left hand [ListFragment](http://developer.android.com/reference/android/app/ListFragment.html) to open the feature tool and use it.  
+## Sample Design
+The maps layers are added to the map via code in the activities ```onCreate()``` method and the parameters for the ```IdentifyTask``` are also created (map service uniform resource locator [URL] and layers to query). An ```OnSingleTapListener``` is set on the map and within this class, the ```IdentifyTask``` is created and invoked via an ```Executor``` (as the Task abstract super class implements the ```Callable<T>``` interface), which allows the task to run in a different thread from the main thread. The geometry is obtained from the ```onSingleTap``` event and is passed to the task. The results from the ```IdentifyTask``` are processed in the ```onCompletion()``` method and placed in a map ```Callout```.
 
-### Note
-This sample exclusively targets the tablets because of its UI design.
+In the ```Callout```, a spinner is customized by overriding the ````IdentifyResultSpinnerAdapter``` class. In the new adapter within the ```getView()``` method, create a ```ListView``` that is populated with ```IdentifyResult```.
