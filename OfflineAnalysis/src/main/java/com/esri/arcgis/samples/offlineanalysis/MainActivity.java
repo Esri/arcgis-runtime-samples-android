@@ -102,15 +102,13 @@ public class MainActivity extends Activity {
 			mRasterLayer = new RasterLayer(mRasterSource);
 			// add the layer
 			mMapView.addLayer(mRasterLayer);
-		} catch (IllegalArgumentException e) {
-			Log.e(TAG, e.getMessage());
-		} catch (FileNotFoundException e) {
-			Log.e(TAG, e.getMessage());
-		} catch (RuntimeException e) {
+            // zoom to raster source extent
+            mMapView.setExtent(mRasterSource.getExtent());
+		} catch (FileNotFoundException | RuntimeException e) {
 			Log.e(TAG, e.getMessage());
 		}
 
-		// add graphics layer
+        // add graphics layer
 		mGraphicsLayer = new GraphicsLayer();
 		mMapView.addLayer(mGraphicsLayer);
 
@@ -226,15 +224,11 @@ public class MainActivity extends Activity {
 		try {
 			mLineOfSight = new LineOfSight(mRaster);
 
-  	} catch (IllegalArgumentException e) {
-  	  e.printStackTrace();
-  	} catch (FileNotFoundException e) {
-  	  e.printStackTrace();
-  	} catch (RuntimeException e) {
+  	} catch (FileNotFoundException | RuntimeException e) {
   	  e.printStackTrace();
   	}
 
-		if (mLineOfSight != null) {
+        if (mLineOfSight != null) {
 			mLosLayer = mLineOfSight.getOutputLayer();
 			mMapView.addLayer(mLosLayer);
 			// set observer features
@@ -281,15 +275,11 @@ public class MainActivity extends Activity {
 		try {
 			mViewshed = new Viewshed(mRaster);
 
-    } catch (IllegalArgumentException e) {
-      e.printStackTrace();
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (RuntimeException e) {
+    } catch (FileNotFoundException | RuntimeException e) {
       e.printStackTrace();
     }
 
-		if (mViewshed != null) {
+        if (mViewshed != null) {
 			functionRS = mViewshed.getOutputFunctionRasterSource();
 			viewShedLayer = new RasterLayer(functionRS);
 			mMapView.addLayer(viewShedLayer);
