@@ -191,11 +191,11 @@ public class Nearby extends Activity {
 
 
     mCoffeeMapIcon = new PictureMarkerSymbol(getApplicationContext(), this
-        .getResources().getDrawable(R.drawable.ic_local_cafe_black_48dp));
+        .getResources().getDrawable(R.drawable.ic_local_cafe_black));
     mPizzaMapIcon = new PictureMarkerSymbol(getApplicationContext(), this
-        .getResources().getDrawable(R.drawable.ic_local_pizza_black_48dp));
+        .getResources().getDrawable(R.drawable.ic_local_pizza_black));
     mBarMapIcon = new PictureMarkerSymbol(getApplicationContext(), this
-        .getResources().getDrawable(R.drawable.ic_local_drink_black_48dp));
+        .getResources().getDrawable(R.drawable.ic_local_drink_black));
 
     setupLocator();
     setupLocationListener();
