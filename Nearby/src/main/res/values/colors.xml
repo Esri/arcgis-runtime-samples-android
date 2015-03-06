@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Material design colors -->
+
+  <color name="coffee_selection">#CDDC39</color>
+  <color name="pizza_selection">#FFC107</color>
+  <color name="beer_selection">#FF5722</color>
+  <color name="ui_highlight">#263238</color>
+  <color name="ratings">#FF9800</color>
+
+
+</resources>
