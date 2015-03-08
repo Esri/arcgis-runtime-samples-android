@@ -8,10 +8,7 @@
     <string name="search_title">Search</string>
     <string name="suggestion_text">Suggestion</string>
 
-
     <!-- progress dialog messages -->
     <string name="address_search">Searching for Address</string>
-    <string name="addressSearchFailed">Address search failed</string>
-    <string name="noResultsFound">No results found</string>
 
 </resources>
