@@ -464,7 +464,7 @@ public class Nearby extends Activity {
 
       case R.id.locate:
         if (mMapView.isLoaded()) {
-          // If LocationDIsplayManager has a fix, pan to that location. If no
+          // If LocationDisplayManager has a fix, pan to that location. If no
           // fix yet, this will happen when the first fix arrives, due to
           // callback set up previously.
           if ((mLDM != null) && (mLDM.getLocation() != null)) {
