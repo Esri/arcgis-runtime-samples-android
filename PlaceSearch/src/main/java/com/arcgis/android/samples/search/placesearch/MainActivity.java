@@ -39,7 +39,12 @@ import com.esri.core.tasks.geocode.LocatorSuggestionResult;
 
 import java.util.List;
 
-
+/**
+ * PlaceSearch app uses the geocoding service to convert addresses to and from
+ * geographic coordinates and place them on the map.  Search for places, addresses,
+ * etc. and get suggestions as you type.
+ *
+ */
 public class MainActivity extends Activity {
 
   private static final String TAG = "PlaceSearch";
