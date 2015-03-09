@@ -15,6 +15,7 @@ package com.arcgis.android.samples.search.placesearch;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.database.MatrixCursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,7 +23,7 @@ import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.SearchView.OnSuggestionListener;
@@ -55,6 +56,7 @@ public class MainActivity extends Activity {
 
   private Locator mLocator;
   private SearchView mSearchView;
+  private MenuItem searchMenuItem;
   private MatrixCursor mSuggestionCursor;
   private SimpleCursorAdapter mSuggestionAdapter;
 
@@ -120,8 +122,9 @@ public class MainActivity extends Activity {
     // as you specify a parent activity in AndroidManifest.xml.
     int id = item.getItemId();
     if (id == R.id.action_search) {
+      searchMenuItem = item;
       // Create search view and display on the Action Bar
-      initSearchView(item);
+      initSearchView();
       item.setActionView(mSearchView);
       return true;
     } else if (id == R.id.action_clear) {
@@ -133,6 +136,19 @@ public class MainActivity extends Activity {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onBackPressed() {
+    if ((mSearchView != null) && (!mSearchView.isIconified())) {
+      // Close the search view when tapping back button
+      if (searchMenuItem != null) {
+        searchMenuItem.collapseActionView();
+        invalidateOptionsMenu();
+      }
+    } else {
+      super.onBackPressed();
+    }
   }
 
   // Create suggestion list
@@ -160,7 +176,7 @@ public class MainActivity extends Activity {
   }
 
   // Initialize search view and add event listeners to handle query text changes and suggestion
-  private void initSearchView(final MenuItem searchMenuItem) {
+  private void initSearchView() {
     if (mMapView == null || !mMapView.isLoaded())
       return;
 
@@ -183,16 +199,6 @@ public class MainActivity extends Activity {
       }
     });
 
-    mSearchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-      @Override
-      public void onFocusChange(View view, boolean hasFocus) {
-        if (!hasFocus) {
-          searchMenuItem.collapseActionView();
-          invalidateOptionsMenu();
-        }
-      }
-    });
-
     mSearchView.setOnSuggestionListener(new OnSuggestionListener() {
 
       @Override
@@ -211,7 +217,7 @@ public class MainActivity extends Activity {
         double x = cursor.getDouble(indexColumnX);
         double y = cursor.getDouble(indexColumnY);
 
-        if (x == 0.0 && y == 0.0) {
+        if ((x == 0.0) && (y == 0.0)) {
           // Place has not been located. Find the place
           new FindPlaceTask(mLocator).execute(address);
         } else {
@@ -277,7 +283,7 @@ public class MainActivity extends Activity {
     protected void onPostExecute(List<LocatorGeocodeResult> results) {
       // Dismiss progress dialog
       mProgressDialog.dismiss();
-      if (results == null || results.size() == 0)
+      if ((results == null) || (results.size() == 0))
         return;
 
       // Add the first result to the map and zoom to it
@@ -290,6 +296,11 @@ public class MainActivity extends Activity {
       mMapViewHelper.addMarkerGraphic(y, x, LOCATION_TITLE, address, android.R.drawable.ic_menu_myplaces, null, false, 1);
       mMapView.centerAndZoom(y, x, 14);
       mSearchView.setQuery(address, true);
+
+      // Hide soft keyboard
+      mSearchView.clearFocus();
+      InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+      inputManager.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
     }
   }
 
