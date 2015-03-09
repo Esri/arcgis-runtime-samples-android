@@ -16,282 +16,372 @@ package com.arcgis.android.samples.search.placesearch;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
+import android.database.MatrixCursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
+import android.widget.SearchView.OnSuggestionListener;
+import android.widget.SimpleCursorAdapter;
 
-import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.MapView;
 import com.esri.android.map.event.OnStatusChangedListener;
-import com.esri.core.geometry.Envelope;
-import com.esri.core.geometry.Point;
-import com.esri.core.map.Graphic;
-import com.esri.core.symbol.SimpleMarkerSymbol;
-import com.esri.core.symbol.TextSymbol;
+import com.esri.android.toolkit.map.MapViewHelper;
 import com.esri.core.tasks.geocode.Locator;
 import com.esri.core.tasks.geocode.LocatorFindParameters;
 import com.esri.core.tasks.geocode.LocatorGeocodeResult;
+import com.esri.core.tasks.geocode.LocatorSuggestionParameters;
+import com.esri.core.tasks.geocode.LocatorSuggestionResult;
 
 import java.util.List;
 
-
+/**
+ * PlaceSearch app uses the geocoding service to convert addresses to and from
+ * geographic coordinates and place them on the map.  Search for places, addresses,
+ * etc. and get suggestions as you type.
+ *
+ */
 public class MainActivity extends Activity {
 
-    private static final String TAG = "MainActivity";
+  private static final String TAG = "PlaceSearch";
+  private static final String COLUMN_NAME_ADDRESS = "address";
+  private static final String COLUMN_NAME_X = "x";
+  private static final String COLUMN_NAME_Y = "y";
+  private static final String LOCATION_TITLE = "Location";
 
-    MapView mMapView;
-    EditText mSearchEditText;
-    String mMapViewState;
+  private MapView mMapView;
+  private String mMapViewState;
+  // Entry point to ArcGIS for Android Toolkit
+  private MapViewHelper mMapViewHelper;
 
-    // Graphics layer to show geocode and reverse geocode results
-    GraphicsLayer mLocationLayer;
-    Point mLocationLayerPoint;
-    String mLocationLayerPointString;
+  private Locator mLocator;
+  private SearchView mSearchView;
+  private MenuItem searchMenuItem;
+  private MatrixCursor mSuggestionCursor;
+  private SimpleCursorAdapter mSuggestionAdapter;
 
-    // UI components
-    static ProgressDialog mProgressDialog;
+  private static ProgressDialog mProgressDialog;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        // Setup and show progress dialog
-        mProgressDialog = new ProgressDialog(this) {
-            @Override
-            public void onBackPressed() {
-                // Back key pressed - just dismiss the dialog
-                mProgressDialog.dismiss();
-            }
-        };
+    // Setup and show progress dialog
+    mProgressDialog = new ProgressDialog(this) {
+      @Override
+      public void onBackPressed() {
+        // Back key pressed - just dismiss the dialog
+        mProgressDialog.dismiss();
+      }
+    };
 
-        // after the content of this activity is set
-        // the map can be accessed from the layout
-        mMapView = (MapView)findViewById(R.id.map);
+    // After the content of this activity is set the map can be accessed from the layout
+    mMapView = (MapView) findViewById(R.id.map);
+    // Initialize the helper class to use the Toolkit
+    mMapViewHelper = new MapViewHelper(mMapView);
+    // Create the default ArcGIS online Locator. If you want to provide your own {@code Locator},
+    // user other methods of Locator.
+    mLocator = Locator.createOnlineLocator();
 
-        mLocationLayer = new GraphicsLayer();
-        mMapView.addLayer(mLocationLayer);
+    // set logo and enable wrap around
+    mMapView.setEsriLogoVisible(true);
+    mMapView.enableWrapAround(true);
 
-        // set logo and enable wrap around
-        mMapView.setEsriLogoVisible(true);
-        mMapView.enableWrapAround(true);
+    // Setup listener for map initialized
+    mMapView.setOnStatusChangedListener(new OnStatusChangedListener() {
 
-        // Setup listener for map initialized
-        mMapView.setOnStatusChangedListener(new OnStatusChangedListener() {
+      @Override
+      public void onStatusChanged(Object source, STATUS status) {
+        if (source == mMapView && status == STATUS.INITIALIZED) {
 
-            @Override
-            public void onStatusChanged(Object source, STATUS status) {
-                if (source == mMapView && status == STATUS.INITIALIZED) {
+          if (mMapViewState == null) {
+            Log.i(TAG, "MapView.setOnStatusChangedListener() status=" + status.toString());
+          } else {
+            mMapView.restoreState(mMapViewState);
+          }
 
-                    if (mMapViewState == null) {
-                        Log.i(TAG, "MapView.setOnStatusChangedListener() status=" + status.toString());
-                    } else {
-                        mMapView.restoreState(mMapViewState);
-                    }
+        }
+      }
+    });
 
-                }
-            }
-        });
+  }
 
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.menu_main, menu);
 
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle action bar item clicks here. The action bar will
+    // automatically handle clicks on the Home/Up button, so long
+    // as you specify a parent activity in AndroidManifest.xml.
+    int id = item.getItemId();
+    if (id == R.id.action_search) {
+      searchMenuItem = item;
+      // Create search view and display on the Action Bar
+      initSearchView();
+      item.setActionView(mSearchView);
+      return true;
+    } else if (id == R.id.action_clear) {
+      // Remove all the marker graphics
+      if (mMapViewHelper != null) {
+        mMapViewHelper.removeAllGraphics();
+      }
+      return true;
     }
 
+    return super.onOptionsItemSelected(item);
+  }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+  @Override
+  public void onBackPressed() {
+    if ((mSearchView != null) && (!mSearchView.isIconified())) {
+      // Close the search view when tapping back button
+      if (searchMenuItem != null) {
+        searchMenuItem.collapseActionView();
+        invalidateOptionsMenu();
+      }
+    } else {
+      super.onBackPressed();
+    }
+  }
 
-        // get a reference to the EditText widget for the search option
-        View searchRef = menu.findItem(R.id.action_search).getActionView();
-        mSearchEditText = (EditText) searchRef.findViewById(R.id.searchText);
+  // Create suggestion list
+  private void suggestPlace(String query) {
+    if (mLocator == null)
+      return;
 
-        // set key listener to start search if Enter key is pressed
-        mSearchEditText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if(keyCode == KeyEvent.KEYCODE_ENTER){
-                    onSearchButtonClicked(mSearchEditText);
-                    return true;
-                }
+    new SuggestPlaceTask(mLocator).execute(query);
+  }
 
-                return false;
-            }
-        });
+  // Initialize suggestion cursor
+  private void initSuggestionCursor() {
+    String[] cols = new String[]{BaseColumns._ID, COLUMN_NAME_ADDRESS, COLUMN_NAME_X, COLUMN_NAME_Y};
+    mSuggestionCursor = new MatrixCursor(cols);
+  }
+
+  // Set the suggestion cursor to an Adapter then set it to the search view
+  private void applySuggestionCursor() {
+    String[] cols = new String[]{COLUMN_NAME_ADDRESS};
+    int[] to = new int[]{R.id.suggestion_item_address};
+
+    mSuggestionAdapter = new SimpleCursorAdapter(mMapView.getContext(), R.layout.suggestion_item, mSuggestionCursor, cols, to, 0);
+    mSearchView.setSuggestionsAdapter(mSuggestionAdapter);
+    mSuggestionAdapter.notifyDataSetChanged();
+  }
+
+  // Initialize search view and add event listeners to handle query text changes and suggestion
+  private void initSearchView() {
+    if (mMapView == null || !mMapView.isLoaded())
+      return;
+
+    mSearchView = new SearchView(this);
+    mSearchView.setFocusable(true);
+    mSearchView.setIconifiedByDefault(false);
+    mSearchView.setQueryHint(getResources().getString(R.string.search_hint));
+
+    mSearchView.setOnQueryTextListener(new OnQueryTextListener() {
+
+      @Override
+      public boolean onQueryTextSubmit(String query) {
+        return false;
+      }
+
+      @Override
+      public boolean onQueryTextChange(String newText) {
+        suggestPlace(newText);
+        return true;
+      }
+    });
+
+    mSearchView.setOnSuggestionListener(new OnSuggestionListener() {
+
+      @Override
+      public boolean onSuggestionSelect(int position) {
+        return false;
+      }
+
+      @Override
+      public boolean onSuggestionClick(int position) {
+        // Obtain the content of the selected suggesting place via cursor
+        MatrixCursor cursor = (MatrixCursor) mSearchView.getSuggestionsAdapter().getItem(position);
+        int indexColumnSuggestion = cursor.getColumnIndex(COLUMN_NAME_ADDRESS);
+        int indexColumnX = cursor.getColumnIndex(COLUMN_NAME_X);
+        int indexColumnY = cursor.getColumnIndex(COLUMN_NAME_Y);
+        String address = cursor.getString(indexColumnSuggestion);
+        double x = cursor.getDouble(indexColumnX);
+        double y = cursor.getDouble(indexColumnY);
+
+        if ((x == 0.0) && (y == 0.0)) {
+          // Place has not been located. Find the place
+          new FindPlaceTask(mLocator).execute(address);
+        } else {
+          // Place has been located. Zoom to the place and add a marker for this place
+          mMapViewHelper.addMarkerGraphic(y, x, LOCATION_TITLE, address, android.R.drawable.ic_menu_myplaces, null, false, 1);
+          mMapView.centerAndZoom(y, x, 14);
+          mSearchView.setQuery(address, true);
+        }
+        cursor.close();
 
         return true;
+      }
+    });
+  }
+
+  // Find the address
+  private class FindPlaceTask extends AsyncTask<String, Void, List<LocatorGeocodeResult>> {
+    private static final String SUGGESTION_ADDRESS_DELIMNATOR = ", ";
+    private Locator mLocator;
+
+    public FindPlaceTask(Locator locator) {
+      mLocator = locator;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_search) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Called from search_layout.xml when user presses Search button
-     *
-     * @param view
-     */
-    public void onSearchButtonClicked(View view){
-        // Hide virtual keyboard
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-
-        // obtain address and execute locator task
-        String address = mSearchEditText.getText().toString();
-        executeLocatorTask(address);
-
-    }
-
-    /**
-     * Set up the search parameters and execute the Locator task.
-     *
-     * @param address
-     */
-    private void executeLocatorTask(String address) {
+    protected List<LocatorGeocodeResult> doInBackground(String... queries) {
+      for (String query : queries) {
         // Create Locator parameters from single line address string
-        LocatorFindParameters findParams = new LocatorFindParameters(address);
-
+        LocatorFindParameters params;
+        int index = query.indexOf(SUGGESTION_ADDRESS_DELIMNATOR);
+        if (index > 0) {
+          params = new LocatorFindParameters(query.substring(index + SUGGESTION_ADDRESS_DELIMNATOR.length()));
+        } else {
+          params = new LocatorFindParameters(query);
+        }
         // Use the centre of the current map extent as the find location point
-        findParams.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
+        params.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
+        // Set the radial search distance in meters
+        params.setDistance(500.0);
 
-        // Calculate distance for find operation
-        Envelope mapExtent = new Envelope();
-        mMapView.getExtent().queryEnvelope(mapExtent);
-        // assume map is in metres, other units wont work, double current envelope
-        double distance = (mapExtent != null && mapExtent.getWidth() > 0) ? mapExtent.getWidth() * 2 : 10000;
-        findParams.setDistance(distance);
-        findParams.setMaxLocations(2);
-
-        // Set address spatial reference to match map
-        findParams.setOutSR(mMapView.getSpatialReference());
-
-        // Execute async task to find the address
-        new LocatorAsyncTask().execute(findParams);
-        mLocationLayerPointString = address;
-    }
-
-    /*
- * This class provides an AsyncTask that performs a geolocation request on a
- * background thread and displays the first result on the map on the UI
- * thread.
- */
-    private class LocatorAsyncTask extends AsyncTask<LocatorFindParameters, Void, List<LocatorGeocodeResult>> {
-        private Exception mException;
-
-        public LocatorAsyncTask() {
+        // Execute the task
+        List<LocatorGeocodeResult> results = null;
+        try {
+          results = mLocator.find(params);
+        } catch (Exception e) {
+          e.printStackTrace();
         }
 
-        @Override
-        protected void onPreExecute() {
-            // Display progress dialog on UI thread
-            mProgressDialog.setMessage(getString(R.string.address_search));
-            mProgressDialog.show();
-        }
+        return results;
+      }
 
-        @Override
-        protected List<LocatorGeocodeResult> doInBackground(LocatorFindParameters... params) {
-            // Perform routing request on background thread
-            mException = null;
-            List<LocatorGeocodeResult> results = null;
-
-            // Create locator using default online geocoding service and tell it to
-            // find the given address
-            Locator locator = Locator.createOnlineLocator();
-            try {
-                results = locator.find(params[0]);
-            } catch (Exception e) {
-                mException = e;
-            }
-            return results;
-        }
-
-        @Override
-        protected void onPostExecute(List<LocatorGeocodeResult> result) {
-            // Display results on UI thread
-            mProgressDialog.dismiss();
-            if (mException != null) {
-                Log.w(TAG, "LocatorSyncTask failed with:");
-                mException.printStackTrace();
-                Toast.makeText(MainActivity.this, getString(R.string.addressSearchFailed), Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            if (result.size() == 0) {
-                Toast.makeText(MainActivity.this, getString(R.string.noResultsFound), Toast.LENGTH_LONG).show();
-            } else {
-                // Use first result in the list
-                LocatorGeocodeResult geocodeResult = result.get(0);
-
-                // get return geometry from geocode result
-                Point resultPoint = geocodeResult.getLocation();
-                // create marker symbol to represent location
-                SimpleMarkerSymbol resultSymbol = new SimpleMarkerSymbol(Color.RED, 16, SimpleMarkerSymbol.STYLE.CROSS);
-                // create graphic object for resulting location
-                Graphic resultLocGraphic = new Graphic(resultPoint, resultSymbol);
-                // add graphic to location layer
-                mLocationLayer.addGraphic(resultLocGraphic);
-
-                // create text symbol for return address
-                String address = geocodeResult.getAddress();
-                TextSymbol resultAddress = new TextSymbol(20, address, Color.BLACK);
-                // create offset for text
-                resultAddress.setOffsetX(-4 * address.length());
-                resultAddress.setOffsetY(10);
-                // create a graphic object for address text
-                Graphic resultText = new Graphic(resultPoint, resultAddress);
-                // add address text graphic to location graphics layer
-                mLocationLayer.addGraphic(resultText);
-
-                mLocationLayerPoint = resultPoint;
-
-                // Zoom map to geocode result location
-                mMapView.zoomToResolution(geocodeResult.getLocation(), 2);
-            }
-        }
-
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+      return null;
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-        mMapViewState = mMapView.retainState();
-        mMapView.pause();
+    protected void onPreExecute() {
+      // Display progress dialog on UI thread
+      mProgressDialog.setMessage(getString(R.string.address_search));
+      mProgressDialog.show();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onPostExecute(List<LocatorGeocodeResult> results) {
+      // Dismiss progress dialog
+      mProgressDialog.dismiss();
+      if ((results == null) || (results.size() == 0))
+        return;
 
-        // Start the MapView running again
-        if (mMapView != null) {
-            mMapView.unpause();
-            if (mMapViewState != null) {
-                mMapView.restoreState(mMapViewState);
-            }
-        }
+      // Add the first result to the map and zoom to it
+      LocatorGeocodeResult result = results.get(0);
+      double x = result.getLocation().getX();
+      double y = result.getLocation().getY();
+      String address = result.getAddress();
+      // Add a marker at the found place. When tapping on the marker, a Callout with the address
+      // will be displayed
+      mMapViewHelper.addMarkerGraphic(y, x, LOCATION_TITLE, address, android.R.drawable.ic_menu_myplaces, null, false, 1);
+      mMapView.centerAndZoom(y, x, 14);
+      mSearchView.setQuery(address, true);
+
+      // Hide soft keyboard
+      mSearchView.clearFocus();
+      InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+      inputManager.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
     }
+  }
+
+  // Obtain a list of search suggestions.
+  private class SuggestPlaceTask extends AsyncTask<String, Void, List<LocatorSuggestionResult>> {
+    private Locator mLocator;
+
+    public SuggestPlaceTask(Locator locator) {
+      mLocator = locator;
+    }
+
+    @Override
+    protected List<LocatorSuggestionResult> doInBackground(String... queries) {
+      for (String query : queries) {
+        // Create suggestion parameter
+        LocatorSuggestionParameters params = new LocatorSuggestionParameters(query);
+        //Set the location to be used for proximity based suggestion
+        params.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
+        // Set the radial search distance in meters
+        params.setDistance(500.0);
+
+        List<LocatorSuggestionResult> results = null;
+        try {
+          results = mLocator.suggest(params);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+
+        return results;
+      }
+
+      return null;
+    }
+
+    @Override
+    protected void onPostExecute(List<LocatorSuggestionResult> results) {
+      if (results == null) {
+        return;
+      }
+
+      int key = 0;
+      // Add suggestion list to a cursor
+      initSuggestionCursor();
+      for (LocatorSuggestionResult result : results) {
+        mSuggestionCursor.addRow(new Object[]{key++, result.getText(), "0", "0"});
+      }
+
+      applySuggestionCursor();
+    }
+  }
+
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+
+    mMapViewState = mMapView.retainState();
+    mMapView.pause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+
+    // Start the MapView running again
+    if (mMapView != null) {
+      mMapView.unpause();
+      if (mMapViewState != null) {
+        mMapView.restoreState(mMapViewState);
+      }
+    }
+  }
 
 }
