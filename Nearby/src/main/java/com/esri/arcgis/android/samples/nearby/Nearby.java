@@ -13,590 +13,571 @@
 
 package com.esri.arcgis.android.samples.nearby;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.RectF;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.esri.android.map.Callout;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.LocationDisplayManager;
-import com.esri.android.map.LocationDisplayManager.AutoPanMode;
 import com.esri.android.map.MapView;
-import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 import com.esri.android.map.event.OnSingleTapListener;
 import com.esri.android.map.event.OnStatusChangedListener;
 import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.LinearUnit;
+import com.esri.core.geometry.MultiPoint;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.geometry.Unit;
+import com.esri.core.map.CallbackListener;
 import com.esri.core.map.Graphic;
 import com.esri.core.symbol.PictureMarkerSymbol;
 import com.esri.core.symbol.Symbol;
+import com.esri.core.tasks.geocode.Locator;
+import com.esri.core.tasks.geocode.LocatorFindParameters;
+import com.esri.core.tasks.geocode.LocatorGeocodeResult;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
- * The purpose of this sample is to leverage your devices GPS position to zoom
- * to your location on the map. When you click on the either of the buttons on
- * the action bar, coffee denoting local coffee shops or beer mug denoting bars,
- * the respective shops in your area are displayed on the map. Check device
- * setting to make sure that location services are enabled for the app.
- * 
+ * The purpose of this sample is to use the extent of the map (either based on
+ * the device GPS position, or the extent you set) to search for local services.
+ * When you click on the buttons on the action bar, the respective shops in your
+ * area are displayed on the map. The ArcGIS Online world locator service is
+ * used.
+ * Check device settings to make sure that location services are enabled for
+ * the app.
  */
 public class Nearby extends Activity {
 
-	final static int TITLE_ID = 1;
-	final static int REVIEW_ID = 2;
-	// The circle area specified by search_radius and input lat/lon serves
-	// searching purpose. It is also used to construct the extent which
-	// map zooms to after the first GPS fix is retrieved.
-	final static double SEARCH_RADIUS = 5;
-
-	MapView mMapView = null;
-	ArcGISTiledMapServiceLayer mBaseMap;
-	GraphicsLayer graphicsLayer = null;
-	PictureMarkerSymbol coffeeIcon, barIcon;
-	JSONObject results = null;
-	ProgressDialog progress;
-	LocationDisplayManager lDisplayManager;
+  private static final String TAG = Nearby.class.getSimpleName();
+
+  // Define types of search.
+  private enum SearchType {
+    BAR,
+    PIZZA,
+    COFFEE,
+  }
+  SearchType mCurrentSearchType;
+  final static double ZOOM_BY = 20;
+  LinearUnit mMilesUnit = new LinearUnit(LinearUnit.Code.MILE_STATUTE);
+
+  ProgressBar mProgress;
+  MapView mMapView = null;
+  SpatialReference mMapSr = null;
+  GraphicsLayer mResultsLayer = null;
+  PictureMarkerSymbol mCoffeeMapIcon, mBarMapIcon, mPizzaMapIcon;
+  
+  // Views to show selected search result information.
+  TextView mTitleTextView;
+  TextView mAddressTextView;
+  TextView mPhoneTextView;
+  ImageView mPhoneImageView;
+  TextView mDistanceTextView;
+  RatingBar mRatingBar;
+  
+  Locator mLocator;
+  ArrayList<String> mFindOutFields = new ArrayList<String>();
+
+  LocationDisplayManager mLDM;
+  LinearLayout mPlaceLayout;
+
+
+  /**
+   * When the map is tapped, select the graphic at that location.
+   */
+  final OnSingleTapListener mapTapCallback = new OnSingleTapListener() {
+    @Override
+    public void onSingleTap(float x, float y) {
+      // Find out if we tapped on a Graphic
+      int[] graphicIDs = mResultsLayer.getGraphicIDs(x, y, 25);
+      if (graphicIDs != null && graphicIDs.length > 0) {
+        // If there is more than one graphic, only select the first found.
+        if (graphicIDs.length > 1){
+          int id = graphicIDs[0];
+          graphicIDs = new int[] { id };
+        }
+
+        // Only deselect the last graphic if user has tapped a new one. App
+        // remains showing the last selected nearby service information,
+        // as that is the main focus of the app.
+        mResultsLayer.clearSelection();
+
+        // Select the graphic
+        mResultsLayer.setSelectedGraphics(graphicIDs, true);
+
+        // Use the graphic attributes to update the information views.
+        Graphic gr = mResultsLayer.getGraphic(graphicIDs[0]);
+        updateContent(gr.getAttributes());
+      }
+    }
+  };
+
+  /**
+   * When map is ready, set up the LocationDisplayManager.
+   */
+  final OnStatusChangedListener statusChangedListener = new OnStatusChangedListener() {
+
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public void onStatusChanged(Object source, STATUS status) {
+      if (source == mMapView && status == STATUS.INITIALIZED) {
+        mMapSr = mMapView.getSpatialReference();
+        if (mLDM == null) {
+          setupLocationListener();
+        }
+      }
+    }
+  };
+
+  /**
+   * When user touches phone number, send this to the dialler using an intent.
+   */
+  final View.OnTouchListener callTouchListener = new View.OnTouchListener() {
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+      String num = mPhoneTextView.getText().toString();
+      Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + num));
+      startActivity(intent);
+      return true;
+    }
+  };
+  
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.main);
+
+    mPlaceLayout = (LinearLayout) findViewById(R.id.placeLayout);
+
+    mMapView = (MapView) findViewById(R.id.map);
+    mMapView.setOnStatusChangedListener(statusChangedListener);
+    mMapView.setOnSingleTapListener(mapTapCallback);
+
+    mTitleTextView = (TextView) findViewById(R.id.titleTextView);
+    mTitleTextView.setText(R.string.startup_caption);
+    mAddressTextView = (TextView) findViewById(R.id.addressTextView);
+    mPhoneTextView = (TextView) findViewById(R.id.phoneTextView);
+    mPhoneTextView.setOnTouchListener(callTouchListener);
+    mPhoneImageView = (ImageView) findViewById(R.id.callImageView);
+    mPhoneImageView.setOnTouchListener(callTouchListener);
+    mDistanceTextView = (TextView) findViewById(R.id.distanceTextView);
+    mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
+    mProgress = (ProgressBar) findViewById(R.id.findProgress);
+
+    mResultsLayer = new GraphicsLayer();
+    mResultsLayer.setSelectionColorWidth(6);
+    mMapView.addLayer(mResultsLayer);
+
+
+    mCoffeeMapIcon = new PictureMarkerSymbol(getApplicationContext(), this
+        .getResources().getDrawable(R.drawable.ic_local_cafe_black));
+    mPizzaMapIcon = new PictureMarkerSymbol(getApplicationContext(), this
+        .getResources().getDrawable(R.drawable.ic_local_pizza_black));
+    mBarMapIcon = new PictureMarkerSymbol(getApplicationContext(), this
+        .getResources().getDrawable(R.drawable.ic_local_drink_black));
+
+    setupLocator();
+    setupLocationListener();
+  }
+
+  private void setupLocator() {
+    // Parameterless constructor - uses the Esri world geocoding service.
+    mLocator = Locator.createOnlineLocator();
+
+    // Set up the outFields parameter for the search.
+    mFindOutFields.add(getResources().getString(R.string.result_title));
+    mFindOutFields.add(getResources().getString(R.string.result_type));
+    mFindOutFields.add(getResources().getString(R.string.result_address));
+    mFindOutFields.add(getResources().getString(R.string.result_phone));
+    mFindOutFields.add(getResources().getString(R.string.result_distance));
+  }
+
+  private void setupLocationListener() {
+    if ((mMapView != null) && (mMapView.isLoaded())) {
+      mLDM = mMapView.getLocationDisplayManager();
+      mLDM.setLocationListener(new LocationListener() {
+
+        boolean locationChanged = false;
+
+        // Zooms to the current location when first GPS fix arrives.
+        @Override
+        public void onLocationChanged(Location loc) {
+          if (!locationChanged) {
+            locationChanged = true;
+            zoomToLocation(loc);
+
+            // After zooming, turn on the Location pan mode to show the location
+            // symbol. This will disable as soon as you interact with the map.
+            mLDM.setAutoPanMode(LocationDisplayManager.AutoPanMode.LOCATION);
+          }
+        }
+
+        @Override
+        public void onProviderDisabled(String arg0) {
+        }
+
+        @Override
+        public void onProviderEnabled(String arg0) {
+        }
+
+        @Override
+        public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+        }
+      });
+
+      mLDM.start();
+    }
+  }
+
+  /**
+   * Zoom to location using a specific size of extent.
+   *
+   * @param loc  the location to center the MapView at
+   */
+  private void zoomToLocation(Location loc) {
+    Point mapPoint = getAsPoint(loc);
+    Unit mapUnit = mMapSr.getUnit();
+    double zoomFactor = Unit.convertUnits(ZOOM_BY,
+        Unit.create(LinearUnit.Code.MILE_US), mapUnit);
+    Envelope zoomExtent = new Envelope(mapPoint, zoomFactor, zoomFactor);
+    mMapView.setExtent(zoomExtent);
+  }
+
+  /**
+   * Performs a find using the Locator, for a specific type of business.
+   *
+   * @param searchFor A string containing the type of business to search for.
+   */
+  private void doFindNearbyAsync(String searchFor) {
+
+
+    final CallbackListener<List<LocatorGeocodeResult>> findCallback = new
+        CallbackListener<List<LocatorGeocodeResult>>() {
+
+      @Override
+      public void onError(Throwable e) {
+        setProgressOnUIThread(false);
+
+        // Log the error
+        Log.e(TAG, "No Results Found");
+        Log.e(TAG, e.getMessage());
+        // Indicate to user we cannot show results in this area.
+        showToastOnUiThread("Error searching for results");
+      }
+
+      @Override
+      public void onCallback(List<LocatorGeocodeResult> results) {
+
+        // remove any previous graphics
+        mResultsLayer.removeAll();
+
+        // Use a Multipoint as a simple way to set total extent.
+        MultiPoint fullExtent = new MultiPoint();
+
+        if (results.size() > 0) {
+          // Set specific symbols and selection color for each type of search.
+          Symbol symbol = null;
+          if (mCurrentSearchType == SearchType.BAR) {
+            mResultsLayer.setSelectionColor(getResources().getColor(
+                R.color.beer_selection));
+            symbol = mBarMapIcon;
+          } else if (mCurrentSearchType == SearchType.PIZZA) {
+            mResultsLayer.setSelectionColor(getResources().getColor(
+                R.color.pizza_selection));
+            symbol = mPizzaMapIcon;
+          } else if (mCurrentSearchType == SearchType.COFFEE) {
+            mResultsLayer.setSelectionColor(getResources().getColor(
+                R.color.coffee_selection));
+            symbol = mCoffeeMapIcon;
+          }
+
+          // For each result, create a Graphic, using result attributes as
+          // graphic attributes.
+          for (LocatorGeocodeResult result : results) {
+            Point resultPoint = result.getLocation();
+            HashMap<String, Object> attrMap = new
+                HashMap<String, Object>(result.getAttributes());
+            mResultsLayer.addGraphic(new Graphic(resultPoint, symbol, attrMap));
+            fullExtent.add(resultPoint);
+          }
+          // Zoom to the full extent
+          mMapView.setExtent(fullExtent, 100);
+        }
+        // Update the UI with the result information.
+        setResultCount(results.size(), mCurrentSearchType);
+      }
+    };
+
+    try
+    {
+      setProgressOnUIThread(true);
+
+      // Get the current map extent.
+      Envelope currExt = new Envelope();
+      mMapView.getExtent().queryEnvelope(currExt);
+
+      // Set up locator parameters based on the extent, search type, and the
+      // outfields set previously.
+      LocatorFindParameters fParams = new LocatorFindParameters(searchFor);
+      fParams.setSearchExtent(currExt, mMapSr);
+      fParams.setOutSR(mMapSr);
+      fParams.setOutFields(mFindOutFields);
+
+      // If LocationDisplayManger has a current location, set this to increase
+      // priority and return a distance value in the results.
+      if ((mLDM != null) && (mLDM.getLocation() != null)) {
+        Point currentPoint = getAsPoint(mLDM.getLocation());
+        fParams.setLocation(currentPoint, mMapSr);
+      }
+
+      // Call find, passing in the callback above.
+      mLocator.find(fParams, findCallback);
+    } 
+    catch (Exception e) {
+      // Update UI and report any errors.
+      setProgressOnUIThread(false);
+
+      // Log the error
+      Log.e(TAG, "No Results Found");
+      Log.e(TAG, e.getMessage());
+
+      // Indicate to user we cannot show results in this area.
+      showToastOnUiThread("Error searching for results");
+    }
+  }
+
+  private static String getRating() {
+    // Randomized ratings could be replaced by a ratings service from a third
+    // party.
+    Random r = new Random();
+    return String.valueOf(1 + (r.nextFloat() * 4));
+  }
+
+  /**
+   * Update user interface with result set information. Ensure this can be
+   * called from either background or UI thread by performing any actions on
+   * Views within a runnable on the UI thread.
+   *
+   * @param resultCount  number of results in the result set
+   * @param searchType  type of business searched for
+   */
+  private void setResultCount(int resultCount, SearchType searchType) {
+    String searchTypeMessage = "";
+
+    switch (searchType) {
+      case COFFEE:
+        searchTypeMessage = getResources().getString(R.string.results_coffee);
+        break;
+      case PIZZA:
+        searchTypeMessage = getResources().getString(R.string.results_pizza);
+        break;
+      case BAR:
+        searchTypeMessage = getResources().getString(R.string.results_bar);
+        break;
+    }
+
+    final String message = String.format("Found %d %s", resultCount,
+        searchTypeMessage);
+
+    runOnUiThread(new Runnable() {
+      public void run() {
+        mProgress.setIndeterminate(false);
+        mTitleTextView.setText(message);
+        mAddressTextView.setText("");
+        mPhoneTextView.setText("");
+        mPhoneImageView.setImageDrawable(null);
+        mDistanceTextView.setText("");
+        mRatingBar.setVisibility(View.GONE);
+      }
+    });
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.menu_layout, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+
+    switch (item.getItemId()) {
+      case R.id.bar:
+        if (mMapView.isLoaded()) {
+          clearCurrentResults();
+          mCurrentSearchType = SearchType.BAR;
+          try {
+            doFindNearbyAsync(getResources().getString(R.string.bar_query));
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+
+        }
+        return true;
+
+      case R.id.pizza:
+        if (mMapView.isLoaded()) {
+          mCurrentSearchType = SearchType.PIZZA;
+          try {
+            doFindNearbyAsync(getResources().getString(R.string.pizza_query));
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+
+        return true;
+
+      case R.id.coffee:
+        if (mMapView.isLoaded()) {
+          mCurrentSearchType = SearchType.COFFEE;
+          try {
+            doFindNearbyAsync(getResources().getString(R.string.coffee_query));
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+
+        }
+
+        return true;
+
+      case R.id.locate:
+        if (mMapView.isLoaded()) {
+          // If LocationDisplayManager has a fix, pan to that location. If no
+          // fix yet, this will happen when the first fix arrives, due to
+          // callback set up previously.
+          if ((mLDM != null) && (mLDM.getLocation() != null)) {
+            // Keep current scale and go to current location, if there is one.
+            mLDM.setAutoPanMode(LocationDisplayManager.AutoPanMode.LOCATION);
+          }
+        }
+
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+
+    }
+  }
+
+  private void clearCurrentResults() {
+    if (mResultsLayer != null) {
+      mResultsLayer.removeAll();
+    }
+    mTitleTextView.setText("");
+    mAddressTextView.setText("");
+    mPhoneTextView.setText("");
+    mPhoneImageView.setImageDrawable(null);
+    mDistanceTextView.setText("");
+    mRatingBar.setRating(0);
+    mRatingBar.setVisibility(View.GONE);
+  }
+
+
+  private Point getAsPoint(Location loc) {
+    Point wgsPoint = new Point(loc.getLongitude(), loc.getLatitude());
+    return (Point) GeometryEngine.project(wgsPoint, SpatialReference.create(4326),
+        mMapSr);
+  }
+
+
+  public void updateContent(Map<String, Object> attributes) {
+    // This is called from UI thread (MapTap listener)
+
+    String title = attributes.get(getResources().getString(
+        R.string.result_title)).toString();
+    mTitleTextView.setText(title);
+
+    String address = attributes.get(getResources().getString(
+        R.string.result_address)).toString();
+    mAddressTextView.setText(address);
+
+    String distance = attributes.get(getResources().getString(
+        R.string.result_distance)).toString();
+    double meters = Double.parseDouble(distance);
+    if (meters > 0) {
+      if (mDistanceTextView.getVisibility() != View.VISIBLE) {
+        mDistanceTextView.setVisibility(View.VISIBLE);
+      }
+      double miles = mMilesUnit.convertFromMeters(meters);
+      mDistanceTextView.setText(String.format("%.2f %s", miles,
+          getResources().getString(R.string.miles)));
+    } else {
+      mDistanceTextView.setVisibility(View.GONE);
+    }
+
+    String phone = attributes.get(getResources().getString(
+        R.string.result_phone)).toString();
+    mPhoneTextView.setText(phone);
+    mPhoneImageView.setImageDrawable(getResources().getDrawable(
+        R.drawable.ic_action_call));
+
+    Float rating = Float.parseFloat(getRating());
+    mRatingBar.setRating(rating);
+    mRatingBar.setVisibility(View.VISIBLE);
+  }
+
+  public void showToastOnUiThread(final String message) {
+    runOnUiThread(new Runnable() {
+      public void run() {
+        Toast.makeText(Nearby.this, message, Toast.LENGTH_SHORT).show();
+      }
+    });
+  }
+
+  public void setProgressOnUIThread(final boolean isIndeterminate) {
+    runOnUiThread(new Runnable() {
+      public void run() {
+        mProgress.setIndeterminate(isIndeterminate);
+      }
+    });
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+    if (mLDM != null) {
+      mLDM.pause();
+    }
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.unpause();
+    if (mLDM != null) {
+      mLDM.resume();
+    }
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    if (mLDM != null) {
+      mLDM.stop();
+    }
+  }
 
-	View content;
-	Callout callout;
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-		mMapView = (MapView) findViewById(R.id.map);
-		mBaseMap = new ArcGISTiledMapServiceLayer(getResources().getString(R.string.basemap_url));
-		mMapView.addLayer(mBaseMap);
-
-		callout = mMapView.getCallout();
-		callout.setStyle(R.xml.calloutstyle);
-
-		content = createContent();
-
-		graphicsLayer = new GraphicsLayer();
-		mMapView.addLayer(graphicsLayer);
-
-		coffeeIcon = new PictureMarkerSymbol(getApplicationContext(), this
-				.getResources().getDrawable(R.drawable.ic_coffee_dark));
-		barIcon = new PictureMarkerSymbol(getApplicationContext(), this
-				.getResources().getDrawable(R.drawable.ic_bar_dark));
-
-
-		mMapView.setOnStatusChangedListener(new OnStatusChangedListener() {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onStatusChanged(Object source, STATUS status) {
-				if (source == mMapView && status == STATUS.INITIALIZED) {
-					lDisplayManager = mMapView.getLocationDisplayManager();
-					lDisplayManager.setAutoPanMode(AutoPanMode.LOCATION);
-					lDisplayManager.setLocationListener(new LocationListener() {
-
-						boolean locationChanged = false;
-
-						// Zooms to the current location when first GPS fix arrives.
-						@Override
-						public void onLocationChanged(Location loc) {
-							if (!locationChanged) {
-								locationChanged = true;
-								double locy = loc.getLatitude();
-								double locx = loc.getLongitude();
-								Point wgspoint = new Point(locx, locy);
-								Point mapPoint = (Point) GeometryEngine
-										.project(wgspoint,
-												SpatialReference.create(4326),
-												mMapView.getSpatialReference());
-
-								Unit mapUnit = mMapView.getSpatialReference()
-										.getUnit();
-								double zoomWidth = Unit.convertUnits(
-										SEARCH_RADIUS,
-										Unit.create(LinearUnit.Code.MILE_US),
-										mapUnit);
-								Envelope zoomExtent = new Envelope(mapPoint,
-										zoomWidth, zoomWidth);
-								mMapView.setExtent(zoomExtent);
-
-							}
-
-						}
-
-						@Override
-						public void onProviderDisabled(String arg0) {
-
-						}
-
-						@Override
-						public void onProviderEnabled(String arg0) {
-						}
-
-						@Override
-						public void onStatusChanged(String arg0, int arg1,
-								Bundle arg2) {
-
-						}
-					});
-					lDisplayManager.start();
-
-				}
-
-			}
-		});
-
-		mMapView.setOnSingleTapListener(new OnSingleTapListener() {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onSingleTap(float x, float y) {
-
-				callout.hide();
-
-				// Handles the tapping on Graphic
-
-				int[] graphicIDs = graphicsLayer.getGraphicIDs(x, y, 25);
-				if (graphicIDs != null && graphicIDs.length > 0) {
-					Graphic gr = graphicsLayer.getGraphic(graphicIDs[0]);
-					updateContent((String) gr.getAttributeValue("Rating"),
-							(String) gr.getAttributeValue("Title"));
-					Point location = (Point) gr.getGeometry();
-					callout.setOffset(0, -15);
-					callout.show(location, content);
-				}
-
-			}
-		});
-
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_layout, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		switch (item.getItemId()) {
-		case R.id.bar:
-			if (mMapView.isLoaded()) {
-				try {
-					AsyncLocalSearch asycst = new AsyncLocalSearch();
-					String[] searchCriteria = { "bar" };
-					asycst.execute(searchCriteria);
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-			return true;
-		case R.id.coffee:
-			if (mMapView.isLoaded()) {
-				try {
-					AsyncLocalSearch asycst = new AsyncLocalSearch();
-					String[] searchCriteria = { "coffee" };
-					asycst.execute(searchCriteria);
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-
-		}
-	}
-
-	/**
-	 * Creates a LinearLayout which contains tile and rating.
-	 * 
-	 * @return content view to be added to the callout.
-	 */
-
-	public View createContent() {
-		// create linear layout for the entire view
-		LinearLayout layout = new LinearLayout(this);
-		layout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT));
-		layout.setOrientation(LinearLayout.VERTICAL);
-
-		// create TextView for the title
-		TextView titleView = new TextView(this);
-		titleView.setId(TITLE_ID);
-		titleView.setTextColor(Color.GRAY);
-		layout.addView(titleView);
-
-		StarView sv = new StarView(this);
-		sv.setId(REVIEW_ID);
-		layout.addView(sv);
-
-		return layout;
-	}
-
-	/**
-	 * Populates the content view with rating and title
-	 * 
-	 * @param rating
-	 *            rating for the business
-	 * @param title
-	 *            title of the business
-	 */
-	public void updateContent(String rating, String title) {
-		if (content == null)
-			return;
-
-		TextView txt = (TextView) content.findViewById(TITLE_ID);
-		txt.setText(title);
-
-		StarView sv = (StarView) content.findViewById(REVIEW_ID);
-
-		try {
-			int val = (int) Double.parseDouble(rating);
-
-			switch (val) {
-			case 1:
-				sv.setLevel(1);
-				break;
-
-			case 2:
-				sv.setLevel(2);
-				break;
-
-			case 3:
-				sv.setLevel(3);
-				break;
-
-			case 4:
-				sv.setLevel(4);
-				break;
-
-			case 5:
-				sv.setLevel(5);
-				break;
-
-			default:
-				sv.setLevel(0);
-				break;
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-
-		}
-
-	}
-
-	/*
-	 * Executes yahoo local search task asynchronously. The first parameter is
-	 * the query criteria like'coffee', 'shop', etc.
-	 */
-
-	private class AsyncLocalSearch extends AsyncTask<String, Void, Boolean> {
-		// Determine if the query returned an array of results
-		boolean success = false;
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			progress.dismiss();
-			callout.hide();
-			// send toast message based on results of query
-			if (!success) {
-				// No search results
-				Toast toast = Toast.makeText(Nearby.this, "No search results",
-						Toast.LENGTH_LONG);
-				toast.show();
-			} else {
-				// Search results
-				Toast toast = Toast.makeText(Nearby.this,
-						"Please tap on graphic for detailed information",
-						Toast.LENGTH_LONG);
-				toast.show();
-			}
-		}
-
-		@Override
-		protected void onPreExecute() {
-			// show progress bar while executing task
-			progress = ProgressDialog.show(Nearby.this, "",
-					"Please wait for search results coming back....", true);
-		}
-
-		@SuppressWarnings("boxing")
-		@Override
-		protected Boolean doInBackground(String... params) {
-			// handle case of no parameters
-			if (params == null || params.length == 0) {
-				success = false;
-				return success;
-			}
-			// remove any previous graphics
-			graphicsLayer.removeAll();
-
-			// Creates URL that is passed to yahoo local search web service end
-			// point
-			String criteria = params[0];
-
-			// base url
-			String baseURL = "http://query.yahooapis.com/v1/public/yql?q=";
-			// base query
-			String query = "select * from local.search where";
-			// get user location
-			Location location = mMapView.getLocationDisplayManager()
-					.getLocation();
-			// convert to lat/lon
-			String latStr = Double.toString(location.getLatitude());
-			String lonStr = Double.toString(location.getLongitude());
-			// create query from user location and defined SEARCH_RADIUS
-			query += (" latitude=" + latStr + " and " + "longitude=" + lonStr
-					+ " and " + "radius=" + Double.toString(SEARCH_RADIUS)
-					+ " and query='" + criteria + "'");
-			// encode the query part of the url
-			String encodeURL = baseURL + Uri.encode(query)
-					+ "&format=json&diagnostics=true&callback=";
-
-			// Uses URLConnection to communicate with yahool local search web
-			// service end point. Once results come back, create a JSON object
-			// and get a JSON array from its content. While iterating the JSON
-			// array, we extract each result's attributes that we are interested
-			// in,for example, location, title, and rating.
-			// A graphic is created by using these attributes for each result,
-			// and therefore added into a GraphicsLayer.
-
-			URL url = null;
-			try {
-				// create the URL from encoded string
-				url = new URL(encodeURL);
-				// open the connection
-				URLConnection urlResponse = null;
-				urlResponse = url.openConnection();
-				// read the response from URLConnection
-				BufferedReader br = new BufferedReader(new InputStreamReader(
-						urlResponse.getInputStream()));
-				String jsonString = "";
-				String line;
-				while ((line = br.readLine()) != null) {
-					jsonString += line;
-				}
-
-				br.close();
-
-				// parse the return JSON.
-				JSONObject queryResponse = new JSONObject(jsonString);
-				// every response from YQL includes a query element
-				queryResponse = queryResponse.getJSONObject("query");
-				// query element contains a results element
-				JSONObject jsonResults = queryResponse.getJSONObject("results");
-				// create a JSONArray to hold elements in results
-				JSONArray result = null;
-
-				// Get the JSONArray value associated with the Result key
-				try {
-					result = jsonResults.getJSONArray("Result");
-				} catch (JSONException e) {
-					// Result element not an array
-					success = false;
-					Log.d("ERROR", "JSON Object not an array");
-					return success;
-				}
-				// Result element is an array to parse
-				success = true;
-
-				// Get the number of search results in this set
-				int resultCount = queryResponse.length();
-
-				// Loop over each result and print the title, summary, and URL
-				for (int i = 0; i < resultCount; i++) {
-					try {
-						JSONObject resultObject = result.getJSONObject(i);
-						jsonResults = resultObject;
-						Point p = new Point(
-								Float.valueOf((String) (resultObject
-										.get("Longitude"))),
-								Float.valueOf((String) (resultObject
-										.get("Latitude"))));
-						String title = resultObject.getString("Title");
-						JSONObject object = resultObject
-								.getJSONObject("Rating");
-						String rating = (String) object.get("AverageRating");
-
-						Point point = (Point) GeometryEngine.project(p,
-								SpatialReference.create(4326),
-								mMapView.getSpatialReference());
-						Symbol symbol = null;
-						if (criteria == "coffee")
-							symbol = coffeeIcon;
-						else
-							symbol = barIcon;
-
-						HashMap<String, Object> attrMap = new HashMap<String, Object>();
-						attrMap.put("Title", title);
-						attrMap.put("Rating", rating);
-						graphicsLayer.addGraphic(new Graphic(point, symbol,
-								attrMap));
-
-					} catch (JSONException r) {
-						r.printStackTrace();
-					}
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			return success;
-		}
-
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		mMapView = null;
-	}
-
-	/**
-	 * 
-	 * Custom view to draw the rating star
-	 * 
-	 */
-	private class StarView extends View {
-
-		private Bitmap mBitmap;
-		private Paint mPaint = new Paint();
-		private Canvas mCanvas = new Canvas();
-		private Path mPath = new Path();
-		private RectF mRect = new RectF();
-		int width = 200;
-		int height = 40;
-		private int mLevel = 0;
-		float[] points = new float[10];
-		float dy;
-
-		public StarView(Context context) {
-			super(context);
-
-			mPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-			mRect.set(-6f, -6f, 6f, 6f);
-
-			double cDegree = 180.0;
-			for (int i = 0; i < 5; i++) {
-				points[2 * i] = (float) Math.cos(cDegree * 3.1415926 / 180);
-				points[2 * i + 1] = (float) Math.sin(cDegree * 3.1415926 / 180);
-				cDegree += 144;
-			}
-
-		}
-
-		public void setLevel(int level) {
-			mLevel = level;
-
-		}
-
-		@Override
-		protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-			mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
-			mCanvas.setBitmap(mBitmap);
-
-			dy = height * 0.5f;
-
-			mPath.moveTo(points[0], points[1]);
-			for (int i = 1; i < 5; i++) {
-				mPath.lineTo(points[i * 2], points[i * 2 + 1]);
-			}
-			mPath.close();
-
-			super.onSizeChanged(w, h, oldw, oldh);
-
-		}
-
-		@Override
-		protected void onDraw(Canvas canvas) {
-
-			mCanvas.drawColor(0xbf1e1d1d);
-			float sx = 15;
-			for (int i = 0; i < 5; i++) {
-				mCanvas.save(Canvas.MATRIX_SAVE_FLAG);
-
-				mCanvas.translate(sx, dy);
-
-				mCanvas.scale(15, 15);
-				mCanvas.rotate(18.0f);
-				mPaint.setStyle(Paint.Style.FILL);
-				if (i < mLevel) {
-					mPaint.setColor(0xffffff00);
-				} else {
-					mPaint.setColor(Color.WHITE);
-				}
-				mCanvas.drawPath(mPath, mPaint);
-
-				mCanvas.restore();
-				sx += 30;
-			}
-			canvas.drawBitmap(mBitmap, 0, 0, null);
-
-		}
-
-		@Override
-		protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-			setMeasuredDimension(width, height);
-		}
-
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if (lDisplayManager != null)
-			lDisplayManager.start();
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		if (lDisplayManager != null)
-			lDisplayManager.stop();
-
-	}
 
 }
