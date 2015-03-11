@@ -258,9 +258,9 @@ public class Nearby extends Activity {
   private void zoomToLocation(Location loc) {
     Point mapPoint = getAsPoint(loc);
     Unit mapUnit = mMapSr.getUnit();
-    double zoomWidth = Unit.convertUnits(ZOOM_BY,
+    double zoomFactor = Unit.convertUnits(ZOOM_BY,
         Unit.create(LinearUnit.Code.MILE_US), mapUnit);
-    Envelope zoomExtent = new Envelope(mapPoint, zoomWidth, zoomWidth);
+    Envelope zoomExtent = new Envelope(mapPoint, zoomFactor, zoomFactor);
     mMapView.setExtent(zoomExtent);
   }
 
@@ -379,8 +379,8 @@ public class Nearby extends Activity {
    * called from either background or UI thread by performing any actions on
    * Views within a runnable on the UI thread.
    *
-   * @param resultCount
-   * @param searchType
+   * @param resultCount  number of results in the result set
+   * @param searchType  type of business searched for
    */
   private void setResultCount(int resultCount, SearchType searchType) {
     String searchTypeMessage = "";
