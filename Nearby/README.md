@@ -5,6 +5,7 @@ The purpose of this sample is to leverage your devices GPS position to zoom to y
 * PictureMarkerSymbol
 * ArcGISTiledMapServiceLayer
 * GeometryEngine
+* LocationDisplayManager
 
 ## Sample Design
 The sample searches for nearby coffee and bar establishments relative to your current GPS location.  The sample also allows you to select returned establishments to get the name and a rating for the establishment.  
