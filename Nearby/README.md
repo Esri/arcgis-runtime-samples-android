@@ -4,7 +4,6 @@ The purpose of this sample is to leverage your devices GPS position to zoom to y
 ## Features
 * PictureMarkerSymbol
 * ArcGISTiledMapServiceLayer
-* Callout
 * GeometryEngine
 
 ## Sample Design
