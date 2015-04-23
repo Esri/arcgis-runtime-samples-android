@@ -15,6 +15,7 @@ android {
         exclude 'META-INF/LGPL2.1'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
+        exclude 'LICENSE.txt'
     }
 
     buildTypes {
@@ -26,7 +27,8 @@ android {
 }
 
 dependencies {
-    // module dependency
+    // app dependencies
+    compile 'com.google.guava:guava:18.0'
     compile 'com.esri.arcgis.android:arcgis-android:10.2.5'
     // local binary dependency
     compile fileTree(dir: 'libs', include: ['*.jar'])
