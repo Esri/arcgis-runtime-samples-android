@@ -44,43 +44,40 @@ public class MainActivityTest {
 
     @Test
     public void testStreetsBasemap() {
-        // Open the overflow menu OR open the options menu,
-        // depending on if the device has a hardware or software overflow menu button.
+        // Open the overflow menu
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         // Click the item.
         onView(withText("Streets")) // ViewMatcher
                 .perform(ViewActions.click()); // click() is a ViewAction
 
-        // Verify that we have really clicked on the icon by checking the TextView content.
+        // Verify that we have really clicked on the selection and map is enabled
         onView(withId(R.id.map)).check(ViewAssertions.matches(isEnabled()));
     }
 
     @Test
     public void testGrayBasemap() {
-        // Open the overflow menu OR open the options menu,
-        // depending on if the device has a hardware or software overflow menu button.
+        // Open the overflow menu
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         // Click the item.
         onView(withText("Gray")) // ViewMatcher
                 .perform(ViewActions.click()); // click() is a ViewAction
 
-        // Verify that we have really clicked on the icon by checking the TextView content.
+        // Verify that we have really clicked on the selection and map is enabled
         onView(withId(R.id.map)).check(ViewAssertions.matches(isEnabled()));
     }
 
     @Test
     public void testOceansBasemap() {
-        // Open the overflow menu OR open the options menu,
-        // depending on if the device has a hardware or software overflow menu button.
+        // Open the overflow menu
         openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 
         // Click the item.
         onView(withText("Oceans")) // ViewMatcher
                 .perform(ViewActions.click()); // click() is a ViewAction
 
-        // Verify that we have really clicked on the icon by checking the TextView content.
+        // Verify that we have really clicked on the selection and map is enabled
         onView(withId(R.id.map)).check(ViewAssertions.matches(isEnabled()));
     }
 
