@@ -59,12 +59,18 @@ public class ExportTileCacheTaskSampleActivity extends Activity {
 
 	final CharSequence[] items = { "Level ID:0", "Level ID:1", "Level ID:2",
 			"Level ID:3", "Level ID:4", "Level ID:5", "Level ID:6",
-			"Level ID:7", "Level ID:8", "Level ID:9", };
+			"Level ID:7", "Level ID:8", "Level ID:9", "Level ID:10",
+			"Level ID:11", "Level ID:12", "Level ID:13", "Level ID:14",
+			"Level ID:15", "Level ID:16", "Level ID:17", "Level ID:18",
+			"Level ID:19", };
 
 	double[] mapResolution = { 156543.03392800014, 78271.51696399994,
 			39135.75848200009, 19567.87924099992, 9783.93962049996,
 			4891.96981024998, 2445.98490512499, 1222.992452562495,
-			611.4962262813797, 305.74811314055756 };
+			611.4962262813797, 305.74811314055756, 152.87405657041106,
+			76.43702828507324, 38.21851414253662, 19.10925707126831,
+			9.554628535634155, 4.77731426794937, 2.388657133974685,
+			1.1943285668550503, 0.5971642835598172, 0.29858214164761665 };
 
 	boolean[] itemsChecked = new boolean[items.length];
 	ArrayList<Double> levelsArraylist = new ArrayList<Double>();
@@ -157,7 +163,8 @@ public class ExportTileCacheTaskSampleActivity extends Activity {
 		});
 
 		builder.setMultiChoiceItems(items, new boolean[] { false, false, false,
-				false, false, false, false, false, false, false },
+						false, false, false, false, false, false, false, false, false,
+						false, false, false, false, false, false, false, false },
 				new DialogInterface.OnMultiChoiceClickListener() {
 
 					@Override
