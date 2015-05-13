@@ -157,7 +157,7 @@ public class ExportTileCacheTaskSampleActivity extends Activity {
 		});
 
 		builder.setMultiChoiceItems(items, new boolean[] { false, false, false,
-				false, false, false, false, false, false, false },
+						false, false, false, false, false, false, false },
 				new DialogInterface.OnMultiChoiceClickListener() {
 
 					@Override
