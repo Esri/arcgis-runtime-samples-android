@@ -17,7 +17,6 @@ allprojects {
             url 'http://dl.bintray.com/esri/arcgis'
         }
     }
-
 }
 
 ext {
