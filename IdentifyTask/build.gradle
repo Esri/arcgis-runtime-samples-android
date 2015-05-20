@@ -28,7 +28,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    // ArcGIS Android 10.2.5 API
+    // ArcGIS Android 10.2.6 API
     //compile (group: 'com.esri.arcgis.android', name: 'arcgis-android', version: '10.2.5')
     compile 'com.esri.arcgis.android:arcgis-android:10.2.6'
 }
