@@ -11,4 +11,4 @@ http://developer.android.com/guide/topics/resources/runtime-changes.html#Handlin
 * Handle configuration changes manually to maintain map state through configuration changes 
 
 ## Sample Requirements
-The SimpleMap sample depends on the Application Toolkit for ArcGIS Android. For instructions on how to add this toolkit to your project, and more information about the toolkit, see [Application Toolkit for ArcGIS Android](https://developers.arcgis.com/android/guide/application-framework.htm).
+The SimpleMap sample depends on the Application Toolkit for ArcGIS Android. For instructions on how to add this toolkit to your project, and more information about the toolkit, see [Application Toolkit for ArcGIS Android](https://developers.arcgis.com/android/guide/application-toolkit-for-arcgis-android.htm).
