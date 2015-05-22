@@ -30,7 +30,7 @@ You can tap on the map to perform the edits and once the action is performed you
 Once the edits are performed locally, you can click on the **Synchronize** button to sync the local edits to the online Feature Service. You also have the option to discard all the changes made when tapping the **Discard** button. 
 
 ### Switch between On/Offline
-When you return back to the initial ```ActionBar``` you can decide to go back online using the **Online** button, this then allows you to delete previously downloaded geodatabases so you can start again, or leave the data in place, in which case it will be used next time you go offline.
+When you return back to the initial ```ActionBar``` you can decide to go back online using the **Online** button, this then allows you to delete previously downloaded geodatabases so you can start again, or leave the data in place, in which case it will be used next time you go offline.  You must turn wifi back on if you made your edits offline and are attempting to sync them back.
 
 ## Sample Requirements
 The OfflineEditor sample depends on the [Android Support Library](https://developer.android.com/tools/support-library/index.html). Instructions for setting that it up prior to running the app is detailed below. 
