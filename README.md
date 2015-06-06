@@ -49,6 +49,7 @@ You should now be able to run any of the included samples.  We will use the ```H
 Some of our apps needs active GPS connection to run. However, while trying to execute them on an emulator take a note that although GPS is enabled, you will need to push the location to the emulator.
 Refer [here](http://developer.android.com/tools/devices/emulator.html) for more information.
 You can also push the location using the Android Device Manager
+
 1. Launch Android Device Manager
 2. Select 'Emulator Control' tab
 3. Enter Longitude and Latitude and click on Send (This will fix the location on your emulator)
