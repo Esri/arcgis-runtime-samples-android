@@ -17,12 +17,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
@@ -63,6 +68,7 @@ public class RoutingSample extends Activity implements
 	public static MapView map = null;
 	ArcGISTiledMapServiceLayer tileLayer;
 	GraphicsLayer routeLayer, hiddenSegmentsLayer;
+	public LocationManager manager;
 	// Symbol used to make route segments "invisible"
 	SimpleLineSymbol segmentHider = new SimpleLineSymbol(Color.WHITE, 5);
 	// Symbol used to highlight route segments
@@ -108,12 +114,21 @@ public class RoutingSample extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
+		manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+
+		if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+			buildAlertMessageNoGps();
+		}
 		// Retrieve the map and initial extent from XML layout
 		map = (MapView) findViewById(R.id.map);
 		// Add tiled layer to MapView
 		tileLayer = new ArcGISTiledMapServiceLayer(
 				"http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
 		map.addLayer(tileLayer);
+
+
+
+
 
 		// Add the route graphic layer (shows the full route)
 		routeLayer = new GraphicsLayer();
@@ -321,6 +336,19 @@ public class RoutingSample extends Activity implements
 
 	}
 
+	private void buildAlertMessageNoGps() {
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Please enable your GPS before proceeding")
+				.setCancelable(false)
+				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+						startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+					}
+				});
+		final AlertDialog alert = builder.create();
+		alert.show();
+	}
+
 	/**
 	 * Updates the UI after a successful rest response has been received.
 	 */
@@ -428,6 +456,7 @@ public class RoutingSample extends Activity implements
 		public void onProviderDisabled(String provider) {
 			Toast.makeText(getApplicationContext(), "GPS Disabled",
 					Toast.LENGTH_SHORT).show();
+			buildAlertMessageNoGps();
 		}
 
 		public void onProviderEnabled(String provider) {
