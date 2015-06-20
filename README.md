@@ -8,6 +8,25 @@ ArcGIS Runtime SDK for Android v10.2.6 samples for Android Studio.  The repo con
 # Developer Instructions
 The **ArcGIS Android SDK Samples** are [Gradle](https://www.gradle.org) based Android projects which can be directly cloned and imported into Android Studio.
 
+Each sample app module has a build.gradle file with the latest ArcGIS Android SDK compile dependency.
+
+```groovy
+dependencies {
+    compile 'com.esri.arcgis.android:arcgis-android:10.2.6-2'
+}
+```
+
+Our SDK is hosted in our public maven repository hosted by Bintray.  Our repository url is added to the projects build.gradle file.
+
+```groovy
+repositories {
+    jcenter()
+    maven {
+        url 'http://dl.bintray.com/esri/arcgis'
+    }
+}
+```
+
 ## Fork the repo
 If you haven't already, fork the [this repo](https://github.com/Esri/arcgis-android-sdk-gradle-samples/fork).
 
