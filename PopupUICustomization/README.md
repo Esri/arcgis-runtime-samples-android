@@ -14,7 +14,7 @@ Another approach is more complicated but more powerful. This approach allows use
 Pop-ups will be display in a fragment called ```PopupFragment```. This fragment also provides menu to edit or delete a feature based on the edit properties of the feature.
 
 ## Sample Requirements
-The Popup samples depend on the [Application Tookit for ArcGIS Android](https://developers.arcgis.com/android/guide/application-framework.htm) and the [Andriod Support Library](https://developer.android.com/tools/support-library/index.html).
+The Popup samples depend on the [Application Tookit for ArcGIS Android]( https://developers.arcgis.com/android/guide/application-toolkit-for-arcgis-android.htm) and the [Andriod Support Library](https://developer.android.com/tools/support-library/index.html).
 
 
 **NOTE**: The PopupUICustomization sample depends on the Android Support Library and is included in the sample as a compile time depedency in the modules build.gradle file.
