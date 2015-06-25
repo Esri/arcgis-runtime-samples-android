@@ -45,6 +45,16 @@ You should now be able to run any of the included samples.  We will use the ```H
 * Select ```HelloWorld``` from the **Select Run/Debug Configuration** drop down
 * Click the **Run** button
 
+## Location Services
+Some of our apps need an active GPS connection to run. When using the emulator, you will need to push the location when trying to run these sample apps on a GPS enabled emulator.
+Refer [here](http://developer.android.com/tools/devices/emulator.html) for more information.
+You can also push the location using the Android Device Manager
+
+1. Launch Android Device Manager
+2. Select 'Emulator Control' tab
+3. Enter Longitude and Latitude and click on Send (This will fix the location on your emulator)
+
+
 ## Issues
 Find a bug or want to request a new feature enhancement?  Please let us know by submitting an issue.
 

@@ -11,7 +11,7 @@ The query upon a feature layer is performed by hit test while the query upon a s
 A popup's properties such background color, text color, and selector color can be set through the PopupContainer. The setting in the PopupContainer will affect all the PopupView in the PopupContainer. If a property is not set, a default value will be used.
 
 ## Sample Requirements
-The Popup samples depend on the [Andriod Support Library](https://developer.android.com/tools/support-library/index.html). Instructions for setting that it up prior to running the app is detailed below. 
+The Popup samples depend on the [Andriod Support Library](https://developer.android.com/tools/support-library/index.html). Instructions for setting that it up prior to running the app is detailed below.
 
 ### Steps
  1. Create a new Sample project for PopupWebMapForEditing. Refer to the [Integration features document](https://developers.arcgis.com/en/android/guide/integration-features.htm#ESRI_SECTION1_162634B4429843789DA0311F52908566) to create a new sample project.
@@ -23,3 +23,5 @@ The Popup samples depend on the [Andriod Support Library](https://developer.andr
  7. Make sure Android Private Libraries is checked
  8. Run the application
  9. Single tap on a graphic to see the resulting ```Popup```
+
+ **NOTE**: We get the support library dependency from our build.gradle file as a compile time depedency. This is important as to work with the PopUp API, support library is required.
