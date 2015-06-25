@@ -14,18 +14,7 @@ Another approach is more complicated but more powerful. This approach allows use
 Pop-ups will be display in a fragment called ```PopupFragment```. This fragment also provides menu to edit or delete a feature based on the edit properties of the feature.
 
 ## Sample Requirements
-The Popup samples depend on the [Application Tookit for ArcGIS Android](https://developers.arcgis.com/android/guide/application-framework.htm) and the [Andriod Support Library](https://developer.android.com/tools/support-library/index.html). Instructions for setting that it up prior to running the app is detailed below. 
-
-### Steps
- 1. Create a new Sample project for PopupUICustomization. Refer to the [Integration features document](https://developers.arcgis.com/en/android/guide/integration-features.htm#ESRI_SECTION1_162634B4429843789DA0311F52908566) to create a new sample project.
- 2. Right click the sample project and select ArcGIS > Add Application Toolkit to add the tookit to the project
- 3. Right click the sample project and select Android Tools > Add Support Library
- 4. Accept packages to install and click Install
- 5. Under Android Private Libraries you should see the android-support-v4.jar file library
- 6. Right click the sample project and select Properties
- 7. Select the Java Build Path on the left hand side then select Order and Export in the Java Build Path tabs
- 8. Make sure ArcGIS Android Application Toolkit and Android Private Libraries are checked
- 9. Run the application
- 10. Single tap on the map to bring up pop-ups with customized UI. Long press on the map to display pop-ups of default UI for comparison. Tap the Edit button to enter into editing mode to edit attributes, add/delete attachments, delete feature and save edits.
+The Popup samples depend on the [Application Tookit for ArcGIS Android]( https://developers.arcgis.com/android/guide/application-toolkit-for-arcgis-android.htm) and the [Andriod Support Library](https://developer.android.com/tools/support-library/index.html).
 
 
+**NOTE**: The PopupUICustomization sample depends on the Android Support Library and is included in the sample as a compile time depedency in the modules build.gradle file.
