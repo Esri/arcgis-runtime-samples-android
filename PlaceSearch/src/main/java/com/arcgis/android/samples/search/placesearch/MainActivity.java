@@ -63,7 +63,6 @@ public class MainActivity extends Activity {
   private SearchView mSearchView;
   private MenuItem searchMenuItem;
   private MatrixCursor mSuggestionCursor;
-  private SimpleCursorAdapter mSuggestionAdapter;
 
   private static ProgressDialog mProgressDialog;
 
@@ -175,7 +174,7 @@ public class MainActivity extends Activity {
     String[] cols = new String[]{COLUMN_NAME_ADDRESS};
     int[] to = new int[]{R.id.suggestion_item_address};
 
-    mSuggestionAdapter = new SimpleCursorAdapter(mMapView.getContext(), R.layout.suggestion_item, mSuggestionCursor, cols, to, 0);
+    SimpleCursorAdapter mSuggestionAdapter = new SimpleCursorAdapter(mMapView.getContext(), R.layout.suggestion_item, mSuggestionCursor, cols, to, 0);
     mSearchView.setSuggestionsAdapter(mSuggestionAdapter);
     mSuggestionAdapter.notifyDataSetChanged();
   }
@@ -241,7 +240,7 @@ public class MainActivity extends Activity {
   // Find the address
   private class FindPlaceTask extends AsyncTask<String, Void, List<LocatorGeocodeResult>> {
     private static final String SUGGESTION_ADDRESS_DELIMNATOR = ", ";
-    private Locator mLocator;
+    private final Locator mLocator;
 
     public FindPlaceTask(Locator locator) {
       mLocator = locator;
@@ -311,7 +310,7 @@ public class MainActivity extends Activity {
 
   // Obtain a list of search suggestions.
   private class SuggestPlaceTask extends AsyncTask<String, Void, List<LocatorSuggestionResult>> {
-    private Locator mLocator;
+    private final Locator mLocator;
 
     public SuggestPlaceTask(Locator locator) {
       mLocator = locator;
