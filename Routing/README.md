@@ -18,16 +18,7 @@ The sample contains four files:
 * Geocode the addresses
 
 ## Sample Requirements
-The Routing sample depends on the [Andriod Support Library](https://developer.android.com/tools/support-library/index.html). Instructions for setting that it up prior to running the app is detailed below.
+The Routing sample depends on the [Andriod Support Library](https://developer.android.com/tools/support-library/index.html). 
 
-### Steps
- 1. Right click the sample project and select **Android Tools > Add Support Library**
- 2. Accept packages to install and click **Install**
- 3. Under **Android Private Libraries** you should see the ```android-support-v4.jar``` file library
- 4. Right click the sample project and select **Properties**
- 5. Select the **Java Build Path** on the left hand side then select **Order and Export** in the Java Build Path tabs
- 6. Make sure **Android Private Libraries** is checked
- 7. Run the application
-
- **NOTE**: You can get the depedency from our build.gradle file as a compile time depedency
+ **NOTE**: The Routing sample depends on the Android Support Library and is included in the sample as a compile time dependency in the modules build.grade file. 
 
