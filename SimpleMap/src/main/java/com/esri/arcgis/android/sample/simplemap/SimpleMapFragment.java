@@ -1,8 +1,7 @@
 package com.esri.arcgis.android.sample.simplemap;
 
-import java.util.Map;
-
 import android.app.Fragment;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,6 +18,8 @@ import com.esri.core.geometry.Point;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.tasks.geocode.Locator;
 import com.esri.core.tasks.geocode.LocatorReverseGeocodeResult;
+
+import java.util.Map;
 
 public class SimpleMapFragment extends Fragment {
 
@@ -118,6 +119,7 @@ public class SimpleMapFragment extends Fragment {
           if ((mResultTitle != null) && (!mResultTitle.isEmpty())) {
             // Additionally, if a tapped location was saved, then add this to 
             // the map as a graphic.
+            mMapViewHelper.getMapView().getCallout().getStyle().setBackgroundColor(Color.BLACK);
             mMapViewHelper.addMarkerGraphic(mResultY, mResultX, mResultTitle,
                 mResultSnippet, null, null, false, 0);
             
@@ -127,6 +129,7 @@ public class SimpleMapFragment extends Fragment {
             // simplification API by specifying a latitude and longitude, a
             // drawable icon, and the title and content of a callout that is
             // shown when the icon is tapped.
+            mMapViewHelper.getMapView().getCallout().getStyle().setBackgroundColor(Color.BLACK);
             mMapViewHelper.addMarkerGraphic(34.056695, -117.195693, "ESRI",
                 "World Headquarters", null, mIcon, false, 0);
           }
@@ -176,7 +179,7 @@ public class SimpleMapFragment extends Fragment {
                 for (String field : mResultCalloutFields) {
                   Map<String, String> resultFields = objs.getAddressFields();
                   if (resultFields.containsKey(field)) {
-                    address.append(resultFields.get(field) + " ");
+                    address.append(resultFields.get(field)).append(" ");
                   }
                 }
                 mResultTitle = address.toString().trim();
