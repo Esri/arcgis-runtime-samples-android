@@ -1,7 +1,5 @@
 package com.esri.arcgis.android.sample.simplemap;
 
-import java.util.Map;
-
 import android.app.Fragment;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -20,6 +18,8 @@ import com.esri.core.geometry.Point;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.tasks.geocode.Locator;
 import com.esri.core.tasks.geocode.LocatorReverseGeocodeResult;
+
+import java.util.Map;
 
 public class SimpleMapFragment extends Fragment {
 
@@ -179,7 +179,7 @@ public class SimpleMapFragment extends Fragment {
                 for (String field : mResultCalloutFields) {
                   Map<String, String> resultFields = objs.getAddressFields();
                   if (resultFields.containsKey(field)) {
-                    address.append(resultFields.get(field) + " ");
+                    address.append(resultFields.get(field)).append(" ");
                   }
                 }
                 mResultTitle = address.toString().trim();
