@@ -53,6 +53,7 @@ public class MainActivity extends Activity {
   private static final String COLUMN_NAME_X = "x";
   private static final String COLUMN_NAME_Y = "y";
   private static final String LOCATION_TITLE = "Location";
+  private static final String SUGGESTION_ADDRESS_DELIMNATOR = ", ";
 
   private MapView mMapView;
   private String mMapViewState;
@@ -65,6 +66,7 @@ public class MainActivity extends Activity {
   private MatrixCursor mSuggestionCursor;
 
   private static ProgressDialog mProgressDialog;
+  private LocatorSuggestionParameters params;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +162,13 @@ public class MainActivity extends Activity {
     if (mLocator == null)
       return;
 
-    new SuggestPlaceTask(mLocator).execute(query);
+    params = new LocatorSuggestionParameters(query);
+    // Use the centre of the current map extent as the find location point
+    params.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
+    // Set the radial search distance in meters
+    params.setDistance(500.0);
+
+    new SuggestPlaceTask(mLocator).execute(params);
   }
 
   // Initialize suggestion cursor
@@ -220,10 +228,21 @@ public class MainActivity extends Activity {
         String address = cursor.getString(indexColumnSuggestion);
         double x = cursor.getDouble(indexColumnX);
         double y = cursor.getDouble(indexColumnY);
+        LocatorFindParameters params;
 
         if ((x == 0.0) && (y == 0.0)) {
           // Place has not been located. Find the place
-          new FindPlaceTask(mLocator).execute(address);
+          int index = address.indexOf(SUGGESTION_ADDRESS_DELIMNATOR);
+          if (index > 0) {
+              params = new LocatorFindParameters(address.substring(index + SUGGESTION_ADDRESS_DELIMNATOR.length()));
+          } else {
+              params = new LocatorFindParameters(address);
+          }
+          // Use the centre of the current map extent as the find location point
+          params.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
+          // Set the radial search distance in meters
+          params.setDistance(500.0);
+          new FindPlaceTask(mLocator).execute(params);
         } else {
           // Place has been located. Zoom to the place and add a marker for this place
           mMapViewHelper.addMarkerGraphic(y, x, LOCATION_TITLE, address, android.R.drawable.ic_menu_myplaces, null, false, 1);
@@ -238,7 +257,7 @@ public class MainActivity extends Activity {
   }
 
   // Find the address
-  private class FindPlaceTask extends AsyncTask<String, Void, List<LocatorGeocodeResult>> {
+  private class FindPlaceTask extends AsyncTask<LocatorFindParameters, Void, List<LocatorGeocodeResult>> {
     private static final String SUGGESTION_ADDRESS_DELIMNATOR = ", ";
     private final Locator mLocator;
 
@@ -247,33 +266,18 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected List<LocatorGeocodeResult> doInBackground(String... queries) {
-      for (String query : queries) {
-        // Create Locator parameters from single line address string
-        LocatorFindParameters params;
-        int index = query.indexOf(SUGGESTION_ADDRESS_DELIMNATOR);
-        if (index > 0) {
-          params = new LocatorFindParameters(query.substring(index + SUGGESTION_ADDRESS_DELIMNATOR.length()));
-        } else {
-          params = new LocatorFindParameters(query);
-        }
-        // Use the centre of the current map extent as the find location point
-        params.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
-        // Set the radial search distance in meters
-        params.setDistance(500.0);
+    protected List<LocatorGeocodeResult> doInBackground(LocatorFindParameters... params) {
 
         // Execute the task
         List<LocatorGeocodeResult> results = null;
         try {
-          results = mLocator.find(params);
+          results = mLocator.find(params[0]);
         } catch (Exception e) {
           e.printStackTrace();
         }
 
         return results;
-      }
 
-      return null;
     }
 
     @Override
@@ -309,7 +313,7 @@ public class MainActivity extends Activity {
   }
 
   // Obtain a list of search suggestions.
-  private class SuggestPlaceTask extends AsyncTask<String, Void, List<LocatorSuggestionResult>> {
+  private class SuggestPlaceTask extends AsyncTask<LocatorSuggestionParameters, Void, List<LocatorSuggestionResult>> {
     private final Locator mLocator;
 
     public SuggestPlaceTask(Locator locator) {
@@ -317,26 +321,18 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected List<LocatorSuggestionResult> doInBackground(String... queries) {
-      for (String query : queries) {
-        // Create suggestion parameter
-        LocatorSuggestionParameters params = new LocatorSuggestionParameters(query);
-        //Set the location to be used for proximity based suggestion
-        params.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
-        // Set the radial search distance in meters
-        params.setDistance(500.0);
+    protected List<LocatorSuggestionResult> doInBackground(LocatorSuggestionParameters... params) {
 
+        // Use the LocatorSuggestionParameter to get the result
         List<LocatorSuggestionResult> results = null;
         try {
-          results = mLocator.suggest(params);
+          results = mLocator.suggest(params[0]);
         } catch (Exception e) {
           e.printStackTrace();
         }
 
         return results;
-      }
 
-      return null;
     }
 
     @Override
