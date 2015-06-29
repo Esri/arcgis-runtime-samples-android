@@ -32,6 +32,7 @@ import android.widget.SimpleCursorAdapter;
 import com.esri.android.map.MapView;
 import com.esri.android.map.event.OnStatusChangedListener;
 import com.esri.android.toolkit.map.MapViewHelper;
+import com.esri.core.map.CallbackListener;
 import com.esri.core.tasks.geocode.Locator;
 import com.esri.core.tasks.geocode.LocatorFindParameters;
 import com.esri.core.tasks.geocode.LocatorGeocodeResult;
@@ -53,6 +54,9 @@ public class MainActivity extends Activity {
   private static final String COLUMN_NAME_X = "x";
   private static final String COLUMN_NAME_Y = "y";
   private static final String LOCATION_TITLE = "Location";
+  private static final String FIND_PLACE = "Find";
+  private static final String SUGGEST_PLACE = "Suggest";
+  private static final String SUGGESTION_ADDRESS_DELIMNATOR = ", ";
 
   private MapView mMapView;
   private String mMapViewState;
@@ -65,6 +69,8 @@ public class MainActivity extends Activity {
   private MatrixCursor mSuggestionCursor;
 
   private static ProgressDialog mProgressDialog;
+  private LocatorSuggestionParameters suggestParams;
+  private LocatorFindParameters findParams;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -155,13 +161,6 @@ public class MainActivity extends Activity {
     }
   }
 
-  // Create suggestion list
-  private void suggestPlace(String query) {
-    if (mLocator == null)
-      return;
-
-    new SuggestPlaceTask(mLocator).execute(query);
-  }
 
   // Initialize suggestion cursor
   private void initSuggestionCursor() {
@@ -198,7 +197,7 @@ public class MainActivity extends Activity {
 
       @Override
       public boolean onQueryTextChange(String newText) {
-        suggestPlace(newText);
+        getSuggestions(newText);
         return true;
       }
     });
@@ -223,12 +222,17 @@ public class MainActivity extends Activity {
 
         if ((x == 0.0) && (y == 0.0)) {
           // Place has not been located. Find the place
-          new FindPlaceTask(mLocator).execute(address);
+          int index = address.indexOf(SUGGESTION_ADDRESS_DELIMNATOR);
+          if (index > 0) {
+            locatorParams(FIND_PLACE, address.substring(index + SUGGESTION_ADDRESS_DELIMNATOR.length()));
+            new FindPlaceTask(mLocator).execute(findParams);
+          } else {
+            locatorParams(FIND_PLACE, address);
+            new FindPlaceTask(mLocator).execute(findParams);
+          }
         } else {
-          // Place has been located. Zoom to the place and add a marker for this place
-          mMapViewHelper.addMarkerGraphic(y, x, LOCATION_TITLE, address, android.R.drawable.ic_menu_myplaces, null, false, 1);
-          mMapView.centerAndZoom(y, x, 14);
-          mSearchView.setQuery(address, true);
+          // Place has been located. show the search result
+          displaySearchResult(x, y, address);
         }
         cursor.close();
 
@@ -238,8 +242,7 @@ public class MainActivity extends Activity {
   }
 
   // Find the address
-  private class FindPlaceTask extends AsyncTask<String, Void, List<LocatorGeocodeResult>> {
-    private static final String SUGGESTION_ADDRESS_DELIMNATOR = ", ";
+  private class FindPlaceTask extends AsyncTask<LocatorFindParameters, Void, List<LocatorGeocodeResult>> {
     private final Locator mLocator;
 
     public FindPlaceTask(Locator locator) {
@@ -247,33 +250,18 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected List<LocatorGeocodeResult> doInBackground(String... queries) {
-      for (String query : queries) {
-        // Create Locator parameters from single line address string
-        LocatorFindParameters params;
-        int index = query.indexOf(SUGGESTION_ADDRESS_DELIMNATOR);
-        if (index > 0) {
-          params = new LocatorFindParameters(query.substring(index + SUGGESTION_ADDRESS_DELIMNATOR.length()));
-        } else {
-          params = new LocatorFindParameters(query);
-        }
-        // Use the centre of the current map extent as the find location point
-        params.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
-        // Set the radial search distance in meters
-        params.setDistance(500.0);
+    protected List<LocatorGeocodeResult> doInBackground(LocatorFindParameters... params) {
 
         // Execute the task
         List<LocatorGeocodeResult> results = null;
         try {
-          results = mLocator.find(params);
+          results = mLocator.find(params[0]);
         } catch (Exception e) {
           e.printStackTrace();
         }
 
         return results;
-      }
 
-      return null;
     }
 
     @Override
@@ -295,64 +283,9 @@ public class MainActivity extends Activity {
       double x = result.getLocation().getX();
       double y = result.getLocation().getY();
       String address = result.getAddress();
-      // Add a marker at the found place. When tapping on the marker, a Callout with the address
-      // will be displayed
-      mMapViewHelper.addMarkerGraphic(y, x, LOCATION_TITLE, address, android.R.drawable.ic_menu_myplaces, null, false, 1);
-      mMapView.centerAndZoom(y, x, 14);
-      mSearchView.setQuery(address, true);
 
-      // Hide soft keyboard
-      mSearchView.clearFocus();
-      InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-      inputManager.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
-    }
-  }
-
-  // Obtain a list of search suggestions.
-  private class SuggestPlaceTask extends AsyncTask<String, Void, List<LocatorSuggestionResult>> {
-    private final Locator mLocator;
-
-    public SuggestPlaceTask(Locator locator) {
-      mLocator = locator;
-    }
-
-    @Override
-    protected List<LocatorSuggestionResult> doInBackground(String... queries) {
-      for (String query : queries) {
-        // Create suggestion parameter
-        LocatorSuggestionParameters params = new LocatorSuggestionParameters(query);
-        //Set the location to be used for proximity based suggestion
-        params.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
-        // Set the radial search distance in meters
-        params.setDistance(500.0);
-
-        List<LocatorSuggestionResult> results = null;
-        try {
-          results = mLocator.suggest(params);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-
-        return results;
-      }
-
-      return null;
-    }
-
-    @Override
-    protected void onPostExecute(List<LocatorSuggestionResult> results) {
-      if (results == null) {
-        return;
-      }
-
-      int key = 0;
-      // Add suggestion list to a cursor
-      initSuggestionCursor();
-      for (LocatorSuggestionResult result : results) {
-        mSuggestionCursor.addRow(new Object[]{key++, result.getText(), "0", "0"});
-      }
-
-      applySuggestionCursor();
+      displaySearchResult(x,y,address);
+      hideKeyboard();
     }
   }
 
@@ -381,6 +314,104 @@ public class MainActivity extends Activity {
         mMapView.restoreState(mMapViewState);
       }
     }
+  }
+
+  /**
+   * Provide character-by-character suggestions for the search string
+   *
+   * @param suggestText String the user typed so far to fetch the suggestions
+   */
+  protected void getSuggestions(String suggestText) {
+    final CallbackListener<List<LocatorSuggestionResult>> suggestCallback = new CallbackListener<List<LocatorSuggestionResult>>() {
+        @Override
+        public void onCallback(List<LocatorSuggestionResult> locatorSuggestionResults) {
+          final List<LocatorSuggestionResult> locSuggestionResults = locatorSuggestionResults;
+            if (locatorSuggestionResults == null)
+                return;
+          runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+              int key = 0;
+              if(locSuggestionResults.size() > 0) {
+                // Add suggestion list to a cursor
+                initSuggestionCursor();
+                for (LocatorSuggestionResult result : locSuggestionResults) {
+                  mSuggestionCursor.addRow(new Object[]{key++, result.getText(), "0", "0"});
+                }
+                applySuggestionCursor();
+              }
+            }
+
+          });
+
+        }
+
+
+        @Override
+        public void onError(Throwable throwable) {
+            //Log the error
+            Log.e(MainActivity.class.getSimpleName(), "No Results found!!");
+            Log.e(MainActivity.class.getSimpleName(), throwable.getMessage());
+        }
+    };
+
+      try {
+            // Initialize the LocatorSuggestion parameters
+            locatorParams(SUGGEST_PLACE,suggestText);
+
+            mLocator.suggest(suggestParams, suggestCallback);
+
+      } catch (Exception e) {
+          Log.e(MainActivity.class.getSimpleName(),"No Results found");
+          Log.e(MainActivity.class.getSimpleName(),e.getMessage());
+      }
+  }
+
+  /**
+   * Initialize the LocatorSuggestionParameters or LocatorFindParameters
+   *
+   * @param type A String determining the type of parameters to be initialized
+   * @param query The string for which the locator parameters are to be initialized
+   */
+  protected void locatorParams(String type, String query) {
+    if(type.contentEquals(SUGGEST_PLACE)) {
+        suggestParams = new LocatorSuggestionParameters(query);
+        // Use the centre of the current map extent as the find location point
+        suggestParams.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
+        // Set the radial search distance in meters
+        suggestParams.setDistance(500.0);
+    }
+    else {
+        findParams = new LocatorFindParameters(query);
+        // Use the centre of the current map extent as the find location point
+      findParams.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
+        // Set the radial search distance in meters
+        findParams.setDistance(500.0);
+    }
+
+  }
+
+  /**
+   * Display the search location on the map
+   * @param x Longitude of the place
+   * @param y Latitude of the place
+   * @param address The address of the location
+   */
+  protected void displaySearchResult(double x, double y, String address) {
+    // Add a marker at the found place. When tapping on the marker, a Callout with the address
+    // will be displayed
+    mMapViewHelper.addMarkerGraphic(y, x, LOCATION_TITLE, address, android.R.drawable.ic_menu_myplaces, null, false, 1);
+    mMapView.centerAndZoom(y, x, 14);
+    mSearchView.setQuery(address, true);
+
+  }
+
+  protected void hideKeyboard() {
+
+    // Hide soft keyboard
+    mSearchView.clearFocus();
+    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    inputManager.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
   }
 
 }
