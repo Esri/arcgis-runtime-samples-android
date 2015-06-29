@@ -19,7 +19,6 @@ import android.content.Context;
 import android.database.MatrixCursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.Menu;
@@ -29,12 +28,10 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.SearchView.OnSuggestionListener;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
 import com.esri.android.map.MapView;
 import com.esri.android.map.event.OnStatusChangedListener;
 import com.esri.android.toolkit.map.MapViewHelper;
-import com.esri.core.geometry.Point;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.tasks.geocode.Locator;
 import com.esri.core.tasks.geocode.LocatorFindParameters;
@@ -43,7 +40,6 @@ import com.esri.core.tasks.geocode.LocatorSuggestionParameters;
 import com.esri.core.tasks.geocode.LocatorSuggestionResult;
 
 import java.util.List;
-import java.util.logging.Handler;
 
 /**
  * PlaceSearch app uses the geocoding service to convert addresses to and from
@@ -228,15 +224,15 @@ public class MainActivity extends Activity {
           // Place has not been located. Find the place
           int index = address.indexOf(SUGGESTION_ADDRESS_DELIMNATOR);
           if (index > 0) {
-            locatorParams(FIND_PLACE,address.substring(index + SUGGESTION_ADDRESS_DELIMNATOR.length()));
+            locatorParams(FIND_PLACE, address.substring(index + SUGGESTION_ADDRESS_DELIMNATOR.length()));
             new FindPlaceTask(mLocator).execute(findParams);
           } else {
-              locatorParams(FIND_PLACE, address);
-              new FindPlaceTask(mLocator).execute(findParams);
+            locatorParams(FIND_PLACE, address);
+            new FindPlaceTask(mLocator).execute(findParams);
           }
         } else {
           // Place has been located. show the search result
-            displaySearchResult(x,y,address);
+          displaySearchResult(x, y, address);
         }
         cursor.close();
 
