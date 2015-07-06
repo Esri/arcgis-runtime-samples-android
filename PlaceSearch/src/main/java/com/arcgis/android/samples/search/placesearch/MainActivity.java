@@ -74,6 +74,7 @@ public class MainActivity extends Activity {
   private LocatorSuggestionParameters suggestParams;
 
   private final Map<String,Point> suggestMap = new TreeMap<>();
+  private SpatialReference mapSpatialReference;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,8 @@ public class MainActivity extends Activity {
     // set logo and enable wrap around
     mMapView.setEsriLogoVisible(true);
     mMapView.enableWrapAround(true);
+
+    mapSpatialReference = mMapView.getSpatialReference();
 
     // Setup listener for map initialized
     mMapView.setOnStatusChangedListener(new OnStatusChangedListener() {
@@ -247,16 +250,10 @@ public class MainActivity extends Activity {
           try {
             temp = suggestMap.get(params[0]);
             // Project the Location to WGS 84
-            runOnUiThread(new Runnable() {
-              @Override
-              public void run() {
-                resultPoint = (Point) GeometryEngine.project(temp, mMapView.getSpatialReference(), SpatialReference.create(4326));
-              }
-            });
+            resultPoint = (Point) GeometryEngine.project(temp, mapSpatialReference, SpatialReference.create(4326));
 
           } catch (Exception e) {
             Log.e(TAG,"Error in fetching the Location");
-            e.printStackTrace();
           }
         } while(temp == null);
 
@@ -338,7 +335,7 @@ public class MainActivity extends Activity {
                   public void run() {
                     List<LocatorGeocodeResult> locatorGeocodeResults;
                     try {
-                      locatorGeocodeResults = mLocator.find(result, 2, null, mMapView.getSpatialReference());
+                      locatorGeocodeResults = mLocator.find(result, 2, null, mapSpatialReference);
                       LocatorGeocodeResult suggestionResult = locatorGeocodeResults.get(0);
                       suggestMap.put(result.getText(), suggestionResult.getLocation());
                     } catch (Exception e) {
