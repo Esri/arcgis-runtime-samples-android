@@ -58,7 +58,6 @@ public class MainActivity extends Activity {
   private static final String COLUMN_NAME_X = "x";
   private static final String COLUMN_NAME_Y = "y";
   private static final String LOCATION_TITLE = "Location";
-  private static final String SUGGEST_PLACE = "Suggest";
 
   private MapView mMapView;
   private String mMapViewState;
@@ -102,14 +101,13 @@ public class MainActivity extends Activity {
     mMapView.setEsriLogoVisible(true);
     mMapView.enableWrapAround(true);
 
-    mapSpatialReference = mMapView.getSpatialReference();
-
     // Setup listener for map initialized
     mMapView.setOnStatusChangedListener(new OnStatusChangedListener() {
 
       @Override
       public void onStatusChanged(Object source, STATUS status) {
         if (source == mMapView && status == STATUS.INITIALIZED) {
+          mapSpatialReference = mMapView.getSpatialReference();
 
           if (mMapViewState == null) {
             Log.i(TAG, "MapView.setOnStatusChangedListener() status=" + status.toString());
@@ -368,7 +366,7 @@ public class MainActivity extends Activity {
 
       try {
             // Initialize the LocatorSuggestion parameters
-            locatorParams(SUGGEST_PLACE,suggestText);
+            locatorParams(suggestText);
 
             mLocator.suggest(suggestParams, suggestCallback);
 
@@ -381,17 +379,14 @@ public class MainActivity extends Activity {
   /**
    * Initialize the LocatorSuggestionParameters or LocatorFindParameters
    *
-   * @param type A String determining the type of parameters to be initialized
    * @param query The string for which the locator parameters are to be initialized
    */
-  protected void locatorParams(String type, String query) {
-    if(type.contentEquals(SUGGEST_PLACE)) {
+  protected void locatorParams(String query) {
         suggestParams = new LocatorSuggestionParameters(query);
         // Use the centre of the current map extent as the find location point
         suggestParams.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
         // Set the radial search distance in meters
         suggestParams.setDistance(500.0);
-    }
 
   }
 
