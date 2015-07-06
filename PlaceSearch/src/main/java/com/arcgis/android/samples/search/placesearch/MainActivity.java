@@ -37,7 +37,6 @@ import com.esri.core.geometry.Point;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.tasks.geocode.Locator;
-import com.esri.core.tasks.geocode.LocatorFindParameters;
 import com.esri.core.tasks.geocode.LocatorGeocodeResult;
 import com.esri.core.tasks.geocode.LocatorSuggestionParameters;
 import com.esri.core.tasks.geocode.LocatorSuggestionResult;
@@ -74,7 +73,7 @@ public class MainActivity extends Activity {
   private static ProgressDialog mProgressDialog;
   private LocatorSuggestionParameters suggestParams;
 
-  private final Map<String,Point> suggestMap = new TreeMap<String,Point>();
+  private final Map<String,Point> suggestMap = new TreeMap<>();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -248,8 +247,17 @@ public class MainActivity extends Activity {
           try {
             temp = suggestMap.get(params[0]);
             // Project the Location to WGS 84
-            resultPoint = (Point) GeometryEngine.project(temp, mMapView.getSpatialReference(), SpatialReference.create(4326));
-          } catch (Exception e) {}
+            runOnUiThread(new Runnable() {
+              @Override
+              public void run() {
+                resultPoint = (Point) GeometryEngine.project(temp, mMapView.getSpatialReference(), SpatialReference.create(4326));
+              }
+            });
+
+          } catch (Exception e) {
+            Log.e(TAG,"Error in fetching the Location");
+            e.printStackTrace();
+          }
         } while(temp == null);
 
       return resultPoint;
