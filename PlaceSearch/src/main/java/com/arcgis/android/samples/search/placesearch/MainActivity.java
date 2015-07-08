@@ -197,6 +197,12 @@ public class MainActivity extends Activity {
     mSearchView.setIconifiedByDefault(false);
     mSearchView.setQueryHint(getResources().getString(R.string.search_hint));
 
+    // Open the soft keyboard
+    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    if (inputMethodManager != null) {
+      inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
     mSearchView.setOnQueryTextListener(new OnQueryTextListener() {
 
       @Override
@@ -248,7 +254,7 @@ public class MainActivity extends Activity {
   /**
    * Called from search_layout.xml when user presses Search button.
    *
-   * @param address
+   * @param address The text in the searchbar to be geocoded
    */
   public void onSearchButtonClicked(String address) {
     hideKeyboard();
@@ -493,7 +499,6 @@ public class MainActivity extends Activity {
       suggestParams.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
       // Set the radial search distance in meters
       suggestParams.setDistance(500.0);
-      return;
     }
     else if(TYPE.contentEquals(FIND_PLACE)) {
       findParams = new LocatorFindParameters(query);
@@ -501,7 +506,6 @@ public class MainActivity extends Activity {
       findParams.setLocation(mMapView.getCenter(), mMapView.getSpatialReference());
       // Set the radial search distance in meters
       findParams.setDistance(500.0);
-      return;
     }
 
 
