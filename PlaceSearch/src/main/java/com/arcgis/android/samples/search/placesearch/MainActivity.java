@@ -442,7 +442,7 @@ public class MainActivity extends Activity {
         if (locatorSuggestionResults == null)
           return;
         suggestionsList = new ArrayList<>();
-        final Long currTime = System.currentTimeMillis();
+
         runOnUiThread(new Runnable() {
           @Override
           public void run() {
@@ -457,7 +457,7 @@ public class MainActivity extends Activity {
                 mSuggestionCursor.addRow(new Object[]{key++, result.getText(), "0", "0"});
               }
 
-              applySuggestionCursor();Log.d(TAG,(System.currentTimeMillis() - currTime)+"");
+              applySuggestionCursor();
             }
           }
 
