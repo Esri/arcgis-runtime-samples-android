@@ -11,4 +11,8 @@
     <!-- progress dialog messages -->
     <string name="address_search">Searching for Address</string>
 
+    <!-- Toast messages -->
+    <string name="addressSearchFailed">Address search failed</string>
+    <string name="noResultsFound">No Results found</string>
+
 </resources>
