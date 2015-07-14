@@ -1,0 +1,13 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#FFF"
+    android:textSize="15sp"
+    android:gravity="center_vertical"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:textColor="#000000"
+    android:drawableRight="@drawable/ic_dragging"
+    android:drawableEnd="@drawable/ic_dragging"
+    android:drawablePadding="20dp"
+    />
