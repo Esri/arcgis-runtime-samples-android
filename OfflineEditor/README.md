@@ -1,10 +1,11 @@
 # Offline Editor:
-You can access and edit data on your Android device even when you have no internet connection.  The purpose of this sample is to demonstrate how to download feature data for offline use,  edit the features geometry with feature templates, and synchronize your edits with a ArcGIS Server Feature Service. 
+You can access and edit data on your Android device even when you have no internet connection.  The purpose of this sample is to demonstrate how to download feature data for offline use,  edit the features geometry with feature templates or edit the attributes of the features and synchronize your edits with a ArcGIS Server Feature Service. 
 
 The sample includes the following utility classes:
 
 * GDBUtil
-* TemplatePicker.
+* TemplatePicker
+* PopupForEditFeatureLayer.
 
 # Sample Design:
 
@@ -25,6 +26,9 @@ The ```OfflineEditorActivity``` class sets up the layout and default map layers 
 ### Edit
 To get started you need to download the feature data to your device using the **Download** button.  The app will automatically switch to data provisioned on your device once the download is complete.  Next you can start to edit the feature data by tapping the **Edit** button which opens the edit tools.  Using the edit tools, tap on the edit template button to select a feature template and place your feature template on the map. The geometry editing process is similar to the one documented in the [GeometryEditor](https://developers.arcgis.com/android/sample-code/geometry-editor/) Sample.
 You can tap on the map to perform the edits and once the action is performed you have a an option to **Save** or **Undo** the last action. 
+
+### Edit Features
+To edit the attributes of the feature, select the feature template using the edit tools. Long press on the feature of to get the name of the feature selected in the callout. Tap on the edit image in the callout to view the attributes in the popup in editable mode. The editing process is similar to [PopupInWebMapForEditing](https://github.com/Esri/arcgis-runtime-samples-android/tree/master/PopupInWebMapForEditing). You can choose to add an attachment to the feature to save it locally. Upon syncing when online, the local edits will be synced to the online feature.
 
 ### Sync
 Once the edits are performed locally, you can click on the **Synchronize** button to sync the local edits to the online Feature Service. You also have the option to discard all the changes made when tapping the **Discard** button. 
