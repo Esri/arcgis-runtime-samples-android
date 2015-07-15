@@ -16,39 +16,14 @@
             android:textColor="#FFFFFFFF"
             android:layout_gravity="center_vertical"
             android:ellipsize="marquee"/>
-        <ImageView android:id="@+id/offlinecalloutdelete"
+        <ImageView android:id="@+id/offlinecalloutedit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
             android:layout_gravity="center_vertical"
             android:visibility="visible"
-            android:src="@android:drawable/ic_menu_delete"/>
+            android:src="@android:drawable/ic_menu_edit"/>
     </LinearLayout>
 
-    <LinearLayout android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView android:id="@+id/offlinecalloutattachmenttextview"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:textColor="#FFFFFFFF"
-            android:layout_gravity="center_vertical"
-            android:ellipsize="marquee"/>
-        <TextView android:id="@+id/offlinecalloutattachmentsize"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:paddingLeft="10dp"
-            android:textColor="#FFFFFFFF"
-            android:layout_gravity="center_vertical"
-            android:ellipsize="marquee"/>
-        <ImageView android:id="@+id/offlinecalloutattachment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:layout_gravity="center_vertical"
-            android:visibility="visible"
-            android:src="@android:drawable/ic_input_get"
-            android:longClickable="true" />
-    </LinearLayout>
 
 </LinearLayout>
