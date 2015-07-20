@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.salihyalcin.dynamicsublayerreordersample;
+package com.arcgis.android.samples.dynamicsublayerreorder;
 
 import android.content.Context;
 import android.os.Build;

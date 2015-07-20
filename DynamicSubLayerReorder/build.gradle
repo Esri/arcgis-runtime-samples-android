@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.example.salihyalcin.dynamicsublayerreordersample"
+        applicationId "com.arcgis.android.samples.dynamicsublayerreorder"
         minSdkVersion 15
-        targetSdkVersion 22
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -27,6 +27,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.2.0'
+    // ArcGIS Android 10.2.6 API
     compile 'com.esri.arcgis.android:arcgis-android:10.2.6-2'
+    // Android Support Library
+    compile 'com.android.support:appcompat-v7:22.2.0'
 }

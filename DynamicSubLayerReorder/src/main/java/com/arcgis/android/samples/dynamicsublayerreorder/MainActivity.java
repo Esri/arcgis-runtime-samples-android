@@ -1,11 +1,10 @@
-package com.example.salihyalcin.dynamicsublayerreordersample;
+package com.arcgis.android.samples.dynamicsublayerreorder;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.esri.android.map.MapView;
 import com.esri.android.map.ags.ArcGISDynamicMapServiceLayer;
-import com.esri.android.map.ags.ArcGISLayerInfo;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 import com.esri.core.geometry.Envelope;
 import com.esri.core.map.DynamicLayerInfo;
@@ -18,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
     MapView mMapView;
     ArcGISTiledMapServiceLayer mBaseMap;
     DynamicListView mLayerList;
-    ArcGISLayerInfo[] mSubLayers;
     public ArrayList<String> mSubLayersName;
     public static  ArcGISDynamicMapServiceLayer mDynamicLayer;
 
@@ -32,11 +30,12 @@ public class MainActivity extends AppCompatActivity {
         mMapView = (MapView)findViewById(R.id.map);
         mLayerList = (DynamicListView)findViewById(R.id.listView);
         mSubLayersName = new ArrayList<>();
+
         //Creating ArcGISTiledMapServiceLayer and ArcGISDynamicMapServiceLayer
         mBaseMap = new ArcGISTiledMapServiceLayer(getString(R.string.basemap_url));
         mDynamicLayer = new ArcGISDynamicMapServiceLayer(getString(R.string.dynamiclayer_url));
 
-        //Add ArrayList to DynamicLayer's SubLayer
+        //Add DynamicLayer's sublayers to ArrayList
         mSubLayersName.add("Cities");
         mSubLayersName.add("Highways");
         mSubLayersName.add("States");
@@ -70,9 +69,11 @@ public class MainActivity extends AppCompatActivity {
     * */
     public void dragDrop(int indexone, int indextwo) {
 
-        //getting DynamicLayerInfos from DynamicMapServiceLayer
+        //Getting DynamicLayerInfos from DynamicMapServiceLayer
         List<DynamicLayerInfo> mTemporaryDynamicInfo = mDynamicLayer.getDynamicLayerInfos();
-        //getting one item from DynamicLayerInfo array
+
+        // Getting one temporary item from DynamicLayerInfo array.
+        // This temporary item used for drap drop
         DynamicLayerInfo mTemporaryItem= mTemporaryDynamicInfo.get(indexone);
         mTemporaryDynamicInfo.remove(mTemporaryItem);
         mTemporaryDynamicInfo.add(indextwo, mTemporaryItem);
