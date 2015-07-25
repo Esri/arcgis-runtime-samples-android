@@ -45,9 +45,11 @@ import com.esri.android.map.Layer;
 import com.esri.android.map.MapOnTouchListener;
 import com.esri.android.map.MapView;
 import com.esri.android.map.ags.ArcGISFeatureLayer;
+import com.esri.android.map.ags.ArcGISPopupInfo;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 import com.esri.android.map.event.OnSingleTapListener;
 import com.esri.android.map.event.OnStatusChangedListener;
+import com.esri.android.map.popup.Popup;
 import com.esri.core.geodatabase.GeodatabaseFeature;
 import com.esri.core.geodatabase.GeodatabaseFeatureTable;
 import com.esri.core.geometry.Envelope;
@@ -138,6 +140,8 @@ public class OfflineEditorActivity extends Activity {
 
 	private static boolean onlineFlag = true;
 
+	public static boolean editFlag = false;
+
 	PopupForEditFeatureLayer popup;
 
 	@SuppressWarnings("unused")
@@ -200,6 +204,11 @@ public class OfflineEditorActivity extends Activity {
 
 			@Override
 			public void onSingleTap(float x, float y) {
+				Callout callout = mapView.getCallout();
+				if(callout != null)
+					callout.hide();
+				if(highlightGraphics.isVisible())
+					highlightGraphics.removeAll();
 
 				if(onlineFlag) {
 					if (mapView.isLoaded()) {
@@ -231,9 +240,147 @@ public class OfflineEditorActivity extends Activity {
 					}
 
 				}
+				else if(!onlineFlag && !editFlag) {
+					//show the callout
+					int tolerance = 20;
+					Envelope envelope = new Envelope(mapView.toMapPoint(x,y), 20 * mapView.getResolution(),
+								20 * mapView.getResolution());
+					Layer[] layers = mapView.getLayers();
+					for (Layer layer : layers) {
+						// If the layer has not been initialized or is invisible, do
+						// nothing.
+						if (!layer.isInitialized() || !layer.isVisible())
+							continue;
+
+						if (layer instanceof FeatureLayer) {
+							// Query feature layer and display popups
+							FeatureLayer localFeatureLayer = (FeatureLayer) layer;
+								// Query feature layer which is associated with a popup
+								// definition.
+							if (progressDialog == null || !progressDialog.isShowing())
+								progressDialog = ProgressDialog.show(mapView.getContext(), "",
+										"Querying...");
+								new RunQueryLocalFeatureLayerTask(x, y, tolerance)
+										.execute(localFeatureLayer);
+
+						}
+					}
+
+				}
 			}
 		});
 
+	}
+
+	private class RunQueryLocalFeatureLayerTask extends
+			AsyncTask<FeatureLayer, Void, Feature[]> {
+
+		private int tolerance;
+		private float x;
+		private float y;
+		private FeatureLayer localFeatureLayer;
+
+		public RunQueryLocalFeatureLayerTask(float x, float y, int tolerance) {
+			super();
+			this.x = x;
+			this.y = y;
+			this.tolerance = tolerance;
+		}
+
+		@Override
+		protected Feature[] doInBackground(FeatureLayer... params) {
+			for (FeatureLayer featureLayer : params) {
+				this.localFeatureLayer = featureLayer;
+				// Retrieve graphic ids near the point.
+				long[] ids = featureLayer.getFeatureIDs(x, y, tolerance);
+				if (ids != null && ids.length > 0) {
+					ArrayList<Feature> features = new ArrayList<Feature>();
+					for (long id : ids) {
+						// Obtain graphic based on the id.
+
+						Feature f = featureLayer.getFeature(id);
+						if (f == null)
+							continue;
+						features.add(f);
+					}
+					// Return an array of graphics near the point.
+					return features.toArray(new Feature[0]);
+				}
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Feature[] features) {
+			// Validate parameter.
+			if (features == null || features.length == 0) {
+				// Dismiss spinner
+				if (progressDialog != null && progressDialog.isShowing()
+						)
+					progressDialog.dismiss();
+
+				return;
+			}
+
+
+			for (Feature fr : features) {
+
+				String geometryType = fr.getGeometry().getType().name();
+				Map<String,Object> attrExtracted = new TreeMap<String, Object>();
+
+				attrExtracted = fr.getAttributes();
+				showCallout(geometryType, fr,attrExtracted);
+
+			}
+		}
+
+	}
+
+	private void showCallout(String geometryType, Feature fr, Map<String, Object> attr) {
+
+		if (progressDialog != null && progressDialog.isShowing())
+			progressDialog.dismiss();
+
+		Envelope env = null;
+		Graphic g = null;
+		String typeOfAttr = null;
+		String temp;
+
+		switch(geometryType) {
+			case "POINT": 	Point point = (Point)fr.getGeometry();
+							g = new Graphic(point, new SimpleFillSymbol(Color.CYAN, com.esri.core.symbol.SimpleFillSymbol.STYLE.SOLID));
+							env = new Envelope();
+							point.queryEnvelope(env);
+							typeOfAttr = pointEventTypeLookup.get((Integer)attr.get("eventtype"));
+
+				break;
+			case "POLYLINE":Polyline polyline = (Polyline)fr.getGeometry();
+							g = new Graphic(polyline, new SimpleFillSymbol(Color.CYAN, com.esri.core.symbol.SimpleFillSymbol.STYLE.SOLID));
+							env = new Envelope();
+							polyline.queryEnvelope(env);
+							Object o = attr.get("symbolid");
+							int i = Integer.valueOf((Short)o);
+							typeOfAttr = polylineEventTypeLookup.get((Integer)i);
+
+				break;
+			case "POLYGON": Polygon polygon = (Polygon)fr.getGeometry();
+							g = new Graphic(polygon, new SimpleFillSymbol(Color.CYAN, com.esri.core.symbol.SimpleFillSymbol.STYLE.SOLID));
+							env = new Envelope();
+							polygon.queryEnvelope(env);
+							Object o1 = attr.get("symbolid");
+							int i1 = Integer.valueOf((Short)o1);
+							typeOfAttr = polygonEventTypeLookup.get((Integer)i1);
+
+				break;
+		}
+
+		highlightGraphics.addGraphic(g);
+		LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		final View callout = inflater.inflate(R.layout.viewcallout, null);
+
+		((TextView)callout.findViewById(R.id.viewcallouttextview)).setText(fr.getId() + " " + typeOfAttr );
+		mapView.getCallout().show(env.getCenter(), callout);
 	}
 
 	@Override
@@ -263,6 +410,11 @@ public class OfflineEditorActivity extends Activity {
 				editMenuItem.setVisible(true);
 				onlineMenuItem.setVisible(true);
 				onlineFlag = false;
+				Callout mapCallout = mapView.getCallout();
+				if (mapCallout != null)
+					mapCallout.hide();
+				if(highlightGraphics.isVisible())
+					highlightGraphics.removeAll();
 				return true;
 
 			case R.id.go_online:
@@ -276,6 +428,7 @@ public class OfflineEditorActivity extends Activity {
 			case R.id.edit:
 				OfflineActions offlineActions = new OfflineActions(
 						OfflineEditorActivity.this);
+				editFlag = true;
 				startActionMode(offlineActions);
 				showEditTemplatePicker();
 				return true;
@@ -439,39 +592,35 @@ public class OfflineEditorActivity extends Activity {
 		@Override
 		public boolean onSingleTap(final MotionEvent e) {
 
-			if(onlineFlag) {
+			if(!editFlag) {
 
+				int tolerance = 20;
+				Envelope envelope = new Envelope(mapView.toMapPoint(e.getX(),e.getY()), 20 * mapView.getResolution(),
+						20 * mapView.getResolution());
+				Layer[] layers = mapView.getLayers();
+				for (Layer layer : layers) {
+					// If the layer has not been initialized or is invisible, do
+					// nothing.
+					if (!layer.isInitialized() || !layer.isVisible())
+						continue;
 
-				if (mapView.isLoaded()) {
-					// Display spinner.
-					if (progressDialog == null || !progressDialog.isShowing())
-						progressDialog = ProgressDialog.show(mapView.getContext(),
-								"", "Querying...");
+					if (layer instanceof FeatureLayer) {
+						// Query feature layer and display popups
+						FeatureLayer localFeatureLayer = (FeatureLayer) layer;
+						// Query feature layer which is associated with a popup
+						// definition.
+						if (progressDialog == null || !progressDialog.isShowing())
+							progressDialog = ProgressDialog.show(mapView.getContext(), "",
+									"Querying...");
+						new RunQueryLocalFeatureLayerTask(e.getX(),e.getY(), tolerance)
+								.execute(localFeatureLayer);
 
-					// Loop through each layer in the webmap
-					int tolerance = 20;
-					Envelope env = new Envelope(mapView.toMapPoint(e.getX(), e.getY()), 20 * mapView
-							.getResolution(), 20 * mapView.getResolution());
-					Layer[] layers = mapView.getLayers();
-					count = new AtomicInteger();
-					for (Layer layer : layers) {
-						// If the layer has not been initialized or is
-						// invisible, do nothing.
-						if (!layer.isInitialized() || !layer.isVisible())
-							continue;
-
-						if (layer instanceof ArcGISFeatureLayer) {
-							// Query feature layer and display popups
-							ArcGISFeatureLayer featureLayer = (ArcGISFeatureLayer) layer;
-							count.incrementAndGet();
-							new RunQueryFeatureLayerTask(e.getX(), e.getY(), tolerance,
-									0).execute(featureLayer);
-						}
 					}
 				}
 
 			}
-			else {
+
+			else if (editFlag){
 				Callout mapCallout = mapView.getCallout();
 				if (mapCallout != null)
 					mapCallout.hide();
@@ -643,7 +792,6 @@ public class OfflineEditorActivity extends Activity {
 
 							if(gdbFeatureSelected.getGeometry().getType().equals(Geometry.Type.POINT)) {
 
-								Log.d("POINT", e.getX() + " " + e.getY());
 								count = new AtomicInteger();
 								Point pt = (Point)gdbFeatureSelected.getGeometry();
 								Graphic g = new Graphic(pt, new SimpleMarkerSymbol(Color.CYAN, 10, SimpleMarkerSymbol.STYLE.DIAMOND));
@@ -654,14 +802,12 @@ public class OfflineEditorActivity extends Activity {
 
 								((TextView)callout.findViewById(R.id.offlinecallouttextview)).setText(gdbFeatureSelected.getId() + " " + gdbFeatureSelected.getTable().getTableName());
 								final GeodatabaseFeatureTable gdbTable = ((GeodatabaseFeatureTable)((FeatureLayer) mapView.getLayerByID(tp.getSelectedLayer().getID())).getFeatureTable());
-								//Log.d(TAG,gdbTable.);
-								callout.findViewById(R.id.offlinecalloutedit).setOnClickListener(new View.OnClickListener() {
+								callout.setOnClickListener(new View.OnClickListener() {
 
 									@Override
 									public void onClick(View arg0) {
 										try {
 											List<Field> fields = gdbTable.getFields();
-											Log.d("Field",fields.size()+"");
 
 											popup = new PopupForEditFeatureLayer(mapView,OfflineEditorActivity.this);
 											popup.showPopup(e.getX(),e.getY(),25);
@@ -677,7 +823,6 @@ public class OfflineEditorActivity extends Activity {
 
 							}
 							else if(gdbFeatureSelected.getGeometry().getType().equals(Geometry.Type.POLYLINE)) {
-								Log.d("POLYLINE", e.getX() + " " + e.getY());
 
 								Polyline poly = (Polyline) gdbFeatureSelected.getGeometry();
 								Graphic g = new Graphic(poly, new SimpleLineSymbol(Color.CYAN, 5));
@@ -689,7 +834,7 @@ public class OfflineEditorActivity extends Activity {
 								((TextView)callout.findViewById(R.id.offlinecallouttextview)).setText(String.valueOf(gdbFeatureSelected.getId()+ " " +gdbFeatureSelected.getTable().getTableName()));
 								Envelope env = new Envelope();
 								poly.queryEnvelope(env);
-								callout.findViewById(R.id.offlinecalloutedit).setOnClickListener(new View.OnClickListener() {
+								callout.setOnClickListener(new View.OnClickListener() {
 
 									@Override
 									public void onClick(View arg0) {
@@ -717,7 +862,7 @@ public class OfflineEditorActivity extends Activity {
 
 								Envelope env = new Envelope();
 								polygon.queryEnvelope(env);
-								callout.findViewById(R.id.offlinecalloutedit).setOnClickListener(new View.OnClickListener() {
+								callout.setOnClickListener(new View.OnClickListener() {
 
 									@Override
 									public void onClick(View arg0) {
@@ -821,7 +966,6 @@ public class OfflineEditorActivity extends Activity {
 				Graphic g = new Graphic(pt, new SimpleMarkerSymbol(Color.CYAN, 10, SimpleMarkerSymbol.STYLE.DIAMOND));
 				highlightGraphics.addGraphic(g);
 				LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				Log.d("Desc",String.valueOf(attr.get("description")));
 
 				View callout = inflater.inflate(R.layout.viewcallout, null);
 
@@ -1114,6 +1258,7 @@ public class OfflineEditorActivity extends Activity {
 		vertexselected = false;
 		insertingindex = 0;
 		editingstates.clear();
+		editingmode = -1;
 
 	}
 
@@ -1148,21 +1293,23 @@ public class OfflineEditorActivity extends Activity {
 	}
 
 	private void setEditingMode() {
-		if (getTemplatePicker() != null) {
-			if (getTemplatePicker().getSelectedLayer().getGeometryType()
-					.equals(Geometry.Type.POINT)
-					|| getTemplatePicker().getSelectedLayer().getGeometryType()
-					.equals(Geometry.Type.MULTIPOINT)) {
-				editingmode = POINT;
-				template = getTemplatePicker().getselectedTemplate();
-			} else if (getTemplatePicker().getSelectedLayer().getGeometryType()
-					.equals(Geometry.Type.POLYLINE)) {
-				editingmode = POLYLINE;
-				template = getTemplatePicker().getselectedTemplate();
-			} else if (getTemplatePicker().getSelectedLayer().getGeometryType()
-					.equals(Geometry.Type.POLYGON)) {
-				editingmode = POLYGON;
-				template = getTemplatePicker().getselectedTemplate();
+		if(editFlag) {
+			if (getTemplatePicker() != null) {
+				if (getTemplatePicker().getSelectedLayer().getGeometryType()
+						.equals(Geometry.Type.POINT)
+						|| getTemplatePicker().getSelectedLayer().getGeometryType()
+						.equals(Geometry.Type.MULTIPOINT)) {
+					editingmode = POINT;
+					template = getTemplatePicker().getselectedTemplate();
+				} else if (getTemplatePicker().getSelectedLayer().getGeometryType()
+						.equals(Geometry.Type.POLYLINE)) {
+					editingmode = POLYLINE;
+					template = getTemplatePicker().getselectedTemplate();
+				} else if (getTemplatePicker().getSelectedLayer().getGeometryType()
+						.equals(Geometry.Type.POLYGON)) {
+					editingmode = POLYGON;
+					template = getTemplatePicker().getselectedTemplate();
+				}
 			}
 		}
 	}
@@ -1258,7 +1405,6 @@ public class OfflineEditorActivity extends Activity {
 
 
 	private void eventTypeinit() {
-		Log.d(TAG, (String.valueOf( onlineFlag)));
 		pointEventTypeLookup.put(0,"Division Break");
 		pointEventTypeLookup.put(1, "Aerial Hazard");pointEventTypeLookup.put(4, "Camp");
 		pointEventTypeLookup.put(6, "Drop Point");pointEventTypeLookup.put(7, "Fire Origin");pointEventTypeLookup.put(8, "FireStation");
@@ -1275,15 +1421,12 @@ public class OfflineEditorActivity extends Activity {
 
 		polygonEventTypeLookup.put(1, "IR Intense Heat Area");polygonEventTypeLookup.put(2, "Maximum Manageable Area (MMA) ");
 		polygonEventTypeLookup.put(3, "Temporary Flight Restriction (TFR)");polygonEventTypeLookup.put(0, "IR Heat Perimeter ");
-
-
 	}
 
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-		Log.d("onActivityResult",data.getData().getPath());
 
 		if(requestCode == 3){
 			if (resultCode == RESULT_OK) {
