@@ -202,13 +202,11 @@ public class MainActivity extends Activity {
 				Toast toast = Toast.makeText(MainActivity.this,
 						"User name and password not valid", Toast.LENGTH_LONG);
 				toast.show();
-				return;
 			} else if (result == null && !auth) {
 				// update UI with notice that user was not authenticated
 				Toast toast = Toast.makeText(MainActivity.this,
 						"No result found.", Toast.LENGTH_LONG);
 				toast.show();
-				return;
 
 			} else {
 				route = result.getRoutes().get(0);
