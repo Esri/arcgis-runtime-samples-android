@@ -197,13 +197,13 @@ public class MainActivity extends Activity {
 
 			// The result of FindClosestFacilities task is passed as a parameter
 			// to map the results
-			if (result == null && auth == true) {
+			if (result == null && auth) {
 				// update UI with notice that no results were found
 				Toast toast = Toast.makeText(MainActivity.this,
 						"User name and password not valid", Toast.LENGTH_LONG);
 				toast.show();
 				return;
-			} else if (result == null && auth == false) {
+			} else if (result == null && !auth) {
 				// update UI with notice that user was not authenticated
 				Toast toast = Toast.makeText(MainActivity.this,
 						"No result found.", Toast.LENGTH_LONG);
