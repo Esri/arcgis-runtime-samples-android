@@ -108,14 +108,7 @@ public class CreateRuntimeGeodatabaseActivity extends Activity {
 	 * Create the geodatabase file location and name structure
 	 */
 	static String createGeodatabaseFilePath() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(demoDataFile.getAbsolutePath());
-		sb.append(File.separator);
-		sb.append(offlineDataSDCardDirName);
-		sb.append(File.separator);
-		sb.append(filename);
-		sb.append(OFFLINE_FILE_EXTENSION);
-		return sb.toString();
+		return demoDataFile.getAbsolutePath() + File.separator + offlineDataSDCardDirName + File.separator + filename + OFFLINE_FILE_EXTENSION;
 	}
 
 	@Override
