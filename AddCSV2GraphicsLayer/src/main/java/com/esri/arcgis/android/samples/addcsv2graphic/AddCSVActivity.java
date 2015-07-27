@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,10 +55,12 @@ public class AddCSVActivity extends Activity {
   ArcGISTiledMapServiceLayer basemapTileLayer;
   GraphicsLayer graphicsLayer = null;
 
+  // When the Date Picker dialog appears, set the default date to be the current date.
   static final int DATE_DIALOG_ID = 0;
-  int mYear = 2011;
-  int mMonth = 11;
-  int mDay = 1;
+  Calendar rightNow = Calendar.getInstance();
+  int mYear = rightNow.get(Calendar.YEAR);
+  int mMonth = rightNow.get(Calendar.MONTH);
+  int mDay = rightNow.get(Calendar.DAY_OF_MONTH);
 
   ProgressDialog dialog;
 
