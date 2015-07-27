@@ -1088,6 +1088,7 @@ public class OfflineEditorActivity extends Activity {
 				}
 			}
 		}
+		clear();
 	}
 
 	void movePoint(Point point) {
@@ -1404,6 +1405,9 @@ public class OfflineEditorActivity extends Activity {
 	}
 
 
+	/**
+	 * Initialize the static ArrayLists with the event types of the Features - Point, Polyline and Polygon
+	 */
 	private void eventTypeinit() {
 		pointEventTypeLookup.put(0,"Division Break");
 		pointEventTypeLookup.put(1, "Aerial Hazard");pointEventTypeLookup.put(4, "Camp");
