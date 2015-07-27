@@ -13,19 +13,11 @@ package com.esri.arcgis.android.samples.offlineeditor;
  *
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,7 +28,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.esri.android.map.Callout;
 import com.esri.android.map.FeatureLayer;
@@ -45,11 +36,8 @@ import com.esri.android.map.Layer;
 import com.esri.android.map.MapOnTouchListener;
 import com.esri.android.map.MapView;
 import com.esri.android.map.ags.ArcGISFeatureLayer;
-import com.esri.android.map.ags.ArcGISPopupInfo;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
-import com.esri.android.map.event.OnSingleTapListener;
 import com.esri.android.map.event.OnStatusChangedListener;
-import com.esri.android.map.popup.Popup;
 import com.esri.core.geodatabase.GeodatabaseFeature;
 import com.esri.core.geodatabase.GeodatabaseFeatureTable;
 import com.esri.core.geometry.Envelope;
@@ -59,8 +47,6 @@ import com.esri.core.geometry.MultiPath;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.Polyline;
-import com.esri.core.map.AttachmentInfo;
-import com.esri.core.map.CallbackListener;
 import com.esri.core.map.Feature;
 import com.esri.core.map.FeatureTemplate;
 import com.esri.core.map.Field;
@@ -70,6 +56,13 @@ import com.esri.core.symbol.SimpleLineSymbol;
 import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.Symbol;
 import com.esri.core.table.TableException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Allows you to make edits on the map being offline.
@@ -199,76 +192,11 @@ public class OfflineEditorActivity extends Activity {
 			}
 		});
 
-		mapView.setOnSingleTapListener(new OnSingleTapListener() {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onSingleTap(float x, float y) {
-				Callout callout = mapView.getCallout();
-				if(callout != null)
-					callout.hide();
-				if(highlightGraphics.isVisible())
-					highlightGraphics.removeAll();
-
-				if(onlineFlag) {
-					if (mapView.isLoaded()) {
-						// Display spinner.
-						if (progressDialog == null || !progressDialog.isShowing())
-							progressDialog = ProgressDialog.show(mapView.getContext(),
-									"", "Querying...");
-
-						// Loop through each layer in the webmap
-						int tolerance = 20;
-						Envelope env = new Envelope(mapView.toMapPoint(x, y), 20 * mapView
-								.getResolution(), 20 * mapView.getResolution());
-						Layer[] layers = mapView.getLayers();
-						count = new AtomicInteger();
-						for (Layer layer : layers) {
-							// If the layer has not been initialized or is
-							// invisible, do nothing.
-							if (!layer.isInitialized() || !layer.isVisible())
-								continue;
-
-							if (layer instanceof ArcGISFeatureLayer) {
-							// Query feature layer and display popups
-							ArcGISFeatureLayer featureLayer = (ArcGISFeatureLayer) layer;
-							count.incrementAndGet();
-							new RunQueryFeatureLayerTask(x, y, tolerance,
-									0).execute(featureLayer);
-							}
-						}
-					}
-
-				}
-				else if(!onlineFlag && !editFlag) {
-					//show the callout
-					int tolerance = 20;
-					Envelope envelope = new Envelope(mapView.toMapPoint(x,y), 20 * mapView.getResolution(),
-								20 * mapView.getResolution());
-					Layer[] layers = mapView.getLayers();
-					for (Layer layer : layers) {
-						// If the layer has not been initialized or is invisible, do
-						// nothing.
-						if (!layer.isInitialized() || !layer.isVisible())
-							continue;
-
-						if (layer instanceof FeatureLayer) {
-							// Query feature layer and display popups
-							FeatureLayer localFeatureLayer = (FeatureLayer) layer;
-								// Query feature layer which is associated with a popup
-								// definition.
-							if (progressDialog == null || !progressDialog.isShowing())
-								progressDialog = ProgressDialog.show(mapView.getContext(), "",
-										"Querying...");
-								new RunQueryLocalFeatureLayerTask(x, y, tolerance)
-										.execute(localFeatureLayer);
-
-						}
-					}
-
-				}
-			}
-		});
+		if (myListener == null) {
+			myListener = new MyTouchListener(OfflineEditorActivity.this,
+					mapView);
+			mapView.setOnTouchListener(myListener);
+		}
 
 	}
 
@@ -410,11 +338,7 @@ public class OfflineEditorActivity extends Activity {
 				editMenuItem.setVisible(true);
 				onlineMenuItem.setVisible(true);
 				onlineFlag = false;
-				Callout mapCallout = mapView.getCallout();
-				if (mapCallout != null)
-					mapCallout.hide();
-				if(highlightGraphics.isVisible())
-					highlightGraphics.removeAll();
+				hideCallout();
 				return true;
 
 			case R.id.go_online:
@@ -422,6 +346,7 @@ public class OfflineEditorActivity extends Activity {
 				GDBUtil.goOnline(OfflineEditorActivity.this, mapView);
 				offlineMenuItem.setVisible(true);
 				editMenuItem.setVisible(false);
+				hideCallout();
 				onlineFlag = true;
 				return true;
 
@@ -592,6 +517,41 @@ public class OfflineEditorActivity extends Activity {
 		@Override
 		public boolean onSingleTap(final MotionEvent e) {
 
+			hideCallout();
+
+			// When online, show the attributes in a callout for feature layer
+			if(onlineFlag) {
+				if (mapView.isLoaded()) {
+					// Display spinner.
+					if (progressDialog == null || !progressDialog.isShowing())
+						progressDialog = ProgressDialog.show(mapView.getContext(),
+								"", "Querying...");
+
+					// Loop through each layer in the webmap
+					int tolerance = 20;
+					Envelope env = new Envelope(mapView.toMapPoint(e.getX(), e.getY()), 20 * mapView
+							.getResolution(), 20 * mapView.getResolution());
+					Layer[] layers = mapView.getLayers();
+					count = new AtomicInteger();
+					for (Layer layer : layers) {
+						// If the layer has not been initialized or is
+						// invisible, do nothing.
+						if (!layer.isInitialized() || !layer.isVisible())
+							continue;
+
+						if (layer instanceof ArcGISFeatureLayer) {
+							// Query feature layer and display popups
+							ArcGISFeatureLayer featureLayer = (ArcGISFeatureLayer) layer;
+							count.incrementAndGet();
+							new RunQueryFeatureLayerTask(e.getX(), e.getY(), tolerance,
+									0).execute(featureLayer);
+						}
+					}
+				}
+
+			}
+
+			// If offline and not in editing mode, show the callout for local feature layer
 			if(!editFlag) {
 
 				int tolerance = 20;
@@ -620,11 +580,9 @@ public class OfflineEditorActivity extends Activity {
 
 			}
 
+			// if in editing mode, allow to place features or edit already existing ones
 			else if (editFlag){
-				Callout mapCallout = mapView.getCallout();
-				if (mapCallout != null)
-					mapCallout.hide();
-				highlightGraphics.removeAll();
+				hideCallout();
 
 				if (tp != null && !onlineData) {
 
@@ -772,6 +730,8 @@ public class OfflineEditorActivity extends Activity {
 			return true;
 		}
 
+		// On long press on a feature after selecting the type from Template picker, show the details in a callout
+		// on tapping the callout, display attributes in editable popup.
 		@Override
 		public void onLongPress(final MotionEvent e) {
 
@@ -809,8 +769,8 @@ public class OfflineEditorActivity extends Activity {
 										try {
 											List<Field> fields = gdbTable.getFields();
 
-											popup = new PopupForEditFeatureLayer(mapView,OfflineEditorActivity.this);
-											popup.showPopup(e.getX(),e.getY(),25);
+											popup = new PopupForEditFeatureLayer(mapView, OfflineEditorActivity.this);
+											popup.showPopup(e.getX(), e.getY(), 25);
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
@@ -839,7 +799,7 @@ public class OfflineEditorActivity extends Activity {
 									@Override
 									public void onClick(View arg0) {
 										try {
-											popup = new PopupForEditFeatureLayer(mapView,OfflineEditorActivity.this);
+											popup = new PopupForEditFeatureLayer(mapView, OfflineEditorActivity.this);
 											popup.showPopup(e.getX(), e.getY(), 25);
 										} catch (Exception e) {
 											e.printStackTrace();
@@ -867,7 +827,7 @@ public class OfflineEditorActivity extends Activity {
 									@Override
 									public void onClick(View arg0) {
 										try {
-											popup = new PopupForEditFeatureLayer(mapView,OfflineEditorActivity.this);
+											popup = new PopupForEditFeatureLayer(mapView, OfflineEditorActivity.this);
 											popup.showPopup(e.getX(), e.getY(), 25);
 										} catch (Exception e) {
 											e.printStackTrace();
@@ -935,9 +895,7 @@ public class OfflineEditorActivity extends Activity {
 				if (progressDialog != null && progressDialog.isShowing()
 						&& count.intValue() == 0) {
 					progressDialog.dismiss();
-					Callout mapCallout = mapView.getCallout();
-					mapCallout.hide();
-					highlightGraphics.removeAll();
+					hideCallout();
 				}
 
 				return;
@@ -1425,6 +1383,14 @@ public class OfflineEditorActivity extends Activity {
 
 		polygonEventTypeLookup.put(1, "IR Intense Heat Area");polygonEventTypeLookup.put(2, "Maximum Manageable Area (MMA) ");
 		polygonEventTypeLookup.put(3, "Temporary Flight Restriction (TFR)");polygonEventTypeLookup.put(0, "IR Heat Perimeter ");
+	}
+
+	private void hideCallout() {
+		Callout callout = mapView.getCallout();
+		if(callout != null)
+			callout.hide();
+		if(highlightGraphics.isVisible())
+			highlightGraphics.removeAll();
 	}
 
 
