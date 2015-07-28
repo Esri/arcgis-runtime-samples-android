@@ -1,14 +1,5 @@
 package com.esri.arcgis.android.samples.offlineeditor;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -39,12 +30,20 @@ import com.esri.core.geodatabase.GeodatabaseEditError;
 import com.esri.core.geodatabase.GeodatabaseFeature;
 import com.esri.core.geodatabase.GeodatabaseFeatureServiceTable;
 import com.esri.core.geodatabase.GeodatabaseFeatureTable;
-import com.esri.core.geometry.Envelope;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.map.Feature;
 import com.esri.core.map.Field;
 import com.esri.core.map.Graphic;
 import com.esri.core.table.TableException;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PopupForEditFeatureLayer {
 
@@ -87,8 +86,6 @@ public class PopupForEditFeatureLayer {
 					"Querying...");
 
 		// Loop through each layer in the webmap
-		Envelope env = new Envelope(map.toMapPoint(x, y), tolerance
-				* map.getResolution(), tolerance * map.getResolution());
 		Layer[] layers = map.getLayers();
 		count = new AtomicInteger();
 		for (Layer layer : layers) {
@@ -341,13 +338,10 @@ public class PopupForEditFeatureLayer {
 
 				try {
 					long updateId = fr.getId();
-					Log.d("Graphics", newgr.getAttributes()
-							.toString());
-					Log.d("graphics", popup.getAddedAttachments().size() + "");
+
 					if (popup.getAddedAttachments().size() > 0) {
 						for (File attachment : popup.getAddedAttachments()) {
 							String fileName = attachment.getName();
-							Log.d("Name", fileName);
 							String contentType = getContentType(attachment);
 
 							try {
@@ -671,6 +665,5 @@ public class PopupForEditFeatureLayer {
 			}
 		});
 	}
-
 
 }

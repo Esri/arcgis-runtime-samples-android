@@ -49,7 +49,6 @@ import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.Polyline;
 import com.esri.core.map.Feature;
 import com.esri.core.map.FeatureTemplate;
-import com.esri.core.map.Field;
 import com.esri.core.map.Graphic;
 import com.esri.core.symbol.SimpleFillSymbol;
 import com.esri.core.symbol.SimpleLineSymbol;
@@ -58,7 +57,6 @@ import com.esri.core.symbol.Symbol;
 import com.esri.core.table.TableException;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
@@ -272,7 +270,6 @@ public class OfflineEditorActivity extends Activity {
 		Envelope env = null;
 		Graphic g = null;
 		String typeOfAttr = null;
-		String temp;
 
 		switch(geometryType) {
 			case "POINT": 	Point point = (Point)fr.getGeometry();
@@ -529,8 +526,6 @@ public class OfflineEditorActivity extends Activity {
 
 					// Loop through each layer in the webmap
 					int tolerance = 20;
-					Envelope env = new Envelope(mapView.toMapPoint(e.getX(), e.getY()), 20 * mapView
-							.getResolution(), 20 * mapView.getResolution());
 					Layer[] layers = mapView.getLayers();
 					count = new AtomicInteger();
 					for (Layer layer : layers) {
@@ -767,7 +762,6 @@ public class OfflineEditorActivity extends Activity {
 									@Override
 									public void onClick(View arg0) {
 										try {
-											List<Field> fields = gdbTable.getFields();
 
 											popup = new PopupForEditFeatureLayer(mapView, OfflineEditorActivity.this);
 											popup.showPopup(e.getX(), e.getY(), 25);
