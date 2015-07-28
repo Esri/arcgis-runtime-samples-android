@@ -94,7 +94,7 @@ public class AddCSVActivity extends Activity {
     datePicker.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        // refactor to use FramentDialog
+        // refactor to use FragmentDialog
         showDialog(DATE_DIALOG_ID);
       }
     });
