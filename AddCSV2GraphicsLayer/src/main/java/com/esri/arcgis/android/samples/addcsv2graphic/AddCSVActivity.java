@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,10 +55,12 @@ public class AddCSVActivity extends Activity {
   ArcGISTiledMapServiceLayer basemapTileLayer;
   GraphicsLayer graphicsLayer = null;
 
+  // When the Date Picker dialog appears, set the default date to be the current date.
   static final int DATE_DIALOG_ID = 0;
-  int mYear = 2011;
-  int mMonth = 11;
-  int mDay = 1;
+  Calendar rightNow = Calendar.getInstance();
+  int mYear = rightNow.get(Calendar.YEAR);
+  int mMonth = rightNow.get(Calendar.MONTH);
+  int mDay = rightNow.get(Calendar.DAY_OF_MONTH);
 
   ProgressDialog dialog;
 
@@ -91,7 +94,7 @@ public class AddCSVActivity extends Activity {
     datePicker.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        // refactor to use FramentDialog
+        // refactor to use FragmentDialog
         showDialog(DATE_DIALOG_ID);
       }
     });
@@ -167,9 +170,9 @@ public class AddCSVActivity extends Activity {
 
       Graphic graphic;
 
-      Map<String, Object> attr = new HashMap<String, Object>();
+      Map<String, Object> attr = new HashMap<>();
 
-      ArrayList<Graphic> windEvents = new ArrayList<Graphic>();
+      ArrayList<Graphic> windEvents = new ArrayList<>();
       SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(Color.BLUE, 20, SimpleMarkerSymbol.STYLE.DIAMOND);
 
       while ((inputLine = reader.readLine()) != null) {
@@ -200,8 +203,6 @@ public class AddCSVActivity extends Activity {
       // Close the input stream...
       reader.close();
 
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
     } catch (IOException ioe) {
       ioe.printStackTrace();
     }
@@ -220,9 +221,9 @@ public class AddCSVActivity extends Activity {
       Point pt;
       Graphic graphic;
 
-      Map<String, Object> attr = new HashMap<String, Object>();
+      Map<String, Object> attr = new HashMap<>();
 
-      ArrayList<Graphic> hailEvents = new ArrayList<Graphic>();
+      ArrayList<Graphic> hailEvents = new ArrayList<>();
       SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(Color.GREEN, 20, SimpleMarkerSymbol.STYLE.DIAMOND);
 
       while ((inputLine = in.readLine()) != null) {
@@ -254,8 +255,6 @@ public class AddCSVActivity extends Activity {
       // Close the input stream...
       in.close();
 
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -274,9 +273,9 @@ public class AddCSVActivity extends Activity {
       Point pt;
       Graphic graphic;
 
-      Map<String, Object> attr = new HashMap<String, Object>();
+      Map<String, Object> attr = new HashMap<>();
 
-      ArrayList<Graphic> tornadoEvents = new ArrayList<Graphic>();
+      ArrayList<Graphic> tornadoEvents = new ArrayList<>();
 
       SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(Color.RED, 20, SimpleMarkerSymbol.STYLE.DIAMOND);
 
@@ -307,8 +306,6 @@ public class AddCSVActivity extends Activity {
       addReports(tornadoEvents);
       in.close();
 
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
