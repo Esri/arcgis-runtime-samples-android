@@ -170,9 +170,9 @@ public class AddCSVActivity extends Activity {
 
       Graphic graphic;
 
-      Map<String, Object> attr = new HashMap<String, Object>();
+      Map<String, Object> attr = new HashMap<>();
 
-      ArrayList<Graphic> windEvents = new ArrayList<Graphic>();
+      ArrayList<Graphic> windEvents = new ArrayList<>();
       SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(Color.BLUE, 20, SimpleMarkerSymbol.STYLE.DIAMOND);
 
       while ((inputLine = reader.readLine()) != null) {
@@ -223,9 +223,9 @@ public class AddCSVActivity extends Activity {
       Point pt;
       Graphic graphic;
 
-      Map<String, Object> attr = new HashMap<String, Object>();
+      Map<String, Object> attr = new HashMap<>();
 
-      ArrayList<Graphic> hailEvents = new ArrayList<Graphic>();
+      ArrayList<Graphic> hailEvents = new ArrayList<>();
       SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(Color.GREEN, 20, SimpleMarkerSymbol.STYLE.DIAMOND);
 
       while ((inputLine = in.readLine()) != null) {
@@ -277,9 +277,9 @@ public class AddCSVActivity extends Activity {
       Point pt;
       Graphic graphic;
 
-      Map<String, Object> attr = new HashMap<String, Object>();
+      Map<String, Object> attr = new HashMap<>();
 
-      ArrayList<Graphic> tornadoEvents = new ArrayList<Graphic>();
+      ArrayList<Graphic> tornadoEvents = new ArrayList<>();
 
       SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(Color.RED, 20, SimpleMarkerSymbol.STYLE.DIAMOND);
 
