@@ -203,8 +203,6 @@ public class AddCSVActivity extends Activity {
       // Close the input stream...
       reader.close();
 
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
     } catch (IOException ioe) {
       ioe.printStackTrace();
     }
@@ -257,8 +255,6 @@ public class AddCSVActivity extends Activity {
       // Close the input stream...
       in.close();
 
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -310,8 +306,6 @@ public class AddCSVActivity extends Activity {
       addReports(tornadoEvents);
       in.close();
 
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
