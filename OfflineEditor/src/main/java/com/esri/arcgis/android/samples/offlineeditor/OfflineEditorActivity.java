@@ -35,10 +35,10 @@ import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.Layer;
 import com.esri.android.map.MapOnTouchListener;
 import com.esri.android.map.MapView;
-import com.esri.android.map.ags.ArcGISFeatureLayer;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 import com.esri.android.map.event.OnStatusChangedListener;
 import com.esri.core.geodatabase.GeodatabaseFeature;
+import com.esri.core.geodatabase.GeodatabaseFeatureServiceTable;
 import com.esri.core.geodatabase.GeodatabaseFeatureTable;
 import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.Geometry;
@@ -60,7 +60,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Allows you to make edits on the map being offline.
@@ -84,8 +83,6 @@ public class OfflineEditorActivity extends Activity {
 	GraphicsLayer highlightGraphics;
 
 	boolean featureUpdate = false;
-
-	boolean mDatabaseInitialized = false;
 
 	boolean onlineData = true;
 
@@ -121,15 +118,9 @@ public class OfflineEditorActivity extends Activity {
 
 	FeatureTemplate template;
 
-	private ProgressDialog progressDialog;
-
-	private AtomicInteger count;
-
 	private Map<Integer,String> pointEventTypeLookup = new TreeMap<>();
 	private Map<Integer,String> polylineEventTypeLookup = new TreeMap<>();
 	private Map<Integer,String> polygonEventTypeLookup = new TreeMap<>();
-
-	private static boolean onlineFlag = true;
 
 	public static boolean editFlag = false;
 
@@ -150,13 +141,6 @@ public class OfflineEditorActivity extends Activity {
 		mapView = ((MapView) findViewById(R.id.map));
 		mapView.addLayer(new ArcGISTiledMapServiceLayer(
 				GDBUtil.DEFAULT_BASEMAP_SERVICE_URL));
-
-		for (int i : GDBUtil.FEATURE_SERVICE_LAYER_IDS) {
-
-			mapView.addLayer(new ArcGISFeatureLayer(
-					GDBUtil.DEFAULT_FEATURE_SERVICE_URL + "/" + i,
-					ArcGISFeatureLayer.MODE.ONDEMAND));
-		}
 
 		eventTypeinit();
 
@@ -180,10 +164,11 @@ public class OfflineEditorActivity extends Activity {
 						highlightGraphics = new GraphicsLayer();
 						mapView.addLayer(graphicsLayer);
 						mapView.addLayer(highlightGraphics);
+						new InitializeGeoDatabseTable().execute();
 					}
 				}
 				if (STATUS.LAYER_LOADED == status) {
-					if (source instanceof ArcGISFeatureLayer) {
+					if (source instanceof FeatureLayer) {
 						GDBUtil.showProgress(OfflineEditorActivity.this, false);
 					}
 				}
@@ -198,114 +183,31 @@ public class OfflineEditorActivity extends Activity {
 
 	}
 
-	private class RunQueryLocalFeatureLayerTask extends
-			AsyncTask<FeatureLayer, Void, Feature[]> {
+	public static class InitializeGeoDatabseTable extends
+			AsyncTask<Void, Void,ArrayList<GeodatabaseFeatureServiceTable>> {
+		ArrayList<GeodatabaseFeatureServiceTable> arrayList;
 
-		private int tolerance;
-		private float x;
-		private float y;
-		private FeatureLayer localFeatureLayer;
+		@Override
+		protected ArrayList<GeodatabaseFeatureServiceTable> doInBackground(Void... params) {
 
-		public RunQueryLocalFeatureLayerTask(float x, float y, int tolerance) {
-			super();
-			this.x = x;
-			this.y = y;
-			this.tolerance = tolerance;
+			arrayList = new ArrayList<>();
+			for (int i : GDBUtil.FEATURE_SERVICE_LAYER_IDS) {
+				GeodatabaseFeatureServiceTable gdb = new GeodatabaseFeatureServiceTable(GDBUtil.DEFAULT_FEATURE_SERVICE_URL, i);
+				gdb.setSpatialReference(mapView.getSpatialReference());
+				gdb.initialize();
+				arrayList.add(gdb);
+			}
+
+			return arrayList;
 		}
 
 		@Override
-		protected Feature[] doInBackground(FeatureLayer... params) {
-			for (FeatureLayer featureLayer : params) {
-				this.localFeatureLayer = featureLayer;
-				// Retrieve graphic ids near the point.
-				long[] ids = featureLayer.getFeatureIDs(x, y, tolerance);
-				if (ids != null && ids.length > 0) {
-					ArrayList<Feature> features = new ArrayList<Feature>();
-					for (long id : ids) {
-						// Obtain graphic based on the id.
-
-						Feature f = featureLayer.getFeature(id);
-						if (f == null)
-							continue;
-						features.add(f);
-					}
-					// Return an array of graphics near the point.
-					return features.toArray(new Feature[0]);
-				}
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Feature[] features) {
-			// Validate parameter.
-			if (features == null || features.length == 0) {
-				// Dismiss spinner
-				if (progressDialog != null && progressDialog.isShowing()
-						)
-					progressDialog.dismiss();
-
-				return;
-			}
-
-
-			for (Feature fr : features) {
-
-				String geometryType = fr.getGeometry().getType().name();
-				Map<String,Object> attrExtracted = new TreeMap<String, Object>();
-
-				attrExtracted = fr.getAttributes();
-				showCallout(geometryType, fr,attrExtracted);
-
+		protected void onPostExecute(ArrayList<GeodatabaseFeatureServiceTable> arr) {
+			for(GeodatabaseFeatureServiceTable g : arr) {
+				mapView.addLayer(new FeatureLayer(g));
 			}
 		}
 
-	}
-
-	private void showCallout(String geometryType, Feature fr, Map<String, Object> attr) {
-
-		if (progressDialog != null && progressDialog.isShowing())
-			progressDialog.dismiss();
-
-		Envelope env = null;
-		Graphic g = null;
-		String typeOfAttr = null;
-
-		switch(geometryType) {
-			case "POINT": 	Point point = (Point)fr.getGeometry();
-							g = new Graphic(point, new SimpleFillSymbol(Color.CYAN, com.esri.core.symbol.SimpleFillSymbol.STYLE.SOLID));
-							env = new Envelope();
-							point.queryEnvelope(env);
-							typeOfAttr = pointEventTypeLookup.get((Integer)attr.get("eventtype"));
-
-				break;
-			case "POLYLINE":Polyline polyline = (Polyline)fr.getGeometry();
-							g = new Graphic(polyline, new SimpleFillSymbol(Color.CYAN, com.esri.core.symbol.SimpleFillSymbol.STYLE.SOLID));
-							env = new Envelope();
-							polyline.queryEnvelope(env);
-							Object o = attr.get("symbolid");
-							int i = Integer.valueOf((Short)o);
-							typeOfAttr = polylineEventTypeLookup.get((Integer)i);
-
-				break;
-			case "POLYGON": Polygon polygon = (Polygon)fr.getGeometry();
-							g = new Graphic(polygon, new SimpleFillSymbol(Color.CYAN, com.esri.core.symbol.SimpleFillSymbol.STYLE.SOLID));
-							env = new Envelope();
-							polygon.queryEnvelope(env);
-							Object o1 = attr.get("symbolid");
-							int i1 = Integer.valueOf((Short)o1);
-							typeOfAttr = polygonEventTypeLookup.get((Integer)i1);
-
-				break;
-		}
-
-		highlightGraphics.addGraphic(g);
-		LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-		final View callout = inflater.inflate(R.layout.viewcallout, null);
-
-		((TextView)callout.findViewById(R.id.viewcallouttextview)).setText(fr.getId() + " " + typeOfAttr );
-		mapView.getCallout().show(env.getCenter(), callout);
 	}
 
 	@Override
@@ -334,7 +236,6 @@ public class OfflineEditorActivity extends Activity {
 				}
 				editMenuItem.setVisible(true);
 				onlineMenuItem.setVisible(true);
-				onlineFlag = false;
 				hideCallout();
 				return true;
 
@@ -344,7 +245,6 @@ public class OfflineEditorActivity extends Activity {
 				offlineMenuItem.setVisible(true);
 				editMenuItem.setVisible(false);
 				hideCallout();
-				onlineFlag = true;
 				return true;
 
 			case R.id.edit:
@@ -516,42 +416,10 @@ public class OfflineEditorActivity extends Activity {
 
 			hideCallout();
 
-			// When online, show the attributes in a callout for feature layer
-			if(onlineFlag) {
-				if (mapView.isLoaded()) {
-					// Display spinner.
-					if (progressDialog == null || !progressDialog.isShowing())
-						progressDialog = ProgressDialog.show(mapView.getContext(),
-								"", "Querying...");
-
-					// Loop through each layer in the webmap
-					int tolerance = 20;
-					Layer[] layers = mapView.getLayers();
-					count = new AtomicInteger();
-					for (Layer layer : layers) {
-						// If the layer has not been initialized or is
-						// invisible, do nothing.
-						if (!layer.isInitialized() || !layer.isVisible())
-							continue;
-
-						if (layer instanceof ArcGISFeatureLayer) {
-							// Query feature layer and display popups
-							ArcGISFeatureLayer featureLayer = (ArcGISFeatureLayer) layer;
-							count.incrementAndGet();
-							new RunQueryFeatureLayerTask(e.getX(), e.getY(), tolerance,
-									0).execute(featureLayer);
-						}
-					}
-				}
-
-			}
-
-			// If offline and not in editing mode, show the callout for local feature layer
+			// If not in editing mode, show the callout for local/online feature layer
 			if(!editFlag) {
 
 				int tolerance = 20;
-				Envelope envelope = new Envelope(mapView.toMapPoint(e.getX(),e.getY()), 20 * mapView.getResolution(),
-						20 * mapView.getResolution());
 				Layer[] layers = mapView.getLayers();
 				for (Layer layer : layers) {
 					// If the layer has not been initialized or is invisible, do
@@ -564,9 +432,6 @@ public class OfflineEditorActivity extends Activity {
 						FeatureLayer localFeatureLayer = (FeatureLayer) layer;
 						// Query feature layer which is associated with a popup
 						// definition.
-						if (progressDialog == null || !progressDialog.isShowing())
-							progressDialog = ProgressDialog.show(mapView.getContext(), "",
-									"Querying...");
 						new RunQueryLocalFeatureLayerTask(e.getX(),e.getY(), tolerance)
 								.execute(localFeatureLayer);
 
@@ -738,16 +603,14 @@ public class OfflineEditorActivity extends Activity {
 
 				if(tp.getSelectedLayer() != null) {
 					if(editingmode == POINT || editingmode == POLYLINE || editingmode == POLYGON) {
-						highlightGraphics.removeAll();;
+						highlightGraphics.removeAll();
 						long[] featureIds = ((FeatureLayer)mapView.getLayerByID(tp.getSelectedLayer().getID())).getFeatureIDs(e.getX(),e.getY(),25);
 
 						if(featureIds.length > 0) {
-							final long gdbFeatureSelectedId = featureIds[0];
 							GeodatabaseFeature gdbFeatureSelected = (GeodatabaseFeature) ((FeatureLayer) mapView.getLayerByID(tp.getSelectedLayer().getID())).getFeature(featureIds[0]);
 
 							if(gdbFeatureSelected.getGeometry().getType().equals(Geometry.Type.POINT)) {
 
-								count = new AtomicInteger();
 								Point pt = (Point)gdbFeatureSelected.getGeometry();
 								Graphic g = new Graphic(pt, new SimpleMarkerSymbol(Color.CYAN, 10, SimpleMarkerSymbol.STYLE.DIAMOND));
 								highlightGraphics.addGraphic(g);
@@ -756,7 +619,8 @@ public class OfflineEditorActivity extends Activity {
 								View callout = inflater.inflate(R.layout.offlinecallout, null);
 
 								((TextView)callout.findViewById(R.id.offlinecallouttextview)).setText(gdbFeatureSelected.getId() + " " + gdbFeatureSelected.getTable().getTableName());
-								final GeodatabaseFeatureTable gdbTable = ((GeodatabaseFeatureTable)((FeatureLayer) mapView.getLayerByID(tp.getSelectedLayer().getID())).getFeatureTable());
+								Envelope env = new Envelope();
+								pt.queryEnvelope(env);
 								callout.setOnClickListener(new View.OnClickListener() {
 
 									@Override
@@ -839,42 +703,39 @@ public class OfflineEditorActivity extends Activity {
 		}
 	}
 
-
-	// Query feature layer by hit test
-	public class RunQueryFeatureLayerTask extends
-			AsyncTask<ArcGISFeatureLayer, Void, Feature[]> {
+	private class RunQueryLocalFeatureLayerTask extends
+			AsyncTask<FeatureLayer, Void, Feature[]> {
 
 		private int tolerance;
-		public float x;
-		public float y;
-		public ArcGISFeatureLayer featureLayer;
-		public int id;
+		private float x;
+		private float y;
+		private FeatureLayer localFeatureLayer;
 
-		public RunQueryFeatureLayerTask(float x, float y, int tolerance, int id) {
+		public RunQueryLocalFeatureLayerTask(float x, float y, int tolerance) {
 			super();
 			this.x = x;
 			this.y = y;
 			this.tolerance = tolerance;
-			this.id = id;
 		}
 
 		@Override
-		protected Feature[] doInBackground(ArcGISFeatureLayer... params) {
-			for (ArcGISFeatureLayer fLayer : params) {
-				this.featureLayer = fLayer;
-				// Retrieve feature ids near the point.
-				int[] ids = fLayer.getGraphicIDs(x, y, tolerance);
+		protected Feature[] doInBackground(FeatureLayer... params) {
+			for (FeatureLayer featureLayer : params) {
+				this.localFeatureLayer = featureLayer;
+				// Retrieve graphic ids near the point.
+				long[] ids = localFeatureLayer.getFeatureIDs(x, y, tolerance);
 				if (ids != null && ids.length > 0) {
 					ArrayList<Feature> features = new ArrayList<Feature>();
-					for (int graphicId : ids) {
-						// Obtain feature based on the id.
-						Feature f = fLayer.getGraphic(graphicId);
+					for (long id : ids) {
+						// Obtain graphic based on the id.
+
+						Feature f = featureLayer.getFeature(id);
 						if (f == null)
 							continue;
 						features.add(f);
 					}
-					// Return an array of features near the point.
-					return features.toArray(new Feature[0]);
+					// Return an array of graphics near the point.
+					return features.toArray(new Feature[features.size()]);
 				}
 			}
 			return null;
@@ -882,92 +743,68 @@ public class OfflineEditorActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Feature[] features) {
-			count.decrementAndGet();
 			// Validate parameter.
 			if (features == null || features.length == 0) {
-				// Dismiss spinner
-				if (progressDialog != null && progressDialog.isShowing()
-						&& count.intValue() == 0) {
-					progressDialog.dismiss();
-					hideCallout();
-				}
-
 				return;
 			}
-			if (progressDialog != null && progressDialog.isShowing()
-					&& count.intValue() == 0)
-				progressDialog.dismiss();
 
 
 			for (Feature fr : features) {
-				Map<String,Object> attrExtracted = new TreeMap<String, Object>();
+
+				String geometryType = fr.getGeometry().getType().name();
+				Map<String,Object> attrExtracted;
 
 				attrExtracted = fr.getAttributes();
-				showAttributes(attrExtracted,(fr.getGeometry()).getType().name(),fr);
+				showCallout(geometryType, fr, attrExtracted);
+
 			}
-
 		}
 
 	}
 
-	private void showAttributes(Map<String,Object> attr,String GeometryType,Feature fr) {
+	private void showCallout(String geometryType, Feature fr, Map<String, Object> attr) {
 
-		switch (GeometryType) {
-			case "POINT":
-				Point pt = (Point)fr.getGeometry();
-				Graphic g = new Graphic(pt, new SimpleMarkerSymbol(Color.CYAN, 10, SimpleMarkerSymbol.STYLE.DIAMOND));
-				highlightGraphics.addGraphic(g);
-				LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		Envelope env = null;
+		Graphic g = null;
+		String typeOfAttr = null;
 
-				View callout = inflater.inflate(R.layout.viewcallout, null);
+		switch(geometryType) {
+			case "POINT": 	Point point = (Point)fr.getGeometry();
+				g = new Graphic(point, new SimpleFillSymbol(Color.CYAN, com.esri.core.symbol.SimpleFillSymbol.STYLE.SOLID));
+				env = new Envelope();
+				point.queryEnvelope(env);
+				typeOfAttr = pointEventTypeLookup.get((Integer)attr.get("eventtype"));
 
-				((TextView)callout.findViewById(R.id.viewcallouttextview)).setText("SymbolID" + ": " + attr.get("symbolid") + "\n" +
-				"Rotation" + ": " + attr.get("rotation") + "\n" +
-				"Description" + ": " + String.valueOf(attr.get("description")) + "\n" +
-				"EventDate" + ": " + attr.get("eventdate") + "\n" +
-				"EventType" + ": " + pointEventTypeLookup.get((Integer)attr.get("eventtype")) + "\n" +
-				"Attach_ID" + ": " + attr.get("attach_id")
-				);
-
-				mapView.getCallout().show(pt, callout);
 				break;
-			case "POLYLINE":
-				Polyline poly = (Polyline) fr.getGeometry();
-				Graphic gr = new Graphic(poly, new SimpleLineSymbol(Color.CYAN, 5));
-				highlightGraphics.addGraphic(gr);
-				LayoutInflater lineinflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			case "POLYLINE":Polyline polyline = (Polyline)fr.getGeometry();
+				g = new Graphic(polyline, new SimpleFillSymbol(Color.CYAN, com.esri.core.symbol.SimpleFillSymbol.STYLE.SOLID));
+				env = new Envelope();
+				polyline.queryEnvelope(env);
+				Object o = attr.get("symbolid");
+				int i = Integer.valueOf((Short)o);
+				typeOfAttr = polylineEventTypeLookup.get((Integer)i);
 
-				Envelope env = new Envelope();
-				poly.queryEnvelope(env);
-				View polycallout = lineinflater.inflate(R.layout.viewcallout, null);
-
-				((TextView)polycallout.findViewById(R.id.viewcallouttextview)).setText("SymbolID" + ": " + polylineEventTypeLookup.get((Integer)attr.get("symbolid")) + "\n" +
-								"TimeStamp" + ": " + attr.get("timestamp") + "\n" +
-								"Description" + ": " + String.valueOf(attr.get("description")) + "\n" +
-								"Attach_ID" + ": " + attr.get("attach_id")
-				);
-
-				mapView.getCallout().show(env.getCenter(), polycallout);
 				break;
-			case "POLYGON":
-				Polygon polygon = (Polygon) fr.getGeometry();
-				Graphic graphic = new Graphic(polygon, new SimpleFillSymbol(Color.CYAN, com.esri.core.symbol.SimpleFillSymbol.STYLE.SOLID));
-				highlightGraphics.addGraphic(graphic);
-				LayoutInflater polygoninflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				Envelope polygonenv = new Envelope();
-				polygon.queryEnvelope(polygonenv);
-				final View polygoncallout = polygoninflater.inflate(R.layout.viewcallout, null);
+			case "POLYGON": Polygon polygon = (Polygon)fr.getGeometry();
+				g = new Graphic(polygon, new SimpleFillSymbol(Color.CYAN, com.esri.core.symbol.SimpleFillSymbol.STYLE.SOLID));
+				env = new Envelope();
+				polygon.queryEnvelope(env);
+				Object o1 = attr.get("symbolid");
+				int i1 = Integer.valueOf((Short)o1);
+				typeOfAttr = polygonEventTypeLookup.get((Integer)i1);
 
-				((TextView)polygoncallout.findViewById(R.id.viewcallouttextview)).setText("SymbolID" + ": " + polygonEventTypeLookup.get((Integer) attr.get("symbolid")) + "\n" +
-						"Description" + ": " + String.valueOf(attr.get("description")) + "\n");
-
-						mapView.getCallout().show(polygonenv.getCenter(), polygoncallout);
 				break;
-
-
 		}
 
+		highlightGraphics.addGraphic(g);
+		LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		final View callout = inflater.inflate(R.layout.viewcallout, null);
+
+		((TextView)callout.findViewById(R.id.viewcallouttextview)).setText(fr.getId() + " " + typeOfAttr );
+		mapView.getCallout().show(env.getCenter(), callout);
 	}
+
 
 	/**
 	 * The edits made are applied and hence saved on the server.

@@ -55,7 +55,6 @@ public class PopupForEditFeatureLayer {
 	private ProgressDialog progressDialog;
 	private AtomicInteger count;
 	private LinearLayout editorBarLocal;
-	private GeodatabaseFeature selectedGdbFeature;
 	private AlertDialog attachmentDialog;
 	private int counter = 0;
 
@@ -134,7 +133,7 @@ public class PopupForEditFeatureLayer {
 				// Retrieve graphic ids near the point.
 				long[] ids = featureLayer.getFeatureIDs(x, y, tolerance);
 				if (ids != null && ids.length > 0) {
-					ArrayList<Feature> features = new ArrayList<Feature>();
+					ArrayList<Feature> features = new ArrayList<>();
 					for (long id : ids) {
 						// Obtain graphic based on the id.
 
@@ -144,7 +143,7 @@ public class PopupForEditFeatureLayer {
 						features.add(f);
 					}
 					// Return an array of graphics near the point.
-					return features.toArray(new Feature[0]);
+					return features.toArray(new Feature[features.size()]);
 				}
 			}
 			return null;
@@ -510,8 +509,8 @@ public class PopupForEditFeatureLayer {
 					LayoutParams.WRAP_CONTENT);
 			LinearLayout layout = new LinearLayout(getContext());
 			layout.addView(popupContainer.getPopupContainerView(),
-					android.widget.LinearLayout.LayoutParams.FILL_PARENT,
-					android.widget.LinearLayout.LayoutParams.FILL_PARENT);
+					LinearLayout.LayoutParams.MATCH_PARENT,
+					LinearLayout.LayoutParams.MATCH_PARENT);
 			setContentView(layout, params);
 		}
 

@@ -13,11 +13,6 @@ package com.esri.arcgis.android.samples.offlineeditor;
  *
  */
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.util.Map;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -31,7 +26,6 @@ import android.widget.Toast;
 import com.esri.android.map.FeatureLayer;
 import com.esri.android.map.Layer;
 import com.esri.android.map.MapView;
-import com.esri.android.map.ags.ArcGISFeatureLayer;
 import com.esri.android.map.ags.ArcGISLocalTiledLayer;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 import com.esri.core.ags.FeatureServiceInfo;
@@ -44,6 +38,11 @@ import com.esri.core.tasks.geodatabase.GeodatabaseStatusCallback;
 import com.esri.core.tasks.geodatabase.GeodatabaseStatusInfo;
 import com.esri.core.tasks.geodatabase.GeodatabaseSyncTask;
 import com.esri.core.tasks.geodatabase.SyncGeodatabaseParameters;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileNotFoundException;
+import java.util.Map;
 
 public class GDBUtil {
 
@@ -131,10 +130,8 @@ public class GDBUtil {
 
     mapView.addLayer(new ArcGISTiledMapServiceLayer(DEFAULT_BASEMAP_SERVICE_URL), 0);
 
-    for (int i : GDBUtil.FEATURE_SERVICE_LAYER_IDS) {
-      mapView.addLayer(new ArcGISFeatureLayer(DEFAULT_FEATURE_SERVICE_URL + "/" + i,
-          ArcGISFeatureLayer.MODE.ONDEMAND));
-    }
+    new OfflineEditorActivity.InitializeGeoDatabseTable().execute();
+
     activity.onlineData = true;
   }
 
@@ -264,7 +261,7 @@ public class GDBUtil {
     // remove all the feature layers from map and add a feature
     // layer from the downloaded geodatabase
     for (Layer layer : mapView.getLayers()) {
-      if (layer instanceof ArcGISFeatureLayer || layer instanceof ArcGISTiledMapServiceLayer)
+      if (layer instanceof FeatureLayer || layer instanceof ArcGISTiledMapServiceLayer)
         mapView.removeLayer(layer);
     }
 
