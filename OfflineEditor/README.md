@@ -26,6 +26,12 @@ The ```OfflineEditorActivity``` class sets up the layout and default map layers 
 To get started you need to download the feature data to your device using the **Download** button.  The app will automatically switch to data provisioned on your device once the download is complete.  Next you can start to edit the feature data by tapping the **Edit** button which opens the edit tools.  Using the edit tools, tap on the edit template button to select a feature template and place your feature template on the map. The geometry editing process is similar to the one documented in the [GeometryEditor](https://developers.arcgis.com/android/sample-code/geometry-editor/) Sample.
 You can tap on the map to perform the edits and once the action is performed you have a an option to **Save** or **Undo** the last action. 
 
+### Edit Features
+To edit the attributes of the feature, select the feature template using the edit tools. Long press on the feature to get a callout with details. Tap on the callout to view the attributes in editable mode. The editing process is similar to [PopupInWebMapForEditing](https://github.com/Esri/arcgis-runtime-samples-android/tree/master/PopupInWebMapForEditing). You can choose to add an attachment to the feature to save it locally. Upon syncing when online, the local edits will be synced to the online feature.
+
+### View
+To view the attributes of the feature in on/off-line mode, single tap on the feature, attributes will be displayed in a callout.
+
 ### Sync
 Once the edits are performed locally, you can click on the **Synchronize** button to sync the local edits to the online Feature Service. You also have the option to discard all the changes made when tapping the **Discard** button. 
 

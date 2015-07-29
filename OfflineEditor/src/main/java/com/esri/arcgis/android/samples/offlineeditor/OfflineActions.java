@@ -102,7 +102,10 @@ public class OfflineActions implements Callback {
 
   @Override
   public void onDestroyActionMode(ActionMode mode) {
+    ((OfflineEditorActivity) mContext).clear();
+    OfflineEditorActivity.editFlag = false;
     mContext = null;
+
   }
 
   @Override

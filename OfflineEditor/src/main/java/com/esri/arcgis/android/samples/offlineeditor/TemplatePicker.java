@@ -56,7 +56,7 @@ public class TemplatePicker extends PopupWindow {
     display.getSize(size);
     // size.x = width
     setWidth(size.x);
-    setHeight(300);
+    setHeight(500);
     setFocusable(true);
   }
 
