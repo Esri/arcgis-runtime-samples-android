@@ -22,7 +22,7 @@ Our SDK is hosted in our public maven repository hosted by Bintray.  Our reposit
 repositories {
     jcenter()
     maven {
-        url 'http://dl.bintray.com/esri/arcgis'
+        url 'https://esri.bintray.com/arcgis'
     }
 }
 ```
