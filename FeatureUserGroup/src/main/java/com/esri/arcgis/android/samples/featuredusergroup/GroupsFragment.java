@@ -1,20 +1,20 @@
-/* Copyright 2014 ESRI
+/* Copyright 2015 Esri
  *
- * All rights reserved under the copyright laws of the United States
- * and applicable international laws, treaties, and conventions.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * You may freely redistribute and use this sample code, with or
- * without modification, provided you include the original copyright
- * notice and use restrictions.
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
- * See the Sample code usage restrictions document for further information.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  *
  */
 
 package com.esri.arcgis.android.samples.featuredusergroup;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -44,6 +44,9 @@ import com.esri.core.portal.PortalGroup;
 import com.esri.core.portal.PortalInfo;
 import com.esri.core.portal.PortalQueryParams;
 import com.esri.core.portal.PortalQueryResultSet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This fragment is launched when FeaturedGroupsActivity starts. It logs in to the portal and
