@@ -28,6 +28,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -63,9 +64,7 @@ import java.util.ArrayList;
  */
 public class DynamicListView extends ListView {
 
-    private final int SMOOTH_SCROLL_AMOUNT_AT_EDGE = 15;
     private final int MOVE_DURATION = 150;
-    private final int LINE_THICKNESS = 15;
 
     public ArrayList<String> mCheeseList;
 
@@ -115,6 +114,7 @@ public class DynamicListView extends ListView {
         setOnItemLongClickListener(mOnItemLongClickListener);
         setOnScrollListener(mScrollListener);
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        int SMOOTH_SCROLL_AMOUNT_AT_EDGE = 15;
         mSmoothScrollAmountAtEdge = (int)(SMOOTH_SCROLL_AMOUNT_AT_EDGE / metrics.density);
     }
 
@@ -176,6 +176,7 @@ public class DynamicListView extends ListView {
 
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
+        int LINE_THICKNESS = 15;
         paint.setStrokeWidth(LINE_THICKNESS);
         paint.setColor(Color.BLACK);
 
@@ -237,7 +238,7 @@ public class DynamicListView extends ListView {
      *  over the listview's items whenever the listview is redrawn.
      */
     @Override
-    protected void dispatchDraw(Canvas canvas) {
+    protected void dispatchDraw(@NonNull Canvas canvas) {
         super.dispatchDraw(canvas);
         if (mHoverCell != null) {
             mHoverCell.draw(canvas);
@@ -245,7 +246,7 @@ public class DynamicListView extends ListView {
     }
 
     @Override
-    public boolean onTouchEvent (MotionEvent event) {
+    public boolean onTouchEvent (@NonNull MotionEvent event) {
 
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
@@ -327,11 +328,6 @@ public class DynamicListView extends ListView {
             final long switchItemID = isBelow ? mBelowItemId : mAboveItemId;
             View switchView = isBelow ? belowView : aboveView;
             final int originalItem = getPositionForView(mobileView);
-
-            if (switchView == null) {
-                updateNeighborViewsForID(mMobileItemId);
-                return;
-            }
 
             swapElements(mCheeseList, originalItem, getPositionForView(switchView));
 

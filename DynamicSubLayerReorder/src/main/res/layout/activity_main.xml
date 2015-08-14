@@ -11,7 +11,7 @@
 
         />
 
-    <com.example.salihyalcin.dynamicsublayerreordersample.DynamicListView
+    <com.arcgis.android.samples.dynamicsublayerreorder.DynamicListView
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:id="@+id/listView"
