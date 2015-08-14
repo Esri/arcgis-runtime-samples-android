@@ -1,7 +1,7 @@
 package com.arcgis.android.samples.dynamicsublayerreorder;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.esri.android.map.MapView;
 import com.esri.android.map.ags.ArcGISDynamicMapServiceLayer;
@@ -9,12 +9,11 @@ import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 import com.esri.core.geometry.Envelope;
 import com.esri.core.map.DynamicLayerInfo;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     MapView mMapView;
     ArcGISTiledMapServiceLayer mBaseMap;
     DynamicListView mLayerList;
