@@ -1,6 +1,5 @@
 # DynamicSubLayerReorderSample
-This sample demonstrates how you can reorder sub layers in an ArcGIS Dynamic Map Service. Feel free to use this example on your applications.
-
+This sample demonstrates how you can reorder sub layers in an ArcGIS Dynamic Map Service. 
 PS : Drag-Drop functionality start with onLongClickListener. 
 
 <img src="https://cloud.githubusercontent.com/assets/9201717/8429817/e723c776-1f33-11e5-97c4-7410f80b0ce4.png" width="250">
@@ -10,9 +9,15 @@ PS : Drag-Drop functionality start with onLongClickListener.
 
 
 #Used Features
-- Esri Android SDK 10.2.6-2
-- DevBytes DynamicListView
+- ArcGISDynamicMapServiceLayer
+- DynamicLayerInfo
+- DynamicListView provided by DevBytes Google
+
+
+#App usage
+Long click to single list item. Drag-drop sublayers to change order. 
 
 #Resources
 - https://developers.arcgis.com/android/
 - https://www.youtube.com/watch?v=_BZIvjMgH-Q
+
