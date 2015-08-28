@@ -74,10 +74,6 @@ public class MainActivity extends AppCompatActivity {
         Envelope mapExtent = new Envelope(-14029650.509177,3560436.632155,-12627306.217347,5430229.021262);
         mMapView.setExtent(mapExtent);
 
-
-
-
-
     }
 
     /*
