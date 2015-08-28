@@ -1,22 +1,30 @@
 # Overview
-ArcGIS Runtime SDK for Android v10.2.6 samples for Android Studio.  The repo contains an [Android Studio](http://developer.android.com/sdk/index.html) project with multi-project sample app modules that can be run from within the Android Studio IDE.
+This branch contains [ArcGIS Runtime SDK For Android](http://developers.arcgis.com/android/beta) sample app modules for Quartz Beta (v100.0.0-beta-1) that can be run from within the Android Studio IDE.
+
+The ```master``` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK For Android](https://developers.arcgis.com/android/).  Samples released under older versions can be found through the [repository releases](https://github.com/Esri/arcgis-runtime-samples-android/releases).
 
 # Prerequisites
-* The samples are building with ```compileSdkVersion 21``` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* The samples are building with ```compileSdkVersion 22``` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [Android Studio](http://developer.android.com/sdk/index.html)
 
 # Developer Instructions
 The **ArcGIS Android SDK Samples** are [Gradle](https://www.gradle.org) based Android projects which can be directly cloned and imported into Android Studio.
 
-Each sample app module has a build.gradle file with the latest ArcGIS Android SDK compile dependency.
+The latest ArcGIS Android SDK compile dependency is defined for all sample modules in the root project build.gradle.  This is the only place where you need to define the dependency to the ArcGIS Android SDK.
 
 ```groovy
-dependencies {
-    compile 'com.esri.arcgis.android:arcgis-android:10.2.6-2'
+subprojects{
+    afterEvaluate {project ->
+        if(project.hasProperty("dependencies")){
+            dependencies {
+                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0-beta-1'
+            }
+        }
+    }
 }
 ```
 
-Our SDK is hosted in our public maven repository hosted by Bintray.  Our repository url is added to the projects build.gradle file.
+Our SDK is hosted in our public maven repository hosted by Bintray.  Our repository url is added to the projects root build.gradle file.
 
 ```groovy
 repositories {
@@ -86,45 +94,35 @@ Once you have set up a remote upstream you can keep your fork up to date with ou
 
 - Open a terminal (Mac users) or command prompt (Windows & Linux users)
 - Change to the current working directory of your local repository
-- Fetch the branches and commits from the upstream repository.  Commits to ```master``` will be stored in a local branch, ```upstream/master```.
+- Fetch the branches and commits from the upstream repository.  Commits to ```quartz-beta``` will be stored in a local branch, ```upstream/quartz-beta```.
 
 ```
 $ git fetch upstream
 ```
 
-- Check out your forks local ```master``` branch
+- Check out your forks local ```quartz-beta``` branch
 
 ```
-$ git checkout master
+$ git checkout quartz-beta
 ```
 
-- Merge changes from ```upstream/master``` into  your local ```master``` branch which syncs your forks ```master``` branch with our samples repository.
+- Merge changes from ```upstream/quartz-beta``` into  your local ```quartz-beta``` branch which syncs your forks ```quartz-beta``` branch with our samples repository.
 
 ```
-$ git merge upstream/master
+$ git merge upstream/quartz-beta
 ```
 
 ## Import Gradle Sample project into Android Studio
 Once the project is cloned to disk you can import into Android Studio:
 
 * From the toolbar select **File > Import Project**, or **Import Non-Android Studio project** from the Welcome Quick Start.
-* Navigate to the root project folder, **arcgis-android-sdk-gradle-samples-10.2.6** directory and click **OK**
+* Navigate to the root project folder, **arcgis-runtime-samples-android** directory and click **OK**
 
 ## Run a sample
-You should now be able to run any of the included samples.  We will use the ```HelloWorld``` Sample as an example.  
+You should now be able to run any of the included samples.  We will use the ```set-map-initial-location``` sample as an example.
 
-* Select ```HelloWorld``` from the **Select Run/Debug Configuration** drop down
+* Select ```set-map-initial-location``` from the **Select Run/Debug Configuration** drop down
 * Click the **Run** button
-
-## Location Services
-Some of our apps need an active GPS connection to run. When using the emulator, you will need to push the location when trying to run these sample apps on a GPS enabled emulator.
-Refer [here](http://developer.android.com/tools/devices/emulator.html) for more information.
-You can also push the location using the Android Device Manager
-
-1. Launch Android Device Manager
-2. Select 'Emulator Control' tab
-3. Enter Longitude and Latitude and click on Send (This will fix the location on your emulator)
-
 
 ## Issues
 Find a bug or want to request a new feature enhancement?  Please let us know by submitting an issue.
