@@ -1,0 +1,122 @@
+/* Copyright 2015 ESRI
+ *
+ * All rights reserved under the copyright laws of the United States
+ * and applicable international laws, treaties, and conventions.
+ *
+ * You may freely redistribute and use this sample code, with or
+ * without modification, provided you include the original copyright
+ * notice and use restrictions.
+ *
+ * See the Sample code usage restrictions document for further information.
+ *
+ */
+
+package com.esri.arcgisruntime.samples.featurelayerselection;
+
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.widget.Toast;
+
+import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.datasource.FeatureQueryResult;
+import com.esri.arcgisruntime.datasource.QueryParameters;
+import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
+import com.esri.arcgisruntime.geometry.Envelope;
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
+import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.mapping.view.Viewpoint;
+import com.esri.arcgisruntime.symbology.RgbColor;
+
+public class MainActivity extends AppCompatActivity {
+
+    MapView mMapView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // inflate MapView from layout
+        mMapView = (MapView) findViewById(R.id.mapView);
+
+        // create a map with the streets basemap
+        final Map map = new Map(Basemap.createStreets());
+        //set an initial viewpointf
+        map.setInitialViewpoint(new Viewpoint(new Envelope(-1131596.019761, 3893114.069099, 3926705.982140, 7977912.461790, 0, 0, 0, 0, SpatialReferences.getWebMercator())));
+        // set the map to be displayed in the mapview
+        mMapView.setMap(map);
+
+        // create feature layer with its service feature table
+        // create the service feature table
+        final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
+        // create the feature layer using the service feature table
+        final FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
+        featureLayer.setSelectionColor(new RgbColor(0, 255, 255, 255)); //cyan, fully opaque
+        featureLayer.setSelectionWidth(3);
+        // add the layer to the map
+        map.getOperationalLayers().add(featureLayer);
+
+        // set an on touch listener to listen for click events
+        mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+
+                // get the point that was clicked and convert it to a point in map coordinates
+                Point clickPoint = mMapView.screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
+                int tolerance = 44;
+                double mapTolerance = tolerance * mMapView.getUnitsPerPixel();
+
+                // create objects required to do a selection with a query
+                Envelope envelope = new Envelope(clickPoint.getX() - mapTolerance, clickPoint.getY() - mapTolerance, clickPoint.getX() + mapTolerance, clickPoint.getY() + mapTolerance, 0, 0, 0, 0, map.getSpatialReference());
+                QueryParameters query = new QueryParameters();
+                query.setGeometry(envelope);
+                query.getOutFields().add("*");
+
+                // call select features
+                final ListenableFuture<FeatureQueryResult> future = featureLayer.selectFeatures(query, FeatureLayer.SelectionMode.NEW);
+                // add done loading listener to fire when the selection returns
+                future.addDoneListener(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            //call get on the future to get the result
+                            FeatureQueryResult result = future.get();
+
+                            //find out how many items there are in the result
+                            int i = 0;
+                            for (; result.iterator().hasNext(); ++i) {
+                                result.iterator().next();
+                            }
+                            Toast.makeText(getApplicationContext(), i + " features selected", Toast.LENGTH_SHORT).show();
+
+                        } catch (Exception e) {
+                            Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
+                        }
+                    }
+                });
+                return super.onSingleTapConfirmed(e);
+            }
+        });
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        // pause MapView
+        mMapView.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // resume MapView
+        mMapView.resume();
+    }
+}
