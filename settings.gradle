@@ -16,4 +16,5 @@ include ':add-graphics-renderer',
         ':service-feature-table-manualcache',
         ':service-feature-table-nocache',
         ':set-initial-map-area',
-        ':set-initial-map-location'
+        ':set-initial-map-location',
+        ':set-map-spatial-reference'
