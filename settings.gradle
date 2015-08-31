@@ -12,4 +12,5 @@ include ':add-graphics-renderer',
         ':identify-graphics-hittest',
         ':open-existing-map',
         ':picture-marker-symbols',
+        ':service-feature-table-cache',
         ':set-initial-map-location'
