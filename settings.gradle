@@ -3,4 +3,5 @@ include ':add-graphics-renderer',
         ':arcgis-tiledlayer-url',
         ':change-basemaps',
         ':change-feature-layer-renderer',
+        ':change-sublayer-visibility',
         ':set-initial-map-location'
