@@ -1,3 +1,4 @@
 include ':add-graphics-renderer',
         ':arcgis-map-imagelayer-url',
+        ':arcgis-tiledlayer-url',
         ':set-initial-map-location'
