@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+
+    <group android:checkableBehavior="all">
+        <item
+            android:id="@+id/Cities"
+            app:showAsAction="never"
+            android:title="@string/Cities" />
+        <item
+            android:id="@+id/Continents"
+            app:showAsAction="never"
+            android:title="@string/Continents" />
+        <item
+            android:id="@+id/World"
+            app:showAsAction="never"
+            android:title="@string/World" />
+    </group>
+
+</menu>
