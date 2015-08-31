@@ -1,1 +1,2 @@
-include '', ':set-initial-map-location'
+include ':add-graphics-renderer',
+        ':set-initial-map-location'
