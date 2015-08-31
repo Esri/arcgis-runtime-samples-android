@@ -10,4 +10,5 @@ include ':add-graphics-renderer',
         ':feature-layer-query',
         ':feature-layer-selection',
         ':identify-graphics-hittest',
+        ':open-existing-map',
         ':set-initial-map-location'
