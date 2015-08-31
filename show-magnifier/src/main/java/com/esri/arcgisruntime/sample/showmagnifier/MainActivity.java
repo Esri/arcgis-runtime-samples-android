@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         mMapView.setMap(mMap);
         // enable magnifier
         mMapView.setMagnifierEnabled(true);
+        // allow magnifier to pan near the edge of the map bounds
+        mMapView.setAllowMagnifierToPanMap(true);
     }
 
     @Override
