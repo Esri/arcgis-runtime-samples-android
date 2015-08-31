@@ -8,4 +8,5 @@ include ':add-graphics-renderer',
         ':feature-layer-definition-expression',
         ':feature-layer-feature-service',
         ':feature-layer-query',
+        ':feature-layer-selection',
         ':set-initial-map-location'
