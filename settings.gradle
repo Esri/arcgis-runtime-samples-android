@@ -18,4 +18,5 @@ include ':add-graphics-renderer',
         ':set-initial-map-area',
         ':set-initial-map-location',
         ':set-map-spatial-reference',
-        ':simple-marker-symbol'
+        ':simple-marker-symbol',
+        ':simple-renderer'
