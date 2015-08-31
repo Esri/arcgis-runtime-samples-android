@@ -11,4 +11,5 @@ include ':add-graphics-renderer',
         ':feature-layer-selection',
         ':identify-graphics-hittest',
         ':open-existing-map',
+        ':picture-marker-symbols',
         ':set-initial-map-location'
