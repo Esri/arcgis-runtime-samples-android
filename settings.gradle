@@ -7,4 +7,5 @@ include ':add-graphics-renderer',
         ':display-drawing-status',
         ':feature-layer-definition-expression',
         ':feature-layer-feature-service',
+        ':feature-layer-query',
         ':set-initial-map-location'
