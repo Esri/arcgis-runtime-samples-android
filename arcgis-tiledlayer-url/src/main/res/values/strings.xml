@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TiledLayerFromUrl</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- World Topo Map Service URL -->
+    <string name="world_topo_service">http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer</string>
+</resources>
