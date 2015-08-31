@@ -6,4 +6,5 @@ include ':add-graphics-renderer',
         ':change-sublayer-visibility',
         ':display-drawing-status',
         ':feature-layer-definition-expression',
+        ':feature-layer-feature-service',
         ':set-initial-map-location'
