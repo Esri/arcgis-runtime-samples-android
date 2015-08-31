@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Picture marker symbols</string>
+    <string name="pin_blank_orange_folder_name">ArcGISTemp</string>
+    <string name="pin_blank_orange_file_name">pin_blank_orange.png</string>
+
+</resources>
