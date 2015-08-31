@@ -1,5 +1,6 @@
 include ':add-graphics-renderer',
         ':arcgis-map-imagelayer-url',
         ':arcgis-tiledlayer-url',
-        ':change-basemaps'
+        ':change-basemaps',
+        ':change-feature-layer-renderer',
         ':set-initial-map-location'
