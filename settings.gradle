@@ -4,4 +4,5 @@ include ':add-graphics-renderer',
         ':change-basemaps',
         ':change-feature-layer-renderer',
         ':change-sublayer-visibility',
+        ':display-drawing-status',
         ':set-initial-map-location'
