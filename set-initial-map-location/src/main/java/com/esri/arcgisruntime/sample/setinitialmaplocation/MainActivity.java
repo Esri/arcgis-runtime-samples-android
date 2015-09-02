@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.helloworld;
+package com.esri.arcgisruntime.sample.setinitialmaplocation;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

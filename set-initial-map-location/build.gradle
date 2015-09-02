@@ -5,7 +5,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "android.arcgis.esri.com.helloworld"
+        applicationId "android.arcgis.esri.com.setinitialmaplocation"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
