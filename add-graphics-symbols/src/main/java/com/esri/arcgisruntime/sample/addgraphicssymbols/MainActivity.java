@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.mapView);
 
         // create a map with the BasemapType topographic
-        Map map = new Map(BasemapType.LIGHT_GRAY_CANVAS, 56.075844, -2.681572, 11);
+        Map map = new Map(BasemapType.OCEANS, 56.075844, -2.681572, 11);
         // set the map to be displayed in this view
         mMapView.setMap(map);
         // add graphics overlay to MapView.
@@ -95,13 +95,13 @@ public class MainActivity extends AppCompatActivity {
         Point buoy4Loc = new Point(-2.6395150461199726, 56.06127916736989, wgs84);
 
         //create a marker symbol
-        SimpleMarkerSymbol boueyMarker = new SimpleMarkerSymbol(new RgbColor(255, 0, 0, 255), 10, SimpleMarkerSymbol.Style.CIRCLE);
+        SimpleMarkerSymbol buoyMarker = new SimpleMarkerSymbol(new RgbColor(255, 0, 0, 255), 10, SimpleMarkerSymbol.Style.CIRCLE);
 
         //create graphics
-        Graphic buoyGraphic1 = new Graphic(buoy1Loc, boueyMarker);
-        Graphic buoyGraphic2 = new Graphic(buoy2Loc, boueyMarker);
-        Graphic buoyGraphic3 = new Graphic(buoy3Loc, boueyMarker);
-        Graphic buoyGraphic4 = new Graphic(buoy4Loc, boueyMarker);
+        Graphic buoyGraphic1 = new Graphic(buoy1Loc, buoyMarker);
+        Graphic buoyGraphic2 = new Graphic(buoy2Loc, buoyMarker);
+        Graphic buoyGraphic3 = new Graphic(buoy3Loc, buoyMarker);
+        Graphic buoyGraphic4 = new Graphic(buoy4Loc, buoyMarker);
 
         //add the graphics to the graphics overlay
         graphicOverlay.getGraphics().add(buoyGraphic1);
