@@ -90,8 +90,12 @@ public class MainActivity extends AppCompatActivity {
    * @param v the button view
    */
   public void pointClick(View v) {
-    v.setSelected(true);
-    mSketchGraphicsOverlay.setDrawingMode(SketchGraphicsOverlay.DrawingMode.POINT);
+    if (!v.isSelected()) {
+      v.setSelected(true);
+      mSketchGraphicsOverlay.setDrawingMode(SketchGraphicsOverlay.DrawingMode.POINT);
+    } else {
+      mSketchGraphicsOverlay.setDrawingMode(SketchGraphicsOverlay.DrawingMode.NONE);
+    }
   }
 
   /**
@@ -100,8 +104,12 @@ public class MainActivity extends AppCompatActivity {
    * @param v the button view
    */
   public void polylineClick(View v) {
-    v.setSelected(true);
-    mSketchGraphicsOverlay.setDrawingMode(SketchGraphicsOverlay.DrawingMode.POLYLINE);
+    if (!v.isSelected()) {
+      v.setSelected(true);
+      mSketchGraphicsOverlay.setDrawingMode(SketchGraphicsOverlay.DrawingMode.POLYLINE);
+    } else {
+      mSketchGraphicsOverlay.setDrawingMode(SketchGraphicsOverlay.DrawingMode.NONE);
+    }
   }
 
   /**
@@ -110,8 +118,12 @@ public class MainActivity extends AppCompatActivity {
    * @param v the button view
    */
   public void polygonClick(View v) {
-    v.setSelected(true);
-    mSketchGraphicsOverlay.setDrawingMode(SketchGraphicsOverlay.DrawingMode.POLYGON);
+    if (!v.isAccessibilityFocused()) {
+      v.setSelected(true);
+      mSketchGraphicsOverlay.setDrawingMode(SketchGraphicsOverlay.DrawingMode.POLYGON);
+    } else {
+      mSketchGraphicsOverlay.setDrawingMode(SketchGraphicsOverlay.DrawingMode.NONE);
+    }
   }
 
   /**
