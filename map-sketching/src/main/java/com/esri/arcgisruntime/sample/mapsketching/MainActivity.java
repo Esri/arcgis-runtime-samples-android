@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
    * @param v the button view
    */
   public void polygonClick(View v) {
-    if (!v.isAccessibilityFocused()) {
+    if (!v.isSelected()) {
       v.setSelected(true);
       mSketchGraphicsOverlay.setDrawingMode(SketchGraphicsOverlay.DrawingMode.POLYGON);
     } else {
