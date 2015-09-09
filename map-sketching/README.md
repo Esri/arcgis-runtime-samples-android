@@ -18,7 +18,7 @@ This sample demonstrates how you can sketch graphics on a SketchGraphicsOverlay.
   1. Tap the point icon in the bottom left.
   2. Single tap on the map. A red placement symbol will be drawn on the map.
   3. Optionally, tap again or drag the placement symbol to reposition the point.
-  4. Long press to finish the point, which will change to a blue placed symbol.
+  4. Long press or tap point icon to finish the point, which will change to a blue placed symbol.
 
 #### Sketch Polyline
 
@@ -26,7 +26,7 @@ This sample demonstrates how you can sketch graphics on a SketchGraphicsOverlay.
   2. Single tap on the map. A red placement symbol will be drawn on the map.
   3. All additional single taps will add a new point, change the symbol of the previous point to the polyline vertex symbol and add a midpoint to the new line segment.
   4. Optionally, any vertex or midpoint can be single tapped to select it, and then dragged to reposition it.
-  5. Long press to finish the polyline, which will change the final working point to the polyline vertex symbol, remove all midpoints, and change the line color to blue.
+  5. Long press or tap polyline icon to finish the polyline, which will change the final working point to the polyline vertex symbol, remove all midpoints, and change the line color to blue.
 
 #### Sketch Polygon
 
@@ -34,7 +34,7 @@ This sample demonstrates how you can sketch graphics on a SketchGraphicsOverlay.
   2. Single tap on the map. A red placement symbol will be drawn on the map.
   3. All additional single taps will add a new point, change the symbol of the previous point to the polyline vertex symbol and add a midpoint to the new line segment. Once three or more points are sketched, the polygon will be drawn within the polyline.
   4. Optionally, any vertex or midpoint can be single tapped to select it, and then dragged to reposition it.
-  5. Long press to finish the polygon, which will change the final working point to the polyline vertex symbol, remove all midpoints, and change the line color to blue.
+  5. Long press or tap polygon icon to finish the polygon, which will change the final working point to the polyline vertex symbol, remove all midpoints, and change the line color to blue.
 
 #### Undo
 
