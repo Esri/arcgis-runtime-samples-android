@@ -12,6 +12,7 @@ include ':add-graphics-renderer',
         ':feature-layer-query',
         ':feature-layer-selection',
         ':identify-graphics-hittest',
+        ':manage-bookmarks',
         ':manage-operational-layers',
         ':map-sketching',
         ':open-existing-map',
@@ -25,4 +26,4 @@ include ':add-graphics-renderer',
         ':show-magnifier',
         ':simple-marker-symbol',
         ':simple-renderer',
-        ':unique-value-renderer', ':manage-bookmarks'
+        ':unique-value-renderer'
