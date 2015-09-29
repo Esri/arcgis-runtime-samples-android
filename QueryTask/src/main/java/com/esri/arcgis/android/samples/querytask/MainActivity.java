@@ -41,12 +41,12 @@ import com.esri.core.tasks.query.QueryTask;
 
 public class MainActivity extends Activity {
 
-	MapView mMapView;
-	GraphicsLayer graphicsLayer;
+	private MapView mMapView;
+	private GraphicsLayer graphicsLayer;
 	Graphic fillGraphic;
-	String queryLayer;
-	boolean boolQuery = true;
-	ProgressDialog progress;
+	private String queryLayer;
+	private boolean boolQuery = true;
+	private ProgressDialog progress;
 
 	final static int HAS_RESULTS = 1;
 	final static int NO_RESULT = 2;
