@@ -29,7 +29,6 @@ import android.widget.Toast;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.MapView;
 import com.esri.android.map.event.OnStatusChangedListener;
-import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.Feature;
 import com.esri.core.map.FeatureResult;
@@ -43,14 +42,8 @@ public class MainActivity extends Activity {
 
 	private MapView mMapView;
 	private GraphicsLayer graphicsLayer;
-	Graphic fillGraphic;
 	private String queryLayer;
-	private boolean boolQuery = true;
 	private ProgressDialog progress;
-
-	final static int HAS_RESULTS = 1;
-	final static int NO_RESULT = 2;
-	final static int CLEAR_RESULT = 3;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -99,7 +92,6 @@ public class MainActivity extends Activity {
 
 		case R.id.reset:
 			graphicsLayer.removeAll();
-			boolQuery = true;
 
 		}
 		return super.onOptionsItemSelected(item);
@@ -179,7 +171,6 @@ public class MainActivity extends Activity {
 			Toast toast = Toast.makeText(MainActivity.this, message,
 					Toast.LENGTH_LONG);
 			toast.show();
-			boolQuery = false;
 
 		}
 
