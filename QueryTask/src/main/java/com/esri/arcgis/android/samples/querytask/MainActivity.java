@@ -135,8 +135,7 @@ public class MainActivity extends Activity {
 			QueryTask qTask = new QueryTask(url);
 
 			try {
-				FeatureResult results = qTask.execute(qParameters);
-				return results;
+				return qTask.execute(qParameters);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
