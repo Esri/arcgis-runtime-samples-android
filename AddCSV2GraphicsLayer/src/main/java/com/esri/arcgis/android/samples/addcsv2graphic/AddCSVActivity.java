@@ -53,16 +53,16 @@ import java.util.Map;
 public class AddCSVActivity extends Activity {
 
   // ArcGIS Android elements
-  MapView mMapView = null;
-  ArcGISTiledMapServiceLayer basemapTileLayer;
-  GraphicsLayer graphicsLayer = null;
+  private MapView mMapView = null;
+  private ArcGISTiledMapServiceLayer basemapTileLayer;
+  private GraphicsLayer graphicsLayer = null;
 
   // When the Date Picker dialog appears, set the default date to be the current date.
-  static final int DATE_DIALOG_ID = 0;
-  Calendar rightNow = Calendar.getInstance();
-  int mYear = rightNow.get(Calendar.YEAR);
-  int mMonth = rightNow.get(Calendar.MONTH);
-  int mDay = rightNow.get(Calendar.DAY_OF_MONTH);
+  private static final int DATE_DIALOG_ID = 0;
+  private Calendar rightNow = Calendar.getInstance();
+  private int mYear = rightNow.get(Calendar.YEAR);
+  private int mMonth = rightNow.get(Calendar.MONTH);
+  private int mDay = rightNow.get(Calendar.DAY_OF_MONTH);
 
   ProgressDialog dialog;
 
@@ -146,7 +146,7 @@ public class AddCSVActivity extends Activity {
     }
   };
 
-  void getCSVReport(String date) {
+  private void getCSVReport(String date) {
     /*
      * This is where the feeds are brought in for tornado reports, hail reports
      * and wind reports. The reports come in with X,Ys and comments. The
