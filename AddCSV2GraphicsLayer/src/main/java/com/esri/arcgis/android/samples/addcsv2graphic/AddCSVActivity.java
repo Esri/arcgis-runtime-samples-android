@@ -64,8 +64,6 @@ public class AddCSVActivity extends Activity {
   private int mMonth = rightNow.get(Calendar.MONTH);
   private int mDay = rightNow.get(Calendar.DAY_OF_MONTH);
 
-  ProgressDialog dialog;
-
   /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState) {
