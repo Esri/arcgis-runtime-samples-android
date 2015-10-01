@@ -59,7 +59,7 @@ public class AddCSVActivity extends Activity {
 
   // When the Date Picker dialog appears, set the default date to be the current date.
   private static final int DATE_DIALOG_ID = 0;
-  private Calendar rightNow = Calendar.getInstance();
+  private final Calendar rightNow = Calendar.getInstance();
   private int mYear = rightNow.get(Calendar.YEAR);
   private int mMonth = rightNow.get(Calendar.MONTH);
   private int mDay = rightNow.get(Calendar.DAY_OF_MONTH);
@@ -112,7 +112,7 @@ public class AddCSVActivity extends Activity {
     return null;
   }
 
-  private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+  private final DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
       mYear = year;
@@ -342,7 +342,7 @@ public class AddCSVActivity extends Activity {
   private class MyOnSingleTapListener implements OnSingleTapListener {
 
     // Here, we use a single tap to popup the attributes for a report...
-    Context _ctx;
+    final Context _ctx;
     private static final long serialVersionUID = 1L;
 
     public MyOnSingleTapListener(Context ctx) {
