@@ -90,7 +90,7 @@ public class RoutingDialogFragment extends DialogFragment implements
 
 	// Interface
 	public interface onGetRoute {
-		public void onDialogRouteClicked(Point p1, Point p2);
+		void onDialogRouteClicked(Point p1, Point p2);
 	}
 
 	@Override

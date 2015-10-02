@@ -262,10 +262,8 @@ public class RoutingSample extends Activity implements
 				hiddenSegmentsLayer.updateGraphic(selectedSegmentID,
 						segmentShower);
 				String direction = ((String) selected.getAttributeValue("text"));
-				double time = ((Double) selected.getAttributeValue("time"))
-						.doubleValue();
-				double length = ((Double) selected.getAttributeValue("length"))
-						.doubleValue();
+				double time = (Double) selected.getAttributeValue("time");
+				double length = (Double) selected.getAttributeValue("length");
 				// Update the label with this direction's information
 				String label = String.format("%s%n%.1f minutes (%.1f miles)",
 						direction, time, length);
@@ -400,7 +398,7 @@ public class RoutingSample extends Activity implements
 		// hiddenSegmentsLayer, and add the direction information to the list
 		// of directions
 		for (RouteDirection rd : curRoute.getRoutingDirections()) {
-			HashMap<String, Object> attribs = new HashMap<String, Object>();
+			HashMap<String, Object> attribs = new HashMap<>();
 			attribs.put("text", rd.getText());
 			attribs.put("time", Double.valueOf(rd.getMinutes()));
 			attribs.put("length", Double.valueOf(rd.getLength()));
@@ -451,7 +449,7 @@ public class RoutingSample extends Activity implements
 		public void onLocationChanged(Location loc) {
 			if (loc == null)
 				return;
-			boolean zoomToMe = (mLocation == null) ? true : false;
+			boolean zoomToMe = (mLocation == null);
 			mLocation = new Point(loc.getLongitude(), loc.getLatitude());
 			if (zoomToMe) {
 				Point p = (Point) GeometryEngine.project(mLocation, egs, wm);
@@ -549,7 +547,7 @@ public class RoutingSample extends Activity implements
 		routeLayer.removeAll();
 		hiddenSegmentsLayer.removeAll();
 		
-		curDirections = new ArrayList<String>();
+		curDirections = new ArrayList<>();
 		mResults = null;
 		curRoute = null;
 		
