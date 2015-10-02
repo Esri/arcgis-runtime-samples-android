@@ -21,7 +21,17 @@ allprojects {
 
 ext {
     compileSdkVersion = 22
-    buildToolsVersion = "21.1.2"
+    buildToolsVersion = "22.0.1"
+}
+
+subprojects{
+    afterEvaluate {project ->
+        if(project.hasProperty("dependencies")){
+            dependencies {
+                compile 'com.esri.arcgis.android:arcgis-android:10.2.7'
+            }
+        }
+    }
 }
 
 

@@ -29,9 +29,6 @@ android {
 dependencies {
     // app dependencies
     compile 'com.google.guava:guava:18.0'
-    compile 'com.esri.arcgis.android:arcgis-android:10.2.7'
-    // local binary dependency
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     // testing dependencies
     androidTestCompile 'com.android.support.test:runner:0.2'
     // Set this dependency to use JUnit 4 rules
