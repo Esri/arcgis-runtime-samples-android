@@ -451,7 +451,7 @@ public class RoutingSample extends Activity implements
 		public void onLocationChanged(Location loc) {
 			if (loc == null)
 				return;
-			boolean zoomToMe = (mLocation == null) ? true : false;
+			boolean zoomToMe = (mLocation == null);
 			mLocation = new Point(loc.getLongitude(), loc.getLatitude());
 			if (zoomToMe) {
 				Point p = (Point) GeometryEngine.project(mLocation, egs, wm);
