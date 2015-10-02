@@ -49,6 +49,7 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:text="@string/my_location"
+            android:inputType="text"
             android:layout_marginLeft="10dp">
         </EditText>
 
@@ -73,7 +74,8 @@
             android:layout_width="286dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:ems="10" 
+            android:ems="10"
+            android:inputType="text"
             android:layout_marginLeft="10dp">
 
             <requestFocus />
