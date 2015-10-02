@@ -27,10 +27,6 @@ android {
 }
 
 dependencies {
-    // module dependency
-    compile 'com.esri.arcgis.android:arcgis-android:10.2.6-2'
     // support library dependency
     compile 'com.android.support:support-v4:19.0.+'
-    // local binary dependency
-    compile fileTree(dir: 'libs', include: ['*.jar'])
 }

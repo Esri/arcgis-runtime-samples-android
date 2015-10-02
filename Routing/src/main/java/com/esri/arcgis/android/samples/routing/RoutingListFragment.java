@@ -46,7 +46,7 @@ public class RoutingListFragment extends Fragment implements
 
 	// Container Activity must implement this interface
 	public interface onDrawerListSelectedListener {
-		public void onSegmentSelected(String segment);
+		void onSegmentSelected(String segment);
 	}
 
 	@Override

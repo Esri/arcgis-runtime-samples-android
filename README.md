@@ -1,5 +1,5 @@
 # Overview
-ArcGIS Runtime SDK for Android v10.2.6 samples for Android Studio.  The repo contains an [Android Studio](http://developer.android.com/sdk/index.html) project with multi-project sample app modules that can be run from within the Android Studio IDE.
+ArcGIS Runtime SDK for Android v10.2.7 samples for Android Studio.  The repo contains an [Android Studio](http://developer.android.com/sdk/index.html) project with multi-project sample app modules that can be run from within the Android Studio IDE.
 
 # Prerequisites
 * The samples are building with ```compileSdkVersion 21``` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
@@ -12,7 +12,7 @@ Each sample app module has a build.gradle file with the latest ArcGIS Android SD
 
 ```groovy
 dependencies {
-    compile 'com.esri.arcgis.android:arcgis-android:10.2.6-2'
+    compile 'com.esri.arcgis.android:arcgis-android:10.2.7'
 }
 ```
 
@@ -108,7 +108,7 @@ $ git merge upstream/master
 Once the project is cloned to disk you can import into Android Studio:
 
 * From the toolbar select **File > Import Project**, or **Import Non-Android Studio project** from the Welcome Quick Start.
-* Navigate to the root project folder, **arcgis-android-sdk-gradle-samples-10.2.6** directory and click **OK**
+* Navigate to the root project folder, **arcgis-android-sdk-gradle-samples-10.2.7** directory and click **OK**
 
 ## Run a sample
 You should now be able to run any of the included samples.  We will use the ```HelloWorld``` Sample as an example.  
