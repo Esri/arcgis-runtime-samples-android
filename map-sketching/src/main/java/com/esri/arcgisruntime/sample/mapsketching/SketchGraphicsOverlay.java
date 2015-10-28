@@ -520,7 +520,7 @@ public class SketchGraphicsOverlay {
                 // Get the graphic we selected
                 Graphic g = graphic.get(0);
                 // If we clicked a point other than the point we're currently working with..
-                if (!mCurrentPoint.equals(g)) {
+                if (mCurrentPoint != null && !mCurrentPoint.equals(g)) {
                   // If the last thing we had was a midpoint and we never moved it, set its symbol back to a midpoint
                   if (mIsMidpointSelected && !mVertexDragStarted) {
                     mCurrentPoint.setSymbol(mPolylineMidpointSymbol);
