@@ -129,7 +129,7 @@ public class FeatureLayerUtils {
 		} else if (FieldType.determineFieldType(field) == FieldType.DATE) {
 			// if its a date, get the milliseconds value
 			Calendar c = Calendar.getInstance();
-			long dateInMillis = 0;
+			long dateInMillis;
 			try {
 				// parse to a double and check this is a change
 				c.setTime(formatter.parse(value));

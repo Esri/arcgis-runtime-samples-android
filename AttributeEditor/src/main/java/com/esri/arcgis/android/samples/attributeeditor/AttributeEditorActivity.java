@@ -221,7 +221,7 @@ public class AttributeEditorActivity extends Activity {
         for (int i = 0; i < listAdapter.getCount(); i++) {
 
           AttributeItem item = (AttributeItem) listAdapter.getItem(i);
-          String value = "";
+          String value;
 
           // check to see if the View has been set
           if (item.getView() != null) {

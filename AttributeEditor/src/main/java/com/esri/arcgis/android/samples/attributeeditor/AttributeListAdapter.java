@@ -121,7 +121,7 @@ class AttributeListAdapter extends BaseAdapter {
 		// array created at startup
 		int fieldIndex = this.editableFieldIndexes[position];
 
-		AttributeItem row = null;
+		AttributeItem row;
 
 		// check to see if we have already created an attribute item if not
 		// create
