@@ -48,29 +48,21 @@ import java.util.HashMap;
  * Adapter class which contains the logic of how to use and process the
  * FeatureLayers Fields and Attributes into an List Layout
  */
-public class AttributeListAdapter extends BaseAdapter {
+class AttributeListAdapter extends BaseAdapter {
 
 	FeatureSet featureSet;
 
-	Field[] fields;
+	private final Field[] fields;
+	private final FeatureType[] types;
+	private final String typeIdFieldName;
+	private final Context context;
+	private final LayoutInflater lInflator;
+	private final int[] editableFieldIndexes;
+	private final String[] typeNames;
+	private final HashMap<String, FeatureType> typeMap;
+	private AttributeItem[] items;
 
-	FeatureType[] types;
-
-	String typeIdFieldName;
-
-	Context context;
-
-	LayoutInflater lInflator;
-
-	int[] editableFieldIndexes;
-
-	String[] typeNames;
-
-	HashMap<String, FeatureType> typeMap;
-
-	AttributeItem[] items;
-
-	DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT,
+	final DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT,
 			DateFormat.SHORT);
 
 	/**
@@ -129,7 +121,7 @@ public class AttributeListAdapter extends BaseAdapter {
 		// array created at startup
 		int fieldIndex = this.editableFieldIndexes[position];
 
-		AttributeItem row = null;
+		AttributeItem row;
 
 		// check to see if we have already created an attribute item if not
 		// create
@@ -263,8 +255,8 @@ public class AttributeListAdapter extends BaseAdapter {
 	 * value that is passed in from the list (the features value). Can be used
 	 * for domains as well as types.
 	 */
-	Spinner createSpinnerViewFromArray(View container, Field field,
-			Object value, String[] values) {
+	private Spinner createSpinnerViewFromArray(View container, Field field,
+											   Object value, String[] values) {
 
 		TextView fieldAlias = (TextView) container
 				.findViewById(R.id.field_alias_txt);
@@ -273,7 +265,7 @@ public class AttributeListAdapter extends BaseAdapter {
 		fieldAlias.setText(field.getAlias());
 		spinner.setPrompt(field.getAlias());
 
-		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
+		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
 				this.context, android.R.layout.simple_spinner_item, values);
 		spinnerAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -290,7 +282,7 @@ public class AttributeListAdapter extends BaseAdapter {
 	 * it uses the locale and presents a button with the date and time in short
 	 * format.
 	 */
-	Button createDateButtonFromLongValue(View container, Field field, long date) {
+	private Button createDateButtonFromLongValue(View container, Field field, long date) {
 
 		TextView fieldAlias = (TextView) container
 				.findViewById(R.id.field_alias_txt);
@@ -314,7 +306,7 @@ public class AttributeListAdapter extends BaseAdapter {
 	 * is applied here, it is assumed that the container has this set already
 	 * (in XML).
 	 */
-	View createAttributeRow(View container, Field field, Object value) {
+	private View createAttributeRow(View container, Field field, Object value) {
 
 		TextView fieldAlias = (TextView) container
 				.findViewById(R.id.field_alias_txt);
@@ -344,7 +336,7 @@ public class AttributeListAdapter extends BaseAdapter {
 	/**
 	 * Helper method to create the date button and its associated events
 	 */
-	void addListenersToDatebutton(Button dateButton) {
+	private void addListenersToDatebutton(Button dateButton) {
 
 		// create new onDateSetLisetener with the button associated with it
 		final ListOnDateSetListener listener = new ListOnDateSetListener(
@@ -393,7 +385,7 @@ public class AttributeListAdapter extends BaseAdapter {
 	 */
 	class ListOnDateSetListener implements OnDateSetListener {
 
-		Button button;
+		final Button button;
 
 		public ListOnDateSetListener(Button button) {
 

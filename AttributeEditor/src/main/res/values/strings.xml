@@ -4,4 +4,8 @@
     <string name="app_name">Attribute Editor Sample</string>
     <string name="btn_edit_apply">Apply</string>
     <string name="btn_edit_discard">Discard</string>
+    <!-- service urls -->
+    <string name="basemap">http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer</string>
+    <string name="operational_layer">http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Petroleum/KSFields/MapServer</string>
+    <string name="feature_layer">http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Petroleum/KSFields/FeatureServer/0</string>
 </resources>

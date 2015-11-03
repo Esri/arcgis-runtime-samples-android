@@ -56,48 +56,39 @@ import java.util.Map;
  */
 public class AttributeEditorActivity extends Activity {
 
-  MapView mapView;
+  // arcgis components
+  private MapView mapView;
+  private ArcGISFeatureLayer featureLayer;
+  private ArcGISDynamicMapServiceLayer operationalLayer;
+  private Point pointClicked;
+  private Envelope initextent;
 
-  ArcGISFeatureLayer featureLayer;
-  ArcGISDynamicMapServiceLayer dmsl;
-
-  Point pointClicked;
-
-  LayoutInflater inflator;
-
-  AttributeListAdapter listAdapter;
-  
-  Envelope initextent;
-
-  ListView listView;
-
-  View listLayout;
+  // android components
+  private LayoutInflater inflator;
+  private AttributeListAdapter listAdapter;
+  private ListView listView;
+  private View listLayout;
 
   public static final String TAG = "AttributeEditorSample";
-
-  static final int ATTRIBUTE_EDITOR_DIALOG_ID = 1;
+  private static final int ATTRIBUTE_EDITOR_DIALOG_ID = 1;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
-
     super.onCreate(savedInstanceState);
-
-   
    
     mapView = new MapView(this);
 	initextent = new Envelope(-10868502.895856911, 4470034.144641369,
 			-10837928.084542884, 4492965.25312689);
 	mapView.setExtent(initextent, 0);
-	ArcGISTiledMapServiceLayer tmsl = new ArcGISTiledMapServiceLayer(
-			"http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer");
-	mapView.addLayer(tmsl);
+	ArcGISTiledMapServiceLayer basemap = new ArcGISTiledMapServiceLayer(getResources().getString(R.string.basemap));
+	mapView.addLayer(basemap);
 
-	dmsl = new ArcGISDynamicMapServiceLayer("http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Petroleum/KSFields/MapServer");
-	mapView.addLayer(dmsl);
+	operationalLayer = new ArcGISDynamicMapServiceLayer(getResources().getString(R.string.operational_layer));
+	mapView.addLayer(operationalLayer);
 
 	featureLayer = new ArcGISFeatureLayer(
-			"http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Petroleum/KSFields/FeatureServer/0",
-			MODE.SELECTION);
+			            getResources().getString(R.string.feature_layer),
+			            MODE.SELECTION);
 	setContentView(mapView);
 	
     SimpleFillSymbol sfs = new SimpleFillSymbol(Color.TRANSPARENT);
@@ -111,18 +102,12 @@ public class AttributeEditorActivity extends Activity {
 
     // Create a new AttributeListAdapter when the feature layer is initialized
     if (featureLayer.isInitialized()) {
-
       listAdapter = new AttributeListAdapter(this, featureLayer.getFields(), featureLayer.getTypes(),
           featureLayer.getTypeIdField());
-
     } else {
-
       featureLayer.setOnStatusChangedListener(new OnStatusChangedListener() {
-
         private static final long serialVersionUID = 1L;
-
         public void onStatusChanged(Object source, STATUS status) {
-
           if (status == STATUS.INITIALIZED) {
             listAdapter = new AttributeListAdapter(AttributeEditorActivity.this, featureLayer.getFields(), featureLayer
                 .getTypes(), featureLayer.getTypeIdField());
@@ -133,11 +118,9 @@ public class AttributeEditorActivity extends Activity {
 
     // Set tap listener for MapView
     mapView.setOnSingleTapListener(new OnSingleTapListener() {
-
       private static final long serialVersionUID = 1L;
 
       public void onSingleTap(float x, float y) {
-
         // convert event into screen click
         pointClicked = mapView.toMapPoint(x, y);
 
@@ -153,15 +136,11 @@ public class AttributeEditorActivity extends Activity {
 
           // handle any errors
           public void onError(Throwable e) {
-
             Log.d(TAG, "Select Features Error" + e.getLocalizedMessage());
-
           }
 
           public void onCallback(FeatureSet queryResults) {
-
             if (queryResults.getGraphics().length > 0) {
-
               Log.d(
                   TAG,
                   "Feature found id="
@@ -226,7 +205,7 @@ public class AttributeEditorActivity extends Activity {
   /**
    * Helper method to return an OnClickListener for the Apply button
    */
-  public OnClickListener returnOnClickApplyChangesListener() {
+  private OnClickListener returnOnClickApplyChangesListener() {
 
     return new OnClickListener() {
 
@@ -235,14 +214,14 @@ public class AttributeEditorActivity extends Activity {
         boolean isTypeField = false;
         boolean hasEdits = false;
         boolean updateMapLayer = false;
-        Map<String, Object> attrs = new HashMap<String, Object>();
+        Map<String, Object> attrs = new HashMap<>();
 
         // loop through each attribute and set the new values if they have
         // changed
         for (int i = 0; i < listAdapter.getCount(); i++) {
 
           AttributeItem item = (AttributeItem) listAdapter.getItem(i);
-          String value = "";
+          String value;
 
           // check to see if the View has been set
           if (item.getView() != null) {
@@ -326,7 +305,7 @@ public class AttributeEditorActivity extends Activity {
   /**
    * OnClick method for the Discard button
    */
-  public OnClickListener returnOnClickDiscardChangesListener() {
+  private OnClickListener returnOnClickDiscardChangesListener() {
 
     return new OnClickListener() {
 
@@ -345,7 +324,7 @@ public class AttributeEditorActivity extends Activity {
    * 
    * @return CallbackListener<FeatureEditResult[][]>
    */
-  CallbackListener<FeatureEditResult[][]> createEditCallbackListener(final boolean updateLayer) {
+  private CallbackListener<FeatureEditResult[][]> createEditCallbackListener(final boolean updateLayer) {
 
     return new CallbackListener<FeatureEditResult[][]>() {
 
@@ -360,7 +339,7 @@ public class AttributeEditorActivity extends Activity {
           // updated features
           if (updateLayer) {
 
-              dmsl.refresh();
+              operationalLayer.refresh();
 
           }
         }
