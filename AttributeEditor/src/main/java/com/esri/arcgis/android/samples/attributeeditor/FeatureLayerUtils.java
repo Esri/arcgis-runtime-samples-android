@@ -186,7 +186,7 @@ public class FeatureLayerUtils {
 	public static int[] createArrayOfFieldIndexes(Field[] fields) {
 
 		// process count of fields and which are available for editing
-		ArrayList<Integer> list = new ArrayList<Integer>();
+		ArrayList<Integer> list = new ArrayList<>();
 		int fieldCount = 0;
 
 		for (int i = 0; i < fields.length; i++) {
@@ -236,7 +236,7 @@ public class FeatureLayerUtils {
 	public static HashMap<String, FeatureType> createTypeMapByValue(
 			FeatureType[] types) {
 
-		HashMap<String, FeatureType> typeMap = new HashMap<String, FeatureType>();
+		HashMap<String, FeatureType> typeMap = new HashMap<>();
 
 		for (FeatureType type : types) {
 

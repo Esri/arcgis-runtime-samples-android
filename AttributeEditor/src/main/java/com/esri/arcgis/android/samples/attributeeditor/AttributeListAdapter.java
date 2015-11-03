@@ -265,7 +265,7 @@ class AttributeListAdapter extends BaseAdapter {
 		fieldAlias.setText(field.getAlias());
 		spinner.setPrompt(field.getAlias());
 
-		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
+		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
 				this.context, android.R.layout.simple_spinner_item, values);
 		spinnerAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

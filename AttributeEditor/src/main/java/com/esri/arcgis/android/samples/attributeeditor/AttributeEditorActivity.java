@@ -214,7 +214,7 @@ public class AttributeEditorActivity extends Activity {
         boolean isTypeField = false;
         boolean hasEdits = false;
         boolean updateMapLayer = false;
-        Map<String, Object> attrs = new HashMap<String, Object>();
+        Map<String, Object> attrs = new HashMap<>();
 
         // loop through each attribute and set the new values if they have
         // changed
