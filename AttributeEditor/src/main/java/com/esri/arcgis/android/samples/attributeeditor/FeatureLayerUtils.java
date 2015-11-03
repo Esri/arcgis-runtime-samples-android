@@ -183,9 +183,8 @@ public class FeatureLayerUtils {
 		int[] editableFieldIndexes = new int[fieldCount];
 
 		for (int x = 0; x < list.size(); x++) {
-			editableFieldIndexes[x] = list.get(x).intValue();
+			editableFieldIndexes[x] = list.get(x);
 		}
-
 		return editableFieldIndexes;
 	}
 
@@ -194,18 +193,14 @@ public class FeatureLayerUtils {
 	 * spinner
 	 */
 	public static String[] createTypeNameArray(FeatureType[] types) {
-
 		String[] typeNames = new String[types.length];
 		int i = 0;
 		for (FeatureType type : types) {
 
 			typeNames[i] = type.getName();
 			i++;
-
 		}
-
 		return typeNames;
-
 	}
 
 	/**
@@ -218,13 +213,8 @@ public class FeatureLayerUtils {
 		HashMap<String, FeatureType> typeMap = new HashMap<>();
 
 		for (FeatureType type : types) {
-
 			typeMap.put(type.getId(), type);
-
 		}
-
 		return typeMap;
-
 	}
-
 }
