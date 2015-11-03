@@ -59,9 +59,10 @@ public class AttributeEditorActivity extends Activity {
   // arcgis components
   MapView mapView;
   ArcGISFeatureLayer featureLayer;
-  ArcGISDynamicMapServiceLayer dmsl;
+  ArcGISDynamicMapServiceLayer operationalLayer;
   Point pointClicked;
   Envelope initextent;
+
   // android components
   LayoutInflater inflator;
   AttributeListAdapter listAdapter;
@@ -69,30 +70,25 @@ public class AttributeEditorActivity extends Activity {
   View listLayout;
 
   public static final String TAG = "AttributeEditorSample";
-
   static final int ATTRIBUTE_EDITOR_DIALOG_ID = 1;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
-
     super.onCreate(savedInstanceState);
-
-   
    
     mapView = new MapView(this);
 	initextent = new Envelope(-10868502.895856911, 4470034.144641369,
 			-10837928.084542884, 4492965.25312689);
 	mapView.setExtent(initextent, 0);
-	ArcGISTiledMapServiceLayer tmsl = new ArcGISTiledMapServiceLayer(
-			"http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer");
-	mapView.addLayer(tmsl);
+	ArcGISTiledMapServiceLayer basemap = new ArcGISTiledMapServiceLayer(getResources().getString(R.string.basemap));
+	mapView.addLayer(basemap);
 
-	dmsl = new ArcGISDynamicMapServiceLayer("http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Petroleum/KSFields/MapServer");
-	mapView.addLayer(dmsl);
+	operationalLayer = new ArcGISDynamicMapServiceLayer(getResources().getString(R.string.operational_layer));
+	mapView.addLayer(operationalLayer);
 
 	featureLayer = new ArcGISFeatureLayer(
-			"http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Petroleum/KSFields/FeatureServer/0",
-			MODE.SELECTION);
+			            getResources().getString(R.string.feature_layer),
+			            MODE.SELECTION);
 	setContentView(mapView);
 	
     SimpleFillSymbol sfs = new SimpleFillSymbol(Color.TRANSPARENT);
@@ -355,7 +351,7 @@ public class AttributeEditorActivity extends Activity {
           // updated features
           if (updateLayer) {
 
-              dmsl.refresh();
+              operationalLayer.refresh();
 
           }
         }
