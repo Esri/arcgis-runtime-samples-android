@@ -31,9 +31,9 @@ import com.esri.android.map.ogc.WMSLayer;
  */
 public class MainActivity extends Activity {
 
-    MapView mMapView;
-    WMSLayer wmsLayer;
-    String wmsURL;
+    private MapView mMapView;
+    private WMSLayer wmsLayer;
+    private String wmsURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
