@@ -23,7 +23,7 @@ import com.esri.core.map.Field;
 /**
  * POJO for storing the data associated with a row in the attributes list
  */
-public class AttributeItem {
+class AttributeItem {
 
 	private Field field;
 

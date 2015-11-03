@@ -57,20 +57,20 @@ import java.util.Map;
 public class AttributeEditorActivity extends Activity {
 
   // arcgis components
-  MapView mapView;
-  ArcGISFeatureLayer featureLayer;
-  ArcGISDynamicMapServiceLayer operationalLayer;
-  Point pointClicked;
-  Envelope initextent;
+  private MapView mapView;
+  private ArcGISFeatureLayer featureLayer;
+  private ArcGISDynamicMapServiceLayer operationalLayer;
+  private Point pointClicked;
+  private Envelope initextent;
 
   // android components
-  LayoutInflater inflator;
-  AttributeListAdapter listAdapter;
-  ListView listView;
-  View listLayout;
+  private LayoutInflater inflator;
+  private AttributeListAdapter listAdapter;
+  private ListView listView;
+  private View listLayout;
 
   public static final String TAG = "AttributeEditorSample";
-  static final int ATTRIBUTE_EDITOR_DIALOG_ID = 1;
+  private static final int ATTRIBUTE_EDITOR_DIALOG_ID = 1;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -205,7 +205,7 @@ public class AttributeEditorActivity extends Activity {
   /**
    * Helper method to return an OnClickListener for the Apply button
    */
-  public OnClickListener returnOnClickApplyChangesListener() {
+  private OnClickListener returnOnClickApplyChangesListener() {
 
     return new OnClickListener() {
 
@@ -305,7 +305,7 @@ public class AttributeEditorActivity extends Activity {
   /**
    * OnClick method for the Discard button
    */
-  public OnClickListener returnOnClickDiscardChangesListener() {
+  private OnClickListener returnOnClickDiscardChangesListener() {
 
     return new OnClickListener() {
 
@@ -324,7 +324,7 @@ public class AttributeEditorActivity extends Activity {
    * 
    * @return CallbackListener<FeatureEditResult[][]>
    */
-  CallbackListener<FeatureEditResult[][]> createEditCallbackListener(final boolean updateLayer) {
+  private CallbackListener<FeatureEditResult[][]> createEditCallbackListener(final boolean updateLayer) {
 
     return new CallbackListener<FeatureEditResult[][]>() {
 

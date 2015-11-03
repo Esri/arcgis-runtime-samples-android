@@ -53,7 +53,7 @@ public class FeatureLayerUtils {
 	 * Helper method to determine if a field should be shown in the list for
 	 * editing
 	 */
-	public static boolean isFieldValidForEditing(Field field) {
+	private static boolean isFieldValidForEditing(Field field) {
 
 		int fieldType = field.getFieldType();
 
