@@ -102,18 +102,12 @@ public class AttributeEditorActivity extends Activity {
 
     // Create a new AttributeListAdapter when the feature layer is initialized
     if (featureLayer.isInitialized()) {
-
       listAdapter = new AttributeListAdapter(this, featureLayer.getFields(), featureLayer.getTypes(),
           featureLayer.getTypeIdField());
-
     } else {
-
       featureLayer.setOnStatusChangedListener(new OnStatusChangedListener() {
-
         private static final long serialVersionUID = 1L;
-
         public void onStatusChanged(Object source, STATUS status) {
-
           if (status == STATUS.INITIALIZED) {
             listAdapter = new AttributeListAdapter(AttributeEditorActivity.this, featureLayer.getFields(), featureLayer
                 .getTypes(), featureLayer.getTypeIdField());
@@ -124,11 +118,9 @@ public class AttributeEditorActivity extends Activity {
 
     // Set tap listener for MapView
     mapView.setOnSingleTapListener(new OnSingleTapListener() {
-
       private static final long serialVersionUID = 1L;
 
       public void onSingleTap(float x, float y) {
-
         // convert event into screen click
         pointClicked = mapView.toMapPoint(x, y);
 
@@ -144,15 +136,11 @@ public class AttributeEditorActivity extends Activity {
 
           // handle any errors
           public void onError(Throwable e) {
-
             Log.d(TAG, "Select Features Error" + e.getLocalizedMessage());
-
           }
 
           public void onCallback(FeatureSet queryResults) {
-
             if (queryResults.getGraphics().length > 0) {
-
               Log.d(
                   TAG,
                   "Feature found id="
