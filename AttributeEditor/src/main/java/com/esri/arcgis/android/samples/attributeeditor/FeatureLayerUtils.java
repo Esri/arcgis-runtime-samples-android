@@ -80,16 +80,12 @@ public class FeatureLayerUtils {
 
 		// if its a string, and it has changed from the oldGraphic value
 		if (FieldType.determineFieldType(field) == FieldType.STRING) {
-
 			if (!value.equals(oldGraphic.getAttributeValue(field.getName()))) {
-
 				// set the value as it is
 				attrs.put(field.getName(), value);
 				hasValueChanged = true;
-
 			}
 		} else if (FieldType.determineFieldType(field) == FieldType.NUMBER) {
-
 			// if its an empty string, its a 0 number value (nulls not
 			// supported), check this is a
 			// change before making it a 0
@@ -100,21 +96,16 @@ public class FeatureLayerUtils {
 				// set a null value on the new graphic
 				attrs.put(field.getName(), 0);
 				hasValueChanged = true;
-
 			} else {
-
 				// parse as an int and check this is a change
 				int intValue = Integer.parseInt(value);
 				if (intValue != Integer.parseInt(oldGraphic.getAttributeValue(
 						field.getName()).toString())) {
-
-					attrs.put(field.getName(), Integer.valueOf(intValue));
+					attrs.put(field.getName(), intValue);
 					hasValueChanged = true;
-
 				}
 			}
 		} else if (FieldType.determineFieldType(field) == FieldType.DECIMAL) {
-
 			// if its an empty string, its a 0 double value (nulls not
 			// supported), check this is a
 			// change before making it a 0
@@ -131,20 +122,15 @@ public class FeatureLayerUtils {
 				double dValue = Double.parseDouble(value);
 				if (dValue != Double.parseDouble(oldGraphic.getAttributeValue(
 						field.getName()).toString())) {
-
-					attrs.put(field.getName(), Double.valueOf(dValue));
+					attrs.put(field.getName(), dValue);
 					hasValueChanged = true;
-
 				}
 			}
 		} else if (FieldType.determineFieldType(field) == FieldType.DATE) {
-
 			// if its a date, get the milliseconds value
 			Calendar c = Calendar.getInstance();
 			long dateInMillis = 0;
-
 			try {
-
 				// parse to a double and check this is a change
 				c.setTime(formatter.parse(value));
 				dateInMillis = c.getTimeInMillis();
@@ -152,17 +138,14 @@ public class FeatureLayerUtils {
 				if (dateInMillis != Long.parseLong(oldGraphic
 						.getAttributeValue(field.getName()).toString())) {
 
-					attrs.put(field.getName(), Long.valueOf(dateInMillis));
+					attrs.put(field.getName(), dateInMillis);
 					hasValueChanged = true;
 				}
 			} catch (ParseException e) {
 				// do nothing
 			}
 		}
-		// }
-
 		return hasValueChanged;
-
 	}
 
 	/**
@@ -192,19 +175,15 @@ public class FeatureLayerUtils {
 		for (int i = 0; i < fields.length; i++) {
 
 			if (isFieldValidForEditing(fields[i])) {
-
-				list.add(Integer.valueOf(i));
+				list.add(i);
 				fieldCount++;
-
 			}
 		}
 
 		int[] editableFieldIndexes = new int[fieldCount];
 
 		for (int x = 0; x < list.size(); x++) {
-
 			editableFieldIndexes[x] = list.get(x).intValue();
-
 		}
 
 		return editableFieldIndexes;
