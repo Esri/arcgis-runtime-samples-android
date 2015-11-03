@@ -57,18 +57,13 @@ public class FeatureLayerUtils {
 
 		int fieldType = field.getFieldType();
 
-		if (field.isEditable() && fieldType != Field.esriFieldTypeOID
+		return field.isEditable() && fieldType != Field.esriFieldTypeOID
 				&& fieldType != Field.esriFieldTypeGeometry
 				&& fieldType != Field.esriFieldTypeBlob
 				&& fieldType != Field.esriFieldTypeRaster
 				&& fieldType != Field.esriFieldTypeGUID
-				&& fieldType != Field.esriFieldTypeXML) {
+				&& fieldType != Field.esriFieldTypeXML;
 
-			return true;
-
-		}
-
-		return false;
 	}
 
 	/**
