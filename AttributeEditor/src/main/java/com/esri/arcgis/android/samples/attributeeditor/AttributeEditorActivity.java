@@ -56,21 +56,16 @@ import java.util.Map;
  */
 public class AttributeEditorActivity extends Activity {
 
+  // arcgis components
   MapView mapView;
-
   ArcGISFeatureLayer featureLayer;
   ArcGISDynamicMapServiceLayer dmsl;
-
   Point pointClicked;
-
-  LayoutInflater inflator;
-
-  AttributeListAdapter listAdapter;
-  
   Envelope initextent;
-
+  // android components
+  LayoutInflater inflator;
+  AttributeListAdapter listAdapter;
   ListView listView;
-
   View listLayout;
 
   public static final String TAG = "AttributeEditorSample";
