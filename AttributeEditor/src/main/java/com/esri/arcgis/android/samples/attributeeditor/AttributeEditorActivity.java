@@ -80,6 +80,8 @@ public class AttributeEditorActivity extends Activity {
         initextent = new Envelope(-10868502.895856911, 4470034.144641369,
                 -10837928.084542884, 4492965.25312689);
         mapView.setExtent(initextent, 0);
+        setContentView(mapView);
+
         ArcGISTiledMapServiceLayer basemap = new ArcGISTiledMapServiceLayer(getResources().getString(R.string.basemap));
         mapView.addLayer(basemap);
 
@@ -89,7 +91,7 @@ public class AttributeEditorActivity extends Activity {
         featureLayer = new ArcGISFeatureLayer(
                 getResources().getString(R.string.feature_layer),
                 MODE.SELECTION);
-        setContentView(mapView);
+        mapView.addLayer(featureLayer);
 
         SimpleFillSymbol sfs = new SimpleFillSymbol(Color.TRANSPARENT);
         sfs.setOutline(new SimpleLineSymbol(Color.YELLOW, 3));
