@@ -82,19 +82,23 @@ public class AttributeEditorActivity extends Activity {
         mapView.setExtent(initextent, 0);
         setContentView(mapView);
 
+        // Tiled Layer Basemap
         ArcGISTiledMapServiceLayer basemap = new ArcGISTiledMapServiceLayer(getResources().getString(R.string.basemap));
         mapView.addLayer(basemap);
 
+        // Operational Layer showing Kansas petroleum field production
         operationalLayer = new ArcGISDynamicMapServiceLayer(getResources().getString(R.string.operational_layer));
         mapView.addLayer(operationalLayer);
 
+        // feature service representing the field production layer to query and highlight selections
         featureLayer = new ArcGISFeatureLayer(
                 getResources().getString(R.string.feature_layer),
                 MODE.SELECTION);
         mapView.addLayer(featureLayer);
 
+        // Show feature selected with outline symbol
         SimpleFillSymbol sfs = new SimpleFillSymbol(Color.TRANSPARENT);
-        sfs.setOutline(new SimpleLineSymbol(Color.YELLOW, 3));
+        sfs.setOutline(new SimpleLineSymbol(Color.YELLOW, 5));
         featureLayer.setSelectionSymbol(sfs);
 
         // set up local variables
