@@ -28,7 +28,7 @@ import com.esri.arcgisruntime.mapping.view.Viewpoint;
 
 public class MainActivity extends AppCompatActivity {
 
-    MapView mMapView;
+    private MapView mMapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
