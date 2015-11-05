@@ -31,7 +31,7 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 
 public class MainActivity extends AppCompatActivity {
 
-    MapView mMapView;
+    private MapView mMapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
