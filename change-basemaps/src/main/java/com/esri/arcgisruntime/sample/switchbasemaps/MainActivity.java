@@ -16,24 +16,19 @@
 
 package com.esri.arcgisruntime.sample.switchbasemaps;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.Viewpoint;
-import com.esri.arcgisruntime.mapping.view.ViewpointType;
-import com.esri.arcgisruntime.mapping.view.VisibleAreaChangedEvent;
-import com.esri.arcgisruntime.mapping.view.VisibleAreaChangedListener;
 
 public class MainActivity extends AppCompatActivity {
 
     private MapView mMapView;
     private Map mMap;
-    private Viewpoint mCurrentViewPoint;
 
     // The basemap switching menu items.
     private MenuItem mStreetsMenuItem = null;
