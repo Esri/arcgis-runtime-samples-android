@@ -192,13 +192,9 @@ public class Nearby extends Activity {
     mResultsLayer.setSelectionColorWidth(6);
     mMapView.addLayer(mResultsLayer);
 
-
-    mCoffeeMapIcon = new PictureMarkerSymbol(getApplicationContext(), this
-        .getResources().getDrawable(R.drawable.ic_local_cafe_black));
-    mPizzaMapIcon = new PictureMarkerSymbol(getApplicationContext(), this
-        .getResources().getDrawable(R.drawable.ic_local_pizza_black));
-    mBarMapIcon = new PictureMarkerSymbol(getApplicationContext(), this
-        .getResources().getDrawable(R.drawable.ic_local_drink_black));
+    mCoffeeMapIcon = new PictureMarkerSymbol(getApplicationContext(), getDrawable(R.drawable.ic_local_cafe_black));
+    mPizzaMapIcon = new PictureMarkerSymbol(getApplicationContext(), getDrawable(R.drawable.ic_local_pizza_black));
+    mBarMapIcon = new PictureMarkerSymbol(getApplicationContext(), getDrawable(R.drawable.ic_local_drink_black));
 
     setupLocator();
     setupLocationListener();
