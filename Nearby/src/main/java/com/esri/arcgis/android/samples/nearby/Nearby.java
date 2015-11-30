@@ -523,8 +523,7 @@ public class Nearby extends AppCompatActivity {
     String phone = attributes.get(getResources().getString(
         R.string.result_phone)).toString();
     mPhoneTextView.setText(phone);
-    mPhoneImageView.setImageDrawable(getResources().getDrawable(
-        R.drawable.ic_action_call));
+    mPhoneImageView.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_action_call));
 
     Float rating = Float.parseFloat(getRating());
     mRatingBar.setRating(rating);
