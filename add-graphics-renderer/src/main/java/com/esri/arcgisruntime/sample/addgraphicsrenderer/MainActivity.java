@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.graphicsoverlayrenderer;
+package com.esri.arcgisruntime.sample.addgraphicsrenderer;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +23,7 @@ import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polygon;
-import com.esri.arcgisruntime.mapping.BasemapType;
+import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
 
-        // create a map with the BasemapType topographic
-        Map mMap = new Map(BasemapType.TOPOGRAPHIC, 34.056295, -117.195800, 14);
+        // create a map with the Basemap Type topographic
+        Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 14);
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
 
