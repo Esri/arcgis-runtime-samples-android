@@ -21,7 +21,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.esri.arcgisruntime.mapping.BasemapType;
+import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
-        // create a map with the BasemapType topographic
-        Map map = new Map(BasemapType.TOPOGRAPHIC, 48.354406, -99.998267, 2);
+        // create a map with the Basemap Type topographic
+        Map map = new Map(Basemap.Type.TOPOGRAPHIC, 48.354406, -99.998267, 2);
         // create a MapImageLayer with dynamically generated map images
         mMapImageLayer = new ArcGISMapImageLayer(getResources().getString(R.string.world_cities_service));
         mMapImageLayer.setOpacity(0.5f);
