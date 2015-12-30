@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                                                        case 1:
                                                            // Start Location Display
                                                            if (!mLocationDisplay.isStarted())
-                                                               mLocationDisplay.start();
+                                                               mLocationDisplay.startAsync();
                                                            break;
                                                        case 2:
                                                            // Re-Center MapView on Location
@@ -94,21 +94,21 @@ public class MainActivity extends AppCompatActivity {
                                                            // the MapView re-centers the map on the symbol.
                                                            mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.DEFAULT);
                                                            if (!mLocationDisplay.isStarted())
-                                                               mLocationDisplay.start();
+                                                               mLocationDisplay.startAsync();
                                                            break;
                                                        case 3:
                                                            // Start Navigation Mode
                                                            // This mode is best suited for in-vehicle navigation.
                                                            mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.NAVIGATION);
                                                            if (!mLocationDisplay.isStarted())
-                                                               mLocationDisplay.start();
+                                                               mLocationDisplay.startAsync();
                                                            break;
                                                        case 4:
                                                            // Start Compass Mode
                                                            // This mode is better suited for waypoint navigation when the user is walking.
                                                            mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.COMPASS);
                                                            if (!mLocationDisplay.isStarted())
-                                                               mLocationDisplay.start();
+                                                               mLocationDisplay.startAsync();
                                                            break;
                                                    }
 
