@@ -47,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     //[DocRef: Name=Create Envelope, Category=Fundamentals, Topic=Geometries]
     // create an Envelope using minimum and maximum x,y coordinates and a SpatialReference
-    Envelope envelope = new Envelope(-123.0, 33.5, -101.0, 48.0, 0.0, 0.0, 0.0, 0.0,
-        SpatialReferences.getWgs84());
+    Envelope envelope = new Envelope(-123.0, 33.5, -101.0, 48.0, SpatialReferences.getWgs84());
     //[DocRef: END]
 
     return envelope;
@@ -122,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
     // create color and symbols for drawing graphics
     RgbColor blue = new RgbColor(0, 0, 255, 255);
     SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(blue, 14, SimpleMarkerSymbol.Style.TRIANGLE);
-    SimpleFillSymbol fillSymbol = new SimpleFillSymbol(blue, SimpleFillSymbol.Style.CROSS, null, 1.0f);
-    SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, blue, 3, 1.0f);
+    SimpleFillSymbol fillSymbol = new SimpleFillSymbol(blue, SimpleFillSymbol.Style.CROSS, null);
+    SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, blue, 3);
 
     // add a graphic of point, multipoint, polyline and polygon.
     GraphicsOverlay overlay = new GraphicsOverlay();
