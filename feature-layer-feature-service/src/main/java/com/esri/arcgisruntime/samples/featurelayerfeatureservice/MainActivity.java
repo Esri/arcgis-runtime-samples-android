@@ -24,13 +24,13 @@ import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.Viewpoint;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    MapView mMapView;
+    private MapView mMapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
