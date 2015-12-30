@@ -24,7 +24,7 @@ import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polygon;
 import com.esri.arcgisruntime.geometry.Polyline;
 import com.esri.arcgisruntime.geometry.SpatialReference;
-import com.esri.arcgisruntime.mapping.BasemapType;
+import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.mapView);
 
         // create a map with the BasemapType topographic
-        Map map = new Map(BasemapType.OCEANS, 56.075844, -2.681572, 11);
+        Map map = new Map(Basemap.Type.OCEANS, 56.075844, -2.681572, 11);
         // set the map to be displayed in this view
         mMapView.setMap(map);
         // add graphics overlay to MapView.
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         Polyline boatRoute = getBoatTripGeometry();
 
         //define a line symbol
-        SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, new RgbColor(128, 0, 128, 255), 4, 1.0f);
+        SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, new RgbColor(128, 0, 128, 255), 4);
 
         //create the graphic
         Graphic boatTripGraphic = new Graphic(boatRoute, lineSymbol);
@@ -159,12 +159,12 @@ public class MainActivity extends AppCompatActivity {
         SimpleLineSymbol outlineSymbol =
                 new SimpleLineSymbol(
                         SimpleLineSymbol.Style.DASH,
-                        new RgbColor(0, 0, 128, 255), 1, 1.0f);
+                        new RgbColor(0, 0, 128, 255), 1);
         SimpleFillSymbol fillSymbol =
                 new SimpleFillSymbol(
                         new RgbColor(0, 80, 0, 255),
                         SimpleFillSymbol.Style.DIAGONAL_CROSS,
-                        outlineSymbol, 1.0f);
+                        outlineSymbol);
 
         //define graphic
         Graphic nestingGraphic = new Graphic(nestingGround,fillSymbol);
