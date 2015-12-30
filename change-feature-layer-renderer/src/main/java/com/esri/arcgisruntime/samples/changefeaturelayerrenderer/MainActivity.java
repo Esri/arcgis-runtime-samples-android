@@ -26,8 +26,8 @@ import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.Viewpoint;
 import com.esri.arcgisruntime.symbology.RgbColor;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
@@ -53,8 +53,7 @@ public class MainActivity extends AppCompatActivity {
         // create a map with the topographic basemap
         Map map = new Map(Basemap.createTopographic());
         //set an initial viewpoint
-        map.setInitialViewpoint(new Viewpoint(new Envelope(-1.30758164047166E7, 4014771.46954516, -1.30730056797177E7
-                , 4016869.78617381, 0, 0, 0, 0, SpatialReferences.getWebMercator())));
+        map.setInitialViewpoint(new Viewpoint(new Envelope(-1.30758164047166E7, 4014771.46954516, -1.30730056797177E7, 4016869.78617381, SpatialReferences.getWebMercator())));
 
 
         // create feature layer with its service feature table
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private void overrideRenderer() {
 
         // create a new simple renderer for the line feature layer
-        SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0,0,255,255), 2, 1);
+        SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0,0,255,255), 2);
         SimpleRenderer simpleRenderer = new SimpleRenderer(lineSymbol);
 
         // override the current renderer with the new renderer defined above
