@@ -17,9 +17,8 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Bookmark;
 import com.esri.arcgisruntime.mapping.BookmarkList;
 import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.Viewpoint;
-import com.esri.arcgisruntime.mapping.view.ViewpointType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +26,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private MapView mMapView;
-
     private BookmarkList mBookmarks;
-
     private List<String> mBookmarksSpinnerList;
-
     private Bookmark mBookmark;
-
     private ArrayAdapter<String> mDataAdapter;
 
     @Override
@@ -90,16 +85,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mMapView.setViewpointAsync(mBookmarks.get(position).getViewpoint());
-
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
-
-
     }
 
     /**
@@ -139,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void addBookmark(String Name) {
 
-        mBookmark = new Bookmark(Name, mMapView.getCurrentViewpoint(ViewpointType.BOUNDING_GEOMETRY));
+        mBookmark = new Bookmark(Name, mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY));
         mBookmarks.add(mBookmark);
         mBookmarksSpinnerList.add(Name);
         mDataAdapter.notifyDataSetChanged();
