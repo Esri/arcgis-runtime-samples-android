@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.sample.identifygraphicoverlay;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -29,9 +30,12 @@ import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polygon;
-import com.esri.arcgisruntime.mapping.BasemapType;
+import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
+import com.esri.arcgisruntime.mapping.view.DrawStatus;
+import com.esri.arcgisruntime.mapping.view.DrawStatusChangedEvent;
+import com.esri.arcgisruntime.mapping.view.DrawStatusChangedListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -48,6 +52,7 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private MapView mMapView;
     private GraphicsOverlay grOverlay;
 
@@ -60,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.mapView);
 
         // create a map with the BasemapType topographic
-        Map mMap = new Map(BasemapType.TOPOGRAPHIC, 34.056295, -117.195800, 14);
+        Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 14);
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
 
@@ -69,21 +74,26 @@ public class MainActivity extends AppCompatActivity {
         mMapView.setOnTouchListener(mMapViewTouchListener);
 
         // work with the MapView after it has loaded
-        mMapView.addSpatialReferenceChangedListener(new SpatialReferenceChangedListener() {
+        mMapView.addDrawStatusChangedListener(new DrawStatusChangedListener() {
+
             @Override
-            public void spatialReferenceChanged(SpatialReferenceChangedEvent spatialReferenceChangedEvent) {
-                // add graphics overlay
-                addGraphicsOverlay();
+            public void drawStatusChanged(DrawStatusChangedEvent drawStatusChangedEvent) {
+                Log.i(TAG, "drawStatusChanged: " + drawStatusChangedEvent.getDrawStatus().toString());
+
+                if (drawStatusChangedEvent.getDrawStatus() == DrawStatus.COMPLETED) {
+                    // get center of MapView
+                    Polygon visibleArea = mMapView.getVisibleArea();
+                    Envelope polygonExtent = visibleArea.getExtent();
+                    Point center = polygonExtent.getCenter();
+                    // pass center of MapView to add graphic overlay
+                    addGraphicsOverlay(center);
+                }
+
             }
         });
     }
 
-    private void addGraphicsOverlay() {
-        // get center of MapView
-        Polygon visibleArea = mMapView.getVisibleArea();
-        Envelope polygonExtent = visibleArea.getExtent();
-        Point center = polygonExtent.getCenter();
-
+    private void addGraphicsOverlay(Point center) {
         // create values inside the visible area extent for creating graphic
         double xValue = mMapView.getVisibleArea().getExtent().getWidth() / 5;
         double yValue = mMapView.getVisibleArea().getExtent().getHeight() / 10;
@@ -99,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
         // create solid line symbol
         Color blue = new RgbColor(0, 0, 230, 255);
-        SimpleLineSymbol solidLine = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, blue, 4, 0.5f);
+        SimpleLineSymbol solidLine = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, blue, 4);
         // create graphic from polygon and symbol
         Graphic graphic = new Graphic(polygon, solidLine);
 
