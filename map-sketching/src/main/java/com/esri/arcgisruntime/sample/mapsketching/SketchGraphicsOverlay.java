@@ -96,9 +96,9 @@ public class SketchGraphicsOverlay {
 
     // Outline symbols for outlining the main symbols
     SimpleLineSymbol blackOutline =
-            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0, 0, 0, 255), 1, 1.0f);
+            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0, 0, 0, 255), 1);
     SimpleLineSymbol whiteOutline =
-            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(255, 255, 255, 255), 1, 1.0f);
+            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(255, 255, 255, 255), 1);
 
     // Create all the different symbols
     // When placing a point, it will be a red circle with black outline
@@ -115,17 +115,17 @@ public class SketchGraphicsOverlay {
     mPolylineVertexSymbol.setOutline(whiteOutline);
     // While placing a polyline, the line will be red
     mPolylinePlacementSymbol =
-            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(255, 0, 0, 255), 1, 1.0f);
+            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(255, 0, 0, 255), 1);
     // Once placed, a polyline will become blue
     mPolylinePlacedSymbol =
-            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0, 0, 255, 255), 1, 1.0f);
+            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0, 0, 255, 255), 1);
     // A midpoint of a polyline segment will be a semi-transparent white circle with black outline
     mPolylineMidpointSymbol =
             new SimpleMarkerSymbol(new RgbColor(255, 255, 255, 192), 5, SimpleMarkerSymbol.Style.CIRCLE);
     mPolylineMidpointSymbol.setOutline(blackOutline);
     // Polygons will be filled with a semi-transparent black solid shade
     mPolygonFillSymbol =
-            new SimpleFillSymbol(new RgbColor(0, 0, 0, 128), SimpleFillSymbol.Style.SOLID, null, 0.5f);
+            new SimpleFillSymbol(new RgbColor(0, 0, 0, 128), SimpleFillSymbol.Style.SOLID, null);
   }
 
   /**
