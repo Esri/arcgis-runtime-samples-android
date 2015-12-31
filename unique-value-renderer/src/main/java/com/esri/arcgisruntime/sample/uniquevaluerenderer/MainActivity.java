@@ -25,12 +25,11 @@ import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.Viewpoint;
 import com.esri.arcgisruntime.symbology.RgbColor;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
-import com.esri.arcgisruntime.symbology.UniqueValue;
 import com.esri.arcgisruntime.symbology.UniqueValueRenderer;
 
 import java.util.ArrayList;
@@ -67,10 +66,10 @@ public class MainActivity extends AppCompatActivity {
         uniqueValueRenderer.getFieldNames().add("STATE_ABBR"); //You can add multiple fields to be used for the renderer in the form of a list, in this case we are only adding a single field
 
         // Create the symbols to be used in the renderer
-        SimpleFillSymbol defaultFillSymbol = new SimpleFillSymbol(new RgbColor(0,0,0,0), SimpleFillSymbol.Style.NULL, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(211, 211, 211, 255), 2, 1f), 1f);
-        SimpleFillSymbol californiaFillSymbol = new SimpleFillSymbol(new RgbColor(255,0,0,255), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(255, 0, 0, 255), 2, 1f), 1f);
-        SimpleFillSymbol arizonaFillSymbol = new SimpleFillSymbol(new RgbColor(0,255,0,255), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0, 255, 0, 255), 2, 1f), 1f);
-        SimpleFillSymbol nevadaFillSymbol = new SimpleFillSymbol(new RgbColor(0,0,255,255), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0, 0, 255, 255), 2, 1f), 1f);
+        SimpleFillSymbol defaultFillSymbol = new SimpleFillSymbol(new RgbColor(0,0,0,0), SimpleFillSymbol.Style.NULL, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(211, 211, 211, 255), 2));
+        SimpleFillSymbol californiaFillSymbol = new SimpleFillSymbol(new RgbColor(255,0,0,255), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(255, 0, 0, 255), 2));
+        SimpleFillSymbol arizonaFillSymbol = new SimpleFillSymbol(new RgbColor(0,255,0,255), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0, 255, 0, 255), 2));
+        SimpleFillSymbol nevadaFillSymbol = new SimpleFillSymbol(new RgbColor(0,0,255,255), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0, 0, 255, 255), 2));
 
         // Set default symbol
         uniqueValueRenderer.setDefaultSymbol(defaultFillSymbol);
@@ -79,17 +78,17 @@ public class MainActivity extends AppCompatActivity {
         // Set value for california
         List californiaValue = new ArrayList();
         californiaValue.add("CA"); //You add values associated with fields set on the unique value renderer. If there are multiple values, they should be set in the same order as the fields are set
-        uniqueValueRenderer.getUniqueValues().add(new UniqueValue("California", "State of California", californiaFillSymbol, californiaValue));
+        uniqueValueRenderer.getUniqueValues().add(new UniqueValueRenderer.UniqueValue("California", "State of California", californiaFillSymbol, californiaValue));
 
         // Set value for arizona
         List arizonaValue = new ArrayList();
         arizonaValue.add("AZ"); //You add values associated with fields set on the unique value renderer. If there are multiple values, they should be set in the same order as the fields are set
-        uniqueValueRenderer.getUniqueValues().add(new UniqueValue("Arizona", "State of Arizona", arizonaFillSymbol, arizonaValue));
+        uniqueValueRenderer.getUniqueValues().add(new UniqueValueRenderer.UniqueValue("Arizona", "State of Arizona", arizonaFillSymbol, arizonaValue));
 
         // Set value for nevada
         List nevadaValue = new ArrayList();
         nevadaValue.add("NV"); //You add values associated with fields set on the unique value renderer. If there are multiple values, they should be set in the same order as the fields are set
-        uniqueValueRenderer.getUniqueValues().add(new UniqueValue("Nevada", "State of Nevada", nevadaFillSymbol, nevadaValue));
+        uniqueValueRenderer.getUniqueValues().add(new UniqueValueRenderer.UniqueValue("Nevada", "State of Nevada", nevadaFillSymbol, nevadaValue));
 
         // Set the renderer on the feature layer
         featureLayer.setRenderer(uniqueValueRenderer);
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         // add the layer to the map
         map.getOperationalLayers().add(featureLayer);
 
-        map.setInitialViewpoint(new Viewpoint(new Envelope(-13893029.0, 3573174.0, -12038972.0, 5309823.0, 0, 0, 0, 0, SpatialReferences.getWebMercator())));
+        map.setInitialViewpoint(new Viewpoint(new Envelope(-13893029.0, 3573174.0, -12038972.0, 5309823.0, SpatialReferences.getWebMercator())));
 
         // set the map to be displayed in the mapview
         mMapView.setMap(map);
