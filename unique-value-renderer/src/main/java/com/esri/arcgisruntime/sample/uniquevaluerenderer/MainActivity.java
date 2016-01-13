@@ -54,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
         //[DocRef: Name=Unique Value Renderer, Topic=Symbols and Renderers, Category=Fundamentals]
         // Create service feature table
         ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
-        // Ensure that the fields used in the renderer are specified as outfields (by default when creating a ServiceFeatureTable, only the minimal set of fields required for rendering are requested)
-        serviceFeatureTable.getOutFields().add(0,"STATE_ABBR");
 
         // Create the feature layer using the service feature table
         FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
