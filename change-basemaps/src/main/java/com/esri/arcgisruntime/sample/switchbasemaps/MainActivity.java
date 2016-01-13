@@ -68,31 +68,31 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         // handle menu item selection
-        switch(item.getItemId()){
-            case R.id.World_Street_Map:
-                // create a map with Streets Basemap
-                mMap.setBasemap(Basemap.createStreets());
-                mStreetsMenuItem.setChecked(true);
-                return true;
-            case R.id.World_Topo:
-                // create a map with Topographic Basemap
-                mMap.setBasemap(Basemap.createTopographic());
-                mTopoMenuItem.setChecked(true);
-                return true;
-            case R.id.Gray:
-                // create a map with Gray Basemap
-                mMap.setBasemap(Basemap.createLightGrayCanvas());
-                mGrayMenuItem.setChecked(true);
-                return true;
-            case R.id.Ocean_Basemap:
-                // create a map with Oceans Basemap
-                mMap.setBasemap(Basemap.createOceans());
-                mOceansMenuItem.setChecked(true);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        //if-else is used because this sample is used elsewhere as a Library module
+        int itemId = item.getItemId();
+        if (itemId == R.id.World_Street_Map) {
+            mMap.setBasemap(Basemap.createStreets());
+            mStreetsMenuItem.setChecked(true);
+            return true;
+        } else if (itemId == R.id.World_Topo) {
+            // create a map with Topographic Basemap
+            mMap.setBasemap(Basemap.createTopographic());
+            mTopoMenuItem.setChecked(true);
+            return true;
+        } else if (itemId == R.id.Gray) {
+            // create a map with Gray Basemap
+            mMap.setBasemap(Basemap.createLightGrayCanvas());
+            mGrayMenuItem.setChecked(true);
+            return true;
+        } else if (itemId == R.id.Ocean_Basemap) {
+            // create a map with Oceans Basemap
+            mMap.setBasemap(Basemap.createOceans());
+            mOceansMenuItem.setChecked(true);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+
         }
     }
 
