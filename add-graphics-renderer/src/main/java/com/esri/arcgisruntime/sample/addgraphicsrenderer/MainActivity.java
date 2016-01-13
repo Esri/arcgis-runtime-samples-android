@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             graphics.add(new Graphic(pt));
         }
         // create color for graphic
-        Color yellow = new RgbColor(255, 255, 0, 255);
+        Color yellow = new RgbColor(255, 255, 0, 127);
         // create simple renderer
         SimpleRenderer simpleRenderer = new SimpleRenderer();
         // create point symbol
