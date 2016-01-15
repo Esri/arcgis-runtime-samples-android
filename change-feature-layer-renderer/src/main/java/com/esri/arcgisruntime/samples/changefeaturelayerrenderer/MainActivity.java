@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 // Handle action bar item clicks
                 int itemId = item.getItemId();
+                //if statement is used because this sample is used elsewhere as a Library module
                 if(itemId == R.id.action_override_rend){
                     // check the state of the menu item
                     if (!overrideActive) {
