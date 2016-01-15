@@ -89,21 +89,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 // Handle action bar item clicks
-                switch (item.getItemId()) {
-                    // handle th
-                    case R.id.action_def_exp:
-                        // check the state of the menu item
-                        if (!applyActive) {
-                            applyDefinitionExpression();
-                            // change the text to reset
-                            applyActive = true;
-                            item.setTitle(R.string.action_reset);
-                        } else {
-                            resetDefinitionExpression();
-                            // change the text to apply
-                            applyActive = false;
-                            item.setTitle(R.string.action_def_exp);
-                        }
+                int itemId = item.getItemId();
+                //if statement is used because this sample is used elsewhere as a Library module
+                if(itemId == R.id.action_def_exp){
+                    // check the state of the menu item
+                    if (!applyActive) {
+                        applyDefinitionExpression();
+                        // change the text to reset
+                        applyActive = true;
+                        item.setTitle(R.string.action_reset);
+                    } else {
+                        resetDefinitionExpression();
+                        // change the text to apply
+                        applyActive = false;
+                        item.setTitle(R.string.action_def_exp);
+                    }
                 }
                 return true;
             }

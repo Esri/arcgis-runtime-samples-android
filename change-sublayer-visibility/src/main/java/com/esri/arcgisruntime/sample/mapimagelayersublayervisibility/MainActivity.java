@@ -91,47 +91,45 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         // handle menu item selection
-        switch(item.getItemId()){
-            case R.id.Cities:
-                if(mLayers.get(0).isVisible() && mCities.isChecked()){
-                    // cities layer is on and menu item checked
-                    mLayers.get(0).setVisible(false);
-                    mCities.setChecked(false);
-                }else if(!mLayers.get(0).isVisible() && !mCities.isChecked()){
-                    // cities layer is off and menu item unchecked
-                    mLayers.get(0).setVisible(true);
-                    mCities.setChecked(true);
-                }
-                return true;
-            case R.id.Continents:
-
-                if(mLayers.get(1).isVisible() && mContinent.isChecked()){
-                    // continent layer is on and menu item checked
-                    mLayers.get(1).setVisible(false);
-                    mContinent.setChecked(false);
-                }else if(!mLayers.get(1).isVisible() && !mContinent.isChecked()){
-                    // continent layer is off and menu item unchecked
-                    mLayers.get(1).setVisible(true);
-                    mContinent.setChecked(true);
-                }
-                return true;
-            case R.id.World:
-
-                if(mLayers.get(2).isVisible() && mWorld.isChecked()){
-                    // world layer is on and menu item checked
-                    mLayers.get(2).setVisible(false);
-                    mWorld.setChecked(false);
-                }else if(!mLayers.get(2).isVisible() && !mWorld.isChecked()){
-                    // world layer is off and menu item unchecked
-                    mLayers.get(2).setVisible(true);
-                    mWorld.setChecked(true);
-                }
-                return true;
-            default:
+        //if-else is used because this sample is used elsewhere as a Library module
+        int itemId = item.getItemId();
+        if(itemId == R.id.Cities){
+            if(mLayers.get(0).isVisible() && mCities.isChecked()){
+                // cities layer is on and menu item checked
+                mLayers.get(0).setVisible(false);
+                mCities.setChecked(false);
+            }else if(!mLayers.get(0).isVisible() && !mCities.isChecked()){
+                // cities layer is off and menu item unchecked
+                mLayers.get(0).setVisible(true);
+                mCities.setChecked(true);
+            }
+            return true;
+        }else if(itemId == R.id.Continents){
+            if(mLayers.get(1).isVisible() && mContinent.isChecked()){
+                // continent layer is on and menu item checked
+                mLayers.get(1).setVisible(false);
+                mContinent.setChecked(false);
+            }else if(!mLayers.get(1).isVisible() && !mContinent.isChecked()){
+                // continent layer is off and menu item unchecked
+                mLayers.get(1).setVisible(true);
+                mContinent.setChecked(true);
+            }
+            return true;
+        }else if(itemId == R.id.World){
+            if(mLayers.get(2).isVisible() && mWorld.isChecked()){
+                // world layer is on and menu item checked
+                mLayers.get(2).setVisible(false);
+                mWorld.setChecked(false);
+            }else if(!mLayers.get(2).isVisible() && !mWorld.isChecked()){
+                // world layer is off and menu item unchecked
+                mLayers.get(2).setVisible(true);
+                mWorld.setChecked(true);
+            }
+            return true;
+        }else{
                 return super.onOptionsItemSelected(item);
-        }
+            }
     }
 
 }

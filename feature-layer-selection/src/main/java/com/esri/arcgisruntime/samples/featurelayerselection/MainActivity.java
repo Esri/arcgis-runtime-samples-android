@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
                 Envelope envelope = new Envelope(clickPoint.getX() - mapTolerance, clickPoint.getY() - mapTolerance, clickPoint.getX() + mapTolerance, clickPoint.getY() + mapTolerance, map.getSpatialReference());
                 QueryParameters query = new QueryParameters();
                 query.setGeometry(envelope);
-                query.getOutFields().add("*");
 
                 // call select features
                 final ListenableFuture<FeatureQueryResult> future = featureLayer.selectFeatures(query, FeatureLayer.SelectionMode.NEW);

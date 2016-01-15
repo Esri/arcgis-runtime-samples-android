@@ -28,8 +28,8 @@ import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.SpatialReferenceChangedEvent;
-import com.esri.arcgisruntime.mapping.view.SpatialReferenceChangedListener;
+import com.esri.arcgisruntime.mapping.view.VisibleAreaChangedEvent;
+import com.esri.arcgisruntime.mapping.view.VisibleAreaChangedListener;
 import com.esri.arcgisruntime.symbology.Color;
 import com.esri.arcgisruntime.symbology.RgbColor;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
@@ -54,9 +54,11 @@ public class MainActivity extends AppCompatActivity {
         mMapView.setMap(mMap);
 
         // work with the MapView after it has loaded
-        mMapView.addSpatialReferenceChangedListener(new SpatialReferenceChangedListener() {
+        mMapView.addVisibleAreaChangedListener(new VisibleAreaChangedListener() {
             @Override
-            public void spatialReferenceChanged(SpatialReferenceChangedEvent spatialReferenceChangedEvent) {
+            public void visibleAreaChanged(VisibleAreaChangedEvent visibleAreaChangedEvent) {
+                //remove the listener so it's only called once
+                mMapView.removeVisibleAreaChangedListener(this);
                 // add graphics overlay
                 addGraphicsOverlay();
             }
@@ -92,12 +94,11 @@ public class MainActivity extends AppCompatActivity {
             graphics.add(new Graphic(pt));
         }
         // create color for graphic
-        Color yellow = new RgbColor(255, 255, 0, 255);
+        Color yellow = new RgbColor(255, 255, 0, 127);
         // create simple renderer
         SimpleRenderer simpleRenderer = new SimpleRenderer();
         // create point symbol
         SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(yellow, 30, SimpleMarkerSymbol.Style.SQUARE);
-        pointSymbol.setOpacity(0.5f);
         // set symbol to renderer
         simpleRenderer.setSymbol(pointSymbol);
         // set renderer to graphics overlay

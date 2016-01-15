@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
         mFeaturelayer = new FeatureLayer(mServiceFeatureTable);
         mFeaturelayer.setOpacity(0.8f);
         //override the renderer
-        SimpleLineSymbol lineSymbol= new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0,0,0,255), 1, 0.6f);
-        SimpleFillSymbol fillSymbol = new SimpleFillSymbol(new RgbColor(255, 204, 0, 255), SimpleFillSymbol.Style.SOLID, lineSymbol, 0.5f);
+        SimpleLineSymbol lineSymbol= new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0,0,0,153), 1);
+        SimpleFillSymbol fillSymbol = new SimpleFillSymbol(new RgbColor(255, 204, 0, 127), SimpleFillSymbol.Style.SOLID, lineSymbol);
         mFeaturelayer.setRenderer(new SimpleRenderer(fillSymbol));
 
         // add the layer to the map
@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         QueryParameters query = new QueryParameters();
         //make search case insensitive
         query.setWhereClause("upper(STATE_NAME) LIKE '%" + searchString.toUpperCase() + "%'");
-        query.getOutFields().add("*");
 
         // call select features
         final ListenableFuture<FeatureQueryResult> future = mServiceFeatureTable.queryFeaturesAsync(query);
