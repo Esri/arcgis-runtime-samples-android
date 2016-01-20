@@ -16,12 +16,13 @@
 
 package com.esri.arcgis.android.samples.nearby;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,7 +30,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -70,7 +70,7 @@ import java.util.Random;
  * Check device settings to make sure that location services are enabled for
  * the app.
  */
-public class Nearby extends Activity {
+public class Nearby extends AppCompatActivity {
 
   private static final String TAG = Nearby.class.getSimpleName();
 
@@ -99,10 +99,9 @@ public class Nearby extends Activity {
   RatingBar mRatingBar;
   
   Locator mLocator;
-  ArrayList<String> mFindOutFields = new ArrayList<String>();
+  ArrayList<String> mFindOutFields = new ArrayList<>();
 
   LocationDisplayManager mLDM;
-  LinearLayout mPlaceLayout;
 
 
   /**
@@ -171,8 +170,6 @@ public class Nearby extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
 
-    mPlaceLayout = (LinearLayout) findViewById(R.id.placeLayout);
-
     mMapView = (MapView) findViewById(R.id.map);
     mMapView.setOnStatusChangedListener(statusChangedListener);
     mMapView.setOnSingleTapListener(mapTapCallback);
@@ -192,13 +189,9 @@ public class Nearby extends Activity {
     mResultsLayer.setSelectionColorWidth(6);
     mMapView.addLayer(mResultsLayer);
 
-
-    mCoffeeMapIcon = new PictureMarkerSymbol(getApplicationContext(), this
-        .getResources().getDrawable(R.drawable.ic_local_cafe_black));
-    mPizzaMapIcon = new PictureMarkerSymbol(getApplicationContext(), this
-        .getResources().getDrawable(R.drawable.ic_local_pizza_black));
-    mBarMapIcon = new PictureMarkerSymbol(getApplicationContext(), this
-        .getResources().getDrawable(R.drawable.ic_local_drink_black));
+    mCoffeeMapIcon = new PictureMarkerSymbol(getApplicationContext(), ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_local_cafe_black));
+    mPizzaMapIcon = new PictureMarkerSymbol(getApplicationContext(), ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_local_pizza_black));
+    mBarMapIcon = new PictureMarkerSymbol(getApplicationContext(), ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_local_drink_black));
 
     setupLocator();
     setupLocationListener();
@@ -332,8 +325,7 @@ public class Nearby extends Activity {
       }
     };
 
-    try
-    {
+    try {
       setProgressOnUIThread(true);
 
       // Get the current map extent.
@@ -356,8 +348,7 @@ public class Nearby extends Activity {
 
       // Call find, passing in the callback above.
       mLocator.find(fParams, findCallback);
-    } 
-    catch (Exception e) {
+    } catch (Exception e) {
       // Update UI and report any errors.
       setProgressOnUIThread(false);
 
@@ -532,8 +523,7 @@ public class Nearby extends Activity {
     String phone = attributes.get(getResources().getString(
         R.string.result_phone)).toString();
     mPhoneTextView.setText(phone);
-    mPhoneImageView.setImageDrawable(getResources().getDrawable(
-        R.drawable.ic_action_call));
+    mPhoneImageView.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_action_call));
 
     Float rating = Float.parseFloat(getRating());
     mRatingBar.setRating(rating);
