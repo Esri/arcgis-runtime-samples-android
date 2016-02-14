@@ -1,6 +1,8 @@
 # Offline Editor:
 You can access and edit data on your Android device even when you have no internet connection.  The purpose of this sample is to demonstrate how to download feature data for offline use,  edit the features geometry with feature templates, and synchronize your edits with a ArcGIS Server Feature Service. 
 
+![Offline Editor App](offline-editor.png)
+
 The sample includes the following utility classes:
 
 * GDBUtil
