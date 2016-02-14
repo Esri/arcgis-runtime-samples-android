@@ -19,7 +19,9 @@ This sample has one class, ```MainActivity```, which has two inner classes to ov
 This sample uses **Beta** native libs that are only available in the [SDK download](https://developers.arcgis.com/android).  Download the SDK and follow the instructions below to work with this sample.
 
 1. Create a **/src/main/jniLibs** directory in the sample project
-2. From the root of your SDK download directory, copy the **/libs/[platform]/librs.main.so** and **/libs/[platform]/librender_script_analysis.soo** into the **jniLibs** folder created in step 1.
+2. From the root of your SDK download directory, copy the **/libs/[platform]/librs.main.so** and **/libs/[platform]/librender_script_analysis.so** into the **jniLibs** folder created in step 1.  Do not include the `libs` folder from the SDK.  
+
+You should end up with the following project directory: `/src/main/jniLIbs/[platform]/librs.main.so` & `/src/main/jniLIbs/[platform]/librender_script_analysis.so`
 
 Where **[platform]** represents the platform architecture your device is running, e.g.  **/libs/armeabi-v7a/librs.main.so** and **/libs/armeabi-v7a/librender_script_analysis.soo** for ARM.
 
