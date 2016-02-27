@@ -30,8 +30,6 @@ import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
-import java.text.Format;
-
 public class MainActivity extends AppCompatActivity {
 
     static final String sTag = "Gesture";
@@ -57,16 +55,19 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(sTag, "onSingleTapConfirmed: " + motionEvent.toString());
 
                 // get the point that was clicked and convert it to a point in map coordinates
-                android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY()));
+                android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
+                        Math.round(motionEvent.getY()));
 
                 Point singleTapPoint = mMapView.screenToLocation(screenPoint);
 
+                // create a textview for the callout
                 TextView calloutContent = new TextView(getApplicationContext());
                 calloutContent.setTextColor(Color.BLACK);
-//                calloutContent.setBackgroundColor(Color.BLUE);
                 calloutContent.setSingleLine();
-                calloutContent.setText("X:" +  (String.format("%.2f", singleTapPoint.getX())) + ", y:" + (String.format("%.2f", singleTapPoint.getY())));
+                calloutContent.setText("X:" +  (String.format("%.2f", singleTapPoint.getX()))
+                        + ", y:" + (String.format("%.2f", singleTapPoint.getY())));
 
+                // get callout, set content and show
                 mCallout = mMapView.getCallout();
                 mCallout.setLocation(singleTapPoint);
                 mCallout.setContent(calloutContent);
