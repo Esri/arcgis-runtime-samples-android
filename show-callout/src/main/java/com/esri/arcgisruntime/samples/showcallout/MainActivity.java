@@ -16,20 +16,27 @@
 
 package com.esri.arcgisruntime.samples.showcallout;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.TextView;
 
+import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
+import java.text.Format;
+
 public class MainActivity extends AppCompatActivity {
 
-    private static final String DEBUG_TAG = "Gesture";
+    static final String sTag = "Gesture";
     private MapView mMapView;
+    private Callout mCallout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
         // create a map with the Basemap Type topographic
-        Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 10);
+        final Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 10);
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
 
@@ -47,7 +54,24 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-                Log.d(DEBUG_TAG, "onSingleTapConfirmed: " + motionEvent.toString());
+                Log.d(sTag, "onSingleTapConfirmed: " + motionEvent.toString());
+
+                // get the point that was clicked and convert it to a point in map coordinates
+                android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY()));
+
+                Point singleTapPoint = mMapView.screenToLocation(screenPoint);
+
+                TextView calloutContent = new TextView(getApplicationContext());
+                calloutContent.setTextColor(Color.BLACK);
+//                calloutContent.setBackgroundColor(Color.BLUE);
+                calloutContent.setSingleLine();
+                calloutContent.setText("X:" +  (String.format("%.2f", singleTapPoint.getX())) + ", y:" + (String.format("%.2f", singleTapPoint.getY())));
+
+                mCallout = mMapView.getCallout();
+                mCallout.setLocation(singleTapPoint);
+                mCallout.setContent(calloutContent);
+                mCallout.show();
+
                 return true;
             }
         });
