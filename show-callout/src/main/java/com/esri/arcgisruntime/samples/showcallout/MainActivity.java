@@ -32,7 +32,7 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-    static final String sTag = "Gesture";
+    private static final String sTag = "Gesture";
     private MapView mMapView;
     private Callout mCallout;
 
