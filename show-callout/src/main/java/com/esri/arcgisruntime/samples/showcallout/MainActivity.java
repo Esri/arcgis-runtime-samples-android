@@ -18,13 +18,17 @@ package com.esri.arcgisruntime.samples.showcallout;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String DEBUG_TAG = "Gesture";
     private MapView mMapView;
 
     @Override
@@ -38,7 +42,17 @@ public class MainActivity extends AppCompatActivity {
         Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 10);
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
+
+        mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
+
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+                Log.d(DEBUG_TAG, "onSingleTapConfirmed: " + motionEvent.toString());
+                return true;
+            }
+        });
     }
+
 
     @Override
     protected void onPause(){
