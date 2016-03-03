@@ -13,6 +13,7 @@
 
 package com.esri.arcgisruntime.samples.featurelayerselection;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -32,7 +33,6 @@ import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.symbology.RgbColor;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
         // create the feature layer using the service feature table
         final FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
-        featureLayer.setSelectionColor(new RgbColor(0, 255, 255, 255)); //cyan, fully opaque
+        featureLayer.setSelectionColor(Color.rgb(0, 255, 255)); //cyan, fully opaque
         featureLayer.setSelectionWidth(3);
         // add the layer to the map
         map.getOperationalLayers().add(featureLayer);
