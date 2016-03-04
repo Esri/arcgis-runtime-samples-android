@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.sample.uniquevaluerenderer;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -27,7 +28,6 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.symbology.RgbColor;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.UniqueValueRenderer;
@@ -64,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
         uniqueValueRenderer.getFieldNames().add("STATE_ABBR"); //You can add multiple fields to be used for the renderer in the form of a list, in this case we are only adding a single field
 
         // Create the symbols to be used in the renderer
-        SimpleFillSymbol defaultFillSymbol = new SimpleFillSymbol(new RgbColor(0,0,0,0), SimpleFillSymbol.Style.NULL, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(211, 211, 211, 255), 2));
-        SimpleFillSymbol californiaFillSymbol = new SimpleFillSymbol(new RgbColor(255,0,0,255), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(255, 0, 0, 255), 2));
-        SimpleFillSymbol arizonaFillSymbol = new SimpleFillSymbol(new RgbColor(0,255,0,255), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0, 255, 0, 255), 2));
-        SimpleFillSymbol nevadaFillSymbol = new SimpleFillSymbol(new RgbColor(0,0,255,255), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0, 0, 255, 255), 2));
+        SimpleFillSymbol defaultFillSymbol = new SimpleFillSymbol(Color.rgb(0, 0, 0), SimpleFillSymbol.Style.NULL, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(211, 211, 211), 2));
+        SimpleFillSymbol californiaFillSymbol = new SimpleFillSymbol(Color.rgb(255,0,0), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(255, 0, 0), 2));
+        SimpleFillSymbol arizonaFillSymbol = new SimpleFillSymbol(Color.rgb(0,255,0), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(0, 255, 0), 2));
+        SimpleFillSymbol nevadaFillSymbol = new SimpleFillSymbol(Color.rgb(0,0,255), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(0, 0, 255), 2));
 
         // Set default symbol
         uniqueValueRenderer.setDefaultSymbol(defaultFillSymbol);
