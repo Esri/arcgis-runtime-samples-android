@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.sample.creategeometries;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -31,7 +32,6 @@ import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.symbology.RgbColor;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(mMap);
 
     // create color and symbols for drawing graphics
-    RgbColor blue = new RgbColor(0, 0, 255, 255);
+    int blue = Color.rgb(0, 0, 255);
     SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(blue, 14, SimpleMarkerSymbol.Style.TRIANGLE);
     SimpleFillSymbol fillSymbol = new SimpleFillSymbol(blue, SimpleFillSymbol.Style.CROSS, null);
     SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, blue, 3);
