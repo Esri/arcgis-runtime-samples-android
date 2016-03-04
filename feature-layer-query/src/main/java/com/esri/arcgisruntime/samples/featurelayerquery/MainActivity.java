@@ -16,6 +16,7 @@ package com.esri.arcgisruntime.samples.featurelayerquery;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -35,7 +36,6 @@ import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.symbology.RgbColor;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
         mFeaturelayer = new FeatureLayer(mServiceFeatureTable);
         mFeaturelayer.setOpacity(0.8f);
         //override the renderer
-        SimpleLineSymbol lineSymbol= new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0,0,0,153), 1);
-        SimpleFillSymbol fillSymbol = new SimpleFillSymbol(new RgbColor(255, 204, 0, 127), SimpleFillSymbol.Style.SOLID, lineSymbol);
+        SimpleLineSymbol lineSymbol= new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(0, 0, 0), 1);
+        SimpleFillSymbol fillSymbol = new SimpleFillSymbol(Color.rgb(255, 204, 0), SimpleFillSymbol.Style.SOLID, lineSymbol);
         mFeaturelayer.setRenderer(new SimpleRenderer(fillSymbol));
 
         // add the layer to the map
