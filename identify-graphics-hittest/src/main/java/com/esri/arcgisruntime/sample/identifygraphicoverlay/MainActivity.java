@@ -17,6 +17,7 @@
 package com.esri.arcgisruntime.sample.identifygraphicoverlay;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,12 +40,8 @@ import com.esri.arcgisruntime.mapping.view.DrawStatusChangedListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.symbology.Color;
-import com.esri.arcgisruntime.symbology.RgbColor;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.util.ListenableList;
-import com.esri.arcgisruntime.mapping.view.SpatialReferenceChangedEvent;
-import com.esri.arcgisruntime.mapping.view.SpatialReferenceChangedListener;
 
 
 import java.util.List;
@@ -108,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         Polygon polygon = new Polygon(polyPoints);
 
         // create solid line symbol
-        Color blue = new RgbColor(0, 0, 230, 255);
+        int blue = Color.rgb(0, 0, 230);
         SimpleLineSymbol solidLine = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, blue, 4);
         // create graphic from polygon and symbol
         Graphic graphic = new Graphic(polygon, solidLine);
@@ -184,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
             android.graphics.Point screenPoint = new android.graphics.Point((int)e.getX(), (int)e.getY());
 
             // identify graphics on the graphics overlay
-            final ListenableFuture<List<Graphic>> identifyGraphic = mMapView.identifyGraphicsOverlay(grOverlay, screenPoint, 10.0, 2);
+            final ListenableFuture<List<Graphic>> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(grOverlay, screenPoint, 10.0, 2);
 
             identifyGraphic.addDoneListener(new Runnable() {
                 @Override
