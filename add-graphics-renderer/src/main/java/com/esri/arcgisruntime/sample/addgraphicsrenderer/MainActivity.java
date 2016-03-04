@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.sample.addgraphicsrenderer;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -30,8 +31,6 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.VisibleAreaChangedEvent;
 import com.esri.arcgisruntime.mapping.view.VisibleAreaChangedListener;
-import com.esri.arcgisruntime.symbology.Color;
-import com.esri.arcgisruntime.symbology.RgbColor;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
 import com.esri.arcgisruntime.util.ListenableList;
@@ -94,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             graphics.add(new Graphic(pt));
         }
         // create color for graphic
-        Color yellow = new RgbColor(255, 255, 0, 127);
+        int yellow = Color.rgb(255, 255, 0);
         // create simple renderer
         SimpleRenderer simpleRenderer = new SimpleRenderer();
         // create point symbol

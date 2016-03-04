@@ -15,6 +15,7 @@
  */
 package com.esri.arcgisruntime.samples.changefeaturelayerrenderer;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +29,6 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.symbology.RgbColor;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
 
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private void overrideRenderer() {
 
         // create a new simple renderer for the line feature layer
-        SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0,0,255,255), 2);
+        SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(0, 0, 255), 2);
         SimpleRenderer simpleRenderer = new SimpleRenderer(lineSymbol);
 
         // override the current renderer with the new renderer defined above
