@@ -20,7 +20,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
@@ -42,7 +41,6 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
     private MapView mMapView;
     private GraphicsOverlay grOverlay;
 
@@ -75,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         polygonGeometry.addPoint(-20e5, -20e5);
 
         // create solid line symbol
-        int yellow = Color.argb(4, 255, 255, 0);
+        int yellow = Color.argb(128, 255, 255, 0);
         SimpleFillSymbol polygonSymbol = new SimpleFillSymbol(yellow, SimpleFillSymbol.Style.SOLID, null);
         // create graphic from polygon geometry and symbol
         Graphic graphic = new Graphic(polygonGeometry.toGeometry(), polygonSymbol);
@@ -88,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
         graphics.add(graphic);
         // add graphics overlay to the MapView
         mMapView.getGraphicsOverlays().add(grOverlay);
-        Log.i(TAG, "Graphic Overlay added to MapView");
     }
 
     @Override
