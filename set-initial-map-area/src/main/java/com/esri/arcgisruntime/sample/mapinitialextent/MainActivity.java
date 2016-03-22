@@ -24,8 +24,8 @@ import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.Viewpoint;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,12 +46,7 @@ public class MainActivity extends AppCompatActivity {
         Map mMap = new Map(mBasemap);
 
         // create an initial extent envelope
-        Envelope mInitExtent = new Envelope(-12211308.778729,
-                4645116.003309,
-                -12208257.879667,
-                4650542.535773,
-                0.0, 0.0, 0.0, 0.0,
-                SpatialReference.create(102100));
+        Envelope mInitExtent = new Envelope(-12211308.778729, 4645116.003309, -12208257.879667, 4650542.535773, SpatialReference.create(102100));
         // create a viewpoint from envelope
         Viewpoint vp = new Viewpoint(mInitExtent);
         // set initial map extent

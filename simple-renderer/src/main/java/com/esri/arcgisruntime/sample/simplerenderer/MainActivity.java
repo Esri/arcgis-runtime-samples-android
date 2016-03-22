@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.sample.simplerenderer;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -27,8 +28,6 @@ import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.symbology.Color;
-import com.esri.arcgisruntime.symbology.RgbColor;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
 
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         //[DocRef: Name=Simple Renderer, Category=Fundamentals, Topic=Symbols and Renderers]
         //create a simple symbol for use in a simple renderer
-        Color color = new RgbColor(255, 0, 0, 255); //red, fully opaque
+        int color = Color.rgb(255, 0, 0); //red, fully opaque
         SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(color, 12, SimpleMarkerSymbol.Style.CROSS); //size 12, style of cross
         SimpleRenderer renderer = new SimpleRenderer(symbol);
 

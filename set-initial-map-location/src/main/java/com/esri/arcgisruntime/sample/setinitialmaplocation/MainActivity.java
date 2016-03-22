@@ -19,7 +19,7 @@ package com.esri.arcgisruntime.sample.setinitialmaplocation;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.esri.arcgisruntime.mapping.BasemapType;
+import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
         // create a map with the BasemapType topographic
-        Map mMap = new Map(BasemapType.TOPOGRAPHIC, 34.056295, -117.195800, 16);
+        Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16);
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
     }

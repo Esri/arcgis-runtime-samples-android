@@ -25,11 +25,11 @@ import android.widget.Button;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
-import com.esri.arcgisruntime.mapping.BasemapType;
+import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.LayerList;
 import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.Viewpoint;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         selectLayers = (Button) findViewById(R.id.operationallayer);
 
         // create a map with the BasemapType topographic
-        Map mMap = new Map(BasemapType.TOPOGRAPHIC, 34.056295, -117.195800, 14);
+        Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 14);
 
         imageLayerElevation = new ArcGISMapImageLayer(getResources().getString(R.string.imagelayer_elevation_url));
         imagelayerCensus = new ArcGISMapImageLayer(getResources().getString(R.string.imagelayer_census_url));

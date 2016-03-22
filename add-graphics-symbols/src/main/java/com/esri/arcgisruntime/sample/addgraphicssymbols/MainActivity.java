@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.sample.addgraphicssymbols;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -24,12 +25,11 @@ import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polygon;
 import com.esri.arcgisruntime.geometry.Polyline;
 import com.esri.arcgisruntime.geometry.SpatialReference;
-import com.esri.arcgisruntime.mapping.BasemapType;
+import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.symbology.RgbColor;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.mapView);
 
         // create a map with the BasemapType topographic
-        Map map = new Map(BasemapType.OCEANS, 56.075844, -2.681572, 11);
+        Map map = new Map(Basemap.Type.OCEANS, 56.075844, -2.681572, 11);
         // set the map to be displayed in this view
         mMapView.setMap(map);
         // add graphics overlay to MapView.
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         Point buoy4Loc = new Point(-2.6395150461199726, 56.06127916736989, wgs84);
 
         //create a marker symbol
-        SimpleMarkerSymbol buoyMarker = new SimpleMarkerSymbol(new RgbColor(255, 0, 0, 255), 10, SimpleMarkerSymbol.Style.CIRCLE);
+        SimpleMarkerSymbol buoyMarker = new SimpleMarkerSymbol(Color.rgb(255, 0, 0), 10, SimpleMarkerSymbol.Style.CIRCLE);
 
         //create graphics
         Graphic buoyGraphic1 = new Graphic(buoy1Loc, buoyMarker);
@@ -119,11 +119,11 @@ public class MainActivity extends AppCompatActivity {
         //create text symbols
         TextSymbol bassRockSymbol =
                 new TextSymbol(
-                        10, "Bass Rock", new RgbColor(0, 0, 230, 255),
+                        10, "Bass Rock", Color.rgb(0, 0, 230),
                         TextSymbol.HorizontalAlignment.LEFT, TextSymbol.VerticalAlignment.BOTTOM);
         TextSymbol craigleithSymbol =
                 new TextSymbol(
-                        10, "Craigleith", new RgbColor(0, 0, 230, 255),
+                        10, "Craigleith", Color.rgb(0, 0, 230),
                         TextSymbol.HorizontalAlignment.RIGHT, TextSymbol.VerticalAlignment.TOP);
 
         //define a graphic from the geometry and symbol
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         Polyline boatRoute = getBoatTripGeometry();
 
         //define a line symbol
-        SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, new RgbColor(128, 0, 128, 255), 4, 1.0f);
+        SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.rgb(128, 0, 128), 4);
 
         //create the graphic
         Graphic boatTripGraphic = new Graphic(boatRoute, lineSymbol);
@@ -159,12 +159,12 @@ public class MainActivity extends AppCompatActivity {
         SimpleLineSymbol outlineSymbol =
                 new SimpleLineSymbol(
                         SimpleLineSymbol.Style.DASH,
-                        new RgbColor(0, 0, 128, 255), 1, 1.0f);
+                        Color.rgb(0, 0, 128), 1);
         SimpleFillSymbol fillSymbol =
                 new SimpleFillSymbol(
-                        new RgbColor(0, 80, 0, 255),
+                        Color.rgb(0, 80, 0),
                         SimpleFillSymbol.Style.DIAGONAL_CROSS,
-                        outlineSymbol, 1.0f);
+                        outlineSymbol);
 
         //define graphic
         Graphic nestingGraphic = new Graphic(nestingGround,fillSymbol);

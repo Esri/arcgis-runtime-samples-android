@@ -22,7 +22,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.esri.arcgisruntime.mapping.BasemapType;
+import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
-    // create a map with the BasemapType topographic
-    Map mMap = new Map(BasemapType.LIGHT_GRAY_CANVAS, 34.056295, -117.195800, 16);
+    // create a map with the Basemap Type topographic
+    Map mMap = new Map(Basemap.Type.LIGHT_GRAY_CANVAS, 34.056295, -117.195800, 16);
     // set the map to be displayed in this view
     mMapView.setMap(mMap);
     // Create a new SketchGraphicsOverlay with a new listener

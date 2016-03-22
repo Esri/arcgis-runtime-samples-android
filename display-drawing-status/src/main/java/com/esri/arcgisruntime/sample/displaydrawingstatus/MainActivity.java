@@ -28,11 +28,11 @@ import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DrawStatus;
 import com.esri.arcgisruntime.mapping.view.DrawStatusChangedEvent;
 import com.esri.arcgisruntime.mapping.view.DrawStatusChangedListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.Viewpoint;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,10 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
-        // create a map with the BasemapType topographic
+        // create a map with the Basemap Type topographic
         Map map = new Map(Basemap.createTopographic());
         // create an envelope
-        Envelope targetExtent = new Envelope(-13639984.0, 4537387.0, -13606734.0, 4558866.0, 0, 0, 0, 0, SpatialReferences.getWebMercator());
+        Envelope targetExtent = new Envelope(-13639984.0, 4537387.0, -13606734.0, 4558866.0, SpatialReferences.getWebMercator());
         // use envelope to set initial viewpoint
         Viewpoint initViewpoint = new Viewpoint(targetExtent);
         // set the initial viewpoint in the map
