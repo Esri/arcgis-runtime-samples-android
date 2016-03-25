@@ -108,99 +108,99 @@ public class MainActivity extends AppCompatActivity {
         switch (progress) {
           case 0:
             mMapView.setViewpointScaleAsync(5.91657527591555E8);
-            mSeekBarScale.setText("Set Scale - "+ 5.91657527591555E8);
+            mSeekBarScale.setText("Seekbar Scale - "+ 5.91657527591555E8);
             break;
           case 1:
             mMapView.setViewpointScaleAsync(2.95828763795777E8);
-            mSeekBarScale.setText("Set Scale - "+ 2.95828763795777E8);
+            mSeekBarScale.setText("Seekbar Scale - "+ 2.95828763795777E8);
           break;
           case 2:
             mMapView.setViewpointScaleAsync(1.47914381897889E8);
-            mSeekBarScale.setText("Set Scale - "+ 1.47914381897889E8);
+            mSeekBarScale.setText("Seekbar Scale - "+ 1.47914381897889E8);
           break;
           case 3:
             mMapView.setViewpointScaleAsync(7.3957190948944E7);
-            mSeekBarScale.setText("Set Scale - "+ 7.3957190948944E7);
+            mSeekBarScale.setText("Seekbar Scale - "+ 7.3957190948944E7);
           break;
           case 4:
             mMapView.setViewpointScaleAsync(3.6978595474472E7);
-            mSeekBarScale.setText("Set Scale - "+ 3.6978595474472E7);
+            mSeekBarScale.setText("Seekbar Scale - "+ 3.6978595474472E7);
           break;
           case 5:
             mMapView.setViewpointScaleAsync(1.8489297737236E7);
-            mSeekBarScale.setText("Set Scale - "+ 1.8489297737236E7);
+            mSeekBarScale.setText("Seekbar Scale - "+ 1.8489297737236E7);
           break;
           case 6:
             mMapView.setViewpointScaleAsync(9244648.868618);
-            mSeekBarScale.setText("Set Scale - "+ 9244648.868618);
+            mSeekBarScale.setText("Seekbar Scale - "+ 9244648.868618);
           break;
           case 7:
             mMapView.setViewpointScaleAsync(4622324.434309);
-            mSeekBarScale.setText("Set Scale - "+ 4622324.434309);
+            mSeekBarScale.setText("Seekbar Scale - "+ 4622324.434309);
           break;
           case 8:
             mMapView.setViewpointScaleAsync(2311162.217155);
-            mSeekBarScale.setText("Set Scale - "+ 2311162.217155);
+            mSeekBarScale.setText("Seekbar Scale - "+ 2311162.217155);
           break;
           case 9:
             mMapView.setViewpointScaleAsync(1155581.108577);
-            mSeekBarScale.setText("Set Scale - "+ 1155581.108577);
+            mSeekBarScale.setText("Seekbar Scale - "+ 1155581.108577);
           break;
           case 10:
             mMapView.setViewpointScaleAsync(577790.554289);
-            mSeekBarScale.setText("Set Scale - "+ 577790.554289);
+            mSeekBarScale.setText("Seekbar Scale - "+ 577790.554289);
           break;
           case 11:
             mMapView.setViewpointScaleAsync(288895.277144);
-            mSeekBarScale.setText("Set Scale - "+ 288895.277144);
+            mSeekBarScale.setText("Seekbar Scale - "+ 288895.277144);
           break;
           case 12:
             mMapView.setViewpointScaleAsync(144447.638572);
-            mSeekBarScale.setText("Set Scale - "+ 144447.638572);
+            mSeekBarScale.setText("Seekbar Scale - "+ 144447.638572);
           break;
           case 13:
             mMapView.setViewpointScaleAsync(72223.819286);
-            mSeekBarScale.setText("Set Scale - "+ 72223.819286);
+            mSeekBarScale.setText("Seekbar Scale - "+ 72223.819286);
           break;
           case 14:
             mMapView.setViewpointScaleAsync(36111.909643);
-            mSeekBarScale.setText("Set Scale - "+ 36111.909643);
+            mSeekBarScale.setText("Seekbar Scale - "+ 36111.909643);
           break;
           case 15:
             mMapView.setViewpointScaleAsync(18055.954822);
-            mSeekBarScale.setText("Set Scale - "+ 18055.954822);
+            mSeekBarScale.setText("Seekbar Scale - "+ 18055.954822);
           break;
           case 16:
             mMapView.setViewpointScaleAsync(9027.977411);
-            mSeekBarScale.setText("Set Scale - "+ 9027.977411);
+            mSeekBarScale.setText("Seekbar Scale - "+ 9027.977411);
           break;
           case 17:
             mMapView.setViewpointScaleAsync(4513.988705);
-            mSeekBarScale.setText("Set Scale - "+ 4513.988705);
+            mSeekBarScale.setText("Seekbar Scale - "+ 4513.988705);
           break;
           case 18:
             mMapView.setViewpointScaleAsync(2256.994353);
-            mSeekBarScale.setText("Set Scale - "+ 2256.994353);
+            mSeekBarScale.setText("Seekbar Scale - "+ 2256.994353);
           break;
           case 19:
             mMapView.setViewpointScaleAsync(1128.497176);
-            mSeekBarScale.setText("Set Scale - "+ 1128.497176);
+            mSeekBarScale.setText("Seekbar Scale - "+ 1128.497176);
           break;
           case 20:
             mMapView.setViewpointScaleAsync(564.248588);
-            mSeekBarScale.setText("Set Scale - "+ 564.248588);
+            mSeekBarScale.setText("Seekbar Scale - "+ 564.248588);
           break;
           case 21:
             mMapView.setViewpointScaleAsync(282.124294);
-            mSeekBarScale.setText("Set Scale - "+ 282.124294);
+            mSeekBarScale.setText("Seekbar Scale - "+ 282.124294);
           break;
           case 22:
             mMapView.setViewpointScaleAsync(141.062147);
-            mSeekBarScale.setText("Set Scale - "+ 141.062147);
+            mSeekBarScale.setText("Seekbar Scale - "+ 141.062147);
           break;
           case 23:
             mMapView.setViewpointScaleAsync(70.5310735);
-            mSeekBarScale.setText("Set Scale - "+ 70.5310735);
+            mSeekBarScale.setText("Seekbar Scale - "+ 70.5310735);
           break;
         }
       }
@@ -218,84 +218,81 @@ public class MainActivity extends AppCompatActivity {
       @Override public void visibleAreaChanged(VisibleAreaChangedEvent visibleAreaChangedEvent) {
         double mapScale = mMapView.getMapScale();
         mMapViewScale.setText("Actual Scale - " + mapScale);
-        if (mapScale == 5.91657527591555E8) {
+        if (mapScale >= 2.95828763795777E8 && mapScale <= 5.91657527591555E8) {
           mSeekBar.setProgress(0);
-          mSeekBarScale.setText("Set Scale - " + 5.91657527591555E8);
-        } else if (mapScale == 2.95828763795777E8) {
+          mSeekBarScale.setText("Seekbar Scale - " + 2.95828763795777E8);
+        } else if (mapScale >= 1.47914381897889E8 && mapScale <= 2.95828763795777E8) {
           mSeekBar.setProgress(1);
-          mSeekBarScale.setText("Set Scale - " + 2.95828763795777E8);
-        } else if (mapScale == 1.47914381897889E8) {
+          mSeekBarScale.setText("Seekbar Scale - " + 1.47914381897889E8);
+        } else if (mapScale >= 7.3957190948944E7 && mapScale <= 1.47914381897889E8) {
           mSeekBar.setProgress(2);
-          mSeekBarScale.setText("Set Scale - " + 1.47914381897889E8);
-        } else if (mapScale == 7.3957190948944E7) {
+          mSeekBarScale.setText("Seekbar Scale - " + 7.3957190948944E7);
+        } else if (mapScale >= 3.6978595474472E7 && mapScale <= 7.3957190948944E7 ) {
           mSeekBar.setProgress(3);
-          mSeekBarScale.setText("Set Scale - " + 7.3957190948944E7);
-        } else if (mapScale == 3.6978595474472E7) {
+          mSeekBarScale.setText("Seekbar Scale - " + 3.6978595474472E7);
+        } else if (mapScale >= 1.8489297737236E7 && mapScale <= 3.6978595474472E7) {
           mSeekBar.setProgress(4);
-          mSeekBarScale.setText("Set Scale - " + 3.6978595474472E7);
-        } else if (mapScale == 1.8489297737236E7) {
+          mSeekBarScale.setText("Seekbar Scale - " + 1.8489297737236E7);
+        } else if (mapScale >= 9244648.868618 && mapScale <= 1.8489297737236E7) {
           mSeekBar.setProgress(5);
-          mSeekBarScale.setText("Set Scale - " + 1.8489297737236E7);
-        } else if (mapScale == 9244648.868618) {
+          mSeekBarScale.setText("Seekbar Scale - " + 9244648.868618);
+        } else if (mapScale >= 4622324.434309 && mapScale <= 9244648.868618) {
           mSeekBar.setProgress(6);
-          mSeekBarScale.setText("Set Scale - " + 9244648.868618);
-        } else if (mapScale == 4622324.434309) {
+          mSeekBarScale.setText("Seekbar Scale - " + 4622324.434309);
+        } else if (mapScale >= 2311162.217155 && mapScale <= 4622324.434309) {
           mSeekBar.setProgress(7);
-          mSeekBarScale.setText("Set Scale - " + 4622324.434309);
-        } else if (mapScale == 2311162.217155) {
+          mSeekBarScale.setText("Seekbar Scale - " + 2311162.217155);
+        } else if (mapScale >= 1155581.108577 && mapScale <= 2311162.217155) {
           mSeekBar.setProgress(8);
-          mSeekBarScale.setText("Set Scale - " + 2311162.217155);
-        } else if (mapScale == 1155581.108577) {
+          mSeekBarScale.setText("Seekbar Scale - " + 1155581.108577);
+        } else if (mapScale >= 577790.554289 && mapScale <= 1155581.108577) {
           mSeekBar.setProgress(9);
-          mSeekBarScale.setText("Set Scale - " + 1155581.108577);
-        } else if (mapScale == 577790.554289) {
+          mSeekBarScale.setText("Seekbar Scale - " + 577790.554289);
+        } else if (mapScale >= 288895.277144 && mapScale <= 577790.554289) {
           mSeekBar.setProgress(10);
-          mSeekBarScale.setText("Set Scale - " + 577790.554289);
-        } else if (mapScale == 288895.277144) {
+          mSeekBarScale.setText("Seekbar Scale - " + 288895.277144);
+        } else if (mapScale >= 144447.638572 && mapScale <= 288895.277144) {
           mSeekBar.setProgress(11);
-          mSeekBarScale.setText("Set Scale - " + 288895.277144);
-        } else if (mapScale == 144447.638572) {
+          mSeekBarScale.setText("Seekbar Scale - " + 144447.638572);
+        } else if (mapScale >= 72223.819286 && mapScale <= 144447.638572) {
           mSeekBar.setProgress(12);
-          mSeekBarScale.setText("Set Scale - " + 144447.638572);
-        } else if (mapScale == 72223.819286) {
+          mSeekBarScale.setText("Seekbar Scale - " + 72223.819286);
+        } else if (mapScale >= 36111.909643 && mapScale <= 72223.819286) {
           mSeekBar.setProgress(13);
-          mSeekBarScale.setText("Set Scale - " + 72223.819286);
-        } else if (mapScale == 36111.909643) {
+          mSeekBarScale.setText("Seekbar Scale - " + 36111.909643);
+        } else if (mapScale >= 18055.954822 && mapScale <= 36111.909643) {
           mSeekBar.setProgress(14);
-          mSeekBarScale.setText("Set Scale - " + 36111.909643);
-        } else if (mapScale == 18055.954822) {
+          mSeekBarScale.setText("Seekbar Scale - " + 18055.954822);
+        } else if (mapScale >= 9027.977411 && mapScale <= 18055.954822) {
           mSeekBar.setProgress(15);
-          mSeekBarScale.setText("Set Scale - " + 18055.954822);
-        } else if (mapScale == 9027.977411) {
+          mSeekBarScale.setText("Seekbar Scale - " + 9027.977411);
+        } else if (mapScale >= 4513.988705 && mapScale <= 9027.977411) {
           mSeekBar.setProgress(16);
-          mSeekBarScale.setText("Set Scale - " + 9027.977411);
-        } else if (mapScale == 4513.988705) {
+          mSeekBarScale.setText("Seekbar Scale - " + 4513.988705);
+        } else if (mapScale >= 2256.994353 && mapScale <= 4513.988705) {
           mSeekBar.setProgress(17);
-          mSeekBarScale.setText("Set Scale - " + 4513.988705);
-        } else if (mapScale == 2256.994353) {
+          mSeekBarScale.setText("Seekbar Scale - " + 2256.994353);
+        } else if (mapScale >= 1128.497176 && mapScale <= 2256.994353) {
           mSeekBar.setProgress(18);
-          mSeekBarScale.setText("Set Scale - " + 2256.994353);
-        } else if (mapScale == 1128.497176) {
+          mSeekBarScale.setText("Seekbar Scale - " + 1128.497176);
+        } else if (mapScale >= 564.248588 && mapScale <= 1128.497176) {
           mSeekBar.setProgress(19);
-          mSeekBarScale.setText("Set Scale - " + 1128.497176);
-        } else if (mapScale == 564.248588) {
+          mSeekBarScale.setText("Seekbar Scale - " + 564.248588);
+        } else if (mapScale >= 282.124294 && mapScale <= 564.248588) {
           mSeekBar.setProgress(20);
-          mSeekBarScale.setText("Set Scale - " + 564.248588);
-        } else if (mapScale == 282.124294) {
+          mSeekBarScale.setText("Seekbar Scale - " + 282.124294);
+        } else if (mapScale >= 141.062147 && mapScale <= 282.124294) {
           mSeekBar.setProgress(21);
-          mSeekBarScale.setText("Set Scale - " + 282.124294);
-        } else if (mapScale == 141.062147) {
+          mSeekBarScale.setText("Seekbar Scale - " + 141.062147);
+        } else if (mapScale >= 70.5310735 && mapScale <= 141.062147) {
           mSeekBar.setProgress(22);
-          mSeekBarScale.setText("Set Scale - " + 141.062147);
-        } else if (mapScale == 70.5310735) {
-          mSeekBar.setProgress(23);
-          mSeekBarScale.setText("Set Scale - " + 70.5310735);
+          mSeekBarScale.setText("Seekbar Scale - " + 70.5310735);
         }
-
       }
     });
 
   }
+
 
   @Override
   protected void onPause() {
