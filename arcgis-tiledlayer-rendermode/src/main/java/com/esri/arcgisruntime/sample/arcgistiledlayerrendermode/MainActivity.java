@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2016 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,10 +40,15 @@ import com.esri.arcgisruntime.sample.android.widget.VerticalSeekBar;
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
+
   private List<String> mRendermodeSpinnerList;
+
   private ArrayAdapter<String> mDataAdapter;
+
   private VerticalSeekBar mSeekBar;
+
   private TextView mSeekBarScale;
+
   private TextView mMapViewScale;
 
   @Override
@@ -54,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
 
-    final ArcGISTiledLayer tiledLayerBaseMap = new ArcGISTiledLayer(getResources().getString(R.string.world_topo_service));
+    final ArcGISTiledLayer tiledLayerBaseMap = new ArcGISTiledLayer(
+        getResources().getString(R.string.world_topo_service));
 
     // set tiled layer as basemap
     Basemap basemap = new Basemap(tiledLayerBaseMap);
@@ -81,19 +87,20 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
-          case 0 :
+          case 0:
             tiledLayerBaseMap.setRenderMode(ImageTiledLayer.RenderMode.DEFAULT);
             break;
-          case 1 :
+          case 1:
             tiledLayerBaseMap.setRenderMode(ImageTiledLayer.RenderMode.AESTHETIC);
             break;
-          case 2 :
+          case 2:
             tiledLayerBaseMap.setRenderMode(ImageTiledLayer.RenderMode.SCALE);
             break;
 
         }
 
       }
+
       @Override
       public void onNothingSelected(AdapterView<?> parent) {
       }
@@ -108,100 +115,100 @@ public class MainActivity extends AppCompatActivity {
         switch (progress) {
           case 0:
             mMapView.setViewpointScaleAsync(5.91657527591555E8);
-            mSeekBarScale.setText("Seekbar Scale - "+ 5.91657527591555E8);
+            mSeekBarScale.setText("Seekbar Scale - " + 5.91657527591555E8);
             break;
           case 1:
             mMapView.setViewpointScaleAsync(2.95828763795777E8);
-            mSeekBarScale.setText("Seekbar Scale - "+ 2.95828763795777E8);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 2.95828763795777E8);
+            break;
           case 2:
             mMapView.setViewpointScaleAsync(1.47914381897889E8);
-            mSeekBarScale.setText("Seekbar Scale - "+ 1.47914381897889E8);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 1.47914381897889E8);
+            break;
           case 3:
             mMapView.setViewpointScaleAsync(7.3957190948944E7);
-            mSeekBarScale.setText("Seekbar Scale - "+ 7.3957190948944E7);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 7.3957190948944E7);
+            break;
           case 4:
             mMapView.setViewpointScaleAsync(3.6978595474472E7);
-            mSeekBarScale.setText("Seekbar Scale - "+ 3.6978595474472E7);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 3.6978595474472E7);
+            break;
           case 5:
             mMapView.setViewpointScaleAsync(1.8489297737236E7);
-            mSeekBarScale.setText("Seekbar Scale - "+ 1.8489297737236E7);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 1.8489297737236E7);
+            break;
           case 6:
             mMapView.setViewpointScaleAsync(9244648.868618);
-            mSeekBarScale.setText("Seekbar Scale - "+ 9244648.868618);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 9244648.868618);
+            break;
           case 7:
             mMapView.setViewpointScaleAsync(4622324.434309);
-            mSeekBarScale.setText("Seekbar Scale - "+ 4622324.434309);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 4622324.434309);
+            break;
           case 8:
             mMapView.setViewpointScaleAsync(2311162.217155);
-            mSeekBarScale.setText("Seekbar Scale - "+ 2311162.217155);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 2311162.217155);
+            break;
           case 9:
             mMapView.setViewpointScaleAsync(1155581.108577);
-            mSeekBarScale.setText("Seekbar Scale - "+ 1155581.108577);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 1155581.108577);
+            break;
           case 10:
             mMapView.setViewpointScaleAsync(577790.554289);
-            mSeekBarScale.setText("Seekbar Scale - "+ 577790.554289);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 577790.554289);
+            break;
           case 11:
             mMapView.setViewpointScaleAsync(288895.277144);
-            mSeekBarScale.setText("Seekbar Scale - "+ 288895.277144);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 288895.277144);
+            break;
           case 12:
             mMapView.setViewpointScaleAsync(144447.638572);
-            mSeekBarScale.setText("Seekbar Scale - "+ 144447.638572);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 144447.638572);
+            break;
           case 13:
             mMapView.setViewpointScaleAsync(72223.819286);
-            mSeekBarScale.setText("Seekbar Scale - "+ 72223.819286);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 72223.819286);
+            break;
           case 14:
             mMapView.setViewpointScaleAsync(36111.909643);
-            mSeekBarScale.setText("Seekbar Scale - "+ 36111.909643);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 36111.909643);
+            break;
           case 15:
             mMapView.setViewpointScaleAsync(18055.954822);
-            mSeekBarScale.setText("Seekbar Scale - "+ 18055.954822);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 18055.954822);
+            break;
           case 16:
             mMapView.setViewpointScaleAsync(9027.977411);
-            mSeekBarScale.setText("Seekbar Scale - "+ 9027.977411);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 9027.977411);
+            break;
           case 17:
             mMapView.setViewpointScaleAsync(4513.988705);
-            mSeekBarScale.setText("Seekbar Scale - "+ 4513.988705);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 4513.988705);
+            break;
           case 18:
             mMapView.setViewpointScaleAsync(2256.994353);
-            mSeekBarScale.setText("Seekbar Scale - "+ 2256.994353);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 2256.994353);
+            break;
           case 19:
             mMapView.setViewpointScaleAsync(1128.497176);
-            mSeekBarScale.setText("Seekbar Scale - "+ 1128.497176);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 1128.497176);
+            break;
           case 20:
             mMapView.setViewpointScaleAsync(564.248588);
-            mSeekBarScale.setText("Seekbar Scale - "+ 564.248588);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 564.248588);
+            break;
           case 21:
             mMapView.setViewpointScaleAsync(282.124294);
-            mSeekBarScale.setText("Seekbar Scale - "+ 282.124294);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 282.124294);
+            break;
           case 22:
             mMapView.setViewpointScaleAsync(141.062147);
-            mSeekBarScale.setText("Seekbar Scale - "+ 141.062147);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 141.062147);
+            break;
           case 23:
             mMapView.setViewpointScaleAsync(70.5310735);
-            mSeekBarScale.setText("Seekbar Scale - "+ 70.5310735);
-          break;
+            mSeekBarScale.setText("Seekbar Scale - " + 70.5310735);
+            break;
         }
       }
 
@@ -227,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (mapScale >= 7.3957190948944E7 && mapScale <= 1.47914381897889E8) {
           mSeekBar.setProgress(2);
           mSeekBarScale.setText("Seekbar Scale - " + 7.3957190948944E7);
-        } else if (mapScale >= 3.6978595474472E7 && mapScale <= 7.3957190948944E7 ) {
+        } else if (mapScale >= 3.6978595474472E7 && mapScale <= 7.3957190948944E7) {
           mSeekBar.setProgress(3);
           mSeekBarScale.setText("Seekbar Scale - " + 3.6978595474472E7);
         } else if (mapScale >= 1.8489297737236E7 && mapScale <= 3.6978595474472E7) {
@@ -290,9 +297,7 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     });
-
   }
-
 
   @Override
   protected void onPause() {
