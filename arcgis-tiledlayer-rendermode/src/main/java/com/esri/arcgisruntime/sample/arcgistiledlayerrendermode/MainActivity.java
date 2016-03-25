@@ -41,15 +41,11 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
 
-  private List<String> mRendermodeSpinnerList;
-
-  private ArrayAdapter<String> mDataAdapter;
-
-  private VerticalSeekBar mSeekBar;
+  private VerticalSeekBar mMapScaleSeekBar;
 
   private TextView mSeekBarScale;
 
-  private TextView mMapViewScale;
+  private TextView mMapScale;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
 
+    // create new Tiled Layer from service url
     final ArcGISTiledLayer tiledLayerBaseMap = new ArcGISTiledLayer(
         getResources().getString(R.string.world_topo_service));
 
@@ -69,20 +66,25 @@ public class MainActivity extends AppCompatActivity {
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
-    // populate the spinner list with default bookmark names
+    // inflate the map scale seekbar
+    mMapScaleSeekBar = (VerticalSeekBar) findViewById(R.id.seekBar);
+    // inflate text views
+    mSeekBarScale = (TextView) findViewById(R.id.seekbarscale);
+    mMapScale = (TextView) findViewById(R.id.mapviewscale);
+
+    // populate the spinner list with possible Render Mode values
     Spinner rendermodesSpinner = (Spinner) findViewById(R.id.rendermodesspinner);
-    mRendermodeSpinnerList = new ArrayList<>();
+    List<String> mRendermodeSpinnerList = new ArrayList<>();
     mRendermodeSpinnerList.add("RenderMode - DEFAULT");
     mRendermodeSpinnerList.add("RenderMode - AESTHETIC");
     mRendermodeSpinnerList.add("RenderMode - SCALE");
 
-    // initialize the adapter for the bookmarks spinner
-    mDataAdapter = new ArrayAdapter<>(this,
+    // initialize the adapter for the rendermodes spinner
+    ArrayAdapter<String> mDataAdapter = new ArrayAdapter<>(this,
         R.layout.spinner_item, mRendermodeSpinnerList);
     rendermodesSpinner.setAdapter(mDataAdapter);
 
-    // when an item is selected in the spinner set the mapview viewpoint to the selected
-    // bookmark's viewpoint
+    // when an item is selected in the spinner set the respective tiled layer Render mode
     rendermodesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -96,21 +98,15 @@ public class MainActivity extends AppCompatActivity {
           case 2:
             tiledLayerBaseMap.setRenderMode(ImageTiledLayer.RenderMode.SCALE);
             break;
-
         }
-
       }
-
       @Override
       public void onNothingSelected(AdapterView<?> parent) {
       }
     });
 
-    mSeekBar = (VerticalSeekBar) findViewById(R.id.seekBar);
-    mSeekBarScale = (TextView) findViewById(R.id.seekbarscale);
-    mMapViewScale = (TextView) findViewById(R.id.mapviewscale);
-
-    mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+    // update the map scale with the value corresponding to the seekbar position
+    mMapScaleSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         switch (progress) {
           case 0:
@@ -221,78 +217,81 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
+    // Update the textview with the Map Scale value and updates the progress of the seekbar
     mMapView.addVisibleAreaChangedListener(new VisibleAreaChangedListener() {
       @Override public void visibleAreaChanged(VisibleAreaChangedEvent visibleAreaChangedEvent) {
         double mapScale = mMapView.getMapScale();
-        mMapViewScale.setText("Actual Scale - " + mapScale);
+        // Update the textview with the MapScale value
+        mMapScale.setText("Actual Scale - " + mapScale);
+        // Update the seekbar position
         if (mapScale >= 2.95828763795777E8 && mapScale <= 5.91657527591555E8) {
-          mSeekBar.setProgress(0);
+          mMapScaleSeekBar.setProgress(0);
           mSeekBarScale.setText("Seekbar Scale - " + 2.95828763795777E8);
         } else if (mapScale >= 1.47914381897889E8 && mapScale <= 2.95828763795777E8) {
-          mSeekBar.setProgress(1);
+          mMapScaleSeekBar.setProgress(1);
           mSeekBarScale.setText("Seekbar Scale - " + 1.47914381897889E8);
         } else if (mapScale >= 7.3957190948944E7 && mapScale <= 1.47914381897889E8) {
-          mSeekBar.setProgress(2);
+          mMapScaleSeekBar.setProgress(2);
           mSeekBarScale.setText("Seekbar Scale - " + 7.3957190948944E7);
         } else if (mapScale >= 3.6978595474472E7 && mapScale <= 7.3957190948944E7) {
-          mSeekBar.setProgress(3);
+          mMapScaleSeekBar.setProgress(3);
           mSeekBarScale.setText("Seekbar Scale - " + 3.6978595474472E7);
         } else if (mapScale >= 1.8489297737236E7 && mapScale <= 3.6978595474472E7) {
-          mSeekBar.setProgress(4);
+          mMapScaleSeekBar.setProgress(4);
           mSeekBarScale.setText("Seekbar Scale - " + 1.8489297737236E7);
         } else if (mapScale >= 9244648.868618 && mapScale <= 1.8489297737236E7) {
-          mSeekBar.setProgress(5);
+          mMapScaleSeekBar.setProgress(5);
           mSeekBarScale.setText("Seekbar Scale - " + 9244648.868618);
         } else if (mapScale >= 4622324.434309 && mapScale <= 9244648.868618) {
-          mSeekBar.setProgress(6);
+          mMapScaleSeekBar.setProgress(6);
           mSeekBarScale.setText("Seekbar Scale - " + 4622324.434309);
         } else if (mapScale >= 2311162.217155 && mapScale <= 4622324.434309) {
-          mSeekBar.setProgress(7);
+          mMapScaleSeekBar.setProgress(7);
           mSeekBarScale.setText("Seekbar Scale - " + 2311162.217155);
         } else if (mapScale >= 1155581.108577 && mapScale <= 2311162.217155) {
-          mSeekBar.setProgress(8);
+          mMapScaleSeekBar.setProgress(8);
           mSeekBarScale.setText("Seekbar Scale - " + 1155581.108577);
         } else if (mapScale >= 577790.554289 && mapScale <= 1155581.108577) {
-          mSeekBar.setProgress(9);
+          mMapScaleSeekBar.setProgress(9);
           mSeekBarScale.setText("Seekbar Scale - " + 577790.554289);
         } else if (mapScale >= 288895.277144 && mapScale <= 577790.554289) {
-          mSeekBar.setProgress(10);
+          mMapScaleSeekBar.setProgress(10);
           mSeekBarScale.setText("Seekbar Scale - " + 288895.277144);
         } else if (mapScale >= 144447.638572 && mapScale <= 288895.277144) {
-          mSeekBar.setProgress(11);
+          mMapScaleSeekBar.setProgress(11);
           mSeekBarScale.setText("Seekbar Scale - " + 144447.638572);
         } else if (mapScale >= 72223.819286 && mapScale <= 144447.638572) {
-          mSeekBar.setProgress(12);
+          mMapScaleSeekBar.setProgress(12);
           mSeekBarScale.setText("Seekbar Scale - " + 72223.819286);
         } else if (mapScale >= 36111.909643 && mapScale <= 72223.819286) {
-          mSeekBar.setProgress(13);
+          mMapScaleSeekBar.setProgress(13);
           mSeekBarScale.setText("Seekbar Scale - " + 36111.909643);
         } else if (mapScale >= 18055.954822 && mapScale <= 36111.909643) {
-          mSeekBar.setProgress(14);
+          mMapScaleSeekBar.setProgress(14);
           mSeekBarScale.setText("Seekbar Scale - " + 18055.954822);
         } else if (mapScale >= 9027.977411 && mapScale <= 18055.954822) {
-          mSeekBar.setProgress(15);
+          mMapScaleSeekBar.setProgress(15);
           mSeekBarScale.setText("Seekbar Scale - " + 9027.977411);
         } else if (mapScale >= 4513.988705 && mapScale <= 9027.977411) {
-          mSeekBar.setProgress(16);
+          mMapScaleSeekBar.setProgress(16);
           mSeekBarScale.setText("Seekbar Scale - " + 4513.988705);
         } else if (mapScale >= 2256.994353 && mapScale <= 4513.988705) {
-          mSeekBar.setProgress(17);
+          mMapScaleSeekBar.setProgress(17);
           mSeekBarScale.setText("Seekbar Scale - " + 2256.994353);
         } else if (mapScale >= 1128.497176 && mapScale <= 2256.994353) {
-          mSeekBar.setProgress(18);
+          mMapScaleSeekBar.setProgress(18);
           mSeekBarScale.setText("Seekbar Scale - " + 1128.497176);
         } else if (mapScale >= 564.248588 && mapScale <= 1128.497176) {
-          mSeekBar.setProgress(19);
+          mMapScaleSeekBar.setProgress(19);
           mSeekBarScale.setText("Seekbar Scale - " + 564.248588);
         } else if (mapScale >= 282.124294 && mapScale <= 564.248588) {
-          mSeekBar.setProgress(20);
+          mMapScaleSeekBar.setProgress(20);
           mSeekBarScale.setText("Seekbar Scale - " + 282.124294);
         } else if (mapScale >= 141.062147 && mapScale <= 282.124294) {
-          mSeekBar.setProgress(21);
+          mMapScaleSeekBar.setProgress(21);
           mSeekBarScale.setText("Seekbar Scale - " + 141.062147);
         } else if (mapScale >= 70.5310735 && mapScale <= 141.062147) {
-          mSeekBar.setProgress(22);
+          mMapScaleSeekBar.setProgress(22);
           mSeekBarScale.setText("Seekbar Scale - " + 70.5310735);
         }
       }
