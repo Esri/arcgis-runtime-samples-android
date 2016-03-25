@@ -1,5 +1,5 @@
 # ArcGIS Tiled Layer Render Mode
 
-![](arcgis-tiledlayer-rendermode.png.png)
+![](arcgis-tiledlayer-rendermode.png)
 
 
