@@ -3,4 +3,7 @@
 
     <!-- World Topo Map Service URL -->
     <string name="world_topo_service">http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer</string>
+
+    <string name="seekbar_scale">Seekbar Scale - %1$g</string>
+
 </resources>
