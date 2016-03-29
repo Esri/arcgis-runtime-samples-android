@@ -1,18 +1,18 @@
 <resources>
-    <string name="app_name">vector-tile-layer</string>
+    <string name="app_name">vector-tiled-layer</string>
 
     <string name="navigation_url">http://www.arcgis.com/sharing/rest/content/items/00cd8e843bae49b3a040423e5d65416b/resources/styles/root.json</string>
     <string name="streets_url">http://www.arcgis.com/sharing/rest/content/items/3b8814f6ddbd485cae67e8018992246e/resources/styles/root.json</string>
     <string name="night_url">http://www.arcgis.com/sharing/rest/content/items/f96366254a564adda1dc468b447ed956/resources/styles/root.json</string>
     <string name="topographic_url">http://www.arcgis.com/sharing/rest/content/items/be44936bcdd24db588a1ae5076e36f34/resources/styles/root.json</string>
 
-    <string-array name="vector_tile_types">
+    <string-array name="vector_tiled_types">
         <item>Navigation</item>
         <item>Streets</item>
         <item>Night</item>
         <item>Topographic</item>
     </string-array>
 
-    <string name="vector_tile_layer">Vector Tile Layer - %1$s</string>
+    <string name="vector_tiled_layer">Vector Tiled Layer - %1$s</string>
 
 </resources>

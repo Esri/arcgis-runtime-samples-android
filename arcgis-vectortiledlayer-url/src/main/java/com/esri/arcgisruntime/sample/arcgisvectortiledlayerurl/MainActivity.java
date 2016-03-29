@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // inflate navigation drawer
-    mNavigationDrawerItemTitles= getResources().getStringArray(R.array.vector_tile_types);
+    mNavigationDrawerItemTitles= getResources().getStringArray(R.array.vector_tiled_types);
     mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     // Set the list's click listener
     mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-    // set the navigation vector tile layer item in the navigation drawer to selected
+    // set the navigation vector tiled layer item in the navigation drawer to selected
     mDrawerList.setItemChecked(0, true);
   }
 
@@ -86,28 +86,28 @@ public class MainActivity extends AppCompatActivity {
 
     // update selected item and title, then close the drawer
     mDrawerList.setItemChecked(position, true);
-    setTitle(getString(R.string.vector_tile_layer, mNavigationDrawerItemTitles[position]));
+    setTitle(getString(R.string.vector_tiled_layer, mNavigationDrawerItemTitles[position]));
     mDrawerLayout.closeDrawer(mDrawerList);
 
-    // update the MapView with the selected vector tile layer type
-    String vectorTileLayerUrl = null;
+    // update the MapView with the selected vector tiled layer type
+    String vectorTiledLayerUrl = null;
 
     switch (position) {
       case 0:
-        vectorTileLayerUrl = getResources().getString(R.string.navigation_url);
+        vectorTiledLayerUrl = getResources().getString(R.string.navigation_url);
         break;
       case 1:
-        vectorTileLayerUrl = getResources().getString(R.string.streets_url);
+        vectorTiledLayerUrl = getResources().getString(R.string.streets_url);
         break;
       case 2:
-        vectorTileLayerUrl = getResources().getString(R.string.night_url);
+        vectorTiledLayerUrl = getResources().getString(R.string.night_url);
         break;
       case 3:
-        vectorTileLayerUrl = getResources().getString(R.string.topographic_url);
+        vectorTiledLayerUrl = getResources().getString(R.string.topographic_url);
         break;
     }
     // create the new vector tiled layer using the url
-    mVectorTiledLayer = new ArcGISVectorTiledLayer(vectorTileLayerUrl);
+    mVectorTiledLayer = new ArcGISVectorTiledLayer(vectorTiledLayerUrl);
     // change the basemap to the new layer
     mMapView.getMap().setBasemap(new Basemap(mVectorTiledLayer));
   }
