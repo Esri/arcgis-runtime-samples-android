@@ -13,4 +13,6 @@
         <item>Topographic</item>
     </string-array>
 
+    <string name="vector_tile_layer">Vector Tile Layer - %1$s</string>
+
 </resources>

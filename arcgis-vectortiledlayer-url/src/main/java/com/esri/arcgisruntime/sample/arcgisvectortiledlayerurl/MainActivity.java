@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
     // Set the list's click listener
     mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
+    // set the navigation vector tile layer item in the navigation drawer to selected
+    mDrawerList.setItemChecked(0, true);
   }
 
   /**
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     // update selected item and title, then close the drawer
     mDrawerList.setItemChecked(position, true);
-    setTitle(mNavigationDrawerItemTitles[position]);
+    setTitle(getString(R.string.vector_tile_layer, mNavigationDrawerItemTitles[position]));
     mDrawerLayout.closeDrawer(mDrawerList);
 
     // update the MapView with the selected vector tile layer type
