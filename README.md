@@ -1,5 +1,3 @@
-# NOTE: This is an active development branch of the [ArcGIS Runtime SDK For Android](http://developers.arcgis.com/android/beta) sample app modules for Quartz Beta.  The sample apps in this branch will not compile against the latest beta version as they are updated to work with the next release of the beta.  Please use the [quartz-beta](https://github.com/Esri/arcgis-runtime-samples-android/tree/quartz-beta) branch for samples that work with the latest beta version available.  You can inspect this branch to see the changes coming in the next beta release.  
-
 # Overview
 This branch contains [ArcGIS Runtime SDK For Android](http://developers.arcgis.com/android/beta) sample app modules for Quartz Beta (v100.0.0-beta-2) that can be run from within the Android Studio IDE.  
 
@@ -8,7 +6,7 @@ This branch contains [ArcGIS Runtime SDK For Android](http://developers.arcgis.c
 The ```master``` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK For Android](https://developers.arcgis.com/android/).  Samples released under older versions can be found through the [repository releases](https://github.com/Esri/arcgis-runtime-samples-android/releases).
 
 # Prerequisites
-* The samples are building with ```compileSdkVersion 22``` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* The samples are building with ```compileSdkVersion 23``` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [Android Studio](http://developer.android.com/sdk/index.html)
 
 # Developer Instructions
@@ -142,7 +140,7 @@ Anyone and everyone is welcome to contribute. We do accept pull requests.
 Please see our [guidelines for contributing doc](https://github.com/Esri/contributing/blob/master/README.md)
 
 ## Licensing
-Copyright 2015 Esri
+Copyright 2016 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
