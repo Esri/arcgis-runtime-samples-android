@@ -13,6 +13,7 @@
 
 package com.esri.arcgisruntime.samples.featurelayerselection;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -29,10 +30,9 @@ import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.Viewpoint;
-import com.esri.arcgisruntime.symbology.RgbColor;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         // create a map with the streets basemap
         final Map map = new Map(Basemap.createStreets());
         //set an initial viewpointf
-        map.setInitialViewpoint(new Viewpoint(new Envelope(-1131596.019761, 3893114.069099, 3926705.982140, 7977912.461790, 0, 0, 0, 0, SpatialReferences.getWebMercator())));
+        map.setInitialViewpoint(new Viewpoint(new Envelope(-1131596.019761, 3893114.069099, 3926705.982140, 7977912.461790, SpatialReferences.getWebMercator())));
         // set the map to be displayed in the mapview
         mMapView.setMap(map);
 
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
         // create the feature layer using the service feature table
         final FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
-        featureLayer.setSelectionColor(new RgbColor(0, 255, 255, 255)); //cyan, fully opaque
+        featureLayer.setSelectionColor(Color.rgb(0, 255, 255)); //cyan, fully opaque
         featureLayer.setSelectionWidth(3);
         // add the layer to the map
         map.getOperationalLayers().add(featureLayer);
@@ -74,10 +74,9 @@ public class MainActivity extends AppCompatActivity {
                 double mapTolerance = tolerance * mMapView.getUnitsPerPixel();
 
                 // create objects required to do a selection with a query
-                Envelope envelope = new Envelope(clickPoint.getX() - mapTolerance, clickPoint.getY() - mapTolerance, clickPoint.getX() + mapTolerance, clickPoint.getY() + mapTolerance, 0, 0, 0, 0, map.getSpatialReference());
+                Envelope envelope = new Envelope(clickPoint.getX() - mapTolerance, clickPoint.getY() - mapTolerance, clickPoint.getX() + mapTolerance, clickPoint.getY() + mapTolerance, map.getSpatialReference());
                 QueryParameters query = new QueryParameters();
                 query.setGeometry(envelope);
-                query.getOutFields().add("*");
 
                 // call select features
                 final ListenableFuture<FeatureQueryResult> future = featureLayer.selectFeatures(query, FeatureLayer.SelectionMode.NEW);

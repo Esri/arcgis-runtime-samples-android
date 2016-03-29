@@ -14,8 +14,9 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.graphicsoverlayrenderer;
+package com.esri.arcgisruntime.sample.addgraphicsrenderer;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -23,15 +24,13 @@ import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polygon;
-import com.esri.arcgisruntime.mapping.BasemapType;
+import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.SpatialReferenceChangedEvent;
-import com.esri.arcgisruntime.mapping.view.SpatialReferenceChangedListener;
-import com.esri.arcgisruntime.symbology.Color;
-import com.esri.arcgisruntime.symbology.RgbColor;
+import com.esri.arcgisruntime.mapping.view.VisibleAreaChangedEvent;
+import com.esri.arcgisruntime.mapping.view.VisibleAreaChangedListener;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
 import com.esri.arcgisruntime.util.ListenableList;
@@ -48,15 +47,17 @@ public class MainActivity extends AppCompatActivity {
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
 
-        // create a map with the BasemapType topographic
-        Map mMap = new Map(BasemapType.TOPOGRAPHIC, 34.056295, -117.195800, 14);
+        // create a map with the Basemap Type topographic
+        Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 14);
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
 
         // work with the MapView after it has loaded
-        mMapView.addSpatialReferenceChangedListener(new SpatialReferenceChangedListener() {
+        mMapView.addVisibleAreaChangedListener(new VisibleAreaChangedListener() {
             @Override
-            public void spatialReferenceChanged(SpatialReferenceChangedEvent spatialReferenceChangedEvent) {
+            public void visibleAreaChanged(VisibleAreaChangedEvent visibleAreaChangedEvent) {
+                //remove the listener so it's only called once
+                mMapView.removeVisibleAreaChangedListener(this);
                 // add graphics overlay
                 addGraphicsOverlay();
             }
@@ -92,12 +93,11 @@ public class MainActivity extends AppCompatActivity {
             graphics.add(new Graphic(pt));
         }
         // create color for graphic
-        Color yellow = new RgbColor(255, 255, 0, 255);
+        int yellow = Color.rgb(255, 255, 0);
         // create simple renderer
         SimpleRenderer simpleRenderer = new SimpleRenderer();
         // create point symbol
         SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(yellow, 30, SimpleMarkerSymbol.Style.SQUARE);
-        pointSymbol.setOpacity(0.5f);
         // set symbol to renderer
         simpleRenderer.setSymbol(pointSymbol);
         // set renderer to graphics overlay

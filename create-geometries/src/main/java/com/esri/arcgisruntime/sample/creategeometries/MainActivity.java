@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.sample.creategeometries;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -31,7 +32,6 @@ import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.symbology.RgbColor;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
@@ -47,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     //[DocRef: Name=Create Envelope, Category=Fundamentals, Topic=Geometries]
     // create an Envelope using minimum and maximum x,y coordinates and a SpatialReference
-    Envelope envelope = new Envelope(-123.0, 33.5, -101.0, 48.0, 0.0, 0.0, 0.0, 0.0,
-        SpatialReferences.getWgs84());
+    Envelope envelope = new Envelope(-123.0, 33.5, -101.0, 48.0, SpatialReferences.getWgs84());
     //[DocRef: END]
 
     return envelope;
@@ -120,10 +119,10 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(mMap);
 
     // create color and symbols for drawing graphics
-    RgbColor blue = new RgbColor(0, 0, 255, 255);
+    int blue = Color.rgb(0, 0, 255);
     SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(blue, 14, SimpleMarkerSymbol.Style.TRIANGLE);
-    SimpleFillSymbol fillSymbol = new SimpleFillSymbol(blue, SimpleFillSymbol.Style.CROSS, null, 1.0f);
-    SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, blue, 3, 1.0f);
+    SimpleFillSymbol fillSymbol = new SimpleFillSymbol(blue, SimpleFillSymbol.Style.CROSS, null);
+    SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, blue, 3);
 
     // add a graphic of point, multipoint, polyline and polygon.
     GraphicsOverlay overlay = new GraphicsOverlay();

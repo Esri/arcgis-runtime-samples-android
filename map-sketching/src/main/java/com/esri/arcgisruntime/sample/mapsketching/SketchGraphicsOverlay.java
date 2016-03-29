@@ -22,6 +22,7 @@ import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.MotionEvent;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -34,7 +35,6 @@ import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.symbology.RgbColor;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
@@ -96,36 +96,36 @@ public class SketchGraphicsOverlay {
 
     // Outline symbols for outlining the main symbols
     SimpleLineSymbol blackOutline =
-            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0, 0, 0, 255), 1, 1.0f);
+            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(0, 0, 0), 1);
     SimpleLineSymbol whiteOutline =
-            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(255, 255, 255, 255), 1, 1.0f);
+            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(255, 255, 255), 1);
 
     // Create all the different symbols
     // When placing a point, it will be a red circle with black outline
     mPointPlacementSymbol =
-            new SimpleMarkerSymbol(new RgbColor(255, 0, 0, 255), 7, SimpleMarkerSymbol.Style.CIRCLE);
+            new SimpleMarkerSymbol(Color.rgb(255, 0, 0), 7, SimpleMarkerSymbol.Style.CIRCLE);
     mPointPlacementSymbol.setOutline(blackOutline);
     // A placed point (single point) will be a blue circle with black outline
     mPointPlacedSymbol =
-            new SimpleMarkerSymbol(new RgbColor(0, 0, 255, 255), 7, SimpleMarkerSymbol.Style.CIRCLE);
+            new SimpleMarkerSymbol(Color.rgb(0, 0, 255), 7, SimpleMarkerSymbol.Style.CIRCLE);
     mPointPlacedSymbol.setOutline(blackOutline);
     // A placed vertex of a polyline will be a blue square with a white outline
     mPolylineVertexSymbol =
-            new SimpleMarkerSymbol(new RgbColor(0, 0, 255, 255), 5, SimpleMarkerSymbol.Style.SQUARE);
+            new SimpleMarkerSymbol(Color.rgb(0, 0, 255), 5, SimpleMarkerSymbol.Style.SQUARE);
     mPolylineVertexSymbol.setOutline(whiteOutline);
     // While placing a polyline, the line will be red
     mPolylinePlacementSymbol =
-            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(255, 0, 0, 255), 1, 1.0f);
+            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(255, 0, 0), 1);
     // Once placed, a polyline will become blue
     mPolylinePlacedSymbol =
-            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, new RgbColor(0, 0, 255, 255), 1, 1.0f);
+            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(0, 0, 255), 1);
     // A midpoint of a polyline segment will be a semi-transparent white circle with black outline
     mPolylineMidpointSymbol =
-            new SimpleMarkerSymbol(new RgbColor(255, 255, 255, 192), 5, SimpleMarkerSymbol.Style.CIRCLE);
+            new SimpleMarkerSymbol(Color.rgb(255, 255, 255), 5, SimpleMarkerSymbol.Style.CIRCLE);
     mPolylineMidpointSymbol.setOutline(blackOutline);
     // Polygons will be filled with a semi-transparent black solid shade
     mPolygonFillSymbol =
-            new SimpleFillSymbol(new RgbColor(0, 0, 0, 128), SimpleFillSymbol.Style.SOLID, null, 0.5f);
+            new SimpleFillSymbol(Color.rgb(0, 0, 0), SimpleFillSymbol.Style.SOLID, null);
   }
 
   /**
@@ -504,7 +504,7 @@ public class SketchGraphicsOverlay {
       final android.graphics.Point screenPoint = new android.graphics.Point((int) event.getX(), (int) event.getY());
 
       // identify graphics on the sketch graphics overlay
-      final ListenableFuture<List<Graphic>> identifyGraphic = mMapView.identifyGraphicsOverlay(mGraphicsOverlay, screenPoint, 10.0, 2);
+      final ListenableFuture<List<Graphic>> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(mGraphicsOverlay, screenPoint, 10.0, 2);
 
       identifyGraphic.addDoneListener(new Runnable() {
         @Override

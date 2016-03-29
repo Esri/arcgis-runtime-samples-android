@@ -31,7 +31,10 @@ import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.Viewpoint;
+import com.esri.arcgisruntime.mapping.Viewpoint;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -74,10 +77,10 @@ public class MainActivity extends AppCompatActivity {
                 // for a specific 311 request type
                 params.setWhereClause("req_type = 'Tree Maintenance or Damage'");
                 // set all outfields
-                params.getOutFields().add("*");
-
+                List<String> outFields = new ArrayList<>();
+                outFields.add("*");
                 //populate the table based on the query, listen for result in a listenable future
-                final ListenableFuture<FeatureQueryResult> future = serviceFeatureTable.populateFromServiceAsync(params, true);
+                final ListenableFuture<FeatureQueryResult> future = serviceFeatureTable.populateFromServiceAsync(params, true, outFields);
                 //add done listener to the future which fires when the async method is complete
                 future.addDoneListener(new Runnable() {
                     @Override

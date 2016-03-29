@@ -1,12 +1,12 @@
 # Overview
-This branch contains [ArcGIS Runtime SDK For Android](http://developers.arcgis.com/android/beta) sample app modules for Quartz Beta (v100.0.0-beta-1) that can be run from within the Android Studio IDE.  
+This branch contains [ArcGIS Runtime SDK For Android](http://developers.arcgis.com/android/beta) sample app modules for Quartz Beta (v100.0.0-beta-2) that can be run from within the Android Studio IDE.  
 
 [Join the Beta!](http://bit.ly/RuntimeAndroidQuartz)
 
 The ```master``` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK For Android](https://developers.arcgis.com/android/).  Samples released under older versions can be found through the [repository releases](https://github.com/Esri/arcgis-runtime-samples-android/releases).
 
 # Prerequisites
-* The samples are building with ```compileSdkVersion 22``` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* The samples are building with ```compileSdkVersion 23``` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [Android Studio](http://developer.android.com/sdk/index.html)
 
 # Developer Instructions
@@ -19,7 +19,7 @@ subprojects{
     afterEvaluate {project ->
         if(project.hasProperty("dependencies")){
             dependencies {
-                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0-beta-1'
+                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0-beta-2'
             }
         }
     }
@@ -140,7 +140,7 @@ Anyone and everyone is welcome to contribute. We do accept pull requests.
 Please see our [guidelines for contributing doc](https://github.com/Esri/contributing/blob/master/README.md)
 
 ## Licensing
-Copyright 2015 Esri
+Copyright 2016 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
