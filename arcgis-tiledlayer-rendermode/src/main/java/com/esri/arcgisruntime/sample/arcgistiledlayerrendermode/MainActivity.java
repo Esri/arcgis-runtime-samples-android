@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
     // populate the spinner list with possible Render Mode values
     Spinner rendermodesSpinner = (Spinner) findViewById(R.id.rendermodesspinner);
     List<String> mRendermodeSpinnerList = new ArrayList<>();
-    mRendermodeSpinnerList.add("RenderMode - DEFAULT");
     mRendermodeSpinnerList.add("RenderMode - AESTHETIC");
     mRendermodeSpinnerList.add("RenderMode - SCALE");
 
@@ -90,12 +89,9 @@ public class MainActivity extends AppCompatActivity {
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
           case 0:
-            tiledLayerBaseMap.setRenderMode(ImageTiledLayer.RenderMode.DEFAULT);
-            break;
-          case 1:
             tiledLayerBaseMap.setRenderMode(ImageTiledLayer.RenderMode.AESTHETIC);
             break;
-          case 2:
+          case 1:
             tiledLayerBaseMap.setRenderMode(ImageTiledLayer.RenderMode.SCALE);
             break;
         }
