@@ -1,6 +1,6 @@
 # ArcGIS Tiled Layer Render Mode
 
-The sample demonstrates how the Tiled layer Render Mode affects what scale the layer is rendered at. There are 2 types of render modes, **SCALE** (which is the default) and **AESTHETIC**. **SCALE** always renders the layer at the correct scale which can result in a fuzzy effect on high DPI screens, **AESTHETIC** aims to ensure the layer draws clearly which will result in the map scale not being respected.
+The sample demonstrates how the Tiled layer Render Mode affects what scale the layer is rendered at. There are 2 types of render modes, **SCALE** (which is the default) and **AESTHETIC**. **SCALE** always renders the layer at the set scale which can result in a fuzzy effect on high DPI screens, **AESTHETIC** aims to ensure the layer renders clearly which will result in the layer scale not being respected.
 
 ![](arcgis-tiledlayer-rendermode.png)
 
