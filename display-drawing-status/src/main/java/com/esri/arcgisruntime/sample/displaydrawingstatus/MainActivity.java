@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         // set the map to be displayed in this view
         mMapView.setMap(map);
 
+        //[DocRef: Name=Monitor map drawing, Category=Work with maps, Topic=Display a map]
         mMapView.addDrawStatusChangedListener(new DrawStatusChangedListener() {
             @Override
             public void drawStatusChanged(DrawStatusChangedEvent drawStatusChangedEvent) {
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        //[DocRef: END]
     }
 
     @Override
