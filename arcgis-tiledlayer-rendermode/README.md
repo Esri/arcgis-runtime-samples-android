@@ -15,4 +15,4 @@ The sample demonstrates how the Tiled layer Render Mode affects what scale the l
 * MapView
 
 ## How to use the sample
-The ArcGIS Tile Layer Render Mode app uses a Tiled layer basemap from an ArcGIS Online service URL. The **RenderMode** spinner lets to select the various possible Render Modes. The user can zoom in/out on the map to visually observe the impact of the Render Mode selected.
+The ArcGIS Tile Layer Render Mode app uses a Tiled layer basemap from an ArcGIS Online service URL. The **RenderMode** spinner lets user select the various possible Render Modes. The user can zoom in/out on the map to visually observe the impact of the Render Mode selected.
