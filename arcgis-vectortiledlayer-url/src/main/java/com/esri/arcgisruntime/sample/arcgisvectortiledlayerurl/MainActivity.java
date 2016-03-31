@@ -187,11 +187,7 @@ public class MainActivity extends AppCompatActivity {
     int id = item.getItemId();
 
     // Activate the navigation drawer toggle
-    if (mDrawerToggle.onOptionsItemSelected(item)) {
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
+    return (mDrawerToggle.onOptionsItemSelected(item)) || super.onOptionsItemSelected(item);
   }
 
 }
