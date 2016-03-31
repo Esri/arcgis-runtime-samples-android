@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //[DocRef: Name=Picture Marker Symbol Drawable, Category=Fundamentals, Topic=Symbols and Renderers]
+        //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
         //Create a picture marker symbol from an app resource
         BitmapDrawable pinStarBlueDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin_star_blue);
         final PictureMarkerSymbol pinStarBlueSymbol = new PictureMarkerSymbol(pinStarBlueDrawable);
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         //Check sample has access to external storage
         if (saveResourceToExternalStorage()){
 
-            //[DocRef: Name=Picture Marker Symbol File, Category=Fundamentals, Topic=Symbols and Renderers]
+            //[DocRef: Name=Picture Marker Symbol File-android, Category=Fundamentals, Topic=Symbols and Renderers]
             //Create a picture marker symbol from a file on disk
             BitmapDrawable pinBlankOrangeDrawable = (BitmapDrawable) Drawable.createFromPath(mPinBlankOrangeFilePath);
             final PictureMarkerSymbol pinBlankOrangeSymbol = new PictureMarkerSymbol(pinBlankOrangeDrawable);
