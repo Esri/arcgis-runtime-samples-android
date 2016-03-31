@@ -15,4 +15,7 @@
 
     <string name="vector_tiled_layer">Vector Tiled Layer - %1$s</string>
 
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
 </resources>

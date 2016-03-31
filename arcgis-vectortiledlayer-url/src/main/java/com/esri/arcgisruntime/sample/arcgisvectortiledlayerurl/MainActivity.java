@@ -16,9 +16,13 @@
 
 package com.esri.arcgisruntime.sample.arcgisvectortiledlayerurl;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,6 +31,7 @@ import android.widget.ListView;
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
   private String[] mNavigationDrawerItemTitles;
   private DrawerLayout mDrawerLayout;
   private ListView mDrawerList;
+  private ActionBarDrawerToggle mDrawerToggle;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -54,32 +60,42 @@ public class MainActivity extends AppCompatActivity {
     Basemap basemap = new Basemap(mVectorTiledLayer);
     // create a map with the basemap
     Map map = new Map(basemap);
+    // create a viewpoint from lat, long, scale
+    Viewpoint vp = new Viewpoint(47.606726, -122.335564, 72223.819286);
+    // set initial map extent
+    map.setInitialViewpoint(vp);
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
     // inflate navigation drawer
-    mNavigationDrawerItemTitles= getResources().getStringArray(R.array.vector_tiled_types);
+    mNavigationDrawerItemTitles = getResources().getStringArray(R.array.vector_tiled_types);
     mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
     // Set the adapter for the list view
     mDrawerList.setAdapter(new ArrayAdapter<>(this,
-            R.layout.drawer_list_item, mNavigationDrawerItemTitles));
+        R.layout.drawer_list_item, mNavigationDrawerItemTitles));
     // Set the list's click listener
     mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
     // set the navigation vector tiled layer item in the navigation drawer to selected
     mDrawerList.setItemChecked(0, true);
+
+    setupDrawer();
+
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setHomeButtonEnabled(true);
+    setTitle(getString(R.string.vector_tiled_layer, mNavigationDrawerItemTitles[0]));
   }
 
   @Override
-  protected void onPause(){
+  protected void onPause() {
     super.onPause();
     mMapView.pause();
   }
 
   @Override
-  protected void onResume(){
+  protected void onResume() {
     super.onResume();
     mMapView.resume();
   }
@@ -122,6 +138,56 @@ public class MainActivity extends AppCompatActivity {
     mVectorTiledLayer = new ArcGISVectorTiledLayer(vectorTiledLayerUrl);
     // change the basemap to the new layer
     mMapView.getMap().setBasemap(new Basemap(mVectorTiledLayer));
+  }
+
+  private void setupDrawer() {
+    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+
+      /** Called when a drawer has settled in a completely open state. */
+      public void onDrawerOpened(View drawerView) {
+        super.onDrawerOpened(drawerView);
+        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+      }
+
+      /** Called when a drawer has settled in a completely closed state. */
+      public void onDrawerClosed(View view) {
+        super.onDrawerClosed(view);
+        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+      }
+    };
+
+    mDrawerToggle.setDrawerIndicatorEnabled(true);
+    mDrawerLayout.setDrawerListener(mDrawerToggle);
+  }
+
+  @Override
+  protected void onPostCreate(Bundle savedInstanceState) {
+    super.onPostCreate(savedInstanceState);
+    // Sync the toggle state after onRestoreInstanceState has occurred.
+    mDrawerToggle.syncState();
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    mDrawerToggle.onConfigurationChanged(newConfig);
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.menu_main, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle action bar item clicks here. The action bar will
+    // automatically handle clicks on the Home/Up button, so long
+    // as you specify a parent activity in AndroidManifest.xml.
+
+    // Activate the navigation drawer toggle
+    return (mDrawerToggle.onOptionsItemSelected(item)) || super.onOptionsItemSelected(item);
   }
 
 }
