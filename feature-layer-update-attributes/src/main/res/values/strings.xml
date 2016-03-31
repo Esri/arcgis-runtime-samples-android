@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">"feature-layer-update-attributes "</string>
+
+    <!-- Sample Strings -->
+    <string name="sample_service_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
+
+    <string-array name="damage_types">
+        <item>Destroyed</item>
+        <item>Major</item>
+        <item>Minor</item>
+        <item>Affected</item>
+        <item>Inaccessible</item>
+    </string-array>
+
 </resources>
