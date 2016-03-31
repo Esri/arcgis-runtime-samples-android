@@ -31,20 +31,17 @@ import android.widget.ListView;
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-
   private ArcGISVectorTiledLayer mVectorTiledLayer;
 
   private String[] mNavigationDrawerItemTitles;
-
   private DrawerLayout mDrawerLayout;
-
   private ListView mDrawerList;
-
   private ActionBarDrawerToggle mDrawerToggle;
 
   @Override
@@ -63,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
     Basemap basemap = new Basemap(mVectorTiledLayer);
     // create a map with the basemap
     Map map = new Map(basemap);
+    // create a viewpoint from lat, long, scale
+    Viewpoint vp = new Viewpoint(47.606726, -122.335564, 72223.819286);
+    // set initial map extent
+    map.setInitialViewpoint(vp);
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
@@ -184,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
     // Handle action bar item clicks here. The action bar will
     // automatically handle clicks on the Home/Up button, so long
     // as you specify a parent activity in AndroidManifest.xml.
-    int id = item.getItemId();
 
     // Activate the navigation drawer toggle
     return (mDrawerToggle.onOptionsItemSelected(item)) || super.onOptionsItemSelected(item);
