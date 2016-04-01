@@ -16,35 +16,44 @@
 
 package com.esri.arcgisruntime.sample.featurelayerupdateattributes;
 
+import java.util.List;
+
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
-import com.esri.arcgisruntime.datasource.FeatureQueryResult;
-import com.esri.arcgisruntime.datasource.QueryParameters;
+import com.esri.arcgisruntime.datasource.arcgis.ArcGISFeature;
+import com.esri.arcgisruntime.datasource.arcgis.FeatureEditResult;
 import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
-import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
+import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private Callout mCallout;
+  private FeatureLayer mFeatureLayer;
+  private ArcGISFeature mResultArcGISFeature;
+  private android.graphics.Point mClickPoint;
+  private ServiceFeatureTable mServiceFeatureTable;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +76,13 @@ public class MainActivity extends AppCompatActivity {
 
     // create feature layer with its service feature table
     // create the service feature table
-    final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
+    mServiceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
     // create the feature layer using the service feature table
-    final FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
-    featureLayer.setSelectionColor(Color.rgb(0, 255, 255)); //cyan, fully opaque
-    featureLayer.setSelectionWidth(3);
+    mFeatureLayer = new FeatureLayer(mServiceFeatureTable);
+    mFeatureLayer.setSelectionColor(Color.rgb(0, 255, 255)); //cyan, fully opaque
+    mFeatureLayer.setSelectionWidth(3);
     // add the layer to the map
-    map.getOperationalLayers().add(featureLayer);
+    map.getOperationalLayers().add(mFeatureLayer);
 
     // set an on touch listener to listen for click events
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
@@ -81,60 +90,30 @@ public class MainActivity extends AppCompatActivity {
       public boolean onSingleTapConfirmed(MotionEvent e) {
 
         // get the point that was clicked and convert it to a point in map coordinates
-        final Point clickPoint = mMapView.screenToLocation(new android.graphics.Point((int) e.getX(), (int) e.getY()));
-        int tolerance = 5;
-        double mapTolerance = tolerance * mMapView.getUnitsPerPixel();
+        mClickPoint = new android.graphics.Point((int) e.getX(), (int) e.getY());
 
-        // create objects required to do a selection with a query
-        Envelope envelope = new Envelope(clickPoint.getX() - mapTolerance, clickPoint.getY() - mapTolerance, clickPoint.getX() + mapTolerance, clickPoint.getY() + mapTolerance, map.getSpatialReference());
-        QueryParameters query = new QueryParameters();
-        query.setGeometry(envelope);
-        query.setMaxFeatures(1);
 
-        // call select features
-        final ListenableFuture<FeatureQueryResult> future = featureLayer.selectFeatures(query, FeatureLayer.SelectionMode.NEW);
+        // call identifylayerAsync
+
+        final ListenableFuture<IdentifyLayerResult> future = mMapView.identifyLayerAsync(mFeatureLayer, mClickPoint, 5, 1);
+
+
         // add done loading listener to fire when the selection returns
         future.addDoneListener(new Runnable() {
           @Override
           public void run() {
             try {
               //call get on the future to get the result
-              FeatureQueryResult result = future.get();
+              IdentifyLayerResult result = future.get();
 
-              String title = null;
+              List<GeoElement> resultGeoElements = result.getIdentifiedElements();
+              mResultArcGISFeature = (ArcGISFeature) resultGeoElements.get(0);
+              String title = (String) mResultArcGISFeature.getAttributes().get("typdamage");
+              showCallout(title);
 
-              //find out how many items there are in the result
-              int i = 0;
-              for (; result.iterator().hasNext(); ++i) {
-                title = (String) result.iterator().next().getAttributes().get("typdamage");
-              }
-              Toast.makeText(getApplicationContext(), i + " features selected", Toast.LENGTH_SHORT).show();
+//              Toast.makeText(getApplicationContext(), i + " features selected", Toast.LENGTH_SHORT).show();
 
-              // create a textview for the callout
-              RelativeLayout calloutLayout = new RelativeLayout(getApplicationContext());
-              RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
-                  RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-              relativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
-              TextView calloutContent = new TextView(getApplicationContext());
-              calloutContent.setId(R.id.textview);
-              calloutContent.setTextColor(Color.BLACK);
-              calloutContent.setSingleLine();
-              calloutContent.setText(title);
-//              calloutContent.setText("X:" +  (String.format("%.2f", clickPoint.getX()))
-//                  + ", y:" + (String.format("%.2f", clickPoint.getY())));
-
-              relativeParams.addRule(RelativeLayout.RIGHT_OF, calloutContent.getId());
-
-              ImageView imageView = new ImageView(getApplicationContext());
-              imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_info_outline_black_18dp));
-
-              calloutLayout.addView(calloutContent);
-              calloutLayout.addView(imageView);
-
-              mCallout.setLocation(clickPoint);
-              mCallout.setContent(calloutLayout);
-              mCallout.show();
 
             } catch (Exception e) {
               Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
@@ -147,4 +126,103 @@ public class MainActivity extends AppCompatActivity {
 
 
   }
+
+  // Function to read the result from newly created activity
+  @Override
+  protected void onActivityResult(int requestCode,
+      int resultCode, final Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if(resultCode == 100){
+
+      // Storing result in a variable called myvar
+      // get("website") 'website' is the key value result data
+//      String mywebsite = data.getExtras().get("result");
+
+      mResultArcGISFeature.loadAsync();
+      mResultArcGISFeature.addDoneLoadingListener(new Runnable() {
+        @Override public void run() {
+          if (mResultArcGISFeature.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+            Log.d("MainActivity", "Error while loading feature");
+          }
+          mResultArcGISFeature.getAttributes().put("typdamage", data.getStringExtra("typdamage"));
+          final ListenableFuture<Boolean> updateFeatureFuture = mServiceFeatureTable.updateFeatureAsync(mResultArcGISFeature);
+          updateFeatureFuture.addDoneListener(new Runnable() {
+            @Override public void run() {
+              try {
+                if (updateFeatureFuture.get()) {
+                  final ListenableFuture<List<FeatureEditResult>> serverResult = mServiceFeatureTable.applyEditsAsync();
+                  serverResult.addDoneListener(new Runnable() {
+                    @Override public void run() {
+                      try {
+                        List<FeatureEditResult> edits = serverResult.get();
+                        if (edits.size() > 0) {
+                          if (!edits.get(0).hasCompletedWithErrors()) {
+                            Log.e("Main Activity","Feature successfully updated");
+                          }
+                        } else {
+                          Log.e( "Main Activity","The attribute type was not changed");
+                        }
+
+                        showCallout((String) mResultArcGISFeature.getAttributes().get("typdamage"));
+                      }catch (Exception e) {
+                        Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
+                      }
+
+                    }
+                  });
+                }
+
+              } catch (Exception e) {
+              Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
+            }
+            }
+          });
+        }
+      });
+    }
+  }
+
+  public void showCallout(String title){
+
+    // create a textview for the callout
+    RelativeLayout calloutLayout = new RelativeLayout(getApplicationContext());
+    RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
+        RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+    //              relativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+
+    TextView calloutContent = new TextView(getApplicationContext());
+    calloutContent.setId(R.id.textview);
+    calloutContent.setTextColor(Color.BLACK);
+    //              calloutContent.setSingleLine();
+    calloutContent.setText(title);
+    //              calloutContent.setText("X:" +  (String.format("%.2f", clickPoint.getX()))
+    //                  + ", y:" + (String.format("%.2f", clickPoint.getY())));
+
+    relativeParams.addRule(RelativeLayout.RIGHT_OF, calloutContent.getId());
+
+    ImageView imageView = new ImageView(getApplicationContext());
+    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_info_outline_black_18dp));
+    imageView.setLayoutParams(relativeParams);
+    imageView.setOnClickListener(new ImageViewOnclickListener());
+
+    calloutLayout.addView(calloutContent);
+    calloutLayout.addView(imageView);
+
+    mCallout.setLocation(mMapView.screenToLocation(mClickPoint));
+    mCallout.setContent(calloutLayout);
+    mCallout.show();
+
+  }
+
+  class ImageViewOnclickListener implements View.OnClickListener {
+
+    @Override public void onClick(View v) {
+      Log.e("imageview", "tap");
+      Intent myIntent = new Intent(MainActivity.this, DamageTypesListActivity.class);
+      //                  myIntent.putExtra("key", value); //Optional parameters
+      MainActivity.this.startActivityForResult(myIntent, 100);
+
+    }
+  }
+
 }

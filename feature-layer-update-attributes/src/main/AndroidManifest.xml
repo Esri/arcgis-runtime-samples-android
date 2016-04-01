@@ -21,7 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".DamageTypesListActivity">
+        <activity
+                android:name=".DamageTypesListActivity"
+                android:label="@string/damage_Types">
         </activity>
     </application>
 
