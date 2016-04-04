@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.datasource.arcgis.ArcGISFeature;
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
   private MapView mMapView;
   private Callout mCallout;
   private FeatureLayer mFeatureLayer;
-  private ArcGISFeature mResultArcGISFeature;
+  private ArcGISFeature mSelectedArcGISFeature;
   private android.graphics.Point mClickPoint;
   private ServiceFeatureTable mServiceFeatureTable;
 
@@ -79,8 +80,12 @@ public class MainActivity extends AppCompatActivity {
     mServiceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
     // create the feature layer using the service feature table
     mFeatureLayer = new FeatureLayer(mServiceFeatureTable);
+
+    // set the color that is applied to a selected feature.
     mFeatureLayer.setSelectionColor(Color.rgb(0, 255, 255)); //cyan, fully opaque
+    // set the width of selection color
     mFeatureLayer.setSelectionWidth(3);
+
     // add the layer to the map
     map.getOperationalLayers().add(mFeatureLayer);
 
@@ -92,11 +97,12 @@ public class MainActivity extends AppCompatActivity {
         // get the point that was clicked and convert it to a point in map coordinates
         mClickPoint = new android.graphics.Point((int) e.getX(), (int) e.getY());
 
+        // clear any previous selection
+        mFeatureLayer.clearSelection();
+        mSelectedArcGISFeature = null;
 
-        // call identifylayerAsync
-
+        // identify the GeoElements in the given layer
         final ListenableFuture<IdentifyLayerResult> future = mMapView.identifyLayerAsync(mFeatureLayer, mClickPoint, 5, 1);
-
 
         // add done loading listener to fire when the selection returns
         future.addDoneListener(new Runnable() {
@@ -107,14 +113,18 @@ public class MainActivity extends AppCompatActivity {
               IdentifyLayerResult result = future.get();
 
               List<GeoElement> resultGeoElements = result.getIdentifiedElements();
-              mResultArcGISFeature = (ArcGISFeature) resultGeoElements.get(0);
-              String title = (String) mResultArcGISFeature.getAttributes().get("typdamage");
-              showCallout(title);
-
-//              Toast.makeText(getApplicationContext(), i + " features selected", Toast.LENGTH_SHORT).show();
-
-
-
+              if (resultGeoElements.size() >0) {
+                if (resultGeoElements.get(0) instanceof ArcGISFeature) {
+                  mSelectedArcGISFeature = (ArcGISFeature) resultGeoElements.get(0);
+                  // highlight the selected feature
+                  mFeatureLayer.selectFeature(mSelectedArcGISFeature);
+                  // show callout with the value for the attribute "typdamage" of the selected feature
+                  showCallout((String) mSelectedArcGISFeature.getAttributes().get("typdamage"));
+                  Toast.makeText(getApplicationContext(), "Tap on the info button to change attribute value", Toast.LENGTH_SHORT).show();
+                }
+              } else {
+                Toast.makeText(getApplicationContext(), "None of the features on the map were selected", Toast.LENGTH_SHORT).show();
+              }
             } catch (Exception e) {
               Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
             }
@@ -127,79 +137,101 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
-  // Function to read the result from newly created activity
+  /**
+   * Function to read the result from newly created activity
+   *
+   */
   @Override
   protected void onActivityResult(int requestCode,
       int resultCode, final Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if(resultCode == 100){
+    if(resultCode == 100) {
 
-      // Storing result in a variable called myvar
-      // get("website") 'website' is the key value result data
-//      String mywebsite = data.getExtras().get("result");
+      updateAttributes(data.getStringExtra("typdamage"));
 
-      mResultArcGISFeature.loadAsync();
-      mResultArcGISFeature.addDoneLoadingListener(new Runnable() {
-        @Override public void run() {
-          if (mResultArcGISFeature.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-            Log.d("MainActivity", "Error while loading feature");
-          }
-          mResultArcGISFeature.getAttributes().put("typdamage", data.getStringExtra("typdamage"));
-          final ListenableFuture<Boolean> updateFeatureFuture = mServiceFeatureTable.updateFeatureAsync(mResultArcGISFeature);
-          updateFeatureFuture.addDoneListener(new Runnable() {
-            @Override public void run() {
-              try {
-                if (updateFeatureFuture.get()) {
-                  final ListenableFuture<List<FeatureEditResult>> serverResult = mServiceFeatureTable.applyEditsAsync();
-                  serverResult.addDoneListener(new Runnable() {
-                    @Override public void run() {
-                      try {
-                        List<FeatureEditResult> edits = serverResult.get();
-                        if (edits.size() > 0) {
-                          if (!edits.get(0).hasCompletedWithErrors()) {
-                            Log.e("Main Activity","Feature successfully updated");
-                          }
-                        } else {
-                          Log.e( "Main Activity","The attribute type was not changed");
-                        }
-
-                        showCallout((String) mResultArcGISFeature.getAttributes().get("typdamage"));
-                      }catch (Exception e) {
-                        Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
-                      }
-
-                    }
-                  });
-                }
-
-              } catch (Exception e) {
-              Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
-            }
-            }
-          });
-        }
-      });
     }
   }
 
-  public void showCallout(String title){
+  /**
+   * Applies changes to the feature, Service Feature Table, and server.
+   *
+   */
+  private void updateAttributes(final String typeDamage) {
+    // load the selected feature
+    mSelectedArcGISFeature.loadAsync();
 
-    // create a textview for the callout
+    // update the selected feature
+    mSelectedArcGISFeature.addDoneLoadingListener(new Runnable() {
+      @Override public void run() {
+        if (mSelectedArcGISFeature.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+          Log.d(getResources().getString(R.string.app_name), "Error while loading feature");
+        }
+
+        // update the Attributes map with the new selected value for "typdamage"
+        mSelectedArcGISFeature.getAttributes().put("typdamage", typeDamage);
+
+        try {
+          // update feature in the feature table
+          ListenableFuture<Boolean> mapViewResult = mServiceFeatureTable.updateFeatureAsync(mSelectedArcGISFeature);
+
+          // if successful, update change to the server
+          if (mapViewResult.get().booleanValue()) {
+
+            // apply change to the server
+            final ListenableFuture<List<FeatureEditResult>> serverResult = mServiceFeatureTable.applyEditsAsync();
+
+            serverResult.addDoneListener(new Runnable() {
+              @Override public void run() {
+                try {
+                  // check if server result successful
+                  List<FeatureEditResult> edits = serverResult.get();
+                  if (edits.size() > 0) {
+                    if (!edits.get(0).hasCompletedWithErrors()) {
+                      Log.e(getResources().getString(R.string.app_name), "Feature successfully updated");
+                    }
+                  } else {
+                    Log.e(getResources().getString(R.string.app_name), "The attribute type was not changed");
+                  }
+                  // display the callout with the updated value
+                  showCallout((String) mSelectedArcGISFeature.getAttributes().get("typdamage"));
+                } catch (Exception e) {
+                  Log.e(getResources().getString(R.string.app_name), "applying changes to the server failed: " + e.getMessage());
+                }
+
+              }
+            });
+          }
+
+        } catch (Exception e) {
+          Log.e(getResources().getString(R.string.app_name), "updating feature in the feature table failed: " + e.getMessage());
+        }
+      }
+    });
+
+  }
+
+  /**
+   * Displays Callout
+   * @param title
+   */
+  private void showCallout(String title){
+
+    // create a text view for the callout
     RelativeLayout calloutLayout = new RelativeLayout(getApplicationContext());
-    RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
-        RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-    //              relativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
     TextView calloutContent = new TextView(getApplicationContext());
     calloutContent.setId(R.id.textview);
     calloutContent.setTextColor(Color.BLACK);
-    //              calloutContent.setSingleLine();
-    calloutContent.setText(title);
-    //              calloutContent.setText("X:" +  (String.format("%.2f", clickPoint.getX()))
-    //                  + ", y:" + (String.format("%.2f", clickPoint.getY())));
+    calloutContent.setTextSize(18);
+    calloutContent.setPadding(0,10,10,0);
 
+    calloutContent.setText(title);
+
+    RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
+        RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
     relativeParams.addRule(RelativeLayout.RIGHT_OF, calloutContent.getId());
 
+    // create image view for the callout
     ImageView imageView = new ImageView(getApplicationContext());
     imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_info_outline_black_18dp));
     imageView.setLayoutParams(relativeParams);
@@ -211,17 +243,17 @@ public class MainActivity extends AppCompatActivity {
     mCallout.setLocation(mMapView.screenToLocation(mClickPoint));
     mCallout.setContent(calloutLayout);
     mCallout.show();
-
   }
 
+  /**
+   * Defines the listener for the ImageView clicks
+   */
   class ImageViewOnclickListener implements View.OnClickListener {
 
     @Override public void onClick(View v) {
       Log.e("imageview", "tap");
       Intent myIntent = new Intent(MainActivity.this, DamageTypesListActivity.class);
-      //                  myIntent.putExtra("key", value); //Optional parameters
       MainActivity.this.startActivityForResult(myIntent, 100);
-
     }
   }
 
