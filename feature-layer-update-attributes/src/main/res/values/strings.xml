@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">"feature-layer-update-attributes"</string>
-    <string name="damage_Types">"Damage Types"</string>
+    <string name="select_damage_Type">"Select new damage type"</string>
 
     <!-- Sample Strings -->
     <string name="sample_service_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>

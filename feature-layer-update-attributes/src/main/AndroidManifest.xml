@@ -23,7 +23,7 @@
         </activity>
         <activity
                 android:name=".DamageTypesListActivity"
-                android:label="@string/damage_Types">
+                android:label="@string/select_damage_Type">
         </activity>
     </application>
 

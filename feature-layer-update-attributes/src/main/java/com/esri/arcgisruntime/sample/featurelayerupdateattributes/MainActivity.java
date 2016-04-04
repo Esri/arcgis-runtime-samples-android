@@ -123,7 +123,8 @@ public class MainActivity extends AppCompatActivity {
                   Toast.makeText(getApplicationContext(), "Tap on the info button to change attribute value", Toast.LENGTH_SHORT).show();
                 }
               } else {
-                Toast.makeText(getApplicationContext(), "None of the features on the map were selected", Toast.LENGTH_SHORT).show();
+                // none of the features on the map were selected
+                mCallout.hide();
               }
             } catch (Exception e) {
               Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
@@ -157,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
    *
    */
   private void updateAttributes(final String typeDamage) {
+
     // load the selected feature
     mSelectedArcGISFeature.loadAsync();
 
