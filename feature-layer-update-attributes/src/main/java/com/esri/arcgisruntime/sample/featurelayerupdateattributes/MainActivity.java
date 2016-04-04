@@ -66,9 +66,11 @@ public class MainActivity extends AppCompatActivity {
 
     // create a map with the streets basemap
     final Map map = new Map(Basemap.createStreets());
-    //set an initial viewpointf
+
+    //set an initial viewpoint
     map.setInitialViewpoint(new Viewpoint(new Point(544871.19, 6806138.66, SpatialReferences
         .getWebMercator()), 2E6));
+    
     // set the map to be displayed in the mapview
     mMapView.setMap(map);
 
@@ -109,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
           @Override
           public void run() {
             try {
-              //call get on the future to get the result
+              // call get on the future to get the result
               IdentifyLayerResult result = future.get();
 
               List<GeoElement> resultGeoElements = result.getIdentifiedElements();
