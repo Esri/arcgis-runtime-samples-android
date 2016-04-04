@@ -30,4 +30,4 @@ Features in the map represent properties and are symbolized based on the type of
 
 ##How it works
 
-The sample uses `identifyLayerAsync` method of `MapView` to identify `GeoElement` being tapped on and the `getAttributes` method on `ArcGISFeature` to get the current damage type for a selected property and displays it in the callout. After the selection of a new damage type, in order to apply the changes to the service it uses `applyEditsAsync` on the `ServiceFeatureTable` for the feature. 
+The sample uses `identifyLayerAsync` method of `MapView` to identify `GeoElement` being tapped on and the `getAttributes` method on `ArcGISFeature` to get the current damage type for a selected property and displays it in the callout. After the selection of a new damage type, it uses `updateFeatureAsync` for updating the `ArcGISFeature` in the `ServiceFeatureTable` and in order to apply the changes to the service it uses `applyEditsAsync` on the `ServiceFeatureTable`. 
