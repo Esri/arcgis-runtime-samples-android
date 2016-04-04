@@ -1,6 +1,6 @@
 # Feature layer update attributes         
 
-This sample demonstrates how to edit attributes of feature in a feature layer.
+This sample demonstrates how to edit attributes of feature in a feature layer.      
 
 
 |  Initial Map                                                |  Feature Selection                                          |
