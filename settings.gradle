@@ -1,6 +1,7 @@
 include ':add-graphics-renderer',
         ':add-graphics-symbols',
         ':arcgis-map-imagelayer-url',
+        ':arcgis-tiledlayer-rendermode',
         ':arcgis-tiledlayer-url',
         ':change-basemaps',
         ':change-feature-layer-renderer',
