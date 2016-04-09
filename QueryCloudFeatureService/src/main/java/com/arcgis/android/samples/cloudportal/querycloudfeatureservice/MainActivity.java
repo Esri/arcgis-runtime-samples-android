@@ -46,25 +46,25 @@ import com.esri.core.tasks.query.QueryTask;
 
 public class MainActivity extends Activity {
 
-    MapView mMapView;
-    ArcGISFeatureLayer mFeatureLayer;
-    GraphicsLayer mGraphicsLayer;
+    private MapView mMapView;
+    private ArcGISFeatureLayer mFeatureLayer;
+    private GraphicsLayer mGraphicsLayer;
     private Callout mCallout;
     private Graphic mIdentifiedGraphic;
 
     private int mCalloutStyle;
     private ViewGroup mCalloutContent;
-    boolean mIsMapLoaded;
-    String mFeatureServiceURL;
+    private boolean mIsMapLoaded;
+    private String mFeatureServiceURL;
 
-    ProgressDialog progress;
+    private ProgressDialog progress;
 
     // The query params switching menu items.
-    MenuItem mQueryUsMenuItem = null;
-    MenuItem mQueryCaMenuItem = null;
-    MenuItem mQueryFrMenuItem = null;
-    MenuItem mQueryAuMenuItem = null;
-    MenuItem mQueryBrMenuItem = null;
+    private MenuItem mQueryUsMenuItem = null;
+    private MenuItem mQueryCaMenuItem = null;
+    private MenuItem mQueryFrMenuItem = null;
+    private MenuItem mQueryAuMenuItem = null;
+    private MenuItem mQueryBrMenuItem = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +129,7 @@ public class MainActivity extends Activity {
      * @param y
      *          y co-ordinate of point
      */
-    void identifyLocation(float x, float y) {
+    private void identifyLocation(float x, float y) {
 
         // Hide the callout, if the callout from previous tap is still showing
         // on map
