@@ -4,7 +4,7 @@
     <string name="app_name">Query Cloud Feature Service</string>
     <string name="spinTitle">Query Customer Data:</string>
     <string name="tileServiceURL">http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer</string>
-    <string name="featureServiceURL">http://services.arcgis.com/oKgs2tbjK6zwTdvi/arcgis/rest/services/Major_World_Cities/FeatureServer/0</string>
+    <string name="featureServiceURL">http://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/World_Cities/FeatureServer/0</string>
 
     <!-- query parameters -->
     <string name="query_us">COUNTRY = US</string>
