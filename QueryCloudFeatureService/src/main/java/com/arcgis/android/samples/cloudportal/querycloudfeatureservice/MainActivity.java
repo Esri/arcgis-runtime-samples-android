@@ -138,14 +138,14 @@ public class MainActivity extends Activity {
         }
 
         // Find out if the user tapped on a feature
-        SearchForFeature(x, y);
+        searchForFeature(x, y);
 
         // If the user tapped on a feature, then display information regarding
         // the feature in the callout
         if (mIdentifiedGraphic != null) {
             Point mapPoint = mMapView.toMapPoint(x, y);
             // Show Callout
-            ShowCallout(mCallout, mIdentifiedGraphic, mapPoint);
+            showCallout(mCallout, mIdentifiedGraphic, mapPoint);
         }
     }
 
@@ -158,7 +158,7 @@ public class MainActivity extends Activity {
      * @param y
      *          y co-ordinate of point
      */
-    private void SearchForFeature(float x, float y) {
+    private void searchForFeature(float x, float y) {
 
         Point mapPoint = mMapView.toMapPoint(x, y);
 
@@ -171,7 +171,7 @@ public class MainActivity extends Activity {
                 if (layer instanceof ArcGISFeatureLayer) {
                     ArcGISFeatureLayer fLayer = (ArcGISFeatureLayer) layer;
                     // Get the Graphic at location x,y
-                    mIdentifiedGraphic = GetFeature(fLayer, x, y);
+                    mIdentifiedGraphic = getFeature(fLayer, x, y);
                 }
             }
         }
@@ -188,7 +188,7 @@ public class MainActivity extends Activity {
      *          y co-ordinate of point
      * @return Graphic at location x,y
      */
-    private Graphic GetFeature(ArcGISFeatureLayer fLayer, float x, float y) {
+    private Graphic getFeature(ArcGISFeatureLayer fLayer, float x, float y) {
 
         // Get the graphics near the Point.
         int[] ids = fLayer.getGraphicIDs(x, y, 10, 1);
@@ -205,7 +205,7 @@ public class MainActivity extends Activity {
      * @param graphic selected graphic
      * @param mapPoint point to show callout
      */
-    private void ShowCallout(Callout calloutView, Graphic graphic, Point mapPoint) {
+    private void showCallout(Callout calloutView, Graphic graphic, Point mapPoint) {
 
         // Get the values of attributes for the Graphic
         String cityName = (String) graphic.getAttributeValue("CITY_NAME");
