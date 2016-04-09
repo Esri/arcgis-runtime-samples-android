@@ -208,9 +208,9 @@ public class MainActivity extends Activity {
     private void ShowCallout(Callout calloutView, Graphic graphic, Point mapPoint) {
 
         // Get the values of attributes for the Graphic
-        String cityName = (String) graphic.getAttributeValue("NAME");
-        String countryName = (String) graphic.getAttributeValue("COUNTRY");
-        String cityPopulationValue = graphic.getAttributeValue("POPULATION").toString();
+        String cityName = (String) graphic.getAttributeValue("CITY_NAME");
+        String countryName = (String) graphic.getAttributeValue("CNTRY_NAME");
+        String cityPopulationValue = graphic.getAttributeValue("POP").toString();
 
         // Set callout properties
         calloutView.setCoordinates(mapPoint);
@@ -254,7 +254,7 @@ public class MainActivity extends Activity {
         @Override
         protected FeatureResult doInBackground(String... params) {
 
-            String whereClause = "COUNTRY='" + params[0] + "'";
+            String whereClause = "CNTRY_NAME='" + params[0] + "'";
 
             // Define a new query and set parameters
             QueryParameters mParams = new QueryParameters();
@@ -330,7 +330,7 @@ public class MainActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.Query_US:
                 mQueryUsMenuItem.setChecked(true);
-                new QueryFeatureLayer().execute("US");
+                new QueryFeatureLayer().execute("United States");
                 return true;
             case R.id.Query_CA:
                 mQueryCaMenuItem.setChecked(true);
