@@ -11,4 +11,7 @@
     <string name="query_au">COUNTRY = AUSTRALIA</string>
     <string name="query_br">COUNTRY = BRAZIL</string>
 
+    <string name="city"><b>City: </b></string>
+    <string name="pop"><b>Population: </b></string>
+
 </resources>
