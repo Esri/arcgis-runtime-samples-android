@@ -52,7 +52,6 @@ public class MainActivity extends Activity {
     private Callout mCallout;
     private Graphic mIdentifiedGraphic;
 
-    private int mCalloutStyle;
     private ViewGroup mCalloutContent;
     private boolean mIsMapLoaded;
     private String mFeatureServiceURL;
@@ -86,8 +85,6 @@ public class MainActivity extends Activity {
         mMapView.setEsriLogoVisible(true);
         mMapView.enableWrapAround(true);
 
-        // Get the MapView's callout from xml->identify_calloutstyle.xml
-        mCalloutStyle = R.xml.identify_calloutstyle;
         LayoutInflater inflater = getLayoutInflater();
         mCallout = mMapView.getCallout();
         // Get the layout for the Callout from
@@ -214,8 +211,6 @@ public class MainActivity extends Activity {
 
         // Set callout properties
         calloutView.setCoordinates(mapPoint);
-        calloutView.setStyle(mCalloutStyle);
-        calloutView.setMaxWidth(325);
 
         // Compose the string to display the results
         StringBuilder cityCountryName = new StringBuilder();
@@ -223,15 +218,14 @@ public class MainActivity extends Activity {
         cityCountryName.append(", ");
         cityCountryName.append(countryName);
 
-        TextView calloutTextLine1 = (TextView) findViewById(R.id.citycountry);
+        TextView calloutTextLine1 = (TextView) findViewById(R.id.tv_city);
         calloutTextLine1.setText(cityCountryName);
 
         // Compose the string to display the results
         StringBuilder cityPopulation = new StringBuilder();
-        cityPopulation.append("Population: ");
         cityPopulation.append(cityPopulationValue);
 
-        TextView calloutTextLine2 = (TextView) findViewById(R.id.population);
+        TextView calloutTextLine2 = (TextView) findViewById(R.id.tv_pop);
         calloutTextLine2.setText(cityPopulation);
         calloutView.setContent(mCalloutContent);
         calloutView.show();
