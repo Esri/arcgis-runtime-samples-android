@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2016 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,25 +46,24 @@ import com.esri.core.tasks.query.QueryTask;
 
 public class MainActivity extends Activity {
 
-    MapView mMapView;
-    ArcGISFeatureLayer mFeatureLayer;
-    GraphicsLayer mGraphicsLayer;
+    private MapView mMapView;
+    private ArcGISFeatureLayer mFeatureLayer;
+    private GraphicsLayer mGraphicsLayer;
     private Callout mCallout;
     private Graphic mIdentifiedGraphic;
 
-    private int mCalloutStyle;
     private ViewGroup mCalloutContent;
-    boolean mIsMapLoaded;
-    String mFeatureServiceURL;
+    private boolean mIsMapLoaded;
+    private String mFeatureServiceURL;
 
-    ProgressDialog progress;
+    private ProgressDialog progress;
 
     // The query params switching menu items.
-    MenuItem mQueryUsMenuItem = null;
-    MenuItem mQueryCaMenuItem = null;
-    MenuItem mQueryFrMenuItem = null;
-    MenuItem mQueryAuMenuItem = null;
-    MenuItem mQueryBrMenuItem = null;
+    private MenuItem mQueryUsMenuItem = null;
+    private MenuItem mQueryCaMenuItem = null;
+    private MenuItem mQueryFrMenuItem = null;
+    private MenuItem mQueryAuMenuItem = null;
+    private MenuItem mQueryBrMenuItem = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +85,6 @@ public class MainActivity extends Activity {
         mMapView.setEsriLogoVisible(true);
         mMapView.enableWrapAround(true);
 
-        // Get the MapView's callout from xml->identify_calloutstyle.xml
-        mCalloutStyle = R.xml.identify_calloutstyle;
         LayoutInflater inflater = getLayoutInflater();
         mCallout = mMapView.getCallout();
         // Get the layout for the Callout from
@@ -129,7 +126,7 @@ public class MainActivity extends Activity {
      * @param y
      *          y co-ordinate of point
      */
-    void identifyLocation(float x, float y) {
+    private void identifyLocation(float x, float y) {
 
         // Hide the callout, if the callout from previous tap is still showing
         // on map
@@ -138,14 +135,14 @@ public class MainActivity extends Activity {
         }
 
         // Find out if the user tapped on a feature
-        SearchForFeature(x, y);
+        searchForFeature(x, y);
 
         // If the user tapped on a feature, then display information regarding
         // the feature in the callout
         if (mIdentifiedGraphic != null) {
             Point mapPoint = mMapView.toMapPoint(x, y);
             // Show Callout
-            ShowCallout(mCallout, mIdentifiedGraphic, mapPoint);
+            showCallout(mCallout, mIdentifiedGraphic, mapPoint);
         }
     }
 
@@ -158,7 +155,7 @@ public class MainActivity extends Activity {
      * @param y
      *          y co-ordinate of point
      */
-    private void SearchForFeature(float x, float y) {
+    private void searchForFeature(float x, float y) {
 
         Point mapPoint = mMapView.toMapPoint(x, y);
 
@@ -171,7 +168,7 @@ public class MainActivity extends Activity {
                 if (layer instanceof ArcGISFeatureLayer) {
                     ArcGISFeatureLayer fLayer = (ArcGISFeatureLayer) layer;
                     // Get the Graphic at location x,y
-                    mIdentifiedGraphic = GetFeature(fLayer, x, y);
+                    mIdentifiedGraphic = getFeature(fLayer, x, y);
                 }
             }
         }
@@ -188,7 +185,7 @@ public class MainActivity extends Activity {
      *          y co-ordinate of point
      * @return Graphic at location x,y
      */
-    private Graphic GetFeature(ArcGISFeatureLayer fLayer, float x, float y) {
+    private Graphic getFeature(ArcGISFeatureLayer fLayer, float x, float y) {
 
         // Get the graphics near the Point.
         int[] ids = fLayer.getGraphicIDs(x, y, 10, 1);
@@ -205,17 +202,15 @@ public class MainActivity extends Activity {
      * @param graphic selected graphic
      * @param mapPoint point to show callout
      */
-    private void ShowCallout(Callout calloutView, Graphic graphic, Point mapPoint) {
+    private void showCallout(Callout calloutView, Graphic graphic, Point mapPoint) {
 
         // Get the values of attributes for the Graphic
-        String cityName = (String) graphic.getAttributeValue("NAME");
-        String countryName = (String) graphic.getAttributeValue("COUNTRY");
-        String cityPopulationValue = graphic.getAttributeValue("POPULATION").toString();
+        String cityName = (String) graphic.getAttributeValue("CITY_NAME");
+        String countryName = (String) graphic.getAttributeValue("CNTRY_NAME");
+        String cityPopulationValue = graphic.getAttributeValue("POP").toString();
 
         // Set callout properties
         calloutView.setCoordinates(mapPoint);
-        calloutView.setStyle(mCalloutStyle);
-        calloutView.setMaxWidth(325);
 
         // Compose the string to display the results
         StringBuilder cityCountryName = new StringBuilder();
@@ -223,15 +218,14 @@ public class MainActivity extends Activity {
         cityCountryName.append(", ");
         cityCountryName.append(countryName);
 
-        TextView calloutTextLine1 = (TextView) findViewById(R.id.citycountry);
+        TextView calloutTextLine1 = (TextView) findViewById(R.id.tv_city);
         calloutTextLine1.setText(cityCountryName);
 
         // Compose the string to display the results
         StringBuilder cityPopulation = new StringBuilder();
-        cityPopulation.append("Population: ");
         cityPopulation.append(cityPopulationValue);
 
-        TextView calloutTextLine2 = (TextView) findViewById(R.id.population);
+        TextView calloutTextLine2 = (TextView) findViewById(R.id.tv_pop);
         calloutTextLine2.setText(cityPopulation);
         calloutView.setContent(mCalloutContent);
         calloutView.show();
@@ -254,7 +248,7 @@ public class MainActivity extends Activity {
         @Override
         protected FeatureResult doInBackground(String... params) {
 
-            String whereClause = "COUNTRY='" + params[0] + "'";
+            String whereClause = "CNTRY_NAME='" + params[0] + "'";
 
             // Define a new query and set parameters
             QueryParameters mParams = new QueryParameters();
@@ -330,7 +324,7 @@ public class MainActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.Query_US:
                 mQueryUsMenuItem.setChecked(true);
-                new QueryFeatureLayer().execute("US");
+                new QueryFeatureLayer().execute("United States");
                 return true;
             case R.id.Query_CA:
                 mQueryCaMenuItem.setChecked(true);
