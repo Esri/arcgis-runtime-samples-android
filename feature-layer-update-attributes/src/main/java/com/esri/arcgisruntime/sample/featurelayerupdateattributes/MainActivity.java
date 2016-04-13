@@ -16,6 +16,8 @@
 
 package com.esri.arcgisruntime.sample.featurelayerupdateattributes;
 
+import java.util.List;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -47,8 +49,6 @@ import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
@@ -61,13 +61,14 @@ public class MainActivity extends AppCompatActivity {
   private Snackbar mSnackbarFailure;
   private String mSelectedArcGISFeatureAttributeValue;
   private boolean mFeatureUpdated;
+  private View mCoordinatorLayout;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    final View coordinatorLayout = findViewById(R.id.snackbarPosition);
+    mCoordinatorLayout = findViewById(R.id.snackbarPosition);
 
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
@@ -147,18 +148,18 @@ public class MainActivity extends AppCompatActivity {
     });
 
     mSnackbarSuccess = Snackbar
-        .make(coordinatorLayout != null ? coordinatorLayout : null, "Feature successfully updated", Snackbar.LENGTH_LONG) // ensure layout not null
+        .make(mCoordinatorLayout, "Feature successfully updated", Snackbar.LENGTH_LONG)
         .setAction("UNDO", new View.OnClickListener() {
           @Override
           public void onClick(View view) {
             String snackBarText = updateAttributes(mSelectedArcGISFeatureAttributeValue) ? "Feature is restored!" : "Feature restore failed!" ;
-            Snackbar snackbar1 = Snackbar.make(coordinatorLayout, snackBarText, Snackbar.LENGTH_SHORT);
+            Snackbar snackbar1 = Snackbar.make(mCoordinatorLayout, snackBarText, Snackbar.LENGTH_SHORT);
             snackbar1.show();
           }
         });
 
     mSnackbarFailure = Snackbar
-        .make(coordinatorLayout, "Feature update failed", Snackbar.LENGTH_LONG);
+        .make(mCoordinatorLayout, "Feature update failed", Snackbar.LENGTH_LONG);
 
   }
 
