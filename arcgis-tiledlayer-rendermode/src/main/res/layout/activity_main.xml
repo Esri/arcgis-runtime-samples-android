@@ -12,13 +12,6 @@
             android:layout_height="fill_parent">
     </com.esri.arcgisruntime.mapping.view.MapView>
 
-    <com.esri.arcgisruntime.sample.android.widget.VerticalSeekBar
-            android:id="@+id/seekBar"
-            android:layout_width="wrap_content"
-            android:layout_height="400dp"
-            android:max="23"
-            android:layout_alignBottom="@+id/mapView" android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
     <Spinner
             android:layout_width="match_parent"
             android:layout_height="?android:attr/listPreferredItemHeight"
@@ -28,23 +21,5 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/colorAccent"
-            android:id="@+id/seekbarscale"
-            android:layout_below="@+id/rendermodesspinner"
-            android:layout_alignLeft="@+id/mapView"
-            android:layout_alignStart="@+id/mapView"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/colorAccent"
-            android:id="@+id/mapviewscale"
-            android:layout_alignBottom="@+id/mapView"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
 
 </RelativeLayout>
