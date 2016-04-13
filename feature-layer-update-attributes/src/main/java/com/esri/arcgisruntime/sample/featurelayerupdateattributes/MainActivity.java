@@ -16,8 +16,6 @@
 
 package com.esri.arcgisruntime.sample.featurelayerupdateattributes;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -49,6 +47,8 @@ import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
   private Snackbar mSnackbarSuccess;
   private Snackbar mSnackbarFailure;
   private String mSelectedArcGISFeatureAttributeValue;
-  boolean mFeatureUpdated;
+  private boolean mFeatureUpdated;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     });
 
     mSnackbarSuccess = Snackbar
-        .make(coordinatorLayout, "Feature successfully updated", Snackbar.LENGTH_LONG)
+        .make(coordinatorLayout != null ? coordinatorLayout : null, "Feature successfully updated", Snackbar.LENGTH_LONG) // ensure layout not null
         .setAction("UNDO", new View.OnClickListener() {
           @Override
           public void onClick(View view) {
