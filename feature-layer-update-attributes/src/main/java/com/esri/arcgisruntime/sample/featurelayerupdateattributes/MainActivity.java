@@ -21,6 +21,7 @@ import java.util.List;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -179,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
           ListenableFuture<Boolean> mapViewResult = mServiceFeatureTable.updateFeatureAsync(mSelectedArcGISFeature);
 
           // if successful, update change to the server
-          if (mapViewResult.get().booleanValue()) {
+          if (mapViewResult.get()) {
 
             // apply change to the server
             final ListenableFuture<List<FeatureEditResult>> serverResult = mServiceFeatureTable.applyEditsAsync();
@@ -216,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
 
   /**
    * Displays Callout
-   * @param title
+   * @param title the text to show in the Callout
    */
   private void showCallout(String title){
 
@@ -237,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create image view for the callout
     ImageView imageView = new ImageView(getApplicationContext());
-    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_info_outline_black_18dp));
+    imageView.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_info_outline_black_18dp));
     imageView.setLayoutParams(relativeParams);
     imageView.setOnClickListener(new ImageViewOnclickListener());
 
@@ -252,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Defines the listener for the ImageView clicks
    */
-  class ImageViewOnclickListener implements View.OnClickListener {
+  private class ImageViewOnclickListener implements View.OnClickListener {
 
     @Override public void onClick(View v) {
       Log.e("imageview", "tap");

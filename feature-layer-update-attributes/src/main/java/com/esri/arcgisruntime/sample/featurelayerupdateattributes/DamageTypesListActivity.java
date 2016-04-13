@@ -24,6 +24,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+/**
+ * Displays the Damage type options in a ListView.
+ */
 public class DamageTypesListActivity extends AppCompatActivity {
 
   @Override
