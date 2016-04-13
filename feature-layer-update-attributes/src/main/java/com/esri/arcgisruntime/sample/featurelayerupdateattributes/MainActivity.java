@@ -21,6 +21,7 @@ import java.util.List;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -56,11 +57,17 @@ public class MainActivity extends AppCompatActivity {
   private ArcGISFeature mSelectedArcGISFeature;
   private android.graphics.Point mClickPoint;
   private ServiceFeatureTable mServiceFeatureTable;
+  private Snackbar mSnackbarSuccess;
+  private Snackbar mSnackbarFailure;
+  private String mSelectedArcGISFeatureAttributeValue;
+  boolean mFeatureUpdated;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    final View coordinatorLayout = findViewById(R.id.snackbarPosition);
 
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
@@ -122,7 +129,8 @@ public class MainActivity extends AppCompatActivity {
                   // highlight the selected feature
                   mFeatureLayer.selectFeature(mSelectedArcGISFeature);
                   // show callout with the value for the attribute "typdamage" of the selected feature
-                  showCallout((String) mSelectedArcGISFeature.getAttributes().get("typdamage"));
+                  mSelectedArcGISFeatureAttributeValue = (String) mSelectedArcGISFeature.getAttributes().get("typdamage");
+                  showCallout(mSelectedArcGISFeatureAttributeValue);
                   Toast.makeText(getApplicationContext(), "Tap on the info button to change attribute value", Toast.LENGTH_SHORT).show();
                 }
               } else {
@@ -138,6 +146,19 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
+    mSnackbarSuccess = Snackbar
+        .make(coordinatorLayout, "Feature successfully updated", Snackbar.LENGTH_LONG)
+        .setAction("UNDO", new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            String snackBarText = updateAttributes(mSelectedArcGISFeatureAttributeValue) ? "Feature is restored!" : "Feature restore failed!" ;
+            Snackbar snackbar1 = Snackbar.make(coordinatorLayout, snackBarText, Snackbar.LENGTH_SHORT);
+            snackbar1.show();
+          }
+        });
+
+    mSnackbarFailure = Snackbar
+        .make(coordinatorLayout, "Feature update failed", Snackbar.LENGTH_LONG);
 
   }
 
@@ -151,8 +172,11 @@ public class MainActivity extends AppCompatActivity {
     super.onActivityResult(requestCode, resultCode, data);
     if(resultCode == 100) {
 
-      updateAttributes(data.getStringExtra("typdamage"));
-
+      if (updateAttributes(data.getStringExtra("typdamage"))) {
+        mSnackbarSuccess.show();
+      } else {
+        mSnackbarFailure.show();
+      }
     }
   }
 
@@ -160,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
    * Applies changes to the feature, Service Feature Table, and server.
    *
    */
-  private void updateAttributes(final String typeDamage) {
+  private boolean updateAttributes(final String typeDamage) {
 
     // load the selected feature
     mSelectedArcGISFeature.loadAsync();
@@ -193,9 +217,11 @@ public class MainActivity extends AppCompatActivity {
                   if (edits.size() > 0) {
                     if (!edits.get(0).hasCompletedWithErrors()) {
                       Log.e(getResources().getString(R.string.app_name), "Feature successfully updated");
+                      mFeatureUpdated = true;
                     }
                   } else {
                     Log.e(getResources().getString(R.string.app_name), "The attribute type was not changed");
+                    mFeatureUpdated = false;
                   }
                   // display the callout with the updated value
                   showCallout((String) mSelectedArcGISFeature.getAttributes().get("typdamage"));
@@ -212,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     });
-
+    return mFeatureUpdated;
   }
 
   /**
