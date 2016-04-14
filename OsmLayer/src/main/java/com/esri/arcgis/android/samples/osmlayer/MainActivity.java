@@ -45,4 +45,16 @@ public class MainActivity extends Activity {
         mMapView.setEsriLogoVisible(true);
         mMapView.enableWrapAround(true);
     }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        mMapView.pause();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        mMapView.unpause();
+    }
 }
