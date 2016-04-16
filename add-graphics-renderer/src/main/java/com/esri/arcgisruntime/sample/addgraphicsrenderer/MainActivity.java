@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2016 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,20 +20,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.PointCollection;
-import com.esri.arcgisruntime.geometry.Polygon;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.VisibleAreaChangedEvent;
-import com.esri.arcgisruntime.mapping.view.VisibleAreaChangedListener;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
-import com.esri.arcgisruntime.util.ListenableList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,65 +41,30 @@ public class MainActivity extends AppCompatActivity {
 
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
-
         // create a map with the Basemap Type topographic
-        Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 14);
+        Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 15.169193, 16.333479, 2);
+        // add graphics overlay
+        addGraphicsOverlay();
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
-
-        // work with the MapView after it has loaded
-        mMapView.addVisibleAreaChangedListener(new VisibleAreaChangedListener() {
-            @Override
-            public void visibleAreaChanged(VisibleAreaChangedEvent visibleAreaChangedEvent) {
-                //remove the listener so it's only called once
-                mMapView.removeVisibleAreaChangedListener(this);
-                // add graphics overlay
-                addGraphicsOverlay();
-            }
-        });
     }
 
     private void addGraphicsOverlay(){
-        // get center of MapView
-        Polygon visibleArea = mMapView.getVisibleArea();
-        Envelope polygonExtent = visibleArea.getExtent();
-        Point center = polygonExtent.getCenter();
+        // point graphic
+        Point pointGeometry = new Point(32.076, 34.979, SpatialReferences.getWebMercator());
+        SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(Color.rgb(255, 0, 0), 30, SimpleMarkerSymbol.Style.DIAMOND);
+        Graphic pointGraphic = new Graphic(pointGeometry);
 
-        // create values inside the visible area extent for creating graphic
-        double xValue = mMapView.getVisibleArea().getExtent().getWidth() / 5;
-        double yValue = mMapView.getVisibleArea().getExtent().getHeight() / 10;
-
-        // create point collection
-        PointCollection polyPoints = new PointCollection(mMapView.getSpatialReference());
-        polyPoints.add(new Point(center.getX() - xValue * 2, center.getY() - yValue * 2));
-        polyPoints.add(new Point(center.getX() - xValue * 2, center.getY() + yValue * 2));
-        polyPoints.add(new Point(center.getX() + xValue * 2, center.getY() + yValue * 2));
-        polyPoints.add(new Point(center.getX() + xValue * 2, center.getY() - yValue * 2));
-
-        // create graphics overlay
-        GraphicsOverlay grOverlay = new GraphicsOverlay();
-
-        // create list of graphics
-        ListenableList<Graphic> graphics = grOverlay.getGraphics();
-
-        // add points from PointCollection to graphics list
-        for(Point pt : polyPoints){
-            // add graphic to graphics overlay
-            graphics.add(new Graphic(pt));
-        }
-        // create color for graphic
-        int yellow = Color.rgb(255, 255, 0);
+        // create a graphic overlay for the point
+        GraphicsOverlay pointGraphicOverlay = new GraphicsOverlay();
         // create simple renderer
-        SimpleRenderer simpleRenderer = new SimpleRenderer();
-        // create point symbol
-        SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(yellow, 30, SimpleMarkerSymbol.Style.SQUARE);
-        // set symbol to renderer
-        simpleRenderer.setSymbol(pointSymbol);
-        // set renderer to graphics overlay
-        grOverlay.setRenderer(simpleRenderer);
-
+        SimpleRenderer pointRenderer = new SimpleRenderer();
+        pointRenderer.setSymbol(pointSymbol);
+        pointGraphicOverlay.setRenderer(pointRenderer);
+        // add graphic to overlay
+        pointGraphicOverlay.getGraphics().add(pointGraphic);
         // add graphics overlay to the MapView
-        mMapView.getGraphicsOverlays().add(grOverlay);
+        mMapView.getGraphicsOverlays().add(pointGraphicOverlay);
     }
 
     @Override
