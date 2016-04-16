@@ -21,12 +21,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.PolylineBuilder;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
 
@@ -51,20 +53,38 @@ public class MainActivity extends AppCompatActivity {
 
     private void addGraphicsOverlay(){
         // point graphic
-        Point pointGeometry = new Point(32.076, 34.979, SpatialReferences.getWebMercator());
-        SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(Color.rgb(255, 0, 0), 30, SimpleMarkerSymbol.Style.DIAMOND);
+        Point pointGeometry = new Point(40e5, 40e5, SpatialReferences.getWebMercator());
+        // yellow diamond point symbol
+        SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(Color.YELLOW, 10, SimpleMarkerSymbol.Style.DIAMOND);
+        // create graphic for point
         Graphic pointGraphic = new Graphic(pointGeometry);
-
         // create a graphic overlay for the point
         GraphicsOverlay pointGraphicOverlay = new GraphicsOverlay();
         // create simple renderer
-        SimpleRenderer pointRenderer = new SimpleRenderer();
-        pointRenderer.setSymbol(pointSymbol);
+        SimpleRenderer pointRenderer = new SimpleRenderer(pointSymbol);
         pointGraphicOverlay.setRenderer(pointRenderer);
         // add graphic to overlay
         pointGraphicOverlay.getGraphics().add(pointGraphic);
         // add graphics overlay to the MapView
         mMapView.getGraphicsOverlays().add(pointGraphicOverlay);
+
+        // line graphic
+        PolylineBuilder lineGeometry = new PolylineBuilder(SpatialReferences.getWebMercator());
+        lineGeometry.addPoint(-10e5, 40e5);
+        lineGeometry.addPoint(20e5, 50e5);
+        SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5);
+        Graphic lineGraphic = new Graphic(lineGeometry.toGeometry());
+        // create graphic overlay for polyline
+        GraphicsOverlay lineGraphicOverlay = new GraphicsOverlay();
+        // create simple renderer
+        SimpleRenderer lineRenderer = new SimpleRenderer(lineSymbol);
+        // add graphic to overlay
+        lineGraphicOverlay.setRenderer(lineRenderer);
+        // add graphic to overlay
+        lineGraphicOverlay.getGraphics().add(lineGraphic);
+        // add graphics overlay to the MapView
+        mMapView.getGraphicsOverlays().add(lineGraphicOverlay);
+
     }
 
     @Override
