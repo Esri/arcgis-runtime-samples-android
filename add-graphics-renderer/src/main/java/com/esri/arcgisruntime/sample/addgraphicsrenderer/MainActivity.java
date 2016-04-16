@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.PolygonBuilder;
 import com.esri.arcgisruntime.geometry.PolylineBuilder;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -28,6 +29,7 @@ import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
@@ -72,7 +74,9 @@ public class MainActivity extends AppCompatActivity {
         PolylineBuilder lineGeometry = new PolylineBuilder(SpatialReferences.getWebMercator());
         lineGeometry.addPoint(-10e5, 40e5);
         lineGeometry.addPoint(20e5, 50e5);
+        // solid blue line symbol
         SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5);
+        // create graphic for polyline
         Graphic lineGraphic = new Graphic(lineGeometry.toGeometry());
         // create graphic overlay for polyline
         GraphicsOverlay lineGraphicOverlay = new GraphicsOverlay();
@@ -84,6 +88,27 @@ public class MainActivity extends AppCompatActivity {
         lineGraphicOverlay.getGraphics().add(lineGraphic);
         // add graphics overlay to the MapView
         mMapView.getGraphicsOverlays().add(lineGraphicOverlay);
+
+        //polygon graphic
+        PolygonBuilder polygonGeometry = new PolygonBuilder(SpatialReferences.getWebMercator());
+        polygonGeometry.addPoint(-20e5, 20e5);
+        polygonGeometry.addPoint(20e5, 20e5);
+        polygonGeometry.addPoint(20e5, -20e5);
+        polygonGeometry.addPoint(-20e5, -20e5);
+        // solid yellow polygon symbol
+        SimpleFillSymbol polygonSymbol = new SimpleFillSymbol(Color.YELLOW, SimpleFillSymbol.Style.SOLID, null);
+        // create graphic for polygon
+        Graphic polygonGraphic = new Graphic(polygonGeometry.toGeometry());
+        // create graphic overlay for polygon
+        GraphicsOverlay polygonGraphicOverlay = new GraphicsOverlay();
+        // create simple renderer
+        SimpleRenderer polygonRenderer = new SimpleRenderer(polygonSymbol);
+        // add graphic to overlay
+        polygonGraphicOverlay.setRenderer(polygonRenderer);
+        // add graphic to overlay
+        polygonGraphicOverlay.getGraphics().add(polygonGraphic);
+        // add graphics overlay to MapView
+        mMapView.getGraphicsOverlays().add(polygonGraphicOverlay);
 
     }
 
