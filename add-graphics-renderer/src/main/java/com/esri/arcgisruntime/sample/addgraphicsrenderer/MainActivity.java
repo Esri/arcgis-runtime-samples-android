@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // inflate MapView from layout
+        // create MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
         // create a map with the Basemap Type topographic
         Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 15.169193, 16.333479, 2);
