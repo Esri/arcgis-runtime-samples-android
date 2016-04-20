@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private void addGraphicsOverlay(){
         // point graphic
         Point pointGeometry = new Point(40e5, 40e5, SpatialReferences.getWebMercator());
-        // yellow diamond point symbol
-        SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(Color.YELLOW, 10, SimpleMarkerSymbol.Style.DIAMOND);
+        // red diamond point symbol
+        SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(Color.RED, 10, SimpleMarkerSymbol.Style.DIAMOND);
         // create graphic for point
         Graphic pointGraphic = new Graphic(pointGeometry);
         // create a graphic overlay for the point
