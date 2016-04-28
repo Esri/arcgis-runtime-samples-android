@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2016 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,20 +20,19 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.PointCollection;
-import com.esri.arcgisruntime.geometry.Polygon;
+import com.esri.arcgisruntime.geometry.PolygonBuilder;
+import com.esri.arcgisruntime.geometry.PolylineBuilder;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.VisibleAreaChangedEvent;
-import com.esri.arcgisruntime.mapping.view.VisibleAreaChangedListener;
+import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
-import com.esri.arcgisruntime.util.ListenableList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,67 +43,73 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // inflate MapView from layout
+        // create MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
-
         // create a map with the Basemap Type topographic
-        Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 14);
+        Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 15.169193, 16.333479, 2);
+        // add graphics overlay
+        addGraphicsOverlay();
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
-
-        // work with the MapView after it has loaded
-        mMapView.addVisibleAreaChangedListener(new VisibleAreaChangedListener() {
-            @Override
-            public void visibleAreaChanged(VisibleAreaChangedEvent visibleAreaChangedEvent) {
-                //remove the listener so it's only called once
-                mMapView.removeVisibleAreaChangedListener(this);
-                // add graphics overlay
-                addGraphicsOverlay();
-            }
-        });
     }
 
     private void addGraphicsOverlay(){
-        // get center of MapView
-        Polygon visibleArea = mMapView.getVisibleArea();
-        Envelope polygonExtent = visibleArea.getExtent();
-        Point center = polygonExtent.getCenter();
-
-        // create values inside the visible area extent for creating graphic
-        double xValue = mMapView.getVisibleArea().getExtent().getWidth() / 5;
-        double yValue = mMapView.getVisibleArea().getExtent().getHeight() / 10;
-
-        // create point collection
-        PointCollection polyPoints = new PointCollection(mMapView.getSpatialReference());
-        polyPoints.add(new Point(center.getX() - xValue * 2, center.getY() - yValue * 2));
-        polyPoints.add(new Point(center.getX() - xValue * 2, center.getY() + yValue * 2));
-        polyPoints.add(new Point(center.getX() + xValue * 2, center.getY() + yValue * 2));
-        polyPoints.add(new Point(center.getX() + xValue * 2, center.getY() - yValue * 2));
-
-        // create graphics overlay
-        GraphicsOverlay grOverlay = new GraphicsOverlay();
-
-        // create list of graphics
-        ListenableList<Graphic> graphics = grOverlay.getGraphics();
-
-        // add points from PointCollection to graphics list
-        for(Point pt : polyPoints){
-            // add graphic to graphics overlay
-            graphics.add(new Graphic(pt));
-        }
-        // create color for graphic
-        int yellow = Color.rgb(255, 255, 0);
+        // point graphic
+        Point pointGeometry = new Point(40e5, 40e5, SpatialReferences.getWebMercator());
+        // red diamond point symbol
+        SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(Color.RED, 10, SimpleMarkerSymbol.Style.DIAMOND);
+        // create graphic for point
+        Graphic pointGraphic = new Graphic(pointGeometry);
+        // create a graphic overlay for the point
+        GraphicsOverlay pointGraphicOverlay = new GraphicsOverlay();
         // create simple renderer
-        SimpleRenderer simpleRenderer = new SimpleRenderer();
-        // create point symbol
-        SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(yellow, 30, SimpleMarkerSymbol.Style.SQUARE);
-        // set symbol to renderer
-        simpleRenderer.setSymbol(pointSymbol);
-        // set renderer to graphics overlay
-        grOverlay.setRenderer(simpleRenderer);
-
+        SimpleRenderer pointRenderer = new SimpleRenderer(pointSymbol);
+        pointGraphicOverlay.setRenderer(pointRenderer);
+        // add graphic to overlay
+        pointGraphicOverlay.getGraphics().add(pointGraphic);
         // add graphics overlay to the MapView
-        mMapView.getGraphicsOverlays().add(grOverlay);
+        mMapView.getGraphicsOverlays().add(pointGraphicOverlay);
+
+        // line graphic
+        PolylineBuilder lineGeometry = new PolylineBuilder(SpatialReferences.getWebMercator());
+        lineGeometry.addPoint(-10e5, 40e5);
+        lineGeometry.addPoint(20e5, 50e5);
+        // solid blue line symbol
+        SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5);
+        // create graphic for polyline
+        Graphic lineGraphic = new Graphic(lineGeometry.toGeometry());
+        // create graphic overlay for polyline
+        GraphicsOverlay lineGraphicOverlay = new GraphicsOverlay();
+        // create simple renderer
+        SimpleRenderer lineRenderer = new SimpleRenderer(lineSymbol);
+        // add graphic to overlay
+        lineGraphicOverlay.setRenderer(lineRenderer);
+        // add graphic to overlay
+        lineGraphicOverlay.getGraphics().add(lineGraphic);
+        // add graphics overlay to the MapView
+        mMapView.getGraphicsOverlays().add(lineGraphicOverlay);
+
+        //polygon graphic
+        PolygonBuilder polygonGeometry = new PolygonBuilder(SpatialReferences.getWebMercator());
+        polygonGeometry.addPoint(-20e5, 20e5);
+        polygonGeometry.addPoint(20e5, 20e5);
+        polygonGeometry.addPoint(20e5, -20e5);
+        polygonGeometry.addPoint(-20e5, -20e5);
+        // solid yellow polygon symbol
+        SimpleFillSymbol polygonSymbol = new SimpleFillSymbol(Color.YELLOW, SimpleFillSymbol.Style.SOLID, null);
+        // create graphic for polygon
+        Graphic polygonGraphic = new Graphic(polygonGeometry.toGeometry());
+        // create graphic overlay for polygon
+        GraphicsOverlay polygonGraphicOverlay = new GraphicsOverlay();
+        // create simple renderer
+        SimpleRenderer polygonRenderer = new SimpleRenderer(polygonSymbol);
+        // add graphic to overlay
+        polygonGraphicOverlay.setRenderer(polygonRenderer);
+        // add graphic to overlay
+        polygonGraphicOverlay.getGraphics().add(polygonGraphic);
+        // add graphics overlay to MapView
+        mMapView.getGraphicsOverlays().add(polygonGraphicOverlay);
+
     }
 
     @Override
