@@ -24,8 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".OperationalLayers"
-            android:label="@string/title_activity_operational_layers" >
+            android:name=".OperationalLayers">
         </activity>
     </application>
 
