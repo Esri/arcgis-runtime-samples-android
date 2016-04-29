@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/mainLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+
+    <!-- MapView -->
+    <com.esri.arcgisruntime.mapping.view.MapView
+            android:id="@+id/mapView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+    </com.esri.arcgisruntime.mapping.view.MapView>
+
+
+
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_alignBottom="@+id/mapView"
+                  android:orientation="horizontal" android:gravity="center" android:layout_centerHorizontal="true">
+
+        <ToggleButton android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/btnCompass"
+                      android:drawableTop="@drawable/arcgisruntime_location_display_compass_symbol"
+                      android:textOff=""
+                      android:textOn=""
+                      android:textSize="0dp"
+                      android:layout_marginLeft="5dp" android:layout_marginRight="5dp"/>
+
+        <ToggleButton android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/btnNav"
+                      android:drawableTop="@drawable/arcgisruntime_location_display_course_symbol"
+                      android:textOff=""
+                      android:textOn=""
+                      android:textSize="0dp"
+                      android:layout_marginLeft="5dp" android:layout_marginRight="5dp"/>
+
+        <ToggleButton android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/btnDefault"
+                      android:drawableTop="@drawable/arcgisruntime_location_display_default_symbol"
+                      android:textOff=""
+                      android:textOn=""
+                      android:textSize="0dp"
+                      android:layout_marginLeft="5dp" android:layout_marginRight="5dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
