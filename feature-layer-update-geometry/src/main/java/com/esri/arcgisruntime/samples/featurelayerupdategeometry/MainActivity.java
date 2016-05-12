@@ -27,15 +27,16 @@ import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.GeoElement;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
   MapView mMapView;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
     // create a map with the streets basemap
-    Map map = new Map(Basemap.createStreets());
+    ArcGISMap map = new ArcGISMap(Basemap.createStreets());
     //set an initial viewpoint
     map.setInitialViewpoint(new Viewpoint(new Envelope(-1131596.019761, 3893114.069099, 3926705.982140, 7977912.461790, SpatialReferences.getWebMercator())));
     // set the map to be displayed in the mapview
