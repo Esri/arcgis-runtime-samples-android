@@ -29,8 +29,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     // set tiled layer as basemap
     Basemap basemap = new Basemap(mVectorTiledLayer);
     // create a map with the basemap
-    Map map = new Map(basemap);
+    ArcGISMap map = new ArcGISMap(basemap);
     // create a viewpoint from lat, long, scale
     Viewpoint vp = new Viewpoint(47.606726, -122.335564, 72223.819286);
     // set initial map extent

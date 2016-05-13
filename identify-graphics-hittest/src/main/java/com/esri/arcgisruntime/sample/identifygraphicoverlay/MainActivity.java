@@ -18,23 +18,22 @@ package com.esri.arcgisruntime.sample.identifygraphicoverlay;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.PolygonBuilder;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.util.ListenableList;
-
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.mapView);
 
         // create a map with the BasemapType topographic
-        Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 3.184710, -4.734690, 2);
+        ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 3.184710, -4.734690, 2);
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
 
@@ -73,8 +72,7 @@ public class MainActivity extends AppCompatActivity {
         polygonGeometry.addPoint(-20e5, -20e5);
 
         // create solid line symbol
-        int yellow = Color.argb(128, 255, 255, 0);
-        SimpleFillSymbol polygonSymbol = new SimpleFillSymbol(yellow, SimpleFillSymbol.Style.SOLID, null);
+        SimpleFillSymbol polygonSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.YELLOW, null);
         // create graphic from polygon geometry and symbol
         Graphic graphic = new Graphic(polygonGeometry.toGeometry(), polygonSymbol);
 
@@ -103,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Override default gestures of the MapView
      */
-    class MapViewTouchListener extends DefaultMapViewOnTouchListener{
+    class MapViewTouchListener extends DefaultMapViewOnTouchListener {
 
         /**
          * Constructs a DefaultMapViewOnTouchListener with the specified Context and MapView.

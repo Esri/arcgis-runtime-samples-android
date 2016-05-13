@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2016 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.LocationDisplay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.sample.spinner.ItemData;
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
 
         // create a map with the BasemapType Imagery
-        Map mMap = new Map(Basemap.createImagery());
+        ArcGISMap mMap = new ArcGISMap(Basemap.createImagery());
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
 
@@ -87,12 +87,11 @@ public class MainActivity extends AppCompatActivity {
                                                            break;
                                                        case 2:
                                                            // Re-Center MapView on Location
-                                                           // AutoPanMode - Default
                                                            // In this mode, the MapView attempts to keep the location symbol on-screen by re-centering
                                                            // the location symbol when the symbol moves outside a "wander extent." The location symbol
                                                            // may move freely within the wander extent, but as soon as the symbol exits the wander extent,
                                                            // the MapView re-centers the map on the symbol.
-                                                           mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.DEFAULT);
+                                                           mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER);
                                                            if (!mLocationDisplay.isStarted())
                                                                mLocationDisplay.startAsync();
                                                            break;
@@ -106,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                                                        case 4:
                                                            // Start Compass Mode
                                                            // This mode is better suited for waypoint navigation when the user is walking.
-                                                           mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.COMPASS);
+                                                           mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.COMPASS_NAVIGATION);
                                                            if (!mLocationDisplay.isStarted())
                                                                mLocationDisplay.startAsync();
                                                            break;

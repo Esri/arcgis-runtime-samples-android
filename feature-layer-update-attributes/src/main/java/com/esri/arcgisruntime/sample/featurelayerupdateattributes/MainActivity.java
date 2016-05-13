@@ -16,8 +16,6 @@
 
 package com.esri.arcgisruntime.sample.featurelayerupdateattributes;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -42,12 +40,14 @@ import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.GeoElement;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
+
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
