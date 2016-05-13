@@ -1,4 +1,4 @@
-/* Copyright 2015 ESRI
+/* Copyright 2016 ESRI
  *
  * All rights reserved under the copyright laws of the United States
  * and applicable international laws, treaties, and conventions.
@@ -19,8 +19,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.mapView);
 
         // create a map with the imagery basemap
-        Map map = new Map(Basemap.createImagery());
+        ArcGISMap map = new ArcGISMap(Basemap.createImagery());
 
         // create an initial viewpoint with a point and scale
         Point point = new Point(-226773, 6550477, SpatialReferences.getWebMercator());
@@ -59,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         //[DocRef: Name=Point graphic with symbol, Category=Fundamentals, Topic=Symbols and Renderers]
         //create a simple marker symbol
-        int color = Color.rgb(255, 0, 0); //red, fully opaque
-        SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(color, 12, SimpleMarkerSymbol.Style.CIRCLE); //size 12, style of circle
+        SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 12); //size 12, style of circle
 
         //add a new graphic with a new point geometry
         Point graphicPoint = new Point(-226773, 6550477, SpatialReferences.getWebMercator());
