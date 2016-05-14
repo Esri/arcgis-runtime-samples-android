@@ -19,7 +19,7 @@ subprojects{
     afterEvaluate {project ->
         if(project.hasProperty("dependencies")){
             dependencies {
-                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0-beta-2'
+                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0-beta-3'
             }
         }
     }
