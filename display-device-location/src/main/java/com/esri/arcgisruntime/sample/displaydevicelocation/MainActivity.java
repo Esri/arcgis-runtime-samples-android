@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Get the MapView from layout and set a map with the BasemapType Imagery
     mMapView = (MapView) findViewById(R.id.mapView);
-    Map mMap = new Map(Basemap.createImagery());
+    ArcGISMap mMap = new ArcGISMap(Basemap.createImagery());
     mMapView.setMap(mMap);
 
     // get the MapView's LocationDisplay
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             // re-centering the location symbol when the symbol moves outside a "wander extent". The location symbol
             // may move freely within the wander extent, but as soon as the symbol exits the wander extent, the MapView
             // re-centers the map on the symbol.
-            mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.DEFAULT);
+            mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER);
             if (!mLocationDisplay.isStarted())
               mLocationDisplay.startAsync();
               break;
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
           case 4:
             // Start Compass Mode
             // This mode is better suited for waypoint navigation when the user is walking.
-            mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.COMPASS);
+            mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.COMPASS_NAVIGATION);
             if (!mLocationDisplay.isStarted())
               mLocationDisplay.startAsync();
               break;
