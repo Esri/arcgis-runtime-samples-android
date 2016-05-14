@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2016 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         // set tiled layer as basemap
         Basemap basemap = new Basemap(tiledLayerBaseMap);
         // create a map with the basemap
-        Map map = new Map(basemap);
+        ArcGISMap map = new ArcGISMap(basemap);
         // set the map to be displayed in this view
         mMapView.setMap(map);
     }

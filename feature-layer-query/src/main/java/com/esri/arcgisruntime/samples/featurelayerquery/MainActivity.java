@@ -1,4 +1,4 @@
-/* Copyright 2015 ESRI
+/* Copyright 2016 ESRI
  *
  * All rights reserved under the copyright laws of the United States
  * and applicable international laws, treaties, and conventions.
@@ -33,8 +33,8 @@ import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.mapView);
 
         // create a map with the topographic basemap
-        final Map map = new Map(Basemap.createTopographic());
+        final ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
         // set the map to be displayed in the mapview
         mMapView.setMap(map);
 
@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
         mFeaturelayer = new FeatureLayer(mServiceFeatureTable);
         mFeaturelayer.setOpacity(0.8f);
         //override the renderer
-        SimpleLineSymbol lineSymbol= new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(0, 0, 0), 1);
-        SimpleFillSymbol fillSymbol = new SimpleFillSymbol(Color.rgb(255, 204, 0), SimpleFillSymbol.Style.SOLID, lineSymbol);
+        SimpleLineSymbol lineSymbol= new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1);
+        SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.YELLOW, lineSymbol);
         mFeaturelayer.setRenderer(new SimpleRenderer(fillSymbol));
 
         // add the layer to the map

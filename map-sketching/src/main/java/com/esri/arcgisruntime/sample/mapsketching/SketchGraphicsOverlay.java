@@ -16,11 +16,6 @@
 
 package com.esri.arcgisruntime.sample.mapsketching;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-import java.util.concurrent.ExecutionException;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.MotionEvent;
@@ -38,6 +33,11 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Wraps a GraphicsOverlay with additional logic for sketching points, lines, and polygons onto
@@ -103,29 +103,29 @@ public class SketchGraphicsOverlay {
     // Create all the different symbols
     // When placing a point, it will be a red circle with black outline
     mPointPlacementSymbol =
-            new SimpleMarkerSymbol(Color.rgb(255, 0, 0), 7, SimpleMarkerSymbol.Style.CIRCLE);
+            new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 7);
     mPointPlacementSymbol.setOutline(blackOutline);
     // A placed point (single point) will be a blue circle with black outline
     mPointPlacedSymbol =
-            new SimpleMarkerSymbol(Color.rgb(0, 0, 255), 7, SimpleMarkerSymbol.Style.CIRCLE);
+            new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE, 7);
     mPointPlacedSymbol.setOutline(blackOutline);
     // A placed vertex of a polyline will be a blue square with a white outline
     mPolylineVertexSymbol =
-            new SimpleMarkerSymbol(Color.rgb(0, 0, 255), 5, SimpleMarkerSymbol.Style.SQUARE);
+            new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.SQUARE, Color.BLUE, 5);
     mPolylineVertexSymbol.setOutline(whiteOutline);
     // While placing a polyline, the line will be red
     mPolylinePlacementSymbol =
-            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(255, 0, 0), 1);
+            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 1);
     // Once placed, a polyline will become blue
     mPolylinePlacedSymbol =
-            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(0, 0, 255), 1);
+            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 1);
     // A midpoint of a polyline segment will be a semi-transparent white circle with black outline
     mPolylineMidpointSymbol =
-            new SimpleMarkerSymbol(Color.rgb(255, 255, 255), 5, SimpleMarkerSymbol.Style.CIRCLE);
+            new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.WHITE, 5);
     mPolylineMidpointSymbol.setOutline(blackOutline);
     // Polygons will be filled with a semi-transparent black solid shade
     mPolygonFillSymbol =
-            new SimpleFillSymbol(Color.rgb(0, 0, 0), SimpleFillSymbol.Style.SOLID, null);
+            new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLACK, null);
   }
 
   /**

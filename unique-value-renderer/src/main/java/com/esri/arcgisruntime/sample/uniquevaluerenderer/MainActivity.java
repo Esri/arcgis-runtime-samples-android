@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2016 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.mapView);
 
         // create a map with the topographic basemap
-        Map map = new Map(Basemap.createTopographic());
+        ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
 
         //[DocRef: Name=Unique Value Renderer, Topic=Symbols and Renderers, Category=Fundamentals]
         // Create service feature table
@@ -64,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
         uniqueValueRenderer.getFieldNames().add("STATE_ABBR"); //You can add multiple fields to be used for the renderer in the form of a list, in this case we are only adding a single field
 
         // Create the symbols to be used in the renderer
-        SimpleFillSymbol defaultFillSymbol = new SimpleFillSymbol(Color.rgb(0, 0, 0), SimpleFillSymbol.Style.NULL, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(211, 211, 211), 2));
-        SimpleFillSymbol californiaFillSymbol = new SimpleFillSymbol(Color.rgb(255,0,0), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(255, 0, 0), 2));
-        SimpleFillSymbol arizonaFillSymbol = new SimpleFillSymbol(Color.rgb(0,255,0), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(0, 255, 0), 2));
-        SimpleFillSymbol nevadaFillSymbol = new SimpleFillSymbol(Color.rgb(0,0,255), SimpleFillSymbol.Style.SOLID, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(0, 0, 255), 2));
+        SimpleFillSymbol defaultFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.NULL, Color.BLACK, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.GRAY, 2));
+        SimpleFillSymbol californiaFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.RED, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2));
+        SimpleFillSymbol arizonaFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.GREEN, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.GREEN, 2));
+        SimpleFillSymbol nevadaFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID,Color.BLUE, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 2));
 
         // Set default symbol
         uniqueValueRenderer.setDefaultSymbol(defaultFillSymbol);
