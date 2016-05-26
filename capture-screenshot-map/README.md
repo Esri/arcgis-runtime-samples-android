@@ -1,5 +1,7 @@
-# Capture Map Svcreenshot
+# Capture Map Screenshot
 The purpose of this sample is to demonstrate how to export the map as an image file. ```MapView.exportImageAsync``` exports the map to **Bitmap** format and saves the bitmap in **PNG** format. 
+
+![screen shot 2016-05-26 at 1 48 58 pm](https://cloud.githubusercontent.com/assets/12448081/15589649/cafcba52-2348-11e6-90f1-9bbbecea6e28.png)
 
 #Features
 
