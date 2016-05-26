@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle menu item selection
-        //if-else is used because this sample is used elsewhere as a Library module
+
         int itemId = item.getItemId();
         if (itemId == R.id.CaptureMap) {
             // take a screenshot of the image
