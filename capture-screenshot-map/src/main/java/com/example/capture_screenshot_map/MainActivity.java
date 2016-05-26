@@ -18,13 +18,16 @@ package com.example.capture_screenshot_map;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaActionSound;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -89,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         mMapView.resume();
     }
 
-
     /**
      * capture the map as an image
      */
@@ -102,13 +104,54 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     Bitmap currentMapImage = export.get();
+                    // play the camera shutter sound
+                    MediaActionSound sound = new MediaActionSound();
+                    sound.play(MediaActionSound.SHUTTER_CLICK);
                     Log.d(TAG,"Captured the image!!");
-                    saveToFile(currentMapImage);
+                    // save the exported bitmap to an image file
+                    SaveImageTask saveImageTask = new SaveImageTask();
+                    saveImageTask.execute(currentMapImage);
                 } catch (Exception e) {
                     Log.d(TAG, "Fail to export map image: " + e.getMessage());
                 }
             }
         });
+    }
+
+    /**
+     * AsyncTask class to save the bitmap as an image
+     */
+    public class SaveImageTask extends AsyncTask<Bitmap, Void, File> {
+
+        protected void onPreExecute() {
+            // display a toast message to inform saving the map as an image
+            Toast.makeText(getApplicationContext(), "Exporting Map as an image!", Toast.LENGTH_SHORT).show();
+        }
+        /**
+         * save the file using a worker thread
+         */
+        protected File doInBackground(Bitmap... mapBitmap) {
+
+            try {
+                return saveToFile(mapBitmap[0]);
+            } catch (Exception e) {
+                Log.d(TAG, "Fail to export map image: " + e.getMessage());
+            }
+
+            return null;
+
+        }
+
+        /**
+         *  Perform the work on UI thread to open the exported map image
+         */
+        protected void onPostExecute(File file) {
+            // Open the file to view
+            Intent i = new Intent();
+            i.setAction(android.content.Intent.ACTION_VIEW);
+            i.setDataAndType(Uri.fromFile(file), "image/png");
+            startActivity(i);
+        }
     }
 
 
@@ -118,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
      * @param bitmap
      * @throws IOException
      */
-    private void saveToFile(Bitmap bitmap) throws IOException {
+    private File saveToFile(Bitmap bitmap) throws IOException {
 
         // create a directory ArcGIS to save the file
         File root = null;
@@ -138,11 +181,7 @@ public class MainActivity extends AppCompatActivity {
         fos.flush();
         fos.close();
 
-        // Open the file to view
-        Intent i = new Intent();
-        i.setAction(android.content.Intent.ACTION_VIEW);
-        i.setDataAndType(Uri.fromFile(file), "image/png");
-        startActivity(i);
+        return file;
 
     }
 
