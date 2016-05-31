@@ -33,4 +33,5 @@ include ':add-graphics-renderer',
         ':show-magnifier',
         ':simple-marker-symbol',
         ':simple-renderer',
-        ':unique-value-renderer'
+        ':unique-value-renderer',
+        ':view-layer-status'
