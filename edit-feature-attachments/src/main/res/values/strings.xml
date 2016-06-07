@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Edit Feature Attachments</string>
+    <string name="select_attachment">"Select an attachment"</string>
+    <string name="delete_attachment">"Delete an attachment"</string>
+    <string name="attribute">"AttributeID"</string>
+    <string name="add">"Add"</string>
+    <string name="attachment">attachment</string>
+    <string name="noOfAttachments">noOfAttachments</string>
+    <!-- Feature Service URL -->
+    <string name="sample_service_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
+    <string name="internal_service_url">http://sds2-appgrp.esri.com:6080/arcgis/rest/services/DamageInspection6/FeatureServer/0</string>
+
+</resources>
