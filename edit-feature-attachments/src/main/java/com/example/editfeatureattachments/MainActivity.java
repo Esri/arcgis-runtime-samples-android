@@ -1,10 +1,25 @@
+/* Copyright 2016 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.example.editfeatureattachments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,30 +50,25 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static int REQUEST_CODE = 100;
+    private static String TAG = "EditFeatureAttachment";
+    ServiceFeatureTable mServiceFeatureTable;
+    ProgressDialog progressDialog;
+    RelativeLayout mCalloutLayout;
     private MapView mMapView;
     private ArcGISMap mMap;
     private Callout mCallout;
     private FeatureLayer mFeatureLayer;
     private ArcGISFeature mSelectedArcGISFeature;
     private android.graphics.Point mClickPoint;
-    private ServiceFeatureTable mServiceFeatureTable;
     private List<Attachment> attachments;
-    private Snackbar mSnackbarSuccess;
-    private Snackbar mSnackbarFailure;
     private String mSelectedArcGISFeatureAttributeValue;
-    private boolean mFeatureUpdated;
-    private View mCoordinatorLayout;
     private String mAttributeID;
-    ProgressDialog progressDialog;
-    private static String TAG = "EditFeatureAttachment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mCoordinatorLayout = findViewById(R.id.snackbarPosition);
-
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
 
@@ -73,8 +83,9 @@ public class MainActivity extends AppCompatActivity {
         mMapView.setMap(mMap);
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Fetching # of attachments");
-        progressDialog.setMessage("Please wait!!");
+        progressDialog.setTitle(getApplication().getString(R.string.fetching_no_attachments));
+        progressDialog.setMessage(getApplication().getString(R.string.wait));
+        createCallout();
         // get callout, set content and show
         mCallout = mMapView.getCallout();
         // create feature layer with its service feature table
@@ -141,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                                                     progressDialog.dismiss();
                                                 }
                                                 showCallout(mSelectedArcGISFeatureAttributeValue, attachments.size());
-                                                Toast.makeText(getApplicationContext(), "Tap on the info button to edit attachment", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getApplicationContext(), getApplication().getString(R.string.info_button_message), Toast.LENGTH_SHORT).show();
 
                                             } catch (Exception e) {
                                                 Log.e(TAG, e.getMessage());
@@ -164,19 +175,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Displays Callout
-     * @param title the text to show in the Callout
+     * Display the callout
+     * @param title the damage type text
+     * @param noOfAttachments attachment count of the selected feature
      */
     private void showCallout(String title, int noOfAttachments){
 
-        // create a text view for the callout
-        RelativeLayout calloutLayout = new RelativeLayout(getApplicationContext());
+        TextView calloutContent = (TextView) mCalloutLayout.findViewById(R.id.calloutTextView);
+        calloutContent.setText(title);
 
+        TextView calloutAttachment = (TextView) mCalloutLayout.findViewById(R.id.attchTV);
+        String attachmentText = getApplication().getString(R.string.attachment_info_message) + noOfAttachments;
+        calloutAttachment.setText(attachmentText);
+
+        mCallout.setLocation(mMapView.screenToLocation(mClickPoint));
+        mCallout.setContent(mCalloutLayout);
+        mCallout.show();
+    }
+
+    /**
+     * Create a Layout for callout
+     */
+    private void createCallout() {
+
+        // create content text view for the callout
+        mCalloutLayout = new RelativeLayout(getApplicationContext());
         TextView calloutContent = new TextView(getApplicationContext());
         calloutContent.setId(R.id.calloutTextView);
         calloutContent.setTextColor(Color.BLACK);
         calloutContent.setTextSize(18);
-        calloutContent.setText(title);
 
         RelativeLayout.LayoutParams relativeParamsBelow = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -187,10 +214,8 @@ public class MainActivity extends AppCompatActivity {
         calloutAttachment.setId(R.id.attchTV);
         calloutAttachment.setTextColor(Color.BLACK);
         calloutAttachment.setTextSize(13);
-        calloutContent.setPadding(0,20,20,0);
+        calloutContent.setPadding(0, 20, 20, 0);
         calloutAttachment.setLayoutParams(relativeParamsBelow);
-        String attachmentText = "Number of attachments :: "+noOfAttachments;
-        calloutAttachment.setText(attachmentText);
 
         RelativeLayout.LayoutParams relativeParamsRightOf = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -202,16 +227,22 @@ public class MainActivity extends AppCompatActivity {
         imageView.setLayoutParams(relativeParamsRightOf);
         imageView.setOnClickListener(new ImageViewOnclickListener());
 
+        mCalloutLayout.addView(calloutContent);
+        mCalloutLayout.addView(imageView);
+        mCalloutLayout.addView(calloutAttachment);
 
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Check which request we're responding to
+        if (requestCode == REQUEST_CODE) {
+            int noOfAttachments = data.getExtras().getInt(getApplication().getString(R.string.noOfAttachments));
+            // update the callout with attachment count
+            showCallout(mSelectedArcGISFeatureAttributeValue, noOfAttachments);
+        }
 
-        calloutLayout.addView(calloutContent);
-        calloutLayout.addView(imageView);
-        calloutLayout.addView(calloutAttachment);
-
-        mCallout.setLocation(mMapView.screenToLocation(mClickPoint));
-        mCallout.setContent(calloutLayout);
-        mCallout.show();
     }
 
     /**
@@ -219,64 +250,18 @@ public class MainActivity extends AppCompatActivity {
      */
     private class ImageViewOnclickListener implements View.OnClickListener {
 
-        @Override public void onClick(View v) {
+        @Override
+        public void onClick(View v) {
             Log.e("imageview", "tap");
+            // start EditAttachmentActivity to view/edit the attachments
             Intent myIntent = new Intent(MainActivity.this, EditAttachmentActivity.class);
-            myIntent.putExtra(getApplication().getString(R.string.attribute),mAttributeID);
-            myIntent.putExtra(getApplication().getString(R.string.noOfAttachments),attachments.size());
-            startActivity(myIntent);
+            myIntent.putExtra(getApplication().getString(R.string.attribute), mAttributeID);
+            myIntent.putExtra(getApplication().getString(R.string.noOfAttachments), attachments.size());
+            Bundle bundle = new Bundle();
+            startActivityForResult(myIntent, REQUEST_CODE, bundle);
 
         }
     }
-
-    @Override
-    public void onResume() {
-        Log.d(TAG, "onResume()");
-
-        super.onResume();
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onRestart() {
-        super.onRestart();
-        Log.d(TAG, "onRestart()");
-        restartCallout();
-    }
-
-    private void restartCallout() {
-        progressDialog.setTitle("Refreshing");
-        progressDialog.setMessage("Please wait!");
-        progressDialog.show();
-        // get the number of attachments
-        final ListenableFuture<List<Attachment>> attachmentResults = mSelectedArcGISFeature.fetchAttachmentsAsync();
-
-        attachmentResults.addDoneListener(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    attachments = attachmentResults.get();
-                    Log.d("number of attachments :", attachments.size() + "");
-                    // show callout with the value for the attribute "typdamage" of the selected feature
-                    mSelectedArcGISFeatureAttributeValue = (String) mSelectedArcGISFeature.getAttributes().get("typdamage");
-                    if (progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
-                    showCallout(mSelectedArcGISFeatureAttributeValue, attachments.size());
-
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
-                }
-            }
-        });
-    }
-
 
 
 }

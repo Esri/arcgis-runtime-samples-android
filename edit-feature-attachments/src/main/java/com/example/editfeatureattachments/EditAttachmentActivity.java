@@ -1,3 +1,19 @@
+/* Copyright 2016 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.example.editfeatureattachments;
 
 import android.app.ProgressDialog;
@@ -11,13 +27,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -29,7 +45,6 @@ import com.esri.arcgisruntime.datasource.arcgis.ArcGISFeature;
 import com.esri.arcgisruntime.datasource.arcgis.Attachment;
 import com.esri.arcgisruntime.datasource.arcgis.FeatureEditResult;
 import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
-import com.esri.arcgisruntime.layers.FeatureLayer;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,87 +57,96 @@ public class EditAttachmentActivity extends AppCompatActivity {
     private static String TAG = "EditAttachmentActivity";
     private static int RESULT_LOAD_IMAGE = 1;
     CustomList adapter;
+    int noOfAttachments;
+    FloatingActionButton addAttachmentFab;
     private List<Attachment> attachments;
-    private Attachment[] arr;
-    private FeatureLayer mFeatureLayer;
     private ArcGISFeature mSelectedArcGISFeature;
-    private android.graphics.Point mClickPoint;
     private ServiceFeatureTable mServiceFeatureTable;
-    private String mSelectedArcGISFeatureAttributeValue;
     private String mAttributeID;
     private ListView list;
     private ArrayList<String> attachmentList = new ArrayList<>();
     private ProgressDialog progressDialog;
-    private int noOfAttachments = 0;
+    private AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.attachments_listview);
-
-
+        setContentView(R.layout.attachments);
 
         Bundle bundle = getIntent().getExtras();
         String s = bundle.getString(getApplication().getString(R.string.attribute));
         noOfAttachments = bundle.getInt(getApplication().getString(R.string.noOfAttachments));
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
 
-        Log.d(TAG, s);
+        // Build a alert dialog with specified style
+        builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+
+        // inflate the floating action button
+        addAttachmentFab = (FloatingActionButton) findViewById(R.id.addAttachmentFAB);
+
+        // select an image to upload as an attachment
+        addAttachmentFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectAttachment();
+            }
+        });
 
         mServiceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
-        // create the feature layer using the service feature table
-        mFeatureLayer = new FeatureLayer(mServiceFeatureTable);
 
         progressDialog = new ProgressDialog(this);
 
-        if(!(noOfAttachments == 0)) {
-            progressDialog.setTitle("Fetching Attachments");
-            progressDialog.setMessage("Please wait!!");
+        // display progress dialog if selected feature has attachments
+        if (noOfAttachments != 0) {
+            progressDialog.setTitle(getApplication().getString(R.string.fetching_attachments));
+            progressDialog.setMessage(getApplication().getString(R.string.wait));
 
             progressDialog.show();
         } else {
-            Toast.makeText(EditAttachmentActivity.this, "Looks like the feature doesn't have any attachments \n Click + to add attachments", Toast.LENGTH_LONG).show();
+            Toast.makeText(EditAttachmentActivity.this, getApplication().getString(R.string.empty_attachment_message), Toast.LENGTH_LONG).show();
         }
 
-        list = (ListView) findViewById(R.id.listview);
-
+        // inflate the list view
+        list = (ListView) findViewById(R.id.listView);
+        // create custom adapter
         adapter = new CustomList(EditAttachmentActivity.this, attachmentList);
-        fetchAttachments(s);
+        // set custom adapter on the list
         list.setAdapter(adapter);
+        fetchAttachments(s);
 
+        // listener on attachment items to download the attachment
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
 
-                progressDialog.setTitle("Downloading Attachments");
-                progressDialog.setMessage("Please wait!!");
-
+                progressDialog.setTitle(getApplication().getString(R.string.downloading_attachments));
+                progressDialog.setMessage(getApplication().getString(R.string.wait));
                 progressDialog.show();
 
-
+                // create a listenableFuture to fetch the attachment asynchronously
                 final ListenableFuture<InputStream> listenableFuture = attachments.get(position).fetchDataAsync();
                 listenableFuture.addDoneListener(new Runnable() {
                     @Override
                     public void run() {
-
                         try {
-
                             String fileName = attachmentList.get(position);
+                            // create a drawable from InputStream
                             Drawable d = Drawable.createFromStream(listenableFuture.get(), fileName);
-
+                            // create a bitmap from drawable
                             Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
                             File root = null;
                             root = Environment.getExternalStorageDirectory();
                             File fileDir = new File(root.getAbsolutePath() + "/ArcGIS/Attachments");
+                            // create folder /ArcGIS/Attachments in external storage
                             fileDir.mkdirs();
                             File file = new File(fileDir, fileName);
                             FileOutputStream fos = new FileOutputStream(file);
+                            // compress the bitmap to PNG format
                             bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
-
-                            Log.d(TAG + "-bitmap", bitmap.getByteCount() + "");
-
                             fos.flush();
                             fos.close();
+                            // set the downloaded bitmap to the icon
+                            ImageView attachmentIcon = (ImageView) view.findViewById(R.id.attachmentIcon);
+                            attachmentIcon.setImageBitmap(bitmap);
 
                             if (progressDialog.isShowing()) {
                                 progressDialog.dismiss();
@@ -132,7 +156,6 @@ public class EditAttachmentActivity extends AppCompatActivity {
                             i.setAction(android.content.Intent.ACTION_VIEW);
                             i.setDataAndType(Uri.fromFile(file), "image/png");
                             startActivity(i);
-
 
                         } catch (Exception e) {
                             Log.d(TAG + "-image-", e.toString());
@@ -146,45 +169,37 @@ public class EditAttachmentActivity extends AppCompatActivity {
         //set onlong click listener to delete the attachment
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                           final int pos, long id) {
-                Log.v("long clicked","pos: " + pos);
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int pos, long id) {
 
-
-                builder.setMessage("Are you sure you want to delete the attachment?");
+                builder.setMessage(getApplication().getString(R.string.delete_query));
                 builder.setCancelable(true);
 
-                builder.setPositiveButton(
-                        "Yes",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                deleteAttachment(pos);
-                                dialog.dismiss();
-                            }
-                        });
-
-                builder.setNegativeButton(
-                        "No",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteAttachment(pos);
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
                 AlertDialog alert = builder.create();
                 alert.show();
-
-
                 return true;
             }
         });
-
-
     }
 
+    /**
+     * Delete the attachment from the feature
+     *
+     * @param pos position of the attachment in the list view to be deleted
+     */
     private void deleteAttachment(int pos) {
-        progressDialog.setTitle("Deleting attachment");
-        progressDialog.setMessage("Please wait...");
+        progressDialog.setTitle(getApplication().getString(R.string.deleting_attachments));
+        progressDialog.setMessage(getApplication().getString(R.string.wait));
         progressDialog.show();
 
         ListenableFuture<Void> deleteResult = mSelectedArcGISFeature.deleteAttachmentAsync(attachments.get(pos));
@@ -193,6 +208,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
             @Override
             public void run() {
                 ListenableFuture<Void> tableResult = mServiceFeatureTable.updateFeatureAsync(mSelectedArcGISFeature);
+                // apply changes back to the server
                 tableResult.addDoneListener(new Runnable() {
                     @Override
                     public void run() {
@@ -203,14 +219,19 @@ public class EditAttachmentActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * Asynchronously fetch the attachments to view as a list
+     * @param objectID
+     */
     private void fetchAttachments(String objectID) {
+        attachmentList = new ArrayList<>();
         // create objects required to do a selection with a query
         QueryParameters query = new QueryParameters();
-        //make search case insensitive
+        // set the where clause of the query
         query.setWhereClause("OBJECTID = " + objectID);
-        // call select features
 
-        attachmentList = new ArrayList<>();
+        // query the feature table
         final ListenableFuture<FeatureQueryResult> future = mServiceFeatureTable.queryFeaturesAsync(query);
 
         future.addDoneListener(new Runnable() {
@@ -235,23 +256,21 @@ public class EditAttachmentActivity extends AppCompatActivity {
                                         attachmentList.add(attachment.getName());
                                     }
 
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            if (progressDialog.isShowing()) {
+                                                progressDialog.dismiss();
+                                            }
+                                            adapter = new CustomList(EditAttachmentActivity.this, attachmentList);
+                                            list.setAdapter(adapter);
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    });
+
                                 }
 
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        if (progressDialog.isShowing()) {
-                                            progressDialog.dismiss();
-                                        }
-
-                                        adapter = new CustomList(EditAttachmentActivity.this, attachmentList);
-                                        list.setAdapter(adapter);
-
-                                        adapter.refreshEvents();
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                });
 
                             } catch (Exception e) {
                                 Log.e(TAG, e.getMessage());
@@ -268,26 +287,6 @@ public class EditAttachmentActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_attachment, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle menu item selection
-        //if-else is used because this sample is used elsewhere as a Library module
-        int itemId = item.getItemId();
-        if (itemId == R.id.Add_Attachment) {
-            selectAttachment();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
 
     /**
      * Open Gallery to select an image as an attachment
@@ -300,6 +299,13 @@ public class EditAttachmentActivity extends AppCompatActivity {
         startActivityForResult(i, RESULT_LOAD_IMAGE);
     }
 
+    /**
+     * Upload the selected image from the gallery as an attachment to the selected feature
+     *
+     * @param requestCode RESULT_LOAD_IMAGE request code to identify the requesting activity
+     * @param resultCode activity result code
+     * @param data Uri of the selected image
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -320,8 +326,8 @@ public class EditAttachmentActivity extends AppCompatActivity {
 
             final String attachmentName = getApplication().getString(R.string.attachment) + "_" + System.currentTimeMillis() + ".png";
 
-            progressDialog.setTitle("Applying Edits on Server");
-            progressDialog.setMessage("Please wait!!");
+            progressDialog.setTitle(getApplication().getString(R.string.apply_edit_message));
+            progressDialog.setMessage(getApplication().getString(R.string.wait));
 
             progressDialog.show();
 
@@ -371,13 +377,12 @@ public class EditAttachmentActivity extends AppCompatActivity {
                                 mAttributeID = mSelectedArcGISFeature.getAttributes().get("objectid").toString();
                                 fetchAttachments(mAttributeID);
                                 // update the attachment list view on the control panel
-                                Toast.makeText(EditAttachmentActivity.this, "Feature edited successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(EditAttachmentActivity.this, getApplication().getString(R.string.success_message), Toast.LENGTH_SHORT).show();
                             } else {
-                                System.out.println(
-                                        "Server Error: Failed updating feature attachment to the server.");
+                                Toast.makeText(EditAttachmentActivity.this, getApplication().getString(R.string.failure_message), Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            System.out.println("Server did not return edit results");
+                            Toast.makeText(EditAttachmentActivity.this, getApplication().getString(R.string.failure_edit_results), Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -390,8 +395,16 @@ public class EditAttachmentActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * send the updated attachment count back to MainActivity and finish the current Activity
+     */
     @Override
     public void onBackPressed() {
+
+        Intent intent = new Intent();
+        intent.putExtra(getApplication().getString(R.string.noOfAttachments), attachmentList.size());
+        setResult(RESULT_OK, intent);
+        finish();
         super.onBackPressed();
     }
 }
