@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- OAuth Portals -->
+    <string-array name="portal">
+        <item name="title">Android Sample</item>
+        <!-- your account URL path-->
+        <item name="url">https://androidteam.maps.arcgis.com/</item>
+        <!-- Client ID of your registered application-->
+        <item name="client_id">BNuvI0QZuudSFeoW</item>
+        <!-- Redirect URI of the application from Authentication tab-->
+        <item name="redirect_uri">my-app://auth</item>
+        <item name="username">AndroidTeam</item>
+        <item name="password">android@100</item>
+    </string-array>
+</resources>

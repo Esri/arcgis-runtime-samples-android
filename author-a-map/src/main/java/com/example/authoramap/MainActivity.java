@@ -1,0 +1,379 @@
+package com.example.authoramap;
+
+import android.app.ProgressDialog;
+import android.content.res.Configuration;
+import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReference;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
+import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
+import com.esri.arcgisruntime.layers.Layer;
+import com.esri.arcgisruntime.loadable.LoadStatus;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.Viewpoint;
+import com.esri.arcgisruntime.mapping.view.LayerViewStateChangedEvent;
+import com.esri.arcgisruntime.mapping.view.LayerViewStateChangedListener;
+import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.portal.Portal;
+import com.esri.arcgisruntime.portal.PortalItem;
+import com.esri.arcgisruntime.security.OAuthLoginManager;
+import com.esri.arcgisruntime.security.OAuthTokenCredential;
+
+public class MainActivity extends AppCompatActivity {
+
+
+    public static final String KEY = "OAUTH_CREDENTIAL";
+    private static final int MIN_SCALE = 40000000;
+    private static final int SCALE = 50000000;
+    private static OAuthLoginManager oauthLoginManager;
+    ProgressDialog progressDialog;
+    Viewpoint viewpoint;
+    private MapView mMapView;
+    private ArcGISMap mMap;
+    private String[] mBasemapTiles;
+    private String[] mLayerTiles;
+    private DrawerLayout mDrawerLayout;
+    private ListView mBasemapListView;
+    private ListView mLayerListView;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private Layer[] layer_arr = new Layer[2];
+    private SpatialReference spartialReference;
+    private PortalItem newMapPortalItem;
+    private OAuthTokenCredential mOAuthCred;
+
+    public static OAuthLoginManager getOAuthLoginManagerInstance() {
+        return oauthLoginManager;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_drawer);
+
+       /* // Check if the activity is started from the other oauth activity
+        String json = getIntent().getStringExtra(KEY);
+        if (json != null) {
+            // An OAuth credential is embedded in the intent. Deserialize the credential
+            mOAuthCred = (OAuthTokenCredential) OAuthTokenCredential.fromJson(json);
+            // Load a webmap
+            if (mOAuthCred != null) {
+                //loadPortalItem(mOAuthCred);
+                Log.d("mOAuthCred",mOAuthCred.getUsername());
+            }
+        }*/
+
+        mTitle = mDrawerTitle = getTitle();
+        // inflate MapView from layout
+        mMapView = (MapView) findViewById(R.id.mapView);
+        // create a map with Topographic Basemap
+        mMap = new ArcGISMap(Basemap.createStreets());
+        // set the map to be displayed in this view
+        mMapView.setMap(mMap);
+
+        // create spatial reference for all points
+        spartialReference = SpatialReferences.getWebMercator();
+
+        // create the esri location point
+        Point londonPoint = new Point(-14093, 6711377, spartialReference);
+        // create the viewpoint with the London point and scale
+        viewpoint = new Viewpoint(londonPoint, SCALE);
+
+        final ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(getApplication().getString(R.string.world_elevation));
+
+        final ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(getApplication().getString(R.string.world_census));
+        // setting the scales at which this layer can be viewed
+        imageLayer.setMinScale(MIN_SCALE);
+        imageLayer.setMaxScale(MIN_SCALE / 10);
+
+        layer_arr[0] = tiledLayer;
+        layer_arr[1] = imageLayer;
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle(getApplication().getString(R.string.author_map_message));
+        progressDialog.setMessage(getApplication().getString(R.string.wait));
+
+        mBasemapTiles = getResources().getStringArray(R.array.basemap_array);
+        mLayerTiles = getResources().getStringArray(R.array.operational_layer_array);
+
+        mBasemapListView = (ListView) findViewById(R.id.basemap_list);
+        mLayerListView = (ListView) findViewById(R.id.layer_list);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        // Set the adapter for the Basemap list view
+        mBasemapListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, mBasemapTiles));
+        mBasemapListView.setItemChecked(0, true);
+
+        // Set the adapter for the Operational Layer list view
+        mLayerListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, mLayerTiles));
+
+        mBasemapListView.setOnItemClickListener(new BasemapClickListener());
+        mLayerListView.setOnItemClickListener(new OperationLayerClickListener());
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name) {
+            public void onDrawerClosed(View view) {
+                getSupportActionBar().setTitle(mTitle);
+
+
+                mMap.addDoneLoadingListener(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mMap.getLoadStatus().name().equalsIgnoreCase(LoadStatus.LOADED.name())) {
+                            // calling onPrepareOptionsMenu() to show action bar icons
+                            if (mLayerListView.getCheckedItemCount() > 1) {
+                                progressDialog.show();
+                                removeLayers();
+                                mMap.getOperationalLayers().add(layer_arr[0]);
+                                mMap.getOperationalLayers().add(layer_arr[1]);
+                            } else {
+                                if (mLayerListView.isItemChecked(0)) {
+                                    progressDialog.show();
+                                    removeLayers();
+                                    mMap.getOperationalLayers().add(layer_arr[0]);
+                                } else if (mLayerListView.isItemChecked(1)) {
+                                    progressDialog.show();
+                                    removeLayers();
+                                    mMap.getOperationalLayers().add(layer_arr[1]);
+                                } else {
+                                    removeLayers();
+                                }
+                            }
+                        }
+                    }
+                });
+
+
+                mMapView.addLayerViewStateChangedListener(new LayerViewStateChangedListener() {
+                    @Override
+                    public void layerViewStateChanged(LayerViewStateChangedEvent layerViewStateChangedEvent) {
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+                });
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                getSupportActionBar().setTitle(mDrawerTitle);
+                // calling onPrepareOptionsMenu() to hide action bar icons
+                invalidateOptionsMenu();
+
+            }
+        };
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        Log.d("MainActivity ==>", " here");
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // toggle nav drawer on selecting action bar app icon/title
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_save) {
+            saveMap();
+        }
+
+        // Activate the navigation drawer toggle
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    private void saveMap() {
+        // Define a set of tags for the new map
+        try {
+            final Portal portal = new Portal("http://www.arcgis.com", true);
+            /*Credential creds = new UserCredential("manish8177","Leonidas123#");
+            portal.setCredential(creds);*/
+            /*OAuthConfiguration config = new OAuthConfiguration("http://www.arcgis.com","UTw3XBPW1HN92h4k","my-app://auth");
+            AuthenticationManager.addOAuthConfiguration(config);*/
+            oauthLoginManager = new OAuthLoginManager("https://androidteam.maps.arcgis.com/", "BNuvI0QZuudSFeoW", "my-ags-app://auth", 0);
+            oauthLoginManager.launchOAuthBrowserPage(getApplicationContext());
+
+            //portal.loadAsync();
+/*            portal.addDoneLoadingListener(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("Portal",portal.getLoadStatus().name());
+
+                    if (portal.getLoadStatus() == LoadStatus.LOADED) {
+                        PortalInfo portalInformation = portal.getPortalInfo();
+                        String portalName = portalInformation.getPortalName();
+                        Log.d("Login", "Successful " + portal.getUri());
+
+                        ArrayList<String> tags = new ArrayList<>(4);
+                        tags.add("Forest Management");
+                        tags.add("Wildlife");
+                        tags.add("Conservation");
+                        tags.add("Avian");
+                        // Save the map to an authenticated Portal, with specified title, tags, description, and thumbnail.
+                        // Passing 'null' as portal folder parameter saves this to users root folder.
+                        final ListenableFuture<PortalItem> saveAsFuture = mMap.saveAsAsync(portal, null,
+                                "My Maps from Mobile", tags,
+                                "This is the test to check if maps are saved online", null);
+                        saveAsFuture.addDoneListener(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Check the result of the save operation.
+                                try {
+                                    newMapPortalItem = saveAsFuture.get();
+                                    Toast.makeText(getApplicationContext(), "Map Saved", Toast.LENGTH_SHORT).show();
+                                } catch (InterruptedException | ExecutionException e) {
+                                    // If saving failed, deal with failure depending on the cause...
+                                    Log.e("Exception", e.toString());
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+            portal.loadAsync();*/
+        } catch (Exception e) {
+            Log.e("error-", e.getMessage() + "");
+        }
+
+
+    }
+
+    /***
+     * Called when invalidateOptionsMenu() is triggered
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // if nav drawer is opened, hide the action items
+        /*boolean drawerOpen = mDrawerLayout.isDrawerOpen(GravityCompat.START);
+        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);*/
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            menu.findItem(R.id.action_save).setVisible(false);
+        } else {
+            menu.findItem(R.id.action_save).setVisible(true);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getActionBar().setTitle(mTitle);
+    }
+
+    /**
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
+     */
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    private void setBasemap(int choice) {
+
+        removeLayers();
+        switch (choice) {
+            case 0:
+                mMap = new ArcGISMap(Basemap.createStreets());
+                // set the map to be displayed in this view
+                mMapView.setMap(mMap);
+                break;
+            case 1:
+                mMap = new ArcGISMap(Basemap.createImagery());
+                // set the map to be displayed in this view
+                mMapView.setMap(mMap);
+                break;
+            case 2:
+                mMap = new ArcGISMap(Basemap.createTopographic());
+                // set the map to be displayed in this view
+                mMapView.setMap(mMap);
+                break;
+            case 3:
+                mMap = new ArcGISMap(Basemap.createOceans());
+                // set the map to be displayed in this view
+                mMapView.setMap(mMap);
+                break;
+        }
+
+        mMapView.setViewpointWithDurationAsync(viewpoint, 7);
+
+    }
+
+    private void removeLayers() {
+        if (mMap.getOperationalLayers().size() == 2) {
+            mMap.getOperationalLayers().remove(0);
+            mMap.getOperationalLayers().remove(0);
+        }
+        if (mMap.getOperationalLayers().size() == 1) {
+            mMap.getOperationalLayers().remove(0);
+        }
+    }
+
+    private class BasemapClickListener implements ListView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            // display view for selected nav drawer item
+            mBasemapListView.setSelection(position);
+            setBasemap(position);
+            Toast.makeText(getApplicationContext(), "Selected " + mBasemapTiles[position], Toast.LENGTH_SHORT).show();
+
+
+            //mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+        }
+    }
+
+    private class OperationLayerClickListener implements ListView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            // display view for selected nav drawer item
+            Toast.makeText(getApplicationContext(), "Selected " + mLayerTiles[position], Toast.LENGTH_SHORT).show();
+        }
+    }
+
+}
