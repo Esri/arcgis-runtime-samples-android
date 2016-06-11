@@ -203,6 +203,8 @@ public class EditAttachmentActivity extends AppCompatActivity {
         progressDialog.show();
 
         ListenableFuture<Void> deleteResult = mSelectedArcGISFeature.deleteAttachmentAsync(attachments.get(pos));
+        attachmentList.remove(pos);
+        adapter.notifyDataSetChanged();
 
         deleteResult.addDoneListener(new Runnable() {
             @Override
