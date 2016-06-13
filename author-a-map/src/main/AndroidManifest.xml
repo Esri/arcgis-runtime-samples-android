@@ -29,7 +29,7 @@
 
             </intent-filter>
         </activity>
-        <activity android:name=".OAuthBrowseActivity">
+        <activity android:name=".MapSaveActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.PICK" />
@@ -42,7 +42,6 @@
                     android:scheme="my-ags-app" />
             </intent-filter>
         </activity>
-        <activity android:name=".MapSaveActivity"></activity>
     </application>
 
 </manifest>

@@ -4,22 +4,23 @@
     <string name="layer_selection">Add operational layers</string>
     <string name="menu_save">Save</string>
 
+    <!-- Services -->
     <string name="world_elevation">http://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer</string>
     <string name="world_census">http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
-
+    <!-- App messages -->
     <string name="author_map_message">Authoring your map</string>
     <string name="wait">Please wait&#8230;</string>
     <string name="map_successful">Map created successfully</string>
     <string name="title_error">Please enter a Title for your map</string>
     <string name="tags_error">Tags can not be empty</string>
-
+    <!-- Basemap choice array -->
     <string-array name="basemap_array">
         <item>Streets</item>
         <item>Imagery</item>
         <item>Topographic</item>
         <item>Oceans</item>
     </string-array>
-
+    <!-- Operational layer array -->
     <string-array name="operational_layer_array">
         <item>World Elevation</item>
         <item>Census</item>

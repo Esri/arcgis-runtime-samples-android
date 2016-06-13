@@ -8,8 +8,8 @@
         <!-- Client ID of your registered application-->
         <item name="client_id">BNuvI0QZuudSFeoW</item>
         <!-- Redirect URI of the application from Authentication tab-->
-        <item name="redirect_uri">my-app://auth</item>
-        <item name="username">AndroidTeam</item>
-        <item name="password">android@100</item>
+        <item name="redirect_uri">my-ags-app://auth</item>
+        <item name="username">your_user_name</item>
+        <item name="password">your_password</item>
     </string-array>
 </resources>

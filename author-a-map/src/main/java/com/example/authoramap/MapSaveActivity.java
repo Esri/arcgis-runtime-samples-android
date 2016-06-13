@@ -16,6 +16,7 @@
 
 package com.example.authoramap;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -29,26 +30,35 @@ import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.portal.PortalItem;
+import com.esri.arcgisruntime.security.OAuthLoginManager;
 import com.esri.arcgisruntime.security.OAuthTokenCredential;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class MapSaveActivity extends AppCompatActivity {
-
-    public static final String KEY = "OAUTH_CREDENTIAL";
+    private final static String TAG = "MapSaveActivity";
     FloatingActionButton saveFab;
-    private OAuthTokenCredential mOAuthCred;
+    OAuthLoginManager oauthLoginManager;
+    private OAuthTokenCredential oauthCred;
     private EditText mTitleEditText, mTagsEditText, mDescEditText;
     private ArrayList<String> mTagsList = new ArrayList<>();
     private String mDescription;
     private String mTitle;
     private Portal portal;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        // Get the OAuthLoginManager object from the main activity.
+        oauthLoginManager = MainActivity.getOAuthLoginManagerInstance();
+        if (oauthLoginManager == null) {
+            return;
+        }
+        fetchCredentials(intent);
+
         setContentView(R.layout.activity_map_save);
 
         // inflate the EditText boxes
@@ -57,14 +67,6 @@ public class MapSaveActivity extends AppCompatActivity {
         mDescEditText = (EditText) findViewById(R.id.descText);
 
         saveFab = (FloatingActionButton) findViewById(R.id.saveFab);
-
-        // Check if the activity is started from the other oauth activity
-        String json = getIntent().getStringExtra(KEY);
-        if (json != null) {
-            // An OAuth credential is embedded in the intent. Deserialize the credential
-            mOAuthCred = (OAuthTokenCredential) OAuthTokenCredential.fromJson(json);
-
-        }
 
         // add a click listener for Floating Action Button
         saveFab.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +83,7 @@ public class MapSaveActivity extends AppCompatActivity {
                     // create a Portal usign the portal url from the array
                     portal = new Portal(portalSettings[1], true);
                     // set the credentials from the browser
-                    portal.setCredential(mOAuthCred);
+                    portal.setCredential(oauthCred);
                     portal.addDoneLoadingListener(new Runnable() {
                         @Override
                         public void run() {
@@ -112,6 +114,24 @@ public class MapSaveActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void fetchCredentials(Intent intent) {
+        // Fetch oauth access token.
+        final ListenableFuture<OAuthTokenCredential> future = oauthLoginManager.fetchOAuthTokenCredentialAsync(intent);
+        future.addDoneListener(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    oauthCred = future.get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+            }
+        });
     }
 
     /**
@@ -137,6 +157,5 @@ public class MapSaveActivity extends AppCompatActivity {
 
         return true;
     }
-
 
 }

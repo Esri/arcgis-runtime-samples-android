@@ -218,7 +218,8 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             // create a OAuthLoginManager object with portalURL, clientID, redirectUri and expiration
-            oauthLoginManager = new OAuthLoginManager("https://androidteam.maps.arcgis.com/", "BNuvI0QZuudSFeoW", "my-ags-app://auth", 0);
+            String[] portalSettings = getResources().getStringArray(R.array.portal);
+            oauthLoginManager = new OAuthLoginManager(portalSettings[1], "BNuvI0QZuudSFeoW", "my-ags-app://auth", 0);
             // launch the browser to get the credentials
             oauthLoginManager.launchOAuthBrowserPage(getApplicationContext());
 
