@@ -16,6 +16,7 @@
 
 package com.example.authoramap;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -37,7 +38,6 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class MapSaveActivity extends AppCompatActivity {
-    private final static String TAG = "MapSaveActivity";
     FloatingActionButton saveFab;
     OAuthLoginManager oauthLoginManager;
     private OAuthTokenCredential oauthCred;
@@ -46,6 +46,7 @@ public class MapSaveActivity extends AppCompatActivity {
     private String mDescription;
     private String mTitle;
     private Portal portal;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class MapSaveActivity extends AppCompatActivity {
         mTitleEditText = (EditText) findViewById(R.id.titleText);
         mTagsEditText = (EditText) findViewById(R.id.tagText);
         mDescEditText = (EditText) findViewById(R.id.descText);
-
+        progressDialog = new ProgressDialog(this);
         saveFab = (FloatingActionButton) findViewById(R.id.saveFab);
 
         // add a click listener for Floating Action Button
@@ -80,10 +81,16 @@ public class MapSaveActivity extends AppCompatActivity {
                 if (flag) {
                     // inflate portal settings from array
                     String[] portalSettings = getResources().getStringArray(R.array.portal);
-                    // create a Portal usign the portal url from the array
+                    // create a Portal using the portal url from the array
                     portal = new Portal(portalSettings[1], true);
                     // set the credentials from the browser
                     portal.setCredential(oauthCred);
+
+
+                    progressDialog.setTitle(getString(R.string.author_map_message));
+                    progressDialog.setMessage(getString(R.string.wait));
+                    progressDialog.show();
+
                     portal.addDoneLoadingListener(new Runnable() {
                         @Override
                         public void run() {
@@ -98,6 +105,9 @@ public class MapSaveActivity extends AppCompatActivity {
                                     public void run() {
                                         // Check the result of the save operation.
                                         try {
+                                            if (progressDialog.isShowing()) {
+                                                progressDialog.dismiss();
+                                            }
                                             PortalItem newMapPortalItem = saveAsFuture.get();
                                             Toast.makeText(getApplicationContext(), getString(R.string.map_successful), Toast.LENGTH_SHORT).show();
                                         } catch (InterruptedException | ExecutionException e) {
@@ -117,6 +127,11 @@ public class MapSaveActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * fetch the OAuth token from the OAuthLogin Manager
+     *
+     * @param intent
+     */
     private void fetchCredentials(Intent intent) {
         // Fetch oauth access token.
         final ListenableFuture<OAuthTokenCredential> future = oauthLoginManager.fetchOAuthTokenCredentialAsync(intent);

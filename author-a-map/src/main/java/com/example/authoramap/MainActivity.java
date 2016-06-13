@@ -49,8 +49,6 @@ import com.esri.arcgisruntime.security.OAuthLoginManager;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    public static final String KEY = "OAUTH_CREDENTIAL";
     private static final int MIN_SCALE = 40000000;
     private static final int SCALE = 50000000;
     static ArcGISMap mMap;
@@ -219,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             // create a OAuthLoginManager object with portalURL, clientID, redirectUri and expiration
             String[] portalSettings = getResources().getStringArray(R.array.portal);
-            oauthLoginManager = new OAuthLoginManager(portalSettings[1], "BNuvI0QZuudSFeoW", "my-ags-app://auth", 0);
+            oauthLoginManager = new OAuthLoginManager(portalSettings[1], portalSettings[2], portalSettings[3], 0);
             // launch the browser to get the credentials
             oauthLoginManager.launchOAuthBrowserPage(getApplicationContext());
 
