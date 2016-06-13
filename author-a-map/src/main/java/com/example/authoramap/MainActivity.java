@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private ActionBarDrawerToggle mDrawerToggle;
-    private Layer[] layer_arr = new Layer[2];
+    private Layer[] layer_array = new Layer[2];
     private SpatialReference spartialReference;
 
     public static OAuthLoginManager getOAuthLoginManagerInstance() {
@@ -99,8 +99,8 @@ public class MainActivity extends AppCompatActivity {
         imageLayer.setMinScale(MIN_SCALE);
         imageLayer.setMaxScale(MIN_SCALE / 10);
 
-        layer_arr[0] = tiledLayer;
-        layer_arr[1] = imageLayer;
+        layer_array[0] = tiledLayer;
+        layer_array[1] = imageLayer;
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle(getApplication().getString(R.string.author_map_message));
@@ -138,17 +138,17 @@ public class MainActivity extends AppCompatActivity {
                             if (mLayerListView.getCheckedItemCount() > 1) {
                                 progressDialog.show();
                                 removeLayers();
-                                mMap.getOperationalLayers().add(layer_arr[0]);
-                                mMap.getOperationalLayers().add(layer_arr[1]);
+                                mMap.getOperationalLayers().add(layer_array[0]);
+                                mMap.getOperationalLayers().add(layer_array[1]);
                             } else { // if any one item is checked, add as layer
                                 if (mLayerListView.isItemChecked(0)) {
                                     progressDialog.show();
                                     removeLayers();
-                                    mMap.getOperationalLayers().add(layer_arr[0]);
+                                    mMap.getOperationalLayers().add(layer_array[0]);
                                 } else if (mLayerListView.isItemChecked(1)) {
                                     progressDialog.show();
                                     removeLayers();
-                                    mMap.getOperationalLayers().add(layer_arr[1]);
+                                    mMap.getOperationalLayers().add(layer_array[1]);
                                 } else {
                                     removeLayers();
                                 }
@@ -234,8 +234,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // if nav drawer is opened, hide the action items
-        /*boolean drawerOpen = mDrawerLayout.isDrawerOpen(GravityCompat.START);
-        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);*/
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             menu.findItem(R.id.action_save).setVisible(false);
         } else {
@@ -309,8 +307,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private void removeLayers() {
         if (mMap.getOperationalLayers().size() == 2) {
-            mMap.getOperationalLayers().remove(0);
-            mMap.getOperationalLayers().remove(0);
+            for (int i = 0; i < mMap.getOperationalLayers().size(); i++) {
+                mMap.getOperationalLayers().remove(0);
+            }
         }
         if (mMap.getOperationalLayers().size() == 1) {
             mMap.getOperationalLayers().remove(0);
