@@ -1,3 +1,19 @@
+/* Copyright 2016 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.example.authoramap;
 
 import android.os.Bundle;
@@ -12,7 +28,6 @@ import android.widget.Toast;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.portal.Portal;
-import com.esri.arcgisruntime.portal.PortalInfo;
 import com.esri.arcgisruntime.portal.PortalItem;
 import com.esri.arcgisruntime.security.OAuthTokenCredential;
 
@@ -22,8 +37,7 @@ import java.util.concurrent.ExecutionException;
 public class MapSaveActivity extends AppCompatActivity {
 
     public static final String KEY = "OAUTH_CREDENTIAL";
-    private static String TAG = "MapSaveActivity";
-    FloatingActionButton addAttachmentFab;
+    FloatingActionButton saveFab;
     private OAuthTokenCredential mOAuthCred;
     private EditText mTitleEditText, mTagsEditText, mDescEditText;
     private ArrayList<String> mTagsList = new ArrayList<>();
@@ -37,11 +51,12 @@ public class MapSaveActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_save);
 
+        // inflate the EditText boxes
         mTitleEditText = (EditText) findViewById(R.id.titleText);
         mTagsEditText = (EditText) findViewById(R.id.tagText);
         mDescEditText = (EditText) findViewById(R.id.descText);
 
-        addAttachmentFab = (FloatingActionButton) findViewById(R.id.saveFab);
+        saveFab = (FloatingActionButton) findViewById(R.id.saveFab);
 
         // Check if the activity is started from the other oauth activity
         String json = getIntent().getStringExtra(KEY);
@@ -51,7 +66,8 @@ public class MapSaveActivity extends AppCompatActivity {
 
         }
 
-        addAttachmentFab.setOnClickListener(new View.OnClickListener() {
+        // add a click listener for Floating Action Button
+        saveFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -60,30 +76,28 @@ public class MapSaveActivity extends AppCompatActivity {
 
                 // if Title and tags are present
                 if (flag) {
+                    // inflate portal settings from array
                     String[] portalSettings = getResources().getStringArray(R.array.portal);
+                    // create a Portal usign the portal url from the array
                     portal = new Portal(portalSettings[1], true);
+                    // set the credentials from the browser
                     portal.setCredential(mOAuthCred);
                     portal.addDoneLoadingListener(new Runnable() {
                         @Override
                         public void run() {
                             Log.d("Portal", portal.getLoadStatus().name());
-
+                            // if portal is LOADED, save the map to the portal
                             if (portal.getLoadStatus() == LoadStatus.LOADED) {
-                                PortalInfo portalInformation = portal.getPortalInfo();
                                 // Save the map to an authenticated Portal, with specified title, tags, description, and thumbnail.
                                 // Passing 'null' as portal folder parameter saves this to users root folder.
-                                final ListenableFuture<PortalItem> saveAsFuture = MainActivity.mMap.saveAsAsync(portal, null,
-                                        mTitle, mTagsList,
-                                        mDescription, null);
+                                final ListenableFuture<PortalItem> saveAsFuture = MainActivity.mMap.saveAsAsync(portal, null, mTitle, mTagsList, mDescription, null);
                                 saveAsFuture.addDoneListener(new Runnable() {
                                     @Override
                                     public void run() {
                                         // Check the result of the save operation.
                                         try {
                                             PortalItem newMapPortalItem = saveAsFuture.get();
-                                            String portalItemId = newMapPortalItem.getId();
                                             Toast.makeText(getApplicationContext(), getString(R.string.map_successful), Toast.LENGTH_SHORT).show();
-                                            openMapToView(portalItemId);
                                         } catch (InterruptedException | ExecutionException e) {
                                             // If saving failed, deal with failure depending on the cause...
                                             Log.e("Exception", e.toString());
@@ -100,6 +114,11 @@ public class MapSaveActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Get the Title, Tags and Description. Set error messages if title or tags are empty while saving a map
+     *
+     * @return true - both Title and Tags fields are non empty else returns false
+     */
     private boolean getMapAdditionalInfo() {
         mTitle = mTitleEditText.getText().toString();
         mDescription = mDescEditText.getText().toString();
@@ -117,23 +136,6 @@ public class MapSaveActivity extends AppCompatActivity {
         }
 
         return true;
-    }
-
-    protected void openMapToView(String portalItemId) {
-        // Load a webmap
-        final PortalItem mPortalItem = new PortalItem(portal, portalItemId);
-        mPortalItem.loadAsync();
-
-        mPortalItem.addDoneLoadingListener(new Runnable() {
-            @Override
-            public void run() {
-                if (mPortalItem.getLoadStatus() == LoadStatus.LOADED) {
-                    Log.d("Portal", mPortalItem.getName() + " " + mPortalItem.getTitle() + " " + mPortalItem.getId());
-                }
-            }
-        });
-
-
     }
 
 

@@ -1,3 +1,19 @@
+/* Copyright 2016 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.example.authoramap;
 
 import android.app.ProgressDialog;
@@ -29,9 +45,7 @@ import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.LayerViewStateChangedEvent;
 import com.esri.arcgisruntime.mapping.view.LayerViewStateChangedListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.portal.PortalItem;
 import com.esri.arcgisruntime.security.OAuthLoginManager;
-import com.esri.arcgisruntime.security.OAuthTokenCredential;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private Layer[] layer_arr = new Layer[2];
     private SpatialReference spartialReference;
-    private PortalItem newMapPortalItem;
-    private OAuthTokenCredential mOAuthCred;
 
     public static OAuthLoginManager getOAuthLoginManagerInstance() {
         return oauthLoginManager;
@@ -96,9 +108,11 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setTitle(getApplication().getString(R.string.author_map_message));
         progressDialog.setMessage(getApplication().getString(R.string.wait));
 
+        // create arrays from String arrays
         mBasemapTiles = getResources().getStringArray(R.array.basemap_array);
         mLayerTiles = getResources().getStringArray(R.array.operational_layer_array);
 
+        // inflate the Basemap and Layer list views
         mBasemapListView = (ListView) findViewById(R.id.basemap_list);
         mLayerListView = (ListView) findViewById(R.id.layer_list);
 
@@ -112,23 +126,23 @@ public class MainActivity extends AppCompatActivity {
         mLayerListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, mLayerTiles));
 
         mBasemapListView.setOnItemClickListener(new BasemapClickListener());
-        //mLayerListView.setOnItemClickListener(new OperationLayerClickListener());
 
+        // set actions for drawer state - close/open
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name) {
+            // if the drawer is closed, get the checked items from LayerListView and add the checked layer
             public void onDrawerClosed(View view) {
                 getSupportActionBar().setTitle(mTitle);
-
                 mMap.addDoneLoadingListener(new Runnable() {
                     @Override
                     public void run() {
                         if (mMap.getLoadStatus().name().equalsIgnoreCase(LoadStatus.LOADED.name())) {
-                            // calling onPrepareOptionsMenu() to show action bar icons
+                            // if both items are checked, add them
                             if (mLayerListView.getCheckedItemCount() > 1) {
                                 progressDialog.show();
                                 removeLayers();
                                 mMap.getOperationalLayers().add(layer_arr[0]);
                                 mMap.getOperationalLayers().add(layer_arr[1]);
-                            } else {
+                            } else { // if any one item is checked, add as layer
                                 if (mLayerListView.isItemChecked(0)) {
                                     progressDialog.show();
                                     removeLayers();
@@ -144,8 +158,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-
+                // if the progrees dialog is showing, dismiss it
                 mMapView.addLayerViewStateChangedListener(new LayerViewStateChangedListener() {
                     @Override
                     public void layerViewStateChanged(LayerViewStateChangedEvent layerViewStateChangedEvent) {
@@ -186,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
-            saveMap();
+            oAuthBrowser();
         }
 
         // Activate the navigation drawer toggle
@@ -198,8 +211,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void saveMap() {
-        // Define a set of tags for the new map
+    /**
+     * launch the OAuth browser page to get credentials
+     */
+    private void oAuthBrowser() {
+
         try {
             // create a OAuthLoginManager object with portalURL, clientID, redirectUri and expiration
             oauthLoginManager = new OAuthLoginManager("https://androidteam.maps.arcgis.com/", "BNuvI0QZuudSFeoW", "my-ags-app://auth", 0);
@@ -237,8 +253,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
+     * sync the state of the drawer toggle
      */
 
     @Override
@@ -251,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
+        // Pass any configuration change to the drawer toggle
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
