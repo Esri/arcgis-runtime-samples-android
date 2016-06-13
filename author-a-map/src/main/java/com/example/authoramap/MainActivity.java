@@ -29,7 +29,6 @@ import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.LayerViewStateChangedEvent;
 import com.esri.arcgisruntime.mapping.view.LayerViewStateChangedListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.portal.PortalItem;
 import com.esri.arcgisruntime.security.OAuthLoginManager;
 import com.esri.arcgisruntime.security.OAuthTokenCredential;
@@ -40,11 +39,11 @@ public class MainActivity extends AppCompatActivity {
     public static final String KEY = "OAUTH_CREDENTIAL";
     private static final int MIN_SCALE = 40000000;
     private static final int SCALE = 50000000;
+    static ArcGISMap mMap;
     private static OAuthLoginManager oauthLoginManager;
     ProgressDialog progressDialog;
     Viewpoint viewpoint;
     private MapView mMapView;
-    private ArcGISMap mMap;
     private String[] mBasemapTiles;
     private String[] mLayerTiles;
     private DrawerLayout mDrawerLayout;
@@ -66,18 +65,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
-
-       /* // Check if the activity is started from the other oauth activity
-        String json = getIntent().getStringExtra(KEY);
-        if (json != null) {
-            // An OAuth credential is embedded in the intent. Deserialize the credential
-            mOAuthCred = (OAuthTokenCredential) OAuthTokenCredential.fromJson(json);
-            // Load a webmap
-            if (mOAuthCred != null) {
-                //loadPortalItem(mOAuthCred);
-                Log.d("mOAuthCred",mOAuthCred.getUsername());
-            }
-        }*/
 
         mTitle = mDrawerTitle = getTitle();
         // inflate MapView from layout
@@ -125,12 +112,11 @@ public class MainActivity extends AppCompatActivity {
         mLayerListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, mLayerTiles));
 
         mBasemapListView.setOnItemClickListener(new BasemapClickListener());
-        mLayerListView.setOnItemClickListener(new OperationLayerClickListener());
+        //mLayerListView.setOnItemClickListener(new OperationLayerClickListener());
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name) {
             public void onDrawerClosed(View view) {
                 getSupportActionBar().setTitle(mTitle);
-
 
                 mMap.addDoneLoadingListener(new Runnable() {
                     @Override
@@ -185,9 +171,6 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        Log.d("MainActivity ==>", " here");
-
     }
 
     @Override
@@ -218,52 +201,11 @@ public class MainActivity extends AppCompatActivity {
     private void saveMap() {
         // Define a set of tags for the new map
         try {
-            final Portal portal = new Portal("http://www.arcgis.com", true);
-            /*Credential creds = new UserCredential("manish8177","Leonidas123#");
-            portal.setCredential(creds);*/
-            /*OAuthConfiguration config = new OAuthConfiguration("http://www.arcgis.com","UTw3XBPW1HN92h4k","my-app://auth");
-            AuthenticationManager.addOAuthConfiguration(config);*/
+            // create a OAuthLoginManager object with portalURL, clientID, redirectUri and expiration
             oauthLoginManager = new OAuthLoginManager("https://androidteam.maps.arcgis.com/", "BNuvI0QZuudSFeoW", "my-ags-app://auth", 0);
+            // launch the browser to get the credentials
             oauthLoginManager.launchOAuthBrowserPage(getApplicationContext());
 
-            //portal.loadAsync();
-/*            portal.addDoneLoadingListener(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d("Portal",portal.getLoadStatus().name());
-
-                    if (portal.getLoadStatus() == LoadStatus.LOADED) {
-                        PortalInfo portalInformation = portal.getPortalInfo();
-                        String portalName = portalInformation.getPortalName();
-                        Log.d("Login", "Successful " + portal.getUri());
-
-                        ArrayList<String> tags = new ArrayList<>(4);
-                        tags.add("Forest Management");
-                        tags.add("Wildlife");
-                        tags.add("Conservation");
-                        tags.add("Avian");
-                        // Save the map to an authenticated Portal, with specified title, tags, description, and thumbnail.
-                        // Passing 'null' as portal folder parameter saves this to users root folder.
-                        final ListenableFuture<PortalItem> saveAsFuture = mMap.saveAsAsync(portal, null,
-                                "My Maps from Mobile", tags,
-                                "This is the test to check if maps are saved online", null);
-                        saveAsFuture.addDoneListener(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Check the result of the save operation.
-                                try {
-                                    newMapPortalItem = saveAsFuture.get();
-                                    Toast.makeText(getApplicationContext(), "Map Saved", Toast.LENGTH_SHORT).show();
-                                } catch (InterruptedException | ExecutionException e) {
-                                    // If saving failed, deal with failure depending on the cause...
-                                    Log.e("Exception", e.toString());
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-            portal.loadAsync();*/
         } catch (Exception e) {
             Log.e("error-", e.getMessage() + "");
         }
@@ -313,6 +255,11 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    /**
+     * create a ArcGISMap for the selected position
+     *
+     * @param choice chosen Base-map
+     */
     private void setBasemap(int choice) {
 
         removeLayers();
@@ -343,6 +290,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Remove the operational layers from the Map
+     */
     private void removeLayers() {
         if (mMap.getOperationalLayers().size() == 2) {
             mMap.getOperationalLayers().remove(0);
@@ -353,27 +303,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Class BasemapClickListener listens for item click and sets the Basemap for selected choice.
+     */
     private class BasemapClickListener implements ListView.OnItemClickListener {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             // display view for selected nav drawer item
             mBasemapListView.setSelection(position);
+            // set the basemap
             setBasemap(position);
             Toast.makeText(getApplicationContext(), "Selected " + mBasemapTiles[position], Toast.LENGTH_SHORT).show();
-
-
-            //mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
         }
     }
 
-    private class OperationLayerClickListener implements ListView.OnItemClickListener {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            // display view for selected nav drawer item
-            Toast.makeText(getApplicationContext(), "Selected " + mLayerTiles[position], Toast.LENGTH_SHORT).show();
-        }
-    }
 
 }

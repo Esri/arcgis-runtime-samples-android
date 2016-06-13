@@ -17,8 +17,6 @@ public class OAuthBrowseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Intent intent = getIntent();
-        Log.i(TAG, "UserContentActivity ..." + intent.getScheme());
-
         // Get the OAuthLoginManager object from the main activity.
         final OAuthLoginManager oauthLoginManager = MainActivity.getOAuthLoginManagerInstance();
         if (oauthLoginManager == null) {
