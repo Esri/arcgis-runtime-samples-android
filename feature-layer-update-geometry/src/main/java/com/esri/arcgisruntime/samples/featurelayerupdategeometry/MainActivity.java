@@ -27,15 +27,16 @@ import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.GeoElement;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
   MapView mMapView;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
     // create a map with the streets basemap
-    Map map = new Map(Basemap.createStreets());
+    ArcGISMap map = new ArcGISMap(Basemap.createStreets());
     //set an initial viewpoint
     map.setInitialViewpoint(new Viewpoint(new Envelope(-1131596.019761, 3893114.069099, 3926705.982140, 7977912.461790, SpatialReferences.getWebMercator())));
     // set the map to be displayed in the mapview
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
     // create the feature layer using the service feature table
     mFeatureLayer = new FeatureLayer(serviceFeatureTable);
-    mFeatureLayer.setSelectionColor(Color.rgb(0, 255, 255)); //cyan, fully opaque
+    mFeatureLayer.setSelectionColor(Color.CYAN); 
     mFeatureLayer.setSelectionWidth(3);
     // add the layer to the map
     map.getOperationalLayers().add(mFeatureLayer);
@@ -103,12 +104,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
               mIdentifiedFeature.setGeometry(movedPoint);
-              final ListenableFuture<Boolean> updateFuture = mFeatureLayer.getFeatureTable().updateFeatureAsync(mIdentifiedFeature);
+              final ListenableFuture<Void> updateFuture = mFeatureLayer.getFeatureTable().updateFeatureAsync(mIdentifiedFeature);
               updateFuture.addDoneListener(new Runnable() {
                 @Override
                 public void run() {
                   try {
-                    if (updateFuture.get()) {
+                    if (updateFuture.get() != null) {
                       applyEditsToServer();
                       mFeatureLayer.clearSelection();
                       mFeatureSelected = false;

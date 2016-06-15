@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2016 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         // set tiled layer as basemap
         Basemap mBasemap = new Basemap(mTopoBasemap);
         // create a map with the basemap
-        Map mMap = new Map(mBasemap);
+        ArcGISMap mMap = new ArcGISMap(mBasemap);
 
         // create an initial extent envelope
         Envelope mInitExtent = new Envelope(-12211308.778729, 4645116.003309, -12208257.879667, 4650542.535773, SpatialReference.create(102100));

@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2016 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,22 @@
 
 package com.esri.arcgisruntime.sample.mapimagelayersublayervisibility;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
+import com.esri.arcgisruntime.layers.SublayerList;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.Map;
-import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
-import com.esri.arcgisruntime.layers.SubLayerList;
 
 public class MainActivity extends AppCompatActivity {
 
     private MapView mMapView;
     private ArcGISMapImageLayer mMapImageLayer;
-    private SubLayerList mLayers;
+    private SublayerList mLayers;
 
     // The layer on/off menu items.
     private MenuItem mCities = null;
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
         // create a map with the Basemap Type topographic
-        Map map = new Map(Basemap.Type.TOPOGRAPHIC, 48.354406, -99.998267, 2);
+        ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 48.354406, -99.998267, 2);
         // create a MapImageLayer with dynamically generated map images
         mMapImageLayer = new ArcGISMapImageLayer(getResources().getString(R.string.world_cities_service));
         mMapImageLayer.setOpacity(0.5f);
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         // set the map to be displayed in this view
         mMapView.setMap(map);
         // get the layers from the map image layer
-        mLayers = mMapImageLayer.getSubLayers();
+        mLayers = mMapImageLayer.getSublayers();
 
     }
 

@@ -1,9 +1,9 @@
 # Overview
-This branch contains [ArcGIS Runtime SDK For Android](http://developers.arcgis.com/android/beta) sample app modules for Quartz Beta (v100.0.0-beta-2) that can be run from within the Android Studio IDE.  
+This branch represents active development for [ArcGIS Runtime SDK for Android Quartz beta](https://developers.arcgis.com/android/beta/).  You can preview updates to existing samples and new samples that are in active development. 
 
 [Join the Beta!](http://bit.ly/RuntimeAndroidQuartz)
 
-The ```master``` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK For Android](https://developers.arcgis.com/android/).  Samples released under older versions can be found through the [repository releases](https://github.com/Esri/arcgis-runtime-samples-android/releases).
+The ```master``` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/).  The ```quartz-beta``` branch contains sample app modules for the latest version of the [ArcGIS Runtime SDK for Android Quartz beta](https://developers.arcgis.com/android/beta/). Samples released under older versions can be found through the [repository releases](https://github.com/Esri/arcgis-runtime-samples-android/releases).
 
 # Prerequisites
 * The samples are building with ```compileSdkVersion 23``` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
@@ -19,7 +19,7 @@ subprojects{
     afterEvaluate {project ->
         if(project.hasProperty("dependencies")){
             dependencies {
-                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0-beta-2'
+                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0-beta-3'
             }
         }
     }

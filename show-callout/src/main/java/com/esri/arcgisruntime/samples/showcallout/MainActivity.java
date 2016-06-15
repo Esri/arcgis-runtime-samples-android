@@ -17,15 +17,15 @@
 package com.esri.arcgisruntime.samples.showcallout;
 
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
 import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
         // create a map with the Basemap Type topographic
-        final Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 10);
+        final ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 10);
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
 

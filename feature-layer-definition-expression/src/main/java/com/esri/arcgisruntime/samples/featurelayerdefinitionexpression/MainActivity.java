@@ -1,4 +1,4 @@
-/* Copyright 2015 ESRI
+/* Copyright 2016 ESRI
  *
  * All rights reserved under the copyright laws of the United States
  * and applicable international laws, treaties, and conventions.
@@ -22,8 +22,8 @@ import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.mapView);
 
         // create a map with the topographic basemap
-        Map map = new Map(Basemap.createTopographic());
+        ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
 
         // create feature layer with its service feature table
         // create the service feature table

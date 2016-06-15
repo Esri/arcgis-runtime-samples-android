@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2016 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polygon;
 import com.esri.arcgisruntime.geometry.Polyline;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -113,16 +113,15 @@ public class MainActivity extends AppCompatActivity {
     MapView mMapView = (MapView) findViewById(R.id.mapView);
 
     // create a map with the BasemapType topographic
-    final Map mMap = new Map(Basemap.createTopographic());
+    final ArcGISMap mMap = new ArcGISMap(Basemap.createTopographic());
 
     // set the map to be displayed in this view
     mMapView.setMap(mMap);
 
     // create color and symbols for drawing graphics
-    int blue = Color.rgb(0, 0, 255);
-    SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(blue, 14, SimpleMarkerSymbol.Style.TRIANGLE);
-    SimpleFillSymbol fillSymbol = new SimpleFillSymbol(blue, SimpleFillSymbol.Style.CROSS, null);
-    SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, blue, 3);
+    SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.TRIANGLE, Color.BLUE, 14);
+    SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.CROSS, Color.BLUE, null);
+    SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 3);
 
     // add a graphic of point, multipoint, polyline and polygon.
     GraphicsOverlay overlay = new GraphicsOverlay();
@@ -133,8 +132,7 @@ public class MainActivity extends AppCompatActivity {
     overlay.getGraphics().add(new Graphic(createPoint(), markerSymbol));
 
     // use the envelope to set the map viewpoint
-    mMapView.setViewpointGeometryWithPaddingAsync(createEnvelope(),
-        getResources().getDimension(R.dimen.viewpoint_padding));
+    mMapView.setViewpointGeometryWithPaddingAsync(createEnvelope(), getResources().getDimension(R.dimen.viewpoint_padding));
 
   }
 
