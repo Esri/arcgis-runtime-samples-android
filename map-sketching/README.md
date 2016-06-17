@@ -7,7 +7,7 @@ This sample demonstrates how you can sketch graphics on a SketchGraphicsOverlay.
 ## Features
 * Map
 * MapView
-* BasemapType
+* Basemap.Type
 * GraphicsOverlay
 * Point, Polyline, Polygon
 
