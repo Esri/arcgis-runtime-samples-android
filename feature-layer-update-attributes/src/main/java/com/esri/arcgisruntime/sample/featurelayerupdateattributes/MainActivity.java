@@ -38,6 +38,7 @@ import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.Viewpoint;
@@ -47,7 +48,6 @@ import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView = (MapView) findViewById(R.id.mapView);
 
     // create a map with the streets basemap
-    final Map map = new Map(Basemap.createStreets());
+    final ArcGISMap map = new ArcGISMap(Basemap.createStreets());
 
     //set an initial viewpoint
     map.setInitialViewpoint(new Viewpoint(new Point(544871.19, 6806138.66, SpatialReferences
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 }
               } else {
                 // none of the features on the map were selected
-                mCallout.hide();
+                mCallout.dismiss();
               }
             } catch (Exception e) {
               Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
@@ -202,10 +202,10 @@ public class MainActivity extends AppCompatActivity {
 
         try {
           // update feature in the feature table
-          ListenableFuture<Boolean> mapViewResult = mServiceFeatureTable.updateFeatureAsync(mSelectedArcGISFeature);
+          ListenableFuture<Void> mapViewResult = mServiceFeatureTable.updateFeatureAsync(mSelectedArcGISFeature);
 
           // if successful, update change to the server
-          if (mapViewResult.get()) {
+          if (mapViewResult.get() != null) {
 
             // apply change to the server
             final ListenableFuture<List<FeatureEditResult>> serverResult = mServiceFeatureTable.applyEditsAsync();
