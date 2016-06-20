@@ -14,7 +14,7 @@
  *
  */
 
-package com.example.changeviewpoint;
+package com.esri.arcgisruntime.sample.changeviewpoint;
 
 import android.graphics.Color;
 import android.os.Bundle;
