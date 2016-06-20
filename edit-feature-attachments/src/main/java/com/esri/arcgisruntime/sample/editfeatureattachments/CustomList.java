@@ -14,7 +14,7 @@
  *
  */
 
-package com.example.editfeatureattachments;
+package com.esri.arcgisruntime.sample.editfeatureattachments;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
