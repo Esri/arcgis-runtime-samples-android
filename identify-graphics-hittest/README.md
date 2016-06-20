@@ -5,7 +5,7 @@
 The **Identify Graphics Hit Test** sample demonstrates how to create a ```Graphic``` and add it to a ```GraphicOverlay``` where it can be identified from the ```MapView```.
 
 ## Features
-* Map
+* ArcGISMap
 * MapView
 * DefaultMapViewOnTouchListener
 * Graphic

@@ -6,12 +6,12 @@
 The sample demonstrates how to access and add bookmarks to a map
 
 ## Features
-* Map
+* ArcGISMap
 * MapView
 * BookmarkList
 * Bookmark
 * Viewpoint
- 
+
 ## How to use the sample
 This sample already has some bookmarks added to the map. You can tap on the spinner bar on the top to access these bookmarks. When the bookmark is selected the MapView is updated to show the viewpoint associated with the bookmark. To add a new bookmark pan/zoom in to the new location for the bookmark. Tap on the floating action button, which will pop up a dialog box where you can enter the name you want to give to this bookmark. When you tap ok the new bookmark will be created and it will show up in the spinner list.
 
@@ -54,4 +54,3 @@ void addBookmark(String Name) {
 
 
 ```
-
