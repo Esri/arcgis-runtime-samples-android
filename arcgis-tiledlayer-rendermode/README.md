@@ -11,7 +11,7 @@ The sample demonstrates how the Tiled layer Render Mode affects what scale the l
 ## Features
 * ArcGISTiledLayer
 * Basemap
-* Map
+* ArcGISMap
 * MapView
 
 ## How to use the sample
