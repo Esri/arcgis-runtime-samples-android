@@ -17,6 +17,7 @@
 package com.esri.arcgisruntime.sample.listviewdragginganimation;
 
 import android.content.Context;
+import android.os.Build;
 import android.widget.ArrayAdapter;
 
 import java.util.HashMap;
@@ -51,7 +52,7 @@ public class StableArrayAdapter extends ArrayAdapter<String> {
 
     @Override
     public boolean hasStableIds() {
-        return true;
+        return android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
     }
 
 

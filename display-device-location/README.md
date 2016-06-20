@@ -1,4 +1,3 @@
-
 # Display Device Location       
 
 This sample demonstrates how you can enable Location Display and switch between different types of AutoPan Modes. It also demonstrates how to use the Android Support Library to check for, and request, location permissions.
@@ -9,7 +8,7 @@ This sample demonstrates how you can enable Location Display and switch between 
 ![](display-device-location-4.png)
 
 ## Features
-* Map
+* ArcGISMap
 * MapView
 * LocationDisplay
 * LocationDisplay.AutoPanMode
