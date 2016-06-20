@@ -6,6 +6,6 @@ The **Display Map** app is the most basic Map app for the [ArcGIS Runtime SDK fo
 It shows how to inflate a ```MapView``` in the layout XML of the activity, create a ```Map``` with a static ```Basemap.createImagery()``` and bind the ```Map``` to the ```MapView```.  By default, this map supports basic zooming and panning operations.
 
 ## Features
-* Map
+* ArcGISMap
 * MapView
 * Basemap

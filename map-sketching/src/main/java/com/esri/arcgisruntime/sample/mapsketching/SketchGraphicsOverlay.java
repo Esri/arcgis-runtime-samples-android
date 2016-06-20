@@ -47,11 +47,19 @@ import java.util.concurrent.ExecutionException;
 public class SketchGraphicsOverlay {
 
   private final MapView mMapView;
+  private final GraphicsOverlay mGraphicsOverlay;
+  private final List<Graphic> mGraphics;
+  // Symbols used when drawing new points/lines/polygons
+  private final SimpleMarkerSymbol mPointPlacementSymbol;
+  private final SimpleMarkerSymbol mPointPlacedSymbol;
+  private final SimpleMarkerSymbol mPolylineVertexSymbol;
+  private final SimpleLineSymbol mPolylinePlacementSymbol;
+  private final SimpleLineSymbol mPolylinePlacedSymbol;
+  private final SimpleMarkerSymbol mPolylineMidpointSymbol;
+  private final SimpleFillSymbol mPolygonFillSymbol;
   // Listener is used to notify when undo/redo/clear buttons can be enabled and
   // when a drawing is finished
   private SketchGraphicsOverlayEventListener mListener;
-  private final GraphicsOverlay mGraphicsOverlay;
-  private final List<Graphic> mGraphics;
   // Keep a reference to the current point, line, and/or polygon because drawn
   private Graphic mCurrentPoint;
   private Graphic mCurrentLine;
@@ -63,14 +71,6 @@ public class SketchGraphicsOverlay {
   // The first point of a polyline uses special logic so keep track of when it's started
   private boolean mIsPolylineStarted = false;
   private boolean mIsMidpointSelected = false;
-  // Symbols used when drawing new points/lines/polygons
-  private final SimpleMarkerSymbol mPointPlacementSymbol;
-  private final SimpleMarkerSymbol mPointPlacedSymbol;
-  private final SimpleMarkerSymbol mPolylineVertexSymbol;
-  private final SimpleLineSymbol mPolylinePlacementSymbol;
-  private final SimpleLineSymbol mPolylinePlacedSymbol;
-  private final SimpleMarkerSymbol mPolylineMidpointSymbol;
-  private final SimpleFillSymbol mPolygonFillSymbol;
   // Stack of actions to be undone
   private Stack<UndoRedoItem> mUndoElementStack = new Stack<>();
   // stack of actions to be redone
@@ -217,6 +217,8 @@ public class SketchGraphicsOverlay {
       // If this was the last event in the stock, notify the listener to disable the corresponding button
       if (from.isEmpty()) {
         if (from == mUndoElementStack) {
+          // disable to selected drawing mode
+          mListener.onDrawingFinished();
           mListener.onUndoStateChanged(false);
         } else {
           mListener.onRedoStateChanged(false);
@@ -232,6 +234,10 @@ public class SketchGraphicsOverlay {
           mGraphics.removeAll(graphics);
           // Queue a new event indicating that we've removed the graphic[s]
           queueUndoRedoItem(to, new UndoRedoItem(UndoRedoItem.Event.REMOVE_POINT, graphics));
+          mIsMidpointSelected = false;
+          mIsPolylineStarted = false;
+          mCurrentPoint = null;
+          mCurrentPointCollection = new PointCollection(mMapView.getSpatialReference());
           break;
         // If the event was removing a graphic, then the action taken here is to add it back
         case REMOVE_POINT:
@@ -432,6 +438,7 @@ public class SketchGraphicsOverlay {
         mListener.onClearStateChanged(true);
       // If previously non empty and now it is, notify the listener to disable the clear button
       } else if (!graphicsWasEmpty && graphicsIsEmpty) {
+        mListener.onDrawingFinished();
         mListener.onClearStateChanged(false);
       }
     }
@@ -471,6 +478,155 @@ public class SketchGraphicsOverlay {
   }
 
   /**
+   * Helper method to get the midpoint of two points
+   *
+   * @param a the first point
+   * @param b the second point
+   * @return the midpoint of the two points
+   */
+  private Point getMidpoint(Point a, Point b) {
+    double midX = (a.getX() + b.getX()) / 2.0;
+    double midY = (a.getY() + b.getY()) / 2.0;
+    return new Point(midX, midY, mMapView.getSpatialReference());
+  }
+
+  /**
+   * Splits a line segment on the midpoint, adding a new vertex where the midpoint
+   * had been and adding new midpoints before and after the new vertex.
+   *
+   * @param newGeometry the position of the new vertex
+   */
+  private void splitMidpoint(Point newGeometry) {
+    // get the index of the current working graphic
+    int graphicIndex = mGraphics.indexOf(mCurrentPoint);
+    int pointIndex;
+    // If we're drawing a polygon and splitting the final midpoint then the index in which
+    // to insert the new point will be second to last
+    if (mDrawingMode == DrawingMode.POLYGON && graphicIndex == mGraphics.size() - 1) {
+      pointIndex = mCurrentPointCollection.size() - 1;
+    } else {
+      // If it's not a polygon or not the final midpoint, get the index in the point collection of
+      // the point following the midpoint so the new vertex can be added before it
+      Point pointAfterMidpoint = (Point) mGraphics.get(graphicIndex + 1).getGeometry();
+      // Since the midpoints aren't in the point collection, get the index of the point after it
+      pointIndex = mCurrentPointCollection.indexOf(pointAfterMidpoint);
+    }
+    // Add a new point at this index with the midpoint's new geometry
+    mCurrentPointCollection.add(pointIndex, newGeometry);
+    // Find the locations of the new midpoints (before and after the just added vertex point)
+    Point newPreMidpoint = getMidpoint(mCurrentPointCollection.get(pointIndex - 1), newGeometry);
+    Point newPostMidpoint = getMidpoint(newGeometry, mCurrentPointCollection.get(pointIndex + 1));
+    // The graphic index is current pointing at the old midpoint, so add the pre-midpoint here
+    // which will shift the index. Increment the counter so it points at the old midpoint again
+    mGraphics.add(graphicIndex++, new Graphic(newPreMidpoint, mPolylineMidpointSymbol));
+    // Add the post-midpoint at the index after the old midpoint
+    mGraphics.add(graphicIndex + 1, new Graphic(newPostMidpoint, mPolylineMidpointSymbol));
+    // Now that we've split and added a new vertex, the selected point is no longer a midpoint
+    mIsMidpointSelected = false;
+  }
+
+  /**
+   * Helper method to add a point to the polyline/polygon. Handles the work of
+   * changing the working points symbol and updating the polyline/polygon geometry.
+   *
+   * @param point the point to add
+   */
+  private void addPolylinePoint(Point point) {
+    Point midPoint = getMidpoint((Point) mCurrentPoint.getGeometry(), point);
+    mCurrentPoint.setSymbol(mPolylineVertexSymbol);
+    mCurrentLine.setGeometry(new Polyline(mCurrentPointCollection));
+    mGraphics.add(new Graphic(midPoint, mPolylineMidpointSymbol));
+    mCurrentPoint = new Graphic(point, mPointPlacementSymbol);
+    mGraphics.add(mCurrentPoint);
+    if (mDrawingMode == DrawingMode.POLYGON) {
+      mCurrentPolygon.setGeometry(new Polygon(mCurrentPointCollection));
+      Point polygonMidpoint = getMidpoint((Point) mCurrentPoint.getGeometry(), mCurrentPointCollection.get(0));
+      mGraphics.add(new Graphic(polygonMidpoint, mPolylineMidpointSymbol));
+    }
+  }
+
+  /**
+   * Helper method to update the final midpoint of a polygon.
+   */
+  private void updatePolygonMidpoint() {
+    // There will only be a final midpoint if there are at least 3 points
+    if (mCurrentPointCollection.size() > 2) {
+      // Get the final midpoint graphic and update its geometry with the midpoint of the final and first points
+      Graphic postMidpoint = mGraphics.get(mGraphics.size() - 1);
+      Point postMidpointGeometry = getMidpoint(mCurrentPointCollection.get(mCurrentPointCollection.size() - 2), mCurrentPointCollection.get(0));
+      postMidpoint.setGeometry(postMidpointGeometry);
+    }
+  }
+
+  /**
+   * Finishes the current drawing by finalizing the working graphic[s], resetting the drawing state, and notifying
+   * the listener that the drawing has finished.
+   */
+  private void finishDrawing() {
+    // If current point is null then there is no drawing to finish
+    if (mCurrentPoint != null) {
+      switch (mDrawingMode) {
+        case POINT:
+          // If we're drawing a point, set the symbol to the placed symbol and reset the current point
+          mCurrentPoint.setSymbol(mPointPlacedSymbol);
+          mCurrentPoint = null;
+          if (!mUndoElementStack.isEmpty()) {
+            // Remove any of the move graphic undo events. Once placed, undo should just remove the point
+            while (mUndoElementStack.peek().getEvent() == UndoRedoItem.Event.MOVE_POINT) {
+              mUndoElementStack.pop();
+            }
+          }
+          break;
+        case POLYGON:
+          // If we're drawing a polygon, logic is similar to finishing a polyline, but additionally need
+          // to remove the final midpoint
+          if (mGraphics.size() > 0) {
+            mGraphics.remove(mGraphics.size() - 1);
+          }
+        case POLYLINE:
+          // Set the current point to the placed vertex symbol and set the line to the placed line symbol
+          mCurrentPoint.setSymbol(mPolylineVertexSymbol);
+          mCurrentLine.setSymbol(mPolylinePlacedSymbol);
+          // The second to last graphic is the final midpoint, and we need to remove all midpoints
+          int index = 0;
+          if (mGraphics.size() > 1) {
+            index = mGraphics.size() - 2;
+          }
+          // Pop events until all the add/move polyline point events are gone (once placed, we only want to remove
+          // a polyline on undo). The final popped event will be an ADD_GRAPHIC event, which will be replaced
+          // further down by an ADD_POLYLINE event
+          if (!(mUndoElementStack.isEmpty())) {
+            UndoRedoItem.Event event;
+            do {
+              event = mUndoElementStack.pop().getEvent();
+            }
+            while (event == UndoRedoItem.Event.ADD_POLYLINE_POINT || event == UndoRedoItem.Event.MOVE_POLYLINE_POINT);
+
+            while (index > 0 && mGraphics.get(index).getSymbol().equals(mPolylineMidpointSymbol)) {
+              // For each add event, remove the midpoint and decrement the index
+              mGraphics.remove(index);
+              index -= 2;
+            }
+            // Push a new event indicating that we've finished a POLYLINE
+            mUndoElementStack.add(new UndoRedoItem(UndoRedoItem.Event.ADD_POLYLINE, null));
+          }
+          // Reset the boolean and working graphics
+          mIsPolylineStarted = false;
+          mCurrentPoint = null;
+          mCurrentLine = null;
+          mCurrentPolygon = null;
+          mCurrentPointCollection = null;
+          mIsMidpointSelected = false;
+          break;
+      }
+    }
+    // Reset drawing mode and empty the redo stack
+    mDrawingMode = DrawingMode.NONE;
+    clearStack(mRedoElementStack);
+    mListener.onDrawingFinished();
+  }
+
+  /**
    * Represents the different possible drawing modes the SketchGraphicsOverlay can be in
    */
   public enum DrawingMode {
@@ -478,6 +634,113 @@ public class SketchGraphicsOverlay {
     POLYLINE,
     POLYGON,
     NONE
+  }
+
+  /**
+   * Represents a single action that can be undone/redone in the sketching stack
+   */
+  public static class UndoRedoItem {
+
+    // Each item has an event type and optionally an object to use in undoing/redoing the action
+    private Event mEvent;
+    private Object mElement;
+
+    /**
+     * Creates a new UndoRedoItem with the specified event type and optional object.
+     *
+     * @param event   the type of event that occured
+     * @param element optionally an object to help undo/redo the action
+     */
+    public UndoRedoItem(Event event, Object element) {
+      mEvent = event;
+      mElement = element;
+    }
+
+    /**
+     * Gets the type of the event.
+     *
+     * @return the type of the event
+     */
+    public Event getEvent() {
+      return mEvent;
+    }
+
+    /**
+     * Gets the object with which to undo/redo the action (depending on the event type,
+     * may be null).
+     *
+     * @return the object with which to undo/redo the action, or null if there is none
+     */
+    public Object getElement() {
+      return mElement;
+    }
+
+    /**
+     * Indicates different types of events that can occur.
+     */
+    public enum Event {
+      ADD_POINT,
+      MOVE_POINT,
+      REMOVE_POINT,
+      ADD_POLYLINE_POINT,
+      MOVE_POLYLINE_POINT,
+      REMOVE_POLYLINE_POINT,
+      ADD_POLYLINE,
+      REMOVE_POLYLINE,
+      ERASE_GRAPHICS,
+      REPLACE_GRAPHICS
+    }
+
+    /**
+     * Represents the specific action of moving a polyline point, which additionally needs
+     * to indicate if the point moved was a midpoint.
+     */
+    public static class MovePolylinePointElement {
+      Graphic mGraphic;
+      Point mPoint;
+      boolean mIsMidpoint;
+
+      /**
+       * Instantiates a new MovePolylinePointElement.
+       *
+       * @param graphic the graphic of the moved point
+       * @param point the position of the moved point
+       * @param isMidpoint true if the moved point was a midpoint
+       */
+      public MovePolylinePointElement(Graphic graphic, Point point, boolean isMidpoint) {
+        mGraphic = graphic;
+        mPoint = point;
+        mIsMidpoint = isMidpoint;
+      }
+
+      /**
+       * Gets the graphic of the moved point.
+       *
+       * @return the graphic of the moved point
+       */
+      public Graphic getGraphic() {
+        return mGraphic;
+      }
+
+      /**
+       * Gets the position of the moved point (note this is required because the Point
+       * returned by graphic.getGeometry() will have changed by reference).
+       *
+       * @return the position of the moved point
+       */
+      public Point getPoint() {
+        return mPoint;
+      }
+
+      /**
+       * Checks if the moved point was a midpoint.
+       *
+       * @return true if the moved point was a midpoint
+       */
+      public boolean isMidpoint() {
+        return mIsMidpoint;
+      }
+    }
   }
 
   /**
@@ -612,9 +875,9 @@ public class SketchGraphicsOverlay {
               boolean graphicsIsEmpty = mGraphics.isEmpty();
               // If the graphics list was previously empty and now it's not, notify the listener
               // to enable the clear button
-              if(graphicsWasEmpty && !graphicsIsEmpty) {
+              if (graphicsWasEmpty && !graphicsIsEmpty) {
                 mListener.onClearStateChanged(true);
-              // If previous non empty and now it is, notify listener to disable the clear button
+                // If previous non empty and now it is, notify listener to disable the clear button
               } else if (!graphicsWasEmpty && graphicsIsEmpty) {
                 mListener.onClearStateChanged(false);
               }
@@ -732,251 +995,6 @@ public class SketchGraphicsOverlay {
       // Reset the drag started flag when the pointer is lifted
       mVertexDragStarted = false;
       return true;
-    }
-  }
-
-  /**
-   * Helper method to get the midpoint of two points
-   *
-   * @param a the first point
-   * @param b the second point
-   * @return the midpoint of the two points
-   */
-  private Point getMidpoint(Point a, Point b) {
-    double midX = (a.getX() + b.getX()) / 2.0;
-    double midY = (a.getY() + b.getY()) / 2.0;
-    return new Point(midX, midY, mMapView.getSpatialReference());
-  }
-
-  /**
-   * Splits a line segment on the midpoint, adding a new vertex where the midpoint
-   * had been and adding new midpoints before and after the new vertex.
-   *
-   * @param newGeometry the position of the new vertex
-   */
-  private void splitMidpoint(Point newGeometry) {
-    // get the index of the current working graphic
-    int graphicIndex = mGraphics.indexOf(mCurrentPoint);
-    int pointIndex;
-    // If we're drawing a polygon and splitting the final midpoint then the index in which
-    // to insert the new point will be second to last
-    if (mDrawingMode == DrawingMode.POLYGON && graphicIndex == mGraphics.size() - 1) {
-      pointIndex = mCurrentPointCollection.size() - 1;
-    } else {
-      // If it's not a polygon or not the final midpoint, get the index in the point collection of
-      // the point following the midpoint so the new vertex can be added before it
-      Point pointAfterMidpoint = (Point) mGraphics.get(graphicIndex + 1).getGeometry();
-      // Since the midpoints aren't in the point collection, get the index of the point after it
-      pointIndex = mCurrentPointCollection.indexOf(pointAfterMidpoint);
-    }
-    // Add a new point at this index with the midpoint's new geometry
-    mCurrentPointCollection.add(pointIndex, newGeometry);
-    // Find the locations of the new midpoints (before and after the just added vertex point)
-    Point newPreMidpoint = getMidpoint(mCurrentPointCollection.get(pointIndex - 1), newGeometry);
-    Point newPostMidpoint = getMidpoint(newGeometry, mCurrentPointCollection.get(pointIndex + 1));
-    // The graphic index is current pointing at the old midpoint, so add the pre-midpoint here
-    // which will shift the index. Increment the counter so it points at the old midpoint again
-    mGraphics.add(graphicIndex++, new Graphic(newPreMidpoint, mPolylineMidpointSymbol));
-    // Add the post-midpoint at the index after the old midpoint
-    mGraphics.add(graphicIndex + 1, new Graphic(newPostMidpoint, mPolylineMidpointSymbol));
-    // Now that we've split and added a new vertex, the selected point is no longer a midpoint
-    mIsMidpointSelected = false;
-  }
-
-  /**
-   * Helper method to add a point to the polyline/polygon. Handles the work of
-   * changing the working points symbol and updating the polyline/polygon geometry.
-   *
-   * @param point the point to add
-   */
-  private void addPolylinePoint(Point point) {
-    Point midPoint = getMidpoint((Point) mCurrentPoint.getGeometry(), point);
-    mCurrentPoint.setSymbol(mPolylineVertexSymbol);
-    mCurrentLine.setGeometry(new Polyline(mCurrentPointCollection));
-    mGraphics.add(new Graphic(midPoint, mPolylineMidpointSymbol));
-    mCurrentPoint = new Graphic(point, mPointPlacementSymbol);
-    mGraphics.add(mCurrentPoint);
-    if (mDrawingMode == DrawingMode.POLYGON) {
-      mCurrentPolygon.setGeometry(new Polygon(mCurrentPointCollection));
-      Point polygonMidpoint = getMidpoint((Point) mCurrentPoint.getGeometry(), mCurrentPointCollection.get(0));
-      mGraphics.add(new Graphic(polygonMidpoint, mPolylineMidpointSymbol));
-    }
-  }
-
-  /**
-   * Helper method to update the final midpoint of a polygon.
-   */
-  private void updatePolygonMidpoint() {
-    // There will only be a final midpoint if there are at least 3 points
-    if (mCurrentPointCollection.size() > 2) {
-      // Get the final midpoint graphic and update its geometry with the midpoint of the final and first points
-      Graphic postMidpoint = mGraphics.get(mGraphics.size() - 1);
-      Point postMidpointGeometry = getMidpoint(mCurrentPointCollection.get(mCurrentPointCollection.size() - 2), mCurrentPointCollection.get(0));
-      postMidpoint.setGeometry(postMidpointGeometry);
-    }
-  }
-
-  /**
-   * Finishes the current drawing by finalizing the working graphic[s], resetting the drawing state, and notifying
-   * the listener that the drawing has finished.
-   */
-  private void finishDrawing() {
-    // If current point is null then there is no drawing to finish
-    if (mCurrentPoint != null) {
-      switch (mDrawingMode) {
-        case POINT:
-          // If we're drawing a point, set the symbol to the placed symbol and reset the current point
-          mCurrentPoint.setSymbol(mPointPlacedSymbol);
-          mCurrentPoint = null;
-          // Remove any of the move graphic undo events. Once placed, undo should just remove the point
-          while (mUndoElementStack.peek().getEvent() == UndoRedoItem.Event.MOVE_POINT) {
-            mUndoElementStack.pop();
-          }
-          break;
-        case POLYGON:
-          // If we're drawing a polygon, logic is similar to finishing a polyline, but additionally need
-          // to remove the final midpoint
-          mGraphics.remove(mGraphics.size() - 1);
-        case POLYLINE:
-          // Set the current point to the placed vertex symbol and set the line to the placed line symbol
-          mCurrentPoint.setSymbol(mPolylineVertexSymbol);
-          mCurrentLine.setSymbol(mPolylinePlacedSymbol);
-          // The second to last graphic is the final midpoint, and we need to remove all midpoints
-          int index = mGraphics.size() - 2;
-          // Pop events until all the add/move polyline point events are gone (once placed, we only want to remove
-          // a polyline on undo). The final popped event will be an ADD_GRAPHIC event, which will be replaced
-          // further down by an ADD_POLYLINE event
-          UndoRedoItem.Event event;
-          do {
-            event = mUndoElementStack.pop().getEvent();
-          }
-          while (event == UndoRedoItem.Event.ADD_POLYLINE_POINT || event == UndoRedoItem.Event.MOVE_POLYLINE_POINT);
-          while (index > 0 && mGraphics.get(index).getSymbol().equals(mPolylineMidpointSymbol)) {
-            // For each add event, remove the midpoint and decrement the index
-            mGraphics.remove(index);
-            index -= 2;
-          }
-          // Push a new event indicating that we've finished a POLYLINE
-          mUndoElementStack.add(new UndoRedoItem(UndoRedoItem.Event.ADD_POLYLINE, null));
-          // Reset the boolean and working graphics
-          mIsPolylineStarted = false;
-          mCurrentPoint = null;
-          mCurrentLine = null;
-          mCurrentPolygon = null;
-          mCurrentPointCollection = null;
-          break;
-      }
-    }
-    // Reset drawing mode and empty the redo stack
-    mDrawingMode = DrawingMode.NONE;
-    clearStack(mRedoElementStack);
-    mListener.onDrawingFinished();
-  }
-
-  /**
-   * Represents a single action that can be undone/redone in the sketching stack
-   */
-  public static class UndoRedoItem {
-
-    /**
-     * Indicates different types of events that can occur.
-     */
-    public enum Event {
-      ADD_POINT,
-      MOVE_POINT,
-      REMOVE_POINT,
-      ADD_POLYLINE_POINT,
-      MOVE_POLYLINE_POINT,
-      REMOVE_POLYLINE_POINT,
-      ADD_POLYLINE,
-      REMOVE_POLYLINE,
-      ERASE_GRAPHICS,
-      REPLACE_GRAPHICS
-    }
-
-    /**
-     * Represents the specific action of moving a polyline point, which additionally needs
-     * to indicate if the point moved was a midpoint.
-     */
-    public static class MovePolylinePointElement {
-      Graphic mGraphic;
-      Point mPoint;
-      boolean mIsMidpoint;
-
-      /**
-       * Instantiates a new MovePolylinePointElement.
-       *
-       * @param graphic the graphic of the moved point
-       * @param point the position of the moved point
-       * @param isMidpoint true if the moved point was a midpoint
-       */
-      public MovePolylinePointElement(Graphic graphic, Point point, boolean isMidpoint) {
-        mGraphic = graphic;
-        mPoint = point;
-        mIsMidpoint = isMidpoint;
-      }
-
-      /**
-       * Gets the graphic of the moved point.
-       *
-       * @return the graphic of the moved point
-       */
-      public Graphic getGraphic() {
-        return mGraphic;
-      }
-
-      /**
-       * Gets the position of the moved point (note this is required because the Point
-       * returned by graphic.getGeometry() will have changed by reference).
-       *
-       * @return the position of the moved point
-       */
-      public Point getPoint() {
-        return mPoint;
-      }
-
-      /**
-       * Checks if the moved point was a midpoint.
-       *
-       * @return true if the moved point was a midpoint
-       */
-      public boolean isMidpoint() {
-        return mIsMidpoint;
-      }
-    }
-
-    // Each item has an event type and optionally an object to use in undoing/redoing the action
-    private Event mEvent;
-    private Object mElement;
-
-    /**
-     * Creates a new UndoRedoItem with the specified event type and optional object.
-     *
-     * @param event   the type of event that occured
-     * @param element optionally an object to help undo/redo the action
-     */
-    public UndoRedoItem(Event event, Object element) {
-      mEvent = event;
-      mElement = element;
-    }
-
-    /**
-     * Gets the type of the event.
-     *
-     * @return the type of the event
-     */
-    public Event getEvent() {
-      return mEvent;
-    }
-
-    /**
-     * Gets the object with which to undo/redo the action (depending on the event type,
-     * may be null).
-     *
-     * @return the object with which to undo/redo the action, or null if there is none
-     */
-    public Object getElement() {
-      return mElement;
     }
   }
 }
