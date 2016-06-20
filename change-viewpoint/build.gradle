@@ -5,7 +5,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.example.changeviewpoint"
+        applicationId "com.esri.arcgisruntime.sample.changeviewpoint"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
