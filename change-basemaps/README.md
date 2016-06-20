@@ -5,7 +5,7 @@
 The Change Basemaps sample app shows how you can change basemaps from the ```ActionBar``` overflow button.  You can easily add more basemaps by extending the menu items and implementing them in the ```onCreateOptionsMenu``` and ```onOptionsItemSelected``` methods.
 
 ## Features
-* Map
+* ArcGISMap
 * MapView
 * Basemap
 * ViewPoint
