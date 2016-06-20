@@ -4,9 +4,9 @@
     tools:context=".MainActivity">
     <item
         android:id="@+id/CaptureMap"
-        app:showAsAction="always"
         android:icon="@android:drawable/ic_menu_camera"
-        android:title="@string/menu_capture" />
+        android:title="@string/menu_capture"
+        app:showAsAction="always" />
 
 
 

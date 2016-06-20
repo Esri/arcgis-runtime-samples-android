@@ -1,4 +1,4 @@
-include ':add-graphics-renderer', ':capture-screenshot-map',
+include ':add-graphics-renderer', ':take-screenshot',
         ':add-graphics-symbols',
         ':arcgis-map-imagelayer-url',
         ':arcgis-tiledlayer-rendermode',

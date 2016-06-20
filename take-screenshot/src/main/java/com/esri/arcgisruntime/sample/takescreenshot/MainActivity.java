@@ -14,7 +14,7 @@
  *
  */
 
-package com.example.capture_screenshot_map;
+package com.esri.arcgisruntime.sample.takescreenshot;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -41,7 +41,7 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     private MapView mMapView;
-    private String TAG = "CaptureScreenshotMap";
+    private String TAG = "TakeScreenshot";
 
 
     @Override
@@ -119,6 +119,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * save the bitmap image to file and open it
+     *
+     * @param bitmap
+     * @throws IOException
+     */
+    private File saveToFile(Bitmap bitmap) throws IOException {
+
+        // create a directory ArcGIS to save the file
+        File root = null;
+        String fileName = "map-export-image" + System.currentTimeMillis() + ".png";
+        root = Environment.getExternalStorageDirectory();
+        File fileDir = new File(root.getAbsolutePath() + "/ArcGIS/");
+        fileDir.mkdirs();
+
+        // create the file inside the directory
+        File file = new File(fileDir, fileName);
+
+        // write the bitmap to PNG file
+        FileOutputStream fos = new FileOutputStream(file);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+
+        // close the stream
+        fos.flush();
+        fos.close();
+
+        return file;
+
+    }
+
+    /**
      * AsyncTask class to save the bitmap as an image
      */
     public class SaveImageTask extends AsyncTask<Bitmap, Void, File> {
@@ -127,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
             // display a toast message to inform saving the map as an image
             Toast.makeText(getApplicationContext(), "Exporting Map as an image!", Toast.LENGTH_SHORT).show();
         }
+
         /**
          * save the file using a worker thread
          */
@@ -143,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /**
-         *  Perform the work on UI thread to open the exported map image
+         * Perform the work on UI thread to open the exported map image
          */
         protected void onPostExecute(File file) {
             // Open the file to view
@@ -152,37 +183,6 @@ public class MainActivity extends AppCompatActivity {
             i.setDataAndType(Uri.fromFile(file), "image/png");
             startActivity(i);
         }
-    }
-
-
-    /**
-     * save the bitmap image to file and open it
-     *
-     * @param bitmap
-     * @throws IOException
-     */
-    private File saveToFile(Bitmap bitmap) throws IOException {
-
-        // create a directory ArcGIS to save the file
-        File root = null;
-        String fileName = "map-export-image"+System.currentTimeMillis() + ".png";
-        root = Environment.getExternalStorageDirectory();
-        File fileDir = new File(root.getAbsolutePath()+"/ArcGIS/");
-        fileDir.mkdirs();
-
-        // create the file inside the directory
-        File file = new File(fileDir, fileName);
-
-        // write the bitmap to PNG file
-        FileOutputStream fos = new FileOutputStream(file);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-
-        // close the stream
-        fos.flush();
-        fos.close();
-
-        return file;
-
     }
 
 
