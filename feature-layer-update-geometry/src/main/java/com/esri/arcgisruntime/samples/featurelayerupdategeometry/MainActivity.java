@@ -24,6 +24,7 @@ import com.esri.arcgisruntime.datasource.arcgis.ArcGISFeature;
 import com.esri.arcgisruntime.datasource.arcgis.FeatureEditResult;
 import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
+import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -99,17 +100,18 @@ public class MainActivity extends AppCompatActivity {
             }
           });
         } else {
-          final Point movedPoint = mMapView.screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
+          Point movedPoint = mMapView.screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
+          final Point normalizedPoint = (Point) GeometryEngine.normalizeCentralMeridian(movedPoint);
           mIdentifiedFeature.addDoneLoadingListener(new Runnable() {
             @Override
             public void run() {
-              mIdentifiedFeature.setGeometry(movedPoint);
+              mIdentifiedFeature.setGeometry(normalizedPoint);
               final ListenableFuture<Void> updateFuture = mFeatureLayer.getFeatureTable().updateFeatureAsync(mIdentifiedFeature);
               updateFuture.addDoneListener(new Runnable() {
                 @Override
                 public void run() {
                   try {
-                    if (updateFuture.get() != null) {
+                    if (updateFuture.isDone()) {
                       applyEditsToServer();
                       mFeatureLayer.clearSelection();
                       mFeatureSelected = false;
@@ -140,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
       public void run() {
         try {
           List<FeatureEditResult> featureEditResultsList = applyEditsFuture.get();
-          if (featureEditResultsList.get(0).getError() != null) {
+          if (!featureEditResultsList.get(0).hasCompletedWithErrors()) {
             Toast.makeText(getApplicationContext(), "Applied Geometry Edits to Server. ObjectID: " + featureEditResultsList.get(0).getObjectId(), Toast.LENGTH_SHORT).show();
           }
         } catch (Exception e) {
