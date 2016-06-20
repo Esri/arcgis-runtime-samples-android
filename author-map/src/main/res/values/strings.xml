@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Author a map</string>
+    <string name="app_name">Authoring a map</string>
     <string name="basemap_selection">Choose a basemap</string>
     <string name="layer_selection">Add operational layers</string>
     <string name="menu_save">Save</string>

@@ -1,4 +1,4 @@
-package com.example.authoramap;
+package com.esri.arcgisruntime.sample.authoramap;
 
 import org.junit.Test;
 

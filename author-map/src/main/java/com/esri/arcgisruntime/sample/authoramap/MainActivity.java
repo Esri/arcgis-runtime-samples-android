@@ -14,7 +14,7 @@
  *
  */
 
-package com.example.authoramap;
+package com.esri.arcgisruntime.sample.authoramap;
 
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
