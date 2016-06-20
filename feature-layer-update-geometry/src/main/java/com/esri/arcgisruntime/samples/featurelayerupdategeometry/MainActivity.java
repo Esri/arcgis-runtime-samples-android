@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
     // create the feature layer using the service feature table
     mFeatureLayer = new FeatureLayer(serviceFeatureTable);
-    mFeatureLayer.setSelectionColor(Color.rgb(0, 255, 255)); //cyan, fully opaque
+    mFeatureLayer.setSelectionColor(Color.CYAN); 
     mFeatureLayer.setSelectionWidth(3);
     // add the layer to the map
     map.getOperationalLayers().add(mFeatureLayer);
@@ -104,12 +104,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
               mIdentifiedFeature.setGeometry(movedPoint);
-              final ListenableFuture<Boolean> updateFuture = mFeatureLayer.getFeatureTable().updateFeatureAsync(mIdentifiedFeature);
+              final ListenableFuture<Void> updateFuture = mFeatureLayer.getFeatureTable().updateFeatureAsync(mIdentifiedFeature);
               updateFuture.addDoneListener(new Runnable() {
                 @Override
                 public void run() {
                   try {
-                    if (updateFuture.get()) {
+                    if (updateFuture.get() != null) {
                       applyEditsToServer();
                       mFeatureLayer.clearSelection();
                       mFeatureSelected = false;
