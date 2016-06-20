@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">View Layer Status</string>
+    <string name="app_name">Disaply layer view  state</string>
 
     <!-- Display labels -->
     <string name="world_time_zone">World Time Zones: </string>

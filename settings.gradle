@@ -34,4 +34,4 @@ include ':add-graphics-renderer',
         ':simple-marker-symbol',
         ':simple-renderer',
         ':unique-value-renderer',
-        ':view-layer-status'
+        ':display-layer-view-state'

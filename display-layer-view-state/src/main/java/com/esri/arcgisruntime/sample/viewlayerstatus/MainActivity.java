@@ -14,7 +14,7 @@
  *
  */
 
-package com.example.viewlayerstatus;
+package com.esri.arcgisruntime.sample.viewlayerstatus;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -36,15 +36,14 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MapView mMapView;
-    private TextView timeZoneTextView;
-    private TextView worldCensusTextView;
-    private TextView recreationTextView;
     private static final int MIN_SCALE = 40000000;
     private static final int TILED_LAYER = 0;
     private static final int IMAGE_LAYER = 1;
     private static final int FEATURE_LAYER = 2;
-
+    private MapView mMapView;
+    private TextView timeZoneTextView;
+    private TextView worldCensusTextView;
+    private TextView recreationTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

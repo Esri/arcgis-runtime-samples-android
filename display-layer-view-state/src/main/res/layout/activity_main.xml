@@ -1,9 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    tools:context=".MainActivity">
 
     <!-- MapView -->
     <com.esri.arcgisruntime.mapping.view.MapView
@@ -15,91 +17,91 @@
     <RelativeLayout
         android:layout_width="200dp"
         android:layout_height="100dp"
-        android:elevation="2dp"
-        android:focusable="false"
         android:layout_alignParentBottom="true"
-        android:background="#e2fdda"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp">
+        android:layout_marginRight="15dp"
+        android:background="#e2fdda"
+        android:elevation="2dp"
+        android:focusable="false">
 
         <TextView
+            android:id="@+id/worldTimeZoneView"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
-            android:id="@+id/worldTimeZoneView"
-            android:textColor="@color/colorPrimaryDark"
-            android:text="@string/world_time_zone"
-            android:singleLine="true"
             android:layout_margin="10dp"
+            android:singleLine="true"
+            android:text="@string/world_time_zone"
+            android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold" />
         <TextView
+            android:id="@+id/worldTimeZoneStatusView"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
-            android:id="@+id/worldTimeZoneStatusView"
-            android:textColor="@color/colorPrimary"
-            android:singleLine="true"
-            android:layout_alignTop="@+id/worldTimeZoneView"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignTop="@+id/worldTimeZoneView"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimary" />
 
         <View style="@style/Divider"
-            android:layout_below="@+id/worldTimeZoneView"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_below="@+id/worldTimeZoneView"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" />
 
         <TextView
+            android:id="@+id/censusView"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
-            android:id="@+id/censusView"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:textColor="@color/colorPrimaryDark"
-            android:text="@string/census"
             android:layout_margin="10dp"
+            android:text="@string/census"
+            android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/censusStatusView"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
-            android:id="@+id/censusStatusView"
-            android:textColor="@color/colorPrimary"
-            android:layout_alignTop="@+id/censusView"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignTop="@+id/censusView"
+            android:textColor="@color/colorPrimary" />
 
 
 
         <TextView
+            android:id="@+id/facilitiesView"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
-            android:id="@+id/facilitiesView"
-            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:textColor="@color/colorPrimaryDark"
-            android:text="@string/facilities"
+            android:layout_centerVertical="true"
             android:layout_margin="10dp"
+            android:text="@string/facilities"
+            android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/facilitiesStatusView"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
-            android:id="@+id/facilitiesStatusView"
-            android:textColor="@color/colorPrimary"
-            android:layout_alignTop="@+id/facilitiesView"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignTop="@+id/facilitiesView"
+            android:textColor="@color/colorPrimary" />
 
         <View style="@style/Divider"
-            android:layout_below="@+id/facilitiesView"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_below="@+id/facilitiesView"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" />
     </RelativeLayout>
