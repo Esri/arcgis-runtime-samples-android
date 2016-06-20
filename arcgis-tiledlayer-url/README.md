@@ -7,7 +7,7 @@ It shows how to inflate a MapView in the layout XML of the activity, create a Ti
 By default, this map supports basic zooming and panning operations.
 
 ## Features
-* Map
+* ArcGISßMap
 * MapView
 * ArcGISTiledLayer
 * Basemap

@@ -5,7 +5,7 @@
 This sample demonstrates how you can sketch graphics on a SketchGraphicsOverlay. Points, Polylines, and Polygons can be drawn. Drawing events can be undone and redone, and the entire contents of the SketchGraphicsOverlay can be erased.
 
 ## Features
-* Map
+* ArcGISMap
 * MapView
 * Basemap.Type
 * GraphicsOverlay

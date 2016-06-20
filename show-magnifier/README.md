@@ -14,6 +14,6 @@ mMapView.setAllowMagnifierToPanMap(true);
 ```
 
 ## Features
-* Map
+* ArcGISMap
 * MapView
 * Basemap.Type
