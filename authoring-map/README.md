@@ -1,4 +1,4 @@
-# Author a map
+# Authoring a map
 This sample demonstrates how to author a map and save it to your portal
 
 ![screenshot1](https://cloud.githubusercontent.com/assets/12448081/16025921/69544758-317f-11e6-9417-de4d561064bf.png) ![screenshot2](https://cloud.githubusercontent.com/assets/12448081/16025943/89f2ff7c-317f-11e6-9063-82dd7139458e.png)
