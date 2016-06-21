@@ -50,13 +50,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "EditFeatureAttachment";
     private static int REQUEST_CODE = 100;
-    private static String TAG = "EditFeatureAttachment";
     ServiceFeatureTable mServiceFeatureTable;
     ProgressDialog progressDialog;
     RelativeLayout mCalloutLayout;
+    ArcGISMap mMap;
     private MapView mMapView;
-    private ArcGISMap mMap;
     private Callout mCallout;
     private FeatureLayer mFeatureLayer;
     private ArcGISFeature mSelectedArcGISFeature;

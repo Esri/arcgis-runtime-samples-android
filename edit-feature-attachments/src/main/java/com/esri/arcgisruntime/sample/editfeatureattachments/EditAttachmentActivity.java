@@ -174,13 +174,13 @@ public class EditAttachmentActivity extends AppCompatActivity {
                 builder.setMessage(getApplication().getString(R.string.delete_query));
                 builder.setCancelable(true);
 
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         deleteAttachment(pos);
                         dialog.dismiss();
                     }
                 });
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
