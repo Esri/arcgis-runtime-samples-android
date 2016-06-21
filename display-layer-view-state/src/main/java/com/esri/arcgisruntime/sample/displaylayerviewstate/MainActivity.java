@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.viewlayerstatus;
+package com.esri.arcgisruntime.sample.displaylayerviewstate;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
