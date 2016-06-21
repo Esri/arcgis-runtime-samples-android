@@ -51,7 +51,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "EditFeatureAttachment";
-    private static int REQUEST_CODE = 100;
+    private static final int REQUEST_CODE = 100;
     ServiceFeatureTable mServiceFeatureTable;
     ProgressDialog progressDialog;
     RelativeLayout mCalloutLayout;
