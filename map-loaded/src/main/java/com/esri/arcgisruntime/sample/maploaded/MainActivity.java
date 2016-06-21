@@ -32,9 +32,9 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static String TAG = "MapLoadStatus";
+    private static final String TAG = "MapLoadStatus";
+    ArcGISMap mMap;
     private MapView mMapView;
-    private ArcGISMap mMap;
     private TextView mMapLoadStatusTextView;
 
     @Override
