@@ -1,4 +1,4 @@
-# Author a map
+# Find route
 This sample demonstrates how to get a route between two locations
 
 ![screenshot1](https://cloud.githubusercontent.com/assets/12448081/16168003/356302dc-34b2-11e6-8ac9-4cfa0a874783.png)
