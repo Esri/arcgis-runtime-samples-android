@@ -55,9 +55,10 @@ public class MainActivity extends AppCompatActivity {
     private static OAuthLoginManager oauthLoginManager;
     ProgressDialog progressDialog;
     Viewpoint viewpoint;
+    String[] mLayerTiles;
+    SpatialReference spartialReference;
     private MapView mMapView;
     private String[] mBasemapTiles;
-    private String[] mLayerTiles;
     private DrawerLayout mDrawerLayout;
     private ListView mBasemapListView;
     private ListView mLayerListView;
@@ -65,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mTitle;
     private ActionBarDrawerToggle mDrawerToggle;
     private Layer[] layer_array = new Layer[2];
-    private SpatialReference spartialReference;
 
     public static OAuthLoginManager getOAuthLoginManagerInstance() {
         return oauthLoginManager;
