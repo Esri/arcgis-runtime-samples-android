@@ -42,7 +42,8 @@ import java.io.InputStreamReader;
 public class MainActivity extends AppCompatActivity {
 
     private static final int SCALE = 5000;
-    private static String TAG = "ChangeViewPoint";
+    private static final String TAG = "ChangeViewPoint";
+    ArcGISMap mMap;
     private MapView mMapView;
     private SpatialReference spatialReference;
     private Button mGeometryButton, mCenterScaleButton, mAnimateButton;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
         // create a map with the BasemapType topographic
-        ArcGISMap mMap = new ArcGISMap(Basemap.createImageryWithLabels());
+        mMap = new ArcGISMap(Basemap.createImageryWithLabels());
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
         // create spatial reference for all points
