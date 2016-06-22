@@ -15,6 +15,7 @@ A signal handler is set up on the map to handle the ```LoadStatusChangedEvent```
 
 # Developer Pattern
 
+The ```adddLoadStatusChangedListener``` method of class ```ArcGISMap``` listens for ```LoadStatusChangedEvent```. To get the load status use method ```getNewLoadStatus().name()``` on the changed event.
 ```java
 // Listener on change in map load status
         mMap.addLoadStatusChangedListener(new LoadStatusChangedListener() {
