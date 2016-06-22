@@ -9,7 +9,7 @@ Three methods are demonstrated to change the view point namely:
 * Center and Scale: Zoom to Waterloo
 
 * Animation: Set the map views's viewpoint to London with a ten second duration  
-  
+---  
 |  Initial Map                                                |  Geometry                                         |
 |:-----------------------------------------------------------:|:-----------------------------------------------------------:|
 |![changevp1](https://cloud.githubusercontent.com/assets/12448081/15730683/8962423a-2823-11e6-8893-1a963ba07c8d.png)|![changevp2](https://cloud.githubusercontent.com/assets/12448081/15730692/9bf3d30a-2823-11e6-8a1d-de959f062772.png)|      
