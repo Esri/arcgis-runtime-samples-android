@@ -33,8 +33,7 @@
             android:layout_toLeftOf="@+id/centerScaleButton"
             android:layout_toStartOf="@+id/centerScaleButton"
             android:background="@color/primary"
-            android:text="Geometry"
-            android:textAlignment="center"
+            android:text="@string/geometry"
             android:textColor="@color/abc_secondary_text_material_dark" />
 
         <Button
@@ -45,8 +44,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:background="@color/primary"
-            android:text="Center &amp; Scale"
-            android:textAlignment="center"
+            android:text="@string/center_scale"
             android:textColor="@color/abc_secondary_text_material_dark" />
 
         <Button
@@ -60,8 +58,7 @@
             android:layout_toEndOf="@+id/centerScaleButton"
             android:layout_toRightOf="@+id/centerScaleButton"
             android:background="@color/primary"
-            android:text="Animate"
-            android:textAlignment="center"
+            android:text="@string/animate"
             android:textColor="@color/abc_secondary_text_material_dark" />
     </RelativeLayout>
 
