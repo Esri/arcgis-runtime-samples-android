@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.datasource.arcgis.TileCache;
 import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -77,9 +78,10 @@ public class MainActivity extends AppCompatActivity {
         mMap.addDoneLoadingListener(new Runnable() {
             @Override
             public void run() {
-                Point p = new Point(-13030231.77, 3849109.75, mMap.getSpatialReference());
-                Viewpoint vp = new Viewpoint(p, 20);
-                mMapView.setViewpoint(vp);
+
+                Point p = new Point(-117.047710, 32.624837, SpatialReference.create(4326));
+                Viewpoint vp = new Viewpoint(p, 20000);
+                mMapView.setViewpointAsync(vp);
 
             }
         });
@@ -153,6 +155,10 @@ public class MainActivity extends AppCompatActivity {
 
                     // set the viewpoint to the marker
                     Point location = geocode.getDisplayLocation();
+                    Log.d(TAG,"here");
+                    Log.d(TAG,location.toString());
+                    Log.d(TAG,geocode.getRouteLocation().toJson());
+                    Log.d(TAG,location.getX() + " " + location.getY() + " " + location.getZ() + " " + location.getM());
                     mMapView.setViewpointCenterWithScaleAsync(location, 100000);
 
                     // get attributes from the result for the callout
@@ -178,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                     attributes.put("title", title);
                     attributes.put("detail", detail);
 
-                    Log.d(TAG, title + " " + detail);
+                    //Log.d(TAG, title + " " + detail);
 
                     // create the marker
                     Graphic marker = new Graphic(geocode.getDisplayLocation(), attributes, mPinSourceSymbol);

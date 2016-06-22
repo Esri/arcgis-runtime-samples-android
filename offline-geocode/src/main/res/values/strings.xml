@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Offline geocode</string>
+    <string name="tpk_path">/ArcGIS/samples/OfflineRouting/SanDiego.tpk</string>
+    <string name="locator_path">/ArcGIS/samples/OfflineRouting/SanDiego_StreetAddress.loc</string>
 </resources>
