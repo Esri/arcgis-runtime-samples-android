@@ -12,6 +12,16 @@
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"></com.esri.arcgisruntime.mapping.view.MapView>
+        android:layout_height="fill_parent">
+
+    </com.esri.arcgisruntime.mapping.view.MapView>
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="New AutoCompleteTextView" />
 
 </RelativeLayout>
