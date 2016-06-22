@@ -10,9 +10,6 @@ local.properties
 .idea/
 build/
 
-# arcgis lib module
-arcgis-android-v10.2.4
-
 # SublimeText
 /*.sublime-project
 *.sublime-workspace
