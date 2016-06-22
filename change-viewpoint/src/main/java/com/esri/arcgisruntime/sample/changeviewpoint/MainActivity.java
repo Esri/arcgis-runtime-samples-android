@@ -42,12 +42,14 @@ import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int SCALE = 5000;
+    private static final int SCALE = 7000;
     private static final String TAG = "ChangeViewPoint";
     ArcGISMap mMap;
     private MapView mMapView;
     private SpatialReference spatialReference;
     private Button mGeometryButton, mCenterScaleButton, mAnimateButton;
+    private int mDuration = 10;
+    private boolean isGeometryButtonClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,18 +115,27 @@ public class MainActivity extends AppCompatActivity {
                 mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
                 mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
                 mCenterScaleButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
+
+                isGeometryButtonClicked = true;
             }
         });
 
         mAnimateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int scale;
+                if(isGeometryButtonClicked) {
+                    scale = SCALE * SCALE;
+                    isGeometryButtonClicked = false;
+                } else {
+                    scale = SCALE;
+                }
                 // create the London location point
                 Point londonPoint = new Point(28677947.756181,22987445.6186465, spatialReference);
                 // create the viewpoint with the London point and scale
-                Viewpoint viewpoint = new Viewpoint(londonPoint, SCALE);
+                Viewpoint viewpoint = new Viewpoint(londonPoint, scale);
                 // set the map views's viewpoint to London with a ten second duration
-                mMapView.setViewpointWithDurationAsync(viewpoint, 10);
+                mMapView.setViewpointWithDurationAsync(viewpoint, mDuration);
 
                 mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
                 mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
