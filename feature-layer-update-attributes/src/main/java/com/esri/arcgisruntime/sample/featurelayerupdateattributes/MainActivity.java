@@ -79,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
     final ArcGISMap map = new ArcGISMap(Basemap.createStreets());
 
     //set an initial viewpoint
-    map.setInitialViewpoint(new Viewpoint(new Point(544871.19, 6806138.66, SpatialReferences
-        .getWebMercator()), 2E6));
+    map.setInitialViewpoint(new Viewpoint(new Point(-100.343, 34.585, SpatialReferences.getWgs84()), 1E8));
     
     // set the map to be displayed in the mapview
     mMapView.setMap(map);
