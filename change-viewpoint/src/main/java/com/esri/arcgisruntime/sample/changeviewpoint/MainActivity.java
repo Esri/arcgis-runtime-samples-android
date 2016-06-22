@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.changeviewpoint;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -109,9 +110,9 @@ public class MainActivity extends AppCompatActivity {
                 // set viewpoint of map view to Geometry - Griffith Park
                 mMapView.setViewpointGeometryAsync(geometry);
 
-                mGeometryButton.setBackgroundColor(getResources().getColor(R.color.primary_dark));
-                mAnimateButton.setBackgroundColor(getResources().getColor(R.color.primary));
-                mCenterScaleButton.setBackgroundColor(getResources().getColor(R.color.primary));
+                mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
+                mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
+                mCenterScaleButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
             }
         });
 
@@ -125,9 +126,9 @@ public class MainActivity extends AppCompatActivity {
                 // set the map views's viewpoint to London with a ten second duration
                 mMapView.setViewpointWithDurationAsync(viewpoint, 10);
 
-                mGeometryButton.setBackgroundColor(getResources().getColor(R.color.primary));
-                mAnimateButton.setBackgroundColor(getResources().getColor(R.color.primary_dark));
-                mCenterScaleButton.setBackgroundColor(getResources().getColor(R.color.primary));
+                mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
+                mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
+                mCenterScaleButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
             }
         });
 
@@ -139,9 +140,9 @@ public class MainActivity extends AppCompatActivity {
                 // set the map views's viewpoint centered on Waterloo and scaled
                 mMapView.setViewpointCenterWithScaleAsync(waterlooPoint, SCALE);
 
-                mGeometryButton.setBackgroundColor(getResources().getColor(R.color.primary));
-                mAnimateButton.setBackgroundColor(getResources().getColor(R.color.primary));
-                mCenterScaleButton.setBackgroundColor(getResources().getColor(R.color.primary_dark));
+                mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
+                mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
+                mCenterScaleButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
             }
         });
     }
