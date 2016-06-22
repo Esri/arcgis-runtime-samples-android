@@ -25,7 +25,6 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:background="#e2fdda"
-        android:elevation="2dp"
         android:focusable="false">
 
         <TextView
