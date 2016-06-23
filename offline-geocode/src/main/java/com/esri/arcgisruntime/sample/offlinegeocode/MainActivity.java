@@ -1,5 +1,6 @@
 package com.esri.arcgisruntime.sample.offlinegeocode;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
+import android.view.View;
 import android.widget.TextView;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -47,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
     private LocatorTask mLocatorTask;
     private ReverseGeocodeParameters mReverseGeocodeParameters;
     private Callout mCallout;
+    private float mDownX;
+    private float mDownY;
+    private final float SCROLL_THRESHOLD = 10;
+    private boolean isOnClick = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,29 +111,40 @@ public class MainActivity extends AppCompatActivity {
 
         mLocatorTask = new LocatorTask(extern + locatorPath);
 
-        //mLocatorTask.
+        mMapView.setOnTouchListener(new MapTouchListener(getApplicationContext(),mMapView));
 
-        mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
+        //setUpSearchView();
 
-            @Override
-            public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
 
-                // get the point that was clicked and convert it to a point in map coordinates
-                android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
-                        Math.round(motionEvent.getY()));
-
-                Point singleTapPoint = mMapView.screenToLocation(screenPoint);
-
-                ListenableFuture<List<GeocodeResult>> results = mLocatorTask.reverseGeocodeAsync(singleTapPoint,
-                        mReverseGeocodeParameters);
-                results.addDoneListener(new ResultsLoadedListener(results));
-
-                return true;
-            }
-        });
 
 
     }
+
+    private class MapTouchListener extends DefaultMapViewOnTouchListener {
+
+        public MapTouchListener(Context context, MapView mapView) {
+            super(context, mapView);
+        }
+
+        @Override
+        public boolean onDoubleTouchDrag(MotionEvent motionEvent) {
+            // get the point that was clicked and convert it to a point in map coordinates
+            android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
+                    Math.round(motionEvent.getY()));
+
+            Point singleTapPoint = mMapView.screenToLocation(screenPoint);
+
+            ListenableFuture<List<GeocodeResult>> results = mLocatorTask.reverseGeocodeAsync(singleTapPoint,
+                    mReverseGeocodeParameters);
+            results.addDoneListener(new ResultsLoadedListener(results));
+
+            return true;
+
+            //return true;
+        }
+    }
+
+
 
     /**
      * Updates marker and callout when new results are loaded.
@@ -159,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG,location.toString());
                     Log.d(TAG,geocode.getRouteLocation().toJson());
                     Log.d(TAG,location.getX() + " " + location.getY() + " " + location.getZ() + " " + location.getM());
-                    mMapView.setViewpointCenterWithScaleAsync(location, 100000);
+                    //mMapView.setViewpointCenterWithScaleAsync(location, 100000);
 
                     // get attributes from the result for the callout
                     String title;
