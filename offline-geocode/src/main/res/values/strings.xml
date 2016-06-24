@@ -5,5 +5,5 @@
     <string name="suggestion_text">Suggestion</string>
     <string name="suggest_item_icon">Suggest item icon</string>
     <string name="geo_locate_error">Geocode failed on address</string>
-    <string name="location_not_foud">We\'re sorry, we couldn\'t find a location with the name</string>
+    <string name="location_not_foud">We are sorry, we couldn't find a location with the name - </string>
 </resources>
