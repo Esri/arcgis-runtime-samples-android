@@ -10,13 +10,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.BaseColumns;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +39,6 @@ import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeResult;
 import com.esri.arcgisruntime.tasks.geocode.LocatorTask;
 import com.esri.arcgisruntime.tasks.geocode.ReverseGeocodeParameters;
-import com.esri.arcgisruntime.tasks.geocode.SuggestParameters;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,14 +46,12 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String SEARCH_HINT = "Search";
+    private static final String SEARCH_HINT = "Search";
     private static final String TAG = "OfflineActivity";
     private static final String COLUMN_NAME_ADDRESS = "address";
     private static final String COLUMN_NAME_X = "x";
     private static final String COLUMN_NAME_Y = "y";
     final String extern = Environment.getExternalStorageDirectory().getPath();
-    final String tpkPath = "/ArcGIS/samples/OfflineRouting/SanFrancisco.tpk";
-    final String locatorPath = "/ArcGIS/samples/OfflineRouting/SanFranciscoLocator.loc";
     GraphicsOverlay graphicsOverlay;
     GeocodeParameters mGeocodeParameters;
     PictureMarkerSymbol mPinSourceSymbol;
@@ -65,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
     private ReverseGeocodeParameters mReverseGeocodeParameters;
     private Callout mCallout;
     private SearchView mSearchview;
-    private SuggestParameters suggestParams;
+    private String mGraphicPointAddress;
+    private Point mGraphicPoint;
     private MatrixCursor mSuggestionCursor;
     private GeocodeResult mGeocodedLocation;
     private String[] recent = {
@@ -84,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.mapView);
 
         // create a basemap from a local tile package
-        TileCache tileCache = new TileCache(extern + tpkPath);
+        TileCache tileCache = new TileCache(extern + getResources().getString(R.string.sanfrancisco_tpk));
         tiledLayer = new ArcGISTiledLayer(tileCache);
         Basemap basemap = new Basemap(tiledLayer);
 
@@ -118,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         mReverseGeocodeParameters.setOutputSpatialReference(mMap.getSpatialReference());
         mReverseGeocodeParameters.setMaxResults(1);
 
-        mLocatorTask = new LocatorTask(extern + locatorPath);
+        mLocatorTask = new LocatorTask(extern + getResources().getString(R.string.sanfrancisco_loc));
 
         mMapView.setOnTouchListener(new MapTouchListener(getApplicationContext(), mMapView));
 
@@ -170,14 +168,15 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onSuggestionClick(int position) {
                     // Obtain the content of the selected suggesting place via
                     // cursor
+                    mSearchview.clearFocus();
                     MatrixCursor cursor = (MatrixCursor) mSearchview.getSuggestionsAdapter().getItem(position);
                     int indexColumnSuggestion = cursor.getColumnIndex(COLUMN_NAME_ADDRESS);
                     final String address = cursor.getString(indexColumnSuggestion);
                     //suggestionClickFlag = true;
                     // Find the Location of the suggestion
                     geoCodeTypedAddress(address);
-                    mSearchview.setQuery(address, false);
                     hideKeyboard();
+                    mSearchview.setQuery(address, false);
                     cursor.close();
 
                     return true;
@@ -269,6 +268,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void displaySearchResult(Point resultPoint, String address) {
 
+
+        if (mMapView.getCallout().isShowing()) {
+            mMapView.getCallout().dismiss();
+        }
         //remove any previous graphics/search results
         //mMapView.getGraphicsOverlays().clear();
         graphicsOverlay.getGraphics().clear();
@@ -283,16 +286,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Zoom map to geocode result location
         mMapView.setViewpointCenterAsync(resultPoint);
-        TextView calloutContent = new TextView(getApplicationContext());
-        calloutContent.setTextColor(Color.BLACK);
-        calloutContent.setText(address);
 
-        // get callout, set content and show
-        mCallout = mMapView.getCallout();
-        mCallout.setLocation(resultPoint);
-        mCallout.setContent(calloutContent);
-
-        mCallout.show();
+        mGraphicPoint = resultPoint;
+        mGraphicPointAddress = address;
     }
 
     /**
@@ -342,6 +338,50 @@ public class MainActivity extends AppCompatActivity {
             return true;
 
         }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+
+
+            if (mMapView.getCallout().isShowing()) {
+                mMapView.getCallout().dismiss();
+            }
+            // get the screen point where user tapped
+            final android.graphics.Point screenPoint = new android.graphics.Point((int) e.getX(), (int) e.getY());
+
+            // identify graphics on the graphics overlay
+            final ListenableFuture<List<Graphic>> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(graphicsOverlay, screenPoint, 1.0, 1);
+
+            identifyGraphic.addDoneListener(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // get the list of graphics returned by identify
+                        List<Graphic> graphic = identifyGraphic.get();
+                        // get size of list in results
+                        int identifyResultSize = graphic.size();
+                        if (!graphic.isEmpty()) {
+                            // show a toast message if graphic was returned
+                            TextView calloutContent = new TextView(getApplicationContext());
+                            calloutContent.setTextColor(Color.BLACK);
+                            calloutContent.setText(mGraphicPointAddress);
+                            calloutContent.setTextIsSelectable(true);
+                            // get callout, set content and show
+                            mCallout = mMapView.getCallout();
+                            mCallout.setContent(calloutContent);
+                            mCallout.getShowOptions().setAnimateRecenter(true);
+                            mCallout.setLocation(mGraphicPoint);
+                            mCallout.show();
+                        }
+                    } catch (InterruptedException | ExecutionException ie) {
+                        ie.printStackTrace();
+                    }
+
+                }
+            });
+
+            return super.onSingleTapConfirmed(e);
+        }
     }
 
 
@@ -373,9 +413,6 @@ public class MainActivity extends AppCompatActivity {
 
                     // set the viewpoint to the marker
                     Point location = geocode.getDisplayLocation();
-                    Log.d(TAG, location.toString());
-                    Log.d(TAG, geocode.getRouteLocation().toJson());
-                    Log.d(TAG, location.getX() + " " + location.getY() + " " + location.getZ() + " " + location.getM());
                     // get attributes from the result for the callout
                     String title;
                     String detail;
@@ -408,17 +445,18 @@ public class MainActivity extends AppCompatActivity {
                     // add the markers to the graphics overlay
                     graphicsOverlay.getGraphics().add(marker);
 
-
                     TextView calloutContent = new TextView(getApplicationContext());
                     calloutContent.setTextColor(Color.BLACK);
                     calloutContent.setText(title + ", " + detail);
-
+                    calloutContent.setTextIsSelectable(true);
                     // get callout, set content and show
                     mCallout = mMapView.getCallout();
                     mCallout.setLocation(geocode.getDisplayLocation());
                     mCallout.setContent(calloutContent);
-
                     mCallout.show();
+
+                    mGraphicPoint = location;
+                    mGraphicPointAddress = title + ", " + detail;
                 }
 
             } catch (Exception e) {
