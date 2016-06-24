@@ -1,4 +1,4 @@
-include ':add-graphics-renderer',
+include ':add-graphics-renderer', ':open-mobile-mappackage',
         ':add-graphics-symbols',
         ':arcgis-map-imagelayer-url',
         ':arcgis-tiledlayer-rendermode',
