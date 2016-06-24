@@ -2,4 +2,8 @@
     <string name="app_name">Offline geocode</string>
     <string name="tpk_path">/ArcGIS/samples/OfflineRouting/SanDiego.tpk</string>
     <string name="locator_path">/ArcGIS/samples/OfflineRouting/SanDiego_StreetAddress.loc</string>
+    <string name="suggestion_text">Suggestion</string>
+    <string name="suggest_item_icon">Suggest item icon</string>
+    <string name="geo_locate_error">Geocode failed on address</string>
+    <string name="location_not_foud">We\'re sorry, we couldn\'t find a location with the name</string>
 </resources>

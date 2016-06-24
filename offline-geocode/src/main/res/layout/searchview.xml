@@ -10,7 +10,7 @@
     android:orientation="horizontal">
 
     <SearchView
-        android:id="@+id/searchView"
+        android:id="@+id/searchView1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="7"
