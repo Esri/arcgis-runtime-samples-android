@@ -47,24 +47,24 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String SEARCH_HINT = "Search";
     private static final String TAG = "OfflineActivity";
+    private static final String COLUMN_NAME_ADDRESS = "address";
+    private static final String COLUMN_NAME_X = "x";
+    private static final String COLUMN_NAME_Y = "y";
     final String extern = Environment.getExternalStorageDirectory().getPath();
     final String tpkPath = "/ArcGIS/samples/OfflineRouting/SanFrancisco.tpk";
     final String locatorPath = "/ArcGIS/samples/OfflineRouting/SanFranciscoLocator.loc";
     GraphicsOverlay graphicsOverlay;
     GeocodeParameters mGeocodeParameters;
     PictureMarkerSymbol mPinSourceSymbol;
-    private MapView mMapView;
     ArcGISMap mMap;
     ArcGISTiledLayer tiledLayer;
+    private MapView mMapView;
     private LocatorTask mLocatorTask;
     private ReverseGeocodeParameters mReverseGeocodeParameters;
     private Callout mCallout;
     private SearchView mSearchview;
-    public static final String SEARCH_HINT = "Search";
-    private static final String COLUMN_NAME_ADDRESS = "address";
-    private static final String COLUMN_NAME_X = "x";
-    private static final String COLUMN_NAME_Y = "y";
     private SuggestParameters suggestParams;
     private MatrixCursor mSuggestionCursor;
     private GeocodeResult mGeocodedLocation;
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     private void setUpSearchView() {
 
         mSearchview = new SearchView(MainActivity.this);
-        mSearchview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.colorGrey));
+        mSearchview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorGrey));
         mSearchview.setIconifiedByDefault(false);
         mSearchview.setQueryHint(SEARCH_HINT);
         RelativeLayout myLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                     //suggestionClickFlag = true;
                     // Find the Location of the suggestion
                     geoCodeTypedAddress(address);
-                    mSearchview.setQuery(address,false);
+                    mSearchview.setQuery(address, false);
                     hideKeyboard();
                     cursor.close();
 
@@ -186,19 +186,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         } catch (Exception e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
             e.printStackTrace();
         }
 
-
-    }
-
-
-    private void onSearchButtonClicked(String address) {
-        // Hide virtual keyboard
-        hideKeyboard();
-
-        geoCodeTypedAddress(address);
 
     }
 
@@ -232,11 +223,10 @@ public class MainActivity extends AppCompatActivity {
                                     mGeocodedLocation = geocodeResults.get(0);
                                     displaySearchResult(mGeocodedLocation.getDisplayLocation(), mGeocodedLocation.getLabel());
 
-                                }else{
+                                } else {
                                     Toast.makeText(getApplicationContext(),
                                             getString(R.string.location_not_foud) + address,
                                             Toast.LENGTH_LONG).show();
-
                                 }
 
                             } catch (InterruptedException e) {
@@ -313,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
         mSuggestionCursor = new MatrixCursor(cols);
 
         int key = 0;
-        for(String s : recent) {
+        for (String s : recent) {
             mSuggestionCursor.addRow(new Object[]{key++, s, "0", "0"});
         }
     }
@@ -370,7 +360,6 @@ public class MainActivity extends AppCompatActivity {
         ResultsLoadedListener(ListenableFuture<List<GeocodeResult>> results) {
             this.results = results;
         }
-
 
 
         @Override
