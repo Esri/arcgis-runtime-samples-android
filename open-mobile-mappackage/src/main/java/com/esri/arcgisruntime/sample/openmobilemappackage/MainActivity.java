@@ -34,8 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private static String extSDCardDirName;
     private static String filename;
 
-    protected static String TAG = "MMPK";
-    protected static String FILE_EXTENSION = ".mmpk";
+    private static final String TAG = "MMPK";
+    private static final String FILE_EXTENSION = ".mmpk";
+
 
 
     @Override
@@ -58,12 +59,11 @@ public class MainActivity extends AppCompatActivity {
         mapPackage.addDoneLoadingListener(new Runnable() {
             @Override
             public void run() {
-                if(mapPackage.getLoadStatus() == LoadStatus.FAILED_TO_LOAD){
-                    Log.e(TAG, mapPackage.getLoadError().getMessage());
-                }
-
-                if(mapPackage.getMaps().size() > 0){
+                if(mapPackage.getLoadStatus() == LoadStatus.LOADED && mapPackage.getMaps().size() > 0){
                     mMapView.setMap(mapPackage.getMaps().get(0));
+                }else{
+                    // Log the issue
+                    Log.e(TAG, mapPackage.getLoadError().getMessage());
                 }
             }
         });
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Create the mobile map package file location and name structure
      */
-    static String createMobileMapPackageFilePath(){
+    private static String createMobileMapPackageFilePath(){
         return extStorDir.getAbsolutePath() + File.separator + extSDCardDirName + File.separator + filename + FILE_EXTENSION;
     }
 
