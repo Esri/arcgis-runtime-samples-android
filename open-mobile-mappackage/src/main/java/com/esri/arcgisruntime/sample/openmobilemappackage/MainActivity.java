@@ -29,15 +29,19 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MapView mMapView;
+    private static final String TAG = "MMPK";
+    private static final String FILE_EXTENSION = ".mmpk";
     private static File extStorDir;
     private static String extSDCardDirName;
     private static String filename;
+    private MapView mMapView;
 
-    private static final String TAG = "MMPK";
-    private static final String FILE_EXTENSION = ".mmpk";
-
-
+    /**
+     * Create the mobile map package file location and name structure
+     */
+    private static String createMobileMapPackageFilePath(){
+        return extStorDir.getAbsolutePath() + File.separator + extSDCardDirName + File.separator + filename + FILE_EXTENSION;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,34 +50,34 @@ public class MainActivity extends AppCompatActivity {
 
         // get sdcard resource name
         extStorDir = Environment.getExternalStorageDirectory();
+        // get the directory
         extSDCardDirName = this.getResources().getString(R.string.config_data_sdcard_offline_dir);
+        // get mobile map package filename
         filename = this.getResources().getString(R.string.config_mmpk_name);
-
+        // create the full path to the mobile map package file
         String mmpkFile = createMobileMapPackageFilePath();
 
         // retrieve the MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
+        // create the mobile map package
         final MobileMapPackage mapPackage = new MobileMapPackage(mmpkFile);
+        // load the mobile map package asynchronously
         mapPackage.loadAsync();
 
+        // add done listener which will invoke when mobile map package has loaded
         mapPackage.addDoneLoadingListener(new Runnable() {
             @Override
             public void run() {
+                // check load status and that the mobile map package has maps
                 if(mapPackage.getLoadStatus() == LoadStatus.LOADED && mapPackage.getMaps().size() > 0){
+                    // add the map from the mobile map package to the MapView
                     mMapView.setMap(mapPackage.getMaps().get(0));
                 }else{
-                    // Log the issue
+                    // Log an issue if the mobile map package fails to load
                     Log.e(TAG, mapPackage.getLoadError().getMessage());
                 }
             }
         });
-    }
-
-    /**
-     * Create the mobile map package file location and name structure
-     */
-    private static String createMobileMapPackageFilePath(){
-        return extStorDir.getAbsolutePath() + File.separator + extSDCardDirName + File.separator + filename + FILE_EXTENSION;
     }
 
     @Override
