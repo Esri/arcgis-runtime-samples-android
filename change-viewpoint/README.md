@@ -1,6 +1,5 @@
-# Map Load Status
+# Change Viewpoint
 This sample demonstrates different ways to change the ```ViewPoint``` of a map. 
-
 
 Three methods are demonstrated to change the view point namely:
 
@@ -9,6 +8,7 @@ Three methods are demonstrated to change the view point namely:
 * Center and Scale: Zoom to Waterloo
 
 * Animation: Set the map views's viewpoint to London with a ten second duration  
+
 ---  
 |  Initial Map                                                |  Geometry                                         |
 |:-----------------------------------------------------------:|:-----------------------------------------------------------:|
