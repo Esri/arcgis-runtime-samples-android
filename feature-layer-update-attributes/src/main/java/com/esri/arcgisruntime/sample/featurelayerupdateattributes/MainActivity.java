@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.sample.featurelayerupdateattributes;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
   private String mSelectedArcGISFeatureAttributeValue;
   private boolean mFeatureUpdated;
   private View mCoordinatorLayout;
+  private ProgressDialog mProgressDialog;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -77,14 +79,17 @@ public class MainActivity extends AppCompatActivity {
     final ArcGISMap map = new ArcGISMap(Basemap.createStreets());
 
     //set an initial viewpoint
-    map.setInitialViewpoint(new Viewpoint(new Point(544871.19, 6806138.66, SpatialReferences
-        .getWebMercator()), 2E6));
+    map.setInitialViewpoint(new Viewpoint(new Point(-100.343, 34.585, SpatialReferences.getWgs84()), 1E8));
     
     // set the map to be displayed in the mapview
     mMapView.setMap(map);
 
     // get callout, set content and show
     mCallout = mMapView.getCallout();
+
+    mProgressDialog = new ProgressDialog(this);
+    mProgressDialog.setTitle(getResources().getString(R.string.progress_title));
+    mProgressDialog.setMessage(getResources().getString(R.string.progress_message));
 
     // create feature layer with its service feature table
     // create the service feature table
@@ -172,12 +177,9 @@ public class MainActivity extends AppCompatActivity {
       int resultCode, final Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if(resultCode == 100) {
-
-      if (updateAttributes(data.getStringExtra("typdamage"))) {
-        mSnackbarSuccess.show();
-      } else {
-        mSnackbarFailure.show();
-      }
+      // display progress dialog while updating attribute callout
+      mProgressDialog.show();
+      updateAttributes(data.getStringExtra("typdamage"));
     }
   }
 
@@ -203,36 +205,45 @@ public class MainActivity extends AppCompatActivity {
         try {
           // update feature in the feature table
           ListenableFuture<Void> mapViewResult = mServiceFeatureTable.updateFeatureAsync(mSelectedArcGISFeature);
+          /*mServiceFeatureTable.updateFeatureAsync(mSelectedArcGISFeature).addDoneListener(new Runnable() {*/
+          mapViewResult.addDoneListener(new Runnable() {
+            @Override
+            public void run() {
+              // apply change to the server
+              final ListenableFuture<List<FeatureEditResult>> serverResult = mServiceFeatureTable.applyEditsAsync();
 
-          // if successful, update change to the server
-          if (mapViewResult.get() != null) {
+              serverResult.addDoneListener(new Runnable() {
+                @Override
+                public void run() {
+                  try {
 
-            // apply change to the server
-            final ListenableFuture<List<FeatureEditResult>> serverResult = mServiceFeatureTable.applyEditsAsync();
-
-            serverResult.addDoneListener(new Runnable() {
-              @Override public void run() {
-                try {
-                  // check if server result successful
-                  List<FeatureEditResult> edits = serverResult.get();
-                  if (edits.size() > 0) {
-                    if (!edits.get(0).hasCompletedWithErrors()) {
-                      Log.e(getResources().getString(R.string.app_name), "Feature successfully updated");
-                      mFeatureUpdated = true;
+                    // check if server result successful
+                    List<FeatureEditResult> edits = serverResult.get();
+                    if (edits.size() > 0) {
+                      if (!edits.get(0).hasCompletedWithErrors()) {
+                        Log.e(getResources().getString(R.string.app_name), "Feature successfully updated");
+                        mSnackbarSuccess.show();
+                        mFeatureUpdated = true;
+                      }
+                    } else {
+                      Log.e(getResources().getString(R.string.app_name), "The attribute type was not changed");
+                      mSnackbarFailure.show();
+                      mFeatureUpdated = false;
                     }
-                  } else {
-                    Log.e(getResources().getString(R.string.app_name), "The attribute type was not changed");
-                    mFeatureUpdated = false;
-                  }
-                  // display the callout with the updated value
-                  showCallout((String) mSelectedArcGISFeature.getAttributes().get("typdamage"));
-                } catch (Exception e) {
-                  Log.e(getResources().getString(R.string.app_name), "applying changes to the server failed: " + e.getMessage());
-                }
+                    if (mProgressDialog.isShowing()) {
+                      mProgressDialog.dismiss();
+                      // display the callout with the updated value
+                      showCallout((String) mSelectedArcGISFeature.getAttributes().get("typdamage"));
+                    }
 
-              }
-            });
-          }
+                  } catch (Exception e) {
+                    Log.e(getResources().getString(R.string.app_name), "applying changes to the server failed: " + e.getMessage());
+                  }
+
+                }
+              });
+            }
+          });
 
         } catch (Exception e) {
           Log.e(getResources().getString(R.string.app_name), "updating feature in the feature table failed: " + e.getMessage());
