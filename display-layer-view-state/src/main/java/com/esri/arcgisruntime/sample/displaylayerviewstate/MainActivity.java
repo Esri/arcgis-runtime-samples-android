@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
      * @param status View Status of the layer
      * @return String equivalent of the status
      */
-    protected String viewStatusString (String status) {
+    private String viewStatusString (String status) {
 
         switch(status) {
             case "ACTIVE": return getApplication().getString(R.string.active);
