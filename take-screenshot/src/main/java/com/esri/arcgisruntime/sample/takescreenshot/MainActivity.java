@@ -16,13 +16,18 @@
 
 package com.esri.arcgisruntime.sample.takescreenshot;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaActionSound;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -41,7 +46,9 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     private MapView mMapView;
-    private String TAG = "TakeScreenshot";
+    private static final String TAG = "TakeScreenshot";
+    int requestCode = 2;
+    String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
 
     @Override
@@ -73,8 +80,16 @@ public class MainActivity extends AppCompatActivity {
 
         int itemId = item.getItemId();
         if (itemId == R.id.CaptureMap) {
-            // take a screenshot of the image
-            captureScreenshotAsync();
+            // Check permissions to see if failure may be due to lack of permissions.
+            boolean permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this, permission[0]) ==
+                    PackageManager.PERMISSION_GRANTED;
+
+            if (!permissionCheck) {
+                // If permissions are not already granted, request permission from the user.
+                ActivityCompat.requestPermissions(MainActivity.this, permission, requestCode);
+            } else {
+                captureScreenshotAsync();
+            }
         }
 
         return true;
@@ -112,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
                     SaveImageTask saveImageTask = new SaveImageTask();
                     saveImageTask.execute(currentMapImage);
                 } catch (Exception e) {
-                    Log.d(TAG, "Fail to export map image: " + e.getMessage());
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.map_export_failure) + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, getResources().getString(R.string.map_export_failure) + e.getMessage());
                 }
             }
         });
@@ -127,23 +143,25 @@ public class MainActivity extends AppCompatActivity {
     private File saveToFile(Bitmap bitmap) throws IOException {
 
         // create a directory ArcGIS to save the file
-        File root = null;
+        File root;
+        File file = null;
         String fileName = "map-export-image" + System.currentTimeMillis() + ".png";
         root = Environment.getExternalStorageDirectory();
-        File fileDir = new File(root.getAbsolutePath() + "/ArcGIS/");
-        fileDir.mkdirs();
+        File fileDir = new File(root.getAbsolutePath() + "/ArcGIS Export/");
+        boolean isDirectoryCreated=fileDir.exists();
+        if (!isDirectoryCreated) {
+            isDirectoryCreated= fileDir.mkdirs();
+        }
+        if(isDirectoryCreated) {
+            file = new File(fileDir, fileName);
+            // write the bitmap to PNG file
+            FileOutputStream fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
 
-        // create the file inside the directory
-        File file = new File(fileDir, fileName);
-
-        // write the bitmap to PNG file
-        FileOutputStream fos = new FileOutputStream(file);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-
-        // close the stream
-        fos.flush();
-        fos.close();
-
+            // close the stream
+            fos.flush();
+            fos.close();
+        }
         return file;
 
     }
@@ -155,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPreExecute() {
             // display a toast message to inform saving the map as an image
-            Toast.makeText(getApplicationContext(), "Exporting Map as an image!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.map_export_message), Toast.LENGTH_SHORT).show();
         }
 
         /**
@@ -166,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 return saveToFile(mapBitmap[0]);
             } catch (Exception e) {
-                Log.d(TAG, "Fail to export map image: " + e.getMessage());
+                Log.e(TAG, getResources().getString(R.string.map_export_failure) + e.getMessage());
             }
 
             return null;
@@ -182,6 +200,23 @@ public class MainActivity extends AppCompatActivity {
             i.setAction(android.content.Intent.ACTION_VIEW);
             i.setDataAndType(Uri.fromFile(file), "image/png");
             startActivity(i);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Location permission was granted. This would have been triggered in response to failing to start the
+            // LocationDisplay, so try starting this again.
+            captureScreenshotAsync();
+        } else {
+            // If permission was denied, show toast to inform user what was chosen. If LocationDisplay is started again,
+            // request permission UX will be shown again, option should be shown to allow never showing the UX again.
+            // Alternative would be to disable functionality so request is not shown again.
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.storage_permission_denied), Toast
+                    .LENGTH_SHORT).show();
+
         }
     }
 
