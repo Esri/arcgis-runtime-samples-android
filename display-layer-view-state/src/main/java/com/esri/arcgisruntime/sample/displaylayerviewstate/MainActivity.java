@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         // create three layers to add to the map
         final ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(getApplication().getString(R.string.world_timezone_service_URL));
+        tiledLayer.setMinScale(4E8);
 
         final ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(getApplication().getString(R.string.world_census_service_URL));
         // setting the scales at which this layer can be viewed
