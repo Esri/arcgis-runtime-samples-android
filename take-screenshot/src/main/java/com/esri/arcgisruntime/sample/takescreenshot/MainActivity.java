@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * AsyncTask class to save the bitmap as an image
      */
-    public class SaveImageTask extends AsyncTask<Bitmap, Void, File> {
+    private class SaveImageTask extends AsyncTask<Bitmap, Void, File> {
 
         protected void onPreExecute() {
             // display a toast message to inform saving the map as an image
