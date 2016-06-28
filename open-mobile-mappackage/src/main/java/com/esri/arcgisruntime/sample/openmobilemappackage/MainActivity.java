@@ -16,10 +16,16 @@
 
 package com.esri.arcgisruntime.sample.openmobilemappackage;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.mobilemappackage.MobileMapPackage;
@@ -34,7 +40,13 @@ public class MainActivity extends AppCompatActivity {
     private static File extStorDir;
     private static String extSDCardDirName;
     private static String filename;
+    private static String mmpkFilePath;
     private MapView mMapView;
+    private MobileMapPackage mapPackage;
+
+    // define permission to request
+    String[] reqPermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private int requestCode = 2;
 
     /**
      * Create the mobile map package file location and name structure
@@ -55,12 +67,43 @@ public class MainActivity extends AppCompatActivity {
         // get mobile map package filename
         filename = this.getResources().getString(R.string.config_mmpk_name);
         // create the full path to the mobile map package file
-        String mmpkFile = createMobileMapPackageFilePath();
+        mmpkFilePath = createMobileMapPackageFilePath();
 
         // retrieve the MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
+
+        // For API level 23+ request permission at runtime
+        if(ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED){
+            loadMobileMapPackage(mmpkFilePath);
+        }else{
+            // request permission
+            ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
+        }
+
+    }
+
+    /**
+     * Handle the permissions request response
+     *
+     */
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            loadMobileMapPackage(mmpkFilePath);
+        }else{
+            // report to user that permission was denied
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.location_permission_denied),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Load a mobile map package into a MapView
+     *
+     * @param mmpkFile Full path to mmpk file
+     */
+    private void loadMobileMapPackage(String mmpkFile){
         // create the mobile map package
-        final MobileMapPackage mapPackage = new MobileMapPackage(mmpkFile);
+        mapPackage = new MobileMapPackage(mmpkFile);
         // load the mobile map package asynchronously
         mapPackage.loadAsync();
 
