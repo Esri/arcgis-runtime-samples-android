@@ -36,4 +36,5 @@ include ':add-graphics-renderer', ':take-screenshot',
         ':show-magnifier',
         ':simple-marker-symbol',
         ':simple-renderer',
-        ':unique-value-renderer'
+        ':unique-value-renderer',
+        ':display-layer-view-state'
