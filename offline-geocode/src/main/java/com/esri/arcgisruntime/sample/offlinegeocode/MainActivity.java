@@ -14,10 +14,13 @@ import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +54,6 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String SEARCH_HINT = "Search";
     private static final String TAG = "OfflineActivity";
     private static final String COLUMN_NAME_ADDRESS = "address";
     private static final String COLUMN_NAME_X = "x";
@@ -71,12 +73,6 @@ public class MainActivity extends AppCompatActivity {
     private Point mGraphicPoint;
     private MatrixCursor mSuggestionCursor;
     private GeocodeResult mGeocodedLocation;
-    private String[] recent = {
-            "1455 Market St, San Francisco, CA 94103", "2011 Mission St, San Francisco  CA  94110",
-            "820 Bryant St, San Francisco  CA  94103", "1 Zoo Rd, San Francisco, 944132",
-            "1201 Mason Street, San Francisco, CA 94108", "151 Third Street, San Francisco, CA 94103",
-            "1050 Lombard Street, San Francisco, CA 94109"
-    };
     int requestCode = 2;
     String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -101,64 +97,15 @@ public class MainActivity extends AppCompatActivity {
 
         mMapView.setOnTouchListener(new MapTouchListener(getApplicationContext(), mMapView));
 
-        setUpSearchView();
-
-
     }
 
-    private void setUpOfflineMapGeocoding() {
-        // create a basemap from a local tile package
-        TileCache tileCache = new TileCache(extern + getResources().getString(R.string.sanfrancisco_tpk));
-        tiledLayer = new ArcGISTiledLayer(tileCache);
-        Basemap basemap = new Basemap(tiledLayer);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        // create ArcGISMap with imagery basemap
-        mMap = new ArcGISMap(basemap);
-
-        mMapView.setMap(mMap);
-
-
-        Point p = new Point(-122.41730573536672, 37.772537383913132, SpatialReference.create(4326));
-        Viewpoint vp = new Viewpoint(p, 20000);
-        mMapView.setViewpointAsync(vp);
-
-        // add a graphics overlay
-        graphicsOverlay = new GraphicsOverlay();
-        graphicsOverlay.setSelectionColor(0xFF00FFFF);
-        mMapView.getGraphicsOverlays().add(graphicsOverlay);
-
-
-        mGeocodeParameters = new GeocodeParameters();
-        mGeocodeParameters.getResultAttributeNames().add("*");
-        mGeocodeParameters.setMaxResults(5);
-
-        //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
-        //Create a picture marker symbol from an app resource
-        BitmapDrawable startDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin);
-        mPinSourceSymbol = new PictureMarkerSymbol(startDrawable);
-        mPinSourceSymbol.loadAsync();
-
-        mReverseGeocodeParameters = new ReverseGeocodeParameters();
-        mReverseGeocodeParameters.getResultAttributeNames().add("*");
-        mReverseGeocodeParameters.setOutputSpatialReference(mMap.getSpatialReference());
-        mReverseGeocodeParameters.setMaxResults(1);
-
-        mLocatorTask = new LocatorTask(extern + getResources().getString(R.string.sanfrancisco_loc));
-    }
-
-    private void setUpSearchView() {
-
-
-        ViewGroup viewGroup = (ViewGroup) findViewById(R.id.relativeLayout);
+        MenuItem searchItem = menu.findItem(R.id.search);
         mSearchview = new SearchView(MainActivity.this);
-        mSearchview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorGrey));
-        mSearchview.setIconifiedByDefault(false);
-        mSearchview.setQueryHint(SEARCH_HINT);
-        viewGroup.addView(mSearchview);
-
-
-        applySuggestionCursor();
-
+        mSearchview = (SearchView) MenuItemCompat.getActionView(searchItem);
         try {
             // Setup the listener when the search button is pressed on the keyboard
             mSearchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -211,7 +158,47 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        return true;
+    }
 
+    private void setUpOfflineMapGeocoding() {
+        // create a basemap from a local tile package
+        TileCache tileCache = new TileCache(extern + getResources().getString(R.string.sanfrancisco_tpk));
+        tiledLayer = new ArcGISTiledLayer(tileCache);
+        Basemap basemap = new Basemap(tiledLayer);
+
+        // create ArcGISMap with imagery basemap
+        mMap = new ArcGISMap(basemap);
+
+        mMapView.setMap(mMap);
+
+
+        Point p = new Point(-122.41730573536672, 37.772537383913132, SpatialReference.create(4326));
+        Viewpoint vp = new Viewpoint(p, 20000);
+        mMapView.setViewpointAsync(vp);
+
+        // add a graphics overlay
+        graphicsOverlay = new GraphicsOverlay();
+        graphicsOverlay.setSelectionColor(0xFF00FFFF);
+        mMapView.getGraphicsOverlays().add(graphicsOverlay);
+
+
+        mGeocodeParameters = new GeocodeParameters();
+        mGeocodeParameters.getResultAttributeNames().add("*");
+        mGeocodeParameters.setMaxResults(5);
+
+        //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
+        //Create a picture marker symbol from an app resource
+        BitmapDrawable startDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin);
+        mPinSourceSymbol = new PictureMarkerSymbol(startDrawable);
+        mPinSourceSymbol.loadAsync();
+
+        mReverseGeocodeParameters = new ReverseGeocodeParameters();
+        mReverseGeocodeParameters.getResultAttributeNames().add("*");
+        mReverseGeocodeParameters.setOutputSpatialReference(mMap.getSpatialReference());
+        mReverseGeocodeParameters.setMaxResults(1);
+
+        mLocatorTask = new LocatorTask(extern + getResources().getString(R.string.sanfrancisco_loc));
     }
 
     /**
@@ -250,19 +237,13 @@ public class MainActivity extends AppCompatActivity {
                                             Toast.LENGTH_LONG).show();
                                 }
 
-                            } catch (InterruptedException e) {
+                            } catch (InterruptedException|ExecutionException e) {
                                 // Deal with exception...
                                 e.printStackTrace();
                                 Toast.makeText(getApplicationContext(),
                                         getString(R.string.geo_locate_error),
                                         Toast.LENGTH_LONG).show();
 
-                            } catch (ExecutionException e) {
-                                // Deal with exception...
-                                e.printStackTrace();
-                                Toast.makeText(getApplicationContext(),
-                                        getString(R.string.geo_locate_error),
-                                        Toast.LENGTH_LONG).show();
                             }
                             // Done processing and can remove this listener.
                             geocodeFuture.removeDoneListener(this);
@@ -321,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
         mSuggestionCursor = new MatrixCursor(cols);
 
         int key = 0;
+        String[] recent = getResources().getStringArray(R.array.suggestion_items);
         for (String s : recent) {
             mSuggestionCursor.addRow(new Object[]{key++, s, "0", "0"});
         }

@@ -7,4 +7,17 @@
     <string name="sanfrancisco_tpk">/ArcGIS/samples/OfflineRouting/SanFrancisco.tpk</string>
     <string name="sanfrancisco_loc">/ArcGIS/samples/OfflineRouting/SanFranciscoLocator.loc</string>
     <string name="storage_permission_denied">Storage permission denied</string>
+
+    <string name="search_hint">hint</string>
+
+    <!-- Search Suggestions -->
+    <string-array name="suggestion_items">
+        <item>1455 Market St, San Francisco, CA 94103</item>
+        <item>2011 Mission St, San Francisco  CA  94110</item>
+        <item>820 Bryant St, San Francisco  CA  94103</item>
+        <item>1 Zoo Rd, San Francisco, 944132</item>
+        <item>1201 Mason Street, San Francisco, CA 94108</item>
+        <item>151 Third Street, San Francisco, CA 94103</item>
+        <item>1050 Lombard Street, San Francisco, CA 94109</item>
+    </string-array>
 </resources>
