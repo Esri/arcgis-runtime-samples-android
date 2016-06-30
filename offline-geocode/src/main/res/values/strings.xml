@@ -3,9 +3,9 @@
     <string name="suggestion_text">Suggestion</string>
     <string name="geo_locate_error">Geocode failed on address</string>
     <string name="location_not_foud">We are sorry, we couldn\'t find a location with the name - </string>
-    <!-- San Francisco tpk abd locator paths -->
-    <string name="sanfrancisco_tpk">/ArcGIS/samples/OfflineRouting/SanFrancisco.tpk</string>
-    <string name="sanfrancisco_loc">/ArcGIS/samples/OfflineRouting/SanFranciscoLocator.loc</string>
+    <!-- San Francisco tpk and locator paths -->
+    <string name="sanfrancisco_tpk">/ArcGIS/samples/Offlinegeocode/SanFrancisco.tpk</string>
+    <string name="sanfrancisco_loc">/ArcGIS/samples/Offlinegeocode/SanFranciscoLocator.loc</string>
     <string name="storage_permission_denied">Storage permission denied</string>
 
     <string name="search_hint">hint</string>

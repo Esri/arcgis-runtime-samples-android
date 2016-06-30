@@ -22,8 +22,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,12 +56,16 @@ public class MainActivity extends AppCompatActivity {
     private static final String COLUMN_NAME_ADDRESS = "address";
     private static final String COLUMN_NAME_X = "x";
     private static final String COLUMN_NAME_Y = "y";
-    final String extern = Environment.getExternalStorageDirectory().getPath();
+    private final String extern = Environment.getExternalStorageDirectory().getPath();
+
     GraphicsOverlay graphicsOverlay;
     GeocodeParameters mGeocodeParameters;
     PictureMarkerSymbol mPinSourceSymbol;
     ArcGISMap mMap;
     ArcGISTiledLayer tiledLayer;
+    int requestCode = 2;
+    String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
     private MapView mMapView;
     private LocatorTask mLocatorTask;
     private ReverseGeocodeParameters mReverseGeocodeParameters;
@@ -73,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
     private Point mGraphicPoint;
     private MatrixCursor mSuggestionCursor;
     private GeocodeResult mGeocodedLocation;
-    int requestCode = 2;
-    String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
         mGeocodeParameters = new GeocodeParameters();
         mGeocodeParameters.getResultAttributeNames().add("*");
-        mGeocodeParameters.setMaxResults(5);
+        mGeocodeParameters.setMaxResults(1);
 
         //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
         //Create a picture marker symbol from an app resource
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                                             Toast.LENGTH_LONG).show();
                                 }
 
-                            } catch (InterruptedException|ExecutionException e) {
+                            } catch (InterruptedException | ExecutionException e) {
                                 // Deal with exception...
                                 e.printStackTrace();
                                 Toast.makeText(getApplicationContext(),
@@ -320,6 +320,22 @@ public class MainActivity extends AppCompatActivity {
         mSuggestionAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Location permission was granted. This would have been triggered in response to failing to start the
+            // LocationDisplay, so try starting this again.
+            setUpOfflineMapGeocoding();
+        } else {
+            // If permission was denied, show toast to inform user what was chosen. If LocationDisplay is started again,
+            // request permission UX will be shown again, option should be shown to allow never showing the UX again.
+            // Alternative would be to disable functionality so request is not shown again.
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.storage_permission_denied), Toast
+                    .LENGTH_SHORT).show();
+
+        }
+    }
 
     private class MapTouchListener extends DefaultMapViewOnTouchListener {
 
@@ -386,7 +402,6 @@ public class MainActivity extends AppCompatActivity {
             return super.onSingleTapConfirmed(e);
         }
     }
-
 
     /**
      * Updates marker and callout when new results are loaded.
@@ -468,23 +483,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        // If request is cancelled, the result arrays are empty.
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // Location permission was granted. This would have been triggered in response to failing to start the
-            // LocationDisplay, so try starting this again.
-            setUpOfflineMapGeocoding();
-        } else {
-            // If permission was denied, show toast to inform user what was chosen. If LocationDisplay is started again,
-            // request permission UX will be shown again, option should be shown to allow never showing the UX again.
-            // Alternative would be to disable functionality so request is not shown again.
-            Toast.makeText(MainActivity.this, getResources().getString(R.string.storage_permission_denied), Toast
-                    .LENGTH_SHORT).show();
-
-        }
     }
 
 }
