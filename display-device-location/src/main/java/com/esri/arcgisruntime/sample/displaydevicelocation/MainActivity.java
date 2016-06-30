@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
           return;
 
         // No error is reported, then continue.
-        if (dataSourceStatusChangedEvent.getSource().getLocationDataSource().getError() == null)
+        if (dataSourceStatusChangedEvent.getError() == null)
           return;
 
         // If an error is found, handle the failure to start.
