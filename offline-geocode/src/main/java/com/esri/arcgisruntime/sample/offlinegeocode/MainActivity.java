@@ -1,6 +1,8 @@
 package com.esri.arcgisruntime.sample.offlinegeocode;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.MatrixCursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,14 +11,17 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
             "1201 Mason Street, San Francisco, CA 94108", "151 Third Street, San Francisco, CA 94103",
             "1050 Lombard Street, San Francisco, CA 94109"
     };
+    int requestCode = 2;
+    String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +88,25 @@ public class MainActivity extends AppCompatActivity {
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
 
+        // Check permissions to see if failure may be due to lack of permissions.
+        boolean permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this, permission[0]) ==
+                PackageManager.PERMISSION_GRANTED;
+
+        if (!permissionCheck) {
+            // If permissions are not already granted, request permission from the user.
+            ActivityCompat.requestPermissions(MainActivity.this, permission, requestCode);
+        } else { // if permission was already granted, set up offline map and geocoding, reverse geocoding and LocatorTask
+            setUpOfflineMapGeocoding();
+        }
+
+        mMapView.setOnTouchListener(new MapTouchListener(getApplicationContext(), mMapView));
+
+        setUpSearchView();
+
+
+    }
+
+    private void setUpOfflineMapGeocoding() {
         // create a basemap from a local tile package
         TileCache tileCache = new TileCache(extern + getResources().getString(R.string.sanfrancisco_tpk));
         tiledLayer = new ArcGISTiledLayer(tileCache);
@@ -90,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         mMap = new ArcGISMap(basemap);
 
         mMapView.setMap(mMap);
+
 
         Point p = new Point(-122.41730573536672, 37.772537383913132, SpatialReference.create(4326));
         Viewpoint vp = new Viewpoint(p, 20000);
@@ -117,22 +144,19 @@ public class MainActivity extends AppCompatActivity {
         mReverseGeocodeParameters.setMaxResults(1);
 
         mLocatorTask = new LocatorTask(extern + getResources().getString(R.string.sanfrancisco_loc));
-
-        mMapView.setOnTouchListener(new MapTouchListener(getApplicationContext(), mMapView));
-
-        setUpSearchView();
-
     }
 
     private void setUpSearchView() {
 
-        mSearchview = new SearchView(MainActivity.this);
+
+        ViewGroup viewGroup = (ViewGroup) findViewById(R.id.relativeLayout);
+        //mSearchview = new SearchView(MainActivity.this);
+        View v =  getLayoutInflater().inflate(R.layout.main_searchview,viewGroup);
+        mSearchview = (SearchView) v.findViewById(R.id.searchView1);
         mSearchview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorGrey));
         mSearchview.setIconifiedByDefault(false);
         mSearchview.setQueryHint(SEARCH_HINT);
-        RelativeLayout myLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
-
-        myLayout.addView(mSearchview);
+        viewGroup.addView(mSearchview);
 
 
         applySuggestionCursor();
@@ -369,7 +393,6 @@ public class MainActivity extends AppCompatActivity {
                             // get callout, set content and show
                             mCallout = mMapView.getCallout();
                             mCallout.setContent(calloutContent);
-                            mCallout.getShowOptions().setAnimateRecenter(true);
                             mCallout.setLocation(mGraphicPoint);
                             mCallout.show();
                         }
@@ -447,7 +470,8 @@ public class MainActivity extends AppCompatActivity {
 
                     TextView calloutContent = new TextView(getApplicationContext());
                     calloutContent.setTextColor(Color.BLACK);
-                    calloutContent.setText(title + ", " + detail);
+                    String calloutText = title + ", " + detail;
+                    calloutContent.setText(calloutText);
                     calloutContent.setTextIsSelectable(true);
                     // get callout, set content and show
                     mCallout = mMapView.getCallout();
@@ -464,6 +488,23 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Location permission was granted. This would have been triggered in response to failing to start the
+            // LocationDisplay, so try starting this again.
+            setUpOfflineMapGeocoding();
+        } else {
+            // If permission was denied, show toast to inform user what was chosen. If LocationDisplay is started again,
+            // request permission UX will be shown again, option should be shown to allow never showing the UX again.
+            // Alternative would be to disable functionality so request is not shown again.
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.storage_permission_denied), Toast
+                    .LENGTH_SHORT).show();
+
+        }
     }
 
 }
