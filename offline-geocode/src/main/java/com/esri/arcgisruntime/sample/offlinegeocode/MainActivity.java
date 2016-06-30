@@ -150,9 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         ViewGroup viewGroup = (ViewGroup) findViewById(R.id.relativeLayout);
-        //mSearchview = new SearchView(MainActivity.this);
-        View v =  getLayoutInflater().inflate(R.layout.main_searchview,viewGroup);
-        mSearchview = (SearchView) v.findViewById(R.id.searchView1);
+        mSearchview = new SearchView(MainActivity.this);
         mSearchview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorGrey));
         mSearchview.setIconifiedByDefault(false);
         mSearchview.setQueryHint(SEARCH_HINT);
