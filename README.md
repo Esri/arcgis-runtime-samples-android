@@ -12,7 +12,7 @@ Each sample app module has a build.gradle file with the latest ArcGIS Android SD
 
 ```groovy
 dependencies {
-    compile 'com.esri.arcgis.android:arcgis-android:10.2.8'
+    compile 'com.esri.arcgis.android:arcgis-android:10.2.8-1'
 }
 ```
 
