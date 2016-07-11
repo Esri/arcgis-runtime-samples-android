@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "FindRouteSample";
     ArcGISVectorTiledLayer mVectorTiledLayer;
     FloatingActionButton mDirectionFab;
-    ProgressDialog mProgressDialog;
+    private ProgressDialog mProgressDialog;
 
     private MapView mMapView;
     private RouteTask mRouteTask;
@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
     private Point mSourcePoint;
     private Point mDestinationPoint;
     private Route mRoute;
-    private SimpleLineSymbol route;
-    private GraphicsOverlay graphicsOverlay;
+    private SimpleLineSymbol mRouteSymbol;
+    private GraphicsOverlay mGraphicsOverlay;
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -80,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_drawer);
 
         // inflate MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapView1);
-        // create a map with the BasemapType topographic
+        mMapView = (MapView) findViewById(R.id.mapView);
         // create new Vector Tiled Layer from service url
         mVectorTiledLayer = new ArcGISVectorTiledLayer(
                 getResources().getString(R.string.navigation_vector));
@@ -136,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                                 mRouteParams = listenableFuture.get();
 
                                 // get List of Stops
-                                List routeStops = mRouteParams.getStops();
+                                List<Stop> routeStops = mRouteParams.getStops();
                                 // set return directions as true to return turn-by-turn directions in the result of getDirectionManeuvers().
                                 mRouteParams.setReturnDirections(true);
 
@@ -148,10 +147,10 @@ public class MainActivity extends AppCompatActivity {
                                 RouteResult result = mRouteTask.solveAsync(mRouteParams).get();
                                 List routes = result.getRoutes();
                                 mRoute = (Route) routes.get(0);
-                                // create a route graphic
-                                Graphic routeGraphic = new Graphic(mRoute.getRouteGeometry(), route);
-                                // add route graphic to the map
-                                graphicsOverlay.getGraphics().add(routeGraphic);
+                                // create a mRouteSymbol graphic
+                                Graphic routeGraphic = new Graphic(mRoute.getRouteGeometry(), mRouteSymbol);
+                                // add mRouteSymbol graphic to the map
+                                mGraphicsOverlay.getGraphics().add(routeGraphic);
                                 // get directions
                                 // NOTE: to get turn-by-turn directions Route Parameters should set returnDirection flag as true
                                 List<DirectionManeuver> directions = mRoute.getDirectionManeuvers();
@@ -183,45 +182,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Set up the Source, Destination and route graphics symbol
+     * Set up the Source, Destination and mRouteSymbol graphics symbol
      */
     private void setupSymbols() {
 
-        graphicsOverlay = new GraphicsOverlay();
+        mGraphicsOverlay = new GraphicsOverlay();
 
         //add the overlay to the map view
-        mMapView.getGraphicsOverlays().add(graphicsOverlay);
+        mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
 
         //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
         //Create a picture marker symbol from an app resource
-        BitmapDrawable startDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.source);
+        BitmapDrawable startDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_source);
         final PictureMarkerSymbol pinSourceSymbol = new PictureMarkerSymbol(startDrawable);
         pinSourceSymbol.loadAsync();
         //[DocRef: END]
         pinSourceSymbol.addDoneLoadingListener(new Runnable() {
             @Override
             public void run() {
-                //add a new graphic with the same location as the initial viewpoint
+                //add a new graphic as start point
                 mSourcePoint = new Point(-13041171.537945, 3860988.271378, SpatialReferences.getWebMercator());
                 Graphic pinSourceGraphic = new Graphic(mSourcePoint, pinSourceSymbol);
-                graphicsOverlay.getGraphics().add(pinSourceGraphic);
+                mGraphicsOverlay.getGraphics().add(pinSourceGraphic);
             }
         });
-        BitmapDrawable endDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.destination);
+        BitmapDrawable endDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_destination);
         final PictureMarkerSymbol pinDestinationSymbol = new PictureMarkerSymbol(endDrawable);
         pinDestinationSymbol.loadAsync();
         //[DocRef: END]
         pinDestinationSymbol.addDoneLoadingListener(new Runnable() {
             @Override
             public void run() {
-                //add a new graphic with the same location as the initial viewpoint
+                //add a new graphic as end point
                 mDestinationPoint = new Point(-13041693.562570, 3856006.859684, SpatialReferences.getWebMercator());
                 Graphic destinationGraphic = new Graphic(mDestinationPoint, pinDestinationSymbol);
-                graphicsOverlay.getGraphics().add(destinationGraphic);
+                mGraphicsOverlay.getGraphics().add(destinationGraphic);
             }
         });
 
-        route = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5);
+        mRouteSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5);
     }
 
     @Override
@@ -256,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
