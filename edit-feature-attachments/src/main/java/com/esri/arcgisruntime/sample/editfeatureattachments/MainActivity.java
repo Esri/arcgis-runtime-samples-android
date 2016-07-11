@@ -52,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "EditFeatureAttachment";
     private static final int REQUEST_CODE = 100;
-    ServiceFeatureTable mServiceFeatureTable;
-    ProgressDialog progressDialog;
-    RelativeLayout mCalloutLayout;
-    ArcGISMap mMap;
+    private ServiceFeatureTable mServiceFeatureTable;
+    private ProgressDialog progressDialog;
+    private RelativeLayout mCalloutLayout;
+    private ArcGISMap mMap;
     private MapView mMapView;
     private Callout mCallout;
     private FeatureLayer mFeatureLayer;
@@ -75,9 +75,8 @@ public class MainActivity extends AppCompatActivity {
         // create a map with the streets basemap
         mMap = new ArcGISMap(Basemap.createStreets());
 
-        //set an initial viewpoint
-        mMap.setInitialViewpoint(new Viewpoint(new Point(544871.19, 6806138.66, SpatialReferences
-                .getWebMercator()), 2E6));
+        //set an initial viewpoint to USA
+        mMap.setInitialViewpoint(new Viewpoint(new Point(-100.343, 34.585, SpatialReferences.getWgs84()), 8e7));
 
         // set the map to be displayed in the mapview
         mMapView.setMap(mMap);
@@ -223,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
 
         // create image view for the callout
         ImageView imageView = new ImageView(getApplicationContext());
-        imageView.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_info_outline_black_18dp));
+        imageView.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_info));
         imageView.setLayoutParams(relativeParamsRightOf);
         imageView.setOnClickListener(new ImageViewOnclickListener());
 
