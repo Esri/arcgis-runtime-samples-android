@@ -10,19 +10,18 @@
         android:layout_height="match_parent">
 
         <com.esri.arcgisruntime.mapping.view.MapView
-            android:id="@+id/mapView1"
+            android:id="@+id/mapView"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"></com.esri.arcgisruntime.mapping.view.MapView>
+            android:layout_height="fill_parent">
+        </com.esri.arcgisruntime.mapping.view.MapView>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
             android:layout_gravity="end|bottom"
             android:layout_margin="@dimen/fab_margin"
-            android:src="@android:drawable/ic_menu_directions" />
+            android:src="@drawable/ic_navigate" />
     </FrameLayout>
 
     <!-- The navigation drawer -->
@@ -31,8 +30,7 @@
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#111"
+        android:background="@color/colorListBackground"
         android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
+        android:divider="@android:color/transparent" />
 </android.support.v4.widget.DrawerLayout>
