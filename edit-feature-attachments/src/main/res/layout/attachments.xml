@@ -16,7 +16,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         android:clickable="true"
-        android:src="@drawable/fab_ic_add" />
+        android:src="@drawable/ic_fab_add" />
 
     <ListView
         android:id="@+id/listView"
