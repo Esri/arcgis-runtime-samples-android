@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.editfeatureattachments;
+package com.esri.arcgisruntime.sample.arrayadapter;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -22,6 +22,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.esri.arcgisruntime.sample.editfeatureattachments.R;
 
 import java.util.ArrayList;
 
@@ -34,18 +36,28 @@ public class CustomList extends ArrayAdapter<String>{
         super(context, R.layout.attachment_entry, attachmentList);
         this.context = context;
         this.attachmentName = attachmentList;
-
-
-
     }
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
-        LayoutInflater inflater = context.getLayoutInflater();
-        View rowView= inflater.inflate(R.layout.attachment_entry, null, true);
-        TextView txtTitle = (TextView) rowView.findViewById(R.id.AttachmentName);
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+        if (convertView == null) {
+            LayoutInflater inflater = context.getLayoutInflater();
+            convertView = inflater.inflate(R.layout.attachment_entry, null, true);
 
-        txtTitle.setText(attachmentName.get(position));
-        return rowView;
+            holder = new ViewHolder();
+            holder.textTitle = (TextView) convertView.findViewById(R.id.AttachmentName);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        holder.textTitle.setText(attachmentName.get(position));
+
+        return convertView;
     }
 
+    private static class ViewHolder {
+        public TextView textTitle;
+    }
 }
