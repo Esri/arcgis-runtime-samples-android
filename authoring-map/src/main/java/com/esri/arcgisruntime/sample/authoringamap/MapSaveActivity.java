@@ -35,11 +35,12 @@ import com.esri.arcgisruntime.security.OAuthLoginManager;
 import com.esri.arcgisruntime.security.OAuthTokenCredential;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 public class MapSaveActivity extends AppCompatActivity {
-    FloatingActionButton saveFab;
-    OAuthLoginManager oauthLoginManager;
+    private FloatingActionButton saveFab;
+    private OAuthLoginManager oauthLoginManager;
     private OAuthTokenCredential oauthCred;
     private EditText mTitleEditText, mTagsEditText, mDescEditText;
     private ArrayList<String> mTagsList = new ArrayList<>();
@@ -142,7 +143,6 @@ public class MapSaveActivity extends AppCompatActivity {
                     oauthCred = future.get();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    return;
                 }
 
             }
@@ -158,9 +158,10 @@ public class MapSaveActivity extends AppCompatActivity {
         mTitle = mTitleEditText.getText().toString();
         mDescription = mDescEditText.getText().toString();
         String[] tags = (mTagsEditText.getText().toString()).split(",");
-        for (String tag : tags) {
+        /*for (String tag : tags) {
             mTagsList.add(tag);
-        }
+        }*/
+        Collections.addAll(mTagsList, tags);
         if (TextUtils.isEmpty(mTitle)) {
             mTitleEditText.setError(getString(R.string.title_error));
             return false;
