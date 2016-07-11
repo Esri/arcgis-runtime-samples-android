@@ -2,7 +2,9 @@
     <string name="app_name">Authoring a map</string>
     <string name="basemap_selection">Choose a basemap</string>
     <string name="layer_selection">Add operational layers</string>
-    <string name="menu_save">Save</string>
+    <string name="title">Title</string>
+    <string name="tags">Tags</string>
+    <string name="desc">Description</string>
 
     <!-- Services -->
     <string name="world_elevation">http://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer</string>
