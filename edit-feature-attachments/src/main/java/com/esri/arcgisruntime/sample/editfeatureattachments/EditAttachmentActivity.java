@@ -16,9 +16,11 @@
 
 package com.esri.arcgisruntime.sample.editfeatureattachments;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -27,7 +29,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -45,6 +50,7 @@ import com.esri.arcgisruntime.datasource.arcgis.ArcGISFeature;
 import com.esri.arcgisruntime.datasource.arcgis.Attachment;
 import com.esri.arcgisruntime.datasource.arcgis.FeatureEditResult;
 import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
+import com.esri.arcgisruntime.sample.arrayadapter.CustomList;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,11 +60,14 @@ import java.util.List;
 
 public class EditAttachmentActivity extends AppCompatActivity {
 
-    private static String TAG = "EditAttachmentActivity";
-    private static int RESULT_LOAD_IMAGE = 1;
+    private static final String TAG = "EditAttachmentActivity";
+    private static final int RESULT_LOAD_IMAGE = 1;
     CustomList adapter;
     int noOfAttachments;
     FloatingActionButton addAttachmentFab;
+    int requestCodeFolder = 2;
+    int requestCodeGallery = 3;
+    String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private List<Attachment> attachments;
     private ArcGISFeature mSelectedArcGISFeature;
     private ServiceFeatureTable mServiceFeatureTable;
@@ -67,6 +76,9 @@ public class EditAttachmentActivity extends AppCompatActivity {
     private ArrayList<String> attachmentList = new ArrayList<>();
     private ProgressDialog progressDialog;
     private AlertDialog.Builder builder;
+    private boolean permissionsGranted = false;
+    private int listPosition;
+    private View listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +99,13 @@ public class EditAttachmentActivity extends AppCompatActivity {
         addAttachmentFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectAttachment();
+
+                if (!permissionsGranted) {
+                    getPermissions(requestCodeGallery);
+                } else {
+                    selectAttachment();
+                }
+
             }
         });
 
@@ -111,60 +129,23 @@ public class EditAttachmentActivity extends AppCompatActivity {
         adapter = new CustomList(EditAttachmentActivity.this, attachmentList);
         // set custom adapter on the list
         list.setAdapter(adapter);
-        fetchAttachments(s);
+        fetchAttachmentsFromServer(s);
 
         // listener on attachment items to download the attachment
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
 
-                progressDialog.setTitle(getApplication().getString(R.string.downloading_attachments));
-                progressDialog.setMessage(getApplication().getString(R.string.wait));
-                progressDialog.show();
-
-                // create a listenableFuture to fetch the attachment asynchronously
-                final ListenableFuture<InputStream> listenableFuture = attachments.get(position).fetchDataAsync();
-                listenableFuture.addDoneListener(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            String fileName = attachmentList.get(position);
-                            // create a drawable from InputStream
-                            Drawable d = Drawable.createFromStream(listenableFuture.get(), fileName);
-                            // create a bitmap from drawable
-                            Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
-                            File root = null;
-                            root = Environment.getExternalStorageDirectory();
-                            File fileDir = new File(root.getAbsolutePath() + "/ArcGIS/Attachments");
-                            // create folder /ArcGIS/Attachments in external storage
-                            fileDir.mkdirs();
-                            File file = new File(fileDir, fileName);
-                            FileOutputStream fos = new FileOutputStream(file);
-                            // compress the bitmap to PNG format
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
-                            fos.flush();
-                            fos.close();
-                            // set the downloaded bitmap to the icon
-                            ImageView attachmentIcon = (ImageView) view.findViewById(R.id.attachmentIcon);
-                            attachmentIcon.setImageBitmap(bitmap);
-
-                            if (progressDialog.isShowing()) {
-                                progressDialog.dismiss();
-                            }
-                            // open the file in gallery
-                            Intent i = new Intent();
-                            i.setAction(android.content.Intent.ACTION_VIEW);
-                            i.setDataAndType(Uri.fromFile(file), "image/png");
-                            startActivity(i);
-
-                        } catch (Exception e) {
-                            Log.d(TAG + "-image-", e.toString());
-                        }
-
-                    }
-                });
+                listPosition = position;
+                listView = view;
+                if (!permissionsGranted) {
+                    getPermissions(requestCodeFolder);
+                } else {
+                    fetchAttachmentAsync(position, view);
+                }
             }
         });
+
 
         //set onlong click listener to delete the attachment
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -188,6 +169,62 @@ public class EditAttachmentActivity extends AppCompatActivity {
                 AlertDialog alert = builder.create();
                 alert.show();
                 return true;
+            }
+        });
+    }
+
+    private void fetchAttachmentAsync(final int position, final View view) {
+
+        progressDialog.setTitle(getApplication().getString(R.string.downloading_attachments));
+        progressDialog.setMessage(getApplication().getString(R.string.wait));
+        progressDialog.show();
+
+        // create a listenableFuture to fetch the attachment asynchronously
+        final ListenableFuture<InputStream> listenableFuture = attachments.get(position).fetchDataAsync();
+        listenableFuture.addDoneListener(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String fileName = attachmentList.get(position);
+                    // create a drawable from InputStream
+                    Drawable d = Drawable.createFromStream(listenableFuture.get(), fileName);
+                    // create a bitmap from drawable
+                    Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
+                    File root = Environment.getExternalStorageDirectory();
+                    File fileDir = new File(root.getAbsolutePath() + "/ArcGIS/Attachments");
+                    // create folder /ArcGIS/Attachments in external storage
+                    boolean isDirectoryCreated = fileDir.exists();
+                    if (!isDirectoryCreated) {
+                        isDirectoryCreated = fileDir.mkdirs();
+                    }
+                    File file = null;
+                    if (isDirectoryCreated) {
+                        file = new File(fileDir, fileName);
+                        FileOutputStream fos = new FileOutputStream(file);
+                        // compress the bitmap to PNG format
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
+                        fos.flush();
+                        fos.close();
+                    }
+                    // set the downloaded bitmap to the icon
+                    ImageView attachmentIcon = (ImageView) view.findViewById(R.id.attachmentIcon);
+                    attachmentIcon.setImageBitmap(bitmap);
+                            /*TextView textTitle = (TextView) view.findViewById(R.id.AttachmentName);
+                            textTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(d,null,null,null);*/
+
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                    // open the file in gallery
+                    Intent i = new Intent();
+                    i.setAction(android.content.Intent.ACTION_VIEW);
+                    i.setDataAndType(Uri.fromFile(file), "image/png");
+                    startActivity(i);
+
+                } catch (Exception e) {
+                    Log.d(TAG, e.toString());
+                }
+
             }
         });
     }
@@ -224,9 +261,10 @@ public class EditAttachmentActivity extends AppCompatActivity {
 
     /**
      * Asynchronously fetch the attachments to view as a list
+     *
      * @param objectID
      */
-    private void fetchAttachments(String objectID) {
+    private void fetchAttachmentsFromServer(String objectID) {
         attachmentList = new ArrayList<>();
         // create objects required to do a selection with a query
         QueryParameters query = new QueryParameters();
@@ -293,20 +331,42 @@ public class EditAttachmentActivity extends AppCompatActivity {
     /**
      * Open Gallery to select an image as an attachment
      */
+
+    private void getPermissions(int requestCode) {
+        boolean permissionCheck = ContextCompat.checkSelfPermission(EditAttachmentActivity.this, permission[0]) ==
+                PackageManager.PERMISSION_GRANTED;
+
+        if (!permissionCheck) {
+            // If permissions are not already granted, request permission from the user.
+            ActivityCompat.requestPermissions(EditAttachmentActivity.this, permission, requestCode);
+
+        } else {
+            permissionsGranted = true;
+            if (requestCode == requestCodeGallery) {
+                selectAttachment();
+            } else {
+                fetchAttachmentAsync(listPosition, listView);
+            }
+
+        }
+    }
+
     private void selectAttachment() {
+
         Intent i = new Intent(
                 Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
         startActivityForResult(i, RESULT_LOAD_IMAGE);
+
     }
 
     /**
      * Upload the selected image from the gallery as an attachment to the selected feature
      *
      * @param requestCode RESULT_LOAD_IMAGE request code to identify the requesting activity
-     * @param resultCode activity result code
-     * @param data Uri of the selected image
+     * @param resultCode  activity result code
+     * @param data        Uri of the selected image
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -318,36 +378,35 @@ public class EditAttachmentActivity extends AppCompatActivity {
 
             Cursor cursor = getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
-            cursor.moveToFirst();
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String picturePath = cursor.getString(columnIndex);
+                cursor.close();
 
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
+                File imageFile = new File(picturePath);
 
-            File imageFile = new File(picturePath);
+                final String attachmentName = getApplication().getString(R.string.attachment) + "_" + System.currentTimeMillis() + ".png";
 
-            final String attachmentName = getApplication().getString(R.string.attachment) + "_" + System.currentTimeMillis() + ".png";
+                progressDialog.setTitle(getApplication().getString(R.string.apply_edit_message));
+                progressDialog.setMessage(getApplication().getString(R.string.wait));
 
-            progressDialog.setTitle(getApplication().getString(R.string.apply_edit_message));
-            progressDialog.setMessage(getApplication().getString(R.string.wait));
+                progressDialog.show();
 
-            progressDialog.show();
+                ListenableFuture<Attachment> addResult = mSelectedArcGISFeature.addAttachmentAsync(imageFile, "image/png", attachmentName);
 
-            ListenableFuture<Attachment> addResult = mSelectedArcGISFeature.addAttachmentAsync(imageFile, "image/png", attachmentName);
-
-            addResult.addDoneListener(new Runnable() {
-                @Override
-                public void run() {
-                    final ListenableFuture<Void> tableResult = mServiceFeatureTable.updateFeatureAsync(mSelectedArcGISFeature);
-                    tableResult.addDoneListener(new Runnable() {
-                        @Override
-                        public void run() {
-                            applyServerEdits();
-                        }
-                    });
-                }
-            });
-
+                addResult.addDoneListener(new Runnable() {
+                    @Override
+                    public void run() {
+                        final ListenableFuture<Void> tableResult = mServiceFeatureTable.updateFeatureAsync(mSelectedArcGISFeature);
+                        tableResult.addDoneListener(new Runnable() {
+                            @Override
+                            public void run() {
+                                applyServerEdits();
+                            }
+                        });
+                    }
+                });
+            }
         }
 
 
@@ -377,7 +436,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
                                 }
                                 //attachmentList.add(fileName);
                                 mAttributeID = mSelectedArcGISFeature.getAttributes().get("objectid").toString();
-                                fetchAttachments(mAttributeID);
+                                fetchAttachmentsFromServer(mAttributeID);
                                 // update the attachment list view on the control panel
                                 Toast.makeText(EditAttachmentActivity.this, getApplication().getString(R.string.success_message), Toast.LENGTH_SHORT).show();
                             } else {
@@ -408,5 +467,29 @@ public class EditAttachmentActivity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         finish();
         super.onBackPressed();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Location permission was granted. This would have been triggered in response to failing to start the
+            // LocationDisplay, so try starting this again.
+            permissionsGranted = true;
+            if (requestCode == requestCodeGallery) {
+                selectAttachment();
+            } else {
+                fetchAttachmentAsync(listPosition, listView);
+            }
+
+        } else {
+            // If permission was denied, show toast to inform user what was chosen. If LocationDisplay is started again,
+            // request permission UX will be shown again, option should be shown to allow never showing the UX again.
+            // Alternative would be to disable functionality so request is not shown again.
+            Toast.makeText(EditAttachmentActivity.this, getResources().getString(R.string.storage_permission_denied), Toast
+                    .LENGTH_SHORT).show();
+            permissionsGranted = false;
+
+        }
     }
 }
