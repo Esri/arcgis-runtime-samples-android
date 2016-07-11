@@ -53,10 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int SCALE = 50000000;
     static ArcGISMap mMap;
     private static OAuthLoginManager oauthLoginManager;
-    ProgressDialog progressDialog;
-    Viewpoint viewpoint;
-    String[] mLayerTiles;
-    SpatialReference spartialReference;
+    private ProgressDialog progressDialog;
+    private Viewpoint viewpoint;
     private MapView mMapView;
     private String[] mBasemapTiles;
     private DrawerLayout mDrawerLayout;
@@ -85,10 +83,10 @@ public class MainActivity extends AppCompatActivity {
         mMapView.setMap(mMap);
 
         // create spatial reference for all points
-        spartialReference = SpatialReferences.getWebMercator();
+        SpatialReference spatialReference = SpatialReferences.getWebMercator();
 
         // create the esri location point
-        Point londonPoint = new Point(-14093, 6711377, spartialReference);
+        Point londonPoint = new Point(-14093, 6711377, spatialReference);
         // create the viewpoint with the London point and scale
         viewpoint = new Viewpoint(londonPoint, SCALE);
 
@@ -108,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
         // create arrays from String arrays
         mBasemapTiles = getResources().getStringArray(R.array.basemap_array);
-        mLayerTiles = getResources().getStringArray(R.array.operational_layer_array);
+        String[] mLayerTiles = getResources().getStringArray(R.array.operational_layer_array);
 
         // inflate the Basemap and Layer list views
         mBasemapListView = (ListView) findViewById(R.id.basemap_list);
@@ -117,11 +115,11 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         // Set the adapter for the Basemap list view
-        mBasemapListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, mBasemapTiles));
+        mBasemapListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, mBasemapTiles));
         mBasemapListView.setItemChecked(0, true);
 
         // Set the adapter for the Operational Layer list view
-        mLayerListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, mLayerTiles));
+        mLayerListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, mLayerTiles));
 
         mBasemapListView.setOnItemClickListener(new BasemapClickListener());
 
@@ -178,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -201,11 +199,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Activate the navigation drawer toggle
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 
     }
 
