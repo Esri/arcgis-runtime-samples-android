@@ -10,12 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MapSaveActivity">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
-
         <TextView
             android:id="@+id/titleLabel"
             android:layout_width="wrap_content"
@@ -26,8 +20,8 @@
             android:layout_marginLeft="39dp"
             android:layout_marginStart="39dp"
             android:layout_marginTop="44dp"
-            android:text="Title"
-            android:textColor="@color/accent_material_dark"
+            android:text="@string/title"
+            android:textColor="@color/accent_material"
             android:textStyle="bold" />
 
         <TextView
@@ -38,8 +32,8 @@
             android:layout_alignStart="@+id/titleLabel"
             android:layout_below="@+id/titleText"
             android:layout_marginTop="21dp"
-            android:text="Tags"
-            android:textColor="@color/accent_material_dark"
+            android:text="@string/tags"
+            android:textColor="@color/accent_material"
             android:textStyle="bold" />
 
         <TextView
@@ -50,8 +44,8 @@
             android:layout_alignStart="@+id/tagsLabel"
             android:layout_centerVertical="true"
             android:layout_marginTop="32dp"
-            android:text="Description"
-            android:textColor="@color/accent_material_dark"
+            android:text="@string/desc"
+            android:textColor="@color/accent_material"
             android:textStyle="bold" />
 
         <EditText
@@ -100,5 +94,4 @@
             app:elevation="6dp"
             app:pressedTranslationZ="12dp" />
 
-    </RelativeLayout>
 </RelativeLayout>
