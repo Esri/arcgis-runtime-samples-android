@@ -9,7 +9,7 @@ This sample demonstrates how to author a map and save it to your portal
 The authored map is saved in your Organization's content. To do so, your app should have acces to your [ArcGIS Online](https://www.arcgis.com/) account and should be registered on [developers](https://developers.arcgis.com/) account. (More information on registering your app can be found [here](http://doc.arcgis.com/en/arcgis-online/share-maps/add-items.htm#REG_APP)). Registering an app is specially important if you want to initiate [named](https://developers.arcgis.com/authentication/signing-in-arcgis-online-users/) or [app login](https://developers.arcgis.com/authentication/accessing-arcgis-online-services/).
 
 1. [Register](https://developers.arcgis.com/applications/#/new/) your application on Arcgis developers account.
-2. Locoate your ```client-id``` and your Organization URL path. (Organization URL can be located in your [ArcGIS Online](https://www.arcgis.com/home/signin.html) account profile)
+2. Locoate your ```client-id``` and your Organization URL path. (Organization URL can be found in your **ArcGIS Online Account profile**)
 3. Once registered, navigate to **Authentication** tab and add a [redirect URI](https://developers.arcgis.com/authentication/mobile-and-native-user-logins/#with-a-custom-redirect-uri): `my-ags-app://auth`
 4. In the sample code, goto **res>values>portal_settings.xml** and enter your account URL path, client-id and redirect-uri.
 
