@@ -206,7 +206,11 @@ public class MainActivity extends AppCompatActivity {
         //Create a picture marker symbol from an app resource
         BitmapDrawable startDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin);
         mPinSourceSymbol = new PictureMarkerSymbol(startDrawable);
+        mPinSourceSymbol.setHeight(90);
+        mPinSourceSymbol.setWidth(20);
         mPinSourceSymbol.loadAsync();
+        mPinSourceSymbol.setLeaderOffsetY(45);
+        mPinSourceSymbol.setOffsetY(-45);
 
         mReverseGeocodeParameters = new ReverseGeocodeParameters();
         mReverseGeocodeParameters.getResultAttributeNames().add("*");
@@ -293,12 +297,8 @@ public class MainActivity extends AppCompatActivity {
         //remove any previous graphics/search results
         //mMapView.getGraphicsOverlays().clear();
         graphicsOverlay.getGraphics().clear();
-        // create marker symbol to represent location
-        Bitmap icon = BitmapFactory.decodeResource(getApplication().getResources(), R.mipmap.ic_pin);
-        BitmapDrawable drawable = new BitmapDrawable(getApplication().getResources(), icon);
-        PictureMarkerSymbol resultSymbol = new PictureMarkerSymbol(drawable);
         // create graphic object for resulting location
-        Graphic resultLocGraphic = new Graphic(resultPoint, resultSymbol);
+        Graphic resultLocGraphic = new Graphic(resultPoint, mPinSourceSymbol);
         // add graphic to location layer
         graphicsOverlay.getGraphics().add(resultLocGraphic);
 
