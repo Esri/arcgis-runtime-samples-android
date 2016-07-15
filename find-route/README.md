@@ -5,7 +5,7 @@ This sample demonstrates how to get a route between two locations
 ![screenshot2](https://cloud.githubusercontent.com/assets/12448081/16168012/4ff10950-34b2-11e6-9434-b068156ea317.png) 
 
 #How to use the sample
-For simplicity the sample comes with Source and Destination stops. You can click on the Navigation ![navigation](https://cloud.githubusercontent.com/assets/12448081/16168046/d37aaea2-34b2-11e6-888a-0cbf22f5455f.png) Floating Action Button to get a route between the stops. Once a route is generated, the `DrawerLayout` is unlocked and you can view the direction maneuver as a list. ```getDirectionManeuvers()``` method on the result of the 
+For simplicity the sample comes with Source and Destination stops. You can click on the Navigation ![navigation](https://cloud.githubusercontent.com/assets/12448081/16168046/d37aaea2-34b2-11e6-888a-0cbf22f5455f.png) Floating Action Button to get a route between the stops. Once a route is generated, the `DrawerLayout` is unlocked and you can view the direction maneuver as a list.
 
 #Features
 
