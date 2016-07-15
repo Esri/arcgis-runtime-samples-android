@@ -157,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
                     MatrixCursor cursor = (MatrixCursor) mSearchview.getSuggestionsAdapter().getItem(position);
                     int indexColumnSuggestion = cursor.getColumnIndex(COLUMN_NAME_ADDRESS);
                     final String address = cursor.getString(indexColumnSuggestion);
-                    //suggestionClickFlag = true;
                     // Find the Location of the suggestion
                     geoCodeTypedAddress(address);
                     hideKeyboard();
@@ -295,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
         //mMapView.getGraphicsOverlays().clear();
         graphicsOverlay.getGraphics().clear();
         // create marker symbol to represent location
-        Bitmap icon = BitmapFactory.decodeResource(getApplication().getResources(), R.drawable.pin);
+        Bitmap icon = BitmapFactory.decodeResource(getApplication().getResources(), R.mipmap.ic_pin);
         BitmapDrawable drawable = new BitmapDrawable(getApplication().getResources(), icon);
         PictureMarkerSymbol resultSymbol = new PictureMarkerSymbol(drawable);
         // create graphic object for resulting location
