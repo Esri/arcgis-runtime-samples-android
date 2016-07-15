@@ -17,6 +17,7 @@
 package com.esri.arcgisruntime.sample.findroute;
 
 import android.app.ProgressDialog;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -37,6 +38,7 @@ import android.widget.ListView;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -143,9 +145,10 @@ public class MainActivity extends AppCompatActivity {
                                 // set return directions as true to return turn-by-turn directions in the result of getDirectionManeuvers().
                                 mRouteParams.setReturnDirections(true);
 
-                                // add your stops to it
-                                routeStops.add(new Stop(new Point(-13041171.537945, 3860988.271378, SpatialReferences.getWebMercator())));
-                                routeStops.add(new Stop(new Point(-13041693.562570, 3856006.859684, SpatialReferences.getWebMercator())));
+                                // add your stops to it 32.7254716,-117.1508181 32.7076359,-117.1592837 -117.15557279683529
+                                //-13041171, 3860988, SpatialReference(3857) -13041693, 3856006, SpatialReference(3857)
+                                routeStops.add(new Stop(new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84())));
+                                routeStops.add(new Stop(new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84())));
 
                                 // solve
                                 RouteResult result = mRouteTask.solveAsync(mRouteParams).get();
@@ -164,6 +167,8 @@ public class MainActivity extends AppCompatActivity {
                                 for (DirectionManeuver dm : directions) {
                                     directionsArray[i++] = dm.getDirectionText();
                                 }
+                                Log.d(TAG,directions.get(0).getGeometry().getExtent().getXMin() + "");
+                                Log.d(TAG,directions.get(0).getGeometry().getExtent().getYMin() + "");
 
                                 // Set the adapter for the list view
                                 mDrawerList.setAdapter(new ArrayAdapter<>(getApplicationContext(),
@@ -221,11 +226,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //add a new graphic as start point
-                mSourcePoint = new Point(-13041171.537945, 3860988.271378, SpatialReferences.getWebMercator());
+                mSourcePoint = new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84());
                 Graphic pinSourceGraphic = new Graphic(mSourcePoint, pinSourceSymbol);
                 mGraphicsOverlay.getGraphics().add(pinSourceGraphic);
             }
         });
+        pinSourceSymbol.setOffsetY(20);
         BitmapDrawable endDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_destination);
         final PictureMarkerSymbol pinDestinationSymbol = new PictureMarkerSymbol(endDrawable);
         pinDestinationSymbol.loadAsync();
@@ -234,11 +240,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //add a new graphic as end point
-                mDestinationPoint = new Point(-13041693.562570, 3856006.859684, SpatialReferences.getWebMercator());
+                mDestinationPoint = new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84());
                 Graphic destinationGraphic = new Graphic(mDestinationPoint, pinDestinationSymbol);
                 mGraphicsOverlay.getGraphics().add(destinationGraphic);
             }
         });
+        pinDestinationSymbol.setOffsetY(20);
 
         mRouteSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5);
     }
@@ -289,7 +296,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         super.onConfigurationChanged(newConfig);
+
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
