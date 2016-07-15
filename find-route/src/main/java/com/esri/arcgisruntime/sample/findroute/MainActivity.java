@@ -30,10 +30,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer;
@@ -155,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                                 mGraphicsOverlay.getGraphics().add(routeGraphic);
                                 // get directions
                                 // NOTE: to get turn-by-turn directions Route Parameters should set returnDirection flag as true
-                                List<DirectionManeuver> directions = mRoute.getDirectionManeuvers();
+                                final List<DirectionManeuver> directions = mRoute.getDirectionManeuvers();
 
                                 String[] directionsArray = new String[directions.size()];
 
@@ -170,6 +172,16 @@ public class MainActivity extends AppCompatActivity {
                                 if (mProgressDialog.isShowing()) {
                                     mProgressDialog.dismiss();
                                 }
+                                mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        mDrawerLayout.closeDrawers();
+                                        DirectionManeuver dm = directions.get(position);
+                                        Geometry gm = dm.getGeometry();
+                                        Viewpoint vp = new Viewpoint(gm.getExtent(),20);
+                                        mMapView.setViewpointWithDurationAsync(vp,3);
+                                    }
+                                });
 
                             }
                         } catch (Exception e) {
