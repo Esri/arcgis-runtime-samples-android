@@ -57,8 +57,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "FindRouteSample";
-    ArcGISVectorTiledLayer mVectorTiledLayer;
-    FloatingActionButton mDirectionFab;
+    private ArcGISVectorTiledLayer mVectorTiledLayer;
+    private FloatingActionButton mDirectionFab;
     private ProgressDialog mProgressDialog;
 
     private MapView mMapView;
@@ -117,9 +117,11 @@ public class MainActivity extends AppCompatActivity {
 
                 mProgressDialog.show();
 
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setHomeButtonEnabled(true);
-                setTitle(getString(R.string.app_name));
+                if(getSupportActionBar() != null) {
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                    getSupportActionBar().setHomeButtonEnabled(true);
+                    setTitle(getString(R.string.app_name));
+                }
                 mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
                 // create RouteTask instance
