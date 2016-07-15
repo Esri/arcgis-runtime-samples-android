@@ -74,11 +74,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String COLUMN_NAME_Y = "y";
     private final String extern = Environment.getExternalStorageDirectory().getPath();
 
-    GraphicsOverlay graphicsOverlay;
-    GeocodeParameters mGeocodeParameters;
-    PictureMarkerSymbol mPinSourceSymbol;
-    ArcGISMap mMap;
-    ArcGISTiledLayer tiledLayer;
+    private GraphicsOverlay graphicsOverlay;
+    private GeocodeParameters mGeocodeParameters;
+    private PictureMarkerSymbol mPinSourceSymbol;
+    private ArcGISMap mMap;
+    private ArcGISTiledLayer tiledLayer;
     int requestCode = 2;
     String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
