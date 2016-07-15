@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 // solve
                                 RouteResult result = mRouteTask.solveAsync(mRouteParams).get();
-                                List routes = result.getRoutes();
+                                final List routes = result.getRoutes();
                                 mRoute = (Route) routes.get(0);
                                 // create a mRouteSymbol graphic
                                 Graphic routeGraphic = new Graphic(mRoute.getRouteGeometry(), mRouteSymbol);
@@ -175,11 +175,17 @@ public class MainActivity extends AppCompatActivity {
                                 mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        if(mGraphicsOverlay.getGraphics().size() > 3) {
+                                            mGraphicsOverlay.getGraphics().remove(mGraphicsOverlay.getGraphics().size() - 1);
+                                        }
                                         mDrawerLayout.closeDrawers();
                                         DirectionManeuver dm = directions.get(position);
                                         Geometry gm = dm.getGeometry();
                                         Viewpoint vp = new Viewpoint(gm.getExtent(),20);
                                         mMapView.setViewpointWithDurationAsync(vp,3);
+                                        SimpleLineSymbol selectedRouteSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.GREEN, 5);
+                                        Graphic selectedRouteGraphic = new Graphic(directions.get(position).getGeometry(), selectedRouteSymbol);
+                                        mGraphicsOverlay.getGraphics().add(selectedRouteGraphic);
                                     }
                                 });
 
