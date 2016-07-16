@@ -38,7 +38,6 @@ import android.widget.ListView;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -61,8 +60,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "FindRouteSample";
-    private ArcGISVectorTiledLayer mVectorTiledLayer;
-    private FloatingActionButton mDirectionFab;
     private ProgressDialog mProgressDialog;
 
     private MapView mMapView;
@@ -86,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
         // create new Vector Tiled Layer from service url
-        mVectorTiledLayer = new ArcGISVectorTiledLayer(
+        ArcGISVectorTiledLayer mVectorTiledLayer = new ArcGISVectorTiledLayer(
                 getResources().getString(R.string.navigation_vector));
 
         // set tiled layer as basemap
@@ -104,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        mDirectionFab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton mDirectionFab = (FloatingActionButton) findViewById(R.id.fab);
 
         setupDrawer();
 
