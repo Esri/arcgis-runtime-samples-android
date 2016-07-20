@@ -3,7 +3,7 @@
     <string name="geo_locate_error">Geocode failed on address</string>
     <string name="location_not_foud">We are sorry, we couldn\'t find a location with the name - </string>
     <!-- San Francisco tpk and locator paths -->
-    <string name="sandiego_tpk">/ArcGIS/samples/OfflineRouting/SanDiego.tpk</string>
+    <string name="sandiego_tpk">/ArcGIS/samples/OfflineRouting/streetmap_SD.tpk</string>
     <string name="sandiego_loc">/ArcGIS/samples/OfflineRouting/Geocoding/SanDiego_StreetAddress.loc</string>
     <string name="storage_permission_denied">Storage permission denied</string>
 
