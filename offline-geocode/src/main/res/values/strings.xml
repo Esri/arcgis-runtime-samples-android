@@ -1,23 +1,22 @@
 <resources>
     <string name="app_name">Offline geocode</string>
-    <string name="suggestion_text">Suggestion</string>
     <string name="geo_locate_error">Geocode failed on address</string>
     <string name="location_not_foud">We are sorry, we couldn\'t find a location with the name - </string>
     <!-- San Francisco tpk and locator paths -->
-    <string name="sanfrancisco_tpk">/ArcGIS/samples/Offlinegeocode/SanFrancisco.tpk</string>
-    <string name="sanfrancisco_loc">/ArcGIS/samples/Offlinegeocode/SanFranciscoLocator.loc</string>
+    <string name="sandiego_tpk">/ArcGIS/samples/OfflineRouting/SanDiego.tpk</string>
+    <string name="sandiego_loc">/ArcGIS/samples/OfflineRouting/Geocoding/SanDiego_StreetAddress.loc</string>
     <string name="storage_permission_denied">Storage permission denied</string>
 
-    <string name="search_hint">hint</string>
+    <string name="search_hint">Enter address</string>
+    <string name="reverse_geocode_message">Drag the pin to reverse-geocode</string>
 
     <!-- Search Suggestions -->
     <string-array name="suggestion_items">
-        <item>1455 Market St, San Francisco, CA 94103</item>
-        <item>2011 Mission St, San Francisco  CA  94110</item>
-        <item>820 Bryant St, San Francisco  CA  94103</item>
-        <item>1 Zoo Rd, San Francisco, 944132</item>
-        <item>1201 Mason Street, San Francisco, CA 94108</item>
-        <item>151 Third Street, San Francisco, CA 94103</item>
-        <item>1050 Lombard Street, San Francisco, CA 94109</item>
+        <item>910 N Harbor Dr, San Diego, CA 92101</item>
+        <item>2920 Zoo Dr, San Diego, CA 92101</item>
+        <item>111 W Harbor Dr, San Diego, CA 92101</item>
+        <item>868 4th Ave, San Diego, CA 92101</item>
+        <item>750 A St, San Diego, CA 92101</item>
+        <item>Enter address&#8230;</item>
     </string-array>
 </resources>
