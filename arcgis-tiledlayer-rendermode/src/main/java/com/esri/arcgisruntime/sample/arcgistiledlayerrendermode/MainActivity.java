@@ -16,9 +16,6 @@
 
 package com.esri.arcgisruntime.sample.arcgistiledlayerrendermode;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -28,10 +25,13 @@ import android.widget.Spinner;
 
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.layers.ImageTiledLayer;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     // set tiled layer as basemap
     Basemap basemap = new Basemap(tiledLayerBaseMap);
     // create a map with the basemap
-    Map map = new Map(basemap);
+    ArcGISMap map = new ArcGISMap(basemap);
     // create a viewpoint from lat, long, scale
     Viewpoint vp = new Viewpoint(47.606726, -122.335564, 144447.638572);
     // set initial map extent

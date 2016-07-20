@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2016 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
     private MapView mMapView;
-    private Map mMap;
+    private ArcGISMap mMap;
 
     // The basemap switching menu items.
     private MenuItem mStreetsMenuItem = null;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
         // create a map with Topographic Basemap
-        mMap = new Map(Basemap.createTopographic());
+        mMap = new ArcGISMap(Basemap.createTopographic());
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
     }

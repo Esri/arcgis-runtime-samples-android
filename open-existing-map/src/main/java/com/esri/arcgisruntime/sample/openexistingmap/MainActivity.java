@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2016 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.portal.PortalItem;
@@ -36,7 +36,7 @@ import com.esri.arcgisruntime.portal.PortalItem;
 public class MainActivity extends AppCompatActivity {
 
     private MapView mMapView;
-    private Map mMap;
+    private ArcGISMap mMap;
     private Portal mPortal;
     private PortalItem mPortalItem;
 
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         // get the pre-defined portal id and portal url
         mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_houses_with_mortgages_id));
         // create a map from a PortalItem
-        mMap = new Map(mPortalItem);
+        mMap = new ArcGISMap(mPortalItem);
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
 
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 if(position == 0){
                     mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_houses_with_mortgages_id));
                     // create a map from a PortalItem
-                    mMap = new Map(mPortalItem);
+                    mMap = new ArcGISMap(mPortalItem);
                     // set the map to be displayed in this view
                     mMapView.setMap(mMap);
                     // close the drawer
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 }else if(position == 1){
                     mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_usa_tapestry_segmentation_id));
                     // create a map from a PortalItem
-                    mMap = new Map(mPortalItem);
+                    mMap = new ArcGISMap(mPortalItem);
                     // set the map to be displayed in this view
                     mMapView.setMap(mMap);
                     // close the drawer
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 }else if(position == 2){
                     mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_us_pop_density_id));
                     // create a map from a PortalItem
-                    mMap = new Map(mPortalItem);
+                    mMap = new ArcGISMap(mPortalItem);
                     // set the map to be displayed in this view
                     mMapView.setMap(mMap);
                     // close the drawer

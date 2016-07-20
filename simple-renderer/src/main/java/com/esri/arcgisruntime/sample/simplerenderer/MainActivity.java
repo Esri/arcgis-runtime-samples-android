@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2016 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
         // create a map with the imagery basemap. This will set the map to have a WebMercator spatial reference
-        Map map = new Map(Basemap.createImageryWithLabels());
+        ArcGISMap map = new ArcGISMap(Basemap.createImageryWithLabels());
         // set the map to be displayed in the mapview
         mMapView.setMap(map);
 
@@ -66,8 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         //[DocRef: Name=Simple Renderer, Category=Fundamentals, Topic=Symbols and Renderers]
         //create a simple symbol for use in a simple renderer
-        int color = Color.rgb(255, 0, 0); //red, fully opaque
-        SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(color, 12, SimpleMarkerSymbol.Style.CROSS); //size 12, style of cross
+        SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, Color.RED, 12); //size 12, style of cross
         SimpleRenderer renderer = new SimpleRenderer(symbol);
 
         //apply the renderer to the graphics overlay (so all graphics will use the same symbol from the renderer)

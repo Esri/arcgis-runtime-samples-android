@@ -24,8 +24,8 @@ import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PolygonBuilder;
 import com.esri.arcgisruntime.geometry.PolylineBuilder;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         // create MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
         // create a map with the Basemap Type topographic
-        Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 15.169193, 16.333479, 2);
+        ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 15.169193, 16.333479, 2);
         // add graphics overlay
         addGraphicsOverlay();
         // set the map to be displayed in this view
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         // point graphic
         Point pointGeometry = new Point(40e5, 40e5, SpatialReferences.getWebMercator());
         // red diamond point symbol
-        SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(Color.RED, 10, SimpleMarkerSymbol.Style.DIAMOND);
+        SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 10);
         // create graphic for point
         Graphic pointGraphic = new Graphic(pointGeometry);
         // create a graphic overlay for the point
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         polygonGeometry.addPoint(20e5, -20e5);
         polygonGeometry.addPoint(-20e5, -20e5);
         // solid yellow polygon symbol
-        SimpleFillSymbol polygonSymbol = new SimpleFillSymbol(Color.YELLOW, SimpleFillSymbol.Style.SOLID, null);
+        SimpleFillSymbol polygonSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.YELLOW, null);
         // create graphic for polygon
         Graphic polygonGraphic = new Graphic(polygonGeometry.toGeometry());
         // create graphic overlay for polygon

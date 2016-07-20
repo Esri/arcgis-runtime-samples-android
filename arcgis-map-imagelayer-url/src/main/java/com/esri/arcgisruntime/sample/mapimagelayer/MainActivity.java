@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2016 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
-import com.esri.arcgisruntime.mapping.Map;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         // create a MapImageLayer with dynamically generated map images
         ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer(getResources().getString(R.string.world_elevation_service));
         // create an empty map instance
-        Map map = new Map();
+        ArcGISMap map = new ArcGISMap();
         // add map image layer as operational layer
         map.getOperationalLayers().add(mapImageLayer);
         // set the map to be displayed in this view

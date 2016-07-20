@@ -1,4 +1,4 @@
-/* Copyright 2015 ESRI
+/* Copyright 2016 ESRI
  *
  * All rights reserved under the copyright laws of the United States
  * and applicable international laws, treaties, and conventions.
@@ -20,8 +20,8 @@ import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.mapView);
 
         // create a map with the light grey canvas basemap
-        Map map = new Map(Basemap.createLightGrayCanvas());
+        ArcGISMap map = new ArcGISMap(Basemap.createLightGrayCanvas());
         //set an initial viewpoint
         map.setInitialViewpoint( new Viewpoint(new Envelope(-1.30758164047166E7, 4014771.46954516, -1.30730056797177E7
                 , 4016869.78617381, SpatialReferences.getWebMercator() )));
