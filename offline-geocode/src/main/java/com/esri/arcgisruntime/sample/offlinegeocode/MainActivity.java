@@ -19,26 +19,25 @@ package com.esri.arcgisruntime.sample.offlinegeocode;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.database.MatrixCursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,19 +68,14 @@ import java.util.concurrent.ExecutionException;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "OfflineActivity";
-    private static final String COLUMN_NAME_ADDRESS = "address";
-    private static final String COLUMN_NAME_X = "x";
-    private static final String COLUMN_NAME_Y = "y";
     private final String extern = Environment.getExternalStorageDirectory().getPath();
-
+    int requestCode = 2;
+    String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private GraphicsOverlay graphicsOverlay;
     private GeocodeParameters mGeocodeParameters;
     private PictureMarkerSymbol mPinSourceSymbol;
     private ArcGISMap mMap;
     private ArcGISTiledLayer tiledLayer;
-    int requestCode = 2;
-    String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-
     private MapView mMapView;
     private LocatorTask mLocatorTask;
     private ReverseGeocodeParameters mReverseGeocodeParameters;
@@ -89,8 +83,9 @@ public class MainActivity extends AppCompatActivity {
     private SearchView mSearchview;
     private String mGraphicPointAddress;
     private Point mGraphicPoint;
-    private MatrixCursor mSuggestionCursor;
     private GeocodeResult mGeocodedLocation;
+    private Spinner mSpinner;
+    private boolean isPinSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,76 +104,88 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MainActivity.this, permission, requestCode);
         } else { // if permission was already granted, set up offline map and geocoding, reverse geocoding and LocatorTask
             setUpOfflineMapGeocoding();
+            setSearchView();
         }
 
         mMapView.setOnTouchListener(new MapTouchListener(getApplicationContext(), mMapView));
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+    private void setSearchView() {
 
-        MenuItem searchItem = menu.findItem(R.id.search);
-        mSearchview = new SearchView(MainActivity.this);
-        mSearchview = (SearchView) MenuItemCompat.getActionView(searchItem);
-        try {
-            // Setup the listener when the search button is pressed on the keyboard
-            mSearchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    hideKeyboard();
-                    geoCodeTypedAddress(query);
+        mSearchview = (SearchView) findViewById(R.id.searchView1);
+        mSearchview.setIconifiedByDefault(true);
+        mSearchview.setQueryHint(getResources().getString(R.string.search_hint));
+        mSearchview.setOnQueryTextListener(new OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                hideKeyboard();
+                geoCodeTypedAddress(query);
+                mSearchview.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        mSpinner = (Spinner) findViewById(R.id.spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        final ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_dropdown_item) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+
+                View v = super.getView(position, convertView, parent);
+                if (position == getCount()) {
                     mSearchview.clearFocus();
-                    return true;
                 }
 
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    initSuggestionCursor();
-                    applySuggestionCursor();
-                    return true;
-                }
-            });
+                return v;
+            }
 
-            mSearchview.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public int getCount() {
+                return super.getCount() - 1; // you dont display last item. It is used as hint.
+            }
 
-                @Override
-                public boolean onSuggestionSelect(int position) {
-                    return false;
-                }
+        };
 
-                @Override
-                public boolean onSuggestionClick(int position) {
-                    // Obtain the content of the selected suggesting place via
-                    // cursor
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.addAll(getResources().getStringArray(R.array.suggestion_items));
+
+        // Apply the adapter to the spinner
+        mSpinner.setAdapter(adapter);
+        mSpinner.setSelection(adapter.getCount());
+
+
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == adapter.getCount()) {
                     mSearchview.clearFocus();
-                    MatrixCursor cursor = (MatrixCursor) mSearchview.getSuggestionsAdapter().getItem(position);
-                    int indexColumnSuggestion = cursor.getColumnIndex(COLUMN_NAME_ADDRESS);
-                    final String address = cursor.getString(indexColumnSuggestion);
-                    // Find the Location of the suggestion
-                    geoCodeTypedAddress(address);
+                } else {
                     hideKeyboard();
-                    mSearchview.setQuery(address, false);
-                    cursor.close();
-
-                    return true;
+                    mSearchview.setQuery(getResources().getStringArray(R.array.suggestion_items)[position], false);
+                    geoCodeTypedAddress(getResources().getStringArray(R.array.suggestion_items)[position]);
+                    mSearchview.setIconified(false);
+                    mSearchview.clearFocus();
                 }
-            });
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
-        } catch (Exception e) {
-            Log.d(TAG, e.getMessage());
-            e.printStackTrace();
-        }
-
-        return true;
     }
 
     private void setUpOfflineMapGeocoding() {
         // create a basemap from a local tile package
-        TileCache tileCache = new TileCache(extern + getResources().getString(R.string.sanfrancisco_tpk));
+        TileCache tileCache = new TileCache(extern + getResources().getString(R.string.sandiego_tpk));
         tiledLayer = new ArcGISTiledLayer(tileCache);
         Basemap basemap = new Basemap(tiledLayer);
 
@@ -188,9 +195,9 @@ public class MainActivity extends AppCompatActivity {
         mMapView.setMap(mMap);
 
 
-        Point p = new Point(-122.41730573536672, 37.772537383913132, SpatialReference.create(4326));
-        Viewpoint vp = new Viewpoint(p, 20000);
-        mMapView.setViewpointAsync(vp);
+        Point p = new Point(-117.1578931863499, 32.71888699942292, SpatialReference.create(4326));
+        Viewpoint vp = new Viewpoint(p, 8000);
+        mMapView.setViewpointWithDurationAsync(vp, 3);
 
         // add a graphics overlay
         graphicsOverlay = new GraphicsOverlay();
@@ -210,14 +217,14 @@ public class MainActivity extends AppCompatActivity {
         mPinSourceSymbol.setWidth(20);
         mPinSourceSymbol.loadAsync();
         mPinSourceSymbol.setLeaderOffsetY(45);
-        mPinSourceSymbol.setOffsetY(-45);
+        mPinSourceSymbol.setOffsetY(-48);
 
         mReverseGeocodeParameters = new ReverseGeocodeParameters();
         mReverseGeocodeParameters.getResultAttributeNames().add("*");
         mReverseGeocodeParameters.setOutputSpatialReference(mMap.getSpatialReference());
         mReverseGeocodeParameters.setMaxResults(1);
 
-        mLocatorTask = new LocatorTask(extern + getResources().getString(R.string.sanfrancisco_loc));
+        mLocatorTask = new LocatorTask(extern + getResources().getString(R.string.sandiego_loc));
     }
 
     /**
@@ -303,37 +310,12 @@ public class MainActivity extends AppCompatActivity {
         graphicsOverlay.getGraphics().add(resultLocGraphic);
 
         // Zoom map to geocode result location
-        mMapView.setViewpointCenterAsync(resultPoint);
+        mMapView.setViewpointWithDurationAsync(new Viewpoint(resultPoint, 8000), 3);
 
         mGraphicPoint = resultPoint;
         mGraphicPointAddress = address;
     }
 
-    /**
-     * Initialize Suggestion Cursor
-     */
-    private void initSuggestionCursor() {
-        String[] cols = {BaseColumns._ID, COLUMN_NAME_ADDRESS, COLUMN_NAME_X, COLUMN_NAME_Y};
-        mSuggestionCursor = new MatrixCursor(cols);
-
-        int key = 0;
-        String[] recent = getResources().getStringArray(R.array.suggestion_items);
-        for (String s : recent) {
-            mSuggestionCursor.addRow(new Object[]{key++, s, "0", "0"});
-        }
-    }
-
-    /**
-     * Set the suggestion cursor to an Adapter then set it to the search view
-     */
-    private void applySuggestionCursor() {
-        String[] cols = {COLUMN_NAME_ADDRESS};
-        int[] to = {R.id.suggestion_item_address};
-        SimpleCursorAdapter mSuggestionAdapter = new SimpleCursorAdapter(mMapView.getContext(),
-                R.layout.search_suggestion_item, mSuggestionCursor, cols, to, 0);
-        mSearchview.setSuggestionsAdapter(mSuggestionAdapter);
-        mSuggestionAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -342,6 +324,7 @@ public class MainActivity extends AppCompatActivity {
             // Location permission was granted. This would have been triggered in response to failing to start the
             // LocationDisplay, so try starting this again.
             setUpOfflineMapGeocoding();
+            setSearchView();
         } else {
             // If permission was denied, show toast to inform user what was chosen. If LocationDisplay is started again,
             // request permission UX will be shown again, option should be shown to allow never showing the UX again.
@@ -352,6 +335,49 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class DragTouchListemer extends DefaultMapViewOnTouchListener {
+
+        float dX, dY;
+
+        public DragTouchListemer(Context context, MapView mapView) {
+            super(context, mapView);
+        }
+
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+
+            switch (event.getAction()) {
+
+                case MotionEvent.ACTION_DOWN:
+                    dX = view.getX() - event.getRawX();
+                    dY = view.getY() - event.getRawY();
+                    break;
+
+                case MotionEvent.ACTION_MOVE:
+                    final int pointerIndex = MotionEventCompat.getActionIndex(event);
+                    final float x = MotionEventCompat.getX(event, pointerIndex);
+                    final float y = MotionEventCompat.getY(event, pointerIndex);
+                    android.graphics.Point screenPoint = new android.graphics.Point(Math.round(x), Math.round(y));
+
+                    Point singleTapPoint = mMapView.screenToLocation(screenPoint);
+
+                    ListenableFuture<List<GeocodeResult>> results = mLocatorTask.reverseGeocodeAsync(singleTapPoint,
+                            mReverseGeocodeParameters);
+                    results.addDoneListener(new ResultsLoadedListener(results));
+
+                    break;
+                case MotionEvent.ACTION_UP:
+                    graphicsOverlay.getGraphics().get(0).setSelected(false);
+                    isPinSelected = false;
+                    mMapView.setOnTouchListener(new MapTouchListener(getApplicationContext(), mMapView));
+                    break;
+                default:
+                    return false;
+            }
+            return true;
+        }
+    }
+
     private class MapTouchListener extends DefaultMapViewOnTouchListener {
 
         public MapTouchListener(Context context, MapView mapView) {
@@ -359,20 +385,45 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public boolean onDoubleTouchDrag(MotionEvent motionEvent) {
-            // get the point that was clicked and convert it to a point in map coordinates
-            android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
-                    Math.round(motionEvent.getY()));
+        public void onLongPress(MotionEvent e) {
+            android.graphics.Point screenPoint = new android.graphics.Point(Math.round(e.getX()),
+                    Math.round(e.getY()));
 
             Point singleTapPoint = mMapView.screenToLocation(screenPoint);
 
             ListenableFuture<List<GeocodeResult>> results = mLocatorTask.reverseGeocodeAsync(singleTapPoint,
                     mReverseGeocodeParameters);
             results.addDoneListener(new ResultsLoadedListener(results));
+            // identify graphics on the graphics overlay
+            final ListenableFuture<List<Graphic>> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(graphicsOverlay, screenPoint, 1.0, 1);
 
-            return true;
+            identifyGraphic.addDoneListener(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // get the list of graphics returned by identify
+                        List<Graphic> graphic = identifyGraphic.get();
+                        // get size of list in results
+                        int identifyResultSize = graphic.size();
+                        if (!graphic.isEmpty()) {
+                            // show a toast message if graphic was returned
+                            graphic.get(0).setSelected(true);
+                            isPinSelected = true;
+                            Toast.makeText(getApplicationContext(),
+                                    getString(R.string.reverse_geocode_message),
+                                    Toast.LENGTH_SHORT).show();
+
+                        }
+                    } catch (InterruptedException | ExecutionException ie) {
+                        ie.printStackTrace();
+                    }
+
+                }
+            });
+
 
         }
+
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
@@ -380,6 +431,10 @@ public class MainActivity extends AppCompatActivity {
 
             if (mMapView.getCallout().isShowing()) {
                 mMapView.getCallout().dismiss();
+            }
+            if (graphicsOverlay.getGraphics().get(0).isSelected()) {
+                isPinSelected = false;
+                graphicsOverlay.getGraphics().get(0).setSelected(false);
             }
             // get the screen point where user tapped
             final android.graphics.Point screenPoint = new android.graphics.Point((int) e.getX(), (int) e.getY());
@@ -396,6 +451,15 @@ public class MainActivity extends AppCompatActivity {
                         // get size of list in results
                         int identifyResultSize = graphic.size();
                         if (!graphic.isEmpty()) {
+
+                            if (!isPinSelected) {
+                                isPinSelected = true;
+                                graphic.get(0).setSelected(true);
+                                Toast.makeText(getApplicationContext(),
+                                        getString(R.string.reverse_geocode_message),
+                                        Toast.LENGTH_SHORT).show();
+                                mMapView.setOnTouchListener(new DragTouchListemer(getApplicationContext(), mMapView));
+                            }
                             // show a toast message if graphic was returned
                             TextView calloutContent = new TextView(getApplicationContext());
                             calloutContent.setTextColor(Color.BLACK);
@@ -469,7 +533,6 @@ public class MainActivity extends AppCompatActivity {
                     attributes.put("title", title);
                     attributes.put("detail", detail);
 
-                    //Log.d(TAG, title + " " + detail);
 
                     // create the marker
                     Graphic marker = new Graphic(geocode.getDisplayLocation(), attributes, mPinSourceSymbol);
@@ -478,6 +541,9 @@ public class MainActivity extends AppCompatActivity {
                     // add the markers to the graphics overlay
                     graphicsOverlay.getGraphics().add(marker);
 
+                    if (isPinSelected) {
+                        marker.setSelected(true);
+                    }
                     TextView calloutContent = new TextView(getApplicationContext());
                     calloutContent.setTextColor(Color.BLACK);
                     String calloutText = title + ", " + detail;
