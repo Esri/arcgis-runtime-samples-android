@@ -33,7 +33,7 @@ import com.esri.core.symbol.SimpleMarkerSymbol;
 
 public class MainActivity extends Activity {
 
-    MapView mMapView;
+    private MapView mMapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
