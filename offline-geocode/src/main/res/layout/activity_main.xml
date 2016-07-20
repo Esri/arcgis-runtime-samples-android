@@ -17,4 +17,13 @@
 
     </com.esri.arcgisruntime.mapping.view.MapView>
 
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/searchview"
+        android:id="@+id/floating_searchView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp" />
+
 </RelativeLayout>
