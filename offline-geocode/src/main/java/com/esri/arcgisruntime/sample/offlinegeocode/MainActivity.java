@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     private GeocodeResult mGeocodedLocation;
     private Spinner mSpinner;
     private boolean isPinSelected;
+    private TextView mCalloutContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +159,10 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter.addAll(getResources().getStringArray(R.array.suggestion_items));
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            // set vertical offset to spinner dropdown for API less than 21
+            mSpinner.setDropDownVerticalOffset(80);
+        }
         // Apply the adapter to the spinner
         mSpinner.setAdapter(adapter);
         mSpinner.setSelection(adapter.getCount());
@@ -194,10 +200,15 @@ public class MainActivity extends AppCompatActivity {
 
         mMapView.setMap(mMap);
 
+        mMap.addDoneLoadingListener(new Runnable() {
+            @Override
+            public void run() {
+                Point p = new Point(-117.162040, 32.718260, SpatialReference.create(4326));
+                Viewpoint vp = new Viewpoint(p, 10000);
+                mMapView.setViewpointWithDurationAsync(vp, 3);
+            }
+        });
 
-        Point p = new Point(-117.1578931863499, 32.71888699942292, SpatialReference.create(4326));
-        Viewpoint vp = new Viewpoint(p, 8000);
-        mMapView.setViewpointWithDurationAsync(vp, 3);
 
         // add a graphics overlay
         graphicsOverlay = new GraphicsOverlay();
@@ -225,6 +236,10 @@ public class MainActivity extends AppCompatActivity {
         mReverseGeocodeParameters.setMaxResults(1);
 
         mLocatorTask = new LocatorTask(extern + getResources().getString(R.string.sandiego_loc));
+
+        mCalloutContent = new TextView(getApplicationContext());
+        mCalloutContent.setTextColor(Color.BLACK);
+        mCalloutContent.setTextIsSelectable(true);
     }
 
     /**
@@ -358,18 +373,57 @@ public class MainActivity extends AppCompatActivity {
                     final float x = MotionEventCompat.getX(event, pointerIndex);
                     final float y = MotionEventCompat.getY(event, pointerIndex);
                     android.graphics.Point screenPoint = new android.graphics.Point(Math.round(x), Math.round(y));
-
-                    Point singleTapPoint = mMapView.screenToLocation(screenPoint);
-
-                    ListenableFuture<List<GeocodeResult>> results = mLocatorTask.reverseGeocodeAsync(singleTapPoint,
+                    final Point singleTapPoint = mMapView.screenToLocation(screenPoint);
+                    final ListenableFuture<List<GeocodeResult>> results = mLocatorTask.reverseGeocodeAsync(singleTapPoint,
                             mReverseGeocodeParameters);
-                    results.addDoneListener(new ResultsLoadedListener(results));
+                    graphicsOverlay.getGraphics().clear();
+                    Graphic resultLocGraphic = new Graphic(singleTapPoint, mPinSourceSymbol);
+                    resultLocGraphic.setSelected(true);
+                    // add graphic to location layer
+                    graphicsOverlay.getGraphics().add(resultLocGraphic);
+                    // display callout with reverse-geocode result on UI thread
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                List<GeocodeResult> geocodes = results.get();
+                                if (geocodes.size() > 0) {
+                                    // get the top result
+                                    GeocodeResult geocode = geocodes.get(0);
+                                    String detail;
+                                    // attributes from a click-based search
+                                    String street = geocode.getAttributes().get("Street").toString();
+                                    String city = geocode.getAttributes().get("City").toString();
+                                    String state = geocode.getAttributes().get("State").toString();
+                                    String zip = geocode.getAttributes().get("ZIP").toString();
+                                    detail = city + ", " + state + " " + zip;
+
+                                    String address = street + "," + detail;
+                                    mCalloutContent.setText(address);
+                                    // get callout, set content and show
+                                    mCallout = mMapView.getCallout();
+                                    mCallout.setLocation(singleTapPoint);
+                                    mCallout.setContent(mCalloutContent);
+                                    mCallout.show();
+
+                                    mGraphicPoint = singleTapPoint;
+                                    mGraphicPointAddress = address;
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
 
                     break;
                 case MotionEvent.ACTION_UP:
-                    graphicsOverlay.getGraphics().get(0).setSelected(false);
-                    isPinSelected = false;
-                    mMapView.setOnTouchListener(new MapTouchListener(getApplicationContext(), mMapView));
+                    if (graphicsOverlay.getGraphics().size() > 0) {
+                        graphicsOverlay.getGraphics().get(0).setSelected(false);
+                        isPinSelected = false;
+                        mMapView.setOnTouchListener(new MapTouchListener(getApplicationContext(), mMapView));
+                    }
                     break;
                 default:
                     return false;
@@ -389,38 +443,11 @@ public class MainActivity extends AppCompatActivity {
             android.graphics.Point screenPoint = new android.graphics.Point(Math.round(e.getX()),
                     Math.round(e.getY()));
 
-            Point singleTapPoint = mMapView.screenToLocation(screenPoint);
+            Point longPressPoint = mMapView.screenToLocation(screenPoint);
 
-            ListenableFuture<List<GeocodeResult>> results = mLocatorTask.reverseGeocodeAsync(singleTapPoint,
+            ListenableFuture<List<GeocodeResult>> results = mLocatorTask.reverseGeocodeAsync(longPressPoint,
                     mReverseGeocodeParameters);
             results.addDoneListener(new ResultsLoadedListener(results));
-            // identify graphics on the graphics overlay
-            final ListenableFuture<List<Graphic>> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(graphicsOverlay, screenPoint, 1.0, 1);
-
-            identifyGraphic.addDoneListener(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // get the list of graphics returned by identify
-                        List<Graphic> graphic = identifyGraphic.get();
-                        // get size of list in results
-                        int identifyResultSize = graphic.size();
-                        if (!graphic.isEmpty()) {
-                            // show a toast message if graphic was returned
-                            graphic.get(0).setSelected(true);
-                            isPinSelected = true;
-                            Toast.makeText(getApplicationContext(),
-                                    getString(R.string.reverse_geocode_message),
-                                    Toast.LENGTH_SHORT).show();
-
-                        }
-                    } catch (InterruptedException | ExecutionException ie) {
-                        ie.printStackTrace();
-                    }
-
-                }
-            });
-
 
         }
 
@@ -432,9 +459,11 @@ public class MainActivity extends AppCompatActivity {
             if (mMapView.getCallout().isShowing()) {
                 mMapView.getCallout().dismiss();
             }
-            if (graphicsOverlay.getGraphics().get(0).isSelected()) {
-                isPinSelected = false;
-                graphicsOverlay.getGraphics().get(0).setSelected(false);
+            if (graphicsOverlay.getGraphics().size() > 0) {
+                if (graphicsOverlay.getGraphics().get(0).isSelected()) {
+                    isPinSelected = false;
+                    graphicsOverlay.getGraphics().get(0).setSelected(false);
+                }
             }
             // get the screen point where user tapped
             final android.graphics.Point screenPoint = new android.graphics.Point((int) e.getX(), (int) e.getY());
@@ -460,14 +489,11 @@ public class MainActivity extends AppCompatActivity {
                                         Toast.LENGTH_SHORT).show();
                                 mMapView.setOnTouchListener(new DragTouchListemer(getApplicationContext(), mMapView));
                             }
-                            // show a toast message if graphic was returned
-                            TextView calloutContent = new TextView(getApplicationContext());
-                            calloutContent.setTextColor(Color.BLACK);
-                            calloutContent.setText(mGraphicPointAddress);
-                            calloutContent.setTextIsSelectable(true);
+
+                            mCalloutContent.setText(mGraphicPointAddress);
                             // get callout, set content and show
                             mCallout = mMapView.getCallout();
-                            mCallout.setContent(calloutContent);
+                            mCallout.setContent(mCalloutContent);
                             mCallout.setLocation(mGraphicPoint);
                             mCallout.show();
                         }
@@ -544,15 +570,12 @@ public class MainActivity extends AppCompatActivity {
                     if (isPinSelected) {
                         marker.setSelected(true);
                     }
-                    TextView calloutContent = new TextView(getApplicationContext());
-                    calloutContent.setTextColor(Color.BLACK);
                     String calloutText = title + ", " + detail;
-                    calloutContent.setText(calloutText);
-                    calloutContent.setTextIsSelectable(true);
+                    mCalloutContent.setText(calloutText);
                     // get callout, set content and show
                     mCallout = mMapView.getCallout();
                     mCallout.setLocation(geocode.getDisplayLocation());
-                    mCallout.setContent(calloutContent);
+                    mCallout.setContent(mCalloutContent);
                     mCallout.show();
 
                     mGraphicPoint = location;
