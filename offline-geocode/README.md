@@ -4,13 +4,14 @@ This sample demonstrates how you can geocode addresses to locations and reverse 
 # How to use the sample
 The sample depends on basemap data to be located on the device. This includes installing a local tile map cache (tpk) to device as described below:
 
- * Download San Diego [tpk](https://github.com/manishk3189/arcgis-runtime-samples-android/tree/Offline-Geocode-ActionBar-Search/offline-geocode/streetmap_SD%20tpk) and [locator](http://www.arcgis.com/home/item.html?id=bd441813cd2f4c8891aee671a65feb54) data from ArcGIS.
+ * Download San Diego [tpk](http://www.arcgis.com/home/item.html?id=1330ab96ac9c40a49e59650557f2cd63) and [locator](http://www.arcgis.com/home/item.html?id=344e3b12368543ef84045ef9aa3c32ba) data from ArcGIS.
  * Create the the sample data folder at the root folder on your device, /{device-externalstoragepath}/ArcGIS/samples/Offlinegeocode.
  * Push the downloaded data contents from step 1 to your device:
   * /{device-externalstoragepath}/ArcGIS/samples/OfflineGeocoding/streetmap_SD.tpk
-  * /{device-externalstoragepath}/ArcGIS/samples/OfflineGeocoding/SanDiego_StreetAddress.loc
-  * /{device-externalstoragepath}/ArcGIS/samples/OfflineGeocoding/SanDiego_StreetAddress.locb
-  * /{device-externalstoragepath}/ArcGIS/samples/OfflineGeocoding/SanDiego_StreetAddress.lox
+  * /{device-externalstoragepath}/ArcGIS/samples/OfflineGeocoding/san-diego-locator.loc
+  * /{device-externalstoragepath}/ArcGIS/samples/OfflineGeocoding/san-diego-locator.locb
+  * /{device-externalstoragepath}/ArcGIS/samples/OfflineGeocoding/san-diego-locator.lox
+  * /{device-externalstoragepath}/ArcGIS/samples/OfflineGeocoding/san-diego-locator.loc.xml
 
   
 ---  
