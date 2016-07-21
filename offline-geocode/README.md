@@ -16,7 +16,7 @@ The sample depends on basemap data to be located on the device. This includes in
 ---  
 |  Initial screen                                             |  List                                         |
 |:-----------------------------------------------------------:|:-----------------------------------------------------------:|
-|![initial](https://cloud.githubusercontent.com/assets/12448081/16972352/8cc3681e-4ddf-11e6-864e-aa2726e0631e.png)|![list](https://cloud.githubusercontent.com/assets/12448081/16972486/c55893f6-4de0-11e6-85e9-c195391ee36a.png)|      
+|![initial](https://cloud.githubusercontent.com/assets/12448081/16972352/8cc3681e-4ddf-11e6-864e-aa2726e0631e.png)|![list](https://cloud.githubusercontent.com/assets/12448081/17008290/b5ffa178-4ea4-11e6-8913-1fa3cd3711d1.png)|      
 
 |  Geocode                                                    |  Reverse Geocode
 |:-----------------------------------------------------------:|:-----------------------------------------------------------:|
