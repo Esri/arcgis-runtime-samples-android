@@ -2,17 +2,16 @@ package com.esri.arcgisruntime.sample.show_initial_map_location;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ToggleButton;
+
+import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Map;
 import com.esri.arcgisruntime.mapping.view.LocationDisplay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     mMapView = (MapView) findViewById(R.id.mapView);
 
     // create a map with the BasemapType topographic
-    Map mMap = new Map(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16);
+    ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16);
 
     // set the map to be displayed in this view
     mMapView.setMap(mMap);
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     mLocationDisplay.startAsync();
 
-    mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.DEFAULT);
+    mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.OFF);
 
   }
   private void setUpButtons(){
@@ -168,14 +167,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
   @Override public void onClick(View v) {
     switch (v.getId()){
       case R.id.btnCompass:
-        mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.COMPASS);
+        mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.COMPASS_NAVIGATION);
         mCompassBtn.setChecked(true);
         mDefaultBtn.setChecked(false);
         mNavBtn.setChecked(false);
         break;
 
       case R.id.btnDefault:
-        mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.DEFAULT);
+        mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER);
         mDefaultBtn.setChecked(true);
         mCompassBtn.setChecked(false);
         mNavBtn.setChecked(false);
