@@ -4,7 +4,7 @@
     <string name="location_not_foud">We are sorry, we couldn\'t find a location with the name - </string>
     <!-- San Francisco tpk and locator paths -->
     <string name="sandiego_tpk">/ArcGIS/samples/OfflineGeocoding/streetmap_SD.tpk</string>
-    <string name="sandiego_loc">/ArcGIS/samples/OfflineGeocoding/SanDiego_StreetAddress.loc</string>
+    <string name="sandiego_loc">/ArcGIS/samples/OfflineGeocoding/san-diego-locator.loc</string>
     <string name="storage_permission_denied">Storage permission denied</string>
 
     <string name="search_hint">Enter address</string>
