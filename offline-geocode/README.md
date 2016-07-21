@@ -4,19 +4,19 @@ This sample demonstrates how you can geocode addresses to locations and reverse 
 # How to use the sample
 The sample depends on basemap data to be located on the device. This includes installing a local tile map cache (tpk) to device as described below:
 
- * Download San Diego [tpk and locator](http://www.arcgis.com/home/item.html?id=bd441813cd2f4c8891aee671a65feb54) data from ArcGIS.
+ * Download San Diego [tpk](https://github.com/manishk3189/arcgis-runtime-samples-android/tree/Offline-Geocode-ActionBar-Search/offline-geocode/streetmap_SD%20tpk) and [locator](http://www.arcgis.com/home/item.html?id=bd441813cd2f4c8891aee671a65feb54) data from ArcGIS.
  * Create the the sample data folder at the root folder on your device, /{device-externalstoragepath}/ArcGIS/samples/Offlinegeocode.
  * Push the downloaded data contents from step 1 to your device:
-  * /{device-externalstoragepath}/ArcGIS/samples/Offlinegeocode/SanDiego.tpk
-  * /{device-externalstoragepath}/ArcGIS/samples/Offlinegeocode/Geocoding/SanDiego_StreetAddress.loc
-  * /{device-externalstoragepath}/ArcGIS/samples/Offlinegeocode/Geocoding/SanDiego_StreetAddress.locb
-  * /{device-externalstoragepath}/ArcGIS/samples/Offlinegeocode/Geocoding/SanDiego_StreetAddress.lox
+  * /{device-externalstoragepath}/ArcGIS/samples/OfflineGeocoding/streetmap_SD.tpk
+  * /{device-externalstoragepath}/ArcGIS/samples/OfflineGeocoding/SanDiego_StreetAddress.loc
+  * /{device-externalstoragepath}/ArcGIS/samples/OfflineGeocoding/SanDiego_StreetAddress.locb
+  * /{device-externalstoragepath}/ArcGIS/samples/OfflineGeocoding/SanDiego_StreetAddress.lox
 
   
 ---  
 |  Initial screen                                             |  List                                         |
 |:-----------------------------------------------------------:|:-----------------------------------------------------------:|
-|![initial](https://cloud.githubusercontent.com/assets/12448081/16972352/8cc3681e-4ddf-11e6-864e-aa2726e0631e.png)|![list](https://cloud.githubusercontent.com/assets/12448081/16972486/c55893f6-4de0-11e6-85e9-c195391ee36a.png)|      
+|![initial](https://cloud.githubusercontent.com/assets/12448081/16972352/8cc3681e-4ddf-11e6-864e-aa2726e0631e.png)|![list](https://cloud.githubusercontent.com/assets/12448081/17008290/b5ffa178-4ea4-11e6-8913-1fa3cd3711d1.png)|      
 
 |  Geocode                                                    |  Reverse Geocode
 |:-----------------------------------------------------------:|:-----------------------------------------------------------:|
