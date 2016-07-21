@@ -21,7 +21,11 @@
         android:layout_width="32dp"
         android:layout_height="match_parent"
         android:id="@+id/spinner"
-        android:layout_weight="0.09"
-        style="@style/Widget.AppCompat.ListView.DropDown" />
+        style="@style/Widget.AppCompat.ListView.DropDown"
+        android:layout_gravity="bottom"
+        android:spinnerMode="dropdown"
+        android:paddingTop="20dp"
+        android:overlapAnchor="false"
+        android:theme="@style/Animation.AppCompat.DropDownUp" />
 
 </LinearLayout>
