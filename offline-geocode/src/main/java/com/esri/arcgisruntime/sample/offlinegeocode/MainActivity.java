@@ -70,13 +70,13 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "OfflineActivity";
     private final String extern = Environment.getExternalStorageDirectory().getPath();
-    int requestCode = 2;
-    String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    final int requestCode = 2;
+    final String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private GraphicsOverlay graphicsOverlay;
     private GeocodeParameters mGeocodeParameters;
     private PictureMarkerSymbol mPinSourceSymbol;
-    private ArcGISMap mMap;
-    private ArcGISTiledLayer tiledLayer;
+    ArcGISMap mMap;
+    ArcGISTiledLayer tiledLayer;
     private MapView mMapView;
     private LocatorTask mLocatorTask;
     private ReverseGeocodeParameters mReverseGeocodeParameters;
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     private String mGraphicPointAddress;
     private Point mGraphicPoint;
     private GeocodeResult mGeocodedLocation;
-    private Spinner mSpinner;
+    Spinner mSpinner;
     private boolean isPinSelected;
     private TextView mCalloutContent;
 
@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Hides soft keyboard
      */
-    protected void hideKeyboard() {
+    private void hideKeyboard() {
         mSearchview.clearFocus();
         InputMethodManager inputManager = (InputMethodManager) getApplicationContext()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -350,11 +350,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class DragTouchListemer extends DefaultMapViewOnTouchListener {
+    private class DragTouchListener extends DefaultMapViewOnTouchListener {
 
         float dX, dY;
 
-        public DragTouchListemer(Context context, MapView mapView) {
+        public DragTouchListener(Context context, MapView mapView) {
             super(context, mapView);
         }
 
@@ -477,8 +477,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         // get the list of graphics returned by identify
                         List<Graphic> graphic = identifyGraphic.get();
-                        // get size of list in results
-                        int identifyResultSize = graphic.size();
+                        // if identified graphic is not empty, start DragTouchListener
                         if (!graphic.isEmpty()) {
 
                             if (!isPinSelected) {
@@ -487,7 +486,7 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),
                                         getString(R.string.reverse_geocode_message),
                                         Toast.LENGTH_SHORT).show();
-                                mMapView.setOnTouchListener(new DragTouchListemer(getApplicationContext(), mMapView));
+                                mMapView.setOnTouchListener(new DragTouchListener(getApplicationContext(), mMapView));
                             }
 
                             mCalloutContent.setText(mGraphicPointAddress);
