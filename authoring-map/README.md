@@ -30,7 +30,7 @@ The app uses OAuth2 protocol to authenticate the named users.  In order to do th
 
 1. `OAuthLoginManager oAuthLoginManager = new OAuthLoginManager(context, portalUrl, clientId, redirectUri, expiration);`
 2. `oAuthLoginManager.launchOAuthBrowserPage();`
-3. Receive the resulting Intent in the activity declared in the manifest
+3. Receive the resulting `Intent` in the activity declared in the manifest
 4. `OAuthTokenCredential credential = oAuthLoginManager.fetchOAuthTokenCredential(intent)`
 
 
@@ -55,6 +55,25 @@ You can see the developer pattern in this app in the **MainActivity.java** class
     }
 ```
 
+
+The resulting `Intent` is handled in the **AndroidManifest.xml** file with the following::
+
+```xml
+        <activity android:name="com.esri.arcgisruntime.sample.authoringamap.MapSaveActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.PICK" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="auth"
+                    android:scheme="my-ags-app" />
+            </intent-filter>
+        </activity>
+
+```
 
 Then we fetch the credentials in the **MapSaveActivity.java** class
 
