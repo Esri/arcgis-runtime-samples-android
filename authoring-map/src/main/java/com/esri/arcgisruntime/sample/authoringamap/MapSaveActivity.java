@@ -95,7 +95,6 @@ public class MapSaveActivity extends AppCompatActivity {
                     portal.addDoneLoadingListener(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("Portal", portal.getLoadStatus().name());
                             // if portal is LOADED, save the map to the portal
                             if (portal.getLoadStatus() == LoadStatus.LOADED) {
                                 // Save the map to an authenticated Portal, with specified title, tags, description, and thumbnail.
