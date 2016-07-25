@@ -107,39 +107,38 @@ Open the drawer by tapping on the Drawer Toggle or sliding right from the left o
 * Portal
 
 ## How it works
-The sample uses a pre-populated list of basemaps and layers to create a ```Map``` and add operational layers on it. The authentication is handled by the ```OAuthLoginManager``` and upon successful response the credentials are extracted from the intent using ```fetchOAuthTokenCredentialAsync```. The fetched credentials are used in the ```Portal``` to save the map using ```saveAsAsync``` method
+The sample uses a pre-populated list of basemaps and layers to create a ```Map``` and add operational layers on it. The authentication is handled by the ```OAuthLoginManager``` and upon successful response the credentials are extracted from the intent using ```fetchOAuthTokenCredentialAsync```. The fetched credentials are used in the ```Portal``` to save the map using ```saveAsAsync``` method.  The following pattern saves the map in the **MapSaveActivity.java**:
 
 ```java
-            String[] portalSettings = getResources().getStringArray(R.array.portal);
-            // create a Portal using the portal url from the array
-            portal = new Portal(portalSettings[1], true);
-            // set the credentials from the browser
-            portal.setCredential(oauthCred);
+String[] portalSettings = getResources().getStringArray(R.array.portal);
+// create a Portal using the portal url from the array
+portal = new Portal(portalSettings[1], true);
+// set the credentials from the browser
+portal.setCredential(oauthCred);
 
-            portal.addDoneLoadingListener(new Runnable() {
+portal.addDoneLoadingListener(new Runnable() {
+    @Override
+    public void run() {
+        // if portal is LOADED, save the map to the portal
+        if (portal.getLoadStatus() == LoadStatus.LOADED) {
+            // Save the map to an authenticated Portal, with specified title, tags, description, and thumbnail.
+            // Passing 'null' as portal folder parameter saves this to users root folder.
+            final ListenableFuture<PortalItem> saveAsFuture = MainActivity.mMap.saveAsAsync(portal, null, mTitle, mTagsList, mDescription, null);
+            saveAsFuture.addDoneListener(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d("Portal", portal.getLoadStatus().name());
-                    // if portal is LOADED, save the map to the portal
-                    if (portal.getLoadStatus() == LoadStatus.LOADED) {
-                        // Save the map to an authenticated Portal, with specified title, tags, description, and thumbnail.
-                        // Passing 'null' as portal folder parameter saves this to users root folder.
-                        final ListenableFuture<PortalItem> saveAsFuture = MainActivity.mMap.saveAsAsync(portal, null, mTitle, mTagsList, mDescription, null);
-                        saveAsFuture.addDoneListener(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Check the result of the save operation.
-                                try {
-                                    PortalItem newMapPortalItem = saveAsFuture.get();
-                                    Toast.makeText(getApplicationContext(), getString(R.string.map_successful), Toast.LENGTH_SHORT).show();
-                                } catch (InterruptedException | ExecutionException e) {
-                                    // If saving failed, deal with failure depending on the cause...
-                                    Log.e("Exception", e.toString());
-                                }
-                            }
-                        });
+                    // Check the result of the save operation.
+                    try {
+                        PortalItem newMapPortalItem = saveAsFuture.get();
+                        Toast.makeText(getApplicationContext(), getString(R.string.map_successful), Toast.LENGTH_SHORT).show();
+                    } catch (InterruptedException | ExecutionException e) {
+                        // If saving failed, deal with failure depending on the cause...
+                        Log.e("Exception", e.toString());
                     }
                 }
             });
-            portal.loadAsync();
+        }
+    }
+});
+portal.loadAsync();
 ```
