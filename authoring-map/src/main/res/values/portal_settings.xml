@@ -4,7 +4,7 @@
     <string-array name="portal">
         <item name="title">Android Sample</item>
         <!-- your account URL path-->
-        <item name="url">https://your-team.maps.arcgis.com/</item>
+        <item name="url">https://www.arcgis.com/</item>
         <!-- Client ID of your registered application-->
         <item name="client_id">your-clientID</item>
         <!-- Redirect URI of the application from Authentication tab-->
