@@ -3,25 +3,30 @@ This sample demonstrates how to author a map and save it to your portal. This sa
 
 ![author-map](author-map.png)
 
+## How to use the sample
+Open the [navigation drawer](https://developer.android.com/training/implementing-navigation/nav-drawer.html) by tapping on the Drawer Toggle or sliding right from the left side of the screen. Choose basemap and operational layers to author a map. Tap on save menu option to save the map. User will be provided with an authentication page to login.  Once logged in you provide a title, tags and description (optional) for the map.
+
+## Features
+* ArcGISMap
+* OAuthLoginManager
+* Portal
+* PortalSettings
+* PortalItem
+
 ## Authentication
 This sample uses the [named user login](https://developers.arcgis.com/authentication/#named-user-login) authentication pattern.  As a developer, you will need the following to make use of this pattern:  
 
-### User account **Portal URL**
-Your Portal Organizational URL can be found in your ArcGIS Online profile.  Login to [ArcGIS Developers site](http://developers.arcgis.com).  Click on your account name and open **Password and Profile** in a new tab as this will take you to your ArcGIS Online account.  In your ArcGIS Online account page click on your account name and open your profile.  Your organizational URL is provided in your profile under **Organization URL** 
-
 ### Your apps **Client ID**
-Navigate back to your [ArcGIS Developers site](http://developers.arcgis.com) account and [Register](https://developers.arcgis.com/applications/#/new/) your app.  Once registered, select the **Authentication** tab taking note of your **Client ID**.
+Login to your [ArcGIS Developers site](http://developers.arcgis.com) account and [Register](https://developers.arcgis.com/applications/#/new/) your app.  Once registered, select the **Authentication** tab taking note of your **Client ID**.
 
 ### A custom **Redirect URI**
 
 A custom Redirect URI has been set up for this app, while still under the **Authentication** tab in your [ArcGIS Developers site](http://developers.arcgis.com) account, navigate down the page to the **Redirect URIs** section and add `my-ags-app://auth` redirect uri. 
 
 ### Edit **portal_settings.xml** source file
-Open the **portal_settings.xml** resource file found in **..\src\res\values\** directory.  Edit the following with the values you obtained above:  
+Open the **portal_settings.xml** resource file found in **..\src\res\values\** directory.  Edit the following with the `CLIENT_ID` value you obtained above:  
 
 ```xml
-<!-- your account URL path--> 
-<item name="url">https://your-team.maps.arcgis.com/</item> 
 <!-- Client ID of your registered application --> 
 <item name="client_id">your-clientID</item> 
 ```
@@ -99,14 +104,7 @@ fetchCredentials(intent);
 
 ```
 
-## How to use the sample
-Open the drawer by tapping on the Drawer Toggle or sliding right from the left of the screen. Choose basemap and operational layers to author a map. Tap on save menu option to save the map. User will be provided with an authentication page to login.  Once logged in you provide a title, tags and description (optional) for the map.
-
-## Features
-* OAuthLoginManager
-* Portal
-
-## How it works
+## Save the map to your Organization
 The sample uses a pre-populated list of basemaps and layers to create a ```Map``` and add operational layers on it. The authentication is handled by the ```OAuthLoginManager``` and upon successful response the credentials are extracted from the intent using ```fetchOAuthTokenCredentialAsync```. The fetched credentials are used in the ```Portal``` to save the map using ```saveAsAsync``` method.  The following pattern saves the map in the **MapSaveActivity.java**:
 
 ```java
