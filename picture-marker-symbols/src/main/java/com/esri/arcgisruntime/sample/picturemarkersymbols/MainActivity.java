@@ -18,7 +18,6 @@ package com.esri.arcgisruntime.sample.picturemarkersymbols;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -36,18 +35,16 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
-import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
+
 public class MainActivity extends AppCompatActivity {
 
   MapView mMapView;
-
   String mArcGISTempFolderPath;
-
   String mPinBlankOrangeFilePath;
 
   @Override
@@ -108,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
     pinStarBlueSymbol.setHeight(40);
     pinStarBlueSymbol.setWidth(40);
     //Optionally set the offset, to align the base of the symbol aligns with the point geometry
-    pinStarBlueSymbol.setOffsetY(11); //The image used for the symbol has a transparent buffer around it, so the offset is not simply height/2
+    pinStarBlueSymbol.setOffsetY(
+        11); //The image used for the symbol has a transparent buffer around it, so the offset is not simply height/2
     pinStarBlueSymbol.loadAsync();
     //[DocRef: END]
     pinStarBlueSymbol.addDoneLoadingListener(new Runnable() {
