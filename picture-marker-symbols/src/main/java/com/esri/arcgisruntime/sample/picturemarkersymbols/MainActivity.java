@@ -80,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
     //When using a URL, you need to call load to fetch the remote resource
     final PictureMarkerSymbol campsiteSymbol = new PictureMarkerSymbol(
         "http://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0/images/e82f744ebb069bb35b234b3fea46deae");
-    //Optionally set the size, if not set the image will be auto sized based on its size in pixels, its appearance would
-    //then differ across devices with different resolutions.
+    //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
+    //its appearance would then differ across devices with different resolutions.
     campsiteSymbol.setHeight(18);
     campsiteSymbol.setWidth(18);
     campsiteSymbol.loadAsync();
@@ -100,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
     //Create a picture marker symbol from an app resource
     BitmapDrawable pinStarBlueDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin_star_blue);
     final PictureMarkerSymbol pinStarBlueSymbol = new PictureMarkerSymbol(pinStarBlueDrawable);
-    //Optionally set the size, if not set the image will be auto sized based on its size in pixels, its appearance would
-    //then differ across devices with different resolutions.
+    //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
+    //its appearance would then differ across devices with different resolutions.
     pinStarBlueSymbol.setHeight(40);
     pinStarBlueSymbol.setWidth(40);
     //Optionally set the offset, to align the base of the symbol aligns with the point geometry
@@ -126,8 +126,8 @@ public class MainActivity extends AppCompatActivity {
       //Create a picture marker symbol from a file on disk
       BitmapDrawable pinBlankOrangeDrawable = (BitmapDrawable) Drawable.createFromPath(mPinBlankOrangeFilePath);
       final PictureMarkerSymbol pinBlankOrangeSymbol = new PictureMarkerSymbol(pinBlankOrangeDrawable);
-      //Optionally set the size, if not set the image will be auto sized based on its size in pixels, its appearance would
-      //then differ across devices with different resolutions.
+      //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
+      //its appearance would then differ across devices with different resolutions.
       pinBlankOrangeSymbol.setHeight(20);
       pinBlankOrangeSymbol.setWidth(20);
       //Optionally set the offset, to align the base of the symbol aligns with the point geometry
