@@ -292,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        mMapView.setViewpointWithDurationAsync(viewpoint, 7);
+        mMapView.setViewpointAsync(viewpoint, 7);
 
     }
 

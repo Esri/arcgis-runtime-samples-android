@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.sample.findroute;
 
+import java.util.List;
 import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -54,8 +55,6 @@ import com.esri.arcgisruntime.tasks.route.RouteParameters;
 import com.esri.arcgisruntime.tasks.route.RouteResult;
 import com.esri.arcgisruntime.tasks.route.RouteTask;
 import com.esri.arcgisruntime.tasks.route.Stop;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -184,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                                         DirectionManeuver dm = directions.get(position);
                                         Geometry gm = dm.getGeometry();
                                         Viewpoint vp = new Viewpoint(gm.getExtent(),20);
-                                        mMapView.setViewpointWithDurationAsync(vp,3);
+                                        mMapView.setViewpointAsync(vp,3);
                                         SimpleLineSymbol selectedRouteSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.GREEN, 5);
                                         Graphic selectedRouteGraphic = new Graphic(directions.get(position).getGeometry(), selectedRouteSymbol);
                                         mGraphicsOverlay.getGraphics().add(selectedRouteGraphic);

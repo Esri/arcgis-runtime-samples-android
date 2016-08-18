@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         mMapView.setMap(map);
 
         // zoom to a view point of the USA
-        mMapView.setViewpointCenterWithScaleAsync(new Point(-13630845, 4544861, SpatialReferences.getWebMercator()), 600000);
+        mMapView.setViewpointCenterAsync(new Point(-13630845, 4544861, SpatialReferences.getWebMercator()), 600000);
 
     }
 

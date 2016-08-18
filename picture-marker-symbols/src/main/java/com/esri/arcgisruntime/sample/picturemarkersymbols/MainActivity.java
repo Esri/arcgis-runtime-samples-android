@@ -16,6 +16,9 @@
 
 package com.esri.arcgisruntime.sample.picturemarkersymbols;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -35,10 +38,6 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     Envelope envelope = new Envelope(new Point(-228835, 6550763, SpatialReferences.getWebMercator()),
         new Point(-223560, 6552021, SpatialReferences.getWebMercator()));
     //set viewpoint on mapview
-    mMapView.setViewpointGeometryWithPaddingAsync(envelope, 100.0);
+    mMapView.setViewpointGeometryAsync(envelope, 100.0);
 
     // create a new graphics overlay and add it to the mapview
     final GraphicsOverlay graphicOverlay = new GraphicsOverlay();

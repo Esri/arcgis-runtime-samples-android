@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         //set initial envelope on the map view sith some padding so all points will be visible
         //This envelope is using the WGS84 points above, but is reprojected by the mapview into the maps spatial reference, so its works fine
-        mMapView.setViewpointGeometryWithPaddingAsync(initialEnvelope, 100);
+        mMapView.setViewpointGeometryAsync(initialEnvelope, 100);
 
         // create a new graphics overlay and add it to the mapview
         GraphicsOverlay graphicOverlay = new GraphicsOverlay();
