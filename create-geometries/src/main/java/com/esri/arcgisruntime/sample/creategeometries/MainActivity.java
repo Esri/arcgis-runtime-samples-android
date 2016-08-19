@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     overlay.getGraphics().add(new Graphic(createPoint(), markerSymbol));
 
     // use the envelope to set the map viewpoint
-    mMapView.setViewpointGeometryWithPaddingAsync(createEnvelope(), getResources().getDimension(R.dimen.viewpoint_padding));
+    mMapView.setViewpointGeometryAsync(createEnvelope(), getResources().getDimension(R.dimen.viewpoint_padding));
 
   }
 

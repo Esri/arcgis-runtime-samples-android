@@ -16,6 +16,10 @@
 
 package com.esri.arcgisruntime.sample.changeviewpoint;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -34,11 +38,6 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         Point startPoint = new Point(28677947.756181,22987445.6186465, spatialReference);
 
         //set viewpoint of map view to starting point and scaled
-        mMapView.setViewpointCenterWithScaleAsync(startPoint, SCALE);
+        mMapView.setViewpointCenterAsync(startPoint, SCALE);
 
         // inflate the Buttons from the layout
         mGeometryButton = (Button) findViewById(R.id.geometryButton);
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 // create the viewpoint with the London point and scale
                 Viewpoint viewpoint = new Viewpoint(londonPoint, scale);
                 // set the map views's viewpoint to London with a ten second duration
-                mMapView.setViewpointWithDurationAsync(viewpoint, mDuration);
+                mMapView.setViewpointAsync(viewpoint, mDuration);
 
                 mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
                 mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
@@ -149,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 // create the Waterloo location point
                 Point waterlooPoint = new Point(28681235.9843606, 22990575.7224154, spatialReference);
                 // set the map views's viewpoint centered on Waterloo and scaled
-                mMapView.setViewpointCenterWithScaleAsync(waterlooPoint, SCALE);
+                mMapView.setViewpointCenterAsync(waterlooPoint, SCALE);
 
                 mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
                 mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));

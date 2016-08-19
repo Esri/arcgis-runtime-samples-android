@@ -16,6 +16,9 @@
 
 package com.esri.arcgisruntime.sample.offlinegeocode;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -61,10 +64,6 @@ import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeResult;
 import com.esri.arcgisruntime.tasks.geocode.LocatorTask;
 import com.esri.arcgisruntime.tasks.geocode.ReverseGeocodeParameters;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -205,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 Point p = new Point(-117.162040, 32.718260, SpatialReference.create(4326));
                 Viewpoint vp = new Viewpoint(p, 10000);
-                mMapView.setViewpointWithDurationAsync(vp, 3);
+                mMapView.setViewpointAsync(vp, 3);
             }
         });
 
@@ -325,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
         graphicsOverlay.getGraphics().add(resultLocGraphic);
 
         // Zoom map to geocode result location
-        mMapView.setViewpointWithDurationAsync(new Viewpoint(resultPoint, 8000), 3);
+        mMapView.setViewpointAsync(new Viewpoint(resultPoint, 8000), 3);
 
         mGraphicPoint = resultPoint;
         mGraphicPointAddress = address;
