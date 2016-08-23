@@ -16,6 +16,9 @@
 
 package com.esri.arcgisruntime.sample.managebookmarks;
 
+import java.util.ArrayList;
+import java.util.List;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,6 +31,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -35,9 +39,6 @@ import com.esri.arcgisruntime.mapping.Bookmark;
 import com.esri.arcgisruntime.mapping.BookmarkList;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         addBookmarkFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog();
+                showDialog(v.getContext());
             }
         });
 
@@ -154,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * shows dialog that prompts user to add a name for the new Bookmark
      */
-    private void showDialog() {
+    private void showDialog(Context context) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Provide the bookmark name");
@@ -168,7 +169,16 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                addBookmark(input.getText().toString());
+                // get the input from EditText
+                String bookmarkName = input.getText().toString();
+                // check if EditText is not empty & bookmark name has not been used
+                if(bookmarkName.length() > 0 && !mBookmarksSpinnerList.contains(bookmarkName)){
+                    addBookmark(bookmarkName);
+                }else{
+                    // display toast explaining bookmark not set
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.bookmark_not_saved), Toast.LENGTH_LONG).show();
+                    dialog.cancel();
+                }
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
