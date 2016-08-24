@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.authoringamap;
+package com.esri.arcgisruntime.sample.createsavemap;
 
 import android.app.ProgressDialog;
 import android.content.Intent;

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Authoring a map</string>
+    <string name="app_name">Create Save Map</string>
     <string name="basemap_selection">Choose a basemap</string>
     <string name="layer_selection">Add operational layers</string>
     <string name="title">Title</string>
@@ -10,7 +10,7 @@
     <string name="world_elevation">http://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer</string>
     <string name="world_census">http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
     <!-- App messages -->
-    <string name="author_map_message">Authoring your map</string>
+    <string name="author_map_message">Creating your map</string>
     <string name="wait">Please wait&#8230;</string>
     <string name="map_successful">Map created successfully</string>
     <string name="title_error">Please enter a Title for your map</string>

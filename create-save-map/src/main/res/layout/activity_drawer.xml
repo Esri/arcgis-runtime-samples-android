@@ -19,7 +19,8 @@
             android:layout_height="fill_parent"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"></com.esri.arcgisruntime.mapping.view.MapView>
+            android:layout_alignParentStart="true">
+        </com.esri.arcgisruntime.mapping.view.MapView>
     </RelativeLayout>
     <!-- The navigation drawer -->
     <LinearLayout
