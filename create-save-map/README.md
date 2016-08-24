@@ -1,10 +1,10 @@
-# Authoring a map
-This sample demonstrates how to author a map and save it to your portal. This sample uses the [named user login](https://developers.arcgis.com/authentication/#named-user-login) authentication pattern.  Before a user can save a map they have to login to their [ArcGIS Online](https://www.arcgis.com/) account. Follow the [authentication](#authentication) steps below before running the app.  
+# Create and Save a Map
+This sample demonstrates how to create a map and save it to your portal. This sample uses the [named user login](https://developers.arcgis.com/authentication/#named-user-login) authentication pattern.  Before a user can save a map they have to login to their [ArcGIS Online](https://www.arcgis.com/) account. Follow the [authentication](#authentication) steps below before running the app.  
 
-![author-map](author-map.png)
+![author-map](create-save-map.png)
 
 ## How to use the sample
-Open the [navigation drawer](https://developer.android.com/training/implementing-navigation/nav-drawer.html) by tapping on the Drawer Toggle or sliding right from the left side of the screen. Choose basemap and operational layers to author a map. Tap on save menu option to save the map. User will be provided with an authentication page to login.  Once logged in you provide a title, tags and description (optional) for the map.
+Open the [navigation drawer](https://developer.android.com/training/implementing-navigation/nav-drawer.html) by tapping on the Drawer Toggle or sliding right from the left side of the screen. Choose basemap and operational layers to create a map. Tap on save menu option to save the map. User will be provided with an authentication page to login.  Once logged in you provide a title, tags and description (optional) for the map.
 
 ## Features
 * ArcGISMap
@@ -64,7 +64,7 @@ You can see the developer pattern in this app in the **MainActivity.java** class
 The resulting `Intent` is handled in the **AndroidManifest.xml** file with the following::
 
 ```xml
-        <activity android:name="com.esri.arcgisruntime.sample.authoringamap.MapSaveActivity">
+        <activity android:name="com.esri.arcgisruntime.sample.createsavemap.MapSaveActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.PICK" />
