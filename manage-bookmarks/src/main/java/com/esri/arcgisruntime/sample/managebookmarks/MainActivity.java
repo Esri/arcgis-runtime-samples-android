@@ -118,24 +118,24 @@ public class MainActivity extends AppCompatActivity {
 
         //Mysterious Desert Pattern
         viewpoint = new Viewpoint(27.3805833, 33.6321389, 6e3);
-        mBookmark = new Bookmark("Mysterious Desert Pattern", viewpoint);
+        mBookmark = new Bookmark(getResources().getString(R.string.desert_pattern), viewpoint);
         mBookmarks.add(mBookmark);
         // Set the viewpoint to the default bookmark selected in the spinner
         mMapView.setViewpointAsync(viewpoint);
 
         //Strange Symbol
         viewpoint = new Viewpoint(37.401573, -116.867808, 6e3);
-        mBookmark = new Bookmark("Strange Symbol", viewpoint);
+        mBookmark = new Bookmark(getResources().getString(R.string.strange_symbol), viewpoint);
         mBookmarks.add(mBookmark);
 
         //Guitar-Shaped Trees
         viewpoint = new Viewpoint(-33.867886, -63.985, 4e4);
-        mBookmark = new Bookmark("Guitar-Shaped Trees", viewpoint);
+        mBookmark = new Bookmark(getResources().getString(R.string.guitar_trees), viewpoint);
         mBookmarks.add(mBookmark);
 
         //Grand Prismatic Spring
         viewpoint = new Viewpoint(44.525049, -110.83819, 6e3);
-        mBookmark = new Bookmark("Grand Prismatic Spring", viewpoint);
+        mBookmark = new Bookmark(getResources().getString(R.string.prismatic_spring), viewpoint);
         mBookmarks.add(mBookmark);
 
     }
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
     private void showDialog(Context context) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Provide the bookmark name");
+        builder.setTitle(getResources().getString(R.string.alert_dialog_title));
 
         // Set up the input
         final EditText input = new EditText(this);
