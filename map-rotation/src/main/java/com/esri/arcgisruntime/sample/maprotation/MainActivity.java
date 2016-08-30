@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         // create MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
-        // create a map with the BasemapType topographic
+        // create a map with the Basemap.Type topographic
         ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 10);
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
@@ -32,13 +32,13 @@ public class MainActivity extends AppCompatActivity {
         mRotationSeekBar = (SeekBar)findViewById(R.id.rotationSeekBar);
         mRotationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+            public void onProgressChanged(SeekBar seekBar, int angle, boolean b) {
                 // convert progress to double
-                double angle = progress;
-                // set the text to angle value
-                mRotationValueText.setText(String.valueOf(progress));
-                // rotate MapView to SeekBar value
-                mMapView.setViewpointRotationAsync(progress);
+                double dAngle = angle;
+                // set the text to SeekBar value
+                mRotationValueText.setText(String.valueOf(angle));
+                // rotate MapView to double angle value
+                mMapView.setViewpointRotationAsync(dAngle);
             }
 
             @Override
