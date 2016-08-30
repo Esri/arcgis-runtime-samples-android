@@ -12,7 +12,6 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 public class MainActivity extends AppCompatActivity {
 
     private MapView mMapView;
-    private SeekBar mRotationSeekBar;
     private TextView mRotationValueText;
 
     @Override
@@ -29,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         // create TextView to show angle of rotation
         mRotationValueText = (TextView)findViewById(R.id.rotationValueText);
         // create SeekBar
-        mRotationSeekBar = (SeekBar)findViewById(R.id.rotationSeekBar);
+        SeekBar mRotationSeekBar = (SeekBar) findViewById(R.id.rotationSeekBar);
         mRotationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int angle, boolean b) {
