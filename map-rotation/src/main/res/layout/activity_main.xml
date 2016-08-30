@@ -22,6 +22,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="40dp"
+        android:layout_toLeftOf="@+id/rotationValueText"
         android:max="360"/>
 
     <TextView
