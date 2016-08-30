@@ -19,6 +19,7 @@ Create a `SeekBar` in the layout setting the max value to `360`.
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
     android:layout_marginBottom="40dp"
+    android:layout_toLeftOf="@+id/rotationValueText"
     android:max="360"/>
 ```
 
