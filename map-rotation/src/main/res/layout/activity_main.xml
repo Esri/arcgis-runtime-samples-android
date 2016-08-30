@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="400dp"
+        android:layout_marginBottom="40dp"
         android:max="360"/>
 
     <TextView
