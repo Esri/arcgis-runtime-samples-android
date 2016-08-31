@@ -32,5 +32,6 @@
         android:layout_alignTop="@+id/rotationSeekBar"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:text="0"/>
 </RelativeLayout>
