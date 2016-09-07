@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">FeatureLayer Geodatabase</string>
+    <!-- data paths -->
+    <string name="data_dir">ArcGIS/samples/FLGdb</string>
+    <!-- vector tpk file name -->
+    <string name="vtpk_file">LosAngeles.vtpk</string>
+    <!-- geodatabase tpk file name -->
+    <string name="geodb_file">LA_Trails.geodatabase</string>
+</resources>
