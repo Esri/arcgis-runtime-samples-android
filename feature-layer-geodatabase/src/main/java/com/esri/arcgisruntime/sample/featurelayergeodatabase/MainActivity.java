@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private ArcGISMap mArcGISMap;
 
     // define permission to request
-    String[] reqPermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private final String[] reqPermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
