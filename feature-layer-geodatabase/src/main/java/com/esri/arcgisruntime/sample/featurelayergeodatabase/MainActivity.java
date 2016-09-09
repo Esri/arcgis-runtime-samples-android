@@ -11,7 +11,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.esri.arcgisruntime.datasource.arcgis.Geodatabase;
+import com.esri.arcgisruntime.datasource.arcgis.GeodatabaseFeatureTable;
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer;
+import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
@@ -25,11 +28,13 @@ public class MainActivity extends AppCompatActivity {
     private static String vtpkFilename;
     private static String geodbFilename;
     private static String mVtpk;
+    private static String mGeoDb;
 
     private MapView mMapView;
-    private ArcGISVectorTiledLayer vectorTiledLayer;
-    private Basemap basemap;
-    private ArcGISMap map;
+    private ArcGISVectorTiledLayer mVectorTiledLayer;
+    private Geodatabase mGeodatabase;
+    private Basemap mBasemap;
+    private ArcGISMap mArcGISMap;
 
     // define permission to request
     String[] reqPermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -48,14 +53,14 @@ public class MainActivity extends AppCompatActivity {
 
         // full path to data
         mVtpk = createvtpkFilePath();
-//        String mGeoDb = demoDataFile + File.separator + offlineDataSDCardDirName + File.separator + geodbFilename;
+        mGeoDb = createGeoDbFilePath();
 
         // create MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
 
         // For API level 23+ request permission at runtime
         if(ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED){
-            loadVectorTile(mVtpk);
+            addData(mVtpk, mGeoDb);
         }else{
             // request permission
             ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
@@ -68,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            loadVectorTile(mVtpk);
+            addData(mVtpk, mGeoDb);
         }else{
             // report to user that permission was denied
             Toast.makeText(MainActivity.this, getResources().getString(R.string.location_permission_denied),
@@ -84,21 +89,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Create the mobile geodatabase file location and name structure
+     */
+    private static String createGeoDbFilePath(){
+        return extStorDir.getAbsolutePath() + File.separator + extSDCardDirName + File.separator + geodbFilename;
+    }
+
+    /**
      * Load a vector tile file into a MapView
      *
-     * @param mVtpkFile Full path to mVtpk file
+     * @param vtpkFile Full path to vector tile layer package file
+     * @param geoDbFile Full path to geodatabase file
      */
-    private void loadVectorTile(String mVtpkFile){
+    private void addData(String vtpkFile, final String geoDbFile){
         // create a new ArcGISVectorTiledLayer from local path
-        vectorTiledLayer = new ArcGISVectorTiledLayer(mVtpkFile);
+        mVectorTiledLayer = new ArcGISVectorTiledLayer(vtpkFile);
         // create a Basemap instance for use in creating an ArcGISMap instance
-        basemap = new Basemap(vectorTiledLayer);
-        map = new ArcGISMap(basemap);
-        // set the map to be displayed in this view
-        mMapView.setMap(map);
+        mBasemap = new Basemap(mVectorTiledLayer);
+        mArcGISMap = new ArcGISMap(mBasemap);
+
         mMapView.setWrapAroundMode(WrapAroundMode.ENABLE_WHEN_SUPPORTED);
         // set the initial viewpoint
-        mMapView.setViewpoint(new Viewpoint(33.902017, -118.218533, 16));
+        mMapView.setViewpoint(new Viewpoint(33.902017, -118.218533, 2));
+
+        // set the mArcGISMap to be displayed in this view
+        mMapView.setMap(mArcGISMap);
+
+        // create a new Geodatabase from local path
+        mGeodatabase = new Geodatabase(geoDbFile);
+        // load the geodatabase
+        mGeodatabase.loadAsync();
+        // add feature layer from geodatabase to the ArcGISMap
+        mGeodatabase.addDoneLoadingListener(new Runnable() {
+            @Override
+            public void run() {
+                GeodatabaseFeatureTable geoDbTable = mGeodatabase.getGeodatabaseFeatureTable("Trailheads");
+                FeatureLayer fLayer = new FeatureLayer(geoDbTable);
+                mArcGISMap.getOperationalLayers().add(fLayer);
+            }
+        });
+
     }
 
     @Override
