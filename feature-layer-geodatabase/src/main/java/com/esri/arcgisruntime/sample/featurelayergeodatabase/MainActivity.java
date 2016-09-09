@@ -59,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
         mMapView = (MapView) findViewById(R.id.mapView);
 
         // For API level 23+ request permission at runtime
-        if(ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
             addData(mVtpk, mGeoDb);
-        }else{
+        } else {
             // request permission
             ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
         }
@@ -69,12 +69,11 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Handle the permissions request response
-     *
      */
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             addData(mVtpk, mGeoDb);
-        }else{
+        } else {
             // report to user that permission was denied
             Toast.makeText(MainActivity.this, getResources().getString(R.string.location_permission_denied),
                     Toast.LENGTH_SHORT).show();
@@ -84,24 +83,24 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Create the vector tile layer file location and name structure
      */
-    private static String createvtpkFilePath(){
+    private static String createvtpkFilePath() {
         return extStorDir.getAbsolutePath() + File.separator + extSDCardDirName + File.separator + vtpkFilename;
     }
 
     /**
      * Create the mobile geodatabase file location and name structure
      */
-    private static String createGeoDbFilePath(){
+    private static String createGeoDbFilePath() {
         return extStorDir.getAbsolutePath() + File.separator + extSDCardDirName + File.separator + geodbFilename;
     }
 
     /**
      * Load a vector tile file into a MapView
      *
-     * @param vtpkFile Full path to vector tile layer package file
+     * @param vtpkFile  Full path to vector tile layer package file
      * @param geoDbFile Full path to geodatabase file
      */
-    private void addData(String vtpkFile, final String geoDbFile){
+    private void addData(String vtpkFile, final String geoDbFile) {
         // create a new ArcGISVectorTiledLayer from local path
         mVectorTiledLayer = new ArcGISVectorTiledLayer(vtpkFile);
         // create a Basemap instance for use in creating an ArcGISMap instance
@@ -132,13 +131,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         mMapView.pause();
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         mMapView.resume();
     }
