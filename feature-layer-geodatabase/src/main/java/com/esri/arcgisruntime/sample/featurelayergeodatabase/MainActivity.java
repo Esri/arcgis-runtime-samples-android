@@ -31,14 +31,11 @@ public class MainActivity extends AppCompatActivity {
     private static String mGeoDb;
 
     private MapView mMapView;
-    private ArcGISVectorTiledLayer mVectorTiledLayer;
     private Geodatabase mGeodatabase;
-    private Basemap mBasemap;
     private ArcGISMap mArcGISMap;
 
     // define permission to request
     String[] reqPermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    private int requestCode = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
             addData(mVtpk, mGeoDb);
         } else {
             // request permission
+            int requestCode = 2;
             ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
         }
     }
@@ -102,10 +100,10 @@ public class MainActivity extends AppCompatActivity {
      */
     private void addData(String vtpkFile, final String geoDbFile) {
         // create a new ArcGISVectorTiledLayer from local path
-        mVectorTiledLayer = new ArcGISVectorTiledLayer(vtpkFile);
+        ArcGISVectorTiledLayer vectorTiledLayer = new ArcGISVectorTiledLayer(vtpkFile);
         // create a Basemap instance for use in creating an ArcGISMap instance
-        mBasemap = new Basemap(mVectorTiledLayer);
-        mArcGISMap = new ArcGISMap(mBasemap);
+        Basemap basemap = new Basemap(vectorTiledLayer);
+        mArcGISMap = new ArcGISMap(basemap);
 
         mMapView.setWrapAroundMode(WrapAroundMode.ENABLE_WHEN_SUPPORTED);
         // set the initial viewpoint
