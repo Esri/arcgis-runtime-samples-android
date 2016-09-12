@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
     private MapView mMapView;
     private Geodatabase mGeodatabase;
-    private ArcGISMap mArcGISMap;
 
     // define permission to request
     private final String[] reqPermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -123,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         ArcGISVectorTiledLayer vectorTiledLayer = new ArcGISVectorTiledLayer(vtpkFile);
         // create a Basemap instance for use in creating an ArcGISMap instance
         Basemap basemap = new Basemap(vectorTiledLayer);
-        mArcGISMap = new ArcGISMap(basemap);
+        ArcGISMap mArcGISMap = new ArcGISMap(basemap);
         // set the mArcGISMap to be displayed in this view
         mMapView.setMap(mArcGISMap);
         // create a new Geodatabase from local path
