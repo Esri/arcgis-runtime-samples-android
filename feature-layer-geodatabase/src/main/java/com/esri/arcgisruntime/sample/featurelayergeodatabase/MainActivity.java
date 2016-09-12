@@ -29,13 +29,16 @@ import android.widget.Toast;
 
 import com.esri.arcgisruntime.datasource.arcgis.Geodatabase;
 import com.esri.arcgisruntime.datasource.arcgis.GeodatabaseFeatureTable;
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.WrapAroundMode;
+import com.esri.arcgisruntime.mapping.view.SpatialReferenceChangedEvent;
+import com.esri.arcgisruntime.mapping.view.SpatialReferenceChangedListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -79,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             int requestCode = 2;
             ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
         }
+
     }
 
     /**
@@ -120,14 +124,8 @@ public class MainActivity extends AppCompatActivity {
         // create a Basemap instance for use in creating an ArcGISMap instance
         Basemap basemap = new Basemap(vectorTiledLayer);
         mArcGISMap = new ArcGISMap(basemap);
-
-        mMapView.setWrapAroundMode(WrapAroundMode.ENABLE_WHEN_SUPPORTED);
-        // set the initial viewpoint
-        mMapView.setViewpoint(new Viewpoint(33.902017, -118.218533, 2));
-
         // set the mArcGISMap to be displayed in this view
         mMapView.setMap(mArcGISMap);
-
         // create a new Geodatabase from local path
         mGeodatabase = new Geodatabase(geoDbFile);
         // load the geodatabase
@@ -136,9 +134,19 @@ public class MainActivity extends AppCompatActivity {
         mGeodatabase.addDoneLoadingListener(new Runnable() {
             @Override
             public void run() {
-                GeodatabaseFeatureTable geoDbTable = mGeodatabase.getGeodatabaseFeatureTable("Trailheads");
-                FeatureLayer fLayer = new FeatureLayer(geoDbTable);
-                mArcGISMap.getOperationalLayers().add(fLayer);
+                for (GeodatabaseFeatureTable geoDbTable : mGeodatabase.getGeodatabaseFeatureTables()){
+                    mMapView.getMap().getOperationalLayers().add(new FeatureLayer(geoDbTable));
+                }
+            }
+        });
+
+        // set initial viewpoint once MapView has spatial reference
+        mMapView.addSpatialReferenceChangedListener(new SpatialReferenceChangedListener() {
+            @Override
+            public void spatialReferenceChanged(SpatialReferenceChangedEvent spatialReferenceChangedEvent) {
+                // set the initial viewpoint
+                Point initPnt = new Point(-13214155, 4040194, SpatialReference.create(3857));
+                mMapView.setViewpoint(new Viewpoint(initPnt, 35e4));
             }
         });
 
