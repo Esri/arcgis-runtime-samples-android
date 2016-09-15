@@ -66,19 +66,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void applyDefinitionExpression() {
-
         // apply a definition expression on the feature layer
         // if this is called before the layer is loaded, it will be applied to the loaded layer
         mFeatureLayer.setDefinitionExpression("req_Type = 'Tree Maintenance or Damage'");
     }
 
     private void resetDefinitionExpression() {
-
         // set the definition expression to nothing (empty string, null also works)
         mFeatureLayer.setDefinitionExpression("");
-
     }
-
 
     private void createBottomToolbar() {
 
