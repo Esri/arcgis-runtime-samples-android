@@ -13,6 +13,7 @@
 
 package com.esri.arcgisruntime.samples.featurelayerselection;
 
+import java.util.Iterator;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.datasource.Feature;
 import com.esri.arcgisruntime.datasource.FeatureQueryResult;
 import com.esri.arcgisruntime.datasource.QueryParameters;
 import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
@@ -36,7 +38,7 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-    MapView mMapView;
+    private MapView mMapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
         // create a map with the streets basemap
         final ArcGISMap map = new ArcGISMap(Basemap.createStreets());
-        //set an initial viewpointf
+        //set an initial viewpoint
         map.setInitialViewpoint(new Viewpoint(new Envelope(-1131596.019761, 3893114.069099, 3926705.982140, 7977912.461790, SpatialReferences.getWebMercator())));
-        // set the map to be displayed in the mapview
+        // set the map to be displayed in the MapView
         mMapView.setMap(map);
 
         // create feature layer with its service feature table
@@ -58,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
         final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
         // create the feature layer using the service feature table
         final FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
-        featureLayer.setSelectionColor(Color.rgb(0, 255, 255)); //cyan, fully opaque
-        featureLayer.setSelectionWidth(3);
+        featureLayer.setSelectionColor(Color.YELLOW);
+        featureLayer.setSelectionWidth(10);
         // add the layer to the map
         map.getOperationalLayers().add(featureLayer);
 
@@ -67,17 +69,14 @@ public class MainActivity extends AppCompatActivity {
         mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-
                 // get the point that was clicked and convert it to a point in map coordinates
                 Point clickPoint = mMapView.screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
-                int tolerance = 44;
+                int tolerance = 10;
                 double mapTolerance = tolerance * mMapView.getUnitsPerPixel();
-
                 // create objects required to do a selection with a query
                 Envelope envelope = new Envelope(clickPoint.getX() - mapTolerance, clickPoint.getY() - mapTolerance, clickPoint.getX() + mapTolerance, clickPoint.getY() + mapTolerance, map.getSpatialReference());
                 QueryParameters query = new QueryParameters();
                 query.setGeometry(envelope);
-
                 // call select features
                 final ListenableFuture<FeatureQueryResult> future = featureLayer.selectFeaturesAsync(query, FeatureLayer.SelectionMode.NEW);
                 // add done loading listener to fire when the selection returns
@@ -87,14 +86,17 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             //call get on the future to get the result
                             FeatureQueryResult result = future.get();
-
-                            //find out how many items there are in the result
-                            int i = 0;
-                            for (; result.iterator().hasNext(); ++i) {
-                                result.iterator().next();
+                            // create an Iterator
+                            Iterator<Feature> iterator = result.iterator();
+                            Feature feature;
+                            // cycle through selections
+                            int counter = 0;
+                            while (iterator.hasNext()){
+                                feature = iterator.next();
+                                counter++;
+                                Log.d(getResources().getString(R.string.app_name), "Selection #: " + counter + " Table name: " + feature.getFeatureTable().getTableName());
                             }
-                            Toast.makeText(getApplicationContext(), i + " features selected", Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(getApplicationContext(), counter + " features selected", Toast.LENGTH_SHORT).show();
                         } catch (Exception e) {
                             Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
                         }
