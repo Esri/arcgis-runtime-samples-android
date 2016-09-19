@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private void addDrawerItems(){
         String[] webmapTitles = {getResources().getString(R.string.webmap_houses_with_mortgages_title),
                             getResources().getString(R.string.webmap_usa_tapestry_segmentation_title),
-                            getResources().getString(R.string.webmap_us_pop_density_title)};
+                            getResources().getString(R.string.webmap_geology_us_title)};
         ArrayAdapter<String> mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, webmapTitles);
         mDrawerList.setAdapter(mAdapter);
 
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                     // close the drawer
                     mDrawerLayout.closeDrawer(adapterView);
                 }else if(position == 2){
-                    mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_us_pop_density_id));
+                    mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_geology_us));
                     // create a map from a PortalItem
                     mMap = new ArcGISMap(mPortalItem);
                     // set the map to be displayed in this view
