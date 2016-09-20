@@ -16,6 +16,9 @@
 
 package com.esri.arcgisruntime.sample.takescreenshot;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -39,10 +42,6 @@ import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 public class MainActivity extends AppCompatActivity {
 
     private MapView mMapView;
@@ -62,15 +61,12 @@ public class MainActivity extends AppCompatActivity {
         ArcGISMap mMap = new ArcGISMap(Basemap.createImageryWithLabels());
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
-
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         return true;
     }
 
@@ -93,18 +89,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return true;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mMapView.pause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mMapView.resume();
     }
 
     /**
@@ -220,5 +204,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMapView.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMapView.resume();
+    }
 
 }
