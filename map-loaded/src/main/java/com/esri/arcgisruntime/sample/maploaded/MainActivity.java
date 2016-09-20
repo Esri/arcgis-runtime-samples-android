@@ -51,18 +51,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause(){
-        super.onPause();
-        mMapView.pause();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        mMapView.resume();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -132,5 +120,17 @@ public class MainActivity extends AppCompatActivity {
         });
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        mMapView.pause();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        mMapView.resume();
     }
 }
