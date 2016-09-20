@@ -6,14 +6,15 @@ This sample shows how to tell what the map's load status is. This is obtained fr
 
 A signal handler is set up on the map to handle the ```LoadStatusChangedEvent``` signal, and the status text is updated when the status changes.
 
-![screen shot 2016-05-27 at 3 01 36 pm](https://cloud.githubusercontent.com/assets/12448081/15622274/fa2fe8f2-241b-11e6-9cdc-2db8ca96dbf8.png)
-#Features
+![Map Loaded](map-loaded.png)
+
+## Features
 
 * Map
 * MapView
 * LoadStatusChangedListener
 
-# Developer Pattern
+## Developer Pattern
 
 The ```adddLoadStatusChangedListener``` method of class ```ArcGISMap``` listens for ```LoadStatusChangedEvent```. To get the load status use method ```getNewLoadStatus().name()``` on the changed event.
 ```java
