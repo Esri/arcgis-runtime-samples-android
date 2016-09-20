@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     private MapView mMapView;
     private static final String TAG = "TakeScreenshot";
-    int requestCode = 2;
-    String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private int requestCode = 2;
+    private String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
 
     @Override
