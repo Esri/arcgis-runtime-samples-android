@@ -1,10 +1,10 @@
-#Service feature table (no cache)
+# Service feature table (no cache)
+This sample demonstrates how to use a feature service in on-interaction-no-cache mode. This mode always fetches features from the server and does not cache features client side by setting the ```ServiceFeatureTable.FeatureRequestMode``` to ```ON_INTERACTION_NO_CACHE``` on an service feature table before it is loaded.
 
-![](service feature table no cache.png)
+![Service Feature Table Nocache](service-feature-table-nocache.png)
 
-##
-
-This sample demonstrates how to use a feature service in on-interaction-no-cache mode. This mode always fetches features from the server and does not cache features client side.
-###
-
-By setting the ```ServiceFeatureTable.FeatureRequestMode``` to ```ON_INTERACTION_NO_CACHE``` on an service feature table before it is loaded.
+## Features
+- Basemap
+- FeatureLayer
+- SpatialReferences
+- Viewpoint
