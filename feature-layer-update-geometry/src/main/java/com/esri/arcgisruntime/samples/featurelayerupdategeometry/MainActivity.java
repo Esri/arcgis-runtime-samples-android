@@ -12,6 +12,7 @@
  */
 package com.esri.arcgisruntime.samples.featurelayerupdategeometry;
 
+import java.util.List;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,9 +34,8 @@ import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
+import com.esri.arcgisruntime.mapping.view.IdentifyReturns;
 import com.esri.arcgisruntime.mapping.view.MapView;
-
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -75,23 +75,27 @@ public class MainActivity extends AppCompatActivity {
 
         if (!mFeatureSelected) {
           android.graphics.Point screenCoordinate = new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY()));
-          int tolerance = 20;
+          double tolerance = 20;
           //Identify Layers to find features
-          final ListenableFuture<List<IdentifyLayerResult>> identifyFuture = mMapView.identifyLayersAsync(screenCoordinate, tolerance, 1);
+          final ListenableFuture<IdentifyLayerResult> identifyFuture = mMapView.identifyLayerAsync(mFeatureLayer, screenCoordinate, tolerance, IdentifyReturns.GEOELEMENTS_ONLY, 1);
           identifyFuture.addDoneListener(new Runnable() {
             @Override
             public void run() {
               try {
-                List<IdentifyLayerResult> identifyLayerResultsList = identifyFuture.get();
-                if(identifyLayerResultsList.size() > 0){
-                  List<GeoElement> identifiedFeaturesList = identifyLayerResultsList.get(0).getIdentifiedElements();
-                  mIdentifiedFeature = (ArcGISFeature) identifiedFeaturesList.get(0);
-                  //Select the identified feature
-                  mFeatureLayer.selectFeature(mIdentifiedFeature);
-                  mFeatureSelected = true;
-                  Toast.makeText(getApplicationContext(), "Feature Selected. Tap on map to update its geometry " , Toast.LENGTH_LONG).show();
-                }else{
-                  Toast.makeText(getApplicationContext(), "No Features Selected. Tap on a feature" , Toast.LENGTH_LONG).show();
+                // call get on the future to get the result
+                IdentifyLayerResult layerResult = identifyFuture.get();
+                List<GeoElement> resultGeoElements = layerResult.getElements();
+
+                if(resultGeoElements.size() > 0){
+                  if(resultGeoElements.get(0) instanceof ArcGISFeature){
+                    mIdentifiedFeature = (ArcGISFeature) resultGeoElements.get(0);
+                    //Select the identified feature
+                    mFeatureLayer.selectFeature(mIdentifiedFeature);
+                    mFeatureSelected = true;
+                    Toast.makeText(getApplicationContext(), "Feature Selected. Tap on map to update its geometry " , Toast.LENGTH_LONG).show();
+                  }else{
+                    Toast.makeText(getApplicationContext(), "No Features Selected. Tap on a feature" , Toast.LENGTH_LONG).show();
+                  }
                 }
               } catch (Exception e) {
                 Log.e(getResources().getString(R.string.app_name), "No Features Selected. Tap on a feature: " + e.getMessage());
