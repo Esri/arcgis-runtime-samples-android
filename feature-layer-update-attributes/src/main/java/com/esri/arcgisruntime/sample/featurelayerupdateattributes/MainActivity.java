@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.sample.featurelayerupdateattributes;
 
+import java.util.List;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -46,9 +47,8 @@ import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
+import com.esri.arcgisruntime.mapping.view.IdentifyReturns;
 import com.esri.arcgisruntime.mapping.view.MapView;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -118,17 +118,17 @@ public class MainActivity extends AppCompatActivity {
         mSelectedArcGISFeature = null;
 
         // identify the GeoElements in the given layer
-        final ListenableFuture<IdentifyLayerResult> future = mMapView.identifyLayerAsync(mFeatureLayer, mClickPoint, 5, 1);
+        final ListenableFuture<IdentifyLayerResult> identifyFuture = mMapView.identifyLayerAsync(mFeatureLayer, mClickPoint, 5, IdentifyReturns.GEOELEMENTS_AND_POPUPS, 1);
 
         // add done loading listener to fire when the selection returns
-        future.addDoneListener(new Runnable() {
+        identifyFuture.addDoneListener(new Runnable() {
           @Override
           public void run() {
             try {
               // call get on the future to get the result
-              IdentifyLayerResult result = future.get();
+              IdentifyLayerResult layerResult = identifyFuture.get();
+              List<GeoElement> resultGeoElements = layerResult.getElements();
 
-              List<GeoElement> resultGeoElements = result.getIdentifiedElements();
               if (resultGeoElements.size() >0) {
                 if (resultGeoElements.get(0) instanceof ArcGISFeature) {
                   mSelectedArcGISFeature = (ArcGISFeature) resultGeoElements.get(0);

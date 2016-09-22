@@ -58,6 +58,8 @@ import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
+import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult;
+import com.esri.arcgisruntime.mapping.view.IdentifyReturns;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters;
@@ -468,14 +470,15 @@ public class MainActivity extends AppCompatActivity {
             final android.graphics.Point screenPoint = new android.graphics.Point((int) e.getX(), (int) e.getY());
 
             // identify graphics on the graphics overlay
-            final ListenableFuture<List<Graphic>> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(graphicsOverlay, screenPoint, 1.0, 1);
+            final ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(graphicsOverlay, screenPoint, 1.0, IdentifyReturns.GEOELEMENTS_ONLY, 1);
 
             identifyGraphic.addDoneListener(new Runnable() {
                 @Override
                 public void run() {
                     try {
+                        IdentifyGraphicsOverlayResult grOverlayResult = identifyGraphic.get();
                         // get the list of graphics returned by identify
-                        List<Graphic> graphic = identifyGraphic.get();
+                        List<Graphic> graphic = grOverlayResult.getGraphics();
                         // if identified graphic is not empty, start DragTouchListener
                         if (!graphic.isEmpty()) {
 
