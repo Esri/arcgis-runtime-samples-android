@@ -41,7 +41,7 @@ mMapView.addSpatialReferenceChangedListener(new SpatialReferenceChangedListener(
 ## Provision your device
 1. Download the data from the table below.  
 2. Extract the contents of the downloaded zip file to disk.  
-3. Create an ArcGIS/samples/FLGdb folder on your device. This requires you to use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
+3. Create an ArcGIS/samples/FLGdb folder on your device. You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
 4. Open up a command prompt and execute the ```adb shell``` command to start a remote shell on your target device.
 5. Navigate to your sdcard directory, e.g. ```cd /sdcard/```.  
 6. Create the ArcGIS/samples/FLGdb directory, ```mkdir ArcGIS/samples/FLGdb```.
