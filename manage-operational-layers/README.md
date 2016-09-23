@@ -1,9 +1,7 @@
 # Manage Operational Layers
-
-![](manage-operational-layers_1.png)
-![](manage-operational-layers_3.png)
-
 The sample demonstrates how to add, remove and reorder operational layers in a map
+
+![Manage Operational Layers](manage-operational-layers.png)
 
 ## Features
 * ArcGISMap
