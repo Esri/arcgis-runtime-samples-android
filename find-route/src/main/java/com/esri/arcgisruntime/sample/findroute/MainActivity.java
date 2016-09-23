@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 // create RouteTask instance
                 mRouteTask = new RouteTask(getString(R.string.routing_service));
 
-                final ListenableFuture<RouteParameters> listenableFuture = mRouteTask.generateDefaultParametersAsync();
+                final ListenableFuture<RouteParameters> listenableFuture = mRouteTask.createDefaultParametersAsync();
                 listenableFuture.addDoneListener(new Runnable() {
                     @Override
                     public void run() {
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                                 routeStops.add(new Stop(new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84())));
 
                                 // solve
-                                RouteResult result = mRouteTask.solveAsync(mRouteParams).get();
+                                RouteResult result = mRouteTask.solveRouteAsync(mRouteParams).get();
                                 final List routes = result.getRoutes();
                                 mRoute = (Route) routes.get(0);
                                 // create a mRouteSymbol graphic
