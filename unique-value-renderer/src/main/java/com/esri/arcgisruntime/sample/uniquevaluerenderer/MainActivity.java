@@ -16,6 +16,8 @@
 
 package com.esri.arcgisruntime.sample.uniquevaluerenderer;
 
+import java.util.ArrayList;
+import java.util.List;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -32,13 +34,10 @@ import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.UniqueValueRenderer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class MainActivity extends AppCompatActivity {
 
-    MapView mMapView;
+    private MapView mMapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
