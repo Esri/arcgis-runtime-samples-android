@@ -20,6 +20,11 @@ The sample depends on basemap data to be located on the device. This includes in
 	* ```adb push san-diego-locator.locb /sdcard/ArcGIS/samples/OfflineGeocoding```
 	* ```adb push san-diego-locator.lox /sdcard/ArcGIS/samples/OfflineGeocoding```
 	* ```adb push san-diego-locator.loc.x /sdcard/ArcGIS/samples/OfflineGeocoding```
+	
+Link     | Local Location
+---------|-------|
+|[San Diego Streets Tile Package](http://www.arcgis.com/home/item.html?id=1330ab96ac9c40a49e59650557f2cd63)| `<sdcard>`/ArcGIS/samples/OfflineGeocoding/streetmap_SD.tpk |
+|[San Diego Offline Locator](http://www.arcgis.com/home/item.html?id=344e3b12368543ef84045ef9aa3c32ba)| `<sdcard>`/ArcGIS/samples/OfflineGeocoding/san-diego-locator.loc |
 
 ## How to use the sample
 Type the address in the Search menu option or select from the list to `Geocode` the address and view the result on the map. Long-press on the location you want to `Reverse Geocode`. Selecting the output pin enables real-time reverse geocoding. Select the pin to highlight the `PictureMarkerSymbol` and tap-hold and drag on the map to get real-time geocoding.
