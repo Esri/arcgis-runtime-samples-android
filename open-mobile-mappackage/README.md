@@ -15,7 +15,7 @@ This sample uses the Android [Constraint Layout](http://tools.android.com/tech-d
 ## Provision your device
 1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=e1f3a7254cb845b09450f54937c16061).  
 2. Extract the contents of the downloaded zip file to disk.  
-3. Create an ArcGIS/samples/MapPackage folder on your device. This requires you to use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
+3. Create an ArcGIS/samples/MapPackage folder on your device. You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
 4. Open up a command prompt and execute the ```adb shell``` command to start a remote shell on your target device.
 5. Navigate to your sdcard directory, e.g. ```cd /sdcard/```.  
 6. Create the ArcGIS/samples/MapPackage directory, ```mkdir ArcGIS/samples/MapPackage```.
