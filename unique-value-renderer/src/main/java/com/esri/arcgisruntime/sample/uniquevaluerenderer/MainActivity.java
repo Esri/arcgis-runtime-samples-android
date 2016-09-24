@@ -73,18 +73,24 @@ public class MainActivity extends AppCompatActivity {
         uniqueValueRenderer.setDefaultLabel("Other");
 
         // Set value for california
-        List californiaValue = new ArrayList();
-        californiaValue.add("CA"); //You add values associated with fields set on the unique value renderer. If there are multiple values, they should be set in the same order as the fields are set
+        List<Object> californiaValue = new ArrayList<>();
+        // You add values associated with fields set on the unique value renderer.
+        // If there are multiple values, they should be set in the same order as the fields are set
+        californiaValue.add("CA");
         uniqueValueRenderer.getUniqueValues().add(new UniqueValueRenderer.UniqueValue("California", "State of California", californiaFillSymbol, californiaValue));
 
         // Set value for arizona
-        List arizonaValue = new ArrayList();
-        arizonaValue.add("AZ"); //You add values associated with fields set on the unique value renderer. If there are multiple values, they should be set in the same order as the fields are set
+        List<Object> arizonaValue = new ArrayList<>();
+        // You add values associated with fields set on the unique value renderer.
+        // If there are multiple values, they should be set in the same order as the fields are set
+        arizonaValue.add("AZ");
         uniqueValueRenderer.getUniqueValues().add(new UniqueValueRenderer.UniqueValue("Arizona", "State of Arizona", arizonaFillSymbol, arizonaValue));
 
         // Set value for nevada
-        List nevadaValue = new ArrayList();
-        nevadaValue.add("NV"); //You add values associated with fields set on the unique value renderer. If there are multiple values, they should be set in the same order as the fields are set
+        List<Object> nevadaValue = new ArrayList<>();
+        // You add values associated with fields set on the unique value renderer.
+        // If there are multiple values, they should be set in the same order as the fields are set
+        nevadaValue.add("NV");
         uniqueValueRenderer.getUniqueValues().add(new UniqueValueRenderer.UniqueValue("Nevada", "State of Nevada", nevadaFillSymbol, nevadaValue));
 
         // Set the renderer on the feature layer
