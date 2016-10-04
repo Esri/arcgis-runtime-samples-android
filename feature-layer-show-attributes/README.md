@@ -64,7 +64,4 @@ future.addDoneListener(new Runnable() {
         }
     }
 });
-return super.onSingleTapConfirmed(e);
-}
-});
 ```
