@@ -46,7 +46,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
-import com.esri.arcgisruntime.datasource.arcgis.TileCache;
+import com.esri.arcgisruntime.data.TileCache;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
@@ -59,7 +59,6 @@ import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult;
-import com.esri.arcgisruntime.mapping.view.IdentifyReturns;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters;
@@ -109,9 +108,7 @@ public class MainActivity extends AppCompatActivity {
             setUpOfflineMapGeocoding();
             setSearchView();
         }
-
         mMapView.setOnTouchListener(new MapTouchListener(getApplicationContext(), mMapView));
-
     }
 
     private void setSearchView() {
@@ -470,7 +467,7 @@ public class MainActivity extends AppCompatActivity {
             final android.graphics.Point screenPoint = new android.graphics.Point((int) e.getX(), (int) e.getY());
 
             // identify graphics on the graphics overlay
-            final ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(graphicsOverlay, screenPoint, 1.0, IdentifyReturns.GEOELEMENTS_ONLY, 1);
+            final ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(graphicsOverlay, screenPoint, 1.0, false, 1);
 
             identifyGraphic.addDoneListener(new Runnable() {
                 @Override

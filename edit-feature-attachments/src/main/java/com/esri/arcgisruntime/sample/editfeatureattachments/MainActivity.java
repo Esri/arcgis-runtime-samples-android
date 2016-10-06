@@ -32,9 +32,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
-import com.esri.arcgisruntime.datasource.arcgis.ArcGISFeature;
-import com.esri.arcgisruntime.datasource.arcgis.Attachment;
-import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.ArcGISFeature;
+import com.esri.arcgisruntime.data.Attachment;
+import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -45,7 +45,6 @@ import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
-import com.esri.arcgisruntime.mapping.view.IdentifyReturns;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 mSelectedArcGISFeature = null;
 
                 // identify the GeoElements in the given layer
-                final ListenableFuture<IdentifyLayerResult> futureIdentifyLayer = mMapView.identifyLayerAsync(mFeatureLayer, mClickPoint, 5, IdentifyReturns.GEOELEMENTS_AND_POPUPS, 1);
+                final ListenableFuture<IdentifyLayerResult> futureIdentifyLayer = mMapView.identifyLayerAsync(mFeatureLayer, mClickPoint, 5, false, 1);
 
                 // add done loading listener to fire when the selection returns
                 futureIdentifyLayer.addDoneListener(new Runnable() {
