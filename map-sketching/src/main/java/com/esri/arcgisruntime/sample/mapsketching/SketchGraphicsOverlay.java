@@ -29,6 +29,7 @@ import com.esri.arcgisruntime.geometry.Polyline;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
+import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
@@ -767,14 +768,16 @@ public class SketchGraphicsOverlay {
       final android.graphics.Point screenPoint = new android.graphics.Point((int) event.getX(), (int) event.getY());
 
       // identify graphics on the sketch graphics overlay
-      final ListenableFuture<List<Graphic>> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(mGraphicsOverlay, screenPoint, 10.0, 2);
+      final ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(mGraphicsOverlay, screenPoint, 10.0, false);
 
       identifyGraphic.addDoneListener(new Runnable() {
         @Override
         public void run() {
           try {
             // get the list of graphics returned by identify
-            List<Graphic> graphic = identifyGraphic.get();
+            IdentifyGraphicsOverlayResult identifyResult = identifyGraphic.get();
+            List<Graphic> graphic = identifyResult.getGraphics();
+
             // In order to put new points inside a previously drawn or currently drawing polygon, don't trigger
             // on clicking a polygon graphic
             if (!graphic.isEmpty() && !(graphic.get(0).getGeometry() instanceof Polygon)) {

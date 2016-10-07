@@ -13,6 +13,7 @@
 package com.esri.arcgisruntime.samples.featurelayerupdategeometry;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,9 +22,9 @@ import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
-import com.esri.arcgisruntime.datasource.arcgis.ArcGISFeature;
-import com.esri.arcgisruntime.datasource.arcgis.FeatureEditResult;
-import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.ArcGISFeature;
+import com.esri.arcgisruntime.data.FeatureEditResult;
+import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
@@ -34,15 +35,14 @@ import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
-import com.esri.arcgisruntime.mapping.view.IdentifyReturns;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 
 public class MainActivity extends AppCompatActivity {
-  MapView mMapView;
-  FeatureLayer mFeatureLayer;
-  boolean mFeatureSelected = false;
-  ArcGISFeature mIdentifiedFeature;
+  private MapView mMapView;
+  private FeatureLayer mFeatureLayer;
+  private boolean mFeatureSelected = false;
+  private ArcGISFeature mIdentifiedFeature;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.createStreets());
     //set an initial viewpoint
     map.setInitialViewpoint(new Viewpoint(new Point(-100.343, 34.585, SpatialReferences.getWgs84()), 1E8));
-    // set the map to be displayed in the mapview
+    // set the map to be displayed in the MapView
     mMapView.setMap(map);
 
     // create feature layer with its service feature table
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
           android.graphics.Point screenCoordinate = new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY()));
           double tolerance = 20;
           //Identify Layers to find features
-          final ListenableFuture<IdentifyLayerResult> identifyFuture = mMapView.identifyLayerAsync(mFeatureLayer, screenCoordinate, tolerance, IdentifyReturns.GEOELEMENTS_ONLY, 1);
+          final ListenableFuture<IdentifyLayerResult> identifyFuture = mMapView.identifyLayerAsync(mFeatureLayer, screenCoordinate, tolerance, false, 1);
           identifyFuture.addDoneListener(new Runnable() {
             @Override
             public void run() {
@@ -97,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "No Features Selected. Tap on a feature" , Toast.LENGTH_LONG).show();
                   }
                 }
-              } catch (Exception e) {
-                Log.e(getResources().getString(R.string.app_name), "No Features Selected. Tap on a feature: " + e.getMessage());
+              } catch (InterruptedException | ExecutionException e) {
+                Log.e(getResources().getString(R.string.app_name), "Update feature failed: " + e.getMessage());
               }
             }
           });
@@ -114,6 +114,9 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                   try {
+                    // track the update
+                    updateFuture.get();
+                    // apply edits once the update has completed
                     if (updateFuture.isDone()) {
                       applyEditsToServer();
                       mFeatureLayer.clearSelection();
@@ -121,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                       Log.e(getResources().getString(R.string.app_name), "Update feature failed");
                     }
-                  } catch (Exception e) {
+                  } catch (InterruptedException | ExecutionException e) {
                     Log.e(getResources().getString(R.string.app_name), "Update feature failed: " + e.getMessage());
                   }
                 }
@@ -144,12 +147,13 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void run() {
         try {
+          // get results of edit
           List<FeatureEditResult> featureEditResultsList = applyEditsFuture.get();
           if (!featureEditResultsList.get(0).hasCompletedWithErrors()) {
             Toast.makeText(getApplicationContext(), "Applied Geometry Edits to Server. ObjectID: " + featureEditResultsList.get(0).getObjectId(), Toast.LENGTH_SHORT).show();
           }
-        } catch (Exception e) {
-          Log.e(getResources().getString(R.string.app_name), "Failed to Apply Edits" + e.getMessage());
+        } catch (InterruptedException | ExecutionException e) {
+          Log.e(getResources().getString(R.string.app_name), "Update feature failed: " + e.getMessage());
         }
       }
     });

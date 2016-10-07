@@ -27,8 +27,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.esri.arcgisruntime.datasource.arcgis.Geodatabase;
-import com.esri.arcgisruntime.datasource.arcgis.GeodatabaseFeatureTable;
+import com.esri.arcgisruntime.data.Geodatabase;
+import com.esri.arcgisruntime.data.GeodatabaseFeatureTable;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer;

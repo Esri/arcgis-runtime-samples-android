@@ -34,7 +34,6 @@ import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult;
-import com.esri.arcgisruntime.mapping.view.IdentifyReturns;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.util.ListenableList;
@@ -126,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             android.graphics.Point screenPoint = new android.graphics.Point((int)e.getX(), (int)e.getY());
 
             // identify graphics on the graphics overlay
-            final ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(grOverlay, screenPoint, 10.0, IdentifyReturns.GEOELEMENTS_ONLY, 2);
+            final ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(grOverlay, screenPoint, 10.0, false, 2);
 
             identifyGraphic.addDoneListener(new Runnable() {
                 @Override

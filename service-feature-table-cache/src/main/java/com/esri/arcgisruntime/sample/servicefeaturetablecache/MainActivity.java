@@ -16,7 +16,7 @@ package com.esri.arcgisruntime.sample.servicefeaturetablecache;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
