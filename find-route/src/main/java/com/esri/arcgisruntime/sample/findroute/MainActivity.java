@@ -49,12 +49,12 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
-import com.esri.arcgisruntime.tasks.route.DirectionManeuver;
-import com.esri.arcgisruntime.tasks.route.Route;
-import com.esri.arcgisruntime.tasks.route.RouteParameters;
-import com.esri.arcgisruntime.tasks.route.RouteResult;
-import com.esri.arcgisruntime.tasks.route.RouteTask;
-import com.esri.arcgisruntime.tasks.route.Stop;
+import com.esri.arcgisruntime.tasks.networkanalysis.DirectionManeuver;
+import com.esri.arcgisruntime.tasks.networkanalysis.Route;
+import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters;
+import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult;
+import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask;
+import com.esri.arcgisruntime.tasks.networkanalysis.Stop;
 
 public class MainActivity extends AppCompatActivity {
 
