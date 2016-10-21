@@ -16,6 +16,9 @@
 
 package com.esri.arcgisruntime.sample.offlinegeocode;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -43,7 +46,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
-import com.esri.arcgisruntime.datasource.arcgis.TileCache;
+import com.esri.arcgisruntime.data.TileCache;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
@@ -55,16 +58,13 @@ import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
+import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeResult;
 import com.esri.arcgisruntime.tasks.geocode.LocatorTask;
 import com.esri.arcgisruntime.tasks.geocode.ReverseGeocodeParameters;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -108,9 +108,7 @@ public class MainActivity extends AppCompatActivity {
             setUpOfflineMapGeocoding();
             setSearchView();
         }
-
         mMapView.setOnTouchListener(new MapTouchListener(getApplicationContext(), mMapView));
-
     }
 
     private void setSearchView() {
@@ -205,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 Point p = new Point(-117.162040, 32.718260, SpatialReference.create(4326));
                 Viewpoint vp = new Viewpoint(p, 10000);
-                mMapView.setViewpointWithDurationAsync(vp, 3);
+                mMapView.setViewpointAsync(vp, 3);
             }
         });
 
@@ -325,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
         graphicsOverlay.getGraphics().add(resultLocGraphic);
 
         // Zoom map to geocode result location
-        mMapView.setViewpointWithDurationAsync(new Viewpoint(resultPoint, 8000), 3);
+        mMapView.setViewpointAsync(new Viewpoint(resultPoint, 8000), 3);
 
         mGraphicPoint = resultPoint;
         mGraphicPointAddress = address;
@@ -469,14 +467,15 @@ public class MainActivity extends AppCompatActivity {
             final android.graphics.Point screenPoint = new android.graphics.Point((int) e.getX(), (int) e.getY());
 
             // identify graphics on the graphics overlay
-            final ListenableFuture<List<Graphic>> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(graphicsOverlay, screenPoint, 1.0, 1);
+            final ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(graphicsOverlay, screenPoint, 1.0, false, 1);
 
             identifyGraphic.addDoneListener(new Runnable() {
                 @Override
                 public void run() {
                     try {
+                        IdentifyGraphicsOverlayResult grOverlayResult = identifyGraphic.get();
                         // get the list of graphics returned by identify
-                        List<Graphic> graphic = identifyGraphic.get();
+                        List<Graphic> graphic = grOverlayResult.getGraphics();
                         // if identified graphic is not empty, start DragTouchListener
                         if (!graphic.isEmpty()) {
 

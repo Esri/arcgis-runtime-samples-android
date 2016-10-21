@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.3'
+        classpath 'com.android.tools.build:gradle:2.2.2'
     }
 }
 
@@ -13,23 +13,25 @@ allprojects {
 
     final def var = repositories {
         jcenter()
-        maven{
-            url 'https://esri.bintray.com/arcgis'
-        }
+        // release url
+//        maven{ url 'https://esri.bintray.com/arcgis' }
+        // testing url
+        maven{ url 'http://android:8080/artifactory/arcgis' }
     }
     var
 }
 
 ext {
-    compileSdkVersion = 23
-    buildToolsVersion = "23.0.1"
+    compileSdkVersion = 24
+    buildToolsVersion = "24.0.1"
 }
 
 subprojects{
     afterEvaluate {project ->
         if(project.hasProperty("dependencies")){
             dependencies {
-                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0-beta-3'
+//                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0'
+                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0-1493'
             }
         }
     }

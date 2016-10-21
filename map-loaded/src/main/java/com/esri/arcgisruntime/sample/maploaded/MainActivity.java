@@ -33,7 +33,6 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MapLoadStatus";
-    private ArcGISMap mMap;
     private MapView mMapView;
     private TextView mMapLoadStatusTextView;
 
@@ -48,18 +47,6 @@ public class MainActivity extends AppCompatActivity {
         mMapLoadStatusTextView = (TextView) findViewById(R.id.mapLoadStatusResult);
         loadMap();
 
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-        mMapView.pause();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        mMapView.resume();
     }
 
     @Override
@@ -90,10 +77,10 @@ public class MainActivity extends AppCompatActivity {
         //clear the current map load status of the TextView
         mMapLoadStatusTextView.setText("");
         // create a map with the BasemapType National Geographic
-        mMap = new ArcGISMap(Basemap.createLightGrayCanvas());
+        ArcGISMap map = new ArcGISMap(Basemap.createLightGrayCanvas());
 
         // Listener on change in map load status
-        mMap.addLoadStatusChangedListener(new LoadStatusChangedListener() {
+        map.addLoadStatusChangedListener(new LoadStatusChangedListener() {
             @Override
             public void loadStatusChanged(LoadStatusChangedEvent loadStatusChangedEvent) {
                 String mapLoadStatus;
@@ -131,6 +118,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // set the map to be displayed in this view
-        mMapView.setMap(mMap);
+        mMapView.setMap(map);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        mMapView.pause();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        mMapView.resume();
     }
 }

@@ -18,7 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -61,24 +61,20 @@ public class MainActivity extends AppCompatActivity {
         mMapView.setMap(map);
 
         // zoom to a view point of the USA
-        mMapView.setViewpointCenterWithScaleAsync(new Point(-13630845, 4544861, SpatialReferences.getWebMercator()), 600000);
+        mMapView.setViewpointCenterAsync(new Point(-13630845, 4544861, SpatialReferences.getWebMercator()), 600000);
 
     }
 
     private void applyDefinitionExpression() {
-
         // apply a definition expression on the feature layer
         // if this is called before the layer is loaded, it will be applied to the loaded layer
         mFeatureLayer.setDefinitionExpression("req_Type = 'Tree Maintenance or Damage'");
     }
 
     private void resetDefinitionExpression() {
-
         // set the definition expression to nothing (empty string, null also works)
         mFeatureLayer.setDefinitionExpression("");
-
     }
-
 
     private void createBottomToolbar() {
 

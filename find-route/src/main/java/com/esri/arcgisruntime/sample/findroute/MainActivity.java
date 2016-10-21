@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.sample.findroute;
 
+import java.util.List;
 import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -48,14 +49,12 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
-import com.esri.arcgisruntime.tasks.route.DirectionManeuver;
-import com.esri.arcgisruntime.tasks.route.Route;
-import com.esri.arcgisruntime.tasks.route.RouteParameters;
-import com.esri.arcgisruntime.tasks.route.RouteResult;
-import com.esri.arcgisruntime.tasks.route.RouteTask;
-import com.esri.arcgisruntime.tasks.route.Stop;
-
-import java.util.List;
+import com.esri.arcgisruntime.tasks.networkanalysis.DirectionManeuver;
+import com.esri.arcgisruntime.tasks.networkanalysis.Route;
+import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters;
+import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult;
+import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask;
+import com.esri.arcgisruntime.tasks.networkanalysis.Stop;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -128,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 // create RouteTask instance
                 mRouteTask = new RouteTask(getString(R.string.routing_service));
 
-                final ListenableFuture<RouteParameters> listenableFuture = mRouteTask.generateDefaultParametersAsync();
+                final ListenableFuture<RouteParameters> listenableFuture = mRouteTask.createDefaultParametersAsync();
                 listenableFuture.addDoneListener(new Runnable() {
                     @Override
                     public void run() {
@@ -148,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                                 routeStops.add(new Stop(new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84())));
 
                                 // solve
-                                RouteResult result = mRouteTask.solveAsync(mRouteParams).get();
+                                RouteResult result = mRouteTask.solveRouteAsync(mRouteParams).get();
                                 final List routes = result.getRoutes();
                                 mRoute = (Route) routes.get(0);
                                 // create a mRouteSymbol graphic
@@ -184,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                                         DirectionManeuver dm = directions.get(position);
                                         Geometry gm = dm.getGeometry();
                                         Viewpoint vp = new Viewpoint(gm.getExtent(),20);
-                                        mMapView.setViewpointWithDurationAsync(vp,3);
+                                        mMapView.setViewpointAsync(vp,3);
                                         SimpleLineSymbol selectedRouteSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.GREEN, 5);
                                         Graphic selectedRouteGraphic = new Graphic(directions.get(position).getGeometry(), selectedRouteSymbol);
                                         mGraphicsOverlay.getGraphics().add(selectedRouteGraphic);

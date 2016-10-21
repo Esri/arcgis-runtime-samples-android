@@ -16,15 +16,19 @@
 
 package com.esri.arcgisruntime.samples.servicefeaturetablemanualcache;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
-import com.esri.arcgisruntime.datasource.FeatureQueryResult;
-import com.esri.arcgisruntime.datasource.QueryParameters;
-import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.Feature;
+import com.esri.arcgisruntime.data.FeatureQueryResult;
+import com.esri.arcgisruntime.data.QueryParameters;
+import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -32,9 +36,6 @@ import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -88,13 +89,17 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             //call get on the future to get the result
                             FeatureQueryResult result = future.get();
-
-                            //find out how many items there are in the result
-                            int i = 0;
-                            for (; result.iterator().hasNext(); ++i) {
-                                result.iterator().next();
+                            // create an Iterator
+                            Iterator<Feature> iterator = result.iterator();
+                            Feature feature;
+                            // cycle through selections
+                            int counter = 0;
+                            while (iterator.hasNext()){
+                                feature = iterator.next();
+                                counter++;
+                                Log.d(getResources().getString(R.string.app_name), "Selection #: " + counter + " Table name: " + feature.getFeatureTable().getTableName());
                             }
-                            Toast.makeText(getApplicationContext(), i + " features returned", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), counter + " features returned", Toast.LENGTH_SHORT).show();
 
                         } catch (Exception e) {
                             Log.e(getResources().getString(R.string.app_name), "Populate from service failed: " + e.getMessage());

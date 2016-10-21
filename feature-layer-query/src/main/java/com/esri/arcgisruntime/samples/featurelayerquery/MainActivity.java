@@ -25,10 +25,10 @@ import android.view.Menu;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
-import com.esri.arcgisruntime.datasource.Feature;
-import com.esri.arcgisruntime.datasource.FeatureQueryResult;
-import com.esri.arcgisruntime.datasource.QueryParameters;
-import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.Feature;
+import com.esri.arcgisruntime.data.FeatureQueryResult;
+import com.esri.arcgisruntime.data.QueryParameters;
+import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         map.getOperationalLayers().add(mFeaturelayer);
 
         // zoom to a view point of the USA
-        mMapView.setViewpointCenterWithScaleAsync(new Point(-11000000, 5000000, SpatialReferences.getWebMercator()), 100000000);
+        mMapView.setViewpointCenterAsync(new Point(-11000000, 5000000, SpatialReferences.getWebMercator()), 100000000);
     }
 
     /**
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                         // get the extend of the first feature in the result to zoom to
                         Feature feature = result.iterator().next();
                         Envelope envelope = feature.getGeometry().getExtent();
-                        mMapView.setViewpointGeometryWithPaddingAsync(envelope, 200);
+                        mMapView.setViewpointGeometryAsync(envelope, 200);
 
                         //Select the feature
                         mFeaturelayer.selectFeature(feature);

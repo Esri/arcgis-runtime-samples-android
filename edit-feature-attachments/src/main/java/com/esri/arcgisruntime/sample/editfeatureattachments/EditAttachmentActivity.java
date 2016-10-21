@@ -16,6 +16,11 @@
 
 package com.esri.arcgisruntime.sample.editfeatureattachments;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -43,20 +48,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
-import com.esri.arcgisruntime.datasource.Feature;
-import com.esri.arcgisruntime.datasource.FeatureQueryResult;
-import com.esri.arcgisruntime.datasource.QueryParameters;
-import com.esri.arcgisruntime.datasource.arcgis.ArcGISFeature;
-import com.esri.arcgisruntime.datasource.arcgis.Attachment;
-import com.esri.arcgisruntime.datasource.arcgis.FeatureEditResult;
-import com.esri.arcgisruntime.datasource.arcgis.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.ArcGISFeature;
+import com.esri.arcgisruntime.data.Attachment;
+import com.esri.arcgisruntime.data.Feature;
+import com.esri.arcgisruntime.data.FeatureEditResult;
+import com.esri.arcgisruntime.data.FeatureQueryResult;
+import com.esri.arcgisruntime.data.QueryParameters;
+import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.sample.arrayadapter.CustomList;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EditAttachmentActivity extends AppCompatActivity {
 

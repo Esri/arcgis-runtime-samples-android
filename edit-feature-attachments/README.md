@@ -1,12 +1,12 @@
 # Edit feature attachments
 The sample demonstrates how you can add, delete or fetch attachments for a specific feature in a feature layer.
 
-![attachment-info](https://cloud.githubusercontent.com/assets/12448081/15902363/59a5e9b4-2d5c-11e6-9577-4311bcb14668.png) ![screen shot 2016-06-08 at 9 41 42 am](https://cloud.githubusercontent.com/assets/12448081/15902528/2e6171d2-2d5d-11e6-9cfc-972f30f80d6c.png)
+![Edit Feature Attachments](edit-feature-attachments.png)
 
 #How to use the sample
 Tapping a feature on the map opens a callout displaying number of attachments. Tap on the ![screen shot 2016-06-08 at 9 47 59 am](https://cloud.githubusercontent.com/assets/12448081/15902683/0b7dbe36-2d5e-11e6-9d11-0b3082f1f3ac.png) **info** to view/edit the attachments. Selecting a list entry downloads the attachment and opens it in gallery to view. Tap on the floating action button **+** to add an attachment or long press to delete.
 
-#Features
+## Features
 
 * ServiceFeatureTable
 * FeatureLayer
@@ -16,7 +16,7 @@ Tapping a feature on the map opens a callout displaying number of attachments. T
 * UpdateFeatureAsync
 * ApplyEditsAsync
 
-# How it works
+## How it works
 
 The map view provides a way to add a listener to screen taps using the ```setOnTouchListener``` method. The app uses the ```MotionEvent``` passed in to the ```onSingleTapConfirmed``` method to identify features on mapview based on the tolerance. ```fetchAttachmentsAsync``` method on selected feature returns a ```List<Attachment>``` list of attachments. To download an attachment ```fetchDataAsync``` method returns an ```InputStream``` which is used to download the attachment as a drawable before it can be converted to Bitmap. 
 

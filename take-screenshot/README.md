@@ -1,15 +1,15 @@
-# Capture Map Screenshot
+# Take Screenshot
 The purpose of this sample is to demonstrate how to export the map as an image file. ```MapView.exportImageAsync``` exports the map to **Bitmap** format which can be saved in any image file format.
 
-![screen shot 2016-05-26 at 1 48 58 pm](https://cloud.githubusercontent.com/assets/12448081/15589649/cafcba52-2348-11e6-90f1-9bbbecea6e28.png)
+![Take Screenshot](take-screenshot.png)
 
-#Features
+## Features
 
 * Map
 * MapView
 * ExportImageAsync
 
-# Developer Pattern
+## Developer Pattern
 
 ```java
 // export the image from the mMapView

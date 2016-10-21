@@ -1,5 +1,5 @@
 # Overview
-This branch represents active development for [ArcGIS Runtime SDK for Android Quartz beta](https://developers.arcgis.com/android/beta/).  You can preview updates to existing samples and new samples that are in active development. 
+**This branch represents active development for [ArcGIS Runtime SDK for Android Quartz beta](https://developers.arcgis.com/android/beta/).  You can preview updates to existing samples and new samples that are in active development.** 
 
 [Join the Beta!](http://bit.ly/RuntimeAndroidQuartz)
 

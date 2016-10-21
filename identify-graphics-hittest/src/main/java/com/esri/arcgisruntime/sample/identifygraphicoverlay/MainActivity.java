@@ -16,6 +16,8 @@
 
 package com.esri.arcgisruntime.sample.identifygraphicoverlay;
 
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -31,12 +33,10 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
+import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.util.ListenableList;
-
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -125,14 +125,15 @@ public class MainActivity extends AppCompatActivity {
             android.graphics.Point screenPoint = new android.graphics.Point((int)e.getX(), (int)e.getY());
 
             // identify graphics on the graphics overlay
-            final ListenableFuture<List<Graphic>> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(grOverlay, screenPoint, 10.0, 2);
+            final ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(grOverlay, screenPoint, 10.0, false, 2);
 
             identifyGraphic.addDoneListener(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        // get the list of graphics returned by identify
-                        List<Graphic> graphic = identifyGraphic.get();
+                        IdentifyGraphicsOverlayResult grOverlayResult = identifyGraphic.get();
+                        // get the list of graphics returned by identify graphic overlay
+                        List<Graphic> graphic = grOverlayResult.getGraphics();
                         // get size of list in results
                         int identifyResultSize = graphic.size();
                         if(!graphic.isEmpty()){
