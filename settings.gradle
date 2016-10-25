@@ -43,5 +43,6 @@ include ':add-graphics-renderer',
         ':show-magnifier',
         ':simple-marker-symbol',
         ':simple-renderer',
+        ':spatial-operations',
         ':take-screenshot',
         ':unique-value-renderer'
