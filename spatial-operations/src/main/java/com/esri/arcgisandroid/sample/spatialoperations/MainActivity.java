@@ -23,14 +23,14 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 
 public class MainActivity extends AppCompatActivity {
 
-  private GraphicsOverlay inputGeometryOverlay = new GraphicsOverlay();
-  private GraphicsOverlay resultGeometryOverlay = new GraphicsOverlay();
+  final private GraphicsOverlay inputGeometryOverlay = new GraphicsOverlay();
+  final private GraphicsOverlay resultGeometryOverlay = new GraphicsOverlay();
   private Polygon inputPolygon1;
   private Polygon inputPolygon2;
 
   // simple black (0xFF000000) line symbol for outlines
-  private SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF000000, 1);
-  private SimpleFillSymbol resultFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, 0xFFE91F1F, lineSymbol);
+  final private SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF000000, 1);
+  final private SimpleFillSymbol resultFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, 0xFFE91F1F, lineSymbol);
 
   // The spatial operation switching menu items.
   private MenuItem noOperationMenuItem = null;
