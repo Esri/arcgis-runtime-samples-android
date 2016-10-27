@@ -33,6 +33,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
@@ -46,12 +47,12 @@ import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 
 public class MainActivity extends AppCompatActivity {
 
-  MapView mMapView;
+  private static final String TAG = "PictureMarkerSymbols";
 
+  MapView mMapView;
   GraphicsOverlay mGraphicsOverlay;
 
   String mArcGISTempFolderPath;
-
   String mPinBlankOrangeFilePath;
 
   private final static int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 101;
@@ -59,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     setContentView(R.layout.activity_main);
 
     // inflate MapView from layout
@@ -81,13 +81,6 @@ public class MainActivity extends AppCompatActivity {
     mGraphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
 
-    /*
-    Add graphics using different types of picture marker symbols
-     */
-
-    /*
-    Create a picture marker symbol from a URL
-     */
     //[DocRef: Name=Picture Marker Symbol URL, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from a URL resource
     //When using a URL, you need to call load to fetch the remote resource
@@ -109,9 +102,6 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    /*
-    Create a picture marker symbol from an app resource
-     */
     //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from an app resource
     BitmapDrawable pinStarBlueDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin_star_blue);
@@ -135,9 +125,6 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    /*
-    Create a picture marker symbol from an app resource
-     */
     //see createPictureMarkerSymbolFromFile() method for implementation
     //first run checks for external storage and permissions,
     checkSaveResourceToExternalStorage();
@@ -230,7 +217,11 @@ public class MainActivity extends AppCompatActivity {
 
     //create new ArcGIS temp folder
     File folder = new File(mArcGISTempFolderPath);
-    folder.mkdirs();
+    if(folder.mkdirs()){
+      Log.d(TAG, "Temp folder created");
+    }else{
+      Toast.makeText(MainActivity.this, "Could not create temp folder", Toast.LENGTH_LONG).show();
+    }
 
     //create file on disk
     File file = new File(mPinBlankOrangeFilePath);
@@ -255,9 +246,21 @@ public class MainActivity extends AppCompatActivity {
     //Clean up file and folders we saved to disk
     try {
       File file = new File(mPinBlankOrangeFilePath);
-      file.delete();
+
+      if(file.delete()){
+        Log.d(TAG, "Temp folder created");
+      }else{
+        Toast.makeText(MainActivity.this, "Could not create temp folder", Toast.LENGTH_LONG).show();
+      }
+
       File tempFolder = new File(mArcGISTempFolderPath);
-      tempFolder.delete();
+
+      if(tempFolder.delete()){
+        Log.d(TAG, "Temp folder created");
+      }else{
+        Toast.makeText(MainActivity.this, "Could not create temp folder", Toast.LENGTH_LONG).show();
+      }
+
     } catch (Exception e) {
       Log.e("picture-marker-symbol",
           "Failed to delete temp files and directory written to external storage: message = " + e.getMessage());
