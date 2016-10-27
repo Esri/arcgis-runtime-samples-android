@@ -2,7 +2,7 @@
 
 ![Change Basemaps App](change-basemaps.png)
 
-The Change Basemaps sample app shows how you can change basemaps from the ```ActionBar``` overflow button.  You can easily add more basemaps by extending the menu items and implementing them in the ```onCreateOptionsMenu``` and ```onOptionsItemSelected``` methods.
+The Change Basemaps sample app shows how you can change basemaps from an Android Navigation Drawer.  
 
 ## Features
 * ArcGISMap
@@ -10,5 +10,9 @@ The Change Basemaps sample app shows how you can change basemaps from the ```Act
 * Basemap
 * ViewPoint
 
-## Sample Design
-The ```ActionBar``` overflow button lists a group of basemaps to choose from.  The basemaps types are created from the ```Basemap``` class and passed to the ```Map```.
+## Developer Pattern
+The `selectBasemaps()` method switches Basemaps based on the position of the navigation drawer selection. The **Basemap** is created from create methods on a `Basemap` object.  
+
+```java
+mMap.setBasemap(Basemap.createStreets());
+```
