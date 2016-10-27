@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
         if(getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setTitle("");
+            // set opening basemap title to Topographic
+            getSupportActionBar().setTitle(mNavigationDrawerItemTitles[2]);
         }
 
         // inflate MapView from layout
