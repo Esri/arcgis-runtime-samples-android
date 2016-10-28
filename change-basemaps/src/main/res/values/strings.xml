@@ -1,8 +1,16 @@
 <resources>
     <string name="app_name">Change Basemaps</string>
-    <!-- basemap menu items -->
-    <string name="StreetMapMenu">Streets</string>
-    <string name="TopoMenu">Topographic</string>
-    <string name="GrayMenu">Gray</string>
-    <string name="OceanMenu">Oceans</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <string-array name="vector_tiled_types">
+        <item>Streets</item>
+        <item>Navigation Vector</item>
+        <item>Topographic</item>
+        <item>Topographic Vector</item>
+        <item>Gray Canvas</item>
+        <item>Gray Canvas Vector</item>
+    </string-array>
+
 </resources>
