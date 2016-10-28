@@ -19,15 +19,21 @@ package com.esri.arcgisruntime.sample.picturemarkersymbols;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
@@ -39,18 +45,21 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 
-
 public class MainActivity extends AppCompatActivity {
 
+  private static final String TAG = "PictureMarkerSymbols";
+
   MapView mMapView;
+  GraphicsOverlay mGraphicsOverlay;
+
   String mArcGISTempFolderPath;
   String mPinBlankOrangeFilePath;
+
+  private final static int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 101;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-
     setContentView(R.layout.activity_main);
 
     // inflate MapView from layout
@@ -69,10 +78,8 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setViewpointGeometryAsync(envelope, 100.0);
 
     // create a new graphics overlay and add it to the mapview
-    final GraphicsOverlay graphicOverlay = new GraphicsOverlay();
-    mMapView.getGraphicsOverlays().add(graphicOverlay);
-
-    //Add graphics using different types of picture marker symbols
+    mGraphicsOverlay = new GraphicsOverlay();
+    mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
 
     //[DocRef: Name=Picture Marker Symbol URL, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from a URL resource
@@ -91,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         //Once the symbol has loaded, add a new graphic to the graphic overlay
         Point campsitePoint = new Point(-223560, 6552021, SpatialReferences.getWebMercator());
         Graphic campsiteGraphic = new Graphic(campsitePoint, campsiteSymbol);
-        graphicOverlay.getGraphics().add(campsiteGraphic);
+        mGraphicsOverlay.getGraphics().add(campsiteGraphic);
       }
     });
 
@@ -114,75 +121,122 @@ public class MainActivity extends AppCompatActivity {
         //add a new graphic with the same location as the initial viewpoint
         Point pinStarBluePoint = new Point(-226773, 6550477, SpatialReferences.getWebMercator());
         Graphic pinStarBlueGraphic = new Graphic(pinStarBluePoint, pinStarBlueSymbol);
-        graphicOverlay.getGraphics().add(pinStarBlueGraphic);
+        mGraphicsOverlay.getGraphics().add(pinStarBlueGraphic);
       }
     });
 
-    //Check sample has access to external storage
-    if (saveResourceToExternalStorage()) {
+    //see createPictureMarkerSymbolFromFile() method for implementation
+    //first run checks for external storage and permissions,
+    checkSaveResourceToExternalStorage();
 
-      //[DocRef: Name=Picture Marker Symbol File-android, Category=Fundamentals, Topic=Symbols and Renderers]
-      //Create a picture marker symbol from a file on disk
-      BitmapDrawable pinBlankOrangeDrawable = (BitmapDrawable) Drawable.createFromPath(mPinBlankOrangeFilePath);
-      final PictureMarkerSymbol pinBlankOrangeSymbol = new PictureMarkerSymbol(pinBlankOrangeDrawable);
-      //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
-      //its appearance would then differ across devices with different resolutions.
-      pinBlankOrangeSymbol.setHeight(20);
-      pinBlankOrangeSymbol.setWidth(20);
-      //Optionally set the offset, to align the base of the symbol aligns with the point geometry
-      pinBlankOrangeSymbol.setOffsetY(10); //The image used has not buffer and therefore the Y offset is height/2
-      pinBlankOrangeSymbol.loadAsync();
-      //[DocRef: END]
-      pinBlankOrangeSymbol.addDoneLoadingListener(new Runnable() {
-        @Override
-        public void run() {
-          //add a new graphic with the same location as the initial viewpoint
-          Point pinBlankOrangePoint = new Point(-228835, 6550763, SpatialReferences.getWebMercator());
-          Graphic pinBlankOrangeGraphic = new Graphic(pinBlankOrangePoint, pinBlankOrangeSymbol);
-          graphicOverlay.getGraphics().add(pinBlankOrangeGraphic);
-        }
-      });
-    }
   }
 
   /**
-   * Helper method to save an image which is within this sample as a drawable resource to the sdcard so that it can be used as the basis of a PictureMarkerSymbol created from a file on disc
+   * Create a picture marker symbol from an image on disk. Called from checkSaveResourceToExternalStorage() or
+   * onRequestPermissionsResult which validate required external storage and permissions
    */
-  private boolean saveResourceToExternalStorage() {
+  private void createPictureMarkerSymbolFromFile() {
 
-    //handle no sdcard
-    if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-      return false;
-    } else {
-
-      //build paths
-      mArcGISTempFolderPath = Environment.getExternalStorageDirectory() + File.separator + this.getResources()
-          .getString(R.string.pin_blank_orange_folder_name);
-      mPinBlankOrangeFilePath =
-          mArcGISTempFolderPath + File.separator + this.getResources().getString(R.string.pin_blank_orange_file_name);
-
-      //get drawable resource
-      Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.pin_blank_orange);
-
-      //create new ArcGIS temp folder
-      File folder = new File(mArcGISTempFolderPath);
-      folder.mkdirs();
-
-      //create file on disk
-      File file = new File(mPinBlankOrangeFilePath);
-
-      try {
-        OutputStream outStream = new FileOutputStream(file);
-        bm.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-        outStream.flush();
-        outStream.close();
-
-        return true;
-
-      } catch (Exception e) {
-        Log.e("picture-marker-symbol", "Failed to write image to external directory: message = " + e.getMessage());
-        return false;
+    //[DocRef: Name=Picture Marker Symbol File-android, Category=Fundamentals, Topic=Symbols and Renderers]
+    //Create a picture marker symbol from a file on disk
+    BitmapDrawable pinBlankOrangeDrawable = (BitmapDrawable) Drawable.createFromPath(mPinBlankOrangeFilePath);
+    final PictureMarkerSymbol pinBlankOrangeSymbol = new PictureMarkerSymbol(pinBlankOrangeDrawable);
+    //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
+    //its appearance would then differ across devices with different resolutions.
+    pinBlankOrangeSymbol.setHeight(20);
+    pinBlankOrangeSymbol.setWidth(20);
+    //Optionally set the offset, to align the base of the symbol aligns with the point geometry
+    pinBlankOrangeSymbol.setOffsetY(10); //The image used has not buffer and therefore the Y offset is height/2
+    pinBlankOrangeSymbol.loadAsync();
+    //[DocRef: END]
+    pinBlankOrangeSymbol.addDoneLoadingListener(new Runnable() {
+      @Override
+      public void run() {
+        //add a new graphic with the same location as the initial viewpoint
+        Point pinBlankOrangePoint = new Point(-228835, 6550763, SpatialReferences.getWebMercator());
+        Graphic pinBlankOrangeGraphic = new Graphic(pinBlankOrangePoint, pinBlankOrangeSymbol);
+        mGraphicsOverlay.getGraphics().add(pinBlankOrangeGraphic);
       }
+    });
+
+  }
+
+  /**
+   * Helper method to save an image which is within this sample as a drawable resource to the sdcard so that it can be
+   * used as the basis of a PictureMarkerSymbol created from a file on disc
+   */
+  private void checkSaveResourceToExternalStorage() {
+
+    //first, check if there is no sdcard
+    if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+      // no mounted disc, cannot proceed
+      return;
+    }
+
+    //Check for required permission of saving to disc, for devices < android 6 this is set in the manifest and should be granted
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        != PackageManager.PERMISSION_GRANTED) {
+      //no permission, need to task, onRequestPermissionsResult will handle the result
+      ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+          MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+    } else {
+      //permission granted, proceed
+      //save the orange marker app resource to disk
+      if (saveFileToExternalStorage()) {
+        createPictureMarkerSymbolFromFile();
+      }
+    }
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+
+    switch (requestCode) {
+      case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+        //If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          //permission granted
+          if (saveFileToExternalStorage()) {
+            createPictureMarkerSymbolFromFile();
+          }
+        }
+      }
+    }
+  }
+
+  private boolean saveFileToExternalStorage() {
+
+    //build paths
+    mArcGISTempFolderPath = Environment.getExternalStorageDirectory() + File.separator + this.getResources()
+        .getString(R.string.pin_blank_orange_folder_name);
+    mPinBlankOrangeFilePath =
+        mArcGISTempFolderPath + File.separator + this.getResources().getString(R.string.pin_blank_orange_file_name);
+
+    //get drawable resource
+    Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.pin_blank_orange);
+
+    //create new ArcGIS temp folder
+    File folder = new File(mArcGISTempFolderPath);
+    if(folder.mkdirs()){
+      Log.d(TAG, "Temp folder created");
+    }else{
+      Toast.makeText(MainActivity.this, "Could not create temp folder", Toast.LENGTH_LONG).show();
+    }
+
+    //create file on disk
+    File file = new File(mPinBlankOrangeFilePath);
+
+    try {
+      OutputStream outStream = new FileOutputStream(file);
+      bm.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+      outStream.flush();
+      outStream.close();
+
+      return true;
+
+    } catch (Exception e) {
+      Log.e("picture-marker-symbol", "Failed to write image to external directory: message = " + e.getMessage());
+      return false;
     }
   }
 
@@ -192,9 +246,21 @@ public class MainActivity extends AppCompatActivity {
     //Clean up file and folders we saved to disk
     try {
       File file = new File(mPinBlankOrangeFilePath);
-      file.delete();
+
+      if(file.delete()){
+        Log.d(TAG, "Temp folder created");
+      }else{
+        Toast.makeText(MainActivity.this, "Could not create temp folder", Toast.LENGTH_LONG).show();
+      }
+
       File tempFolder = new File(mArcGISTempFolderPath);
-      tempFolder.delete();
+
+      if(tempFolder.delete()){
+        Log.d(TAG, "Temp folder created");
+      }else{
+        Toast.makeText(MainActivity.this, "Could not create temp folder", Toast.LENGTH_LONG).show();
+      }
+
     } catch (Exception e) {
       Log.e("picture-marker-symbol",
           "Failed to delete temp files and directory written to external storage: message = " + e.getMessage());
