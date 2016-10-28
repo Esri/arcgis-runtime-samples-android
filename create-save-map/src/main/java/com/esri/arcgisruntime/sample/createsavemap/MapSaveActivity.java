@@ -16,6 +16,9 @@
 
 package com.esri.arcgisruntime.sample.createsavemap;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.concurrent.ExecutionException;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,10 +36,6 @@ import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.portal.PortalItem;
 import com.esri.arcgisruntime.security.OAuthLoginManager;
 import com.esri.arcgisruntime.security.OAuthTokenCredential;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.concurrent.ExecutionException;
 
 public class MapSaveActivity extends AppCompatActivity {
     private FloatingActionButton saveFab;
@@ -99,7 +98,7 @@ public class MapSaveActivity extends AppCompatActivity {
                             if (portal.getLoadStatus() == LoadStatus.LOADED) {
                                 // Save the map to an authenticated Portal, with specified title, tags, description, and thumbnail.
                                 // Passing 'null' as portal folder parameter saves this to users root folder.
-                                final ListenableFuture<PortalItem> saveAsFuture = MainActivity.mMap.saveAsAsync(portal, null, mTitle, mTagsList, mDescription, null);
+                                final ListenableFuture<PortalItem> saveAsFuture = MainActivity.mMap.saveAsAsync(portal, null, mTitle, mTagsList, mDescription, null, true);
                                 saveAsFuture.addDoneListener(new Runnable() {
                                     @Override
                                     public void run() {
