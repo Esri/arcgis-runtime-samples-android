@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         mSelectedArcGISFeature = null;
 
         // identify the GeoElements in the given layer
-        final ListenableFuture<IdentifyLayerResult> identifyFuture = mMapView.identifyLayerAsync(mFeatureLayer, mClickPoint, 5, true, 1);
+        final ListenableFuture<IdentifyLayerResult> identifyFuture = mMapView.identifyLayerAsync(mFeatureLayer, mClickPoint, 5, false, 1);
 
         // add done loading listener to fire when the selection returns
         identifyFuture.addDoneListener(new Runnable() {
