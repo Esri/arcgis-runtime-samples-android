@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
         // create a map with Topographic Basemap
-        mMap = new ArcGISMap(Basemap.createStreets());
+        mMap = new ArcGISMap(Basemap.Type.STREETS, 48.354388, -99.998245, 3);
         // set the map to be displayed in this view
         mMapView.setMap(mMap);
 
@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         viewpoint = new Viewpoint(londonPoint, SCALE);
 
         final ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(getApplication().getString(R.string.world_elevation));
-
         final ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(getApplication().getString(R.string.world_census));
         // setting the scales at which this layer can be viewed
         imageLayer.setMinScale(MIN_SCALE);
@@ -154,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-                // if the progrees dialog is showing, dismiss it
+                // if the progress dialog is showing, dismiss it
                 mMapView.addLayerViewStateChangedListener(new LayerViewStateChangedListener() {
                     @Override
                     public void layerViewStateChanged(LayerViewStateChangedEvent layerViewStateChangedEvent) {
@@ -264,36 +263,25 @@ public class MainActivity extends AppCompatActivity {
     /**
      * create a ArcGISMap for the selected position
      *
-     * @param choice chosen Base-map
+     * @param choice chosen Basemap
      */
     private void setBasemap(int choice) {
 
         removeLayers();
         switch (choice) {
             case 0:
-                mMap = new ArcGISMap(Basemap.createStreets());
-                // set the map to be displayed in this view
-                mMapView.setMap(mMap);
+                mMap.setBasemap(Basemap.createStreets());
                 break;
             case 1:
-                mMap = new ArcGISMap(Basemap.createImagery());
-                // set the map to be displayed in this view
-                mMapView.setMap(mMap);
+                mMap.setBasemap(Basemap.createImagery());
                 break;
             case 2:
-                mMap = new ArcGISMap(Basemap.createTopographic());
-                // set the map to be displayed in this view
-                mMapView.setMap(mMap);
+                mMap.setBasemap(Basemap.createTopographic());
                 break;
             case 3:
-                mMap = new ArcGISMap(Basemap.createOceans());
-                // set the map to be displayed in this view
-                mMapView.setMap(mMap);
+                mMap.setBasemap(Basemap.createOceans());
                 break;
         }
-
-        mMapView.setViewpointAsync(viewpoint, 7);
-
     }
 
     /**
