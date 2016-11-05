@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.editfeatureattachments;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,8 @@ import com.esri.arcgisruntime.data.FeatureQueryResult;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.sample.arrayadapter.CustomList;
+
+import org.apache.commons.io.FileUtils;
 
 public class EditAttachmentActivity extends AppCompatActivity {
 
@@ -382,7 +385,14 @@ public class EditAttachmentActivity extends AppCompatActivity {
                 String picturePath = cursor.getString(columnIndex);
                 cursor.close();
 
-                File imageFile = new File(picturePath);
+                // covert file to bytes to pass to ArcGISFeature
+                byte[] imageByte = new byte[0];
+                try {
+                    File imageFile = new File(picturePath);
+                    imageByte = FileUtils.readFileToByteArray(imageFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 final String attachmentName = getApplication().getString(R.string.attachment) + "_" + System.currentTimeMillis() + ".png";
 
@@ -391,7 +401,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
 
                 progressDialog.show();
 
-                ListenableFuture<Attachment> addResult = mSelectedArcGISFeature.addAttachmentAsync(imageFile, "image/png", attachmentName);
+                ListenableFuture<Attachment> addResult = mSelectedArcGISFeature.addAttachmentAsync(imageByte, "image/png", attachmentName);
 
                 addResult.addDoneListener(new Runnable() {
                     @Override
