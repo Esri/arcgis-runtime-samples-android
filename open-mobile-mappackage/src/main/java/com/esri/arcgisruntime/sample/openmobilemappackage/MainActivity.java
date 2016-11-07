@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
      * @param mmpkFile Full path to mmpk file
      */
     private void loadMobileMapPackage(String mmpkFile){
+        //[DocRef: Name=Open Mobile Map Package-android, Category=Work with maps, Topic=Create an offline map]
         // create the mobile map package
         mapPackage = new MobileMapPackage(mmpkFile);
         // load the mobile map package asynchronously
@@ -121,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        //[DocRef: END]
     }
 
     @Override
