@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 final Point clickPoint = mMapView.screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
                 // create a selection tolerance
                 int tolerance = 10;
-                double mapTolerance = tolerance * mMapView.getUnitsPerPixel();
+                double mapTolerance = tolerance * mMapView.getUnitsPerDensityIndependentPixel();
                 // use tolerance to create an envelope to query
                 Envelope envelope = new Envelope(clickPoint.getX() - mapTolerance, clickPoint.getY() - mapTolerance, clickPoint.getX() + mapTolerance, clickPoint.getY() + mapTolerance, map.getSpatialReference());
                 QueryParameters query = new QueryParameters();

@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 // get the point that was clicked and convert it to a point in map coordinates
                 Point clickPoint = mMapView.screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
                 int tolerance = 10;
-                double mapTolerance = tolerance * mMapView.getUnitsPerPixel();
+                double mapTolerance = tolerance * mMapView.getUnitsPerDensityIndependentPixel();
                 // create objects required to do a selection with a query
                 Envelope envelope = new Envelope(clickPoint.getX() - mapTolerance, clickPoint.getY() - mapTolerance, clickPoint.getX() + mapTolerance, clickPoint.getY() + mapTolerance, map.getSpatialReference());
                 QueryParameters query = new QueryParameters();
