@@ -11,3 +11,20 @@ The **Display Drawing Status** app shows how to use the ```DrawStatus``` value r
 * DrawStatus
 * DrawStatusChangedEvent
 * DrawStatusChangedListener
+
+## Developer Pattern
+The listener interface for receiving `DrawStatus` changed events from the `MapView`:
+
+```java
+mMapView.addDrawStatusChangedListener(new DrawStatusChangedListener() {
+    @Override
+    public void drawStatusChanged(DrawStatusChangedEvent drawStatusChangedEvent) {
+        if(drawStatusChangedEvent.getDrawStatus() == DrawStatus.IN_PROGRESS){
+            progressBar.setVisibility(View.VISIBLE);
+            Log.d("drawStatusChanged", "spinner visible");
+        }else if (drawStatusChangedEvent.getDrawStatus() == DrawStatus.COMPLETED){
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+    }
+});
+```
