@@ -61,7 +61,7 @@ You can see the developer pattern in this app in the **MainActivity.java** class
 ```
 
 
-The resulting `Intent` is handled in the **AndroidManifest.xml** file with the following::
+The resulting `Intent` is handled in the **AndroidManifest.xml** file with the following:
 
 ```xml
         <activity android:name="com.esri.arcgisruntime.sample.createsavemap.MapSaveActivity">
@@ -80,7 +80,7 @@ The resulting `Intent` is handled in the **AndroidManifest.xml** file with the f
 
 ```
 
-Then we fetch the credentials in the **MapSaveActivity.java** class
+Then we fetch the credentials in the **MapSaveActivity.java** class:
 
 ```java
 // onCreate()
