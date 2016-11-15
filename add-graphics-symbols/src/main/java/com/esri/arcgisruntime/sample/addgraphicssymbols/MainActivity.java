@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
-
         // create a map with the BasemapType topographic
         ArcGISMap map = new ArcGISMap(Basemap.Type.OCEANS, 56.075844, -2.681572, 11);
         // set the map to be displayed in this view
@@ -62,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         addNestingGround(graphicsOverlay);
         //add text symbols and points to graphics overlay
         addText(graphicsOverlay);
-
     }
 
     @Override
@@ -80,10 +78,8 @@ public class MainActivity extends AppCompatActivity {
     private GraphicsOverlay addGraphicsOverlay(MapView mapView) {
         //create the graphics overlay
         GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
-
         //add the overlay to the map view
         mapView.getGraphicsOverlays().add(graphicsOverlay);
-
         return graphicsOverlay;
     }
 
@@ -93,22 +89,18 @@ public class MainActivity extends AppCompatActivity {
         Point buoy2Loc = new Point(-2.6908416959572303, 56.06444173689877, wgs84);
         Point buoy3Loc = new Point(-2.6697273884990937, 56.064250073402874, wgs84);
         Point buoy4Loc = new Point(-2.6395150461199726, 56.06127916736989, wgs84);
-
         //create a marker symbol
         SimpleMarkerSymbol buoyMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10);
-
         //create graphics
         Graphic buoyGraphic1 = new Graphic(buoy1Loc, buoyMarker);
         Graphic buoyGraphic2 = new Graphic(buoy2Loc, buoyMarker);
         Graphic buoyGraphic3 = new Graphic(buoy3Loc, buoyMarker);
         Graphic buoyGraphic4 = new Graphic(buoy4Loc, buoyMarker);
-
         //add the graphics to the graphics overlay
         graphicOverlay.getGraphics().add(buoyGraphic1);
         graphicOverlay.getGraphics().add(buoyGraphic2);
         graphicOverlay.getGraphics().add(buoyGraphic3);
         graphicOverlay.getGraphics().add(buoyGraphic4);
-
     }
 
     private void addText(GraphicsOverlay graphicOverlay) {
@@ -118,18 +110,14 @@ public class MainActivity extends AppCompatActivity {
 
         //create text symbols
         TextSymbol bassRockSymbol =
-                new TextSymbol(
-                        10, "Bass Rock", Color.rgb(0, 0, 230),
+                new TextSymbol(10, "Bass Rock", Color.rgb(0, 0, 230),
                         TextSymbol.HorizontalAlignment.LEFT, TextSymbol.VerticalAlignment.BOTTOM);
-        TextSymbol craigleithSymbol =
-                new TextSymbol(
-                        10, "Craigleith", Color.rgb(0, 0, 230),
+        TextSymbol craigleithSymbol = new TextSymbol(10, "Craigleith", Color.rgb(0, 0, 230),
                         TextSymbol.HorizontalAlignment.RIGHT, TextSymbol.VerticalAlignment.TOP);
 
         //define a graphic from the geometry and symbol
         Graphic bassRockGraphic = new Graphic(bassLocation, bassRockSymbol);
         Graphic craigleithGraphic = new Graphic(craigleithLocation, craigleithSymbol);
-
         //add the text to the graphics overlay
         graphicOverlay.getGraphics().add(bassRockGraphic);
         graphicOverlay.getGraphics().add(craigleithGraphic);
@@ -138,44 +126,29 @@ public class MainActivity extends AppCompatActivity {
     private void addBoatTrip(GraphicsOverlay graphicOverlay) {
         //define a polyline for the boat trip
         Polyline boatRoute = getBoatTripGeometry();
-
         //define a line symbol
         SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.rgb(128, 0, 128), 4);
-
         //create the graphic
         Graphic boatTripGraphic = new Graphic(boatRoute, lineSymbol);
-
         //add to the graphic overlay
         graphicOverlay.getGraphics().add(boatTripGraphic);
-
     }
 
     private void addNestingGround(GraphicsOverlay graphicOverlay) {
-
         //define the polygon for the nesting ground
         Polygon nestingGround = getNestingGroundGeometry();
-
         //define the fill symbol and outline
-        SimpleLineSymbol outlineSymbol =
-                new SimpleLineSymbol(
-                        SimpleLineSymbol.Style.DASH,
-                        Color.rgb(0, 0, 128), 1);
-        SimpleFillSymbol fillSymbol =
-                new SimpleFillSymbol(SimpleFillSymbol.Style.DIAGONAL_CROSS, Color.rgb(0, 80, 0), outlineSymbol);
-
+        SimpleLineSymbol outlineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.rgb(0, 0, 128), 1);
+        SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.DIAGONAL_CROSS, Color.rgb(0, 80, 0), outlineSymbol);
         //define graphic
         Graphic nestingGraphic = new Graphic(nestingGround,fillSymbol);
-
         //add to graphics overlay
         graphicOverlay.getGraphics().add(nestingGraphic);
-
     }
 
     private Polyline getBoatTripGeometry() {
-
         //a new point collection to make up the polyline
         PointCollection boatPositions = new PointCollection(wgs84);
-
         //add positions to the point collection
         boatPositions.add(new Point(-2.7184791227926772,56.06147084563517));
         boatPositions.add(new Point(-2.7196807500463924,56.06147084563517));
@@ -237,7 +210,6 @@ public class MainActivity extends AppCompatActivity {
         boatPositions.add(new Point(-2.718307461756433,56.06147084563517));
 
         //create the polyline from the point collection
-
         return new Polyline(boatPositions);
     }
 
@@ -274,8 +246,6 @@ public class MainActivity extends AppCompatActivity {
         points.add(new Point(-2.643077012566659,56.077125346044475));
 
         //create a polygon from the point collection
-
         return new Polygon(points);
     }
-
 }
