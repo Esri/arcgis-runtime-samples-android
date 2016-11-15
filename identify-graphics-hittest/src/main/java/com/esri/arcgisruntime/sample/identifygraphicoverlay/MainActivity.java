@@ -63,6 +63,18 @@ public class MainActivity extends AppCompatActivity {
         addGraphicsOverlay();
     }
 
+    @Override
+    protected void onPause(){
+        super.onPause();
+        mMapView.pause();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        mMapView.resume();
+    }
+
     private void addGraphicsOverlay() {
         // create the polygon
         PolygonBuilder polygonGeometry = new PolygonBuilder(SpatialReferences.getWebMercator());
@@ -84,18 +96,6 @@ public class MainActivity extends AppCompatActivity {
         graphics.add(graphic);
         // add graphics overlay to the MapView
         mMapView.getGraphicsOverlays().add(grOverlay);
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-        mMapView.pause();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        mMapView.resume();
     }
 
     /**

@@ -29,18 +29,25 @@ You can identify on a graphics overlay from the ```MapView.identifyOnGraphicsOve
 
 ```java
 // identify graphics on the graphics overlay
-final ListenableFuture<List<Graphic>> identifyGraphic = mMapView.identifyGraphicOverlay(grOverlay, screenPoint, 10, 2);
+final ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphic = mMapView.identifyGraphicsOverlayAsync(grOverlay, screenPoint, 10.0, false, 2);
 
 identifyGraphic.addDoneListener(new Runnable() {
-  @Override
-  public void run() {
-    try {
-      // get the list of graphics returned by identify
-      List<Graphic> graphic = identifyGraphic.get();
-      // get size of list in results
-      int identifyResultSize = graphic.size();
-    }catch(InterruptedException | ExecutionException ie){
-      ie.printStackTrace();
+    @Override
+    public void run() {
+        try {
+            IdentifyGraphicsOverlayResult grOverlayResult = identifyGraphic.get();
+            // get the list of graphics returned by identify graphic overlay
+            List<Graphic> graphic = grOverlayResult.getGraphics();
+            // get size of list in results
+            int identifyResultSize = graphic.size();
+            if(!graphic.isEmpty()){
+                // show a toast message if graphic was returned
+                Toast.makeText(getApplicationContext(), "Tapped on " + identifyResultSize + " Graphic", Toast.LENGTH_SHORT).show();
+            }
+        }catch(InterruptedException | ExecutionException ie){
+            ie.printStackTrace();
+        }
+
     }
-  }
+});
 ```
