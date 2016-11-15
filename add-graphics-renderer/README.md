@@ -2,7 +2,7 @@
 
 ![Graphics Overlay Renderer App](graphic-overlay-renderer.png)
 
-The **Add Graphics Renderer** sample demonstrates how to add ```Graphic```s to a List, create a ```SimpleRenderer``` to represent a symbol and style, and add the renderer to the ```MapView```.
+The **Add Graphics Renderer** sample demonstrates how to add graphics to a List, create a `SimpleRenderer` to represent a symbol and style, and add the renderer to the `MapView`.
 
 ## Features
 * MapView
@@ -14,26 +14,22 @@ The **Add Graphics Renderer** sample demonstrates how to add ```Graphic```s to a
 
 ## Developer Pattern
 ### Renderer
-Graphics are added to a ```GraphicsOverlay``` without any symbols or styles. You create a ```Renderer``` to add to the ```GraphicsOverlay``` which defines the symbol as ```SimpleMarkerSymbol``` which sets the style to be rendered.
+Graphics are added to a `GraphicsOverlay` without any symbols or styles. You create a `Renderer` to add to the `GraphicsOverlay` which defines the symbol as `SimpleMarkerSymbol` which sets the style to be rendered.
 
 ```java
-// add points from PointCollection to graphics list
-for(Point pt : polyPoints){
-  // add graphic to graphics overlay
-    graphics.add(new Graphic(pt));
-  }
-// create color for graphic
-Color yellow = new RgbColor(255, 255, 0, 255);
-// create simple renderer
-SimpleRenderer simpleRenderer = new SimpleRenderer();
-// create point symbol
-SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(yellow, 30, SimpleMarkerSymbol.Style.SQUARE);
-pointSymbol.setOpacity(0.5f);
-// set symbol to renderer
-simpleRenderer.setSymbol(pointSymbol);
-// set renderer to graphics overlay
-grOverlay.setRenderer(simpleRenderer);
-
-// add graphics overlay to the MapView
-mMapView.getGraphicsOverlays().add(grOverlay);
+        // point graphic
+        Point pointGeometry = new Point(40e5, 40e5, SpatialReferences.getWebMercator());
+        // red diamond point symbol
+        SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 10);
+        // create graphic for point
+        Graphic pointGraphic = new Graphic(pointGeometry);
+        // create a graphic overlay for the point
+        GraphicsOverlay pointGraphicOverlay = new GraphicsOverlay();
+        // create simple renderer
+        SimpleRenderer pointRenderer = new SimpleRenderer(pointSymbol);
+        pointGraphicOverlay.setRenderer(pointRenderer);
+        // add graphic to overlay
+        pointGraphicOverlay.getGraphics().add(pointGraphic);
+        // add graphics overlay to the MapView
+        mMapView.getGraphicsOverlays().add(pointGraphicOverlay);
 ```
