@@ -37,6 +37,8 @@ repositories {
 }
 ```
 
+[ ![Download](https://api.bintray.com/packages/esri/arcgis/arcgis-android/images/download.svg) ](https://bintray.com/esri/arcgis/arcgis-android/_latestVersion)
+
 ## Fork the repo
 If you haven't already, fork the [this repo](https://github.com/Esri/arcgis-android-sdk-gradle-samples/fork).
 
