@@ -1,12 +1,8 @@
 # Overview
-**This branch represents active development for [ArcGIS Runtime SDK for Android Quartz beta](https://developers.arcgis.com/android/beta/).  You can preview updates to existing samples and new samples that are in active development.** 
-
-[Join the Beta!](http://bit.ly/RuntimeAndroidQuartz)
-
-The ```master``` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/).  The ```quartz-beta``` branch contains sample app modules for the latest version of the [ArcGIS Runtime SDK for Android Quartz beta](https://developers.arcgis.com/android/beta/). Samples released under older versions can be found through the [repository releases](https://github.com/Esri/arcgis-runtime-samples-android/releases).
+ArcGIS Runtime SDK for Android v100.0.0 samples.  The `master` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [repository releases](https://github.com/Esri/arcgis-runtime-samples-android/releases).
 
 # Prerequisites
-* The samples are building with ```compileSdkVersion 23``` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* The samples are building with `compileSdkVersion 24` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [Android Studio](http://developer.android.com/sdk/index.html)
 
 # Developer Instructions
@@ -19,7 +15,7 @@ subprojects{
     afterEvaluate {project ->
         if(project.hasProperty("dependencies")){
             dependencies {
-                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0-beta-3'
+                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0'
             }
         }
     }
@@ -96,24 +92,24 @@ upstream https://github.com/Esri/arcgis-runtime-samples-android.git (push)
 ### Sync your fork
 Once you have set up a remote upstream you can keep your fork up to date with our samples repository by syncing your fork.
 
-- Open a terminal (Mac users) or command prompt (Windows & Linux users)
+- Open a terminal or command prompt
 - Change to the current working directory of your local repository
-- Fetch the branches and commits from the upstream repository.  Commits to ```quartz-beta``` will be stored in a local branch, ```upstream/quartz-beta```.
+- Fetch the branches and commits from the upstream repository.  Commits to `master` will be stored in a local branch, `upstream/master`.
 
 ```
 $ git fetch upstream
 ```
 
-- Check out your forks local ```quartz-beta``` branch
+- Check out your forks local `master` branch
 
 ```
-$ git checkout quartz-beta
+$ git checkout master
 ```
 
-- Merge changes from ```upstream/quartz-beta``` into  your local ```quartz-beta``` branch which syncs your forks ```quartz-beta``` branch with our samples repository.
+- Merge changes from `upstream/master` into  your local `master` branch which syncs your forks `master` branch with our samples repository.
 
 ```
-$ git merge upstream/quartz-beta
+$ git merge upstream/master
 ```
 
 ## Import Gradle Sample project into Android Studio
@@ -123,9 +119,9 @@ Once the project is cloned to disk you can import into Android Studio:
 * Navigate to the root project folder, **arcgis-runtime-samples-android** directory and click **OK**
 
 ## Run a sample
-You should now be able to run any of the included samples.  We will use the ```set-map-initial-location``` sample as an example.
+You should now be able to run any of the included samples.  We will use the `set-map-initial-location` sample as an example.
 
-* Select ```set-map-initial-location``` from the **Select Run/Debug Configuration** drop down
+* Select `set-map-initial-location` from the **Select Run/Debug Configuration** drop down
 * Click the **Run** button
 
 ## Issues
