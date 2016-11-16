@@ -53,7 +53,7 @@ Clone the **ArcGIS Android SDK Samples** in Android Studio:
 ### Command line Git
 [Clone the ArcGIS Android SDK Samples](https://help.github.com/articles/fork-a-repo#step-2-clone-your-fork)
 
-Open your terminal, navigate to your working directory, use ```git clone``` to get a copy of the repo.
+Open your terminal, navigate to your working directory, use `git clone` to get a copy of the repo.
 
 ```
 # Clones your fork of the repository into the current directory in terminal
@@ -63,7 +63,7 @@ $ git clone https://github.com/YOUR-USERNAME/arcgis-runtime-samples-android.git
 ## Configure remote upstream for your fork
 To sync changes you make in a fork with this repository, you must configure a remote that points to the upstream repository in Git.
 
-- Open a terminal (Mac users) or command prompt (Windows & Linux users)
+- Open a terminal or command prompt
 - List the current configured remote repository for your fork
 
 ```
