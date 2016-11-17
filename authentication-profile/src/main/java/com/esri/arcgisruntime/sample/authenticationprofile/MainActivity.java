@@ -27,6 +27,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView userText;
     private TextView emailText;
-    private TextView urlText;
+    private TextView portalNameText;
     private TextView createDate;
     private ImageView userImage;
 
@@ -62,70 +63,67 @@ public class MainActivity extends AppCompatActivity {
                     // Get the portal information
                     PortalInfo portalInformation = portal.getPortalInfo();
                     String portalName = portalInformation.getPortalName();
-                    urlText = (TextView)findViewById(R.id.portal);
-                    urlText.setText(portalName);
+                    portalNameText = (TextView) findViewById(R.id.portal);
+                    portalNameText.setText(portalName);
 
-                    // Get the authenticated portal user
-                    PortalUser user = portal.getUser();
-                    // get the users full name
-                    String userName = user.getFullName();
-                    // update the textview
-                    userText = (TextView)findViewById(R.id.userName);
-                    userText.setText(userName);
-                    // get the users email
-                    String email = user.getEmail();
-                    // update the textview
-                    emailText = (TextView)findViewById(R.id.email);
-                    emailText.setText(email);
-                    // get the created date
-                    Calendar startDate = user.getCreated();
-                    // format date
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
-                    // get string format
-                    String formatDate = simpleDateFormat.format(startDate.getTime());
-                    // update textview
-                    createDate = (TextView)findViewById(R.id.create_date);
-                    createDate.setText(formatDate);
-                    // check if user profile thumbnail exists
-                    if (user.getThumbnailFileName() == null) {
-                        return;
-                    }
-                    // fetch the thumbnail
-                    final ListenableFuture<byte[]> thumbnailFuture = user.fetchThumbnailAsync();
-                    thumbnailFuture.addDoneListener(new Runnable() {
-                        @Override
-                        public void run() {
-                            // get the thumbnail image data
-                            byte[] itemThumbnailData;
-                            try {
-                                itemThumbnailData = thumbnailFuture.get();
-
-                                if ((itemThumbnailData != null) && (itemThumbnailData.length > 0)) {
-                                    // create a Bitmap to use as required
-                                    Bitmap itemThumbnail = BitmapFactory.decodeByteArray(itemThumbnailData, 0, itemThumbnailData.length);
-                                    // set the Bitmap onto the ImageView
-                                    userImage = (ImageView)findViewById(R.id.userImage);
-                                    userImage.setImageBitmap(itemThumbnail);
-                                }
-                            } catch (InterruptedException | ExecutionException e) {
-                                Log.d("TEST", e.getMessage());
-                            }
+                    // this portal does not require authentication, if null send toast message
+                    if(portal.getUser() != null){
+                        // Get the authenticated portal user
+                        PortalUser user = portal.getUser();
+                        // get the users full name
+                        String userName = user.getFullName();
+                        // update the textview
+                        userText = (TextView) findViewById(R.id.userName);
+                        userText.setText(userName);
+                        // get the users email
+                        String email = user.getEmail();
+                        // update the textview
+                        emailText = (TextView) findViewById(R.id.email);
+                        emailText.setText(email);
+                        // get the created date
+                        Calendar startDate = user.getCreated();
+                        // format date
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
+                        // get string format
+                        String formatDate = simpleDateFormat.format(startDate.getTime());
+                        // update textview
+                        createDate = (TextView) findViewById(R.id.create_date);
+                        createDate.setText(formatDate);
+                        // check if user profile thumbnail exists
+                        if (user.getThumbnailFileName() == null) {
+                            return;
                         }
-                    });
+                        // fetch the thumbnail
+                        final ListenableFuture<byte[]> thumbnailFuture = user.fetchThumbnailAsync();
+                        thumbnailFuture.addDoneListener(new Runnable() {
+                            @Override
+                            public void run() {
+                                // get the thumbnail image data
+                                byte[] itemThumbnailData;
+                                try {
+                                    itemThumbnailData = thumbnailFuture.get();
+
+                                    if ((itemThumbnailData != null) && (itemThumbnailData.length > 0)) {
+                                        // create a Bitmap to use as required
+                                        Bitmap itemThumbnail = BitmapFactory.decodeByteArray(itemThumbnailData, 0, itemThumbnailData.length);
+                                        // set the Bitmap onto the ImageView
+                                        userImage = (ImageView) findViewById(R.id.userImage);
+                                        userImage.setImageBitmap(itemThumbnail);
+                                    }
+                                } catch (InterruptedException | ExecutionException e) {
+                                    Log.d("TEST", e.getMessage());
+                                }
+                            }
+                        });
+                    } else {
+                        // send message that user did not authenticate
+                        Toast.makeText(getApplicationContext(), "User did not authenticate against " + portalName, Toast.LENGTH_LONG).show();
+                    }
 
                 }
             }
         });
         portal.loadAsync();
     }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-    }
 }
+
