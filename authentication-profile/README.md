@@ -10,12 +10,14 @@ The Authentication Profile sample use the `DefaultAuthenticationChallengeHandler
 * PortalUser
 
 ## Developer Pattern
-The `DefaultAuthenticationChallengeHandler` is the default implementation of the `AuthenticationChallengeHandler` interface to handle authentication with a portal.  This is set on the `AuthenticationManager`. To authenticate the user you create a `Portal` object, provide the essential credentials and then asynchronously load the portal as shown below:
+The `DefaultAuthenticationChallengeHandler` is the default implementation of the `AuthenticationChallengeHandler` interface to handle  all security types that ArcGIS supports (including OAuth).  This sample uses it to authenticate with a portal.  This is set on the `AuthenticationManager`. To authenticate the user you create a `Portal` object, provide the essential credentials and then asynchronously load the portal as shown below:
 
 ```java
 // Set the DefaultAuthenticationChallegeHandler to allow authentication with the portal.
 DefaultAuthenticationChallengeHandler handler = new DefaultAuthenticationChallengeHandler(this);
 AuthenticationManager.setAuthenticationChallengeHandler(handler);
+// Set loginRequired to true always prompt for credential,
+// When set to false to only login if required by the portal
 final Portal portal = new Portal("http://www.arcgis.com", true);
 ```
 
