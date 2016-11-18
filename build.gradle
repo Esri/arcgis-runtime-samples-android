@@ -22,16 +22,15 @@ allprojects {
 }
 
 ext {
-    compileSdkVersion = 24
-    buildToolsVersion = "24.0.1"
+    compileSdkVersion = 25
+    buildToolsVersion = "25.0.0"
 }
 
 subprojects{
     afterEvaluate {project ->
         if(project.hasProperty("dependencies")){
             dependencies {
-//                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0'
-                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0-1524'
+                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0'
             }
         }
     }
