@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         vectorTiledLayerUrl = getResources().getString(R.string.night_url);
         break;
       case 3:
-        vectorTiledLayerUrl = getResources().getString(R.string.topographic_url);
+        vectorTiledLayerUrl = getResources().getString(R.string.dark_gray_url);
         break;
     }
     // create the new vector tiled layer using the url
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     mDrawerToggle.setDrawerIndicatorEnabled(true);
-    mDrawerLayout.setDrawerListener(mDrawerToggle);
+    mDrawerLayout.addDrawerListener(mDrawerToggle);
   }
 
   @Override
