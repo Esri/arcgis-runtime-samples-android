@@ -23,6 +23,6 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.0.1'
+    // arcgis-android & appcompat lib dependencies from rootProject build.gradle
     compile 'com.android.support:design:25.0.1'
 }

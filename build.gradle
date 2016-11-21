@@ -13,10 +13,7 @@ allprojects {
 
     final def var = repositories {
         jcenter()
-        // release url
-//        maven{ url 'https://esri.bintray.com/arcgis' }
-        // testing url
-        maven{ url 'http://android:8080/artifactory/arcgis' }
+        maven{ url 'https://esri.bintray.com/arcgis' }
     }
     var
 }
@@ -30,6 +27,7 @@ subprojects{
     afterEvaluate {project ->
         if(project.hasProperty("dependencies")){
             dependencies {
+                compile 'com.android.support:appcompat-v7:25.0.1'
                 compile 'com.esri.arcgisruntime:arcgis-android:100.0.0'
             }
         }

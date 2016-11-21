@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.esri.arcgisruntime.sample.findroute"
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
     }
@@ -20,6 +20,6 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:24.0.0'
-    compile 'com.android.support:design:24.0.0'
+    // arcgis-android & appcompat lib dependencies from rootProject build.gradle
+    compile 'com.android.support:design:25.0.1'
 }
