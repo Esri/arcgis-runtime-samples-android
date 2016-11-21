@@ -8,6 +8,6 @@
         android:layout_height="wrap_content"
         android:paddingTop="5dp"
         android:maxLines="1"
-        android:drawableStart="@android:drawable/stat_notify_more"
+        android:drawableStart="@android:drawable/ic_menu_add"
         android:padding="5dp"/>
 </LinearLayout>
