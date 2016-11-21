@@ -21,6 +21,6 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta2'
+    // arcgis-android & appcompat lib dependencies from rootProject build.gradle
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
 }

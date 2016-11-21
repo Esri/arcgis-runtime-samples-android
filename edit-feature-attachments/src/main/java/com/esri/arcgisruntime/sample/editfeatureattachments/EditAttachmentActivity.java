@@ -44,7 +44,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -208,11 +207,6 @@ public class EditAttachmentActivity extends AppCompatActivity {
                         fos.flush();
                         fos.close();
                     }
-                    // set the downloaded bitmap to the icon
-                    ImageView attachmentIcon = (ImageView) view.findViewById(R.id.attachmentIcon);
-                    attachmentIcon.setImageBitmap(bitmap);
-                            /*TextView textTitle = (TextView) view.findViewById(R.id.AttachmentName);
-                            textTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(d,null,null,null);*/
 
                     if (progressDialog.isShowing()) {
                         progressDialog.dismiss();

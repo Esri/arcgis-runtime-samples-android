@@ -35,13 +35,10 @@ import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
 import com.esri.arcgisruntime.data.Attachment;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
-import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.GeoElement;
-import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
@@ -51,11 +48,10 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "EditFeatureAttachment";
     private static final int REQUEST_CODE = 100;
-    private ServiceFeatureTable mServiceFeatureTable;
     private ProgressDialog progressDialog;
     private RelativeLayout mCalloutLayout;
-    private ArcGISMap mMap;
     private MapView mMapView;
+    private ArcGISMap mMap;
     private Callout mCallout;
     private FeatureLayer mFeatureLayer;
     private ArcGISFeature mSelectedArcGISFeature;
@@ -70,13 +66,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
-
         // create a map with the streets basemap
-        mMap = new ArcGISMap(Basemap.createStreets());
-
-        //set an initial viewpoint to USA
-        mMap.setInitialViewpoint(new Viewpoint(new Point(-100.343, 34.585, SpatialReferences.getWgs84()), 8e7));
-
+        mMap = new ArcGISMap(Basemap.Type.STREETS, 44.354388, -119.998245, 5);
         // set the map to be displayed in the mapview
         mMapView.setMap(mMap);
 
@@ -88,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         mCallout = mMapView.getCallout();
         // create feature layer with its service feature table
         // create the service feature table
-        mServiceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
+        ServiceFeatureTable mServiceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
         mServiceFeatureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.ON_INTERACTION_CACHE);
         // create the feature layer using the service feature table
         mFeatureLayer = new FeatureLayer(mServiceFeatureTable);
@@ -131,16 +122,13 @@ public class MainActivity extends AppCompatActivity {
                                     mSelectedArcGISFeature = (ArcGISFeature) resultGeoElements.get(0);
                                     // highlight the selected feature
                                     mFeatureLayer.selectFeature(mSelectedArcGISFeature);
-
                                     mAttributeID = mSelectedArcGISFeature.getAttributes().get("objectid").toString();
-
                                     // get the number of attachments
                                     final ListenableFuture<List<Attachment>> attachmentResults = mSelectedArcGISFeature.fetchAttachmentsAsync();
 
                                     attachmentResults.addDoneListener(new Runnable() {
                                         @Override
                                         public void run() {
-
                                             try {
                                                 attachments = attachmentResults.get();
                                                 Log.d("number of attachments :", attachments.size() + "");
@@ -250,7 +238,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            Log.e("imageview", "tap");
             // start EditAttachmentActivity to view/edit the attachments
             Intent myIntent = new Intent(MainActivity.this, EditAttachmentActivity.class);
             myIntent.putExtra(getApplication().getString(R.string.attribute), mAttributeID);
