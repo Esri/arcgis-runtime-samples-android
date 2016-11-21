@@ -8,7 +8,7 @@
     <!-- Messages -->
     <string name="fetching_no_attachments">Fetching attachment count</string>
     <string name="info_button_message">Tap on the info button to edit attachment</string>
-    <string name="attachment_info_message">Number of attachments :: </string>
+    <string name="attachment_info_message">Number of attachments | </string>
     <string name="empty_attachment_message">Click + to add attachments</string>
     <string name="fetching_attachments">Fetching Attachments</string>
     <string name="wait">Please wait&#8230;</string>
