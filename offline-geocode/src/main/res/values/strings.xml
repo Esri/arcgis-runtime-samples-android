@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Offline geocode</string>
+    <string name="geo_locate_error">Geocode failed on address</string>
+    <string name="location_not_foud">We are sorry, we couldn\'t find a location with the name - </string>
+    <!-- San Francisco tpk and locator paths -->
+    <string name="sandiego_tpk">/ArcGIS/samples/OfflineGeocoding/streetmap_SD.tpk</string>
+    <string name="sandiego_loc">/ArcGIS/samples/OfflineGeocoding/san-diego-locator.loc</string>
+    <string name="storage_permission_denied">Storage permission denied</string>
+
+    <string name="search_hint">Enter address</string>
+    <string name="reverse_geocode_message">Drag the pin to reverse-geocode</string>
+
+    <!-- Search Suggestions -->
+    <string-array name="suggestion_items">
+        <item>910 N Harbor Dr, San Diego, CA 92101</item>
+        <item>2920 Zoo Dr, San Diego, CA 92101</item>
+        <item>111 W Harbor Dr, San Diego, CA 92101</item>
+        <item>868 4th Ave, San Diego, CA 92101</item>
+        <item>750 A St, San Diego, CA 92101</item>
+        <item>Enter address&#8230;</item>
+    </string-array>
+</resources>

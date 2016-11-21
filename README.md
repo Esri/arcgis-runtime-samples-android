@@ -1,22 +1,28 @@
 # Overview
-ArcGIS Runtime SDK for Android v10.2.8 samples for Android Studio.  The repo contains an [Android Studio](http://developer.android.com/sdk/index.html) project with multi-project sample app modules that can be run from within the Android Studio IDE.
+ArcGIS Runtime SDK for Android v100.0.0 samples.  The `master` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [repository releases](https://github.com/Esri/arcgis-runtime-samples-android/releases).
 
 # Prerequisites
-* The samples are building with ```compileSdkVersion 21``` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* The samples are building with `compileSdkVersion 25` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [Android Studio](http://developer.android.com/sdk/index.html)
 
 # Developer Instructions
 The **ArcGIS Android SDK Samples** are [Gradle](https://www.gradle.org) based Android projects which can be directly cloned and imported into Android Studio.
 
-Each sample app module has a build.gradle file with the latest ArcGIS Android SDK compile dependency.
+The latest ArcGIS Android SDK compile dependency is defined for all sample modules in the root project build.gradle.  This is the only place where you need to define the dependency to the ArcGIS Android SDK.
 
 ```groovy
-dependencies {
-    compile 'com.esri.arcgis.android:arcgis-android:10.2.8-1'
+subprojects{
+    afterEvaluate {project ->
+        if(project.hasProperty("dependencies")){
+            dependencies {
+                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0'
+            }
+        }
+    }
 }
 ```
 
-Our SDK is hosted in our public maven repository hosted by Bintray.  Our repository url is added to the projects build.gradle file.
+Our SDK is hosted in our public maven repository hosted by Bintray.  Our repository url is added to the projects root build.gradle file.
 
 ```groovy
 repositories {
@@ -47,7 +53,7 @@ Clone the **ArcGIS Android SDK Samples** in Android Studio:
 ### Command line Git
 [Clone the ArcGIS Android SDK Samples](https://help.github.com/articles/fork-a-repo#step-2-clone-your-fork)
 
-Open your terminal, navigate to your working directory, use ```git clone``` to get a copy of the repo.
+Open your terminal, navigate to your working directory, use `git clone` to get a copy of the repo.
 
 ```
 # Clones your fork of the repository into the current directory in terminal
@@ -57,7 +63,7 @@ $ git clone https://github.com/YOUR-USERNAME/arcgis-runtime-samples-android.git
 ## Configure remote upstream for your fork
 To sync changes you make in a fork with this repository, you must configure a remote that points to the upstream repository in Git.
 
-- Open a terminal (Mac users) or command prompt (Windows & Linux users)
+- Open a terminal or command prompt
 - List the current configured remote repository for your fork
 
 ```
@@ -86,21 +92,21 @@ upstream https://github.com/Esri/arcgis-runtime-samples-android.git (push)
 ### Sync your fork
 Once you have set up a remote upstream you can keep your fork up to date with our samples repository by syncing your fork.
 
-- Open a terminal (Mac users) or command prompt (Windows & Linux users)
+- Open a terminal or command prompt
 - Change to the current working directory of your local repository
-- Fetch the branches and commits from the upstream repository.  Commits to ```master``` will be stored in a local branch, ```upstream/master```.
+- Fetch the branches and commits from the upstream repository.  Commits to `master` will be stored in a local branch, `upstream/master`.
 
 ```
 $ git fetch upstream
 ```
 
-- Check out your forks local ```master``` branch
+- Check out your forks local `master` branch
 
 ```
 $ git checkout master
 ```
 
-- Merge changes from ```upstream/master``` into  your local ```master``` branch which syncs your forks ```master``` branch with our samples repository.
+- Merge changes from `upstream/master` into  your local `master` branch which syncs your forks `master` branch with our samples repository.
 
 ```
 $ git merge upstream/master
@@ -110,25 +116,13 @@ $ git merge upstream/master
 Once the project is cloned to disk you can import into Android Studio:
 
 * From the toolbar select **File > Import Project**, or **Import Non-Android Studio project** from the Welcome Quick Start.
-* Navigate to the root project folder, **arcgis-android-sdk-gradle-samples-10.2.8** directory and click **OK**
+* Navigate to the root project folder, **arcgis-runtime-samples-android** directory and click **OK**
 
 ## Run a sample
-You should now be able to run any of the included samples.  We will use the ```HelloWorld``` Sample as an example.  
+You should now be able to run any of the included samples.  We will use the `set-map-initial-location` sample as an example.
 
-* Select ```HelloWorld``` from the **Select Run/Debug Configuration** drop down
+* Select `set-map-initial-location` from the **Select Run/Debug Configuration** drop down
 * Click the **Run** button
-
-## Location Services
-Some of our sample app modules need an active GPS connection to run. If you are running these samples on an emulator you will need to push the location to a GPS enabled emulator.
-Refer [here](http://developer.android.com/tools/devices/emulator.html) for more information.
-You can also push the location using the Android Device Manager.
-
-Steps to fix a location on your emulator:
-
-1. Launch Android Device Manager
-2. Select **Emulator Control** tab
-3. Enter **Longitude** and **Latitude** then click on **Send** 
-
 
 ## Issues
 Find a bug or want to request a new feature enhancement?  Please let us know by submitting an issue.

@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">DynamicSubLayerReorderSample</string>
-
-    <string name="action_settings">Settings</string>
-    <string name="basemap_url">http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer</string>
-    <string name="dynamiclayer_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer</string>
-</resources>

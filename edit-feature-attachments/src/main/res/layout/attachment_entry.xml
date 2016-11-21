@@ -1,0 +1,13 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+    <TextView
+        android:id="@+id/AttachmentName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:maxLines="1"
+        android:drawableStart="@android:drawable/ic_menu_add"
+        android:padding="5dp"/>
+</LinearLayout>
