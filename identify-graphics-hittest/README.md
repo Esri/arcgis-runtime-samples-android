@@ -1,6 +1,6 @@
 # Identify Graphics Hit Test
 
-![Identify Graphic Overlay App](identify-graphic-overlay.png)
+![Identify Graphic Hit Test App](identify-graphic-hittest.png)
 
 The **Identify Graphics Hit Test** sample demonstrates how to create a ```Graphic``` and add it to a ```GraphicOverlay``` where it can be identified from the ```MapView```.
 
