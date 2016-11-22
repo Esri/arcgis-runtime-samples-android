@@ -1,6 +1,6 @@
 # Add Graphics Renderer
 
-![Graphics Overlay Renderer App](graphic-overlay-renderer.png)
+![Add Graphics Renderer App](add-graphics-renderer.png)
 
 The **Add Graphics Renderer** sample demonstrates how to add graphics to a List, create a `SimpleRenderer` to represent a symbol and style, and add the renderer to the `MapView`.
 
