@@ -23,7 +23,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.Callout;
@@ -57,21 +59,26 @@ public class MainActivity extends AppCompatActivity {
                 // get the point that was clicked and convert it to a point in map coordinates
                 android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
                         Math.round(motionEvent.getY()));
-
-                Point singleTapPoint = mMapView.screenToLocation(screenPoint);
-
+                // create a map point from screen point
+                Point mapPoint = mMapView.screenToLocation(screenPoint);
+                // convert to WGS84 for lat/lon format
+                Point wgs84Point = (Point) GeometryEngine.project(mapPoint, SpatialReferences.getWgs84());
                 // create a textview for the callout
                 TextView calloutContent = new TextView(getApplicationContext());
                 calloutContent.setTextColor(Color.BLACK);
                 calloutContent.setSingleLine();
-                calloutContent.setText("X:" +  (String.format("%.2f", singleTapPoint.getX()))
-                        + ", y:" + (String.format("%.2f", singleTapPoint.getY())));
+                // format coordinates to 4 decimal places
+                calloutContent.setText("Lat: " +  String.format("%.4f", wgs84Point.getY()) +
+                        ", Lon: " + String.format("%.4f", wgs84Point.getX()));
 
                 // get callout, set content and show
                 mCallout = mMapView.getCallout();
-                mCallout.setLocation(singleTapPoint);
+                mCallout.setLocation(mapPoint);
                 mCallout.setContent(calloutContent);
                 mCallout.show();
+
+                // center on tapped point
+                mMapView.setViewpointCenterAsync(mapPoint);
 
                 return true;
             }
