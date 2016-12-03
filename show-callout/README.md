@@ -16,12 +16,16 @@ The pattern demonstrates how to show location coordinates on a `MapView` using a
 TextView calloutContent = new TextView(getApplicationContext());
 calloutContent.setTextColor(Color.BLACK);
 calloutContent.setSingleLine();
-calloutContent.setText("X:" +  (String.format("%.2f", singleTapPoint.getX()))
-        + ", y:" + (String.format("%.2f", singleTapPoint.getY())));
+// format coordinates to 4 decimal places
+ calloutContent.setText("Lat: " +  String.format("%.4f", wgs84Point.getY()) +
+        ", Lon: " + String.format("%.4f", wgs84Point.getX()));
 
 // get callout, set content and show
 mCallout = mMapView.getCallout();
-mCallout.setLocation(singleTapPoint);
+mCallout.setLocation(mapPoint);
 mCallout.setContent(calloutContent);
 mCallout.show();
+
+// center on tapped point
+mMapView.setViewpointCenterAsync(mapPoint);
 ```
