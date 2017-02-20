@@ -125,10 +125,10 @@ public class MainActivity extends AppCompatActivity {
         vectorTiledLayerUrl = getResources().getString(R.string.navigation_url);
         break;
       case 1:
-        vectorTiledLayerUrl = getResources().getString(R.string.streets_url);
+        vectorTiledLayerUrl = getResources().getString(R.string.night_url);
         break;
       case 2:
-        vectorTiledLayerUrl = getResources().getString(R.string.night_url);
+        vectorTiledLayerUrl = getResources().getString(R.string.light_gray_url);
         break;
       case 3:
         vectorTiledLayerUrl = getResources().getString(R.string.dark_gray_url);
