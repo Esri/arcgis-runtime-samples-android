@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">vector-tiled-layer</string>
 
-    <string name="navigation_url">http://www.arcgis.com/home/item.html?id=00cd8e843bae49b3a040423e5d65416b</string>
-    <string name="streets_url">http://www.arcgis.com/home/item.html?id=3b8814f6ddbd485cae67e8018992246e</string>
-    <string name="night_url">http://www.arcgis.com/home/item.html?id=f96366254a564adda1dc468b447ed956</string>
-    <string name="dark_gray_url">http://www.arcgis.com/home/item.html?id=3e3099d7302f4d99bc6f916dcc07ed59</string>
+    <string name="navigation_url">https://www.arcgis.com/home/item.html?id=e19e9330bf08490ca8353d76b5e2e658</string>
+    <string name="light_gray_url">https://www.arcgis.com/home/item.html?id=5dd75c1a544b46c3af01ba5736bfdfa0</string>
+    <string name="night_url">https://www.arcgis.com/home/item.html?id=92c551c9f07b4147846aae273e822714</string>
+    <string name="dark_gray_url">https://www.arcgis.com/home/item.html?id=5ad3948260a147a993ef4865e3fad476</string>
 
     <string-array name="vector_tiled_types">
         <item>World Navigation</item>
-        <item>World Street</item>
         <item>World Street Night</item>
+        <item>Light Gray Canvas</item>
         <item>Dark Gray Canvas</item>
     </string-array>
 
