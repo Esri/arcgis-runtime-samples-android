@@ -33,12 +33,15 @@ The sample creates a ```RouteTask``` from the and uses default ```RouteParameter
 
                                 // get List of Stops
                                 List routeStops = mRouteParams.getStops();
-                                // set return directions as true to return turn-by-turn directions in the result of getDirectionManeuvers().
+                                // set return directions as true to return turn-by-turn directions 
+                                // in the result of getDirectionManeuvers().
                                 mRouteParams.setReturnDirections(true);
 
                                 // add your stops to it
-                                routeStops.add(new Stop(new Point(-13041171.537945, 3860988.271378, SpatialReferences.getWebMercator())));
-                                routeStops.add(new Stop(new Point(-13041693.562570, 3856006.859684, SpatialReferences.getWebMercator())));
+                                routeStops.add(new Stop(new Point(-13041171.537945, 3860988.271378, 
+                                    SpatialReferences.getWebMercator())));
+                                routeStops.add(new Stop(new Point(-13041693.562570, 3856006.859684, 
+                                    SpatialReferences.getWebMercator())));
 
                                 // solve
                                 RouteResult result = mRouteTask.solveAsync(mRouteParams).get();
@@ -49,7 +52,8 @@ The sample creates a ```RouteTask``` from the and uses default ```RouteParameter
                                 // add route graphic to the map
                                 graphicsOverlay.getGraphics().add(routeGraphic);
                                 // get directions
-                                // NOTE: to get turn-by-turn directions Route Parameters should set returnDirection flag as true
+                                // NOTE: to get turn-by-turn directions Route Parameters should set 
+                                // returnDirection flag as true
                                 List<DirectionManeuver> directions = mRoute.getDirectionManeuvers();
 
                                 String[] directionsArray = new String[directions.size()];
