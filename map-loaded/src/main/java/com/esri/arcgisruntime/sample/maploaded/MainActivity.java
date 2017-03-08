@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             public void loadStatusChanged(LoadStatusChangedEvent loadStatusChangedEvent) {
                 String mapLoadStatus;
                 mapLoadStatus = loadStatusChangedEvent.getNewLoadStatus().name();
-                // map load status can be any of LOADED, FAILED_TO_LOAD, NOT_LOADED or LOADED
+                // map load status can be any of LOADING, FAILED_TO_LOAD, NOT_LOADED or LOADED
                 // set the status in the TextView accordingly
                 switch (mapLoadStatus) {
                     case "LOADING":
