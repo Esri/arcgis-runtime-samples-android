@@ -9,7 +9,7 @@ We do invite you to take a look at the new samples that are in development to ge
 * The samples are building with `compileSdkVersion 25` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [Android Studio](http://developer.android.com/sdk/index.html)
 
-# Developer Instructions
+# Developer Instructions - Active development
 The **ArcGIS Android SDK Samples** are [Gradle](https://www.gradle.org) based Android projects which can be directly cloned and imported into Android Studio.
 
 The latest ArcGIS Android SDK compile dependency is defined for all sample modules in the root project build.gradle.  This is the only place where you need to define the dependency to the ArcGIS Android SDK.
