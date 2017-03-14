@@ -1,11 +1,15 @@
 # Overview
-ArcGIS Runtime SDK for Android v100.0.0 samples.  The `master` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [repository releases](https://github.com/Esri/arcgis-runtime-samples-android/releases).
+ArcGIS Runtime SDK for Android v100.0.1 samples.  The `develop` branch of this repository contains sample app modules for the next release currently in development of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). 
+
+**NOTE:  This is an active development branch and will not run against any released version of the ArcGIS Android SDK**  
+
+We do invite you to take a look at the new samples that are in development to get a sneak peak into how the API is being developed. 
 
 # Prerequisites
 * The samples are building with `compileSdkVersion 25` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [Android Studio](http://developer.android.com/sdk/index.html)
 
-# Developer Instructions
+# Developer Instructions - Active development
 The **ArcGIS Android SDK Samples** are [Gradle](https://www.gradle.org) based Android projects which can be directly cloned and imported into Android Studio.
 
 The latest ArcGIS Android SDK compile dependency is defined for all sample modules in the root project build.gradle.  This is the only place where you need to define the dependency to the ArcGIS Android SDK.
@@ -15,7 +19,7 @@ subprojects{
     afterEvaluate {project ->
         if(project.hasProperty("dependencies")){
             dependencies {
-                compile 'com.esri.arcgisruntime:arcgis-android:100.0.0'
+                compile 'com.esri.arcgisruntime:arcgis-android:100.0.1'
             }
         }
     }
