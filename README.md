@@ -1,7 +1,7 @@
 # Overview
-ArcGIS Runtime SDK for Android v100.0.1 samples.  The `develop` branch of this repository contains sample app modules for the next release currently in development of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). 
+ArcGIS Runtime SDK for Android v100.1.0 samples.  The `develop` branch of this repository contains sample app modules for the next release currently in development of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). 
 
-**NOTE:  This is an active development branch and will not run against any released version of the ArcGIS Android SDK**  
+**NOTE:  This is an active development branch and will not run against any released version of the ArcGIS Android SDK.  The samples in this branch build off an internal dependency repository for testing and new sample updates based on internal development.**  
 
 We do invite you to take a look at the new samples that are in development to get a sneak peak into how the API is being developed. 
 
