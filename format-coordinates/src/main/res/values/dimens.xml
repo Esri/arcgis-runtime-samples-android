@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="coordinate_text_margin">4dp</dimen>
+    <dimen name="coordinate_grid_padding">8dp</dimen>
+</resources>
