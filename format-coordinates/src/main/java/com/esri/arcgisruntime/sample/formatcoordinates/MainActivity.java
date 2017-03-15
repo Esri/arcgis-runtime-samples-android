@@ -53,33 +53,26 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Uses CoordinateFormatter to update the UI with coordinate notation strings based on the given Point.
    * @param newLocation Point to convert to coordinate notations
-   * @param skipType type of coordinate notation to skip updating (for example if user input that type); or null to
-   *                 update all
    */
-  private void toCoordinateNotationFromPoint(Point newLocation, NotationType skipType) {
+  private void toCoordinateNotationFromPoint(Point newLocation) {
     if ((newLocation != null) && (! newLocation.isEmpty())) {
       coordinateLocation.setGeometry(newLocation);
 
       try {
-        if (skipType != NotationType.DD) {
-          // use CoordinateFormatter to convert to Latitude Longitude, formatted as Decimal Degrees
-          mLatLongDDValue.setText(CoordinateFormatter.toLatitudeLongitude(newLocation,
-              CoordinateFormatter.LatitudeLongitudeFormat.DECIMAL_DEGREES, 4));
-        }
-        if (skipType != NotationType.DMS) {
-          // use CoordinateFormatter to convert to Latitude Longitude, formatted as Degrees, Minutes, Seconds
-          mLatLongDMSValue.setText(CoordinateFormatter.toLatitudeLongitude(newLocation,
-              CoordinateFormatter.LatitudeLongitudeFormat.DEGREES_MINUTES_SECONDS, 1));
-        }
-        if (skipType != NotationType.UTM) {
-          // use CoordinateFormatter to convert to Universal Transverse Mercator, using latitudinal bands indicator
-          mUtmValue.setText(CoordinateFormatter.toUtm(newLocation,
-              CoordinateFormatter.UtmConversionMode.LATITUDE_BAND_INDICATORS, true));
-        }
-        if (skipType != NotationType.USNG) {
-          // use CoordinateFormatter to convert to United States National Grid (USNG)
-          mUSNGValue.setText(CoordinateFormatter.toUsng(newLocation, 4, true));
-        }
+        // use CoordinateFormatter to convert to Latitude Longitude, formatted as Decimal Degrees
+        mLatLongDDValue.setText(CoordinateFormatter.toLatitudeLongitude(newLocation,
+            CoordinateFormatter.LatitudeLongitudeFormat.DECIMAL_DEGREES, 4));
+
+        // use CoordinateFormatter to convert to Latitude Longitude, formatted as Degrees, Minutes, Seconds
+        mLatLongDMSValue.setText(CoordinateFormatter.toLatitudeLongitude(newLocation,
+            CoordinateFormatter.LatitudeLongitudeFormat.DEGREES_MINUTES_SECONDS, 1));
+
+        // use CoordinateFormatter to convert to Universal Transverse Mercator, using latitudinal bands indicator
+        mUtmValue.setText(CoordinateFormatter.toUtm(newLocation,
+            CoordinateFormatter.UtmConversionMode.LATITUDE_BAND_INDICATORS, true));
+
+        // use CoordinateFormatter to convert to United States National Grid (USNG)
+        mUSNGValue.setText(CoordinateFormatter.toUsng(newLocation, 4, true));
       }
       catch (ArcGISRuntimeException convertException) {
         String message = String.format("%s Point at '%s'\n%s", getString(R.string.failed_convert),
@@ -92,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Uses CoordinateFormatter to update the graphic in the map from the given coordinate notation string entered by the
    * user. Also calls corresponding method to update all the remaining coordinate notation strings.
-   * @param type
-   * @param coordinateNotation
+   * @param type the given coordinate notation type
+   * @param coordinateNotation a string containing the coordinate notation to convert to a point
    */
   private void fromCoordinateNotationToPoint(NotationType type, String coordinateNotation) {
     // ignore empty input coordinate notation strings, do not update UI
@@ -121,8 +114,9 @@ public class MainActivity extends AppCompatActivity {
           Snackbar.make(mMapView, getString(R.string.unsupported_message), Snackbar.LENGTH_SHORT).show();
           break;
       }
+
       // update the location shown in the map
-      toCoordinateNotationFromPoint(convertedPoint, type);
+      toCoordinateNotationFromPoint(convertedPoint);
     }
     catch (ArcGISRuntimeException convertException) {
       String message = String.format("%s '%s'\n%s", getString(R.string.failed_convert), coordinateNotation,
@@ -231,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, Color.YELLOW, 20f));
     mMapView.getGraphicsOverlays().add(new GraphicsOverlay());
     mMapView.getGraphicsOverlays().get(0).getGraphics().add(coordinateLocation);
-    toCoordinateNotationFromPoint(initialPoint, null);
+    toCoordinateNotationFromPoint(initialPoint);
 
     // set up a map touch listener that shows coordinates when a user taps on the map view
     mMapView.setOnTouchListener(new ShowCoordinatesMapTouchListener(this, mMapView));
@@ -255,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onSingleTapConfirmed(MotionEvent e) {
       // convert the screen location where user tapped into a map point
       Point tapPoint = mMapView.screenToLocation(new android.graphics.Point((int) e.getX(), (int) e.getY()));
-      toCoordinateNotationFromPoint(tapPoint, null);
+      toCoordinateNotationFromPoint(tapPoint);
       return true;
     }
 
