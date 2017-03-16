@@ -128,8 +128,8 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Shows a dialog allowing a user to enter a coordinate string in the given notation, then parses that string into a
    * Point displayed on the map, and also updates
-   * @param type
-   * @param currentValue
+   * @param type indicates the type of coordinate notation to be entered into the editable text box in the dialog
+   * @param currentValue existing value of the coordinate, shown as default in the text box
    */
   private void showEnterCoordinateDialog(final NotationType type, final String currentValue) {
     String title = "";
