@@ -12,8 +12,12 @@ In order to work with OAuth2 you need to edit the string resource file and assig
 
 - Browse to the [ArcGIS developers site](https://developers.arcgis.com).
 - Sign in with your ArcGIS developer account.
-- Create an application. This will give you access to a client id string.
-- Initialize the ```client_id``` string resource, ```res/values/strings.xml```, with the client id string and run the sample. 
+- Create an application. 
+- Go to the **Authentication** tab for your new application.
+- Add `urn:ietf:wg:oauth:2.0:oob` to the redirect URIs.
+- Initialize the `client_id` string resource, **res/values/strings.xml**, with the client id string and run the sample. 
+
+More information about mobile and native user logins with the ArcGIS Runtime SDK's can be found [here](https://developers.arcgis.com/authentication/mobile-and-native-user-logins/#with-an-arcgis-runtime-sdk).
 
 ## Sample Design 
 The sample consists of two [FragmentActivity](http://developer.android.com/reference/android/support/v4/app/FragmentActivity.html) classes. The OAuth2Sample class checks if there are any previously saved UserCredentials. If credentials are not previously cached the app creates an instance of OAuthView and prompts the user to enter credentials. Once successfully authenticated the server returns the credentials in the onCallback method of the CallbackListener. The UserCredentials object is first encrypted by creating an instance of SealedObject and then serialized to the sdcard. The OAuth2Sample class then launches the UserContentActivity. If UserCredentials are present on the sdcard then OAuth2Sample class
