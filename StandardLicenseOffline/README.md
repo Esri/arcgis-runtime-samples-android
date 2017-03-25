@@ -14,13 +14,20 @@ This sample also loads a Tile Map Package (TPK) from device storage if network i
 ## Sample Requirements
 To use this sample, you must set a valid client id and copy data locally.
 
-In order to set the license level to Standard you need to edit the sample code and assign a valid client id string to the ```CLIENT_ID``` constant. Follow these steps:
+In order to set the license level to Standard you need to edit the sample code and assign a valid client id string to the `CLIENT_ID` constant. Follow these steps:
+
 - Browse to the [ArcGIS developers site](https://developers.arcgis.com).
 - Sign in with your ArcGIS developer account.
-- Create an application. This will give you access to a client id string.
-- Initialize the ```CLIENT_ID``` constant with the client id string and run the sample. If the client id has been successfully set a OAuth sign in UI is shown which allows the user to sign in to a portal. After successful sign in the license level is set to standard based on the LicenseInfo retrieved from the authenticated portal.
+- Create an application. 
+- Go to the **Authentication** tab for your new application.
+- Add `urn:ietf:wg:oauth:2.0:oob` to the redirect URIs.
+- Initialize the `client_id` string resource, **res/values/strings.xml**, with the client id string and run the sample. 
+
+If the client id has been successfully set a OAuth sign in UI is shown which allows the user to sign in to a portal. After successful sign in the license level is set to standard based on the LicenseInfo retrieved from the authenticated portal.
 
 **NOTE:** When you release your app, you should ensure that the client id is encrypted and saved to the device in a secure manner; this sample uses a hardcoded string instead for simplicity of example code. 
+
+More information about mobile and native user logins with the ArcGIS Runtime SDK's can be found [here](https://developers.arcgis.com/authentication/mobile-and-native-user-logins/#with-an-arcgis-runtime-sdk).
 
 In order to copy the example .tpk file locally, follow these steps:
 - On your device, browse to [http://www.arcgis.com/home/item.html?id=9a7e015149854c35b5eb94494f4aeb89](http://www.arcgis.com/home/item.html?id=9a7e015149854c35b5eb94494f4aeb89).
