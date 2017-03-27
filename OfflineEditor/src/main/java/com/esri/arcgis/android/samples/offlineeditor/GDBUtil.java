@@ -365,8 +365,9 @@ public class GDBUtil {
 
         @Override
         public void statusUpdated(GeodatabaseStatusInfo status) {
-
-          showMessage(activity, status.getStatus().toString());
+          if (!status.isDownloading()){
+            showMessage(activity, status.getStatus().toString());
+          }
         }
       };
 
