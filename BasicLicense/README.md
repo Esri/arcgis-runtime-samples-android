@@ -16,6 +16,8 @@ In order to set the license level to Basic you need to edit the sample code and 
 - Browse to the [ArcGIS developers site](https://developers.arcgis.com).
 - Sign in with your ArcGIS developer account.
 - Create an application. This will give you access to a client id string.
-- Initialize the ```CLIENT_ID``` constant with the client id string and run the sample. If the license level has been successfully set to Basic you won't see a watermark on the map.
+- Initialize the `CLIENT_ID` constant with the client id string and run the sample. 
+
+If the license level has been successfully set to Basic you won't see a watermark on the map.
 
 **NOTE:** When you release your app, you should ensure that the client id is encrypted and saved to the device in a secure manner; this sample uses a hardcoded string instead for simplicity of example code. 
