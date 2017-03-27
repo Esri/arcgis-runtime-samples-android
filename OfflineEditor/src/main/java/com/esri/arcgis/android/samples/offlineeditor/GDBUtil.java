@@ -1,4 +1,4 @@
-/* Copyright 2015 Esri
+/* Copyright 2017 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,10 @@
 
 package com.esri.arcgis.android.samples.offlineeditor;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileNotFoundException;
+import java.util.Map;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -42,11 +46,6 @@ import com.esri.core.tasks.geodatabase.GeodatabaseStatusCallback;
 import com.esri.core.tasks.geodatabase.GeodatabaseStatusInfo;
 import com.esri.core.tasks.geodatabase.GeodatabaseSyncTask;
 import com.esri.core.tasks.geodatabase.SyncGeodatabaseParameters;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.util.Map;
 
 public class GDBUtil {
 
