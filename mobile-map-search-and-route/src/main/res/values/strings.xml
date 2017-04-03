@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Mobile Map Search and Route</string>
+    <string name="chooseMap">Choose map</string>
+    <string name="has_transport">Has transport network</string>
+    <string name="no_transport">No transport network</string>
+    <string name="has_geotag">Has geotagging</string>
+    <string name="no_geotag">No geotagging</string>
+</resources>
