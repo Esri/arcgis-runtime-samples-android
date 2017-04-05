@@ -1,3 +1,19 @@
+/* Copyright 2017 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.esri.arcgisruntime.sample.mobilemapsearchandroute;
 
 import android.Manifest;
@@ -162,13 +178,12 @@ public class MobileMapViewActivity extends AppCompatActivity {
         // get mobile map package filename
         String filename = this.getString(R.string.config_mmpk_name);
         // create the full path to the mobile map package file
-        String path= extStorDir.getAbsolutePath()
+        return extStorDir.getAbsolutePath()
                 + File.separator
                 + extSDCardDirName
                 + File.separator
                 + filename
                 + ".mmpk";
-        return path;
     }
 
     //handles write external storage permissions and loads mobile map package asynchronously
@@ -224,28 +239,28 @@ public class MobileMapViewActivity extends AppCompatActivity {
         //for each map in the mobile map package, pull out relevant thumbnail information
         for (int i = 0; i < mMobileMapPackage.getMaps().size(); i++) {
             ArcGISMap currMap = mMobileMapPackage.getMaps().get(i);
-            final MapPreview map = new MapPreview();
+            final MapPreview mapPreview = new MapPreview();
             //set map number
-            map.setMapNum(i);
+            mapPreview.setMapNum(i);
             //set map title. If null use the index of the list of maps to name each map Map #
             if (currMap.getItem() != null && currMap.getItem().getTitle() != null) {
-                map.setTitle(currMap.getItem().getTitle());
+                mapPreview.setTitle(currMap.getItem().getTitle());
             } else {
-                map.setTitle("Map " + i);
+                mapPreview.setTitle("Map " + i);
             }
             //set map description. If null use package description instead
             if (currMap.getItem() != null && currMap.getItem().getDescription() != null) {
-                map.setDesc(currMap.getItem().getDescription());
+                mapPreview.setDesc(currMap.getItem().getDescription());
             } else {
-                map.setDesc(mMobileMapPackage.getItem().getDescription());
+                mapPreview.setDesc(mMobileMapPackage.getItem().getDescription());
             }
             //check if map has transport data
             if (currMap.getTransportationNetworks().size() > 0) {
-                map.setTransportNetwork(true);
+                mapPreview.setTransportNetwork(true);
             }
             //check if map has geocoding data
             if (mMobileMapPackage.getLocatorTask() != null) {
-                map.setGeocoding(true);
+                mapPreview.setGeocoding(true);
             }
             //set map preview thumbnail
             final ListenableFuture<byte[]> thumbnailAsync;
@@ -259,8 +274,8 @@ public class MobileMapViewActivity extends AppCompatActivity {
                 public void run() {
                     if (thumbnailAsync.isDone()) {
                         try {
-                            map.setThumbnailByteStream(thumbnailAsync.get());
-                            mMapPreviews.add(map);
+                            mapPreview.setThumbnailByteStream(thumbnailAsync.get());
+                            mMapPreviews.add(mapPreview);
                         } catch (InterruptedException | ExecutionException e) {
                             e.printStackTrace();
                         }
@@ -300,21 +315,13 @@ public class MobileMapViewActivity extends AppCompatActivity {
         return new Graphic(point, symbol);
     }
 
-    //returns the graphic for a line
-    private SimpleLineSymbol routeSymbol() {
-        SimpleLineSymbol symbol = new SimpleLineSymbol(
-                SimpleLineSymbol.Style.SOLID, Color.BLUE, 5.0f);
-        return symbol;
-    }
-
     //method to show the callout for the provided graphic, with tap location details
-    private void showCalloutForGraphic(Graphic graphic, Point tapLocation, boolean animated) {
+    private void showCalloutForGraphic(Graphic graphic, Point tapLocation) {
         TextView calloutTextView = (TextView) getLayoutInflater().inflate(callout, null);
         calloutTextView.setText(graphic.getAttributes().get("Match_addr").toString());
         mCallout = mMapView.getCallout();
         mCallout.setLocation(tapLocation);
         mCallout.setContent(calloutTextView);
-        mCallout.getShowOptions().setAnimateCallout(animated);
         mCallout.show();
     }
 
@@ -367,7 +374,7 @@ public class MobileMapViewActivity extends AppCompatActivity {
                         if (geocodeResult.size() > 0) {
                             graphic.getAttributes().put(
                                     "Match_addr", geocodeResult.get(0).getLabel());
-                            showCalloutForGraphic(graphic, point, false);
+                            showCalloutForGraphic(graphic, point);
                         } else {
                             //no result was found
                             mMapView.getCallout().dismiss();
@@ -420,7 +427,9 @@ public class MobileMapViewActivity extends AppCompatActivity {
                 public void run() {
                     try {
                         Route route = routeResult.get().getRoutes().get(0);
-                        Graphic routeGraphic = new Graphic(route.getRouteGeometry(), routeSymbol());
+                        Graphic routeGraphic = new Graphic(route.getRouteGeometry(),
+                                new SimpleLineSymbol(
+                                        SimpleLineSymbol.Style.SOLID, Color.BLUE, 5.0f));
                         mRouteGraphicsOverlay.getGraphics().add(routeGraphic);
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
