@@ -28,7 +28,8 @@ subprojects{
     afterEvaluate {project ->
         if(project.hasProperty("dependencies")){
             dependencies {
-                compile 'com.android.support:appcompat-v7:25.3.0'
+                compile 'com.android.support:appcompat-v7:25.3.1'
+                compile 'com.android.support:design:25.3.1'
                 compile 'com.esri.arcgisruntime:arcgis-android:100.1.0-1662'
             }
         }
