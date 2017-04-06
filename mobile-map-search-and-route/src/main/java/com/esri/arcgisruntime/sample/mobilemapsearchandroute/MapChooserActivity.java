@@ -31,6 +31,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
+/**
+ * Activity for choosing which map in the mobile map package to display on the main activity
+ * (MobileMapViewActivity.java). The activity features a recycler view which lists a series of
+ * mapPreviews
+ */
 public class MapChooserActivity extends AppCompatActivity {
     private RecyclerView mMapPreviewRecyclerView;
     private MapPreviewAdapter mMapPreviewAdapter;

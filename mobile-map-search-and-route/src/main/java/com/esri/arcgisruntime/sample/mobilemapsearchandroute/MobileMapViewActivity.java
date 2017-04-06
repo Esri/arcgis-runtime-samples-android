@@ -65,6 +65,16 @@ import java.util.concurrent.ExecutionException;
 
 import static com.esri.arcgisruntime.sample.mobilemapsearchandroute.R.layout.callout;
 
+/**
+ * This sample demonstrates offline functionality through the use of a mobile map package (mmpk)
+ *
+ * Main activity handles:
+ * loading of map package,
+ * loading of maps and map previews from map packages,
+ * searching (ie reverse geocoding),
+ * routing
+ */
+
 public class MobileMapViewActivity extends AppCompatActivity {
     private static final String TAG = "MMVA";
     private MobileMapPackage mMobileMapPackage;
@@ -168,7 +178,10 @@ public class MobileMapViewActivity extends AppCompatActivity {
         mMapView.resume();
     }
 
-    //build the path for mobile map package
+    /**
+     * Builds the path to the mobile map package on the device
+     * @return the assembled path
+     */
     private String buildMMPkPath() {
         // get sdcard resource name
         File extStorDir = Environment.getExternalStorageDirectory();
@@ -186,7 +199,10 @@ public class MobileMapViewActivity extends AppCompatActivity {
                 + ".mmpk";
     }
 
-    //handles write external storage permissions and loads mobile map package asynchronously
+    /**
+     * Handles read/write external storage permissions (for API 23+) and loads mobile map package
+     * @param path to location of mobile map package on device
+     */
     private void loadMobileMapPackage(String path) {
         //for API level 23+ request permission at runtime
         if (ContextCompat.checkSelfPermission(getApplicationContext(),
@@ -219,7 +235,10 @@ public class MobileMapViewActivity extends AppCompatActivity {
         });
     }
 
-    //load the given map number
+    /**
+     * Loads map from the mobile map package for a given number
+     * @param mapNum index of map in mobile map package
+     */
     private void loadMap(int mapNum) {
         ArcGISMap map = mMobileMapPackage.getMaps().get(mapNum);
         //if map contains transport network setup route task
@@ -233,6 +252,10 @@ public class MobileMapViewActivity extends AppCompatActivity {
     }
 
     //sets fields for map previews shown in map chooser activity
+
+    /**
+     * generates fields for mapPreviews from information in the mobile map package
+     */
     private void loadMapPreviews() {
         //set mobile map package title
         mMMPkTitle = mMobileMapPackage.getItem().getTitle();
@@ -285,7 +308,10 @@ public class MobileMapViewActivity extends AppCompatActivity {
         }
     }
 
-    //define a simple symbol for a stop
+    /**
+     * Defines a stop graphic symbol
+     * @return the stop graphic
+     */
     private SimpleMarkerSymbol simpleSymbolForStopGraphic() {
         SimpleMarkerSymbol simpleMarkerSymbol = new SimpleMarkerSymbol(
                 SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 12);
@@ -293,7 +319,13 @@ public class MobileMapViewActivity extends AppCompatActivity {
         return simpleMarkerSymbol;
     }
 
-    //adds a number to stop symbol
+    /**
+     *  Defines a composite symbol consisting of the stop graphic and the index number of the stop
+     *  graphic in a route
+     * @param simpleMarkerSymbol takes a simple stop graphic
+     * @param index gets an index number which corresponds to the stop number
+     * @return the composite symbol
+     */
     private CompositeSymbol compositeSymbolForStopGraphic(
             SimpleMarkerSymbol simpleMarkerSymbol, Integer index) {
         TextSymbol textSymbol = new TextSymbol(12, index.toString(), Color.BLACK,
@@ -303,7 +335,13 @@ public class MobileMapViewActivity extends AppCompatActivity {
         return new CompositeSymbol(compositeSymbolList);
     }
 
-    //returns either a simple symbol or composite symbol at a given point
+    /**
+     * For a given point, returns a simple or composite symbol
+     * @param point
+     * @param isIndexRequired true if used in a route
+     * @param index stop number in a route
+     * @return a Graphic at point with either a simple or composite symbol
+     */
     private Graphic graphicForPoint(Point point, boolean isIndexRequired, Integer index) {
         //make symbol composite if an index is required
         Symbol symbol;
@@ -315,7 +353,11 @@ public class MobileMapViewActivity extends AppCompatActivity {
         return new Graphic(point, symbol);
     }
 
-    //method to show the callout for the provided graphic, with tap location details
+    /**
+     * Shows the callout for a provided graphic
+     * @param graphic the graphic selected by the user
+     * @param tapLocation the location selected a a Point
+     */
     private void showCalloutForGraphic(Graphic graphic, Point tapLocation) {
         TextView calloutTextView = (TextView) getLayoutInflater().inflate(callout, null);
         calloutTextView.setText(graphic.getAttributes().get("Match_addr").toString());
@@ -325,8 +367,12 @@ public class MobileMapViewActivity extends AppCompatActivity {
         mCallout.show();
     }
 
-    //given a point, marks point with graphic and either calls reverseGeocode and route, or calls
-    //just reverseGeocode
+    /**
+     * Given a point, marks point with graphic and either calls reverseGeocode and route, or calls
+     * just reverseGeocode
+     * @param screenPoint point on the screen which the user selected
+     * @param mapPoint point on the map which the user selected
+     */
     private void geoView(android.graphics.Point screenPoint, final Point mapPoint) {
         if (mRouteTask != null || mLocatorTask != null) {
             if (mRouteTask == null) {
@@ -362,7 +408,12 @@ public class MobileMapViewActivity extends AppCompatActivity {
         }
     }
 
-    //pulls address from map
+    /**
+     *  Calls reverseGeocode on a Locator Task and, if there is a result, passes it to a Callout
+     *  method
+     * @param point user generated map point
+     * @param graphic used for marking the point on which the user touched
+     */
     private void reverseGeocode(final Point point, final Graphic graphic) {
         if (mLocatorTask != null) {
             final ListenableFuture<List<GeocodeResult>> results =
@@ -387,7 +438,10 @@ public class MobileMapViewActivity extends AppCompatActivity {
         }
     }
 
-    //get default parameters
+    /**
+     * Given an ArcGISMap with a transport network, create a new routeTask
+     * @param map a map with a transport work
+     */
     private void setupRouteTask(ArcGISMap map) {
         mRouteTask = new RouteTask(this, map.getTransportationNetworks().get(0));
         try {
@@ -396,17 +450,21 @@ public class MobileMapViewActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    //get the default parameters asynchronously
+
+    /**
+     *  Get default route task parameters
+     */
     private void getDefaultParameters() {
         try {
             mRouteParameters = mRouteTask.createDefaultParametersAsync().get();
         } catch (Exception e) {
-            //on any error, display the stack trace
             e.printStackTrace();
         }
     }
 
-    //using the last two markers drawn, calculate route between them
+    /**
+     * Uses the last two markers drawn to calculate a route between them
+     */
     private void route() {
         if (mMarkerGraphicsOverlay.getGraphics().size() > 1 && mRouteParameters != null) {
             //create stops for last and second to last graphic
@@ -443,7 +501,11 @@ public class MobileMapViewActivity extends AppCompatActivity {
         }
     }
 
-    //convert list of graphics into a list of stops
+    /**
+     * Converts a given list of graphics into a list of stops
+     * @param graphics
+     * @return a list of stops
+     */
     private List stopsForGraphics(List<Graphic> graphics) {
         List<Stop> stops = new ArrayList<>();
         for (Graphic graphic : graphics) {

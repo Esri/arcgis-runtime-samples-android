@@ -18,8 +18,12 @@ package com.esri.arcgisruntime.sample.mobilemapsearchandroute;
 
 import java.io.Serializable;
 
+/**
+ * Class which serves as the model in an MVC architecture for setting and getting information
+ * related to MapPreviews
+ */
 class MapPreview implements Serializable {
-    //model to hold relevant fields of map preview
+
     private int mMapNum;
     private String mTitle;
     private boolean mTransportNetwork = false;
