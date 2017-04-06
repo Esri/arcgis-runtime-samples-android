@@ -66,15 +66,14 @@ import java.util.concurrent.ExecutionException;
 import static com.esri.arcgisruntime.sample.mobilemapsearchandroute.R.layout.callout;
 
 /**
- * This sample demonstrates offline functionality through the use of a mobile map package (mmpk)
+ * This class demonstrates offline functionality through the use of a mobile map package (mmpk).
  *
- * Main activity handles:
+ * This (main) activity handles:
  * loading of map package,
  * loading of maps and map previews from map packages,
- * searching (ie reverse geocoding),
- * routing
+ * searching (ie reverse geocoding), and
+ * routing.
  */
-
 public class MobileMapViewActivity extends AppCompatActivity {
     private static final String TAG = "MMVA";
     private MobileMapPackage mMobileMapPackage;
@@ -236,7 +235,7 @@ public class MobileMapViewActivity extends AppCompatActivity {
     }
 
     /**
-     * Loads map from the mobile map package for a given number
+     * Loads map from the mobile map package for a given index
      * @param mapNum index of map in mobile map package
      */
     private void loadMap(int mapNum) {
@@ -251,10 +250,8 @@ public class MobileMapViewActivity extends AppCompatActivity {
             mMapView.setMap(map);
     }
 
-    //sets fields for map previews shown in map chooser activity
-
     /**
-     * generates fields for mapPreviews from information in the mobile map package
+     * generates and populates the mapPreview models from information in the mobile map package
      */
     private void loadMapPreviews() {
         //set mobile map package title
@@ -309,7 +306,7 @@ public class MobileMapViewActivity extends AppCompatActivity {
     }
 
     /**
-     * Defines a stop graphic symbol
+     * Defines a graphic symbol which represents geocoded locations
      * @return the stop graphic
      */
     private SimpleMarkerSymbol simpleSymbolForStopGraphic() {
@@ -320,10 +317,11 @@ public class MobileMapViewActivity extends AppCompatActivity {
     }
 
     /**
-     *  Defines a composite symbol consisting of the stop graphic and the index number of the stop
-     *  graphic in a route
-     * @param simpleMarkerSymbol takes a simple stop graphic
-     * @param index gets an index number which corresponds to the stop number
+     *  Defines a composite symbol consisting of the SimpleMarkerSymbol and a text symbol
+     *  representing the index of a stop in a route
+     * @param simpleMarkerSymbol a SimpleMarkerSymbol which represents the background of the
+     *                           composite symbol
+     * @param index number which corresponds to the stop number in a route
      * @return the composite symbol
      */
     private CompositeSymbol compositeSymbolForStopGraphic(
@@ -336,8 +334,8 @@ public class MobileMapViewActivity extends AppCompatActivity {
     }
 
     /**
-     * For a given point, returns a simple or composite symbol
-     * @param point
+     * For a given point, returns a graphic
+     * @param point map point
      * @param isIndexRequired true if used in a route
      * @param index stop number in a route
      * @return a Graphic at point with either a simple or composite symbol
@@ -354,9 +352,9 @@ public class MobileMapViewActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows the callout for a provided graphic
+     * Shows the callout for a given graphic
      * @param graphic the graphic selected by the user
-     * @param tapLocation the location selected a a Point
+     * @param tapLocation the location selected at a Point
      */
     private void showCalloutForGraphic(Graphic graphic, Point tapLocation) {
         TextView calloutTextView = (TextView) getLayoutInflater().inflate(callout, null);
@@ -368,8 +366,9 @@ public class MobileMapViewActivity extends AppCompatActivity {
     }
 
     /**
-     * Given a point, marks point with graphic and either calls reverseGeocode and route, or calls
-     * just reverseGeocode
+     * Adds a graphic at a given point to GraphicsOverlay in the MapView. If RouteTask is not null
+     * get index for stop symbol. If identifyGraphicsOverlayAsync returns no graphics, call
+     * reverseGeocode and route, otherwise just call reverseGeocode.
      * @param screenPoint point on the screen which the user selected
      * @param mapPoint point on the map which the user selected
      */
@@ -409,8 +408,8 @@ public class MobileMapViewActivity extends AppCompatActivity {
     }
 
     /**
-     *  Calls reverseGeocode on a Locator Task and, if there is a result, passes it to a Callout
-     *  method
+     *  Calls reverseGeocode on a Locator Task and, if there is a result, passes the result to a
+     *  Callout method
      * @param point user generated map point
      * @param graphic used for marking the point on which the user touched
      */
@@ -439,8 +438,8 @@ public class MobileMapViewActivity extends AppCompatActivity {
     }
 
     /**
-     * Given an ArcGISMap with a transport network, create a new routeTask
-     * @param map a map with a transport work
+     * Given an ArcGISMap with a transport network, create a new RouteTask
+     * @param map a map with a transport network
      */
     private void setupRouteTask(ArcGISMap map) {
         mRouteTask = new RouteTask(this, map.getTransportationNetworks().get(0));
@@ -452,7 +451,7 @@ public class MobileMapViewActivity extends AppCompatActivity {
     }
 
     /**
-     *  Get default route task parameters
+     *  Get default RouteTask parameters
      */
     private void getDefaultParameters() {
         try {

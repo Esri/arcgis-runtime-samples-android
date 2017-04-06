@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Activity for choosing which map in the mobile map package to display on the main activity
  * (MobileMapViewActivity.java). The activity features a recycler view which lists a series of
- * mapPreviews
+ * MapPreviews.
  */
 public class MapChooserActivity extends AppCompatActivity {
     private RecyclerView mMapPreviewRecyclerView;
@@ -65,7 +65,9 @@ public class MapChooserActivity extends AppCompatActivity {
         loadMapPreviews();
     }
 
-    //create and load adapter
+    /**
+     * Create and set adapter
+     */
     private void loadMapPreviews() {
         if (mMapPreviewAdapter == null) {
             mMapPreviewAdapter = new MapPreviewAdapter(mMapPreviews);
@@ -75,7 +77,10 @@ public class MapChooserActivity extends AppCompatActivity {
             mMapPreviewAdapter.notifyDataSetChanged();
         }
     }
-    //implements recycler view to be extensible for MMPks with many maps
+
+    /**
+     * Class which extends the RecyclerView holder
+     */
     private class MapPreviewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private MapPreview mMapPreview;
         private final TextView mTitleTextView;
@@ -84,7 +89,9 @@ public class MapChooserActivity extends AppCompatActivity {
         private final TextView mDescTextView;
         private final ImageView mThumbnailImageView;
 
-        //inflate views within holder
+        /**
+         * Inflate views within holder
+         */
         private MapPreviewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.map_preview, parent, false));
             itemView.setOnClickListener(this);
@@ -94,7 +101,11 @@ public class MapChooserActivity extends AppCompatActivity {
             mDescTextView = (TextView) itemView.findViewById(R.id.mapDesc);
             mThumbnailImageView = (ImageView) itemView.findViewById(R.id.mapThumbnail);
         }
-        //bind data to views
+
+        /**
+         * Bind information from a mapPreview to views
+         * @param mapPreview model class which holds information about maps
+         */
         private void bind(MapPreview mapPreview) {
             mMapPreview = mapPreview;
             mTitleTextView.setText(mapPreview.getTitle());
@@ -130,6 +141,9 @@ public class MapChooserActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Class which extends RecyclerView adapter
+     */
     private class MapPreviewAdapter extends RecyclerView.Adapter<MapPreviewHolder> {
         private List<MapPreview> mMapPreviews;
 
