@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:2.3.1'
     }
 }
 
@@ -28,8 +28,8 @@ subprojects{
     afterEvaluate {project ->
         if(project.hasProperty("dependencies")){
             dependencies {
-                compile 'com.android.support:appcompat-v7:25.2.0'
-                compile 'com.esri.arcgisruntime:arcgis-android:100.1.0-1641'
+                compile 'com.android.support:appcompat-v7:25.3.0'
+                compile 'com.esri.arcgisruntime:arcgis-android:100.1.0-1662'
             }
         }
     }
