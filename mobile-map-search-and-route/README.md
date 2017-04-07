@@ -36,4 +36,4 @@ The sample loads a map from a `MobileMapPackage` to instantiate a map package ob
 
 Link | Local Location
 ---------|-------|
-|[San Francisco Mobile Map Package](hhttps://arcgisruntime.maps.arcgis.com/home/item.html?id=260eb6535c824209964cf281766ebe43)| `<sdcard>`/ArcGIS/samples/MapPackage/SanFrancisco.mmpk |
+|[San Francisco Mobile Map Package](https://arcgisruntime.maps.arcgis.com/home/item.html?id=260eb6535c824209964cf281766ebe43)| `<sdcard>`/ArcGIS/samples/MapPackage/SanFrancisco.mmpk |
