@@ -12,7 +12,7 @@ This sample demonstrates how to search and route using data in a map package.
 
 ## How to use the sample
 
-The sample loads maps from a map package and displays the first map in the map package (index 0) on the starting activity (MobileMapViewActivity). All maps contained within the map package are shown as a recycler view list in a seperate activity (MapChooserActivity). You can tap on a single map to load its contents to the main MapView on MobileMapViewActivity. The map chooser menu indicates if the map has transportation network datasets (for routing) or a locator task (for geocoding). If the mobile map supports routing or geocoding, you can tap on the map for results.
+The sample loads maps from a `MobileMapPackage` and displays the first map in the map package (index 0) on the starting activity (MobileMapViewActivity). All maps contained within the map package are shown as a recycler view list in a seperate activity (MapChooserActivity). You can tap on a single map to load its contents to the main `MapView` on MobileMapViewActivity. The map chooser menu indicates if the map has `transportationNetworks` datasets (for routing) or a `LocatorTask` (for geocoding). If the mobile map supports routing or geocoding, you can tap on the map for results.
 
 ![](image1.png)
 ![](image2.png)
