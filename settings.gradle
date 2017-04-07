@@ -1,4 +1,4 @@
-include ':add-graphics-renderer',
+include ':add-graphics-renderer', ':raster-layer-file',
         ':add-graphics-symbols',
         ':arcgis-map-imagelayer-url',
         ':arcgis-tiledlayer-url',

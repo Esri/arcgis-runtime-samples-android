@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Raster Layer File</string>
+    <string name="location_permission_denied">Raster Layer File could not open the raster because WRITE permission was denied.</string>
+</resources>
