@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private void loadRaster() {
         // create a raster from a local raster file
         Raster raster = new Raster(
-                new File("/storage/emulated/0/ArcGIS/samples/Shasta.tif").getAbsolutePath());
+                new File("/storage/emulated/0/ArcGIS/samples/raster/Shasta.tif").getAbsolutePath());
         // create a raster layer
         final RasterLayer rasterLayer = new RasterLayer(raster);
         // create a Map with imagery basemap
