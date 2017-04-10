@@ -1,27 +1,21 @@
-<h1>Raster Layer File</h1>
+# Raster Layer File
 
-<p>Demonstrates how to create and use a raster layer made from a local raster file.</p>
+Demonstrates how to create and use a raster layer made from a local raster file.
 
-<p><img src="RasterLayerFile.png"/></p>
+![](raster-layer-file.png)
 
-<h2>How it works</h2>
+## How it works
 
-<p>To add a <code>RasterLayer</code> as an operational layer from a local raster file:</p>
-<ol>
-  <li>Create a <code>Raster</code> from a raster file.</li>
-  <li>Create a <code>RasterLayer</code> from the <code>Raster</code>.</li>
-  <li>Add it as an operational layer with <code>map.getOperationalLayers().add(rasterLayer)</code>.</li>
-</ol>
+To add a `RasterLayer` as an operational layer from a local raster file:
 
-<h2>Features</h2>
+- Create a `Raster` from a raster file.
+- Create a <code>RasterLayer</code> from the `Raster`.
+- Add it as an operational layer with `map.getOperationalLayers().add(rasterLayer)`.
 
-<ul>
-  <li>ArcGISMap</li>
-  <li>Basemap</li>
-  <li>MapView</li>
-  <li>Raster</li>
-  <li>RasterLayer</li>
-</ul>
+
+## Features
+- Raster
+- RasterLayer
 
 
 
