@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.sample.rasterlayerfile;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -62,13 +63,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Using values stored in strings.xml, builds path to Shasta.tif.
+     * @return the path to raster file
+     */
+    private String buildRasterPath() {
+        // get sdcard resource name
+        File extStorDir = Environment.getExternalStorageDirectory();
+        // get the directory
+        String extSDCardDirName =
+                this.getResources().getString(R.string.config_data_sdcard_offline_dir);
+        // get raster filename
+        String filename = this.getString(R.string.config_raster_name);
+        // create the full path to the raster file
+        return extStorDir.getAbsolutePath()
+                + File.separator
+                + extSDCardDirName
+                + File.separator
+                + filename
+                + ".tif";
+    }
+
+    /**
      * Loads Shasta.tif as a Raster and adds it to a new RasterLayer. The RasterLayer is then added
-     * to the map as an operational layer. Map viewpoint is then set based on the raster's geometry.
+     * to the map as an operational layer. Map viewpoint is then set based on the Raster's geometry.
      */
     private void loadRaster() {
         // create a raster from a local raster file
-        Raster raster = new Raster(
-                new File("/storage/emulated/0/ArcGIS/samples/raster/Shasta.tif").getAbsolutePath());
+        Raster raster = new Raster(buildRasterPath());
         // create a raster layer
         final RasterLayer rasterLayer = new RasterLayer(raster);
         // create a Map with imagery basemap
@@ -103,13 +124,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         mMapView.pause();
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         mMapView.resume();
     }
