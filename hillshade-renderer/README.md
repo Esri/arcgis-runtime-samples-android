@@ -1,4 +1,4 @@
-#Hillshade renderer
+##Hillshade renderer
 
 This sample demonstrates how to use hillshade renderer on a raster
 
