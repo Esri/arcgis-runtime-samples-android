@@ -11,4 +11,4 @@ Tap on the wrench button in the Action Bar to change the settings for the `Hills
 
 ## How it works
 
-The sample uses the `HillshadeRenderer` class to generate render new hillshades. The parameters provided by the user are passed to `HillshadeRender` at instantiation: `new HillshadeRenderer(mAltitude, mAzimuth, mZFactor, mSlopeType, mPixelSizeFactor, mPixelSizePower, mOutputBitDepth);` which returns a `RasterRenderer`. The `RasterRenderer` is then added to the `RasterLayer`. 
+The sample uses the `HillshadeRenderer` class to render new hillshades. The parameters provided by the user are passed to `HillshadeRender` at instantiation: `new HillshadeRenderer(mAltitude, mAzimuth, mZFactor, mSlopeType, mPixelSizeFactor, mPixelSizePower, mOutputBitDepth);` which returns a `RasterRenderer`. The `RasterRenderer` is then added to the `RasterLayer`. 
