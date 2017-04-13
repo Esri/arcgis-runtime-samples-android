@@ -143,7 +143,6 @@ public class MainActivity extends AppCompatActivity
         HillshadeRenderer hillshadeRenderer = new HillshadeRenderer(mAltitude, mAzimuth,
                 mZFactor, mSlopeType, mPixelSizeFactor, mPixelSizePower, mOutputBitDepth);
         mRasterLayer.setRasterRenderer(hillshadeRenderer);
-        Log.d("SlopeType", "Slope type: " + mSlopeType.toString() + " Ordinal: " + mSlopeType.ordinal());
     }
 
     /**
