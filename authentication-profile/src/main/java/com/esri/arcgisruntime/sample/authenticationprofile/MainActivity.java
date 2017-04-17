@@ -50,12 +50,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set the DefaultAuthenticationChallegeHandler to allow authentication with the portal.
+        // Set the DefaultAuthenticationChallengeHandler to allow authentication with the portal.
         DefaultAuthenticationChallengeHandler handler = new DefaultAuthenticationChallengeHandler(this);
         AuthenticationManager.setAuthenticationChallengeHandler(handler);
         // Set loginRequired to true always prompt for credential,
         // When set to false to only login if required by the portal
-        final Portal portal = new Portal("http://www.arcgis.com", true);
+        final Portal portal = new Portal("https://www.arcgis.com", true);
         portal.addDoneLoadingListener(new Runnable() {
             @Override
             public void run() {
