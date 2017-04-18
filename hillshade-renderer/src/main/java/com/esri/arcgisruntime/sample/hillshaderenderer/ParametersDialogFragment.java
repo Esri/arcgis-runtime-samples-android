@@ -41,9 +41,9 @@ public class ParametersDialogFragment extends DialogFragment {
     private TextView mCurrAzimuthTextView;
 
     /**
-     * Builds parameter dialog with values pulled through from MainActivity.
-     * @param savedInstanceState
-     * @return create paramater dialog box
+     * Builds a parameter dialog box with values pulled through from MainActivity.
+     * @param savedInstanceState bundle holding previous activity's saved state
+     * @return create parameter dialog box
      */
     @NonNull
     @Override
