@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 for(final FeatureLayer layer : mOperationalLayers){
                     final ListenableFuture<FeatureQueryResult> future = layer.selectFeaturesAsync(queryParams, FeatureLayer.SelectionMode.NEW);
                     layer.clearSelection();
+
                     future.addDoneListener(new Runnable() {
                         @Override
                         public void run() {
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                                     List<RelationshipInfo> relationshipInfos = selectedTable.getLayerInfo().getRelationshipInfos();
                                     for(RelationshipInfo relationshipInfo : relationshipInfos){
                                         RelatedQueryParameters relatedQueryParameters = new RelatedQueryParameters(relationshipInfo);
+                                        Log.d(TAG, selectedTable.getTableName());
 
                                         final ListenableFuture<List<RelatedFeatureQueryResult>> relatedFeatureQueryResultFuture = selectedTable.queryRelatedFeaturesAsync(arcGISFeature, relatedQueryParameters);
                                         relatedFeatureQueryResultFuture.addDoneListener(new Runnable() {
@@ -127,26 +129,7 @@ public class MainActivity extends AppCompatActivity {
                                                     List<RelatedFeatureQueryResult> relatedFeatureQueryResultList = relatedFeatureQueryResultFuture.get();
 
                                                     for(RelatedFeatureQueryResult relatedQueryResult : relatedFeatureQueryResultList){
-
-                                                        for (Feature relatedFeature : relatedQueryResult) {
-                                                            // feature returned from selection query
-                                                            Map<String, Object> attributes = relatedFeature.getAttributes();
-
-                                                            int counter = 0;
-                                                            for (Map.Entry<String, Object> attribute : attributes.entrySet()) {
-                                                                // add new rows
-                                                                TableRow row = new TableRow(MainActivity.this);
-                                                                TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                                                                row.setLayoutParams(layoutParams);
-                                                                TextView dataText = new TextView(MainActivity.this);
-                                                                dataText.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.cell_shape, null));
-                                                                dataText.setPadding(dimen, dimen, dimen, dimen);
-                                                                dataText.setText(attribute.getKey() + " | " + attribute.getValue().toString());
-                                                                row.addView(dataText);
-                                                                dataTable.addView(row, counter);
-                                                                counter++;
-                                                            }
-                                                        }
+                                                        createTables(relatedQueryResult);
                                                     }
 
                                                 } catch (Exception e) {
@@ -205,6 +188,29 @@ public class MainActivity extends AppCompatActivity {
 
         speciesFeatureTable.loadAsync();
 
+    }
+
+    private void createTables(RelatedFeatureQueryResult queryResult){
+        for (Feature relatedFeature : queryResult) {
+            // feature returned from selection query
+            Map<String, Object> attributes = relatedFeature.getAttributes();
+
+            int counter = 0;
+            for (Map.Entry<String, Object> attribute : attributes.entrySet()) {
+                // add new rows
+                TableRow row = new TableRow(MainActivity.this);
+                TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                row.setLayoutParams(layoutParams);
+                TextView dataText = new TextView(MainActivity.this);
+                dataText.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.cell_shape, null));
+                dataText.setPadding(dimen, dimen, dimen, dimen);
+                dataText.setText(attribute.getKey() + " | " + attribute.getValue().toString());
+                Log.d(TAG, attribute.getKey() + " | " + attribute.getValue().toString());
+                row.addView(dataText);
+                dataTable.addView(row, counter);
+                counter++;
+            }
+        }
     }
 
     @Override
