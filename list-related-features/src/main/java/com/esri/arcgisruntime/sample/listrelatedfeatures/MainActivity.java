@@ -1,20 +1,17 @@
 package com.esri.arcgisruntime.sample.listrelatedfeatures;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.esri.arcgisruntime.arcgisservices.RelationshipInfo;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -40,13 +37,12 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "RelatedFeatures";
 
     private MapView mMapView;
-    private ArcGISMap map;
+    private ArcGISMap mArcGISMap;
     private final ArrayList<FeatureLayer> mOperationalLayers = new ArrayList<>();
 
     private BottomSheetBehavior mBottomSheetBehavior = null;
-    private TableLayout dataTable;
-
-    int dimen;
+    private ArrayAdapter<String> mArrayAdapter;
+    private final List<String> mRelatedValues = new LinkedList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,36 +50,35 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // The View with the BottomSheetBehavior
-
         mBottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottom_sheet));
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        dimen = (int)getResources().getDimension(R.dimen.activity_horizontal_margin)/8;
-        dataTable = (TableLayout)findViewById(R.id.data_table);
+        ListView mListView = (ListView) findViewById(R.id.related_list);
+        mArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mRelatedValues);
+        mListView.setAdapter(mArrayAdapter);
 
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
-        // create a map a webmap
-        map = new ArcGISMap(getResources().getString(R.string.webmap_url));
-        // set the map to be displayed in this view
-        mMapView.setMap(map);
-
-        map.addDoneLoadingListener(new Runnable() {
+        // create a mArcGISMap a webmap
+        mArcGISMap = new ArcGISMap(getResources().getString(R.string.webmap_url));
+        // set the mArcGISMap to be displayed in this view
+        mMapView.setMap(mArcGISMap);
+        mArcGISMap.addDoneLoadingListener(new Runnable() {
             @Override
             public void run() {
-                if(map.getLoadStatus() == LoadStatus.LOADED){
-                    createFeatures(map);
+                if(mArcGISMap.getLoadStatus() == LoadStatus.LOADED){
+                    // create Features to use for listing related features
+                    createFeatures(mArcGISMap);
                 }
             }
         });
 
         mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView){
-
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-                // clear all rows
-                dataTable.removeAllViews();
-                // get the point that was clicked and convert it to a point in map coordinates
+                // clear ListAdapter of previous results
+                mArrayAdapter.clear();
+                // get the point that was clicked and convert it to a point in mArcGISMap coordinates
                 Point clickPoint = mMapView.screenToLocation(new android.graphics.Point(
                         Math.round(e.getX()),
                         Math.round(e.getY())));
@@ -95,122 +90,118 @@ public class MainActivity extends AppCompatActivity {
                         clickPoint.getY() - mapTolerance,
                         clickPoint.getX() + mapTolerance,
                         clickPoint.getY() + mapTolerance,
-                        map.getSpatialReference());
+                        mArcGISMap.getSpatialReference());
                 QueryParameters queryParams = new QueryParameters();
                 queryParams.setGeometry(envelope);
-
-                for(final FeatureLayer layer : mOperationalLayers){
-                    final ListenableFuture<FeatureQueryResult> future = layer.selectFeaturesAsync(queryParams, FeatureLayer.SelectionMode.NEW);
-                    layer.clearSelection();
-
-                    future.addDoneListener(new Runnable() {
-                        @Override
-                        public void run() {
-                            //call get on the future to get the result
-                            try {
-                                FeatureQueryResult result = future.get();
-
-                                for (Feature feature : result) {
-                                    ArcGISFeature arcGISFeature = (ArcGISFeature)feature;
-
-                                    layer.setSelectionColor(Color.YELLOW);
-                                    layer.setSelectionWidth(10);
-                                    ArcGISFeatureTable selectedTable = (ArcGISFeatureTable)feature.getFeatureTable();
-                                    List<RelationshipInfo> relationshipInfos = selectedTable.getLayerInfo().getRelationshipInfos();
-                                    for(RelationshipInfo relationshipInfo : relationshipInfos){
-                                        RelatedQueryParameters relatedQueryParameters = new RelatedQueryParameters(relationshipInfo);
-                                        Log.d(TAG, selectedTable.getTableName());
-
-                                        final ListenableFuture<List<RelatedFeatureQueryResult>> relatedFeatureQueryResultFuture = selectedTable.queryRelatedFeaturesAsync(arcGISFeature, relatedQueryParameters);
-                                        relatedFeatureQueryResultFuture.addDoneListener(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                try {
-                                                    List<RelatedFeatureQueryResult> relatedFeatureQueryResultList = relatedFeatureQueryResultFuture.get();
-
-                                                    for(RelatedFeatureQueryResult relatedQueryResult : relatedFeatureQueryResultList){
-                                                        createTables(relatedQueryResult);
-                                                    }
-
-                                                } catch (Exception e) {
-                                                    Log.e(TAG, "Exception occurred: " + e.getMessage());
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-                            } catch (Exception e) {
-                                Log.e(TAG, "Exception occurred: " + e.getMessage());
-                            }
-                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        }
-
-                    });
-
-                }
+                // get the FeatureLayer to query
+                final FeatureLayer selectedLayer = mOperationalLayers.get(0);
+                // get a list of related features to display
+                queryRelatedFeatures(selectedLayer, queryParams);
                 return super.onSingleTapConfirmed(e);
             }
         });
-
-        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                // React to state change
-//                Log.d(TAG, "BottomSheet State changed");
-            }
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                // React to dragging events
-//                Log.d(TAG, "BottomSheet State dragged");
-            }
-        });
-
     }
 
+    /**
+     * Uses the selected FeatureLayer to get FeatureTable RelationshipInfos used to
+     * QueryRelatedFeaturesAsync which returns a list of related features.
+     *
+     * @param featureLayer Layer selected from the Map
+     * @param queryParameters Input parameters for query
+     */
+    private void queryRelatedFeatures(final FeatureLayer featureLayer, QueryParameters queryParameters){
+        final ListenableFuture<FeatureQueryResult> future = featureLayer.selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW);
+        // clear previously selected layers
+        featureLayer.clearSelection();
+
+        future.addDoneListener(new Runnable() {
+            @Override
+            public void run() {
+                //call get on the future to get the result
+                try {
+                    FeatureQueryResult result = future.get();
+                    // iterate over features returned
+                    for (Feature feature : result) {
+                        ArcGISFeature arcGISFeature = (ArcGISFeature)feature;
+                        featureLayer.setSelectionColor(Color.YELLOW);
+                        featureLayer.setSelectionWidth(5);
+                        // get FeatureTable RelationshipInfos for table relationship
+                        ArcGISFeatureTable selectedTable = (ArcGISFeatureTable)feature.getFeatureTable();
+                        List<RelationshipInfo> relationshipInfos = selectedTable.getLayerInfo().getRelationshipInfos();
+                        Log.d(TAG, "Display Field Name: " + selectedTable.getLayerInfo().getDisplayFieldName());
+                        // iterate through returned relationship infos
+                        for(RelationshipInfo relationshipInfo : relationshipInfos){
+                            RelatedQueryParameters relatedQueryParameters = new RelatedQueryParameters(relationshipInfo);
+                            // query for features related to selectedTable, returns results from tables added to the Map
+                            final ListenableFuture<List<RelatedFeatureQueryResult>> relatedFeatureQueryResultFuture = selectedTable.queryRelatedFeaturesAsync(arcGISFeature, relatedQueryParameters);
+                            relatedFeatureQueryResultFuture.addDoneListener(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        List<RelatedFeatureQueryResult> relatedFeatureQueryResultList = relatedFeatureQueryResultFuture.get();
+                                        // iterate over returned RelatedFeatureQueryResults
+                                        for(RelatedFeatureQueryResult relatedQueryResult : relatedFeatureQueryResultList){
+                                            // iterate over Features returned
+                                            for (Feature relatedFeature : relatedQueryResult) {
+                                                // check if FeatureTable name has been added to List
+                                                if(!mRelatedValues.contains("Table - " + relatedFeature.getFeatureTable().getTableName() + ":")){
+                                                    mRelatedValues.add("Table - " + relatedFeature.getFeatureTable().getTableName() + ":");
+                                                }
+                                                // feature returned from selection query
+                                                Map<String, Object> attributes = relatedFeature.getAttributes();
+                                                // add related feature attributes to List
+                                                for (Map.Entry<String, Object> attribute : attributes.entrySet()) {
+                                                    if(!attribute.getKey().equals("OBJECTID")){
+                                                        mRelatedValues.add(attribute.getValue().toString());
+                                                    }
+                                                }
+                                                // notify ListAdapter content has changed
+                                                mArrayAdapter.notifyDataSetChanged();
+                                            }
+                                        }
+
+                                    } catch (Exception e) {
+                                        Log.e(TAG, "Exception occurred: " + e.getMessage());
+                                    }
+                                }
+                            });
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Exception occurred: " + e.getMessage());
+                }
+                // show the bottomsheet with results
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+
+        });
+    }
+
+    /**
+     * Create Features from Layers in the Map
+     *
+     * @param map ArcGISMap to get Layers and Tables
+     */
     private void createFeatures(ArcGISMap map){
-
         LayerList layers = map.getOperationalLayers();
-
+        // add the National Parks Feature layer to LayerList
         for(Layer layer: layers){
             FeatureLayer fLayer = (FeatureLayer) layer;
-            mOperationalLayers.add(fLayer);
+            if(fLayer.getName().contains("Alaska National Parks")){
+                mOperationalLayers.add(fLayer);
+            }
         }
 
+        // create ArcGISFeatureTable from non-spatial tables in Map
         List<ArcGISFeatureTable> tables = map.getTables();
-        ArcGISFeatureTable speciesFeatureTable = tables.get(0);
-
+        final ArcGISFeatureTable speciesFeatureTable = tables.get(0);
         speciesFeatureTable.addDoneLoadingListener(new Runnable() {
             @Override
             public void run() {
-//                Log.d(TAG, "Table name " + speciesFeatureTable.getTableName());
+                Log.d(TAG, "Found table: " + speciesFeatureTable.getTableName());
             }
         });
-
         speciesFeatureTable.loadAsync();
-
-    }
-
-    private void createTables(RelatedFeatureQueryResult queryResult){
-        for (Feature relatedFeature : queryResult) {
-            // feature returned from selection query
-            Map<String, Object> attributes = relatedFeature.getAttributes();
-
-            int counter = 0;
-            for (Map.Entry<String, Object> attribute : attributes.entrySet()) {
-                // add new rows
-                TableRow row = new TableRow(MainActivity.this);
-                TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                row.setLayoutParams(layoutParams);
-                TextView dataText = new TextView(MainActivity.this);
-                dataText.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.cell_shape, null));
-                dataText.setPadding(dimen, dimen, dimen, dimen);
-                dataText.setText(attribute.getKey() + " | " + attribute.getValue().toString());
-                Log.d(TAG, attribute.getKey() + " | " + attribute.getValue().toString());
-                row.addView(dataText);
-                dataTable.addView(row, counter);
-                counter++;
-            }
-        }
     }
 
     @Override
