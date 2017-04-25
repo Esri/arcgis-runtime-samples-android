@@ -128,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
                         // get FeatureTable RelationshipInfos for table relationship
                         ArcGISFeatureTable selectedTable = (ArcGISFeatureTable)feature.getFeatureTable();
                         List<RelationshipInfo> relationshipInfos = selectedTable.getLayerInfo().getRelationshipInfos();
-                        Log.d(TAG, "Display Field Name: " + selectedTable.getLayerInfo().getDisplayFieldName());
                         // iterate through returned relationship infos
                         for(RelationshipInfo relationshipInfo : relationshipInfos){
                             RelatedQueryParameters relatedQueryParameters = new RelatedQueryParameters(relationshipInfo);
