@@ -12,7 +12,7 @@ The List Related Features app has a `MapView` preloaded with a web map `FeatureL
 * RelatedFeatureQueryResult
 
 ## Developer Pattern
-The `FeatureTable` from a selected `Feature` is used as parameters on a `FeatureTable.queryRelatedFeaturesAsync` method.  The results returned represent related `Feature`s of which you can obtain the `ArcGISFeatureLayerInfo` to get the field used to filter the attribute values and notify the `ArrayAdapter` of the changes.
+The `FeatureTable` from a selected `Feature` is used a parameter on a `FeatureTable.queryRelatedFeaturesAsync` method.  The results returned represent related `Feature`s of which you can obtain the `ArcGISFeatureLayerInfo` to get the field used to filter the attribute values and notify the `ArrayAdapter` of the changes.
 
 ```java
 ArcGISFeatureTable selectedTable = (ArcGISFeatureTable)feature.getFeatureTable();
