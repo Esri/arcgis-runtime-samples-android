@@ -26,18 +26,12 @@ relatedFeatureQueryResultFuture.addDoneListener(new Runnable() {
             for(RelatedFeatureQueryResult relatedQueryResult : relatedFeatureQueryResultList){
                 // iterate over Features returned
                 for (Feature relatedFeature : relatedQueryResult) {
-                    // check if FeatureTable name has been added to List
-                    if(!mRelatedValues.contains("Table - " + relatedFeature.getFeatureTable().getTableName() + ":")){
-                        mRelatedValues.add("Table - " + relatedFeature.getFeatureTable().getTableName() + ":");
-                    }
-                    // feature returned from selection query
-                    Map<String, Object> attributes = relatedFeature.getAttributes();
-                    // add related feature attributes to List
-                    for (Map.Entry<String, Object> attribute : attributes.entrySet()) {
-                        if(!attribute.getKey().equals("OBJECTID")){
-                            mRelatedValues.add(attribute.getValue().toString());
-                        }
-                    }
+                    // Get the Display field to use as filter on related attributes
+                    ArcGISFeature agsFeature = (ArcGISFeature) relatedFeature;
+                    String displayFieldName = agsFeature.getFeatureTable().getLayerInfo().getDisplayFieldName();
+                    String displayFieldValue = agsFeature.getAttributes().get(displayFieldName).toString();
+    
+                    mRelatedValues.add(displayFieldValue);
                     // notify ListAdapter content has changed
                     mArrayAdapter.notifyDataSetChanged();
                 }
