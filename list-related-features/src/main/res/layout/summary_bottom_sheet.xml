@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorIcons"
+    android:background="@color/colorPrimaryLight"
     android:orientation="vertical"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
@@ -10,6 +10,11 @@
     app:behavior_peekHeight="120dp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-    <include layout="@layout/data_table"/>
+    <ListView
+        android:id="@+id/related_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
 
 </LinearLayout>
