@@ -30,6 +30,7 @@ subprojects{
             dependencies {
                 compile 'com.android.support:appcompat-v7:25.3.1'
                 compile 'com.android.support:design:25.3.1'
+                compile 'com.android.support.constraint:constraint-layout:1.0.2'
                 compile 'com.esri.arcgisruntime:arcgis-android:100.1.0-1662'
             }
         }
