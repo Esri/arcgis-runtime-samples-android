@@ -21,7 +21,8 @@ import java.util.List;
  * Class which handles the blend renderer parameters dialog.
  */
 
-public class ParametersDialogFragment extends DialogFragment {
+public class
+ParametersDialogFragment extends DialogFragment {
 
     /**
      * Interface for passing dialog parameters back to MainActivity.
