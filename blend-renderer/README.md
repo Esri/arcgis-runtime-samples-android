@@ -17,7 +17,7 @@ To apply a `BlendRenderer` to a `RasterLayer`:
 3. Create a `Basemap` from the `RasterLayer` and set it to the map.
 4. Create a `Raster` for elevation from a grayscale raster file.
 5. Create a `BlendRenderer`, specifying the elevation `Raster`, `ColorRamp`, and other properties.
-	- If you specify a non-null `ColorRamp`, use the elevation `Raster` as the base raster in addition to the elevation raster parameter. That way the `ColorRampz is used instead of the satellite imagery.
+	- If you specify a non-null `ColorRamp`, use the elevation `Raster` as the base raster in addition to the elevation raster parameter. That way the `ColorRamp' is used instead of the satellite imagery.
 6. Set the `Renderer` on the `RasterLayer` with `rasterLayer.setRenderer(renderer)`.
 
 ## Features
