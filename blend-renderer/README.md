@@ -10,15 +10,15 @@ Choose and adjust the settings to update the `BlendRenderer` on the `RasterLayer
 
 ## How it works
 
-To apply a BlendRenderer to a RasterLayer:
+To apply a `BlendRenderer` to a `RasterLayer`:
 
-1. Create a Raster from a raster file.
-2. Create a raster layer from the raster.
-3. Create a Basemap from the raster layer and set it to the map.
-4. Create a raster for elevation from a grayscale raster file.
-5. Create a blend renderer, specifying the elevation raster, color ramp, and other properties.
-	- If you specify a non-null color ramp, use the elevation raster as the base raster in addition to the elevation raster parameter. That way the color ramp is used instead of the satellite imagery.
-6. Set the renderer on the raster layer with rasterLayer.setRenderer(renderer).
+1. Create a `Raster` from a raster file.
+2. Create a `RasterLayer` from the `Raster`.
+3. Create a `Basemap` from the `RasterLayer` and set it to the map.
+4. Create a `Raster` for elevation from a grayscale raster file.
+5. Create a `BlendRenderer`, specifying the elevation `Raster`, `ColorRamp`, and other properties.
+	- If you specify a non-null `ColorRamp`, use the elevation `Raster` as the base raster in addition to the elevation raster parameter. That way the `ColorRampz is used instead of the satellite imagery.
+6. Set the `Renderer` on the `RasterLayer` with `rasterLayer.setRenderer(renderer)`.
 
 ## Features
 
