@@ -100,8 +100,8 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
   }
 
   /**
-   * Creates a new Raster based on a given path and adds it to a RasterLayer which is added to an
-   * ArcGISMap as an operational layer.
+   * Creates new imagery and elevation rasters based on a given path, creates an ArcGISMap, sets it to a MapView and
+   * calls updateRenderer().
    */
   private void blendRenderer() {
     // create rasters
@@ -109,19 +109,15 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
         new File(buildRasterPath(this.getString(R.string.imagery_raster_name))).getAbsolutePath());
     mElevationRaster = new Raster(
         new File(buildRasterPath(this.getString(R.string.elevation_raster_name))).getAbsolutePath());
-    // create a raster layer
-    mRasterLayer = new RasterLayer(mImageryRaster);
-    // create a basemap from the raster layer
+    // create a map
     ArcGISMap map = new ArcGISMap();
     // add the map to a map view
     mMapView.setMap(map);
-    // add the raster as an operational layer
-    //map.getOperationalLayers().add(mRasterLayer);
     updateRenderer();
   }
 
   /**
-   * Creates a new BlendRenderer according to the chosen property values.
+   * Creates ColorRamp and BlendRenderer according to the chosen property values.
    */
   private void updateRenderer() {
     ColorRamp colorRamp = mColorRampType != ColorRamp.PresetType.NONE ? new ColorRamp(mColorRampType, 800) : null;

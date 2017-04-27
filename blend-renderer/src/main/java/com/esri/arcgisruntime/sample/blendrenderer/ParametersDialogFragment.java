@@ -58,7 +58,7 @@ ParametersDialogFragment extends DialogFragment {
             mColorRampType = (ColorRamp.PresetType) blendParameters.getSerializable("color_ramp_type");
         }
 
-        AlertDialog.Builder paramDialog = new AlertDialog.Builder(getContext());
+        final AlertDialog.Builder paramDialog = new AlertDialog.Builder(getContext());
         @SuppressLint("InflateParams") View dialogView = inflater.inflate(R.layout.dialog_box, null);
         paramDialog.setView(dialogView);
         paramDialog.setTitle(R.string.dialog_title);
@@ -71,6 +71,7 @@ ParametersDialogFragment extends DialogFragment {
         paramDialog.setPositiveButton("Render", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
                 ParametersListener activity =
                         (ParametersListener) getActivity();
                 activity.returnParameters(mAltitude, mAzimuth, mSlopeType, mColorRampType);
