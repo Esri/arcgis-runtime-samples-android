@@ -188,17 +188,6 @@ public class MainActivity extends AppCompatActivity {
                 mOperationalLayers.add(fLayer);
             }
         }
-
-        // create ArcGISFeatureTable from non-spatial tables in Map
-        List<ArcGISFeatureTable> tables = map.getTables();
-        final ArcGISFeatureTable speciesFeatureTable = tables.get(0);
-        speciesFeatureTable.addDoneLoadingListener(new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG, "Found table: " + speciesFeatureTable.getTableName());
-            }
-        });
-        speciesFeatureTable.loadAsync();
     }
 
     @Override
