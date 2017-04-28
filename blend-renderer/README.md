@@ -31,7 +31,7 @@ To apply a `BlendRenderer` to a `RasterLayer`:
 - RasterLayer
 
 ## Provision your device
-1. Download the **TBD.zip** data from [ArcGIS Online](https://TBD).  
+1. Download the **shasta-elevation.zip** data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=caeef9aa78534760b07158bb8e068462).  
 2. Extract the contents of the downloaded zip file to disk.  
 3. Create an ArcGIS/samples/raster folder on your device. You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
 4. Open up a command prompt and execute the `adb shell` command to start a remote shell on your target device.
@@ -45,5 +45,5 @@ To apply a `BlendRenderer` to a `RasterLayer`:
 
 	Link | Local Location
 	---------|-------|
-	|[TBD.zip](TBD)| `<sdcard>`/ArcGIS/samples/raster/Shasta.tif 		  |
+	|[shasta-elevation.zip](https://arcgisruntime.maps.arcgis.com/home/item.html?id=caeef9aa78534760b07158bb8e068462)| `<sdcard>`/ArcGIS/samples/raster/Shasta.tif 		  |
 	|			   | `<sdcard>`/ArcGIS/samples/raster/Shasta_Elevation.tif |
