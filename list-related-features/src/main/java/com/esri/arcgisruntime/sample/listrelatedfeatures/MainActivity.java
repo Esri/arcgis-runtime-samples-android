@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 // clear ListAdapter of previous results
                 mArrayAdapter.clear();
+                // hide the bottomsheet
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 // get the point that was clicked and convert it to a point in mArcGISMap coordinates
                 Point clickPoint = mMapView.screenToLocation(new android.graphics.Point(
                         Math.round(e.getX()),
