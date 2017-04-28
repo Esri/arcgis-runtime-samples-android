@@ -116,44 +116,52 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 //call get on the future to get the result
                 try {
-                    FeatureQueryResult result = future.get();
-                    // iterate over features returned
-                    for (Feature feature : result) {
-                        ArcGISFeature arcGISFeature = (ArcGISFeature)feature;
-                        featureLayer.setSelectionColor(Color.YELLOW);
-                        featureLayer.setSelectionWidth(5);
+                    if(future.get().iterator().hasNext()){
+                        FeatureQueryResult result = future.get();
+                        // iterate over features returned
+                        for (Feature feature : result) {
+                            ArcGISFeature arcGISFeature = (ArcGISFeature)feature;
+                            featureLayer.setSelectionColor(Color.YELLOW);
+                            featureLayer.setSelectionWidth(5);
 
-                        ArcGISFeatureTable selectedTable = (ArcGISFeatureTable)feature.getFeatureTable();
+                            ArcGISFeatureTable selectedTable = (ArcGISFeatureTable)feature.getFeatureTable();
 
-                        final ListenableFuture<List<RelatedFeatureQueryResult>> relatedFeatureQueryResultFuture = selectedTable.queryRelatedFeaturesAsync(arcGISFeature);
-                        relatedFeatureQueryResultFuture.addDoneListener(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    List<RelatedFeatureQueryResult> relatedFeatureQueryResultList = relatedFeatureQueryResultFuture.get();
-                                    // iterate over returned RelatedFeatureQueryResults
-                                    for(RelatedFeatureQueryResult relatedQueryResult : relatedFeatureQueryResultList){
-                                        // iterate over Features returned
-                                        for (Feature relatedFeature : relatedQueryResult) {
-                                            // Get the Display field to use as filter on related attributes
-                                            ArcGISFeature agsFeature = (ArcGISFeature) relatedFeature;
-                                            String displayFieldName = agsFeature.getFeatureTable().getLayerInfo().getDisplayFieldName();
-                                            String displayFieldValue = agsFeature.getAttributes().get(displayFieldName).toString();
+                            final ListenableFuture<List<RelatedFeatureQueryResult>> relatedFeatureQueryResultFuture = selectedTable.queryRelatedFeaturesAsync(arcGISFeature);
+                            relatedFeatureQueryResultFuture.addDoneListener(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        List<RelatedFeatureQueryResult> relatedFeatureQueryResultList = relatedFeatureQueryResultFuture.get();
+                                        // iterate over returned RelatedFeatureQueryResults
+                                        for(RelatedFeatureQueryResult relatedQueryResult : relatedFeatureQueryResultList){
+                                            // iterate over Features returned
+                                            for (Feature relatedFeature : relatedQueryResult) {
+                                                // Get the Display field to use as filter on related attributes
+                                                ArcGISFeature agsFeature = (ArcGISFeature) relatedFeature;
+                                                String displayFieldName = agsFeature.getFeatureTable().getLayerInfo().getDisplayFieldName();
+                                                String displayFieldValue = agsFeature.getAttributes().get(displayFieldName).toString();
 
-                                            mRelatedValues.add(displayFieldValue);
+                                                mRelatedValues.add(displayFieldValue);
 
-                                            // notify ListAdapter content has changed
-                                            mArrayAdapter.notifyDataSetChanged();
+                                                // notify ListAdapter content has changed
+                                                mArrayAdapter.notifyDataSetChanged();
+                                            }
                                         }
+
+                                    } catch (Exception e) {
+                                        Log.e(TAG, "Exception occurred: " + e.getMessage());
                                     }
-
-                                } catch (Exception e) {
-                                    Log.e(TAG, "Exception occurred: " + e.getMessage());
                                 }
-                            }
-                        });
+                            });
 
+                        }
+                    } else {
+                        // did not tap on a feature, display no results
+                        mRelatedValues.add(getResources().getString(R.string.no_results));
+                        // notify ListAdapter content has changed
+                        mArrayAdapter.notifyDataSetChanged();
                     }
+
                 } catch (Exception e) {
                     Log.e(TAG, "Exception occurred: " + e.getMessage());
                 }
