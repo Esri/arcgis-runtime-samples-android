@@ -23,14 +23,13 @@ import com.esri.arcgisruntime.raster.Raster;
 import com.esri.arcgisruntime.raster.SlopeType;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements ParametersDialogFragment.ParametersListener {
 
   private MapView mMapView;
   private Raster mImageryRaster;
   private Raster mElevationRaster;
-  private RasterLayer mRasterLayer;
   private int mAltitude;
   private int mAzimuth;
   private double mZFactor;
@@ -122,13 +121,13 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
   private void updateRenderer() {
     ColorRamp colorRamp = mColorRampType != ColorRamp.PresetType.NONE ? new ColorRamp(mColorRampType, 800) : null;
     // if color ramp is not NONE, color the hillshade elevation raster instead of using satellite imagery raster color
-    mRasterLayer = colorRamp != null ? new RasterLayer(mElevationRaster) : new RasterLayer(mImageryRaster);
+    RasterLayer mRasterLayer = colorRamp != null ? new RasterLayer(mElevationRaster) : new RasterLayer(mImageryRaster);
     mMapView.getMap().setBasemap(new Basemap(mRasterLayer));
       // create blend renderer
       BlendRenderer blendRenderer = new BlendRenderer(
           mElevationRaster,
-          Arrays.asList(9.0),
-          Arrays.asList(255.0),
+          Collections.singletonList(9.0),
+          Collections.singletonList(255.0),
           null,
           null,
           null,
