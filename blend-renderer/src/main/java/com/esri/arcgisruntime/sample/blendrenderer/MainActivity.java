@@ -28,16 +28,27 @@ import java.util.Collections;
 public class MainActivity extends AppCompatActivity implements ParametersDialogFragment.ParametersListener {
 
   private MapView mMapView;
+
   private Raster mImageryRaster;
+
   private Raster mElevationRaster;
+
   private int mAltitude;
+
   private int mAzimuth;
+
   private double mZFactor;
+
   private SlopeType mSlopeType;
+
   private ColorRamp.PresetType mColorRampType;
+
   private double mPixelSizeFactor;
+
   private double mPixelSizePower;
+
   private int mOutputBitDepth;
+
   private FragmentManager mFragmentManager;
 
   @Override
@@ -67,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
     mMapView = (MapView) findViewById(R.id.mapView);
     mFragmentManager = getSupportFragmentManager();
     // define permission to request
-    String[] reqPermission = new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
     int requestCode = 2;
     // For API level 23+ request permission at runtime
     if (ContextCompat.checkSelfPermission(MainActivity.this,
@@ -81,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
 
   /**
    * Using values stored in strings.xml, builds path to rasters.
+   *
    * @return the path to raster file
    */
   private String buildRasterPath(String filename) {
@@ -123,24 +135,24 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
     // if color ramp is not NONE, color the hillshade elevation raster instead of using satellite imagery raster color
     RasterLayer mRasterLayer = colorRamp != null ? new RasterLayer(mElevationRaster) : new RasterLayer(mImageryRaster);
     mMapView.getMap().setBasemap(new Basemap(mRasterLayer));
-      // create blend renderer
-      BlendRenderer blendRenderer = new BlendRenderer(
-          mElevationRaster,
-          Collections.singletonList(9.0),
-          Collections.singletonList(255.0),
-          null,
-          null,
-          null,
-          null,
-          colorRamp,
-          mAltitude,
-          mAzimuth,
-          mZFactor,
-          mSlopeType,
-          mPixelSizeFactor,
-          mPixelSizePower,
-          mOutputBitDepth);
-      mRasterLayer.setRasterRenderer(blendRenderer);
+    // create blend renderer
+    BlendRenderer blendRenderer = new BlendRenderer(
+        mElevationRaster,
+        Collections.singletonList(9.0),
+        Collections.singletonList(255.0),
+        null,
+        null,
+        null,
+        null,
+        colorRamp,
+        mAltitude,
+        mAzimuth,
+        mZFactor,
+        mSlopeType,
+        mPixelSizeFactor,
+        mPixelSizePower,
+        mOutputBitDepth);
+    mRasterLayer.setRasterRenderer(blendRenderer);
   }
 
   /**
