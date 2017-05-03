@@ -12,7 +12,7 @@ This sample demonstrates how to display an scene with elevation data.
 Create an `ArcGISScene` and set the `Basemap` with `ArcGISScene.setBasemap()`. Create a `SceneView` and set the scene to the view, `SceneView.setScene(scene)`.  Create a `Surface` and add an `ArcGISTiledElevationSource`, `Surface.getElevationSources().add()`. Set the surface as the scene's base surface `ArcGIScene.setBaseSurface(surface)`.
 
 ```java
-// inflate MapView from layout
+// inflate SceneView from layout
 mSceneView = (SceneView) findViewById(sceneView);
 // create a scene and add a basemap to it
 ArcGISScene agsScene = new ArcGISScene();
