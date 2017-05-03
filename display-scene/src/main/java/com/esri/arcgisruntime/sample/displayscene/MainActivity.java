@@ -58,14 +58,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-        // pause MapView
+        // pause ScemeView
         mSceneView.pause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // resume MapView
+        // resume SceneView
         mSceneView.resume();
     }
 }
