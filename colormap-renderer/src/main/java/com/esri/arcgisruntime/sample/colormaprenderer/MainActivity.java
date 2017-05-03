@@ -71,8 +71,7 @@ public class MainActivity extends AppCompatActivity {
     // get sdcard resource name
     File extStorDir = Environment.getExternalStorageDirectory();
     // get the directory
-    String extSDCardDirName =
-        this.getResources().getString(R.string.config_data_sdcard_offline_dir);
+    String extSDCardDirName = this.getResources().getString(R.string.config_data_sdcard_offline_dir);
     // get raster filename
     String filename = this.getString(R.string.config_raster_name);
     // create the full path to the raster file
@@ -86,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
 
   /**
    * Loads ShastaBW.tif as a Raster and adds it to a new RasterLayer. RasterLayer is then added to the map as an
-   * operational layer. List of color values is created (0-149: red) (150-250: yellow). The list is passed in to a new
-   * ColorMapRenderer, which is then set to the RasterLayer Rendererer. Map viewpoint is then set based on the Raster's
+   * operational layer. A List of color values is created (0-149: red) (150-250: yellow). The List is passed to a new
+   * ColorMapRenderer, which is then set to the RasterLayer Rendererer. Map viewpoint is then set based on Raster
    * geometry.
    */
   private void loadRaster() {
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
     // add the raster as an operational layer
     map.getOperationalLayers().add(rasterLayer);
-    // create a color map where values 0-150 are red (0xFFFF0000) and 150-250 are yellow (0xFFFFFF00)
+    // create a color map where values 0-149 are red (0xFFFF0000) and 150-250 are yellow (0xFFFFFF00)
     List<Integer> colors = new ArrayList<>();
     for (int i = 0; i <= 250; i++) {
       if (i < 150) {
