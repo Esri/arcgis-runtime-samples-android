@@ -1,5 +1,5 @@
 # Display a Scene
-This sample demonstrates how to display an scene with elevation data.
+This sample demonstrates how to display a scene with elevation data.
 
 ![Display a Scene App](display-scene.png)
 
