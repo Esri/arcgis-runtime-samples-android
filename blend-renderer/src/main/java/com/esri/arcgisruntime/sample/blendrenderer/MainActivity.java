@@ -29,6 +29,10 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
 
   private MapView mMapView;
 
+  private File mImageFile;
+
+  private File mElevationFile;
+
   private Raster mImageryRaster;
 
   private Raster mElevationRaster;
@@ -111,15 +115,13 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
   }
 
   /**
-   * Creates new imagery and elevation rasters based on a given path, creates an ArcGISMap, sets it to a MapView and
+   * Creates new imagery and elevation files based on a given path, creates an ArcGISMap, sets it to a MapView and
    * calls updateRenderer().
    */
   private void blendRenderer() {
-    // create rasters
-    mImageryRaster = new Raster(
-        new File(buildRasterPath(this.getString(R.string.imagery_raster_name))).getAbsolutePath());
-    mElevationRaster = new Raster(
-        new File(buildRasterPath(this.getString(R.string.elevation_raster_name))).getAbsolutePath());
+    // create raster files
+    mImageFile = new File(buildRasterPath(this.getString(R.string.imagery_raster_name)));
+    mElevationFile = new File(buildRasterPath(this.getString(R.string.elevation_raster_name)));
     // create a map
     ArcGISMap map = new ArcGISMap();
     // add the map to a map view
@@ -131,7 +133,11 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
    * Creates ColorRamp and BlendRenderer according to the chosen property values.
    */
   private void updateRenderer() {
+    // if color ramp type is not None, create a new ColorRamp
     ColorRamp colorRamp = mColorRampType != ColorRamp.PresetType.NONE ? new ColorRamp(mColorRampType, 800) : null;
+    // create rasters
+    mImageryRaster = new Raster(mImageFile.getAbsolutePath());
+    mElevationRaster = new Raster(mElevationFile.getAbsolutePath());
     // if color ramp is not NONE, color the hillshade elevation raster instead of using satellite imagery raster color
     RasterLayer rasterLayer = colorRamp != null ? new RasterLayer(mElevationRaster) : new RasterLayer(mImageryRaster);
     mMapView.getMap().setBasemap(new Basemap(rasterLayer));
