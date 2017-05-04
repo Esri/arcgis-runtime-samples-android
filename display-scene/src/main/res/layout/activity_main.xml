@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.esri.arcgisruntime.sample.displayscene.MainActivity">
 
-    <!-- MapView -->
+    <!-- SceneView -->
     <com.esri.arcgisruntime.mapping.view.SceneView
         android:id="@+id/sceneView"
         android:layout_width="match_parent"
