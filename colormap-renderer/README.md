@@ -2,7 +2,7 @@
 
 Demonstrates how to use a `ColormapRenderer` on `RasterLayer`. `ColormapRenderer` can be used to replace values on a `RasterLayer` with a color based on the original value brightness.
 
-![](colormap-renderer.png)
+![colormap renderer app](colormap-renderer.png)
 
 ## How it works
 
@@ -25,7 +25,7 @@ To apply a `ColormapRenderer` to a `RasterLayer`:
 
 
 ## Provision your device
-1. Download the **ShastaBW.zip** data from [ArcGIS Online](//TODO).  
+1. Download the **shasta-bw.zip** data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=95392f99970d4a71bd25951beb34a508).  
 2. Extract the contents of the downloaded zip file to disk.  
 3. Create an ArcGIS/samples/raster folder on your device. You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
 4. Open up a command prompt and execute the `adb shell` command to start a remote shell on your target device.
@@ -39,4 +39,4 @@ To apply a `ColormapRenderer` to a `RasterLayer`:
 
 Link | Local Location
 ---------|-------|
-|[ShastaBW.zip](//TODO)| `<sdcard>`/ArcGIS/samples/raster/ShastaBW.tif |
+|[shasta-bw.zip](https://arcgisruntime.maps.arcgis.com/home/item.html?id=95392f99970d4a71bd25951beb34a508)| `<sdcard>`/ArcGIS/samples/raster/ShastaBW.tif |
