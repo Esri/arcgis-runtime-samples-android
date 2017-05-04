@@ -25,8 +25,6 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 
-import static com.esri.arcgisruntime.sample.displayscene.R.id.sceneView;
-
 public class MainActivity extends AppCompatActivity {
 
     private SceneView mSceneView;
@@ -36,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // create SceneView from layout
-        mSceneView = (SceneView) findViewById(sceneView);
+        mSceneView = (SceneView) findViewById(R.id.sceneView);
         // create a scene and add a basemap to it
         ArcGISScene agsScene = new ArcGISScene();
         agsScene.setBasemap(Basemap.createImagery());
