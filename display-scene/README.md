@@ -22,9 +22,7 @@ mSceneView.setScene(agsScene);
 // add base surface for elevation data
 ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
         getResources().getString(R.string.elevation_image_service));
-Surface surface = new Surface();
-surface.getElevationSources().add(elevationSource);
-agsScene.setBaseSurface(surface);
+agsScene.getBaseSurface().getElevationSources().add(elevationSource);
 
 // add a camera and initial camera position
 Camera camera = new Camera(28.4, 83.9, 10010.0, 10.0, 80.0, 300.0);
