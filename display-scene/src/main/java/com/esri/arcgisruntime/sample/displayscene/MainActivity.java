@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // inflate SceneView from layout
+        // create SceneView from layout
         mSceneView = (SceneView) findViewById(sceneView);
         // create a scene and add a basemap to it
         ArcGISScene agsScene = new ArcGISScene();
