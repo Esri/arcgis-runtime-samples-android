@@ -133,8 +133,8 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
   private void updateRenderer() {
     ColorRamp colorRamp = mColorRampType != ColorRamp.PresetType.NONE ? new ColorRamp(mColorRampType, 800) : null;
     // if color ramp is not NONE, color the hillshade elevation raster instead of using satellite imagery raster color
-    RasterLayer mRasterLayer = colorRamp != null ? new RasterLayer(mElevationRaster) : new RasterLayer(mImageryRaster);
-    mMapView.getMap().setBasemap(new Basemap(mRasterLayer));
+    RasterLayer rasterLayer = colorRamp != null ? new RasterLayer(mElevationRaster) : new RasterLayer(mImageryRaster);
+    mMapView.getMap().setBasemap(new Basemap(rasterLayer));
     // create blend renderer
     BlendRenderer blendRenderer = new BlendRenderer(
         mElevationRaster,
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
         mPixelSizeFactor,
         mPixelSizePower,
         mOutputBitDepth);
-    mRasterLayer.setRasterRenderer(blendRenderer);
+    rasterLayer.setRasterRenderer(blendRenderer);
   }
 
   /**
