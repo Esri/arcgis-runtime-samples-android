@@ -33,10 +33,6 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
 
   private File mElevationFile;
 
-  private Raster mImageryRaster;
-
-  private Raster mElevationRaster;
-
   private int mAltitude;
 
   private int mAzimuth;
@@ -136,14 +132,14 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
     // if color ramp type is not None, create a new ColorRamp
     ColorRamp colorRamp = mColorRampType != ColorRamp.PresetType.NONE ? new ColorRamp(mColorRampType, 800) : null;
     // create rasters
-    mImageryRaster = new Raster(mImageFile.getAbsolutePath());
-    mElevationRaster = new Raster(mElevationFile.getAbsolutePath());
+    Raster imageryRaster = new Raster(mImageFile.getAbsolutePath());
+    Raster elevationRaster = new Raster(mElevationFile.getAbsolutePath());
     // if color ramp is not NONE, color the hillshade elevation raster instead of using satellite imagery raster color
-    RasterLayer rasterLayer = colorRamp != null ? new RasterLayer(mElevationRaster) : new RasterLayer(mImageryRaster);
+    RasterLayer rasterLayer = colorRamp != null ? new RasterLayer(elevationRaster) : new RasterLayer(imageryRaster);
     mMapView.getMap().setBasemap(new Basemap(rasterLayer));
     // create blend renderer
     BlendRenderer blendRenderer = new BlendRenderer(
-        mElevationRaster,
+        elevationRaster,
         Collections.singletonList(9.0),
         Collections.singletonList(255.0),
         null,
