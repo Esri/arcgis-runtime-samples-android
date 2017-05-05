@@ -112,6 +112,9 @@ public class MainActivity extends AppCompatActivity {
                 final FeatureLayer selectedLayer = mOperationalLayers.get(0);
                 // get a list of related features to display
                 queryRelatedFeatures(selectedLayer, queryParams);
+                // highlight selected layer
+                selectedLayer.setSelectionColor(Color.YELLOW);
+                selectedLayer.setSelectionWidth(5);
                 return super.onSingleTapConfirmed(e);
             }
         });
@@ -136,12 +139,10 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     if(future.get().iterator().hasNext()){
                         FeatureQueryResult result = future.get();
+
                         // iterate over features returned
                         for (Feature feature : result) {
                             ArcGISFeature arcGISFeature = (ArcGISFeature)feature;
-                            featureLayer.setSelectionColor(Color.YELLOW);
-                            featureLayer.setSelectionWidth(5);
-
                             ArcGISFeatureTable selectedTable = (ArcGISFeatureTable)feature.getFeatureTable();
 
                             final ListenableFuture<List<RelatedFeatureQueryResult>> relatedFeatureQueryResultFuture = selectedTable.queryRelatedFeaturesAsync(arcGISFeature);
