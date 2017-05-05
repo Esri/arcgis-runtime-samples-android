@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.colormaprenderer;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -100,13 +101,13 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
     // add the raster as an operational layer
     map.getOperationalLayers().add(rasterLayer);
-    // create a color map where values 0-149 are red (0xFFFF0000) and 150-250 are yellow (0xFFFFFF00)
+    // create a color map where values 0-149 are red (Color.RED) and 150-250 are yellow (Color.Yellow)
     List<Integer> colors = new ArrayList<>();
     for (int i = 0; i <= 250; i++) {
       if (i < 150) {
-        colors.add(i, 0xFFFF0000);
+        colors.add(i, Color.RED);
       } else {
-        colors.add(i, 0xFFFFFF00);
+        colors.add(i, Color.YELLOW);
       }
     }
     // create a colormap renderer
