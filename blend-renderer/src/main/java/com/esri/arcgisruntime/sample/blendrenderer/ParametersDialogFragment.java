@@ -16,8 +16,6 @@
 
 package com.esri.arcgisruntime.sample.blendrenderer;
 
-import java.util.ArrayList;
-import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -28,39 +26,25 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.SeekBar;
-import android.widget.Spinner;
-import android.widget.TextView;
-
+import android.widget.*;
 import com.esri.arcgisruntime.raster.ColorRamp;
 import com.esri.arcgisruntime.raster.SlopeType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class which handles the blend renderer parameters dialog.
  */
 
-public class
-ParametersDialogFragment extends DialogFragment {
-
-  /**
-   * Interface for passing dialog parameters back to MainActivity.
-   */
-  public interface ParametersListener {
-    void returnParameters(int altitude, int azimuth, SlopeType slopeType, ColorRamp.PresetType colorRampType);
-  }
+public class ParametersDialogFragment extends DialogFragment {
 
   private Integer mAltitude;
-
   private Integer mAzimuth;
-
   private SlopeType mSlopeType;
-
   private ColorRamp.PresetType mColorRampType;
 
   private TextView mCurrAltitudeTextView;
-
   private TextView mCurrAzimuthTextView;
 
   /**
@@ -235,5 +219,12 @@ ParametersDialogFragment extends DialogFragment {
   private void updateAzimuthSeekBar(SeekBar azimuthSeekBar) {
     azimuthSeekBar.setProgress(mAzimuth);
     mCurrAzimuthTextView.setText(mAzimuth.toString());
+  }
+
+  /**
+   * Interface for passing dialog parameters back to MainActivity.
+   */
+  public interface ParametersListener {
+    void returnParameters(int altitude, int azimuth, SlopeType slopeType, ColorRamp.PresetType colorRampType);
   }
 }

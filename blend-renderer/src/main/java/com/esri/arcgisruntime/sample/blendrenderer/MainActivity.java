@@ -16,8 +16,6 @@
 
 package com.esri.arcgisruntime.sample.blendrenderer;
 
-import java.io.File;
-import java.util.Collections;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -31,7 +29,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.esri.arcgisruntime.layers.RasterLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -41,28 +38,22 @@ import com.esri.arcgisruntime.raster.ColorRamp;
 import com.esri.arcgisruntime.raster.Raster;
 import com.esri.arcgisruntime.raster.SlopeType;
 
+import java.io.File;
+import java.util.Collections;
+
 public class MainActivity extends AppCompatActivity implements ParametersDialogFragment.ParametersListener {
 
   private MapView mMapView;
-
   private File mImageFile;
-
   private File mElevationFile;
 
   private int mAltitude;
-
   private int mAzimuth;
-
   private double mZFactor;
-
   private SlopeType mSlopeType;
-
   private ColorRamp.PresetType mColorRampType;
-
   private double mPixelSizeFactor;
-
   private double mPixelSizePower;
-
   private int mOutputBitDepth;
 
   private FragmentManager mFragmentManager;
