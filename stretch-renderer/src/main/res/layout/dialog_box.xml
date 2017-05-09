@@ -9,9 +9,7 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="81dp">
 
-
     <!-- StretchType -->
-
     <TextView
             android:id="@+id/stretch_type_text_view"
             android:layout_width="wrap_content"
@@ -35,9 +33,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"/>
 
-
     <!-- MinMax -->
-
     <TextView
             android:id="@+id/min_value_text_view"
             android:layout_width="wrap_content"
@@ -106,9 +102,7 @@
             app:layout_constraintTop_toTopOf="@+id/max_value_text_view"
             android:layout_marginEnd="16dp"/>
 
-
     <!-- PercentClip -->
-
     <TextView
             android:id="@+id/percent_clip_min_value_text_view"
             android:layout_width="wrap_content"
@@ -177,9 +171,7 @@
             app:layout_constraintTop_toTopOf="@+id/percent_clip_max_value_text_view"
             android:layout_marginEnd="16dp"/>
 
-
     <!-- StandardDeviation -->
-
     <TextView
             android:text="@string/standard_deviation"
             android:layout_width="wrap_content"
@@ -190,7 +182,6 @@
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@+id/max_value_text_view"
             android:visibility="gone"/>
-
     <SeekBar
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -206,7 +197,6 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="@+id/min_seek_bar"
             android:visibility="gone"/>
-
     <TextView
             android:id="@+id/curr_std_dev_text_view"
             android:layout_width="wrap_content"
