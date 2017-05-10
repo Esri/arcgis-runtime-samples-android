@@ -6,7 +6,6 @@
     <string name="data_sdcard_offline_dir">ArcGIS/samples/raster</string>
     <string name="raster_name">Shasta</string>
     <string name="max_value">Max value</string>
-    <string name="curr_text">###</string>
     <string name="min_value">Min value</string>
     <string name="stretch_type">Stretch type</string>
     <string name="standard_deviation">Std Dev</string>
