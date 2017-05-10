@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
   }
 
   /**
-   * Using values stored in strings.xml, builds path to rasters.
+   * Using values stored in strings.xml, builds path to raster.
    *
    * @return the path to raster file
    */
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
   }
 
   /**
-   * Creates new imagery and elevation rasters based on a given path, creates an ArcGISMap, sets it to a MapView and
+   * Creates new imagery raster based on a given path, creates an ArcGISMap, sets it to a MapView and
    * calls updateRenderer().
    */
   private void initialize() {
@@ -129,27 +129,23 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
   }
 
   /**
-   * Creates ColorRamp and BlendRenderer according to the chosen property values.
+   * Creates StretchRenderer of the chosen type: MinMax, PercentClip or StandardDeviation.
    */
   private void updateRenderer() {
     StretchParameters stretchParameters;
     switch (mStretchType) {
       default:
-        Log.d("Renderer", "MinMax");
         stretchParameters = new MinMaxStretchParameters(
             Collections.singletonList((double) mMin),
             Collections.singletonList((double) mMax));
         break;
       case PERCENT_CLIP:
-        Log.d("Renderer", "PercentClip with min " + mPercentClipMin + " and max " + mPercentClipMax);
         stretchParameters = new PercentClipStretchParameters(mPercentClipMin, mPercentClipMax);
         break;
       case STANDARD_DEVIATION:
-        Log.d("Renderer", "StdDeviation with factor " + mStdDevFactor);
         stretchParameters = new StandardDeviationStretchParameters(mStdDevFactor);
     }
     StretchRenderer stretchRenderer = new StretchRenderer(stretchParameters, null, true, null);
-    Log.d("Renderer", "Rendering " + stretchRenderer.getStretchParameters().toString());
     mRasterLayer.setRasterRenderer(stretchRenderer);
   }
 
@@ -178,9 +174,9 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
+    //send parameters to fragment
     ParametersDialogFragment paramDialog = new ParametersDialogFragment();
     Bundle stretchParameters = new Bundle();
-    //send parameters to fragment
     stretchParameters.putInt("min", mMin);
     stretchParameters.putInt("max", mMax);
     stretchParameters.putInt("percent_clip_min", mPercentClipMin);
