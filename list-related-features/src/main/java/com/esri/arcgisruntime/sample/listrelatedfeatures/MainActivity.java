@@ -21,10 +21,13 @@ import java.util.LinkedList;
 import java.util.List;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -65,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
         // The View with the BottomSheetBehavior
         mBottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottom_sheet));
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        // get bottomsheet collapsed height in dp
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        final float dp = mBottomSheetBehavior.getPeekHeight()/((float)displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
 
         ListView mListView = (ListView) findViewById(R.id.related_list);
         mArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mRelatedValues);
@@ -118,6 +125,25 @@ public class MainActivity extends AppCompatActivity {
                 return super.onSingleTapConfirmed(e);
             }
         });
+
+        // respond to bottom sheet interaction
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if(newState == BottomSheetBehavior.STATE_COLLAPSED){
+                    // set attribution bar above bottom sheet when collapsed
+                    mMapView.setViewInsets(0, 0, 0, dp);
+                }else{
+                    // set attribution bar to bottom when bottom sheet hidden or sliding
+                    mMapView.setViewInsets(0, 0, 0, 0);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // bottom sheet sliding up or down
+            }
+        });
     }
 
     /**
@@ -159,20 +185,16 @@ public class MainActivity extends AppCompatActivity {
                                                 ArcGISFeature agsFeature = (ArcGISFeature) relatedFeature;
                                                 String displayFieldName = agsFeature.getFeatureTable().getLayerInfo().getDisplayFieldName();
                                                 String displayFieldValue = agsFeature.getAttributes().get(displayFieldName).toString();
-
                                                 mRelatedValues.add(displayFieldValue);
-
                                                 // notify ListAdapter content has changed
                                                 mArrayAdapter.notifyDataSetChanged();
                                             }
                                         }
-
                                     } catch (Exception e) {
                                         Log.e(TAG, "Exception occurred: " + e.getMessage());
                                     }
                                 }
                             });
-
                         }
                     } else {
                         // did not tap on a feature, display no results
