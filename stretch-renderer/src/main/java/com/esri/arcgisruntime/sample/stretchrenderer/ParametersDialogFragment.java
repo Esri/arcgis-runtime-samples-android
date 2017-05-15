@@ -331,7 +331,7 @@ public class ParametersDialogFragment extends DialogFragment {
   /**
    * Interface for passing dialog parameters back to MainActivity.
    */
-  public interface ParametersListener {
+  interface ParametersListener {
     void returnParameters(int min, int max, int percentClipMin, int percentClipMax, int stdDevFactor,
         MainActivity.StretchType stretchType);
   }
