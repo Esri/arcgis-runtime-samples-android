@@ -24,9 +24,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,18 +92,19 @@ public class ParametersDialogFragment extends DialogFragment {
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     LayoutInflater inflater = (LayoutInflater) getContext().getSystemService
         (Context.LAYOUT_INFLATER_SERVICE);
-    Bundle stretchParameters = getArguments();
-    if (stretchParameters != null) {
-      mMinR = stretchParameters.getInt("minR");
-      mMaxR = stretchParameters.getInt("maxR");
-      mMinG = stretchParameters.getInt("minG");
-      mMaxG = stretchParameters.getInt("maxG");
-      mMinB = stretchParameters.getInt("minB");
-      mMaxB = stretchParameters.getInt("maxB");
-      mPercentClipMin = stretchParameters.getInt("percent_clip_min");
-      mPercentClipMax = stretchParameters.getInt("percent_clip_max");
-      mStdDevFactor = stretchParameters.getInt("std_dev_factor");
-      mStretchType = (MainActivity.StretchType) stretchParameters.getSerializable("stretch_type");
+    Bundle rgbParameters = getArguments();
+    if (rgbParameters != null) {
+      mMinR = rgbParameters.getInt("minR");
+      mMaxR = rgbParameters.getInt("maxR");
+      mMinG = rgbParameters.getInt("minG");
+      mMaxG = rgbParameters.getInt("maxG");
+      mMinB = rgbParameters.getInt("minB");
+      mMaxB = rgbParameters.getInt("maxB");
+      mPercentClipMin = rgbParameters.getInt("percent_clip_min");
+      mPercentClipMax = rgbParameters.getInt("percent_clip_max");
+      mStdDevFactor = rgbParameters.getInt("std_dev_factor");
+      mStretchType = (MainActivity.StretchType) rgbParameters.getSerializable("stretch_type");
+      Log.d("Incoming Parameters", "min r: " +mMinR+ " max r: " +mMaxR+ " min g: " +mMinG+ " max g: " +mMaxG+ " min b: " +mMinB+ " max b: " +mMaxB);
     }
 
     final AlertDialog.Builder paramDialog = new AlertDialog.Builder(getContext());
@@ -145,8 +151,13 @@ public class ParametersDialogFragment extends DialogFragment {
     mCurrMaxGreenTextView = (TextView) dialogView.findViewById(R.id.curr_max_green_text_view);
     mCurrMinBlueTextView = (TextView) dialogView.findViewById(R.id.curr_min_blue_text_view);
     mCurrMaxBlueTextView = (TextView) dialogView.findViewById(R.id.curr_max_blue_text_view);
+    //update seek bar positions with current mMinMax values
     updateSeekBar(mMinRedSeekBar, mMinR, mCurrMinRedTextView);
     updateSeekBar(mMaxRedSeekBar, mMaxR, mCurrMaxRedTextView);
+    updateSeekBar(mMinGreenSeekBar, mMinG, mCurrMinGreenTextView);
+    updateSeekBar(mMaxGreenSeekBar, mMaxG, mCurrMaxGreenTextView);
+    updateSeekBar(mMinBlueSeekBar, mMinB, mCurrMinBlueTextView);
+    updateSeekBar(mMaxBlueSeekBar, mMaxB, mCurrMaxBlueTextView);
     // percent clip ui elements
     mPercentClipMinTextView = (TextView) dialogView.findViewById(R.id.percent_clip_min_value_text_view);
     mPercentClipMaxTextView = (TextView) dialogView.findViewById(R.id.percent_clip_max_value_text_view);
@@ -156,6 +167,7 @@ public class ParametersDialogFragment extends DialogFragment {
     mPercentClipMaxSeekBar.setMax(99);
     mCurrPercentClipMinTextView = (TextView) dialogView.findViewById(R.id.curr_percent_clip_min_text_view);
     mCurrPercentClipMaxTextView = (TextView) dialogView.findViewById(R.id.curr_percent_clip_max_text_view);
+    //update seek bar positions with current PercentClip
     updateSeekBar(mPercentClipMinSeekBar, mPercentClipMin, mCurrPercentClipMinTextView);
     updateSeekBar(mPercentClipMaxSeekBar, mPercentClipMax, mCurrPercentClipMaxTextView);
     // standard deviation ui elements
@@ -164,6 +176,7 @@ public class ParametersDialogFragment extends DialogFragment {
     mStdDevSeekBar.setMax(3);
     mCurrStdDevTextView = (TextView) dialogView.findViewById(R.id.curr_std_dev_text_view);
     updateSeekBar(mStdDevSeekBar, mStdDevFactor, mCurrStdDevTextView);
+
     // set ui to previous selection
     if (mStretchType == MainActivity.StretchType.MIN_MAX) {
       setMinMaxVisibility(true);
@@ -179,15 +192,15 @@ public class ParametersDialogFragment extends DialogFragment {
       setStdDevVisibility(true);
     }
     // seek bar listeners
-    mMinSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+    mMinRedSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        mMin = progress;
-        updateSeekBar(mMinSeekBar, mMin, mCurrMinTextView);
+        mMinR = progress;
+        updateSeekBar(mMinRedSeekBar, mMinR, mCurrMinRedTextView);
         // move max to march min if max goes below min
-        if (mMax < mMin) {
-          mMax = mMin;
-          updateSeekBar(mMaxSeekBar, mMax, mCurrMaxTextView);
+        if (mMaxR < mMinR) {
+          mMaxR = mMinR;
+          updateSeekBar(mMaxRedSeekBar, mMaxR, mCurrMaxRedTextView);
         }
       }
 
@@ -197,15 +210,87 @@ public class ParametersDialogFragment extends DialogFragment {
       @Override
       public void onStopTrackingTouch(SeekBar seekBar) { }
     });
-    mMaxSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+    mMaxRedSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        mMax = progress;
-        updateSeekBar(mMaxSeekBar, mMax, mCurrMaxTextView);
+        mMaxR = progress;
+        updateSeekBar(mMaxRedSeekBar, mMaxR, mCurrMaxRedTextView);
         // move min to match max if min goes above max
-        if (mMin > mMax) {
-          mMin = mMax;
-          updateSeekBar(mMinSeekBar, mMin, mCurrMinTextView);
+        if (mMinR > mMaxR) {
+          mMinR = mMaxR;
+          updateSeekBar(mMinRedSeekBar, mMinR, mCurrMinRedTextView);
+        }
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekBar seekBar) { }
+
+      @Override
+      public void onStopTrackingTouch(SeekBar seekBar) { }
+    });
+    mMinGreenSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override
+      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        mMinG = progress;
+        updateSeekBar(mMinGreenSeekBar, mMinG, mCurrMinGreenTextView);
+        // move max to march min if max goes below min
+        if (mMaxG < mMinG) {
+          mMaxG = mMinG;
+          updateSeekBar(mMaxGreenSeekBar, mMaxG, mCurrMaxGreenTextView);
+        }
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekBar seekBar) { }
+
+      @Override
+      public void onStopTrackingTouch(SeekBar seekBar) { }
+    });
+    mMaxGreenSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override
+      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        mMaxG = progress;
+        updateSeekBar(mMaxGreenSeekBar, mMaxG, mCurrMaxGreenTextView);
+        // move min to match max if min goes above max
+        if (mMinG > mMaxG) {
+          mMinG = mMaxG;
+          updateSeekBar(mMinGreenSeekBar, mMinG, mCurrMinGreenTextView);
+        }
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekBar seekBar) { }
+
+      @Override
+      public void onStopTrackingTouch(SeekBar seekBar) { }
+    });
+    mMinBlueSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override
+      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        mMinB = progress;
+        updateSeekBar(mMinBlueSeekBar, mMinB, mCurrMinBlueTextView);
+        // move max to march min if max goes below min
+        if (mMaxB < mMinB) {
+          mMaxB = mMinB;
+          updateSeekBar(mMaxBlueSeekBar, mMaxB, mCurrMaxBlueTextView);
+        }
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekBar seekBar) { }
+
+      @Override
+      public void onStopTrackingTouch(SeekBar seekBar) { }
+    });
+    mMaxBlueSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override
+      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        mMaxB = progress;
+        updateSeekBar(mMaxBlueSeekBar, mMaxB, mCurrMaxBlueTextView);
+        // move min to match max if min goes above max
+        if (mMinB > mMaxB) {
+          mMinB = mMaxB;
+          updateSeekBar(mMinBlueSeekBar, mMinB, mCurrMinBlueTextView);
         }
       }
 
@@ -264,7 +349,7 @@ public class ParametersDialogFragment extends DialogFragment {
       @Override
       public void onStopTrackingTouch(SeekBar seekBar) { }
     });
-    // stretch type spinnner
+    // stretch type spinner
     List<String> stretchTypeArray = new ArrayList<>();
     stretchTypeArray.add(MainActivity.StretchType.MIN_MAX.toString());   //ordinals:0
     stretchTypeArray.add(MainActivity.StretchType.PERCENT_CLIP.toString());       //1
@@ -308,19 +393,47 @@ public class ParametersDialogFragment extends DialogFragment {
 
   private void setMinMaxVisibility(boolean visibility) {
     if (visibility) {
-      mMinTextView.setVisibility(View.VISIBLE);
-      mMinSeekBar.setVisibility(View.VISIBLE);
-      mCurrMinTextView.setVisibility(View.VISIBLE);
-      mMaxTextView.setVisibility(View.VISIBLE);
-      mMaxSeekBar.setVisibility(View.VISIBLE);
-      mCurrMaxTextView.setVisibility(View.VISIBLE);
+      mMinRedTextView.setVisibility(View.VISIBLE);
+      mMinRedSeekBar.setVisibility(View.VISIBLE);
+      mCurrMinRedTextView.setVisibility(View.VISIBLE);
+      mMaxRedTextView.setVisibility(View.VISIBLE);
+      mMaxRedSeekBar.setVisibility(View.VISIBLE);
+      mCurrMaxRedTextView.setVisibility(View.VISIBLE);
+
+      mMinGreenTextView.setVisibility(View.VISIBLE);
+      mMinGreenSeekBar.setVisibility(View.VISIBLE);
+      mCurrMinGreenTextView.setVisibility(View.VISIBLE);
+      mMaxGreenTextView.setVisibility(View.VISIBLE);
+      mMaxGreenSeekBar.setVisibility(View.VISIBLE);
+      mCurrMaxGreenTextView.setVisibility(View.VISIBLE);
+
+      mMinBlueTextView.setVisibility(View.VISIBLE);
+      mMinBlueSeekBar.setVisibility(View.VISIBLE);
+      mCurrMinBlueTextView.setVisibility(View.VISIBLE);
+      mMaxBlueTextView.setVisibility(View.VISIBLE);
+      mMaxBlueSeekBar.setVisibility(View.VISIBLE);
+      mCurrMaxBlueTextView.setVisibility(View.VISIBLE);
     } else {
-      mMinTextView.setVisibility(View.GONE);
-      mMinSeekBar.setVisibility(View.GONE);
-      mCurrMinTextView.setVisibility(View.GONE);
-      mMaxTextView.setVisibility(View.GONE);
-      mMaxSeekBar.setVisibility(View.GONE);
-      mCurrMaxTextView.setVisibility(View.GONE);
+      mMinRedTextView.setVisibility(View.GONE);
+      mMinRedSeekBar.setVisibility(View.GONE);
+      mCurrMinRedTextView.setVisibility(View.GONE);
+      mMaxRedTextView.setVisibility(View.GONE);
+      mMaxRedSeekBar.setVisibility(View.GONE);
+      mCurrMaxRedTextView.setVisibility(View.GONE);
+
+      mMinGreenTextView.setVisibility(View.GONE);
+      mMinGreenSeekBar.setVisibility(View.GONE);
+      mCurrMinGreenTextView.setVisibility(View.GONE);
+      mMaxGreenTextView.setVisibility(View.GONE);
+      mMaxGreenSeekBar.setVisibility(View.GONE);
+      mCurrMaxGreenTextView.setVisibility(View.GONE);
+
+      mMinBlueTextView.setVisibility(View.GONE);
+      mMinBlueSeekBar.setVisibility(View.GONE);
+      mCurrMinBlueTextView.setVisibility(View.GONE);
+      mMaxBlueTextView.setVisibility(View.GONE);
+      mMaxBlueSeekBar.setVisibility(View.GONE);
+      mCurrMaxBlueTextView.setVisibility(View.GONE);
     }
   }
 
@@ -363,7 +476,7 @@ public class ParametersDialogFragment extends DialogFragment {
   /**
    * Interface for passing dialog parameters back to MainActivity.
    */
-  public interface ParametersListener {
+  interface ParametersListener {
     void returnParameters(int minR, int maxR, int minG, int maxG, int minB, int maxB, int percentClipMin,
         int percentClipMax, int stdDevFactor, MainActivity.StretchType stretchType);
   }

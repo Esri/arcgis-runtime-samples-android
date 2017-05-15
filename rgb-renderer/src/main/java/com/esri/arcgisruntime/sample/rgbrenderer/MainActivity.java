@@ -33,7 +33,12 @@ import com.esri.arcgisruntime.layers.RasterLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.raster.*;
+import com.esri.arcgisruntime.raster.MinMaxStretchParameters;
+import com.esri.arcgisruntime.raster.PercentClipStretchParameters;
+import com.esri.arcgisruntime.raster.RGBRenderer;
+import com.esri.arcgisruntime.raster.Raster;
+import com.esri.arcgisruntime.raster.StandardDeviationStretchParameters;
+import com.esri.arcgisruntime.raster.StretchParameters;
 
 import java.io.File;
 import java.util.Arrays;
@@ -41,29 +46,18 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity implements ParametersDialogFragment.ParametersListener {
 
   private FragmentManager mFragmentManager;
-
   private MapView mMapView;
-
   private RasterLayer mRasterLayer;
 
   private int mMinR;
-
   private int mMaxR;
-
   private int mMinG;
-
   private int mMaxG;
-
   private int mMinB;
-
   private int mMaxB;
-
   private int mPercentClipMin;
-
   private int mPercentClipMax;
-
   private int mStdDevFactor;
-
   private StretchType mStretchType;
 
   @Override
@@ -226,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
     mMapView.resume();
   }
 
-  public enum StretchType {
+  enum StretchType {
     MIN_MAX("Min Max"),
     PERCENT_CLIP("Percent Clip"),
     STANDARD_DEVIATION("Standard Deviation");
