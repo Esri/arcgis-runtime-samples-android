@@ -175,6 +175,7 @@ public class ParametersDialogFragment extends DialogFragment {
     mStdDevSeekBar = (SeekBar) dialogView.findViewById(R.id.std_dev_seek_bar);
     mStdDevSeekBar.setMax(3);
     mCurrStdDevTextView = (TextView) dialogView.findViewById(R.id.curr_std_dev_text_view);
+    //update seel bar position with current StandardDeviation
     updateSeekBar(mStdDevSeekBar, mStdDevFactor, mCurrStdDevTextView);
 
     // set ui to previous selection

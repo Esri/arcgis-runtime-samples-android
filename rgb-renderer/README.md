@@ -1,21 +1,21 @@
-# Stretch Renderer
+# RGB Renderer
 
-Demonstrates how to use a `StretchRenderer` on a `RasterLayer`. A `StretchRenderer` can be used to stretch tightly grouped values across the available value spectrum, creating more contrast between objects. This is useful for identifying objects in dark images.
+Demonstrates how to use an `RGBRenderer` on a `RasterLayer`. An `RGBRenderer` is used to adjust the color bands of a multispectral image.
 
-![Stretch Renderer App](stretch-renderer.png)
+![RGB Renderer App](rgb-renderer.png)
 
 ## How to use the sample
 
-Choose one of the stretch parameter types. The other options will adjust based on the chosen type.
+Tap on the `Edit renderer` button in the toolbar to change the settings for the `RGBRenderer`. The sample allows you to change the stretch type and parameters for each type. You can tap on the Render button to update the raster.
 
 ## How it works
 
-To apply a `StretchRenderer` to a `RasterLayer`:
+To apply a `RGBRenderer` to a `RasterLayer`:
 
-1. Create a `Raster` from a raster file.
+1. Create a `Raster` from a from a multispectral raster file.
 2. Create a `RasterLayer` from the `Raster`.
 3. Create a `Basemap` from the `RasterLayer` and set it to the map.
-4. Create a `StretchRenderer`, specifying the stretch parameters and other properties.
+4. Create a `RGBRenderer`, specifying the stretch parameters and other properties.
 5. Set the `Renderer` on the `RasterLayer` with `rasterLayer.setRenderer(renderer)`.
 
 ## Features
@@ -26,7 +26,7 @@ To apply a `StretchRenderer` to a `RasterLayer`:
 - Raster
 - RasterLayer
 - StretchParameters
-- StretchRenderer
+- RGBRenderer
 
 
 ## Provision your device
