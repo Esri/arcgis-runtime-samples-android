@@ -11,7 +11,7 @@ To position `Graphics` using `SurfacePlacement` (DRAPED, RELATIVE, ABSOLUTE):
 
 1. Create a GraphicsOverlay.
 2. Set the surface placement mode `GraphicsOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.      )`
-	- `DRAPED`, Z value of graphic has no affect and graphic is attached to surface
+	-  `DRAPED` , Z value of graphic has no affect and graphic is attached to surface
 	- `ABSOLUTE`, position graphic using only it's Z value
 	- `RELATIVE`, position graphic using it's Z value plus the elevation of the surface
 3. Add graphics to the graphics overlay, GraphicsOverlay.getGraphics.add(Graphic).
