@@ -73,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         final float dp = mBottomSheetBehavior.getPeekHeight()/((float)displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
 
-        ListView mListView = (ListView) findViewById(R.id.related_list);
+        ListView tableList = (ListView) findViewById(R.id.related_list);
         mArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mRelatedValues);
-        mListView.setAdapter(mArrayAdapter);
+        tableList.setAdapter(mArrayAdapter);
 
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
