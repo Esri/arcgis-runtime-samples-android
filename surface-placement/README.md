@@ -1,6 +1,6 @@
-# Elevation Mode
+# Surface Placement
 
-Demonstrates how to position graphics using different elevation modes.
+Demonstrates how to position graphics using different Surface Placements.
 
 ![Elevation Mode App](elevation-mode.png)
 
