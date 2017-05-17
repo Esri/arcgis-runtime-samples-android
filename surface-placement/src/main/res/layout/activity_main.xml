@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.esri.arcgisruntime.sample.elevationmode.MainActivity">
+    tools:context="com.esri.arcgisruntime.sample.surfaceplacement.MainActivity">
 
     <!-- SceneView -->
     <com.esri.arcgisruntime.mapping.view.SceneView

@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.elevationmode;
+package com.esri.arcgisruntime.sample.surfaceplacement;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
