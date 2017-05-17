@@ -179,6 +179,9 @@ public class MainActivity extends AppCompatActivity {
                                         List<RelatedFeatureQueryResult> relatedFeatureQueryResultList = relatedFeatureQueryResultFuture.get();
                                         // iterate over returned RelatedFeatureQueryResults
                                         for(RelatedFeatureQueryResult relatedQueryResult : relatedFeatureQueryResultList){
+                                            // Add Table Name to List
+                                            String relatedTableName = relatedQueryResult.getRelatedTable().getTableName();
+                                            mRelatedValues.add(relatedTableName);
                                             // iterate over Features returned
                                             for (Feature relatedFeature : relatedQueryResult) {
                                                 // Get the Display field to use as filter on related attributes
