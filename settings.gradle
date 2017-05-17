@@ -51,5 +51,6 @@ include ':add-graphics-renderer',
         ':simple-marker-symbol',
         ':simple-renderer',
         ':spatial-operations',
+        ':stretch-renderer',
         ':take-screenshot',
         ':unique-value-renderer'
