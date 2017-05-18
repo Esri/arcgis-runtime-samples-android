@@ -5,12 +5,11 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.esri.arcgisruntime.sample.openmobilemappackage"
-        minSdkVersion 16
+        applicationId "com.esri.arcgisruntime.sample.blendrenderer"
+        minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
-
     }
     buildTypes {
         release {
