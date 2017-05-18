@@ -16,6 +16,9 @@
 
 package com.esri.arcgisruntime.sample.rgbrenderer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -32,9 +35,6 @@ import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class which handles the RGBRenderer parameters dialog.
@@ -175,7 +175,7 @@ public class ParametersDialogFragment extends DialogFragment {
     mStdDevSeekBar = (SeekBar) dialogView.findViewById(R.id.std_dev_seek_bar);
     mStdDevSeekBar.setMax(3);
     mCurrStdDevTextView = (TextView) dialogView.findViewById(R.id.curr_std_dev_text_view);
-    //update seel bar position with current StandardDeviation
+    //update seek bar position with current StandardDeviation
     updateSeekBar(mStdDevSeekBar, mStdDevFactor, mCurrStdDevTextView);
 
     // set ui to previous selection
