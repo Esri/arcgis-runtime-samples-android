@@ -55,4 +55,5 @@ include ':add-graphics-renderer',
         ':spatial-operations',
         ':surface-placement',
         ':take-screenshot',
-        ':unique-value-renderer'
+        ':unique-value-renderer',
+        ':web-tiledlayer'
