@@ -4,8 +4,6 @@
 
 This sample demonstrates how to display map tiles from Stamen terrain as an online resource using the `WebTiledLayer`. 
 
-Map tile sets are provided For Terrain: Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.
-
 ## Features
 * ArcGISMap
 * Basemap
@@ -40,3 +38,6 @@ webTiledLayer.addDoneLoadingListener(new Runnable() {
     }
 });
 ```
+
+## License
+Map tile sets are provided For Terrain: Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.
