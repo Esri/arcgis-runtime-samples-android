@@ -17,6 +17,3 @@ An `Map` is declared and a `BasemapOpenStreetMap` object is nested as a child of
 ArcGISMap map = new ArcGISMap(Basemap.Type.OPEN_STREET_MAP, 34.056295, -117.195800, 10);
 mMapView.setMap(map);
 ```
-
-## License
-Map tile sets are provided For Terrain: Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.
