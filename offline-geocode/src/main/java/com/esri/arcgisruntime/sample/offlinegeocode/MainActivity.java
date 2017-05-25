@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
 
         // add a graphics overlay
         graphicsOverlay = new GraphicsOverlay();
-        graphicsOverlay.setSelectionColor(0xFF00FFFF);
+        graphicsOverlay.setSelectionColor(Color.CYAN);
         mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
 

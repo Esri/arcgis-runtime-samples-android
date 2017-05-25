@@ -97,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
     mFeatureLayer = new FeatureLayer(mServiceFeatureTable);
 
     // set the color that is applied to a selected feature.
-    mFeatureLayer.setSelectionColor(Color.rgb(0, 255, 255)); //cyan, fully opaque
+    mFeatureLayer.setSelectionColor(Color.CYAN);
     // set the width of selection color
-    mFeatureLayer.setSelectionWidth(3);
+    mFeatureLayer.setSelectionWidth(5);
 
     // add the layer to the map
     map.getOperationalLayers().add(mFeatureLayer);
