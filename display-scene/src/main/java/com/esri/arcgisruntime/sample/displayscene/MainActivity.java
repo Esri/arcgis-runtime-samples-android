@@ -33,17 +33,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // create a scene and add a basemap to it
+        ArcGISScene scene = new ArcGISScene();
+        scene.setBasemap(Basemap.createImagery());
+
+        //[DocRef: Name=Display Scene-android, Category=Work with 3D, Topic=Display a scene]
         // create SceneView from layout
         mSceneView = (SceneView) findViewById(R.id.sceneView);
-        // create a scene and add a basemap to it
-        ArcGISScene agsScene = new ArcGISScene();
-        agsScene.setBasemap(Basemap.createImagery());
-        mSceneView.setScene(agsScene);
+        mSceneView.setScene(scene);
+        //[DocRef: END]
 
-        // add base surface for elevation data
+        //[DocRef: Name=Add elevation to base surface-android, Category=Work with 3D, Topic=Display a scene,
+        // RemoveChars=getResources().getString(R.string.elevation_image_service),
+        // ReplaceChars=http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer]
+        // create an elevation source, and add this to the base surface of the scene
         ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
                 getResources().getString(R.string.elevation_image_service));
-        agsScene.getBaseSurface().getElevationSources().add(elevationSource);
+        scene.getBaseSurface().getElevationSources().add(elevationSource);
+        //[DocRef: END]
 
         // add a camera and initial camera position
         Camera camera = new Camera(28.4, 83.9, 10010.0, 10.0, 80.0, 300.0);
