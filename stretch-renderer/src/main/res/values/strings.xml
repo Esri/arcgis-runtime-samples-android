@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Stretch Renderer</string>
+    <string name="location_permission_denied">Stretch Renderer could not open the raster because WRITE permission was denied.</string>
+    <string name="chooseParam">Edit renderer</string>
+    <string name="dialog_title">Stretch rendering parameters</string>
+    <string name="data_sdcard_offline_dir">ArcGIS/samples/raster</string>
+    <string name="raster_name">Shasta</string>
+    <string name="max_value">Max value</string>
+    <string name="min_value">Min value</string>
+    <string name="stretch_type">Stretch type</string>
+    <string name="standard_deviation">Std Dev</string>
+</resources>
