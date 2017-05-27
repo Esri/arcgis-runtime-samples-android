@@ -44,8 +44,10 @@
         app:layout_constraintLeft_toRightOf="@+id/azimuth_text_view"
         app:layout_constraintTop_toBottomOf="@+id/altitude_seek_bar"
         android:layout_marginRight="0dp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintRight_toRightOf="@+id/altitude_seek_bar"/>
+        app:layout_constraintHorizontal_bias="0.941"
+        app:layout_constraintRight_toRightOf="@+id/altitude_seek_bar"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/slope_type_spinner" />
 
     <TextView
         android:id="@+id/azimuth_text_view"
