@@ -192,10 +192,6 @@ public class ParametersDialogFragment extends DialogFragment {
             // constrain min + max <= 100
             mPercentClipMax = 100 - mPercentClipMin;
             updateSeekBar(mPercentClipMaxSeekBar, mPercentClipMax, mCurrPercentClipMaxTextView);
-        } else if (mPercentClipMax < mPercentClipMin){
-            // constrain max >= min
-            mPercentClipMax = mPercentClipMin;
-            updateSeekBar(mPercentClipMaxSeekBar, mPercentClipMax, mCurrPercentClipMaxTextView);
         }
       }
 
@@ -214,10 +210,6 @@ public class ParametersDialogFragment extends DialogFragment {
         if (mPercentClipMin + mPercentClipMax > 100) {
             // constrain min + max <= 100
             mPercentClipMin = 100 - mPercentClipMax;
-            updateSeekBar(mPercentClipMinSeekBar, mPercentClipMin, mCurrPercentClipMinTextView);
-        } else if (mPercentClipMin > mPercentClipMax){
-            // constrain min < max
-            mPercentClipMin = mPercentClipMax;
             updateSeekBar(mPercentClipMinSeekBar, mPercentClipMin, mCurrPercentClipMinTextView);
         }
       }
