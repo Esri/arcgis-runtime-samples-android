@@ -188,13 +188,14 @@ public class ParametersDialogFragment extends DialogFragment {
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         mPercentClipMin = progress;
         updateSeekBar(mPercentClipMinSeekBar, mPercentClipMin, mCurrPercentClipMinTextView);
-        // move max to match min if max goes below min
-        if (mPercentClipMax < mPercentClipMin) {
-          mPercentClipMax = mPercentClipMin;
-          updateSeekBar(mPercentClipMaxSeekBar, mPercentClipMax, mCurrPercentClipMaxTextView);
-        } else if (mPercentClipMin + mPercentClipMax > 100){
-          mPercentClipMax = 100 - mPercentClipMin;
-          updateSeekBar(mPercentClipMaxSeekBar, mPercentClipMax, mCurrPercentClipMaxTextView);
+        if (mPercentClipMin + mPercentClipMax > 100) {
+            // constrain min + max <= 100
+            mPercentClipMax = 100 - mPercentClipMin;
+            updateSeekBar(mPercentClipMaxSeekBar, mPercentClipMax, mCurrPercentClipMaxTextView);
+        } else if (mPercentClipMax < mPercentClipMin){
+            // constrain max >= min
+            mPercentClipMax = mPercentClipMin;
+            updateSeekBar(mPercentClipMaxSeekBar, mPercentClipMax, mCurrPercentClipMaxTextView);
         }
       }
 
@@ -210,12 +211,13 @@ public class ParametersDialogFragment extends DialogFragment {
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         mPercentClipMax = progress;
         updateSeekBar(mPercentClipMaxSeekBar, mPercentClipMax, mCurrPercentClipMaxTextView);
-        // move min to match max if min goes above max
-        if (mPercentClipMin > mPercentClipMax) {
-          mPercentClipMin = mPercentClipMax;
-          updateSeekBar(mPercentClipMinSeekBar, mPercentClipMin, mCurrPercentClipMinTextView);
-        } else if (mPercentClipMin + mPercentClipMax > 100){
+        if (mPercentClipMin + mPercentClipMax > 100) {
+            // constrain min + max <= 100
             mPercentClipMin = 100 - mPercentClipMax;
+            updateSeekBar(mPercentClipMinSeekBar, mPercentClipMin, mCurrPercentClipMinTextView);
+        } else if (mPercentClipMin > mPercentClipMax){
+            // constrain min < max
+            mPercentClipMin = mPercentClipMax;
             updateSeekBar(mPercentClipMinSeekBar, mPercentClipMin, mCurrPercentClipMinTextView);
         }
       }
