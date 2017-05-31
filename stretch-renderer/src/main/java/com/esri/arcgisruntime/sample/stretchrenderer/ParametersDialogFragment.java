@@ -16,6 +16,8 @@
 
 package com.esri.arcgisruntime.sample.stretchrenderer;
 
+import java.util.ArrayList;
+import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -31,9 +33,6 @@ import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class which handles the stretch renderer parameters dialog.
@@ -183,14 +182,18 @@ public class ParametersDialogFragment extends DialogFragment {
       @Override
       public void onStopTrackingTouch(SeekBar seekBar) { }
     });
+
     mPercentClipMinSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         mPercentClipMin = progress;
         updateSeekBar(mPercentClipMinSeekBar, mPercentClipMin, mCurrPercentClipMinTextView);
-        // move max to march min if max goes below min
+        // move max to match min if max goes below min
         if (mPercentClipMax < mPercentClipMin) {
           mPercentClipMax = mPercentClipMin;
+          updateSeekBar(mPercentClipMaxSeekBar, mPercentClipMax, mCurrPercentClipMaxTextView);
+        } else if (mPercentClipMin + mPercentClipMax > 100){
+          mPercentClipMax = 100 - mPercentClipMin;
           updateSeekBar(mPercentClipMaxSeekBar, mPercentClipMax, mCurrPercentClipMaxTextView);
         }
       }
@@ -201,6 +204,7 @@ public class ParametersDialogFragment extends DialogFragment {
       @Override
       public void onStopTrackingTouch(SeekBar seekBar) { }
     });
+
     mPercentClipMaxSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -210,6 +214,9 @@ public class ParametersDialogFragment extends DialogFragment {
         if (mPercentClipMin > mPercentClipMax) {
           mPercentClipMin = mPercentClipMax;
           updateSeekBar(mPercentClipMinSeekBar, mPercentClipMin, mCurrPercentClipMinTextView);
+        } else if (mPercentClipMin + mPercentClipMax > 100){
+            mPercentClipMin = 100 - mPercentClipMax;
+            updateSeekBar(mPercentClipMinSeekBar, mPercentClipMin, mCurrPercentClipMinTextView);
         }
       }
 
