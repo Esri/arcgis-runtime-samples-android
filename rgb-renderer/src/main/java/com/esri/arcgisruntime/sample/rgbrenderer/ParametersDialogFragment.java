@@ -301,14 +301,15 @@ public class ParametersDialogFragment extends DialogFragment {
       @Override
       public void onStopTrackingTouch(SeekBar seekBar) { }
     });
+    
     mPercentClipMinSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         mPercentClipMin = progress;
         updateSeekBar(mPercentClipMinSeekBar, mPercentClipMin, mCurrPercentClipMinTextView);
-        // move max to march min if max goes below min
-        if (mPercentClipMax < mPercentClipMin) {
-          mPercentClipMax = mPercentClipMin;
+        if (mPercentClipMin + mPercentClipMax > 100) {
+          // constrain min + max <= 100
+          mPercentClipMax = 100 - mPercentClipMin;
           updateSeekBar(mPercentClipMaxSeekBar, mPercentClipMax, mCurrPercentClipMaxTextView);
         }
       }
@@ -319,14 +320,15 @@ public class ParametersDialogFragment extends DialogFragment {
       @Override
       public void onStopTrackingTouch(SeekBar seekBar) { }
     });
+
     mPercentClipMaxSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         mPercentClipMax = progress;
         updateSeekBar(mPercentClipMaxSeekBar, mPercentClipMax, mCurrPercentClipMaxTextView);
-        // move min to match max if min goes above max
-        if (mPercentClipMin > mPercentClipMax) {
-          mPercentClipMin = mPercentClipMax;
+        if (mPercentClipMin + mPercentClipMax > 100) {
+          // constrain min + max <= 100
+          mPercentClipMin = 100 - mPercentClipMax;
           updateSeekBar(mPercentClipMinSeekBar, mPercentClipMin, mCurrPercentClipMinTextView);
         }
       }
