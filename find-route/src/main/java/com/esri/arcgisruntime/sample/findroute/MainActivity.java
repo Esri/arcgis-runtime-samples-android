@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -102,8 +103,19 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton mDirectionFab = (FloatingActionButton) findViewById(R.id.fab);
 
-        setupDrawer();
+        // update UI when attribution view changes
+        final FrameLayout.LayoutParams params =  (FrameLayout.LayoutParams)mDirectionFab.getLayoutParams();
+        mMapView.addAttributionViewLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(
+                    View view, int left, int top, int right, int bottom,
+                    int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                int heightDelta = (bottom - oldBottom);
+                params.bottomMargin += heightDelta;
+            }
+        });
 
+        setupDrawer();
         setupSymbols();
 
         mProgressDialog = new ProgressDialog(this);
