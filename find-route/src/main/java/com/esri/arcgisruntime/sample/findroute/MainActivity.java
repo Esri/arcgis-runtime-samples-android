@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
                 // create RouteTask instance
-                mRouteTask = new RouteTask(getString(R.string.routing_service));
+                mRouteTask = new RouteTask(getApplicationContext()  , getString(R.string.routing_service));
 
                 final ListenableFuture<RouteParameters> listenableFuture = mRouteTask.createDefaultParametersAsync();
                 listenableFuture.addDoneListener(new Runnable() {
