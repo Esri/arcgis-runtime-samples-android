@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.sample.findroute;
 
+import java.util.ArrayList;
 import java.util.List;
 import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
@@ -148,15 +149,18 @@ public class MainActivity extends AppCompatActivity {
                                 int i = 0;
                                 mRouteParams = listenableFuture.get();
 
-                                // get List of Stops
-                                List<Stop> routeStops = mRouteParams.getStops();
+                                // create stops
+                                Stop stop1 =  new Stop(new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84()));
+                                Stop stop2 = new Stop(new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84()));
+
+                                List<Stop> routeStops = new ArrayList<>();
+                                // add stops
+                                routeStops.add(stop1);
+                                routeStops.add(stop2);
+                                mRouteParams.setStops(routeStops);
+
                                 // set return directions as true to return turn-by-turn directions in the result of getDirectionManeuvers().
                                 mRouteParams.setReturnDirections(true);
-
-                                // add your stops to it 32.7254716,-117.1508181 32.7076359,-117.1592837 -117.15557279683529
-                                //-13041171, 3860988, SpatialReference(3857) -13041693, 3856006, SpatialReference(3857)
-                                routeStops.add(new Stop(new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84())));
-                                routeStops.add(new Stop(new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84())));
 
                                 // solve
                                 RouteResult result = mRouteTask.solveRouteAsync(mRouteParams).get();
