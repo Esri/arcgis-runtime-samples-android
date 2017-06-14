@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.findroute;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -231,34 +232,47 @@ public class MainActivity extends AppCompatActivity {
         //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
         //Create a picture marker symbol from an app resource
         BitmapDrawable startDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_source);
-        final PictureMarkerSymbol pinSourceSymbol = new PictureMarkerSymbol(startDrawable);
-        pinSourceSymbol.loadAsync();
+        final PictureMarkerSymbol pinSourceSymbol;
+        try {
+            pinSourceSymbol = PictureMarkerSymbol.createAsync(startDrawable).get();
+            pinSourceSymbol.loadAsync();
+            pinSourceSymbol.addDoneLoadingListener(new Runnable() {
+                @Override
+                public void run() {
+                    //add a new graphic as start point
+                    mSourcePoint = new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84());
+                    Graphic pinSourceGraphic = new Graphic(mSourcePoint, pinSourceSymbol);
+                    mGraphicsOverlay.getGraphics().add(pinSourceGraphic);
+                }
+            });
+            pinSourceSymbol.setOffsetY(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         //[DocRef: END]
-        pinSourceSymbol.addDoneLoadingListener(new Runnable() {
-            @Override
-            public void run() {
-                //add a new graphic as start point
-                mSourcePoint = new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84());
-                Graphic pinSourceGraphic = new Graphic(mSourcePoint, pinSourceSymbol);
-                mGraphicsOverlay.getGraphics().add(pinSourceGraphic);
-            }
-        });
-        pinSourceSymbol.setOffsetY(20);
         BitmapDrawable endDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_destination);
-        final PictureMarkerSymbol pinDestinationSymbol = new PictureMarkerSymbol(endDrawable);
-        pinDestinationSymbol.loadAsync();
+        final PictureMarkerSymbol pinDestinationSymbol;
+        try {
+            pinDestinationSymbol = PictureMarkerSymbol.createAsync(endDrawable).get();
+            pinDestinationSymbol.loadAsync();
+            pinDestinationSymbol.addDoneLoadingListener(new Runnable() {
+                @Override
+                public void run() {
+                    //add a new graphic as end point
+                    mDestinationPoint = new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84());
+                    Graphic destinationGraphic = new Graphic(mDestinationPoint, pinDestinationSymbol);
+                    mGraphicsOverlay.getGraphics().add(destinationGraphic);
+                }
+            });
+            pinDestinationSymbol.setOffsetY(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         //[DocRef: END]
-        pinDestinationSymbol.addDoneLoadingListener(new Runnable() {
-            @Override
-            public void run() {
-                //add a new graphic as end point
-                mDestinationPoint = new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84());
-                Graphic destinationGraphic = new Graphic(mDestinationPoint, pinDestinationSymbol);
-                mGraphicsOverlay.getGraphics().add(destinationGraphic);
-            }
-        });
-        pinDestinationSymbol.setOffsetY(20);
-
         mRouteSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5);
     }
 
