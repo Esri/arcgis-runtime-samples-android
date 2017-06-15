@@ -1,4 +1,4 @@
-/* Copyright 2016 Esri
+/* Copyright 2017 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@
 
 package com.esri.arcgisruntime.sample.findroute;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -34,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -102,8 +105,19 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton mDirectionFab = (FloatingActionButton) findViewById(R.id.fab);
 
-        setupDrawer();
+        // update UI when attribution view changes
+        final FrameLayout.LayoutParams params =  (FrameLayout.LayoutParams)mDirectionFab.getLayoutParams();
+        mMapView.addAttributionViewLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(
+                    View view, int left, int top, int right, int bottom,
+                    int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                int heightDelta = (bottom - oldBottom);
+                params.bottomMargin += heightDelta;
+            }
+        });
 
+        setupDrawer();
         setupSymbols();
 
         mProgressDialog = new ProgressDialog(this);
@@ -125,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
                 // create RouteTask instance
-                mRouteTask = new RouteTask(getString(R.string.routing_service));
+                mRouteTask = new RouteTask(getApplicationContext()  , getString(R.string.routing_service));
 
                 final ListenableFuture<RouteParameters> listenableFuture = mRouteTask.createDefaultParametersAsync();
                 listenableFuture.addDoneListener(new Runnable() {
@@ -136,15 +150,18 @@ public class MainActivity extends AppCompatActivity {
                                 int i = 0;
                                 mRouteParams = listenableFuture.get();
 
-                                // get List of Stops
-                                List<Stop> routeStops = mRouteParams.getStops();
+                                // create stops
+                                Stop stop1 =  new Stop(new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84()));
+                                Stop stop2 = new Stop(new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84()));
+
+                                List<Stop> routeStops = new ArrayList<>();
+                                // add stops
+                                routeStops.add(stop1);
+                                routeStops.add(stop2);
+                                mRouteParams.setStops(routeStops);
+
                                 // set return directions as true to return turn-by-turn directions in the result of getDirectionManeuvers().
                                 mRouteParams.setReturnDirections(true);
-
-                                // add your stops to it 32.7254716,-117.1508181 32.7076359,-117.1592837 -117.15557279683529
-                                //-13041171, 3860988, SpatialReference(3857) -13041693, 3856006, SpatialReference(3857)
-                                routeStops.add(new Stop(new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84())));
-                                routeStops.add(new Stop(new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84())));
 
                                 // solve
                                 RouteResult result = mRouteTask.solveRouteAsync(mRouteParams).get();
@@ -215,34 +232,47 @@ public class MainActivity extends AppCompatActivity {
         //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
         //Create a picture marker symbol from an app resource
         BitmapDrawable startDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_source);
-        final PictureMarkerSymbol pinSourceSymbol = new PictureMarkerSymbol(startDrawable);
-        pinSourceSymbol.loadAsync();
+        final PictureMarkerSymbol pinSourceSymbol;
+        try {
+            pinSourceSymbol = PictureMarkerSymbol.createAsync(startDrawable).get();
+            pinSourceSymbol.loadAsync();
+            pinSourceSymbol.addDoneLoadingListener(new Runnable() {
+                @Override
+                public void run() {
+                    //add a new graphic as start point
+                    mSourcePoint = new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84());
+                    Graphic pinSourceGraphic = new Graphic(mSourcePoint, pinSourceSymbol);
+                    mGraphicsOverlay.getGraphics().add(pinSourceGraphic);
+                }
+            });
+            pinSourceSymbol.setOffsetY(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         //[DocRef: END]
-        pinSourceSymbol.addDoneLoadingListener(new Runnable() {
-            @Override
-            public void run() {
-                //add a new graphic as start point
-                mSourcePoint = new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84());
-                Graphic pinSourceGraphic = new Graphic(mSourcePoint, pinSourceSymbol);
-                mGraphicsOverlay.getGraphics().add(pinSourceGraphic);
-            }
-        });
-        pinSourceSymbol.setOffsetY(20);
         BitmapDrawable endDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_destination);
-        final PictureMarkerSymbol pinDestinationSymbol = new PictureMarkerSymbol(endDrawable);
-        pinDestinationSymbol.loadAsync();
+        final PictureMarkerSymbol pinDestinationSymbol;
+        try {
+            pinDestinationSymbol = PictureMarkerSymbol.createAsync(endDrawable).get();
+            pinDestinationSymbol.loadAsync();
+            pinDestinationSymbol.addDoneLoadingListener(new Runnable() {
+                @Override
+                public void run() {
+                    //add a new graphic as end point
+                    mDestinationPoint = new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84());
+                    Graphic destinationGraphic = new Graphic(mDestinationPoint, pinDestinationSymbol);
+                    mGraphicsOverlay.getGraphics().add(destinationGraphic);
+                }
+            });
+            pinDestinationSymbol.setOffsetY(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         //[DocRef: END]
-        pinDestinationSymbol.addDoneLoadingListener(new Runnable() {
-            @Override
-            public void run() {
-                //add a new graphic as end point
-                mDestinationPoint = new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84());
-                Graphic destinationGraphic = new Graphic(mDestinationPoint, pinDestinationSymbol);
-                mGraphicsOverlay.getGraphics().add(destinationGraphic);
-            }
-        });
-        pinDestinationSymbol.setOffsetY(20);
-
         mRouteSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5);
     }
 
