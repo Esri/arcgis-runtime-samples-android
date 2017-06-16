@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.esri.arcgisruntime.sample.blendrenderer"
         minSdkVersion 17
-        targetSdkVersion 25
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
