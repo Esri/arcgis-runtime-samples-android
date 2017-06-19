@@ -22,7 +22,7 @@ To add a `RasterLayer` as an operational layer from an `ImageServiceRaster`:
  map.getOperationalLayers().add(rasterLayer);
 ```
 
-The sample also zooms in to the extent of the `ImageServiceRaster`.  Currently we do not support zooming a `RasterLayer` out beyond 4 times it's published level of detail. The sample uses `MapView.setViewpointCenterAsync()` method to ensure the image shows when the app starts. You can see the effect of the image not showing when you zoom out to the full extent of the image and beyond. 
+The sample also zooms to the extent of the `ImageServiceRaster`.  Currently we do not support zooming a `RasterLayer` out beyond 4 times it's published level of detail. The sample uses `MapView.setViewpointCenterAsync()` method to ensure the image shows when the app starts. You can see the effect of the image not showing when you zoom out to the full extent of the image and beyond. 
 
 ```java
 // zoom to the extent of the raster service
