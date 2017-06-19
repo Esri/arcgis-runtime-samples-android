@@ -39,10 +39,14 @@ public class MainActivity extends AppCompatActivity {
         // create MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
         // create a Dark Gray Canvas Vector basemap
-        final ArcGISMap map = new ArcGISMap(Basemap.createDarkGrayCanvasVector());
+        ArcGISMap map = new ArcGISMap(Basemap.createDarkGrayCanvasVector());
+        // add the map to a map view
+        mMapView.setMap(map);
         // create image service raster as raster layer
         final ImageServiceRaster imageServiceRaster = new ImageServiceRaster(getResources().getString(R.string.image_service_url));
         final RasterLayer rasterLayer = new RasterLayer(imageServiceRaster);
+        // add raster layer as map operational layer
+        map.getOperationalLayers().add(rasterLayer);
         // zoom to the extent of the raster service
         rasterLayer.addDoneLoadingListener(new Runnable() {
             @Override
@@ -54,11 +58,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        // add raster layer as map operational layer
-        map.getOperationalLayers().add(rasterLayer);
-        // add the map to a map view
-        mMapView.setMap(map);
     }
 
     @Override
