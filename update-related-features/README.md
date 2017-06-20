@@ -2,7 +2,9 @@
 
 ![Update Related Features App](update-related-feature.png)
 
-The Update Related Features app has a `MapView` loaded with two related `FeatureLayer`'s, national parks and preserves.  The relationships between the layers is defined in the service. When you tap on a national park `Feature` the app identifies the feature and performs a related table query then shows the annual visitors amount for the preserve. You can update the visitor amount by tapping the drop-down in the `Callout` and selecting a different amount. The app will apply the update on the server.  
+The Update Related Features app has a `MapView` loaded with two related `FeatureLayer`'s, national parks and preserves.  The relationships between the layers is defined in the service. When you tap on a national park `Feature` the app identifies the feature and performs a related table query then shows the annual visitors amount for the preserve. You can update the visitor amount by tapping the drop-down in the `Callout` and selecting a different amount. The app will apply the update on the server.  The color coding of the Preserves features are outlined in the Legend below:
+
+![Map Legend](legend.png)
 
 ## Features
 * ArcGISFeature
