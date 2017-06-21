@@ -49,8 +49,6 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String TAG = "UpdateRelatedFeatures";
-
     private MapView mMapView;
 
     private ServiceFeatureTable mParksFeatureTable;
@@ -63,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private Callout mCallout;
 
     private ProgressDialog mProgressDialog;
+    private String mAttributeValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,8 +158,8 @@ public class MainActivity extends AppCompatActivity {
                             // get preserve park name
                             String parkName = mSelectedRelatedFeature.getAttributes().get("UNIT_NAME").toString();
                             // use the Annual Visitors field to use as filter on related attributes
-                            String attributeValue = mSelectedRelatedFeature.getAttributes().get("ANNUAL_VISITORS").toString();
-                            showCallout(parkName, attributeValue);
+                            mAttributeValue = mSelectedRelatedFeature.getAttributes().get("ANNUAL_VISITORS").toString();
+                            showCallout(parkName);
                             // center on tapped point
                             mMapView.setViewpointCenterAsync(mMapView.screenToLocation(mTappedPoint));
                         }
@@ -176,9 +175,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Show a callout with Attribute Key and editable Value
-     * @param value attribute value
+     * @param parkName preserves park name
      */
-    private void showCallout(String parkName, final String value){
+    private void showCallout(String parkName){
         // create a text view for the callout
         View calloutLayout = LayoutInflater.from(getApplicationContext()).inflate(R.layout.callout, null);
         // create a text view and add park name
@@ -188,13 +187,13 @@ public class MainActivity extends AppCompatActivity {
         // create spinner with selection options
         final Spinner visitorSpinner = (Spinner) calloutLayout.findViewById(R.id.spinner_values);
         // create an array adapter using the string array and default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 getApplicationContext(), R.array.visitors_range, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appear
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // apply the adapter to the spinner
         visitorSpinner.setAdapter(adapter);
-        visitorSpinner.setSelection(getIndex(visitorSpinner, value));
+        visitorSpinner.setSelection(getIndex(visitorSpinner, mAttributeValue));
         // show callout at tapped location
         mCallout.setLocation(mMapView.screenToLocation(mTappedPoint));
         mCallout.setContent(calloutLayout);
@@ -205,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // check if selection has changed
                 String selectedValue = visitorSpinner.getSelectedItem().toString();
-                if(!selectedValue.equalsIgnoreCase(value)){
+                if(!selectedValue.equalsIgnoreCase(mAttributeValue)){
                     // selection changed, update the related feature
                     mCallout.dismiss();
                     mProgressDialog.setMessage(getResources().getString(R.string.progress_update));
@@ -234,6 +233,8 @@ public class MainActivity extends AppCompatActivity {
                 if(mSelectedRelatedFeature.getLoadStatus() == LoadStatus.LOADED){
                     // put new attribute value
                     mSelectedRelatedFeature.getAttributes().put("ANNUAL_VISITORS", visitors);
+                    // persist the attribute value
+                    mAttributeValue = visitors;
                     // update feature in the related feature table
                     ListenableFuture<Void> updateFeature = mPreservesFeatureTable.updateFeatureAsync(mSelectedRelatedFeature);
                     updateFeature.addDoneListener(new Runnable() {
