@@ -60,4 +60,5 @@ include ':add-graphics-renderer',
         ':stretch-renderer',
         ':take-screenshot',
         ':unique-value-renderer',
+        ':update-related-features',
         ':web-tiledlayer'
