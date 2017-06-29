@@ -5,7 +5,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.esri.arcgisruntime.sample.blendrenderer"
+        applicationId "com.esri.arcgisruntime.sample.stretchrenderer"
         minSdkVersion 17
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
