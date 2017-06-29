@@ -32,7 +32,7 @@
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/centerScaleButton"
             android:layout_toStartOf="@+id/centerScaleButton"
-            android:background="@color/primary"
+            android:background="@color/colorPrimary"
             android:text="@string/geometry"
             android:textColor="@color/abc_secondary_text_material_dark" />
 
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:background="@color/primary"
+            android:background="@color/colorPrimary"
             android:text="@string/center_scale"
             android:textColor="@color/abc_secondary_text_material_dark" />
 
@@ -57,7 +57,7 @@
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/centerScaleButton"
             android:layout_toRightOf="@+id/centerScaleButton"
-            android:background="@color/primary"
+            android:background="@color/colorPrimary"
             android:text="@string/animate"
             android:textColor="@color/abc_secondary_text_material_dark" />
     </RelativeLayout>
