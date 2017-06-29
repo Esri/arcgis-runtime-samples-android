@@ -21,7 +21,7 @@
         </com.esri.arcgisruntime.mapping.view.MapView>
     </LinearLayout>
     <RelativeLayout
-        android:background="@color/background_material_dark"
+        android:background="@color/colorPrimary"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent">
         <ImageButton

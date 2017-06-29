@@ -111,9 +111,9 @@ public class MainActivity extends AppCompatActivity {
                 // set viewpoint of map view to Geometry - Griffith Park
                 mMapView.setViewpointGeometryAsync(geometry);
 
-                mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
-                mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
-                mCenterScaleButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
+                mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
+                mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                mCenterScaleButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
 
                 isGeometryButtonClicked = true;
             }
@@ -136,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
                 // set the map views's viewpoint to London with a ten second duration
                 mMapView.setViewpointAsync(viewpoint, mDuration);
 
-                mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
-                mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
-                mCenterScaleButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
+                mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
+                mCenterScaleButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
             }
         });
 
@@ -150,9 +150,9 @@ public class MainActivity extends AppCompatActivity {
                 // set the map views's viewpoint centered on Waterloo and scaled
                 mMapView.setViewpointCenterAsync(waterlooPoint, SCALE);
 
-                mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
-                mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary));
-                mCenterScaleButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.primary_dark));
+                mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                mCenterScaleButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
             }
         });
     }
