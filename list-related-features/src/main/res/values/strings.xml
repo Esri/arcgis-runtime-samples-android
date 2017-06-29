@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">List Related Features</string>
+    <!-- service urls -->
+    <string
+        name="webmap_url">https://arcgisruntime.maps.arcgis.com/home/item.html?id=dcc7466a91294c0ab8f7a094430ab437</string>
+    <string name="no_results">No results found</string>
+</resources>

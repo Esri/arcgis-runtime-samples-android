@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private RelativeLayout mCalloutLayout;
     private MapView mMapView;
-    private ArcGISMap mMap;
     private Callout mCallout;
     private FeatureLayer mFeatureLayer;
     private ArcGISFeature mSelectedArcGISFeature;
@@ -67,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
         // inflate MapView from layout
         mMapView = (MapView) findViewById(R.id.mapView);
         // create a map with the streets basemap
-        mMap = new ArcGISMap(Basemap.Type.STREETS, 44.354388, -119.998245, 5);
+        ArcGISMap map = new ArcGISMap(Basemap.Type.STREETS, 44.354388, -119.998245, 5);
         // set the map to be displayed in the mapview
-        mMapView.setMap(mMap);
+        mMapView.setMap(map);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle(getApplication().getString(R.string.fetching_no_attachments));
@@ -85,12 +84,12 @@ public class MainActivity extends AppCompatActivity {
         mFeatureLayer = new FeatureLayer(mServiceFeatureTable);
 
         // set the color that is applied to a selected feature.
-        mFeatureLayer.setSelectionColor(Color.rgb(0, 255, 255)); //cyan, fully opaque
+        mFeatureLayer.setSelectionColor(Color.CYAN); //cyan, fully opaque
         // set the width of selection color
-        mFeatureLayer.setSelectionWidth(3);
+        mFeatureLayer.setSelectionWidth(5);
 
         // add the layer to the map
-        mMap.getOperationalLayers().add(mFeatureLayer);
+        map.getOperationalLayers().add(mFeatureLayer);
 
         mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
             @Override

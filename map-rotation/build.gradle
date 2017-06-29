@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.esri.arcgisruntime.sample.maprotation"
-        minSdkVersion 16
-        targetSdkVersion 25
+        minSdkVersion 17
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }

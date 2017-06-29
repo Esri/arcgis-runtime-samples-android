@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Update Related Features</string>
+    <string name="callout_label">%1$s Annual Visitors:</string>
+    <string name="progress_identify">Identifying Feature</string>
+    <string name="progress_query">Querying Related Feature</string>
+    <string name="progress_update">Apply Updates on Server</string>
+    <string name="update_success">Successfully Updated Related Feature</string>
+    <string name="update_fail">Apply Edits Failed</string>
+
+    <string-array name="visitors_range">
+        <item>0-1,000</item>
+        <item>1,000-10,000</item>
+        <item>10,000-50,000</item>
+        <item>50,000-100,000</item>
+        <item>500,000+</item>
+    </string-array>
+
+    <!-- feature service urls -->
+    <string name="parks_feature_table">
+        https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/ArcGIS/rest/services/AlaskaNationalParksPreserves_Update/FeatureServer/1
+    </string>
+    <string name="preserves_feature_table">
+        https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/ArcGIS/rest/services/AlaskaNationalParksPreserves_Update/FeatureServer/0
+    </string>
+</resources>
