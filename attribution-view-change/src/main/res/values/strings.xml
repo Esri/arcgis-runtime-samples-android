@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Attribution View Change</string>
+    <string name="message">Button responds to attribution bar</string>
+</resources>
