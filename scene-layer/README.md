@@ -22,9 +22,8 @@ mSceneView = (SceneView) findViewById(R.id.sceneView);
 mSceneView.setScene(scene);
 
 // add a scene service to the scene for viewing buildings
-ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(
-    "http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer");
-scene.getOperationalLayers().add(sceneLayer);
+ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(getResources().getString(R.string.brest_buildings));
+    scene.getOperationalLayers().add(sceneLayer);
 
 // add a camera and initial camera position
 Camera camera = new Camera(48.378, -4.494, 200, 345, 65, 0);
