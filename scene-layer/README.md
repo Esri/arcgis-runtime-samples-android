@@ -1,30 +1,32 @@
-# Display a Scene
-This sample demonstrates how to display a scene with elevation data.
+# Scene Layer
+This sample demonstrates how to add a scene layer to a scene.
 
-![Display a Scene App](display-scene.png)
+![Scene Layer App](scene-layer.png)
 
 ## Features
 * ArcGISScene
-* ArcGISTiledElevationSource
 * SceneView
+* SceneLayer
 
 ## Developer Pattern
-Create an `ArcGISScene` and set the `Basemap` with `ArcGISScene.setBasemap()`. Create a `SceneView` and set the scene to the view, `SceneView.setScene(scene)`.  Create a `Surface` and add an `ArcGISTiledElevationSource`, `Surface.getElevationSources().add()`. Set the surface as the scene's base surface `ArcGIScene.setBaseSurface(surface)`.
+Create an `ArcGISScene` and set a `Basemap` with `ArcGISScene.setBasemap()`.
+Create a `SceneView` and set the scene to the view, `SceneView.setScene(scene)`. 
+Create a `SceneLayer` and add it to the scene as an operational layer, `scene.getOperationalLayers().add(sceneLayer)`;
 
 ```java
-// inflate SceneView from layout
-mSceneView = (SceneView) findViewById(sceneView);
 // create a scene and add a basemap to it
-ArcGISScene agsScene = new ArcGISScene();
-agsScene.setBasemap(Basemap.createImagery());
-mSceneView.setScene(agsScene);
+ArcGISScene scene = new ArcGISScene();
+scene.setBasemap(Basemap.createImagery());
 
-// add base surface for elevation data
-ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
-        getResources().getString(R.string.elevation_image_service));
-agsScene.getBaseSurface().getElevationSources().add(elevationSource);
+mSceneView = (SceneView) findViewById(R.id.sceneView);
+mSceneView.setScene(scene);
+
+// add a scene service to the scene for viewing buildings
+ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(
+    "http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer");
+scene.getOperationalLayers().add(sceneLayer);
 
 // add a camera and initial camera position
-Camera camera = new Camera(28.4, 83.9, 10010.0, 10.0, 80.0, 300.0);
+Camera camera = new Camera(48.378, -4.494, 200, 345, 65, 0);
 mSceneView.setViewpointCamera(camera);
 ```
