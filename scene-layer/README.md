@@ -10,8 +10,8 @@ This sample demonstrates how to add a scene layer to a scene.
 
 ## Developer Pattern
 - Create an `ArcGISScene` and set a `Basemap` with `ArcGISScene.setBasemap()`.
-- Create a `SceneView` and set the scene to the view, `SceneView.setScene(scene)`. 
-- Create a `SceneLayer` and add it to the scene as an operational layer, `scene.getOperationalLayers().add(sceneLayer)`;
+- Create a `SceneView` and set the scene to the view with `SceneView.setScene(scene)`. 
+- Create a `SceneLayer` and add it to the scene as an operational layer with `scene.getOperationalLayers().add(sceneLayer)`;
 
 ```java
 // create a scene and add a basemap to it
