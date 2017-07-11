@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
         // add the map to a map view
         mMapView.setMap(map);
         // create image service raster as raster layer
-        final ImageServiceRaster imageServiceRaster = new ImageServiceRaster(getResources().getString(R.string.image_service_url));
+        final ImageServiceRaster imageServiceRaster = new ImageServiceRaster(
+                getResources().getString(R.string.image_service_url));
         final RasterLayer rasterLayer = new RasterLayer(imageServiceRaster);
         // add raster layer as map operational layer
         map.getOperationalLayers().add(rasterLayer);
