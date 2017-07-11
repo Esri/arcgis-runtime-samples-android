@@ -62,4 +62,5 @@ include ':add-graphics-renderer',
         ':take-screenshot',
         ':unique-value-renderer',
         ':update-related-features',
-        ':web-tiledlayer'
+        ':web-tiledlayer',
+        ':wmts-layer'
