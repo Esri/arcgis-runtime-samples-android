@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
     });
 
     setSearchView();
-
   }
 
   private void setSearchView() {
