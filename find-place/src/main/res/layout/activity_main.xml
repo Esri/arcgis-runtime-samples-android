@@ -18,10 +18,22 @@
     <include
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            layout="@layout/searchview"
-            android:id="@+id/floating_searchView"
+            layout="@layout/poi_search_view"
+            android:id="@+id/floating_poi_searchView"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="20dp" />
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
+    <include
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/place_search_view"
+            android:id="@+id/floating_place_searchView"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@+id/floating_poi_searchView"
+            android:layout_alignParentStart="true"/>
 
 </RelativeLayout>

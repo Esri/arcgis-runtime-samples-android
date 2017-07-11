@@ -5,7 +5,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.esri.arcgisruntime.sample.displaymap"
+        applicationId "com.esri.arcgisruntime.sample.findplace"
         minSdkVersion 22
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -1,16 +1,8 @@
 <resources>
     <string name="app_name">Find A Place</string>
-    <string name="search_hint">Enter address</string>
+    <string name="poi_search_hint">Enter POI</string>
+    <string name="place_search_hint">Enter place</string>
     <string name="geo_locate_error">Geocode failed on address</string>
     <string name="location_not_found">No location with that name</string>
 
-    <!-- Search Suggestions -->
-    <string-array name="suggestion_items">
-        <item>910 N Harbor Dr, San Diego, CA 92101</item>
-        <item>2920 Zoo Dr, San Diego, CA 92101</item>
-        <item>111 W Harbor Dr, San Diego, CA 92101</item>
-        <item>868 4th Ave, San Diego, CA 92101</item>
-        <item>750 A St, San Diego, CA 92101</item>
-        <item>Enter address&#8230;</item>
-    </string-array>
 </resources>

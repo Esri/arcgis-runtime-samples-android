@@ -27,7 +27,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -59,11 +58,13 @@ public class MainActivity extends AppCompatActivity {
   private String TAG = "Find A Place";
 
   private MapView mMapView;
-  private SearchView mSearchView;
+  private SearchView mPoiSearchView;
+  private SearchView mPlaceSearchView;
   private LocatorTask mLocatorTask;
   private GraphicsOverlay mGraphicsOverlay;
   private ArrayAdapter<CharSequence> mAdapter;
-  private Spinner mSpinner;
+  private Spinner mPoiSpinner;
+  private Spinner mPlaceSpinner;
   private GeocodeResult mGeocodedLocation;
   private SuggestParameters mSuggestParameters;
   private GeocodeParameters mGeocodeParameters;
@@ -108,94 +109,95 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    setSearchView();
+    setSearchViews();
   }
 
-  private void setSearchView() {
-    mSearchView = (SearchView) findViewById(R.id.searchView);
-    mSearchView.setIconifiedByDefault(true);
-    mSearchView.setQueryHint(getResources().getString(R.string.search_hint));
-    mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+  private void setSearchViews() {
+    mPoiSearchView = (SearchView) findViewById(R.id.poiSearchView);
+    mPoiSpinner = (Spinner) findViewById(R.id.poiSpinner);
+    mPlaceSearchView = (SearchView) findViewById(R.id.placeSearchView);
+    mPlaceSpinner = (Spinner) findViewById(R.id.placeSpinner);
+    // Create an ArrayAdapter using the string array and a default spinner layout
+    mAdapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_dropdown_item) {
+      @Override
+      public int getCount() {
+        return super.getCount() - 1;
+      }
+    };
+    mPoiSearchView.setIconifiedByDefault(false);
+    mPoiSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
       @Override
       public boolean onQueryTextSubmit(String query) {
         //hideKeyboard();
         geoCodeTypedAddress(query);
-        mSearchView.clearFocus();
+        mPoiSearchView.clearFocus();
         return true;
       }
 
       @Override
       public boolean onQueryTextChange(String newText) {
         Log.d(TAG, "text changed");
+
         // get suggestions from the locatorTask
-        final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
-            .suggestAsync(newText, mSuggestParameters);
-        suggestionsFuture.addDoneListener(new Runnable() {
+        if (!newText.equals("")) {
+          final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
+              .suggestAsync(newText, mSuggestParameters);
+          suggestionsFuture.addDoneListener(new Runnable() {
 
-          @Override public void run() {
-            try {
-              // Get the results of the async operation
-              List<SuggestResult> suggestResults = suggestionsFuture.get();
-              List<String> suggestedAddresses = new ArrayList<>(suggestResults.size());
+            @Override public void run() {
+              try {
+                // Get the results of the async operation
+                List<SuggestResult> suggestResults = suggestionsFuture.get();
+                final List<String> suggestedAddresses = new ArrayList<>(suggestResults.size());
+                mPoiSpinner.performClick();
+                Log.d(TAG, "suggestResults length " + suggestResults.size());
+                Log.d(TAG, "suggestedAddresses length " + suggestedAddresses.size());
 
-              // Iterate the suggestions
-              for (SuggestResult result : suggestResults) {
-                suggestedAddresses.add(result.getLabel());
-              }
-              mAdapter.addAll(suggestedAddresses);
+                // Iterate the suggestions
+                for (SuggestResult result : suggestResults) {
+                  suggestedAddresses.add(result.getLabel());
+                }
+                mAdapter.clear();
+                mAdapter.addAll(suggestedAddresses);
 
-              // Apply the adapter to the spinner
-              mSpinner.setAdapter(mAdapter);
-              mSpinner.setSelection(mAdapter.getCount());
-              mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                  if (position == mAdapter.getCount()) {
-                    mSearchView.clearFocus();
-                  } else {
-                    mSearchView.setQuery(getResources().getStringArray(R.array.suggestion_items)[position], false);
-                    geoCodeTypedAddress(getResources().getStringArray(R.array.suggestion_items)[position]);
-                    mSearchView.setIconified(false);
-                    mSearchView.clearFocus();
+                // Apply the adapter to the spinner
+                mPoiSpinner.setAdapter(mAdapter);
+                mPoiSpinner.setSelection(mAdapter.getCount());
+                mPoiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                  @Override
+                  public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    if (suggestedAddresses.size() > 0) {
+                      String query = suggestedAddresses.get(position);
+                      geoCodeTypedAddress(query);
+                      mPoiSearchView.setQuery(query, false);
+                      mPoiSearchView.setIconified(false);
+                      mPoiSearchView.clearFocus();
+                    }
                   }
-                }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-              });
+                  @Override
+                  public void onNothingSelected(AdapterView<?> parent) {
+                  }
+                });
 
-              // Specify the layout to use when the list of choices appears
-              mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                // Specify the layout to use when the list of choices appears
+                mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-            } catch (Exception e) {
-              e.printStackTrace();
+              } catch (Exception e) {
+                e.printStackTrace();
+
+              }
+
             }
-
-          }
-        });
+          });
+        }
         return true;
       }
+
     });
-
-    mSpinner = (Spinner) findViewById(R.id.spinner);
-    // Create an ArrayAdapter using the string array and a default spinner layout
-    mAdapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_dropdown_item) {
-      @Override
-      public View getView(int position, View convertView, ViewGroup parent) {
-        View v = super.getView(position, convertView, parent);
-        if (position == getCount()) {
-          mSearchView.clearFocus();
-        }
-        return v;
-      }
-
-      @Override
-      public int getCount() {
-        return super.getCount() - 1; // you dont display last item. It is used as hint.
-      }
-    };
-
+    mPlaceSearchView.setIconified(true);
   }
 
   /**
@@ -275,10 +277,10 @@ public class MainActivity extends AppCompatActivity {
    * Hides soft keyboard
    */
   private void hideKeyboard() {
-    mSearchView.clearFocus();
+    mPoiSearchView.clearFocus();
     InputMethodManager inputManager = (InputMethodManager) getApplicationContext()
         .getSystemService(Context.INPUT_METHOD_SERVICE);
-    inputManager.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
+    inputManager.hideSoftInputFromWindow(mPoiSearchView.getWindowToken(), 0);
   }
 
   @Override

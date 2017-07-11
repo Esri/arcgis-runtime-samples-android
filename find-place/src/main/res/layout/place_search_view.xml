@@ -11,16 +11,17 @@
 
 
     <SearchView
-        android:id="@+id/searchView"
+        android:id="@+id/placeSearchView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="7" >
+        android:layout_weight="7"
+        android:queryHint="@string/place_search_hint">
     </SearchView>
 
     <Spinner
         android:layout_width="32dp"
         android:layout_height="match_parent"
-        android:id="@+id/spinner"
+        android:id="@+id/placeSpinner"
         style="@style/Widget.AppCompat.ListView.DropDown"
         android:layout_gravity="bottom"
         android:spinnerMode="dropdown"
