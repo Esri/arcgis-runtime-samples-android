@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">WMTS Layer</string>
+    <string name="wmts_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer/WMTS</string>
+</resources>
