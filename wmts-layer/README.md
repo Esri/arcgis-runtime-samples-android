@@ -1,5 +1,5 @@
 # WMTS Layer
-This sample demonstrates showing UI components responding to attribution view.
+This sample created a WMTS layer from the given url and the first layer id, which is retrieved by loading the associated WMTS service and obtaining the layer info list. Then the WMTS layer will be added to the map as a basemap layer.
 
 ![WMTS Layer App](wmts-layer.png)
 
