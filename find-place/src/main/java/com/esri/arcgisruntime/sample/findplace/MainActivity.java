@@ -21,17 +21,16 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.content.Context;
+import android.database.MatrixCursor;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.SearchView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -44,8 +43,6 @@ import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.ViewpointChangedEvent;
-import com.esri.arcgisruntime.mapping.view.ViewpointChangedListener;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeResult;
@@ -55,21 +52,20 @@ import com.esri.arcgisruntime.tasks.geocode.SuggestResult;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String COLUMN_NAME_ADDRESS = "address";
   private String TAG = "Find A Place";
-
   private MapView mMapView;
   private SearchView mPoiSearchView;
   private SearchView mPlaceSearchView;
   private LocatorTask mLocatorTask;
   private GraphicsOverlay mGraphicsOverlay;
-  private ArrayAdapter<CharSequence> mAdapter;
-  private Spinner mPoiSpinner;
-  private Spinner mPlaceSpinner;
+  private SimpleCursorAdapter mSuggestionAdapter;
   private GeocodeResult mGeocodedLocation;
   private SuggestParameters mSuggestParameters;
   private GeocodeParameters mGeocodeParameters;
   private PictureMarkerSymbol mPinSourceSymbol;
   private Geometry mCurrentExtent;
+  String[] mColumnNames;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
     // set the map to be displayed in this view
     mMapView.setMap(map);
-
     // create a locator task
     mLocatorTask = new LocatorTask("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
 
@@ -94,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
+    mColumnNames = new String[] { BaseColumns._ID, COLUMN_NAME_ADDRESS };
 
     mSuggestParameters = new SuggestParameters();
     mSuggestParameters.getCategories().add("POI");
@@ -101,35 +97,24 @@ public class MainActivity extends AppCompatActivity {
     mGeocodeParameters = new GeocodeParameters();
     mGeocodeParameters.getResultAttributeNames().add("*");
     mGeocodeParameters.setMaxResults(6);
-    mMapView.addViewpointChangedListener(new ViewpointChangedListener() {
-      @Override public void viewpointChanged(ViewpointChangedEvent viewpointChangedEvent) {
-        // Get the current map extent
-        mCurrentExtent = mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry();
-        mSuggestParameters.setSearchArea(mCurrentExtent);
-      }
-    });
+    //mMapView.addViewpointChangedListener(new ViewpointChangedListener() {
+    //  @Override public void viewpointChanged(ViewpointChangedEvent viewpointChangedEvent) {
+    // Get the current map extent
+    //    mCurrentExtent = mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry();
+    //    mSuggestParameters.setSearchArea(mCurrentExtent);
+    //  }
+    //});
 
     setSearchViews();
   }
 
   private void setSearchViews() {
     mPoiSearchView = (SearchView) findViewById(R.id.poiSearchView);
-    mPoiSpinner = (Spinner) findViewById(R.id.poiSpinner);
     mPlaceSearchView = (SearchView) findViewById(R.id.placeSearchView);
-    mPlaceSpinner = (Spinner) findViewById(R.id.placeSpinner);
-    // Create an ArrayAdapter using the string array and a default spinner layout
-    mAdapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_dropdown_item) {
-      @Override
-      public int getCount() {
-        return super.getCount() - 1;
-      }
-    };
-    mPoiSearchView.setIconifiedByDefault(false);
     mPoiSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
       @Override
       public boolean onQueryTextSubmit(String query) {
-        //hideKeyboard();
         geoCodeTypedAddress(query);
         mPoiSearchView.clearFocus();
         return true;
@@ -141,55 +126,48 @@ public class MainActivity extends AppCompatActivity {
 
         // get suggestions from the locatorTask
         if (!newText.equals("")) {
-          final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
-              .suggestAsync(newText, mSuggestParameters);
+          final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask.suggestAsync(newText, mSuggestParameters);
           suggestionsFuture.addDoneListener(new Runnable() {
 
             @Override public void run() {
               try {
                 // Get the results of the async operation
                 List<SuggestResult> suggestResults = suggestionsFuture.get();
-                final List<String> suggestedAddresses = new ArrayList<>(suggestResults.size());
-                mPoiSpinner.performClick();
+                final List<String> suggestedAddresses = new ArrayList<>();
                 Log.d(TAG, "suggestResults length " + suggestResults.size());
-                Log.d(TAG, "suggestedAddresses length " + suggestedAddresses.size());
-
+                MatrixCursor suggestionsCursor = new MatrixCursor(mColumnNames);
+                int key = 0;
                 // Iterate the suggestions
                 for (SuggestResult result : suggestResults) {
                   suggestedAddresses.add(result.getLabel());
+                  Log.d("resultlabel", result.getLabel());
+                  suggestionsCursor.addRow(new Object[] { key++, result.getLabel() });
+                  //Log.d("cursor", mSuggestionCursor.getString(0));
                 }
-                mAdapter.clear();
-                mAdapter.addAll(suggestedAddresses);
+                Log.d(TAG, "suggestedAddresses length " + suggestedAddresses.size());
 
-                // Apply the adapter to the spinner
-                mPoiSpinner.setAdapter(mAdapter);
-                mPoiSpinner.setSelection(mAdapter.getCount());
-                mPoiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                  @Override
-                  public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                    if (suggestedAddresses.size() > 0) {
-                      String query = suggestedAddresses.get(position);
-                      geoCodeTypedAddress(query);
-                      mPoiSearchView.setQuery(query, false);
-                      mPoiSearchView.setIconified(false);
-                      mPoiSearchView.clearFocus();
-                    }
+                String[] cols = new String[] { COLUMN_NAME_ADDRESS };
+                int[] to = new int[] { R.id.suggestion_item_address };
+                mSuggestionAdapter = new SimpleCursorAdapter(MainActivity.this, R.layout.suggestion, suggestionsCursor, cols, to, 0);
+                mPoiSearchView.setSuggestionsAdapter(mSuggestionAdapter);
+                //mSuggestionAdapter.notifyDataSetChanged();
+                mPoiSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                  @Override public boolean onSuggestionSelect(int position) {
+                    return false;
                   }
 
-                  @Override
-                  public void onNothingSelected(AdapterView<?> parent) {
+                  @Override public boolean onSuggestionClick(int position) {
+                    MatrixCursor selectedRow = (MatrixCursor) mSuggestionAdapter.getItem(position);
+                    int selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS);
+                    final String address = selectedRow.getString(selectedCursorIndex);
+                    geoCodeTypedAddress(address);
+                    mPoiSearchView.setQuery(address, false);
+                    return true;
                   }
                 });
-
-                // Specify the layout to use when the list of choices appears
-                mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
               } catch (Exception e) {
                 e.printStackTrace();
-
               }
-
             }
           });
         }
@@ -197,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
       }
 
     });
-    mPlaceSearchView.setIconified(true);
   }
 
   /**

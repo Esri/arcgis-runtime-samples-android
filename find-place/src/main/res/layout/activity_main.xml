@@ -15,25 +15,32 @@
             android:layout_height="fill_parent">
     </com.esri.arcgisruntime.mapping.view.MapView>
 
-    <include
-            android:layout_width="fill_parent"
+    <android.support.v7.widget.SearchView
+            android:id="@+id/poiSearchView"
+            android:background="@color/colorWhiteBackground"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/poi_search_view"
-            android:id="@+id/floating_poi_searchView"
+            android:layout_weight="7"
+            android:queryHint="@string/poi_search_hint"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"/>
-    <include
-            android:layout_width="fill_parent"
+            android:layout_marginRight="10dp">
+    </android.support.v7.widget.SearchView>
+
+    <android.support.v7.widget.SearchView
+            android:id="@+id/placeSearchView"
+            android:background="@color/colorWhiteBackground"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/place_search_view"
-            android:id="@+id/floating_place_searchView"
+            android:layout_weight="7"
+            android:queryHint="@string/place_search_hint"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_below="@+id/floating_poi_searchView"
-            android:layout_alignParentStart="true"/>
+            android:layout_below="@+id/poiSearchView"
+            android:layout_alignParentStart="true">
+    </android.support.v7.widget.SearchView>
 
 </RelativeLayout>
