@@ -16,30 +16,30 @@
     </com.esri.arcgisruntime.mapping.view.MapView>
 
     <android.support.v7.widget.SearchView
-            android:id="@+id/poiSearchView"
+            android:id="@+id/searchSearchView"
             android:background="@color/colorWhiteBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="7"
-            android:queryHint="@string/poi_search_hint"
+            android:queryHint="@string/search_hint"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp">
     </android.support.v7.widget.SearchView>
 
     <android.support.v7.widget.SearchView
-            android:id="@+id/placeSearchView"
+            android:id="@+id/locationSearchView"
             android:background="@color/colorWhiteBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="7"
-            android:queryHint="@string/place_search_hint"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_below="@+id/poiSearchView"
+            android:queryHint="@string/location_search_hint"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_below="@+id/searchSearchView"
             android:layout_alignParentStart="true">
     </android.support.v7.widget.SearchView>
 

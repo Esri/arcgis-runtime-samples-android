@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import android.content.Context;
 import android.database.MatrixCursor;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -30,11 +29,12 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Geometry;
+import com.esri.arcgisruntime.geometry.Multipoint;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -43,6 +43,9 @@ import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.mapping.view.ViewpointChangedEvent;
+import com.esri.arcgisruntime.mapping.view.ViewpointChangedListener;
+import com.esri.arcgisruntime.mapping.view.WrapAroundMode;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeResult;
@@ -53,115 +56,119 @@ import com.esri.arcgisruntime.tasks.geocode.SuggestResult;
 public class MainActivity extends AppCompatActivity {
 
   private static final String COLUMN_NAME_ADDRESS = "address";
-  private String TAG = "Find A Place";
+  String[] mColumnNames;
+  private String TAG;
   private MapView mMapView;
-  private SearchView mPoiSearchView;
-  private SearchView mPlaceSearchView;
+  private SearchView mSearchSearchView;
+  private SearchView mLocationSearchView;
   private LocatorTask mLocatorTask;
   private GraphicsOverlay mGraphicsOverlay;
-  private SimpleCursorAdapter mSuggestionAdapter;
-  private GeocodeResult mGeocodedLocation;
-  private SuggestParameters mSuggestParameters;
-  private GeocodeParameters mGeocodeParameters;
+  private GeocodeResult mGeocodeResult;
+  private SuggestParameters mSearchSuggestParameters;
+  private GeocodeParameters mSearchGeocodeParameters;
+  private SuggestParameters mLocationSuggestParameters;
+  private GeocodeParameters mLocationGeocodeParameters;
   private PictureMarkerSymbol mPinSourceSymbol;
   private Geometry mCurrentExtent;
-  String[] mColumnNames;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    TAG = "Find a place";
 
+    // setup SearchViews
+    mSearchSearchView = (SearchView) findViewById(R.id.searchSearchView);
+    mSearchSearchView.setIconified(false);
+    mSearchSearchView.setQueryHint(getResources().getString(R.string.search_hint));
+    mLocationSearchView = (SearchView) findViewById(R.id.locationSearchView);
+    mLocationSearchView.setIconified(false);
+    mLocationSearchView.setQueryHint(getResources().getString(R.string.location_search_hint));
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
+    // disable map wraparound
+    mMapView.setWrapAroundMode(WrapAroundMode.DISABLED);
     // create a map with the BasemapType topographic
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
     // set the map to be displayed in this view
     mMapView.setMap(map);
-    // create a locator task
+    // create a locator task from an online service
     mLocatorTask = new LocatorTask("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
-
+    // define the graphics overlay and drawable responsible for showing relevant points
     mGraphicsOverlay = new GraphicsOverlay();
-
-    BitmapDrawable startDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin);
+    BitmapDrawable pinDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin);
     try {
-      mPinSourceSymbol = PictureMarkerSymbol.createAsync(startDrawable).get();
+      mPinSourceSymbol = PictureMarkerSymbol.createAsync(pinDrawable).get();
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
+      Toast.makeText(getApplicationContext(), "Failed to load pin drawable!", Toast.LENGTH_LONG);
     }
     mColumnNames = new String[] { BaseColumns._ID, COLUMN_NAME_ADDRESS };
-
-    mSuggestParameters = new SuggestParameters();
-    mSuggestParameters.getCategories().add("POI");
-    mSuggestParameters.setMaxResults(6);
-    mGeocodeParameters = new GeocodeParameters();
-    mGeocodeParameters.getResultAttributeNames().add("*");
-    mGeocodeParameters.setMaxResults(6);
-    //mMapView.addViewpointChangedListener(new ViewpointChangedListener() {
-    //  @Override public void viewpointChanged(ViewpointChangedEvent viewpointChangedEvent) {
-    // Get the current map extent
-    //    mCurrentExtent = mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry();
-    //    mSuggestParameters.setSearchArea(mCurrentExtent);
-    //  }
-    //});
-
-    setSearchViews();
+    mMapView.addViewpointChangedListener(new ViewpointChangedListener() {
+      @Override public void viewpointChanged(ViewpointChangedEvent viewpointChangedEvent) {
+        //Get the current map extent
+        mCurrentExtent = mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry();
+      }
+    });
+    setupSearch();
+    setupLocation();
   }
 
-  private void setSearchViews() {
-    mPoiSearchView = (SearchView) findViewById(R.id.poiSearchView);
-    mPlaceSearchView = (SearchView) findViewById(R.id.placeSearchView);
-    mPoiSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+  private void setupSearch() {
+
+    mSearchSuggestParameters = new SuggestParameters();
+    mSearchSuggestParameters.getCategories().add("POI");
+    mSearchSuggestParameters.setMaxResults(6);
+    mSearchGeocodeParameters = new GeocodeParameters();
+    mSearchGeocodeParameters.getResultAttributeNames().add("*");
+    mSearchSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
       @Override
-      public boolean onQueryTextSubmit(String query) {
-        geoCodeTypedAddress(query);
-        mPoiSearchView.clearFocus();
+      public boolean onQueryTextSubmit(String address) {
+        geoCodeTypedAddress(address);
+        mSearchSearchView.clearFocus();
+        mLocationSearchView.clearFocus();
         return true;
       }
 
       @Override
       public boolean onQueryTextChange(String newText) {
-        Log.d(TAG, "text changed");
-
-        // get suggestions from the locatorTask
+        // as long as newText isn't empty, get suggestions from the locatorTask
         if (!newText.equals("")) {
-          final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask.suggestAsync(newText, mSuggestParameters);
+          mSearchSuggestParameters.setSearchArea(mCurrentExtent);
+          final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
+              .suggestAsync(newText, mSearchSuggestParameters);
           suggestionsFuture.addDoneListener(new Runnable() {
 
             @Override public void run() {
               try {
                 // Get the results of the async operation
                 List<SuggestResult> suggestResults = suggestionsFuture.get();
-                final List<String> suggestedAddresses = new ArrayList<>();
-                Log.d(TAG, "suggestResults length " + suggestResults.size());
                 MatrixCursor suggestionsCursor = new MatrixCursor(mColumnNames);
                 int key = 0;
                 // Iterate the suggestions
                 for (SuggestResult result : suggestResults) {
-                  suggestedAddresses.add(result.getLabel());
-                  Log.d("resultlabel", result.getLabel());
                   suggestionsCursor.addRow(new Object[] { key++, result.getLabel() });
-                  //Log.d("cursor", mSuggestionCursor.getString(0));
                 }
-                Log.d(TAG, "suggestedAddresses length " + suggestedAddresses.size());
 
                 String[] cols = new String[] { COLUMN_NAME_ADDRESS };
                 int[] to = new int[] { R.id.suggestion_item_address };
-                mSuggestionAdapter = new SimpleCursorAdapter(MainActivity.this, R.layout.suggestion, suggestionsCursor, cols, to, 0);
-                mPoiSearchView.setSuggestionsAdapter(mSuggestionAdapter);
-                //mSuggestionAdapter.notifyDataSetChanged();
-                mPoiSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
+                    R.layout.suggestion, suggestionsCursor, cols, to, 0);
+                mSearchSearchView.setSuggestionsAdapter(suggestionAdapter);
+                mSearchSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
                   @Override public boolean onSuggestionSelect(int position) {
                     return false;
                   }
 
                   @Override public boolean onSuggestionClick(int position) {
-                    MatrixCursor selectedRow = (MatrixCursor) mSuggestionAdapter.getItem(position);
+                    MatrixCursor selectedRow = (MatrixCursor) suggestionAdapter.getItem(position);
                     int selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS);
                     final String address = selectedRow.getString(selectedCursorIndex);
                     geoCodeTypedAddress(address);
-                    mPoiSearchView.setQuery(address, false);
+                    mSearchSearchView.setQuery(address, false);
+                    mSearchSearchView.clearFocus();
+                    mLocationSearchView.clearFocus();
                     return true;
                   }
                 });
@@ -173,7 +180,71 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
       }
+    });
+  }
 
+  private void setupLocation() {
+
+    mLocationSuggestParameters = new SuggestParameters();
+    mLocationSuggestParameters.setMaxResults(3);
+    mLocationGeocodeParameters = new GeocodeParameters();
+    mLocationGeocodeParameters.getResultAttributeNames().add("*");
+    mLocationGeocodeParameters.setMaxResults(3);
+    mLocationSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+      @Override public boolean onQueryTextSubmit(String s) {
+        return false;
+      }
+
+      @Override public boolean onQueryTextChange(String newText) {
+        mLocationSuggestParameters.setSearchArea(mCurrentExtent);
+        // as long as newText isn't empty, get suggestions from the locatorTask
+        if (!newText.equals("")) {
+          final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
+              .suggestAsync(newText, mLocationSuggestParameters);
+          suggestionsFuture.addDoneListener(new Runnable() {
+
+            @Override public void run() {
+              try {
+                // Get the results of the async operation
+                List<SuggestResult> suggestResults = suggestionsFuture.get();
+                MatrixCursor suggestionsCursor = new MatrixCursor(mColumnNames);
+                int key = 0;
+                // Iterate the suggestions
+                for (SuggestResult result : suggestResults) {
+                  suggestionsCursor.addRow(new Object[] { key++, result.getLabel() });
+                }
+
+                String[] cols = new String[] { COLUMN_NAME_ADDRESS };
+                int[] to = new int[] { R.id.suggestion_item_address };
+                final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this, R.layout.suggestion, suggestionsCursor,
+                    cols, to, 0);
+                mLocationSearchView.setSuggestionsAdapter(suggestionAdapter);
+                mLocationSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                  @Override public boolean onSuggestionSelect(int position) {
+                    return false;
+                  }
+
+                  @Override public boolean onSuggestionClick(int position) {
+                    // on suggestion
+                    MatrixCursor selectedRow = (MatrixCursor) suggestionAdapter.getItem(position);
+                    int selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS);
+                    final String address = selectedRow.getString(selectedCursorIndex);
+                    setSearchArea(address);
+                    mLocationSearchView.setQuery(address, false);
+                    mLocationSearchView.clearFocus();
+                    mSearchSearchView.clearFocus();
+
+                    return true;
+                  }
+                });
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+            }
+          });
+        }
+        return true;
+      }
     });
   }
 
@@ -184,46 +255,38 @@ public class MainActivity extends AppCompatActivity {
    */
   private void geoCodeTypedAddress(final String address) {
     // Null out any previously located result
-    mGeocodedLocation = null;
-
+    mGeocodeResult = null;
+    mSearchGeocodeParameters.setSearchArea(mCurrentExtent);
     // Execute async task to find the address
     mLocatorTask.addDoneLoadingListener(new Runnable() {
       @Override
       public void run() {
         if (mLocatorTask.getLoadStatus() == LoadStatus.LOADED) {
           // Call geocodeAsync passing in an address
-          final ListenableFuture<List<GeocodeResult>> geocodeFuture = mLocatorTask
-              .geocodeAsync(address, mGeocodeParameters);
-          geocodeFuture.addDoneListener(new Runnable() {
+          final ListenableFuture<List<GeocodeResult>> geocodeResultListenableFuture = mLocatorTask
+              .geocodeAsync(address, mSearchGeocodeParameters);
+          geocodeResultListenableFuture.addDoneListener(new Runnable() {
             @Override
             public void run() {
               try {
                 // Get the results of the async operation
-                List<GeocodeResult> geocodeResults = geocodeFuture.get();
-
+                List<GeocodeResult> geocodeResults = geocodeResultListenableFuture.get();
                 if (geocodeResults.size() > 0) {
-                  // Use the first result - for example
+                  // Use the first result as an example
                   // display on the map
-                  mGeocodedLocation = geocodeResults.get(0);
-                  displaySearchResult(mGeocodedLocation.getDisplayLocation(), mGeocodedLocation.getLabel());
+                  displaySearchResult(geocodeResults);
 
                 } else {
-                  Toast.makeText(getApplicationContext(),
-                      getString(R.string.location_not_found) + address,
+                  Toast.makeText(getApplicationContext(), getString(R.string.location_not_found) + address,
                       Toast.LENGTH_LONG).show();
                 }
-
               } catch (InterruptedException | ExecutionException e) {
                 // Deal with exception...
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error), Toast.LENGTH_LONG).show();
-
               }
-              // Done processing and can remove this listener.
-              geocodeFuture.removeDoneListener(this);
             }
           });
-
         } else {
           Log.i(TAG, "Trying to reload locator task");
           mLocatorTask.retryLoadAsync();
@@ -233,31 +296,73 @@ public class MainActivity extends AppCompatActivity {
     mLocatorTask.loadAsync();
   }
 
-  private void displaySearchResult(Point resultPoint, String address) {
+  private void setSearchArea(final String address) {
+    // Execute async task to find the address
+    mLocatorTask.addDoneLoadingListener(new Runnable() {
+      @Override
+      public void run() {
+        if (mLocatorTask.getLoadStatus() == LoadStatus.LOADED) {
+          // Call geocodeAsync passing in an address
+          final ListenableFuture<List<GeocodeResult>> geocodeFuture = mLocatorTask
+              .geocodeAsync(address, mSearchGeocodeParameters);
+          geocodeFuture.addDoneListener(new Runnable() {
+            @Override
+            public void run() {
+              try {
+                // Get the results of the async operation
+                List<GeocodeResult> geocodeResults = geocodeFuture.get();
+                if (geocodeResults.size() > 0) {
+                  // Use the first result as an example
+                  // display on the map
+                  mGeocodeResult = geocodeResults.get(0);
+                  Log.d(TAG, mGeocodeResult.getLabel().toString());
+                  mSearchGeocodeParameters
+                      .setPreferredSearchLocation(mGeocodeResult.getDisplayLocation());
+                } else {
+                  Toast.makeText(getApplicationContext(),
+                      getString(R.string.location_not_found) + address, Toast.LENGTH_LONG).show();
+                }
+              } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error),
+                    Toast.LENGTH_LONG).show();
+              }
+              // done processing and can remove this listener.
+              geocodeFuture.removeDoneListener(this);
+            }
+          });
+        }
+      }
+    });
+  }
+
+  private void displaySearchResult(List<GeocodeResult> geocodeResults) {
+    Log.d(TAG, "displaySearchResult");
     if (mMapView.getCallout().isShowing()) {
       mMapView.getCallout().dismiss();
     }
     //remove any previous graphics/search results
-    //mMapView.getGraphicsOverlays().clear();
+    mMapView.getGraphicsOverlays().clear();
     mGraphicsOverlay.getGraphics().clear();
-    // create graphic object for resulting location
-    Graphic resultLocGraphic = new Graphic(resultPoint, mPinSourceSymbol);
-    // add graphic to location layer
-    mGraphicsOverlay.getGraphics().add(resultLocGraphic);
-    // Zoom map to geocode result location
-    mMapView.setViewpointAsync(new Viewpoint(resultPoint, 8000), 3);
-    //mGraphicPoint = resultPoint;
-    //mGraphicPointAddress = address;
-  }
-
-  /**
-   * Hides soft keyboard
-   */
-  private void hideKeyboard() {
-    mPoiSearchView.clearFocus();
-    InputMethodManager inputManager = (InputMethodManager) getApplicationContext()
-        .getSystemService(Context.INPUT_METHOD_SERVICE);
-    inputManager.hideSoftInputFromWindow(mPoiSearchView.getWindowToken(), 0);
+    List<Point> resultPoints = new ArrayList<>();
+    for (GeocodeResult result : geocodeResults) {
+      // create graphic object for resulting location
+      Point resultPoint = result.getDisplayLocation();
+      Graphic resultLocGraphic = new Graphic(resultPoint, mPinSourceSymbol);
+      // add graphic to location layer
+      mGraphicsOverlay.getGraphics().add(resultLocGraphic);
+      resultPoints.add(resultPoint);
+    }
+    // create a geometry containing all result points
+    Multipoint resultsMultipoint = new Multipoint(resultPoints);
+    Envelope resultsEnvelope = resultsMultipoint.getExtent();
+    // add a 25% buffer to the extent Envelope of result points
+    Envelope resultsEnvelopeWithBuffer = new Envelope(resultsEnvelope.getCenter(), resultsEnvelope.getWidth() * 1.25,
+        resultsEnvelope.getHeight() * 1.25);
+    // zoom map to result points Envelope over 3 seconds
+    mMapView.setViewpointAsync(new Viewpoint(resultsEnvelopeWithBuffer), 3);
+    // set the graphics overlay to the map
+    mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
   }
 
   @Override
@@ -271,5 +376,4 @@ public class MainActivity extends AppCompatActivity {
     super.onResume();
     mMapView.resume();
   }
-
 }
