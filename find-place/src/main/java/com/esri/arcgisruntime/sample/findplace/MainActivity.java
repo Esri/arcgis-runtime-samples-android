@@ -1,4 +1,4 @@
-/* Copyright 2016 Esri
+/* Copyright 2017 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.database.MatrixCursor;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -29,6 +30,8 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -40,8 +43,11 @@ import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
+import com.esri.arcgisruntime.mapping.view.Callout;
+import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
+import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.ViewpointChangedEvent;
 import com.esri.arcgisruntime.mapping.view.ViewpointChangedListener;
@@ -56,7 +62,7 @@ import com.esri.arcgisruntime.tasks.geocode.SuggestResult;
 public class MainActivity extends AppCompatActivity {
 
   private static final String COLUMN_NAME_ADDRESS = "address";
-  String[] mColumnNames;
+  private String[] mColumnNames;
   private String TAG;
   private MapView mMapView;
   private SearchView mSearchSearchView;
@@ -70,11 +76,13 @@ public class MainActivity extends AppCompatActivity {
   private GeocodeParameters mLocationGeocodeParameters;
   private PictureMarkerSymbol mPinSourceSymbol;
   private Geometry mCurrentExtent;
+  private Callout mCallout;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
     TAG = "Find a place";
 
     // setup SearchViews
@@ -101,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
       mPinSourceSymbol = PictureMarkerSymbol.createAsync(pinDrawable).get();
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
-      Toast.makeText(getApplicationContext(), "Failed to load pin drawable!", Toast.LENGTH_LONG);
+      Toast.makeText(getApplicationContext(), "Failed to load pin drawable!", Toast.LENGTH_LONG).show();
     }
     mColumnNames = new String[] { BaseColumns._ID, COLUMN_NAME_ADDRESS };
     mMapView.addViewpointChangedListener(new ViewpointChangedListener() {
@@ -110,8 +118,54 @@ public class MainActivity extends AppCompatActivity {
         mCurrentExtent = mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry();
       }
     });
+    mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
+
+      @Override
+      public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+        Log.d(TAG, "onSingleTapConfirmed: " + motionEvent.toString());
+        showCallout(motionEvent);
+        return true;
+      }
+    });
     setupSearch();
     setupLocation();
+  }
+
+  private void showCallout(MotionEvent motionEvent) {
+    // get the point that was clicked and convert it to a point in map coordinates
+    android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
+        Math.round(motionEvent.getY()));
+
+    final Point singleTapPoint = mMapView.screenToLocation(screenPoint);
+
+    // get layers with elements near the clicked location
+    final ListenableFuture<IdentifyGraphicsOverlayResult> identifyResults = mMapView
+        .identifyGraphicsOverlayAsync(mGraphicsOverlay, screenPoint, 10, false);
+    identifyResults.addDoneListener(new Runnable() {
+      @Override public void run() {
+        try {
+          List<Graphic> graphics = identifyResults.get().getGraphics();
+          if (graphics.size() > 0) {
+            Graphic marker = graphics.get(0);
+            // create a textview for the callout
+            TextView calloutContent = new TextView(getApplicationContext());
+            calloutContent.setTextColor(Color.BLACK);
+            calloutContent.setText(marker.getAttributes().get("Type").toString() + "\n" + marker.getAttributes().get("StAddr").toString());
+
+            // get callout, set content and show
+            mCallout = mMapView.getCallout();
+            mCallout.setLocation(marker.computeCalloutLocation(singleTapPoint, mMapView));
+            mCallout.setContent(calloutContent);
+            mCallout.show();
+
+          }
+
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+
+    });
   }
 
   private void setupSearch() {
@@ -216,7 +270,8 @@ public class MainActivity extends AppCompatActivity {
 
                 String[] cols = new String[] { COLUMN_NAME_ADDRESS };
                 int[] to = new int[] { R.id.suggestion_item_address };
-                final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this, R.layout.suggestion, suggestionsCursor,
+                final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
+                    R.layout.suggestion, suggestionsCursor,
                     cols, to, 0);
                 mLocationSearchView.setSuggestionsAdapter(suggestionAdapter);
                 mLocationSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
@@ -275,7 +330,6 @@ public class MainActivity extends AppCompatActivity {
                   // Use the first result as an example
                   // display on the map
                   displaySearchResult(geocodeResults);
-
                 } else {
                   Toast.makeText(getApplicationContext(), getString(R.string.location_not_found) + address,
                       Toast.LENGTH_LONG).show();
@@ -315,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
                   // Use the first result as an example
                   // display on the map
                   mGeocodeResult = geocodeResults.get(0);
-                  Log.d(TAG, mGeocodeResult.getLabel().toString());
+                  Log.d(TAG, mGeocodeResult.getLabel());
                   mSearchGeocodeParameters
                       .setPreferredSearchLocation(mGeocodeResult.getDisplayLocation());
                 } else {
@@ -348,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
     for (GeocodeResult result : geocodeResults) {
       // create graphic object for resulting location
       Point resultPoint = result.getDisplayLocation();
-      Graphic resultLocGraphic = new Graphic(resultPoint, mPinSourceSymbol);
+      Graphic resultLocGraphic = new Graphic(resultPoint, result.getAttributes(), mPinSourceSymbol);
       // add graphic to location layer
       mGraphicsOverlay.getGraphics().add(resultLocGraphic);
       resultPoints.add(resultPoint);
@@ -363,17 +417,5 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setViewpointAsync(new Viewpoint(resultsEnvelopeWithBuffer), 3);
     // set the graphics overlay to the map
     mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
-  }
-
-  @Override
-  protected void onPause() {
-    super.onPause();
-    mMapView.pause();
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    mMapView.resume();
   }
 }
