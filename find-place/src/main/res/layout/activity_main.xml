@@ -16,7 +16,7 @@
     </com.esri.arcgisruntime.mapping.view.MapView>
 
     <android.support.v7.widget.SearchView
-            android:id="@+id/searchSearchView"
+            android:id="@+id/search_searchView"
             android:background="@color/colorWhiteBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
     </android.support.v7.widget.SearchView>
 
     <android.support.v7.widget.SearchView
-            android:id="@+id/locationSearchView"
+            android:id="@+id/location_searchView"
             android:background="@color/colorWhiteBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,9 +39,15 @@
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_below="@+id/searchSearchView"
+            android:layout_below="@+id/search_searchView"
             android:layout_alignParentStart="true">
     </android.support.v7.widget.SearchView>
+    <Button
+            android:text="Redo search in this area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/redo_search_button" android:visibility="invisible" android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" android:layout_marginBottom="56dp" android:elevation="0dp"/>
 
 </RelativeLayout>
 
