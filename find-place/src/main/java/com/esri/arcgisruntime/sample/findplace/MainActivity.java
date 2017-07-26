@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.findplace;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.database.MatrixCursor;
@@ -64,6 +65,9 @@ import com.esri.arcgisruntime.tasks.geocode.SuggestResult;
 public class MainActivity extends AppCompatActivity {
 
   private String TAG;
+  private String COLUMN_NAME_ADDRESS = "address";
+  private String[] mColumnNames;
+
   private SearchView mSearchSearchView;
   private SearchView mLocationSearchView;
   private Button mRedoSearchButton;
@@ -71,17 +75,13 @@ public class MainActivity extends AppCompatActivity {
   private MapView mMapView;
   private LocatorTask mLocatorTask;
   private GraphicsOverlay mGraphicsOverlay;
-  private GeocodeResult mGeocodeResult;
   private SuggestParameters mSearchSuggestParameters;
   private GeocodeParameters mSearchGeocodeParameters;
   private SuggestParameters mLocationSuggestParameters;
   private GeocodeParameters mLocationGeocodeParameters;
   private PictureMarkerSymbol mPinSourceSymbol;
-  private Geometry mCurrentExtent;
+  private Geometry mCurrentExtentGeometry;
   private Callout mCallout;
-
-  private String COLUMN_NAME_ADDRESS = "address";
-  private String[] mColumnNames;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -133,9 +133,10 @@ public class MainActivity extends AppCompatActivity {
     // add listener to update extent when viewpoint changes
     mMapView.addViewpointChangedListener(new ViewpointChangedListener() {
       @Override public void viewpointChanged(ViewpointChangedEvent viewpointChangedEvent) {
+        // once map is done navigating
         if (!mMapView.isNavigating()) {
           //Get the current map extent
-          mCurrentExtent = mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry();
+          mCurrentExtentGeometry = mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry();
           // prevent repeat calls to make button visible
           mRedoSearchButton.setVisibility(View.VISIBLE);
         }
@@ -145,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
 
       @Override
       public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-        Log.d(TAG, "onSingleTapConfirmed: " + motionEvent.toString());
         showCallout(motionEvent);
         return true;
       }
@@ -155,25 +155,37 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void redoSearch() {
+    // set center of current extent to preferred search location
+    mSearchGeocodeParameters.setPreferredSearchLocation(mCurrentExtentGeometry.getExtent().getCenter());
+
+    mLocationSearchView.setQuery("Searching by area.", false);
     // use whatever text is in the search box to call geoCodeTypedAddress
     geoCodeTypedAddress(mSearchSearchView.getQuery().toString());
     // hide redo search button
     mRedoSearchButton.setVisibility(View.INVISIBLE);
   }
 
+  /**
+   * Identifies the Graphic at the clicked point. Gets attribute of that Graphic and assigns it to a Callout. Callout is
+   * then displayed.
+   *
+   * @param motionEvent from onSingleTapConfirmed
+   */
   private void showCallout(MotionEvent motionEvent) {
-    // get the point that was clicked
+    // get the screen point
     android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
         Math.round(motionEvent.getY()));
-    // convert clicked point to a map point
+    // convert to map point
     final Point mapPoint = mMapView.screenToLocation(screenPoint);
-    // get layers with elements near the clicked location
-    final ListenableFuture<IdentifyGraphicsOverlayResult> identifyResults = mMapView
+    // from the graphics overlay, get graphics near the tapped location
+    final ListenableFuture<IdentifyGraphicsOverlayResult> identifyResultsFuture = mMapView
         .identifyGraphicsOverlayAsync(mGraphicsOverlay, screenPoint, 10, false);
-    identifyResults.addDoneListener(new Runnable() {
+    identifyResultsFuture.addDoneListener(new Runnable() {
       @Override public void run() {
         try {
-          List<Graphic> graphics = identifyResults.get().getGraphics();
+          IdentifyGraphicsOverlayResult identifyGraphicsOverlayResult = identifyResultsFuture.get();
+          List<Graphic> graphics = identifyGraphicsOverlayResult.getGraphics();
+          // if a graphic has been identified
           if (graphics.size() > 0) {
             //get the first graphic identified
             Graphic identifiedGraphic = graphics.get(0);
@@ -181,9 +193,12 @@ public class MainActivity extends AppCompatActivity {
             TextView calloutContent = new TextView(getApplicationContext());
             calloutContent.setTextColor(Color.BLACK);
             // set the text of the callout to graphic's attributes
-            calloutContent.setText(
-                identifiedGraphic.getAttributes().get("Type").toString() + "\n"
-                    + identifiedGraphic.getAttributes().get("StAddr").toString());
+            for (Map.Entry<String, Object> attribute : identifiedGraphic.getAttributes().entrySet()) {
+              Log.d("attributes", attribute.getKey());
+            }
+
+            calloutContent.setText(identifiedGraphic.getAttributes().get("PlaceName").toString() + "\n"
+                + identifiedGraphic.getAttributes().get("StAddr").toString());
             // get callout and set its options: animateCallout: true, recenterMap: false, animateRecenter: false
             mCallout = mMapView.getCallout();
             mCallout.setShowOptions(new Callout.ShowOptions(true, false, false));
@@ -199,18 +214,26 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
+  /**
+   * Sets up the top SearchView, which filters for POI. Uses MatrixCursor to show suggestions to the user as the user
+   * inputs text.
+   */
   private void setupSearch() {
 
     mSearchSuggestParameters = new SuggestParameters();
+    // filter categories for POI
     mSearchSuggestParameters.getCategories().add("POI");
     mSearchSuggestParameters.setMaxResults(5);
     mSearchGeocodeParameters = new GeocodeParameters();
+    // get all attributes
     mSearchGeocodeParameters.getResultAttributeNames().add("*");
     mSearchSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
       @Override
       public boolean onQueryTextSubmit(String address) {
+
         geoCodeTypedAddress(address);
+        // clear focus from search views
         mSearchSearchView.clearFocus();
         mLocationSearchView.clearFocus();
         return true;
@@ -220,40 +243,42 @@ public class MainActivity extends AppCompatActivity {
       public boolean onQueryTextChange(String newText) {
         // as long as newText isn't empty, get suggestions from the locatorTask
         if (!newText.equals("")) {
-          mSearchSuggestParameters.setSearchArea(mCurrentExtent);
+          mSearchSuggestParameters.setSearchArea(mCurrentExtentGeometry);
           final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
               .suggestAsync(newText, mSearchSuggestParameters);
           suggestionsFuture.addDoneListener(new Runnable() {
 
             @Override public void run() {
               try {
-                // Get the results of the async operation
+                // get the results of the async operation
                 List<SuggestResult> suggestResults = suggestionsFuture.get();
                 MatrixCursor suggestionsCursor = new MatrixCursor(mColumnNames);
                 int key = 0;
-                // Iterate the suggestions
+                // add each suggestion result to a new row
                 for (SuggestResult result : suggestResults) {
                   suggestionsCursor.addRow(new Object[] { key++, result.getLabel() });
                 }
-
+                // define SimpleCursorAdapter
                 String[] cols = new String[] { COLUMN_NAME_ADDRESS };
                 int[] to = new int[] { R.id.suggestion_item_address };
                 final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
                     R.layout.suggestion, suggestionsCursor, cols, to, 0);
                 mSearchSearchView.setSuggestionsAdapter(suggestionAdapter);
+                // handle a suggestion being chosen
                 mSearchSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
                   @Override public boolean onSuggestionSelect(int position) {
                     return false;
                   }
 
                   @Override public boolean onSuggestionClick(int position) {
+                    // get the selected row
                     MatrixCursor selectedRow = (MatrixCursor) suggestionAdapter.getItem(position);
+                    // get the row's index
                     int selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS);
+                    // get the string from the row at index
                     String address = selectedRow.getString(selectedCursorIndex);
-                    geoCodeTypedAddress(address);
-                    mSearchSearchView.setQuery(address, false);
-                    mSearchSearchView.clearFocus();
-                    mLocationSearchView.clearFocus();
+                    // set the string to the SearchView and submit as a query
+                    mSearchSearchView.setQuery(address, true);
                     return true;
                   }
                 });
@@ -273,15 +298,15 @@ public class MainActivity extends AppCompatActivity {
     mLocationSuggestParameters = new SuggestParameters();
     mLocationSuggestParameters.setMaxResults(5);
     mLocationGeocodeParameters = new GeocodeParameters();
+    // get all attributes
     mLocationGeocodeParameters.getResultAttributeNames().add("*");
-    mLocationGeocodeParameters.setMaxResults(5);
     mLocationSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override public boolean onQueryTextSubmit(String s) {
         return false;
       }
 
       @Override public boolean onQueryTextChange(String newText) {
-        mLocationSuggestParameters.setSearchArea(mCurrentExtent);
+        mLocationSuggestParameters.setSearchArea(mCurrentExtentGeometry);
         // as long as newText isn't empty, get suggestions from the locatorTask
         if (!newText.equals("")) {
           final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
@@ -340,9 +365,7 @@ public class MainActivity extends AppCompatActivity {
    * @param address
    */
   private void geoCodeTypedAddress(final String address) {
-    // Null out any previously located result
-    mGeocodeResult = null;
-    mSearchGeocodeParameters.setSearchArea(mCurrentExtent);
+    mSearchGeocodeParameters.setSearchArea(mCurrentExtentGeometry);
     // Execute async task to find the address
     mLocatorTask.addDoneLoadingListener(new Runnable() {
       @Override
@@ -358,8 +381,6 @@ public class MainActivity extends AppCompatActivity {
                 // Get the results of the async operation
                 List<GeocodeResult> geocodeResults = geocodeResultListenableFuture.get();
                 if (geocodeResults.size() > 0) {
-                  // Use the first result as an example
-                  // display on the map
                   displaySearchResult(geocodeResults);
                 } else {
                   Toast.makeText(getApplicationContext(), getString(R.string.location_not_found) + address,
@@ -397,20 +418,14 @@ public class MainActivity extends AppCompatActivity {
                 // Get the results of the async operation
                 List<GeocodeResult> geocodeResults = geocodeFuture.get();
                 if (geocodeResults.size() > 0) {
-                  // Use the first result as an example
-                  // display on the map
-                  mGeocodeResult = geocodeResults.get(0);
-                  Log.d(TAG, mGeocodeResult.getLabel());
-                  mSearchGeocodeParameters
-                      .setPreferredSearchLocation(mGeocodeResult.getDisplayLocation());
+                  mSearchGeocodeParameters.setPreferredSearchLocation(geocodeResults.get(0).getDisplayLocation());
                 } else {
-                  Toast.makeText(getApplicationContext(),
-                      getString(R.string.location_not_found) + address, Toast.LENGTH_LONG).show();
+                  Toast.makeText(getApplicationContext(), getString(R.string.location_not_found) + address,
+                      Toast.LENGTH_LONG).show();
                 }
               } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error),
-                    Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error), Toast.LENGTH_LONG).show();
               }
               // done processing and can remove this listener.
               geocodeFuture.removeDoneListener(this);

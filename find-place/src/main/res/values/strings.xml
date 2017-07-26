@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Find A Place</string>
     <string name="search_hint">Enter POI</string>
-    <string name="location_search_hint">Enter place</string>
+    <string name="location_search_hint">In Proximity of...</string>
     <string name="geo_locate_error">Geocode failed on address</string>
     <string name="location_not_found">No location with that name: </string>
 
