@@ -18,7 +18,6 @@ package com.esri.arcgisruntime.sample.findplace;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.database.MatrixCursor;
@@ -64,9 +63,11 @@ import com.esri.arcgisruntime.tasks.geocode.SuggestResult;
 
 public class MainActivity extends AppCompatActivity {
 
+  private final String COLUMN_NAME_ADDRESS = "address";
   private String TAG;
-  private String COLUMN_NAME_ADDRESS = "address";
   private String[] mColumnNames;
+  private boolean mSetViewpointForDisplayResult;
+  private String mSearchAddress;
 
   private SearchView mSearchSearchView;
   private SearchView mLocationSearchView;
@@ -135,10 +136,15 @@ public class MainActivity extends AppCompatActivity {
       @Override public void viewpointChanged(ViewpointChangedEvent viewpointChangedEvent) {
         // once map is done navigating
         if (!mMapView.isNavigating()) {
-          //Get the current map extent
+          // get the current map extent
           mCurrentExtentGeometry = mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry();
-          // prevent repeat calls to make button visible
-          mRedoSearchButton.setVisibility(View.VISIBLE);
+          // only show redo search button when viewpoint changes not from display results
+          if (!mSetViewpointForDisplayResult) {
+            mRedoSearchButton.setVisibility(View.VISIBLE);
+          } else {
+            mRedoSearchButton.setVisibility(View.INVISIBLE);
+            mSetViewpointForDisplayResult = false;
+          }
         }
       }
     });
@@ -154,11 +160,11 @@ public class MainActivity extends AppCompatActivity {
     setupLocation();
   }
 
-  public void redoSearch() {
+  private void redoSearch() {
     // set center of current extent to preferred search location
     mSearchGeocodeParameters.setPreferredSearchLocation(mCurrentExtentGeometry.getExtent().getCenter());
-
-    mLocationSearchView.setQuery("Searching by area.", false);
+    mSearchGeocodeParameters.setSearchArea(mCurrentExtentGeometry);
+    mLocationSearchView.setQuery(getString(R.string.searching_by_area), false);
     // use whatever text is in the search box to call geoCodeTypedAddress
     geoCodeTypedAddress(mSearchSearchView.getQuery().toString());
     // hide redo search button
@@ -189,23 +195,21 @@ public class MainActivity extends AppCompatActivity {
           if (graphics.size() > 0) {
             //get the first graphic identified
             Graphic identifiedGraphic = graphics.get(0);
-            // create a textview for the callout
+            // create a TextView for the Callout
             TextView calloutContent = new TextView(getApplicationContext());
             calloutContent.setTextColor(Color.BLACK);
-            // set the text of the callout to graphic's attributes
-            for (Map.Entry<String, Object> attribute : identifiedGraphic.getAttributes().entrySet()) {
-              Log.d("attributes", attribute.getKey());
-            }
-
+            // set the text of the Callout to graphic's attributes
             calloutContent.setText(identifiedGraphic.getAttributes().get("PlaceName").toString() + "\n"
                 + identifiedGraphic.getAttributes().get("StAddr").toString());
-            // get callout and set its options: animateCallout: true, recenterMap: false, animateRecenter: false
+            // get Callout and set its options: animateCallout: true, recenterMap: false, animateRecenter: false
             mCallout = mMapView.getCallout();
             mCallout.setShowOptions(new Callout.ShowOptions(true, false, false));
             // set the leader position and show the callout
             mCallout.setLocation(identifiedGraphic.computeCalloutLocation(mapPoint, mMapView));
             mCallout.setContent(calloutContent);
             mCallout.show();
+          } else {
+            mCallout.dismiss();
           }
         } catch (Exception e) {
           e.printStackTrace();
@@ -223,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
     mSearchSuggestParameters = new SuggestParameters();
     // filter categories for POI
     mSearchSuggestParameters.getCategories().add("POI");
-    mSearchSuggestParameters.setMaxResults(5);
     mSearchGeocodeParameters = new GeocodeParameters();
     // get all attributes
     mSearchGeocodeParameters.getResultAttributeNames().add("*");
@@ -231,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
 
       @Override
       public boolean onQueryTextSubmit(String address) {
+        Log.d("Search", "query text submit");
 
         geoCodeTypedAddress(address);
         // clear focus from search views
@@ -276,9 +280,9 @@ public class MainActivity extends AppCompatActivity {
                     // get the row's index
                     int selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS);
                     // get the string from the row at index
-                    String address = selectedRow.getString(selectedCursorIndex);
-                    // set the string to the SearchView and submit as a query
-                    mSearchSearchView.setQuery(address, true);
+                    mSearchAddress = selectedRow.getString(selectedCursorIndex);
+                    // set the address string to the SearchView and submit as a query
+                    mSearchSearchView.setQuery(mSearchAddress, true);
                     return true;
                   }
                 });
@@ -296,7 +300,6 @@ public class MainActivity extends AppCompatActivity {
   private void setupLocation() {
 
     mLocationSuggestParameters = new SuggestParameters();
-    mLocationSuggestParameters.setMaxResults(5);
     mLocationGeocodeParameters = new GeocodeParameters();
     // get all attributes
     mLocationGeocodeParameters.getResultAttributeNames().add("*");
@@ -306,7 +309,6 @@ public class MainActivity extends AppCompatActivity {
       }
 
       @Override public boolean onQueryTextChange(String newText) {
-        mLocationSuggestParameters.setSearchArea(mCurrentExtentGeometry);
         // as long as newText isn't empty, get suggestions from the locatorTask
         if (!newText.equals("")) {
           final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
@@ -315,20 +317,19 @@ public class MainActivity extends AppCompatActivity {
 
             @Override public void run() {
               try {
-                // Get the results of the async operation
+                // get the results of the async operation
                 List<SuggestResult> suggestResults = suggestionsFuture.get();
                 MatrixCursor suggestionsCursor = new MatrixCursor(mColumnNames);
                 int key = 0;
-                // Iterate the suggestions
+                // add each suggestion result to a new row
                 for (SuggestResult result : suggestResults) {
                   suggestionsCursor.addRow(new Object[] { key++, result.getLabel() });
                 }
-
+                // define SimpleCursorAdapter
                 String[] cols = new String[] { COLUMN_NAME_ADDRESS };
                 int[] to = new int[] { R.id.suggestion_item_address };
                 final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
-                    R.layout.suggestion, suggestionsCursor,
-                    cols, to, 0);
+                    R.layout.suggestion, suggestionsCursor, cols, to, 0);
                 mLocationSearchView.setSuggestionsAdapter(suggestionAdapter);
                 mLocationSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
                   @Override public boolean onSuggestionSelect(int position) {
@@ -336,14 +337,54 @@ public class MainActivity extends AppCompatActivity {
                   }
 
                   @Override public boolean onSuggestionClick(int position) {
-                    // on suggestion
+                    // get the selected row
                     MatrixCursor selectedRow = (MatrixCursor) suggestionAdapter.getItem(position);
+                    // get the row's index
                     int selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS);
+                    // get the string from the row at index
                     final String address = selectedRow.getString(selectedCursorIndex);
-                    setSearchArea(address);
-                    mLocationSearchView.setQuery(address, false);
-                    mLocationSearchView.clearFocus();
-                    mSearchSearchView.clearFocus();
+                    // set the search area to the address string
+                    mLocatorTask.addDoneLoadingListener(new Runnable() {
+                      @Override
+                      public void run() {
+                        if (mLocatorTask.getLoadStatus() == LoadStatus.LOADED) {
+                          // Call geocodeAsync passing in an address
+                          final ListenableFuture<List<GeocodeResult>> geocodeFuture = mLocatorTask
+                              .geocodeAsync(address, mLocationGeocodeParameters);
+                          geocodeFuture.addDoneListener(new Runnable() {
+                            @Override
+                            public void run() {
+                              try {
+                                // Get the results of the async operation
+                                List<GeocodeResult> geocodeResults = geocodeFuture.get();
+                                if (geocodeResults.size() > 0) {
+                                  // use geocodeResult to focus search area
+                                  GeocodeResult geocodeResult = geocodeResults.get(0);
+                                  mSearchGeocodeParameters
+                                      .setPreferredSearchLocation(geocodeResult.getDisplayLocation());
+                                  mSearchGeocodeParameters.setSearchArea(geocodeResult.getDisplayLocation());
+                                  // set the address string to the SearchView, but don't submit as a query
+                                  mLocationSearchView.setQuery(address, false);
+                                  // call search query
+                                  mSearchSearchView.setQuery(mSearchAddress, true);
+                                  mLocationSearchView.clearFocus();
+                                  mSearchSearchView.clearFocus();
+                                } else {
+                                  Toast.makeText(getApplicationContext(),
+                                      getString(R.string.location_not_found) + address, Toast.LENGTH_LONG).show();
+                                }
+                              } catch (InterruptedException | ExecutionException e) {
+                                e.printStackTrace();
+                                Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error),
+                                    Toast.LENGTH_LONG).show();
+                              }
+                              // done processing and can remove this listener
+                              geocodeFuture.removeDoneListener(this);
+                            }
+                          });
+                        }
+                      }
+                    });
 
                     return true;
                   }
@@ -365,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
    * @param address
    */
   private void geoCodeTypedAddress(final String address) {
-    mSearchGeocodeParameters.setSearchArea(mCurrentExtentGeometry);
+    Log.d("geocodetypedaddress", address);
     // Execute async task to find the address
     mLocatorTask.addDoneLoadingListener(new Runnable() {
       @Override
@@ -410,7 +451,7 @@ public class MainActivity extends AppCompatActivity {
         if (mLocatorTask.getLoadStatus() == LoadStatus.LOADED) {
           // Call geocodeAsync passing in an address
           final ListenableFuture<List<GeocodeResult>> geocodeFuture = mLocatorTask
-              .geocodeAsync(address, mSearchGeocodeParameters);
+              .geocodeAsync(address, mLocationGeocodeParameters);
           geocodeFuture.addDoneListener(new Runnable() {
             @Override
             public void run() {
@@ -418,7 +459,10 @@ public class MainActivity extends AppCompatActivity {
                 // Get the results of the async operation
                 List<GeocodeResult> geocodeResults = geocodeFuture.get();
                 if (geocodeResults.size() > 0) {
-                  mSearchGeocodeParameters.setPreferredSearchLocation(geocodeResults.get(0).getDisplayLocation());
+                  // use geocodeResult to focus search area
+                  GeocodeResult geocodeResult = geocodeResults.get(0);
+                  mSearchGeocodeParameters.setPreferredSearchLocation(geocodeResult.getDisplayLocation());
+                  mSearchGeocodeParameters.setSearchArea(geocodeResult.getDisplayLocation());
                 } else {
                   Toast.makeText(getApplicationContext(), getString(R.string.location_not_found) + address,
                       Toast.LENGTH_LONG).show();
@@ -427,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error), Toast.LENGTH_LONG).show();
               }
-              // done processing and can remove this listener.
+              // done processing and can remove this listener
               geocodeFuture.removeDoneListener(this);
             }
           });
@@ -437,13 +481,13 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void displaySearchResult(List<GeocodeResult> geocodeResults) {
-    Log.d(TAG, "displaySearchResult");
+    // dismiss any callout and clear map
     if (mMapView.getCallout().isShowing()) {
       mMapView.getCallout().dismiss();
     }
-    //remove any previous graphics/search results
     mMapView.getGraphicsOverlays().clear();
     mGraphicsOverlay.getGraphics().clear();
+    // create a list of result points from the geocode results
     List<Point> resultPoints = new ArrayList<>();
     for (GeocodeResult result : geocodeResults) {
       // create graphic object for resulting location
@@ -453,14 +497,16 @@ public class MainActivity extends AppCompatActivity {
       mGraphicsOverlay.getGraphics().add(resultLocGraphic);
       resultPoints.add(resultPoint);
     }
-    // create a geometry containing all result points
+    // add result points to a Multipoint and get an envelope surrounding it
     Multipoint resultsMultipoint = new Multipoint(resultPoints);
     Envelope resultsEnvelope = resultsMultipoint.getExtent();
     // add a 25% buffer to the extent Envelope of result points
     Envelope resultsEnvelopeWithBuffer = new Envelope(resultsEnvelope.getCenter(), resultsEnvelope.getWidth() * 1.25,
         resultsEnvelope.getHeight() * 1.25);
-    // zoom map to result points Envelope over 3 seconds
+    // zoom map to result over 3 seconds
     mMapView.setViewpointAsync(new Viewpoint(resultsEnvelopeWithBuffer), 3);
+    // set flag for viewpoint move from display result to true
+    mSetViewpointForDisplayResult = true;
     // set the graphics overlay to the map
     mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
   }
