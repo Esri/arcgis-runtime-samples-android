@@ -46,25 +46,33 @@ class MainActivity : AppCompatActivity() {
         imageRasterLayer.addDoneLoadingListener {
             if(imageRasterLayer.loadStatus == LoadStatus.LOADED){
                 // zoom to extent of raster
-                mapView.setViewpointGeometryAsync(imageServiceRaster.serviceInfo.fullExtent)
+                val centerPnt = imageServiceRaster.serviceInfo.fullExtent.center
+                mapView.setViewpointCenterAsync(centerPnt, 55000000.0)
+                // update raster with simplified hillshade
                 applyRasterFunction(imageServiceRaster)
             }
         }
-
     }
 
     /**
+     * Apply a raster function on the given Raster
      *
+     * @param raster Input raster to apply function
      */
     fun applyRasterFunction(raster: Raster){
-        val hillshadeSimplified = resources.getString(R.string.hillshade_simplified)
-        val rasterFunction = RasterFunction.fromJson(hillshadeSimplified)
+        // create raster function from json string
+        val rasterFunction = RasterFunction.fromJson(resources.getString(R.string.hillshade_simplified))
+        // get parameter name value pairs used by hillshade
         val rasterFunctionArguments = rasterFunction.arguments
-        rasterFunctionArguments.setRaster(resources.getString(R.string.app_name), raster)
+        // get list of raster names associated with raster function
+        val rasterName = rasterFunctionArguments.rasterNames
+        // set raster to the raster name
+        rasterFunctionArguments.setRaster(rasterName[0], raster)
+        // create raster as raster layer
         val raster = Raster(rasterFunction)
-        val rasterLayer = RasterLayer(raster)
-        mapView.map.operationalLayers.clear()
-        mapView.map.operationalLayers.add(rasterLayer)
+        val hillshadeLayer = RasterLayer(raster)
+        // add hillshade raster
+        mapView.map.operationalLayers.add(hillshadeLayer)
     }
 
     override fun onPause() {
