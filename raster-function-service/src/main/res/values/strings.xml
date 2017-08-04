@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Raster Function Service</string>
+    <string name="image_service_raster_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/NLCDLandCover2001/ImageServer</string>
+
+    <!-- data paths -->
+    <string name="json_dir">/ArcGIS/samples/raster/</string>
+    <string name="hillshade_json">hillshade_simplified.json</string>
+
+    <string name="location_permission_denied">Raster Function Service could not open because WRITE permission was denied.</string>
+
+    <string name="hillshade_simplified">
+        {
+          \"raster_function_arguments\":
+          {
+            \"z_factor\":{\"double\":25.0,\"type\":\"Raster_function_variable\"},
+            \"slope_type\":{\"raster_slope_type\":\"none\",\"type\":\"Raster_function_variable\"},
+            \"azimuth\":{\"double\":315,\"type\":\"Raster_function_variable\"},
+            \"altitude\":{\"double\":45,\"type\":\"Raster_function_variable\"},
+            \"type\":\"Raster_function_arguments\",
+            \"raster\":{\"name\":\"raster\",\"is_raster\":true,\"type\":\"Raster_function_variable\"},
+            \"nbits\":{\"int\":8,\"type\":\"Raster_function_variable\"}
+          },
+          \"raster_function\":{\"type\":\"Hillshade_function\"},
+          \"type\":\"Raster_function_template\"
+        }
+    </string>
+</resources>
