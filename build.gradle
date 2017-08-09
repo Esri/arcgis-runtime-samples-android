@@ -16,7 +16,8 @@ allprojects {
     final def var = repositories {
         jcenter()
         maven { url 'https://maven.google.com' }
-        maven{ url 'https://esri.bintray.com/arcgis' }
+        maven { url 'https://esri.bintray.com/arcgis' }
+        maven { url 'http://android:8080/artifactory/arcgis' }
     }
     var
 }
@@ -35,7 +36,7 @@ subprojects{
                 implementation 'com.android.support:appcompat-v7:25.4.0'
                 implementation 'com.android.support:design:25.4.0'
                 implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-                implementation 'com.esri.arcgisruntime:arcgis-android:100.1.0'
+                implementation 'com.esri.arcgisruntime:arcgis-android:100.2.0-1787'
             }
         }
     }
