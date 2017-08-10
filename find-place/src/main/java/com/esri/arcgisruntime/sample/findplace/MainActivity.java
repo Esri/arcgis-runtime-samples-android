@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
   private String TAG;
   private String[] mColumnNames;
   private boolean mSetViewpointForDisplayResult;
+  private boolean mLocationFound;
   private String mSearchAddress;
 
   private SearchView mSearchSearchView;
@@ -91,12 +92,17 @@ public class MainActivity extends AppCompatActivity {
 
     TAG = "Find a place";
 
+    // flag for whether a valid location has been found
+    mLocationFound = false;
+
     // setup the two SearchViews to show text hint
     mSearchSearchView = (SearchView) findViewById(R.id.search_searchView);
     mSearchSearchView.setIconified(false);
+    mSearchSearchView.setFocusable(false);
     mSearchSearchView.setQueryHint(getResources().getString(R.string.search_hint));
     mLocationSearchView = (SearchView) findViewById(R.id.location_searchView);
     mLocationSearchView.setIconified(false);
+    mLocationSearchView.setFocusable(false);
     mLocationSearchView.setQueryHint(getResources().getString(R.string.location_search_hint));
     // setup the redo search button
     mRedoSearchButton = (Button) findViewById(R.id.redo_search_button);
@@ -122,8 +128,6 @@ public class MainActivity extends AppCompatActivity {
     // set pin to half of native size
     mPinSourceSymbol.setWidth(19f);
     mPinSourceSymbol.setHeight(72f);
-    // set callout leader to point to top of pin
-    mPinSourceSymbol.setLeaderOffsetY(mPinSourceSymbol.getHeight() / 2);
     mColumnNames = new String[] { BaseColumns._ID, COLUMN_NAME_ADDRESS };
     // on redo button click call redoSearch
     mRedoSearchButton.setOnClickListener(new View.OnClickListener() {
@@ -172,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Identifies the Graphic at the clicked point. Gets attribute of that Graphic and assigns it to a Callout. Callout is
+   * Identifies the Graphic at the clicked point. Gets attribute of that Graphic and assigns it to a Callout, which is
    * then displayed.
    *
    * @param motionEvent from onSingleTapConfirmed
@@ -258,17 +262,17 @@ public class MainActivity extends AppCompatActivity {
                 List<SuggestResult> suggestResults = suggestionsFuture.get();
                 MatrixCursor suggestionsCursor = new MatrixCursor(mColumnNames);
                 int key = 0;
-                // add each suggestion result to a new row
+                // add each poi_suggestion result to a new row
                 for (SuggestResult result : suggestResults) {
                   suggestionsCursor.addRow(new Object[] { key++, result.getLabel() });
                 }
                 // define SimpleCursorAdapter
                 String[] cols = new String[] { COLUMN_NAME_ADDRESS };
-                int[] to = new int[] { R.id.suggestion_item_address };
+                int[] to = new int[] { R.id.suggestion_address };
                 final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
                     R.layout.suggestion, suggestionsCursor, cols, to, 0);
                 mSearchSearchView.setSuggestionsAdapter(suggestionAdapter);
-                // handle a suggestion being chosen
+                // handle a poi_suggestion being chosen
                 mSearchSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
                   @Override public boolean onSuggestionSelect(int position) {
                     return false;
@@ -281,8 +285,13 @@ public class MainActivity extends AppCompatActivity {
                     int selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS);
                     // get the string from the row at index
                     mSearchAddress = selectedRow.getString(selectedCursorIndex);
-                    // set the address string to the SearchView and submit as a query
-                    mSearchSearchView.setQuery(mSearchAddress, true);
+                    // if a valid location has been found, set the address string to the SearchView and submit as a
+                    // query, otherwise, set the address string to the SearchView, but don't submit as a query
+                    if (mLocationFound) {
+                      mSearchSearchView.setQuery(mSearchAddress, true);
+                    } else {
+                      mSearchSearchView.setQuery(mSearchAddress, false);
+                    }
                     return true;
                   }
                 });
@@ -321,13 +330,13 @@ public class MainActivity extends AppCompatActivity {
                 List<SuggestResult> suggestResults = suggestionsFuture.get();
                 MatrixCursor suggestionsCursor = new MatrixCursor(mColumnNames);
                 int key = 0;
-                // add each suggestion result to a new row
+                // add each poi_suggestion result to a new row
                 for (SuggestResult result : suggestResults) {
                   suggestionsCursor.addRow(new Object[] { key++, result.getLabel() });
                 }
                 // define SimpleCursorAdapter
                 String[] cols = new String[] { COLUMN_NAME_ADDRESS };
-                int[] to = new int[] { R.id.suggestion_item_address };
+                int[] to = new int[] { R.id.suggestion_address };
                 final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
                     R.layout.suggestion, suggestionsCursor, cols, to, 0);
                 mLocationSearchView.setSuggestionsAdapter(suggestionAdapter);
@@ -343,7 +352,6 @@ public class MainActivity extends AppCompatActivity {
                     int selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS);
                     // get the string from the row at index
                     final String address = selectedRow.getString(selectedCursorIndex);
-                    // set the search area to the address string
                     mLocatorTask.addDoneLoadingListener(new Runnable() {
                       @Override
                       public void run() {
@@ -358,6 +366,8 @@ public class MainActivity extends AppCompatActivity {
                                 // Get the results of the async operation
                                 List<GeocodeResult> geocodeResults = geocodeFuture.get();
                                 if (geocodeResults.size() > 0) {
+                                  // valid location found
+                                  mLocationFound = true;
                                   // use geocodeResult to focus search area
                                   GeocodeResult geocodeResult = geocodeResults.get(0);
                                   mSearchGeocodeParameters
@@ -370,6 +380,8 @@ public class MainActivity extends AppCompatActivity {
                                   mLocationSearchView.clearFocus();
                                   mSearchSearchView.clearFocus();
                                 } else {
+                                  // flag for whether a location has been found
+                                  mLocationFound = false;
                                   Toast.makeText(getApplicationContext(),
                                       getString(R.string.location_not_found) + address, Toast.LENGTH_LONG).show();
                                 }
