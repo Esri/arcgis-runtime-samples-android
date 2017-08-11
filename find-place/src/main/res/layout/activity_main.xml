@@ -47,8 +47,10 @@
             android:text="Redo search in this area"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/redo_search_button" android:visibility="invisible" android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" android:layout_marginBottom="56dp" android:elevation="0dp"/>
+            android:id="@+id/redo_search_button"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"/>
 
 </RelativeLayout>
 
