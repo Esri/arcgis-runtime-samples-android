@@ -68,24 +68,26 @@ import com.esri.arcgisruntime.tasks.geocode.SuggestResult;
 
 public class MainActivity extends AppCompatActivity {
 
-  private final String COLUMN_NAME_ADDRESS = "address";
-  String[] reqPermissions = new String[] { Manifest.permission.ACCESS_FINE_LOCATION,
-      Manifest.permission.ACCESS_COARSE_LOCATION };
+  String[] reqPermissions =
+      new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION };
   private int requestCode = 2;
   private String TAG;
-  private String[] mColumnNames;
-  private boolean mLocationSelected;
-  private String mSearchAddress;
 
-  private SearchView mSearchSearchView;
+  private SearchView mPoiSearchView;
   private SearchView mLocationSearchView;
+
+  private final String COLUMN_NAME_ADDRESS = "address";
+  private String[] mColumnNames = { BaseColumns._ID, COLUMN_NAME_ADDRESS };
+
+  private String mPoiAddress;
+  private Point mPreferredSearchLocation;
 
   private MapView mMapView;
   private LocationDisplay mLocationDisplay;
   private LocatorTask mLocatorTask;
   private GraphicsOverlay mGraphicsOverlay;
-  private SuggestParameters mSearchSuggestParameters;
-  private GeocodeParameters mSearchGeocodeParameters;
+  private SuggestParameters mPoiSuggestParameters;
+  private GeocodeParameters mPoiGeocodeParameters;
   private SuggestParameters mLocationSuggestParameters;
   private GeocodeParameters mLocationGeocodeParameters;
   private PictureMarkerSymbol mPinSourceSymbol;
@@ -99,45 +101,21 @@ public class MainActivity extends AppCompatActivity {
 
     TAG = "Find a place";
 
-    // flag for whether a valid location has been found
-    mLocationSelected = false;
+    // if permissions are not already granted, request permission from the user
+    if (!(ContextCompat.checkSelfPermission(MainActivity.this, reqPermissions[0]) == PackageManager.PERMISSION_GRANTED
+        && ContextCompat.checkSelfPermission(MainActivity.this, reqPermissions[1]) == PackageManager.PERMISSION_GRANTED)) {
+      ActivityCompat.requestPermissions(MainActivity.this, reqPermissions, requestCode);
+    }
 
-    // setup the two SearchViews to show text hint
-    mSearchSearchView = (SearchView) findViewById(R.id.search_searchView);
-    mSearchSearchView.setIconified(false);
-    mSearchSearchView.setFocusable(false);
-    mSearchSearchView.setQueryHint(getResources().getString(R.string.search_hint));
+    // setup the two SearchViews and show text hint
+    mPoiSearchView = (SearchView) findViewById(R.id.search_searchView);
+    mPoiSearchView.setIconified(false);
+    mPoiSearchView.setFocusable(false);
+    mPoiSearchView.setQueryHint(getResources().getString(R.string.search_hint));
     mLocationSearchView = (SearchView) findViewById(R.id.location_searchView);
     mLocationSearchView.setIconified(false);
     mLocationSearchView.setFocusable(false);
     mLocationSearchView.setQueryHint(getResources().getString(R.string.location_search_hint));
-
-    // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
-    // disable map wraparound
-    mMapView.setWrapAroundMode(WrapAroundMode.DISABLED);
-    mLocationDisplay = mMapView.getLocationDisplay();
-    mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER);
-    mLocationDisplay.startAsync();
-    // create a map with the BasemapType topographic
-    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
-    // set the map to be displayed in this view
-    mMapView.setMap(map);
-    // create a locator task from an online service
-    mLocatorTask = new LocatorTask("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
-    // define the graphics overlay and drawable responsible for showing relevant points
-    mGraphicsOverlay = new GraphicsOverlay();
-    BitmapDrawable pinDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin);
-    try {
-      mPinSourceSymbol = PictureMarkerSymbol.createAsync(pinDrawable).get();
-    } catch (InterruptedException | ExecutionException e) {
-      e.printStackTrace();
-      Toast.makeText(getApplicationContext(), "Failed to load pin drawable!", Toast.LENGTH_LONG).show();
-    }
-    // set pin to half of native size
-    mPinSourceSymbol.setWidth(19f);
-    mPinSourceSymbol.setHeight(72f);
-    mColumnNames = new String[] { BaseColumns._ID, COLUMN_NAME_ADDRESS };
     // on redo button click call redoSearchInThisArea
     Button redoSearchButton = (Button) findViewById(R.id.redo_search_button);
     redoSearchButton.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +123,31 @@ public class MainActivity extends AppCompatActivity {
         redoSearchInThisArea();
       }
     });
-    // add listener to update extent when viewpoint changes
+
+    // define pin drawable
+    BitmapDrawable pinDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin);
+    try {
+      mPinSourceSymbol = PictureMarkerSymbol.createAsync(pinDrawable).get();
+    } catch (InterruptedException | ExecutionException e) {
+      e.printStackTrace();
+      Toast.makeText(getApplicationContext(), "Failed to load pin drawable.", Toast.LENGTH_LONG).show();
+    }
+    // set pin to half of native size
+    mPinSourceSymbol.setWidth(19f);
+    mPinSourceSymbol.setHeight(72f);
+
+    // create a LocatorTask from an online service
+    mLocatorTask = new LocatorTask("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
+
+    // inflate MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
+    // disable map wraparound
+    mMapView.setWrapAroundMode(WrapAroundMode.DISABLED);
+    // create a map with the BasemapType topographic
+    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    // set the map to be displayed in this view
+    mMapView.setMap(map);
+    // add listener to update extent when viewpoint has changed
     mMapView.addViewpointChangedListener(new ViewpointChangedListener() {
       @Override public void viewpointChanged(ViewpointChangedEvent viewpointChangedEvent) {
         if (!mMapView.isNavigating()) {
@@ -154,38 +156,49 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     });
+    // add listener to handle callouts
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
-
       @Override
       public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
         showCallout(motionEvent);
         return true;
       }
     });
-    setupLocationDisplay();
-    setupSearch();
+    // setup and start location display
+    mLocationDisplay = mMapView.getLocationDisplay();
+    mLocationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER);
+    mLocationDisplay.startAsync();
+    // initially use device location to focus POI search
+    mLocationDisplay.addLocationChangedListener(new LocationDisplay.LocationChangedListener() {
+      @Override public void onLocationChanged(LocationDisplay.LocationChangedEvent locationChangedEvent) {
+        mPoiGeocodeParameters.setPreferredSearchLocation(mLocationDisplay.getMapLocation());
+      }
+    });
+    // define the graphics overlay
+    mGraphicsOverlay = new GraphicsOverlay();
+
+    setupPoi();
     setupLocation();
   }
 
   /**
-   * Sets up the top SearchView, which filters for POI. Uses MatrixCursor to show suggestions to the user as the user
-   * inputs text.
+   * Sets up the POI SearchView. Uses MatrixCursor to show suggestions to the user as the user inputs text.
    */
-  private void setupSearch() {
+  private void setupPoi() {
 
-    mSearchSuggestParameters = new SuggestParameters();
+    mPoiSuggestParameters = new SuggestParameters();
     // filter categories for POI
-    mSearchSuggestParameters.getCategories().add("POI");
-    mSearchGeocodeParameters = new GeocodeParameters();
+    mPoiSuggestParameters.getCategories().add("POI");
+    mPoiGeocodeParameters = new GeocodeParameters();
     // get all attributes
-    mSearchGeocodeParameters.getResultAttributeNames().add("*");
-    mSearchSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+    mPoiGeocodeParameters.getResultAttributeNames().add("*");
+    mPoiSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
       @Override
       public boolean onQueryTextSubmit(String address) {
         geoCodeTypedAddress(address);
         // clear focus from search views
-        mSearchSearchView.clearFocus();
+        mPoiSearchView.clearFocus();
         mLocationSearchView.clearFocus();
         return true;
       }
@@ -194,9 +207,8 @@ public class MainActivity extends AppCompatActivity {
       public boolean onQueryTextChange(String newText) {
         // as long as newText isn't empty, get suggestions from the locatorTask
         if (!newText.equals("")) {
-          mSearchSuggestParameters.setSearchArea(mCurrentExtentGeometry);
-          final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
-              .suggestAsync(newText, mSearchSuggestParameters);
+          mPoiSuggestParameters.setSearchArea(mCurrentExtentGeometry);
+          final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask.suggestAsync(newText, mPoiSuggestParameters);
           suggestionsFuture.addDoneListener(new Runnable() {
 
             @Override public void run() {
@@ -214,9 +226,9 @@ public class MainActivity extends AppCompatActivity {
                 int[] to = new int[] { R.id.suggestion_address };
                 final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
                     R.layout.suggestion, suggestionsCursor, cols, to, 0);
-                mSearchSearchView.setSuggestionsAdapter(suggestionAdapter);
+                mPoiSearchView.setSuggestionsAdapter(suggestionAdapter);
                 // handle a poi_suggestion being chosen
-                mSearchSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                mPoiSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
                   @Override public boolean onSuggestionSelect(int position) {
                     return false;
                   }
@@ -227,15 +239,8 @@ public class MainActivity extends AppCompatActivity {
                     // get the row's index
                     int selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS);
                     // get the string from the row at index
-                    mSearchAddress = selectedRow.getString(selectedCursorIndex);
-                    // if no location selected, use device location
-                    if (mLocationSelected) {
-                      mSearchSearchView.setQuery(mSearchAddress, true);
-                    } else {
-                      mSearchSearchView.setQuery(mSearchAddress, true);
-                      mSearchGeocodeParameters.setPreferredSearchLocation(mLocationDisplay.getLocation().getPosition());
-                      //mLocationSearchView.setQuery("Current location", false);
-                    }
+                    mPoiAddress = selectedRow.getString(selectedCursorIndex);
+                    mPoiSearchView.setQuery(mPoiAddress, true);
                     return true;
                   }
                 });
@@ -260,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
       @Override public boolean onQueryTextSubmit(String address) {
         geoCodeTypedAddress(address);
         // clear focus from search views
-        mSearchSearchView.clearFocus();
+        mPoiSearchView.clearFocus();
         mLocationSearchView.clearFocus();
         return true;
       }
@@ -268,17 +273,16 @@ public class MainActivity extends AppCompatActivity {
       @Override public boolean onQueryTextChange(String newText) {
         // as long as newText isn't empty, get suggestions from the locatorTask
         if (!newText.equals("")) {
-          final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
-              .suggestAsync(newText, mLocationSuggestParameters);
+          final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask.suggestAsync(newText, mLocationSuggestParameters);
           suggestionsFuture.addDoneListener(new Runnable() {
 
             @Override public void run() {
               try {
-                // get the results of the async operation
+                // get the list of suggestions
                 List<SuggestResult> suggestResults = suggestionsFuture.get();
                 MatrixCursor suggestionsCursor = new MatrixCursor(mColumnNames);
                 int key = 0;
-                // add each poi_suggestion result to a new row
+                // add each SuggestResult to a new row
                 for (SuggestResult result : suggestResults) {
                   suggestionsCursor.addRow(new Object[] { key++, result.getLabel() });
                 }
@@ -304,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
                       @Override
                       public void run() {
                         if (mLocatorTask.getLoadStatus() == LoadStatus.LOADED) {
-                          // Call geocodeAsync passing in an address
+                          // geocode the selected address to get access to the resulting display location
                           final ListenableFuture<List<GeocodeResult>> geocodeFuture = mLocatorTask
                               .geocodeAsync(address, mLocationGeocodeParameters);
                           geocodeFuture.addDoneListener(new Runnable() {
@@ -314,22 +318,18 @@ public class MainActivity extends AppCompatActivity {
                                 // Get the results of the async operation
                                 List<GeocodeResult> geocodeResults = geocodeFuture.get();
                                 if (geocodeResults.size() > 0) {
-                                  // valid location found
-                                  mLocationSelected = true;
                                   // use geocodeResult to focus search area
                                   GeocodeResult geocodeResult = geocodeResults.get(0);
-                                  mSearchGeocodeParameters
+                                  mPoiGeocodeParameters
                                       .setPreferredSearchLocation(geocodeResult.getDisplayLocation());
-                                  mSearchGeocodeParameters.setSearchArea(geocodeResult.getDisplayLocation());
+                                  mPoiGeocodeParameters.setSearchArea(geocodeResult.getDisplayLocation());
                                   // set the address string to the SearchView, but don't submit as a query
                                   mLocationSearchView.setQuery(address, false);
                                   // call search query
-                                  mSearchSearchView.setQuery(mSearchAddress, true);
+                                  mPoiSearchView.setQuery(mPoiAddress, true);
                                   mLocationSearchView.clearFocus();
-                                  mSearchSearchView.clearFocus();
+                                  mPoiSearchView.clearFocus();
                                 } else {
-                                  // flag for whether a location has been found
-                                  mLocationSelected = false;
                                   Toast.makeText(getApplicationContext(),
                                       getString(R.string.location_not_found) + address, Toast.LENGTH_LONG).show();
                                 }
@@ -354,6 +354,9 @@ public class MainActivity extends AppCompatActivity {
               }
             }
           });
+        } else {
+          // if no location selected, use device location
+          mPoiGeocodeParameters.setPreferredSearchLocation(mLocationDisplay.getMapLocation());
         }
         return true;
       }
@@ -361,16 +364,16 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Does a search for existing POI using the MapView's current extent to inform the search.
+   * Performs a search for the POI listed in the SearchView, using the MapView's current extent to inform the search.
    */
 
   private void redoSearchInThisArea() {
     // set center of current extent to preferred search location
-    mSearchGeocodeParameters.setPreferredSearchLocation(mCurrentExtentGeometry.getExtent().getCenter());
-    mSearchGeocodeParameters.setSearchArea(mCurrentExtentGeometry);
+    mPoiGeocodeParameters.setPreferredSearchLocation(mCurrentExtentGeometry.getExtent().getCenter());
+    mPoiGeocodeParameters.setSearchArea(mCurrentExtentGeometry);
     mLocationSearchView.setQuery(getString(R.string.searching_by_area), false);
     // use whatever text is in the search box to call geoCodeTypedAddress
-    geoCodeTypedAddress(mSearchSearchView.getQuery().toString());
+    geoCodeTypedAddress(mPoiSearchView.getQuery().toString());
   }
 
   /**
@@ -426,7 +429,6 @@ public class MainActivity extends AppCompatActivity {
    * @param address
    */
   private void geoCodeTypedAddress(final String address) {
-    Log.d("geocodetypedaddress", address);
     // Execute async task to find the address
     mLocatorTask.addDoneLoadingListener(new Runnable() {
       @Override
@@ -434,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
         if (mLocatorTask.getLoadStatus() == LoadStatus.LOADED) {
           // Call geocodeAsync passing in an address
           final ListenableFuture<List<GeocodeResult>> geocodeResultListenableFuture = mLocatorTask
-              .geocodeAsync(address, mSearchGeocodeParameters);
+              .geocodeAsync(address, mPoiGeocodeParameters);
           geocodeResultListenableFuture.addDoneListener(new Runnable() {
             @Override
             public void run() {
@@ -463,14 +465,20 @@ public class MainActivity extends AppCompatActivity {
     mLocatorTask.loadAsync();
   }
 
+  /**
+   * Turns a list of GeocodeResults into Points and adds them to a GraphicOverlay which is then drawn on the map. The
+   * points are added to a multipoint used to calculate a viewpoint
+   *
+   * @param geocodeResults list of geocode results
+   */
   private void displaySearchResult(List<GeocodeResult> geocodeResults) {
-    // dismiss any callout and clear map
+    // dismiss any callout and clear map of any existing graphics
     if (mMapView.getCallout().isShowing()) {
       mMapView.getCallout().dismiss();
     }
     mMapView.getGraphicsOverlays().clear();
     mGraphicsOverlay.getGraphics().clear();
-    // create a list of result points from the geocode results
+    // create a list of points from the geocode results
     List<Point> resultPoints = new ArrayList<>();
     for (GeocodeResult result : geocodeResults) {
       // create graphic object for resulting location
@@ -492,30 +500,13 @@ public class MainActivity extends AppCompatActivity {
     mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
   }
 
-  private void setupLocationDisplay() {
-    // check and request permissions
-    boolean permissionCheck1 = ContextCompat.checkSelfPermission(MainActivity.this, reqPermissions[0]) ==
-        PackageManager.PERMISSION_GRANTED;
-    boolean permissionCheck2 = ContextCompat.checkSelfPermission(MainActivity.this, reqPermissions[1]) ==
-        PackageManager.PERMISSION_GRANTED;
-
-    if (!(permissionCheck1 && permissionCheck2)) {
-      // If permissions are not already granted, request permission from the user.
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermissions, requestCode);
-    }
-  }
-
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    // If request is cancelled, the result arrays are empty.
+    // if request is cancelled, the result arrays are empty
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      // Location permission was granted. This would have been triggered in response to failing to start the
-      // LocationDisplay, so try starting this again.
       mLocationDisplay.startAsync();
     } else {
-      // If permission was denied, show toast to inform user what was chosen. If LocationDisplay is started again,
-      // request permission UX will be shown again, option should be shown to allow never showing the UX again.
-      // Alternative would be to disable functionality so request is not shown again.
+      // if permission was denied, show toast to inform user what was chosen
       Toast.makeText(MainActivity.this, getResources().getString(R.string.location_permission_denied), Toast.LENGTH_SHORT).show();
     }
   }
