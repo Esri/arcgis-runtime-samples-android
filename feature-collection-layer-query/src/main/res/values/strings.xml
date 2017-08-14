@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Feature Collection Layer (Query)</string>
+    <string name="wildfire_feature_server">"http://sampleserver6.arcgisonline.com/arcgis/rest/services/Wildfire/FeatureServer/0"</string>
+</resources>
