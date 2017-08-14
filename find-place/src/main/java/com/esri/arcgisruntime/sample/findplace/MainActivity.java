@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
   private String COLUMN_NAME_ADDRESS = "address";
   private String[] mColumnNames = { BaseColumns._ID, COLUMN_NAME_ADDRESS };
 
-  private boolean mPoiSearchViewEmpty;
   private boolean mLocationSearchViewEmpty;
 
   private String mPoiAddress;
@@ -138,8 +137,7 @@ public class MainActivity extends AppCompatActivity {
     mPinSourceSymbol.setWidth(19f);
     mPinSourceSymbol.setHeight(72f);
 
-    // instantiate flags
-    mPoiSearchViewEmpty = true;
+    // instantiate flag location search view flag
     mLocationSearchViewEmpty = true;
 
     // create a LocatorTask from an online service
@@ -224,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
       public boolean onQueryTextChange(String newText) {
         // as long as newText isn't empty, get suggestions from the locatorTask
         if (!newText.equals("")) {
-          mPoiSearchViewEmpty = false;
           mPoiSuggestParameters.setSearchArea(mCurrentExtentGeometry);
           final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
               .suggestAsync(newText, mPoiSuggestParameters);
@@ -268,15 +265,15 @@ public class MainActivity extends AppCompatActivity {
               }
             }
           });
-          // if search view is empty, set flag
-        } else {
-          mPoiSearchViewEmpty = true;
         }
         return true;
       }
     });
   }
 
+  /**
+   * Sets up the Location SearchView. Uses MatrixCursor to show suggestions to the user as the user inputs text.
+   */
   private void setupLocation() {
 
     mLocationSuggestParameters = new SuggestParameters();
@@ -352,6 +349,7 @@ public class MainActivity extends AppCompatActivity {
                                   mLocationSearchView.setQuery(address, false);
                                   // call POI search query
                                   mPoiSearchView.setQuery(mPoiAddress, true);
+                                  // clear focus from search views
                                   mLocationSearchView.clearFocus();
                                   mPoiSearchView.clearFocus();
                                 } else {
@@ -387,7 +385,6 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Performs a search for the POI listed in the SearchView, using the MapView's current extent to inform the search.
    */
-
   private void redoSearchInThisArea() {
     // set center of current extent to preferred search location
     mPreferredSearchLocation = mCurrentExtentGeometry.getExtent().getCenter();
@@ -398,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Identifies the Graphic at the clicked point. Gets attribute of that Graphic and assigns it to a Callout, which is
+   * Identifies the Graphic at the tapped point. Gets attribute of that Graphic and assigns it to a Callout, which is
    * then displayed.
    *
    * @param motionEvent from onSingleTapConfirmed
@@ -445,9 +442,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Geocode an address typed in by user
+   * Geocode an address passed in by the user.
    *
-   * @param address
+   * @param address read in from searchViews
    */
   private void geoCodeTypedAddress(final String address) {
     // mPreferredSearchLocation set from location SearchView or, if empty, device location
@@ -492,13 +489,14 @@ public class MainActivity extends AppCompatActivity {
    * Turns a list of GeocodeResults into Points and adds them to a GraphicOverlay which is then drawn on the map. The
    * points are added to a multipoint used to calculate a viewpoint
    *
-   * @param geocodeResults list of geocode results
+   * @param geocodeResults as a list
    */
   private void displaySearchResult(List<GeocodeResult> geocodeResults) {
-    // dismiss any callout and clear map of any existing graphics
+    // dismiss any callout
     if (mMapView.getCallout().isShowing()) {
       mMapView.getCallout().dismiss();
     }
+    // clear map of existing graphics
     mMapView.getGraphicsOverlays().clear();
     mGraphicsOverlay.getGraphics().clear();
     // create a list of points from the geocode results
