@@ -68,14 +68,17 @@ import com.esri.arcgisruntime.tasks.geocode.SuggestResult;
 
 public class MainActivity extends AppCompatActivity {
 
-  private final String COLUMN_NAME_ADDRESS = "address";
   String[] reqPermissions =
       new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION };
   private int requestCode = 2;
   private String TAG;
   private SearchView mPoiSearchView;
   private SearchView mLocationSearchView;
+  private String COLUMN_NAME_ADDRESS = "address";
   private String[] mColumnNames = { BaseColumns._ID, COLUMN_NAME_ADDRESS };
+
+  private boolean mPoiSearchViewEmpty;
+  private boolean mLocationSearchViewEmpty;
 
   private String mPoiAddress;
   private Point mPreferredSearchLocation;
@@ -134,6 +137,10 @@ public class MainActivity extends AppCompatActivity {
     // set pin to half of native size
     mPinSourceSymbol.setWidth(19f);
     mPinSourceSymbol.setHeight(72f);
+
+    // instantiate flags
+    mPoiSearchViewEmpty = true;
+    mLocationSearchViewEmpty = true;
 
     // create a LocatorTask from an online service
     mLocatorTask = new LocatorTask("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
@@ -198,11 +205,14 @@ public class MainActivity extends AppCompatActivity {
 
       @Override
       public boolean onQueryTextSubmit(String address) {
-        // if no text is present in the locationSearchView, use the device's current location
-        Log.d("onPOIquery", mLocationSearchView.getQuery().toString());
-        if (mLocationSearchView.getQuery().equals("")) {
+        // if locationSearchView text box is empty, use the device location
+        if (mLocationSearchViewEmpty) {
           mPreferredSearchLocation = mLocationDisplay.getMapLocation();
+          mLocationSearchView.setQuery("Using current location...", false);
         }
+        // keep track of typed address
+        mPoiAddress = address;
+        // geocode typed address
         geoCodeTypedAddress(address);
         // clear focus from search views
         mPoiSearchView.clearFocus();
@@ -214,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
       public boolean onQueryTextChange(String newText) {
         // as long as newText isn't empty, get suggestions from the locatorTask
         if (!newText.equals("")) {
+          mPoiSearchViewEmpty = false;
           mPoiSuggestParameters.setSearchArea(mCurrentExtentGeometry);
           final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
               .suggestAsync(newText, mPoiSuggestParameters);
@@ -257,6 +268,9 @@ public class MainActivity extends AppCompatActivity {
               }
             }
           });
+          // if search view is empty, set flag
+        } else {
+          mPoiSearchViewEmpty = true;
         }
         return true;
       }
@@ -281,6 +295,7 @@ public class MainActivity extends AppCompatActivity {
       @Override public boolean onQueryTextChange(String newText) {
         // as long as newText isn't empty, get suggestions from the locatorTask
         if (!newText.equals("")) {
+          mLocationSearchViewEmpty = false;
           final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
               .suggestAsync(newText, mLocationSuggestParameters);
           suggestionsFuture.addDoneListener(new Runnable() {
@@ -346,14 +361,11 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error),
                                     Toast.LENGTH_LONG).show();
                               }
-                              // done processing and can remove this listener
-                              //geocodeFuture.removeDoneListener(this);
                             }
                           });
                         }
                       }
                     });
-
                     return true;
                   }
                 });
@@ -362,6 +374,9 @@ public class MainActivity extends AppCompatActivity {
               }
             }
           });
+          // if search view is empty, set flag
+        } else {
+          mLocationSearchViewEmpty = true;
         }
         return true;
       }
