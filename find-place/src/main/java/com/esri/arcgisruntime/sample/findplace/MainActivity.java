@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     try {
       mPinSourceSymbol = PictureMarkerSymbol.createAsync(pinDrawable).get();
     } catch (InterruptedException | ExecutionException e) {
-      e.printStackTrace();
+      Log.e(TAG, "Picture Marker Symbol error: " + e.getMessage());
       Toast.makeText(getApplicationContext(), "Failed to load pin drawable.", Toast.LENGTH_LONG).show();
     }
     // set pin to half of native size
@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
                   }
                 });
               } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "Geocode suggestion error: " + e.getMessage());
               }
             }
           });
@@ -280,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
   private void setupLocation() {
 
     mLocationSuggestParameters = new SuggestParameters();
+    mLocationSuggestParameters.getCategories().add("Populated Place");
     mLocationGeocodeParameters = new GeocodeParameters();
     // get all attributes
     mLocationGeocodeParameters.getResultAttributeNames().add("*");
@@ -344,11 +345,12 @@ public class MainActivity extends AppCompatActivity {
                                 if (geocodeResults.size() > 0) {
                                   // use geocodeResult to focus search area
                                   GeocodeResult geocodeResult = geocodeResults.get(0);
+                                  // update preferred search area to the geocode result
                                   mPreferredSearchLocation = geocodeResult.getDisplayLocation();
-                                  mPoiGeocodeParameters.setSearchArea(geocodeResult.getDisplayLocation());
+                                  mPoiGeocodeParameters.setSearchArea(mPreferredSearchLocation);
                                   // set the address string to the SearchView, but don't submit as a query
                                   mLocationSearchView.setQuery(address, false);
-                                  // call search query
+                                  // call POI search query
                                   mPoiSearchView.setQuery(mPoiAddress, true);
                                   mLocationSearchView.clearFocus();
                                   mPoiSearchView.clearFocus();
@@ -357,9 +359,8 @@ public class MainActivity extends AppCompatActivity {
                                       getString(R.string.location_not_found) + address, Toast.LENGTH_LONG).show();
                                 }
                               } catch (InterruptedException | ExecutionException e) {
-                                e.printStackTrace();
-                                Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error),
-                                    Toast.LENGTH_LONG).show();
+                                Log.e(TAG, "Geocode error: " + e.getMessage());
+                                Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error), Toast.LENGTH_LONG).show();
                               }
                             }
                           });
@@ -370,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
                   }
                 });
               } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "Geocode suggestion error: " + e.getMessage());
               }
             }
           });
@@ -437,7 +438,7 @@ public class MainActivity extends AppCompatActivity {
             mCallout.dismiss();
           }
         } catch (Exception e) {
-          e.printStackTrace();
+          Log.e(TAG, "Identify error: " + e.getMessage());
         }
       }
     });
@@ -473,8 +474,7 @@ public class MainActivity extends AppCompatActivity {
                       Toast.LENGTH_LONG).show();
                 }
               } catch (InterruptedException | ExecutionException e) {
-                // Deal with exception...
-                e.printStackTrace();
+                Log.e(TAG, "Geocode error: " + e.getMessage());
                 Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error), Toast.LENGTH_LONG).show();
               }
             }

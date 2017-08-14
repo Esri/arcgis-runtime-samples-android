@@ -1,22 +1,21 @@
-# Display a Map
-The **Display Map** app is the most basic Map app for the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/en/android/).
-It shows how to inflate a `MapView` in the layout XML of the activity, create a `ArcGISMap` with a static `Basemap.Type` and bind the `ArcGISMap` to the `MapView`.  By default, this map supports basic zooming and panning operations.
+# Find place
 
-![Display a Map App](display-map.png)
+This sample demonstrates how to use geocode functionality to search for points of interest, around a location or within an extent.
 
-## Features
-* ArcGISMap
-* MapView
-* Basemap
 
-## Developer Pattern
-Create a `ArcGISMap` with a `Basemap.Type` and an initial viewpoint. 
+## How to use the sample
 
-```java
-// inflate MapView from layout
-mMapView = (MapView) findViewById(R.id.mapView);
-// create a map with the BasemapType topographic
-ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16);
-// set the map to be displayed in this view
-mMapView.setMap(mMap);
-```
+Specify the point of interest in the `Point of Interest` SearchView (e.g. Starbucks). For the proximity field you can choose between your current location, by leaving the SearchView blank, or any other location by entering text. Suggestions will appear, while the user is typing. When a suggestion is selected or the submit query button is tapped, the resulting locations are shown on the map. Tapping on a pin will show get details about that location in a callout. A button at the bottom called 'Redo Search in this Area' will let you search by the current extent's midpoint.
+
+
+![](image1.png)
+![](image2.png)
+
+
+## How it works
+
+The sample uses the `.suggestAsync(searchText, suggestParameters)` method on the `LocatorTask` to get suggestions while you are typing. The suggestions for each textfield are restricted using `.getCategories.add(" ")` on `SuggestParameters`.
+
+If a proximity location is specified, the sample uses the `GeocodeResult.getDisplayLocation()` method to get the coordinates for that location. It then uses that location in the `GeocodeParameters.setSearchArea()` and finds the POIs using `LocatorTask.suggestAsync(poiTypedText, geocodeParameters)`, with the point of interest you entered as the text. 
+
+When you tap on the `Redo Search in This Area` button, the same method is called, but this time the `GeocodeParameters.setSearchArea()` is set to `MapView.getCurrentViewpoint(...)`. 
