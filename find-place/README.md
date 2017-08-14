@@ -5,7 +5,7 @@ This sample demonstrates how to use geocode functionality to search for points o
 
 ## How to use the sample
 
-Specify the point of interest in the `Point of Interest` SearchView (e.g. Starbucks). For the proximity field you can choose between your current location, by leaving the SearchView blank, or any other location by entering text. Suggestions will appear, while the user is typing. When a suggestion is selected or the submit query button is tapped, the resulting locations are shown on the map. Tapping on a pin will show get details about that location in a callout. A button at the bottom called 'Redo Search in this Area' will let you search by the current extent's midpoint.
+Specify the point of interest in the `POI` SearchView (e.g. Starbucks). For the proximity field you can choose between your current location, by leaving the SearchView blank, or any other location by entering text. Suggestions will appear while the user is typing. When a suggestion is selected, or the submit query button is tapped, the resulting locations are shown on the map. Tapping on a pin will show details about that location in a callout. A button at the bottom called 'Redo Search in this Area' will let you search by the current viewpoint's midpoint.
 
 
 ![](image1.png)
