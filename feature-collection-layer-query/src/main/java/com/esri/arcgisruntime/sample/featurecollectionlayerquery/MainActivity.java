@@ -1,4 +1,4 @@
-/* Copyright 2016 Esri
+/* Copyright 2017 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,10 +36,9 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-  private String TAG = "FeatCollectLayerQuery";
+  private final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
-  private FeatureTable mFeatureTable;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     //initialize service feature table to be queried
-    mFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.wildfire_feature_server));
+    FeatureTable featureTable = new ServiceFeatureTable(getResources().getString(R.string.wildfire_feature_server));
 
     //create query parameters
     QueryParameters queryParams = new QueryParameters();
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     queryParams.setWhereClause("1=1");
 
     //query feature from the table
-    final ListenableFuture<FeatureQueryResult> queryResult = mFeatureTable.queryFeaturesAsync(queryParams);
+    final ListenableFuture<FeatureQueryResult> queryResult = featureTable.queryFeaturesAsync(queryParams);
     queryResult.addDoneListener(new Runnable() {
       @Override public void run() {
         try {

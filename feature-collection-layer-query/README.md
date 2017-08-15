@@ -1,22 +1,9 @@
-# Display a Map
-The **Display Map** app is the most basic Map app for the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/en/android/).
-It shows how to inflate a `MapView` in the layout XML of the activity, create a `ArcGISMap` with a static `Basemap.Type` and bind the `ArcGISMap` to the `MapView`.  By default, this map supports basic zooming and panning operations.
+# Feature collection layer (query)
 
-![Display a Map App](display-map.png)
+This sample demonstrates how to create a feature collection layer to show a query result from a service feature table. The feature collection is then displayed on a map with a feature collection layer.
 
-## Features
-* ArcGISMap
-* MapView
-* Basemap
+![](image1.png)
 
-## Developer Pattern
-Create a `ArcGISMap` with a `Basemap.Type` and an initial viewpoint. 
+## How it works
 
-```java
-// inflate MapView from layout
-mMapView = (MapView) findViewById(R.id.mapView);
-// create a map with the BasemapType topographic
-ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16);
-// set the map to be displayed in this view
-mMapView.setMap(mMap);
-```
+A query is performed using the `.queryFeaturesAsync(queryParameters)` method on `FeatureTable`. The result of the query is used to instantiate an `FeatureCollectionTable`. The table is used to instantiate an `FeatureCollection` which is then use to initialize a `FeatureCollectionLayer`. The layer is then displayed on the map by adding it to the operational layers array.

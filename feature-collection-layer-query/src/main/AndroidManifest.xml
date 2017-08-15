@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name="com.esri.arcgisruntime.sample.featurecollectionlayerquery.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:configChanges="orientation|screenSize|uiMode">
             <intent-filter>
