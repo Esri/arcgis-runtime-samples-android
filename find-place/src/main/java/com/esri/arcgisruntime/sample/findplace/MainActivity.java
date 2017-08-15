@@ -68,14 +68,13 @@ import com.esri.arcgisruntime.tasks.geocode.SuggestResult;
 
 public class MainActivity extends AppCompatActivity {
 
-  String[] reqPermissions =
+  private final String[] reqPermissions =
       new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION };
-  private int requestCode = 2;
-  private String TAG;
+  private final String TAG = MainActivity.class.getSimpleName();
   private SearchView mPoiSearchView;
   private SearchView mLocationSearchView;
-  private String COLUMN_NAME_ADDRESS = "address";
-  private String[] mColumnNames = { BaseColumns._ID, COLUMN_NAME_ADDRESS };
+  private final String COLUMN_NAME_ADDRESS = "address";
+  private final String[] mColumnNames = { BaseColumns._ID, COLUMN_NAME_ADDRESS };
 
   private boolean mLocationSearchViewEmpty;
 
@@ -99,12 +98,11 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    TAG = "Find a place";
-
     // if permissions are not already granted, request permission from the user
     if (!(ContextCompat.checkSelfPermission(MainActivity.this, reqPermissions[0]) == PackageManager.PERMISSION_GRANTED
         && ContextCompat.checkSelfPermission(MainActivity.this, reqPermissions[1])
         == PackageManager.PERMISSION_GRANTED)) {
+      int requestCode = 2;
       ActivityCompat.requestPermissions(MainActivity.this, reqPermissions, requestCode);
     }
 
@@ -117,8 +115,9 @@ public class MainActivity extends AppCompatActivity {
     mLocationSearchView.setIconified(false);
     mLocationSearchView.setFocusable(false);
     mLocationSearchView.setQueryHint(getResources().getString(R.string.location_search_hint));
-    // on redo button click call redoSearchInThisArea
+    // setup redo search button
     Button redoSearchButton = (Button) findViewById(R.id.redo_search_button);
+    // on redo button click call redoSearchInThisArea
     redoSearchButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         redoSearchInThisArea();
@@ -447,47 +446,51 @@ public class MainActivity extends AppCompatActivity {
    * @param address read in from searchViews
    */
   private void geoCodeTypedAddress(final String address) {
-    // mPreferredSearchLocation set from location SearchView or, if empty, device location
-    mPoiGeocodeParameters.setPreferredSearchLocation(mPreferredSearchLocation);
-    mPoiGeocodeParameters.setSearchArea(mPreferredSearchLocation);
-    // Execute async task to find the address
-    mLocatorTask.addDoneLoadingListener(new Runnable() {
-      @Override
-      public void run() {
-        if (mLocatorTask.getLoadStatus() == LoadStatus.LOADED) {
-          // Call geocodeAsync passing in an address
-          final ListenableFuture<List<GeocodeResult>> geocodeResultListenableFuture = mLocatorTask
-              .geocodeAsync(address, mPoiGeocodeParameters);
-          geocodeResultListenableFuture.addDoneListener(new Runnable() {
-            @Override
-            public void run() {
-              try {
-                // Get the results of the async operation
-                List<GeocodeResult> geocodeResults = geocodeResultListenableFuture.get();
-                if (geocodeResults.size() > 0) {
-                  displaySearchResult(geocodeResults);
-                } else {
-                  Toast.makeText(getApplicationContext(), getString(R.string.location_not_found) + address,
-                      Toast.LENGTH_LONG).show();
+    // check that address isn't null
+    if (address != null) {
+      // mPreferredSearchLocation set from location SearchView or, if empty, device location
+      mPoiGeocodeParameters.setPreferredSearchLocation(mPreferredSearchLocation);
+      mPoiGeocodeParameters.setSearchArea(mPreferredSearchLocation);
+      // Execute async task to find the address
+      mLocatorTask.addDoneLoadingListener(new Runnable() {
+        @Override
+        public void run() {
+          if (mLocatorTask.getLoadStatus() == LoadStatus.LOADED) {
+            // Call geocodeAsync passing in an address
+            final ListenableFuture<List<GeocodeResult>> geocodeResultListenableFuture = mLocatorTask
+                .geocodeAsync(address, mPoiGeocodeParameters);
+            geocodeResultListenableFuture.addDoneListener(new Runnable() {
+              @Override
+              public void run() {
+                try {
+                  // Get the results of the async operation
+                  List<GeocodeResult> geocodeResults = geocodeResultListenableFuture.get();
+                  if (geocodeResults.size() > 0) {
+                    displaySearchResult(geocodeResults);
+                  } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.location_not_found) + address,
+                        Toast.LENGTH_LONG).show();
+                  }
+                } catch (InterruptedException | ExecutionException e) {
+                  Log.e(TAG, "Geocode error: " + e.getMessage());
+                  Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error), Toast.LENGTH_LONG)
+                      .show();
                 }
-              } catch (InterruptedException | ExecutionException e) {
-                Log.e(TAG, "Geocode error: " + e.getMessage());
-                Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error), Toast.LENGTH_LONG).show();
               }
-            }
-          });
-        } else {
-          Log.i(TAG, "Trying to reload locator task");
-          mLocatorTask.retryLoadAsync();
+            });
+          } else {
+            Log.i(TAG, "Trying to reload locator task");
+            mLocatorTask.retryLoadAsync();
+          }
         }
-      }
-    });
-    mLocatorTask.loadAsync();
+      });
+      mLocatorTask.loadAsync();
+    }
   }
 
   /**
    * Turns a list of GeocodeResults into Points and adds them to a GraphicOverlay which is then drawn on the map. The
-   * points are added to a multipoint used to calculate a viewpoint
+   * points are added to a multipoint used to calculate a viewpoint.
    *
    * @param geocodeResults as a list
    */
