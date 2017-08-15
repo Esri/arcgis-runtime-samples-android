@@ -71,11 +71,10 @@ public class MainActivity extends AppCompatActivity {
   private final String[] reqPermissions =
       new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION };
   private final String TAG = MainActivity.class.getSimpleName();
-  private SearchView mPoiSearchView;
-  private SearchView mLocationSearchView;
   private final String COLUMN_NAME_ADDRESS = "address";
   private final String[] mColumnNames = { BaseColumns._ID, COLUMN_NAME_ADDRESS };
-
+  private SearchView mPoiSearchView;
+  private SearchView mLocationSearchView;
   private boolean mLocationSearchViewEmpty;
 
   private String mPoiAddress;
@@ -357,7 +356,8 @@ public class MainActivity extends AppCompatActivity {
                                 }
                               } catch (InterruptedException | ExecutionException e) {
                                 Log.e(TAG, "Geocode error: " + e.getMessage());
-                                Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error),
+                                    Toast.LENGTH_LONG).show();
                               }
                             }
                           });
@@ -496,7 +496,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void displaySearchResult(List<GeocodeResult> geocodeResults) {
     // dismiss any callout
-    if (mMapView.getCallout().isShowing()) {
+    if (mMapView.getCallout() != null && mMapView.getCallout().isShowing()) {
       mMapView.getCallout().dismiss();
     }
     // clear map of existing graphics

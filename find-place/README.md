@@ -9,7 +9,6 @@ Specify the point of interest in the `POI` SearchView (e.g. Starbucks). For the 
 
 
 ![](image1.png)
-![](image2.png)
 
 
 ## How it works
