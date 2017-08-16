@@ -74,11 +74,11 @@ public class MainActivity extends AppCompatActivity {
   private final String COLUMN_NAME_ADDRESS = "address";
   private final String[] mColumnNames = { BaseColumns._ID, COLUMN_NAME_ADDRESS };
   private SearchView mPoiSearchView;
-  private SearchView mLocationSearchView;
-  private boolean mLocationSearchViewEmpty;
+  private SearchView mProximitySearchView;
+  private boolean mProximitySearchViewEmpty;
 
   private String mPoiAddress;
-  private Point mPreferredSearchLocation;
+  private Point mPreferredSearchProximity;
 
   private MapView mMapView;
   private LocationDisplay mLocationDisplay;
@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
   private GraphicsOverlay mGraphicsOverlay;
   private SuggestParameters mPoiSuggestParameters;
   private GeocodeParameters mPoiGeocodeParameters;
-  private SuggestParameters mLocationSuggestParameters;
-  private GeocodeParameters mLocationGeocodeParameters;
+  private SuggestParameters mProximitySuggestParameters;
+  private GeocodeParameters mProximityGeocodeParameters;
   private PictureMarkerSymbol mPinSourceSymbol;
   private Geometry mCurrentExtentGeometry;
   private Callout mCallout;
@@ -110,10 +110,10 @@ public class MainActivity extends AppCompatActivity {
     mPoiSearchView.setIconified(false);
     mPoiSearchView.setFocusable(false);
     mPoiSearchView.setQueryHint(getResources().getString(R.string.search_hint));
-    mLocationSearchView = (SearchView) findViewById(R.id.location_searchView);
-    mLocationSearchView.setIconified(false);
-    mLocationSearchView.setFocusable(false);
-    mLocationSearchView.setQueryHint(getResources().getString(R.string.location_search_hint));
+    mProximitySearchView = (SearchView) findViewById(R.id.proximity_searchView);
+    mProximitySearchView.setIconified(false);
+    mProximitySearchView.setFocusable(false);
+    mProximitySearchView.setQueryHint(getResources().getString(R.string.proximity_search_hint));
     // setup redo search button
     Button redoSearchButton = (Button) findViewById(R.id.redo_search_button);
     // on redo button click call redoSearchInThisArea
@@ -135,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
     mPinSourceSymbol.setWidth(19f);
     mPinSourceSymbol.setHeight(72f);
 
-    // instantiate flag location search view flag
-    mLocationSearchViewEmpty = true;
+    // instantiate flag proximity search view flag
+    mProximitySearchViewEmpty = true;
 
     // create a LocatorTask from an online service
     mLocatorTask = new LocatorTask("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
@@ -174,8 +174,8 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onLocationChanged(LocationDisplay.LocationChangedEvent locationChangedEvent) {
         currentLocation[0] = mLocationDisplay.getMapLocation();
         // only update preferredSearchLocation if device has moved
-        if (!currentLocation[0].equals(mLocationDisplay.getMapLocation(), 100) || mPreferredSearchLocation == null) {
-          mPreferredSearchLocation = mLocationDisplay.getMapLocation();
+        if (!currentLocation[0].equals(mLocationDisplay.getMapLocation(), 100) || mPreferredSearchProximity == null) {
+          mPreferredSearchProximity = mLocationDisplay.getMapLocation();
         }
       }
     });
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
     mGraphicsOverlay = new GraphicsOverlay();
 
     setupPoi();
-    setupLocation();
+    setupProximity();
   }
 
   /**
@@ -201,10 +201,10 @@ public class MainActivity extends AppCompatActivity {
 
       @Override
       public boolean onQueryTextSubmit(String address) {
-        // if locationSearchView text box is empty, use the device location
-        if (mLocationSearchViewEmpty) {
-          mPreferredSearchLocation = mLocationDisplay.getMapLocation();
-          mLocationSearchView.setQuery("Using current location...", false);
+        // if proximity SearchView text box is empty, use the device location
+        if (mProximitySearchViewEmpty) {
+          mPreferredSearchProximity = mLocationDisplay.getMapLocation();
+          mProximitySearchView.setQuery("Using current location...", false);
         }
         // keep track of typed address
         mPoiAddress = address;
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
         geoCodeTypedAddress(address);
         // clear focus from search views
         mPoiSearchView.clearFocus();
-        mLocationSearchView.clearFocus();
+        mProximitySearchView.clearFocus();
         return true;
       }
 
@@ -270,30 +270,30 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Sets up the Location SearchView. Uses MatrixCursor to show suggestions to the user as the user inputs text.
+   * Sets up the proximity SearchView. Uses MatrixCursor to show suggestions to the user as the user inputs text.
    */
-  private void setupLocation() {
+  private void setupProximity() {
 
-    mLocationSuggestParameters = new SuggestParameters();
-    mLocationSuggestParameters.getCategories().add("Populated Place");
-    mLocationGeocodeParameters = new GeocodeParameters();
+    mProximitySuggestParameters = new SuggestParameters();
+    mProximitySuggestParameters.getCategories().add("Populated Place");
+    mProximityGeocodeParameters = new GeocodeParameters();
     // get all attributes
-    mLocationGeocodeParameters.getResultAttributeNames().add("*");
-    mLocationSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+    mProximityGeocodeParameters.getResultAttributeNames().add("*");
+    mProximitySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override public boolean onQueryTextSubmit(String address) {
         geoCodeTypedAddress(address);
         // clear focus from search views
         mPoiSearchView.clearFocus();
-        mLocationSearchView.clearFocus();
+        mProximitySearchView.clearFocus();
         return true;
       }
 
       @Override public boolean onQueryTextChange(String newText) {
         // as long as newText isn't empty, get suggestions from the locatorTask
         if (!newText.equals("")) {
-          mLocationSearchViewEmpty = false;
+          mProximitySearchViewEmpty = false;
           final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
-              .suggestAsync(newText, mLocationSuggestParameters);
+              .suggestAsync(newText, mProximitySuggestParameters);
           suggestionsFuture.addDoneListener(new Runnable() {
 
             @Override public void run() {
@@ -311,8 +311,8 @@ public class MainActivity extends AppCompatActivity {
                 int[] to = new int[] { R.id.suggestion_address };
                 final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
                     R.layout.suggestion, suggestionsCursor, cols, to, 0);
-                mLocationSearchView.setSuggestionsAdapter(suggestionAdapter);
-                mLocationSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                mProximitySearchView.setSuggestionsAdapter(suggestionAdapter);
+                mProximitySearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
                   @Override public boolean onSuggestionSelect(int position) {
                     return false;
                   }
@@ -328,9 +328,9 @@ public class MainActivity extends AppCompatActivity {
                       @Override
                       public void run() {
                         if (mLocatorTask.getLoadStatus() == LoadStatus.LOADED) {
-                          // geocode the selected address to get access to the resulting display location
+                          // geocode the selected address to get location of address
                           final ListenableFuture<List<GeocodeResult>> geocodeFuture = mLocatorTask
-                              .geocodeAsync(address, mLocationGeocodeParameters);
+                              .geocodeAsync(address, mProximityGeocodeParameters);
                           geocodeFuture.addDoneListener(new Runnable() {
                             @Override
                             public void run() {
@@ -341,14 +341,14 @@ public class MainActivity extends AppCompatActivity {
                                   // use geocodeResult to focus search area
                                   GeocodeResult geocodeResult = geocodeResults.get(0);
                                   // update preferred search area to the geocode result
-                                  mPreferredSearchLocation = geocodeResult.getDisplayLocation();
-                                  mPoiGeocodeParameters.setSearchArea(mPreferredSearchLocation);
+                                  mPreferredSearchProximity = geocodeResult.getDisplayLocation();
+                                  mPoiGeocodeParameters.setSearchArea(mPreferredSearchProximity);
                                   // set the address string to the SearchView, but don't submit as a query
-                                  mLocationSearchView.setQuery(address, false);
+                                  mProximitySearchView.setQuery(address, false);
                                   // call POI search query
                                   mPoiSearchView.setQuery(mPoiAddress, true);
                                   // clear focus from search views
-                                  mLocationSearchView.clearFocus();
+                                  mProximitySearchView.clearFocus();
                                   mPoiSearchView.clearFocus();
                                 } else {
                                   Toast.makeText(getApplicationContext(),
@@ -374,7 +374,7 @@ public class MainActivity extends AppCompatActivity {
           });
           // if search view is empty, set flag
         } else {
-          mLocationSearchViewEmpty = true;
+          mProximitySearchViewEmpty = true;
         }
         return true;
       }
@@ -385,10 +385,10 @@ public class MainActivity extends AppCompatActivity {
    * Performs a search for the POI listed in the SearchView, using the MapView's current extent to inform the search.
    */
   private void redoSearchInThisArea() {
-    // set center of current extent to preferred search location
-    mPreferredSearchLocation = mCurrentExtentGeometry.getExtent().getCenter();
+    // set center of current extent to preferred search proximity
+    mPreferredSearchProximity = mCurrentExtentGeometry.getExtent().getCenter();
     mPoiGeocodeParameters.setSearchArea(mCurrentExtentGeometry);
-    mLocationSearchView.setQuery(getString(R.string.searching_by_area), false);
+    mProximitySearchView.setQuery(getString(R.string.searching_by_area), false);
     // use most recent POI address
     geoCodeTypedAddress(mPoiAddress);
   }
@@ -448,9 +448,9 @@ public class MainActivity extends AppCompatActivity {
   private void geoCodeTypedAddress(final String address) {
     // check that address isn't null
     if (address != null) {
-      // mPreferredSearchLocation set from location SearchView or, if empty, device location
-      mPoiGeocodeParameters.setPreferredSearchLocation(mPreferredSearchLocation);
-      mPoiGeocodeParameters.setSearchArea(mPreferredSearchLocation);
+      // POI geocode parameters set from proximity SearchView or, if empty, device location
+      mPoiGeocodeParameters.setPreferredSearchLocation(mPreferredSearchProximity);
+      mPoiGeocodeParameters.setSearchArea(mPreferredSearchProximity);
       // Execute async task to find the address
       mLocatorTask.addDoneLoadingListener(new Runnable() {
         @Override
