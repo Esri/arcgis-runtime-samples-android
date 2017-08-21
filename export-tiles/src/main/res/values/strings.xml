@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Export Tiles</string>
+    <string name="export_tiles_text">Export Tiles</string>
+    <string name="downloading_text">Downloading</string>
+</resources>
