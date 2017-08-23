@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Export Tiles</string>
+    <string name="world_street_map">
+        https://sampleserver6.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer
+    </string>
+    <string name="config_data_sdcard_offline_dir">/ArcGIS/samples/TileCache/worldStreetMap.tpk</string>
     <string name="export_tiles_text">Export Tiles</string>
-    <string name="downloading_text">Downloading</string>
+    <string name="cancel_export_tiles_text">Cancel</string>
+
 </resources>
