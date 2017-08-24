@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.sample.exporttiles;
 
+import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 import android.Manifest;
@@ -169,9 +170,13 @@ public class MainActivity extends AppCompatActivity {
     parametersFuture.addDoneListener(new Runnable() {
       @Override public void run() {
         try {
+          File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.config_data_sdcard_offline_dir));
+          if (!file.exists()) {
+            file.mkdirs();
+          }
           ExportTileCacheParameters parameters = parametersFuture.get();
           mExportTileCacheJob = mExportTileCacheTask.exportTileCacheAsync(parameters,
-              Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir));
+              Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir) + getString(R.string.file_name));
         } catch (InterruptedException e) {
           Log.e(TAG, "TileCacheParameters interrupted: " + e.getMessage());
         } catch (ExecutionException e) {
