@@ -29,6 +29,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.TileCache;
@@ -37,7 +39,7 @@ import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheJob;
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheParameters;
@@ -47,12 +49,15 @@ public class MainActivity extends AppCompatActivity {
 
   private String TAG = MainActivity.class.getSimpleName();
 
+  private Button mExportTilesButton;
+  private RelativeLayout mProgressLayout;
+  private TextView mProgressTextView;
   private ProgressBar mProgressBar;
+  private RelativeLayout mMapPreviewLayout;
 
   private MapView mMapView;
   private MapView mPreviewMapView;
   private ArcGISTiledLayer mTiledLayer;
-  private GraphicsOverlay mGraphicsOverlay;
   private ExportTileCacheJob mExportTileCacheJob;
   private ExportTileCacheTask mExportTileCacheTask;
 
@@ -63,92 +68,98 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    handleWritePermissions();
+    // define permission to request
+    String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+    int requestCode = 2;
+    // For API level 23+ request permission at runtime
+    if (ContextCompat.checkSelfPermission(MainActivity.this,
+        reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+    } else {
+      // request permission
+      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
+    }
 
+    mProgressLayout = (RelativeLayout) findViewById(R.id.progressLayout);
+    mProgressTextView = (TextView) findViewById(R.id.progress_text_view);
     mProgressBar = (ProgressBar) findViewById(R.id.taskProgressBar);
 
     mTiledLayer = new ArcGISTiledLayer(getString(R.string.world_street_map));
-    mExportTileCacheTask = new ExportTileCacheTask(getString(R.string.world_street_map));
     ArcGISMap map = new ArcGISMap();
-    map.setBasemap(Basemap.createStreets());
+    map.setBasemap(new Basemap(mTiledLayer));
 
-    //add the graphics overlay to the map view
-    mGraphicsOverlay = new GraphicsOverlay();
+    mMapPreviewLayout = (RelativeLayout) findViewById(R.id.mapPreviewLayout);
+
     mMapView = (MapView) findViewById(R.id.mapView);
-    mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
     mMapView.setMap(map);
+
     mPreviewMapView = (MapView) findViewById(R.id.previewMapView);
 
-    setupExportTilesButton();
+    createExportTilesButton();
+    createPreviewCloseButton();
 
+    // run cancel download once to clear map preview and progress bar
+    cancelDownload();
   }
 
-  private void setupExportTilesButton() {
-    //setup export tiles button
-    final Button exportTilesButton = (Button) findViewById(R.id.exportTilesButton);
-    exportTilesButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Log.d("onClick", "Button touched!");
-        if (mDownloading) {
-          cancelDownload();
-          exportTilesButton.setText(getResources().getString(R.string.export_tiles_text));
-        } else {
-          initiateDownload();
-          exportTilesButton.setText(getResources().getString(R.string.cancel_export_tiles_text));
-        }
-      }
-    });
-  }
-
+  /**
+   * Uses the MapView View to define an Envelope larger on all sides by one MapView.
+   *
+   * @return extent
+   */
   private Envelope viewToExtent() {
-    int[] outLocation = new int[2];
-    mPreviewMapView.getLocationOnScreen(outLocation);
-    for (int location : outLocation) {
-      Log.d("coor", String.valueOf(location));
-    }
-
-    android.graphics.Point minScreenPoint = new android.graphics.Point(outLocation[0], outLocation[1]);
-    android.graphics.Point maxScreenPoint = new android.graphics.Point(minScreenPoint.x + mPreviewMapView.getWidth(),
-        minScreenPoint.y + mPreviewMapView.getHeight());
-
-    Log.d("minScreen", "x: " + minScreenPoint.x + " y: " + minScreenPoint.y);
-    Log.d("maxScreen", "x: " + maxScreenPoint.x + " y: " + maxScreenPoint.y);
-
+    // get the upper left corner of the map view
+    android.graphics.Point minScreenPoint = new android.graphics.Point(mMapView.getLeft() - mMapView.getWidth(), mMapView.getTop() - mMapView.getHeight());
+    // get the lower right corner of the map view
+    android.graphics.Point maxScreenPoint = new android.graphics.Point(minScreenPoint.x + (mMapView.getWidth() * 3), minScreenPoint.y + (mMapView.getHeight() * 3 ));
+    // convert screen points to map points
     Point minPoint = mMapView.screenToLocation(minScreenPoint);
     Point maxPoint = mMapView.screenToLocation(maxScreenPoint);
-
-    Log.d("minMap", "x: " + minPoint.getX() + " y: " + minPoint.getY());
-    Log.d("maxMap", "x: " + maxPoint.getX() + " y: " + maxPoint.getY());
-
-    Envelope extent = new Envelope(new Point(0,0), new Point(10,10));
-    return extent;
+    // use the points to define and return an envelope
+    return new Envelope(minPoint, maxPoint);
   }
 
   private void cancelDownload() {
     Log.d(TAG, "cancelDownload");
     mDownloading = false;
+    mExportTilesButton.setVisibility(View.VISIBLE);
+    mProgressLayout.setVisibility(View.INVISIBLE);
+    mProgressTextView.setVisibility(View.INVISIBLE);
+    mProgressBar.setVisibility(View.INVISIBLE);
+    mProgressBar.setProgress(0);
+    mPreviewMapView.getChildAt(0).setVisibility(View.INVISIBLE);
+    mMapView.bringToFront();
+    mExportTilesButton.setText(getResources().getString(R.string.export_tiles_text));
     if (mExportTileCacheJob != null) {
-      mProgressBar.setVisibility(View.INVISIBLE);
       mExportTileCacheJob.cancel();
-
-      //self.visualEffectView.isHidden = true
     }
   }
 
   private void initiateDownload() {
     Log.d(TAG, "initiateDownload");
-
+    mExportTilesButton.setText(getResources().getString(R.string.cancel_export_tiles_text));
+    mProgressLayout.setVisibility(View.VISIBLE);
+    mProgressLayout.bringToFront();
+    mProgressTextView.setText(getString(R.string.progress_starting));
+    //mProgressTextView.bringToFront();
+    mProgressTextView.setVisibility(View.VISIBLE);
+    //mProgressBar.bringToFront();
+    mProgressBar.setVisibility(View.VISIBLE);
+    //mPreviewMapView.getChildAt(1).setVisibility(View.VISIBLE);
     //get the parameters by specifying the selected area,
     //mapview's current scale as the minScale and tiled layer's max scale as maxScale
     double minScale = mMapView.getMapScale();
-    double maxScale = 8.0;
+    double maxScale = mTiledLayer.getMaxScale();
+
+    // minScale must always be larger than maxScale
+    if (minScale == maxScale) {
+      minScale = maxScale + 1;
+    }
+
+    Log.d("minScale", String.valueOf(minScale));
+    Log.d("maxScale", String.valueOf(maxScale));
 
     //set the state
     mDownloading = true;
-
-    //delete previous existing tpks
-    //deleteAllTpks();
 
     //initialize the export task
     Log.d("tilecacheurl", mTiledLayer.getUri());
@@ -159,38 +170,72 @@ public class MainActivity extends AppCompatActivity {
       @Override public void run() {
         try {
           ExportTileCacheParameters parameters = parametersFuture.get();
-          Log.d(TAG, "parameters loaded");
-          mExportTileCacheJob = mExportTileCacheTask.exportTileCacheAsync(parameters, Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir));
-          mExportTileCacheJob.start();
-          mExportTileCacheJob.addProgressChangedListener(new Runnable() {
-            @Override public void run() {
-              Log.d("Progress", String.valueOf(mExportTileCacheJob.getProgress()));
-            }
-          });
-          mExportTileCacheJob.addJobDoneListener(new Runnable() {
-            @Override public void run() {
-              Log.e(TAG, mExportTileCacheJob.getError().getMessage());
+          mExportTileCacheJob = mExportTileCacheTask.exportTileCacheAsync(parameters,
+              Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir));
+        } catch (InterruptedException e) {
+          Log.e(TAG, "TileCacheParameters interrupted: " + e.getMessage());
+        } catch (ExecutionException e) {
+          Log.e(TAG, "Error generating parameters: " + e.getMessage());
+        }
+        mExportTileCacheJob.start();
+        mProgressTextView.setText(getString(R.string.progress_starting));
+        Log.e("Job", String.valueOf(mExportTileCacheJob.getError()));
+        mExportTileCacheJob.addProgressChangedListener(new Runnable() {
+          @Override public void run() {
+            mProgressTextView.setText(getString(R.string.progress_fetching));
+            mProgressBar.setProgress(mExportTileCacheJob.getProgress());
+            Log.d("Progress", String.valueOf(mExportTileCacheJob.getProgress()));
+          }
+        });
+        mExportTileCacheJob.addJobDoneListener(new Runnable() {
+          @Override public void run() {
+            if (mExportTileCacheJob.getResult() != null) {
               TileCache exportedTileCacheResult = mExportTileCacheJob.getResult();
-              ArcGISTiledLayer newTiledLayer = new ArcGISTiledLayer(exportedTileCacheResult);
-              mPreviewMapView.getMap().setBasemap(new Basemap(newTiledLayer));
+              showMapPreview(exportedTileCacheResult);
+            } else {
+              Log.e(TAG, "Tile cache job result null. File size may be too big.");
+              cancelDownload();
             }
-          });
-        } catch (InterruptedException | ExecutionException e) {
-          Log.e(TAG, "Error exporting tile cache: " + e.getMessage());
+            mProgressTextView.setText(getString(R.string.progress_done));
+          }
+        });
+      }
+    });
+  }
+
+  private void showMapPreview(TileCache result) {
+    ArcGISTiledLayer newTiledLayer = new ArcGISTiledLayer(result);
+    ArcGISMap map = new ArcGISMap(new Basemap(newTiledLayer));
+    mPreviewMapView.setMap(map);
+    mPreviewMapView.setViewpoint(mMapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE));
+    mMapPreviewLayout.bringToFront();
+    mPreviewMapView.getChildAt(0).setVisibility(View.VISIBLE);
+    mExportTilesButton.setVisibility(View.GONE);
+  }
+
+  private void createExportTilesButton() {
+    //setup export tiles button
+    mExportTilesButton = (Button) findViewById(R.id.exportTilesButton);
+    mExportTilesButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Log.d("onClick", "Button touched!");
+        if (mDownloading) {
+          cancelDownload();
+        } else {
+          initiateDownload();
         }
       }
     });
   }
 
-  private void handleWritePermissions() {
-    //for API level 23+ request permission at runtime
-    final String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-    if (ContextCompat.checkSelfPermission(getApplicationContext(), reqPermission[0])
-        != PackageManager.PERMISSION_GRANTED) {
-      //request permission
-      int requestCode = 2;
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
-    }
+  private void createPreviewCloseButton() {
+    Button previewCloseButton = (Button) findViewById(R.id.closeButton);
+    previewCloseButton.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        cancelDownload();
+      }
+    });
   }
 
   @Override
