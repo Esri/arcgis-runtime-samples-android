@@ -11,7 +11,7 @@ Pan and zoom into the desired area, making sure the area is within the red block
 
 ## How it works
 
-The sample uses the `.createDefaultExportTileCacheParametersAsync(areaOfInterest, minScale, maxScale)` method on `ExportTileCacheTask` class to generate `ExportTileCacheParameters` parameters by providing the area of interest and the min/max scale for the tpk. 
+The sample uses the `.createDefaultExportTileCacheParametersAsync(areaOfInterest, minScale, maxScale)` method on `ExportTileCacheTask` class to generate `ExportTileCacheParameters` by providing the area of interest and the min/max scale for the tpk. 
 
 It then uses these parameters in the `exportTileCacheJob(downloadPath)` method to generate a `Job`. The job, on successful completion, results in a `TileCache` object which is used to create an `ArcGISTiledLayer` and shown in a map as a preview.
 
