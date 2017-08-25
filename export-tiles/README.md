@@ -1,22 +1,15 @@
-# Display a Map
-The **Display Map** app is the most basic Map app for the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/en/android/).
-It shows how to inflate a `MapView` in the layout XML of the activity, create a `ArcGISMap` with a static `Basemap.Type` and bind the `ArcGISMap` to the `MapView`.  By default, this map supports basic zooming and panning operations.
+# Export tiles
 
-![Display a Map App](display-map.png)
+This sample demonstrates how to export tiles from a map server
 
-## Features
-* ArcGISMap
-* MapView
-* Basemap
+## How to use the sample
 
-## Developer Pattern
-Create a `ArcGISMap` with a `Basemap.Type` and an initial viewpoint. 
+Pan and zoom into the desired area, making sure the area is within the red block. Tap on the `Export tiles` button to start the process. On successful completion you will see a preview of the downloaded tpk.
 
-```java
-// inflate MapView from layout
-mMapView = (MapView) findViewById(R.id.mapView);
-// create a map with the BasemapType topographic
-ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16);
-// set the map to be displayed in this view
-mMapView.setMap(mMap);
-```
+![](image1.png)
+
+
+## How it works
+
+The sample uses the `.createDefaultExportTileCacheParametersAsync(areOfInterest, minScale, maxScale)` method on `ExportTileCacheTask` class to generate `ExportTileCacheParameters` parameters by providing the area of interest and the min/max scale for the tpk. It then uses these parameters in the `exportTileCacheJob(downloadPath)` method to generate a `Job`. The job, on successful completion, results in a `TileCache` object which is used to create an `ArcGISTiledLayer` and shown in a map as a preview.
+

@@ -76,7 +76,13 @@
                 android:layout_below="@+id/taskProgressBar"
                 android:layout_centerHorizontal="true"/>
     </RelativeLayout>
-
+    <View
+            android:id="@+id/previewMask"
+            android:layout_width="256dp"
+            android:layout_height="384dp"
+            android:background="@drawable/preview_mask"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
     <Button
             android:text="@string/export_tiles_text"
             android:layout_width="match_parent"
