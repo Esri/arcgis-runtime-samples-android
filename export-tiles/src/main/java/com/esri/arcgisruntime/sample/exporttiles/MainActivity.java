@@ -23,6 +23,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -49,13 +50,13 @@ import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheTask;
 
 public class MainActivity extends AppCompatActivity {
 
-  private String TAG = MainActivity.class.getSimpleName();
+  private final String TAG = MainActivity.class.getSimpleName();
 
   private Button mExportTilesButton;
   private RelativeLayout mProgressLayout;
   private TextView mProgressTextView;
   private ProgressBar mProgressBar;
-  private RelativeLayout mTileCachePreviewLayout;
+  private ConstraintLayout mTileCachePreviewLayout;
   private View mPreviewMask;
 
   private MapView mMapView;
@@ -75,9 +76,7 @@ public class MainActivity extends AppCompatActivity {
     String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
     int requestCode = 2;
     // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(MainActivity.this,
-        reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-    } else {
+    if (ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]) != PackageManager.PERMISSION_GRANTED) {
       // request permission
       ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
     }
@@ -85,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
     mProgressLayout = (RelativeLayout) findViewById(R.id.progressLayout);
     mProgressTextView = (TextView) findViewById(R.id.progress_text_view);
     mProgressBar = (ProgressBar) findViewById(R.id.taskProgressBar);
-    mTileCachePreviewLayout = (RelativeLayout) findViewById(R.id.mapPreviewLayout);
-    mPreviewMask = (View) findViewById(R.id.previewMask);
+    mTileCachePreviewLayout = (ConstraintLayout) findViewById(R.id.mapPreviewLayout);
+    mPreviewMask = findViewById(R.id.previewMask);
 
     mTileCachePreview = (MapView) findViewById(R.id.previewMapView);
     mMapView = (MapView) findViewById(R.id.mapView);
