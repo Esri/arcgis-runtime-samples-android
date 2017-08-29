@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
     geodatabaseSyncTask.loadAsync();
     geodatabaseSyncTask.addDoneLoadingListener(new Runnable() {
       @Override public void run() {
-
         // generate the geodatabase on button click
         genGeodatabaseButton.setOnClickListener(new View.OnClickListener() {
           @Override public void onClick(View v) {
@@ -143,16 +142,15 @@ public class MainActivity extends AppCompatActivity {
                   }
 
                   // create and start the job
-                  mLocalGeodatabasePath = Environment.getExternalStorageDirectory()
-                      + getString(R.string.config_data_sdcard_offline_dir) + getString(R.string.file_name);
+                  mLocalGeodatabasePath =
+                      Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir)
+                          + getString(R.string.file_name);
                   final GenerateGeodatabaseJob generateGeodatabaseJob = geodatabaseSyncTask
                       .generateGeodatabaseAsync(parameters, mLocalGeodatabasePath);
-                  Log.d("genGeoJob", generateGeodatabaseJob.toString());
-
                   generateGeodatabaseJob.start();
                   mProgressTextView.setText(getString(R.string.progress_started));
 
-                  // show progress
+                  // update progress
                   generateGeodatabaseJob.addProgressChangedListener(new Runnable() {
                     @Override public void run() {
                       progressBar.setProgress(generateGeodatabaseJob.getProgress());
