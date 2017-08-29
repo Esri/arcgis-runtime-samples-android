@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
   private ExportTileCacheTask mExportTileCacheTask;
 
   private boolean mDownloading = false;
+  private boolean mDirExists = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -189,12 +190,17 @@ public class MainActivity extends AppCompatActivity {
         .createDefaultExportTileCacheParametersAsync(viewToExtent(), minScale, maxScale);
     parametersFuture.addDoneListener(new Runnable() {
       @Override public void run() {
+        // create directory for file
+        File file = new File(Environment.getExternalStorageDirectory(),
+            getString(R.string.config_data_sdcard_offline_dir));
+        mDirExists = file.exists();
+        if (mDirExists) {
+          Log.i(TAG, "Directory exists");
+        } else {
+          file.mkdirs();
+        }
         try {
-          File file = new File(Environment.getExternalStorageDirectory(),
-              getString(R.string.config_data_sdcard_offline_dir));
-          if (!file.exists()) {
-            file.mkdirs();
-          }
+          // export tile cache to directory
           ExportTileCacheParameters parameters = parametersFuture.get();
           mExportTileCacheJob = mExportTileCacheTask.exportTileCacheAsync(parameters,
               Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir)
@@ -255,7 +261,6 @@ public class MainActivity extends AppCompatActivity {
     mTileCachePreview.setMap(map);
     mTileCachePreview.setViewpoint(mMapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE));
     mTileCachePreview.setVisibility(View.VISIBLE);
-    //mTileCachePreview.bringToFront();
     mTileCachePreviewLayout.bringToFront();
     mTileCachePreview.getChildAt(0).setVisibility(View.VISIBLE);
     mExportTilesButton.setVisibility(View.GONE);
