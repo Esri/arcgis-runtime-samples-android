@@ -42,7 +42,7 @@
                 android:text="@string/progress_starting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/progress_text_view"
+                android:id="@+id/progressTextView"
                 android:layout_below="@+id/taskProgressBar"
                 android:layout_centerHorizontal="true"/>
     </RelativeLayout>

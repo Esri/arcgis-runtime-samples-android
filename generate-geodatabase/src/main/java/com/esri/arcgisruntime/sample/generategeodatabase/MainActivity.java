@@ -21,6 +21,7 @@ import java.util.concurrent.ExecutionException;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -31,11 +32,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Geodatabase;
 import com.esri.arcgisruntime.data.GeodatabaseFeatureTable;
+import com.esri.arcgisruntime.data.TileCache;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -54,8 +58,12 @@ public class MainActivity extends AppCompatActivity {
 
   private final String TAG = MainActivity.class.getSimpleName();
 
-  MapView mMapView;
-  RelativeLayout mProgressLayout;
+  private MapView mMapView;
+
+  private TextView mProgressTextView;
+  private RelativeLayout mProgressLayout;
+
+  private String mLocalGeodatabasePath;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +79,10 @@ public class MainActivity extends AppCompatActivity {
       ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
     }
 
-    // use world street map tiled layer
-    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(getString(R.string.world_street_map));
+    // use local tile package for the base map
+    TileCache sanFrancisco = new TileCache(
+        Environment.getExternalStorageDirectory() + getString(R.string.san_francisco_tpk));
+    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(sanFrancisco);
 
     // create a map view and add a map
     mMapView = (MapView) findViewById(R.id.mapView);
@@ -82,12 +92,13 @@ public class MainActivity extends AppCompatActivity {
     // create a graphics overlay and symbol to mark the extent
     final GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
-    final SimpleLineSymbol boundarySymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFFFF0000, 5);
+    final SimpleLineSymbol boundarySymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5);
 
     // inflate button and progress layout
     final Button genGeodatabaseButton = (Button) findViewById(R.id.genGeodatabaseButton);
     mProgressLayout = (RelativeLayout) findViewById(R.id.progressLayout);
     final ProgressBar progressBar = (ProgressBar) findViewById(R.id.taskProgressBar);
+    mProgressTextView = (TextView) findViewById(R.id.progressTextView);
     progressBar.setProgress(0);
 
     // create a geodatabase sync task
@@ -120,26 +131,32 @@ public class MainActivity extends AppCompatActivity {
                 try {
                   // set parameters
                   GenerateGeodatabaseParameters parameters = defaultParameters.get();
+                  Log.d("parameters", parameters.getExtent().toString());
+                  // don't include attachments to minimize geodatabase size
                   parameters.setReturnAttachments(false);
 
-                  // temporary file for geodatabase
-                  File file = new File(Environment.getExternalStorageDirectory(),
+                  // create folder for geodatabase
+                  File geodatabaseDirectory = new File(Environment.getExternalStorageDirectory(),
                       getString(R.string.config_data_sdcard_offline_dir));
-                  if (!file.exists()) {
-                    file.mkdirs();
+                  if (!geodatabaseDirectory.exists()) {
+                    geodatabaseDirectory.mkdirs();
                   }
 
                   // create and start the job
+                  mLocalGeodatabasePath = Environment.getExternalStorageDirectory()
+                      + getString(R.string.config_data_sdcard_offline_dir) + getString(R.string.file_name);
                   final GenerateGeodatabaseJob generateGeodatabaseJob = geodatabaseSyncTask
-                      .generateGeodatabaseAsync(parameters,
-                          Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir)
-                              + getString(R.string.file_name));
+                      .generateGeodatabaseAsync(parameters, mLocalGeodatabasePath);
+                  Log.d("genGeoJob", generateGeodatabaseJob.toString());
+
                   generateGeodatabaseJob.start();
+                  mProgressTextView.setText(getString(R.string.progress_started));
 
                   // show progress
                   generateGeodatabaseJob.addProgressChangedListener(new Runnable() {
                     @Override public void run() {
                       progressBar.setProgress(generateGeodatabaseJob.getProgress());
+                      mProgressTextView.setText(getString(R.string.progress_fetching));
                     }
                   });
 
@@ -149,14 +166,13 @@ public class MainActivity extends AppCompatActivity {
                       mProgressLayout.setVisibility(View.INVISIBLE);
                       if (generateGeodatabaseJob.getStatus() == Job.Status.SUCCEEDED) {
                         final Geodatabase geodatabase = generateGeodatabaseJob.getResult();
-
-                        //displayMessage("Geodatabase successfully generated", "Unregistering geodatabase since we're
-                        // not syncing it here");
+                        Log.d("resultGDB", geodatabase.toString());
 
                         geodatabase.loadAsync();
                         geodatabase.addDoneLoadingListener(new Runnable() {
                           @Override public void run() {
                             if (geodatabase.getLoadStatus() == LoadStatus.LOADED) {
+                              mProgressTextView.setText(getString(R.string.progress_done));
                               for (GeodatabaseFeatureTable geodatabaseFeatureTable : geodatabase
                                   .getGeodatabaseFeatureTables()) {
                                 geodatabaseFeatureTable.loadAsync();
@@ -169,6 +185,10 @@ public class MainActivity extends AppCompatActivity {
                         });
                         // unregister since we're not syncing
                         geodatabaseSyncTask.unregisterGeodatabaseAsync(geodatabase);
+                        Log.i(TAG, "Geodatabase unregistered since we wont be editing it in this sample.");
+                        Toast.makeText(MainActivity.this,
+                            "Geodatabase unregistered since we wont be editing it in this sample.", Toast.LENGTH_LONG)
+                            .show();
                       } else if (generateGeodatabaseJob.getError() != null) {
                         Log.e(TAG, "Error generating geodatabase: " + generateGeodatabaseJob.getError().getMessage());
                       } else {
@@ -181,7 +201,6 @@ public class MainActivity extends AppCompatActivity {
                 }
               }
             });
-
           }
         });
       }
@@ -198,5 +217,14 @@ public class MainActivity extends AppCompatActivity {
   protected void onResume() {
     super.onResume();
     mMapView.resume();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    if (isFinishing()) {
+      // TODO delete local database???
+      new File(Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir)
+          + getString(R.string.file_name)).delete();
+    }
   }
 }
