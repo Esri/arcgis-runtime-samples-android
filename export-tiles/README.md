@@ -15,4 +15,4 @@ The sample uses the `.createDefaultExportTileCacheParametersAsync(areaOfInterest
 
 It then uses these parameters in the `exportTileCacheJob(downloadPath)` method to generate a `Job`. The job, on successful completion, results in a `TileCache` object which is used to create an `ArcGISTiledLayer` and shown in a map as a preview.
 
-The `TileCache` file is stored in </sdcard/ArcGIS/Samples/TileCache> under the name <worldStreetMap.tpk>.
+The `TileCache` file is stored in _/sdcard/ArcGIS/Samples/TileCache_ under the name _worldStreetMap.tpk_.
