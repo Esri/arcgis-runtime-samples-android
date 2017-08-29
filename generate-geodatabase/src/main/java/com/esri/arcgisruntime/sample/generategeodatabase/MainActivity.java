@@ -43,6 +43,7 @@ import com.esri.arcgisruntime.data.TileCache;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -165,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
                       if (generateGeodatabaseJob.getStatus() == Job.Status.SUCCEEDED) {
                         final Geodatabase geodatabase = generateGeodatabaseJob.getResult();
                         Log.d("resultGDB", geodatabase.toString());
-
                         geodatabase.loadAsync();
                         geodatabase.addDoneLoadingListener(new Runnable() {
                           @Override public void run() {
@@ -175,6 +175,9 @@ public class MainActivity extends AppCompatActivity {
                                   .getGeodatabaseFeatureTables()) {
                                 geodatabaseFeatureTable.loadAsync();
                                 map.getOperationalLayers().add(new FeatureLayer(geodatabaseFeatureTable));
+                              }
+                              for (Layer layer : map.getOperationalLayers()) {
+                                Log.d("layer", layer.getName());
                               }
                             } else {
                               Log.e(TAG, "Error loading geodatabase: " + geodatabase.getLoadError().getMessage());
