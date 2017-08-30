@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
   private ExportTileCacheTask mExportTileCacheTask;
 
   private boolean mDownloading = false;
-  private boolean mDirExists = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +93,10 @@ public class MainActivity extends AppCompatActivity {
     mTiledLayer = new ArcGISTiledLayer(getString(R.string.world_street_map));
     ArcGISMap map = new ArcGISMap();
     map.setBasemap(new Basemap(mTiledLayer));
+    // set a min scale to avoid instance of downloading a tile cache that is too big
+    map.setMinScale(10000000);
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(51.5, 0.0, 10000000));
 
     createExportTilesButton();
     createPreviewCloseButton();
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
    * |                  |
    * |                  |
    * --------------------
+   *
    * @return an Envelope three times as high and three times as wide as the main MapView.
    */
   private Envelope viewToExtent() {
@@ -190,14 +193,18 @@ public class MainActivity extends AppCompatActivity {
         .createDefaultExportTileCacheParametersAsync(viewToExtent(), minScale, maxScale);
     parametersFuture.addDoneListener(new Runnable() {
       @Override public void run() {
-        // create directory for file
+        // create directory for file at .../ArcGIS/Samples/TileCache/
         File file = new File(Environment.getExternalStorageDirectory(),
             getString(R.string.config_data_sdcard_offline_dir));
-        mDirExists = file.exists();
-        if (mDirExists) {
-          Log.i(TAG, "Directory exists");
+        if (!file.exists()) {
+          boolean dirCreated = file.mkdirs();
+          if (dirCreated) {
+            Log.i(TAG, "Local TileCache directory created.");
+          } else {
+            Log.e(TAG, "Error creating local TileCache directory.");
+          }
         } else {
-          file.mkdirs();
+          Log.i(TAG, "No local TileCache directory created, one already exists.");
         }
         try {
           // export tile cache to directory
