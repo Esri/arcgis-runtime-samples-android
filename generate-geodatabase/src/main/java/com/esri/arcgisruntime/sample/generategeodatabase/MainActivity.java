@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
   private RelativeLayout mProgressLayout;
 
   private String mLocalGeodatabasePath;
+  private String mGeodatabaseDirPath;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -100,18 +101,19 @@ public class MainActivity extends AppCompatActivity {
     mProgressLayout = (RelativeLayout) findViewById(R.id.progressLayout);
     final ProgressBar progressBar = (ProgressBar) findViewById(R.id.taskProgressBar);
     mProgressTextView = (TextView) findViewById(R.id.progressTextView);
-    progressBar.setProgress(0);
 
     // create a geodatabase sync task
-    String featureServiceURL = getString(R.string.wildfire_sync);
-    final GeodatabaseSyncTask geodatabaseSyncTask = new GeodatabaseSyncTask(featureServiceURL);
+    final GeodatabaseSyncTask geodatabaseSyncTask = new GeodatabaseSyncTask(getString(R.string.wildfire_sync));
     geodatabaseSyncTask.loadAsync();
     geodatabaseSyncTask.addDoneLoadingListener(new Runnable() {
       @Override public void run() {
-        // generate the geodatabase on button click
+
+        // generate the geodatabase sync task
         genGeodatabaseButton.setOnClickListener(new View.OnClickListener() {
           @Override public void onClick(View v) {
+
             // show the progress layout
+            progressBar.setProgress(0);
             mProgressLayout.setVisibility(View.VISIBLE);
 
             // clear any previous operational layers and graphics if button clicked more than once
@@ -129,23 +131,27 @@ public class MainActivity extends AppCompatActivity {
             defaultParameters.addDoneListener(new Runnable() {
               @Override public void run() {
                 try {
-                  // set parameters
+                  // set parameters and don't include attachments
                   GenerateGeodatabaseParameters parameters = defaultParameters.get();
-                  Log.d("parameters", parameters.getExtent().toString());
-                  // don't include attachments to minimize geodatabase size
                   parameters.setReturnAttachments(false);
 
                   // create folder for geodatabase
-                  File geodatabaseDirectory = new File(Environment.getExternalStorageDirectory(),
-                      getString(R.string.config_data_sdcard_offline_dir));
+                  mGeodatabaseDirPath =
+                      Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir);
+                  File geodatabaseDirectory = new File(mGeodatabaseDirPath);
                   if (!geodatabaseDirectory.exists()) {
-                    geodatabaseDirectory.mkdirs();
+                    boolean dirCreated = geodatabaseDirectory.mkdirs();
+                    if (dirCreated) {
+                      Log.i(TAG, "Local Geodatabase directory created at: " + mGeodatabaseDirPath);
+                    } else {
+                      Log.e(TAG, "Error creating local Geodatabase directory at: " + mGeodatabaseDirPath);
+                    }
+                  } else {
+                    Log.i(TAG, "No local Geodatabase directory created, one already exists at: " + mGeodatabaseDirPath);
                   }
 
                   // create and start the job
-                  mLocalGeodatabasePath =
-                      Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir)
-                          + getString(R.string.file_name);
+                  mLocalGeodatabasePath = mGeodatabaseDirPath + getString(R.string.file_name);
                   final GenerateGeodatabaseJob generateGeodatabaseJob = geodatabaseSyncTask
                       .generateGeodatabaseAsync(parameters, mLocalGeodatabasePath);
                   generateGeodatabaseJob.start();
@@ -185,11 +191,16 @@ public class MainActivity extends AppCompatActivity {
                           }
                         });
                         // unregister since we're not syncing
-                        geodatabaseSyncTask.unregisterGeodatabaseAsync(geodatabase);
-                        Log.i(TAG, "Geodatabase unregistered since we wont be editing it in this sample.");
-                        Toast.makeText(MainActivity.this,
-                            "Geodatabase unregistered since we wont be editing it in this sample.", Toast.LENGTH_LONG)
-                            .show();
+                        ListenableFuture unregisterGeodatabase = geodatabaseSyncTask
+                            .unregisterGeodatabaseAsync(geodatabase);
+                        unregisterGeodatabase.addDoneListener(new Runnable() {
+                          @Override public void run() {
+                            Log.i(TAG, "Geodatabase unregistered since we wont be editing it in this sample.");
+                            Toast.makeText(MainActivity.this,
+                                "Geodatabase unregistered since we wont be editing it in this sample.",
+                                Toast.LENGTH_LONG).show();
+                          }
+                        });
                       } else if (generateGeodatabaseJob.getError() != null) {
                         Log.e(TAG, "Error generating geodatabase: " + generateGeodatabaseJob.getError().getMessage());
                       } else {
@@ -224,8 +235,12 @@ public class MainActivity extends AppCompatActivity {
     super.onDestroy();
     if (isFinishing()) {
       // TODO delete local database???
-      new File(Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir)
-          + getString(R.string.file_name)).delete();
+      boolean deleted = new File(mLocalGeodatabasePath).delete();
+      if (deleted) {
+        Log.i(TAG, "Local Geodatabase deleted.");
+      } else {
+        Log.e(TAG, "Failed to delete local Geodatabase.");
+      }
     }
   }
 }
