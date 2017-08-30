@@ -29,3 +29,20 @@ To generate a `Geodatabase` from a feature service:
 * GenerateGeodatabaseParameters
 * MapView
 * ServiceFeatureTable
+
+## Provision your device
+1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=TBD).  
+2. Extract the contents of the downloaded zip file to disk.  
+3. Create an ArcGIS/samples/MapPackage folder on your device. You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
+4. Open up a command prompt and execute the ```adb shell``` command to start a remote shell on your target device.
+5. Navigate to your sdcard directory, e.g. ```cd /sdcard/```.  
+6. Create the ArcGIS/samples/TileCache directory, ```mkdir ArcGIS/samples/TileCache```.
+7. You should now have the following directory on your target device, ```/sdcard/ArcGIS/samples/TileCache```. We will copy the contents of the downloaded data into this directory. Note:  Directory may be slightly different on your device.
+8. Exit the shell with the, ```exit``` command.
+9. While still in your command prompt, navigate to the folder where you extracted the contents of the data from step 1 and execute the following command: 
+	* ```adb push SanFrancisco.tpk /sdcard/ArcGIS/samples/TileCache```
+
+
+Link | Local Location
+---------|-------|
+|[San Francisco Tile Cache](https://arcgisruntime.maps.arcgis.com/home/item.html?id=TBD)| `<sdcard>`/ArcGIS/samples/TileCache/SanFrancisco.tpk |
