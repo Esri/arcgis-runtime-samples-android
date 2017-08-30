@@ -1,17 +1,31 @@
-# Export tiles
+# Generate geodatabase
 
-This sample demonstrates how to export tiles from a map server.
+This sample demonstrates how to generate a geodatabase from a feature service.
 
 ## How to use the sample
 
-Pan and zoom into the desired area, making sure the area is within the red block. Tap on the `Export tiles` button to start the process. On successful completion you will see a preview of the downloaded tpk.
+Zoom to any extent and click the generate button to generate a geodatabase of features from a feature service filtered to the current extent. A red bounding box graphic will display showing the extent used. A progress bar will show the job's progress. Once the geodatabase has been generated, the layers in the geodatabase will be added to the map.
 
 ![](image1.png)
 
 
 ## How it works
 
-The sample uses the `.createDefaultExportTileCacheParametersAsync(areaOfInterest, minScale, maxScale)` method on `ExportTileCacheTask` class to generate `ExportTileCacheParameters` by providing the area of interest and the min/max scale for the tpk. 
+To generate a `Geodatabase` from a feature service:
 
-It then uses these parameters in the `exportTileCacheJob(downloadPath)` method to generate a `Job`. The job, on successful completion, results in a `TileCache` object which is used to create an `ArcGISTiledLayer` and shown in a map as a preview.
 
+Create a `GeodatabaseSyncTask` with the URL of a feature service and load it.
+Create `GenerateGeodatabaseParameters` specifying the extent and whether to include attachments.
+Create a `GenerateGeodatabaseJob` with `GenerateGeodatabaseJob generateGeodatabaseJob = syncTask.generateGeodatabaseAsync(parameters, filePath)`. Start the job with `generateGeodatabaseJob.start()`.
+When the job is done, `generateGeodatabaseJob.getResult()` will return a `Geodatabase`. Inside the `Geodatabase` are `FeatureTable`s that can be used to add `FeatureLayer`s to the map.
+Lastly, it is good practice to call `syncTask.unregisterGeodatabaseAsync(geodatabase)` when not planning on syncing changes to the service.
+
+## Features
+
+* ArcGISMap
+* FeatureLayer
+* Geodatabase
+* GenerateGeodatabaseJob 
+* GenerateGeodatabaseParameters
+* MapView
+* ServiceFeatureTable
