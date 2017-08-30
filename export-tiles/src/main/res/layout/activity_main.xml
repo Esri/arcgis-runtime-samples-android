@@ -1,0 +1,147 @@
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+    <!-- MapViews -->
+    <android.support.constraint.ConstraintLayout
+            android:id="@+id/mapPreviewLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp" tools:layout_constraintTop_creator="1"
+            tools:layout_constraintLeft_creator="1"
+            app:layout_constraintLeft_toLeftOf="parent" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginRight="0dp" app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="0dp" app:layout_constraintBottom_toBottomOf="@+id/mapView"
+            android:layout_marginBottom="0dp">
+        <View
+                android:id="@+id/dimBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/dimBackground"
+                app:layout_constraintRight_toLeftOf="@+id/closeButton"
+                tools:layout_constraintTop_creator="1"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintBottom_creator="1"
+                app:layout_constraintBottom_toBottomOf="@+id/previewMapView"
+                app:layout_constraintTop_toBottomOf="@+id/previewMapView"
+                tools:layout_constraintLeft_creator="1"
+                app:layout_constraintLeft_toLeftOf="@+id/closeButton"/>
+        <TextView
+                android:text="@string/preview_text"
+                android:textSize="26sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/preview_text_view"
+                android:textColor="@color/colorPrimary"
+                tools:layout_constraintRight_creator="1"
+                app:layout_constraintRight_toRightOf="parent"
+                tools:layout_constraintLeft_creator="1"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp" app:layout_constraintHorizontal_bias="0.494"
+                android:layout_marginLeft="8dp" app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginRight="8dp" android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/previewMapView"/>
+        <com.esri.arcgisruntime.mapping.view.MapView
+                android:id="@+id/previewMapView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/preview_background"
+                tools:layout_constraintTop_creator="1"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintBottom_creator="1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                tools:layout_constraintLeft_creator="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintVertical_bias="0.0"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="60dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"/>
+        <Button
+                android:text="@string/close_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:id="@+id/closeButton"
+                android:textColor="@color/colorPrimary"
+                android:background="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="8dp" android:layout_marginRight="8dp"
+                app:layout_constraintRight_toRightOf="parent" android:layout_marginLeft="8dp"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+    </android.support.constraint.ConstraintLayout>
+    <com.esri.arcgisruntime.mapping.view.MapView
+            android:id="@+id/mapView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            tools:layout_constraintTop_creator="1" tools:layout_constraintRight_creator="1"
+            tools:layout_constraintBottom_creator="1" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" tools:layout_constraintLeft_creator="1"
+            app:layout_constraintLeft_toLeftOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+    <RelativeLayout
+            android:id="@+id/progressLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/preview_background"
+            tools:layout_constraintTop_creator="1" tools:layout_constraintRight_creator="1"
+            tools:layout_constraintBottom_creator="1" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" tools:layout_constraintLeft_creator="1"
+            app:layout_constraintLeft_toLeftOf="parent" app:layout_constraintTop_toTopOf="parent">
+        <ProgressBar
+                android:id="@+id/taskProgressBar"
+                style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:indeterminate="false"
+                android:paddingBottom="10dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"/>
+        <TextView
+                android:text="@string/progress_starting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progress_text_view"
+                android:layout_below="@+id/taskProgressBar"
+                android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+    <View
+            android:id="@+id/previewMask"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/preview_mask"
+            tools:layout_constraintTop_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintBottom_creator="1"
+            android:layout_marginStart="52dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="52dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="60dp"
+            tools:layout_constraintLeft_creator="1"
+            android:layout_marginBottom="60dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.0"/>
+    <Button
+            android:text="@string/export_tiles_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/exportTilesButton"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintBottom_creator="1" app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_constraintLeft_creator="1" app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginRight="8dp" android:layout_marginBottom="8dp"
+            app:layout_constraintRight_toRightOf="parent" android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp" android:layout_marginEnd="8dp"/>
+</android.support.constraint.ConstraintLayout>
