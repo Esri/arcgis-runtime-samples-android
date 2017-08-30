@@ -182,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
                                 geodatabaseFeatureTable.loadAsync();
                                 map.getOperationalLayers().add(new FeatureLayer(geodatabaseFeatureTable));
                               }
+                              genGeodatabaseButton.setVisibility(View.GONE);
                               for (Layer layer : map.getOperationalLayers()) {
                                 Log.d("layer", layer.getName());
                               }
