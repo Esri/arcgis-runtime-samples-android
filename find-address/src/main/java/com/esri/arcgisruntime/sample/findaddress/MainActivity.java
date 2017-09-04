@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Identifies the Graphic at the tapped point. Gets attribute of that Graphic and assigns it to a Callout, which is
+   * Identifies the Graphic at the tapped point. Gets attributes of that Graphic and assigns it to a Callout, which is
    * then displayed.
    *
    * @param motionEvent from onSingleTapConfirmed
@@ -284,8 +284,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Turns a list of GeocodeResults into Points and adds them to a GraphicOverlay which is then drawn on the map. The
-   * points are added to a multipoint used to calculate a viewpoint.
+   * Turns a GeocodeResult into Points and adds them to a GraphicOverlay which is then drawn on the map.
    *
    * @param geocodeResult a single geocode result
    */
