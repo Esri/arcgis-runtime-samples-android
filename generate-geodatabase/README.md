@@ -31,7 +31,7 @@ To generate a `Geodatabase` from a feature service:
 * ServiceFeatureTable
 
 ## Provision your device
-1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=TBD).  
+1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=72e703cd01654e7796eb1ae75af1cb53).  
 2. Extract the contents of the downloaded zip file to disk.  
 3. Create an ArcGIS/samples/MapPackage folder on your device. You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
 4. Open up a command prompt and execute the ```adb shell``` command to start a remote shell on your target device.
@@ -45,4 +45,4 @@ To generate a `Geodatabase` from a feature service:
 
 Link | Local Location
 ---------|-------|
-|[San Francisco Tile Cache](https://arcgisruntime.maps.arcgis.com/home/item.html?id=TBD)| `<sdcard>`/ArcGIS/samples/TileCache/SanFrancisco.tpk |
+|[San Francisco Tile Cache](https://arcgisruntime.maps.arcgis.com/home/item.html?id=72e703cd01654e7796eb1ae75af1cb53)| `<sdcard>`/ArcGIS/samples/TileCache/SanFrancisco.tpk |
