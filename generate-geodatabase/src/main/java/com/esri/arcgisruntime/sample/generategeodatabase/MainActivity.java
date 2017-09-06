@@ -235,7 +235,6 @@ public class MainActivity extends AppCompatActivity {
   @Override protected void onDestroy() {
     super.onDestroy();
     if (isFinishing()) {
-      // TODO delete local database???
       boolean deleted = new File(mLocalGeodatabasePath).delete();
       if (deleted) {
         Log.i(TAG, "Local Geodatabase deleted.");
