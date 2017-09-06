@@ -44,8 +44,9 @@ import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult;
+import com.esri.arcgisruntime.mapping.view.MapScaleChangedEvent;
+import com.esri.arcgisruntime.mapping.view.MapScaleChangedListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.WrapAroundMode;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeResult;
@@ -89,23 +90,26 @@ public class MainActivity extends AppCompatActivity {
     mPinSourceSymbol.setWidth(19f);
     mPinSourceSymbol.setHeight(72f);
 
+    // offset callout to sit at top of pin
+    mPinSourceSymbol.setLeaderOffsetY(25f);
+
     // create a LocatorTask from an online service
     mLocatorTask = new LocatorTask("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
 
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
-    // disable map wraparound
-    mMapView.setWrapAroundMode(WrapAroundMode.DISABLED);
     // create a map with the BasemapType topographic
-    final ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    final ArcGISMap map = new ArcGISMap(Basemap.createStreetsVector());
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    // set the map viewpoint to start over North America
+    mMapView.setViewpoint(new Viewpoint(40, -100, 100000000));
 
-    // add listener to handle callouts
+    // add listener to handle screen taps
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override
       public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-        showCallout(motionEvent);
+        identifyGraphic(motionEvent);
         return true;
       }
     });
@@ -191,17 +195,14 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Identifies the Graphic at the tapped point. Gets attributes of that Graphic and assigns it to a Callout, which is
-   * then displayed.
+   * Identifies the Graphic at the tapped point.
    *
-   * @param motionEvent from onSingleTapConfirmed
+   * @param motionEvent containing a tapped screen point
    */
-  private void showCallout(MotionEvent motionEvent) {
+  private void identifyGraphic(MotionEvent motionEvent) {
     // get the screen point
     android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
         Math.round(motionEvent.getY()));
-    // convert to map point
-    final Point mapPoint = mMapView.screenToLocation(screenPoint);
     // from the graphics overlay, get graphics near the tapped location
     final ListenableFuture<IdentifyGraphicsOverlayResult> identifyResultsFuture = mMapView
         .identifyGraphicsOverlayAsync(mGraphicsOverlay, screenPoint, 10, false);
@@ -214,24 +215,46 @@ public class MainActivity extends AppCompatActivity {
           if (graphics.size() > 0) {
             //get the first graphic identified
             Graphic identifiedGraphic = graphics.get(0);
-            // create a TextView for the Callout
-            TextView calloutContent = new TextView(getApplicationContext());
-            calloutContent.setTextColor(Color.BLACK);
-            // set the text of the Callout to graphic's attributes
-            calloutContent.setText(identifiedGraphic.getAttributes().get("PlaceName").toString() + "\n"
-                + identifiedGraphic.getAttributes().get("StAddr").toString());
-            // get Callout and set its options: animateCallout: true, recenterMap: false, animateRecenter: false
-            mCallout = mMapView.getCallout();
-            mCallout.setShowOptions(new Callout.ShowOptions(true, false, false));
-            // set the leader position and show the callout
-            mCallout.setLocation(identifiedGraphic.computeCalloutLocation(mapPoint, mMapView));
-            mCallout.setContent(calloutContent);
-            mCallout.show();
+            showCallout(identifiedGraphic);
           } else {
+            // if no graphic identified
             mCallout.dismiss();
           }
         } catch (Exception e) {
           Log.e(TAG, "Identify error: " + e.getMessage());
+        }
+      }
+    });
+  }
+
+  /**
+   * Shows the Graphic's attributes as a Callout.
+   *
+   * @param graphic containing attributes
+   */
+  private void showCallout(final Graphic graphic) {
+    // create a TextView for the Callout
+    TextView calloutContent = new TextView(getApplicationContext());
+    calloutContent.setTextColor(Color.BLACK);
+    // set the text of the Callout to graphic's attributes
+    calloutContent.setText(graphic.getAttributes().get("PlaceName").toString() + "\n"
+        + graphic.getAttributes().get("StAddr").toString());
+    // get Callout
+    mCallout = mMapView.getCallout();
+    // set Callout options: animateCallout: true, recenterMap: false, animateRecenter: false
+    mCallout.setShowOptions(new Callout.ShowOptions(true, false, false));
+    mCallout.setContent(calloutContent);
+    // set the leader position and show the callout
+    mCallout.setLocation(graphic.computeCalloutLocation(graphic.getGeometry().getExtent().getCenter(), mMapView));
+    mCallout.show();
+    // listen for changes in map scale
+    mMapView.addMapScaleChangedListener(new MapScaleChangedListener() {
+      @Override public void mapScaleChanged(MapScaleChangedEvent mapScaleChangedEvent) {
+        // if a callout is currently showing
+        if (mMapView.getCallout().isShowing()) {
+          // compute new leader position after map scale change and show the callout
+          mCallout.setLocation(graphic.computeCalloutLocation(graphic.getGeometry().getExtent().getCenter(), mMapView));
+          mCallout.show();
         }
       }
     });
@@ -284,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Turns a GeocodeResult into Points and adds them to a GraphicOverlay which is then drawn on the map.
+   * Turns a GeocodeResult into a Point and adds it to a GraphicOverlay which is then drawn on the map.
    *
    * @param geocodeResult a single geocode result
    */
@@ -305,5 +328,18 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setViewpointAsync(new Viewpoint(geocodeResult.getExtent()), 3);
     // set the graphics overlay to the map
     mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
+    showCallout(resultLocGraphic);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
   }
 }
