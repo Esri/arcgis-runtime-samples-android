@@ -18,7 +18,6 @@ package com.esri.arcgisruntime.sample.findaddress;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
 import android.database.MatrixCursor;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -44,8 +43,6 @@ import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult;
-import com.esri.arcgisruntime.mapping.view.MapScaleChangedEvent;
-import com.esri.arcgisruntime.mapping.view.MapScaleChangedListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters;
@@ -89,9 +86,6 @@ public class MainActivity extends AppCompatActivity {
     // set pin to half of native size
     mPinSourceSymbol.setWidth(19f);
     mPinSourceSymbol.setHeight(72f);
-
-    // offset callout to sit at top of pin
-    mPinSourceSymbol.setLeaderOffsetY(25f);
 
     // create a LocatorTask from an online service
     mLocatorTask = new LocatorTask("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
@@ -245,19 +239,10 @@ public class MainActivity extends AppCompatActivity {
     mCallout.setShowOptions(new Callout.ShowOptions(true, false, false));
     mCallout.setContent(calloutContent);
     // set the leader position and show the callout
-    mCallout.setLocation(graphic.computeCalloutLocation(graphic.getGeometry().getExtent().getCenter(), mMapView));
+    // set the leader position and show the callout
+    Point calloutLocation = graphic.computeCalloutLocation(graphic.getGeometry().getExtent().getCenter(), mMapView);
+    mCallout.setGeoElement(graphic, calloutLocation);
     mCallout.show();
-    // listen for changes in map scale
-    mMapView.addMapScaleChangedListener(new MapScaleChangedListener() {
-      @Override public void mapScaleChanged(MapScaleChangedEvent mapScaleChangedEvent) {
-        // if a callout is currently showing
-        if (mMapView.getCallout().isShowing()) {
-          // compute new leader position after map scale change and show the callout
-          mCallout.setLocation(graphic.computeCalloutLocation(graphic.getGeometry().getExtent().getCenter(), mMapView));
-          mCallout.show();
-        }
-      }
-    });
   }
 
   /**
