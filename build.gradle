@@ -24,7 +24,7 @@ allprojects {
 }
 
 ext {
-    compileSdkVersion = 25
+    compileSdkVersion = 26
     buildToolsVersion = '26.0.0'
     minSdkVersion = 16
     targetSdkVersion = 26
@@ -34,8 +34,8 @@ subprojects{
     afterEvaluate {project ->
         if(project.hasProperty("dependencies")){
             dependencies {
-                implementation 'com.android.support:appcompat-v7:25.4.0'
-                implementation 'com.android.support:design:25.4.0'
+                implementation 'com.android.support:appcompat-v7:26.0.2'
+                implementation 'com.android.support:design:26.0.2'
                 implementation 'com.android.support.constraint:constraint-layout:1.0.2'
                 implementation 'com.esri.arcgisruntime:arcgis-android:100.2.0-1787'
             }
