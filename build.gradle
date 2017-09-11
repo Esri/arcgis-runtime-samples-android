@@ -37,7 +37,7 @@ subprojects{
                 implementation 'com.android.support:appcompat-v7:26.0.2'
                 implementation 'com.android.support:design:26.0.2'
                 implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-                implementation 'com.esri.arcgisruntime:arcgis-android:100.2.0-1787'
+                implementation 'com.esri.arcgisruntime:arcgis-android:100.2.0-1820'
             }
         }
     }
