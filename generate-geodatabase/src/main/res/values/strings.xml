@@ -2,7 +2,6 @@
     <string name="app_name">Generate Geodatabase</string>
     <string name="san_francisco_tpk">/ArcGIS/Samples/TileCache/SanFrancisco.tpk</string>
     <string name="wildfire_sync">"https://sampleserver6.arcgisonline.com/arcgis/rest/services/Sync/WildfireSync/FeatureServer"</string>
-    <string name="config_data_sdcard_offline_dir">/ArcGIS/Samples/Geodatabase/</string>
     <string name="file_name">wildfire.geodatabase</string>
     <string name="gen_geodatabase_button_text">Generate</string>
     <string name="progress_starting">Starting</string>

@@ -43,7 +43,6 @@ import com.esri.arcgisruntime.data.TileCache;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.layers.FeatureLayer;
-import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -63,9 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
   private TextView mProgressTextView;
   private RelativeLayout mProgressLayout;
-
-  private String mLocalGeodatabasePath;
-  private String mGeodatabaseDirPath;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -135,25 +131,13 @@ public class MainActivity extends AppCompatActivity {
                   GenerateGeodatabaseParameters parameters = defaultParameters.get();
                   parameters.setReturnAttachments(false);
 
-                  // create folder for geodatabase
-                  mGeodatabaseDirPath =
-                      Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir);
-                  File geodatabaseDirectory = new File(mGeodatabaseDirPath);
-                  if (!geodatabaseDirectory.exists()) {
-                    boolean dirCreated = geodatabaseDirectory.mkdirs();
-                    if (dirCreated) {
-                      Log.i(TAG, "Local Geodatabase directory created at: " + mGeodatabaseDirPath);
-                    } else {
-                      Log.e(TAG, "Error creating local Geodatabase directory at: " + mGeodatabaseDirPath);
-                    }
-                  } else {
-                    Log.i(TAG, "No local Geodatabase directory created, one already exists at: " + mGeodatabaseDirPath);
-                  }
+                  // define the local path where the geodatabase will be stored
+                  final String localGeodatabasePath =
+                      getCacheDir().toString() + File.separator + getString(R.string.file_name);
 
                   // create and start the job
-                  mLocalGeodatabasePath = mGeodatabaseDirPath + getString(R.string.file_name);
                   final GenerateGeodatabaseJob generateGeodatabaseJob = geodatabaseSyncTask
-                      .generateGeodatabaseAsync(parameters, mLocalGeodatabasePath);
+                      .generateGeodatabaseAsync(parameters, localGeodatabasePath);
                   generateGeodatabaseJob.start();
                   mProgressTextView.setText(getString(R.string.progress_started));
 
@@ -171,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
                       mProgressLayout.setVisibility(View.INVISIBLE);
                       if (generateGeodatabaseJob.getStatus() == Job.Status.SUCCEEDED) {
                         final Geodatabase geodatabase = generateGeodatabaseJob.getResult();
-                        Log.d("resultGDB", geodatabase.toString());
                         geodatabase.loadAsync();
                         geodatabase.addDoneLoadingListener(new Runnable() {
                           @Override public void run() {
@@ -183,9 +166,7 @@ public class MainActivity extends AppCompatActivity {
                                 map.getOperationalLayers().add(new FeatureLayer(geodatabaseFeatureTable));
                               }
                               genGeodatabaseButton.setVisibility(View.GONE);
-                              for (Layer layer : map.getOperationalLayers()) {
-                                Log.d("layer", layer.getName());
-                              }
+                              Log.i(TAG, "Local geodatabase stored at: " + localGeodatabasePath);
                             } else {
                               Log.e(TAG, "Error loading geodatabase: " + geodatabase.getLoadError().getMessage());
                             }
@@ -230,17 +211,5 @@ public class MainActivity extends AppCompatActivity {
   protected void onResume() {
     super.onResume();
     mMapView.resume();
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    if (isFinishing()) {
-      boolean deleted = new File(mLocalGeodatabasePath).delete();
-      if (deleted) {
-        Log.i(TAG, "Local Geodatabase deleted.");
-      } else {
-        Log.e(TAG, "Failed to delete local Geodatabase.");
-      }
-    }
   }
 }
