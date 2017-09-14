@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Generate Geodatabase</string>
+    <string name="san_francisco_tpk">/ArcGIS/Samples/TileCache/SanFrancisco.tpk</string>
+    <string name="wildfire_sync">"https://sampleserver6.arcgisonline.com/arcgis/rest/services/Sync/WildfireSync/FeatureServer"</string>
+    <string name="file_name">wildfire.geodatabase</string>
+    <string name="gen_geodatabase_button_text">Generate</string>
+    <string name="progress_starting">Starting</string>
+    <string name="progress_started">Started</string>
+    <string name="progress_fetching">Fetching result</string>
+    <string name="progress_done">Done</string>
+</resources>
