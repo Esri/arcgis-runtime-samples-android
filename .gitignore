@@ -10,9 +10,10 @@ local.properties
 .idea/
 build/
 
-# SublimeText
-/*.sublime-project
-*.sublime-workspace
+# IDE files
+*.project
+*.classpath
+.settings/
 
 # OS generated files #
 .DS_Store
