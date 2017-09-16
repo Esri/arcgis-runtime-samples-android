@@ -1,15 +1,12 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.2-M2'
     repositories {
         jcenter()
         google()
-        maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-beta5'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.android.tools.build:gradle:3.0.0-beta6'
     }
 }
 
@@ -20,7 +17,6 @@ allprojects {
         google()
         maven { url 'https://esri.bintray.com/arcgis' }
         maven { url 'http://android:8080/artifactory/arcgis' }
-        maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
     }
     var
 }
@@ -39,7 +35,7 @@ subprojects{
                 implementation 'com.android.support:appcompat-v7:26.0.2'
                 implementation 'com.android.support:design:26.0.2'
                 implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-                implementation 'com.esri.arcgisruntime:arcgis-android:100.2.0-1820'
+                implementation 'com.esri.arcgisruntime:arcgis-android:100.2.0-1825'
             }
         }
     }
