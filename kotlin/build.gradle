@@ -29,6 +29,8 @@ ext {
     buildToolsVersion = '26.0.0'
     minSdkVersion = 16
     targetSdkVersion = 26
+    versionCode = 100
+    versionName = '100.2.0'
     // app dependencies
     andSupportLib = '26.1.0'
     constraintLayout = '1.0.2'
@@ -40,8 +42,6 @@ subprojects{
         if(project.hasProperty("dependencies")){
             dependencies {
                 implementation "com.android.support:appcompat-v7:$andSupportLib"
-                implementation "com.android.support:design:$andSupportLib"
-                implementation "com.android.support.constraint:constraint-layout:$constraintLayout"
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
                 implementation "com.esri.arcgisruntime:arcgis-android:$arcgisVersion"
             }
