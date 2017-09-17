@@ -6,7 +6,7 @@ ArcGIS Runtime SDK for Android v100.2.0 samples.  The `master` branch of this re
 * [Android Studio](http://developer.android.com/sdk/index.html)
 
 ## Project Structure
-Sample are organized by developer language.  All Java based samples are in the [java](java) folder and [Kotlin](https://kotlinlang.org/) based samples are in the [kotlin](kotlin) folder. These project folders need to be imported directly into Android Studio: 
+Sample are organized by developer language.  All Java based samples are in the [java](java) folder and Kotlin based samples are in the [kotlin](kotlin) folder. These project folders need to be imported directly into Android Studio: 
 
 - From the Android Studio toolbar select **File > Import Project**, or **Import Non-Android Studio** project from the **Welcome Quick Start**.
 - Navigate to the **java** or **kotlin** project directory and click OK
