@@ -30,9 +30,9 @@ ext {
     minSdkVersion = 16
     targetSdkVersion = 26
     // app dependencies
-    arcgisVersion = '100.2.0-1825'
     andSupportLib = '26.1.0'
     constraintLayout = '1.0.2'
+    arcgisVersion = '100.2.0-1825'
 }
 
 subprojects{
