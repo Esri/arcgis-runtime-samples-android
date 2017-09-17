@@ -1,7 +1,10 @@
 # Overview
 ArcGIS Runtime SDK for Android v100.2.0 samples.  The `master` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [git tags](https://github.com/Esri/arcgis-runtime-samples-android/tags).  Please read our [wiki](https://github.com/Esri/arcgis-runtime-samples-android/wiki) for help with working with this repository.  
 
-Sample are organized by developer language.  All Java based samples are in the [java](java) folder and [Kotlin](https://kotlinlang.org/) based samples are in the [kotlin](kotlin) folder. 
+Sample are organized by developer language.  All Java based samples are in the [java](java) folder and [Kotlin](https://kotlinlang.org/) based samples are in the [kotlin](kotlin) folder. These project folders need to be imported directly into Android Studio: 
+
+- From the Android Studio toolbar select **File > Import Project**, or **Import Non-Android Studio** project from the **Welcome Quick Start**.
+- Navigate to the **java** or **kotlin** project directory and click OK
 
 # Prerequisites
 * The samples are building with `compileSdkVersion 26` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
