@@ -1,5 +1,4 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     ext.kotlin_version = '1.2-M2'
     repositories {
@@ -14,7 +13,6 @@ buildscript {
 }
 
 allprojects {
-
     final def var = repositories {
         jcenter()
         google()
@@ -26,25 +24,27 @@ allprojects {
 }
 
 ext {
+    // sdk
     compileSdkVersion = 26
     buildToolsVersion = '26.0.0'
     minSdkVersion = 16
     targetSdkVersion = 26
+    // app dependencies
+    arcgisVersion = '100.2.0-1825'
+    andSupportLib = '26.1.0'
+    constraintLayout = '1.0.2'
 }
 
 subprojects{
     afterEvaluate {project ->
         if(project.hasProperty("dependencies")){
             dependencies {
-                implementation 'com.android.support:appcompat-v7:26.0.2'
-                implementation 'com.android.support:design:26.0.2'
-                implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-                implementation 'com.esri.arcgisruntime:arcgis-android:100.2.0-1825'
+                implementation "com.android.support:appcompat-v7:$andSupportLib"
+                implementation "com.android.support:design:$andSupportLib"
+                implementation "com.android.support.constraint:constraint-layout:$constraintLayout"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+                implementation "com.esri.arcgisruntime:arcgis-android:$arcgisVersion"
             }
         }
     }
-}
-
-repositories {
-    google()
 }
