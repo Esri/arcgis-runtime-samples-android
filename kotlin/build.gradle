@@ -1,14 +1,16 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: '../version.gradle'
+
 buildscript {
-    ext.kotlin_version = '1.2-M2'
+    apply from: '../version.gradle'
     repositories {
         jcenter()
         google()
         maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-beta6'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.android.tools.build:gradle:$gradleVersion"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 }
 
@@ -23,26 +25,12 @@ allprojects {
     var
 }
 
-ext {
-    // sdk
-    compileSdkVersion = 26
-    buildToolsVersion = '26.0.0'
-    minSdkVersion = 16
-    targetSdkVersion = 26
-    versionCode = 100
-    versionName = '100.2.0'
-    // app dependencies
-    andSupportLib = '26.1.0'
-    constraintLayout = '1.0.2'
-    arcgisVersion = '100.2.0-1825'
-}
-
 subprojects{
     afterEvaluate {project ->
         if(project.hasProperty("dependencies")){
             dependencies {
-                implementation "com.android.support:appcompat-v7:$andSupportLib"
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+                implementation "com.android.support:appcompat-v7:$andSupportLibVersion"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
                 implementation "com.esri.arcgisruntime:arcgis-android:$arcgisVersion"
             }
         }
