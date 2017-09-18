@@ -8,8 +8,8 @@ android {
         applicationId "com.esri.arcgisruntime.sample.maprotation"
         minSdkVersion 17
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
     }
 
     buildTypes {
@@ -22,4 +22,5 @@ android {
 
 dependencies {
     // arcgis-android & appcompat lib dependencies from rootProject build.gradle
+    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
 }

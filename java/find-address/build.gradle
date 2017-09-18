@@ -8,8 +8,8 @@ android {
         applicationId "com.esri.arcgisruntime.sample.findaddress"
         minSdkVersion 22
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
     }
     buildTypes {
         release {
