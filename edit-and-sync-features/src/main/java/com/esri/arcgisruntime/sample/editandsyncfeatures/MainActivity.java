@@ -71,6 +71,14 @@ public class MainActivity extends AppCompatActivity {
   private TextView mProgressTextView;
   private RelativeLayout mProgressLayout;
 
+  // Enumeration to track which phase of the workflow the sample is in
+  public enum EditState
+  {
+    NotReady, // Geodatabase has not yet been generated
+    Editing, // A feature is in the process of being moved
+    Ready // The geodatabase is ready for synchronization or further edits
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -172,6 +180,8 @@ public class MainActivity extends AppCompatActivity {
                                   .getGeodatabaseFeatureTables()) {
                                 geodatabaseFeatureTable.loadAsync();
                                 mGeodatabaseFeatureLayer = new FeatureLayer(geodatabaseFeatureTable);
+                                mGeodatabaseFeatureLayer.setSelectionColor(Color.BLUE);
+                                mGeodatabaseFeatureLayer.setSelectionWidth(10.0);
                                 map.getOperationalLayers().add(mGeodatabaseFeatureLayer);
 
                                 // add listener to handle screen once geodatabase is loaded and added to the MapView
@@ -220,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
         Math.round(motionEvent.getY()));
     // get the point that was clicked and convert it to a point in map coordinates
     Point mapPoint = mMapView.screenToLocation(screenPoint);
-    // define a tolerance for use with identifying the feature
+    // define a tolerance for identifying the feature
     int tolerance = 10;
     double mapTolerance = tolerance * mMapView.getUnitsPerDensityIndependentPixel();
     // create objects required to do a selection with a query
