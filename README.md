@@ -1,5 +1,5 @@
 # Overview
-ArcGIS Runtime SDK for Android v100.2.0 samples.  The `master` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [git tags](https://github.com/Esri/arcgis-runtime-samples-android/tags).  Please read our [wiki](https://github.com/Esri/arcgis-runtime-samples-android/wiki) for help with working with this repository.  
+ArcGIS Runtime SDK for Android v100.2.0 samples.  This branch, **develop**, is not guarenteed to build against a release version of the ArcGIS Android SDK.  The **master** branch contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [git tags](https://github.com/Esri/arcgis-runtime-samples-android/tags).  Please read our [wiki](https://github.com/Esri/arcgis-runtime-samples-android/wiki) for help with working with this repository.  
 
 # Prerequisites
 * The samples are building with `compileSdkVersion 26` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
@@ -46,7 +46,7 @@ Anyone and everyone is welcome to [contribute](.github/CONTRIBUTING.md). We do a
 3. Contribute Code
 4. Improve Documentation
 
-Please see our [guidelines for contributing doc](https://github.com/Esri/contributing/blob/master/README.md)
+Please see our [guidelines for contributing doc](.github/CONTRIBUTING.md)
 
 ## Licensing
 Copyright 2017 Esri
@@ -57,4 +57,4 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-A copy of the license is available in the repository's [license.txt](https://github.com/Esri/arcgis-android-sdk-gradle-samples/blob/master/LICENSE) file.
+A copy of the license is available in the repository's [LICENSE](LICENSE) file.
