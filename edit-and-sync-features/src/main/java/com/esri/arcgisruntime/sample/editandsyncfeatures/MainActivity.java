@@ -67,9 +67,12 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private FeatureLayer mGeodatabaseFeatureLayer;
+  private Feature mFeature;
 
   private TextView mProgressTextView;
   private RelativeLayout mProgressLayout;
+
+  private EditState mEditState;
 
   // Enumeration to track which phase of the workflow the sample is in
   public enum EditState
@@ -83,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    // set edit state to not ready until geodatabase job has completed successfully
+    mEditState = EditState.NotReady;
 
     // define permission to request
     String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
@@ -133,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             graphicsOverlay.getGraphics().clear();
 
             // show the extent used as a graphic
-            Envelope extent = mMapView.getVisibleArea().getExtent();
+            final Envelope extent = mMapView.getVisibleArea().getExtent();
             Graphic boundary = new Graphic(extent, boundarySymbol);
             graphicsOverlay.getGraphics().add(boundary);
 
@@ -189,7 +195,12 @@ public class MainActivity extends AppCompatActivity {
                                     .setOnTouchListener(new DefaultMapViewOnTouchListener(MainActivity.this, mMapView) {
                                       @Override
                                       public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-                                        identifyFeature(motionEvent);
+                                        if (mEditState == EditState.Ready) {
+                                          identifyFeature(motionEvent);
+                                        } else if (mEditState == EditState.Editing) {
+                                          Log.d(TAG, "editting");
+                                          moveSelectedFeatureTo(motionEvent);
+                                        }
                                         return true;
                                       }
                                     });
@@ -201,6 +212,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                           }
                         });
+                        // set edit state to ready
+                        mEditState = EditState.Ready;
                       } else if (generateGeodatabaseJob.getError() != null) {
                         Log.e(TAG, "Error generating geodatabase: " + generateGeodatabaseJob.getError().getMessage());
                       } else {
@@ -239,25 +252,27 @@ public class MainActivity extends AppCompatActivity {
     QueryParameters query = new QueryParameters();
     query.setGeometry(envelope);
     // call select features
-    final ListenableFuture<FeatureQueryResult> future = mGeodatabaseFeatureLayer
+    final ListenableFuture<FeatureQueryResult> featureQueryResultFuture = mGeodatabaseFeatureLayer
         .selectFeaturesAsync(query, FeatureLayer.SelectionMode.NEW);
     // add done loading listener to fire when the selection returns
-    future.addDoneListener(new Runnable() {
+    featureQueryResultFuture.addDoneListener(new Runnable() {
       @Override
       public void run() {
         try {
           //call get on the future to get the result
-          FeatureQueryResult result = future.get();
+          FeatureQueryResult result = featureQueryResultFuture.get();
           // create an Iterator
           Iterator<Feature> iterator = result.iterator();
-          Feature feature;
           // cycle through selections
           int counter = 0;
           while (iterator.hasNext()) {
-            feature = iterator.next();
+            mFeature = iterator.next();
             counter++;
+            if (counter > 0) {
+              mEditState = EditState.Editing;
+            }
             Log.d(getResources().getString(R.string.app_name),
-                "Selection #: " + counter + " Table name: " + feature.getFeatureTable().getTableName());
+                "Selection #: " + counter + " Table name: " + mFeature.getFeatureTable().getTableName());
           }
           Toast.makeText(getApplicationContext(), counter + " features selected", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
@@ -265,6 +280,24 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     });
+  }
+
+  /**
+   * Moves a selected feature to the given point.
+   *
+   * @param motionEvent containing a tapped screen point
+   */
+  private void moveSelectedFeatureTo(MotionEvent motionEvent) {
+    mEditState = EditState.NotReady;
+    // get the screen point
+    android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
+        Math.round(motionEvent.getY()));
+    // get the point that was clicked and convert it to a point in map coordinates
+    Point mapPoint = mMapView.screenToLocation(screenPoint);
+
+    mFeature.setGeometry(mapPoint);
+    mFeature.getFeatureTable().updateFeatureAsync(mFeature);
+
   }
 
   @Override
