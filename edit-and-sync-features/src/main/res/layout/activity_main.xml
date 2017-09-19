@@ -11,7 +11,7 @@
             android:layout_height="match_parent">
     </com.esri.arcgisruntime.mapping.view.MapView>
     <Button
-            android:id="@+id/genGeodatabaseButton"
+            android:id="@+id/geodatabaseButton"
             android:text="@string/gen_geodatabase_button_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
