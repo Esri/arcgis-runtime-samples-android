@@ -27,7 +27,6 @@ This sample demonstrates how to synchronize offline edits with a feature service
 * GenerateGeodatabaseParameters
 * SyncGeodatabaseJob
 * SyncGeodatabaseParameters
-* GenerateLayerOption
 * SyncLayerOption
 
 ## Provision your device
