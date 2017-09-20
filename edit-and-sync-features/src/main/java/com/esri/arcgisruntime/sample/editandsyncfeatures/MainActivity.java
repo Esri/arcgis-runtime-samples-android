@@ -36,6 +36,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -190,15 +191,15 @@ public class MainActivity extends AppCompatActivity {
                     mGeodatabase.addDoneLoadingListener(new Runnable() {
                       @Override public void run() {
                         if (mGeodatabase.getLoadStatus() == LoadStatus.LOADED) {
-                          for (GeodatabaseFeatureTable geodatabaseFeatureTable : mGeodatabase
-                              .getGeodatabaseFeatureTables()) {
-                            geodatabaseFeatureTable.loadAsync();
-                            FeatureLayer geodatabaseFeatureLayer = new FeatureLayer(geodatabaseFeatureTable);
-                            // add geodatabase layer to the map as a feature layer and make it selectable
-                            mMapView.getMap().getOperationalLayers().add(geodatabaseFeatureLayer);
-                            geodatabaseFeatureLayer.setSelectionColor(Color.CYAN);
-                            geodatabaseFeatureLayer.setSelectionWidth(5.0);
-                          }
+                          // get only the first table which, contains points
+                          GeodatabaseFeatureTable pointsGeodatabaseFeatureTable = mGeodatabase
+                              .getGeodatabaseFeatureTables().get(0);
+                          pointsGeodatabaseFeatureTable.loadAsync();
+                          FeatureLayer geodatabaseFeatureLayer = new FeatureLayer(pointsGeodatabaseFeatureTable);
+                          // add geodatabase layer to the map as a feature layer and make it selectable
+                          mMapView.getMap().getOperationalLayers().add(geodatabaseFeatureLayer);
+                          geodatabaseFeatureLayer.setSelectionColor(Color.CYAN);
+                          geodatabaseFeatureLayer.setSelectionWidth(5.0);
                           mGeodatabaseButton.setVisibility(View.GONE);
                           Log.i(TAG, "Local geodatabase stored at: " + localGeodatabasePath);
                         } else {
@@ -210,13 +211,22 @@ public class MainActivity extends AppCompatActivity {
                     mCurrentEditState = EditState.Ready;
                   } else if (generateGeodatabaseJob.getError() != null) {
                     Log.e(TAG, "Error generating geodatabase: " + generateGeodatabaseJob.getError().getMessage());
+                    Toast.makeText(MainActivity.this,
+                        "Error generating geodatabase: " + generateGeodatabaseJob.getError().getMessage(),
+                        Toast.LENGTH_LONG).show();
+                    mProgressLayout.setVisibility(View.INVISIBLE);
                   } else {
                     Log.e(TAG, "Unknown Error generating geodatabase");
+                    Toast.makeText(MainActivity.this, "Unknown Error generating geodatabase", Toast.LENGTH_LONG).show();
+                    mProgressLayout.setVisibility(View.INVISIBLE);
                   }
                 }
               });
             } catch (InterruptedException | ExecutionException e) {
               Log.e(TAG, "Error generating geodatabase parameters : " + e.getMessage());
+              Toast.makeText(MainActivity.this, "Error generating geodatabase parameters: " + e.getMessage(),
+                  Toast.LENGTH_LONG).show();
+              mProgressLayout.setVisibility(View.INVISIBLE);
             }
           }
         });
@@ -248,6 +258,18 @@ public class MainActivity extends AppCompatActivity {
     syncGeodatabaseJob.addProgressChangedListener(new Runnable() {
       @Override public void run() {
         updateProgress(syncGeodatabaseJob.getProgress());
+      }
+    });
+
+    syncGeodatabaseJob.addJobDoneListener(new Runnable() {
+      @Override public void run() {
+        if (syncGeodatabaseJob.getStatus() == Job.Status.SUCCEEDED) {
+          Toast.makeText(MainActivity.this, "Sync complete", Toast.LENGTH_SHORT).show();
+          mGeodatabaseButton.setVisibility(View.INVISIBLE);
+        } else {
+          Log.e(TAG, "Database did not sync correctly!");
+          Toast.makeText(MainActivity.this, "Database did not sync correctly!", Toast.LENGTH_LONG).show();
+        }
       }
     });
   }

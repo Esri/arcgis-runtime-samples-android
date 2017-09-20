@@ -1,34 +1,34 @@
-# Generate Geodatabase
+# Edit and sync features
 
-This sample demonstrates how to generate a geodatabase from a feature service.
+This sample demonstrates how to synchronize offline edits with a feature service.
 
 ## How to use the sample
 
-Zoom to any extent and click the generate button to generate a geodatabase of features from a feature service filtered to the current extent. A red bounding box graphic will display showing the extent used. A progress bar will show the job's progress. Once the geodatabase has been generated, the layers in the geodatabase will be added to the map.
-
 ![](image1.png)
 
-
-## How it works
-
-To generate a `Geodatabase` from a feature service:
-
-
-- Create a `GeodatabaseSyncTask` with the URL of a feature service and load it.
-- Create `GenerateGeodatabaseParameters` specifying the extent and whether to include attachments.
-- Create a `GenerateGeodatabaseJob` with `GenerateGeodatabaseJob generateGeodatabaseJob = syncTask.generateGeodatabaseAsync(parameters, filePath)`. Start the job with `generateGeodatabaseJob.start()`.
-- When the job is done, `generateGeodatabaseJob.getResult()` will return a `Geodatabase`. Inside the `Geodatabase` are `FeatureTable`s that can be used to add `FeatureLayer`s to the map.
-- Lastly, it is good practice to call `syncTask.unregisterGeodatabaseAsync(geodatabase)` when not planning on syncing changes to the service.
+- Pan and zoom into the desired area, making sure the area you want to take offline is within the current extent of the `MapView`. 
+- Tap on the Generate Geodatabase button. This will call `generateGeodatabase()`, which will return a `GenerateGeodatabaseJob`. 
+- Once the job completes successfully, a `GeodatabaseFeatureTable` and a `FeatureLayer` are created from the resulting `Geodatabase`. The `FeatureLayer` is then added to the `ArcGISMap`. 
+- Once the `FeatureLayer` generated from the local `Geodatabase` is displayed, a `Feature` can be selected by tapping on it. The selected `Feature` can be moved to a new location by tapping anywhere on the map. 
+- Once a successful edit has been made to the `FeatureLayer`, the Sync Geodatabase button is enabled. This button synchronizes local edits made to the local `GeoDatabase` with the remote feature service using `syncGeodatabase()` which generates `SyncGeodatbaseParameters` and passes them to a `SyncGeodatabaseJob`.
+- Once the job successfully completes, the local edits are synchronized with the feature service.
 
 ## Features
 
-* ArcGISMap
-* FeatureLayer
-* Geodatabase
-* GenerateGeodatabaseJob 
-* GenerateGeodatabaseParameters
 * MapView
-* ServiceFeatureTable
+* Map
+* Basemap
+* ArcGISTiledLayer
+* TileCache
+* FeatureLayer
+* FeatureTable
+* GeodatabaseSyncTask
+* GenerateGeodatabaseJob
+* GenerateGeodatabaseParameters
+* SyncGeodatabaseJob
+* SyncGeodatabaseParameters
+* GenerateLayerOption
+* SyncLayerOption
 
 ## Provision your device
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=72e703cd01654e7796eb1ae75af1cb53).  
