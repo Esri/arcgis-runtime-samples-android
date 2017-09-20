@@ -4,7 +4,7 @@ This sample demonstrates how to synchronize offline edits with a feature service
 
 ## How to use the sample
 
-![](image1.png)
+![](editandsyncgeodatabase.png)
 
 - Pan and zoom into the desired area, making sure the area you want to take offline is within the current extent of the `MapView`. 
 - Tap on the Generate Geodatabase button. This will call `generateGeodatabase()`, which will return a `GenerateGeodatabaseJob`. 
