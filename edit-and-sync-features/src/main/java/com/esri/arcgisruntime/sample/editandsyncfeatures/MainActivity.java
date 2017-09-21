@@ -26,6 +26,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -70,16 +71,18 @@ import com.esri.arcgisruntime.tasks.geodatabase.SyncLayerOption;
 public class MainActivity extends AppCompatActivity {
 
   private final String TAG = MainActivity.class.getSimpleName();
-
-  private MapView mMapView;
-  private GraphicsOverlay mGraphicsOverlay;
-  private GeodatabaseSyncTask mGeodatabaseSyncTask;
-  private Geodatabase mGeodatabase;
+  private String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+  private int requestCode = 2;
 
   private RelativeLayout mProgressLayout;
   private TextView mProgressTextView;
   private ProgressBar mProgressBar;
   private Button mGeodatabaseButton;
+
+  private MapView mMapView;
+  private GraphicsOverlay mGraphicsOverlay;
+  private GeodatabaseSyncTask mGeodatabaseSyncTask;
+  private Geodatabase mGeodatabase;
 
   private List<Feature> mSelectedFeatures;
   private EditState mCurrentEditState;
@@ -89,26 +92,11 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // define permission to request
-    String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]) != PackageManager.PERMISSION_GRANTED) {
-      // request permission
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
-    }
-
     // set edit state to not ready until geodatabase job has completed successfully
     mCurrentEditState = EditState.NotReady;
 
-    // use local tile package for the base map
-    TileCache sanFrancisco = new TileCache(
-        Environment.getExternalStorageDirectory() + getString(R.string.san_francisco_tpk));
-    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(sanFrancisco);
     // create a map view and add a map
     mMapView = (MapView) findViewById(R.id.mapView);
-    final ArcGISMap map = new ArcGISMap(new Basemap(tiledLayer));
-    mMapView.setMap(map);
     // create a graphics overlay and symbol to mark the extent
     mGraphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
@@ -129,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     });
-
     // add listener to handle motion events, which only responds once a geodatabase is loaded
     mMapView.setOnTouchListener(
         new DefaultMapViewOnTouchListener(MainActivity.this, mMapView) {
@@ -143,6 +130,26 @@ public class MainActivity extends AppCompatActivity {
             return true;
           }
         });
+
+    // request write permission to access local TileCache
+    if (ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]) != PackageManager.PERMISSION_GRANTED) {
+      // request permission
+      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
+    } else {
+      loadTileCache();
+    }
+  }
+
+  /**
+   * Load local tile cache.
+   */
+  private void loadTileCache() {
+    // use local tile package for the base map
+    TileCache sanFranciscoTileCache = new TileCache(
+        Environment.getExternalStorageDirectory() + getString(R.string.san_francisco_tpk));
+    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(sanFranciscoTileCache);
+    final ArcGISMap map = new ArcGISMap(new Basemap(tiledLayer));
+    mMapView.setMap(map);
   }
 
   /**
@@ -385,6 +392,20 @@ public class MainActivity extends AppCompatActivity {
   protected void onResume() {
     super.onResume();
     mMapView.resume();
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      // Write permission was granted, so load TileCache
+      loadTileCache();
+    } else {
+      // If permission was denied, show toast to inform user write permission is required and remove Generate
+      // Geodatabase button
+      Toast.makeText(MainActivity.this, getResources().getString(R.string.write_permission), Toast
+          .LENGTH_SHORT).show();
+      mGeodatabaseButton.setVisibility(View.GONE);
+    }
   }
 
   // Enumeration to track editing of points
