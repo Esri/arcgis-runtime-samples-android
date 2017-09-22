@@ -2,9 +2,9 @@
 
 This sample demonstrates how to synchronize offline edits with a feature service.
 
-## How to use the sample
-
 ![](editandsyncfeatures.png)
+
+## How to use the sample
 
 - Pan and zoom into the desired area, making sure the area you want to take offline is within the current extent of the `MapView`. 
 - Tap on the Generate Geodatabase button. This will call `generateGeodatabase()`, which will return a `GenerateGeodatabaseJob`. 
@@ -15,11 +15,6 @@ This sample demonstrates how to synchronize offline edits with a feature service
 
 ## Features
 
-* MapView
-* Map
-* Basemap
-* ArcGISTiledLayer
-* TileCache
 * FeatureLayer
 * FeatureTable
 * GeodatabaseSyncTask

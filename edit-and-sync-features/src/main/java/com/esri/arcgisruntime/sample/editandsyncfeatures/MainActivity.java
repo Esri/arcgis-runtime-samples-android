@@ -71,8 +71,7 @@ import com.esri.arcgisruntime.tasks.geodatabase.SyncLayerOption;
 public class MainActivity extends AppCompatActivity {
 
   private final String TAG = MainActivity.class.getSimpleName();
-  private String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-  private int requestCode = 2;
+  private final String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
 
   private RelativeLayout mProgressLayout;
   private TextView mProgressTextView;
@@ -134,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
     // request write permission to access local TileCache
     if (ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]) != PackageManager.PERMISSION_GRANTED) {
       // request permission
+      int requestCode = 2;
       ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
     } else {
       loadTileCache();
@@ -305,9 +305,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Identifies the features at the tapped point within a certain tolerance.
+   * Queries the features at the tapped point within a certain tolerance.
    *
-   * @param point     contains an ESRI map point
+   * @param point     contains an ArcGIS map point
    * @param tolerance distance from point within which features will be selected
    */
   private void selectFeaturesAt(Point point, int tolerance) {
@@ -355,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Moves selected features to the given point.
    *
-   * @param point contains an ESRI map point
+   * @param point contains an ArcGIS map point
    */
   private void moveSelectedFeatureTo(Point point) {
     for (Feature feature : mSelectedFeatures) {
@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Converts motion event to an ESRI map point.
+   * Converts motion event to an ArcGIS map point.
    *
    * @param motionEvent containing coordinates of an Android screen point
    * @return a corresponding map point in the place
