@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Edit and Sync Features</string>
+    <string name="write_permission">Write permission required to access local TileCache.</string>
+    <string name="san_francisco_tpk">/ArcGIS/Samples/TileCache/SanFrancisco.tpk</string>
+    <string name="wildfire_sync">"https://sampleserver6.arcgisonline.com/arcgis/rest/services/Sync/WildfireSync/FeatureServer"</string>
+    <string name="file_name">wildfire.geodatabase</string>
+    <string name="gen_geodatabase_button_text">Generate Geodatabase</string>
+    <string name="sync_geodatabase_button_text">Sync Geodatabase</string>
+    <string name="progress_starting">Starting</string>
+    <string name="progress_started">Started</string>
+    <string name="progress_syncing">Syncing</string>
+    <string name="progress_done">Done</string>
+</resources>
