@@ -1,8 +1,8 @@
 # Identify Layers
 
-This sample demonstrates how to identify features on a map acoss different layers present in the map.
+This sample demonstrates how to identify features on a map across different layers present in the map.
 
-![Identify Layers](identify-layers.png)
+![](identify-layers.png)
 
 ## How to use the sample
 
