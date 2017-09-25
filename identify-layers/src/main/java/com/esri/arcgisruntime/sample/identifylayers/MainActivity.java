@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Performs an identify on layers at the given screenpoint and calls handleIdentifyResults() to process them.
+   * Performs an identify on layers at the given screenpoint and calls handleIdentifyResults(...) to process them.
    *
    * @param screenPoint in Android graphic coordinates.
    */
@@ -123,12 +123,11 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Processes identify results into a string which is passed to showAlertDialog().
+   * Processes identify results into a string which is passed to showAlertDialog(...).
    *
    * @param identifyLayerResults a list of identify results generated in identifyResult().
    */
   private void handleIdentifyResults(List<IdentifyLayerResult> identifyLayerResults) {
-    Log.d(TAG, "handleIdentifyResults");
     String message = "";
     int totalCount = 0;
     for (IdentifyLayerResult identifyLayerResult : identifyLayerResults) {
@@ -208,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
     // create alert dialog
     AlertDialog alertDialog = alertDialogBuilder.create();
 
-    // show it
+    // show the alert dialog
     alertDialog.show();
   }
 
