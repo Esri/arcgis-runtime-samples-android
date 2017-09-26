@@ -128,16 +128,16 @@ public class MainActivity extends AppCompatActivity {
    * @param identifyLayerResults a list of identify results generated in identifyResult().
    */
   private void handleIdentifyResults(List<IdentifyLayerResult> identifyLayerResults) {
-    String message = "";
+    StringBuilder message = new StringBuilder();
     int totalCount = 0;
     for (IdentifyLayerResult identifyLayerResult : identifyLayerResults) {
       int count = geoElementsCountFromResult(identifyLayerResult);
       String layerName = identifyLayerResult.getLayerContent().getName();
-      message += layerName + ": " + count;
+      message.append(layerName).append(": ").append(count);
 
       // add new line character if not the final element in array
       if (!identifyLayerResult.equals(identifyLayerResults.get(identifyLayerResults.size() - 1))) {
-        message += "\n";
+        message.append("\n");
       }
       totalCount += count;
     }
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
    *
    * @param message contains identify results processed into a string.
    */
-  private void showAlertDialog(String message) {
+  private void showAlertDialog(StringBuilder message) {
     Builder alertDialogBuilder = new Builder(this);
 
     // set title
