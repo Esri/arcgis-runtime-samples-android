@@ -17,6 +17,7 @@ allprojects {
         jcenter()
         maven { url 'https://maven.google.com' }
         maven{ url 'https://esri.bintray.com/arcgis' }
+        maven { url 'http://android.esri.com:8080/artifactory/arcgis' }
     }
     var
 }
@@ -35,7 +36,7 @@ subprojects{
                 compile 'com.android.support:appcompat-v7:25.4.0'
                 compile 'com.android.support:design:25.4.0'
                 compile 'com.android.support.constraint:constraint-layout:1.0.2'
-                compile 'com.esri.arcgisruntime:arcgis-android:100.1.0'
+                compile 'com.esri.arcgisruntime:arcgis-android:100.2.0-1841'
             }
         }
     }

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Feature layer extrusion</string>
+    <string name="us_census_feature_service">http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer/3</string>
+    <string name="elevation_image_service">
+        http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
+    <string name="total_pop">Total Population</string>
+    <string name="density_pop">Population Density</string>
+</resources>
