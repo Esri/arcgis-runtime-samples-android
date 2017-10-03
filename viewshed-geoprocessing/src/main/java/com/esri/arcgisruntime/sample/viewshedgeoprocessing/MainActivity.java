@@ -1,4 +1,4 @@
-/* Copyright 2016 Esri
+/* Copyright 2017 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,11 +96,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onSingleTapConfirmed(e);
       }
     });
-
   }
 
   /**
-   * Adds a graphic at the chosen mapPoint
+   * Adds a graphic at the chosen mapPoint.
    *
    * @param point in MapView coordinates.
    */
@@ -155,12 +154,11 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Creates 
+   * Creates a GeoprocessingJob from the GeoprocessingTask. Displays the resulting viewshed on the map.
    *
-   * @param featureCollectionTable
+   * @param featureCollectionTable containing the observation point.
    */
   private void performGeoprocessing(final FeatureCollectionTable featureCollectionTable) {
-
     // geoprocessing parameters
     final ListenableFuture<GeoprocessingParameters> parameterFuture = mGeoprocessingTask.createDefaultParametersAsync();
     parameterFuture.addDoneListener(new Runnable() {
