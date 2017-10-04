@@ -1,3 +1,4 @@
 include ':attribution-view-change',
         ':raster-function-service',
+        ':scalebar',
         ':wmts-layer'

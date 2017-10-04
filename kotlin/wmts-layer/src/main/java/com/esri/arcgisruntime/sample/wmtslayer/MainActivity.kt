@@ -13,6 +13,7 @@
  * limitations under the License.
  *
  */
+
 package com.esri.arcgisruntime.sample.wmtslayer
 
 import android.os.Bundle

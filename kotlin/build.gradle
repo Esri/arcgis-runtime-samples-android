@@ -21,6 +21,7 @@ allprojects {
         maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
         maven { url 'https://esri.bintray.com/arcgis' }
         maven { url 'http://android:8080/artifactory/arcgis' }
+        maven { url 'http://android:8080/artifactory/libs-snapshots' }
     }
     var
 }
