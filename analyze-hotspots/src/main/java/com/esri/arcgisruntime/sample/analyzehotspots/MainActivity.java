@@ -17,7 +17,6 @@
 package com.esri.arcgisruntime.sample.analyzehotspots;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import android.app.DatePickerDialog;
@@ -30,6 +29,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
@@ -46,6 +46,8 @@ import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingString;
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingTask;
 
 public class MainActivity extends AppCompatActivity {
+
+  private String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
   private GeoprocessingTask mGeoprocessingTask;
@@ -74,11 +76,12 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // initialize geoprocessing task with the url of the service
-    mGeoprocessingTask = new GeoprocessingTask("http://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/GPServer/911%20Calls%20Hotspot");
+    mGeoprocessingTask = new GeoprocessingTask(
+        "http://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/GPServer/911%20Calls%20Hotspot");
 
     analyzeButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        analyzeHotspots(new Date("1990-01-01"), new Date("1995-01-01"));
+        analyzeHotspots("1990-01-01", "1995-01-01");
       }
     });
 
@@ -94,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
 
     final DatePickerDialog.OnDateSetListener fromDate = new DatePickerDialog.OnDateSetListener() {
       @Override public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        StringBuilder date = new StringBuilder().append(year).append("-").append(month + 1).append("-").append(dayOfMonth);
+        StringBuilder date = new StringBuilder().append(year).append("-").append(month + 1).append("-")
+            .append(dayOfMonth);
         fromDateText.setText(date);
 
       }
@@ -102,23 +106,24 @@ public class MainActivity extends AppCompatActivity {
 
     final DatePickerDialog.OnDateSetListener toDate = new DatePickerDialog.OnDateSetListener() {
       @Override public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        StringBuilder date = new StringBuilder().append(year).append("-").append(month + 1).append("-").append(dayOfMonth);
+        StringBuilder date = new StringBuilder().append(year).append("-").append(month + 1).append("-")
+            .append(dayOfMonth);
         toDateText.setText(date);
 
       }
     };
 
-    // set the custom dialog components - text, image and button
-
     fromDateText.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        new DatePickerDialog(MainActivity.this, fromDate, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        new DatePickerDialog(MainActivity.this, fromDate, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)).show();
       }
     });
-    
+
     toDateText.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        new DatePickerDialog(MainActivity.this, toDate, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        new DatePickerDialog(MainActivity.this, toDate, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)).show();
       }
     });
 
@@ -134,7 +139,8 @@ public class MainActivity extends AppCompatActivity {
     dialog.show();
   }
 
-  private void analyzeHotspots(final Date from, final Date to) {
+  private void analyzeHotspots(final String from, final String to) {
+    Log.d("analyze", "hotspots");
 
     // cancel previous job request
     if (mGeoprocessingJob != null) {
@@ -164,17 +170,21 @@ public class MainActivity extends AppCompatActivity {
 
           mGeoprocessingJob.addJobDoneListener(new Runnable() {
             @Override public void run() {
-              // a map image layer is generated as a result. Remove any layer previously added to the map
-              mMapView.getMap().getOperationalLayers().clear();
+              if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
+                // a map image layer is generated as a result. Remove any layer previously added to the map
+                mMapView.getMap().getOperationalLayers().clear();
 
-              GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
-              ArcGISMapImageLayer hotspotMapImageLayer = geoprocessingResult.getMapImageLayer();
+                GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
+                ArcGISMapImageLayer hotspotMapImageLayer = geoprocessingResult.getMapImageLayer();
 
-              // add the new layer to the map
-              mMapView.getMap().getOperationalLayers().add(hotspotMapImageLayer);
+                // add the new layer to the map
+                mMapView.getMap().getOperationalLayers().add(hotspotMapImageLayer);
 
-              // set the map viewpoint to the MapImageLayer
-              mMapView.setViewpointGeometryAsync(hotspotMapImageLayer.getFullExtent());
+                // set the map viewpoint to the MapImageLayer
+                mMapView.setViewpointGeometryAsync(hotspotMapImageLayer.getFullExtent());
+              } else {
+                Log.e(TAG, "Job did not succeed!");
+              }
             }
           });
         } catch (InterruptedException | ExecutionException e) {
