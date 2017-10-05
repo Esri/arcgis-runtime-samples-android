@@ -12,7 +12,7 @@
         android:layout_height="fill_parent">
     </com.esri.arcgisruntime.mapping.view.MapView>
     <Button
-            android:text="Button"
+            android:text="Analyze"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true" android:layout_marginBottom="21dp" android:id="@+id/analyze_button"/>

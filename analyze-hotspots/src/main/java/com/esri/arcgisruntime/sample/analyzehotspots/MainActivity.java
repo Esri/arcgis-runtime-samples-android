@@ -16,7 +16,10 @@
 
 package com.esri.arcgisruntime.sample.analyzehotspots;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import android.app.DatePickerDialog;
@@ -37,7 +40,6 @@ import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
-import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingJob;
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingParameters;
@@ -52,14 +54,29 @@ public class MainActivity extends AppCompatActivity {
   private MapView mMapView;
   private GeoprocessingTask mGeoprocessingTask;
   private GeoprocessingJob mGeoprocessingJob;
-  private GraphicsOverlay mGraphicsOverlay;
+
+  private EditText fromDateText;
+  private EditText toDateText;
+
+  private SimpleDateFormat mSimpleDateFormatter;
+  private Date mMinDate;
+  private Date mMaxDate;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    mSimpleDateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+    try {
+      mMinDate = mSimpleDateFormatter.parse("01/01/1998");
+      mMaxDate = mSimpleDateFormatter.parse("31/05/1998");
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
     final Button analyzeButton = (Button) findViewById(R.id.analyze_button);
+    analyzeButton.setVisibility(View.GONE);
 
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
@@ -78,10 +95,16 @@ public class MainActivity extends AppCompatActivity {
     // initialize geoprocessing task with the url of the service
     mGeoprocessingTask = new GeoprocessingTask(
         "http://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/GPServer/911%20Calls%20Hotspot");
+    mGeoprocessingTask.loadAsync();
 
-    analyzeButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        analyzeHotspots("1990-01-01", "1995-01-01");
+    mGeoprocessingTask.addDoneLoadingListener(new Runnable() {
+      @Override public void run() {
+        analyzeButton.setVisibility(View.VISIBLE);
+        analyzeButton.setOnClickListener(new View.OnClickListener() {
+          @Override public void onClick(View v) {
+            analyzeHotspots("1998-01-01", "1998-01-31");
+          }
+        });
       }
     });
 
@@ -90,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
     dialog.setContentView(R.layout.custom_alert_dialog);
     dialog.setTitle("Select Date Range for Analysis");
 
-    final EditText fromDateText = (EditText) dialog.findViewById(R.id.fromDateText);
-    final EditText toDateText = (EditText) dialog.findViewById(R.id.toDateText);
+    fromDateText = (EditText) dialog.findViewById(R.id.fromDateText);
+    toDateText = (EditText) dialog.findViewById(R.id.toDateText);
 
     final Calendar calendar = Calendar.getInstance();
 
@@ -115,8 +138,12 @@ public class MainActivity extends AppCompatActivity {
 
     fromDateText.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        new DatePickerDialog(MainActivity.this, fromDate, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)).show();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, fromDate,
+            calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.getDatePicker().setMinDate(mMinDate.getTime());
+        datePickerDialog.getDatePicker().setMaxDate(mMaxDate.getTime());
+        datePickerDialog.show();
       }
     });
 
@@ -140,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void analyzeHotspots(final String from, final String to) {
-    Log.d("analyze", "hotspots");
 
     // cancel previous job request
     if (mGeoprocessingJob != null) {
@@ -152,15 +178,20 @@ public class MainActivity extends AppCompatActivity {
     paramsFuture.addDoneListener(new Runnable() {
       @Override public void run() {
         try {
+          Log.i(TAG, "Parameters loaded.");
           GeoprocessingParameters geoprocessingParameters = paramsFuture.get();
           geoprocessingParameters.setProcessSpatialReference(mMapView.getSpatialReference());
           geoprocessingParameters.setOutputSpatialReference(mMapView.getSpatialReference());
 
-          StringBuilder queryString = new StringBuilder("(\"DATE\" > date '").append(from)
-              .append(" 00:00:00' AND \"DATE\" < date '").append(to).append(" 00:00:00')");
+          StringBuilder queryString = new StringBuilder("(\"DATE\" > date '")
+              .append(from)
+              .append(" 00:00:00' AND \"DATE\" < date '")
+              .append(to)
+              .append(" 00:00:00')");
 
-          Log.d("string", queryString.toString());
           geoprocessingParameters.getInputs().put("Query", new GeoprocessingString(queryString.toString()));
+
+          Log.i(TAG, "Query: " + queryString.toString());
 
           // create job
           mGeoprocessingJob = mGeoprocessingTask.createJob(geoprocessingParameters);
@@ -171,17 +202,22 @@ public class MainActivity extends AppCompatActivity {
           mGeoprocessingJob.addJobDoneListener(new Runnable() {
             @Override public void run() {
               if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
+                Log.d(TAG, "Job succeeded.");
                 // a map image layer is generated as a result. Remove any layer previously added to the map
                 mMapView.getMap().getOperationalLayers().clear();
 
                 GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
-                ArcGISMapImageLayer hotspotMapImageLayer = geoprocessingResult.getMapImageLayer();
+                final ArcGISMapImageLayer hotspotMapImageLayer = geoprocessingResult.getMapImageLayer();
 
                 // add the new layer to the map
                 mMapView.getMap().getOperationalLayers().add(hotspotMapImageLayer);
 
-                // set the map viewpoint to the MapImageLayer
-                mMapView.setViewpointGeometryAsync(hotspotMapImageLayer.getFullExtent());
+                hotspotMapImageLayer.addDoneLoadingListener(new Runnable() {
+                  @Override public void run() {
+                    // set the map viewpoint to the MapImageLayer, once loaded
+                    mMapView.setViewpointGeometryAsync(hotspotMapImageLayer.getFullExtent());
+                  }
+                });
               } else {
                 Log.e(TAG, "Job did not succeed!");
               }
