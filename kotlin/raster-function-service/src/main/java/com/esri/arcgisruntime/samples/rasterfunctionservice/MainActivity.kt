@@ -13,7 +13,7 @@
  * limitations under the License.
  *
  */
-package com.esri.arcgisruntime.toolkit.rasterfunctionservice
+package com.esri.arcgisruntime.samples.rasterfunctionservice
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
