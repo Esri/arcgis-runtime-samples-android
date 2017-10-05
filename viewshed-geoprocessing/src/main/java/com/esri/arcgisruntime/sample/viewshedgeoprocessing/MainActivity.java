@@ -16,14 +16,17 @@
 
 package com.esri.arcgisruntime.sample.viewshedgeoprocessing;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
+import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureCollectionTable;
@@ -128,13 +131,14 @@ public class MainActivity extends AppCompatActivity {
       mGeoprocessingJob.cancel();
     }
 
-    // TODO - This feels like a bit of a hack. Using new ArrayList<Field>() as the first parameter of new
-    // TODO - FeatureCollectionTable(new ArrayList<Field>(), ...) throws an error
-    Field field = Field.createInteger("placeholder", null);
+    List<Field> fields = new ArrayList<>(1);
+    // create field with same alias as name
+    Field field = Field.createString("observer", "", 8);
+    fields.add(field);
 
     // create feature collection table for point geometry
-    final FeatureCollectionTable featureCollectionTable = new FeatureCollectionTable(Collections.singletonList(field),
-        GeometryType.POINT, point.getSpatialReference());
+    final FeatureCollectionTable featureCollectionTable = new FeatureCollectionTable(fields, GeometryType.POINT,
+        point.getSpatialReference());
     featureCollectionTable.loadAsync();
 
     // create a new feature and assign the geometry
@@ -177,15 +181,21 @@ public class MainActivity extends AppCompatActivity {
           // start the job
           mGeoprocessingJob.start();
 
+          // listen for job success
           mGeoprocessingJob.addJobDoneListener(new Runnable() {
             @Override public void run() {
-              GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
-              GeoprocessingFeatures resultFeatures = (GeoprocessingFeatures) geoprocessingResult.getOutputs()
-                  .get("Viewshed_Result");
-              FeatureSet featureSet = resultFeatures.getFeatures();
-              for (Feature feature : featureSet) {
-                Graphic graphic = new Graphic(feature.getGeometry());
-                mResultGraphicsOverlay.getGraphics().add(graphic);
+              if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
+                GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
+                // get the viewshed from geoprocessingResult
+                GeoprocessingFeatures resultFeatures = (GeoprocessingFeatures) geoprocessingResult.getOutputs()
+                    .get("Viewshed_Result");
+                FeatureSet featureSet = resultFeatures.getFeatures();
+                for (Feature feature : featureSet) {
+                  Graphic graphic = new Graphic(feature.getGeometry());
+                  mResultGraphicsOverlay.getGraphics().add(graphic);
+                }
+              } else {
+                Toast.makeText(getApplicationContext(), "Geoprocessing result failed!", Toast.LENGTH_LONG).show();
               }
             }
           });
