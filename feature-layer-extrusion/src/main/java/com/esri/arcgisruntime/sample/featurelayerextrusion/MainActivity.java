@@ -59,16 +59,26 @@ public class MainActivity extends AppCompatActivity {
     ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(
         getResources().getString(R.string.us_census_feature_service));
 
-    FeatureLayer states = new FeatureLayer(serviceFeatureTable);
+
 
     // create a scene and add a basemap to it
-    ArcGISScene scene = new ArcGISScene();
-    scene.setBasemap(Basemap.createImagery());
+    ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
+    //scene.setBasemap(Basemap.createImagery());
     // create SceneView from layout
     mSceneView = (SceneView) findViewById(R.id.sceneView);
+    scene.getLoadSettings().setPreferredPolygonFeatureRenderingMode(FeatureLayer.RenderingMode.DYNAMIC);
     // set the scene to the scene view
     mSceneView.setScene(scene);
+    final FeatureLayer states = new FeatureLayer(serviceFeatureTable);
+    //states.setFeatureRenderingMode(FeatureLayer.RenderingMode.DYNAMIC);
+    scene.getOperationalLayers().add(states);
 
+    // define line and fill renderers
+    SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1.0f);
+    SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLUE, lineSymbol);
+    SimpleRenderer renderer = new SimpleRenderer(fillSymbol);
+    states.setRenderer(renderer);
+    states.getRenderer().getSceneProperties().setExtrusionMode(Renderer.SceneProperties.ExtrusionMode.ABSOLUTE_HEIGHT);
 
     // define a look at point for the camera at geographical center of the continental US
     Point lookAtPoint = new Point(-10974490, 4814376, 0, SpatialReferences.getWebMercator());
@@ -79,25 +89,17 @@ public class MainActivity extends AppCompatActivity {
     mSceneView.setCameraController(orbitCamera);
     mSceneView.setViewpointCamera(camera);
 
-    // define line and fill renderers
-    final SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1.0f);
-    final SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLUE, lineSymbol);
-
     // set button listener
     togglePopButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        // define a new renderer
-        SimpleRenderer renderer = new SimpleRenderer(fillSymbol);
-        Renderer.SceneProperties renderProperties = renderer.getSceneProperties();
-        renderProperties.setExtrusionMode(Renderer.SceneProperties.ExtrusionMode.ABSOLUTE_HEIGHT);
         // set extrusion properties to either show total population or population density based on flag
         if (showTotalPopulation) {
-          renderProperties.setExtrusionExpression("[POP2007]");
+          states.getRenderer().getSceneProperties().setExtrusionExpression("[POP2007]");
           // change text of button to reflect showing total population
           togglePopButton.setText(R.string.total_pop);
           showTotalPopulation = false;
         } else {
-          renderProperties.setExtrusionExpression("[POP07_SQMI]");
+          states.getRenderer().getSceneProperties().setExtrusionExpression("[POP07_SQMI]");
           // change text of button to reflect showing population density
           togglePopButton.setText(R.string.density_pop);
           showTotalPopulation = true;
@@ -107,6 +109,4 @@ public class MainActivity extends AppCompatActivity {
     // click to set initial state
     togglePopButton.performClick();
   }
-
-
 }

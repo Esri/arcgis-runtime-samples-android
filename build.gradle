@@ -36,7 +36,7 @@ subprojects{
                 compile 'com.android.support:appcompat-v7:25.4.0'
                 compile 'com.android.support:design:25.4.0'
                 compile 'com.android.support.constraint:constraint-layout:1.0.2'
-                compile 'com.esri.arcgisruntime:arcgis-android:100.2.0-1841'
+                compile 'com.esri.arcgisruntime:arcgis-android:100.2.0-1844'
             }
         }
     }
