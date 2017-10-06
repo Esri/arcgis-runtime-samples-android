@@ -67,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    mSimpleDateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+    mSimpleDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     try {
-      mMinDate = mSimpleDateFormatter.parse("01/01/1998");
-      mMaxDate = mSimpleDateFormatter.parse("31/05/1998");
+      mMinDate = mSimpleDateFormatter.parse("1998-01-01");
+      mMaxDate = mSimpleDateFormatter.parse("1998-05-31");
     } catch (ParseException e) {
       e.printStackTrace();
     }
@@ -144,8 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
     toDateText.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        new DatePickerDialog(MainActivity.this, toDate, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)).show();
+        showCalendar(InputCalendar.To);
       }
     });
 
@@ -161,13 +160,47 @@ public class MainActivity extends AppCompatActivity {
     dialog.show();
   }
 
-  private void showCalendar(InputCalendar inputCalendar) {
+  private void showCalendar(final InputCalendar inputCalendar) {
+    // create a date set listener
+    DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+      @Override public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        // build the correct date format for the query
+        StringBuilder date = new StringBuilder()
+            .append(year)
+            .append("-")
+            .append(month + 1)
+            .append("-")
+            .append(dayOfMonth);
+        // set the date to correct text view
+        if (inputCalendar == InputCalendar.From) {
+          fromDateText.setText(date);
+          try {
+            // limit the min date to after from date
+            mMinDate = mSimpleDateFormatter.parse(date.toString());
+          } catch (ParseException e) {
+            e.printStackTrace();
+          }
+        } else if (inputCalendar == InputCalendar.To) {
+          toDateText.setText(date);
+          try {
+            // limit the maximum date to before the to date
+            mMaxDate = mSimpleDateFormatter.parse(date.toString());
+          } catch (ParseException e) {
+            e.printStackTrace();
+          }
+        }
+      }
+    };
+
+    // define the date picker dialog
     Calendar calendar = Calendar.getInstance();
-    DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, fromDate,
+    DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, onDateSetListener,
         calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
         calendar.get(Calendar.DAY_OF_MONTH));
+
     datePickerDialog.getDatePicker().setMinDate(mMinDate.getTime());
     datePickerDialog.getDatePicker().setMaxDate(mMaxDate.getTime());
+
     datePickerDialog.show();
   }
 
@@ -248,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
   }
 }
 
-public enum InputCalendar {
-  From, //
+enum InputCalendar {
+  From,
   To
 }
