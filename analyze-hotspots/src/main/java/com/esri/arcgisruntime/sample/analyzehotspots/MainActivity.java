@@ -138,12 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
     fromDateText.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, fromDate,
-            calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.getDatePicker().setMinDate(mMinDate.getTime());
-        datePickerDialog.getDatePicker().setMaxDate(mMaxDate.getTime());
-        datePickerDialog.show();
+        showCalendar(InputCalendar.From);
       }
     });
 
@@ -164,6 +159,16 @@ public class MainActivity extends AppCompatActivity {
     });
 
     dialog.show();
+  }
+
+  private void showCalendar(InputCalendar inputCalendar) {
+    Calendar calendar = Calendar.getInstance();
+    DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, fromDate,
+        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH));
+    datePickerDialog.getDatePicker().setMinDate(mMinDate.getTime());
+    datePickerDialog.getDatePicker().setMaxDate(mMaxDate.getTime());
+    datePickerDialog.show();
   }
 
   private void analyzeHotspots(final String from, final String to) {
@@ -241,4 +246,9 @@ public class MainActivity extends AppCompatActivity {
     super.onResume();
     mMapView.resume();
   }
+}
+
+public enum InputCalendar {
+  From, //
+  To
 }
