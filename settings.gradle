@@ -1,4 +1,4 @@
-include ':add-graphics-renderer',/*
+include ':add-graphics-renderer',
         ':add-graphics-symbols',
         ':arcgis-map-imagelayer-url',
         ':arcgis-tiledlayer-url',
@@ -22,9 +22,8 @@ include ':add-graphics-renderer',/*
         ':edit-and-sync-features',
         ':export-tiles',
         ':feature-collection-layer-query',
-        ':feature-layer-definition-expression',*/
+        ':feature-layer-definition-expression',
         ':feature-layer-extrusion',
-        ':feature-layer-extrusion-test'/*
         ':feature-layer-feature-service',
         ':feature-layer-geodatabase',
         ':feature-layer-query',
@@ -73,4 +72,4 @@ include ':add-graphics-renderer',/*
         ':unique-value-renderer',
         ':update-related-features',
         ':web-tiledlayer',
-        ':wmts-layer'*/
+        ':wmts-layer'
