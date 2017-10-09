@@ -1,22 +1,21 @@
-# Display a Map
-The **Display Map** app is the most basic Map app for the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/en/android/).
-It shows how to inflate a `MapView` in the layout XML of the activity, create a `ArcGISMap` with a static `Basemap.Type` and bind the `ArcGISMap` to the `MapView`.  By default, this map supports basic zooming and panning operations.
+# Analyze Hotpots
+This sample demonstrates how to execute a geoprocessing task to calculate a hotspot analysis based on the frequency of 911 calls. It calculates the frequency of these calls within a given study area during a specified constrained time period set between 1998-01-01 and 1998-05-31.
 
-![Display a Map App](display-map.png)
+![Analyze Hotspots App](analyze-hotspots.png)
 
 ## Features
-* ArcGISMap
-* MapView
-* Basemap
+* GeoprocessingJob
+* GeoprocessingParameters
+* GeoprocessingResult
+* GeoprocessingTask
 
-## Developer Pattern
-Create a `ArcGISMap` with a `Basemap.Type` and an initial viewpoint. 
+## How to use the sample
+Select a From: and To: date from the dialog and tap on the `Analyze`. The results will be shown on the map on successful completion of the Geoprocessing Job
 
-```java
-// inflate MapView from layout
-mMapView = (MapView) findViewById(R.id.mapView);
-// create a map with the BasemapType topographic
-ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16);
-// set the map to be displayed in this view
-mMapView.setMap(mMap);
-```
+## How it works
+A `GeoprocessingTask` is created by setting the URL to the REST endpoint of a geoprocessing service.
+`GeoprocessingParameters` are created asynchronously from the `GeoprocessingTask`.
+
+Once the date ranges are selected, a query string is created with the 'to' and 'from' dates. The query string is then added as a key/value parameter input to the `GeoprocessingParameters`.
+
+A `GeoprocessingJob` is then obtained by calling  `.createJob(geoprocessingParameters)` method of the `GeoprocessingTask`. The job is started, and once complete, the `ArcGISMapImageLayer` is obtained from the result, and added to the `ArcGISMap`.

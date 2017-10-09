@@ -1,4 +1,4 @@
-/* Copyright 2016 Esri
+/* Copyright 2017 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,6 +33,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -47,9 +50,15 @@ import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingResult;
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingString;
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingTask;
 
+// enum to flag whether the date picker calendar shown should be for the 'from' or 'to' date
+enum InputCalendar {
+  From,
+  To
+}
+
 public class MainActivity extends AppCompatActivity {
 
-  private String TAG = MainActivity.class.getSimpleName();
+  private final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
   private GeoprocessingTask mGeoprocessingTask;
@@ -67,19 +76,19 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    mSimpleDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+    // create a simple date formatter to parse strings to date
+    mSimpleDateFormatter = new SimpleDateFormat(getString(R.string.date_format), Locale.US);
     try {
-      mMinDate = mSimpleDateFormatter.parse("1998-01-01");
-      mMaxDate = mSimpleDateFormatter.parse("1998-05-31");
+      // set default date range for the data set
+      mMinDate = mSimpleDateFormatter.parse(getString(R.string.min_date));
+      mMaxDate = mSimpleDateFormatter.parse(getString(R.string.max_date));
     } catch (ParseException e) {
-      e.printStackTrace();
+      Log.e(TAG, "Error in date format: " + e.getMessage());
     }
-
-    final Button analyzeButton = (Button) findViewById(R.id.analyze_button);
-    analyzeButton.setVisibility(View.GONE);
 
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
+
     // create a map with the BasemapType topographic
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
 
@@ -93,66 +102,41 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // initialize geoprocessing task with the url of the service
-    mGeoprocessingTask = new GeoprocessingTask(
-        "http://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/GPServer/911%20Calls%20Hotspot");
+    mGeoprocessingTask = new GeoprocessingTask(getString(R.string.hotspot_911_calls));
     mGeoprocessingTask.loadAsync();
 
-    mGeoprocessingTask.addDoneLoadingListener(new Runnable() {
-      @Override public void run() {
-        analyzeButton.setVisibility(View.VISIBLE);
-        analyzeButton.setOnClickListener(new View.OnClickListener() {
-          @Override public void onClick(View v) {
-            analyzeHotspots("1998-01-01", "1998-01-31");
-          }
-        });
-      }
-    });
+    showDateRangeDialog();
+  }
 
-    // custom dialog
+  /**
+   * Creates the date range dialog. Includes listeners to handle click events, which call showCalendar(...) or
+   * analyzeHotspots(...).
+   */
+  private void showDateRangeDialog() {
+    // create custom dialog
     final Dialog dialog = new Dialog(MainActivity.this);
     dialog.setContentView(R.layout.custom_alert_dialog);
-    dialog.setTitle("Select Date Range for Analysis");
 
     fromDateText = (EditText) dialog.findViewById(R.id.fromDateText);
     toDateText = (EditText) dialog.findViewById(R.id.toDateText);
-
-    final Calendar calendar = Calendar.getInstance();
-
-    final DatePickerDialog.OnDateSetListener fromDate = new DatePickerDialog.OnDateSetListener() {
-      @Override public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        StringBuilder date = new StringBuilder().append(year).append("-").append(month + 1).append("-")
-            .append(dayOfMonth);
-        fromDateText.setText(date);
-
-      }
-    };
-
-    final DatePickerDialog.OnDateSetListener toDate = new DatePickerDialog.OnDateSetListener() {
-      @Override public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        StringBuilder date = new StringBuilder().append(year).append("-").append(month + 1).append("-")
-            .append(dayOfMonth);
-        toDateText.setText(date);
-
-      }
-    };
 
     fromDateText.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         showCalendar(InputCalendar.From);
       }
     });
-
     toDateText.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         showCalendar(InputCalendar.To);
       }
     });
 
-    Button doneButton = (Button) dialog.findViewById(R.id.doneButton);
+    Button analyzeButton = (Button) dialog.findViewById(R.id.analyzeButton);
     // if button is clicked, close the custom dialog
-    doneButton.setOnClickListener(new View.OnClickListener() {
+    analyzeButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        analyzeHotspots(fromDateText.getText().toString(), toDateText.getText().toString());
         dialog.dismiss();
       }
     });
@@ -160,6 +144,11 @@ public class MainActivity extends AppCompatActivity {
     dialog.show();
   }
 
+  /**
+   * Shows a date picker dialog and writes the date chosen to the correct editable text.
+   *
+   * @param inputCalendar enum which specifies which editable text the chosen date should be written to
+   */
   private void showCalendar(final InputCalendar inputCalendar) {
     // create a date set listener
     DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -195,17 +184,24 @@ public class MainActivity extends AppCompatActivity {
     // define the date picker dialog
     Calendar calendar = Calendar.getInstance();
     DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, onDateSetListener,
-        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH));
-
+        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
     datePickerDialog.getDatePicker().setMinDate(mMinDate.getTime());
     datePickerDialog.getDatePicker().setMaxDate(mMaxDate.getTime());
-
+    if (inputCalendar == InputCalendar.From) {
+      // start from calendar from min date
+      datePickerDialog.updateDate(1998, 0, 1);
+    }
     datePickerDialog.show();
   }
 
+  /**
+   * Runs the geoprocessing job, updating progress while loading. On job done, loads the resulting
+   * ArcGISMapImageLayer to the map and resets the Viewpoint of the MapView.
+   *
+   * @param from string which holds a date
+   * @param to   string which holds a date
+   */
   private void analyzeHotspots(final String from, final String to) {
-
     // cancel previous job request
     if (mGeoprocessingJob != null) {
       mGeoprocessingJob.cancel();
@@ -216,7 +212,6 @@ public class MainActivity extends AppCompatActivity {
     paramsFuture.addDoneListener(new Runnable() {
       @Override public void run() {
         try {
-          Log.i(TAG, "Parameters loaded.");
           GeoprocessingParameters geoprocessingParameters = paramsFuture.get();
           geoprocessingParameters.setProcessSpatialReference(mMapView.getSpatialReference());
           geoprocessingParameters.setOutputSpatialReference(mMapView.getSpatialReference());
@@ -237,10 +232,26 @@ public class MainActivity extends AppCompatActivity {
           // start job
           mGeoprocessingJob.start();
 
+          // create a dialog to show progress of the geoprocessing job
+          final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+          progressDialog.setTitle("Running geoprocessing job");
+          progressDialog.setIndeterminate(false);
+          progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+          progressDialog.setMax(100);
+          progressDialog.show();
+
+          // update progress
+          mGeoprocessingJob.addProgressChangedListener(new Runnable() {
+            @Override public void run() {
+              progressDialog.setProgress(mGeoprocessingJob.getProgress());
+            }
+          });
+
           mGeoprocessingJob.addJobDoneListener(new Runnable() {
             @Override public void run() {
+              progressDialog.dismiss();
               if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
-                Log.d(TAG, "Job succeeded.");
+                Log.i(TAG, "Job succeeded.");
                 // a map image layer is generated as a result. Remove any layer previously added to the map
                 mMapView.getMap().getOperationalLayers().clear();
 
@@ -258,6 +269,7 @@ public class MainActivity extends AppCompatActivity {
                 });
               } else {
                 Log.e(TAG, "Job did not succeed!");
+                Toast.makeText(MainActivity.this, "Job did not succeed!", Toast.LENGTH_LONG).show();
               }
             }
           });
@@ -279,9 +291,4 @@ public class MainActivity extends AppCompatActivity {
     super.onResume();
     mMapView.resume();
   }
-}
-
-enum InputCalendar {
-  From,
-  To
 }
