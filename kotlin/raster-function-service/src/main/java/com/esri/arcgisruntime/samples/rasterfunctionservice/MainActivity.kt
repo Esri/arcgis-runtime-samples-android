@@ -13,8 +13,12 @@
  * limitations under the License.
  *
  */
+<<<<<<< HEAD:kotlin/raster-function-service/src/main/java/com/esri/arcgisruntime/toolkit/rasterfunctionservice/MainActivity.kt
 
 package com.esri.arcgisruntime.toolkit.rasterfunctionservice
+=======
+package com.esri.arcgisruntime.samples.rasterfunctionservice
+>>>>>>> develop:kotlin/raster-function-service/src/main/java/com/esri/arcgisruntime/samples/rasterfunctionservice/MainActivity.kt
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
