@@ -13,6 +13,7 @@
  * limitations under the License.
  *
  */
+
 package com.esri.arcgisruntime.samples.rasterfunctionservice
 
 import android.os.Bundle
@@ -59,7 +60,7 @@ class MainActivity : AppCompatActivity() {
      *
      * @param raster Input raster to apply function
      */
-    fun applyRasterFunction(raster: Raster){
+    private fun applyRasterFunction(raster: Raster){
         // create raster function from json string
         val rasterFunction = RasterFunction.fromJson(resources.getString(R.string.hillshade_simplified))
         // get parameter name value pairs used by hillshade
