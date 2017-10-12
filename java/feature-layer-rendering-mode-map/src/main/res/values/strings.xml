@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Feature Layer Rendering Mode</string>
+    <string name="energy_geology_feature_service">
+        http://sampleserver6.arcgisonline.com/arcgis/rest/services/Energy/Geology/FeatureServer/
+    </string>
+    <string name="animated_zoom">Animated Zoom</string>
+    <string name="renderingmode_static">RenderingMode.STATIC</string>
+    <string name="renderingmode_dynamic">RenderingMode.DYNAMIC</string>
+    <string name="navigating">Navigating…</string>
+</resources>
