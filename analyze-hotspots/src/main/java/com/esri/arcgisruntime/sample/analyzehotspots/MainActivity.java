@@ -26,7 +26,9 @@ import java.util.concurrent.ExecutionException;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -71,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
   private Date mMinDate;
   private Date mMaxDate;
 
+  private boolean canceled;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -78,13 +82,6 @@ public class MainActivity extends AppCompatActivity {
 
     // create a simple date formatter to parse strings to date
     mSimpleDateFormatter = new SimpleDateFormat(getString(R.string.date_format), Locale.US);
-    try {
-      // set default date range for the data set
-      mMinDate = mSimpleDateFormatter.parse(getString(R.string.min_date));
-      mMaxDate = mSimpleDateFormatter.parse(getString(R.string.max_date));
-    } catch (ParseException e) {
-      Log.e(TAG, "Error in date format: " + e.getMessage());
-    }
 
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
@@ -105,7 +102,15 @@ public class MainActivity extends AppCompatActivity {
     mGeoprocessingTask = new GeoprocessingTask(getString(R.string.hotspot_911_calls));
     mGeoprocessingTask.loadAsync();
 
-    showDateRangeDialog();
+    FloatingActionButton calendarFAB = (FloatingActionButton) findViewById(R.id.calendarButton);
+
+    calendarFAB.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        showDateRangeDialog();
+      }
+    });
+
+    calendarFAB.performClick();
   }
 
   /**
@@ -116,6 +121,15 @@ public class MainActivity extends AppCompatActivity {
     // create custom dialog
     final Dialog dialog = new Dialog(MainActivity.this);
     dialog.setContentView(R.layout.custom_alert_dialog);
+    dialog.setCancelable(true);
+
+    try {
+      // set default date range for the data set
+      mMinDate = mSimpleDateFormatter.parse(getString(R.string.min_date));
+      mMaxDate = mSimpleDateFormatter.parse(getString(R.string.max_date));
+    } catch (ParseException e) {
+      Log.e(TAG, "Error in date format: " + e.getMessage());
+    }
 
     fromDateText = (EditText) dialog.findViewById(R.id.fromDateText);
     toDateText = (EditText) dialog.findViewById(R.id.toDateText);
@@ -207,6 +221,12 @@ public class MainActivity extends AppCompatActivity {
       mGeoprocessingJob.cancel();
     }
 
+    // a map image layer is generated as a result. Remove any layer previously added to the map
+    mMapView.getMap().getOperationalLayers().clear();
+
+    // set canceled flag to false
+    canceled = false;
+
     // parameters
     final ListenableFuture<GeoprocessingParameters> paramsFuture = mGeoprocessingTask.createDefaultParametersAsync();
     paramsFuture.addDoneListener(new Runnable() {
@@ -238,6 +258,16 @@ public class MainActivity extends AppCompatActivity {
           progressDialog.setIndeterminate(false);
           progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
           progressDialog.setMax(100);
+          progressDialog.setCancelable(false);
+          progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              dialog.dismiss();
+              // set canceled flag to true
+              canceled = true;
+              mGeoprocessingJob.cancel();
+            }
+          });
           progressDialog.show();
 
           // update progress
@@ -252,8 +282,6 @@ public class MainActivity extends AppCompatActivity {
               progressDialog.dismiss();
               if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
                 Log.i(TAG, "Job succeeded.");
-                // a map image layer is generated as a result. Remove any layer previously added to the map
-                mMapView.getMap().getOperationalLayers().clear();
 
                 GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
                 final ArcGISMapImageLayer hotspotMapImageLayer = geoprocessingResult.getMapImageLayer();
@@ -267,6 +295,9 @@ public class MainActivity extends AppCompatActivity {
                     mMapView.setViewpointGeometryAsync(hotspotMapImageLayer.getFullExtent());
                   }
                 });
+              } else if (canceled) {
+                Toast.makeText(MainActivity.this, "Job canceled.", Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "Job cancelled.");
               } else {
                 Log.e(TAG, "Job did not succeed!");
                 Toast.makeText(MainActivity.this, "Job did not succeed!", Toast.LENGTH_LONG).show();
