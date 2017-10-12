@@ -64,19 +64,19 @@ public class MainActivity extends AppCompatActivity {
     mNavigatingTextView = findViewById(R.id.isNavigatingTextView);
     mNavigatingTextView.setVisibility(View.INVISIBLE);
 
-    // create a map (bottom) and set it to render all features in dynamic rendering mode
-    ArcGISMap mapBottom = new ArcGISMap();
-    mapBottom.setInitialViewpoint(mZoomedOut);
-    mapBottom.getLoadSettings().setPreferredPointFeatureRenderingMode(FeatureLayer.RenderingMode.DYNAMIC);
-    mapBottom.getLoadSettings().setPreferredPolylineFeatureRenderingMode(FeatureLayer.RenderingMode.DYNAMIC);
-    mapBottom.getLoadSettings().setPreferredPolygonFeatureRenderingMode(FeatureLayer.RenderingMode.DYNAMIC);
-
     // create a map (top) and set it to render all features in static rendering mode
     ArcGISMap mapTop = new ArcGISMap();
     mapTop.setInitialViewpoint(mZoomedOut);
     mapTop.getLoadSettings().setPreferredPointFeatureRenderingMode(FeatureLayer.RenderingMode.STATIC);
     mapTop.getLoadSettings().setPreferredPolylineFeatureRenderingMode(FeatureLayer.RenderingMode.STATIC);
     mapTop.getLoadSettings().setPreferredPolygonFeatureRenderingMode(FeatureLayer.RenderingMode.STATIC);
+
+    // create a map (bottom) and set it to render all features in dynamic rendering mode
+    ArcGISMap mapBottom = new ArcGISMap();
+    mapBottom.setInitialViewpoint(mZoomedOut);
+    mapBottom.getLoadSettings().setPreferredPointFeatureRenderingMode(FeatureLayer.RenderingMode.DYNAMIC);
+    mapBottom.getLoadSettings().setPreferredPolylineFeatureRenderingMode(FeatureLayer.RenderingMode.DYNAMIC);
+    mapBottom.getLoadSettings().setPreferredPolygonFeatureRenderingMode(FeatureLayer.RenderingMode.DYNAMIC);
 
     // create the service feature table
     ServiceFeatureTable faultServiceFeatureTable = new ServiceFeatureTable(
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    // disable the bottom map view on touch listener
+    // disable the top map view on touch listener
     mMapViewTop.setOnTouchListener(new DefaultMapViewOnTouchListener(MainActivity.this, mMapViewTop) {
       @Override public boolean onTouch(View v, MotionEvent event) {
         return false;
