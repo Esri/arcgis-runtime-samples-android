@@ -6,10 +6,10 @@ android {
 
     defaultConfig {
         applicationId "com.esri.arcgisruntime.sample.displaymap"
-        minSdkVersion 22
+        minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
     }
     buildTypes {
         release {
