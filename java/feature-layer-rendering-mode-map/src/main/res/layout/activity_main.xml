@@ -58,7 +58,7 @@
             android:layout_marginStart="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:textStyle="bold"
-            android:textColor="@android:color/background_light"/>
+            android:textColor="@android:color/background_dark"/>
     <TextView
             android:text="@string/renderingmode_dynamic"
             android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
             android:layout_marginStart="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:textStyle="bold"
-            android:textColor="@android:color/background_light"/>
+            android:textColor="@android:color/background_dark"/>
     <TextView
             android:text="@string/navigating"
             android:background="@color/colorPrimary"
