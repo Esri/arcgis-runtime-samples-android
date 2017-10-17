@@ -7,7 +7,7 @@ local.properties
 # Intellij project files
 *.ipr
 *.iml
-.idea/
+*.idea/
 build/
 
 # IDE files
