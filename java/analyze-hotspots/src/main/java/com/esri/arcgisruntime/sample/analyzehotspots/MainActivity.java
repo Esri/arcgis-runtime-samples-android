@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     mSimpleDateFormatter = new SimpleDateFormat(getString(R.string.date_format), Locale.US);
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
 
     // create a map with the BasemapType topographic
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     mGeoprocessingTask = new GeoprocessingTask(getString(R.string.hotspot_911_calls));
     mGeoprocessingTask.loadAsync();
 
-    FloatingActionButton calendarFAB = (FloatingActionButton) findViewById(R.id.calendarButton);
+    FloatingActionButton calendarFAB = findViewById(R.id.calendarButton);
 
     calendarFAB.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
@@ -131,8 +131,8 @@ public class MainActivity extends AppCompatActivity {
       Log.e(TAG, "Error in date format: " + e.getMessage());
     }
 
-    fromDateText = (EditText) dialog.findViewById(R.id.fromDateText);
-    toDateText = (EditText) dialog.findViewById(R.id.toDateText);
+    fromDateText = dialog.findViewById(R.id.fromDateText);
+    toDateText = dialog.findViewById(R.id.toDateText);
 
     fromDateText.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    Button analyzeButton = (Button) dialog.findViewById(R.id.analyzeButton);
+    Button analyzeButton = dialog.findViewById(R.id.analyzeButton);
     // if button is clicked, close the custom dialog
     analyzeButton.setOnClickListener(new View.OnClickListener() {
       @Override
