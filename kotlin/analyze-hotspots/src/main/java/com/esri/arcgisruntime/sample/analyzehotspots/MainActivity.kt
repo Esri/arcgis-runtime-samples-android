@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -127,7 +128,7 @@ class MainActivity : AppCompatActivity() {
           val date = StringBuilder()
           date.append(year)
           date.append("-")
-          date.append(month + 1)
+          date.append(monthOfYear + 1)
           date.append("-")
           date.append(dayOfMonth)
 
@@ -169,105 +170,33 @@ class MainActivity : AppCompatActivity() {
           geoprocessingParameters.processSpatialReference = mapView.spatialReference
           geoprocessingParameters.outputSpatialReference = mapView.spatialReference
 
-          val queryString = StringBuilder("(\\\"DATE\\\" > date '")
+          val queryString = StringBuilder("(\"DATE\" > date '")
                   .append(from)
                   .append(" 00:00:00' AND \"DATE\" < date '")
                   .append(to)
                   .append(" 00:00:00')")
           Log.i("MainActivity", "QueryString = $queryString")
-          geoprocessingParameters.inputs.put("Query", queryString.toString() as GeoprocessingString)
+          val geoprocessingString = GeoprocessingString(queryString.toString())
+          geoprocessingParameters.inputs.put("Query", geoprocessingString)
+          val geoprocessingJob = geoprocessingTask.createJob(geoprocessingParameters)
+          geoprocessingJob.start()
 
+          geoprocessingJob.addProgressChangedListener {
+              val progress = geoprocessingJob.progress
+              Log.i("MainActivity", "Progress: $progress%")
+          }
 
+          geoprocessingJob.addJobDoneListener {
+              if (geoprocessingJob.status == Job.Status.SUCCEEDED) {
+                  Log.i("MainActivity", "Job Suceeded")
+                  val geoprocessingResult = geoprocessingJob.result
+                  val hotspotMapImageLayer = geoprocessingResult.mapImageLayer
+
+                  // add new layer to map
+                  mapView.map.operationalLayers.add(hotspotMapImageLayer)
+              }
+          }
       })
-
-
-//
-//    if (mGeoprocessingJob != null) {
-//      mGeoprocessingJob.cancel();
-//    }
-//
-//    // parameters
-//    final ListenableFuture<GeoprocessingParameters> paramsFuture = mGeoprocessingTask.createDefaultParametersAsync();
-//    paramsFuture.addDoneListener(new Runnable() {
-//      @Override public void run() {
-//        try {
-//          GeoprocessingParameters geoprocessingParameters = paramsFuture.get();
-//          geoprocessingParameters.setProcessSpatialReference(mapView.getSpatialReference());
-//          geoprocessingParameters.setOutputSpatialReference(mapView.getSpatialReference());
-//
-//          StringBuilder queryString = new StringBuilder("(\"DATE\" > date '")
-//              .append(from)
-//              .append(" 00:00:00' AND \"DATE\" < date '")
-//              .append(to)
-//              .append(" 00:00:00')");
-//
-//          geoprocessingParameters.getInputs().put("Query", new GeoprocessingString(queryString.toString()));
-//
-//          Log.i(TAG, "Query: " + queryString.toString());
-//
-//          // create job
-//          mGeoprocessingJob = mGeoprocessingTask.createJob(geoprocessingParameters);
-//
-//          // start job
-//          mGeoprocessingJob.start();
-//
-//          // create a dialog to show progress of the geoprocessing job
-//          final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-//          progressDialog.setTitle("Running geoprocessing job");
-//          progressDialog.setIndeterminate(false);
-//          progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//          progressDialog.setMax(100);
-//          progressDialog.setCancelable(false);
-//          progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//              dialog.dismiss();
-//              // set canceled flag to true
-//              canceled = true;
-//              mGeoprocessingJob.cancel();
-//            }
-//          });
-//          progressDialog.show();
-//
-//          // update progress
-//          mGeoprocessingJob.addProgressChangedListener(new Runnable() {
-//            @Override public void run() {
-//              progressDialog.setProgress(mGeoprocessingJob.getProgress());
-//            }
-//          });
-//
-//          mGeoprocessingJob.addJobDoneListener(new Runnable() {
-//            @Override public void run() {
-//              progressDialog.dismiss();
-//              if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
-//                Log.i(TAG, "Job succeeded.");
-//
-//                GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
-//                final ArcGISMapImageLayer hotspotMapImageLayer = geoprocessingResult.getMapImageLayer();
-//
-//                // add the new layer to the map
-//                mapView.getMap().getOperationalLayers().add(hotspotMapImageLayer);
-//
-//                hotspotMapImageLayer.addDoneLoadingListener(new Runnable() {
-//                  @Override public void run() {
-//                    // set the map viewpoint to the MapImageLayer, once loaded
-//                    mapView.setViewpointGeometryAsync(hotspotMapImageLayer.getFullExtent());
-//                  }
-//                });
-//              } else if (canceled) {
-//                Toast.makeText(MainActivity.this, "Job canceled.", Toast.LENGTH_SHORT).show();
-//                Log.i(TAG, "Job cancelled.");
-//              } else {
-//                Log.e(TAG, "Job did not succeed!");
-//                Toast.makeText(MainActivity.this, "Job did not succeed!", Toast.LENGTH_LONG).show();
-//              }
-//            }
-//          });
-//        } catch (InterruptedException | ExecutionException e) {
-//          e.printStackTrace();
-//        }
-//      }
-//    });
   }
 
     private fun parseDate(data: String) : Date {
@@ -276,13 +205,13 @@ class MainActivity : AppCompatActivity() {
       return simpleDateFormatter.parse(data)
   }
 
-//    override fun onPause() {
-//        super.onPause()
-//        mapView.pause()
-//    }
-//
-//    override fun onResume() {
-//        super.onResume()
-//        mapView.resume()
-//    }
+    override fun onPause() {
+        super.onPause()
+        mapView.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
 }
