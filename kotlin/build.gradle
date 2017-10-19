@@ -7,6 +7,9 @@ buildscript {
         jcenter()
         google()
         maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
+        maven {
+            url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2'
+        }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradleVersion"

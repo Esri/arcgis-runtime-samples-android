@@ -14,6 +14,7 @@ build/
 *.project
 *.classpath
 .settings/
+.vscode
 
 # OS generated files #
 .DS_Store

@@ -8,10 +8,11 @@ ext {
     versionName = '100.2.0'
     // library versions
     kotlinVersion = '1.2.0-beta-31'
+    ankoVersion = '0.10.2'
     andSupportLibVersion = '26.1.0'
     constraintLayoutVersion = '1.0.2'
     arcgisVersion = '100.2.0-1851'
     arcgisToolkitVersion = '100.1.0-SNAPSHOT'
     // plugin versions
-    gradleVersion = '3.0.0-beta7'
+    gradleVersion = '3.0.0-rc1'
 }
