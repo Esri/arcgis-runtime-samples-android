@@ -7,7 +7,7 @@ ext {
     versionCode = 100
     versionName = '100.2.0'
     // library versions
-    kotlinVersion = '1.2.0-beta-31'
+    kotlinVersion = '1.2.0-beta-88'
     ankoVersion = '0.10.2'
     andSupportLibVersion = '26.1.0'
     constraintLayoutVersion = '1.0.2'
