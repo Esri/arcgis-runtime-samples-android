@@ -25,4 +25,5 @@ dependencies {
     // arcgis-android & appcompat lib dependencies from rootProject build.gradle
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
     implementation "com.android.support:design:$andSupportLibVersion"
+    implementation "org.jetbrains.anko:anko-commons:$ankoVersion"
 }
