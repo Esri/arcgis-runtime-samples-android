@@ -45,7 +45,7 @@ val geoprocessingJob = geoprocessingTask.createJob(geoprocessingParameters)
 geoprocessingJob.start()
 
 // show progress
-val progressDialog = progressDialog(message = "Running geoprocessing Job", title = "Hotspots")
+val progressDialog = progressDialog(message = getString(R.string.dialog_text), title = getString(R.string.app_name))
 
 // update progress
 geoprocessingJob.addProgressChangedListener {
@@ -69,8 +69,8 @@ geoprocessingJob.addJobDoneListener {
               mapView.setViewpointGeometryAsync(hotspotMapImageLayer.fullExtent)
           }
       }
-      isCanceled -> Log.i("MainActivity", "Job Canceled")
-      else -> Log.i("MainActivity", "Job Failed!")
+      isCanceled -> alert(getString(R.string.job_canceled))
+      else -> alert(getString(R.string.job_failed))
   }
 }
 ```
