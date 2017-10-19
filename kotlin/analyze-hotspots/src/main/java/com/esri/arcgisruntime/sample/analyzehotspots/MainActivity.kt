@@ -60,13 +60,6 @@ class MainActivity : AppCompatActivity() {
       // set the map to the map view
       mapView.map = map
 
-      // create a simple date formatter to parse strings to date
-//      val simpleDateFormatter = SimpleDateFormat(getString(R.string.date_format), Locale.US)
-
-      // initialize geoprocessing task with the url of the service
-//      val geoprocessingTask = GeoprocessingTask(getString(R.string.hotspot_911_calls))
-//      geoprocessingTask.loadAsync()
-
       calendarButton.setOnClickListener {
           showDateRangeDialog()
       }
