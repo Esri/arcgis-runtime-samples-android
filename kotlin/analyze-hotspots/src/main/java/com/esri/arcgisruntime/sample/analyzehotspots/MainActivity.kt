@@ -67,8 +67,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Creates the date range dialog. Includes listeners to handle click events, which call showCalendar(...) or
-   * analyzeHotspots(...).
+   * Creates the date range dialog. Includes listeners to handle click events,
+   * which call showCalendar(...) or analyzeHotspots(...).
    */
   private fun showDateRangeDialog() {
       // create custom dialog
@@ -105,6 +105,8 @@ class MainActivity : AppCompatActivity() {
    * Shows a date picker dialog and writes the date chosen to the correct editable text.
    *
    * @param inputCalendar enum which specifies which editable text the chosen date should be written to
+   * @param _minDate
+   * @param _maxDate
    */
   private fun showCalendar(inputCalendar: InputCalendar, _minDate: Date, _maxDate: Date) {
       var calendarMinDate = _minDate
