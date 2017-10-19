@@ -147,16 +147,19 @@ class MainActivity : AppCompatActivity() {
    * Runs the geoprocessing job, updating progress while loading. On job done, loads the resulting
    * ArcGISMapImageLayer to the map and resets the Viewpoint of the MapView.
    *
+   * @param geoprocessingTask Geoprocessing task to generate hotspots
    * @param from string which holds a date
    * @param to   string which holds a date
+   * @param _isCanceled flag to cancel operation
    */
-  private fun analyzeHotspots(geoprocessingTask: GeoprocessingTask, from: String, to: String, isCanceled: Boolean) {
+  private fun analyzeHotspots(geoprocessingTask: GeoprocessingTask, from: String, to: String, _isCanceled: Boolean) {
+      var isCanceled = _isCanceled
       geoprocessingTask.loadAsync()
-      // cancel previous job request
 
       // a map image layer is generated as a result, clear previous results
       mapView.map.operationalLayers.clear()
 
+      // create parameters for geoprocessing job
       val paramsFuture = geoprocessingTask.createDefaultParametersAsync()
       paramsFuture.addDoneListener({
           val geoprocessingParameters = paramsFuture.get()
