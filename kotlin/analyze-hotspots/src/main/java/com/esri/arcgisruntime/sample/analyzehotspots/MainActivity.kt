@@ -20,7 +20,6 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import com.esri.arcgisruntime.concurrent.Job
@@ -32,6 +31,7 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingString
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingTask
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.progressDialog
 import java.text.SimpleDateFormat
 import java.util.*
@@ -153,10 +153,9 @@ class MainActivity : AppCompatActivity() {
    * @param geoprocessingTask Geoprocessing task to generate hotspots
    * @param from string which holds a date
    * @param to   string which holds a date
-   * @param _isCanceled flag to cancel operation
+   * @param isCanceled flag to cancel operation
    */
-  private fun analyzeHotspots(geoprocessingTask: GeoprocessingTask, from: String, to: String, _isCanceled: Boolean) {
-      var isCanceled = _isCanceled
+  private fun analyzeHotspots(geoprocessingTask: GeoprocessingTask, from: String, to: String, isCanceled: Boolean) {
       geoprocessingTask.loadAsync()
 
       // a map image layer is generated as a result, clear previous results
@@ -174,6 +173,7 @@ class MainActivity : AppCompatActivity() {
                   .append(" 00:00:00' AND \"DATE\" < date '")
                   .append(to)
                   .append(" 00:00:00')")
+
           val geoprocessingString = GeoprocessingString(queryString.toString())
           geoprocessingParameters.inputs.put("Query", geoprocessingString)
           // create and start geoprocessing job
@@ -181,7 +181,7 @@ class MainActivity : AppCompatActivity() {
           geoprocessingJob.start()
 
           // show progress
-          val progressDialog = progressDialog(message = "Running geoprocessing Job", title = "Hotspots")
+          val progressDialog = progressDialog(message = getString(R.string.dialog_text), title = getString(R.string.app_name))
 
           // update progress
           geoprocessingJob.addProgressChangedListener {
@@ -205,8 +205,8 @@ class MainActivity : AppCompatActivity() {
                           mapView.setViewpointGeometryAsync(hotspotMapImageLayer.fullExtent)
                       }
                   }
-                  isCanceled -> Log.i("MainActivity", "Job Canceled")
-                  else -> Log.i("MainActivity", "Job Failed!")
+                  isCanceled -> alert(getString(R.string.job_canceled))
+                  else -> alert(getString(R.string.job_failed))
               }
           }
       })
