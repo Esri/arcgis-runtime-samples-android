@@ -32,6 +32,7 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingString
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingTask
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.progressDialog
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -173,30 +174,47 @@ class MainActivity : AppCompatActivity() {
                   .append(" 00:00:00' AND \"DATE\" < date '")
                   .append(to)
                   .append(" 00:00:00')")
-          Log.i("MainActivity", "QueryString = $queryString")
           val geoprocessingString = GeoprocessingString(queryString.toString())
           geoprocessingParameters.inputs.put("Query", geoprocessingString)
+          // create and start geoprocessing job
           val geoprocessingJob = geoprocessingTask.createJob(geoprocessingParameters)
           geoprocessingJob.start()
 
+          // show progress
+          val progressDialog = progressDialog(message = "Running geoprocessing Job", title = "Hotspots")
+
+          // update progress
           geoprocessingJob.addProgressChangedListener {
               val progress = geoprocessingJob.progress
-              Log.i("MainActivity", "Progress: $progress%")
+              progressDialog.progress = progress
           }
 
           geoprocessingJob.addJobDoneListener {
-              if (geoprocessingJob.status == Job.Status.SUCCEEDED) {
-                  Log.i("MainActivity", "Job Suceeded")
-                  val geoprocessingResult = geoprocessingJob.result
-                  val hotspotMapImageLayer = geoprocessingResult.mapImageLayer
+              when {
+                  geoprocessingJob.status == Job.Status.SUCCEEDED -> {
+                      progressDialog.dismiss()
+                      // get results
+                      val geoprocessingResult = geoprocessingJob.result
+                      val hotspotMapImageLayer = geoprocessingResult.mapImageLayer
 
-                  // add new layer to map
-                  mapView.map.operationalLayers.add(hotspotMapImageLayer)
+                      // add new layer to map
+                      mapView.map.operationalLayers.add(hotspotMapImageLayer)
+
+                      // zoom to the layer extent
+                      hotspotMapImageLayer.addDoneLoadingListener {
+                          mapView.setViewpointGeometryAsync(hotspotMapImageLayer.fullExtent)
+                      }
+                  }
+                  isCanceled -> Log.i("MainActivity", "Job Canceled")
+                  else -> Log.i("MainActivity", "Job Failed!")
               }
           }
       })
   }
 
+    /**
+     * parse String to Date
+     */
     private fun parseDate(data: String) : Date {
       // create a simple date formatter to parse strings to date
       val simpleDateFormatter = SimpleDateFormat(getString(R.string.date_format), Locale.US)
