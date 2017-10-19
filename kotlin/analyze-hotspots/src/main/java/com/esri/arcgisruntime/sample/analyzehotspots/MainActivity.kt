@@ -196,6 +196,7 @@ class MainActivity : AppCompatActivity() {
                       // get results
                       val geoprocessingResult = geoprocessingJob.result
                       val hotspotMapImageLayer = geoprocessingResult.mapImageLayer
+                      hotspotMapImageLayer.opacity = 0.5f
 
                       // add new layer to map
                       mapView.map.operationalLayers.add(hotspotMapImageLayer)
