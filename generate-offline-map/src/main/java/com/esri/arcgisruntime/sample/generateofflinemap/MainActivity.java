@@ -76,7 +76,7 @@ import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask;
     // get the portal url for ArcGIS Online
     Portal portal = new Portal(getResources().getString(R.string.portal_url), true);
     // get the pre-defined portal id and portal url
-    final PortalItem portalItem = new PortalItem(portal, getString(R.string.portal_key));
+    PortalItem portalItem = new PortalItem(portal, getString(R.string.portal_key));
 
     //instantiate offline map task
     mOfflineMapTask = new OfflineMapTask(portalItem);
@@ -97,7 +97,7 @@ import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask;
     Button generateOfflineMapButton = findViewById(R.id.generateOfflineMapButton);
     generateOfflineMapButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
-        takeMapOffline(portalItem);
+        takeMapOffline();
       }
     });
   }
@@ -106,7 +106,7 @@ import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask;
    * Creates parameters for offline map job using current view as extent. Then runs the job and sets the job result
    * map to the map view.
    */
-  private void takeMapOffline(PortalItem portalItem) {
+  private void takeMapOffline() {
     if (mMap.getLoadStatus() == LoadStatus.LOADED) {
 
       // use current visible area as extent
@@ -168,7 +168,7 @@ import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask;
   }
 
   /**
-   * Clears any graphics from the graphics overlay and adds
+   * Clears any graphics from the graphics overlay and adds a new boundary symbol.
    *
    * @param extent of area chosen to generate an offline map.
    */
