@@ -1,4 +1,5 @@
 include 'analyze-hotspots',
+        ':authentication-profile',
         ':attribution-view-change',
         'feature-layer-extrusion',
         ':raster-function-service',
