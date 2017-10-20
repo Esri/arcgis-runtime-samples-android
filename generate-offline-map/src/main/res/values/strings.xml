@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Generate Offline Map</string>
+    <string name="portal_url">http://www.arcgis.com/</string>
+    <string name="offline_map_local_directory">/ArcGIS/Samples/OfflineMap/</string>
+    <string name="generate_offline_map">Generate Offline Map</string>
+    <string name="file_name">NapervilleWaterNetwork.geodatabase</string>
+    <string name="portal_key">acc027394bc84c2fb04d1ed317aac674</string>
+</resources>
