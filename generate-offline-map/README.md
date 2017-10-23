@@ -9,9 +9,9 @@ This sample demonstrates how to take a web map offline.
 - GenerateOfflineMapParameters
 - GenerateOfflineMapJob
 - GenerateOfflineMapResult
+- OfflineMapTask
 - PortalItem
 - Portal
-- OfflineMapTask
 
 ## How it works
 This sample uses the `OfflineMapTask` to take a web map offline. Since this sample involves downloading map data to the local device, an ArcGIS Online account is required. Credentials are handled within the app with the `AuthenticationManager`.
