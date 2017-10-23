@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Feature Layer Rendering Mode (Map)</string>
+    <string name="app_name">Feature Layer Rendering Mode (Scene)</string>
     <string name="energy_geology_feature_service">
         http://sampleserver6.arcgisonline.com/arcgis/rest/services/Energy/Geology/FeatureServer/
     </string>
