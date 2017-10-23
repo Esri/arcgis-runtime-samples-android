@@ -51,7 +51,7 @@ import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapJob;
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapParameters;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask;
 
-@SuppressWarnings("deprecation") public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
   private final String TAG = MainActivity.class.getSimpleName();
 
