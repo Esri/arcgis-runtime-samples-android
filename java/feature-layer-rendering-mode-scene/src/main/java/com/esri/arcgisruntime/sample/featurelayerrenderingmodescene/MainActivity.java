@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     FeatureLayer contactsFeatureLayer = new FeatureLayer(contactsServiceFeatureTable);
     FeatureLayer outcropFeatureLayer = new FeatureLayer(outcropServiceFeatureTable);
 
+
     // add the feature layers to the scenes
     sceneTop.getOperationalLayers().add(faultFeatureLayer);
     sceneTop.getOperationalLayers().add(contactsFeatureLayer);
