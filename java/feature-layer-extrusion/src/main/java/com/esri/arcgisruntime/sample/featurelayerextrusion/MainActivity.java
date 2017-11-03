@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     // add the service feature table to a feature layer
     final FeatureLayer statesFeatureLayer = new FeatureLayer(statesServiceFeatureTable);
     // set the feature layer to render dynamically to allow extrusion
-    statesFeatureLayer.setFeatureRenderingMode(FeatureLayer.RenderingMode.DYNAMIC);
+    statesFeatureLayer.setRenderingMode(FeatureLayer.RenderingMode.DYNAMIC);
 
     // create a scene and add it to the scene view
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
