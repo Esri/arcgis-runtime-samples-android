@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     // define viewpoints
     mZoomedOut = new Camera(zoomedOutPoint, 42000, 0, 0, 0);
-    mZoomedIn = new Camera(zoomedInPoint, 2500, 90, 75, 90);
+    mZoomedIn = new Camera(zoomedInPoint, 2500, 90, 75, 0);
 
     // inflate the zoom button
     mZoomButton = findViewById(R.id.zoomButton);
@@ -150,10 +150,10 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Sets both Sceneviews to a ViewpointCamera over a number of seconds.
+   * Sets both SceneViews to a ViewpointCamera over a number of seconds.
    *
    * @param camera to which both SceneViews should be set.
-   * @param seconds over which the viewpoint is asynchronously set.
+   * @param seconds over which the Viewpoint is asynchronously set.
    *
    * @return a ListenableFuture representing the result of the Viewpoint change.
    */
