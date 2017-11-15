@@ -5,6 +5,7 @@ This sample demonstrates how to open a GeoPackage and show a GeoPackage feature 
 
 ## Features
 - FeatureLayer
+- FeatureTable
 - GeoPackage
 
 ## Provision your device
@@ -22,4 +23,4 @@ This sample demonstrates how to open a GeoPackage and show a GeoPackage feature 
 
 Link | Local Location
 ---------|-------|
-|[Aurora CO GeoPackage](https://www.arcgis.com/home/item.html?id=68ec42517cdd439e81b036210483e8e7)| `<sdcard>`/ArcGIS/samples/MapPackage/AuroraCO.gpkg|
+|[Aurora CO GeoPackage](https://www.arcgis.com/home/item.html?id=68ec42517cdd439e81b036210483e8e7)| `<sdcard>`/ArcGIS/samples/GeoPackage/AuroraCO.gpkg|
