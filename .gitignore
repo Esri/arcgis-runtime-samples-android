@@ -9,3 +9,6 @@
 Icon?
 ehthumbs.db
 Thumbs.db
+
+# Android Studio
+.idea/
