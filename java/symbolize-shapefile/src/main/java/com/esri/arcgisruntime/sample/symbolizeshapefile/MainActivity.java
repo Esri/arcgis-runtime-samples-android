@@ -49,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    requestWritePermission();
-
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
     // create a map with the BasemapType topographic
@@ -58,10 +56,12 @@ public class MainActivity extends AppCompatActivity {
     // set the map to be displayed in this view
     mMapView.setMap(mMap);
 
-    // Set an initial viewpoint
+    // set an initial viewpoint
     Point point = new Point(-11662054, 4818336, SpatialReference.create(3857));
     Viewpoint viewpoint = new Viewpoint(point, 200000);
     mMap.setInitialViewpoint(viewpoint);
+
+    requestWritePermission();
 
   }
 
@@ -71,17 +71,17 @@ public class MainActivity extends AppCompatActivity {
 
     FeatureLayer featureLayer = new FeatureLayer(shapefileFeatureTable);
 
-    // Create the Symbol
-
+    // create the Symbol
     SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 1.0f);
     SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.YELLOW, lineSymbol);
 
-    // Create the Renderer
+    // create the Renderer
     SimpleRenderer renderer = new SimpleRenderer(fillSymbol);
 
-    // Set the Renderer on the Layer
+    // set the Renderer on the Layer
     featureLayer.setRenderer(renderer);
 
+    // add the feature layer to the map
     mMap.getOperationalLayers().add(featureLayer);
   }
 
