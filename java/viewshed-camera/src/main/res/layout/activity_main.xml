@@ -9,7 +9,7 @@
 
     <!-- SceneView -->
     <Button
-            android:text="Update from camera"
+            android:text="@string/update_from_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/updateViewshedButton"
