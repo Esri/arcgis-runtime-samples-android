@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Request read permission on the device.
    */
-  public void requestWritePermission() {
+  private void requestWritePermission() {
     // define permission to request
     String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
     int requestCode = 2;

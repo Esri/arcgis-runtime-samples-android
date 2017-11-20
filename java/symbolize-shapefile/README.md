@@ -36,4 +36,4 @@ This sample demonstrates how to override the default renderer of a shapefile whe
 
 Link | Local Location
 ---------|-------|
-|[Aurora Subdivions Shapefile](https://www.arcgis.com/home/item.html?id=d98b3e5293834c5f852f13c569930caa)| `<sdcard>`/ArcGIS/Samples/Shapefile/Aurora_CO_shp/Subdivisions.shp |
+|[Aurora Subdivisions Shapefile](https://www.arcgis.com/home/item.html?id=d98b3e5293834c5f852f13c569930caa)| `<sdcard>`/ArcGIS/Samples/Shapefile/Aurora_CO_shp/Subdivisions.shp |
