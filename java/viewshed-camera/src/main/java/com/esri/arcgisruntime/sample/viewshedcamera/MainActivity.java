@@ -43,20 +43,21 @@ public class MainActivity extends AppCompatActivity {
     ArcGISScene scene = new ArcGISScene();
     scene.setBasemap(Basemap.createImagery());
 
+    // add the scene to a scene view
     mSceneView = findViewById(R.id.sceneView);
     mSceneView.setScene(scene);
 
-    // set the camera
+    // set the camera to the scene view
     Camera camera = new Camera(48.3808, -4.49492, 48.2511, 344.488, 74.1212, 0.0);
     mSceneView.setViewpointCamera(camera);
 
-    // add base surface for elevation data
+    // add base surface for elevation data to the scene view
     Surface surface = new Surface();
     ArcGISTiledElevationSource brestElevationSource = new ArcGISTiledElevationSource(getString(R.string.brest_dtm));
     surface.getElevationSources().add(brestElevationSource);
     scene.setBaseSurface(surface);
 
-    // add a scene layer
+    // add a scene layer to the scene
     ArcGISSceneLayer brestBuildingLayer = new ArcGISSceneLayer(getString(R.string.brest_building_layer));
     scene.getOperationalLayers().add(brestBuildingLayer);
 
