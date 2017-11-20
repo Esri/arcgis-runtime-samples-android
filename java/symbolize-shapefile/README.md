@@ -7,11 +7,9 @@ This sample demonstrates how to override the default renderer of a shapefile whe
 ## How it works
 
 1. Create a `ShapefileFeatureTable` by setting the path to a shapefile. 
-2. To display the shapefile, create a `FeatureLayer` and set the feature layer table property to the `ShapeFileFeatureTable`.
-3. If the layer is added to the `Map`, the default black and gray symbology is applied.
-4. To override the default symbology, create a `SimpleRenderer` is created.
-5. A `SimpleRenderer` is used to apply the same symbol to every feature. In this case, a yellow `SimpleFillSymbol` with a red `SimpleLineSymbol` as an outline.
-6. Apply the symbol by setting the renderer to the `FeatureLayer`.
+1. Create a `FeatureLayer` and set the feature layer table property to the `ShapeFileFeatureTable`.
+1. Create a `SimpleRenderer` to override the default symbology. In this case, a yellow `SimpleFillSymbol` with a red `SimpleLineSymbol` as an outline.
+1. Apply the symbol to the `FeatureLayer` by setting the renderer.
 
 ## Features
 
