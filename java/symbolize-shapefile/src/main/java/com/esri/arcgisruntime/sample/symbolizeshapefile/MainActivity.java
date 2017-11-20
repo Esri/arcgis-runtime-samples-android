@@ -66,9 +66,12 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void symbolizeShapefile() {
+
+    // create a shapefile feature table from the local data
     ShapefileFeatureTable shapefileFeatureTable = new ShapefileFeatureTable(
         Environment.getExternalStorageDirectory() + getString(R.string.local_folder) + getString(R.string.file_name));
 
+    // use the shapefile feature table to create a feature layer
     FeatureLayer featureLayer = new FeatureLayer(shapefileFeatureTable);
 
     // create the Symbol
