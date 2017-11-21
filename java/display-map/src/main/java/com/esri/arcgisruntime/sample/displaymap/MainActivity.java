@@ -40,15 +40,6 @@ public class MainActivity extends AppCompatActivity {
         mMapView.setMap(map);
     }
 
-    private void addMap() {
-
-    }
-
-    private String getName() {
-
-        return "myName";
-    }
-
     @Override
     protected void onPause(){
         super.onPause();
