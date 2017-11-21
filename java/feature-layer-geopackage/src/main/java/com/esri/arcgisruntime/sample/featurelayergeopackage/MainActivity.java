@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Make sure a feature table was found in the package
         if (geoPackageTable == null) {
-          Toast.makeText(MainActivity.this, "No feature table found in the package!", Toast.LENGTH_LONG);
+          Toast.makeText(MainActivity.this, "No feature table found in the package!", Toast.LENGTH_LONG).show();
           Log.e(TAG, "No feature table found in this package!");
           return;
         }
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         // Add the feature table as a layer to the map (with default symbology)
         mMap.getOperationalLayers().add(featureLayer);
       } else {
-        Toast.makeText(MainActivity.this, "GeoPackage failed to load! " + geoPackage.getLoadError(), Toast.LENGTH_LONG);
+        Toast.makeText(MainActivity.this, "GeoPackage failed to load! " + geoPackage.getLoadError(), Toast.LENGTH_LONG).show();
         Log.e(TAG, "GeoPackage failed to load!" + geoPackage.getLoadError());
       }
     });
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Request write permission on the device.
    */
-  public void requestWritePermission() {
+  private void requestWritePermission() {
     // define permission to request
     String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
     int requestCode = 2;
