@@ -76,4 +76,5 @@ include ':add-graphics-renderer',
         ':unique-value-renderer',
         ':update-related-features',
         ':viewshed-geoprocessing',
-        ':web-tiledlayer'
+        ':web-tiledlayer',
+        ':wms-layer-url'
