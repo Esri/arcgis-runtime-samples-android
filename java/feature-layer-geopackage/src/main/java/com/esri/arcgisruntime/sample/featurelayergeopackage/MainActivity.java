@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         if (geoPackageTable == null) {
           Toast.makeText(MainActivity.this, "No feature table found in the package!", Toast.LENGTH_LONG);
           Log.e(TAG, "No feature table found in this package!");
+          return;
         }
 
         // Create a layer to show the feature table
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
    */
   public void requestWritePermission() {
     // define permission to request
-    String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+    String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
     int requestCode = 2;
     // For API level 23+ request permission at runtime
     if (ContextCompat.checkSelfPermission(MainActivity.this,
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     } else {
       // report to user that permission was denied
       Toast.makeText(MainActivity.this,
-          getResources().getString(R.string.write_permission_denied), Toast.LENGTH_SHORT).show();
+          getResources().getString(R.string.read_permission_denied), Toast.LENGTH_SHORT).show();
     }
   }
 
