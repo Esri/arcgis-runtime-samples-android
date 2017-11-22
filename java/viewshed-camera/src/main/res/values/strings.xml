@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Viewshed camera</string>
+    <string name="update_from_camera">Update from camera</string>
+    <string name="brest_dtm">http://scene.arcgis.com/arcgis/rest/services/BREST_DTM_1M/ImageServer</string>
+    <string name="brest_building_layer">
+        http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0
+    </string>
+</resources>

@@ -75,5 +75,6 @@ include ':add-graphics-renderer',
         ':take-screenshot',
         ':unique-value-renderer',
         ':update-related-features',
+        ':viewshed-camera',
         ':viewshed-geoprocessing',
         ':web-tiledlayer'
