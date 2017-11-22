@@ -16,6 +16,6 @@ ext {
     // plugin versions
     gradleVersion = '3.0.0'
 	// java versions
-	targetJavaVersion = 1.8
-	sourceJavaVersion = 1.8
+    targetJavaVersion = 1.8
+    sourceJavaVersion = 1.8
 }
