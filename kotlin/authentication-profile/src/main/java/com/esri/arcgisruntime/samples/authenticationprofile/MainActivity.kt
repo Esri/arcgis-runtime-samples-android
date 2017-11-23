@@ -43,8 +43,10 @@ class MainActivity : AppCompatActivity() {
         val portal = Portal("http://www.arcgis.com", true)
 
         portal.addDoneLoadingListener {
-            when{
-                portal.loadStatus == LoadStatus.LOADED -> {
+
+            when (portal.loadStatus) {
+
+                LoadStatus.LOADED -> {
                     val portalInformation = portal.portalInfo
                     val portalInfoName = portalInformation.portalName
                     portalName.text = portalInfoName
@@ -82,6 +84,10 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         toast("User did not authenticate against $portalInfoName")
                     }
+                }
+
+                LoadStatus.FAILED_TO_LOAD -> {
+                    toast("Portal failed to load")
                 }
             }
 
