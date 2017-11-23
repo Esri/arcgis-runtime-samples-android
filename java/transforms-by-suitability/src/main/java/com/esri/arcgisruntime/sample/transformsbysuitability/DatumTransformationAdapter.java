@@ -74,7 +74,7 @@ public class DatumTransformationAdapter extends ArrayAdapter<DatumTransformation
 
     // Look for unusable transformations
     if (transformation.isMissingProjectionEngineFiles()) {
-      sb.append("Missing grid files");
+      sb.append(getContext().getResources().getString(R.string.adapter_missing_files));
 
       if (transformation instanceof GeographicTransformation) {
         GeographicTransformation gt = (GeographicTransformation)transformation;

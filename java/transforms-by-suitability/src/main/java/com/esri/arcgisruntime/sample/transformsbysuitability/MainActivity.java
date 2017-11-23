@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
   private Point mOriginalGeometry;
 
-  private Graphic projectedGraphic;
+  private Graphic mProjectedGraphic;
 
   private DatumTransformationAdapter mTransformAdapter;
 
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
   private boolean mUseExtentForSuitability = false;
 
   // define permission to request
-  String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
+  private String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
 
   private int requestCode = 2;
 
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
       // Get the datum transformation selected by the user
       DatumTransformation selectedTransform = (DatumTransformation) adapterView.getAdapter().getItem(i);
 
-      Point projectedGeometry = null;
+      Point projectedGeometry;
       try {
         // Use the selected transformation to reproject the Geometry
         projectedGeometry = (Point) GeometryEngine.project(mOriginalGeometry, mMapView.getSpatialReference(),
@@ -105,13 +105,13 @@ public class MainActivity extends AppCompatActivity {
 
       // Add projected geometry as a second graphic - use a cross symbol which ensures the default transformation
       // graphic remains visible beneath this graphic.
-      if (projectedGraphic == null) {
-        projectedGraphic = addGraphic(projectedGeometry, Color.argb(255, 255, 0, 0),
+      if (mProjectedGraphic == null) {
+        mProjectedGraphic = addGraphic(projectedGeometry, Color.argb(255, 255, 0, 0),
             SimpleMarkerSymbol.Style.CROSS);
 
       } else {
         // If graphic already set, just update the geometry
-        projectedGraphic.setGeometry(projectedGeometry);
+        mProjectedGraphic.setGeometry(projectedGeometry);
       }
     });
 
@@ -283,20 +283,19 @@ public class MainActivity extends AppCompatActivity {
    */
   private void removeProjectedGeometryGraphic() {
     // Remove graphic showing the projected geometry, as the selected transformation is not usable.
-    if ((mMapView.getGraphicsOverlays().size() > 0) && (projectedGraphic != null)) {
+    if ((mMapView.getGraphicsOverlays().size() > 0) && (mProjectedGraphic != null)) {
       if (mMapView.getGraphicsOverlays().get(0).getGraphics().size() == 2) {
-        mMapView.getGraphicsOverlays().get(0).getGraphics().remove(projectedGraphic);
-        projectedGraphic = null;
+        mMapView.getGraphicsOverlays().get(0).getGraphics().remove(mProjectedGraphic);
+        mProjectedGraphic = null;
       }
     }
-    return;
   }
 
   /**
    * Check if permissions for local storage access have been granted. If so, set the projection engine data
    * directory and populate the list of transformations. If not, request permissions from user.
    */
-  public void checkPermissions() {
+  private void checkPermissions() {
     // For API level 23+ request permission at runtime
     int permission = ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]);
     if (permission == PackageManager.PERMISSION_GRANTED) {

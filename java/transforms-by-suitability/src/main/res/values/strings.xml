@@ -6,4 +6,6 @@
   <string name="directory_set">Projection engine directory set</string>
   <string name="directory_not_set">Error setting projection engine directory</string>
   <string name="transform_missing_files">This transformation has missing grid files</string>
+  <string name="adapter_missing_files">Missing grid files</string>
+  <string name="option_order_by">Order by suitability for map extent</string>
 </resources>

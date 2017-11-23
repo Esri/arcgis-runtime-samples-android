@@ -20,7 +20,7 @@
     </com.esri.arcgisruntime.mapping.view.MapView>
     <CheckBox
         android:id="@+id/order_by_check_box"
-        android:text="Order by suitability for map extent"
+        android:text="@string/option_order_by"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
