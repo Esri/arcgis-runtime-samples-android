@@ -4,12 +4,8 @@ apply from: '../version.gradle'
 buildscript {
     apply from: '../version.gradle'
     repositories {
-        jcenter()
         google()
-        maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
-        maven {
-            url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2'
-        }
+        jcenter()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradleVersion"
@@ -19,9 +15,8 @@ buildscript {
 
 allprojects {
     final def var = repositories {
-        jcenter()
         google()
-        maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
+        jcenter()
         maven { url 'https://esri.bintray.com/arcgis' }
         maven { url 'http://android:8080/artifactory/arcgis' }
         maven { url 'http://android:8080/artifactory/libs-snapshots' }
