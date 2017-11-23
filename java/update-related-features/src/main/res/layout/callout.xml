@@ -13,7 +13,7 @@
 
     <Spinner
         android:id="@+id/spinner_values"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/attribute"
         android:drawSelectorOnTop="true"/>
