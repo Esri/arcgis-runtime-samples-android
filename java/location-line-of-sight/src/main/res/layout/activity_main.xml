@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.esri.arcgisruntime.sample.displayscene.MainActivity">
+    tools:context="com.esri.arcgisruntime.sample.locationlineofsight.MainActivity">
 
     <!-- SceneView -->
     <com.esri.arcgisruntime.mapping.view.SceneView

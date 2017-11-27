@@ -1,30 +1,19 @@
-# Display a Scene
-This sample demonstrates how to display a scene with elevation data.
+# Location Line of Sight
 
-![Display a Scene App](display-scene.png)
+This sample demonstrates how to perform a line of sight analysis between two points in a SceneView.
+
+![](location-line-of-sight.png)
+
+## How it works
+A `LineOfSight` analysis is a type of visual analysis you can perform on a scene. The `LineOfSight` analysis aims to answer the question 'What are the visible and obstructed portions of a line between two locations?'. The output is a line in an overlay with two different colors - one representing visible areas and the other representing obstructed areas.
+
+1. First, create a `LocationLineOfSight`, and assigning values for the `observerLocation`, and `targetLocation`.
+1. Once the `LineOfSight` is created, add it to an `AnalysisOverlay`, and add the `AnalysisOverlay` to the `SceneView`.
+1. Each time the screen is tapped, the `LocationLineOfSight`'s `observerLocation` or `targetLocation` is updated with the clicked point, and the `LineOfSight` is automatically recalculated and displayed in the overlay.
 
 ## Features
-* ArcGISScene
-* ArcGISTiledElevationSource
-* SceneView
-
-## Developer Pattern
-Create an `ArcGISScene` and set the `Basemap` with `ArcGISScene.setBasemap()`. Create a `SceneView` and set the scene to the view, `SceneView.setScene(scene)`.  Create a `Surface` and add an `ArcGISTiledElevationSource`, `Surface.getElevationSources().add()`. Set the surface as the scene's base surface `ArcGIScene.setBaseSurface(surface)`.
-
-```java
-// inflate SceneView from layout
-mSceneView = (SceneView) findViewById(sceneView);
-// create a scene and add a basemap to it
-ArcGISScene agsScene = new ArcGISScene();
-agsScene.setBasemap(Basemap.createImagery());
-mSceneView.setScene(agsScene);
-
-// add base surface for elevation data
-ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
-        getResources().getString(R.string.elevation_image_service));
-agsScene.getBaseSurface().getElevationSources().add(elevationSource);
-
-// add a camera and initial camera position
-Camera camera = new Camera(28.4, 83.9, 10010.0, 10.0, 80.0, 300.0);
-mSceneView.setViewpointCamera(camera);
-```
+- AnalysisOverlay
+- LocationLineOfSight
+- SceneView
+- Surface
+- ArcGISTiledElevationSource
