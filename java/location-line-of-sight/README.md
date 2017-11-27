@@ -9,7 +9,7 @@ A `LineOfSight` analysis is a type of visual analysis you can perform on a scene
 
 1. Create a `LocationLineOfSight`, and assign values for the `observerLocation`, and `targetLocation`.
 1. Once the `LocationLineOfSight` is created, add it to an `AnalysisOverlay`, and add the `AnalysisOverlay` to the `SceneView`.
-1. The first screen tap, sets the `observerLocation`
+1. The first screen tap, sets the `observerLocation`.
 1. Each subsequent screen tap, sets the `targetLocation` and creates a new `LocationLineOfSight`.
 
 ## Features
