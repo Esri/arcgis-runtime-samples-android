@@ -20,6 +20,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.geoanalysis.LineOfSight;
 import com.esri.arcgisruntime.geoanalysis.LocationLineOfSight;
@@ -34,12 +35,11 @@ import com.esri.arcgisruntime.mapping.view.SceneView;
 
 public class MainActivity extends AppCompatActivity {
 
+  private final double mZOffset = 2.0;
   private SceneView mSceneView;
   private AnalysisOverlay mAnalysisOverlay;
   private Point mObserverLocation;
   private Point mTargetLocation;
-
-  private final double mZOffset = 2.0;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
     mSceneView.setScene(scene);
 
     // create an elevation source, and add this to the base surface of the scene
-    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(getString(R.string.elevation_image_service));
+    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
+        getString(R.string.elevation_image_service));
     scene.getBaseSurface().getElevationSources().add(elevationSource);
 
     // create an analysis overlay to contain the analysis and add it to the scene view
@@ -81,18 +82,26 @@ public class MainActivity extends AppCompatActivity {
         // convert the screen point to a scene point
         Point scenePoint = mSceneView.screenToBaseSurface(screenPoint);
 
-        if (mObserverLocation == null) {
-          // set the observer location
-          mObserverLocation = new Point(scenePoint.getX(), scenePoint.getY(), scenePoint.getZ() + mZOffset, scenePoint.getSpatialReference());
+        // check that the converted point is actually on the surface of the globe
+        if (scenePoint != null) {
+
+          if (mObserverLocation == null) {
+            // set the observer location
+            mObserverLocation = new Point(scenePoint.getX(), scenePoint.getY(), scenePoint.getZ() + mZOffset,
+                scenePoint.getSpatialReference());
+          } else {
+            // set the target location
+            mTargetLocation = new Point(scenePoint.getX(), scenePoint.getY(), scenePoint.getZ() + mZOffset,
+                scenePoint.getSpatialReference());
+
+            // create a new line of sight analysis with observer and target locations
+            LocationLineOfSight locationLineOfSight = new LocationLineOfSight(mObserverLocation, mTargetLocation);
+
+            // add the line of sight analysis to the analysis overlay
+            mAnalysisOverlay.getAnalyses().add(locationLineOfSight);
+          }
         } else {
-          // set the target location
-          mTargetLocation = new Point(scenePoint.getX(), scenePoint.getY(), scenePoint.getZ() + mZOffset, scenePoint.getSpatialReference());
-
-          // create a new line of sight analysis with observer and target locations
-          LocationLineOfSight locationLineOfSight = new LocationLineOfSight(mObserverLocation, mTargetLocation);
-
-          // add the line of sight analysis to the analysis overlay
-          mAnalysisOverlay.getAnalyses().add(locationLineOfSight);
+          Toast.makeText(MainActivity.this, "Please select a point on the surface.", Toast.LENGTH_LONG).show();
         }
         return super.onSingleTapConfirmed(motionEvent);
       }
