@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Statistical Query: US States</string>
+    <string name="add">Add</string>
+    <string name="type">Type:</string>
+    <string name="field">Field:</string>
+    <string name="remove_statistic">Remove Statistic</string>
+    <string name="left"><![CDATA[<<]]></string>
+    <string name="right"><![CDATA[>>]]></string>
+    <string name="group_fields">Group Field(s):</string>
+    <string name="order_by_field">Order by Field</string>
+    <string name="get_statistics">Get Statistics</string>
+    <string name="change_sort_order">Change sort order</string>
+    <string name="us_states_census">https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer/3
+    </string>
+</resources>
