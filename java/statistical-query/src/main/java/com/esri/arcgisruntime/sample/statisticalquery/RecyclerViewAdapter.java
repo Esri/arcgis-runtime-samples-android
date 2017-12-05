@@ -32,7 +32,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
   @Override
   public void onBindViewHolder(ViewHolder holder, int position) {
     String text = mData.get(position);
-    holder.mTextView.setText(text);
+    holder.mRowTextView.setText(text);
     // give the selected row a gray background and make all others transparent
     holder.itemView.setBackgroundColor(mSelectedPosition == position ? Color.LTGRAY : Color.TRANSPARENT);
   }
@@ -43,17 +43,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    public final TextView mTextView;
+    public final TextView mRowTextView;
 
     public ViewHolder(View itemView) {
       super(itemView);
-      mTextView = itemView.findViewById(R.id.recyclerViewRow);
+      mRowTextView = itemView.findViewById(R.id.rowTextView);
       itemView.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-      if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+      if (mClickListener != null)
+        mClickListener.onItemClick(view, getAdapterPosition());
       notifyItemChanged(mSelectedPosition);
       mSelectedPosition = getAdapterPosition();
       notifyItemChanged(mSelectedPosition);

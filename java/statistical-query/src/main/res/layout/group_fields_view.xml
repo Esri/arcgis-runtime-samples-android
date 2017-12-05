@@ -12,9 +12,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/groupFieldsTextView"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/groupFieldsRecyclerView"
+            app:layout_constraintStart_toStartOf="@+id/groupFieldRecyclerView"
             android:layout_marginStart="8dp"
-            app:layout_constraintEnd_toEndOf="@+id/groupFieldsRecyclerView"
+            app:layout_constraintEnd_toEndOf="@+id/groupFieldRecyclerView"
             android:layout_marginLeft="8dp"/>
     <TextView
             android:text="@string/order_by_field"
@@ -46,13 +46,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/moveRightButton"
-            app:layout_constraintStart_toEndOf="@+id/groupFieldsRecyclerView"
+            app:layout_constraintStart_toEndOf="@+id/groupFieldRecyclerView"
             android:layout_marginStart="8dp"
-            app:layout_constraintTop_toTopOf="@+id/groupFieldsRecyclerView"
+            app:layout_constraintTop_toTopOf="@+id/groupFieldRecyclerView"
             android:layout_marginTop="8dp"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/orderFieldRecyclerView"
-            android:layout_marginLeft="8dp"/>
+            android:layout_marginLeft="8dp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"/>
     <Button
             android:text="@string/left"
             android:layout_width="wrap_content"
@@ -61,24 +63,24 @@
             app:layout_constraintEnd_toEndOf="@+id/moveRightButton"
             app:layout_constraintStart_toStartOf="@+id/moveRightButton"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/moveRightButton"/>
+            app:layout_constraintTop_toBottomOf="@+id/moveRightButton"
+            android:minHeight="0dp"
+            android:minWidth="0dp"/>
     <android.support.v7.widget.RecyclerView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"
-            android:id="@+id/groupFieldsRecyclerView"
+            android:id="@+id/groupFieldRecyclerView"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintEnd_toStartOf="@+id/moveRightButton"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/changeSortOrderButton"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/groupFieldsTextView"
-            android:layout_marginLeft="8dp"
-            android:background="@drawable/border"/>
+            android:background="@drawable/border" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/getStatisticsButton"/>
     <android.support.v7.widget.RecyclerView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:id="@+id/orderFieldRecyclerView"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
