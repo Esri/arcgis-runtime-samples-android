@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
-  // define permission to request
-  private final String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+  // permission to read external storage
+  private final String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
 
   private MapView mMapView;
 
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // create map and add to view
+    // create map and add to map view
     ArcGISMap map = new ArcGISMap(Basemap.createStreets());
     mMapView = findViewById(R.id.mapView);
     mMapView.setMap(map);
@@ -70,33 +70,35 @@ public class MainActivity extends AppCompatActivity {
    */
   private void loadGeodatabase() {
 
+    // create path to local geodatabase
     String path =
         Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir)
             + getString(R.string.config_geodb_name);
-    Log.d("path", path);
 
     // create a new geodatabase from local path
     final Geodatabase geodatabase = new Geodatabase(path);
+
     // load the geodatabase
     geodatabase.loadAsync();
-    // add feature layer from geodatabase to the ArcGISMap
+
+    // create feature layer from geodatabase and add to the map
     geodatabase.addDoneLoadingListener(() -> {
       if (geodatabase.getLoadStatus() == LoadStatus.LOADED) {
         // access the geodatabase's feature table Trailheads
         GeodatabaseFeatureTable geodatabaseFeatureTable = geodatabase.getGeodatabaseFeatureTable("Trailheads");
         geodatabaseFeatureTable.loadAsync();
-        // create a layer from the geodatabase feature table above and add to map
+        // create a layer from the geodatabase feature table and add to map
         final FeatureLayer featureLayer = new FeatureLayer(geodatabaseFeatureTable);
         featureLayer.addDoneLoadingListener(() -> {
           if (featureLayer.getLoadStatus() == LoadStatus.LOADED) {
-            // set viewpoint to the location of feature layer's features
+            // set viewpoint to the feature layer's extent
             mMapView.setViewpointAsync(new Viewpoint(featureLayer.getFullExtent()));
           } else {
             Toast.makeText(MainActivity.this, "Feature Layer failed to load!", Toast.LENGTH_LONG).show();
             Log.e(TAG, "Feature Layer failed to load!");
           }
         });
-        // display feature layer to the map view
+        // add feature layer to the map
         mMapView.getMap().getOperationalLayers().add(featureLayer);
       } else {
         Toast.makeText(MainActivity.this, "Geodatabase failed to load!", Toast.LENGTH_LONG).show();
