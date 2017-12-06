@@ -40,7 +40,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/changeSortOrderButton"
             app:layout_constraintBottom_toTopOf="@+id/getStatisticsButton"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="@+id/orderFieldRecyclerView"
+            app:layout_constraintStart_toStartOf="@+id/orderFieldRecyclerView"/>
     <Button
             android:text="@string/right"
             android:layout_width="wrap_content"
@@ -76,7 +77,7 @@
             app:layout_constraintEnd_toStartOf="@+id/moveRightButton"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/groupFieldsTextView"
-            android:background="@drawable/border" android:layout_marginBottom="8dp"
+            android:background="@drawable/border"
             app:layout_constraintBottom_toTopOf="@+id/getStatisticsButton"/>
     <android.support.v7.widget.RecyclerView
             android:layout_width="0dp"
@@ -89,7 +90,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/orderByFieldTextView"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/changeSortOrderButton"
             android:background="@drawable/border"/>
 </android.support.constraint.ConstraintLayout>

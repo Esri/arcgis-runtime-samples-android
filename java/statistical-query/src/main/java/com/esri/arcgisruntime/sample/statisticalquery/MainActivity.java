@@ -1,163 +1,288 @@
 package com.esri.arcgisruntime.sample.statisticalquery;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.data.StatisticDefinition;
+import com.esri.arcgisruntime.data.StatisticRecord;
 import com.esri.arcgisruntime.data.StatisticType;
 import com.esri.arcgisruntime.data.StatisticsQueryParameters;
+import com.esri.arcgisruntime.data.StatisticsQueryResult;
 
 public class MainActivity extends AppCompatActivity {
 
-  private ServiceFeatureTable mStatesFeatureTable;
+  private static final String TAG = MainActivity.class.getSimpleName();
+
+  private ServiceFeatureTable mUsStatesFeatureTable;
+  private Button mAddButton;
+  private Button mRemoveStatisticButton;
+  private Button mMoveRightButton;
+  private Button mMoveLeftButton;
+  private Button mChangeSortOrder;
+  private Button mGetStatisticsButton;
+  private Spinner mFieldSpinner;
+  private Spinner mTypeSpinner;
+  private RecyclerView mFieldTypeRecyclerView;
+  private RecyclerView mGroupFieldRecyclerView;
+  private RecyclerView mOrderByFieldRecyclerView;
+  private RecyclerViewAdapter mFieldTypeAdapter;
+  private RecyclerViewAdapter mGroupFieldAdapter;
+  private RecyclerViewAdapter mOrderByFieldAdapter;
+
+  private List<StatisticDefinition> mStatisticDefinitionList;
+  private List<String> mFieldTypeList;
+  private List<String> mGroupFieldList;
+  private List<String> mOrderByFieldList;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // inflate UI elements
-    Button addButton = findViewById(R.id.addButton);
-    Button removeStatisticButton = findViewById(R.id.removeStatisticButton);
-    Button moveRightButton = findViewById(R.id.moveRightButton);
-    Button moveLeftButton = findViewById(R.id.moveLeftButton);
-    Button getStatisticsButton = findViewById(R.id.getStatisticsButton);
-    Spinner fieldSpinner = findViewById(R.id.fieldSpinner);
-    Spinner typeSpinner = findViewById(R.id.typeSpinner);
-    RecyclerView fieldTypeRecyclerView = findViewById(R.id.fieldTypeRecyclerView);
-    RecyclerView groupFieldRecyclerView = findViewById(R.id.groupFieldRecyclerView);
-    RecyclerView orderByFieldRecyclerView = findViewById(R.id.orderFieldRecyclerView);
+    inflateUiViews();
 
-    // field type recycler view
-    List<String> fieldTypeRecyclerViewList = new ArrayList<>();
-    fieldTypeRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-    RecyclerViewAdapter fieldTypeRecyclerViewAdapter = new RecyclerViewAdapter(this, fieldTypeRecyclerViewList);
-    fieldTypeRecyclerView.setAdapter(fieldTypeRecyclerViewAdapter);
-
-    // group field recycler view
-    List<String> groupFieldRecyclerViewList = new ArrayList<>();
-    groupFieldRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-    RecyclerViewAdapter groupFieldRecyclerViewAdapter = new RecyclerViewAdapter(this, groupFieldRecyclerViewList);
-    groupFieldRecyclerView.setAdapter(groupFieldRecyclerViewAdapter);
-
-    // order by field recycler view
-    List<String> orderByFieldRecyclerViewList = new ArrayList<>();
-    orderByFieldRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-    RecyclerViewAdapter orderByFieldRecyclerViewAdapter = new RecyclerViewAdapter(this, orderByFieldRecyclerViewList);
-    orderByFieldRecyclerView.setAdapter(orderByFieldRecyclerViewAdapter);
+    createRecyclerViews();
 
     // create US states feature table
-    mStatesFeatureTable = new ServiceFeatureTable(getString(R.string.us_states_census));
+    mUsStatesFeatureTable = new ServiceFeatureTable(getString(R.string.us_states_census));
 
     // Collection of (user-defined) statistics to use in the query
-    List<StatisticDefinition> statisticDefinitionsList = new ArrayList<>();
+    mStatisticDefinitionList = new ArrayList<>();
 
     // load the table
-    mStatesFeatureTable.loadAsync();
+    mUsStatesFeatureTable.loadAsync();
 
-    mStatesFeatureTable.addDoneLoadingListener(() -> {
+    mUsStatesFeatureTable.addDoneLoadingListener(() -> {
 
       // fill array with field names
-      List<String> fieldsArrayAsStrings = new ArrayList<>();
-      Map<String, Integer> fieldMap = new HashMap<>();
-      for (int i = 0; i < mStatesFeatureTable.getFields().size(); i++) {
-        String fieldAsString = mStatesFeatureTable.getFields().get(i).getName();
-        fieldsArrayAsStrings.add(fieldAsString);
-        fieldMap.put(fieldAsString, i);
+      List<String> fieldNameList = new ArrayList<>();
+      for (int i = 0; i < mUsStatesFeatureTable.getFields().size(); i++) {
+        String fieldName = mUsStatesFeatureTable.getFields().get(i).getName();
+        fieldNameList.add(fieldName);
       }
 
       // fill the field spinner with field names
-      fieldSpinner
-          .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, fieldMap.keySet().toArray()));
+      mFieldSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, fieldNameList));
 
       // fill the type spinner with StatisticType values
-      typeSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, StatisticType.values()));
+      mTypeSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, StatisticType.values()));
 
       // fill group field recycler view with field names
-      groupFieldRecyclerViewList.addAll(fieldsArrayAsStrings);
-      groupFieldRecyclerViewAdapter.notifyDataSetChanged();
+      mGroupFieldList.addAll(fieldNameList);
+      mGroupFieldAdapter.notifyDataSetChanged();
 
-      // on add button click
-      addButton.setOnClickListener(v -> {
-        String fieldName = fieldSpinner.getSelectedItem().toString();
-        StatisticType statType = (StatisticType) typeSpinner.getSelectedItem();
-        fieldTypeRecyclerViewList.add(fieldName + " (" + statType + ")");
-        fieldTypeRecyclerViewAdapter.notifyItemInserted(fieldTypeRecyclerViewList.size() - 1);
-        StatisticDefinition statDefinition = new StatisticDefinition(fieldName, statType,
-            fieldName + "_" + statType.toString());
-        statisticDefinitionsList.add(statDefinition);
+      mAddButton.setOnClickListener(v -> {
+        String fieldName = mFieldSpinner.getSelectedItem().toString();
+        StatisticType statType = StatisticType.valueOf(mTypeSpinner.getSelectedItem().toString());
+        mFieldTypeList.add(fieldName + " (" + statType + ")");
+        mFieldTypeAdapter.notifyItemInserted(mFieldTypeList.size() - 1);
+        StatisticDefinition statDefinition = new StatisticDefinition(fieldName, statType);
+        mStatisticDefinitionList.add(statDefinition);
       });
 
-      // on remove statistic button click
-      removeStatisticButton.setOnClickListener(v -> {
-        fieldTypeRecyclerViewList.remove(fieldTypeRecyclerViewAdapter.getSelectedPosition());
-        fieldTypeRecyclerViewAdapter.notifyItemRemoved(fieldTypeRecyclerViewAdapter.getSelectedPosition());
+      mRemoveStatisticButton.setOnClickListener(v -> {
+        int position = mFieldTypeAdapter.getSelectedPosition();
+
+        mStatisticDefinitionList.remove(position);
+
+        // remove field and type from field type recycler view
+        mFieldTypeList.remove(position);
+        mFieldTypeAdapter.notifyItemRemoved(position);
       });
 
-      moveRightButton.setOnClickListener(view -> {
-        orderByFieldRecyclerViewList
-            .add(groupFieldRecyclerViewAdapter.getItem(groupFieldRecyclerViewAdapter.getSelectedPosition()) + " (" +
-                QueryParameters.SortOrder.ASCENDING + ")");
-        orderByFieldRecyclerViewAdapter.notifyItemInserted(orderByFieldRecyclerViewList.size() - 1);
-        groupFieldRecyclerViewList.remove(groupFieldRecyclerViewAdapter.getSelectedPosition());
-        groupFieldRecyclerViewAdapter.notifyItemRemoved(groupFieldRecyclerViewAdapter.getSelectedPosition());
+      mMoveRightButton.setOnClickListener(view -> {
+        int position = mGroupFieldAdapter.getSelectedPosition();
+
+        // add field to order by field recycler view with a sort order of ASCENDING
+        mOrderByFieldList.add(mGroupFieldAdapter.getItem(position) + " (" + QueryParameters.SortOrder.ASCENDING + ")");
+        mOrderByFieldAdapter.notifyItemInserted(mOrderByFieldList.size() - 1);
+
+        // remove the field from group field recycler view
+        //mGroupFieldList.remove(position);
+        //mGroupFieldAdapter.notifyItemRemoved(position);
       });
 
-      moveLeftButton.setOnClickListener(view -> {
+      mMoveLeftButton.setOnClickListener(view -> {
+        int position = mOrderByFieldAdapter.getSelectedPosition();
 
-        // strip out (ASCENDING) or (DESCENDING) from orderByFieldRecyclerView
-        String stringWithOrdering = orderByFieldRecyclerViewAdapter
-            .getItem(orderByFieldRecyclerViewAdapter.getSelectedPosition());
-        String field = stringWithOrdering.substring(0, stringWithOrdering.indexOf(" "));
+        // strip out (ASCENDING) or (DESCENDING) from string
+        String fieldAndOrder = mOrderByFieldAdapter.getItem(position);
+        String field = getField(fieldAndOrder);
 
-        // get the field's associated index to insert back into the correct location in groupFieldRecyclerView
-        int fieldIndex = fieldMap.get(field);
+        // get field's original index to insert back into the correct index of the recycler view
+        int fieldIndex = fieldNameList.indexOf(field);
 
         // add the field back in to groupFieldRecyclerView at correct index
-        groupFieldRecyclerViewList.add(fieldIndex, field);
-        groupFieldRecyclerViewAdapter.notifyItemInserted(fieldIndex);
+        mGroupFieldList.add(fieldIndex, field);
+        mGroupFieldAdapter.notifyItemInserted(fieldIndex);
 
         // remove field from orderByFieldRecyclerView
-        orderByFieldRecyclerViewList.remove(orderByFieldRecyclerViewAdapter.getSelectedPosition());
-        orderByFieldRecyclerViewAdapter.notifyItemRemoved(orderByFieldRecyclerViewAdapter.getSelectedPosition());
+        mOrderByFieldList.remove(position);
+        mOrderByFieldAdapter.notifyItemRemoved(position);
+      });
+
+      mChangeSortOrder.setOnClickListener(view -> {
+        int position = mOrderByFieldAdapter.getSelectedPosition();
+        if (position >= 0) {
+          String fieldAndOrder = mOrderByFieldAdapter.getItem(position);
+          mOrderByFieldList.remove(position);
+          String field = getField(fieldAndOrder);
+          QueryParameters.SortOrder sortOrder = getSortOrder(fieldAndOrder);
+          if (sortOrder == QueryParameters.SortOrder.ASCENDING) {
+            mOrderByFieldList.add(position, field + " (" + QueryParameters.SortOrder.DESCENDING + ")");
+          } else {
+            mOrderByFieldList.add(position, field + " (" + QueryParameters.SortOrder.ASCENDING + ")");
+          }
+          mOrderByFieldAdapter.notifyItemChanged(position);
+        } else {
+          Toast.makeText(MainActivity.this, "Please select a field with sort order.", Toast.LENGTH_LONG).show();
+        }
+      });
+
+      mGetStatisticsButton.setOnClickListener(view -> {
+        executeStatisticsQuery();
       });
     });
+  }
 
-    getStatisticsButton.setOnClickListener(view -> {
-      // verify that there is at least one statistic definition
-      if (statisticDefinitionsList.size() > 0) {
-        // create the statistics query parameters, pass in the list of statistic definitions
-        StatisticsQueryParameters statQueryParams = new StatisticsQueryParameters(statisticDefinitionsList);
+  private void executeStatisticsQuery() {
+    // verify that there is at least one statistic definition
+    if (mStatisticDefinitionList.size() == 0) {
+      Toast.makeText(MainActivity.this, "Please define at least one statistic for the query.", Toast.LENGTH_LONG)
+          .show();
+      return;
+    }
 
-        // Specify the group fields (if any)
-        for (String groupField : groupFieldRecyclerViewList) {
-          statQueryParams.getGroupByFieldNames().add(groupField);
+    // create the statistics query parameters, pass in the list of statistic definitions
+    StatisticsQueryParameters statQueryParams = new StatisticsQueryParameters(mStatisticDefinitionList);
+    Log.d("statsDefField", mStatisticDefinitionList.get(0).getFieldName());
+    Log.d("statsDefType", mStatisticDefinitionList.get(0).getStatisticType().toString());
+
+    // Specify the group fields (if any)
+    for (String groupField : mGroupFieldList) {
+      statQueryParams.getGroupByFieldNames().add(groupField);
+    }
+    // Specify the fields to order by (if any)
+    for (String fieldAndSortOrder : mOrderByFieldList) {
+
+      // create a new OrderBy object to define the sort for the selected field
+      QueryParameters.OrderBy orderBy = new QueryParameters.OrderBy(getField(fieldAndSortOrder),
+          getSortOrder(fieldAndSortOrder));
+
+      Log.d("queryOrderByField", orderBy.getFieldName());
+      Log.d("queryOrderBySort", orderBy.getSortOrder().toString());
+
+      statQueryParams.getOrderByFields().add(orderBy);
+
+    }
+    // execute the statistical query with these parameters and await the results
+    ListenableFuture<StatisticsQueryResult> statisticsQueryResultFuture = mUsStatesFeatureTable.queryStatisticsAsync(statQueryParams);
+
+    Log.d("groupBy", statQueryParams.getGroupByFieldNames().get(0));
+    //      Log.d("orderBy", statQueryParams.getOrderByFields().get(0).getFieldName());
+    Log.d("statsDefQuery", statQueryParams.getStatisticDefinitions().get(0).getFieldName());
+
+    statisticsQueryResultFuture.addDoneListener(() -> {
+      Log.d(TAG, "stats query result future returned");
+      try {
+        StatisticsQueryResult statisticsQueryResult = statisticsQueryResultFuture.get();
+
+        for (Iterator<StatisticRecord> stats = statisticsQueryResult.iterator(); stats.hasNext();) {
+          //for (Map.Entry<String, Object> entry : stats.next().getStatistics().entrySet()) {
+          //  Log.d("statsEntry", entry.getKey() + " " + entry.getValue());
+          //}
+          for (Map.Entry<String, Object> entry : stats.next().getGroup().entrySet()) {
+            Log.d("groupEntry", entry.getKey() + " " + entry.getValue());
+          }
         }
 
-        // Specify the fields to order by (if any)
-        for (String fieldAndOrder : orderByFieldRecyclerViewList) {
 
-          statQueryParams.getOrderByFields().add(QueryParameters.OrderBy);
-        }
-      } else {
-        Toast.makeText(MainActivity.this, "Please define at least one statistic for the query.", Toast.LENGTH_LONG)
-            .show();
+      } catch (InterruptedException | ExecutionException e) {
+        Log.e(TAG, "Invalid statistics definition: " + e.getMessage());
       }
+      // format the output, and display results in the tree view
+
     });
 
   }
 
+  private void inflateUiViews() {
+    mAddButton = findViewById(R.id.addButton);
+    mRemoveStatisticButton = findViewById(R.id.removeStatisticButton);
+    mMoveRightButton = findViewById(R.id.moveRightButton);
+    mMoveLeftButton = findViewById(R.id.moveLeftButton);
+    mChangeSortOrder = findViewById(R.id.changeSortOrderButton);
+    mGetStatisticsButton = findViewById(R.id.getStatisticsButton);
+    mFieldSpinner = findViewById(R.id.fieldSpinner);
+    mTypeSpinner = findViewById(R.id.typeSpinner);
+    mFieldTypeRecyclerView = findViewById(R.id.fieldTypeRecyclerView);
+    mGroupFieldRecyclerView = findViewById(R.id.groupFieldRecyclerView);
+    mOrderByFieldRecyclerView = findViewById(R.id.orderFieldRecyclerView);
+  }
+
+  private void createRecyclerViews() {
+    // field type recycler view
+    mFieldTypeList = new ArrayList<>();
+    mFieldTypeRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+    mFieldTypeAdapter = new RecyclerViewAdapter(this, mFieldTypeList);
+    mFieldTypeRecyclerView.setAdapter(mFieldTypeAdapter);
+
+    // group field recycler view
+    mGroupFieldList = new ArrayList<>();
+    mGroupFieldRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+    mGroupFieldAdapter = new RecyclerViewAdapter(this, mGroupFieldList);
+    mGroupFieldRecyclerView.setAdapter(mGroupFieldAdapter);
+
+    // order by field recycler view
+    mOrderByFieldList = new ArrayList<>();
+    mOrderByFieldRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+    mOrderByFieldAdapter = new RecyclerViewAdapter(this, mOrderByFieldList);
+    mOrderByFieldRecyclerView.setAdapter(mOrderByFieldAdapter);
+  }
+
+  /**
+   * Helper method to get the sort order from a string.
+   *
+   * @param fieldAndOrder string from recycler view
+   * @return SortOrder (either ASCENDING or DESCENDING)
+   */
+  private QueryParameters.SortOrder getSortOrder(String fieldAndOrder) {
+    String orderString = fieldAndOrder.substring(fieldAndOrder.indexOf("(") + 1, fieldAndOrder.indexOf(")"));
+    QueryParameters.SortOrder sortOrder;
+    if (orderString.equals("DESCENDING")) {
+      sortOrder = QueryParameters.SortOrder.DESCENDING;
+    } else if (orderString.equals("ASCENDING")) {
+      sortOrder = QueryParameters.SortOrder.ASCENDING;
+    } else {
+      Log.e(TAG, "Invalid sort order: " + orderString);
+      sortOrder = null;
+    }
+    return sortOrder;
+  }
+
+  /**
+   * Helper method to get a field from a string.
+   *
+   * @param fieldAndOrder string from recycler view
+   * @return field as a string
+   */
+  private String getField(String fieldAndOrder) {
+    return fieldAndOrder.substring(0, fieldAndOrder.indexOf(" "));
+  }
 }
