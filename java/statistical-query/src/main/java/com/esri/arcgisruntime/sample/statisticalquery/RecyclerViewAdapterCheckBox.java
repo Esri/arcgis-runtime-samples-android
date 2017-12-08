@@ -1,5 +1,6 @@
 package com.esri.arcgisruntime.sample.statisticalquery;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,23 +10,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapterCheckBox extends RecyclerView.Adapter<RecyclerViewAdapterCheckBox.ViewHolder> {
 
-  private List<String> mData = Collections.emptyList();
   private final LayoutInflater mInflater;
+  private List<String> mData = Collections.emptyList();
+  private List<Boolean> mCheckedList = new ArrayList<>();
   private ItemClickListener mClickListener;
   private int mSelectedPosition = 0;
 
-  public RecyclerViewAdapter(Context context, List<String> data) {
+  public RecyclerViewAdapterCheckBox(Context context, List<String> data) {
     this.mInflater = LayoutInflater.from(context);
     this.mData = data;
   }
 
   @Override
   public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View view = mInflater.inflate(R.layout.recyclerview_row, parent, false);
+    View view = mInflater.inflate(R.layout.recyclerview_checkbox_row, parent, false);
     return new ViewHolder(view);
   }
 
@@ -33,6 +36,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
   public void onBindViewHolder(ViewHolder holder, int position) {
     String text = mData.get(position);
     holder.mRowTextView.setText(text);
+    holder.mCheckBox.setChecked(mCheckedList.get(position));
+    holder.mCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+
+    });
+
     // give the selected row a gray background and make all others transparent
     holder.itemView.setBackgroundColor(mSelectedPosition == position ? Color.LTGRAY : Color.TRANSPARENT);
   }
@@ -42,28 +50,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     return mData.size();
   }
 
-  public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    public final TextView mRowTextView;
-
-    public ViewHolder(View itemView) {
-      super(itemView);
-      mRowTextView = itemView.findViewById(R.id.rowTextView);
-      itemView.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-      if (mClickListener != null) {
-        mClickListener.onItemClick(view, getAdapterPosition());
-      }
-      notifyItemChanged(mSelectedPosition);
-      mSelectedPosition = getAdapterPosition();
-      notifyItemChanged(mSelectedPosition);
-    }
-  }
-
   public int getSelectedPosition() {
     return mSelectedPosition;
+  }
+
+  public List<Boolean> getCheckedItems() {
+    return mCheckedList;
   }
 
   // convenience method for getting data at click position
@@ -79,5 +71,27 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
   // parent activity will implement this method to respond to click events
   public interface ItemClickListener {
     void onItemClick(View view, int position);
+  }
+
+  public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public final TextView mRowTextView;
+    public final CheckBox mCheckBox;
+
+    public ViewHolder(View itemView) {
+      super(itemView);
+      mRowTextView = itemView.findViewById(R.id.rowTextView);
+      mCheckBox = itemView.findViewById(R.id.rowCheckBox);
+      itemView.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+      if (mClickListener != null) {
+        mClickListener.onItemClick(view, getAdapterPosition());
+      }
+      notifyItemChanged(mSelectedPosition);
+      mSelectedPosition = getAdapterPosition();
+      notifyItemChanged(mSelectedPosition);
+    }
   }
 }
