@@ -1,12 +1,12 @@
 package com.esri.arcgisruntime.sample.statisticalquery;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +17,18 @@ public class RecyclerViewAdapterCheckBox extends RecyclerView.Adapter<RecyclerVi
 
   private final LayoutInflater mInflater;
   private List<String> mData = Collections.emptyList();
-  private List<Boolean> mCheckedList = new ArrayList<>();
+  private boolean[] mCheckedList;
   private ItemClickListener mClickListener;
   private int mSelectedPosition = 0;
 
   public RecyclerViewAdapterCheckBox(Context context, List<String> data) {
     this.mInflater = LayoutInflater.from(context);
     this.mData = data;
+    mCheckedList = new boolean[data.size()];
+    for (int i = 0; i < mCheckedList.length; i++) {
+      Log.d("checkedArray", String.valueOf(mCheckedList[i]));
+    }
+
   }
 
   @Override
@@ -36,13 +41,23 @@ public class RecyclerViewAdapterCheckBox extends RecyclerView.Adapter<RecyclerVi
   public void onBindViewHolder(ViewHolder holder, int position) {
     String text = mData.get(position);
     holder.mRowTextView.setText(text);
-    holder.mCheckBox.setChecked(mCheckedList.get(position));
-    holder.mCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
 
+    //in some cases, it will prevent unwanted situations
+    holder.mCheckBox.setOnCheckedChangeListener(null);
+
+    // set checked status to known checked status
+    holder.mCheckBox.setChecked(mCheckedList[position]);
+
+    // update checked array on check change
+    holder.mCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+      mCheckedList[position] = !mCheckedList[position];
+      for (int i = 0; i < mCheckedList.length; i++) {
+      }
     });
 
     // give the selected row a gray background and make all others transparent
     holder.itemView.setBackgroundColor(mSelectedPosition == position ? Color.LTGRAY : Color.TRANSPARENT);
+
   }
 
   @Override
@@ -54,7 +69,7 @@ public class RecyclerViewAdapterCheckBox extends RecyclerView.Adapter<RecyclerVi
     return mSelectedPosition;
   }
 
-  public List<Boolean> getCheckedItems() {
+  public boolean[] getCheckedList() {
     return mCheckedList;
   }
 

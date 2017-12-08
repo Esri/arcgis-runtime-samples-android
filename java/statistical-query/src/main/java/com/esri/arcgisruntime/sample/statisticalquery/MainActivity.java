@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
   private List<StatisticDefinition> mStatisticDefinitionList;
   private List<String> mStatisticDefinitionsAsStringsList;
-  private List<String> mGroupList;
   private List<String> mOrderByList;
   private List<String> mFieldNameList;
 
@@ -59,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     inflateUiViews();
-
-    createRecyclerViews();
 
     // create US states feature table
     mUsStatesFeatureTable = new ServiceFeatureTable(getString(R.string.us_states_census));
@@ -79,15 +76,13 @@ public class MainActivity extends AppCompatActivity {
         mFieldNameList.add(fieldName);
       }
 
+      createRecyclerViews();
+
       // fill the field spinner with field names
       mFieldSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mFieldNameList));
 
       // fill the type spinner with StatisticType values
       mTypeSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, StatisticType.values()));
-
-      // fill group field recycler view with field names
-      mGroupList.addAll(mFieldNameList);
-      mGroupAdapter.notifyDataSetChanged();
 
       // wire up buttons to work only after the US states feature table has loaded
       mAddButton.setOnClickListener(v -> addStatistic());
@@ -106,22 +101,29 @@ public class MainActivity extends AppCompatActivity {
   private void addStatistic() {
     String fieldName = mFieldSpinner.getSelectedItem().toString();
     StatisticType statType = StatisticType.valueOf(mTypeSpinner.getSelectedItem().toString());
-    mStatisticDefinitionsAsStringsList.add(fieldName + " (" + statType + ")");
-    mStatisticsDefinitionAdapter.notifyItemInserted(mStatisticDefinitionsAsStringsList.size() - 1);
-    StatisticDefinition statDefinition = new StatisticDefinition(fieldName, statType);
-    mStatisticDefinitionList.add(statDefinition);
+    if (mStatisticDefinitionsAsStringsList.contains(fieldName + " (" + statType + ")")) {
+      mStatisticDefinitionsAsStringsList.add(fieldName + " (" + statType + ")");
+      mStatisticsDefinitionAdapter.notifyItemInserted(mStatisticDefinitionsAsStringsList.size() - 1);
+      StatisticDefinition statDefinition = new StatisticDefinition(fieldName, statType);
+      mStatisticDefinitionList.add(statDefinition);
+    } else {
+      Toast.makeText(MainActivity.this, "The statistic definitions list already contains this pair of field and type.", Toast.LENGTH_LONG).show();
+    }
   }
 
   /**
    * Removes a statistic from the StatisticsDefinition list and recycler view.
    */
   private void removeStatistic() {
-    int position = mStatisticsDefinitionAdapter.getSelectedPosition();
+    // check statistic definitions list has any statistic definitions
+    if (mStatisticDefinitionList.size() > 0) {
+      int position = mStatisticsDefinitionAdapter.getSelectedPosition();
 
-    // remove statistic definition from statistics definition list and recycler view
-    mStatisticDefinitionList.remove(position);
-    mStatisticDefinitionsAsStringsList.remove(position);
-    mStatisticsDefinitionAdapter.notifyItemRemoved(position);
+      // remove statistic definition from statistics definition list and recycler view
+      mStatisticDefinitionList.remove(position);
+      mStatisticDefinitionsAsStringsList.remove(position);
+      mStatisticsDefinitionAdapter.notifyItemRemoved(position);
+    }
   }
 
   /**
@@ -132,20 +134,20 @@ public class MainActivity extends AppCompatActivity {
 
     String field = mGroupAdapter.getItem(mGroupAdapter.getSelectedPosition());
 
-    //TODO -testing REMOVE!
-    mGroupList.clear();
-    mGroupList.add(field);
+    if (getCheckedFields().contains(field)) {
 
-    //TODO - Fix this to move logic out of UI?!!
-    if (!mOrderByList.contains(field + " (" + QueryParameters.SortOrder.ASCENDING + ")") &&
-        !mOrderByList.contains(field + " (" + QueryParameters.SortOrder.DESCENDING + ")")) {
+      if (!mOrderByList.contains(field + " (" + QueryParameters.SortOrder.ASCENDING + ")") &&
+          !mOrderByList.contains(field + " (" + QueryParameters.SortOrder.DESCENDING + ")")) {
 
-      // add field to order by recycler view with a sort order of ASCENDING
-      mOrderByList.add(field + " (" + QueryParameters.SortOrder.ASCENDING + ")");
-      mOrderByAdapter.notifyItemInserted(mOrderByList.size() - 1);
+        // add field to order by recycler view with a sort order of ASCENDING
+        mOrderByList.add(field + " (" + QueryParameters.SortOrder.ASCENDING + ")");
+        mOrderByAdapter.notifyItemInserted(mOrderByList.size() - 1);
 
+      } else {
+        Toast.makeText(MainActivity.this, "Statistics are already being ordered by " + field, Toast.LENGTH_LONG).show();
+      }
     } else {
-      Toast.makeText(MainActivity.this, "Statistics are already being ordered by " + field, Toast.LENGTH_LONG).show();
+      Toast.makeText(MainActivity.this, "Only fields selected for grouping can also be ordered.", Toast.LENGTH_LONG).show();
     }
   }
 
@@ -153,11 +155,16 @@ public class MainActivity extends AppCompatActivity {
    * Removes a field from the order by list and recycler view.
    */
   private void removeFieldFromOrderBy() {
-    int position = mOrderByAdapter.getSelectedPosition();
+    // check that order by list has any order bys
+    if (mOrderByList.size() > 0) {
 
-    // remove field from orderByFieldRecyclerView
-    mOrderByList.remove(position);
-    mOrderByAdapter.notifyItemRemoved(position);
+      // get the selected order by's position in the recycler view
+      int position = mOrderByAdapter.getSelectedPosition();
+
+      // remove field from recycler view
+      mOrderByList.remove(position);
+      mOrderByAdapter.notifyItemRemoved(position);
+    }
   }
 
   /**
@@ -193,46 +200,40 @@ public class MainActivity extends AppCompatActivity {
       return;
     }
 
-    Log.d(TAG, "Relevant lists");
-    for (String statsDefString : mStatisticDefinitionsAsStringsList) {
-      Log.d("statsDef", statsDefString);
-    }
-    for (String orderByString : mOrderByList) {
-      Log.d("orderBy", orderByString);
-    }
-    for (String groupByString : mGroupList) {
-      Log.d("groupBy", groupByString);
-    }
-
     // create the statistics query parameters, pass in the list of statistic definitions
     StatisticsQueryParameters statQueryParams = new StatisticsQueryParameters(mStatisticDefinitionList);
-    Log.d("statsDefField", mStatisticDefinitionList.get(0).getFieldName());
-    Log.d("statsDefType", mStatisticDefinitionList.get(0).getStatisticType().toString());
 
-    // Specify the group fields (if any)
-    for (String groupField : mGroupList) {
-      statQueryParams.getGroupByFieldNames().add(groupField);
+    // add all checked fields in the group fields list to the query parameters
+    for (int i = 0; i < mGroupAdapter.getCheckedList().length; i++) {
+      if (mGroupAdapter.getCheckedList()[i]) {
+        statQueryParams.getGroupByFieldNames().add(mFieldNameList.get(i));
+      }
     }
+
     // Specify the fields to order by (if any)
     for (String fieldAndSortOrder : mOrderByList) {
 
       // create a new OrderBy object to define the sort for the selected field
-      QueryParameters.OrderBy orderBy = new QueryParameters.OrderBy(getField(fieldAndSortOrder),
-          getSortOrder(fieldAndSortOrder));
-
-      Log.d("queryOrderByField", orderBy.getFieldName());
-      Log.d("queryOrderBySort", orderBy.getSortOrder().toString());
-
+      QueryParameters.OrderBy orderBy = new QueryParameters.OrderBy(getField(fieldAndSortOrder), getSortOrder(fieldAndSortOrder));
       statQueryParams.getOrderByFields().add(orderBy);
-
     }
+
+    // write the statistical query parameters to the log
+    Log.i(TAG, "Statistical query parameters");
+    for (StatisticDefinition statisticDefinition: statQueryParams.getStatisticDefinitions()) {
+      Log.i(TAG, "Statistic definition: " + statisticDefinition.getFieldName() + ": " + statisticDefinition.getStatisticType());
+    }
+    for (String group : statQueryParams.getGroupByFieldNames()) {
+      Log.i(TAG, "Group by: " + group);
+    }
+    for (QueryParameters.OrderBy orderBy : statQueryParams.getOrderByFields()) {
+      Log.i(TAG, "Order " + orderBy.getFieldName() + " by " + orderBy.getSortOrder());
+    }
+
     // execute the statistical query with these parameters and await the results
     ListenableFuture<StatisticsQueryResult> statisticsQueryResultFuture = mUsStatesFeatureTable
         .queryStatisticsAsync(statQueryParams);
 
-    Log.d("groupBy", statQueryParams.getGroupByFieldNames().get(0));
-    //      Log.d("orderBy", statQueryParams.getOrderByFields().get(0).getFieldName());
-    //      Log.d("statsDefQuery", statQueryParams.getStatisticDefinitions().get(0).getFieldName());
 
     statisticsQueryResultFuture.addDoneListener(() -> {
       Log.d(TAG, "stats query result future returned");
@@ -251,8 +252,7 @@ public class MainActivity extends AppCompatActivity {
             groupedStatistics.put(group.getValue().toString(), statsForGroup);
           }
         }
-
-        showResults(groupedStatistics);
+        displayResults(groupedStatistics);
       } catch (InterruptedException | ExecutionException e) {
         Log.e(TAG, "Invalid statistics definition: " + e.getMessage());
       }
@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
    *
    * @param groupedStatistics hash map which contains results by group
    */
-  private void showResults(HashMap<String, List<String>> groupedStatistics) {
+  private void displayResults(HashMap<String, List<String>> groupedStatistics) {
     Intent intent = new Intent(this, ResultsActivity.class);
     intent.putExtra("results", groupedStatistics);
     startActivity(intent);
@@ -291,10 +291,9 @@ public class MainActivity extends AppCompatActivity {
     mStatisticsDefinitionAdapter = new RecyclerViewAdapter(this, mStatisticDefinitionsAsStringsList);
     mStatisticsDefinitionRecyclerView.setAdapter(mStatisticsDefinitionAdapter);
 
-    // group field recycler view
-    mGroupList = new ArrayList<>();
+    // group field recycler view which just takes the full list of of field names
     mGroupRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-    mGroupAdapter = new RecyclerViewAdapterCheckBox(this, mGroupList);
+    mGroupAdapter = new RecyclerViewAdapterCheckBox(this, mFieldNameList);
     mGroupRecyclerView.setAdapter(mGroupAdapter);
 
     // order by field recycler view
@@ -332,5 +331,24 @@ public class MainActivity extends AppCompatActivity {
    */
   private String getField(String fieldAndOrder) {
     return fieldAndOrder.substring(0, fieldAndOrder.indexOf(" "));
+  }
+
+  /**
+   * Helper method to get a list of the fields which are checked in the group fields recycler view.
+   *
+   * @return list of checked fields
+   */
+  private ArrayList<String> getCheckedFields() {
+
+    ArrayList<String> checkedFields = new ArrayList<>();
+
+    // add all checked fields in the group fields list to the query parameters
+    for (int i = 0; i < mGroupAdapter.getCheckedList().length; i++) {
+      // if checked
+      if (mGroupAdapter.getCheckedList()[i]) {
+        checkedFields.add(mFieldNameList.get(i));
+      }
+    }
+    return checkedFields;
   }
 }
