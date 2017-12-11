@@ -1,10 +1,7 @@
 package com.esri.arcgisruntime.sample.statisticalquery;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.content.Intent;
@@ -18,11 +15,12 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.data.StatisticDefinition;
-import com.esri.arcgisruntime.data.StatisticRecord;
 import com.esri.arcgisruntime.data.StatisticType;
 import com.esri.arcgisruntime.data.StatisticsQueryParameters;
 import com.esri.arcgisruntime.data.StatisticsQueryResult;
@@ -99,15 +97,21 @@ public class MainActivity extends AppCompatActivity {
    * view.
    */
   private void addStatistic() {
+
+    // get field and stat type from the respective spinners
     String fieldName = mFieldSpinner.getSelectedItem().toString();
     StatisticType statType = StatisticType.valueOf(mTypeSpinner.getSelectedItem().toString());
-    if (mStatisticDefinitionsAsStringsList.contains(fieldName + " (" + statType + ")")) {
+
+    // check if the list already contains this field/type pair, if not, then add it to both UI string list and stat
+    // definition list
+    if (!mStatisticDefinitionsAsStringsList.contains(fieldName + " (" + statType + ")")) {
       mStatisticDefinitionsAsStringsList.add(fieldName + " (" + statType + ")");
       mStatisticsDefinitionAdapter.notifyItemInserted(mStatisticDefinitionsAsStringsList.size() - 1);
       StatisticDefinition statDefinition = new StatisticDefinition(fieldName, statType);
       mStatisticDefinitionList.add(statDefinition);
     } else {
-      Toast.makeText(MainActivity.this, "The statistic definitions list already contains this pair of field and type.", Toast.LENGTH_LONG).show();
+      Toast.makeText(MainActivity.this, "The statistic definitions list already contains this field and type pair.",
+          Toast.LENGTH_LONG).show();
     }
   }
 
@@ -115,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
    * Removes a statistic from the StatisticsDefinition list and recycler view.
    */
   private void removeStatistic() {
-    // check statistic definitions list has any statistic definitions
+    // check if the statistic definitions list has any statistic definitions
     if (mStatisticDefinitionList.size() > 0) {
       int position = mStatisticsDefinitionAdapter.getSelectedPosition();
 
@@ -127,27 +131,29 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Adds a field to the order by list and recycler view therefore selecting the field for order for ASCENDING (by
-   * default).
+   * Adds a field to the order by list and recycler view, thus selecting the field for order by ASCENDING (by default).
    */
   private void addFieldToOrderBy() {
 
+    // get the selected field from the group recycler view
     String field = mGroupAdapter.getItem(mGroupAdapter.getSelectedPosition());
 
+    // check if field is checked
     if (getCheckedFields().contains(field)) {
 
+      // check if the order by list already contains the field
       if (!mOrderByList.contains(field + " (" + QueryParameters.SortOrder.ASCENDING + ")") &&
           !mOrderByList.contains(field + " (" + QueryParameters.SortOrder.DESCENDING + ")")) {
 
-        // add field to order by recycler view with a sort order of ASCENDING
+        // add field to order list with a sort order of ASCENDING
         mOrderByList.add(field + " (" + QueryParameters.SortOrder.ASCENDING + ")");
         mOrderByAdapter.notifyItemInserted(mOrderByList.size() - 1);
-
       } else {
         Toast.makeText(MainActivity.this, "Statistics are already being ordered by " + field, Toast.LENGTH_LONG).show();
       }
     } else {
-      Toast.makeText(MainActivity.this, "Only fields selected for grouping can also be ordered.", Toast.LENGTH_LONG).show();
+      Toast.makeText(MainActivity.this, "Only fields selected for grouping can also be ordered.", Toast.LENGTH_LONG)
+          .show();
     }
   }
 
@@ -173,11 +179,18 @@ public class MainActivity extends AppCompatActivity {
   private void changeSortOrder() {
     int position = mOrderByAdapter.getSelectedPosition();
 
+    // check if there are any fields in the order by recycler view
     if (position >= 0) {
-      String fieldAndOrder = mOrderByAdapter.getItem(position);
+
+      // get the field and order and remove it from recycler view
+      String fieldAndSortOrder = mOrderByAdapter.getItem(position);
       mOrderByList.remove(position);
-      String field = getField(fieldAndOrder);
-      QueryParameters.SortOrder sortOrder = getSortOrder(fieldAndOrder);
+
+      // get the field and sort order strings
+      String field = getFieldFrom(fieldAndSortOrder);
+      QueryParameters.SortOrder sortOrder = getSortOrderFrom(fieldAndSortOrder);
+
+      // toggle between ASCENDING and DESCENDING
       if (sortOrder == QueryParameters.SortOrder.ASCENDING) {
         mOrderByList.add(position, field + " (" + QueryParameters.SortOrder.DESCENDING + ")");
       } else {
@@ -193,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
    *
    */
   private void executeStatisticsQuery() {
-    // verify that there is at least one statistic definition
+    // verify that there is at least one statistic definition in the statistic definition list
     if (mStatisticDefinitionList.size() == 0) {
       Toast.makeText(MainActivity.this, "Please define at least one statistic for the query.", Toast.LENGTH_LONG)
           .show();
@@ -204,24 +217,34 @@ public class MainActivity extends AppCompatActivity {
     StatisticsQueryParameters statQueryParams = new StatisticsQueryParameters(mStatisticDefinitionList);
 
     // add all checked fields in the group fields list to the query parameters
+    List<String> groupList = new ArrayList<>();
     for (int i = 0; i < mGroupAdapter.getCheckedList().length; i++) {
       if (mGroupAdapter.getCheckedList()[i]) {
-        statQueryParams.getGroupByFieldNames().add(mFieldNameList.get(i));
+        groupList.add(mFieldNameList.get(i));
       }
     }
+    statQueryParams.getGroupByFieldNames().addAll(groupList);
 
-    // Specify the fields to order by (if any)
+    // specify the fields to order by (if any)
     for (String fieldAndSortOrder : mOrderByList) {
 
-      // create a new OrderBy object to define the sort for the selected field
-      QueryParameters.OrderBy orderBy = new QueryParameters.OrderBy(getField(fieldAndSortOrder), getSortOrder(fieldAndSortOrder));
-      statQueryParams.getOrderByFields().add(orderBy);
+      // check that all orderBy fields are also checked for grouping
+      if (groupList.contains(getFieldFrom(fieldAndSortOrder))) {
+
+        // create a new OrderBy object to define the sort order for the selected field
+        QueryParameters.OrderBy orderBy = new QueryParameters.OrderBy(getFieldFrom(fieldAndSortOrder),
+            getSortOrderFrom(fieldAndSortOrder));
+        statQueryParams.getOrderByFields().add(orderBy);
+      } else {
+        Toast.makeText(MainActivity.this, "Only checked fields in the 'Group Fields' list can be selected for ordering in the 'Order by Field' list.", Toast.LENGTH_LONG).show();
+      }
     }
 
     // write the statistical query parameters to the log
     Log.i(TAG, "Statistical query parameters");
-    for (StatisticDefinition statisticDefinition: statQueryParams.getStatisticDefinitions()) {
-      Log.i(TAG, "Statistic definition: " + statisticDefinition.getFieldName() + ": " + statisticDefinition.getStatisticType());
+    for (StatisticDefinition statisticDefinition : statQueryParams.getStatisticDefinitions()) {
+      Log.i(TAG, "Statistic definition: " + statisticDefinition.getFieldName() + ": " + statisticDefinition
+          .getStatisticType());
     }
     for (String group : statQueryParams.getGroupByFieldNames()) {
       Log.i(TAG, "Group by: " + group);
@@ -234,25 +257,13 @@ public class MainActivity extends AppCompatActivity {
     ListenableFuture<StatisticsQueryResult> statisticsQueryResultFuture = mUsStatesFeatureTable
         .queryStatisticsAsync(statQueryParams);
 
-
     statisticsQueryResultFuture.addDoneListener(() -> {
       Log.d(TAG, "stats query result future returned");
       try {
         StatisticsQueryResult statisticsQueryResult = statisticsQueryResultFuture.get();
 
-        // create a hash map for storage of results and populate it with the statistics query result
-        HashMap<String, List<String>> groupedStatistics = new HashMap<>();
-        for (Iterator<StatisticRecord> results = statisticsQueryResult.iterator(); results.hasNext(); ) {
-          StatisticRecord statisticRecord = results.next();
-          for (Map.Entry<String, Object> group : statisticRecord.getGroup().entrySet()) {
-            List<String> statsForGroup = new ArrayList<>();
-            for (Map.Entry<String, Object> stat : statisticRecord.getStatistics().entrySet()) {
-              statsForGroup.add(stat.getKey() + ": " + stat.getValue());
-            }
-            groupedStatistics.put(group.getValue().toString(), statsForGroup);
-          }
-        }
-        displayResults(groupedStatistics);
+        displayResults(statisticsQueryResult);
+
       } catch (InterruptedException | ExecutionException e) {
         Log.e(TAG, "Invalid statistics definition: " + e.getMessage());
       }
@@ -262,11 +273,12 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Creates a new activity to display results.
    *
-   * @param groupedStatistics hash map which contains results by group
+   * @param statisticsQueryResult hash map which contains results by group
    */
-  private void displayResults(HashMap<String, List<String>> groupedStatistics) {
+  private void displayResults(StatisticsQueryResult statisticsQueryResult) {
     Intent intent = new Intent(this, ResultsActivity.class);
-    intent.putExtra("results", groupedStatistics);
+    Gson gson = new Gson();
+    intent.putExtra("results", gson.toJson(statisticsQueryResult));
     startActivity(intent);
   }
 
@@ -304,12 +316,12 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Helper method to get the sort order from a string.
+   * Helper method to get the sort order from a string containing a field and sort order.
    *
    * @param fieldAndOrder string from recycler view
    * @return SortOrder (either ASCENDING or DESCENDING)
    */
-  private QueryParameters.SortOrder getSortOrder(String fieldAndOrder) {
+  private QueryParameters.SortOrder getSortOrderFrom(String fieldAndOrder) {
     String orderString = fieldAndOrder.substring(fieldAndOrder.indexOf("(") + 1, fieldAndOrder.indexOf(")"));
     QueryParameters.SortOrder sortOrder;
     if (orderString.equals("DESCENDING")) {
@@ -329,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
    * @param fieldAndOrder string from recycler view
    * @return field as a string
    */
-  private String getField(String fieldAndOrder) {
+  private String getFieldFrom(String fieldAndOrder) {
     return fieldAndOrder.substring(0, fieldAndOrder.indexOf(" "));
   }
 
