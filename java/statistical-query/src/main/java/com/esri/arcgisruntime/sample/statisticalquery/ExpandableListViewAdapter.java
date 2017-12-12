@@ -1,7 +1,6 @@
 package com.esri.arcgisruntime.sample.statisticalquery;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -17,7 +16,7 @@ class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
   private final Context context;
   private final List<String> mGroupList;
-  private final HashMap<String, List<String>> mStatList;
+  private final LinkedHashMap<String, List<String>> mStatList;
 
   public ExpandableListViewAdapter(Context context, LinkedHashMap<String, List<String>> statList) {
     this.context = context;
