@@ -6,7 +6,6 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ public class RecyclerViewAdapterCheckBox extends RecyclerView.Adapter<RecyclerVi
 
   private final LayoutInflater mInflater;
   private List<String> mData = Collections.emptyList();
-  private boolean[] mCheckedList;
+  private final boolean[] mCheckedList;
   private ItemClickListener mClickListener;
   private int mSelectedPosition = 0;
 
@@ -25,10 +24,6 @@ public class RecyclerViewAdapterCheckBox extends RecyclerView.Adapter<RecyclerVi
     this.mInflater = LayoutInflater.from(context);
     this.mData = data;
     mCheckedList = new boolean[data.size()];
-    for (int i = 0; i < mCheckedList.length; i++) {
-      Log.d("checkedArray", String.valueOf(mCheckedList[i]));
-    }
-
   }
 
   @Override
@@ -49,15 +44,10 @@ public class RecyclerViewAdapterCheckBox extends RecyclerView.Adapter<RecyclerVi
     holder.mCheckBox.setChecked(mCheckedList[position]);
 
     // update checked array on check change
-    holder.mCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-      mCheckedList[position] = !mCheckedList[position];
-      for (int i = 0; i < mCheckedList.length; i++) {
-      }
-    });
+    holder.mCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> mCheckedList[position] = !mCheckedList[position]);
 
     // give the selected row a gray background and make all others transparent
     holder.itemView.setBackgroundColor(mSelectedPosition == position ? Color.LTGRAY : Color.TRANSPARENT);
-
   }
 
   @Override

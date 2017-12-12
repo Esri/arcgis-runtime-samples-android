@@ -324,13 +324,17 @@ public class MainActivity extends AppCompatActivity {
   private QueryParameters.SortOrder getSortOrderFrom(String fieldAndOrder) {
     String orderString = fieldAndOrder.substring(fieldAndOrder.indexOf("(") + 1, fieldAndOrder.indexOf(")"));
     QueryParameters.SortOrder sortOrder;
-    if (orderString.equals("DESCENDING")) {
-      sortOrder = QueryParameters.SortOrder.DESCENDING;
-    } else if (orderString.equals("ASCENDING")) {
-      sortOrder = QueryParameters.SortOrder.ASCENDING;
-    } else {
-      Log.e(TAG, "Invalid sort order: " + orderString);
-      sortOrder = null;
+    switch (orderString) {
+      case "DESCENDING":
+        sortOrder = QueryParameters.SortOrder.DESCENDING;
+        break;
+      case "ASCENDING":
+        sortOrder = QueryParameters.SortOrder.ASCENDING;
+        break;
+      default:
+        Log.e(TAG, "Invalid sort order: " + orderString);
+        sortOrder = null;
+        break;
     }
     return sortOrder;
   }

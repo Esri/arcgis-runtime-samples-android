@@ -13,11 +13,11 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
+class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
-  private Context context;
-  private List<String> mGroupList;
-  private HashMap<String, List<String>> mStatList;
+  private final Context context;
+  private final List<String> mGroupList;
+  private final HashMap<String, List<String>> mStatList;
 
   public ExpandableListViewAdapter(Context context, LinkedHashMap<String, List<String>> statList) {
     this.context = context;
