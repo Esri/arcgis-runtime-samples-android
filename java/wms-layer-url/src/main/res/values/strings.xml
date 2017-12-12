@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">WMS layer (URL)</string>
+    <string name="wms_layer_url">https://certmapper.cr.usgs.gov/arcgis/services/geology/africa/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS</string>
+</resources>
