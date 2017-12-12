@@ -5,22 +5,17 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.esri.arcgisruntime.sample.featurelayergeodatabase"
+        applicationId "com.esri.arcgisruntime.sample.wmslayerurl"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
     }
-    
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    compileOptions {
-        targetCompatibility rootProject.ext.targetJavaVersion
-        sourceCompatibility rootProject.ext.sourceJavaVersion
     }
 }
 

@@ -80,4 +80,5 @@ include ':add-graphics-renderer', ':statistical-query',
         ':update-related-features',
         ':viewshed-camera',
         ':viewshed-geoprocessing',
-        ':web-tiledlayer'
+        ':web-tiledlayer',
+        ':wms-layer-url'

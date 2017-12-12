@@ -19,7 +19,6 @@ package com.esri.arcgisruntime.sample.featurelayerextrusion;
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.esri.arcgisruntime.data.QueryParameters
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
@@ -46,15 +45,10 @@ class MainActivity : AppCompatActivity() {
     // get us census data as a service feature table
     val statesServiceFeatureTable = ServiceFeatureTable(resources.getString(R.string.us_census_feature_service))
 
-    // load all fields in the service feature table
-    val queryParams = QueryParameters()
-    queryParams.whereClause = "1=1"
-    statesServiceFeatureTable.queryFeaturesAsync(queryParams, ServiceFeatureTable.QueryFeatureFields.LOAD_ALL)
-
     // add the service feature table to a feature layer
     val statesFeatureLayer = FeatureLayer(statesServiceFeatureTable)
     // set the feature layer to render dynamically to allow extrusion
-    statesFeatureLayer.featureRenderingMode = FeatureLayer.RenderingMode.DYNAMIC
+    statesFeatureLayer.renderingMode = FeatureLayer.RenderingMode.DYNAMIC
 
     // create a scene and add it to the scene view
     val scene = ArcGISScene(Basemap.createImagery())

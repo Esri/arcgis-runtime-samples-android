@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         //[DocRef: END]
 
         // add a camera and initial camera position
-        Camera camera = new Camera(28.4, 83.9, 10010.0, 10.0, 80.0, 300.0);
+        Camera camera = new Camera(28.4, 83.9, 10010.0, 10.0, 80.0, 0.0);
         mSceneView.setViewpointCamera(camera);
     }
 
