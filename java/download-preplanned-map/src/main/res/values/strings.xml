@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Download Preplanned Map</string>
+    <string name="file_name">preplannedMap</string>
+    <string name="portal_url">http://www.arcgis.com/</string>
+    <string name="portal_item_ID">60a294b72e2e466186ddf0d204ecd25c</string>
+</resources>
