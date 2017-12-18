@@ -8,29 +8,31 @@
 
 
     <com.esri.arcgisruntime.mapping.view.MapView
+            android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
     <android.support.v4.widget.DrawerLayout
             android:id="@+id/drawerLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
->
+            android:layout_height="match_parent">
         <!--Content-->
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+
+
         </LinearLayout>
         <!-- Navigation Drawer-->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TEST TEST TEST"/>
         <android.support.v7.widget.RecyclerView
                 android:id="@+id/drawerRecyclerView"
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="left"
-                android:background="#ffffff">
-        </android.support.v7.widget.RecyclerView>
+                android:background="@color/colorAccent"/>
     </android.support.v4.widget.DrawerLayout>
 
 </RelativeLayout>
