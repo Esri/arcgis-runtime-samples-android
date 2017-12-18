@@ -1,0 +1,20 @@
+ext {
+    // sdk versions
+    compileSdkVersion = 26
+    buildToolsVersion = '26.0.2'
+    minSdkVersion = 16
+    targetSdkVersion = 26
+    versionCode = 100
+    versionName = '100.2.0'
+    // library versions
+    kotlinVersion = '1.2.10'
+    ankoVersion = '0.10.3'
+    andSupportLibVersion = '27.0.2'
+    constraintLayoutVersion = '1.0.2'
+    arcgisVersion = '100.2.0'
+    // plugin versions
+    gradleVersion = '3.0.1'
+    // java versions
+    targetJavaVersion = 1.8
+    sourceJavaVersion = 1.8
+}

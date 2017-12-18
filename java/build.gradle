@@ -1,0 +1,35 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: '../version.gradle'
+
+buildscript {
+    apply from: '../version.gradle'
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:$gradleVersion"
+    }
+}
+
+allprojects {
+
+    final def var = repositories {
+        google()
+        jcenter()
+        maven { url 'https://esri.bintray.com/arcgis' }
+    }
+    var
+}
+
+subprojects{
+    afterEvaluate {project ->
+        if(project.hasProperty("dependencies")){
+            dependencies {
+                implementation "com.android.support:appcompat-v7:$andSupportLibVersion"
+                implementation "com.android.support:design:$andSupportLibVersion"
+                implementation "com.esri.arcgisruntime:arcgis-android:$arcgisVersion"
+            }
+        }
+    }
+}

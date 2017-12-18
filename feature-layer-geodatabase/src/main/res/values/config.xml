@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- data paths -->
-    <string name="config.data.sdcard.offline.dir">ArcGIS/samples/FLGdb</string>
-    <!-- vector tpk file name -->
-    <string name="config.vtpk.name">LosAngeles.vtpk</string>
-    <!-- geodatabase tpk file name -->
-    <string name="config.geodb.name">LA_Trails.geodatabase</string>
-</resources>

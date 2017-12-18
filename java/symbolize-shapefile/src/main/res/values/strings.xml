@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Symbolize Shapefile</string>
+    <string name="local_folder">/ArcGIS/Samples/Shapefile/Aurora_CO_shp/
+    </string>
+    <string name="file_name">Subdivisions.shp</string>
+    <string name="read_permission_denied">Shapefile could not be opened because READ permission was denied.
+    </string>
+</resources>
