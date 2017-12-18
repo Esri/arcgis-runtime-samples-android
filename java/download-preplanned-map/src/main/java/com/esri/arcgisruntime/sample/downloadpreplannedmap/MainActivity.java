@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
     mMapView = findViewById(R.id.mapView);
     mRecyclerView = findViewById(R.id.drawerRecyclerView);
+    DrawerAdapter adapter = new DrawerAdapter(mPreplannedAreaPreviews);
+    mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    mRecyclerView.setAdapter(adapter);
 
     // define the local path where the preplanned map will be stored
     mLocalPreplannedMapDir = getCacheDir().toString() + File.separator + getString(R.string.file_name);
@@ -109,6 +112,10 @@ public class MainActivity extends AppCompatActivity {
               preplannedMapArea.loadAsync();
               int finalI = i;
               preplannedMapArea.addDoneLoadingListener(() -> {
+                if (preplannedMapArea.getLoadStatus() == LoadStatus.NOT_LOADED) {
+                  Log.e(TAG, "Map area failed to load: " + preplannedMapArea.getLoadError().getMessage());
+                  return;
+                }
 
                 PreplannedAreaPreview preview = new PreplannedAreaPreview();
                 preview.setMapNum(finalI);
@@ -122,9 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            DrawerAdapter adapter = new DrawerAdapter(mPreplannedAreaPreviews);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            mRecyclerView.setAdapter(adapter);
+
 
           } catch (InterruptedException | ExecutionException e) {
             Toast.makeText(MainActivity.this, "Error loading preplanned areas: " + e.getMessage(), Toast.LENGTH_LONG)

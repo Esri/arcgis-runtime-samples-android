@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerViewHolder> {
-  private ArrayList<PreplannedAreaPreview> drawerMenuList;
-  public DrawerAdapter(ArrayList<PreplannedAreaPreview> drawerMenuList) {
-    this.drawerMenuList = drawerMenuList;
+  private ArrayList<PreplannedAreaPreview> preplannedAreaPreviews;
+  public DrawerAdapter(ArrayList<PreplannedAreaPreview> preplannedAreaPreviews) {
+    this.preplannedAreaPreviews = preplannedAreaPreviews;
   }
   @Override
   public DrawerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -24,14 +24,15 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
   }
   @Override
   public void onBindViewHolder(DrawerViewHolder holder, int position) {
-    holder.title.setText(drawerMenuList.get(position).getTitle());
-    byte[] byteStream = drawerMenuList.get(position).getThumbnailByteStream();
+    holder.title.setText(preplannedAreaPreviews.get(position).getTitle());
+    byte[] byteStream = preplannedAreaPreviews.get(position).getThumbnailByteStream();
     Bitmap thumbnail = BitmapFactory.decodeByteArray(byteStream, 0, byteStream.length);
     holder.preview.setImageBitmap(thumbnail);
+    notifyDataSetChanged();
   }
   @Override
   public int getItemCount() {
-    return drawerMenuList.size();
+    return preplannedAreaPreviews.size();
   }
   class DrawerViewHolder extends RecyclerView.ViewHolder {
     TextView title;
