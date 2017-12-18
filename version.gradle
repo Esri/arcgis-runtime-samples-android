@@ -12,7 +12,6 @@ ext {
     andSupportLibVersion = '27.0.2'
     constraintLayoutVersion = '1.0.2'
     arcgisVersion = '100.2.0'
-    arcgisToolkitVersion = '100.1.0-SNAPSHOT'
     // plugin versions
     gradleVersion = '3.0.1'
     // java versions
