@@ -1,10 +1,8 @@
 apply plugin: 'com.android.application'
 
-
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
 
     defaultConfig {
         applicationId "com.esri.arcgisruntime.sample.webtiledlayer"
@@ -12,7 +10,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
-
     }
     buildTypes {
         release {
