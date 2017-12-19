@@ -8,7 +8,7 @@
 
     <!-- Services -->
     <string name="world_elevation">http://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer</string>
-    <string name="world_census">http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
+    <string name="us_census">http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
     <!-- App messages -->
     <string name="author_map_message">Creating your map</string>
     <string name="wait">Please wait&#8230;</string>
