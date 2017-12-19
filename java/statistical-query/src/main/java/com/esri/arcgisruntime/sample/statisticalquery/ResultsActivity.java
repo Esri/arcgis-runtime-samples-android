@@ -34,6 +34,10 @@ import com.google.gson.Gson;
 import com.esri.arcgisruntime.data.StatisticRecord;
 import com.esri.arcgisruntime.data.StatisticsQueryResult;
 
+/**
+ * Gets results from the main activity from an Intent extra, converts it the results to a LinkedHashMap and finally
+ * creates a new ExpandableListView and adapter to display the results.
+ */
 public class ResultsActivity extends AppCompatActivity {
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,11 +48,12 @@ public class ResultsActivity extends AppCompatActivity {
     Intent intent = getIntent();
     String statisticsQueryResultString = intent.getStringExtra("results");
     Gson gson = new Gson();
-    // get statistics query result from intent as gson
-    StatisticsQueryResult statisticsQueryResult = gson.fromJson(statisticsQueryResultString, StatisticsQueryResult.class);
+    // get statistics query result from intent as Gson
+    StatisticsQueryResult statisticsQueryResult = gson
+        .fromJson(statisticsQueryResultString, StatisticsQueryResult.class);
 
-    // create a linked hash map (which preserves ordering) for storage of results and
-    // populate it with the statistics query result
+    // create a linked hash map (which preserves ordering) for storage of results and populate it with the statistics
+    // query result
     LinkedHashMap<String, List<String>> groupedStatistics = new LinkedHashMap<>();
     // get each statistic record
     for (Iterator<StatisticRecord> results = statisticsQueryResult.iterator(); results.hasNext(); ) {

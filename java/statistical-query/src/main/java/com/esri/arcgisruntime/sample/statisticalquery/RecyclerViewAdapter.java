@@ -28,6 +28,9 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+/**
+ * Flexible recycler view adapter which binds a field row either with or without a checkbox.
+ */
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
   private final LayoutInflater mInflater;

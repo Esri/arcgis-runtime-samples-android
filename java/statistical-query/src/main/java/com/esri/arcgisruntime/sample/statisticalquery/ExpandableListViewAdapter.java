@@ -28,6 +28,9 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+/**
+ * Expandable list view which displays grouped results from a LinkedHashMap.
+ */
 class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
   private final Context context;
