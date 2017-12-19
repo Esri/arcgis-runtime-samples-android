@@ -248,12 +248,7 @@ public class MainActivity extends AppCompatActivity {
     updateProgress(0);
     // Create parameters for the sync task
     SyncGeodatabaseParameters syncGeodatabaseParameters = new SyncGeodatabaseParameters();
-
-    // specify sync direction for all layer options
-    for (SyncLayerOption syncLayerOption : syncGeodatabaseParameters.getLayerOptions()) {
-      syncLayerOption.setSyncDirection(SyncGeodatabaseParameters.SyncDirection.BIDIRECTIONAL);
-    }
-
+    syncGeodatabaseParameters.setSyncDirection(SyncGeodatabaseParameters.SyncDirection.BIDIRECTIONAL);
     syncGeodatabaseParameters.setRollbackOnFailure(false);
     // Get the layer ID for each feature table in the geodatabase, then add to the sync job
     for (GeodatabaseFeatureTable geodatabaseFeatureTable : mGeodatabase.getGeodatabaseFeatureTables()) {
