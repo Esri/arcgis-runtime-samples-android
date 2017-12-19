@@ -1,3 +1,19 @@
+/* Copyright 2017 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.esri.arcgisruntime.sample.statisticalquery;
 
 import java.util.Collections;
@@ -13,14 +29,13 @@ import android.widget.TextView;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-  private List<String> mData = Collections.emptyList();
+  private List<String> mFields = Collections.emptyList();
   private final LayoutInflater mInflater;
-  private ItemClickListener mClickListener;
   private int mSelectedPosition = 0;
 
   public RecyclerViewAdapter(Context context, List<String> data) {
     this.mInflater = LayoutInflater.from(context);
-    this.mData = data;
+    this.mFields = data;
   }
 
   @Override
@@ -31,7 +46,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
   @Override
   public void onBindViewHolder(ViewHolder holder, int position) {
-    String text = mData.get(position);
+    String text = mFields.get(position);
     holder.mRowTextView.setText(text);
     // give the selected row a gray background and make all others transparent
     holder.itemView.setBackgroundColor(mSelectedPosition == position ? Color.LTGRAY : Color.TRANSPARENT);
@@ -39,7 +54,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
   @Override
   public int getItemCount() {
-    return mData.size();
+    return mFields.size();
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -53,9 +68,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onClick(View view) {
-      if (mClickListener != null) {
-        mClickListener.onItemClick(view, getAdapterPosition());
-      }
+      // notify change before and after selection so that both previous and current selection have their background
+      // color changed
       notifyItemChanged(mSelectedPosition);
       mSelectedPosition = getAdapterPosition();
       notifyItemChanged(mSelectedPosition);
@@ -67,10 +81,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
   }
 
   public String getItem(int id) {
-    return mData.get(id);
+    return mFields.get(id);
   }
 
-  public interface ItemClickListener {
-    void onItemClick(View view, int position);
-  }
 }

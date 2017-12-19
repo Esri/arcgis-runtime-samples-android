@@ -1,3 +1,19 @@
+/* Copyright 2017 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.esri.arcgisruntime.sample.statisticalquery;
 
 import java.util.Collections;
@@ -15,14 +31,13 @@ import android.widget.TextView;
 public class RecyclerViewAdapterCheckBox extends RecyclerView.Adapter<RecyclerViewAdapterCheckBox.ViewHolder> {
 
   private final LayoutInflater mInflater;
-  private List<String> mData = Collections.emptyList();
   private final boolean[] mCheckedList;
-  private ItemClickListener mClickListener;
+  private List<String> mFields = Collections.emptyList();
   private int mSelectedPosition = 0;
 
   public RecyclerViewAdapterCheckBox(Context context, List<String> data) {
     this.mInflater = LayoutInflater.from(context);
-    this.mData = data;
+    this.mFields = data;
     mCheckedList = new boolean[data.size()];
   }
 
@@ -34,25 +49,22 @@ public class RecyclerViewAdapterCheckBox extends RecyclerView.Adapter<RecyclerVi
 
   @Override
   public void onBindViewHolder(ViewHolder holder, int position) {
-    String text = mData.get(position);
+    String text = mFields.get(position);
     holder.mRowTextView.setText(text);
-
-    //in some cases, it will prevent unwanted situations
+    // prevent recycler view from occasionally reseting checkboxes
     holder.mCheckBox.setOnCheckedChangeListener(null);
-
     // set checked status to known checked status
     holder.mCheckBox.setChecked(mCheckedList[position]);
-
     // update checked array on check change
-    holder.mCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> mCheckedList[position] = !mCheckedList[position]);
-
+    holder.mCheckBox
+        .setOnCheckedChangeListener((compoundButton, isChecked) -> mCheckedList[position] = !mCheckedList[position]);
     // give the selected row a gray background and make all others transparent
     holder.itemView.setBackgroundColor(mSelectedPosition == position ? Color.LTGRAY : Color.TRANSPARENT);
   }
 
   @Override
   public int getItemCount() {
-    return mData.size();
+    return mFields.size();
   }
 
   public int getSelectedPosition() {
@@ -63,19 +75,8 @@ public class RecyclerViewAdapterCheckBox extends RecyclerView.Adapter<RecyclerVi
     return mCheckedList;
   }
 
-  // convenience method for getting data at click position
   public String getItem(int id) {
-    return mData.get(id);
-  }
-
-  // allows clicks events to be caught
-  public void setClickListener(ItemClickListener itemClickListener) {
-    this.mClickListener = itemClickListener;
-  }
-
-  // parent activity will implement this method to respond to click events
-  public interface ItemClickListener {
-    void onItemClick(View view, int position);
+    return mFields.get(id);
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -91,9 +92,8 @@ public class RecyclerViewAdapterCheckBox extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public void onClick(View view) {
-      if (mClickListener != null) {
-        mClickListener.onItemClick(view, getAdapterPosition());
-      }
+      // notify change before and after selection so that both previous and current selection have their background
+      // color changed
       notifyItemChanged(mSelectedPosition);
       mSelectedPosition = getAdapterPosition();
       notifyItemChanged(mSelectedPosition);
