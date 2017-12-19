@@ -1,4 +1,4 @@
-include ':add-graphics-renderer', ':statistical-query',
+include ':add-graphics-renderer', ':statistical-query-group-sort',
         ':add-graphics-symbols',
         'analyze-hotspots',
         ':arcgis-map-imagelayer-url',
