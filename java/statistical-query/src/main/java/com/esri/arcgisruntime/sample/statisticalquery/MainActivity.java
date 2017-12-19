@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
   private RecyclerView mGroupRecyclerView;
   private RecyclerView mOrderByRecyclerView;
   private RecyclerViewAdapter mStatisticsDefinitionAdapter;
-  private RecyclerViewAdapterCheckBox mGroupAdapter;
+  private RecyclerViewAdapter mGroupAdapter;
   private RecyclerViewAdapter mOrderByAdapter;
 
   private List<StatisticDefinition> mStatisticDefinitionList;
@@ -322,18 +322,18 @@ public class MainActivity extends AppCompatActivity {
     // field type recycler view
     mStatisticDefinitionsAsStringsList = new ArrayList<>();
     mStatisticsDefinitionRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-    mStatisticsDefinitionAdapter = new RecyclerViewAdapter(this, mStatisticDefinitionsAsStringsList);
+    mStatisticsDefinitionAdapter = new RecyclerViewAdapter(this, mStatisticDefinitionsAsStringsList, false);
     mStatisticsDefinitionRecyclerView.setAdapter(mStatisticsDefinitionAdapter);
 
     // group field recycler view which just takes the full list of of field names
     mGroupRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-    mGroupAdapter = new RecyclerViewAdapterCheckBox(this, mFieldNameList);
+    mGroupAdapter = new RecyclerViewAdapter(this, mFieldNameList, true);
     mGroupRecyclerView.setAdapter(mGroupAdapter);
 
     // order by field recycler view
     mOrderByList = new ArrayList<>();
     mOrderByRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-    mOrderByAdapter = new RecyclerViewAdapter(this, mOrderByList);
+    mOrderByAdapter = new RecyclerViewAdapter(this, mOrderByList, false);
     mOrderByRecyclerView.setAdapter(mOrderByAdapter);
   }
 
