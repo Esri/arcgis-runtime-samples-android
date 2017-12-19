@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
    * view.
    */
   private void addStatistic() {
-
     // get field and stat type from the respective spinners
     String fieldName = mFieldSpinner.getSelectedItem().toString();
     StatisticType statType = StatisticType.valueOf(mTypeSpinner.getSelectedItem().toString());
@@ -203,7 +202,8 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   *
+   * Creates a new StatisticsQueryParameters from the StatisticDefinitionList. Also adds a list of field names on which
+   * the result should be grouped, as well as a list of field names for sort order.
    */
   private void executeStatisticsQuery() {
     // verify that there is at least one statistic definition in the statistic definition list
@@ -236,7 +236,9 @@ public class MainActivity extends AppCompatActivity {
             getSortOrderFrom(fieldAndSortOrder));
         statQueryParams.getOrderByFields().add(orderBy);
       } else {
-        Toast.makeText(MainActivity.this, "Only checked fields in the 'Group Fields' list can be selected for ordering in the 'Order by Field' list.", Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this,
+            "Only checked fields in the 'Group Fields' list can be selected for ordering in the 'Order by Field' list.",
+            Toast.LENGTH_LONG).show();
       }
     }
 
@@ -256,14 +258,12 @@ public class MainActivity extends AppCompatActivity {
     // execute the statistical query with these parameters and await the results
     ListenableFuture<StatisticsQueryResult> statisticsQueryResultFuture = mUsStatesFeatureTable
         .queryStatisticsAsync(statQueryParams);
-
     statisticsQueryResultFuture.addDoneListener(() -> {
       Log.d(TAG, "stats query result future returned");
       try {
         StatisticsQueryResult statisticsQueryResult = statisticsQueryResultFuture.get();
-
+        // pass the results to displayResults
         displayResults(statisticsQueryResult);
-
       } catch (InterruptedException | ExecutionException e) {
         Log.e(TAG, "Invalid statistics definition: " + e.getMessage());
       }
@@ -271,9 +271,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Creates a new activity to display results.
+   * Creates a new activity to display results and passes statisticsQueryResult to the new activity as JSON.
    *
-   * @param statisticsQueryResult hash map which contains results by group
+   * @param statisticsQueryResult as generated in executeStatisticsQuery()
    */
   private void displayResults(StatisticsQueryResult statisticsQueryResult) {
     Intent intent = new Intent(this, ResultsActivity.class);
@@ -282,6 +282,9 @@ public class MainActivity extends AppCompatActivity {
     startActivity(intent);
   }
 
+  /**
+   * Inflate all views in the user interface.
+   */
   private void inflateUiViews() {
     mAddButton = findViewById(R.id.addButton);
     mRemoveStatisticButton = findViewById(R.id.removeStatisticButton);
@@ -296,6 +299,9 @@ public class MainActivity extends AppCompatActivity {
     mOrderByRecyclerView = findViewById(R.id.orderFieldRecyclerView);
   }
 
+  /**
+   * Create recycler views and their adapters.
+   */
   private void createRecyclerViews() {
     // field type recycler view
     mStatisticDefinitionsAsStringsList = new ArrayList<>();
