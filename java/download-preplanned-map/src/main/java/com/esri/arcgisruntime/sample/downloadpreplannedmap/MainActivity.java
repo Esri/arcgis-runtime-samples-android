@@ -1,3 +1,19 @@
+/* Copyright 2017 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.esri.arcgisruntime.sample.downloadpreplannedmap;
 
 import java.io.File;
@@ -32,12 +48,11 @@ import com.esri.arcgisruntime.tasks.offlinemap.PreplannedMapArea;
 
 public class MainActivity extends AppCompatActivity {
 
-  private MapView mMapView;
-
   private final String[] reqPermission = new String[] {
       Manifest.permission.WRITE_EXTERNAL_STORAGE
   };
   String TAG = MainActivity.class.getSimpleName();
+  private MapView mMapView;
   private ArrayList<PreplannedAreaPreview> mPreplannedAreaPreviews;
   private RecyclerView mRecyclerView;
   private OfflineMapTask mOfflineMapTask;
@@ -58,9 +73,13 @@ public class MainActivity extends AppCompatActivity {
 
     mMapView = findViewById(R.id.mapView);
     mRecyclerView = findViewById(R.id.drawerRecyclerView);
-    DrawerAdapter adapter = new DrawerAdapter(mPreplannedAreaPreviews);
-    mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-    mRecyclerView.setAdapter(adapter);
+
+    final DrawerAdapter[] adapter = { new DrawerAdapter(mPreplannedAreaPreviews) };
+    LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+    layoutManager.scrollToPosition(0);
+    mRecyclerView.setLayoutManager(layoutManager);
+    mRecyclerView.setAdapter(adapter[0]);
 
     // define the local path where the preplanned map will be stored
     mLocalPreplannedMapDir = getCacheDir().toString() + File.separator + getString(R.string.file_name);
@@ -68,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create portal that contains the portal item
 
-    //TODO - Update link with public data
+    //TODO - Update link with public data when available
     Portal portal = new Portal(getString(R.string.portal_url));
 
     // create webmap based on the id
@@ -119,28 +138,32 @@ public class MainActivity extends AppCompatActivity {
 
                 PreplannedAreaPreview preview = new PreplannedAreaPreview();
                 preview.setMapNum(finalI);
-                preview.setTitle(String.valueOf(finalI + 1));
-                preview.setThumbnailByteStream(preplannedMapArea.getPortalItem().getThumbnailData());
+                preview.setTitle("Map area " + String.valueOf(finalI + 1));
+                ListenableFuture<byte[]> thumbnailFuture = preplannedMapArea.getPortalItem().fetchThumbnailAsync();
+                thumbnailFuture.addDoneListener(() -> {
+                  try {
+                    preview.setThumbnailByteStream(thumbnailFuture.get());
+                  } catch (InterruptedException | ExecutionException e) {
+                    Log.e(TAG, "Error fetching thumbnail: " + e.getMessage());
+                  }
+                });
+
                 mPreplannedAreaPreviews.add(preview);
-
-                Log.d("mapNum", String.valueOf(preview.getMapNum()));
-
+                adapter[0] = new DrawerAdapter(mPreplannedAreaPreviews);
+                adapter[0].notifyDataSetChanged();
+                Log.d("title", String.valueOf(preview.getTitle()));
+                Log.d("previews length", String.valueOf(mPreplannedAreaPreviews.size()));
+                Log.d("item count", String.valueOf(adapter[0].getItemCount()));
               });
-
             }
-
-
-
           } catch (InterruptedException | ExecutionException e) {
             Toast.makeText(MainActivity.this, "Error loading preplanned areas: " + e.getMessage(), Toast.LENGTH_LONG)
                 .show();
             Log.e(TAG, "Error loading preplanned areas: " + e.getMessage());
           }
-
         });
       });
     });
-
   }
 
   private void downloadMapAreaAsync(PreplannedMapArea mapArea) {
