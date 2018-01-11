@@ -1,4 +1,4 @@
-include ':add-graphics-renderer',
+include ':add-graphics-renderer', ':viewshed-location',
         ':add-graphics-symbols',
         'analyze-hotspots',
         ':arcgis-map-imagelayer-url',
