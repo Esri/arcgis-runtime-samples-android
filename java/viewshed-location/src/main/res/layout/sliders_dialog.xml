@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                                             android:layout_height="match_parent">
-
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorTransparentGrey">
 
     <!-- Heading -->
     <TextView
-            android:text="Heading"
+            android:text="@string/heading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/heading_textview"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/pitch_textview"
-    />
+            app:layout_constraintEnd_toEndOf="@+id/pitch_textview"/>
     <TextView
             android:text="Num"
             android:layout_width="wrap_content"
@@ -23,9 +23,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"/>
     <SeekBar
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/heading_seek_bar"
             android:layout_marginTop="8dp"
@@ -37,14 +38,13 @@
 
     <!-- Pitch -->
     <TextView
-            android:text="Pitch"
+            android:text="@string/pitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/pitch_textview"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/heading_textview"
-            app:layout_constraintEnd_toEndOf="@+id/horizontal_angle_textview"
-    />
+            app:layout_constraintEnd_toEndOf="@+id/horizontal_angle_textview"/>
     <TextView
             android:text="Num"
             android:layout_width="wrap_content"
@@ -53,102 +53,138 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/curr_heading"/>
+            app:layout_constraintTop_toBottomOf="@+id/curr_heading"
+            android:layout_marginRight="8dp"/>
     <SeekBar
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/pitch_seekbar"
+            android:id="@+id/pitch_seek_bar"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/heading_seek_bar"
             app:layout_constraintEnd_toStartOf="@+id/curr_pitch"
             android:layout_marginEnd="8dp"
             app:layout_constraintStart_toEndOf="@+id/pitch_textview"
             android:layout_marginStart="8dp"/>
+
+    <!-- Horizontal Angle -->
     <TextView
-            android:text="Horizontal Angle"
+            android:text="@string/horizontal_angle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/horizontal_angle_textview" android:layout_marginTop="8dp"
+            android:id="@+id/horizontal_angle_textview"
+            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/pitch_textview"
-            app:layout_constraintEnd_toEndOf="@+id/vertical_angle_textview"
-    />
+            app:layout_constraintEnd_toEndOf="@+id/vertical_angle_textview"/>
     <TextView
             android:text="Num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/curr_horizontal_angle" app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/curr_horizontal_angle"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/curr_pitch"/>
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/curr_pitch"
+            android:layout_marginRight="8dp"/>
     <SeekBar
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/horizontal_angle_seekbar" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/pitch_seekbar"
-            app:layout_constraintEnd_toStartOf="@+id/curr_horizontal_angle" android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toEndOf="@+id/horizontal_angle_textview" android:layout_marginStart="8dp"/>
+            android:id="@+id/horizontal_angle_seekbar"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/pitch_seek_bar"
+            app:layout_constraintEnd_toStartOf="@+id/curr_horizontal_angle"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toEndOf="@+id/horizontal_angle_textview"
+            android:layout_marginStart="8dp"/>
+
+    <!-- Vertical Angle -->
     <TextView
-            android:text="Vertical Angle"
+            android:text="@string/vertical_angle"
             android:layout_width="87dp"
             android:layout_height="wrap_content"
             android:id="@+id/vertical_angle_textview"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/horizontal_angle_textview"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/horizontal_angle_textview"
             app:layout_constraintEnd_toEndOf="@+id/minimum_distance_textview"/>
     <TextView
             android:text="Num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/curr_vertical_angle" app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/curr_vertical_angle"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/curr_horizontal_angle"/>
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/curr_horizontal_angle"
+            android:layout_marginRight="8dp"/>
     <SeekBar
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/vertical_angle_seekbar" android:layout_marginTop="8dp"
+            android:id="@+id/vertical_angle_seekbar"
+            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/horizontal_angle_seekbar"
-            app:layout_constraintEnd_toStartOf="@+id/curr_vertical_angle" android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toEndOf="@+id/vertical_angle_textview" android:layout_marginStart="8dp"/>
+            app:layout_constraintEnd_toStartOf="@+id/curr_vertical_angle"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toEndOf="@+id/vertical_angle_textview"
+            android:layout_marginStart="8dp"/>
+
+    <!-- Minimum Distance -->
     <TextView
-            android:text="Minimum Distance"
+            android:text="@string/minimum_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/minimum_distance_textview"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/vertical_angle_textview"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/vertical_angle_textview"
             app:layout_constraintEnd_toEndOf="@+id/maximum_distance_seekbar"/>
     <TextView
             android:text="Num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/curr_minimum_distance" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/curr_vertical_angle"/>
+            android:id="@+id/curr_minimum_distance"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/curr_vertical_angle"
+            android:layout_marginRight="8dp"/>
     <SeekBar
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/min_distance_seekbar" android:layout_marginTop="8dp"
+            android:id="@+id/min_distance_seekbar"
+            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/vertical_angle_seekbar"
-            app:layout_constraintEnd_toStartOf="@+id/curr_minimum_distance" android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toEndOf="@+id/minimum_distance_textview" android:layout_marginStart="8dp"/>
+            app:layout_constraintEnd_toStartOf="@+id/curr_minimum_distance"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toEndOf="@+id/minimum_distance_textview"
+            android:layout_marginStart="8dp"/>
+
+    <!-- Maximum Distance -->
     <TextView
-            android:text="Maximum Distance"
+            android:text="@string/maximum_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/maximum_distance_seekbar"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/minimum_distance_textview"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/minimum_distance_textview"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"/>
     <TextView
             android:text="Num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/curr_maximum_distance" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/curr_minimum_distance" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"/>
+            android:id="@+id/curr_maximum_distance"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/curr_minimum_distance"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
     <SeekBar
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/max_distance_seekbar" android:layout_marginTop="8dp"
+            android:id="@+id/max_distance_seekbar"
+            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/min_distance_seekbar"
-            app:layout_constraintEnd_toStartOf="@+id/curr_maximum_distance" android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toEndOf="@+id/maximum_distance_seekbar" android:layout_marginStart="8dp"/>
-
+            app:layout_constraintEnd_toStartOf="@+id/curr_maximum_distance"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toEndOf="@+id/maximum_distance_seekbar"
+            android:layout_marginStart="8dp"/>
 
 </android.support.constraint.ConstraintLayout>
