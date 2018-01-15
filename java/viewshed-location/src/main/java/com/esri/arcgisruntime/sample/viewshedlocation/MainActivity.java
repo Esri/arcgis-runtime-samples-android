@@ -23,8 +23,17 @@ import com.esri.arcgisruntime.mapping.view.SceneView;
 public class MainActivity extends AppCompatActivity {
 
   private SceneView mSceneView;
+  private LocationViewshed mViewshed;
+
   private int mMinDistance;
   private int mMaxDistance;
+  private int mInitHeading;
+  private int mInitPitch;
+  private int mInitHorizontalAngle;
+  private int mInitVerticalAngle;
+  private int mInitMinDistance;
+  private int mInitMaxDistance;
+
   private SeekBar mHeadingSeekBar;
   private SeekBar mPitchSeekBar;
   private SeekBar mHorizontalAngleSeekBar;
@@ -37,13 +46,6 @@ public class MainActivity extends AppCompatActivity {
   private TextView mCurrVerticalAngle;
   private TextView mCurrMinDistance;
   private TextView mCurrMaxDistance;
-  private LocationViewshed mViewshed;
-  private int mInitHeading;
-  private int mInitPitch;
-  private int mInitHorizontalAngle;
-  private int mInitVerticalAngle;
-  private int mInitMinDistance;
-  private int mInitMaxDistance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     mInitVerticalAngle = 90;
     mInitMinDistance = 0;
     mInitMaxDistance = 10000;
+    mMinDistance = mInitMinDistance;
+    mMaxDistance = mInitMaxDistance;
 
     // create a scene and add a basemap to it
     mSceneView = findViewById(R.id.sceneView);
@@ -95,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
     mSceneView.getAnalysisOverlays().add(analysisOverlay);
 
     handleUiElements();
-
   }
 
   private void handleUiElements() {

@@ -16,7 +16,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/pitch_textview"/>
     <TextView
-            android:text="Num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/curr_heading"
@@ -46,7 +45,6 @@
             app:layout_constraintTop_toBottomOf="@+id/heading_textview"
             app:layout_constraintEnd_toEndOf="@+id/horizontal_angle_textview"/>
     <TextView
-            android:text="Num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/curr_pitch"
@@ -76,7 +74,6 @@
             app:layout_constraintTop_toBottomOf="@+id/pitch_textview"
             app:layout_constraintEnd_toEndOf="@+id/vertical_angle_textview"/>
     <TextView
-            android:text="Num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/curr_horizontal_angle"
@@ -106,7 +103,6 @@
             app:layout_constraintTop_toBottomOf="@+id/horizontal_angle_textview"
             app:layout_constraintEnd_toEndOf="@+id/minimum_distance_textview"/>
     <TextView
-            android:text="Num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/curr_vertical_angle"
@@ -136,7 +132,6 @@
             app:layout_constraintTop_toBottomOf="@+id/vertical_angle_textview"
             app:layout_constraintEnd_toEndOf="@+id/maximum_distance_seekbar"/>
     <TextView
-            android:text="Num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/curr_minimum_distance"
@@ -168,7 +163,6 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"/>
     <TextView
-            android:text="Num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/curr_maximum_distance"
