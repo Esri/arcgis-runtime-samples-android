@@ -3,6 +3,8 @@ package com.esri.arcgisruntime.sample.viewshedlocation;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.AnalysisOverlay;
 import com.esri.arcgisruntime.mapping.view.Camera;
+import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.OrbitLocationCameraController;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 
@@ -98,6 +101,21 @@ public class MainActivity extends AppCompatActivity {
     analysisOverlay.getAnalyses().add(mViewshed);
     mSceneView.getAnalysisOverlays().add(analysisOverlay);
 
+    mSceneView.setOnTouchListener(new DefaultSceneViewOnTouchListener(mSceneView) {
+
+      @Override public boolean onDoubleTouchDrag(MotionEvent motionEvent) {
+
+        android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY()));
+        Point surfacePoint = mSceneView.screenToBaseSurface(screenPoint);
+        Point aboveSurfacePoint = new Point(surfacePoint.getX(), surfacePoint.getY(), surfacePoint.getZ() + 50);
+
+        mViewshed.setLocation(aboveSurfacePoint);
+
+        Log.d("surfPoint", String.valueOf(surfacePoint.getX()) + " " +  surfacePoint.getY());
+        return false;
+      }
+    });
+
     handleUiElements();
   }
 
@@ -131,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onStopTrackingTouch(SeekBar seekBar) { }
     });
 
-    mPitchSeekBar.setMax(360);
+
+    mPitchSeekBar.setMax(180);
     setPitch(mInitPitch);
     mPitchSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
