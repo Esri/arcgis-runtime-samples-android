@@ -55,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
     // set initial values
     mInitHeading = 0;
     mInitPitch = 60;
-    mInitHorizontalAngle = 120;
+    mInitHorizontalAngle = 75;
     mInitVerticalAngle = 90;
     mInitMinDistance = 0;
-    mInitMaxDistance = 10000;
+    mInitMaxDistance = 1500;
     mMinDistance = mInitMinDistance;
     mMaxDistance = mInitMaxDistance;
 
@@ -70,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
 
     // add base surface for elevation data
     Surface surface = new Surface();
-    final String localElevationImageService = getString(com.esri.arcgisruntime.sample.viewshedlocation.R.string.elevation_service);
+    final String localElevationImageService = getString(
+        com.esri.arcgisruntime.sample.viewshedlocation.R.string.elevation_service);
     surface.getElevationSources().add(new ArcGISTiledElevationSource(localElevationImageService));
     scene.setBaseSurface(surface);
 
@@ -79,10 +80,9 @@ public class MainActivity extends AppCompatActivity {
     ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(buildings);
     scene.getOperationalLayers().add(sceneLayer);
 
-    // create viewshed from the camera
-    Point location = new Point(-4.50, 48.4,100.0, SpatialReferences.getWgs84());
+    // create viewshed from location
+    Point location = new Point(-4.50, 48.4, 100.0, SpatialReferences.getWgs84());
     Viewshed.setFrustumOutlineColor(Color.BLUE);
-
     mViewshed = new LocationViewshed(location, mInitHeading, mInitPitch, mInitHorizontalAngle, mInitVerticalAngle,
         mInitMinDistance, mInitMaxDistance);
     mViewshed.setFrustumOutlineVisible(true);
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     mHeadingSeekBar = findViewById(R.id.heading_seek_bar);
     mPitchSeekBar = findViewById(R.id.pitch_seek_bar);
     mHorizontalAngleSeekBar = findViewById(R.id.horizontal_angle_seekbar);
-    mVerticalAngleSeekBar= findViewById(R.id.vertical_angle_seekbar);
+    mVerticalAngleSeekBar = findViewById(R.id.vertical_angle_seekbar);
     mMinDistanceSeekBar = findViewById(R.id.min_distance_seekbar);
     mMaxDistanceSeekBar = findViewById(R.id.max_distance_seekbar);
     mCurrHeading = findViewById(R.id.curr_heading);
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onStopTrackingTouch(SeekBar seekBar) { }
     });
 
-    mPitchSeekBar.setMax(180);
+    mPitchSeekBar.setMax(360);
     setPitch(mInitPitch);
     mPitchSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
     mMaxDistanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         mMaxDistance = seekBar.getProgress();
-        if (mMaxDistance  - mMinDistance < 1000) {
+        if (mMaxDistance - mMinDistance < 1000) {
           if (mMaxDistance > 1000) {
             mMinDistance = mMaxDistance - 1000;
           } else {
@@ -252,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
-  protected void onPause(){
+  protected void onPause() {
     super.onPause();
     // pause SceneView
     mSceneView.pause();
