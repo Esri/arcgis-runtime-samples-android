@@ -1,16 +1,21 @@
 package com.esri.arcgisruntime.sample.viewshedgeoelement;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
@@ -43,6 +48,8 @@ import com.esri.arcgisruntime.symbology.SimpleRenderer;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
+
   private static final LinearUnit METERS = new LinearUnit(LinearUnitId.METERS);
   private static final AngularUnit DEGREES = new AngularUnit(AngularUnitId.DEGREES);
   private SceneView mSceneView;
@@ -74,9 +81,15 @@ public class MainActivity extends AppCompatActivity {
 
     // request read permission
     requestReadPermission();
+
   }
 
   private void viewshedGeoElement() {
+
+    // load tank model from assets into cache directory
+    copyFileFromAssetsToCache(getString(R.string.bradley_model));
+    copyFileFromAssetsToCache(getString(R.string.bradley_skin));
+
     // create a graphics overlay for the tank
     GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
     graphicsOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
@@ -88,10 +101,9 @@ public class MainActivity extends AppCompatActivity {
     renderProperties.setHeadingExpression("[HEADING]");
     graphicsOverlay.setRenderer(renderer3D);
 
-    // create a graphic of a tank
+    String pathToModel = getCacheDir() + File.separator + getString(R.string.bradley_model);
 
-    String modelURI = Environment.getExternalStorageDirectory() + getString(R.string.bradley_model);
-    ModelSceneSymbol tankSymbol = new ModelSceneSymbol(modelURI, 10.0);
+    ModelSceneSymbol tankSymbol = new ModelSceneSymbol(pathToModel, 10.0);
     tankSymbol.setHeading(90);
     tankSymbol.setAnchorPosition(SceneSymbol.AnchorPosition.BOTTOM);
     tankSymbol.loadAsync();
@@ -125,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
           @Override public void run() {
             animate();
           }
-        }, 0, 100);
+        }, 0, 50);
 
         return super.onSingleTapConfirmed(motionEvent);
       }
@@ -169,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void requestReadPermission() {
     // define permission to request
-    String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
+    String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
     int requestCode = 2;
     // For API level 23+ request permission at runtime
     if (ContextCompat.checkSelfPermission(MainActivity.this,
@@ -191,6 +203,35 @@ public class MainActivity extends AppCompatActivity {
       // report to user that permission was denied
       Toast.makeText(MainActivity.this, getResources().getString(R.string.read_permission_denied),
           Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  /**
+   * Copy the given file from the app's assets folder to the app's cache directory.
+   *
+   * @param fileName as String
+   */
+  private void copyFileFromAssetsToCache(String fileName) {
+    AssetManager assetManager = getApplicationContext().getAssets();
+
+    File file = new File(getCacheDir() + File.separator + fileName);
+
+    if (!file.exists()) {
+      try {
+        InputStream in = assetManager.open(fileName);
+        OutputStream out = new FileOutputStream(getCacheDir() + File.separator + fileName);
+        byte[] buffer = new byte[1024];
+        int read = in.read(buffer);
+        while (read != -1) {
+          out.write(buffer, 0, read);
+          read = in.read(buffer);
+        }
+        Log.i(TAG, fileName + " copied to cache.");
+      } catch (Exception e) {
+        Log.e(TAG, "Error writing " + fileName + " to cache. " + e.getMessage());
+      }
+    } else {
+      Log.i(TAG, fileName + " already successfully copied to cache.");
     }
   }
 
