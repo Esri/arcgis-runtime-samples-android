@@ -20,7 +20,7 @@
             app:layout_constraintBottom_toTopOf="@+id/include">
     </com.esri.arcgisruntime.mapping.view.SceneView>
 
-    <include layout="@layout/sliders_dialog"
+    <include layout="@layout/viewshed_seek_bars"
              android:layout_width="0dp"
              android:layout_height="wrap_content"
              app:layout_constraintBottom_toBottomOf="parent"
