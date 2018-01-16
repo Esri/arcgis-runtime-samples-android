@@ -3,6 +3,7 @@ package com.esri.arcgisruntime.sample.viewshedlocation;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -23,17 +24,18 @@ import com.esri.arcgisruntime.mapping.view.SceneView;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
+  // initial values
+  private static final int mInitHeading = 0;
+  private static final int mInitPitch = 60;
+  private static final int mInitHorizontalAngle = 75;
+  private static final int mInitVerticalAngle = 90;
+  private static final int mInitMinDistance = 0;
+  private static final int mInitMaxDistance = 1500;
   private SceneView mSceneView;
   private LocationViewshed mViewshed;
-
   private int mMinDistance;
   private int mMaxDistance;
-  private int mInitHeading;
-  private int mInitPitch;
-  private int mInitHorizontalAngle;
-  private int mInitVerticalAngle;
-  private int mInitMinDistance;
-  private int mInitMaxDistance;
 
   private SeekBar mHeadingSeekBar;
   private SeekBar mPitchSeekBar;
@@ -54,16 +56,10 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     // set initial values
-    mInitHeading = 0;
-    mInitPitch = 60;
-    mInitHorizontalAngle = 75;
-    mInitVerticalAngle = 90;
-    mInitMinDistance = 0;
-    mInitMaxDistance = 1500;
     mMinDistance = mInitMinDistance;
     mMaxDistance = mInitMaxDistance;
 
-    // create a scene and add a basemap to it
+    // create a scene and add an imagery basemap to it
     mSceneView = findViewById(R.id.sceneView);
     ArcGISScene scene = new ArcGISScene();
     scene.setBasemap(Basemap.createImagery());
@@ -99,12 +95,22 @@ public class MainActivity extends AppCompatActivity {
     analysisOverlay.getAnalyses().add(mViewshed);
     mSceneView.getAnalysisOverlays().add(analysisOverlay);
 
+    handleUiElements();
+  }
+
+  /**
+   * Handles double touch drag for movement of viewshed location point, inflation of UI elements, and listeners for
+   * changes in seek bar progress.
+   */
+  private void handleUiElements() {
+
     mSceneView.setOnTouchListener(new DefaultSceneViewOnTouchListener(mSceneView) {
 
       @Override public boolean onDoubleTouchDrag(MotionEvent motionEvent) {
 
         // convert from screen point to surface point
-        android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY()));
+        android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
+            Math.round(motionEvent.getY()));
         Point surfacePoint = mSceneView.screenToBaseSurface(screenPoint);
 
         // add 50 meters to surface point for location point
@@ -114,11 +120,6 @@ public class MainActivity extends AppCompatActivity {
         return false;
       }
     });
-
-    handleUiElements();
-  }
-
-  private void handleUiElements() {
 
     // inflate UI elements
     mHeadingSeekBar = findViewById(R.id.heading_seek_bar);
@@ -148,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onStopTrackingTouch(SeekBar seekBar) { }
     });
 
-
+    // set arbitary max to 180 to avoid nonsensical pitch values
     mPitchSeekBar.setMax(180);
     setPitch(mInitPitch);
     mPitchSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -212,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onStopTrackingTouch(SeekBar seekBar) { }
     });
 
-    // set to arbitary max to maximum of 4 digits
+    // set arbitary max to 9999 to allow a maximum of 4 digits
     mMaxDistanceSeekBar.setMax(9999);
     setMaxDistance(mInitMaxDistance);
     mMaxDistanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -235,36 +236,76 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
+  // helper methods
+
+  /**
+   * Set viewshed heading, seek bar progress, and current heading text view.
+   *
+   * @param heading in degrees
+   */
   private void setHeading(int heading) {
     mViewshed.setHeading(heading);
     mHeadingSeekBar.setProgress(heading);
     mCurrHeading.setText(Integer.toString(heading));
   }
 
+  /**
+   * Set viewshed pitch, seek bar progress, and current pitch text view.
+   *
+   * @param pitch in degrees
+   */
   private void setPitch(int pitch) {
     mViewshed.setPitch(pitch);
     mPitchSeekBar.setProgress(pitch);
     mCurrPitch.setText(Integer.toString(pitch));
   }
 
+  /**
+   * Set viewshed horizontal angle, seek bar progress, and current horizontal angle text view.
+   *
+   * @param horizontalAngle in degrees, > 0 and <= 120
+   */
   private void setHorizontalAngle(int horizontalAngle) {
-    mViewshed.setHorizontalAngle(horizontalAngle);
-    mHorizontalAngleSeekBar.setProgress(horizontalAngle);
-    mCurrHorizontalAngle.setText(Integer.toString(horizontalAngle));
+    if (horizontalAngle > 0 && horizontalAngle <= 120) {
+      mViewshed.setHorizontalAngle(horizontalAngle);
+      mHorizontalAngleSeekBar.setProgress(horizontalAngle);
+      mCurrHorizontalAngle.setText(Integer.toString(horizontalAngle));
+    } else {
+      Log.e(TAG, "Horizontal angle must be greater than 0 and less than or equal to 120.");
+    }
   }
 
+  /**
+   * Set viewshed vertical angle, seek bar progress, and current vertical angle text view.
+   *
+   * @param verticalAngle in degrees, > 0 and <= 120
+   */
   private void setVerticalAngle(int verticalAngle) {
-    mViewshed.setVerticalAngle(verticalAngle);
-    mVerticalAngleSeekBar.setProgress(verticalAngle);
-    mCurrVerticalAngle.setText(Integer.toString(verticalAngle));
+    if (verticalAngle > 0 && verticalAngle <= 120) {
+      mViewshed.setVerticalAngle(verticalAngle);
+      mVerticalAngleSeekBar.setProgress(verticalAngle);
+      mCurrVerticalAngle.setText(Integer.toString(verticalAngle));
+    } else {
+      Log.e(TAG, "Vertical angle must be greater than 0 and less than or equal to 120.");
+    }
   }
 
+  /**
+   * Set viewshed minimum distance, seek bar progress, and current minimum distance text view.
+   *
+   * @param minDistance in meters
+   */
   private void setMinDistance(int minDistance) {
     mViewshed.setMinDistance(minDistance);
     mMinDistanceSeekBar.setProgress(minDistance);
     mCurrMinDistance.setText(Integer.toString(minDistance));
   }
 
+  /**
+   * Set viewshed maximum distance, seek bar progress, and current maximum distance text view.
+   *
+   * @param maxDistance in meters
+   */
   private void setMaxDistance(int maxDistance) {
     mViewshed.setMaxDistance(maxDistance);
     mMaxDistanceSeekBar.setProgress(maxDistance);
@@ -274,14 +315,12 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onPause() {
     super.onPause();
-    // pause SceneView
     mSceneView.pause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    // resume SceneView
     mSceneView.resume();
   }
 }
