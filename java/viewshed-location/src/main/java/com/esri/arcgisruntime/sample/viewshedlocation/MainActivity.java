@@ -3,7 +3,6 @@ package com.esri.arcgisruntime.sample.viewshedlocation;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 import com.esri.arcgisruntime.geoanalysis.LocationViewshed;
 import com.esri.arcgisruntime.geoanalysis.Viewshed;
 import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
@@ -84,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     scene.getOperationalLayers().add(sceneLayer);
 
     // create viewshed from location
-    Point location = new Point(-4.50, 48.4, 100.0, SpatialReferences.getWgs84());
+    Point location = new Point(-4.50, 48.4, 100.0);
     Viewshed.setFrustumOutlineColor(Color.BLUE);
     mViewshed = new LocationViewshed(location, mInitHeading, mInitPitch, mInitHorizontalAngle, mInitVerticalAngle,
         mInitMinDistance, mInitMaxDistance);
@@ -105,13 +103,14 @@ public class MainActivity extends AppCompatActivity {
 
       @Override public boolean onDoubleTouchDrag(MotionEvent motionEvent) {
 
+        // convert from screen point to surface point
         android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY()));
         Point surfacePoint = mSceneView.screenToBaseSurface(screenPoint);
-        Point aboveSurfacePoint = new Point(surfacePoint.getX(), surfacePoint.getY(), surfacePoint.getZ() + 50);
 
-        mViewshed.setLocation(aboveSurfacePoint);
+        // add 50 meters to surface point for location point
+        mViewshed.setLocation(new Point(surfacePoint.getX(), surfacePoint.getY(), surfacePoint.getZ() + 50));
 
-        Log.d("surfPoint", String.valueOf(surfacePoint.getX()) + " " +  surfacePoint.getY());
+        // ignore default double touch drag gesture
         return false;
       }
     });
@@ -195,7 +194,8 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onStopTrackingTouch(SeekBar seekBar) { }
     });
 
-    mMinDistanceSeekBar.setMax(9000);
+    // set to 1000 below the arbitrary max
+    mMinDistanceSeekBar.setMax(8999);
     setMinDistance(mInitMinDistance);
     mMinDistanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -212,7 +212,8 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onStopTrackingTouch(SeekBar seekBar) { }
     });
 
-    mMaxDistanceSeekBar.setMax(10000);
+    // set to arbitary max to maximum of 4 digits
+    mMaxDistanceSeekBar.setMax(9999);
     setMaxDistance(mInitMaxDistance);
     mMaxDistanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
