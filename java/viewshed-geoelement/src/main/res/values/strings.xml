@@ -6,5 +6,5 @@
     </string>
     <string name="bradley_model">bradle.3ds</string>
     <string name="bradley_skin">tank1.jpg</string>
-    <string name="read_permission_denied">Model cannot be loaded becauseREAD permission was denied.</string>
+    <string name="write_permission_denied">Model cannot be loaded because READ/WRITE permission was denied.</string>
 </resources>

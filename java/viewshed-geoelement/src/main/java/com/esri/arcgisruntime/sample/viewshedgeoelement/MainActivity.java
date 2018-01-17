@@ -80,10 +80,14 @@ public class MainActivity extends AppCompatActivity {
     scene.getOperationalLayers().add(sceneLayer);
 
     // request read permission
-    requestReadPermission();
+    requestWritePermission();
 
   }
 
+  /**
+   * Creates a GeoElement Viewshed fixed to a graphic of a tank. Includes a touch listener which uses a single tap as a
+   * waypoint for navigation of the tank and associated viewshed.
+   */
   private void viewshedGeoElement() {
 
     // load tank model from assets into cache directory
@@ -177,9 +181,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Request read permission on the device.
+   * Request write permission on the device.
    */
-  private void requestReadPermission() {
+  private void requestWritePermission() {
     // define permission to request
     String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
     int requestCode = 2;
@@ -201,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
       viewshedGeoElement();
     } else {
       // report to user that permission was denied
-      Toast.makeText(MainActivity.this, getResources().getString(R.string.read_permission_denied),
+      Toast.makeText(MainActivity.this, getResources().getString(R.string.write_permission_denied),
           Toast.LENGTH_SHORT).show();
     }
   }
