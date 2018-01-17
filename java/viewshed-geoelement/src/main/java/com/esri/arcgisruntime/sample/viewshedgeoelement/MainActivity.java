@@ -1,3 +1,16 @@
+/* Copyright 2018 ESRI
+ *
+ * All rights reserved under the copyright laws of the United States
+ * and applicable international laws, treaties, and conventions.
+ *
+ * You may freely redistribute and use this sample code, with or
+ * without modification, provided you include the original copyright
+ * notice and use restrictions.
+ *
+ * See the Sample code usage restrictions document for further information.
+ *
+ */
+
 package com.esri.arcgisruntime.sample.viewshedgeoelement;
 
 import java.io.File;
@@ -81,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
 
     // request read permission
     requestWritePermission();
-
   }
 
   /**
@@ -125,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     analysisOverlay.getAnalyses().add(geoElementViewshed);
     mSceneView.getAnalysisOverlays().add(analysisOverlay);
 
-    // set the waypoint where the user clicks
+    // set the waypoint where the user taps
     mSceneView.setOnTouchListener(new DefaultSceneViewOnTouchListener(mSceneView) {
       @Override public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
         // get a screen point from the motion event
@@ -235,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "Error writing " + fileName + " to cache. " + e.getMessage());
       }
     } else {
-      Log.i(TAG, fileName + " already successfully copied to cache.");
+      Log.i(TAG, fileName + " already in cache.");
     }
   }
 
