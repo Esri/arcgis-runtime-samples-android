@@ -1,17 +1,18 @@
-# Transforms by suitability
+# Transforms by Suitability
 
 Transformations (sometimes known as datum or geographic transformations) are used when projecting data from one spatial reference to another, when there is a difference in the underlying datum of the spatial references. Transformations can be mathematically defined by specific equations (equation-based transformations), or may rely on external supporting files (grid-based transformations). Choosing the most appropriate transformation for a situation can ensure the best possible accuracy for this operation. Some users familiar with transformations may wish to control which transformation is used in an operation.
 
 This sample demonstrates how to use the `TransformationCatalog` to get a list of available `DatumTransformations` that can be used to project a `Geometry` between two different `SpatialReferences`, and how to use one of the transformations to perform the `GeometryEngine.project` operation. The `TransformationCatalog` is also used to set the location of files upon which grid-based transformations depend, and to find the default transformation used for the two `SpatialReferences`.
 
-![transforms by suitability](transforms-by-suitability.png)
+![Transforms By Suitability App](transforms-by-suitability.png)
 
 ## Features
-- `TransformationCatalog`
-- `DatumTransformation`
-- `GeographicTransformation`
-- `GeographicTransformationStep`
-- `GeometryEngine.project`
+
+* TransformationCatalog
+* DatumTransformation
+* GeographicTransformation
+* GeographicTransformationStep
+* GeometryEngine.project
 
 ## How to use the sample
 
@@ -82,6 +83,7 @@ When the user taps on a transformation in the list, the `OnItemClickListener` re
 
 
 ## Provision your device
+
 This sample can be used with or without provisioning projection engine data to your device.
 
 To download projection engine data to your device:
@@ -93,8 +95,8 @@ To download projection engine data to your device:
 
 You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools** to copy files to your device:
 1. Open a command prompt on your computer.
-2. Execute the ```adb push``` command to create the ```ArcGIS/samples/PEData``` directory and copy the files from your computer to the device:
-	* ```adb push <path to PEData directory on your computer> /sdcard/ArcGIS/samples/PEData```
+2. Execute the `adb push` command to create the `ArcGIS/samples/PEData` directory and copy the files from your computer to the device:
+	* ```adb push <path to PEData directory on your computer> /sdcard/ArcGIS/samples/PEData`
 
 You should now have the following directory containing projection engine data files on your target device:
-  * ```/sdcard/ArcGIS/samples/PEData```
+  * `/sdcard/ArcGIS/samples/PEData`

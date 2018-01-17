@@ -22,13 +22,13 @@ To apply a `BlendRenderer` to a `RasterLayer`:
 
 ## Features
 
-- ArcGISMap
-- Basemap
-- BlendRenderer
-- ColorRamp
-- MapView
-- Raster
-- RasterLayer
+* ArcGISMap
+* Basemap
+* BlendRenderer
+* ColorRamp
+* MapView
+* Raster
+* RasterLayer
 
 ## Provision your device
 1. Download the **shasta-elevation.zip** data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=caeef9aa78534760b07158bb8e068462).  

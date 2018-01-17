@@ -1,9 +1,11 @@
 # Take Screenshot
+
 The purpose of this sample is to demonstrate how to export the map as an image file. `MapView.exportImageAsync` exports the map to **Bitmap** format which can be saved in any image file format.
 
-![Take Screenshot](take-screenshot.png)
+![Take Screenshot App](take-screenshot.png)
 
 ## Features
+
 * ArcGISMap
 * MapView
 * ExportImageAsync

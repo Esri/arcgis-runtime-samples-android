@@ -1,22 +1,24 @@
 # Map Load Status
-This sample shows how to tell what the map's load status is. This is obtained from the enum value from a ```LoadStatus``` class. The LoadStatus is considered loaded when any of the following are true:
+
+This sample shows how to tell what the map's load status is. This is obtained from the enum value from a `LoadStatus` class. The LoadStatus is considered loaded when any of the following are true:
 * The map has a valid spatial reference
 * The map has an an initial viewpoint
 * One of the map's predefined layers has been created.
 
-A signal handler is set up on the map to handle the ```LoadStatusChangedEvent``` signal, and the status text is updated when the status changes.
+A signal handler is set up on the map to handle the `LoadStatusChangedEvent` signal, and the status text is updated when the status changes.
 
-![Map Loaded](map-loaded.png)
+![Map Loaded App](map-loaded.png)
 
 ## Features
 
+* LoadStatusChangedListener
 * Map
 * MapView
-* LoadStatusChangedListener
+
 
 ## Developer Pattern
 
-The ```adddLoadStatusChangedListener``` method of class ```ArcGISMap``` listens for ```LoadStatusChangedEvent```. To get the load status use method ```getNewLoadStatus().name()``` on the changed event.
+The `addLoadStatusChangedListener` method of class `ArcGISMap` listens for `LoadStatusChangedEvent`. To get the load status use method `getNewLoadStatus().name()` on the changed event.
 ```java
 // Listener on change in map load status
         mMap.addLoadStatusChangedListener(new LoadStatusChangedListener() {
