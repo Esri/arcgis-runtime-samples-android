@@ -6,7 +6,7 @@
        android:startColor="@color/background_material_dark"
        android:endColor="@color/background_material_dark"
     />
-	
-    <padding android:left="10dip" android:top="10dip" android:right="10dip" android:bottom="10dip" />
+
+    <padding android:left="8dip" android:top="8dip" android:right="8dip" android:bottom="8dip"/>
      
 </shape>
