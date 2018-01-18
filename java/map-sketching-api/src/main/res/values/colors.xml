@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+
+
+    <color name="primary_text_color">@color/esri_darker_gray</color>
+    <color name="secondary_text_color">#FF888888</color>
+    <color name="esri_white">#FFFFFFFF</color>
+    <color name="esri_darker_gray">#FF333333</color>
+    <!-- Editor Toolbar -->
+    <color name="button_color_light">#BBBBBB</color>
+    <color name="button_color_dark">#999999</color>
+    <color name="button_color_disabled">#FF430000</color>
+    <color name="button_default_border">#FF444444</color>
+    <color name="button_focused_border">#FFAAAAAA</color>
+    <color name="button_disabled_focused_border">#FF888888</color>
+</resources>

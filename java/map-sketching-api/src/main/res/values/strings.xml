@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Map Sketching API</string>
+    <string name="pointButtonDescription">Draw new point button</string>
+    <string name="pointsButtonDescription">Draw new multiple points button</string>
+
+    <string name="polylineButtonDescription">Draw new polyline button</string>
+    <string name="polygonButtonDescription">Draw new polygon button</string>
+    <string name="undoButtonDescription">Undo last drawing event button</string>
+    <string name="redoButtonDescription">Redo last undone drawing event button</string>
+    <string name="clearButtonDescription">finish current drawings session</string>
+
+    <string name="freehandLineButtonDescription">Draw freehand polyline</string>
+    <string name="freehandPolyButtonDescription">Draw freehand polygon</string>
+</resources>
