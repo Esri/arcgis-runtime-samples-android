@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Map Sketching API</string>
+    <string name="app_name">Sketch Editor</string>
     <string name="pointButtonDescription">Draw new point</string>
     <string name="polylineButtonDescription">Draw new polyline</string>
     <string name="polygonButtonDescription">Draw new polygon</string>
