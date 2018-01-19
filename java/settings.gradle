@@ -1,4 +1,4 @@
-include ':add-graphics-renderer', ':map-sketching-api',
+include ':add-graphics-renderer', ':sketch-editor',
         ':add-graphics-symbols',
         'analyze-hotspots',
         ':arcgis-map-imagelayer-url',

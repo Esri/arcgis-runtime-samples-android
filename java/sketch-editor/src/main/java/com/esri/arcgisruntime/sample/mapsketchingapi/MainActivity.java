@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -69,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
     mPolygonButton = findViewById(R.id.polygonButton);
     mFreehandLineButton = findViewById(R.id.freehandLineButton);
     mFreehandPolygonButton = findViewById(R.id.freehandPolygonButton);
-    ImageButton undoButton = findViewById(R.id.undoButton);
-    ImageButton redoButton = findViewById(R.id.redoButton);
-    ImageButton stopButton = findViewById(R.id.stopButton);
 
     // add click listeners
     mPointButton.setOnClickListener(view -> createModePoint());
@@ -80,9 +80,6 @@ public class MainActivity extends AppCompatActivity {
     mPolygonButton.setOnClickListener(view -> createModePolygon());
     mFreehandLineButton.setOnClickListener(view -> createModeFreehandLine());
     mFreehandPolygonButton.setOnClickListener(view -> createModeFreehandPolygon());
-    undoButton.setOnClickListener(view -> undo());
-    redoButton.setOnClickListener(view -> redo());
-    stopButton.setOnClickListener(view -> stop());
   }
 
   /**
@@ -220,7 +217,8 @@ public class MainActivity extends AppCompatActivity {
       validIf = "No sketch creation mode selected.";
     }
     String report = "Sketch geometry invalid:\n" + validIf;
-    Snackbar reportSnackbar = Snackbar.make(findViewById(R.id.coordinator), report, Snackbar.LENGTH_INDEFINITE);
+    Snackbar reportSnackbar = Snackbar.make(findViewById(R.id.toolbarInclude), report, Snackbar.LENGTH_INDEFINITE);
+    reportSnackbar.setAction("Dismiss", view -> reportSnackbar.dismiss());
     TextView snackbarTextView = reportSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
     snackbarTextView.setSingleLine(false);
     reportSnackbar.show();
@@ -237,6 +235,30 @@ public class MainActivity extends AppCompatActivity {
     mPolygonButton.setSelected(false);
     mFreehandLineButton.setSelected(false);
     mFreehandPolygonButton.setSelected(false);
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.undo_redo_stop_menu, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.undo:
+        undo();
+        return true;
+      case R.id.redo:
+        redo();
+        return true;
+      case R.id.stop:
+        stop();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 
   @Override

@@ -5,7 +5,7 @@
     <string name="polygonButtonDescription">Draw new polygon</string>
     <string name="freehandLineButtonDescription">Draw freehand line</string>
     <string name="freehandPolyButtonDescription">Draw freehand polygon</string>
-    <string name="undoButtonDescription">Undo last drawing event</string>
-    <string name="redoButtonDescription">Redo last undone drawing event</string>
-    <string name="stopButtonDescription">stop current drawing session</string>
+    <string name="undoButtonDescription">Undo</string>
+    <string name="redoButtonDescription">Redo</string>
+    <string name="stopButtonDescription">Stop</string>
 </resources>
