@@ -4,7 +4,6 @@
     <item
             android:state_pressed="true"
             android:drawable="@drawable/button_pressed"/>
-
     <item
             android:state_selected="true"
             android:drawable="@drawable/button_pressed"/>

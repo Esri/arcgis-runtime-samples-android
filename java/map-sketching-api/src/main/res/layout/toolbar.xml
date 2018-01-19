@@ -1,10 +1,10 @@
 <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/button_default_border" tools:layout_editor_absoluteY="81dp">
+        android:background="@color/toolbar_background">
 
     <ImageButton
             android:contentDescription="@string/pointButtonDescription"
@@ -16,7 +16,6 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:src="@drawable/ic_action_point"
-            android:onClick="pointClick"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
     <ImageButton
@@ -29,7 +28,6 @@
             android:layout_toRightOf="@+id/pointButton"
             android:layout_width="wrap_content"
             android:src="@drawable/ic_action_multipoint"
-            android:onClick="pointsClick"
             app:layout_constraintStart_toEndOf="@+id/pointButton"
             app:layout_constraintBottom_toBottomOf="parent"/>
     <ImageButton
@@ -42,7 +40,6 @@
             android:layout_toRightOf="@+id/pointsButton"
             android:layout_width="wrap_content"
             android:src="@drawable/ic_action_polyline"
-            android:onClick="polylineClick"
             app:layout_constraintStart_toEndOf="@+id/pointsButton"
             app:layout_constraintBottom_toBottomOf="parent"/>
     <ImageButton
@@ -55,36 +52,32 @@
             android:layout_toRightOf="@+id/polylineButton"
             android:layout_width="wrap_content"
             android:src="@drawable/ic_action_polygon"
-            android:onClick="polygonClick"
             app:layout_constraintStart_toEndOf="@+id/polylineButton"
             app:layout_constraintBottom_toBottomOf="parent"/>
     <ImageButton
             android:contentDescription="@string/freehandPolyButtonDescription"
             android:background="@drawable/button_bar_background"
-            android:id="@+id/freehandPolyButton"
+            android:id="@+id/freehandPolygonButton"
             android:layout_alignParentTop="true"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/freehandPolylineButton"
-            android:layout_toRightOf="@+id/freehandPolylineButton"
+            android:layout_toEndOf="@+id/freehandLineButton"
+            android:layout_toRightOf="@+id/freehandLineButton"
             android:layout_width="wrap_content"
             android:src="@drawable/ic_action_freehand_polygon"
-            android:onClick="freehandPolygonClick"
-            app:layout_constraintStart_toEndOf="@+id/freehandPolylineButton"
+            app:layout_constraintStart_toEndOf="@+id/freehandLineButton"
             app:layout_constraintBottom_toBottomOf="parent"/>
     <ImageButton
             android:contentDescription="@string/freehandLineButtonDescription"
             android:background="@drawable/button_bar_background"
-            android:id="@+id/freehandPolylineButton"
+            android:id="@+id/freehandLineButton"
             android:layout_alignParentTop="true"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/polygonButton"
             android:layout_toRightOf="@+id/polygonButton"
             android:layout_width="wrap_content"
             android:src="@drawable/ic_action_freehand_polyline"
-            android:onClick="freehandPolylineClick"
             app:layout_constraintStart_toEndOf="@+id/polygonButton"
             app:layout_constraintBottom_toBottomOf="parent"/>
-
     <ImageButton
             android:contentDescription="@string/undoButtonDescription"
             android:background="@drawable/button_bar_background"
@@ -95,35 +88,29 @@
             android:layout_toLeftOf="@+id/redoButton"
             android:layout_width="wrap_content"
             android:src="@drawable/ic_action_undo"
-            android:onClick="undoClick" app:layout_constraintStart_toEndOf="@+id/redoButton"
-            app:layout_constraintBottom_toBottomOf="parent"
-    />
+            app:layout_constraintStart_toEndOf="@+id/freehandPolygonButton"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     <ImageButton
             android:contentDescription="@string/redoButtonDescription"
             android:background="@drawable/button_bar_background"
             android:id="@+id/redoButton"
             android:layout_alignParentTop="true"
             android:layout_height="wrap_content"
-
             android:layout_width="wrap_content"
             android:src="@drawable/ic_action_redo"
-            android:onClick="redoClick" app:layout_constraintStart_toEndOf="@+id/freehandPolyButton"
+            app:layout_constraintStart_toEndOf="@+id/undoButton"
             app:layout_constraintBottom_toBottomOf="parent"/>
-
-
     <ImageButton
-            android:contentDescription="@string/clearButtonDescription"
+            android:contentDescription="@string/stopButtonDescription"
             android:background="@drawable/button_bar_background"
-            android:id="@+id/doneButton"
+            android:id="@+id/stopButton"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:src="@drawable/ic_action_done"
-            android:onClick="doneClick"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/undoButton"/>
-
+            app:layout_constraintStart_toEndOf="@+id/redoButton"/>
 
 </android.support.constraint.ConstraintLayout>
