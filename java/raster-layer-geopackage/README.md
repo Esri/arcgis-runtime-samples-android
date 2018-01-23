@@ -6,7 +6,11 @@ This sample demonstrates how to open a GeoPackage, obtain a raster from the pack
 
 ## How it works
 
-A GeoPackage is created by passing the path to a `.gpkg` file. Once the `Map` loads, `GeoPackage::load` is called. A signal handler is connected so that once the `GeoPackage` loads, the `RasterLayer` can be created. The `RasterLayer` is created by obtaining the first `Raster` in the list of `GeoPackageRasters`, and passing that `Raster` to the `RasterLayer`. Finally, the new layer is appended to the Map's operational layers.
+1. A GeoPackage is created by passing the path to a `.gpkg` file stored locally on the device. 
+1. Once READ permissions have been granted, the `GeoPackage` is loaded with `.loadAsync()`.
+1. A `.doneLoadingListener()` id added to the `GeoPackage` and is checked to have `LoadStatus.LOADED`.
+1. A `RasterLayer` is created by obtaining the first `Raster` in the list of `.getGeoPackageRasters()`, and passing that `Raster` to the `RasterLayer`. 
+1. Finally, the new `RasterLayer` is added to the Map's operational layers.
 
 ## Features
 
