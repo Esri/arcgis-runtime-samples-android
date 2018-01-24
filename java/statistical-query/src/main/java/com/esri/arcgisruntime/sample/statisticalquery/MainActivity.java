@@ -1,19 +1,43 @@
+/* Copyright 2018 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.esri.arcgisruntime.sample.statisticalquery;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.data.StatisticDefinition;
+import com.esri.arcgisruntime.data.StatisticRecord;
 import com.esri.arcgisruntime.data.StatisticType;
 import com.esri.arcgisruntime.data.StatisticsQueryParameters;
 import com.esri.arcgisruntime.data.StatisticsQueryResult;
@@ -26,12 +50,13 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
+
   private MapView mMapView;
   private FeatureTable mWorldCitiesTable;
 
   private CheckBox mCurrentExtentCheckbox;
   private CheckBox mGreater5mCheckbox;
-  private Button mGetStatisticsButton;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
     mCurrentExtentCheckbox = findViewById(R.id.currentExtentCheckBox);
     mGreater5mCheckbox = findViewById(R.id.greater5mCheckBox);
-    mGetStatisticsButton = findViewById(R.id.getStatisticsButton);
+    Button getStatisticsButton = findViewById(R.id.getStatisticsButton);
 
     // create a new Map with the world streets vector basemap
     ArcGISMap map = new ArcGISMap(Basemap.createStreetsVector());
@@ -60,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // add click listener to get statistics button
-    mGetStatisticsButton.setOnClickListener(view -> getStatistics());
+    getStatisticsButton.setOnClickListener(view -> getStatistics());
   }
 
   private void getStatistics() {
@@ -91,8 +116,9 @@ public class MainActivity extends AppCompatActivity {
 
     // if only using features in the current extent, set up the spatial filter for the statistics query parameters
     if (mCurrentExtentCheckbox.isChecked()) {
-      // get the current extent (envelope) from the map view
-      Envelope currentExtent = (Envelope) mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry();
+      // get the current extent (as an envelope) from the map view
+      Envelope currentExtent = (Envelope) mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY)
+          .getTargetGeometry();
 
       // set the statistics query parameters geometry with the envelope
       statQueryParams.setGeometry(currentExtent);
@@ -101,22 +127,43 @@ public class MainActivity extends AppCompatActivity {
       statQueryParams.setSpatialRelationship(QueryParameters.SpatialRelationship.INTERSECTS);
     }
 
-    // if only evaluating the largest cities (over 5 million in population), set up an attribute filter
+    // set up an attribute filter
     if (mGreater5mCheckbox.isChecked()) {
-      // Set a where clause to get the largest cities (could also use "POP_CLASS = '5,000,000 and greater'")
-      statQueryParams.setWhereClause("POP_RANK = 1");
+      // set a where clause to get only cities with populations over five million
+      statQueryParams.setWhereClause("POP_CLASS = '5,000,000 and greater'");
     }
 
     // execute the statistical query with these parameters and await the results
-    ListenableFuture<StatisticsQueryResult> statQueryResultFuture = mWorldCitiesTable.queryStatisticsAsync(statQueryParams);
-
+    ListenableFuture<StatisticsQueryResult> statQueryResultFuture = mWorldCitiesTable
+        .queryStatisticsAsync(statQueryParams);
     statQueryResultFuture.addDoneListener(() -> {
       try {
+        // get the result
         StatisticsQueryResult statQueryResult = statQueryResultFuture.get();
 
-        // display results in the list box
-        //StatResultsListBox.ItemsSource = statQueryResult.iterator().next().getStatistics().Statistics.ToList();
+        // get iterator from the result
+        Iterator<StatisticRecord> statisticRecordIterator = statQueryResult.iterator();
+
+        // build a result string for display
+        StringBuilder result = new StringBuilder();
+        while (statisticRecordIterator.hasNext()) {
+          Map<String, Object> statisticsMap = statisticRecordIterator.next().getStatistics();
+          for (Map.Entry<String, Object> stat : statisticsMap.entrySet()) {
+            result.append(stat.getKey()).append(": ").append(String.format(Locale.US, "%,.0f", (Double) stat.getValue()))
+                .append("\n");
+          }
+        }
+
+        // show the results in a snackbar
+        Snackbar reportSnackbar = Snackbar.make(findViewById(R.id.activityMain), result, Snackbar.LENGTH_INDEFINITE);
+        reportSnackbar.setAction("Dismiss", view -> reportSnackbar.dismiss());
+        TextView snackbarTextView = reportSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+        snackbarTextView.setSingleLine(false);
+        reportSnackbar.show();
+
       } catch (InterruptedException | ExecutionException e) {
+        Toast.makeText(MainActivity.this, "Error getting Statistical Query Results: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        Log.e(TAG, "Error getting Statistical Query Results: " + e.getMessage());
         e.printStackTrace();
       }
     });
