@@ -25,4 +25,4 @@ This sample demonstrates how to query a table to get aggregated statistics back 
     * sum
     * standard deviation
     * variance
-1. Execute `queryStatistics` on the `ServiceFeatureTable`. Depending on the state of the two checkboxes, additional parameters are set. This process runs asynchronously, and once complete, this gives access to the `QueryStatisticsResult`, which contains key/value pairs.
+1. Execute `queryStatistics` on the `ServiceFeatureTable`. Depending on the state of the two checkboxes, additional parameters are set. The query runs asynchronously, and once complete, this gives access to the `QueryStatisticsResult`, which contains key/value pairs.
