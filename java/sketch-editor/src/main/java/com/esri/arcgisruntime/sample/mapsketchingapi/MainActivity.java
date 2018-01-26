@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     mSketchEditor = new SketchEditor();
     mMapView.setSketchEditor(mSketchEditor);
 
-    // inflate buttons
+    // get buttons from layouts
     mPointButton = findViewById(R.id.pointButton);
     mMultiPointButton = findViewById(R.id.pointsButton);
     mPolylineButton = findViewById(R.id.polylineButton);
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
   /**
    * When the multipoint button is clicked, reset other buttons, show the multipoint button as selected, and start
-   * point drawing mode.
+   * multipoint drawing mode.
    */
   private void createModeMultipoint() {
     resetButtons();
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * When the stop button is clicked, check that sketch if valid. If so, get the geometry from the sketch, set its
+   * When the stop button is clicked, check that sketch is valid. If so, get the geometry from the sketch, set its
    * symbol and add it to the graphics overlay.
    */
   private void stop() {
