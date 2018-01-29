@@ -54,9 +54,13 @@ public class MainActivity extends AppCompatActivity {
     requestReadPermission();
   }
 
+  /**
+   * Creates a ShapefileFeatureTable from a service and, on loading, creates a FeatureLayer and add it to the map.
+   */
   private void featureLayerShapefile() {
     // load the shapefile with a local path
-    ShapefileFeatureTable shapefileFeatureTable = new ShapefileFeatureTable(Environment.getExternalStorageDirectory() + getString(R.string.shapefile_path));
+    ShapefileFeatureTable shapefileFeatureTable = new ShapefileFeatureTable(
+        Environment.getExternalStorageDirectory() + getString(R.string.shapefile_path));
 
     shapefileFeatureTable.loadAsync();
     shapefileFeatureTable.addDoneLoadingListener(() -> {
@@ -77,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
       }
     });
   }
-
 
   /**
    * Request read permission on the device.
