@@ -13,7 +13,7 @@ The sample demonstrates how to view the status of the layers on the map. This is
 
 # Developer Pattern
 
-The `addLayerViewStateChangedListener` on **MapView** listens for `LayerViewStateChangedEvent`. To get the layer's view status, use method `getLayerViewStatus().iterator().next()` on event.
+The `addLayerViewStateChangedListener` on `MapView` listens for `LayerViewStateChangedEvent`. To get the layer's view status, use method `getLayerViewStatus().iterator().next()` on event.
 
 ```java
 // Listen to changes in the status of the Layer

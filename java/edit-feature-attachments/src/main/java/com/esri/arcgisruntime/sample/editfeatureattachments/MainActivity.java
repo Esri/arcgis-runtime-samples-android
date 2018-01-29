@@ -47,7 +47,7 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-  private static final String TAG = "EditFeatureAttachment";
+  private static final String TAG = MainActivity.class.getSimpleName();
   private static final int REQUEST_CODE = 100;
   private ProgressDialog progressDialog;
   private RelativeLayout mCalloutLayout;
@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         // clear any previous selection
         mFeatureLayer.clearSelection();
         mSelectedArcGISFeature = null;
+        mCallout.dismiss();
 
         // identify the GeoElements in the given layer
         final ListenableFuture<IdentifyLayerResult> futureIdentifyLayer = mMapView

@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         // clear any previous selection
         mFeatureLayer.clearSelection();
         mSelectedArcGISFeature = null;
+        mCallout.dismiss();
 
         // identify the GeoElements in the given layer
         final ListenableFuture<IdentifyLayerResult> identifyFuture = mMapView.identifyLayerAsync(mFeatureLayer, mClickPoint, 5, false, 1);

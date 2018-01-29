@@ -7,7 +7,7 @@
     <string name="desc">Description</string>
 
     <!-- Services -->
-    <string name="world_elevation">http://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer</string>
+    <string name="world_time_zones">http://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer</string>
     <string name="us_census">http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
     <!-- App messages -->
     <string name="author_map_message">Creating your map</string>
@@ -24,7 +24,7 @@
     </string-array>
     <!-- Operational layer array -->
     <string-array name="operational_layer_array">
-        <item>World Elevation</item>
+        <item>World Time Zones</item>
         <item>Census</item>
     </string-array>
 </resources>

@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     // create spatial reference for all points
     SpatialReference spatialReference = SpatialReferences.getWebMercator();
 
-    final ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(getApplication().getString(R.string.world_elevation));
+    final ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(getApplication().getString(R.string.world_time_zones));
     final ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(getApplication().getString(R.string.us_census));
     // setting the scales at which this layer can be viewed
     imageLayer.setMinScale(MIN_SCALE);
