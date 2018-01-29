@@ -83,7 +83,7 @@
     <!-- Vertical Angle -->
     <TextView
             android:text="@string/vertical_angle"
-            android:layout_width="87dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/vertical_angle_textview"
             android:layout_marginTop="8dp"

@@ -16,6 +16,8 @@
 
 package com.esri.arcgisruntime.sample.viewshedlocation;
 
+import java.util.concurrent.ExecutionException;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +25,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geoanalysis.LocationViewshed;
 import com.esri.arcgisruntime.geoanalysis.Viewshed;
 import com.esri.arcgisruntime.geometry.Point;
@@ -119,25 +123,31 @@ public class MainActivity extends AppCompatActivity {
    * changes in seek bar progress.
    */
   private void handleUiElements() {
-
     mSceneView.setOnTouchListener(new DefaultSceneViewOnTouchListener(mSceneView) {
-
       @Override public boolean onDoubleTouchDrag(MotionEvent motionEvent) {
-
-        // convert from screen point to surface point
+        // convert from screen point to location point
         android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
             Math.round(motionEvent.getY()));
-        Point surfacePoint = mSceneView.screenToBaseSurface(screenPoint);
+        ListenableFuture<Point> locationPointFuture = mSceneView.screenToLocationAsync(screenPoint);
+        locationPointFuture.addDoneListener(() -> {
+          try {
+            Point locationPoint = locationPointFuture.get();
 
-        // add 50 meters to surface point for location point
-        mViewshed.setLocation(new Point(surfacePoint.getX(), surfacePoint.getY(), surfacePoint.getZ() + 50));
+            // add 50 meters to location point and set to viewshed
+            mViewshed.setLocation(new Point(locationPoint.getX(), locationPoint.getY(), locationPoint.getZ() + 50));
+          } catch (InterruptedException | ExecutionException e) {
+            String error = "Error converting screen point to location point: " + e.getMessage();
+            Log.e(TAG, error);
+            Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+          }
+        });
 
         // ignore default double touch drag gesture
-        return false;
+        return true;
       }
     });
 
-    // inflate UI elements
+    // get views from layout
     mHeadingSeekBar = findViewById(R.id.heading_seek_bar);
     mPitchSeekBar = findViewById(R.id.pitch_seek_bar);
     mHorizontalAngleSeekBar = findViewById(R.id.horizontal_angle_seekbar);
@@ -165,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onStopTrackingTouch(SeekBar seekBar) { }
     });
 
-    // set arbitary max to 180 to avoid nonsensical pitch values
+    // set arbitrary max to 180 to avoid nonsensical pitch values
     mPitchSeekBar.setMax(180);
     setPitch(mInitPitch);
     mPitchSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -229,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onStopTrackingTouch(SeekBar seekBar) { }
     });
 
-    // set arbitary max to 9999 to allow a maximum of 4 digits
+    // set arbitrary max to 9999 to allow a maximum of 4 digits
     mMaxDistanceSeekBar.setMax(9999);
     setMaxDistance(mInitMaxDistance);
     mMaxDistanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

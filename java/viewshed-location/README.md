@@ -13,7 +13,7 @@ A viewshed shows the visible and obstructed areas from an observer's vantage poi
 
 ## How to use the sample
 
-Use the seek bars on the bottom of the screen to change the properties of the viewshed and see them updated in real time. To move the viewshed, long press on the screen and drag your finger. Lift your finger to stop moving the viewshed.
+Use the seek bars on the bottom of the screen to change the properties of the viewshed and see them updated in real time. To move the viewshed, double touch and drag your finger across the screen. Lift your finger to stop moving the viewshed.
 
 ## How it works
 
