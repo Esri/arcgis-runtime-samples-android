@@ -19,7 +19,8 @@ This sample demonstrates how to open a shapefile stored on the device and displa
 1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=d98b3e5293834c5f852f13c569930caa).
 1. Extract the contents of the downloaded zip file to disk.
 1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
-1. Execute the following command: 
+1. Execute the following command:
+
 `adb push Public_Art.shp /sdcard/ArcGIS/Samples/ShapeFile/Aurora_CO_shp/Public_Art.shp`
 
 
