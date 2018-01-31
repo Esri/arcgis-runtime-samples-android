@@ -10,7 +10,6 @@ The sample will start with a viewshed created from the initial camera location, 
 portion of the viewshed will be visible. Move around the scene to see the obstructed (red) portion. Click the 'Update 
 from Camera' button to update the viewshed to the current camera position.
 
-
 # How it works
 
 To create and update a viewshed from a camera:
@@ -21,7 +20,6 @@ To create and update a viewshed from a camera:
 
 # Features
 
-* 3D
 * AnalysisOverlay
 * ArcGISTiledElevationSource
 * ArcGISScene

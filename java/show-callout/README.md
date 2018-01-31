@@ -1,14 +1,17 @@
 # Show Callout
+
 The **Show Callout** sample draws a callout on a MapView and manages its behavior. A callout displays an Android View that contains text and/or other content. It has a leader that points to the location the callout refers to. 
 
 ![Show Callout App](show-callout.png)
 
 ## Features
+
 * ArcGISMap
-* MapView
 * Callout
+* MapView
 
 ## Developer Pattern
+
 The pattern demonstrates how to show location coordinates on a `MapView` using a `Callout`.  The sample converts screen coordinates to location coordinates to show the location of the callout.  The content of the callout is created programmatically by an Android `TextView`.
 
 ```java

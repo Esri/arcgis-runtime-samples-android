@@ -1,19 +1,19 @@
 # Identify Graphics Hit Test
 
-![Identify Graphic Hit Test App](identify-graphic-hittest.png)
+![Identify Graphic Hit Test App](identify-graphics-hittest.png)
 
-The **Identify Graphics Hit Test** sample demonstrates how to create a ```Graphic``` and add it to a ```GraphicOverlay``` where it can be identified from the ```MapView```.
+The **Identify Graphics Hit Test** sample demonstrates how to create a `Graphic` and add it to a `GraphicOverlay` where it can be identified from the `MapView`.
 
 ## Features
 * ArcGISMap
-* MapView
 * DefaultMapViewOnTouchListener
 * Graphic
 * GraphicsOverlay
+* MapView
 
 ## Developer Pattern
 ### Graphics
-Graphics represent graphic elements used in graphic overlays on the ```MapView```. Graphics are contained in a modifiable ```List``` for graphics on a ```GraphicsOverlay```.  The ```ListenableList``` interface defines a listenable ```List``` of graphics that can be notified when items are being added or removed from the ```List```.
+Graphics represent graphic elements used in graphic overlays on the `MapView`. Graphics are contained in a modifiable `List` for graphics on a `GraphicsOverlay`.  The `ListenableList` interface defines a listenable `List` of graphics that can be notified when items are being added or removed from the `List`.
 
 ```java
 // create list of graphics
@@ -25,7 +25,7 @@ mMapView.getGraphicsOverlays().add(grOverlay);
 ```
 
 ### Identify Graphics Overlay
-You can identify on a graphics overlay from the ```MapView.identifyOnGraphicsOverlay()``` method which returns a ```ListenableFuture<List<Graphic>>```.  Futures are an abstraction for asynchronous event driven systems that the Android platform provides.  The method returns immediately as a wrapper around the ```List<Graphic>```, once the asynchronous event is completed you can access it with ```ListenableFuture.get()```.
+You can identify on a graphics overlay from the `MapView.identifyOnGraphicsOverlay()` method which returns a `ListenableFuture<List<Graphic>>`.  Futures are an abstraction for asynchronous event driven systems that the Android platform provides.  The method returns immediately as a wrapper around the `List<Graphic>`, once the asynchronous event is completed you can access it with `ListenableFuture.get()`.
 
 ```java
 // identify graphics on the graphics overlay

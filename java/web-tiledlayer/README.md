@@ -1,16 +1,18 @@
 # Web Tiled Layer
 
-![Web Tiled Layer](webtiledlayer.png)
+![Web Tiled Layer App](web-tiledlayer.png)
 
 This sample demonstrates how to display map tiles from Stamen terrain as an online resource using the `WebTiledLayer`. 
 
 ## Features
+
 * ArcGISMap
 * Basemap
 * MapView
 * WebTiledLayer
 
 ## Developer Pattern
+
 `WebTiledLayer` provides a simple way to integrate non-ArcGIS Services as a layer in a map. In this case, map tiles from Stamen are added to the map. The template URL is specified by setting the subDomains, level, col, and row attributes. Additionally, copyright information is added to the layer so that the layer can be properly attributed. The layer is added to a `Basemap`, and a `Basemap` is added to a `ArcGISMap`. Finally, the Map is set on the `MapView`, and the tiled layer is displayed.
 
 ```java
