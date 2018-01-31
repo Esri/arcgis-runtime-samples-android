@@ -6,7 +6,7 @@ A viewshed shows the visible and obstructed areas from an observer's vantage poi
 
 # How to use the sample
 
-Once the scene is done loading, click on a location for the tank to drive to. It will automatically turn and drive straight towards the clicked point. The viewshed will automatically move and rotate with the tank.
+Once the scene is done loading, click on a location for the tank to drive to. It will automatically turn and drive straight towards the tapped point. The viewshed will automatically move and rotate with the tank.
 
 
 # How it works

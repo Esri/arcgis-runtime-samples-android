@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
     ModelSceneSymbol tankSymbol = new ModelSceneSymbol(pathToModel, 10.0);
     tankSymbol.setHeading(90);
     tankSymbol.setAnchorPosition(SceneSymbol.AnchorPosition.BOTTOM);
-    tankSymbol.loadAsync();
     mTankGraphic = new Graphic(new Point(-4.506390, 48.385624, SpatialReferences.getWgs84()), tankSymbol);
     mTankGraphic.getAttributes().put("HEADING", 0.0);
     graphicsOverlay.getGraphics().add(mTankGraphic);
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
           }
         }, 0, 50);
 
-        return super.onSingleTapConfirmed(motionEvent);
+        return true;
       }
     });
 
