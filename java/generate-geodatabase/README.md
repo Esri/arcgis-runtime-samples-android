@@ -6,7 +6,7 @@ This sample demonstrates how to generate a geodatabase from a feature service.
 
 Zoom to any extent and click the generate button to generate a geodatabase of features from a feature service filtered to the current extent. A red bounding box graphic will display showing the extent used. A progress bar will show the job's progress. Once the geodatabase has been generated it is stored in the app's cache directory (shown in the log). The layers in the geodatabase are then added to the map.
 
-![Generate Geodatabase App](generate_geodatabase.png)
+![Generate Geodatabase App](generate-geodatabase.png)
 
 
 ## How it works
