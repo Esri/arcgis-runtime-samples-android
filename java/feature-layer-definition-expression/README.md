@@ -1,7 +1,7 @@
-#Feature layer definition expression
+# Feature layer definition expression
 This sample demonstrates how you can limit which features to display on the map. Use the buttons in the bottom toolbar to apply or reset definition expression.
 
-![FeatureLayer Definition Expression](featurelayer-definition-expression.png)
+![Feature Layer Definition Expression App](feature-layer-definition-expression.png)
 
 ## How it works
 

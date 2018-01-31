@@ -1,21 +1,24 @@
 # Raster Function Service
+
 Raster functions are operations performed on a `Raster`to apply on-the-fly processing such as Hillshade.  This sample demonstrates how to create an `ImageServiceRaster` and apply a `RasterFunction` to it. The `RasterFunction` applied in this case is Hillshade.
 
-![Raster Function app](raster-function.png)
+![Raster Function App](raster-function-service.png)
 
 ## Features
-- ImageServiceRaster
-- RasterLayer
-- RasterFunction
+
+* ImageServiceRaster
+* RasterFunction
+* RasterLayer
 
 ## Developer Pattern
+
 To create a `Raster` from a `RasterFunction`:
 
-- Create a `RasterFunction` from a json string resource.
-- Create a `RasterFunctionArguments` from the `RasterFunction`.
-- Set a `Raster` with a name parameter in `RasterFunctionArguments`
-- Create a new `Raster` from the `RasterFunction`.
-- Add it as an operational layer with `mapView.map.operationalLayers.add(hillshadeLayer)`.
+* Create a `RasterFunction` from a json string resource.
+* Create a `RasterFunctionArguments` from the `RasterFunction`.
+* Set a `Raster` with a name parameter in `RasterFunctionArguments`
+* Create a new `Raster` from the `RasterFunction`.
+* Add it as an operational layer with `mapView.map.operationalLayers.add(hillshadeLayer)`.
 
 ```kotlin
 fun applyRasterFunction(raster: Raster){

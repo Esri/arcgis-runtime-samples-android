@@ -1,13 +1,16 @@
 # Attribution View Change
+
 This sample demonstrates showing UI components responding to attribution view.
 
 ![Attribution View Change App](attribution-view-change.png)
 
 ## Features
-* Basemap
+
 * ArcGISMap
+* Basemap
 
 ## Developer Pattern
+
 Set the bottom margin of FAB to respect the height of the attribution bar.
 
 ```kotlin

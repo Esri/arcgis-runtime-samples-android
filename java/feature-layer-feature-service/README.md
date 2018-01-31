@@ -1,7 +1,7 @@
-#Feature layer feature service
+# Feature layer feature service
 This sample shows how to use a layer from an ArcGIS feature service as a feature layer.
 
-![Feature Layer Feature Service](featurelayer-feature-service.png)
+![Feature Layer Feature Service](feature-layer-feature-service.png)
 
 ## How it works
 
