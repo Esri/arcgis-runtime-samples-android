@@ -9,7 +9,7 @@ Demonstrates how to create and use a raster layer made from a local raster file.
 To add a `RasterLayer` as an operational layer from a local raster file:
 
 1. Create a `Raster` from a raster file.
-1. Create a <code>RasterLayer</code> from the `Raster`.
+1. Create a `RasterLayer` from the `Raster`.
 1. Add it as an operational layer with `map.getOperationalLayers().add(rasterLayer)`.
 
 ## Features

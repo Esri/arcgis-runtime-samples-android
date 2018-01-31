@@ -11,7 +11,7 @@ Three methods are demonstrated to change the view point namely:
 
 * Animation: Set the map views's viewpoint to London with a ten second duration  
 
-#Features
+# Features
 
 * MapView
 * SpatialReference

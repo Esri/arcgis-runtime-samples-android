@@ -40,7 +40,7 @@ To apply a `BlendRenderer` to a `RasterLayer`:
 7. You should now have the following directory on your target device, `/sdcard/ArcGIS/samples/raster`. We will copy the contents of the downloaded data into this directory. Note:  Directory may be slightly different on your device.
 8. Exit the shell with the, `exit` command.
 9. While still in your command prompt, navigate to the root folder where you extracted the contents of the data from step 1 and execute the following command: 
-	* `adb push TBD/. /sdcard/ArcGIS/samples/raster`
+	`adb push shasta-elevation/. /sdcard/ArcGIS/samples/raster`
 	
 
 	Link | Local Location
