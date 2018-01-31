@@ -1,0 +1,88 @@
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/toolbar_background">
+
+    <ImageButton
+            android:contentDescription="@string/pointButtonDescription"
+            android:background="@drawable/button_bar_background"
+            android:id="@+id/pointButton"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_action_point"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/pointsButton"/>
+    <ImageButton
+            android:contentDescription="@string/polylineButtonDescription"
+            android:background="@drawable/button_bar_background"
+            android:id="@+id/pointsButton"
+            android:layout_alignParentTop="true"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/pointButton"
+            android:layout_toRightOf="@+id/pointButton"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_action_multipoint"
+            app:layout_constraintStart_toEndOf="@+id/pointButton"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/polylineButton"/>
+    <ImageButton
+            android:contentDescription="@string/polylineButtonDescription"
+            android:background="@drawable/button_bar_background"
+            android:id="@+id/polylineButton"
+            android:layout_alignParentTop="true"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/pointsButton"
+            android:layout_toRightOf="@+id/pointsButton"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_action_polyline"
+            app:layout_constraintStart_toEndOf="@+id/pointsButton"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/polygonButton"/>
+    <ImageButton
+            android:contentDescription="@string/polygonButtonDescription"
+            android:background="@drawable/button_bar_background"
+            android:id="@+id/polygonButton"
+            android:layout_alignParentTop="true"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/polylineButton"
+            android:layout_toRightOf="@+id/polylineButton"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_action_polygon"
+            app:layout_constraintStart_toEndOf="@+id/polylineButton"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/freehandLineButton"/>
+    <ImageButton
+            android:contentDescription="@string/freehandPolyButtonDescription"
+            android:background="@drawable/button_bar_background"
+            android:id="@+id/freehandPolygonButton"
+            android:layout_alignParentTop="true"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/freehandLineButton"
+            android:layout_toRightOf="@+id/freehandLineButton"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_action_freehand_polygon"
+            app:layout_constraintStart_toEndOf="@+id/freehandLineButton"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="0.5"/>
+    <ImageButton
+            android:contentDescription="@string/freehandLineButtonDescription"
+            android:background="@drawable/button_bar_background"
+            android:id="@+id/freehandLineButton"
+            android:layout_alignParentTop="true"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/polygonButton"
+            android:layout_toRightOf="@+id/polygonButton"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_action_freehand_polyline"
+            app:layout_constraintStart_toEndOf="@+id/polygonButton"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/freehandPolygonButton"/>
+
+</android.support.constraint.ConstraintLayout>

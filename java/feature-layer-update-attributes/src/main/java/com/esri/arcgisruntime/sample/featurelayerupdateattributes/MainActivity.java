@@ -51,7 +51,6 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-  private MapView mMapView;
   private Callout mCallout;
   private FeatureLayer mFeatureLayer;
   private ArcGISFeature mSelectedArcGISFeature;
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     mCoordinatorLayout = findViewById(R.id.snackbarPosition);
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    MapView mapView = (MapView) findViewById(R.id.mapView);
 
     // create a map with the streets basemap
     final ArcGISMap map = new ArcGISMap(Basemap.createStreets());
@@ -81,10 +80,10 @@ public class MainActivity extends AppCompatActivity {
     map.setInitialViewpoint(new Viewpoint(new Point(-100.343, 34.585, SpatialReferences.getWgs84()), 1E8));
     
     // set the map to be displayed in the mapview
-    mMapView.setMap(map);
+    mapView.setMap(map);
 
     // get callout, set content and show
-    mCallout = mMapView.getCallout();
+    mCallout = mapView.getCallout();
 
     mProgressDialog = new ProgressDialog(this);
     mProgressDialog.setTitle(getResources().getString(R.string.progress_title));
@@ -105,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     map.getOperationalLayers().add(mFeatureLayer);
 
     // set an on touch listener to listen for click events
-    mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
+    mapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mapView) {
       @Override
       public boolean onSingleTapConfirmed(MotionEvent e) {
 
@@ -115,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         // clear any previous selection
         mFeatureLayer.clearSelection();
         mSelectedArcGISFeature = null;
+        mCallout.dismiss();
 
         // identify the GeoElements in the given layer
         final ListenableFuture<IdentifyLayerResult> identifyFuture = mMapView.identifyLayerAsync(mFeatureLayer, mClickPoint, 5, false, 1);
@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
     calloutLayout.addView(calloutContent);
     calloutLayout.addView(imageView);
 
-    mCallout.setLocation(mMapView.screenToLocation(mClickPoint));
+    mCallout.setGeoElement(mSelectedArcGISFeature ,null);
     mCallout.setContent(calloutLayout);
     mCallout.show();
   }
