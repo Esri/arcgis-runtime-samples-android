@@ -96,7 +96,7 @@ To download projection engine data to your device:
 You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools** to copy files to your device:
 1. Open a command prompt on your computer.
 2. Execute the `adb push` command to create the `ArcGIS/samples/PEData` directory and copy the files from your computer to the device:
-	* ```adb push <path to PEData directory on your computer> /sdcard/ArcGIS/samples/PEData`
+	* `adb push <path to PEData directory on your computer> /sdcard/ArcGIS/samples/PEData`
 
 You should now have the following directory containing projection engine data files on your target device:
   * `/sdcard/ArcGIS/samples/PEData`
