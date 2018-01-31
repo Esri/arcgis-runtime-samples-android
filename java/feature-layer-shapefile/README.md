@@ -11,7 +11,7 @@ This sample demonstrates how to open a shapefile stored on the device and displa
 
 ## How it works
 
-1. Create a `ShapefileFeatureTable a path to a shapefile (.shp) on loaded onto the device.
+1. Create a `ShapefileFeatureTable` a path to a shapefile (.shp) on loaded onto the device.
 1. Use the `ShapefileFeatureTable` to create a `FeatureLayer`
 1. Add the `FeatureLayer` to the `ArcGISMap` as an operational layer, using default symbology and rendering.
 
