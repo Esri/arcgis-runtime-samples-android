@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -47,6 +48,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.apache.commons.io.FileUtils;
+
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
 import com.esri.arcgisruntime.data.Attachment;
@@ -57,18 +60,16 @@ import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.sample.arrayadapter.CustomList;
 
-import org.apache.commons.io.FileUtils;
-
 public class EditAttachmentActivity extends AppCompatActivity {
 
     private static final String TAG = "EditAttachmentActivity";
     private static final int RESULT_LOAD_IMAGE = 1;
-    CustomList adapter;
-    int noOfAttachments;
-    FloatingActionButton addAttachmentFab;
-    int requestCodeFolder = 2;
-    int requestCodeGallery = 3;
-    String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private CustomList adapter;
+    private int noOfAttachments;
+    private FloatingActionButton addAttachmentFab;
+    private final int requestCodeFolder = 2;
+    private final int requestCodeGallery = 3;
+    private final String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private List<Attachment> attachments;
     private ArcGISFeature mSelectedArcGISFeature;
     private ServiceFeatureTable mServiceFeatureTable;
@@ -87,7 +88,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
         setContentView(R.layout.attachments);
 
         Bundle bundle = getIntent().getExtras();
-        String s = bundle.getString(getApplication().getString(R.string.attribute));
+        String s = bundle.getString(getString(R.string.attribute));
         noOfAttachments = bundle.getInt(getApplication().getString(R.string.noOfAttachments));
 
         // Build a alert dialog with specified style
@@ -142,13 +143,13 @@ public class EditAttachmentActivity extends AppCompatActivity {
                 if (!permissionsGranted) {
                     getPermissions(requestCodeFolder);
                 } else {
-                    fetchAttachmentAsync(position, view);
+                    fetchAttachmentAsync(position);
                 }
             }
         });
 
 
-        //set onlong click listener to delete the attachment
+        //set on long click listener to delete the attachment
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int pos, long id) {
@@ -174,7 +175,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchAttachmentAsync(final int position, final View view) {
+    private void fetchAttachmentAsync(final int position) {
 
         progressDialog.setTitle(getApplication().getString(R.string.downloading_attachments));
         progressDialog.setMessage(getApplication().getString(R.string.wait));
@@ -341,7 +342,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
             if (requestCode == requestCodeGallery) {
                 selectAttachment();
             } else {
-                fetchAttachmentAsync(listPosition, listView);
+                fetchAttachmentAsync(listPosition);
             }
 
         }
@@ -372,8 +373,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 String picturePath = cursor.getString(columnIndex);
@@ -482,7 +482,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
             if (requestCode == requestCodeGallery) {
                 selectAttachment();
             } else {
-                fetchAttachmentAsync(listPosition, listView);
+                fetchAttachmentAsync(listPosition);
             }
 
         } else {

@@ -16,7 +16,7 @@ For simplicity the sample comes with Source and Destination stops. You can click
 
 # How it works
 
-The sample creates a ```RouteTask``` from the and uses default ```RouteParameters```from the ```RouteTask``` service to set up the **stops**. In order to get detailed driving directions, ```setReturnDirections``` is set true in the parameters. ```RouteTask.solveAsync``` is used to solve for route. The ```RouteResult``` is then used to create the route graphics and ```getDirectionManeuvers()``` on route result returns step-by-step direction list which is populated in the `ListView`
+The sample creates a `RouteTask` from a URL and uses default `RouteParameters` from the `RouteTask` service to set up the **stops**. In order to get detailed driving directions, `setReturnDirections` is set true in the parameters. `RouteTask.solveAsync` is used to solve for route. The `RouteResult` is then used to create the route graphics and `getDirectionManeuvers()` on route result returns step-by-step direction list which is populated in the `ListView`.
 
 ```java
                 // create RouteTask instance
