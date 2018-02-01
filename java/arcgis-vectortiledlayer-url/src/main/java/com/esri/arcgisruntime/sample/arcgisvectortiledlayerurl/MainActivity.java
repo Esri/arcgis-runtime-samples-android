@@ -193,4 +193,5 @@ public class MainActivity extends AppCompatActivity {
     // Activate the navigation drawer toggle
     return (mDrawerToggle.onOptionsItemSelected(item)) || super.onOptionsItemSelected(item);
   }
+  
 }
