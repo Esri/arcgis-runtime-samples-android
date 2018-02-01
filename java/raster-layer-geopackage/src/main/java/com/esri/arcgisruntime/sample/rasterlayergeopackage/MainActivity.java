@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
 
-    // create a map with the BasemapType topographic
+    // create a map with the BasemapType light gray canvas
     ArcGISMap map = new ArcGISMap(Basemap.Type.LIGHT_GRAY_CANVAS, 39.7294, -104.8319, 11);
 
     // set the map to be displayed in this view
@@ -50,21 +50,25 @@ public class MainActivity extends AppCompatActivity {
     geoPackage.loadAsync();
     geoPackage.addDoneLoadingListener(() -> {
       if (geoPackage.getLoadStatus() == LoadStatus.LOADED) {
-        // read raster images and get the first one
-        Raster geoPackageRaster = geoPackage.getGeoPackageRasters().get(0);
-
-        // make sure an image was found in the package
-        if (geoPackageRaster != null) {
+        if (!geoPackage.getGeoPackageRasters().isEmpty()) {
+          // read raster images and get the first one
+          Raster geoPackageRaster = geoPackage.getGeoPackageRasters().get(0);
 
           // create a layer to show the raster
           RasterLayer geoPackageRasterLayer = new RasterLayer(geoPackageRaster);
 
           // add the image as a raster layer to the map (with default symbology)
           mMapView.getMap().getOperationalLayers().add(geoPackageRasterLayer);
+          
+        } else {
+          String emptyMessage = "No rasters found in this GeoPackage!";
+          Toast.makeText(MainActivity.this, emptyMessage, Toast.LENGTH_LONG).show();
+          Log.e(TAG, emptyMessage);
         }
       } else {
-        Toast.makeText(MainActivity.this, "Geopackage failed to load!", Toast.LENGTH_LONG).show();
-        Log.e(TAG, "Geopackage failed to load!");
+        String error = "GeoPackage failed to load!";
+        Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
       }
     });
   }
