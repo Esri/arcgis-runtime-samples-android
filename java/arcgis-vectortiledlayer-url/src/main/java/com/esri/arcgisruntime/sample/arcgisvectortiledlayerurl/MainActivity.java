@@ -101,6 +101,16 @@ public class MainActivity extends AppCompatActivity {
     mMapView.resume();
   }
 
+  /**
+   * The click listener for ListView in the navigation drawer
+   */
+  private class DrawerItemClickListener implements ListView.OnItemClickListener {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+      selectItem(position);
+    }
+  }
+
   private void selectItem(int position) {
 
     // update selected item and title, then close the drawer
@@ -183,15 +193,4 @@ public class MainActivity extends AppCompatActivity {
     // Activate the navigation drawer toggle
     return (mDrawerToggle.onOptionsItemSelected(item)) || super.onOptionsItemSelected(item);
   }
-
-  /**
-   * The click listener for ListView in the navigation drawer
-   */
-  private class DrawerItemClickListener implements ListView.OnItemClickListener {
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-      selectItem(position);
-    }
-  }
-
 }
