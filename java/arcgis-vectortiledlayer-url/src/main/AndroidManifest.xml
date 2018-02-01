@@ -12,7 +12,8 @@
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:supportsRtl="true">
         <activity android:name="com.esri.arcgisruntime.sample.arcgisvectortiledlayerurl.MainActivity"
                   android:label="@string/app_name"
                   android:configChanges="orientation|screenSize|uiMode">
