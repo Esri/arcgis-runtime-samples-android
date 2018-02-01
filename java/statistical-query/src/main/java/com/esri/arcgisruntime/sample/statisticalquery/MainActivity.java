@@ -84,35 +84,25 @@ public class MainActivity extends AppCompatActivity {
     // assign the map to the MapView
     mMapView.setMap(map);
 
-    // add click listener to get statistics button
-    getStatisticsButton.setOnClickListener(view -> getStatistics());
-  }
-
-  private void getStatistics() {
-
-    // create definitions for each statistic to calculate
-    StatisticDefinition statDefinitionAvgPop = new StatisticDefinition("POP", StatisticType.AVERAGE, "");
-    StatisticDefinition statDefinitionMinPop = new StatisticDefinition("POP", StatisticType.MINIMUM, "");
-    StatisticDefinition statDefinitionMaxPop = new StatisticDefinition("POP", StatisticType.MAXIMUM, "");
-    StatisticDefinition statDefinitionSumPop = new StatisticDefinition("POP", StatisticType.SUM, "");
-    StatisticDefinition statDefinitionStdDevPop = new StatisticDefinition("POP", StatisticType.STANDARD_DEVIATION, "");
-    StatisticDefinition statDefinitionVarPop = new StatisticDefinition("POP", StatisticType.VARIANCE, "");
-
-    // create a definition for count that includes an alias for the output
-    StatisticDefinition statDefinitionCount = new StatisticDefinition("POP", StatisticType.COUNT, "CityCount");
-
-    // add the statistics definitions to a list
+    // create definitions for each statistic to calculate and add to a list
     List<StatisticDefinition> statDefinitions = new ArrayList<>();
-    statDefinitions.add(statDefinitionAvgPop);
-    statDefinitions.add(statDefinitionCount);
-    statDefinitions.add(statDefinitionMinPop);
-    statDefinitions.add(statDefinitionMaxPop);
-    statDefinitions.add(statDefinitionSumPop);
-    statDefinitions.add(statDefinitionStdDevPop);
-    statDefinitions.add(statDefinitionVarPop);
+    statDefinitions.add(new StatisticDefinition("POP", StatisticType.AVERAGE, ""));
+    statDefinitions.add(new StatisticDefinition("POP", StatisticType.MINIMUM, ""));
+    statDefinitions.add(new StatisticDefinition("POP", StatisticType.MAXIMUM, ""));
+    statDefinitions.add(new StatisticDefinition("POP", StatisticType.SUM, ""));
+    statDefinitions.add(new StatisticDefinition("POP", StatisticType.STANDARD_DEVIATION, ""));
+    statDefinitions.add(new StatisticDefinition("POP", StatisticType.VARIANCE, ""));
+    // create a definition for count that includes an alias for the output
+    statDefinitions.add(new StatisticDefinition("POP", StatisticType.COUNT, "CityCount"));
 
     // create the statistics query parameters, pass in the list of definitions
     StatisticsQueryParameters statQueryParams = new StatisticsQueryParameters(statDefinitions);
+
+    // add click listener to get statistics button which calls getStatistics, passing in the statistic query parameters
+    getStatisticsButton.setOnClickListener(view -> getStatistics(statQueryParams));
+  }
+
+  private void getStatistics(StatisticsQueryParameters statQueryParams) {
 
     // if only using features in the current extent, set up the spatial filter for the statistics query parameters
     if (mCurrentExtentCheckbox.isChecked()) {
@@ -156,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
         // show the results in a snackbar
         Snackbar reportSnackbar = Snackbar.make(findViewById(R.id.activityMain), result, Snackbar.LENGTH_INDEFINITE);
-        reportSnackbar.setAction("Dismiss", view -> reportSnackbar.dismiss());
+        reportSnackbar.setAction("New Query", view -> reportSnackbar.dismiss());
         TextView snackbarTextView = reportSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         snackbarTextView.setSingleLine(false);
         reportSnackbar.show();
