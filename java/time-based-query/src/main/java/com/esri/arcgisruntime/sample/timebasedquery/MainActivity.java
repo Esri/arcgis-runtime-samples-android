@@ -1,5 +1,9 @@
 package com.esri.arcgisruntime.sample.timebasedquery;
 
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,6 +15,7 @@ import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.TimeExtent;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,17 +56,17 @@ public class MainActivity extends AppCompatActivity {
       queryParameters.setWhereClause("1=1");
 
       // create a new time extent that covers the desired interval (beginning of time to September 16th, 2000)
-      TimeExtent myExtent = new TimeExtent(new DateTime(1, 1, 1), new DateTime(2000, 9, 16));
+      TimeExtent timeExtent = new TimeExtent(TimeExtent.MIN_CALENDAR, new GregorianCalendar(2000, 9, 16));
 
-      // Apply the time extent to the query parameters
-      queryParameters.TimeExtent = myExtent;
+      // apply the time extent to the query parameters
+      queryParameters.setTimeExtent(timeExtent);
 
-      // Create list of the fields that are returned from the service
-      var outputFields = new string[] { "*" };
+      // create list of the fields that are returned from the service
+      List<String> outFields = new ArrayList<>();
+      outFields.add("*");
 
-      // Populate feature table with the data based on query
-      await _myFeatureTable.PopulateFromServiceAsync(queryParameters, true, outputFields);
-
+      // populate feature table with the data based on query
+      mServiceFeatureTable.populateFromServiceAsync(queryParameters, true, outFields);
     });
 
     // create FeatureLayer from table
@@ -72,8 +77,15 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
   }
 
-  private async void OnLoadedPopulateData(object sender, LoadStatusEventArgs e)
-  {
+  @Override
+  protected void onPause(){
+    super.onPause();
+    mMapView.pause();
+  }
 
+  @Override
+  protected void onResume(){
+    super.onResume();
+    mMapView.resume();
   }
 }
