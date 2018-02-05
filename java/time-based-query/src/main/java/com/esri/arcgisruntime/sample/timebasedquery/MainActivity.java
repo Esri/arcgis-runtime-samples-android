@@ -1,3 +1,19 @@
+/* Copyright 2018 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.esri.arcgisruntime.sample.timebasedquery;
 
 import java.util.ArrayList;
@@ -31,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
 
     // create a new map with oceans basemap
@@ -44,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
     // when feature table is loaded, populate data
     mServiceFeatureTable.addDoneLoadingListener(() -> {
-      if (mServiceFeatureTable.getLoadStatus() != LoadStatus.LOADED) {
-        String error = "Service feature table failed to load : " + mServiceFeatureTable.getLoadError();
+      if (mServiceFeatureTable.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+        String error = "Service feature table failed to load: " + mServiceFeatureTable.getLoadError();
         Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
         return;
@@ -78,13 +95,13 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
-  protected void onPause(){
+  protected void onPause() {
     super.onPause();
     mMapView.pause();
   }
 
   @Override
-  protected void onResume(){
+  protected void onResume() {
     super.onResume();
     mMapView.resume();
   }
