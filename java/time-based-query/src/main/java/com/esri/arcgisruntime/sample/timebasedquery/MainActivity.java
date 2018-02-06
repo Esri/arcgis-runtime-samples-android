@@ -40,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
 
-  private ServiceFeatureTable mServiceFeatureTable;
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -54,15 +52,15 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.createOceans());
 
     // create feature table for the hurricane feature service
-    mServiceFeatureTable = new ServiceFeatureTable(getString(R.string.hurricanes_service));
+    ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getString(R.string.hurricanes_service));
 
     // define the request mode
-    mServiceFeatureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE);
+    serviceFeatureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE);
 
     // when feature table is loaded, populate data
-    mServiceFeatureTable.addDoneLoadingListener(() -> {
-      if (mServiceFeatureTable.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-        String error = "Service feature table failed to load: " + mServiceFeatureTable.getLoadError();
+    serviceFeatureTable.addDoneLoadingListener(() -> {
+      if (serviceFeatureTable.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+        String error = "Service feature table failed to load: " + serviceFeatureTable.getLoadError();
         Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
         return;
@@ -83,11 +81,11 @@ public class MainActivity extends AppCompatActivity {
       outFields.add("*");
 
       // populate feature table with the data based on query
-      mServiceFeatureTable.populateFromServiceAsync(queryParameters, true, outFields);
+      serviceFeatureTable.populateFromServiceAsync(queryParameters, true, outFields);
     });
 
-    // create FeatureLayer from table
-    FeatureLayer featureLayer = new FeatureLayer(mServiceFeatureTable);
+    // create a feature layer from the service feature table
+    FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
 
     // add created layer to the map and add the map to the map view
     map.getOperationalLayers().add(featureLayer);
