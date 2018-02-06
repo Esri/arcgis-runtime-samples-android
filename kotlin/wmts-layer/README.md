@@ -1,15 +1,18 @@
 # WMTS Layer
+
 This sample created a WMTS layer from the given url and the first layer id, which is retrieved by loading the associated WMTS service and obtaining the layer info list. Then the WMTS layer will be added to the map as a basemap layer.
 
 ![WMTS Layer App](wmts-layer.png)
 
 ## Features
+
 * Basemap
 * ArcGISMap
 * WmtsService
 * WmtsLayer
 
 ## Developer Pattern
+
 Create a `WmtsService` from a `String` url and load the service.  Once loaded use the service info to get the LayerInfo and use to create the `WmtsLayer`.  Add the layer to the map as a `Basemap`. 
 
 ```kotlin

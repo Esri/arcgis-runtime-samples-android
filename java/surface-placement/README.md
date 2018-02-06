@@ -2,7 +2,7 @@
 
 Demonstrates how to position graphics using different Surface Placements.
 
-![Elevation Mode App](elevation-mode.png)
+![Elevation Mode App](surface-placement.png)
 
 
 ## How it works
@@ -18,6 +18,7 @@ To position `Graphics` using `SurfacePlacement` (`DRAPED`, `RELATIVE`, `ABSOLUTE
 4. Add the graphics overlay to the SceneView, SceneView.getGraphicsOverlays().add(GraphicsOverlay).
 
 ## Features
+
 * ArcGISScene
 * Camera
 * Graphic

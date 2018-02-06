@@ -1,13 +1,16 @@
 # Open Mobile Map Package
+
 This sample demonstrates how to open and display a map from a Mobile Map Package.
 
-![Open Mobile Map Package App](open-mmpk.png)
+![Open Mobile Map Package App](open-mobile-mappackage.png)
 
 ## Features
-- MapView
-- MobileMapPackage
+
+* MapView
+* MobileMapPackage
 
 ## Developer Pattern
+
 This sample takes a Mobile Map Package that was created in ArcGIS Pro, and displays a `ArcGISMap` from within the package in a `MapView`. This is accomplished by calling `MobileMapPackage.loadAsyc()` and waiting for its load status to be completed. Once the package is loaded, you can access its maps, and assign one of the maps to be viewed in the `MapView`.
 
 This sample uses the Android [Constraint Layout](https://developer.android.com/training/constraint-layout/index.html). In order to use you must ensure you have the latest Android Support Repository.  Details for installing can be found [here](https://developer.android.com/training/constraint-layout/index.html#add-constraintlayout-to-your-project).

@@ -1,18 +1,20 @@
-# Raster Layer File
+# Raster Layer Service
 This sample demonstrates how to create an `ImageServiceRaster` and add it to a `RasterLayer`. An `ImageServiceRaster` allows you to work with an image map service exposed by the ArcGIS Server Rest API.
 
-![](raster-layer-service.png)
+![Raster Layer Service App](raster-layer-service.png)
 
 ## Features
-- Raster
-- RasterLayer
+
+* Raster
+* RasterLayer
 
 ## Developer Pattern
+
 To add a `RasterLayer` as an operational layer from an `ImageServiceRaster`:
 
-- Create an `ImageServiceRaster` from a service url as `String`.
-- Create a `RasterLayer` from the `ImageServiceRaster`.
-- Add it as an operational layer with `map.getOperationalLayers().add(rasterLayer)`.
+1. Create an `ImageServiceRaster` from a service url as `String`.
+1. Create a `RasterLayer` from the `ImageServiceRaster`.
+1. Add it as an operational layer with `map.getOperationalLayers().add(rasterLayer)`.
 
 ```java
 // create image service raster as raster layer
