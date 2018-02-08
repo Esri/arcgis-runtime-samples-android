@@ -158,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
   }
 
   private void downloadMapArea(PreplannedMapArea mapArea) {
-
     String title = mapArea.getPortalItem().getTitle();
 
     // create folder path where the map area will be downloaded
@@ -168,71 +167,65 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     // if area has already been downloaded locally to the device, open it
     if (file.exists()) {
       MobileMapPackage localMapArea = new MobileMapPackage(path);
-      mMapView.setMap(localMapArea.getMaps().get(0));
+      localMapArea.loadAsync();
+      localMapArea.addDoneLoadingListener(() -> mMapView.setMap(localMapArea.getMaps().get(0)));
       return;
     }
 
-    boolean dirCreated = file.mkdirs();
-    Log.d(TAG, "path: " + file.getAbsolutePath());
-    if (dirCreated) {
-      Log.i(TAG, "New directory creates at: " + path);
+    file.mkdirs();
 
-      // create the job used download the preplanned map and start
-      DownloadPreplannedOfflineMapJob downloadPreplannedOfflineMapJob = mOfflineMapTask
-          .downloadPreplannedOfflineMap(mapArea, path);
+    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "default");
+    notificationBuilder.setContentTitle(title).setContentText("Download in progress")
+        .setSmallIcon(android.R.drawable.stat_sys_download);
 
-      showProgress(downloadPreplannedOfflineMapJob, title);
+    // create the job used download the preplanned map and start
+    DownloadPreplannedOfflineMapJob downloadPreplannedOfflineMapJob = mOfflineMapTask.downloadPreplannedOfflineMap(mapArea, path);
 
-      downloadPreplannedOfflineMapJob.start();
-      downloadPreplannedOfflineMapJob.addJobDoneListener(() -> {
-        if (downloadPreplannedOfflineMapJob.getStatus() == Job.Status.FAILED) {
-          Log.e(TAG, "Offline map job failed: " + downloadPreplannedOfflineMapJob.getError());
-          return;
+    // update progress
+    downloadPreplannedOfflineMapJob.addProgressChangedListener(() -> {
+      notificationBuilder.setProgress(100, downloadPreplannedOfflineMapJob.getProgress(), false);
+      notificationManager.notify(0, notificationBuilder.build());
+    });
+
+    downloadPreplannedOfflineMapJob.addJobDoneListener(() -> {
+      notificationBuilder.setContentText("Download complete").setProgress(0, 0, false).setSmallIcon(android.R.drawable.stat_sys_download_done);
+      notificationManager.notify(0, notificationBuilder.build());
+    });
+
+    downloadPreplannedOfflineMapJob.start();
+    downloadPreplannedOfflineMapJob.addJobDoneListener(() -> {
+      if (downloadPreplannedOfflineMapJob.getStatus() == Job.Status.FAILED) {
+        Log.e(TAG, "Offline map job failed: " + downloadPreplannedOfflineMapJob.getError());
+        return;
+      }
+      // get result of downloaded area
+      DownloadPreplannedOfflineMapResult results = downloadPreplannedOfflineMapJob.getResult();
+      Log.d(TAG, "job path :" + downloadPreplannedOfflineMapJob.getDownloadDirectoryPath());
+      // Handle possible errors and show them to the user
+      if (results.hasErrors()) {
+        StringBuilder errorBuilder = new StringBuilder();
+        for (Map.Entry<Layer, ArcGISRuntimeException> layerError : results.getLayerErrors().entrySet()) {
+          errorBuilder.append(
+              layerError.getKey() + " " + layerError.getValue().getMessage() + "\n" + layerError.getValue()
+                  .getCause() + "\n");
         }
-        // get result of downloaded area
-        DownloadPreplannedOfflineMapResult results = downloadPreplannedOfflineMapJob.getResult();
-        Log.d(TAG, "job path :" + downloadPreplannedOfflineMapJob.getDownloadDirectoryPath());
-        // Handle possible errors and show them to the user
-        if (results.hasErrors()) {
-          StringBuilder errorBuilder = new StringBuilder();
-          for (Map.Entry<Layer, ArcGISRuntimeException> layerError : results.getLayerErrors().entrySet()) {
-            errorBuilder.append(
-                layerError.getKey() + " " + layerError.getValue().getMessage() + "\n" + layerError.getValue()
-                    .getCause() + "\n");
-          }
-          for (Map.Entry<FeatureTable, ArcGISRuntimeException> tableError : results.getTableErrors().entrySet()) {
-            errorBuilder.append(
-                tableError.getKey() + " " + tableError.getValue().getMessage() + "\n" + tableError.getValue()
-                    .getCause() + "\n");
-          }
-          // Report error accessing a secured resource
-          Log.e(TAG, String.valueOf(errorBuilder));
+        for (Map.Entry<FeatureTable, ArcGISRuntimeException> tableError : results.getTableErrors().entrySet()) {
+          errorBuilder.append(
+              tableError.getKey() + " " + tableError.getValue().getMessage() + "\n" + tableError.getValue()
+                  .getCause() + "\n");
         }
-        // Set the downloaded map to the view
-        mMapView.setMap(results.getOfflineMap());
-      });
-    } else {
-      Log.e(TAG, "Error creating directory at :" + path);
-    }
+        // Report error accessing a secured resource
+        Log.e(TAG, String.valueOf(errorBuilder));
+      }
+      // Set the downloaded map to the view
+      mMapView.setMap(results.getOfflineMap());
+    });
   }
 
   @Override public void onItemClick(int position) {
     downloadMapArea(mPreplannedAreas.get(position));
     Log.d(TAG, String.valueOf(mPreplannedAreas.get(position).getLoadStatus()));
-  }
-
-  private void showProgress(DownloadPreplannedOfflineMapJob job, String title) {
-
-    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "default");
-    notificationBuilder.setContentTitle(title).setContentText("Download in progress").setSmallIcon(R.drawable.arcgisruntime_location_display_compass_symbol);
-
-    // update progress
-    job.addProgressChangedListener(() -> notificationBuilder.setProgress(100, job.getProgress(), false));
-    notificationManager.notify(0, notificationBuilder.build());
-
-    job.addJobDoneListener(() -> notificationBuilder.setContentText("Download complete").setProgress(0,0, false));
-    notificationManager.notify(0, notificationBuilder.build());
   }
 
   /**
