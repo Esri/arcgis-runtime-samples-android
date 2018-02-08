@@ -1,4 +1,4 @@
-/* Copyright 2017 Esri
+/* Copyright 2018 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,32 +18,39 @@ package com.esri.arcgisruntime.sample.downloadpreplannedmap;
 
 import java.util.ArrayList;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.RecyclerViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.PreviewAreaHolder> {
+
   private ArrayList<PreplannedAreaPreview> preplannedAreaPreviews;
-  public DrawerAdapter(ArrayList<PreplannedAreaPreview> preplannedAreaPreviews) {
+
+  private OnItemClicked onClick;
+
+  public interface OnItemClicked {
+    void onItemClick(int position);
+  }
+
+  public RecyclerViewAdapter(ArrayList<PreplannedAreaPreview> preplannedAreaPreviews) {
     this.preplannedAreaPreviews = preplannedAreaPreviews;
+    Log.d("recyclerAdapter", String.valueOf(this.preplannedAreaPreviews.size()));
   }
   @Override
-  public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  public PreviewAreaHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view;
     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.preview_item, parent, false);
-    return new RecyclerViewHolder(view);
+    return new PreviewAreaHolder(view);
   }
   @Override
-  public void onBindViewHolder(RecyclerViewHolder holder, int position) {
+  public void onBindViewHolder(PreviewAreaHolder holder, int position) {
+    holder.itemView.setOnClickListener(v -> onClick.onItemClick(position));
     holder.title.setText(preplannedAreaPreviews.get(position).getTitle());
-    byte[] byteStream = preplannedAreaPreviews.get(position).getThumbnailByteStream();
-    Bitmap thumbnail = BitmapFactory.decodeByteArray(byteStream, 0, byteStream.length);
-    holder.preview.setImageBitmap(thumbnail);
+    holder.preview.setImageBitmap(preplannedAreaPreviews.get(position).getBitmapThumbnail());
   }
   @Override
   public int getItemCount() {
@@ -53,13 +60,18 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.RecyclerVi
       return 0;
     }
   }
-  public static class RecyclerViewHolder extends RecyclerView.ViewHolder {
+  public static class PreviewAreaHolder extends RecyclerView.ViewHolder {
     TextView title;
     ImageView preview;
-    public RecyclerViewHolder(View itemView) {
+    public PreviewAreaHolder(View itemView) {
       super(itemView);
-      title = itemView.findViewById(R.id.title);
+      title = itemView.findViewById(R.id.sectorTextView);
       preview = itemView.findViewById(R.id.areaPreview);
     }
+  }
+
+  public void setOnClick(OnItemClicked onClick)
+  {
+    this.onClick=onClick;
   }
 }

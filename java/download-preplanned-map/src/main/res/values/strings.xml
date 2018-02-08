@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Download Preplanned Map</string>
     <string name="file_name">preplannedMap</string>
-    <string name="portal_url">https://pulsars.mapsdevext.arcgis.com</string>
-    <string name="portal_item_ID">60a294b72e2e466186ddf0d204ecd25c</string>
+    <string name="portal_url">https://arcgisruntime.maps.arcgis.com</string>
+    <string name="portal_item_ID">acc027394bc84c2fb04d1ed317aac674</string>
+    <string name="write_permission_denied">Write permission required to allow downloading of preplanned map areas.</string>
 </resources>
