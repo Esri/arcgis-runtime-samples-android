@@ -176,4 +176,11 @@ public class MainActivity extends AppCompatActivity {
     mSceneViewTop.resume();
     mSceneViewBottom.resume();
   }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mSceneViewTop.dispose();
+    mSceneViewBottom.dispose();
+  }
 }

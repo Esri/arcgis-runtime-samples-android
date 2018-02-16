@@ -101,6 +101,12 @@ public class MainActivity extends AppCompatActivity {
     mMapView.resume();
   }
 
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
+
   /**
    * The click listener for ListView in the navigation drawer
    */

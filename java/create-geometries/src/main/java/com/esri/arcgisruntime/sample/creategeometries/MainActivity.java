@@ -43,6 +43,40 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
  */
 public class MainActivity extends AppCompatActivity {
 
+  private MapView mMapView;
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+
+    // get MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
+
+    // create a map with the BasemapType topographic
+    final ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+
+    // set the map to be displayed in this view
+    mMapView.setMap(map);
+
+    // create color and symbols for drawing graphics
+    SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.TRIANGLE, Color.BLUE, 14);
+    SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.CROSS, Color.BLUE, null);
+    SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 3);
+
+    // add a graphic of point, multipoint, polyline and polygon.
+    GraphicsOverlay overlay = new GraphicsOverlay();
+    mMapView.getGraphicsOverlays().add(overlay);
+    overlay.getGraphics().add(new Graphic(createPolygon(), fillSymbol));
+    overlay.getGraphics().add(new Graphic(createPolyline(), lineSymbol));
+    overlay.getGraphics().add(new Graphic(createMultipoint(), markerSymbol));
+    overlay.getGraphics().add(new Graphic(createPoint(), markerSymbol));
+
+    // use the envelope to set the map viewpoint
+    mMapView.setViewpointGeometryAsync(createEnvelope(), getResources().getDimension(R.dimen.viewpoint_padding));
+
+  }
+
   private Envelope createEnvelope() {
 
     //[DocRef: Name=Create Envelope, Category=Fundamentals, Topic=Geometries]
@@ -103,37 +137,21 @@ public class MainActivity extends AppCompatActivity {
     return polygon;
   }
 
-
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-
-    // get MapView from layout
-    MapView mMapView = (MapView) findViewById(R.id.mapView);
-
-    // create a map with the BasemapType topographic
-    final ArcGISMap mMap = new ArcGISMap(Basemap.createTopographic());
-
-    // set the map to be displayed in this view
-    mMapView.setMap(mMap);
-
-    // create color and symbols for drawing graphics
-    SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.TRIANGLE, Color.BLUE, 14);
-    SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.CROSS, Color.BLUE, null);
-    SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 3);
-
-    // add a graphic of point, multipoint, polyline and polygon.
-    GraphicsOverlay overlay = new GraphicsOverlay();
-    mMapView.getGraphicsOverlays().add(overlay);
-    overlay.getGraphics().add(new Graphic(createPolygon(), fillSymbol));
-    overlay.getGraphics().add(new Graphic(createPolyline(), lineSymbol));
-    overlay.getGraphics().add(new Graphic(createMultipoint(), markerSymbol));
-    overlay.getGraphics().add(new Graphic(createPoint(), markerSymbol));
-
-    // use the envelope to set the map viewpoint
-    mMapView.setViewpointGeometryAsync(createEnvelope(), getResources().getDimension(R.dimen.viewpoint_padding));
-
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
   }
 
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }

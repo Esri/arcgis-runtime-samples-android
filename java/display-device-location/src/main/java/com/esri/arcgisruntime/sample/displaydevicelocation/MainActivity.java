@@ -16,6 +16,8 @@
 
 package com.esri.arcgisruntime.sample.displaydevicelocation;
 
+import java.util.ArrayList;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -34,8 +36,6 @@ import com.esri.arcgisruntime.mapping.view.LocationDisplay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.sample.spinner.ItemData;
 import com.esri.arcgisruntime.sample.spinner.SpinnerAdapter;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -191,4 +191,9 @@ public class MainActivity extends AppCompatActivity {
     mMapView.resume();
   }
 
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }

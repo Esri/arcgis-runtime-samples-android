@@ -17,6 +17,7 @@
 package com.esri.arcgisruntime.sample.featurelayerupdateattributes;
 
 import java.util.List;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -51,9 +52,12 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
+
   private Callout mCallout;
   private FeatureLayer mFeatureLayer;
   private ArcGISFeature mSelectedArcGISFeature;
+  private MapView mMapView;
   private android.graphics.Point mClickPoint;
   private ServiceFeatureTable mServiceFeatureTable;
   private Snackbar mSnackbarSuccess;
@@ -71,19 +75,19 @@ public class MainActivity extends AppCompatActivity {
     mCoordinatorLayout = findViewById(R.id.snackbarPosition);
 
     // inflate MapView from layout
-    MapView mapView = (MapView) findViewById(R.id.mapView);
+    mMapView = (MapView) findViewById(R.id.mapView);
 
     // create a map with the streets basemap
     final ArcGISMap map = new ArcGISMap(Basemap.createStreets());
 
     //set an initial viewpoint
     map.setInitialViewpoint(new Viewpoint(new Point(-100.343, 34.585, SpatialReferences.getWgs84()), 1E8));
-    
+
     // set the map to be displayed in the mapview
-    mapView.setMap(map);
+    mMapView.setMap(map);
 
     // get callout, set content and show
-    mCallout = mapView.getCallout();
+    mCallout = mMapView.getCallout();
 
     mProgressDialog = new ProgressDialog(this);
     mProgressDialog.setTitle(getResources().getString(R.string.progress_title));
@@ -104,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     map.getOperationalLayers().add(mFeatureLayer);
 
     // set an on touch listener to listen for click events
-    mapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mapView) {
+    mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override
       public boolean onSingleTapConfirmed(MotionEvent e) {
 
@@ -117,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
         mCallout.dismiss();
 
         // identify the GeoElements in the given layer
-        final ListenableFuture<IdentifyLayerResult> identifyFuture = mMapView.identifyLayerAsync(mFeatureLayer, mClickPoint, 5, false, 1);
+        final ListenableFuture<IdentifyLayerResult> identifyFuture = mMapView
+            .identifyLayerAsync(mFeatureLayer, mClickPoint, 5, false, 1);
 
         // add done loading listener to fire when the selection returns
         identifyFuture.addDoneListener(new Runnable() {
@@ -128,22 +133,24 @@ public class MainActivity extends AppCompatActivity {
               IdentifyLayerResult layerResult = identifyFuture.get();
               List<GeoElement> resultGeoElements = layerResult.getElements();
 
-              if (resultGeoElements.size() >0) {
+              if (resultGeoElements.size() > 0) {
                 if (resultGeoElements.get(0) instanceof ArcGISFeature) {
                   mSelectedArcGISFeature = (ArcGISFeature) resultGeoElements.get(0);
                   // highlight the selected feature
                   mFeatureLayer.selectFeature(mSelectedArcGISFeature);
                   // show callout with the value for the attribute "typdamage" of the selected feature
-                  mSelectedArcGISFeatureAttributeValue = (String) mSelectedArcGISFeature.getAttributes().get("typdamage");
+                  mSelectedArcGISFeatureAttributeValue = (String) mSelectedArcGISFeature.getAttributes()
+                      .get("typdamage");
                   showCallout(mSelectedArcGISFeatureAttributeValue);
-                  Toast.makeText(getApplicationContext(), "Tap on the info button to change attribute value", Toast.LENGTH_SHORT).show();
+                  Toast.makeText(getApplicationContext(), "Tap on the info button to change attribute value",
+                      Toast.LENGTH_SHORT).show();
                 }
               } else {
                 // none of the features on the map were selected
                 mCallout.dismiss();
               }
             } catch (Exception e) {
-              Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
+              Log.e(TAG, "Select feature failed: " + e.getMessage());
             }
           }
         });
@@ -156,26 +163,25 @@ public class MainActivity extends AppCompatActivity {
         .setAction("UNDO", new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            String snackBarText = updateAttributes(mSelectedArcGISFeatureAttributeValue) ? "Feature is restored!" : "Feature restore failed!" ;
+            String snackBarText = updateAttributes(mSelectedArcGISFeatureAttributeValue) ?
+                "Feature is restored!" :
+                "Feature restore failed!";
             Snackbar snackbar1 = Snackbar.make(mCoordinatorLayout, snackBarText, Snackbar.LENGTH_SHORT);
             snackbar1.show();
           }
         });
 
-    mSnackbarFailure = Snackbar
-        .make(mCoordinatorLayout, "Feature update failed", Snackbar.LENGTH_LONG);
-
+    mSnackbarFailure = Snackbar.make(mCoordinatorLayout, "Feature update failed", Snackbar.LENGTH_LONG);
   }
 
   /**
    * Function to read the result from newly created activity
-   *
    */
   @Override
   protected void onActivityResult(int requestCode,
       int resultCode, final Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if(resultCode == 100) {
+    if (resultCode == 100) {
       // display progress dialog while updating attribute callout
       mProgressDialog.show();
       updateAttributes(data.getStringExtra("typdamage"));
@@ -184,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
 
   /**
    * Applies changes to the feature, Service Feature Table, and server.
-   *
    */
   private boolean updateAttributes(final String typeDamage) {
 
@@ -195,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
     mSelectedArcGISFeature.addDoneLoadingListener(new Runnable() {
       @Override public void run() {
         if (mSelectedArcGISFeature.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-          Log.d(getResources().getString(R.string.app_name), "Error while loading feature");
+          Log.e(TAG, "Error while loading feature");
         }
 
         // update the Attributes map with the new selected value for "typdamage"
@@ -220,12 +225,12 @@ public class MainActivity extends AppCompatActivity {
                     List<FeatureEditResult> edits = serverResult.get();
                     if (edits.size() > 0) {
                       if (!edits.get(0).hasCompletedWithErrors()) {
-                        Log.e(getResources().getString(R.string.app_name), "Feature successfully updated");
+                        Log.e(TAG, "Feature successfully updated");
                         mSnackbarSuccess.show();
                         mFeatureUpdated = true;
                       }
                     } else {
-                      Log.e(getResources().getString(R.string.app_name), "The attribute type was not changed");
+                      Log.e(TAG, "The attribute type was not changed");
                       mSnackbarFailure.show();
                       mFeatureUpdated = false;
                     }
@@ -234,18 +239,15 @@ public class MainActivity extends AppCompatActivity {
                       // display the callout with the updated value
                       showCallout((String) mSelectedArcGISFeature.getAttributes().get("typdamage"));
                     }
-
                   } catch (Exception e) {
-                    Log.e(getResources().getString(R.string.app_name), "applying changes to the server failed: " + e.getMessage());
+                    Log.e(TAG, "applying changes to the server failed: " + e.getMessage());
                   }
-
                 }
               });
             }
           });
-
         } catch (Exception e) {
-          Log.e(getResources().getString(R.string.app_name), "updating feature in the feature table failed: " + e.getMessage());
+          Log.e(TAG, "updating feature in the feature table failed: " + e.getMessage());
         }
       }
     });
@@ -254,9 +256,10 @@ public class MainActivity extends AppCompatActivity {
 
   /**
    * Displays Callout
+   *
    * @param title the text to show in the Callout
    */
-  private void showCallout(String title){
+  private void showCallout(String title) {
 
     // create a text view for the callout
     RelativeLayout calloutLayout = new RelativeLayout(getApplicationContext());
@@ -265,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
     calloutContent.setId(R.id.textview);
     calloutContent.setTextColor(Color.BLACK);
     calloutContent.setTextSize(18);
-    calloutContent.setPadding(0,10,10,0);
+    calloutContent.setPadding(0, 10, 10, 0);
 
     calloutContent.setText(title);
 
@@ -275,16 +278,35 @@ public class MainActivity extends AppCompatActivity {
 
     // create image view for the callout
     ImageView imageView = new ImageView(getApplicationContext());
-    imageView.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_info_outline_black_18dp));
+    imageView
+        .setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_info_outline_black_18dp));
     imageView.setLayoutParams(relativeParams);
     imageView.setOnClickListener(new ImageViewOnclickListener());
 
     calloutLayout.addView(calloutContent);
     calloutLayout.addView(imageView);
 
-    mCallout.setGeoElement(mSelectedArcGISFeature ,null);
+    mCallout.setGeoElement(mSelectedArcGISFeature, null);
     mCallout.setContent(calloutLayout);
     mCallout.show();
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
   }
 
   /**
@@ -293,10 +315,8 @@ public class MainActivity extends AppCompatActivity {
   private class ImageViewOnclickListener implements View.OnClickListener {
 
     @Override public void onClick(View v) {
-      Log.e("imageview", "tap");
       Intent myIntent = new Intent(MainActivity.this, DamageTypesListActivity.class);
       MainActivity.this.startActivityForResult(myIntent, 100);
     }
   }
-
 }
