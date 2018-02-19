@@ -86,4 +86,3 @@ public class MainActivity extends AppCompatActivity {
     mMapView.dispose();
   }
 }
-}
