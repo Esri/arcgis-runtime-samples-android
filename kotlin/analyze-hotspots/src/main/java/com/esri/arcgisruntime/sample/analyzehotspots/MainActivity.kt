@@ -231,4 +231,9 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         mapView.resume()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.dispose()
+    }
 }
