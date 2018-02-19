@@ -21,7 +21,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.SpatialReference;
-import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
@@ -29,43 +28,46 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MapView mMapView;
+  private MapView mMapView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        // inflate MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapView);
-        // create new Tiled Layer from service url
-        ArcGISTiledLayer mTopoBasemap = new ArcGISTiledLayer(getResources().getString(R.string.world_topo_service));
-        // set tiled layer as basemap
-        Basemap mBasemap = new Basemap(mTopoBasemap);
-        // create a map with the basemap
-        ArcGISMap mMap = new ArcGISMap(mBasemap);
+    // inflate MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
+    // create a map with the basemap
+    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
 
-        // create an initial extent envelope
-        Envelope mInitExtent = new Envelope(-12211308.778729, 4645116.003309, -12208257.879667, 4650542.535773, SpatialReference.create(102100));
-        // create a viewpoint from envelope
-        Viewpoint vp = new Viewpoint(mInitExtent);
-        // set initial map extent
-        mMap.setInitialViewpoint(vp);
+    // create an initial extent envelope
+    Envelope mInitExtent = new Envelope(-12211308.778729, 4645116.003309, -12208257.879667, 4650542.535773,
+        SpatialReference.create(102100));
+    // create a viewpoint from envelope
+    Viewpoint vp = new Viewpoint(mInitExtent);
+    // set initial map extent
+    map.setInitialViewpoint(vp);
 
-        // set the map to be displayed in this view
-        mMapView.setMap(mMap);
+    // set the map to be displayed in this view
+    mMapView.setMap(map);
 
-    }
+  }
 
-    @Override
-    protected void onPause(){
-        super.onPause();
-        mMapView.pause();
-    }
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        mMapView.resume();
-    }
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }

@@ -16,6 +16,8 @@
 
 package com.esri.arcgisruntime.sample.rasterlayerfile;
 
+import java.io.File;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -32,106 +34,111 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.raster.Raster;
 
-import java.io.File;
-
 /**
  * A sample class which demonstrates loading a Raster from the local device.
  */
 public class MainActivity extends AppCompatActivity {
 
-    private MapView mMapView;
+  private MapView mMapView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        // retrieve the MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapView);
+    // retrieve the MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
 
-        // define permission to request
-        String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-        int requestCode = 2;
-        // For API level 23+ request permission at runtime
-        if(ContextCompat.checkSelfPermission(MainActivity.this,
-                reqPermission[0]) == PackageManager.PERMISSION_GRANTED){
-            loadRaster();
-        } else {
-            // request permission
-            ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
-        }
+    // define permission to request
+    String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+    int requestCode = 2;
+    // For API level 23+ request permission at runtime
+    if (ContextCompat.checkSelfPermission(MainActivity.this,
+        reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+      loadRaster();
+    } else {
+      // request permission
+      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
     }
+  }
 
-    /**
-     * Using values stored in strings.xml, builds path to Shasta.tif.
-     * @return the path to raster file
-     */
-    private String buildRasterPath() {
-        // get sdcard resource name
-        File extStorDir = Environment.getExternalStorageDirectory();
-        // get the directory
-        String extSDCardDirName =
-                this.getResources().getString(R.string.config_data_sdcard_offline_dir);
-        // get raster filename
-        String filename = this.getString(R.string.config_raster_name);
-        // create the full path to the raster file
-        return extStorDir.getAbsolutePath()
-                + File.separator
-                + extSDCardDirName
-                + File.separator
-                + filename
-                + ".tif";
-    }
+  /**
+   * Using values stored in strings.xml, builds path to Shasta.tif.
+   *
+   * @return the path to raster file
+   */
+  private String buildRasterPath() {
+    // get sdcard resource name
+    File extStorDir = Environment.getExternalStorageDirectory();
+    // get the directory
+    String extSDCardDirName =
+        this.getResources().getString(R.string.config_data_sdcard_offline_dir);
+    // get raster filename
+    String filename = this.getString(R.string.config_raster_name);
+    // create the full path to the raster file
+    return extStorDir.getAbsolutePath()
+        + File.separator
+        + extSDCardDirName
+        + File.separator
+        + filename
+        + ".tif";
+  }
 
-    /**
-     * Loads Shasta.tif as a Raster and adds it to a new RasterLayer. The RasterLayer is then added
-     * to the map as an operational layer. Map viewpoint is then set based on the Raster's geometry.
-     */
-    private void loadRaster() {
-        // create a raster from a local raster file
-        Raster raster = new Raster(buildRasterPath());
-        // create a raster layer
-        final RasterLayer rasterLayer = new RasterLayer(raster);
-        // create a Map with imagery basemap
-        ArcGISMap map = new ArcGISMap(Basemap.createImagery());
-        // add the map to a map view
-        mMapView.setMap(map);
-        // add the raster as an operational layer
-        map.getOperationalLayers().add(rasterLayer);
-        // set viewpoint on the raster
-        rasterLayer.addDoneLoadingListener(new Runnable() {
-            @Override
-            public void run() {
-                mMapView.setViewpointGeometryAsync(rasterLayer.getFullExtent(), 50);
-            }
-        });
-    }
+  /**
+   * Loads Shasta.tif as a Raster and adds it to a new RasterLayer. The RasterLayer is then added
+   * to the map as an operational layer. Map viewpoint is then set based on the Raster's geometry.
+   */
+  private void loadRaster() {
+    // create a raster from a local raster file
+    Raster raster = new Raster(buildRasterPath());
+    // create a raster layer
+    final RasterLayer rasterLayer = new RasterLayer(raster);
+    // create a Map with imagery basemap
+    ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+    // add the map to a map view
+    mMapView.setMap(map);
+    // add the raster as an operational layer
+    map.getOperationalLayers().add(rasterLayer);
+    // set viewpoint on the raster
+    rasterLayer.addDoneLoadingListener(new Runnable() {
+      @Override
+      public void run() {
+        mMapView.setViewpointGeometryAsync(rasterLayer.getFullExtent(), 50);
+      }
+    });
+  }
 
-    /**
-     * Handle the permissions request response.
-     */
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults){
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            loadRaster();
-        } else {
-            // report to user that permission was denied
-            Toast.makeText(MainActivity.this,
-                    getResources().getString(R.string.location_permission_denied),
-                    Toast.LENGTH_SHORT).show();
-        }
+  /**
+   * Handle the permissions request response.
+   */
+  public void onRequestPermissionsResult(int requestCode,
+      @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
+    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      loadRaster();
+    } else {
+      // report to user that permission was denied
+      Toast.makeText(MainActivity.this,
+          getResources().getString(R.string.location_permission_denied),
+          Toast.LENGTH_SHORT).show();
     }
+  }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mMapView.pause();
-    }
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mMapView.resume();
-    }
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }

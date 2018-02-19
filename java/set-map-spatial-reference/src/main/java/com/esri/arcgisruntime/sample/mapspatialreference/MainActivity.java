@@ -27,38 +27,44 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MapView mMapView;
+  private MapView mMapView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        // inflate MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapView);
-        // create a map with World_Bonne projection
-        ArcGISMap mMap = new ArcGISMap(SpatialReference.create(54024));
-        //Adding a map image layer which can reproject itself to the map's spatial reference
-        ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer(getResources().getString(R.string.world_cities_service));
-        // set the map image layer as basemap
-        Basemap basemap = new Basemap(mapImageLayer);
-        // add the basemap to the map
-        mMap.setBasemap(basemap);
-        // set the map to be displayed in this view
-        mMapView.setMap(mMap);
+    // inflate MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
+    // create a map with World_Bonne projection
+    ArcGISMap mMap = new ArcGISMap(SpatialReference.create(54024));
+    //Adding a map image layer which can reproject itself to the map's spatial reference
+    ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer(
+        getResources().getString(R.string.world_cities_service));
+    // set the map image layer as basemap
+    Basemap basemap = new Basemap(mapImageLayer);
+    // add the basemap to the map
+    mMap.setBasemap(basemap);
+    // set the map to be displayed in this view
+    mMapView.setMap(mMap);
 
-    }
+  }
 
-    @Override
-    protected void onPause(){
-        super.onPause();
-        mMapView.pause();
-    }
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        mMapView.resume();
-    }
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
 
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }

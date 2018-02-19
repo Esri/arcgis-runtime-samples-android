@@ -273,4 +273,9 @@ public class MainActivity extends AppCompatActivity {
     mMapView.resume();
   }
 
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }

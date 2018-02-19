@@ -33,72 +33,76 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MapView mMapView;
-    private static LayerList mOperationalLayers;
+  private static LayerList mOperationalLayers;
+  private MapView mMapView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  /**
+   * returns the LayerList associated with the Map
+   *
+   * @return LayerList containing all the operational layers in the Map
+   */
+  public static LayerList getOperationalLayerList() {
+    return mOperationalLayers;
+  }
 
-        ArcGISMapImageLayer imageLayerElevation, imagelayerCensus;
-        Button selectLayers;
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        // inflate MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapView);
+    ArcGISMapImageLayer imageLayerElevation, imagelayerCensus;
+    Button selectLayers;
 
-        // inflate operational layer selection button from the layout
-        selectLayers = (Button) findViewById(R.id.operationallayer);
+    // inflate MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
 
-        // create a map with the BasemapType topographic
-        ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 14);
+    // inflate operational layer selection button from the layout
+    selectLayers = (Button) findViewById(R.id.operationallayer);
 
-        imageLayerElevation = new ArcGISMapImageLayer(getResources().getString(R.string.imagelayer_elevation_url));
-        imagelayerCensus = new ArcGISMapImageLayer(getResources().getString(R.string.imagelayer_census_url));
+    // create a map with the BasemapType topographic
+    ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 14);
 
-        // get the LayerList from the Map
-        mOperationalLayers = mMap.getOperationalLayers();
-        // add operational layers to the Map
-        mOperationalLayers.add(imageLayerElevation);
-        mOperationalLayers.add(imagelayerCensus);
+    imageLayerElevation = new ArcGISMapImageLayer(getResources().getString(R.string.imagelayer_elevation_url));
+    imagelayerCensus = new ArcGISMapImageLayer(getResources().getString(R.string.imagelayer_census_url));
 
-        // set the initial viewpoint on the map
-        mMap.setInitialViewpoint(new Viewpoint(new Point(-133e5, 45e5, SpatialReference.create(3857)), 2e7));
+    // get the LayerList from the Map
+    mOperationalLayers = mMap.getOperationalLayers();
+    // add operational layers to the Map
+    mOperationalLayers.add(imageLayerElevation);
+    mOperationalLayers.add(imagelayerCensus);
 
-        // set the map to be displayed in this view
-        mMapView.setMap(mMap);
+    // set the initial viewpoint on the map
+    mMap.setInitialViewpoint(new Viewpoint(new Point(-133e5, 45e5, SpatialReference.create(3857)), 2e7));
 
+    // set the map to be displayed in this view
+    mMapView.setMap(mMap);
 
-        selectLayers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, OperationalLayers.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(intent);
+    selectLayers.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent(MainActivity.this, OperationalLayers.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(intent);
 
-            }
-        });
-    }
+      }
+    });
+  }
 
-    /**
-     * returns the LayerList associated with the Map
-     *
-     * @return LayerList containing all the operational layers in the Map
-     */
-    public static LayerList getOperationalLayerList() {
-        return mOperationalLayers;
-    }
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mMapView.pause();
-    }
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mMapView.resume();
-    }
-
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }

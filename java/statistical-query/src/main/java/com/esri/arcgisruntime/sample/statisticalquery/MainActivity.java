@@ -139,8 +139,8 @@ public class MainActivity extends AppCompatActivity {
         while (statisticRecordIterator.hasNext()) {
           Map<String, Object> statisticsMap = statisticRecordIterator.next().getStatistics();
           for (Map.Entry<String, Object> stat : statisticsMap.entrySet()) {
-            result.append(stat.getKey()).append(": ").append(String.format(Locale.US, "%,.0f", (Double) stat.getValue()))
-                .append("\n");
+            result.append(stat.getKey()).append(": ")
+                .append(String.format(Locale.US, "%,.0f", (Double) stat.getValue())).append("\n");
           }
         }
 
@@ -152,10 +152,29 @@ public class MainActivity extends AppCompatActivity {
         reportSnackbar.show();
 
       } catch (InterruptedException | ExecutionException e) {
-        Toast.makeText(MainActivity.this, "Error getting Statistical Query Results: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this, "Error getting Statistical Query Results: " + e.getMessage(),
+            Toast.LENGTH_LONG).show();
         Log.e(TAG, "Error getting Statistical Query Results: " + e.getMessage());
         e.printStackTrace();
       }
     });
+  }
+
+  @Override
+  protected void onPause() {
+    mMapView.pause();
+    super.onPause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
   }
 }

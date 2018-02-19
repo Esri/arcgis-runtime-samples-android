@@ -349,4 +349,10 @@ public class MainActivity extends AppCompatActivity {
     super.onResume();
     mSceneView.resume();
   }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mSceneView.dispose();
+  }
 }
