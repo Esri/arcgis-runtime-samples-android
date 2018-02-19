@@ -16,7 +16,6 @@
 
 package com.esri.arcgisruntime.sample.openexistingmap;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
@@ -164,13 +163,7 @@ public class MainActivity extends AppCompatActivity {
     super.onPostCreate(savedInstanceState);
     mDrawerToggle.syncState();
   }
-
-  @Override
-  public void onConfigurationChanged(Configuration newConfig) {
-    super.onConfigurationChanged(newConfig);
-    mDrawerToggle.onConfigurationChanged(newConfig);
-  }
-
+  
   public boolean onOptionsItemSelected(MenuItem item) {
     // activate the navigation drawer toggle
     return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
