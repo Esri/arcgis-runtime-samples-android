@@ -15,12 +15,12 @@ To apply a `ColormapRenderer` to a `RasterLayer`:
 
 
 ## Features
-- ArcGISMap
-- Basemap
-- ColormapRenderer
-- MapView
-- Raster
-- RasterLayer
+* ArcGISMap
+* Basemap
+* ColormapRenderer
+* MapView
+* Raster
+* RasterLayer
 
 
 

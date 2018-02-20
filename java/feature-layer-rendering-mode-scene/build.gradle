@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.esri.arcgisruntime.sample.featurelayerrenderingmodescene"
-        minSdkVersion 22
+        minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
@@ -21,5 +21,5 @@ android {
 
 dependencies {
     // arcgis-android & appcompat lib dependencies from rootProject build.gradle
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
 }

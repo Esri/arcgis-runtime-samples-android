@@ -1,19 +1,21 @@
 # Offline geocode
+
 This sample demonstrates how you can geocode addresses to locations and reverse geocode locations to addresses when the device does not have network connectivity
 
-![Offline Geocode](offline-geocode.png)
+![Offline Geocode App](offline-geocode.png)
 
 ## Features
-- LocatorTask
-- GeocodeResult
-- GeocodeParameters
-- ReverseGeocodeParameters
+
+* GeocodeResult
+* GeocodeParameters
+* LocatorTask
+* ReverseGeocodeParameters
 
 ## How to use the sample
 Type the address in the Search menu option or select from the list to `Geocode` the address and view the result on the map. Long-press on the location you want to Reverse Geocode. Selecting the output pin enables real-time reverse geocoding. Select the pin to highlight the `PictureMarkerSymbol` and tap-hold and drag on the map to get real-time geocoding.
 
 ## Developer Pattern
-Use the path of SanFrancisco.loc to create an object of `LocatorTask`. Set up `GeocodeParameters` and run asynchronous method geoCodeAsync to get GeocodeResults. Methods ```getDisplayLocation()``` and `getLabel()` on geocode results is then used to fetch location and address.
+Use the path of SanFrancisco.loc to create an object of `LocatorTask`. Set up `GeocodeParameters` and run asynchronous method geoCodeAsync to get GeocodeResults. Methods `getDisplayLocation()` and `getLabel()` on geocode results is then used to fetch location and address.
 
 ```java
 // Execute async task to find the address

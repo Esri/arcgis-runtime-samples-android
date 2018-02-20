@@ -2,22 +2,20 @@
 
 Demonstrates how to create and use a raster layer made from a local raster file.
 
-![](raster-layer-file.png)
+![Raster Layer File App](raster-layer-file.png)
 
 ## How it works
 
 To add a `RasterLayer` as an operational layer from a local raster file:
 
-- Create a `Raster` from a raster file.
-- Create a <code>RasterLayer</code> from the `Raster`.
-- Add it as an operational layer with `map.getOperationalLayers().add(rasterLayer)`.
-
+1. Create a `Raster` from a raster file.
+1. Create a `RasterLayer` from the `Raster`.
+1. Add it as an operational layer with `map.getOperationalLayers().add(rasterLayer)`.
 
 ## Features
-- Raster
-- RasterLayer
 
-
+* Raster
+* RasterLayer
 
 ## Provision your device
 1. Download the **raster-file.zip** data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=7c4c679ab06a4df19dc497f577f111bd).  
