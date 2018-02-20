@@ -1,14 +1,14 @@
 # Overview
-ArcGIS Runtime SDK for Android v100.2.0 samples.  The `master` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [git tags](https://github.com/Esri/arcgis-runtime-samples-android/tags).  Please read our [wiki](https://github.com/Esri/arcgis-runtime-samples-android/wiki) for help with working with this repository.  
+ArcGIS Runtime SDK for Android v100.2.1 samples.  The `master` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [git tags](https://github.com/Esri/arcgis-runtime-samples-android/tags).  Please read our [wiki](https://github.com/Esri/arcgis-runtime-samples-android/wiki) for help with working with this repository.  
 
 # Prerequisites
-* The samples are building with `compileSdkVersion 26` which requires [JDK 7 or higher](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* The samples are building with `compileSdkVersion 27`
 * [Android Studio](http://developer.android.com/sdk/index.html)
 
 ## SDK Maven repo
 The SDK is available through the Bintray Maven repo, you can take a look at the repository with the link below: 
 
-[ ![Download](https://api.bintray.com/packages/esri/arcgis/arcgis-android/images/download.svg?version=100.2.0) ](https://bintray.com/esri/arcgis/arcgis-android/100.2.0/link)
+[ ![Download](https://api.bintray.com/packages/esri/arcgis/arcgis-android/images/download.svg?version=100.2.1) ](https://bintray.com/esri/arcgis/arcgis-android/100.2.1/link)
 
 ## Developer Instructions
 Please read our [developer instructions wiki page](https://github.com/Esri/arcgis-runtime-samples-android/wiki/dev-instructions) to set up your developer environment with Android Studio.  Instructions include forking and cloning the repository for those new to Git.
@@ -54,7 +54,7 @@ Anyone and everyone is welcome to [contribute](.github/CONTRIBUTING.md). We do a
 Please see our [guidelines for contributing doc](https://github.com/Esri/contributing/blob/master/README.md)
 
 ## Licensing
-Copyright 2017 Esri
+Copyright 2018 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
