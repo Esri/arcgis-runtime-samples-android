@@ -16,16 +16,16 @@
 
 package com.esri.arcgisruntime.sample.displaymap
 
+import android.support.v7.app.AppCompatActivity
+import android.os.Bundle
+
 //[DocRef: Name=Import map types-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
+import com.esri.arcgisruntime.mapping.ArcGISMap
+import com.esri.arcgisruntime.mapping.Basemap
 //[DocRef: END]
 
 //[DocRef: Name=Import kotlinx-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
-import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
 import kotlinx.android.synthetic.main.activity_main.*
-
 //[DocRef: END]
 
 class MainActivity : AppCompatActivity() {
