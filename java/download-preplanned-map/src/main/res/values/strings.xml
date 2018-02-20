@@ -4,4 +4,5 @@
     <string name="portal_url">https://arcgisruntime.maps.arcgis.com</string>
     <string name="portal_item_ID">acc027394bc84c2fb04d1ed317aac674</string>
     <string name="write_permission_denied">Write permission required to allow downloading of preplanned map areas.</string>
+    <string name="delete_all_offline_areas">Delete all offline areas</string>
 </resources>
