@@ -129,4 +129,10 @@ public class MainActivity extends AppCompatActivity {
     super.onResume();
     mMapView.resume();
   }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }

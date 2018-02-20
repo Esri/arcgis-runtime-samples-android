@@ -264,4 +264,10 @@ public class MainActivity extends AppCompatActivity {
     mSceneView.resume();
   }
 
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    // dispose SceneView
+    mSceneView.dispose();
+  }
 }

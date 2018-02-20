@@ -30,31 +30,36 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-    //[DocRef: Name=Create map-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
-    // create a map with the BasemapType topographic
-    val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16)
+        //[DocRef: Name=Create map-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
+        // create a map with the BasemapType topographic
+        val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16)
+        //[DocRef: END]
+
+        //[DocRef: Name=Set map-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
+        // set the map to be displayed in the layout's MapView
+        mapView.map = map
+        //[DocRef: END]
+
+    }
+
+    //[DocRef: Name=Pause and resume-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
+    override fun onPause() {
+        super.onPause()
+        mapView.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.dispose()
+    }
     //[DocRef: END]
-
-    //[DocRef: Name=Set map-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
-    // set the map to be displayed in the layout's MapView
-    mapView.map = map
-    //[DocRef: END]
-
-  }
-
-  //[DocRef: Name=Pause and resume-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
-  override fun onPause() {
-    super.onPause()
-    mapView.pause()
-  }
-
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
-  //[DocRef: END]
 }

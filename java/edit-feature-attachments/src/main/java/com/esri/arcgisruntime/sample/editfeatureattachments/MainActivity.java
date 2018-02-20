@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
   private FeatureLayer mFeatureLayer;
   private ArcGISFeature mSelectedArcGISFeature;
   private android.graphics.Point mClickPoint;
+  private MapView mMapView;
   private List<Attachment> attachments;
   private String mSelectedArcGISFeatureAttributeValue;
   private String mAttributeID;
@@ -64,18 +65,18 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     // inflate MapView from layout
-    MapView mapView = (MapView) findViewById(R.id.mapView);
+    mMapView = (MapView) findViewById(R.id.mapView);
     // create a map with the streets basemap
     ArcGISMap map = new ArcGISMap(Basemap.Type.STREETS, 44.354388, -119.998245, 5);
     // set the map to be displayed in the mapview
-    mapView.setMap(map);
+    mMapView.setMap(map);
 
     progressDialog = new ProgressDialog(this);
     progressDialog.setTitle(getApplication().getString(R.string.fetching_no_attachments));
     progressDialog.setMessage(getApplication().getString(R.string.wait));
     createCallout();
     // get callout, set content and show
-    mCallout = mapView.getCallout();
+    mCallout = mMapView.getCallout();
     // create feature layer with its service feature table
     // create the service feature table
     ServiceFeatureTable mServiceFeatureTable = new ServiceFeatureTable(
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     // add the layer to the map
     map.getOperationalLayers().add(mFeatureLayer);
 
-    mapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mapView) {
+    mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override
       public boolean onSingleTapConfirmed(MotionEvent e) {
 
@@ -253,6 +254,24 @@ public class MainActivity extends AppCompatActivity {
       startActivityForResult(myIntent, REQUEST_CODE, bundle);
 
     }
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
   }
 
 }

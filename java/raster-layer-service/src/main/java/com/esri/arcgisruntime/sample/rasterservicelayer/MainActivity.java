@@ -29,47 +29,53 @@ import com.esri.arcgisruntime.raster.ImageServiceRaster;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MapView mMapView;
+  private MapView mMapView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        // create MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapView);
-        // create a Dark Gray Canvas Vector basemap
-        ArcGISMap map = new ArcGISMap(Basemap.createDarkGrayCanvasVector());
-        // add the map to a map view
-        mMapView.setMap(map);
-        // create image service raster as raster layer
-        final ImageServiceRaster imageServiceRaster = new ImageServiceRaster(
-                getResources().getString(R.string.image_service_url));
-        final RasterLayer rasterLayer = new RasterLayer(imageServiceRaster);
-        // add raster layer as map operational layer
-        map.getOperationalLayers().add(rasterLayer);
-        // zoom to the extent of the raster service
-        rasterLayer.addDoneLoadingListener(new Runnable() {
-            @Override
-            public void run() {
-                if(rasterLayer.getLoadStatus() == LoadStatus.LOADED){
-                    // get the center point
-                    Point centerPnt = imageServiceRaster.getServiceInfo().getFullExtent().getCenter();
-                    mMapView.setViewpointCenterAsync(centerPnt, 55000000);
-                }
-            }
-        });
-    }
+    // create MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
+    // create a Dark Gray Canvas Vector basemap
+    ArcGISMap map = new ArcGISMap(Basemap.createDarkGrayCanvasVector());
+    // add the map to a map view
+    mMapView.setMap(map);
+    // create image service raster as raster layer
+    final ImageServiceRaster imageServiceRaster = new ImageServiceRaster(
+        getResources().getString(R.string.image_service_url));
+    final RasterLayer rasterLayer = new RasterLayer(imageServiceRaster);
+    // add raster layer as map operational layer
+    map.getOperationalLayers().add(rasterLayer);
+    // zoom to the extent of the raster service
+    rasterLayer.addDoneLoadingListener(new Runnable() {
+      @Override
+      public void run() {
+        if (rasterLayer.getLoadStatus() == LoadStatus.LOADED) {
+          // get the center point
+          Point centerPnt = imageServiceRaster.getServiceInfo().getFullExtent().getCenter();
+          mMapView.setViewpointCenterAsync(centerPnt, 55000000);
+        }
+      }
+    });
+  }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mMapView.pause();
-    }
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mMapView.resume();
-    }
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }

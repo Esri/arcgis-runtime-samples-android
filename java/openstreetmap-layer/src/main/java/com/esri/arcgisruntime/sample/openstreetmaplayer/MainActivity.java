@@ -25,31 +25,38 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MapView mMapView;
+  private MapView mMapView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        // access MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapView);
-        // instantiate an ArcGISMap with OpenStreetMap Basemap
-        ArcGISMap map = new ArcGISMap(Basemap.Type.OPEN_STREET_MAP, 34.056295, -117.195800, 10);
-        mMapView.setMap(map);
-    }
+    // access MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
+    // instantiate an ArcGISMap with OpenStreetMap Basemap
+    ArcGISMap map = new ArcGISMap(Basemap.Type.OPEN_STREET_MAP, 34.056295, -117.195800, 10);
+    mMapView.setMap(map);
+  }
 
-    @Override
-    protected void onPause(){
-        super.onPause();
-        // pause MapView
-        mMapView.pause();
-    }
+  @Override
+  protected void onPause() {
+    super.onPause();
+    // pause MapView
+    mMapView.pause();
+  }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // resume MapView
-        mMapView.resume();
-    }
+  @Override
+  protected void onResume() {
+    super.onResume();
+    // resume MapView
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    // dispose MapView
+    mMapView.dispose();
+  }
 }

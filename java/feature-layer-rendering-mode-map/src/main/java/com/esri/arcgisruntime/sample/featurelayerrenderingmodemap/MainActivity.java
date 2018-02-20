@@ -174,4 +174,11 @@ public class MainActivity extends AppCompatActivity {
     mMapViewTop.resume();
     mMapViewBottom.resume();
   }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapViewTop.dispose();
+    mMapViewBottom.dispose();
+  }
 }

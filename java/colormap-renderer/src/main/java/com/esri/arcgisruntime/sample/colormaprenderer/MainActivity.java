@@ -16,6 +16,10 @@
 
 package com.esri.arcgisruntime.sample.colormaprenderer;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -25,22 +29,23 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
+
 import com.esri.arcgisruntime.layers.RasterLayer;
+import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.raster.ColormapRenderer;
 import com.esri.arcgisruntime.raster.Raster;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * A sample class which demonstrates the ColorMapRenderer.
  */
 public class MainActivity extends AppCompatActivity {
+
+  private final static String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
 
@@ -118,7 +123,13 @@ public class MainActivity extends AppCompatActivity {
     rasterLayer.addDoneLoadingListener(new Runnable() {
       @Override
       public void run() {
-        mMapView.setViewpointGeometryAsync(rasterLayer.getFullExtent(), 50);
+        if (rasterLayer.getLoadStatus() == LoadStatus.LOADED) {
+          mMapView.setViewpointGeometryAsync(rasterLayer.getFullExtent(), 50);
+        } else {
+          String error = "RasterLayer failed to load: " + rasterLayer.getLoadError().getMessage();
+          Log.e(TAG, error);
+          Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+        }
       }
     });
   }
@@ -149,5 +160,11 @@ public class MainActivity extends AppCompatActivity {
   protected void onResume() {
     super.onResume();
     mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
   }
 }
