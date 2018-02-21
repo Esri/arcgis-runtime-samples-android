@@ -16,7 +16,6 @@
 
 package com.esri.arcgisruntime.sample.openexistingmap;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
@@ -35,140 +34,139 @@ import com.esri.arcgisruntime.portal.PortalItem;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MapView mMapView;
-    private ArcGISMap mMap;
-    private Portal mPortal;
-    private PortalItem mPortalItem;
+  private MapView mMapView;
+  private ArcGISMap mMap;
+  private Portal mPortal;
+  private PortalItem mPortalItem;
 
-    private ListView mDrawerList;
+  private ListView mDrawerList;
 
-    private ActionBarDrawerToggle mDrawerToggle;
-    private DrawerLayout mDrawerLayout;
-    private String mActivityTitle;
+  private ActionBarDrawerToggle mDrawerToggle;
+  private DrawerLayout mDrawerLayout;
+  private String mActivityTitle;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        mDrawerList = (ListView)findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        mActivityTitle = getTitle().toString();
+    mDrawerList = (ListView) findViewById(R.id.navList);
+    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    mActivityTitle = getTitle().toString();
 
-        // inflate MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapView);
+    // inflate MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
 
-        // get the portal url for ArcGIS Online
-        mPortal = new Portal(getResources().getString(R.string.portal_url));
-        // get the pre-defined portal id and portal url
-        mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_houses_with_mortgages_id));
-        // create a map from a PortalItem
-        mMap = new ArcGISMap(mPortalItem);
-        // set the map to be displayed in this view
-        mMapView.setMap(mMap);
+    // get the portal url for ArcGIS Online
+    mPortal = new Portal(getResources().getString(R.string.portal_url));
+    // get the pre-defined portal id and portal url
+    mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_houses_with_mortgages_id));
+    // create a map from a PortalItem
+    mMap = new ArcGISMap(mPortalItem);
+    // set the map to be displayed in this view
+    mMapView.setMap(mMap);
 
-        // add the webmap titles to the drawer
-        addDrawerItems();
-        setupDrawer();
+    // add the webmap titles to the drawer
+    addDrawerItems();
+    setupDrawer();
 
-        // set icons on action bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-    }
+    // set icons on action bar
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setHomeButtonEnabled(true);
+  }
 
-    private void addDrawerItems(){
-        String[] webmapTitles = {getResources().getString(R.string.webmap_houses_with_mortgages_title),
-                            getResources().getString(R.string.webmap_usa_tapestry_segmentation_title),
-                            getResources().getString(R.string.webmap_geology_us_title)};
-        ArrayAdapter<String> mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, webmapTitles);
-        mDrawerList.setAdapter(mAdapter);
+  private void addDrawerItems() {
+    String[] webmapTitles = { getResources().getString(R.string.webmap_houses_with_mortgages_title),
+        getResources().getString(R.string.webmap_usa_tapestry_segmentation_title),
+        getResources().getString(R.string.webmap_geology_us_title) };
+    ArrayAdapter<String> mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, webmapTitles);
+    mDrawerList.setAdapter(mAdapter);
 
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(@NonNull AdapterView<?> adapterView, @NonNull View view, int position, long id) {
-                if(position == 0){
-                    mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_houses_with_mortgages_id));
-                    // create a map from a PortalItem
-                    mMap = new ArcGISMap(mPortalItem);
-                    // set the map to be displayed in this view
-                    mMapView.setMap(mMap);
-                    // close the drawer
-                    mDrawerLayout.closeDrawer(adapterView);
-                }else if(position == 1){
-                    mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_usa_tapestry_segmentation_id));
-                    // create a map from a PortalItem
-                    mMap = new ArcGISMap(mPortalItem);
-                    // set the map to be displayed in this view
-                    mMapView.setMap(mMap);
-                    // close the drawer
-                    mDrawerLayout.closeDrawer(adapterView);
-                }else if(position == 2){
-                    mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_geology_us));
-                    // create a map from a PortalItem
-                    mMap = new ArcGISMap(mPortalItem);
-                    // set the map to be displayed in this view
-                    mMapView.setMap(mMap);
-                    // close the drawer
-                    mDrawerLayout.closeDrawer(adapterView);
-                }
-            }
-        });
-    }
+    mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(@NonNull AdapterView<?> adapterView, @NonNull View view, int position, long id) {
+        if (position == 0) {
+          mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_houses_with_mortgages_id));
+          // create a map from a PortalItem
+          mMap = new ArcGISMap(mPortalItem);
+          // set the map to be displayed in this view
+          mMapView.setMap(mMap);
+          // close the drawer
+          mDrawerLayout.closeDrawer(adapterView);
+        } else if (position == 1) {
+          mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_usa_tapestry_segmentation_id));
+          // create a map from a PortalItem
+          mMap = new ArcGISMap(mPortalItem);
+          // set the map to be displayed in this view
+          mMapView.setMap(mMap);
+          // close the drawer
+          mDrawerLayout.closeDrawer(adapterView);
+        } else if (position == 2) {
+          mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_geology_us));
+          // create a map from a PortalItem
+          mMap = new ArcGISMap(mPortalItem);
+          // set the map to be displayed in this view
+          mMapView.setMap(mMap);
+          // close the drawer
+          mDrawerLayout.closeDrawer(adapterView);
+        }
+      }
+    });
+  }
 
-    private void setupDrawer(){
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close){
+  private void setupDrawer() {
+    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
 
-            // called when drawer has settled in an open state
-            public void onDrawerOpened(View drawerView){
-                super.onDrawerOpened(drawerView);
-                // change the title to the nav bar
-                getSupportActionBar().setTitle(getResources().getString(R.string.navbar_title));
-                // invalidate options menu
-                invalidateOptionsMenu();
-            }
+      // called when drawer has settled in an open state
+      public void onDrawerOpened(View drawerView) {
+        super.onDrawerOpened(drawerView);
+        // change the title to the nav bar
+        getSupportActionBar().setTitle(getResources().getString(R.string.navbar_title));
+        // invalidate options menu
+        invalidateOptionsMenu();
+      }
 
-            // called when drawer has settled in a closed state
-            public void onDrawerClosed(View view){
-                super.onDrawerClosed(view);
-                // set title to the app
-                getSupportActionBar().setTitle(mActivityTitle);
-                // invalidate options menu
-                invalidateOptionsMenu();
-            }
-        };
-        // enable draw indicator
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        // attach toggle to drawer layout
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-    }
+      // called when drawer has settled in a closed state
+      public void onDrawerClosed(View view) {
+        super.onDrawerClosed(view);
+        // set title to the app
+        getSupportActionBar().setTitle(mActivityTitle);
+        // invalidate options menu
+        invalidateOptionsMenu();
+      }
+    };
+    // enable draw indicator
+    mDrawerToggle.setDrawerIndicatorEnabled(true);
+    // attach toggle to drawer layout
+    mDrawerLayout.setDrawerListener(mDrawerToggle);
+  }
 
-    @Override
-    protected void onPause(){
-        super.onPause();
-        mMapView.pause();
-    }
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        mMapView.resume();
-    }
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState){
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig){
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
+  @Override
+  protected void onPostCreate(Bundle savedInstanceState) {
+    super.onPostCreate(savedInstanceState);
+    mDrawerToggle.syncState();
+  }
+  
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // activate the navigation drawer toggle
+    return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // activate the navigation drawer toggle
-        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-
-    }
+  }
 }

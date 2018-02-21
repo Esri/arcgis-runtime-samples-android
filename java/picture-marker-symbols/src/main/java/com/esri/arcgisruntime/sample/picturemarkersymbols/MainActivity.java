@@ -47,15 +47,12 @@ import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 
 public class MainActivity extends AppCompatActivity {
 
-  private static final String TAG = "PictureMarkerSymbols";
-
+  private static final String TAG = MainActivity.class.getSimpleName();
+  private final static int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 101;
   MapView mMapView;
   GraphicsOverlay mGraphicsOverlay;
-
   String mArcGISTempFolderPath;
   String mPinBlankOrangeFilePath;
-
-  private final static int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 101;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
     //Create a picture marker symbol from a URL resource
     //When using a URL, you need to call load to fetch the remote resource
     final PictureMarkerSymbol campsiteSymbol = new PictureMarkerSymbol(
-        "http://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0/images/e82f744ebb069bb35b234b3fea46deae");
+        "http://sampleserver6.arcgisonline"
+            + ".com/arcgis/rest/services/Recreation/FeatureServer/0/images/e82f744ebb069bb35b234b3fea46deae");
     //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
     //its appearance would then differ across devices with different resolutions.
     campsiteSymbol.setHeight(18);
@@ -173,7 +171,8 @@ public class MainActivity extends AppCompatActivity {
       return;
     }
 
-    //Check for required permission of saving to disc, for devices < android 6 this is set in the manifest and should be granted
+    //Check for required permission of saving to disc, for devices < android 6 this is set in the manifest and should
+    // be granted
     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         != PackageManager.PERMISSION_GRANTED) {
       //no permission, need to task, onRequestPermissionsResult will handle the result
@@ -217,9 +216,9 @@ public class MainActivity extends AppCompatActivity {
 
     //create new ArcGIS temp folder
     File folder = new File(mArcGISTempFolderPath);
-    if(folder.mkdirs()){
+    if (folder.mkdirs()) {
       Log.d(TAG, "Temp folder created");
-    }else{
+    } else {
       Toast.makeText(MainActivity.this, "Could not create temp folder", Toast.LENGTH_LONG).show();
     }
 
@@ -243,21 +242,25 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onDestroy() {
     super.onDestroy();
+
+    // dispose MapView
+    mMapView.dispose();
+
     //Clean up file and folders we saved to disk
     try {
       File file = new File(mPinBlankOrangeFilePath);
 
-      if(file.delete()){
-        Log.d(TAG, "Temp folder created");
-      }else{
+      if (file.delete()) {
+        Log.i(TAG, "Temp folder created");
+      } else {
         Toast.makeText(MainActivity.this, "Could not create temp folder", Toast.LENGTH_LONG).show();
       }
 
       File tempFolder = new File(mArcGISTempFolderPath);
 
-      if(tempFolder.delete()){
-        Log.d(TAG, "Temp folder created");
-      }else{
+      if (tempFolder.delete()) {
+        Log.i(TAG, "Temp folder created");
+      } else {
         Toast.makeText(MainActivity.this, "Could not create temp folder", Toast.LENGTH_LONG).show();
       }
 

@@ -1,4 +1,4 @@
-/* Copyright 2016 Esri
+/* Copyright 2018 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,11 +50,10 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
 
     // create new Vector Tiled Layer from service url
-    mVectorTiledLayer = new ArcGISVectorTiledLayer(
-        getResources().getString(R.string.navigation_url));
+    mVectorTiledLayer = new ArcGISVectorTiledLayer(getString(R.string.mid_century_url));
 
     // set tiled layer as basemap
     Basemap basemap = new Basemap(mVectorTiledLayer);
@@ -69,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate navigation drawer
     mNavigationDrawerItemTitles = getResources().getStringArray(R.array.vector_tiled_types);
-    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-    mDrawerList = (ListView) findViewById(R.id.left_drawer);
+    mDrawerLayout = findViewById(R.id.drawer_layout);
+    mDrawerList = findViewById(R.id.left_drawer);
 
     // Set the adapter for the list view
     mDrawerList.setAdapter(new ArrayAdapter<>(this,
@@ -83,8 +82,10 @@ public class MainActivity extends AppCompatActivity {
 
     setupDrawer();
 
-    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    getSupportActionBar().setHomeButtonEnabled(true);
+    if (getSupportActionBar() != null) {
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setHomeButtonEnabled(true);
+    }
     setTitle(getString(R.string.vector_tiled_layer, mNavigationDrawerItemTitles[0]));
   }
 
@@ -98,6 +99,12 @@ public class MainActivity extends AppCompatActivity {
   protected void onResume() {
     super.onResume();
     mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
   }
 
   /**
@@ -122,16 +129,19 @@ public class MainActivity extends AppCompatActivity {
 
     switch (position) {
       case 0:
-        vectorTiledLayerUrl = getResources().getString(R.string.navigation_url);
+        vectorTiledLayerUrl = getString(R.string.mid_century_url);
         break;
       case 1:
-        vectorTiledLayerUrl = getResources().getString(R.string.night_url);
+        vectorTiledLayerUrl = getString(R.string.colored_pencil_url);
         break;
       case 2:
-        vectorTiledLayerUrl = getResources().getString(R.string.light_gray_url);
+        vectorTiledLayerUrl = getString(R.string.newspaper_url);
         break;
       case 3:
-        vectorTiledLayerUrl = getResources().getString(R.string.dark_gray_url);
+        vectorTiledLayerUrl = getString(R.string.nova_url);
+        break;
+      case 4:
+        vectorTiledLayerUrl = getString(R.string.world_street_night_url);
         break;
     }
     // create the new vector tiled layer using the url
@@ -189,5 +199,5 @@ public class MainActivity extends AppCompatActivity {
     // Activate the navigation drawer toggle
     return (mDrawerToggle.onOptionsItemSelected(item)) || super.onOptionsItemSelected(item);
   }
-
+  
 }
