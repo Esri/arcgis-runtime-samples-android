@@ -338,4 +338,11 @@ public class MainActivity extends AppCompatActivity {
     // resume MapView
     mMapView.resume();
   }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    // dispose MapView
+    mMapView.dispose();
+  }
 }

@@ -75,6 +75,12 @@ public class MainActivity extends AppCompatActivity {
         mMapView.resume();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMapView.dispose();
+    }
+
     private void addGraphicsOverlay() {
         // create the polygon
         PolygonBuilder polygonGeometry = new PolygonBuilder(SpatialReferences.getWebMercator());

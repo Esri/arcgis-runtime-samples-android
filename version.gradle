@@ -1,17 +1,21 @@
 ext {
     // sdk versions
     compileSdkVersion = 26
-    buildToolsVersion = '26.0.2'
+    buildToolsVersion = '27.0.3'
     minSdkVersion = 16
     targetSdkVersion = 26
     versionCode = 100
-    versionName = '100.2.0'
+    versionName = '100.2.1'
     // library versions
-    kotlinVersion = '1.2.10'
-    ankoVersion = '0.10.3'
+    kotlinVersion = '1.2.21'
+    ankoVersion = '0.10.4'
     andSupportLibVersion = '27.0.2'
     constraintLayoutVersion = '1.0.2'
+<<<<<<< HEAD
     arcgisVersion = '100.3.0-1959'
+=======
+    arcgisVersion = '100.2.1'
+>>>>>>> 5206541ee838610bd0de2b01feb75330d09ab708
     // plugin versions
     gradleVersion = '3.0.1'
     // java versions

@@ -128,8 +128,9 @@ public class MainActivity extends AppCompatActivity {
     try {
       mPinSourceSymbol = PictureMarkerSymbol.createAsync(pinDrawable).get();
     } catch (InterruptedException | ExecutionException e) {
-      Log.e(TAG, "Picture Marker Symbol error: " + e.getMessage());
-      Toast.makeText(getApplicationContext(), "Failed to load pin drawable.", Toast.LENGTH_LONG).show();
+      String error = "Error creating PictureMarkerSymbol: " + e.getMessage();
+      Log.e(TAG, error);
+      Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
     }
     // set pin to half of native size
     mPinSourceSymbol.setWidth(19f);
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     mProximitySearchViewEmpty = true;
 
     // create a LocatorTask from an online service
-    mLocatorTask = new LocatorTask("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
+    mLocatorTask = new LocatorTask(getString(R.string.world_geocode_service));
 
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
@@ -534,5 +535,23 @@ public class MainActivity extends AppCompatActivity {
       Toast.makeText(MainActivity.this, getResources().getString(R.string.location_permission_denied),
           Toast.LENGTH_SHORT).show();
     }
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
   }
 }

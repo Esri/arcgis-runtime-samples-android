@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.uniquevaluerenderer;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -34,91 +35,108 @@ import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.UniqueValueRenderer;
 
-
 public class MainActivity extends AppCompatActivity {
 
-    private MapView mMapView;
+  private MapView mMapView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        // inflate MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapView);
+    // inflate MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
 
-        // create a map with the topographic basemap
-        ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    // create a map with the topographic basemap
+    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
 
-        //[DocRef: Name=Unique Value Renderer, Topic=Symbols and Renderers, Category=Fundamentals]
-        // Create service feature table
-        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
+    //[DocRef: Name=Unique Value Renderer, Topic=Symbols and Renderers, Category=Fundamentals]
+    // Create service feature table
+    ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(
+        getResources().getString(R.string.sample_service_url));
 
-        // Create the feature layer using the service feature table
-        FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
+    // Create the feature layer using the service feature table
+    FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
 
-        // Override the renderer of the feature layer with a new unique value renderer
-        UniqueValueRenderer uniqueValueRenderer = new UniqueValueRenderer();
-        // Set the field to use for the unique values
-        uniqueValueRenderer.getFieldNames().add("STATE_ABBR"); //You can add multiple fields to be used for the renderer in the form of a list, in this case we are only adding a single field
+    // Override the renderer of the feature layer with a new unique value renderer
+    UniqueValueRenderer uniqueValueRenderer = new UniqueValueRenderer();
+    // Set the field to use for the unique values
+    uniqueValueRenderer.getFieldNames().add(
+        "STATE_ABBR"); //You can add multiple fields to be used for the renderer in the form of a list, in this case
+      // we are only adding a single field
 
-        // Create the symbols to be used in the renderer
-        SimpleFillSymbol defaultFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.NULL, Color.BLACK, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.GRAY, 2));
-        SimpleFillSymbol californiaFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.RED, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2));
-        SimpleFillSymbol arizonaFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.GREEN, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.GREEN, 2));
-        SimpleFillSymbol nevadaFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID,Color.BLUE, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 2));
+    // Create the symbols to be used in the renderer
+    SimpleFillSymbol defaultFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.NULL, Color.BLACK,
+        new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.GRAY, 2));
+    SimpleFillSymbol californiaFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.RED,
+        new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2));
+    SimpleFillSymbol arizonaFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.GREEN,
+        new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.GREEN, 2));
+    SimpleFillSymbol nevadaFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLUE,
+        new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 2));
 
-        // Set default symbol
-        uniqueValueRenderer.setDefaultSymbol(defaultFillSymbol);
-        uniqueValueRenderer.setDefaultLabel("Other");
+    // Set default symbol
+    uniqueValueRenderer.setDefaultSymbol(defaultFillSymbol);
+    uniqueValueRenderer.setDefaultLabel("Other");
 
-        // Set value for california
-        List<Object> californiaValue = new ArrayList<>();
-        // You add values associated with fields set on the unique value renderer.
-        // If there are multiple values, they should be set in the same order as the fields are set
-        californiaValue.add("CA");
-        uniqueValueRenderer.getUniqueValues().add(new UniqueValueRenderer.UniqueValue("California", "State of California", californiaFillSymbol, californiaValue));
+    // Set value for california
+    List<Object> californiaValue = new ArrayList<>();
+    // You add values associated with fields set on the unique value renderer.
+    // If there are multiple values, they should be set in the same order as the fields are set
+    californiaValue.add("CA");
+    uniqueValueRenderer.getUniqueValues().add(
+        new UniqueValueRenderer.UniqueValue("California", "State of California", californiaFillSymbol,
+            californiaValue));
 
-        // Set value for arizona
-        List<Object> arizonaValue = new ArrayList<>();
-        // You add values associated with fields set on the unique value renderer.
-        // If there are multiple values, they should be set in the same order as the fields are set
-        arizonaValue.add("AZ");
-        uniqueValueRenderer.getUniqueValues().add(new UniqueValueRenderer.UniqueValue("Arizona", "State of Arizona", arizonaFillSymbol, arizonaValue));
+    // Set value for arizona
+    List<Object> arizonaValue = new ArrayList<>();
+    // You add values associated with fields set on the unique value renderer.
+    // If there are multiple values, they should be set in the same order as the fields are set
+    arizonaValue.add("AZ");
+    uniqueValueRenderer.getUniqueValues()
+        .add(new UniqueValueRenderer.UniqueValue("Arizona", "State of Arizona", arizonaFillSymbol, arizonaValue));
 
-        // Set value for nevada
-        List<Object> nevadaValue = new ArrayList<>();
-        // You add values associated with fields set on the unique value renderer.
-        // If there are multiple values, they should be set in the same order as the fields are set
-        nevadaValue.add("NV");
-        uniqueValueRenderer.getUniqueValues().add(new UniqueValueRenderer.UniqueValue("Nevada", "State of Nevada", nevadaFillSymbol, nevadaValue));
+    // Set value for nevada
+    List<Object> nevadaValue = new ArrayList<>();
+    // You add values associated with fields set on the unique value renderer.
+    // If there are multiple values, they should be set in the same order as the fields are set
+    nevadaValue.add("NV");
+    uniqueValueRenderer.getUniqueValues()
+        .add(new UniqueValueRenderer.UniqueValue("Nevada", "State of Nevada", nevadaFillSymbol, nevadaValue));
 
-        // Set the renderer on the feature layer
-        featureLayer.setRenderer(uniqueValueRenderer);
-        //[DocRef: END]
+    // Set the renderer on the feature layer
+    featureLayer.setRenderer(uniqueValueRenderer);
+    //[DocRef: END]
 
-        // add the layer to the map
-        map.getOperationalLayers().add(featureLayer);
+    // add the layer to the map
+    map.getOperationalLayers().add(featureLayer);
 
-        map.setInitialViewpoint(new Viewpoint(new Envelope(-13893029.0, 3573174.0, -12038972.0, 5309823.0, SpatialReferences.getWebMercator())));
+    map.setInitialViewpoint(new Viewpoint(
+        new Envelope(-13893029.0, 3573174.0, -12038972.0, 5309823.0, SpatialReferences.getWebMercator())));
 
-        // set the map to be displayed in the mapview
-        mMapView.setMap(map);
+    // set the map to be displayed in the mapview
+    mMapView.setMap(map);
 
-    }
+  }
 
-    @Override
-    protected void onPause(){
-        super.onPause();
-        // pause MapView
-        mMapView.pause();
-    }
+  @Override
+  protected void onPause() {
+    super.onPause();
+    // pause MapView
+    mMapView.pause();
+  }
 
+  @Override
+  protected void onResume() {
+    super.onResume();
+    // resume MapView
+    mMapView.resume();
+  }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        // resume MapView
-        mMapView.resume();
-    }
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    // dispose MapView
+    mMapView.dispose();
+  }
 }

@@ -25,30 +25,36 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MapView mMapView;
+  private MapView mMapView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        // create MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapView);
-        // create a map with the BasemapType topographic
-        ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16);
-        // set the map to be displayed in this view
-        mMapView.setMap(mMap);
-    }
+    // create MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
+    // create a map with the BasemapType topographic
+    ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16);
+    // set the map to be displayed in this view
+    mMapView.setMap(mMap);
+  }
 
-    @Override
-    protected void onPause(){
-        super.onPause();
-        mMapView.pause();
-    }
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        mMapView.resume();
-    }
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }
