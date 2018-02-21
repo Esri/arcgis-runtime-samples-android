@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     // when feature table is loaded, populate data
     serviceFeatureTable.addDoneLoadingListener(() -> {
       if (serviceFeatureTable.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-        String error = "Service feature table failed to load: " + serviceFeatureTable.getLoadError();
+        String error = "Service feature table failed to load: " + serviceFeatureTable.getLoadError().getCause();
         Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
         return;
