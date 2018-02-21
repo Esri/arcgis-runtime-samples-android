@@ -11,11 +11,7 @@ ext {
     ankoVersion = '0.10.4'
     andSupportLibVersion = '27.0.2'
     constraintLayoutVersion = '1.0.2'
-<<<<<<< HEAD
-    arcgisVersion = '100.3.0-1959'
-=======
     arcgisVersion = '100.2.1'
->>>>>>> 5206541ee838610bd0de2b01feb75330d09ab708
     // plugin versions
     gradleVersion = '3.0.1'
     // java versions
