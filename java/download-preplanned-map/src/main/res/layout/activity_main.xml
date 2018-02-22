@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v4.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/drawerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <!--Content-->
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        <com.esri.arcgisruntime.mapping.view.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </LinearLayout>
+    <!-- Navigation Drawer-->
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start">
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/drawerRecyclerView"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/background_light"/>
+        <Button
+                android:id="@+id/deleteAreasButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/delete_all_offline_areas"
+                android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+</android.support.v4.widget.DrawerLayout>
+

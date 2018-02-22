@@ -1,3 +1,19 @@
+/* Copyright 2018 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.esri.arcgisruntime.sample.readgeopackage;
 
 import java.util.HashMap;
@@ -13,6 +29,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -29,6 +46,8 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.raster.GeoPackageRaster;
 
 public class MainActivity extends AppCompatActivity {
+
+  private static final String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
 
   private final static String TAG = MainActivity.class.getSimpleName();
 
@@ -47,10 +66,14 @@ public class MainActivity extends AppCompatActivity {
 
     // on item click, get item text and use it to get hash map layer and pass to toggleLayer
     mDrawerListView.setOnItemClickListener(
-        (adapterView, view, i, l) -> toggleLayer((Layer) mLayersHashMap.get(mDrawerListView.getItemAtPosition(i))));
+        (adapterView, view, i, l) ->  {
+          CheckBox checkBox = view.findViewById(R.id.layerCheckBox);
+          checkBox.setChecked(!checkBox.isChecked());
+          toggleLayer((Layer) mLayersHashMap.get(mDrawerListView.getItemAtPosition(i)));
+        });
 
     // init adaptor
-    mLayersStringAdaptor = new ArrayAdapter<>(this, R.layout.drawer_list_item);
+    mLayersStringAdaptor = new ArrayAdapter<>(this, R.layout.drawer_list_item, R.id.layerCheckBox);
 
     // Set the adapter for the list view
     mDrawerListView.setAdapter(mLayersStringAdaptor);
@@ -62,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.Type.STREETS, 39.7294, -104.8319, 11);
     mMapView.setMap(map);
 
-    requestReadPermission();
+    requestPermissions();
 
   }
 
@@ -166,19 +189,15 @@ public class MainActivity extends AppCompatActivity {
       // set the viewpoint to the extent of the layer
       mMapView.setViewpointAsync(new Viewpoint(layer.getFullExtent()), 1);
     }
-
   }
 
   /**
-   * Request read permission on the device.
+   * Request permissions on the device.
    */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
+  private void requestPermissions() {
+    int requestCode = 1;
     // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(MainActivity.this,
-        reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+    if (ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
       readGeoPackage();
     } else {
       // request permission
@@ -189,15 +208,12 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Handle the permissions request response.
    */
-  public void onRequestPermissionsResult(int requestCode,
-      @NonNull String[] permissions,
-      @NonNull int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       readGeoPackage();
     } else {
       // report to user that permission was denied
-      Toast.makeText(MainActivity.this,
-          getResources().getString(R.string.read_permission_denied), Toast.LENGTH_SHORT).show();
+      Toast.makeText(MainActivity.this, getResources().getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
     }
   }
 
@@ -211,5 +227,11 @@ public class MainActivity extends AppCompatActivity {
   protected void onResume() {
     super.onResume();
     mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
   }
 }
