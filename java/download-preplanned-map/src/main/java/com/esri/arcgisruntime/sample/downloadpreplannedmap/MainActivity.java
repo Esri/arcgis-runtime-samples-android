@@ -60,6 +60,9 @@ import com.esri.arcgisruntime.tasks.offlinemap.PreplannedMapArea;
 public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.OnItemClicked {
 
   private static final String TAG = MainActivity.class.getSimpleName();
+
+  private static final String[] reqPermission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+
   private MapView mMapView;
   private OfflineMapTask mOfflineMapTask;
 
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    requestPermission(new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE });
+    requestPermissions();
 
     mMapView = findViewById(R.id.mapView);
 
@@ -176,28 +179,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
       return;
     }
 
+    // make the file directory
     file.mkdirs();
-
-    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "default");
-    notificationBuilder.setContentTitle(title).setContentText("Download in progress")
-        .setSmallIcon(android.R.drawable.stat_sys_download);
 
     // create the job used download the preplanned map and start
     DownloadPreplannedOfflineMapJob downloadPreplannedOfflineMapJob = mOfflineMapTask
         .downloadPreplannedOfflineMap(mapArea, path);
 
-    // update progress
-    downloadPreplannedOfflineMapJob.addProgressChangedListener(() -> {
-      notificationBuilder.setProgress(100, downloadPreplannedOfflineMapJob.getProgress(), false);
-      notificationManager.notify(0, notificationBuilder.build());
-    });
-
-    downloadPreplannedOfflineMapJob.addJobDoneListener(() -> {
-      notificationBuilder.setContentText("Download complete").setProgress(0, 0, false)
-          .setSmallIcon(android.R.drawable.stat_sys_download_done);
-      notificationManager.notify(0, notificationBuilder.build());
-    });
+    // set up notification manager to show download progress
+    startNotificationManager(downloadPreplannedOfflineMapJob, title);
 
     downloadPreplannedOfflineMapJob.start();
     downloadPreplannedOfflineMapJob.addJobDoneListener(() -> {
@@ -205,28 +195,71 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         Log.e(TAG, "Offline map job failed: " + downloadPreplannedOfflineMapJob.getError());
         return;
       }
+
       // get result of downloaded area
       DownloadPreplannedOfflineMapResult results = downloadPreplannedOfflineMapJob.getResult();
       Log.d(TAG, "job path :" + downloadPreplannedOfflineMapJob.getDownloadDirectoryPath());
-      // Handle possible errors and show them to the user
+      // handle possible errors and show them to the user
       if (results.hasErrors()) {
-        StringBuilder errorBuilder = new StringBuilder();
-        for (Map.Entry<Layer, ArcGISRuntimeException> layerError : results.getLayerErrors().entrySet()) {
-          errorBuilder.append(
-              layerError.getKey() + " " + layerError.getValue().getMessage() + "\n" + layerError.getValue()
-                  .getCause() + "\n");
-        }
-        for (Map.Entry<FeatureTable, ArcGISRuntimeException> tableError : results.getTableErrors().entrySet()) {
-          errorBuilder.append(
-              tableError.getKey() + " " + tableError.getValue().getMessage() + "\n" + tableError.getValue()
-                  .getCause() + "\n");
-        }
-        // Report error accessing a secured resource
-        Log.e(TAG, String.valueOf(errorBuilder));
+        handleErrors(results);
+      } else {
+        // set the downloaded map to the view
+        mMapView.setMap(results.getOfflineMap());
       }
-      // Set the downloaded map to the view
-      mMapView.setMap(results.getOfflineMap());
     });
+  }
+
+  /**
+   * Set up notification manager to show download progress.
+   *
+   * @param job the given DownloadPreplannedOfflineMapJob
+   * @param title of the map area
+   */
+  private void startNotificationManager(DownloadPreplannedOfflineMapJob job, String title) {
+    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "default");
+    notificationBuilder.setContentTitle(title).setContentText("Download in progress")
+        .setSmallIcon(android.R.drawable.stat_sys_download);
+
+    // update progress
+    job.addProgressChangedListener(() -> {
+      notificationBuilder.setProgress(100, job.getProgress(), false);
+      notificationManager.notify(0, notificationBuilder.build());
+    });
+
+    //
+    job.addJobDoneListener(() -> {
+      if (job.getStatus() == Job.Status.SUCCEEDED) {
+        notificationBuilder.setContentText("Download complete").setProgress(0, 0, false)
+            .setSmallIcon(android.R.drawable.stat_sys_download_done);
+        notificationManager.notify(0, notificationBuilder.build());
+      } else {
+        notificationBuilder.setContentText("Download failed").setProgress(0, 0, false)
+            .setSmallIcon(android.R.drawable.stat_sys_warning);
+        notificationManager.notify(0, notificationBuilder.build());
+      }
+    });
+  }
+
+  /**
+   * Builds errors from results and displays them in the Log.
+   *
+   * @param results DownloadPreplannedOfflineMapResult
+   */
+  private void handleErrors(DownloadPreplannedOfflineMapResult results) {
+    StringBuilder errorBuilder = new StringBuilder();
+    for (Map.Entry<Layer, ArcGISRuntimeException> layerError : results.getLayerErrors().entrySet()) {
+      errorBuilder.append(
+          layerError.getKey() + " " + layerError.getValue().getMessage() + "\n" + layerError.getValue()
+              .getCause() + "\n");
+    }
+    for (Map.Entry<FeatureTable, ArcGISRuntimeException> tableError : results.getTableErrors().entrySet()) {
+      errorBuilder.append(
+          tableError.getKey() + " " + tableError.getValue().getMessage() + "\n" + tableError.getValue()
+              .getCause() + "\n");
+    }
+    // report error accessing a secured resource
+    Log.e(TAG, String.valueOf(errorBuilder));
   }
 
   private void deleteAllMapAreas() {
@@ -273,6 +306,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     deleteAll(localPreplannedMapDirFile);
   }
 
+  /**
+   * Find all files of type *.geodatabase.
+   *
+   * @param files as array
+   * @return list of strings which are paths to .geodatabase files on the device
+   */
   private List<String> findGeodatabases(File[] files) {
     List<String> geodatabasesToUnregister = new ArrayList<>();
     for (File f : files) {
@@ -285,6 +324,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     return geodatabasesToUnregister;
   }
 
+  /**
+   * Delete all files recursively.
+   *
+   * @param fileOrDirectory to delete
+   */
   private void deleteAll(File fileOrDirectory) {
     if (fileOrDirectory.isDirectory()) {
       for (File child : fileOrDirectory.listFiles()) {
@@ -296,14 +340,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
   @Override public void onItemClick(int position) {
     downloadMapArea(mPreplannedAreas.get(position));
-    Log.d(TAG, String.valueOf(mPreplannedAreas.get(position).getLoadStatus()));
   }
 
   /**
    * Request permissions at runtime.
    */
-  private void requestPermission(String[] reqPermission) {
-    int requestCode = 2;
+  private void requestPermissions() {
+    int requestCode = 1;
     // For API level 23+ request permission at runtime
     if (ContextCompat.checkSelfPermission(MainActivity.this,
         reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
@@ -325,5 +368,23 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
       Toast.makeText(MainActivity.this, getResources().getString(R.string.write_permission_denied), Toast.LENGTH_SHORT)
           .show();
     }
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
   }
 }

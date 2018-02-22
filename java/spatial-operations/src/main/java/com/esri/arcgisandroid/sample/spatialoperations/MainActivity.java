@@ -25,41 +25,41 @@ public class MainActivity extends AppCompatActivity {
 
   final private GraphicsOverlay inputGeometryOverlay = new GraphicsOverlay();
   final private GraphicsOverlay resultGeometryOverlay = new GraphicsOverlay();
-  private Polygon inputPolygon1;
-  private Polygon inputPolygon2;
-
   // simple black (0xFF000000) line symbol for outlines
   final private SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF000000, 1);
-  final private SimpleFillSymbol resultFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, 0xFFE91F1F, lineSymbol);
-
+  final private SimpleFillSymbol resultFillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, 0xFFE91F1F,
+      lineSymbol);
+  private Polygon inputPolygon1;
+  private Polygon inputPolygon2;
   // The spatial operation switching menu items.
   private MenuItem noOperationMenuItem = null;
   private MenuItem intersectionMenuItem = null;
   private MenuItem unionMenuItem = null;
   private MenuItem differenceMenuItem = null;
   private MenuItem symmetricDifferenceMenuItem = null;
+  private MapView mMapView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    MapView mapView = (MapView)findViewById(R.id.mapView);
+    mMapView = (MapView) findViewById(R.id.mapView);
 
     // create ArcGISMap with topographic basemap
     ArcGISMap map = new ArcGISMap(Basemap.createLightGrayCanvas());
-    mapView.setMap(map);
+    mMapView.setMap(map);
 
     // create graphics overlays to show the inputs and results of the spatial operation
-    mapView.getGraphicsOverlays().add(inputGeometryOverlay);
-    mapView.getGraphicsOverlays().add(resultGeometryOverlay);
+    mMapView.getGraphicsOverlays().add(inputGeometryOverlay);
+    mMapView.getGraphicsOverlays().add(resultGeometryOverlay);
 
     // create input polygons and add graphics to display these polygons in an overlay
     createPolygons();
 
     // center the map view on the input geometries
     Geometry viewpointGeom = GeometryEngine.union(inputPolygon1, inputPolygon2).getExtent();
-    mapView.setViewpointGeometryAsync(viewpointGeom, 20);
+    mMapView.setViewpointGeometryAsync(viewpointGeom, 20);
   }
 
   @Override
@@ -94,29 +94,24 @@ public class MainActivity extends AppCompatActivity {
       // no spatial operation - graphics have been cleared previously
       noOperationMenuItem.setChecked(true);
       return true;
-    }
-    else if (itemId == R.id.action_intersection) {
+    } else if (itemId == R.id.action_intersection) {
       intersectionMenuItem.setChecked(true);
       showGeometry(GeometryEngine.intersection(inputPolygon1, inputPolygon2));
       return true;
-    }
-    else if (itemId == R.id.action_union) {
+    } else if (itemId == R.id.action_union) {
       unionMenuItem.setChecked(true);
       showGeometry(GeometryEngine.union(inputPolygon1, inputPolygon2));
       return true;
-    }
-    else if (itemId == R.id.action_difference) {
+    } else if (itemId == R.id.action_difference) {
       differenceMenuItem.setChecked(true);
       // note that the difference method gives different results depending on the order of input geometries
       showGeometry(GeometryEngine.difference(inputPolygon1, inputPolygon2));
       return true;
-    }
-    else if (itemId == R.id.action_symmetric_difference) {
+    } else if (itemId == R.id.action_symmetric_difference) {
       symmetricDifferenceMenuItem.setChecked(true);
       showGeometry(GeometryEngine.symmetricDifference(inputPolygon1, inputPolygon2));
       return true;
-    }
-    else {
+    } else {
       return super.onOptionsItemSelected(item);
     }
   }
@@ -174,4 +169,21 @@ public class MainActivity extends AppCompatActivity {
     inputGeometryOverlay.getGraphics().add(new Graphic(inputPolygon2, fillSymbol));
   }
 
+  @Override
+  protected void onPause() {
+    mMapView.pause();
+    super.onPause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }

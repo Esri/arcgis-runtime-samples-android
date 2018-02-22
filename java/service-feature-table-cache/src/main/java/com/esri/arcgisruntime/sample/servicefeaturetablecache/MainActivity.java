@@ -25,55 +25,61 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
-
 public class MainActivity extends AppCompatActivity {
 
-    MapView mMapView;
+  MapView mMapView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        // inflate MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapView);
+    // inflate MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
 
-        // create a map with the light grey canvas basemap
-        ArcGISMap map = new ArcGISMap(Basemap.createLightGrayCanvas());
-        //set an initial viewpoint
-        map.setInitialViewpoint( new Viewpoint(new Envelope(-1.30758164047166E7, 4014771.46954516, -1.30730056797177E7
-                , 4016869.78617381, SpatialReferences.getWebMercator() )));
+    // create a map with the light grey canvas basemap
+    ArcGISMap map = new ArcGISMap(Basemap.createLightGrayCanvas());
+    //set an initial viewpoint
+    map.setInitialViewpoint(new Viewpoint(new Envelope(-1.30758164047166E7, 4014771.46954516, -1.30730056797177E7
+        , 4016869.78617381, SpatialReferences.getWebMercator())));
 
+    // create feature layer with its service feature table
+    // create the service feature table
+    ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(
+        getResources().getString(R.string.sample_service_url));
 
-        // create feature layer with its service feature table
-        // create the service feature table
-        ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
+    //explicitly set the mode to on interaction cache (which is also the default mode for service feature tables)
+    serviceFeatureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.ON_INTERACTION_CACHE);
 
-        //explicitly set the mode to on interaction cache (which is also the default mode for service feature tables)
-        serviceFeatureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.ON_INTERACTION_CACHE);
+    // create the feature layer using the service feature table
+    FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
 
-        // create the feature layer using the service feature table
-        FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
+    // add the layer to the map
+    map.getOperationalLayers().add(featureLayer);
 
-        // add the layer to the map
-        map.getOperationalLayers().add(featureLayer);
+    // set the map to be displayed in the mapview
+    mMapView.setMap(map);
 
-        // set the map to be displayed in the mapview
-        mMapView.setMap(map);
+  }
 
-    }
+  @Override
+  protected void onPause() {
+    super.onPause();
+    // pause MapView
+    mMapView.pause();
+  }
 
-    @Override
-    protected void onPause(){
-        super.onPause();
-        // pause MapView
-        mMapView.pause();
-    }
+  @Override
+  protected void onResume() {
+    super.onResume();
+    // resume MapView
+    mMapView.resume();
+  }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        // resume MapView
-        mMapView.resume();
-    }
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    // dispose MapView
+    mMapView.dispose();
+  }
 }

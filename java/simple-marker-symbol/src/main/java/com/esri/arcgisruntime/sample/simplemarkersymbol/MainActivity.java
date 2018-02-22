@@ -27,59 +27,66 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 
-
 public class MainActivity extends AppCompatActivity {
 
-    private MapView mMapView;
+  private MapView mMapView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        // inflate MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapView);
+    // inflate MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
 
-        // create a map with the imagery basemap
-        ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+    // create a map with the imagery basemap
+    ArcGISMap map = new ArcGISMap(Basemap.createImagery());
 
-        // create an initial viewpoint with a point and scale
-        Point point = new Point(-226773, 6550477, SpatialReferences.getWebMercator());
-        Viewpoint vp = new Viewpoint(point, 7500);
+    // create an initial viewpoint with a point and scale
+    Point point = new Point(-226773, 6550477, SpatialReferences.getWebMercator());
+    Viewpoint vp = new Viewpoint(point, 7500);
 
-        // set initial map extent
-        map.setInitialViewpoint(vp);
+    // set initial map extent
+    map.setInitialViewpoint(vp);
 
-        // set the map to be displayed in the mapview
-        mMapView.setMap(map);
+    // set the map to be displayed in the mapview
+    mMapView.setMap(map);
 
-        // create a new graphics overlay and add it to the mapview
-        GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
-        mMapView.getGraphicsOverlays().add(graphicsOverlay);
+    // create a new graphics overlay and add it to the mapview
+    GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
+    mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
-        //[DocRef: Name=Point graphic with symbol, Category=Fundamentals, Topic=Symbols and Renderers]
-        //create a simple marker symbol
-        SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 12); //size 12, style of circle
+    //[DocRef: Name=Point graphic with symbol, Category=Fundamentals, Topic=Symbols and Renderers]
+    //create a simple marker symbol
+    SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED,
+        12); //size 12, style of circle
 
-        //add a new graphic with a new point geometry
-        Point graphicPoint = new Point(-226773, 6550477, SpatialReferences.getWebMercator());
-        Graphic graphic = new Graphic(graphicPoint, symbol);
-        graphicsOverlay.getGraphics().add(graphic);
-        //[DocRef: END]
+    //add a new graphic with a new point geometry
+    Point graphicPoint = new Point(-226773, 6550477, SpatialReferences.getWebMercator());
+    Graphic graphic = new Graphic(graphicPoint, symbol);
+    graphicsOverlay.getGraphics().add(graphic);
+    //[DocRef: END]
 
-    }
+  }
 
-    @Override
-    protected void onPause(){
-        super.onPause();
-        // pause MapView
-        mMapView.pause();
-    }
+  @Override
+  protected void onPause() {
+    super.onPause();
+    // pause MapView
+    mMapView.pause();
+  }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        // resume MapView
-        mMapView.resume();
-    }
+  @Override
+  protected void onResume() {
+    super.onResume();
+    // resume MapView
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    // dispose MapView
+    mMapView.dispose();
+  }
 }

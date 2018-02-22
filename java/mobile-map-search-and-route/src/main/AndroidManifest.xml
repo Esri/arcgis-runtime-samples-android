@@ -17,8 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".MobileMapViewActivity"
-                  android:configChanges="orientation|screenSize|uiMode">
+        <activity android:name=".MobileMapViewActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
