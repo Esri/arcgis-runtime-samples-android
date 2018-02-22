@@ -72,8 +72,7 @@ public class MainActivity extends AppCompatActivity {
     mDrawerList = findViewById(R.id.left_drawer);
 
     // Set the adapter for the list view
-    mDrawerList.setAdapter(new ArrayAdapter<>(this,
-        R.layout.drawer_list_item, mNavigationDrawerItemTitles));
+    mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mNavigationDrawerItemTitles));
     // Set the list's click listener
     mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 

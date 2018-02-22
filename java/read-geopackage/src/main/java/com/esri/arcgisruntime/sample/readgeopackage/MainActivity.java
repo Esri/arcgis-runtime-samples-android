@@ -26,8 +26,10 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -52,10 +54,11 @@ public class MainActivity extends AppCompatActivity {
   private final static String TAG = MainActivity.class.getSimpleName();
 
   private ListView mDrawerListView;
-  private ArrayAdapter mLayersStringAdaptor;
+  private ArrayAdapter<String> mLayersStringAdaptor;
 
   private MapView mMapView;
-  private HashMap mLayersHashMap;
+  private HashMap<String,Layer> mLayersHashMap;
+  private DrawerLayout mDrawerLayout;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -63,19 +66,20 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     mDrawerListView = findViewById(R.id.left_drawer);
+    mDrawerLayout = findViewById(R.id.drawer_layout);
 
     // on item click, get item text and use it to get hash map layer and pass to toggleLayer
     mDrawerListView.setOnItemClickListener(
         (adapterView, view, i, l) ->  {
           CheckBox checkBox = view.findViewById(R.id.layerCheckBox);
           checkBox.setChecked(!checkBox.isChecked());
-          toggleLayer((Layer) mLayersHashMap.get(mDrawerListView.getItemAtPosition(i)));
+          toggleLayer(mLayersHashMap.get(mDrawerListView.getItemAtPosition(i).toString()));
         });
 
     // init adaptor
     mLayersStringAdaptor = new ArrayAdapter<>(this, R.layout.drawer_list_item, R.id.layerCheckBox);
 
-    // Set the adapter for the list view
+    // set the adapter for the list view
     mDrawerListView.setAdapter(mLayersStringAdaptor);
 
     // inflate MapView from layout
@@ -91,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
   private void readGeoPackage() {
 
-    mLayersHashMap = new HashMap();
+    mLayersHashMap = new HashMap<>();
 
     // open and load the GeoPackage
     GeoPackage geoPackage = new GeoPackage(
@@ -125,10 +129,8 @@ public class MainActivity extends AppCompatActivity {
           // if getName is not null, use it as the raster's name
           if (!rasterLayer.getName().equals("")) {
             rasterLayerName = rasterLayer.getName();
-            Log.d(TAG, "has name");
           } else { // else use the end of the path name as the raster's name
             rasterLayerName = path.substring(path.lastIndexOf("/") + 1);
-            Log.d(TAG, "has path name " + rasterLayerName);
           }
 
           // append the layer type to the name
@@ -154,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
         // load the FeatureLayer - that way we can get to it's properties
         featureLayer.loadAsync();
         featureLayer.addDoneLoadingListener(() -> {
-          Log.d("featureLayer", featureLayer.getLoadStatus().toString());
 
           // create a string to hold the name of the FeatureLayer for display in the ListView and as the hash map key
           String featureLayerName = featureLayer.getName();
@@ -165,10 +166,12 @@ public class MainActivity extends AppCompatActivity {
           // add the name of the FeatureLayer and the FeatureLayer itself into the hash map
           mLayersHashMap.put(featureLayerName, featureLayer);
 
-          // Add the name of the FeatureLayer to the ListBox of layers not in map
+          // add the name of the FeatureLayer to the layers StringAdapter
           mLayersStringAdaptor.add(featureLayerName);
           mLayersStringAdaptor.notifyDataSetChanged();
 
+          // open the drawer
+          mDrawerLayout.openDrawer(Gravity.START);
         });
       }
     });
