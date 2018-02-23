@@ -37,7 +37,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -58,7 +57,7 @@ import com.esri.arcgisruntime.tasks.offlinemap.DownloadPreplannedOfflineMapResul
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask;
 import com.esri.arcgisruntime.tasks.offlinemap.PreplannedMapArea;
 
-public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.OnItemClicked {
+public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.OnAreaClicked {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -86,11 +85,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     mDeleteAreasButton = findViewById(R.id.deleteAreasButton);
     mDeleteAreasButton.setOnClickListener(view -> unregisterAndDeleteAllAreas());
 
-    mRecyclerView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        view.get
-      }
-    });
   }
 
   public void populateDrawerWithThumbnailPreviews() {
@@ -104,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     RecyclerViewAdapter adapter = new RecyclerViewAdapter(mPreplannedAreaPreviews);
     mRecyclerView.setAdapter(adapter);
 
-    adapter.setOnClick(this);
+    adapter.setOnAreaClicked(this);
 
     // define the local path where the preplanned map will be stored
     mLocalPreplannedMapDir = getCacheDir().toString() + File.separator + getString(R.string.file_name);
@@ -138,16 +132,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             // get the list of preplanned map areas
             mPreplannedAreas = preplannedAreasFuture.get();
             // load each area
-            for (PreplannedMapArea preplannedMapArea : mPreplannedAreas) {
-              preplannedMapArea.loadAsync();
-              preplannedMapArea.addDoneLoadingListener(() -> {
-                if (preplannedMapArea.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-                  Log.e(TAG, "Map area failed to load: " + preplannedMapArea.getLoadError().getMessage());
+            for (int i = 0; i < mPreplannedAreas.size(); i++) {
+              int finalI = i;
+              mPreplannedAreas.get(finalI).loadAsync();
+              mPreplannedAreas.get(finalI).addDoneLoadingListener(() -> {
+                if (mPreplannedAreas.get(finalI).getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+                  Log.e(TAG, "Map area failed to load: " + mPreplannedAreas.get(finalI).getLoadError().getMessage());
                   return;
                 }
                 PreplannedAreaPreview preview = new PreplannedAreaPreview();
-                preview.setTitle(preplannedMapArea.getPortalItem().getTitle());
-                ListenableFuture<byte[]> thumbnailFuture = preplannedMapArea.getPortalItem().fetchThumbnailAsync();
+                preview.setMapNum(finalI);
+                preview.setTitle(mPreplannedAreas.get(finalI).getPortalItem().getTitle());
+                ListenableFuture<byte[]> thumbnailFuture = mPreplannedAreas.get(finalI).getPortalItem().fetchThumbnailAsync();
                 thumbnailFuture.addDoneListener(() -> {
                   try {
                     byte[] byteStream = thumbnailFuture.get();
@@ -333,8 +329,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     fileOrDirectory.delete();
   }
 
-  @Override public void onItemClick(int position) {
-    downloadMapArea(mPreplannedAreas.get(position));
+  @Override public void onAreaClick(int position) {
+    Log.d(TAG, "recycler "+ position);
+    downloadMapArea(mPreplannedAreas.get(mPreplannedAreaPreviews.get(position).getMapNum()));
   }
 
   /**

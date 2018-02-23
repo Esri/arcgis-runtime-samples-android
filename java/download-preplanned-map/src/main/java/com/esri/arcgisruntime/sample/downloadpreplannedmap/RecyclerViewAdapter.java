@@ -19,7 +19,6 @@ package com.esri.arcgisruntime.sample.downloadpreplannedmap;
 import java.util.ArrayList;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,15 +29,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
   private ArrayList<PreplannedAreaPreview> preplannedAreaPreviews;
 
-  private OnItemClicked onClick;
+  private OnAreaClicked onAreaClicked;
 
-  public interface OnItemClicked {
-    void onItemClick(int position);
+  public interface OnAreaClicked {
+    void onAreaClick(int position);
   }
 
   public RecyclerViewAdapter(ArrayList<PreplannedAreaPreview> preplannedAreaPreviews) {
     this.preplannedAreaPreviews = preplannedAreaPreviews;
-    Log.d("recyclerAdapter", String.valueOf(this.preplannedAreaPreviews.size()));
   }
   @Override
   public PreviewAreaHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -48,7 +46,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
   }
   @Override
   public void onBindViewHolder(PreviewAreaHolder holder, int position) {
-    holder.itemView.setOnClickListener(v -> onClick.onItemClick(position));
+    holder.setIsRecyclable(false);
+    holder.itemView.setOnClickListener(v -> onAreaClicked.onAreaClick(position));
     holder.title.setText(preplannedAreaPreviews.get(position).getTitle());
     holder.preview.setImageBitmap(preplannedAreaPreviews.get(position).getBitmapThumbnail());
   }
@@ -70,8 +69,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
   }
 
-  public void setOnClick(OnItemClicked onClick)
-  {
-    this.onClick=onClick;
+  public void setOnAreaClicked(OnAreaClicked onAreaClicked) {
+    this.onAreaClicked=onAreaClicked;
   }
 }
