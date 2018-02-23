@@ -37,6 +37,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -83,7 +84,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     mMapView = findViewById(R.id.mapView);
 
     mDeleteAreasButton = findViewById(R.id.deleteAreasButton);
-    mDeleteAreasButton.setOnClickListener(view -> deleteAllMapAreas());
+    mDeleteAreasButton.setOnClickListener(view -> unregisterAndDeleteAllAreas());
+
+    mRecyclerView.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        view.get
+      }
+    });
   }
 
   public void populateDrawerWithThumbnailPreviews() {
@@ -198,7 +205,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
       // get result of downloaded area
       DownloadPreplannedOfflineMapResult results = downloadPreplannedOfflineMapJob.getResult();
-      Log.d(TAG, "job path :" + downloadPreplannedOfflineMapJob.getDownloadDirectoryPath());
       // handle possible errors and show them to the user
       if (results.hasErrors()) {
         handleErrors(results);
@@ -262,33 +268,22 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     Log.e(TAG, String.valueOf(errorBuilder));
   }
 
-  private void deleteAllMapAreas() {
-    // Setup UI for downloading
-    //downloadNotificationText.Visibility = Visibility.Collapsed;
-    //progressBar.IsIndeterminate = true;
-    //busyText.Text = "Deleting downloaded map area...";
-    //busyIndicator.Visibility = Visibility.Visible;
-
-    // If there is a map loaded to the MapView, remove it
-    if (mMapView.getMap() != null) {
-      mMapView.setMap(null);
-    }
-
-    unregisterAndDeleteAllAreas();
-  }
-
   /**
    * Find all geodatabases from all the downloaded map areas, unregister them then recreate temporary data folder.
    * <p>
    * When area is downloaded, geodatabases gets registered with the original service to support syncronization. When the
    * area is deleted from the device, it is important first to unregister all geodatabases that are used in the map so
-   * the service doesn't have a stray geodatabases registered.
+   * the service doesn't have any stray geodatabases registered.
    */
   private void unregisterAndDeleteAllAreas() {
+
+    // if there is a map loaded to the MapView, remove it
+    if (mMapView.getMap() != null) {
+      mMapView.setMap(null);
+    }
+
     // find all geodatabase files from the map areas by extension
-
     File localPreplannedMapDirFile = new File(mLocalPreplannedMapDir);
-
     List<String> geodatabaseToUnregister = findGeodatabases(localPreplannedMapDirFile.listFiles());
 
     // unregister all geodatabases
@@ -334,8 +329,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
       for (File child : fileOrDirectory.listFiles()) {
         deleteAll(child);
       }
-      fileOrDirectory.delete();
     }
+    fileOrDirectory.delete();
   }
 
   @Override public void onItemClick(int position) {
