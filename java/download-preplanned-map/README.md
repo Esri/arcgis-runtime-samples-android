@@ -7,7 +7,7 @@ This sample demonstrates how to download preplanned map areas from a webmap. In 
 ## Features
 
 * Geodatabase
-* GeodatbaseSyncTask
+* GeodatabaseSyncTask
 * DownloadPreplannedOfflineMapJob
 * DownloadPreplannedOfflineMapResult;
 * OfflineMapTask

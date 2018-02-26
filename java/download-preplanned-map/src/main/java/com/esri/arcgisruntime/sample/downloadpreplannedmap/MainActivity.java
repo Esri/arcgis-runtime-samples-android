@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         // show progress bar
         mProgressBar.setVisibility(View.VISIBLE);
         // open the drawer from the left
-        mDrawerLayout.openDrawer(Gravity.LEFT);
+        mDrawerLayout.openDrawer(Gravity.START);
 
         // get related preplanned areas
         ListenableFuture<List<PreplannedMapArea>> preplannedAreasFuture = mOfflineMapTask.getPreplannedMapAreasAsync();
