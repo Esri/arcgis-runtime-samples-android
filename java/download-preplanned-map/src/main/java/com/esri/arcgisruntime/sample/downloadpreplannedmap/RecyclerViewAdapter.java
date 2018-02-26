@@ -31,19 +31,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
   private OnAreaClicked onAreaClicked;
 
-  public interface OnAreaClicked {
-    void onAreaClick(int position);
-  }
-
   public RecyclerViewAdapter(ArrayList<PreplannedAreaPreview> preplannedAreaPreviews) {
     this.preplannedAreaPreviews = preplannedAreaPreviews;
   }
+
   @Override
   public PreviewAreaHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view;
     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.preview_item, parent, false);
     return new PreviewAreaHolder(view);
   }
+
   @Override
   public void onBindViewHolder(PreviewAreaHolder holder, int position) {
     holder.setIsRecyclable(false);
@@ -51,6 +49,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     holder.title.setText(preplannedAreaPreviews.get(position).getTitle());
     holder.preview.setImageBitmap(preplannedAreaPreviews.get(position).getBitmapThumbnail());
   }
+
   @Override
   public int getItemCount() {
     if (preplannedAreaPreviews != null) {
@@ -59,17 +58,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
       return 0;
     }
   }
+
+  public void setOnAreaClicked(OnAreaClicked onAreaClicked) {
+    this.onAreaClicked = onAreaClicked;
+  }
+
+  public interface OnAreaClicked {
+    void onAreaClick(int position);
+  }
+
   public static class PreviewAreaHolder extends RecyclerView.ViewHolder {
     final TextView title;
     final ImageView preview;
+
     public PreviewAreaHolder(View itemView) {
       super(itemView);
       title = itemView.findViewById(R.id.sectorTextView);
       preview = itemView.findViewById(R.id.areaPreview);
     }
-  }
-
-  public void setOnAreaClicked(OnAreaClicked onAreaClicked) {
-    this.onAreaClicked=onAreaClicked;
   }
 }

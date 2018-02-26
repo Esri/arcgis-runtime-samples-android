@@ -1,4 +1,4 @@
-/* Copyright 2017 Esri
+/* Copyright 2018 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
     // define the local path where the preplanned map will be stored
     mLocalPreplannedMapDir = getCacheDir().toString() + File.separator + getString(R.string.file_name);
-    Log.d(TAG, mLocalPreplannedMapDir);
 
     // create portal that contains the portal item
     Portal portal = new Portal(getString(R.string.portal_url));
