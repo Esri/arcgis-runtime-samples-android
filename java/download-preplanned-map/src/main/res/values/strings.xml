@@ -5,4 +5,6 @@
     <string name="portal_item_ID">acc027394bc84c2fb04d1ed317aac674</string>
     <string name="write_permission_denied">Write permission required to allow downloading of preplanned map areas.</string>
     <string name="delete_all_offline_areas">Delete all offline areas</string>
+    <string name="map_area_preview">Map Area Preview</string>
+    <string name="querying_map_areas">Querying map areas...</string>
 </resources>

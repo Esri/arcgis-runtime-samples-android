@@ -30,13 +30,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -67,36 +71,41 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
   private OfflineMapTask mOfflineMapTask;
 
   private ArrayList<PreplannedAreaPreview> mPreplannedAreaPreviews;
-  private RecyclerView mRecyclerView;
-  private Button mDeleteAreasButton;
 
   private String mLocalPreplannedMapDir;
   private List<PreplannedMapArea> mPreplannedAreas;
+  private DownloadPreplannedOfflineMapJob mDownloadPreplannedOfflineMapJob;
+  private DrawerLayout mDrawerLayout;
+  private ConstraintLayout mProgressBar;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    mDrawerLayout = findViewById(R.id.drawerLayout);
+    mProgressBar = findViewById(R.id.progressDialog);
 
     requestPermissions();
 
     mMapView = findViewById(R.id.mapView);
 
-    mDeleteAreasButton = findViewById(R.id.deleteAreasButton);
-    mDeleteAreasButton.setOnClickListener(view -> unregisterAndDeleteAllAreas());
-
+    // set up button to delete and unregister geodatabases
+    Button deleteAreasButton = findViewById(R.id.deleteAreasButton);
+    deleteAreasButton.setOnClickListener(view -> unregisterAndDeleteAllAreas());
   }
 
-  public void populateDrawerWithThumbnailPreviews() {
-
+  /**
+   * Creates a recycler view in a drawer to show previews of the preplanned map areas available.
+   */
+  private void populateDrawerWithThumbnailPreviews() {
     // setup recycler view
-    mRecyclerView = findViewById(R.id.drawerRecyclerView);
+    RecyclerView recyclerView = findViewById(R.id.drawerRecyclerView);
     LinearLayoutManager layoutManager = new LinearLayoutManager(this);
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-    mRecyclerView.setLayoutManager(layoutManager);
+    recyclerView.setLayoutManager(layoutManager);
     mPreplannedAreaPreviews = new ArrayList<>();
     RecyclerViewAdapter adapter = new RecyclerViewAdapter(mPreplannedAreaPreviews);
-    mRecyclerView.setAdapter(adapter);
+    recyclerView.setAdapter(adapter);
 
     adapter.setOnAreaClicked(this);
 
@@ -125,6 +134,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
           return;
         }
 
+        // show progress bar
+        mProgressBar.setVisibility(View.VISIBLE);
+        // open the drawer from the left
+        mDrawerLayout.openDrawer(Gravity.LEFT);
+
         // get related preplanned areas
         ListenableFuture<List<PreplannedMapArea>> preplannedAreasFuture = mOfflineMapTask.getPreplannedMapAreasAsync();
         preplannedAreasFuture.addDoneListener(() -> {
@@ -143,7 +157,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
                 PreplannedAreaPreview preview = new PreplannedAreaPreview();
                 preview.setMapNum(finalI);
                 preview.setTitle(mPreplannedAreas.get(finalI).getPortalItem().getTitle());
-                ListenableFuture<byte[]> thumbnailFuture = mPreplannedAreas.get(finalI).getPortalItem().fetchThumbnailAsync();
+                ListenableFuture<byte[]> thumbnailFuture = mPreplannedAreas.get(finalI).getPortalItem()
+                    .fetchThumbnailAsync();
                 thumbnailFuture.addDoneListener(() -> {
                   try {
                     byte[] byteStream = thumbnailFuture.get();
@@ -164,9 +179,16 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
           }
         });
       });
+      mProgressBar.setVisibility(View.GONE);
     });
   }
 
+  /**
+   * Downloads an ArcGIS Map using the OfflineMapTask and a PreplannedMapArea. Sets the resulting offline map to the
+   * MapView.
+   *
+   * @param mapArea A PreplannedMapArea
+   */
   private void downloadMapArea(PreplannedMapArea mapArea) {
     String title = mapArea.getPortalItem().getTitle();
 
@@ -183,24 +205,26 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     }
 
     // make the file directory
-    file.mkdirs();
+    if (file.mkdirs()) {
+      Log.i(TAG, "Made file: " + file.getAbsolutePath());
+    }
 
     // create the job used download the preplanned map and start
-    DownloadPreplannedOfflineMapJob downloadPreplannedOfflineMapJob = mOfflineMapTask
+    mDownloadPreplannedOfflineMapJob = mOfflineMapTask
         .downloadPreplannedOfflineMap(mapArea, path);
 
     // set up notification manager to show download progress
-    startNotificationManager(downloadPreplannedOfflineMapJob, title);
+    startNotificationManager(mDownloadPreplannedOfflineMapJob, title);
 
-    downloadPreplannedOfflineMapJob.start();
-    downloadPreplannedOfflineMapJob.addJobDoneListener(() -> {
-      if (downloadPreplannedOfflineMapJob.getStatus() == Job.Status.FAILED) {
-        Log.e(TAG, "Offline map job failed: " + downloadPreplannedOfflineMapJob.getError());
+    mDownloadPreplannedOfflineMapJob.start();
+    mDownloadPreplannedOfflineMapJob.addJobDoneListener(() -> {
+      if (mDownloadPreplannedOfflineMapJob.getStatus() == Job.Status.FAILED) {
+        Log.e(TAG, "Offline map job failed: " + mDownloadPreplannedOfflineMapJob.getError());
         return;
       }
 
       // get result of downloaded area
-      DownloadPreplannedOfflineMapResult results = downloadPreplannedOfflineMapJob.getResult();
+      DownloadPreplannedOfflineMapResult results = mDownloadPreplannedOfflineMapJob.getResult();
       // handle possible errors and show them to the user
       if (results.hasErrors()) {
         handleErrors(results);
@@ -212,13 +236,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
   }
 
   /**
-   * Set up notification manager to show download progress.
+   * Set notification manager to show download progress.
    *
-   * @param job the given DownloadPreplannedOfflineMapJob
+   * @param job   the given DownloadPreplannedOfflineMapJob
    * @param title of the map area
    */
   private void startNotificationManager(DownloadPreplannedOfflineMapJob job, String title) {
     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    if (notificationManager == null) {
+      Log.e(TAG, "Failed to get notification service");
+      return;
+    }
     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "default");
     notificationBuilder.setContentTitle(title).setContentText("Download in progress")
         .setSmallIcon(android.R.drawable.stat_sys_download);
@@ -229,14 +257,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
       notificationManager.notify(0, notificationBuilder.build());
     });
 
-    //
     job.addJobDoneListener(() -> {
       if (job.getStatus() == Job.Status.SUCCEEDED) {
         notificationBuilder.setContentText("Download complete").setProgress(0, 0, false)
             .setSmallIcon(android.R.drawable.stat_sys_download_done);
         notificationManager.notify(0, notificationBuilder.build());
       } else {
-        notificationBuilder.setContentText("Download failed").setProgress(0, 0, false)
+        notificationBuilder.setContentText("Download incomplete").setProgress(0, 0, false)
             .setSmallIcon(android.R.drawable.stat_sys_warning);
         notificationManager.notify(0, notificationBuilder.build());
       }
@@ -251,54 +278,60 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
   private void handleErrors(DownloadPreplannedOfflineMapResult results) {
     StringBuilder errorBuilder = new StringBuilder();
     for (Map.Entry<Layer, ArcGISRuntimeException> layerError : results.getLayerErrors().entrySet()) {
-      errorBuilder.append(
-          layerError.getKey() + " " + layerError.getValue().getMessage() + "\n" + layerError.getValue()
-              .getCause() + "\n");
+      errorBuilder.append(layerError.getKey()).append(" ").append(layerError.getValue().getMessage()).append("\n")
+          .append(layerError.getValue().getCause()).append("\n");
     }
     for (Map.Entry<FeatureTable, ArcGISRuntimeException> tableError : results.getTableErrors().entrySet()) {
-      errorBuilder.append(
-          tableError.getKey() + " " + tableError.getValue().getMessage() + "\n" + tableError.getValue()
-              .getCause() + "\n");
+      errorBuilder.append(tableError.getKey()).append(" ").append(tableError.getValue().getMessage()).append("\n")
+          .append(tableError.getValue().getCause()).append("\n");
     }
     // report error accessing a secured resource
     Log.e(TAG, String.valueOf(errorBuilder));
   }
 
   /**
-   * Find all geodatabases from all the downloaded map areas, unregister them then recreate temporary data folder.
+   * Find all geodatabases from all the downloaded map areas and unregisters them.
    * <p>
-   * When area is downloaded, geodatabases gets registered with the original service to support syncronization. When the
-   * area is deleted from the device, it is important first to unregister all geodatabases that are used in the map so
-   * the service doesn't have any stray geodatabases registered.
+   * When an area is downloaded, geodatabases are registered with the original service to support syncronization.
+   * Before the area is deleted from the device, it's important to first unregister all geodatabases that are used in
+   * the map so the service doesn't have any stray geodatabases registered.
    */
   private void unregisterAndDeleteAllAreas() {
 
-    // if there is a map loaded to the MapView, remove it
-    if (mMapView.getMap() != null) {
-      mMapView.setMap(null);
+    // cancel the job
+    if (mDownloadPreplannedOfflineMapJob != null) {
+      mDownloadPreplannedOfflineMapJob.cancel();
     }
+
+    // set MapView to null to remove all maps
+    mMapView.setMap(null);
 
     // find all geodatabase files from the map areas by extension
     File localPreplannedMapDirFile = new File(mLocalPreplannedMapDir);
-    List<String> geodatabaseToUnregister = findGeodatabases(localPreplannedMapDirFile.listFiles());
+    if (localPreplannedMapDirFile.exists()) {
+      List<String> geodatabaseToUnregister = findGeodatabases(localPreplannedMapDirFile.listFiles());
 
-    // unregister all geodatabases
-    for (String geodatabasePath : geodatabaseToUnregister) {
-      Geodatabase geodatabase = new Geodatabase(geodatabasePath);
-      geodatabase.addDoneLoadingListener(() -> {
-        GeodatabaseSyncTask geodatabaseSyncTask = new GeodatabaseSyncTask(geodatabase.getServiceUrl());
-        geodatabaseSyncTask.addDoneLoadingListener(() -> {
-          ListenableFuture<Void> unregisterGeodatabaseAsync = geodatabaseSyncTask.unregisterGeodatabaseAsync(geodatabase);
-          unregisterGeodatabaseAsync.addDoneListener(() -> geodatabaseSyncTask.addDoneLoadingListener(geodatabase::close));
+      // unregister all geodatabases
+      for (String geodatabasePath : geodatabaseToUnregister) {
+        Geodatabase geodatabase = new Geodatabase(geodatabasePath);
+        geodatabase.addDoneLoadingListener(() -> {
+          GeodatabaseSyncTask geodatabaseSyncTask = new GeodatabaseSyncTask(geodatabase.getServiceUrl());
+          geodatabaseSyncTask.addDoneLoadingListener(() -> {
+            ListenableFuture<Void> unregisterGeodatabaseAsync = geodatabaseSyncTask
+                .unregisterGeodatabaseAsync(geodatabase);
+            unregisterGeodatabaseAsync
+                .addDoneListener(() -> geodatabaseSyncTask.addDoneLoadingListener(geodatabase::close));
+          });
         });
-      });
+      }
     }
+
     // delete all data from the temporary data folder
     deleteAll(localPreplannedMapDirFile);
   }
 
   /**
-   * Find all files of type *.geodatabase.
+   * Find all files of type *.geodatabase recursively.
    *
    * @param files as array
    * @return list of strings which are paths to .geodatabase files on the device
@@ -326,11 +359,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         deleteAll(child);
       }
     }
-    fileOrDirectory.delete();
+    if (fileOrDirectory.delete()) {
+      Log.i(TAG, "Deleted file: " + fileOrDirectory.getAbsolutePath());
+    }
   }
 
   @Override public void onAreaClick(int position) {
-    Log.d(TAG, "recycler "+ position);
     downloadMapArea(mPreplannedAreas.get(mPreplannedAreaPreviews.get(position).getMapNum()));
   }
 
@@ -377,6 +411,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    unregisterAndDeleteAllAreas();
     mMapView.dispose();
   }
 }

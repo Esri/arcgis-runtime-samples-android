@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.PreviewAreaHolder> {
 
-  private ArrayList<PreplannedAreaPreview> preplannedAreaPreviews;
+  private final ArrayList<PreplannedAreaPreview> preplannedAreaPreviews;
 
   private OnAreaClicked onAreaClicked;
 
@@ -60,8 +60,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
   }
   public static class PreviewAreaHolder extends RecyclerView.ViewHolder {
-    TextView title;
-    ImageView preview;
+    final TextView title;
+    final ImageView preview;
     public PreviewAreaHolder(View itemView) {
       super(itemView);
       title = itemView.findViewById(R.id.sectorTextView);

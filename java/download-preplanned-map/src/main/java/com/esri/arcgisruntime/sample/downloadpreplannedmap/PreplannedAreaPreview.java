@@ -2,11 +2,11 @@ package com.esri.arcgisruntime.sample.downloadpreplannedmap;
 
 import android.graphics.Bitmap;
 
-public class PreplannedAreaPreview {
+class PreplannedAreaPreview {
 
-  String mTitle;
-  int mMapNum;
-  Bitmap mBitmapThumbnail;
+  private String mTitle;
+  private int mMapNum;
+  private Bitmap mBitmapThumbnail;
 
   public String getTitle() {
     return mTitle;
