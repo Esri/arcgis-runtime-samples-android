@@ -1,5 +1,5 @@
 # Find address
-
+### Category: Search and Query
 This sample demonstrates how to geocode an address and show it on a map view.
 
 
