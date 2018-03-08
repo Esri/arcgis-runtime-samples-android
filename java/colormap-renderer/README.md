@@ -1,5 +1,5 @@
 # Colormap Renderer
-
+### Category: Visualizaton
 Demonstrates how to use a `ColormapRenderer` on `RasterLayer`. `ColormapRenderer` can be used to replace values on a `RasterLayer` with a color based on the original value brightness.
 
 ![colormap renderer app](colormap-renderer.png)
