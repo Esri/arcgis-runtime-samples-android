@@ -1,5 +1,5 @@
 # ArcGIS Vector Tiled Layer URL
-
+### Category: Visualization
 ![ArcGIS VectorTiledLayer](arcgis-vectortiledlayer.png)
 
 This app creates `Basemap`s from an `ArcGISVectorTiledLayer` which is pointed to an ArcGIS Vector Tile Service.
