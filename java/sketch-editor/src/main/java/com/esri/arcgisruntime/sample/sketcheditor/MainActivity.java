@@ -1,4 +1,4 @@
-package com.esri.arcgisruntime.sample.mapsketchingapi;
+package com.esri.arcgisruntime.sample.sketcheditor;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
