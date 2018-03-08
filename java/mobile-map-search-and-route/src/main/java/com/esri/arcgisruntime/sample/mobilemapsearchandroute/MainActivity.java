@@ -74,8 +74,8 @@ import com.esri.arcgisruntime.tasks.networkanalysis.Stop;
  * searching (ie reverse geocoding), and
  * routing.
  */
-public class MobileMapViewActivity extends AppCompatActivity {
-  private static final String TAG = MobileMapViewActivity.class.getSimpleName();
+public class MainActivity extends AppCompatActivity {
+  private static final String TAG = MainActivity.class.getSimpleName();
   private static GraphicsOverlay mMarkerGraphicsOverlay;
   private static GraphicsOverlay mRouteGraphicsOverlay;
   private static RouteTask mRouteTask;
@@ -217,7 +217,7 @@ public class MobileMapViewActivity extends AppCompatActivity {
       //request permission
       int requestCode = 2;
       ActivityCompat.requestPermissions(
-          MobileMapViewActivity.this, reqPermission, requestCode);
+          MainActivity.this, reqPermission, requestCode);
     }
     //create the mobile map package
     mMobileMapPackage = new MobileMapPackage(path);
