@@ -1,4 +1,5 @@
 # Feature Layer Extrusion
+### Category: Visualization
 This sample demonstrates how to apply extrusion to a renderer on a feature layer.
 
 ![Feature Layer Extrusion App](feature-layer-extrusion.png)
