@@ -1,5 +1,5 @@
 # Map Load Status
-
+### Category: Maps and Scenes
 This sample shows how to tell what the map's load status is. This is obtained from the enum value from a `LoadStatus` class. The `LoadStatus` is considered loaded when any of the following are true:
 * The map has a valid spatial reference
 * The map has an an initial viewpoint
