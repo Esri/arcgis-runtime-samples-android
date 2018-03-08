@@ -1,4 +1,5 @@
 # Feature Layer Update Geometry
+### Category: Manage Data
 This sample demonstrates how to update geometry in a feature layer.
 
 ![Feature Layer Update Geometry App](feature-layer-update-geometry.png)
