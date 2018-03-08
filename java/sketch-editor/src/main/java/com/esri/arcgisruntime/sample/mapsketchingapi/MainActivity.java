@@ -246,19 +246,15 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.undo:
-        undo();
-        return true;
-      case R.id.redo:
-        redo();
-        return true;
-      case R.id.stop:
-        stop();
-        return true;
-      default:
-        return super.onOptionsItemSelected(item);
+    int id = item.getItemId();
+    if (id == R.id.undo) {
+      undo();
+    } else if (id == R.id.redo) {
+      redo();
+    } else if (id == R.id.stop) {
+      stop();
     }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override
