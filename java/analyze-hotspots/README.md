@@ -1,4 +1,4 @@
-# Analyze Hotpots
+# Analyze Hotspots
 ### Category: Analysis
 This sample demonstrates how to execute a geoprocessing task to calculate a hotspot analysis based on the frequency of 911 calls. It calculates the frequency of these calls within a given study area during a specified constrained time period set between 1998-01-01 and 1998-05-31.
 
