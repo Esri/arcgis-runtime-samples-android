@@ -1,4 +1,5 @@
-# Feature layer query
+# Feature Layer Query
+### Category: Search and Query
 This sample demonstrates how to query a feature layer via feature table.
 
 ![Feature Layer Query App](feature-layer-query.png)
