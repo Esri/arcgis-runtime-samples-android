@@ -1,4 +1,5 @@
 # Add Graphics Renderer
+### Category: Visualization
 
 ![Add Graphics Renderer App](add-graphics-renderer.png)
 

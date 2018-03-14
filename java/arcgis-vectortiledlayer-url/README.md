@@ -1,4 +1,5 @@
 # ArcGIS Vector Tiled Layer URL
+### Category: Layers
 
 ![ArcGIS VectorTiledLayer](arcgis-vectortiledlayer-url.png)
 

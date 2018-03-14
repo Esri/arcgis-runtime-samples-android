@@ -1,5 +1,5 @@
 # Display Layer View State
-
+### Category: Maps and Scenes
 The sample demonstrates how to view the status of the layers on the map. This is obtained from the enum value of `LayerViewStatus`. A listener is added to the `MapView` to handle the `LayerViewStateChangedEvent`, and the status text is updated when the status changes. The list of operational layers in the map are displayed. Each row in this list also has the view status corresponding to that layer. Pan or zoom the map, to view the status changes in the layers.
 
 ![Display Layer View State App](display-layer-view-state.png)

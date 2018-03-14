@@ -1,4 +1,5 @@
-# Feature layer update attributes         
+# Feature layer update attributes
+### Category: Manage Data
 This sample demonstrates how to edit attributes of feature in a feature layer.      
 
 ![Feature Layer Update Attributes App](feature-layer-update-attributes.png)

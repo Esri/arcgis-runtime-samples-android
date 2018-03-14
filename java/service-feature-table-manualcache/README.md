@@ -1,5 +1,5 @@
 # Service Feature Table (Manual Cache)
-
+### Category: Maps and Scenes
 This sample demonstrates how to use a feature service in manual cache mode. This mode does not fetch features until a call to populate from service is called. From this point onwards, no additional queries are sent to the server to retrieve features. If you know what features you need ahead of time, this is the best mode.
 
 ![Service FeatureTable Manual Cache App](service-feature-table-manualcache.png)

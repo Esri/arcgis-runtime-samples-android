@@ -1,4 +1,5 @@
 # ArcGIS Map Image Layer URL
+### Category: Layers
 
 ![ArcGIS Map Image Layer App](arcgis-mapimagelayer-url.png)
 

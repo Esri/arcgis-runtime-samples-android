@@ -1,4 +1,5 @@
 # Feature layer selection
+### Category: Search and Query
 This sample demonstrates how to select features in a feature layer.
 
 ![Feature Layer Selection App](feature-layer-selection.png)

@@ -1,4 +1,5 @@
 # ArcGIS Tiled Layer URL
+### Category: Layers
 
 ![Tiled Layer from URL App](arcgis-tiledlayer-url.png)
 

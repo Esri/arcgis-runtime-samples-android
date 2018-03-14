@@ -1,5 +1,5 @@
 # Manage Operational Layers
-
+### Category: Maps and Scenes
 The sample demonstrates how to add, remove and reorder operational layers in a map
 
 ![Manage Operational Layers App](manage-operational-layers.png)

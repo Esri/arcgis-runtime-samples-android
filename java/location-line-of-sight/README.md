@@ -1,5 +1,5 @@
 # Location Line of Sight
-
+### Category: Analysis
 This sample demonstrates how to perform a line of sight analysis between two points in a SceneView.
 
 ![Location Line of Sight App](location-line-of-sight.png)
