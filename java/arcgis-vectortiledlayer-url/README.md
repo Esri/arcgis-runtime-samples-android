@@ -1,6 +1,6 @@
 # ArcGIS Vector Tiled Layer URL
 
-![ArcGIS VectorTiledLayer](arcgis-vectortiledlayer.png)
+![ArcGIS VectorTiledLayer](arcgis-vectortiledlayer-url.png)
 
 This app creates `Basemap`s from an `ArcGISVectorTiledLayer` which is pointed to an ArcGIS Vector Tile Service.
 It shows how to inflate a `MapView` in the layout XML of the activity, creates a `ArcGISVectorTiledLayer` from an ArcGIS Online service URL and bind that to a `Basemap`.  The `Basemap` is used to create a `Map` which is used inside of the `MapView`. It uses Android Navigation drawer to switch between different Vector Tiled Layers. By default, this map supports basic zooming and panning operations.
