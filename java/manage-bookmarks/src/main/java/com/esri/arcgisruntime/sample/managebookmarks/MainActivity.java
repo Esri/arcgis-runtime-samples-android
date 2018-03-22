@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     bookmarksSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mMapView.setViewpointAsync(mBookmarks.get(position).getViewpoint());
+        mMapView.setBookmarkAsync(mBookmarks.get(position).getViewpoint());
       }
 
       @Override
