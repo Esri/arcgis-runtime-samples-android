@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
           String path = geoPackageRaster.getPath();
 
-          // if getName is not null, use it as the raster's name
+          // if getName is not null, use it as the raster's name, else use the end of the path name as the raster's name
           rasterLayerName = rasterLayer.getName().isEmpty() ? path.substring(path.lastIndexOf('/') + 1) : rasterLayer.getName();
 
           // append the layer type to the name
