@@ -24,7 +24,6 @@ import java.util.concurrent.ExecutionException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
@@ -43,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
 
   private final String TAG = MainActivity.class.getSimpleName();
 
-  private TextView userText;
-  private TextView emailText;
-  private TextView portalNameText;
-  private TextView createDate;
-  private ImageView userImage;
+  private TextView mUserText;
+  private TextView mEmailText;
+  private TextView mPortalNameText;
+  private TextView mCreateDate;
+  private ImageView mUserImage;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
         // Get the portal information
         PortalInfo portalInformation = portal.getPortalInfo();
         String portalName = portalInformation.getPortalName();
-        portalNameText = (TextView) findViewById(R.id.portal);
-        portalNameText.setText(portalName);
+        mPortalNameText = (TextView) findViewById(R.id.portal);
+        mPortalNameText.setText(portalName);
 
         // this portal does not require authentication, if null send toast message
         if (portal.getUser() != null) {
@@ -80,13 +79,13 @@ public class MainActivity extends AppCompatActivity {
           // get the users full name
           String userName = user.getFullName();
           // update the textview
-          userText = findViewById(R.id.userName);
-          userText.setText(userName);
+          mUserText = findViewById(R.id.userName);
+          mUserText.setText(userName);
           // get the users email
           String email = user.getEmail();
           // update the textview
-          emailText = findViewById(R.id.email);
-          emailText.setText(email);
+          mEmailText = findViewById(R.id.email);
+          mEmailText.setText(email);
           // get the created date
           Calendar startDate = user.getCreated();
           // format date
@@ -94,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
           // get string format
           String formatDate = simpleDateFormat.format(startDate.getTime());
           // update textview
-          createDate = findViewById(R.id.create_date);
-          createDate.setText(formatDate);
+          mCreateDate = findViewById(R.id.create_date);
+          mCreateDate.setText(formatDate);
           // check if user profile thumbnail exists
           if (user.getThumbnailFileName() == null) {
             return;
@@ -113,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap itemThumbnail = BitmapFactory
                     .decodeByteArray(itemThumbnailData, 0, itemThumbnailData.length);
                 // set the Bitmap onto the ImageView
-                userImage = (ImageView) findViewById(R.id.userImage);
-                userImage.setImageBitmap(itemThumbnail);
+                mUserImage = (ImageView) findViewById(R.id.userImage);
+                mUserImage.setImageBitmap(itemThumbnail);
               }
             } catch (InterruptedException | ExecutionException e) {
               String errorMessage = getString(R.string.get_thumbnail_error);
