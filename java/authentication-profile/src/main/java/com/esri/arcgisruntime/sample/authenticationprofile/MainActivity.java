@@ -1,4 +1,4 @@
-/* Copyright 2016 Esri
+/* Copyright 2018 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
@@ -39,91 +41,104 @@ import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView userText;
-    private TextView emailText;
-    private TextView portalNameText;
-    private TextView createDate;
-    private ImageView userImage;
+  private final String TAG = MainActivity.class.getSimpleName();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  private TextView userText;
+  private TextView emailText;
+  private TextView portalNameText;
+  private TextView createDate;
+  private ImageView userImage;
 
-        // Set the DefaultAuthenticationChallengeHandler to allow authentication with the portal.
-        DefaultAuthenticationChallengeHandler handler = new DefaultAuthenticationChallengeHandler(this);
-        AuthenticationManager.setAuthenticationChallengeHandler(handler);
-        // Set loginRequired to true always prompt for credential,
-        // When set to false to only login if required by the portal
-        final Portal portal = new Portal("https://www.arcgis.com", true);
-        portal.addDoneLoadingListener(new Runnable() {
-            @Override
-            public void run() {
-                if (portal.getLoadStatus() == LoadStatus.LOADED) {
-                    // Get the portal information
-                    PortalInfo portalInformation = portal.getPortalInfo();
-                    String portalName = portalInformation.getPortalName();
-                    portalNameText = (TextView) findViewById(R.id.portal);
-                    portalNameText.setText(portalName);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-                    // this portal does not require authentication, if null send toast message
-                    if(portal.getUser() != null){
-                        // Get the authenticated portal user
-                        PortalUser user = portal.getUser();
-                        // get the users full name
-                        String userName = user.getFullName();
-                        // update the textview
-                        userText = (TextView) findViewById(R.id.userName);
-                        userText.setText(userName);
-                        // get the users email
-                        String email = user.getEmail();
-                        // update the textview
-                        emailText = (TextView) findViewById(R.id.email);
-                        emailText.setText(email);
-                        // get the created date
-                        Calendar startDate = user.getCreated();
-                        // format date
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
-                        // get string format
-                        String formatDate = simpleDateFormat.format(startDate.getTime());
-                        // update textview
-                        createDate = (TextView) findViewById(R.id.create_date);
-                        createDate.setText(formatDate);
-                        // check if user profile thumbnail exists
-                        if (user.getThumbnailFileName() == null) {
-                            return;
-                        }
-                        // fetch the thumbnail
-                        final ListenableFuture<byte[]> thumbnailFuture = user.fetchThumbnailAsync();
-                        thumbnailFuture.addDoneListener(new Runnable() {
-                            @Override
-                            public void run() {
-                                // get the thumbnail image data
-                                byte[] itemThumbnailData;
-                                try {
-                                    itemThumbnailData = thumbnailFuture.get();
+    // Set the DefaultAuthenticationChallengeHandler to allow authentication with the portal.
+    //[DocRef: Name=Set DefaultAuthenticationChallengeHandler, Category=Cloud and servers, Topic=Access the ArcGIS Platform]
+    // Create a DefaultAuthenticationChallengeHandler, passing in an Android Context (e.g. the current Activity)
+    DefaultAuthenticationChallengeHandler handler = new DefaultAuthenticationChallengeHandler(this);
+    // Set the challenge handler onto the AuthenticationManager
+    AuthenticationManager.setAuthenticationChallengeHandler(handler);
+    //[DocRef: END]
 
-                                    if ((itemThumbnailData != null) && (itemThumbnailData.length > 0)) {
-                                        // create a Bitmap to use as required
-                                        Bitmap itemThumbnail = BitmapFactory.decodeByteArray(itemThumbnailData, 0, itemThumbnailData.length);
-                                        // set the Bitmap onto the ImageView
-                                        userImage = (ImageView) findViewById(R.id.userImage);
-                                        userImage.setImageBitmap(itemThumbnail);
-                                    }
-                                } catch (InterruptedException | ExecutionException e) {
-                                    Log.d("TEST", e.getMessage());
-                                }
-                            }
-                        });
-                    } else {
-                        // send message that user did not authenticate
-                        Toast.makeText(getApplicationContext(), "User did not authenticate against " + portalName, Toast.LENGTH_LONG).show();
-                    }
+    // Set loginRequired to true always prompt for credential,
+    // When set to false to only login if required by the portal
+    final Portal portal = new Portal(getString(R.string.get_thumbnail_error), true);
+    portal.addDoneLoadingListener(new Runnable() {
+      @Override
+      public void run() {
+        if (portal.getLoadStatus() == LoadStatus.LOADED) {
+          // Get the portal information
+          PortalInfo portalInformation = portal.getPortalInfo();
+          String portalName = portalInformation.getPortalName();
+          portalNameText = (TextView) findViewById(R.id.portal);
+          portalNameText.setText(portalName);
 
-                }
+          // this portal does not require authentication, if null send toast message
+          if (portal.getUser() != null) {
+            // Get the authenticated portal user
+            PortalUser user = portal.getUser();
+            // get the users full name
+            String userName = user.getFullName();
+            // update the textview
+            userText = (TextView) findViewById(R.id.userName);
+            userText.setText(userName);
+            // get the users email
+            String email = user.getEmail();
+            // update the textview
+            emailText = (TextView) findViewById(R.id.email);
+            emailText.setText(email);
+            // get the created date
+            Calendar startDate = user.getCreated();
+            // format date
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getString(R.string.date_format), Locale.US);
+            // get string format
+            String formatDate = simpleDateFormat.format(startDate.getTime());
+            // update textview
+            createDate = (TextView) findViewById(R.id.create_date);
+            createDate.setText(formatDate);
+            // check if user profile thumbnail exists
+            if (user.getThumbnailFileName() == null) {
+              return;
             }
-        });
-        portal.loadAsync();
-    }
+            // fetch the thumbnail
+            final ListenableFuture<byte[]> thumbnailFuture = user.fetchThumbnailAsync();
+            thumbnailFuture.addDoneListener(new Runnable() {
+              @Override
+              public void run() {
+                // get the thumbnail image data
+                byte[] itemThumbnailData;
+                try {
+                  itemThumbnailData = thumbnailFuture.get();
+
+                  if ((itemThumbnailData != null) && (itemThumbnailData.length > 0)) {
+                    // create a Bitmap to use as required
+                    Bitmap itemThumbnail = BitmapFactory
+                        .decodeByteArray(itemThumbnailData, 0, itemThumbnailData.length);
+                    // set the Bitmap onto the ImageView
+                    userImage = (ImageView) findViewById(R.id.userImage);
+                    userImage.setImageBitmap(itemThumbnail);
+                  }
+                } catch (InterruptedException | ExecutionException e) {
+                  String errorMessage = getString(R.string.get_thumbnail_error);
+                  Log.e(TAG, errorMessage + e.getMessage());
+                  Toast.makeText(getApplicationContext(), errorMessage + "\n" + e.getMessage(), Toast.LENGTH_LONG)
+                      .show();
+                }
+              }
+            });
+          } else {
+            // send message that user did not authenticate
+            String authErrorMessage = getString(R.string.authenticate_error) + portalName;
+            Log.e(TAG, authErrorMessage);
+            Toast.makeText(getApplicationContext(), authErrorMessage, Toast.LENGTH_LONG).show();
+          }
+
+        }
+      }
+    });
+    portal.loadAsync();
+  }
 }
 
