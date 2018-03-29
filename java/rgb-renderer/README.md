@@ -20,13 +20,13 @@ To apply a `RGBRenderer` to a `RasterLayer`:
 
 ## Features
 
-- ArcGISMap
-- Basemap
-- MapView
-- Raster
-- RasterLayer
-- StretchParameters
-- RGBRenderer
+* ArcGISMap
+* Basemap
+* MapView
+* Raster
+* RasterLayer
+* StretchParameters
+* RGBRenderer
 
 
 ## Provision your device

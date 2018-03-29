@@ -43,6 +43,8 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
  */
 public class MainActivity extends AppCompatActivity {
 
+  private MapView mMapView;
+
   private Envelope createEnvelope() {
 
     //[DocRef: Name=Create Envelope, Category=Fundamentals, Topic=Geometries]
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     // get MapView from layout
-    MapView mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = (MapView) findViewById(R.id.mapView);
 
     // create a map with the BasemapType topographic
     final ArcGISMap mMap = new ArcGISMap(Basemap.createTopographic());
@@ -136,4 +138,21 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }

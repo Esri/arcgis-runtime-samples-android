@@ -26,34 +26,40 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MapView mMapView;
+  private MapView mMapView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        // inflate MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapViewLayout);
-        // create new Tiled Layer from service url
-        ArcGISTiledLayer tiledLayerBaseMap = new ArcGISTiledLayer(getResources().getString(R.string.world_topo_service));
-        // set tiled layer as basemap
-        Basemap basemap = new Basemap(tiledLayerBaseMap);
-        // create a map with the basemap
-        ArcGISMap map = new ArcGISMap(basemap);
-        // set the map to be displayed in this view
-        mMapView.setMap(map);
-    }
+    // inflate MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapViewLayout);
+    // create new Tiled Layer from service url
+    ArcGISTiledLayer tiledLayerBaseMap = new ArcGISTiledLayer(getResources().getString(R.string.world_topo_service));
+    // set tiled layer as basemap
+    Basemap basemap = new Basemap(tiledLayerBaseMap);
+    // create a map with the basemap
+    ArcGISMap map = new ArcGISMap(basemap);
+    // set the map to be displayed in this view
+    mMapView.setMap(map);
+  }
 
-    @Override
-    protected void onPause(){
-        super.onPause();
-        mMapView.pause();
-    }
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        mMapView.resume();
-    }
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }

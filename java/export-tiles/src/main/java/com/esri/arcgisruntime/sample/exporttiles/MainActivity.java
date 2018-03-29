@@ -317,4 +317,11 @@ public class MainActivity extends AppCompatActivity {
     mMapView.resume();
     mTileCachePreview.resume();
   }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+    mTileCachePreview.dispose();
+  }
 }

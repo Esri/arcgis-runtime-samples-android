@@ -6,7 +6,7 @@ This sample demonstrates how to export tiles from a map server.
 
 Pan and zoom into the desired area, making sure the area is within the red block. Tap on the `Export tiles` button to start the process. On successful completion you will see a preview of the downloaded tpk.
 
-![](image1.png)
+![Export Tiles App](export-tiles.png)
 
 
 ## How it works

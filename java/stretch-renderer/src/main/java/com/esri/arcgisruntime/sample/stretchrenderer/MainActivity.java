@@ -16,6 +16,9 @@
 
 package com.esri.arcgisruntime.sample.stretchrenderer;
 
+import java.io.File;
+import java.util.Collections;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -29,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+
 import com.esri.arcgisruntime.layers.RasterLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -39,9 +43,6 @@ import com.esri.arcgisruntime.raster.Raster;
 import com.esri.arcgisruntime.raster.StandardDeviationStretchParameters;
 import com.esri.arcgisruntime.raster.StretchParameters;
 import com.esri.arcgisruntime.raster.StretchRenderer;
-
-import java.io.File;
-import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements ParametersDialogFragment.ParametersListener {
 
@@ -203,6 +204,12 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
   protected void onResume() {
     super.onResume();
     mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
   }
 
   enum StretchType {

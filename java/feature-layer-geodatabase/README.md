@@ -1,12 +1,12 @@
 # Feature layer (GeoDatabase)
 This sample demonstrates how to consume an Esri mobile geodatabase by using a `FeatureLayer` and a `GeodatabaseFeatureTable`.
 
-![feature layer geodatabase](feature-layer-geodb.png)
+![feature layer geodatabase](feature-layer-geodatabase.png)
 
 ## Features
-- FeatureLayer
-- Geodatabase
-- GeodatabaseFeatureTable
+* FeatureLayer
+* Geodatabase
+* GeodatabaseFeatureTable
 
 ## Developer Pattern
 The sample creates an instance of `GeodatabaseFeatureTable` by supplying a path to a local mobile geodatabase. The `FeatureLayer` is then supplied with the `GeodatabaseFeatureTable` and added to the Map. The mobile geodatabase can either be obtained through ArcMap, with the Create Runtime Content geoprocessing tool, or through a feature service with the `GeodatabaseSyncTask`.
