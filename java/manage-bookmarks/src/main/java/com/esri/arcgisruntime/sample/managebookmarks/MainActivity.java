@@ -16,9 +16,6 @@
 
 package com.esri.arcgisruntime.sample.managebookmarks;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -33,13 +30,15 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Bookmark;
 import com.esri.arcgisruntime.mapping.BookmarkList;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     bookmarksSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mMapView.setViewpointAsync(mBookmarks.get(position).getViewpoint());
+        mMapView.setBookmarkAsync(mBookmarks.get(position));
       }
 
       @Override
@@ -123,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     mBookmark = new Bookmark(getResources().getString(R.string.desert_pattern), viewpoint);
     mBookmarks.add(mBookmark);
     // Set the viewpoint to the default bookmark selected in the spinner
-    mMapView.setViewpointAsync(viewpoint);
+    mMapView.setBookmarkAsync(mBookmarks.get(0));
 
     //Strange Symbol
     viewpoint = new Viewpoint(37.401573, -116.867808, 6e3);
