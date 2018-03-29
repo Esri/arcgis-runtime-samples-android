@@ -16,9 +16,6 @@
 
 package com.esri.arcgisruntime.sample.readgeopackage;
 
-import java.util.HashMap;
-import java.util.List;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -34,7 +31,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.esri.arcgisruntime.data.GeoPackage;
 import com.esri.arcgisruntime.data.GeoPackageFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -46,6 +42,9 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.raster.GeoPackageRaster;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,15 +67,16 @@ public class MainActivity extends AppCompatActivity {
     mDrawerListView = findViewById(R.id.left_drawer);
     mDrawerLayout = findViewById(R.id.drawer_layout);
 
-    // on item click, get item text and use it to get hash map layer and pass to toggleLayer
+    // on tapping a layer in the drawer list view, toggle the check box and call toggleLayer
     mDrawerListView.setOnItemClickListener(
         (adapterView, view, i, l) ->  {
           CheckBox checkBox = view.findViewById(R.id.layerCheckBox);
           checkBox.setChecked(!checkBox.isChecked());
+          // toggles the given layer on and off
           toggleLayer(mLayersHashMap.get(mDrawerListView.getItemAtPosition(i).toString()));
         });
 
-    // init adaptor
+    // initialize the array adaptor
     mLayersStringAdaptor = new ArrayAdapter<>(this, R.layout.drawer_list_item, R.id.layerCheckBox);
 
     // set the adapter for the list view
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
       if (geoPackage.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
         String error = "Geopackage failed to load: " + geoPackage.getLoadError();
         Log.e(TAG, error);
-        Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         return;
       }
 
@@ -127,11 +127,7 @@ public class MainActivity extends AppCompatActivity {
           String path = geoPackageRaster.getPath();
 
           // if getName is not null, use it as the raster's name
-          if (!rasterLayer.getName().equals("")) {
-            rasterLayerName = rasterLayer.getName();
-          } else { // else use the end of the path name as the raster's name
-            rasterLayerName = path.substring(path.lastIndexOf("/") + 1);
-          }
+          rasterLayerName = rasterLayer.getName().isEmpty() ? path.substring(path.lastIndexOf('/') + 1) : rasterLayer.getName();
 
           // append the layer type to the name
           rasterLayerName += "\n(RasterLayer)";
@@ -169,11 +165,10 @@ public class MainActivity extends AppCompatActivity {
           // add the name of the FeatureLayer to the layers StringAdapter
           mLayersStringAdaptor.add(featureLayerName);
           mLayersStringAdaptor.notifyDataSetChanged();
-
-          // open the drawer
-          mDrawerLayout.openDrawer(Gravity.START);
         });
       }
+      // open the drawer
+      mDrawerLayout.openDrawer(Gravity.START);
     });
   }
 
@@ -200,23 +195,25 @@ public class MainActivity extends AppCompatActivity {
   private void requestPermissions() {
     int requestCode = 1;
     // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
       readGeoPackage();
     } else {
       // request permission
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
+      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
     }
   }
 
   /**
    * Handle the permissions request response.
    */
+  @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       readGeoPackage();
     } else {
       // report to user that permission was denied
-      Toast.makeText(MainActivity.this, getResources().getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, getResources().getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
     }
   }
 
