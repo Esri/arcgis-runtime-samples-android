@@ -16,8 +16,6 @@
 
 package com.esri.arcgisruntime.sample.openmobilemappackage;
 
-import java.io.File;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -28,10 +26,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.MobileMapPackage;
 import com.esri.arcgisruntime.mapping.view.MapView;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     // get the directory
     extSDCardDirName = this.getResources().getString(R.string.config_data_sdcard_offline_dir);
     // get mobile map package filename
-    filename = this.getResources().getString(R.string.config_mmpk_name);
+    filename = this.getResources().getString(R.string.yellowstone_mmpk);
     // create the full path to the mobile map package file
     mmpkFilePath = createMobileMapPackageFilePath();
 
@@ -111,11 +110,11 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void run() {
         // check load status and that the mobile map package has maps
-        if (mapPackage.getLoadStatus() == LoadStatus.LOADED && mapPackage.getMaps().size() > 0) {
+        if (mapPackage.getLoadStatus() == LoadStatus.LOADED && !mapPackage.getMaps().isEmpty()) {
           // add the map from the mobile map package to the MapView
           mMapView.setMap(mapPackage.getMaps().get(0));
         } else {
-          // Log an issue if the mobile map package fails to load
+          // log an issue if the mobile map package fails to load
           Log.e(TAG, mapPackage.getLoadError().getMessage());
         }
       }
