@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
       @Override public void run() {
         // create directory for file at .../ArcGIS/Samples/TileCache/
         File file = new File(Environment.getExternalStorageDirectory(),
-            getString(R.string.config_data_sdcard_offline_dir));
+            getString(R.string.tile_cache_folder));
         if (!file.exists()) {
           boolean dirCreated = file.mkdirs();
           if (dirCreated) {
@@ -210,8 +210,8 @@ public class MainActivity extends AppCompatActivity {
           // export tile cache to directory
           ExportTileCacheParameters parameters = parametersFuture.get();
           mExportTileCacheJob = mExportTileCacheTask.exportTileCacheAsync(parameters,
-              Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir)
-                  + getString(R.string.file_name));
+              Environment.getExternalStorageDirectory() + getString(R.string.tile_cache_folder)
+                  + getString(R.string.world_street_map_tpk));
         } catch (InterruptedException e) {
           Log.e(TAG, "TileCacheParameters interrupted: " + e.getMessage());
         } catch (ExecutionException e) {

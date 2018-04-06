@@ -16,9 +16,6 @@
 
 package com.esri.arcgisruntime.sample.generategeodatabase;
 
-import java.io.File;
-import java.util.concurrent.ExecutionException;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -34,7 +31,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Geodatabase;
@@ -53,6 +49,9 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseJob;
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseParameters;
 import com.esri.arcgisruntime.tasks.geodatabase.GeodatabaseSyncTask;
+
+import java.io.File;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -133,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
                   // define the local path where the geodatabase will be stored
                   final String localGeodatabasePath =
-                      getCacheDir().toString() + File.separator + getString(R.string.file_name);
+                      getCacheDir().toString() + File.separator + getString(R.string.wildfire_geodatabase);
 
                   // create and start the job
                   final GenerateGeodatabaseJob generateGeodatabaseJob = geodatabaseSyncTask
