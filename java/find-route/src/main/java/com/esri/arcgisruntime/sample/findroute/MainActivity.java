@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_drawer);
+    setContentView(R.layout.directions_drawer);
 
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Set the adapter for the list view
                 mDrawerList.setAdapter(new ArrayAdapter<>(getApplicationContext(),
-                    R.layout.drawer_layout_text, directionsArray));
+                    R.layout.directions_layout, directionsArray));
 
                 if (mProgressDialog.isShowing()) {
                   mProgressDialog.dismiss();
