@@ -111,7 +111,7 @@ public class ParametersDialogFragment extends DialogFragment {
     @SuppressLint("InflateParams")
     final View dialogView = inflater.inflate(R.layout.rgb_dialog_box, null);
     paramDialog.setView(dialogView);
-    paramDialog.setTitle(R.string.dialog_title);
+    paramDialog.setTitle(R.string.rgb_rendering_parameters);
     paramDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
