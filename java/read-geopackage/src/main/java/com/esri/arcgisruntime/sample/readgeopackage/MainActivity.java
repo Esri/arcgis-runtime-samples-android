@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     // initialize the array adaptor
-    mLayersStringAdaptor = new ArrayAdapter<>(this, R.layout.drawer_list_item, R.id.geopackageLayerCheckBox);
+    mLayersStringAdaptor = new ArrayAdapter<>(this, R.layout.geopackage_layer_item, R.id.geopackageLayerCheckBox);
 
     // set the adapter for the list view
     mDrawerListView.setAdapter(mLayersStringAdaptor);
