@@ -70,14 +70,14 @@ public class MainActivity extends AppCompatActivity {
     // on tapping a layer in the drawer list view, toggle the check box and call toggleLayer
     mDrawerListView.setOnItemClickListener(
         (adapterView, view, i, l) ->  {
-          CheckBox checkBox = view.findViewById(R.id.layerCheckBox);
+          CheckBox checkBox = view.findViewById(R.id.geopackageLayerCheckBox);
           checkBox.setChecked(!checkBox.isChecked());
           // toggles the given layer on and off
           toggleLayer(mLayersHashMap.get(mDrawerListView.getItemAtPosition(i).toString()));
         });
 
     // initialize the array adaptor
-    mLayersStringAdaptor = new ArrayAdapter<>(this, R.layout.drawer_list_item, R.id.layerCheckBox);
+    mLayersStringAdaptor = new ArrayAdapter<>(this, R.layout.drawer_list_item, R.id.geopackageLayerCheckBox);
 
     // set the adapter for the list view
     mDrawerListView.setAdapter(mLayersStringAdaptor);
