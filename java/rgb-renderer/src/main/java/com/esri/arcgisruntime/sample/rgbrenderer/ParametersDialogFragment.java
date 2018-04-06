@@ -109,7 +109,7 @@ public class ParametersDialogFragment extends DialogFragment {
 
     final AlertDialog.Builder paramDialog = new AlertDialog.Builder(getContext());
     @SuppressLint("InflateParams")
-    final View dialogView = inflater.inflate(R.layout.dialog_box, null);
+    final View dialogView = inflater.inflate(R.layout.rgb_dialog_box, null);
     paramDialog.setView(dialogView);
     paramDialog.setTitle(R.string.dialog_title);
     paramDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -357,7 +357,7 @@ public class ParametersDialogFragment extends DialogFragment {
     stretchTypeArray.add(MainActivity.StretchType.MIN_MAX.toString());   //ordinals:0
     stretchTypeArray.add(MainActivity.StretchType.PERCENT_CLIP.toString());       //1
     stretchTypeArray.add(MainActivity.StretchType.STANDARD_DEVIATION.toString()); //2
-    ArrayAdapter<String> stretchTypeSpinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_text_view,
+    ArrayAdapter<String> stretchTypeSpinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.rgb_spinner_text_view,
         stretchTypeArray);
     Spinner stretchTypeSpinner = (Spinner) dialogView.findViewById(R.id.stretch_type_spinner);
     stretchTypeSpinner.setAdapter(stretchTypeSpinnerAdapter);
