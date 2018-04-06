@@ -17,7 +17,7 @@
         </com.esri.arcgisruntime.mapping.view.MapView>
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/directionFAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
