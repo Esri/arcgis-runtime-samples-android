@@ -16,32 +16,31 @@
 
 package com.esri.arcgisruntime.sample.takescreenshot;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaActionSound;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -192,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private class SaveImageTask extends AsyncTask<Bitmap, Void, File> {
 
+    @Override
     protected void onPreExecute() {
       // display a toast message to inform saving the map as an image
       Toast.makeText(getApplicationContext(), getResources().getString(R.string.map_export_message), Toast.LENGTH_SHORT)
@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * save the file using a worker thread
      */
+    @Override
     protected File doInBackground(Bitmap... mapBitmap) {
 
       try {
@@ -216,12 +217,18 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Perform the work on UI thread to open the exported map image
      */
+    @Override
     protected void onPostExecute(File file) {
       // Open the file to view
       Intent i = new Intent();
-      i.setAction(android.content.Intent.ACTION_VIEW);
-      i.setDataAndType(Uri.fromFile(file), "image/png");
+      i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+      i.setAction(Intent.ACTION_VIEW);
+      i.setDataAndType(
+          FileProvider.getUriForFile(MainActivity.this, getApplicationContext().getPackageName() + ".provider", file),
+          "image/png");
       startActivity(i);
     }
   }
+
+  public static class ScreenshotFileProvider extends FileProvider {}
 }
