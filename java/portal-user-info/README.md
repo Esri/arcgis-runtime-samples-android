@@ -1,5 +1,5 @@
 # Portal User Info
-The Authentication Profile sample use the `DefaultAuthenticationChallengeHandler` class to take care of showing an authentication dialog for logging into a `Portal`. Once authenticated against the portal the app displays information about the authenticated user's profile.
+This sample uses the `DefaultAuthenticationChallengeHandler` class to take care of showing an authentication dialog for logging into a `Portal`. Once authenticated against the portal, the app displays information about the authenticated user's profile.
 
 ![Authentication Profile App](portal-user-info.png) 
 
