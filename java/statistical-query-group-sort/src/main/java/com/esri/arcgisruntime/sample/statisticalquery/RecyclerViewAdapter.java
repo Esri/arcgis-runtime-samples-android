@@ -16,9 +16,6 @@
 
 package com.esri.arcgisruntime.sample.statisticalquery;
 
-import java.util.Collections;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -28,23 +25,25 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import java.util.List;
+
 /**
  * Flexible recycler view adapter which binds a field row either with or without a checkbox.
  */
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
   private final LayoutInflater mInflater;
-  private final int FIELD = 0;
-  private final int FIELDWITHCHECKBOX = 1;
-  private List<String> mFields = Collections.emptyList();
+  private static final int FIELD = 0;
+  private static final int FIELDWITHCHECKBOX = 1;
+  private List<String> mFields;
   private int mSelectedPosition = 0;
   private final boolean mHasCheckbox;
   private final boolean[] mCheckedList;
 
   public RecyclerViewAdapter(Context context, List<String> fields, boolean hasCheckbox) {
-    this.mInflater = LayoutInflater.from(context);
-    this.mFields = fields;
-    this.mHasCheckbox = hasCheckbox;
+    mInflater = LayoutInflater.from(context);
+    mFields = fields;
+    mHasCheckbox = hasCheckbox;
     mCheckedList = hasCheckbox ? new boolean[fields.size()] : null;
   }
 
@@ -101,6 +100,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
   @Override
   public int getItemViewType(int position) {
+    int i = super.getItemViewType(position);
     return mHasCheckbox ? FIELDWITHCHECKBOX : FIELD;
   }
 
@@ -112,10 +112,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     return mFields.get(id);
   }
 
-  public class ViewHolderField extends RecyclerView.ViewHolder implements View.OnClickListener {
-    public final TextView mRowTextView;
+  class ViewHolderField extends RecyclerView.ViewHolder implements View.OnClickListener {
+    final TextView mRowTextView;
 
-    public ViewHolderField(View itemView) {
+    ViewHolderField(View itemView) {
       super(itemView);
       mRowTextView = itemView.findViewById(R.id.rowTextView);
       itemView.setOnClickListener(this);
@@ -131,11 +131,11 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
   }
 
-  public class ViewHolderFieldCheckBox extends RecyclerView.ViewHolder implements View.OnClickListener {
-    public final TextView mRowTextView;
-    public final CheckBox mCheckBox;
+  class ViewHolderFieldCheckBox extends RecyclerView.ViewHolder implements View.OnClickListener {
+    final TextView mRowTextView;
+    final CheckBox mCheckBox;
 
-    public ViewHolderFieldCheckBox(View itemView) {
+    ViewHolderFieldCheckBox(View itemView) {
       super(itemView);
       mRowTextView = itemView.findViewById(R.id.rowTextView);
       mCheckBox = itemView.findViewById(R.id.rowCheckBox);

@@ -16,10 +16,6 @@
 
 package com.esri.arcgisruntime.sample.statisticalquery;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -27,6 +23,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Expandable list view which displays grouped results from a LinkedHashMap.
@@ -39,13 +39,13 @@ class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
   public ExpandableListViewAdapter(Context context, LinkedHashMap<String, List<String>> statList) {
     this.context = context;
-    this.mGroupList = new ArrayList<>(statList.keySet());
-    this.mStatList = statList;
+    mGroupList = new ArrayList<>(statList.keySet());
+    mStatList = statList;
   }
 
   @Override
   public Object getChild(int groupListPosition, int statListPosition) {
-    return this.mStatList.get(this.mGroupList.get(groupListPosition)).get(statListPosition);
+    return mStatList.get(mGroupList.get(groupListPosition)).get(statListPosition);
   }
 
   @Override
@@ -58,7 +58,7 @@ class ExpandableListViewAdapter extends BaseExpandableListAdapter {
       ViewGroup parent) {
     final String expandedListText = (String) getChild(groupListPosition, statListPosition);
     if (convertView == null) {
-      LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       convertView = layoutInflater.inflate(android.R.layout.simple_expandable_list_item_1, null);
     }
     TextView expandedListTextView = convertView.findViewById(android.R.id.text1);
@@ -68,17 +68,17 @@ class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
   @Override
   public int getChildrenCount(int listPosition) {
-    return this.mStatList.get(this.mGroupList.get(listPosition)).size();
+    return mStatList.get(mGroupList.get(listPosition)).size();
   }
 
   @Override
   public Object getGroup(int listPosition) {
-    return this.mGroupList.get(listPosition);
+    return mGroupList.get(listPosition);
   }
 
   @Override
   public int getGroupCount() {
-    return this.mGroupList.size();
+    return mGroupList.size();
   }
 
   @Override
@@ -90,7 +90,7 @@ class ExpandableListViewAdapter extends BaseExpandableListAdapter {
   public View getGroupView(int listPosition, boolean isExpanded, View convertView, ViewGroup parent) {
     String listTitle = (String) getGroup(listPosition);
     if (convertView == null) {
-      LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       convertView = layoutInflater.inflate(android.R.layout.simple_expandable_list_item_1, null);
     }
     TextView listTitleTextView = convertView.findViewById(android.R.id.text1);

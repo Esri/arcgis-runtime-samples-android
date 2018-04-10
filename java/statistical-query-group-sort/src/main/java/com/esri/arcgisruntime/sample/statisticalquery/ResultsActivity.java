@@ -16,23 +16,17 @@
 
 package com.esri.arcgisruntime.sample.statisticalquery;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import com.esri.arcgisruntime.data.StatisticRecord;
-import com.esri.arcgisruntime.data.StatisticsQueryResult;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Gets results from the main activity through an Intent extra, converts the results to a LinkedHashMap, and creates an
@@ -46,37 +40,9 @@ public class ResultsActivity extends AppCompatActivity {
 
     // get intent from main activity
     Intent intent = getIntent();
-    String statisticsQueryResultString = intent.getStringExtra("results");
     Gson gson = new Gson();
-    // get statistics query result from intent as Gson
-    StatisticsQueryResult statisticsQueryResult = gson.fromJson(statisticsQueryResultString, StatisticsQueryResult.class);
-
-    // create a LinkedHashMap (preserves ordering) and populate it with the statistics query result
-    LinkedHashMap<String, List<String>> groupedStatistics = new LinkedHashMap<>();
-    // get each statistic record
-    for (Iterator<StatisticRecord> results = statisticsQueryResult.iterator(); results.hasNext(); ) {
-      StatisticRecord statisticRecord = results.next();
-      // if statistic record contains no grouping
-      if (statisticRecord.getGroup().isEmpty()) {
-        List<String> statsWithoutGroup = new ArrayList<>();
-        for (Map.Entry<String, Object> stat : statisticRecord.getStatistics().entrySet()) {
-          statsWithoutGroup.add(stat.getKey() + ": " + stat.getValue());
-        }
-        // add statistics to an expandable list view category called ungrouped statistics
-        groupedStatistics.put("Ungrouped statistics", statsWithoutGroup);
-      } else {
-        // get group for each statistic record
-        for (Map.Entry<String, Object> group : statisticRecord.getGroup().entrySet()) {
-          // add all stats for each group to a new list
-          List<String> statsForGroup = new ArrayList<>();
-          for (Map.Entry<String, Object> stat : statisticRecord.getStatistics().entrySet()) {
-            statsForGroup.add(stat.getKey() + ": " + stat.getValue());
-          }
-          // add group and associated stats for that group to linked hash map
-          groupedStatistics.put(group.getValue().toString(), statsForGroup);
-        }
-      }
-    }
+    // get linked hash map from intent
+    LinkedHashMap<String, List<String>> groupedStatistics =  gson.fromJson(intent.getStringExtra("results"), new ResultsActivity.LinkedHashMapTypeToken().getType());
 
     // create expandable list view
     ExpandableListView expandableListView = findViewById(R.id.expandableListView);
@@ -84,5 +50,8 @@ public class ResultsActivity extends AppCompatActivity {
     expandableListView.setAdapter(expandableListAdapter);
     // expand the first group by default
     expandableListView.expandGroup(0);
+  }
+
+  private static class LinkedHashMapTypeToken extends TypeToken<LinkedHashMap<String, List<String>>> {
   }
 }

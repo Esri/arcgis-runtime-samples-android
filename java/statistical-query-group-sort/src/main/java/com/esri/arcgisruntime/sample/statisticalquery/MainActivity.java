@@ -16,10 +16,6 @@
 
 package com.esri.arcgisruntime.sample.statisticalquery;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,16 +26,22 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.data.StatisticDefinition;
+import com.esri.arcgisruntime.data.StatisticRecord;
 import com.esri.arcgisruntime.data.StatisticType;
 import com.esri.arcgisruntime.data.StatisticsQueryParameters;
 import com.esri.arcgisruntime.data.StatisticsQueryResult;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * This class demonstrates querying statistics from a service feature table. To make the query relevant,
@@ -121,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
    */
   private void executeStatisticsQuery() {
     // verify that there is at least one statistic definition in the statistic definition list
-    if (mStatisticDefinitionList.size() == 0) {
-      Toast.makeText(MainActivity.this, "Please define at least one statistic for the query.", Toast.LENGTH_LONG)
+    if (mStatisticDefinitionList.isEmpty()) {
+      Toast.makeText(this, "Please define at least one statistic for the query.", Toast.LENGTH_LONG)
           .show();
       return;
     }
@@ -148,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             getSortOrderFrom(fieldAndSortOrder));
         statQueryParams.getOrderByFields().add(orderBy);
       } else {
-        Toast.makeText(MainActivity.this,
+        Toast.makeText(this,
             "Only checked fields in the 'Group Fields' list can be selected for ordering in the 'Order by Field' list.",
             Toast.LENGTH_LONG).show();
       }
@@ -158,9 +160,41 @@ public class MainActivity extends AppCompatActivity {
     ListenableFuture<StatisticsQueryResult> statisticsQueryResultFuture = mUsStatesFeatureTable.queryStatisticsAsync(statQueryParams);
     statisticsQueryResultFuture.addDoneListener(() -> {
       try {
+        // get the StatisticsQueryResult
         StatisticsQueryResult statisticsQueryResult = statisticsQueryResultFuture.get();
+
+        // create a LinkedHashMap (preserves ordering) and populate it with the statistics query result
+        Map<String, List<String>> groupedStatistics = new LinkedHashMap<>();
+        // get each statistic record
+        for (Iterator<StatisticRecord> results = statisticsQueryResult.iterator(); results.hasNext(); ) {
+          StatisticRecord statisticRecord = results.next();
+          // if statistic record contains no grouping
+          if (statisticRecord.getGroup().isEmpty()) {
+            List<String> statsWithoutGroup = new ArrayList<>();
+            for (Map.Entry<String, Object> stat : statisticRecord.getStatistics().entrySet()) {
+              statsWithoutGroup.add(stat.getKey() + ": " + stat.getValue());
+            }
+            // add statistics to an expandable list view category called ungrouped statistics
+            groupedStatistics.put("Ungrouped statistics", statsWithoutGroup);
+          } else {
+            // get group for each statistic record
+            for (Map.Entry<String, Object> group : statisticRecord.getGroup().entrySet()) {
+              // add all stats for each group to a new list
+              List<String> statsForGroup = new ArrayList<>();
+              for (Map.Entry<String, Object> stat : statisticRecord.getStatistics().entrySet()) {
+                statsForGroup.add(stat.getKey() + ": " + stat.getValue());
+              }
+              // add group and associated stats for that group to linked hash map
+              groupedStatistics.put(group.getValue().toString(), statsForGroup);
+            }
+          }
+        }
+
+        // write the linked hash map out to json
+        Gson gson = new Gson();
+        String groupedStatisticsJson = gson.toJson(groupedStatistics, LinkedHashMap.class);
         // pass the results to displayResults
-        displayResults(statisticsQueryResult);
+        displayResults(groupedStatisticsJson);
       } catch (InterruptedException | ExecutionException e) {
         Log.e(TAG, "Invalid statistics definition: " + e.getMessage());
       }
@@ -177,13 +211,13 @@ public class MainActivity extends AppCompatActivity {
     StatisticType statType = StatisticType.valueOf(mTypeSpinner.getSelectedItem().toString());
 
     // check if the list already contains this field/type pair, and adds it if it doesn't
-    if (!mStatisticDefinitionsAsStringsList.contains(fieldName + " (" + statType + ")")) {
-      mStatisticDefinitionsAsStringsList.add(fieldName + " (" + statType + ")");
+    if (!mStatisticDefinitionsAsStringsList.contains(fieldName + " (" + statType + ')')) {
+      mStatisticDefinitionsAsStringsList.add(fieldName + " (" + statType + ')');
       mStatisticsDefinitionAdapter.notifyItemInserted(mStatisticDefinitionsAsStringsList.size() - 1);
       StatisticDefinition statDefinition = new StatisticDefinition(fieldName, statType);
       mStatisticDefinitionList.add(statDefinition);
     } else {
-      Toast.makeText(MainActivity.this, "The statistic definitions list already contains this field and type pair.",
+      Toast.makeText(this, "The statistic definitions list already contains this field and type pair.",
           Toast.LENGTH_LONG).show();
     }
   }
@@ -193,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void removeStatistic() {
     // check if the statistic definitions list has any statistic definitions
-    if (mStatisticDefinitionList.size() > 0) {
+    if (!mStatisticDefinitionList.isEmpty()) {
       // remove statistic definition from statistics definition list and recycler view
       int position = mStatisticsDefinitionAdapter.getSelectedPosition();
       mStatisticDefinitionList.remove(position);
@@ -213,16 +247,16 @@ public class MainActivity extends AppCompatActivity {
     // check if field is checked
     if (getCheckedFields().contains(field)) {
       // check if the order by list already contains the field
-      if (!mOrderByList.contains(field + " (" + QueryParameters.SortOrder.ASCENDING + ")") &&
-          !mOrderByList.contains(field + " (" + QueryParameters.SortOrder.DESCENDING + ")")) {
+      if (!mOrderByList.contains(field + " (" + QueryParameters.SortOrder.ASCENDING + ')') &&
+          !mOrderByList.contains(field + " (" + QueryParameters.SortOrder.DESCENDING + ')')) {
         // add field to order list with a sort order of ASCENDING
-        mOrderByList.add(field + " (" + QueryParameters.SortOrder.ASCENDING + ")");
+        mOrderByList.add(field + " (" + QueryParameters.SortOrder.ASCENDING + ')');
         mOrderByAdapter.notifyItemInserted(mOrderByList.size() - 1);
       } else {
-        Toast.makeText(MainActivity.this, "Statistics are already being ordered by " + field, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Statistics are already being ordered by " + field, Toast.LENGTH_LONG).show();
       }
     } else {
-      Toast.makeText(MainActivity.this, "Only fields selected for grouping can also be ordered.", Toast.LENGTH_LONG)
+      Toast.makeText(this, "Only fields selected for grouping can also be ordered.", Toast.LENGTH_LONG)
           .show();
     }
   }
@@ -232,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void removeFieldFromOrderBy() {
     // check that order by list has any order bys
-    if (mOrderByList.size() > 0) {
+    if (!mOrderByList.isEmpty()) {
 
       // remove field from recycler view
       int position = mOrderByAdapter.getSelectedPosition();
@@ -257,25 +291,24 @@ public class MainActivity extends AppCompatActivity {
       QueryParameters.SortOrder sortOrder = getSortOrderFrom(fieldAndSortOrder);
       // toggle between ASCENDING and DESCENDING
       if (sortOrder == QueryParameters.SortOrder.ASCENDING) {
-        mOrderByList.add(position, field + " (" + QueryParameters.SortOrder.DESCENDING + ")");
+        mOrderByList.add(position, field + " (" + QueryParameters.SortOrder.DESCENDING + ')');
       } else {
-        mOrderByList.add(position, field + " (" + QueryParameters.SortOrder.ASCENDING + ")");
+        mOrderByList.add(position, field + " (" + QueryParameters.SortOrder.ASCENDING + ')');
       }
       mOrderByAdapter.notifyItemChanged(position);
     } else {
-      Toast.makeText(MainActivity.this, "Please select a field with sort order.", Toast.LENGTH_LONG).show();
+      Toast.makeText(this, "Please select a field with sort order.", Toast.LENGTH_LONG).show();
     }
   }
 
   /**
-   * Creates a new activity to display results and passes statisticsQueryResult to the new activity as JSON.
+   * Creates a new activity to display results.
    *
-   * @param statisticsQueryResult as generated in executeStatisticsQuery()
+   * @param groupedStatisticsJson Json of LinkedHashMap containing grouped result from statisticsQueryResult
    */
-  private void displayResults(StatisticsQueryResult statisticsQueryResult) {
+  private void displayResults(String groupedStatisticsJson) {
     Intent intent = new Intent(this, ResultsActivity.class);
-    Gson gson = new Gson();
-    intent.putExtra("results", gson.toJson(statisticsQueryResult));
+    intent.putExtra("results", groupedStatisticsJson);
     startActivity(intent);
   }
 
@@ -324,8 +357,8 @@ public class MainActivity extends AppCompatActivity {
    * @param fieldAndOrder string from recycler view
    * @return SortOrder (either ASCENDING or DESCENDING)
    */
-  private QueryParameters.SortOrder getSortOrderFrom(String fieldAndOrder) {
-    String orderString = fieldAndOrder.substring(fieldAndOrder.indexOf("(") + 1, fieldAndOrder.indexOf(")"));
+  private static QueryParameters.SortOrder getSortOrderFrom(String fieldAndOrder) {
+    String orderString = fieldAndOrder.substring(fieldAndOrder.indexOf('(') + 1, fieldAndOrder.indexOf(')'));
     QueryParameters.SortOrder sortOrder;
     switch (orderString) {
       case "DESCENDING":
@@ -348,8 +381,8 @@ public class MainActivity extends AppCompatActivity {
    * @param fieldAndOrder string from recycler view
    * @return field as a string
    */
-  private String getFieldFrom(String fieldAndOrder) {
-    return fieldAndOrder.substring(0, fieldAndOrder.indexOf(" "));
+  private static String getFieldFrom(String fieldAndOrder) {
+    return fieldAndOrder.substring(0, fieldAndOrder.indexOf(' '));
   }
 
   /**
