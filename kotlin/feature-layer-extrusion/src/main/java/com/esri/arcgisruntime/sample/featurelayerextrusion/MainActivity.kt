@@ -104,4 +104,9 @@ class MainActivity : AppCompatActivity() {
     super.onResume()
     sceneView.resume()
   }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    sceneView.dispose()
+  }
 }

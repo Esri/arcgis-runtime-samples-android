@@ -38,6 +38,8 @@ import com.esri.arcgisruntime.symbology.SimpleRenderer;
 
 public class MainActivity extends AppCompatActivity {
 
+  private SceneView mSceneView;
+
   private boolean showTotalPopulation;
 
   @Override
@@ -62,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
     // create a scene and add it to the scene view
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
-    SceneView sceneView = findViewById(R.id.sceneView);
-    sceneView.setScene(scene);
+    mSceneView = findViewById(R.id.sceneView);
+    mSceneView.setScene(scene);
 
     // add the feature layer to the scene
     scene.getOperationalLayers().add(statesFeatureLayer);
@@ -82,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
     // add a camera and set it to orbit the look at point
     Camera camera = new Camera(lookAtPoint, 20000000, 0, 55, 0);
     OrbitLocationCameraController orbitCamera = new OrbitLocationCameraController(lookAtPoint, 20000000);
-    sceneView.setCameraController(orbitCamera);
-    sceneView.setViewpointCamera(camera);
+    mSceneView.setCameraController(orbitCamera);
+    mSceneView.setViewpointCamera(camera);
 
     // set button listener
     togglePopButton.setOnClickListener(new View.OnClickListener() {
@@ -106,5 +108,22 @@ public class MainActivity extends AppCompatActivity {
     });
     // click to set initial state
     togglePopButton.performClick();
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mSceneView.pause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mSceneView.resume();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mSceneView.dispose();
   }
 }

@@ -36,119 +36,133 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int MIN_SCALE = 40000000;
-    private static final int TILED_LAYER = 0;
-    private static final int IMAGE_LAYER = 1;
-    private static final int FEATURE_LAYER = 2;
-    private MapView mMapView;
-    private TextView timeZoneTextView;
-    private TextView worldCensusTextView;
-    private TextView recreationTextView;
+  private static final int MIN_SCALE = 40000000;
+  private static final int TILED_LAYER = 0;
+  private static final int IMAGE_LAYER = 1;
+  private static final int FEATURE_LAYER = 2;
+  private MapView mMapView;
+  private TextView timeZoneTextView;
+  private TextView worldCensusTextView;
+  private TextView recreationTextView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        // create three layers to add to the map
-        final ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(getApplication().getString(R.string.world_timezone_service_URL));
-        tiledLayer.setMinScale(4E8);
+    // create three layers to add to the map
+    final ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(
+        getApplication().getString(R.string.world_timezone_service_URL));
+    tiledLayer.setMinScale(4E8);
 
-        final ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(getApplication().getString(R.string.world_census_service_URL));
-        // setting the scales at which this layer can be viewed
-        imageLayer.setMinScale(MIN_SCALE);
-        imageLayer.setMaxScale(MIN_SCALE / 10);
+    final ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(
+        getApplication().getString(R.string.world_census_service_URL));
+    // setting the scales at which this layer can be viewed
+    imageLayer.setMinScale(MIN_SCALE);
+    imageLayer.setMaxScale(MIN_SCALE / 10);
 
-        // creating a layer from a service feature table
-        final ServiceFeatureTable featureTable = new ServiceFeatureTable(getApplication().getString(R.string.world_facilities_service_URL));
-        final FeatureLayer featureLayer = new FeatureLayer(featureTable);
+    // creating a layer from a service feature table
+    final ServiceFeatureTable featureTable = new ServiceFeatureTable(
+        getApplication().getString(R.string.world_facilities_service_URL));
+    final FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
-        // inflate MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapView);
-        // create a map with the BasemapType topographic
-        final ArcGISMap mMap = new ArcGISMap(Basemap.createTopographic());
-        // add the layers on the map
-        mMap.getOperationalLayers().add(tiledLayer);
-        mMap.getOperationalLayers().add(imageLayer);
-        mMap.getOperationalLayers().add(featureLayer);
+    // inflate MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
+    // create a map with the BasemapType topographic
+    final ArcGISMap mMap = new ArcGISMap(Basemap.createTopographic());
+    // add the layers on the map
+    mMap.getOperationalLayers().add(tiledLayer);
+    mMap.getOperationalLayers().add(imageLayer);
+    mMap.getOperationalLayers().add(featureLayer);
 
-        // set the map to be displayed in this view
-        mMapView.setMap(mMap);
+    // set the map to be displayed in this view
+    mMapView.setMap(mMap);
 
-        // inflate TextViews from the layout
-        timeZoneTextView = (TextView) findViewById(R.id.worldTimeZoneStatusView);
-        worldCensusTextView = (TextView) findViewById(R.id.censusStatusView);
-        recreationTextView = (TextView) findViewById(R.id.facilitiesStatusView);
+    // inflate TextViews from the layout
+    timeZoneTextView = (TextView) findViewById(R.id.worldTimeZoneStatusView);
+    worldCensusTextView = (TextView) findViewById(R.id.censusStatusView);
+    recreationTextView = (TextView) findViewById(R.id.facilitiesStatusView);
 
-        // zoom to custom ViewPoint
-        mMapView.setViewpoint(new Viewpoint(
-                new Point(-11e6, 45e5, SpatialReferences.getWebMercator()), MIN_SCALE));
+    // zoom to custom ViewPoint
+    mMapView.setViewpoint(new Viewpoint(
+        new Point(-11e6, 45e5, SpatialReferences.getWebMercator()), MIN_SCALE));
 
-        // Listen to changes in the status of the Layer
-        mMapView.addLayerViewStateChangedListener(new LayerViewStateChangedListener() {
-            @Override
-            public void layerViewStateChanged(LayerViewStateChangedEvent layerViewStateChangedEvent) {
+    // Listen to changes in the status of the Layer
+    mMapView.addLayerViewStateChangedListener(new LayerViewStateChangedListener() {
+      @Override
+      public void layerViewStateChanged(LayerViewStateChangedEvent layerViewStateChangedEvent) {
 
-                // get the layer which changed it's state
-                Layer layer = layerViewStateChangedEvent.getLayer();
+        // get the layer which changed it's state
+        Layer layer = layerViewStateChangedEvent.getLayer();
 
-                // get the View Status of the layer
-                // View status will be either of ACTIVE, ERROR, LOADING, NOT_VISIBLE, OUT_OF_SCALE, UNKNOWN
-                String viewStatus = layerViewStateChangedEvent.getLayerViewStatus().iterator().next().toString();
+        // get the View Status of the layer
+        // View status will be either of ACTIVE, ERROR, LOADING, NOT_VISIBLE, OUT_OF_SCALE, UNKNOWN
+        String viewStatus = layerViewStateChangedEvent.getLayerViewStatus().iterator().next().toString();
 
-                final int layerIndex = mMap.getOperationalLayers().indexOf(layer);
+        final int layerIndex = mMap.getOperationalLayers().indexOf(layer);
 
-                // finding and updating status of the layer
-                switch (layerIndex) {
-                    case TILED_LAYER:
-                        timeZoneTextView.setText(viewStatusString(viewStatus));
-                        break;
-                    case IMAGE_LAYER:
-                        worldCensusTextView.setText(viewStatusString(viewStatus));
-                        break;
-                    case FEATURE_LAYER:
-                        recreationTextView.setText(viewStatusString(viewStatus));
-                        break;
-                }
-
-            }
-        });
-    }
-
-    /**
-     * The method looks up the view status of the layer and returns a string which is displayed
-     *
-     * @param status View Status of the layer
-     * @return String equivalent of the status
-     */
-    private String viewStatusString (String status) {
-
-        switch(status) {
-            case "ACTIVE": return getApplication().getString(R.string.active);
-
-            case "ERROR": return getApplication().getString(R.string.error);
-
-            case "LOADING": return getApplication().getString(R.string.loading);
-
-            case "NOT_VISIBLE": return getApplication().getString(R.string.notVisible);
-
-            case "OUT_OF_SCALE": return getApplication().getString(R.string.outOfScale);
-
+        // finding and updating status of the layer
+        switch (layerIndex) {
+          case TILED_LAYER:
+            timeZoneTextView.setText(viewStatusString(viewStatus));
+            break;
+          case IMAGE_LAYER:
+            worldCensusTextView.setText(viewStatusString(viewStatus));
+            break;
+          case FEATURE_LAYER:
+            recreationTextView.setText(viewStatusString(viewStatus));
+            break;
         }
 
-        return getApplication().getString(R.string.unknown);
+      }
+    });
+  }
+
+  /**
+   * The method looks up the view status of the layer and returns a string which is displayed
+   *
+   * @param status View Status of the layer
+   * @return String equivalent of the status
+   */
+  private String viewStatusString(String status) {
+
+    switch (status) {
+      case "ACTIVE":
+        return getApplication().getString(R.string.active);
+
+      case "ERROR":
+        return getApplication().getString(R.string.error);
+
+      case "LOADING":
+        return getApplication().getString(R.string.loading);
+
+      case "NOT_VISIBLE":
+        return getApplication().getString(R.string.notVisible);
+
+      case "OUT_OF_SCALE":
+        return getApplication().getString(R.string.outOfScale);
 
     }
 
-    @Override
-    protected void onPause(){
-        super.onPause();
-        mMapView.pause();
-    }
+    return getApplication().getString(R.string.unknown);
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        mMapView.resume();
-    }
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }

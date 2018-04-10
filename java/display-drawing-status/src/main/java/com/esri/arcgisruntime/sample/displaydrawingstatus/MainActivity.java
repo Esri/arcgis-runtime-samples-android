@@ -36,60 +36,68 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MapView mMapView;
+  private MapView mMapView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+    final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        // inflate MapView from layout
-        mMapView = (MapView) findViewById(R.id.mapView);
-        // create a map with the Basemap Type topographic
-        ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
-        // create an envelope
-        Envelope targetExtent = new Envelope(-13639984.0, 4537387.0, -13606734.0, 4558866.0, SpatialReferences.getWebMercator());
-        // use envelope to set initial viewpoint
-        Viewpoint initViewpoint = new Viewpoint(targetExtent);
-        // set the initial viewpoint in the map
-        map.setInitialViewpoint(initViewpoint);
+    // inflate MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
+    // create a map with the Basemap Type topographic
+    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    // create an envelope
+    Envelope targetExtent = new Envelope(-13639984.0, 4537387.0, -13606734.0, 4558866.0,
+        SpatialReferences.getWebMercator());
+    // use envelope to set initial viewpoint
+    Viewpoint initViewpoint = new Viewpoint(targetExtent);
+    // set the initial viewpoint in the map
+    map.setInitialViewpoint(initViewpoint);
 
-        // create a feature table from a service url
-        ServiceFeatureTable svcFeaturetable = new ServiceFeatureTable(getResources().getString(R.string.service_feature_table_url));
-        // create a feature layer
-        FeatureLayer featureLayer = new FeatureLayer(svcFeaturetable);
-        // add feature layer to map
-        map.getOperationalLayers().add(featureLayer);
+    // create a feature table from a service url
+    ServiceFeatureTable svcFeaturetable = new ServiceFeatureTable(
+        getResources().getString(R.string.service_feature_table_url));
+    // create a feature layer
+    FeatureLayer featureLayer = new FeatureLayer(svcFeaturetable);
+    // add feature layer to map
+    map.getOperationalLayers().add(featureLayer);
 
-        // set the map to be displayed in this view
-        mMapView.setMap(map);
+    // set the map to be displayed in this view
+    mMapView.setMap(map);
 
-        //[DocRef: Name=Monitor map drawing, Category=Work with maps, Topic=Display a map]
-        mMapView.addDrawStatusChangedListener(new DrawStatusChangedListener() {
-            @Override
-            public void drawStatusChanged(DrawStatusChangedEvent drawStatusChangedEvent) {
-                if(drawStatusChangedEvent.getDrawStatus() == DrawStatus.IN_PROGRESS){
-                    progressBar.setVisibility(View.VISIBLE);
-                    Log.d("drawStatusChanged", "spinner visible");
-                }else if (drawStatusChangedEvent.getDrawStatus() == DrawStatus.COMPLETED){
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-        //[DocRef: END]
-    }
+    //[DocRef: Name=Monitor map drawing, Category=Work with maps, Topic=Display a map]
+    mMapView.addDrawStatusChangedListener(new DrawStatusChangedListener() {
+      @Override
+      public void drawStatusChanged(DrawStatusChangedEvent drawStatusChangedEvent) {
+        if (drawStatusChangedEvent.getDrawStatus() == DrawStatus.IN_PROGRESS) {
+          progressBar.setVisibility(View.VISIBLE);
+          Log.d("drawStatusChanged", "spinner visible");
+        } else if (drawStatusChangedEvent.getDrawStatus() == DrawStatus.COMPLETED) {
+          progressBar.setVisibility(View.INVISIBLE);
+        }
+      }
+    });
+    //[DocRef: END]
+  }
 
-    @Override
-    protected void onPause(){
-        super.onPause();
-        mMapView.pause();
-    }
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        mMapView.resume();
-    }
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
 }

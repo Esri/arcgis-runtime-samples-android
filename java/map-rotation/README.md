@@ -1,9 +1,11 @@
 # Map Rotation
+
 This sample demonstrates how to rotate a map on your Android device using an Android `SeekBar`.
 
-![map-rotation](map-rotation.png)
+![Map Rotation App](map-rotation.png)
 
 # Features
+
 * ArcGISMap
 * Basemap
 * MapView

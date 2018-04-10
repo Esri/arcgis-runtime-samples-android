@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">"feature-layer-update-attributes"</string>
+    <string name="app_name">Feature Layer Update Attributes</string>
     <string name="select_damage_Type">"Select new damage type"</string>
     <!-- Progress dialog messages -->
     <string name="progress_title">Updating attribute type</string>
