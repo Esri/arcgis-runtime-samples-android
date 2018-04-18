@@ -53,16 +53,16 @@ class MainActivity : AppCompatActivity() {
         spinner.adapter = spinnerAdapter
         // zoom to the extent of the raster service
         imageRasterLayer.addDoneLoadingListener {
-            if(imageRasterLayer.loadStatus == LoadStatus.LOADED){
-                // zoom to extent of raster
-                mapView.setViewpointGeometryAsync(imageServiceRaster.serviceInfo.fullExtent)
-                // get the predefined rendering rules and add to spinner
-                val renderingRuleInfos = imageServiceRaster.serviceInfo.renderingRuleInfos
-                for(renderRuleInfo in renderingRuleInfos){
-                    val renderingRuleName = renderRuleInfo.name
-                    renderRulesList.add(renderingRuleName)
-                    // update array adapter with list update
-                    spinnerAdapter.notifyDataSetChanged()
+            when { imageRasterLayer.loadStatus == LoadStatus.LOADED -> {
+                    // zoom to extent of raster
+                    mapView.setViewpointGeometryAsync(imageServiceRaster.serviceInfo.fullExtent)
+                    // get the predefined rendering rules and add to spinner
+                    val renderingRuleInfos = imageServiceRaster.serviceInfo.renderingRuleInfos
+                    renderingRuleInfos.map {
+                        renderRulesList.add(it.name)
+                        // update array adapter with list update
+                        spinnerAdapter.notifyDataSetChanged()
+                    }
                 }
             }
         }

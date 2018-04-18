@@ -77,18 +77,21 @@ class MainActivity : AppCompatActivity() {
 
     // set button listener
     toggle_button.setOnClickListener{
-      if (showTotalPopulation) {
-        // divide total population by 10 to make data legible
-        renderer.sceneProperties.extrusionExpression = "[POP2007] / 10"
-        // change text of button to total pop
-        toggle_button.text = resources.getString(R.string.total_pop)
-        showTotalPopulation = false
-      } else {
-        // multiple population density by 5000 to make data legible
-        renderer.sceneProperties.extrusionExpression = "[POP07_SQMI] * 5000"
-        // change text of button to pop density
-        toggle_button.text = resources.getString(R.string.density_pop)
-        showTotalPopulation = true
+      when {
+          showTotalPopulation -> {
+            // divide total population by 10 to make data legible
+            renderer.sceneProperties.extrusionExpression = "[POP2007] / 10"
+            // change text of button to total pop
+            toggle_button.text = resources.getString(R.string.total_pop)
+            showTotalPopulation = false
+          }
+          !showTotalPopulation -> {
+            // multiply population density by 5000 to make data legible
+            renderer.sceneProperties.extrusionExpression = "[POP07_SQMI] * 5000"
+            // change text of button to pop density
+            toggle_button.text = resources.getString(R.string.density_pop)
+            showTotalPopulation = true
+          }
       }
     }
     // click to set initial state

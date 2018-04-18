@@ -39,18 +39,18 @@ class MainActivity : AppCompatActivity() {
         // set the map to be displayed in this view
         mapView.map = map
         // create image service raster as raster layer
-        val imageServiceRaster = ImageServiceRaster(
-                resources.getString(R.string.image_service_raster_url))
+        val imageServiceRaster = ImageServiceRaster(resources.getString(R.string.image_service_raster_url))
         val imageRasterLayer = RasterLayer(imageServiceRaster)
         map.operationalLayers.add(imageRasterLayer)
         // zoom to the extent of the raster service
         imageRasterLayer.addDoneLoadingListener {
-            if(imageRasterLayer.loadStatus == LoadStatus.LOADED){
+            when { imageRasterLayer.loadStatus == LoadStatus.LOADED -> {
                 // zoom to extent of raster
                 val centerPnt = imageServiceRaster.serviceInfo.fullExtent.center
                 mapView.setViewpointCenterAsync(centerPnt, 55000000.0)
                 // update raster with simplified hillshade
                 applyRasterFunction(imageServiceRaster)
+            }
             }
         }
     }
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
      *
      * @param raster Input raster to apply function
      */
-    private fun applyRasterFunction(raster: Raster){
+    private fun applyRasterFunction(raster: Raster) {
         // create raster function from json string
         val rasterFunction = RasterFunction.fromJson(resources.getString(R.string.hillshade_simplified))
         // get parameter name value pairs used by hillshade

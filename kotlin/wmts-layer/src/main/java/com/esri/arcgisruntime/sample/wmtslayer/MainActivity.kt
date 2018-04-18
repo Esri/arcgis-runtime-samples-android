@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         // create wmts service from url string
         val wmtsService = WmtsService(getString(R.string.wmts_url))
         wmtsService.addDoneLoadingListener({
-            if(wmtsService.loadStatus == LoadStatus.LOADED){
+            when { wmtsService.loadStatus == LoadStatus.LOADED -> {
                 // get service info
                 val wmtsServiceInfo = wmtsService.serviceInfo
                 // get the first layers id
@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity() {
                 val wmtsLayer = WmtsLayer(layerInfos[0])
                 // set the basemap of the map with WMTS layer
                 map.basemap = Basemap(wmtsLayer)
+            }
             }
         })
         wmtsService.loadAsync()
