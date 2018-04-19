@@ -16,6 +16,9 @@
 
 package com.esri.arcgisruntime.sample.generategeodatabase;
 
+import java.io.File;
+import java.util.concurrent.ExecutionException;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -49,9 +52,6 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseJob;
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseParameters;
 import com.esri.arcgisruntime.tasks.geodatabase.GeodatabaseSyncTask;
-
-import java.io.File;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 

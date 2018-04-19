@@ -16,6 +16,8 @@
 
 package com.esri.arcgisruntime.sample.openmobilemappackage;
 
+import java.io.File;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -29,8 +31,6 @@ import android.widget.Toast;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.MobileMapPackage;
 import com.esri.arcgisruntime.mapping.view.MapView;
-
-import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
