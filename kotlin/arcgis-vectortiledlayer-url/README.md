@@ -12,22 +12,12 @@ It shows how to inflate a `MapView` in the layout XML of the activity, creates a
 * ArcGISVectorTiledLayer
 
 ## Developer Pattern
-```java
-// inflate MapView from layout
-mMapView = (MapView) findViewById(R.id.mapView);
-
-// create new Vector Tiled Layer from service url
-mVectorTiledLayer = new ArcGISVectorTiledLayer(
-    getResources().getString(R.string.navigation_url));
-
-// set tiled layer as basemap
-Basemap basemap = new Basemap(mVectorTiledLayer);
-// create a map with the basemap
-ArcGISMap map = new ArcGISMap(basemap);
-// create a viewpoint from lat, long, scale
-Viewpoint vp = new Viewpoint(47.606726, -122.335564, 72223.819286);
-// set initial map extent
-map.setInitialViewpoint(vp);
-// set the map to be displayed in this view
-mMapView.setMap(map);
+```kotlin
+// create a map with the basemap and set it to the map view
+mapView.map = ArcGISMap().apply {
+  // set vector tiled layer from url as basemap
+  basemap = Basemap(ArcGISVectorTiledLayer(getString(R.string.mid_century_url)))
+  // create a viewpoint from lat, long, scale
+  initialViewpoint = Viewpoint(47.606726, -122.335564, 72223.819286)
+}
 ```

@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     // set the map to be displayed in the map view
     mapView.map = ArcGISMap().apply {
       // create a basemap with a tiled layer from service url
-      Basemap(ArcGISTiledLayer(resources.getString(R.string.world_topo_service)))
+      basemap = Basemap(ArcGISTiledLayer(resources.getString(R.string.world_topo_service)))
     }
   }
 

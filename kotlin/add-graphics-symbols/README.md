@@ -15,13 +15,24 @@ The **Add Graphics with Symbols** sample demonstrates how to add points, polylin
 ## Developer Pattern
 Graphics are added to a `GraphicsOverlay` without any symbols or styles. To include a symbol with a graphic, create a `Graphic` with a `Symbol` and `Geometry` and add it to the `GraphicsOverlay`. 
 
-```java
-//define a polyline for the boat trip
-Polyline boatRoute = getBoatTripGeometry();
-//define a line symbol
-SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.rgb(128, 0, 128), 4);
-//create the graphic
-Graphic boatTripGraphic = new Graphic(boatRoute, lineSymbol);
-//add to the graphic overlay
-graphicOverlay.getGraphics().add(boatTripGraphic);
+```kotlin
+ // add graphics overlay to map view
+    mapView.graphicsOverlays.apply {
+
+      // create the buoy graphics overlay
+      add(GraphicsOverlay().apply {
+        graphics.add(Graphic(Multipoint(PointCollection(wgs84).apply {
+          add(Point(-2.712642647560347, 56.062812566811544))
+          add(Point(-2.6908416959572303, 56.06444173689877))
+          add(Point(-2.6697273884990937, 56.064250073402874))
+          add(Point(-2.6395150461199726, 56.06127916736989))
+        }), SimpleMarkerSymbol().apply {
+          // define red circle symbol
+          style = SimpleMarkerSymbol.Style.CIRCLE
+          color = Color.RED
+          size = 10f
+        }))
+      })
+	...
+	}
 ```

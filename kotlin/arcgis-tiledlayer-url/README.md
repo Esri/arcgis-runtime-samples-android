@@ -11,13 +11,10 @@ The ArcGIS Tile Layer URL app is the most basic Map app for the [ArcGIS Runtime 
 * Basemap
 
 ## Developer pattern
-```java
-// create new Tiled Layer from service url
-ArcGISTiledLayer tiledLayerBaseMap = new ArcGISTiledLayer(getResources().getString(R.string.world_topo_service));
-// set tiled layer as basemap
-Basemap basemap = new Basemap(tiledLayerBaseMap);
-// create a map with the basemap
-ArcGISMap map = new ArcGISMap(basemap);
-// set the map to be displayed in this view
-mMapView.setMap(map);
+```kotlin
+// set the map to be displayed in the map view
+mapView.map = ArcGISMap().apply {
+  // create a basemap with a tiled layer from service url
+  basemap = Basemap(ArcGISTiledLayer(resources.getString(R.string.world_topo_service)))
+}
 ```
