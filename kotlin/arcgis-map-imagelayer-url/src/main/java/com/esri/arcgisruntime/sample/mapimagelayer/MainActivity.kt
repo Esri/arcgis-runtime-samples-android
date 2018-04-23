@@ -26,30 +26,30 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
 
-        mapView.apply {
-            map = ArcGISMap().apply {
-                // create a MapImageLayer with dynamically generated map images and add it to the map's operational layers
-                operationalLayers.add(ArcGISMapImageLayer(resources.getString(R.string.world_elevation_service)))
-            }
-        }
+    mapView.apply {
+      map = ArcGISMap().apply {
+        // create a MapImageLayer with dynamically generated map images and add it to the map's operational layers
+        operationalLayers.add(ArcGISMapImageLayer(resources.getString(R.string.world_elevation_service)))
+      }
     }
+  }
 
-    override fun onPause() {
-        super.onPause()
-        mapView.pause()
-    }
+  override fun onPause() {
+    super.onPause()
+    mapView.pause()
+  }
 
-    override fun onResume() {
-        super.onResume()
-        mapView.resume()
-    }
+  override fun onResume() {
+    super.onResume()
+    mapView.resume()
+  }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView.dispose()
-    }
+  override fun onDestroy() {
+    super.onDestroy()
+    mapView.dispose()
+  }
 }

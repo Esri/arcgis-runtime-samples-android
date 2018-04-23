@@ -37,64 +37,64 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
 
-        // create a map with the Basemap Type topographic
-        val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 15.169193, 16.333479, 2)
+    // create a map with the Basemap Type topographic
+    val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 15.169193, 16.333479, 2)
 
-        // add graphics overlays to the map view
-        mapView.graphicsOverlays.apply {
-            // add a point graphic overlay to the map view
-            add(GraphicsOverlay().apply {
-                // create red diamond simple renderer
-                renderer = SimpleRenderer(SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 10f))
-                // define point geometry
-                graphics.add(Graphic(Point(40e5, 40e5, SpatialReferences.getWebMercator())))
-            })
+    // add graphics overlays to the map view
+    mapView.graphicsOverlays.apply {
+      // add a point graphic overlay to the map view
+      add(GraphicsOverlay().apply {
+        // create red diamond simple renderer
+        renderer = SimpleRenderer(SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 10f))
+        // define point geometry
+        graphics.add(Graphic(Point(40e5, 40e5, SpatialReferences.getWebMercator())))
+      })
 
-            // add a line graphic overlay to the map view
-            add(GraphicsOverlay().apply {
-                // create blue line simple renderer
-                renderer = SimpleRenderer(SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f))
-                // define line geometry
-                graphics.add(Graphic(PolylineBuilder(SpatialReferences.getWebMercator()).apply {
-                    addPoint(-10e5, 40e5)
-                    addPoint(20e5, 50e5)
-                }.toGeometry()))
-            })
+      // add a line graphic overlay to the map view
+      add(GraphicsOverlay().apply {
+        // create blue line simple renderer
+        renderer = SimpleRenderer(SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f))
+        // define line geometry
+        graphics.add(Graphic(PolylineBuilder(SpatialReferences.getWebMercator()).apply {
+          addPoint(-10e5, 40e5)
+          addPoint(20e5, 50e5)
+        }.toGeometry()))
+      })
 
-            // add a polygon graphic overlay to the map view
-            add(GraphicsOverlay().apply {
-                // create yellow fill simple renderer
-                renderer = SimpleRenderer(SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.YELLOW, null))
-                // define polygon geometry
-                graphics.add(Graphic(PolygonBuilder(SpatialReferences.getWebMercator()).apply {
-                    addPoint(-20e5, 20e5)
-                    addPoint(20e5, 20e5)
-                    addPoint(20e5, -20e5)
-                    addPoint(-20e5, -20e5)
-                }.toGeometry()))
-            })
-        }
-
-        // set the map to the map view
-        mapView.map = map
+      // add a polygon graphic overlay to the map view
+      add(GraphicsOverlay().apply {
+        // create yellow fill simple renderer
+        renderer = SimpleRenderer(SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.YELLOW, null))
+        // define polygon geometry
+        graphics.add(Graphic(PolygonBuilder(SpatialReferences.getWebMercator()).apply {
+          addPoint(-20e5, 20e5)
+          addPoint(20e5, 20e5)
+          addPoint(20e5, -20e5)
+          addPoint(-20e5, -20e5)
+        }.toGeometry()))
+      })
     }
 
-    override fun onPause() {
-        super.onPause()
-        mapView.pause()
-    }
+    // set the map to the map view
+    mapView.map = map
+  }
 
-    override fun onResume() {
-        super.onResume()
-        mapView.resume()
-    }
+  override fun onPause() {
+    super.onPause()
+    mapView.pause()
+  }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView.dispose()
-    }
+  override fun onResume() {
+    super.onResume()
+    mapView.resume()
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    mapView.dispose()
+  }
 }

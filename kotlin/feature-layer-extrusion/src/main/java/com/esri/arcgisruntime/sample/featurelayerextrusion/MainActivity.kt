@@ -1,4 +1,4 @@
-/* Copyright 2017 Esri
+/* Copyright 2018 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,52 +46,59 @@ class MainActivity : AppCompatActivity() {
     val statesServiceFeatureTable = ServiceFeatureTable(resources.getString(R.string.us_census_feature_service))
 
     // add the service feature table to a feature layer
-    val statesFeatureLayer = FeatureLayer(statesServiceFeatureTable)
-    // set the feature layer to render dynamically to allow extrusion
-    statesFeatureLayer.renderingMode = FeatureLayer.RenderingMode.DYNAMIC
+    val statesFeatureLayer = FeatureLayer(statesServiceFeatureTable).apply {
+      // set the feature layer to render dynamically to allow extrusion
+      renderingMode = FeatureLayer.RenderingMode.DYNAMIC
+    }
 
-    // create a scene and add it to the scene view
-    val scene = ArcGISScene(Basemap.createImagery())
-    sceneView.scene = scene
-
-    // add the feature layer to the scene
-    scene.operationalLayers.add(statesFeatureLayer)
-
-    // define line and fill symbols for a simple renderer
-    val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1.0f)
-    val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLUE, lineSymbol)
-    val renderer = SimpleRenderer(fillSymbol)
-    // set renderer extrusion mode to base height, which includes base height of each vertex in calculating z values
-    renderer.sceneProperties.extrusionMode = Renderer.SceneProperties.ExtrusionMode.BASE_HEIGHT
+    // define simple renderer
+    val renderer = SimpleRenderer(SimpleFillSymbol().apply {
+      style = SimpleFillSymbol.Style.SOLID
+      color = Color.BLUE
+      outline = SimpleLineSymbol().apply {
+        style = SimpleLineSymbol.Style.SOLID
+        color = Color.BLACK
+        width = 1.0f
+      }
+    }).apply {
+      // set renderer extrusion mode to base height, which includes base height of each vertex in calculating z values
+      sceneProperties.extrusionMode = Renderer.SceneProperties.ExtrusionMode.BASE_HEIGHT
+    }
 
     // set the simple renderer to the feature layer
     statesFeatureLayer.renderer = renderer
 
-    // define a look at point for the camera at geographical center of the continental US
-    val lookAtPoint = Point(-10974490.0, 4814376.0, 0.0, SpatialReferences.getWebMercator())
-    // add a camera and set it to orbit the look at point
-    val camera = Camera(lookAtPoint, 20000000.0, 0.0, 55.0, 0.0)
-    val orbitCamera = OrbitLocationCameraController(lookAtPoint, 20000000.0)
-    sceneView.cameraController = orbitCamera
-    sceneView.setViewpointCamera(camera)
+    sceneView.apply {
+      // define a look at point for the camera at geographical center of the continental US
+      val lookAtPoint = Point(-10974490.0, 4814376.0, 0.0, SpatialReferences.getWebMercator())
+      // add a camera and set it to orbit the look at point
+      setViewpointCamera(Camera(lookAtPoint, 20000000.0, 0.0, 55.0, 0.0))
+      cameraController = OrbitLocationCameraController(lookAtPoint, 20000000.0)
+    }
+
+    // create a scene and add it to the scene view
+    sceneView.scene = ArcGISScene(Basemap.createImagery()).apply {
+      // add the feature layer to the scene
+      operationalLayers.add(statesFeatureLayer)
+    }
 
     // set button listener
-    toggle_button.setOnClickListener{
+    toggle_button.setOnClickListener {
       when {
-          showTotalPopulation -> {
-            // divide total population by 10 to make data legible
-            renderer.sceneProperties.extrusionExpression = "[POP2007] / 10"
-            // change text of button to total pop
-            toggle_button.text = resources.getString(R.string.total_pop)
-            showTotalPopulation = false
-          }
-          !showTotalPopulation -> {
-            // multiply population density by 5000 to make data legible
-            renderer.sceneProperties.extrusionExpression = "[POP07_SQMI] * 5000"
-            // change text of button to pop density
-            toggle_button.text = resources.getString(R.string.density_pop)
-            showTotalPopulation = true
-          }
+        showTotalPopulation -> {
+          // divide total population by 10 to make data legible
+          renderer.sceneProperties.extrusionExpression = "[POP2007] / 10"
+          // change text of button to total pop
+          toggle_button.text = resources.getString(R.string.total_pop)
+          showTotalPopulation = false
+        }
+        !showTotalPopulation -> {
+          // multiply population density by 5000 to make data legible
+          renderer.sceneProperties.extrusionExpression = "[POP07_SQMI] * 5000"
+          // change text of button to pop density
+          toggle_button.text = resources.getString(R.string.density_pop)
+          showTotalPopulation = true
+        }
       }
     }
     // click to set initial state
