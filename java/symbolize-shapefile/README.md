@@ -1,5 +1,5 @@
 # Symbolize a shapefile
-
+### Category: Visualization
 This sample demonstrates how to override the default renderer of a shapefile when displaying with a FeatureLayer.
 
 ![Symbolize Shapefile App](symbolize-shapefile.png)

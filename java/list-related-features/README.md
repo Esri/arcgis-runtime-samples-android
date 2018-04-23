@@ -1,5 +1,5 @@
 # List Related Features
-
+### Category: Search and Query
 ![List Related Features App](list-related-features.png)
 
 The List Related Features app has a `MapView` loaded with a web map `FeatureLayer`. When you tap on a `Feature` you get a returned list of related features in an Android `BottomSheet`. The `FeatureLayer` has more than one relationship, the `ListView` results for each relationship.

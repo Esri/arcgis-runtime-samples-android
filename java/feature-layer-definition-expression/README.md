@@ -1,4 +1,5 @@
 # Feature layer definition expression
+### Category: Search and Query
 This sample demonstrates how you can limit which features to display on the map. Use the buttons in the bottom toolbar to apply or reset definition expression.
 
 ![Feature Layer Definition Expression App](feature-layer-definition-expression.png)

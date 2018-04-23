@@ -1,4 +1,5 @@
-# Identify Graphics Hit Test
+# Identify Graphics
+### Category: Search and Query
 
 ![Identify Graphic Hit Test App](identify-graphics-hittest.png)
 

@@ -1,5 +1,5 @@
 # Raster Layer GeoPackage
-
+### Category: Layers
 This sample demonstrates how to open a `GeoPackage`, obtain a raster from the package, and display the table as a `RasterLayer`.
 
 ![Raster Layer Geopackage App](raster-layer-geopackage.png)

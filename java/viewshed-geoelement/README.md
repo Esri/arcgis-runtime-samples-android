@@ -1,5 +1,5 @@
 # Viewshed GeoElement
-
+### Category: Analysis
 A viewshed shows the visible and obstructed areas from an observer's vantage point. This sample demonstrates how to attach a viewshed to a moving GeoElement.
 
 ![Viewshed GeoElement App](viewshed-geoelement.png)

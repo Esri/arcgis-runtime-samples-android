@@ -1,5 +1,5 @@
 # Simple marker symbol
-
+### Category: Visualization
 This sample adds a graphic to a graphics overlay with a symbol of a red point specified via a simple marker symbol.
 
 ![Simple Marker Symbol App](simple-marker-symbol.png)
