@@ -1,5 +1,5 @@
 # Identify Layers
-
+### Category: Search and Query
 This sample demonstrates how to identify features on a map across different layers present in the map.
 
 ![Identify Layers App](identify-layers.png)

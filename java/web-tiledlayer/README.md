@@ -1,5 +1,5 @@
 # Web Tiled Layer
-
+### Category: Layers
 ![Web Tiled Layer App](web-tiledlayer.png)
 
 This sample demonstrates how to display map tiles from Stamen terrain as an online resource using the `WebTiledLayer`. 

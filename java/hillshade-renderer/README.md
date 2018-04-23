@@ -1,5 +1,5 @@
 # Hillshade renderer
-
+### Category: Visualization
 This sample demonstrates how to use hillshade renderer on a raster
 
 ## How to use the sample

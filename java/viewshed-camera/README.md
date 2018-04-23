@@ -1,5 +1,5 @@
 # Viewshed Camera
-
+### Category: Analysis
 A viewshed shows the visible and obstructed areas from an observer's vantage point. This sample demonstrates how to create and update a viewshed from a camera.
 
 ![Viewshed Camera App](viewshed-camera.png)

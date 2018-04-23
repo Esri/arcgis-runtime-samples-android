@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Get the full path to the local GeoPackage
     String geoPackagePath =
-        Environment.getExternalStorageDirectory() + getString(R.string.local_folder) + getString(R.string.file_name);
+        Environment.getExternalStorageDirectory() + getString(R.string.geopackage_folder) + getString(R.string.aurora_co_gpkg);
     Log.d(TAG, geoPackagePath);
 
     // Open the GeoPackage
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     } else {
       // report to user that permission was denied
       Toast.makeText(MainActivity.this,
-          getResources().getString(R.string.read_permission_denied), Toast.LENGTH_SHORT).show();
+          getResources().getString(R.string.geopackage_read_permission_denied), Toast.LENGTH_SHORT).show();
     }
   }
 

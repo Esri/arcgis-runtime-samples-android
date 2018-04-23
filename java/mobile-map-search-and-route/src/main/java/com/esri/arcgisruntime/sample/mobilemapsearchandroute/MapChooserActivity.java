@@ -33,7 +33,7 @@ import java.util.List;
 
 /**
  * Activity for choosing which map in the mobile map package to display on the main activity
- * (MobileMapViewActivity.java). The activity features a recycler view which lists a series of
+ * (MainActivity.java). The activity features a recycler view which lists a series of
  * MapPreviews.
  */
 public class MapChooserActivity extends AppCompatActivity {
@@ -133,7 +133,7 @@ public class MapChooserActivity extends AppCompatActivity {
         public void onClick(View view) {
             final int MAP_CHOSEN_RESULT = 1;
             Intent mapChosenIntent = new Intent(getApplicationContext(),
-                    MobileMapViewActivity.class);
+                    MainActivity.class);
             //pass map number chosen back to mobile map view activity
             mapChosenIntent.putExtra("map_num", mMapPreview.getMapNum());
             setResult(MAP_CHOSEN_RESULT, mapChosenIntent);

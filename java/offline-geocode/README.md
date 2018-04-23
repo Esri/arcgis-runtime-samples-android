@@ -1,5 +1,5 @@
 # Offline geocode
-
+### Category: Search and Query
 This sample demonstrates how you can geocode addresses to locations and reverse geocode locations to addresses when the device does not have network connectivity
 
 ![Offline Geocode App](offline-geocode.png)

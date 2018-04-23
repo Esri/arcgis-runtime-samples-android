@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
     // get sdcard resource name
     File extStorDir = Environment.getExternalStorageDirectory();
     // get the directory
-    String extSDCardDirName = this.getResources().getString(R.string.data_sdcard_offline_dir);
+    String extSDCardDirName = this.getResources().getString(R.string.raster_folder);
     // create the full path to the raster file
     return extStorDir.getAbsolutePath()
         + File.separator
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
   private void initialize() {
     // create raster
     Raster raster = new Raster(
-        new File(buildRasterPath(this.getString(R.string.raster_name))).getAbsolutePath());
+        new File(buildRasterPath(this.getString(R.string.shasta_file))).getAbsolutePath());
     mRasterLayer = new RasterLayer(raster);
     // create a basemap from the raster layer
     Basemap basemap = new Basemap(mRasterLayer);
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
     } else {
       // report to user that permission was denied
       Toast.makeText(MainActivity.this,
-          getResources().getString(R.string.location_permission_denied),
+          getResources().getString(R.string.rgb_rendererer_writer_permission_denied),
           Toast.LENGTH_SHORT).show();
     }
   }

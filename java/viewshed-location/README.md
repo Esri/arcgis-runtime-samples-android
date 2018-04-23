@@ -1,5 +1,5 @@
 # Viewshed Location
-
+### Category: Analysis
 A viewshed shows the visible and obstructed areas from an observer's vantage point. This sample demonstrates all of the configurable properties of a viewshed.
 
 ![Viewshed Location](viewshed-location.png)

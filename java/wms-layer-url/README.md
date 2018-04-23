@@ -1,5 +1,5 @@
 # WMS Layer (URL)
-
+### Category: Layers
 This sample demonstrates how to display a WMS Layer from an online URL.
 
 ![WMS Layer URL App](wms-layer-url.png)

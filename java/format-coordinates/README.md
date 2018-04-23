@@ -1,5 +1,5 @@
 # Format coordinates
-
+### Category: Manage Data
 ![Format Coordinates App](format-coordinates.png)
 
 Coordinates can be written and formatted in different ways, for example latitude, longitude coordinates can be formatted as decimal degrees, or degrees, minutes, and seconds. This sample demonstrates how to convert a map location `Point` in WGS 1984 spatial reference to a number of different coordinate notations (decimal degrees; degrees, minutes, seconds; Universal Transverse Mercator (UTM), and United States National Grid (USNG)), by using `CoordinateFormatter`. Additionally, coodinate notation strings can be converted to a `Point` and shown in the map by tapping on the notation values shown and entering a coordinate in the appropriate notation. 
