@@ -26,10 +26,10 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
-import android.widget.Spinner
 import android.widget.TextView
 import com.esri.arcgisruntime.raster.ColorRamp
 import com.esri.arcgisruntime.raster.SlopeType
+import kotlinx.android.synthetic.main.dialog_box.view.*
 import java.util.*
 
 /**
@@ -66,50 +66,53 @@ class ParametersDialogFragment : DialogFragment() {
 
     val paramDialog = AlertDialog.Builder(context!!).apply {
 
-      val dialogView = inflater.inflate(R.layout.dialog_box, null)
-      setView(dialogView)
-      setTitle(R.string.dialog_title)
-      setNegativeButton("Cancel") { dialog, which -> dismiss() }
-      setPositiveButton("Render") { dialog, which ->
-        dialog.dismiss()
-        val activity = activity as ParametersListener?
-        activity!!.returnParameters(mAltitude!!, mAzimuth!!, mSlopeType, mColorRampType)
+      val dialogView = inflater.inflate(R.layout.dialog_box, null).apply {
+        setView(this)
+        setTitle(R.string.dialog_title)
+        setNegativeButton("Cancel") { dialog, which -> dismiss() }
+        setPositiveButton("Render") { dialog, which ->
+          dialog.dismiss()
+          val activity = activity as ParametersListener?
+          activity!!.returnParameters(mAltitude!!, mAzimuth!!, mSlopeType, mColorRampType)
+        }
       }
 
-      mCurrAltitudeTextView = dialogView.findViewById<View>(R.id.curr_altitude_text) as TextView
-      val altitudeSeekBar = dialogView.findViewById<View>(R.id.altitude_seek_bar) as SeekBar
-      altitudeSeekBar.max = 90 //altitude is restricted to 0 - 90
-      //set initial altitude value
-      updateAltitudeSeekBar(altitudeSeekBar)
-      altitudeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-          mAltitude = progress.toDouble()
-          updateAltitudeSeekBar(seekBar)
-        }
 
-        override fun onStartTrackingTouch(seekBar: SeekBar) {}
+      mCurrAltitudeTextView = dialogView.curr_altitude_text as TextView
+      dialogView.altitude_seek_bar.apply {
+        max = 90 //altitude is restricted to 0 - 90
+        //set initial altitude value
+        updateAltitudeSeekBar(this)
+        setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+          override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+            mAltitude = progress.toDouble()
+            updateAltitudeSeekBar(seekBar)
+          }
 
-        override fun onStopTrackingTouch(seekBar: SeekBar) {}
-      })
+          override fun onStartTrackingTouch(seekBar: SeekBar) {}
 
-      mCurrAzimuthTextView = dialogView.findViewById<View>(R.id.curr_azimuth_text) as TextView
-      val azimuthSeekBar = dialogView.findViewById<View>(R.id.azimuth_seek_bar) as SeekBar
-      azimuthSeekBar.max = 360 //azimuth measured in degrees 0 - 360
-      //set initial azimuth value
-      updateAzimuthSeekBar(azimuthSeekBar)
-      azimuthSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-          mAzimuth = progress.toDouble()
-          updateAzimuthSeekBar(seekBar)
-        }
+          override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
+      }
 
-        override fun onStartTrackingTouch(seekBar: SeekBar) {}
+      mCurrAzimuthTextView = dialogView.curr_azimuth_text as TextView
+      dialogView.azimuth_seek_bar.apply {
+        max = 360 //azimuth measured in degrees 0 - 360
+        //set initial azimuth value
+        updateAzimuthSeekBar(this)
+        setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+          override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+            mAzimuth = progress.toDouble()
+            updateAzimuthSeekBar(seekBar)
+          }
 
-        override fun onStopTrackingTouch(seekBar: SeekBar) {}
-      })
+          override fun onStartTrackingTouch(seekBar: SeekBar) {}
 
-      val slopeTypeSpinner = dialogView.findViewById<View>(R.id.slope_type_spinner) as Spinner
-      slopeTypeSpinner.apply {
+          override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
+      }
+
+      dialogView.slope_type_spinner.apply {
         adapter = ArrayAdapter(context!!, R.layout.spinner_text_view,
             ArrayList<String>().apply {
               SlopeType.values().forEach {
@@ -127,8 +130,7 @@ class ParametersDialogFragment : DialogFragment() {
         }
       }
 
-      val colorRampSpinner = dialogView.findViewById<View>(R.id.color_ramp_spinner) as Spinner
-      colorRampSpinner.apply {
+      dialogView.color_ramp_spinner.apply {
         adapter = ArrayAdapter(context!!, R.layout.spinner_text_view,
             ArrayList<String>().apply {
               ColorRamp.PresetType.values().forEach {

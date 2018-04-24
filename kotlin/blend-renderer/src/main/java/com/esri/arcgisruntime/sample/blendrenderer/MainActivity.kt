@@ -31,12 +31,13 @@ import com.esri.arcgisruntime.raster.Raster
 import com.esri.arcgisruntime.raster.SlopeType
 import com.esri.arcgisruntime.utils.PermissionUtils
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 
 
 class MainActivity : AppCompatActivity(), ParametersDialogFragment.ParametersListener {
 
-  private var mImageRaster: Raster? = null
-  private var mElevationRaster: Raster? = null
+  private var mImageRasterFile: File? = null
+  private var mElevationRasterFile: File? = null
 
   private var mAltitude: Double = 0.toDouble()
   private var mAzimuth: Double = 0.toDouble()
@@ -81,9 +82,9 @@ class MainActivity : AppCompatActivity(), ParametersDialogFragment.ParametersLis
    */
   private fun blendRenderer() {
     // create raster files
-    mImageRaster = Raster(
+    mImageRasterFile = File(
         Environment.getExternalStorageDirectory().absolutePath + this.getString(R.string.shasta_path))
-    mElevationRaster = Raster(
+    mElevationRasterFile = File(
         Environment.getExternalStorageDirectory().absolutePath + this.getString(R.string.shasta_elevation_path))
     // create a map and it to a map view
     mapView.map = ArcGISMap()
@@ -103,15 +104,19 @@ class MainActivity : AppCompatActivity(), ParametersDialogFragment.ParametersLis
 
     // if color ramp is not null, color the hillshade elevation raster instead of the satellite imagery raster
     when {
-      colorRamp != null -> RasterLayer(mElevationRaster)
-      else -> RasterLayer(mImageRaster)
+      colorRamp != null -> RasterLayer(Raster(mElevationRasterFile?.path))
+      else -> RasterLayer(Raster(mImageRasterFile?.path))
     }.let {
       mapView.map.basemap = Basemap(it)
       // create blend renderer
       it.rasterRenderer = BlendRenderer(
-          mElevationRaster,
+          Raster(mElevationRasterFile?.path),
           listOf(9.0),
-          listOf(255.0), null, null, null, null,
+          listOf(255.0),
+          null,
+          null,
+          null,
+          null,
           colorRamp,
           mAltitude,
           mAzimuth,
@@ -119,7 +124,8 @@ class MainActivity : AppCompatActivity(), ParametersDialogFragment.ParametersLis
           mSlopeType,
           mPixelSizeFactor,
           mPixelSizePower,
-          mOutputBitDepth)
+          mOutputBitDepth
+      )
     }
   }
 
