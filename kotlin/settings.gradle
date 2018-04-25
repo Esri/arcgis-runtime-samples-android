@@ -1,6 +1,7 @@
 include ':analyze-hotspots',
         ':authentication-profile',
         ':attribution-view-change',
+        ':change-basemaps',
         ':display-map',
         ':feature-layer-extrusion',
         ':raster-function-service',
