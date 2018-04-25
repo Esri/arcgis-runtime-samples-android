@@ -11,8 +11,8 @@ The Change Basemaps sample app shows how you can change basemaps from an Android
 * ViewPoint
 
 ## Developer Pattern
-The `selectBasemaps()` method switches Basemaps based on the position of the navigation drawer selection. The **Basemap** is created from create methods on a `Basemap` object.  
+The `selectBasemap(position: Int)` function switches Basemaps based on the position of the navigation drawer selection. The **Basemap** is created from create methods on a `Basemap` object.  
 
-```java
-mMap.setBasemap(Basemap.createStreets());
+```kotlin
+mapView.map.basemap = Basemap.createStreets()
 ```
