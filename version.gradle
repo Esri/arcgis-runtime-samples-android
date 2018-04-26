@@ -7,13 +7,13 @@ ext {
     versionCode = 100
     versionName = '100.2.1'
     // library versions
-    kotlinVersion = '1.2.31'
+    kotlinVersion = '1.2.40'
     ankoVersion = '0.10.4'
     andSupportLibVersion = '27.1.0'
-    constraintLayoutVersion = '1.0.2'
+    constraintLayoutVersion = '1.1.0'
     arcgisVersion = '100.2.1'
     // plugin versions
-    gradleVersion = '3.1.0'
+    gradleVersion = '3.1.1'
     // java versions
     targetJavaVersion = 1.8
     sourceJavaVersion = 1.8
