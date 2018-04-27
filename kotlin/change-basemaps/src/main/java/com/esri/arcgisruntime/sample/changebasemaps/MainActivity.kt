@@ -20,12 +20,10 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import kotlinx.android.synthetic.main.activity_main.*
@@ -101,11 +99,8 @@ class MainActivity : AppCompatActivity() {
     drawerList.setItemChecked(position, true)
     drawerLayout.closeDrawer(drawerList)
 
-    Log.d("before", mNavigationDrawerItemTitles[position])
-
     // get basemap title by position
     val baseMapTitle = mNavigationDrawerItemTitles[position]
-    Log.d("after", baseMapTitle)
     supportActionBar?.title = baseMapTitle
 
     // select basemap by title
@@ -154,7 +149,6 @@ class MainActivity : AppCompatActivity() {
   override fun onPause() {
     super.onPause()
     mapView.pause()
-
   }
 
   override fun onDestroy() {
