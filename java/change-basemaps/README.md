@@ -1,5 +1,5 @@
 # Change Basemaps
-### Category: Layers
+### Category: Maps and Scenes
 ![Change Basemaps App](change-basemaps.png)
 
 The Change Basemaps sample app shows how you can change basemaps from an Android Navigation Drawer.  
