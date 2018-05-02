@@ -1,5 +1,5 @@
 # Surface Placement
-### Category: Maps and Scenes
+### Category: MapViews, SceneViews and UI
 Demonstrates how to position graphics using different Surface Placements.
 
 ![Elevation Mode App](surface-placement.png)
