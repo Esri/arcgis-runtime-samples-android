@@ -1,5 +1,5 @@
 # Display Device Location       
-### Category: MapView, SceneView and UI
+### Category: MapViews, SceneViews and UI
 This sample demonstrates how you can enable Location Display and switch between different types of AutoPan Modes. It also demonstrates how to use the Android Support Library to check for, and request, location permissions.
 
 ![Display Device Location](display-device-location.png)
