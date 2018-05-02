@@ -1,5 +1,5 @@
 # Set Initial Map Location
-## Category: Maps and Scenes
+### Category: Maps and Scenes
 
 ![Set Initial Map Location App](set-initial-map-location.png)
 
