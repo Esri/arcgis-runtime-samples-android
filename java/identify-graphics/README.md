@@ -1,7 +1,7 @@
 # Identify Graphics
 ### Category: Search and Query
 
-![Identify Graphic Hit Test App](identify-graphics-hittest.png)
+![Identify Graphics App](identify-graphics.png)
 
 The **Identify Graphics Hit Test** sample demonstrates how to create a `Graphic` and add it to a `GraphicOverlay` where it can be identified from the `MapView`.
 
