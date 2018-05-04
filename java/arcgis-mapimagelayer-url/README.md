@@ -1,14 +1,20 @@
 # ArcGIS Map Image Layer URL
-### Category: Layers
+This sample demonstrates how to load an ArcGIS Map Image Layer from a URL.
 
 ![ArcGIS Map Image Layer App](arcgis-mapimagelayer-url.png)
 
-The ArcGIS Map Image Layer from URL app is the most basic Map app for the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/en/android/) using an `ArcGISMapImageLayer` operational layer from an ArcGIS Online service URL.
-It shows how to inflate a MapView in the layout XML of the activity, create a Map Image Layer from an ArcGIS Online service URL and bind that to a `Basemap`.  The `Basemap` is used to create a `Map` which is used inside of the `MapView`.
-By default, this map supports basic zooming and panning operations.
+## How to use the sample
+Simply run the app.
 
-## Features
+## How it works
+An `ArcGISMapImageLayer` from an ArcGIS Online service URL is added to the `ArcGISMap` as an operational layer.
+
+## Relevant API
 * ArcGISMap
 * MapView
 * ArcGISMapImageLayer
 * Basemap
+
+
+#### Tags
+Layers

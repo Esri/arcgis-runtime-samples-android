@@ -1,15 +1,27 @@
 # Create geometries
-### Category: Edit and Manage Data
+
+This sample demonstrates simple ways to create different types of geometries on a map.
+
 ![Create Geometries App](create-geometries.png)
 
-Demonstrates simple ways to create different types of `Geometry`. The geometries are added as `Graphics` to a `GraphicsOverlay` and displayed in a `MapView`. An `Envelope` is used to set the `Viewpoint` of the `MapView`.
+## How to use the sample
 
-## Features
-* Point
+Simply run the app.
+
+## How it works
+
+Geometries are added as `Graphics` to a `GraphicsOverlay` which is displayed on a `MapView`. An `Envelope` is used to set the `Viewpoint` of the `MapView`.
+
+## Relevant API
+
 * Envelope
 * Multipoint
-* Polyline
+* Point
 * Polygon
+* Polyline
 * Graphic
 * GraphicsOverlay
-* MapView.setViewpointGeometryWithPaddingAsync
+* MapView
+
+#### Tags
+Edit and Manage Data

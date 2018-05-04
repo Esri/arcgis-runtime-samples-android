@@ -1,17 +1,14 @@
 # ArcGIS Tiled Layer URL
-### Category: Layers
+This sample demonstrates how to load an ArcGIS Tiled Layer from a URL.
 
 ![Tiled Layer from URL App](arcgis-tiledlayer-url.png)
 
-The ArcGIS Tile Layer URL app is the most basic Map app for the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/en/android/) using Tiled Layer basemap from an ArcGIS Online service URL.  It shows how to inflate a MapView in the layout XML of the activity, create a Tiled Layer from an ArcGIS Online service URL and bind that to a `Basemap`.  The `Basemap` is used to create a `Map` which is used inside of the `MapView`.  By default, this map supports basic zooming and panning operations.
+## How to use the sample
+Simply run the app.
 
-## Features
-* ArcGISMap
-* MapView
-* ArcGISTiledLayer
-* Basemap
+## How it works
+An `ArcGISTiledLayer` from an ArcGIS Online service URL is added to the `ArcGISMap` as an operational layer.
 
-## Developer pattern
 ```java
 // create new Tiled Layer from service url
 ArcGISTiledLayer tiledLayerBaseMap = new ArcGISTiledLayer(getResources().getString(R.string.world_topo_service));
@@ -22,3 +19,12 @@ ArcGISMap map = new ArcGISMap(basemap);
 // set the map to be displayed in this view
 mMapView.setMap(map);
 ```
+
+## Relevant API
+* ArcGISMap
+* ArcGISTiledLayer
+* Basemap
+* MapView
+
+#### Tags
+Layers
