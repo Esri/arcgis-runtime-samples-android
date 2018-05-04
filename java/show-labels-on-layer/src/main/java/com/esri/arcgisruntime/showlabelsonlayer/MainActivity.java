@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
       } else {
         Toast.makeText(this, getString(R.string.error_message) + featureLayer.getLoadError().getMessage(), Toast.LENGTH_LONG).show();
         Log.e(TAG, getString(R.string.error_message) + featureLayer.getLoadError().getMessage());
-        //new Alert(Alert.AlertType.ERROR, featureLayer.getLoadError().getMessage()).show();
       }
     });
 
@@ -77,5 +76,23 @@ public class MainActivity extends AppCompatActivity {
     // add the definition to the feature layer and enable labels on it
     featureLayer.getLabelDefinitions().add(labelDefinition);
     featureLayer.setLabelsEnabled(true);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
   }
 }

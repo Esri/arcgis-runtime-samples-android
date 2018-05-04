@@ -1,15 +1,12 @@
 # Show Labels on Layer
-### Category: Visualization
 Demonstrates how to show labels on a feature layer.
 
 ![Show Labels on Layer App](show-labels-on-layer.png)
 
-## Features
-* FeatureLayer
-* LabelDefinition
-* TextSymbol
+## How to use the sample
+Simply load the sample. Notice the way labels change with different zoom levels.
 
-## Developer Pattern
+## How it works
 
 1. Create a `FeatureLayer` with a `ServiceFeatureTable` using an online feature service.
 1. Create a `TextSymbol` to use for displaying the label text.
@@ -19,3 +16,11 @@ Demonstrates how to show labels on a feature layer.
 1. Create a label definition from the JSON using `LabelDefinition.fromJson(json)`.
 1. Add the definition to the feature layer with `featureLayer.getLabelDefinitions().add(labelDefinition)`.
 1. Lastly, enable labels on the layer using `featureLayer.setLabelsEnabled()`.
+
+## Relevant API
+* FeatureLayer
+* LabelDefinition
+* TextSymbol
+
+#### Tags
+Visualization

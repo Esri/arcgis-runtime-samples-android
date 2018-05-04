@@ -93,4 +93,19 @@ class MainActivity : AppCompatActivity() {
     featureLayer.labelDefinitions.add(labelDefinition)
     featureLayer.isLabelsEnabled = true
   }
+
+  override fun onPause() {
+    super.onPause()
+    mapView.pause()
+  }
+
+  override fun onResume() {
+    super.onResume()
+    mapView.resume()
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    mapView.dispose()
+  }
 }
