@@ -1,10 +1,17 @@
 # Display Drawing Status
-### Category: MapViews, SceneViews and UI
-![Display Drawing Status App](display-drawing-status.png)
 
 The **Display Drawing Status** app shows how to use the `DrawStatus` value representing drawing state of the `MapView` to display an Android `ProgressBar` while the map is loading.
 
-## Features
+![Display Drawing Status App](display-drawing-status.png)
+
+## How to use the sample
+Simply run the app.
+
+## How it works
+1. Create a `MapView` and set a `DrawStatusChangedListener`.
+1. Use `getDrawStatus` on the `DrawStatusChangedEvent` to determine draw status.
+
+## Relevant API
 * ArcGISMap
 * MapView
 * ServiceFeatureTable
@@ -12,19 +19,5 @@ The **Display Drawing Status** app shows how to use the `DrawStatus` value repre
 * DrawStatusChangedEvent
 * DrawStatusChangedListener
 
-## Developer Pattern
-The listener interface for receiving `DrawStatus` changed events from the `MapView`:
-
-```java
-mMapView.addDrawStatusChangedListener(new DrawStatusChangedListener() {
-    @Override
-    public void drawStatusChanged(DrawStatusChangedEvent drawStatusChangedEvent) {
-        if(drawStatusChangedEvent.getDrawStatus() == DrawStatus.IN_PROGRESS){
-            progressBar.setVisibility(View.VISIBLE);
-            Log.d("drawStatusChanged", "spinner visible");
-        }else if (drawStatusChangedEvent.getDrawStatus() == DrawStatus.COMPLETED){
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-    }
-});
-```
+#### Tags
+MapViews, SceneViews and UI

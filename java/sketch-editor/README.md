@@ -1,19 +1,14 @@
 # Sketch Editor
-### Category: Maps and Scenes
-This sample demonstrates the use of the Sketch Editor.
+Demonstrates the use of the Sketch Editor, which can be used to draw on a map.
 
 ![Sketch Editor App](sketch-editor.png)
 
 # How to use the sample
-
 Use the buttons along the bottom of the screen to sketch: points, multipoints, polylines, polygons, freehand lines, and freehand polylines.
 
 Use the buttons at the top of the screen to: undo, redo, and stop (finish) the sketch.
 
 # How it works
-
-To create and update a viewshed from a camera:
-
 1. Create a `SketchEditor` and add it to a `MapView`.
 1. Use `SketchEditor.start(<SketchCreationMode>)` to start sketching. Modes (as enum) include:
 	* `SketchCreationMode.POINT`
@@ -26,8 +21,10 @@ To create and update a viewshed from a camera:
 1. Use `.getGeometry()` on your instance of sketch editor to get the geometry and, for instance, use to to define a new `Graphic`.
 1. Finally, use `.stop()` on your instance of sketch editor to stop sketching.
 
-# Features
-
+# Relevant API
 * MapView
 * SketchCreationMode
 * SketchEditor
+
+#### Tags
+Maps and Scenes

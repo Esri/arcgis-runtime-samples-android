@@ -1,15 +1,12 @@
 # Create geometries
-
 This sample demonstrates simple ways to create different types of geometries on a map.
 
 ![Create Geometries App](create-geometries.png)
 
 ## How to use the sample
-
 Simply run the app.
 
 ## How it works
-
 Geometries are added as `Graphics` to a `GraphicsOverlay` which is displayed on a `MapView`. An `Envelope` is used to set the `Viewpoint` of the `MapView`.
 
 ## Relevant API
