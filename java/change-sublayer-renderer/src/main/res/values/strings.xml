@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">change-sublayer-renderer</string>
+    <string name="app_name">Change Sublayer Renderer</string>
+    <string name="render_button">Render</string>
 </resources>
