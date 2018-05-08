@@ -5,4 +5,5 @@ include ':analyze-hotspots',
         ':feature-layer-extrusion',
         ':raster-function-service',
         ':raster-rendering-rule',
+        ':show-labels-on-layer',
         ':wmts-layer'

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Show labels on layer</string>
+    <string name="us_highways_1">http://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer/1</string>
+    <string name="error_message">Error loading feature layer: </string>
+</resources>
