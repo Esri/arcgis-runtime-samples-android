@@ -1,5 +1,5 @@
 # Feature Layer Show Attributes
-Demonstrates how to return all loaded features from a query to show all attributes.
+Return all loaded features from a query to show all attributes.
 
 ![Feature Layer Show Attributes App](feature-layer-show-attributes.png)
 

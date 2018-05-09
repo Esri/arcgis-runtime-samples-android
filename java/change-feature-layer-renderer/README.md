@@ -1,5 +1,5 @@
 # Change Feature Layer Renderer
-This sample demonstrates how to override and reset a renderer of a feature layer. Use the buttons in the bottom toolbar to override or reset the renderer.
+Override and reset a renderer of a feature layer. Use the buttons in the bottom toolbar to override or reset the renderer.
 
 ![Change Feature Layer Renderer](change-feature-layer-renderer.png)
 

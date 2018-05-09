@@ -1,5 +1,5 @@
 # Web Tiled Layer
-Demonstrates how to display map tiles from Stamen terrain as an online resource using the `WebTiledLayer`. `WebTiledLayer` provides a simple way to integrate non-ArcGIS Services as a layer in a map.
+Display map tiles from Stamen terrain as an online resource using the `WebTiledLayer`. `WebTiledLayer` provides a simple way to integrate non-ArcGIS Services as a layer in a map.
 
 ![Web Tiled Layer App](web-tiledlayer.png)
 

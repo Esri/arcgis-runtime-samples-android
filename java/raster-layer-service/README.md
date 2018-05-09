@@ -1,5 +1,5 @@
 # Raster Layer Service
-Demonstrates how to create an `ImageServiceRaster` and add it to a `RasterLayer`. An `ImageServiceRaster` allows you to work with an image map service exposed by the ArcGIS Server Rest API.
+Create an `ImageServiceRaster` and add it to a `RasterLayer`. An `ImageServiceRaster` allows you to work with an image map service exposed by the ArcGIS Server Rest API.
 
 ![Raster Layer Service App](raster-layer-service.png)
 

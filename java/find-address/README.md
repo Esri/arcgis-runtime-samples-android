@@ -1,5 +1,5 @@
 # Find Address
-Demonstrates how to geocode an address and show it on a map view.
+Geocode an address and show it on a map view.
 
 ![Find Address App](find-address.png)
 

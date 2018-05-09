@@ -1,5 +1,5 @@
 # Change Viewpoint
-This sample demonstrates different ways to set the `ViewPoint` of a map. 
+Set the ViewPoint of a map. 
 
 ![Change Viewpoint](change-viewpoint.png)
 

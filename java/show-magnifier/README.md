@@ -1,5 +1,5 @@
 # Show Magnifier
-Demonstrates how you can tap and hold on a map to get a magnifier.
+Tap and hold on a map to get a magnifier.
 
 ![Show Magnifier App](show-magnifier.png)
 

@@ -1,5 +1,5 @@
 # Stretch Renderer
-Demonstrates how to use a `StretchRenderer` on a `RasterLayer`. A `StretchRenderer` can be used to stretch tightly grouped values across the available value spectrum, creating more contrast between objects. This is useful for identifying objects in dark images.
+A `StretchRenderer` can be used on a `RasterLayer`. A `StretchRenderer` can be used to stretch tightly grouped values across the available value spectrum, creating more contrast between objects. This is useful for identifying objects in dark images.
 
 ![Stretch Renderer App](stretch-renderer.png)
 

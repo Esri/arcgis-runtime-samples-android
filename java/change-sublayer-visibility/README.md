@@ -1,5 +1,5 @@
 # Change Sublayer Visibility
-This sample demonstrates how to toggle visibility of the map's sublayers.
+Toggle visibility of the map's sublayers.
 
 ![Change Sub Layer Visibility App](change-sublayer-visibility.png)
 

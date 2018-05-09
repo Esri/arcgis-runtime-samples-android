@@ -1,5 +1,5 @@
 # Identify Graphics
-Demonstrates how to create a `Graphic` and add it to a `GraphicOverlay` where it can be identified from the `MapView`.
+Create a `Graphic` and add it to a `GraphicOverlay` where it can be identified from the `MapView`.
 
 ![Identify Graphics App](identify-graphics.png)
 

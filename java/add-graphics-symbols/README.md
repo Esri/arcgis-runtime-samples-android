@@ -1,5 +1,5 @@
 # Add Graphics with Symbols
-This sample demonstrates how to add points, polylines, and polygons as graphics, set a symbol renderer to the graphics and add to a graphics overlay.  The sample also adds text symbols to represent text as symbols on the graphics overlay.
+Add points, polylines, and polygons as graphics, set a symbol renderer to the graphics and add to a graphics overlay. The sample also adds text symbols to represent text as symbols on the graphics overlay.
 
 ![Add Graphics with Symbols App](add-graphics-symbols.png)
 

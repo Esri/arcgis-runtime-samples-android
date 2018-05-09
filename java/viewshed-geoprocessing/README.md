@@ -1,5 +1,5 @@
 # Viewshed Geoprocessing
-Demonstrates how to calculate a viewshed using a geoprocessing service.
+Calculate a viewshed using a geoprocessing service.
 
 ![Viewshed Geoprocessing](viewshed-geoprocessing.png)
 

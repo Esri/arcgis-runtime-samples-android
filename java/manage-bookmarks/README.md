@@ -1,5 +1,5 @@
 # Manage Bookmarks
-Demonstrates how to access and add bookmarks to a map.
+Access and add bookmarks to a map.
 
 ![Manage Bookmarks App](manage-bookmarks.png)
 

@@ -1,5 +1,5 @@
 # Open Mobile Map Package
-Demonstrates how to open and display a map from a Mobile Map Package.
+Open and display a map from a Mobile Map Package.
 
 ![Open Mobile Map Package App](open-mobile-mappackage.png)
 

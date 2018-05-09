@@ -1,5 +1,5 @@
 # Add Graphics Renderer
-This sample demonstrates how to add graphics to a List, create a SimpleRenderer to represent a symbol and style, and add the renderer to the MapView.
+Add graphics to a List, create a SimpleRenderer to represent a symbol and style, and add the renderer to the MapView.
 
 ![Add Graphics Renderer App](add-graphics-renderer.png)
 

@@ -1,5 +1,5 @@
 # Set Initial Map Area
-Demonstrates how to start a `Map` app with a defined initial area using a `Viewpoint` created with an `Envelope` defining the initial area.
+Start a `Map` app with a defined initial area using a `Viewpoint` created with an `Envelope` which defines the initial area.
 
 ![Set Initial Map Area App](set-initial-map-area.png)
 

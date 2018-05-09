@@ -1,5 +1,5 @@
 # Feature Layer Shapefile
-Demonstrates how to open a shapefile stored on the device and display it as a feature layer with default symbology.
+Open a shapefile stored on the device and display it as a feature layer with default symbology.
 
 ![Feature Layer App](feature-layer-shapefile.png)
 

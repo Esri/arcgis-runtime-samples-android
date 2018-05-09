@@ -1,5 +1,5 @@
 # Identify Layers
-Demonstrates how to identify features on a map across different layers present in the map.
+Identify features on a map across different layers.
 
 ![Identify Layers App](identify-layers.png)
 

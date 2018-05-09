@@ -1,5 +1,5 @@
 # Generate Geodatabase
-Demonstrates how to generate a geodatabase from a feature service.
+Generate a geodatabase from a feature service.
 
 ![Generate Geodatabase App](generate-geodatabase.png)
 

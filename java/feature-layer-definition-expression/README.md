@@ -1,5 +1,5 @@
 # Feature layer definition expression
-Demonstrates how you can limit which features to display on the map.
+Limit which features to display on the map.
 
 ![Feature Layer Definition Expression App](feature-layer-definition-expression.png)
 

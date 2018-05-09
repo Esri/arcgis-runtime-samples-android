@@ -1,5 +1,5 @@
 # Take Screenshot
-Demonstrates how to export the map as an image file. `MapView.exportImageAsync` exports the map to Bitmap format which can be saved in any image file format.
+Export a map as an image file. `MapView.exportImageAsync` exports the map to Bitmap format which can be saved in any image file format.
 
 ![Take Screenshot App](take-screenshot.png)
 

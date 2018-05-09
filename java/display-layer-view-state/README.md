@@ -1,5 +1,5 @@
 # Display Layer View State
-The sample demonstrates how to view the status of the layers on the map. 
+View the status of the layers on the map. 
 
 ![Display Layer View State App](display-layer-view-state.png)
 

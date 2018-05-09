@@ -1,5 +1,5 @@
 # Find Place
-Demonstrates how to use geocode functionality to search for points of interest, around a location or within an extent.
+Use geocode functionality to search for points of interest, around a location or within an extent.
 
 ![Find Place App](find-place.png)
 

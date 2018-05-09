@@ -1,5 +1,5 @@
 # Spatial Operations
-Demonstrates how to perform geometry-on-geometry spatial operations by using `GeometryEngine`. Two input `Polygons` are added as `Graphics` to a `GraphicsOverlay` and displayed in a `MapView`. 
+Perform geometry-on-geometry spatial operations by using `GeometryEngine`. Two input `Polygons` are added as `Graphics` to a `GraphicsOverlay` and displayed in a `MapView`. 
 
 ![Spatial Operations App](spatial-operations.png)
 

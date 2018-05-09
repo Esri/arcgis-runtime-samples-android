@@ -1,5 +1,5 @@
 # Statistical Query
-Demonstrates how to query a table to get aggregated statistics back for a specific field.
+Query a table to get aggregated statistics back for a specific field.
 
 ![Statistical Query App](statistical-query.png)
 

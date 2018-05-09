@@ -1,5 +1,5 @@
 # Export tiles
-Demonstrates downloading tiles to a local tile cache file stored on the device.
+Download tiles to a local tile cache file stored on the device.
 
 ![Export Tiles App](export-tiles.png)
 

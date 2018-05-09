@@ -1,5 +1,5 @@
 # Set Map Spatial Reference
-Demonstrates how to create a map with a specific spatial reference
+Create a map with a specific spatial reference.
 
 ![Set Map Spatial Reference App](set-map-spatial-reference.png)
 

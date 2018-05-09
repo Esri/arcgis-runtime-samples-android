@@ -1,5 +1,5 @@
 # Feature Layer Extrusion
-Demonstrates how to apply extrusion to a renderer on a feature layer.
+Apply extrusion to a renderer on a feature layer.
 
 ![Feature Layer Extrusion App](feature-layer-extrusion.png)
 

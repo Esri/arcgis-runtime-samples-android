@@ -1,5 +1,5 @@
 # Display a Map
-Demonstrates how to inflate a map view and add an ArcGIS map to it.
+Inflate a map view and add an ArcGIS map to it.
 
 ![Display a Map App](display-map.png)
 

@@ -1,5 +1,5 @@
 # Read GeoPackage
-Demonstrates how to read rasters and feature tables from geopackages and display them as layers in an map.
+Read rasters and feature tables from geopackages and display them as layers in a map.
 
 ![Read GeoPackage App](read-geopackage.png)
 

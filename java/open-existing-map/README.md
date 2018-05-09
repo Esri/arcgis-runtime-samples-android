@@ -1,5 +1,5 @@
 # Open Existing Map
-Demonstrates how to open an existing map as a `PortalItem` from a `Portal`.
+Open an existing map as a `PortalItem` from a `Portal`.
 
 ![Open Existing Map App](open-existing-map.png)
 

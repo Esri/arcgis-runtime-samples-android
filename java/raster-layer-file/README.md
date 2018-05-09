@@ -1,5 +1,5 @@
 # Raster Layer File
-Demonstrates how to create and use a raster layer made from a local raster file.
+Create and use a raster layer made from a local raster file.
 
 ![Raster Layer File App](raster-layer-file.png)
 

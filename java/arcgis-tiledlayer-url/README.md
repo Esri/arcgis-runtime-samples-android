@@ -1,5 +1,5 @@
 # ArcGIS Tiled Layer URL
-This sample demonstrates how to load an ArcGIS Tiled Layer from a URL.
+Load an ArcGIS Tiled Layer from a URL.
 
 ![Tiled Layer from URL App](arcgis-tiledlayer-url.png)
 

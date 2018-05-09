@@ -1,5 +1,5 @@
 # Map Load Status
-Demonstrates how to tell what the map's load status is--obtained from the enum value from a `LoadStatus` class. 
+Tell what the map's load status is--obtained from the enum value from a `LoadStatus` class. 
 
 ![Map Load Status App](map-load-status.png)
 

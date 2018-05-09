@@ -1,5 +1,5 @@
 # Create geometries
-This sample demonstrates simple ways to create different types of geometries on a map.
+Create different types of geometries on a map.
 
 ![Create Geometries App](create-geometries.png)
 

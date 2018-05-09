@@ -1,5 +1,5 @@
 # Feature Layer Rendering Mode (Scene)
-Demonstrates how to use load settings to set preferred rendering mode for feature layers, specifically static or dynamic rendering modes.
+Use load settings to set preferred rendering mode for feature layers, specifically static or dynamic rendering modes.
 
 ![Feature Layer Rendering Mode App](feature-layer-rendering-mode-scene.png)
 

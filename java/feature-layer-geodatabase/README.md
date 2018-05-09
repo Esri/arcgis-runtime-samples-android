@@ -1,5 +1,5 @@
 # Feature layer (GeoDatabase)
-Demonstrates how to consume an Esri mobile geodatabase by using a `FeatureLayer` and a `GeodatabaseFeatureTable`.
+Consume an Esri mobile geodatabase by using a `FeatureLayer` and a `GeodatabaseFeatureTable`.
 
 ![feature layer geodatabase](feature-layer-geodatabase.png)
 

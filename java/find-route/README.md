@@ -1,5 +1,5 @@
 # Find route
-Demonstrates how to get a route between two locations.
+Get a route between two locations.
 
 ![Find Route App](find-route.png)
 

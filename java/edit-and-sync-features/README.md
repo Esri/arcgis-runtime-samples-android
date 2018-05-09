@@ -1,5 +1,5 @@
 # Edit and sync features
-This sample demonstrates how to synchronize offline edits with a feature service.
+Synchronize offline edits with a feature service.
 
 ![Edit and sync features App](edit-and-sync-features.png)
 

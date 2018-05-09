@@ -1,5 +1,5 @@
 # Scene Layer
-Demonstrates how to add a scene layer to a scene.
+Add a scene layer to a scene.
 
 ![Scene Layer App](scene-layer.png)
 

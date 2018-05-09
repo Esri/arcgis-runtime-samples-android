@@ -1,5 +1,5 @@
 # Feature Layer Query
-Demonstrates how to query a feature layer via feature table.
+Query a feature layer via feature table.
 
 ![Feature Layer Query App](feature-layer-query.png)
 

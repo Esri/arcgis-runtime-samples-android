@@ -1,5 +1,5 @@
 # Location Line of Sight
-Demonstrates how to perform a line of sight analysis between two points in a SceneView.
+Perform a line of sight analysis between two points in a SceneView.
 
 ![Location Line of Sight App](location-line-of-sight.png)
 

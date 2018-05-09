@@ -1,5 +1,5 @@
 # OpenStreetMap Layer
-Demonstrates how to add the OpenStreetMap layer to a map as a Basemap.
+Add the OpenStreetMap layer to a map as a Basemap.
 
 ![OpenStreetMap Layer App](openstreetmap-layer.png)
 

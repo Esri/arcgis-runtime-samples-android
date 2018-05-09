@@ -1,5 +1,5 @@
 # Surface Placement
-Demonstrates how to position graphics using different Surface Placements.
+Position graphics above a surface using different Surface Placements.
 
 ![Elevation Mode App](surface-placement.png)
 

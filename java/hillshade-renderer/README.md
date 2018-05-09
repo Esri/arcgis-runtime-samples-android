@@ -1,5 +1,5 @@
 # Hillshade renderer
-Demonstrates how to use hillshade renderer on a raster.
+Use a hillshade renderer on a raster.
 
 ![Hillshade Renderer App](hillshade-renderer.png)
 

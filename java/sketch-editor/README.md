@@ -1,5 +1,5 @@
 # Sketch Editor
-Demonstrates the use of the Sketch Editor, which can be used to draw on a map.
+The Sketch Editor can be used to draw on a map.
 
 ![Sketch Editor App](sketch-editor.png)
 

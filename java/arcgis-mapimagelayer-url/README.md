@@ -1,5 +1,5 @@
 # ArcGIS Map Image Layer URL
-This sample demonstrates how to load an ArcGIS Map Image Layer from a URL.
+Load an ArcGIS Map Image Layer from a URL.
 
 ![ArcGIS Map Image Layer App](arcgis-mapimagelayer-url.png)
 

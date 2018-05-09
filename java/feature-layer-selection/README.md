@@ -1,5 +1,5 @@
 # Feature Layer Selection
-Demonstrates how to select features in a feature layer.
+Select features in a feature layer.
 
 ![Feature Layer Selection App](feature-layer-selection.png)
 

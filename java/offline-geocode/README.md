@@ -1,5 +1,5 @@
 # Offline geocode
-Demonstrates how you can geocode addresses to locations and reverse geocode locations to addresses when the device does not have network connectivity
+Geocode addresses to locations and reverse geocode locations to addresses when the device does not have network connectivity.
 
 ![Offline Geocode App](offline-geocode.png)
 

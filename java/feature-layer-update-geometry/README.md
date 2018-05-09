@@ -1,5 +1,5 @@
 # Feature Layer Update Geometry
-Demonstrates how to update geometry in a feature layer.
+Update geometry in a feature layer.
 
 ![Feature Layer Update Geometry App](feature-layer-update-geometry.png)
 

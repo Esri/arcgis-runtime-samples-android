@@ -1,5 +1,5 @@
 # Blend Renderer
-Demonstrates how to use a `BlendRenderer` on a `RasterLayer`. `BlendRenderer` is used to blend elevation data with imagery, creating a 3D effect.
+Use a `BlendRenderer` on a `RasterLayer`. `BlendRenderer` is used to blend elevation data with imagery, creating a 3D effect.
 
 ![Blend Renderer App](blend-renderer.png)
 

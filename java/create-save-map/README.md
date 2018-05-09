@@ -1,5 +1,5 @@
 # Create and Save a Map
-This sample demonstrates how to create a map and save it to your portal.
+Create a map and save it to your portal.
 
 ![Create and Save a Map App](create-save-map.png)
 

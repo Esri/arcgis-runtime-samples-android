@@ -1,5 +1,5 @@
 # Picture Marker Symbols
-Demonstrates how to create picture marker symbols from the different types of picture resources available, whether they are sourced from a URL, locally on the device or in the app.
+Create picture marker symbols from the different types of picture resources available, whether they are sourced from a URL, locally on the device, or in the app.
 
 ![Picture Marker Symbols App](picture-marker-symbols.png) 
 

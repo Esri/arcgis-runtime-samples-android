@@ -1,5 +1,5 @@
 # Show Callout
-Demonstrates how to draw a callout on a map view and manages its behavior. A callout displays an Android View that contains text and/or other content. It has a leader that points to the location the callout refers to. 
+Draw a callout on a map view and manage its behavior. A callout displays an Android View that contains text and/or other content. It has a leader that points to the location the callout refers to. 
 
 ![Show Callout App](show-callout.png)
 

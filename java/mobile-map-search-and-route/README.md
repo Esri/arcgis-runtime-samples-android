@@ -1,5 +1,5 @@
 ## Mobile Map (Search and Route)
-Demonstrates how to search and route using data in a map package.
+Search and route using data in a map package.
 
 ![Mobile Map Search and Route App](mobile-map-search-and-route.png)
 

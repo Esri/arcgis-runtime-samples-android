@@ -1,5 +1,5 @@
 # Feature layer update attributes
-Demonstrates how to edit attributes of feature in a feature layer.      
+Edit attributes of a feature in a feature layer.      
 
 ![Feature Layer Update Attributes App](feature-layer-update-attributes.png)
 

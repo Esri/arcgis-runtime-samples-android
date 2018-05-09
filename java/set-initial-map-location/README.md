@@ -1,5 +1,5 @@
 # Set Initial Map Location
-Demonstrates creating a map with an initial location by passing lat, long and level of detail values.
+Create a map with an initial location by passing lat, long and level of detail values.
 
 ![Set Initial Map Location App](set-initial-map-location.png)
 

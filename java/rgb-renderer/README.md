@@ -1,5 +1,5 @@
 # RGB Renderer
-Demonstrates how to use an `RGBRenderer` on a `RasterLayer`. An `RGBRenderer` is used to adjust the color bands of a multispectral image.
+Use an `RGBRenderer` on a `RasterLayer`. An `RGBRenderer` is used to adjust the color bands of a multispectral image.
 
 ![RGB Renderer App](rgb-renderer.png)
 
