@@ -1,15 +1,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"  android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"  android:layout_width="match_parent"
-                android:layout_height="match_parent" tools:context=".MainActivity">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context=".MainActivity">
 
-    <!-- MapView -->
-    <com.esri.arcgisruntime.mapping.view.MapView
-            android:id="@+id/mapView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-    </com.esri.arcgisruntime.mapping.view.MapView>
+
+        <!-- MapView -->
+        <com.esri.arcgisruntime.mapping.view.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="40dp">
+        </com.esri.arcgisruntime.mapping.view.MapView>
+        <EditText
+                android:id="@+id/buffer_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Specify the buffer in miles then tap on map "
+                android:inputType="number"
+                android:layout_alignTop="@id/mapView"/>
+
 
 </RelativeLayout>

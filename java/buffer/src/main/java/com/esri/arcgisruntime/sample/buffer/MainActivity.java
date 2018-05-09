@@ -17,7 +17,10 @@ package com.esri.arcgisruntime.sample.buffer;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.EditText;
+import android.widget.NumberPicker;
 import com.esri.arcgisruntime.geometry.*;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -32,13 +35,17 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
+  private EditText mBufferInput;
+  private Double bufferDistance =0.0;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // inflate MapViews
+    // inflate views
     mMapView = findViewById(R.id.mapView);
+    mBufferInput = findViewById(R.id.buffer_input);
+
     // create a map with the Basemap
     ArcGISMap map = new ArcGISMap(SpatialReferences.getWebMercator());
     map.setBasemap(Basemap.createTopographic());
@@ -71,14 +78,19 @@ public class MainActivity extends AppCompatActivity {
         android.graphics.Point clickLocation = new android.graphics.Point(Math.round(motionEvent.getX()),
             Math.round(motionEvent.getY()));
         Point mapPoint = mMapView.screenToLocation(clickLocation);
-        Polygon bufferGeometry = GeometryEngine.buffer(mapPoint,miles.convertTo(meters,10));
-        // show the buffered region as a green graphic
-        Graphic bufferGraphic = new Graphic(bufferGeometry,fillSymbol);
-        graphicsOverlay.getGraphics().add(bufferGraphic);
-        //show a red marker where clicked
-        Graphic markerGraphic = new Graphic(mapPoint, new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE,
-            0xFFFF0000, 5));
-        graphicsOverlay.getGraphics().add(markerGraphic);
+        // only draw a buffer if a value was entered
+        if(mBufferInput.getText().toString().length() !=0){
+          bufferDistance = Double.valueOf(mBufferInput.getText().toString());
+          Polygon bufferGeometry = GeometryEngine.buffer(mapPoint,miles.convertTo(meters,bufferDistance));
+          // show the buffered region as a green graphic
+          Graphic bufferGraphic = new Graphic(bufferGeometry,fillSymbol);
+          graphicsOverlay.getGraphics().add(bufferGraphic);
+          //show a red marker where clicked
+          Graphic markerGraphic = new Graphic(mapPoint, new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE,
+              0xFFFF0000, 5));
+          graphicsOverlay.getGraphics().add(markerGraphic);
+        }
+
         return true;
       }
     }
