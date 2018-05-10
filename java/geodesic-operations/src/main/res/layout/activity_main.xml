@@ -4,7 +4,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.esri.arcgisruntime.basicandroidproject.MainActivity">
+    tools:context="com.esri.arcgisruntime.geodesicoperations.MainActivity">
 
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"

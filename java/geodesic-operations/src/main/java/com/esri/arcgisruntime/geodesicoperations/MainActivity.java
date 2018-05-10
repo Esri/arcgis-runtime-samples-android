@@ -1,4 +1,4 @@
-/* Copyright 2016 Esri
+/* Copyright 2018 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,44 @@
  *
  */
 
-package com.esri.arcgisruntime.basicandroidproject;
+package com.esri.arcgisruntime.geodesicoperations;
 
-import android.annotation.SuppressLint;
+import java.util.Arrays;
+
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
-import com.esri.arcgisruntime.geometry.*;
+import com.esri.arcgisruntime.geometry.GeodeticCurveType;
+import com.esri.arcgisruntime.geometry.Geometry;
+import com.esri.arcgisruntime.geometry.GeometryEngine;
+import com.esri.arcgisruntime.geometry.LinearUnit;
+import com.esri.arcgisruntime.geometry.LinearUnitId;
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.PointCollection;
+import com.esri.arcgisruntime.geometry.Polyline;
+import com.esri.arcgisruntime.geometry.SpatialReference;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.view.*;
+import com.esri.arcgisruntime.mapping.view.Callout;
+import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
+import com.esri.arcgisruntime.mapping.view.Graphic;
+import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
+import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
-
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-  private SpatialReference srWgs84 = SpatialReferences.getWgs84();
-  private Point start;
-  private Point destination;
-  private Graphic path;
-  private Callout mCallout;
-  //TODO is this the correct linear unit?
-  private LinearUnit unitOfMeasurement = new LinearUnit(LinearUnitId.KILOMETERS);
-  private String units = "Kilometers";
+  private final SpatialReference srWgs84 = SpatialReferences.getWgs84();
+  private final LinearUnit unitOfMeasurement = new LinearUnit(LinearUnitId.KILOMETERS);
+  private final String units = "Kilometers";
 
-  @SuppressLint("ClickableViewAccessibility") @Override
+  @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -53,15 +60,15 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.createImagery());
 
     // set map to a map view
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     mMapView.setMap(map);
 
     // create a graphic overlay
     GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
-    // add a graohic at JFK to represent the flight start location //
-    start = new Point(-73.7781, 40.6413, srWgs84);
+    // add a graphic at JFK to represent the flight start location //
+    final Point start = new Point(-73.7781, 40.6413, srWgs84);
     SimpleMarkerSymbol locationMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF0000FF, 10);
     Graphic startLocation = new Graphic(start, locationMarker);
     graphicsOverlay.getGraphics().add(startLocation);
@@ -72,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     graphicsOverlay.getGraphics().add(endLocation);
 
     // create graphic representing the geodesic path between the two locations
-    path = new Graphic();
+    final Graphic path = new Graphic();
     path.setSymbol(new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, 0xFF0000FF, 5));
     graphicsOverlay.getGraphics().add(path);
 
@@ -86,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         android.graphics.Point clickLocation = new android.graphics.Point(Math.round(motionEvent.getX()),
             Math.round(motionEvent.getY()));
         Point mapPoint = mMapView.screenToLocation(clickLocation);
-        destination = (Point) GeometryEngine.project(mapPoint, SpatialReferences.getWgs84());
+        final Point destination = (Point) GeometryEngine.project(mapPoint, SpatialReferences.getWgs84());
         endLocation.setGeometry(destination);
         // create a straight line path between the start and end locations
         PointCollection points = new PointCollection(Arrays.asList(start, destination), srWgs84);
@@ -104,10 +111,10 @@ public class MainActivity extends AppCompatActivity {
         calloutContent.setSingleLine();
         // format coordinates to 2 decimal places
         calloutContent.setText("Distance: " + String.format("%.2f", distance) + units);
-        mCallout = mMapView.getCallout();
-        mCallout.setLocation(mapPoint);
-        mCallout.setContent(calloutContent);
-        mCallout.show();
+        final Callout callout = mMapView.getCallout();
+        callout.setLocation(mapPoint);
+        callout.setContent(calloutContent);
+        callout.show();
         return true;
 
       }
@@ -123,8 +130,13 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onResume() {
-    super.onResume();
     mMapView.resume();
+    super.onResume();
+  }
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
   }
 }
 
