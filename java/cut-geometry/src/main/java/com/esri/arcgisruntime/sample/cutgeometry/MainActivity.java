@@ -1,3 +1,18 @@
+/* Copyright 2018 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package com.esri.arcgisruntime.sample.cutgeometry;
 
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +21,8 @@ import android.os.Bundle;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import android.view.View;
+import android.widget.Button;
 import com.esri.arcgisruntime.geometry.*;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -16,33 +33,38 @@ import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
+  private Button  mCutButton;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // inflate MapView from layout
+    // inflate views from layout
     mMapView = (MapView) findViewById(R.id.mapView);
+    mCutButton = findViewById(R.id.cutButton);
     // create a map with the BasemapType topographic
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
     // create a graphic overlay
-    GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
+    final GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
     // create a blue polygon graphic to cut
-    Graphic polygonGraphic = new Graphic(createLakeSuperiorPolygon(), new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID,
+    final Graphic polygonGraphic = new Graphic(createLakeSuperiorPolygon(), new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID,
         0x220000FF, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF0000FF, 2)));
     graphicsOverlay.getGraphics().add(polygonGraphic);
 
     // create a red polyline graphic to cut the polygon
-    Graphic polylineGraphic = new Graphic(createBorder(), new SimpleLineSymbol(SimpleLineSymbol.Style.DOT,
+    final Graphic polylineGraphic = new Graphic(createBorder(), new SimpleLineSymbol(SimpleLineSymbol.Style.DOT,
         0xFFFF0000, 3));
     graphicsOverlay.getGraphics().add(polylineGraphic);
 
@@ -50,7 +72,20 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setViewpointGeometryAsync(polygonGraphic.getGeometry());
 
     //create a button to perform the cut operation
+    mCutButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        List<Geometry> parts = GeometryEngine.cut(polygonGraphic.getGeometry(),(Polyline) polylineGraphic.getGeometry());
 
+        // create graphics for the US and Canada sides
+        Graphic canadaSide = new Graphic(parts.get(0),new SimpleFillSymbol(SimpleFillSymbol.Style.BACKWARD_DIAGONAL,
+            0xFF00FF00, new SimpleLineSymbol(SimpleLineSymbol.Style.NULL, 0xFFFFFFFF, 0)));
+        Graphic usSide = new Graphic(parts.get(1), new SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL,
+            0xFFFFFF00, new SimpleLineSymbol(SimpleLineSymbol.Style.NULL, 0xFFFFFFFF, 0)));
+        graphicsOverlay.getGraphics().addAll(Arrays.asList(canadaSide,usSide));
+        mCutButton.setEnabled(false);
+      }
+    });
   }
   /**
    * Creates a polyline along the US/Canada border over Lake Superior.
