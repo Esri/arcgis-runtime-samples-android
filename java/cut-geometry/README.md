@@ -1,38 +1,31 @@
-<h1>Cut Geometry</h1>
+# Cut Geometry
+Demonstrates how to cut a geometry with a polyline using the GeometryEngine.
 
-<p>Demonstrates how to cut a geometry with a polyline using the GeometryEngine.</p>
+![Cut Geometry Image](CutGeometry.png)
 
-<p><img src="CutGeometry.png"/></p>
+## How to use the sample
+Click the "Cut" button to cut the polygon with the polyline and see the resulting parts.
 
-<h2>How to use the sample</h2>
+## How it works
+To cut a geometry with a polyline:
 
-<p>Click the "Cut" button to cut the polygon with the polyline and see the resulting parts.</p>
+1. Use the static method `GeometryEngine.cut(geometry, polyline)`.
+1. Loop through the `List <Geometry>` of cut pieces. Keep in mind that some of these geometries may
+     be multi-part.`
 
-<h2>How it works</h2>
+## Features
 
-<p>To cut a geometry with a polyline:</p>
-
-<ol>
-    <li>Use the static method <code>GeometryEngine.cut(geometry, polyline)</code>.</li>
-    <li>Loop through the <code>List&lt;Geometry&gt;</code> of cut pieces. Keep in mind that some of these geometries may
-     be multi-part.</code>
-</ol>
-
-<h2>Features</h2>
-
-<ul>
-    <li>ArcGISMap</li>
-    <li>Basemap</li>
-    <li>Geometry</li>
-    <li>GeometryEngine</li>
-    <li>Graphic</li>
-    <li>GraphicsOverlay</li>
-    <li>MapView</li>
-    <li>Point</li>
-    <li>PointCollection</li>
-    <li>Polygon</li>
-    <li>Polyline</li>
-    <li>SimpleFillSymbol</li>
-    <li>SimpleLineSymbol</li>
-    <li>SpatialReferences</li>
-</ul>
+* ArcGISMap
+* Basemap
+* Geometry
+* GeometryEngine
+* Graphic
+* GraphicsOverlay
+* MapView
+* Point
+* PointCollection
+* Polygon
+* Polyline
+* SimpleFillSymbol
+* SimpleLineSymbol
+* SpatialReferences

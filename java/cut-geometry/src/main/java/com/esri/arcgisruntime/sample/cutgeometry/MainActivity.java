@@ -15,6 +15,9 @@
  */
 package com.esri.arcgisruntime.sample.cutgeometry;
 
+import java.util.Arrays;
+import java.util.List;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -35,13 +38,10 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-
   private Button mCutButton;
 
   @Override
@@ -52,8 +52,10 @@ public class MainActivity extends AppCompatActivity {
     // inflate views from layout
     mMapView = (MapView) findViewById(R.id.mapView);
     mCutButton = findViewById(R.id.cutButton);
+
     // create a map with the BasemapType topographic
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
