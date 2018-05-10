@@ -18,12 +18,15 @@ package com.esri.arcgisruntime.sample.cutgeometry;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-
 import android.view.View;
 import android.widget.Button;
-import com.esri.arcgisruntime.geometry.*;
+import com.esri.arcgisruntime.geometry.Geometry;
+import com.esri.arcgisruntime.geometry.Polygon;
+import com.esri.arcgisruntime.geometry.PointCollection;
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.GeometryEngine;
+import com.esri.arcgisruntime.geometry.Polyline;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.Graphic;
@@ -31,7 +34,6 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
-import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +41,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-  private Button  mCutButton;
+
+  private Button mCutButton;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +62,9 @@ public class MainActivity extends AppCompatActivity {
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
     // create a blue polygon graphic to cut
-    final Graphic polygonGraphic = new Graphic(createLakeSuperiorPolygon(), new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID,
-        0x220000FF, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF0000FF, 2)));
+    final Graphic polygonGraphic = new Graphic(createLakeSuperiorPolygon(),
+        new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID,
+            0x220000FF, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF0000FF, 2)));
     graphicsOverlay.getGraphics().add(polygonGraphic);
 
     // create a red polyline graphic to cut the polygon
@@ -71,22 +75,24 @@ public class MainActivity extends AppCompatActivity {
     // zoom to show the polygon graphic
     mMapView.setViewpointGeometryAsync(polygonGraphic.getGeometry());
 
-    //create a button to perform the cut operation
+    // create a button to perform the cut operation
     mCutButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        List<Geometry> parts = GeometryEngine.cut(polygonGraphic.getGeometry(),(Polyline) polylineGraphic.getGeometry());
+        List<Geometry> parts = GeometryEngine
+            .cut(polygonGraphic.getGeometry(), (Polyline) polylineGraphic.getGeometry());
 
         // create graphics for the US and Canada sides
-        Graphic canadaSide = new Graphic(parts.get(0),new SimpleFillSymbol(SimpleFillSymbol.Style.BACKWARD_DIAGONAL,
+        Graphic canadaSide = new Graphic(parts.get(0), new SimpleFillSymbol(SimpleFillSymbol.Style.BACKWARD_DIAGONAL,
             0xFF00FF00, new SimpleLineSymbol(SimpleLineSymbol.Style.NULL, 0xFFFFFFFF, 0)));
         Graphic usSide = new Graphic(parts.get(1), new SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL,
             0xFFFFFF00, new SimpleLineSymbol(SimpleLineSymbol.Style.NULL, 0xFFFFFFFF, 0)));
-        graphicsOverlay.getGraphics().addAll(Arrays.asList(canadaSide,usSide));
+        graphicsOverlay.getGraphics().addAll(Arrays.asList(canadaSide, usSide));
         mCutButton.setEnabled(false);
       }
     });
   }
+
   /**
    * Creates a polyline along the US/Canada border over Lake Superior.
    *
