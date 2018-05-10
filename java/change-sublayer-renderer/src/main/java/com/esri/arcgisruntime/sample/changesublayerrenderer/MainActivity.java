@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
   private MapView mMapView;
   private Button mButton;
   private ArcGISMapImageSublayer countiesSublayer;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
