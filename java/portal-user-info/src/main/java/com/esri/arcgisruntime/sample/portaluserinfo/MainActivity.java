@@ -16,6 +16,13 @@
 
 package com.esri.arcgisruntime.sample.portaluserinfo;
 
+<<<<<<< HEAD:java/portal-user-info/src/main/java/com/esri/arcgisruntime/sample/portaluserinfo/MainActivity.java
+=======
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+>>>>>>> ae93855a8aa3c75193d13c32fef48c7011822919:java/portal-user-info/src/main/java/com/esri/arcgisruntime/sample/portaluserinfo/MainActivity.java
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
