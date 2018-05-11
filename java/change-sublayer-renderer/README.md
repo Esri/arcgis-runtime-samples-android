@@ -1,8 +1,8 @@
 ## Change Sublayer Renderer
-Demonstrates how to change the renderer on a map image layer sublayer. In this example, a renderer is applied 
+Change the renderer on a map image layer sublayer. In this example, a renderer is applied 
 to see the different population ranges in the counties sublayer data.
 
-![Chnage Image Sublayer](ChangeSublayerRenderer.png)
+![Change Sublayer Renderer App](change-sublayer-renderer.png)
 
 ## How to use the sample
 Wait for the map image layer to load. Then click the "Change sublayer renderer" button to set the renderer.
@@ -15,8 +15,7 @@ To get a sublayer and change its renderer:
 1. Cast the sublayer you want to change to the appropriate type: `(ArcGISMapImageSublayer) sublayers.get(2)`.
 1. Set the renderer with `sublayer.setRenderer(renderer)`.
 
-## Features
-
+## Relevant API
 * ArcGISMap 
 * ArcGISMapImageLayer 
 * ArcGISMapImageSublayer 
