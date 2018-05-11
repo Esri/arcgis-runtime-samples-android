@@ -47,9 +47,9 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-  private final SpatialReference srWgs84 = SpatialReferences.getWgs84();
-  private final LinearUnit unitOfMeasurement = new LinearUnit(LinearUnitId.KILOMETERS);
-  private final String units = "Kilometers";
+  private final SpatialReference mSrWgs84 = SpatialReferences.getWgs84();
+  private final LinearUnit mUnitOfMeasurement = new LinearUnit(LinearUnitId.KILOMETERS);
+  private final String mUnits = "Kilometers";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
     // add a graphic at JFK to represent the flight start location //
-    final Point start = new Point(-73.7781, 40.6413, srWgs84);
+    final Point start = new Point(-73.7781, 40.6413, mSrWgs84);
     SimpleMarkerSymbol locationMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF0000FF, 10);
     Graphic startLocation = new Graphic(start, locationMarker);
     graphicsOverlay.getGraphics().add(startLocation);
@@ -96,21 +96,21 @@ public class MainActivity extends AppCompatActivity {
         final Point destination = (Point) GeometryEngine.project(mapPoint, SpatialReferences.getWgs84());
         endLocation.setGeometry(destination);
         // create a straight line path between the start and end locations
-        PointCollection points = new PointCollection(Arrays.asList(start, destination), srWgs84);
+        PointCollection points = new PointCollection(Arrays.asList(start, destination), mSrWgs84);
         Polyline polyline = new Polyline(points);
         // densify the path as a geodesic curve and show it with the path graphic
         Geometry pathGeometry = GeometryEngine
-            .densifyGeodetic(polyline, 1, unitOfMeasurement, GeodeticCurveType.GEODESIC);
+            .densifyGeodetic(polyline, 1, mUnitOfMeasurement, GeodeticCurveType.GEODESIC);
         path.setGeometry(pathGeometry);
         // calculate the path distance
-        double distance = GeometryEngine.lengthGeodetic(pathGeometry, unitOfMeasurement, GeodeticCurveType.GEODESIC);
+        double distance = GeometryEngine.lengthGeodetic(pathGeometry, mUnitOfMeasurement, GeodeticCurveType.GEODESIC);
 
         // create a textview for the callout
         TextView calloutContent = new TextView(getApplicationContext());
         calloutContent.setTextColor(Color.BLACK);
         calloutContent.setSingleLine();
         // format coordinates to 2 decimal places
-        calloutContent.setText("Distance: " + String.format("%.2f", distance) + units);
+        calloutContent.setText("Distance: " + String.format("%.2f", distance) + mUnits);
         final Callout callout = mMapView.getCallout();
         callout.setLocation(mapPoint);
         callout.setContent(calloutContent);
@@ -130,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onResume() {
-    mMapView.resume();
     super.onResume();
+    mMapView.resume();
   }
   @Override
   protected void onDestroy() {
