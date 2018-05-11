@@ -1,5 +1,5 @@
 # Map Rotation
-### Category: Maps and Scenes
+### Category: MapViews, SceneViews and UI
 This sample demonstrates how to rotate a map on your Android device using an Android `SeekBar`.
 
 ![Map Rotation App](map-rotation.png)

@@ -1,4 +1,5 @@
 # Viewshed Geoprocessing
+### Category: Analysis
 
 This sample demonstrates how to calculate a viewshed using a geoprocessing service.
 

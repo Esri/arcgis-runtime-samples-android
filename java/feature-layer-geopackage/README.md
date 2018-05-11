@@ -1,5 +1,5 @@
 # Feature layer (GeoPackage)
-### Category: Maps and Scenes
+### Category: Edit and Manage Data
 This sample demonstrates how to open a GeoPackage and show a GeoPackage feature table in a feature layer.
 
 ![Feature layer GeoPackage App](feature-layer-geopackage.png)

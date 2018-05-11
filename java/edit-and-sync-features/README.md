@@ -1,5 +1,5 @@
 # Edit and sync features
-### Category: Manage Data
+### Category: Edit and Manage Data
 This sample demonstrates how to synchronize offline edits with a feature service.
 
 ![Edit and sync features App](edit-and-sync-features.png)

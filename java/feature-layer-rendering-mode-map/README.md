@@ -1,5 +1,5 @@
 # Feature Layer Rendering Mode (Map)
-### Category: Maps and Scenes
+### Category: MapViews, SceneViews and UI
 This sample demonstrates how to use load settings to set preferred rendering mode for feature layers, specifically static or dynamic rendering modes.
 
 ![Feature Layer Rendering Mode App](feature-layer-rendering-mode-map.png)
