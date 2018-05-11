@@ -3,13 +3,10 @@ Use the `DefaultAuthenticationChallengeHandler` class to take care of showing an
 
 ![Portal User Info App](portal-user-info.png) 
 
-## Features
-* AuthenticationManager
-* DefaultAuthenticationChallengeHandler
-* PortalInfo
-* PortalUser
+## How to use the sample
+When prompted, enter your ArcGIS Online credentials.
 
-## Developer Pattern
+## How it works
 The `DefaultAuthenticationChallengeHandler` is the default implementation of the `AuthenticationChallengeHandler` interface to handle  all security types that ArcGIS supports (including OAuth).  This sample uses it to authenticate with a portal.  This is set on the `AuthenticationManager`. To authenticate the user you create a `Portal` object, provide the essential credentials and then asynchronously load the portal as shown below:
 
 ```java
@@ -41,3 +38,12 @@ PortalUser user = portal.getUser();
 // get the users full name
 String userName = user.getFullName();
 ```
+
+## Relevant API
+* AuthenticationManager
+* DefaultAuthenticationChallengeHandler
+* PortalInfo
+* PortalUser
+
+#### Tags
+Cloud and Portal
