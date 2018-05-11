@@ -127,8 +127,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onResume() {
-    mapView.resume()
     super.onResume()
+    mapView.resume()
   }
 
   override fun onDestroy() {
