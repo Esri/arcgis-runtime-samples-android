@@ -1,4 +1,5 @@
 # Change Viewpoint
+### Category: MapViews, SceneViews and UI
 This sample demonstrates different ways to change the `ViewPoint` of a map. 
 
 ![Change Viewpoint](change-viewpoint.png)

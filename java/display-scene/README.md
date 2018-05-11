@@ -1,4 +1,5 @@
 # Display a Scene
+### Category: Maps and Scenes
 This sample demonstrates how to display a scene with elevation data.
 
 ![Display a Scene App](display-scene.png)

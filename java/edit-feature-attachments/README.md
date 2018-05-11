@@ -1,4 +1,5 @@
 # Edit feature attachments
+### Category: Edit and Manage Data
 The sample demonstrates how you can add, delete or fetch attachments for a specific feature in a feature layer.
 
 ![Edit Feature Attachments](edit-feature-attachments.png)

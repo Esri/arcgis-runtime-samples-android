@@ -4,6 +4,6 @@
     <item
         android:id="@+id/chooseParam"
         android:icon="@android:drawable/ic_menu_manage"
-        android:title="@string/chooseParam"
+        android:title="@string/edit_renderer"
         app:showAsAction="ifRoom|withText"/>
 </menu>

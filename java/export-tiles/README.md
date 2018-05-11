@@ -1,5 +1,5 @@
 # Export tiles
-
+### Category: Edit and Manage Data
 This sample demonstrates how to export tiles from a map server.
 
 ## How to use the sample

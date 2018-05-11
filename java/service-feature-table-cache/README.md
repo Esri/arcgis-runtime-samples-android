@@ -1,5 +1,5 @@
 # Service Feature Table (Cache)
-
+### Category: Maps and Scenes
 This sample demonstrates how to use a feature service with a service feature table in on-interaction-cache mode (which is the default mode for service feature tables). 
 
 ![Service FeatureTable Cache App](service-feature-table-cache.png)

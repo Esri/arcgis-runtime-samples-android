@@ -1,5 +1,5 @@
 # Generate Geodatabase
-
+### Category: Edit and Manage Data
 This sample demonstrates how to generate a geodatabase from a feature service.
 
 ## How to use the sample

@@ -1,4 +1,5 @@
 # Create and Save a Map
+### Category: Cloud and Portal
 This sample demonstrates how to create a map and save it to your portal. This sample uses the [named user login](https://developers.arcgis.com/authentication/#named-user-login) authentication pattern.  Before a user can save a map they have to login to their [ArcGIS Online](https://www.arcgis.com/) account. Follow the [authentication](#authentication) steps below before running the app.  
 
 ![author-map](create-save-map.png)

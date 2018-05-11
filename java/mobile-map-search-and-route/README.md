@@ -1,5 +1,5 @@
 ## Mobile Map (Search and Route)
-
+### Category: Routing and Logistics
 This sample demonstrates how to search and route using data in a map package.
 
 ## Features

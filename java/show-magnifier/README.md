@@ -1,5 +1,5 @@
 # Show Magnifier
-
+### Category: MapViews, SceneViews and UI
 ![Show Magnifier App](show-magnifier.png)
 
 This sample demonstrates how you can tap and hold on a map to get the magnifier. You can also pan while tapping and holding to move the magnifier across the map.

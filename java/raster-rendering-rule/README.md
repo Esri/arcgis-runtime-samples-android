@@ -1,5 +1,5 @@
 # Raster Rendering Rule
-
+### Category: Visualization
 This sample demonstrates how to create an `ImageServiceRaster`, fetch the `RenderingRules` from the service info, and use a `RenderingRule` to create an `ImageServiceRaster` and add it to a raster layer. 
 
 ![Raster Rendering Rule App](raster-rendering-rule.png)

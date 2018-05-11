@@ -1,4 +1,5 @@
 # Read GeoPackage
+## Category: Edit and Manage Data
 
 This sample demonstrates how to read rasters and feature tables from geopackages and display them as layers in an map.
 

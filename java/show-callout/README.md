@@ -1,5 +1,5 @@
 # Show Callout
-
+### Category: MapViews, SceneViews and UI
 The **Show Callout** sample draws a callout on a MapView and manages its behavior. A callout displays an Android View that contains text and/or other content. It has a leader that points to the location the callout refers to. 
 
 ![Show Callout App](show-callout.png)

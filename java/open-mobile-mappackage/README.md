@@ -1,5 +1,5 @@
 # Open Mobile Map Package
-
+### Category: Edit and Manage Data
 This sample demonstrates how to open and display a map from a Mobile Map Package.
 
 ![Open Mobile Map Package App](open-mobile-mappackage.png)

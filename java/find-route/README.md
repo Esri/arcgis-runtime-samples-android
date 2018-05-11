@@ -1,4 +1,5 @@
 # Find route
+### Category: Routing and Logistics
 This sample demonstrates how to get a route between two locations
 
 ![Find Route App](find-route.png)

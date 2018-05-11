@@ -1,5 +1,5 @@
 # Sketch Editor
-
+### Category: Maps and Scenes
 This sample demonstrates the use of the Sketch Editor.
 
 ![Sketch Editor App](sketch-editor.png)

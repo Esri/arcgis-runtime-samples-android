@@ -1,5 +1,5 @@
 # Manage BookMarks
-
+### Category: MapViews, SceneViews and UI
 ![Manage Bookmarks App](manage-bookmarks.png)
 
 The sample demonstrates how to access and add bookmarks to a map
