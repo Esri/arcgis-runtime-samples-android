@@ -1,37 +1,20 @@
 # Take Screenshot
-### Category: MapViews, SceneViews and UI
-The purpose of this sample is to demonstrate how to export the map as an image file. `MapView.exportImageAsync` exports the map to **Bitmap** format which can be saved in any image file format.
+Export a map as an image file. `MapView.exportImageAsync` exports the map to Bitmap format which can be saved in any image file format.
 
 ![Take Screenshot App](take-screenshot.png)
 
-## Features
+## How to use the sample
+Tap the camera icon the upper right to take a screenshot of the current view on the `MapView`.
 
+## How it works
+1. Call `exportImageAsync` on the `MapView` and set it to a `ListenableFuture<Bitmap>`.
+1. On done, call `get()` on the `ListenableFuture<Bitmap>` and save it to the device.
+
+## Relevant API
 * ArcGISMap
-* MapView
 * ExportImageAsync
+* ListenableFuture<Bitmap>
+* MapView
 
-## Developer Pattern
-
-```java
-// export the image from the mMapView
-final ListenableFuture<Bitmap> export = mMapView.exportImageAsync();
-export.addDoneListener(new Runnable() {
-    @Override
-    public void run() {
-        try {
-            Bitmap currentMapImage = export.get();
-            // play the camera shutter sound
-            MediaActionSound sound = new MediaActionSound();
-            sound.play(MediaActionSound.SHUTTER_CLICK);
-            Log.d(TAG,"Captured the image!!");
-            // save the exported bitmap to an image file
-            SaveImageTask saveImageTask = new SaveImageTask();
-            saveImageTask.execute(currentMapImage);
-        } catch (Exception e) {
-            Log.d(TAG, "Fail to export map image: " + e.getMessage());
-        }
-    }
-});
-}
-    
-```
+#### Tags
+MapViews, SceneViews and UI
