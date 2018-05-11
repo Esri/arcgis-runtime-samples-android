@@ -1,8 +1,13 @@
+<<<<<<< HEAD:java/portal-user-info/README.md
+# Portal User Info
+Use the `DefaultAuthenticationChallengeHandler` class to take care of showing an authentication dialog for logging into a `Portal`. Once authenticated against the portal, the app displays information about the authenticated user's profile.
+=======
 # Authentication Profile
 ### Category: Cloud and Portal
 The Authentication Profile sample use the `DefaultAuthenticationChallengeHandler` class to take care of showing an authentication dialog for logging into a `Portal`. Once authenticated against the portal the app displays information about the authenticated user's profile.
+>>>>>>> 9c5d231b0fa60df765b6ae4866ff1689c0b29505:java/authentication-profile/README.md
 
-![Authentication Profile App](authentication-profile.png) 
+![Portal User Info App](portal-user-info.png) 
 
 ## Features
 * AuthenticationManager

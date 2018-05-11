@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Authentication Profile</string>
+    <string name="app_name">Portal User Info</string>
 
     <string name="user_name">User Name</string>
     <string name="email">E-Mail</string>

@@ -14,13 +14,12 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.authenticationprofile;
+package com.esri.arcgisruntime.sample.portaluserinfo;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
