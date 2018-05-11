@@ -1,5 +1,5 @@
 # Geodesic Operations 
-Demonstrates how to use the GeometryEngine to calculate a geodesic path between two points and measure its distance.
+Use the GeometryEngine to calculate a geodesic path between two points and measure its distance.
 
 ![Geodesic Operations App](geodesic-operations.png)
 
@@ -16,7 +16,6 @@ Click on the map to select a path destination. The geodesic path between the two
 
 
 ## Relevant API
-
  * ArcGISMap 
  * GeodeticCurveType 
  * Geometry 
