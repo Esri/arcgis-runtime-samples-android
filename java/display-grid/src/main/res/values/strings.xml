@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Display Grid</string>
+    <string-array name="layers_array">
+        <item>Lat and Long</item>
+        <item>MGRS Grid</item>
+        <item>UTM Grid</item>
+        <item>USNG Grid</item>
+    </string-array>
+</resources>
