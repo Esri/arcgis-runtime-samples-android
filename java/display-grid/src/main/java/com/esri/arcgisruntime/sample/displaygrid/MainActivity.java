@@ -16,6 +16,7 @@
 package com.esri.arcgisruntime.sample.displaygrid;
 
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -45,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private CheckBox mLabelsCheckBox;
-  private ConstraintLayout mainActivity;
-  private PopupWindow mPopupMenu;
   private Spinner mGridSpinner;
   private Button mMenuButton;
 
@@ -59,15 +58,20 @@ public class MainActivity extends AppCompatActivity {
     // inflate views from layout
     mMapView = findViewById(R.id.mapView);
     mMenuButton = findViewById(R.id.menu_button);
-    mainActivity = findViewById(R.id.activity_main);
 
-    // inflate views that are placed on popup box
-    LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-    ViewGroup container = (ViewGroup) layoutInflater.inflate(R.layout.popup_menu,null);
-    mPopupMenu = new PopupWindow(container, ViewGroup.LayoutParams.WRAP_CONTENT,
-        ViewGroup.LayoutParams.WRAP_CONTENT,true);
-    mGridSpinner = container.findViewById(R.id.layer_spinner);
-    mLabelsCheckBox = container.findViewById(R.id.labels_checkBox);
+    // set up AlertDialog to display grid options
+    final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+    final View view = getLayoutInflater().inflate(R.layout.popup_menu,null);
+    mGridSpinner = view.findViewById(R.id.layer_spinner);
+    mLabelsCheckBox = view.findViewById(R.id.labels_checkBox);
+    builder.setView(view);
+    final AlertDialog dialog = builder.create();
+
+    // create drop-down list of different grids
+    ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_spinner_item,
+        getResources().getStringArray(R.array.layers_array));
+    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    mGridSpinner.setAdapter(adapter);
 
     // create a map with imagery basemap
     ArcGISMap map = new ArcGISMap(Basemap.createImagery());
@@ -77,29 +81,26 @@ public class MainActivity extends AppCompatActivity {
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
-    // add the grid types to the drop-down list
-    final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(MainActivity.this,
-        R.array.layers_array, R.layout.spinner_item);
-    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    mGridSpinner.setAdapter(adapter);
-
     // set defaults on grid
     mMapView.setGrid(new LatitudeLongitudeGrid());
     mLabelsCheckBox.setChecked(true);
-
 
     // add available grids to drop-down menu
     mGridSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // set the grid type
-        switch (position){
-          case 0: mMapView.setGrid(new LatitudeLongitudeGrid());
+        switch (position) {
+          case 0:
+            mMapView.setGrid(new LatitudeLongitudeGrid());
             break;
-          case 1: mMapView.setGrid(new MgrsGrid());
+          case 1:
+            mMapView.setGrid(new MgrsGrid());
             break;
-          case 2: mMapView.setGrid(new UtmGrid());
+          case 2:
+            mMapView.setGrid(new UtmGrid());
             break;
-          case 3: mMapView.setGrid(new UsngGrid());
+          case 3:
+            mMapView.setGrid(new UsngGrid());
             break;
         }
         setLabelVisibility();
@@ -119,8 +120,7 @@ public class MainActivity extends AppCompatActivity {
     // display pop-up box when button is clicked
     mMenuButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        mPopupMenu.showAtLocation(mainActivity, Gravity.CENTER,0 ,0);
-        mPopupMenu.setOutsideTouchable(true);
+        dialog.show();
       }
     });
   }
