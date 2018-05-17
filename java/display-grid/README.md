@@ -1,18 +1,29 @@
 # Display grid
 
-Display and work with coordinate system grids such as Latitude/Longitude, MGRS, UTM and USNG on a map view. 
-This includes toggling labels visibility.
+Display and work with coordinate grid systems such as Latitude/Longitude, MGRS, UTM and USNG on a map view. 
+This includes toggling labels visibility, changing the color of the grid lines, and changing the color of the the grid labels.
+
+![Display Grid App](display-grid.png)
 
 ## How to use the sample
 
 Tap on the `Change Grid` button in the toolbar to open the settings view. 
 You can select type of grid from `Grid Type` (LatLong, MGRS, UTM and USNG) 
-and modify it's properties likelabel visibility.
+and modify it's properties like label visibility, grid line color, and grid label color.
 
-![Display Grid App](display-grid.png)
+## Relevant API
 
-## How it works
+* Map
+* MapView
+* ArcGISGrid
+*LatitudeLongitudeGrid
+* MGRSGrid
+* UTMGrid
+* USNGGrid
+* MGRSGrid
+* LatitudeLongitudeGrid
+* USNGGrid
+* UTMGrid
+* TextSymbol
+* SimpleLineSymbol
 
-`AGSMapView` has a property called `grid` of type `AGSGrid` and is initially set to use the LatitudeLongitude grid. 
-The controls allow to hide the labels of the grid with the following properties/methods:
-- `labelVisibility` : Specifies whether the grid's text labels are visible or not

@@ -15,6 +15,7 @@
  */
 package com.esri.arcgisruntime.sample.displaygrid;
 
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,55 +25,77 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
+import com.esri.arcgisruntime.mapping.view.Grid;
 import com.esri.arcgisruntime.mapping.view.LatitudeLongitudeGrid;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.mapping.view.MgrsGrid;
 import com.esri.arcgisruntime.mapping.view.UsngGrid;
 import com.esri.arcgisruntime.mapping.view.UtmGrid;
+import com.esri.arcgisruntime.symbology.LineSymbol;
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
+import com.esri.arcgisruntime.symbology.TextSymbol;
 
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private CheckBox mLabelsCheckBox;
   private Spinner mGridSpinner;
+  private Spinner mColorsSpinner;
   private Button mMenuButton;
-
+  private Spinner mLabelColorSpinner;
+  private int mLineColor;
+  private int mLabelColor;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // inflate views from layout
+    // inflate views from activity_main
     mMapView = findViewById(R.id.mapView);
     mMenuButton = findViewById(R.id.menu_button);
 
-    // set up AlertDialog to display grid options
+    // set up a popup menu to manage grid settings
     final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-    final View view = getLayoutInflater().inflate(R.layout.popup_menu,null);
-    mGridSpinner = view.findViewById(R.id.layer_spinner);
-    mLabelsCheckBox = view.findViewById(R.id.labels_checkBox);
+    final View view = getLayoutInflater().inflate(R.layout.popup_menu, null);
     builder.setView(view);
     final AlertDialog dialog = builder.create();
 
+    // inflate views from popup_menu
+    mGridSpinner = view.findViewById(R.id.layer_spinner);
+    mLabelsCheckBox = view.findViewById(R.id.labels_checkBox);
+    mColorsSpinner = view.findViewById(R.id.line_color_spinner);
+    mLabelColorSpinner = view.findViewById(R.id.label_color_spinner);
+
     // create drop-down list of different grids
-    ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,android.R.layout.simple_spinner_item,
+    ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item,
         getResources().getStringArray(R.array.layers_array));
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     mGridSpinner.setAdapter(adapter);
 
+    // create drop-down list of different colors
+    ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item,
+        getResources().getStringArray(R.array.colors_array));
+    colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    mColorsSpinner.setAdapter(colorAdapter);
+
+    // create drop-down list of different label colors
+    ArrayAdapter<String> labelColorAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item,
+        getResources().getStringArray(R.array.colors_array));
+    labelColorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    mLabelColorSpinner.setAdapter(labelColorAdapter);
+
     // create a map with imagery basemap
     ArcGISMap map = new ArcGISMap(Basemap.createImagery());
     // set viewpoint
-    final Point center = new Point(-7702852.905619,6217972.345771,23227,SpatialReference.create(3857));
-    map.setInitialViewpoint(new Viewpoint(center,23227));
+    final Point center = new Point(-7702852.905619, 6217972.345771, 23227, SpatialReference.create(3857));
+    map.setInitialViewpoint(new Viewpoint(center, 23227));
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
@@ -80,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setGrid(new LatitudeLongitudeGrid());
     mLabelsCheckBox.setChecked(true);
 
-    // add available grids to drop-down menu
+    // change different grids on the Map View
     mGridSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // set the grid type
@@ -97,15 +120,61 @@ public class MainActivity extends AppCompatActivity {
           case 3:
             mMapView.setGrid(new UsngGrid());
             break;
-        }
+        }// make sure settings persist on grid type change
         setLabelVisibility();
+        changeGridColor(mLineColor);
+        changeLabelColor(mLabelColor);
       }
+
       @Override public void onNothingSelected(AdapterView<?> parent) {
-        Toast.makeText(MainActivity.this, "Nothing Selected", Toast.LENGTH_SHORT).show();
       }
     });
 
-    // turn labels on/off when the checkbox is clicked
+    // change grid lines color
+    mColorsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        //set the color
+        switch (position) {
+          case 0:
+            mLineColor = Color.RED;
+            break;
+          case 1:
+            mLineColor = Color.WHITE;
+            break;
+          case 2:
+            mLineColor = Color.BLUE;
+            break;
+        }
+        changeGridColor(mLineColor);
+      }
+
+      @Override public void onNothingSelected(AdapterView<?> parent) {
+      }
+    });
+
+    // change grid labels color
+    mLabelColorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        //set the color
+        switch (position) {
+          case 0:
+            mLabelColor = Color.RED;
+            break;
+          case 1:
+            mLabelColor = Color.WHITE;
+            break;
+          case 2:
+            mLabelColor = Color.BLUE;
+            break;
+        }
+        changeLabelColor(mLabelColor);
+      }
+
+      @Override public void onNothingSelected(AdapterView<?> parent) {
+      }
+    });
+
+    // hide and show label visibility when the checkbox is clicked
     mLabelsCheckBox.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         setLabelVisibility();
@@ -120,11 +189,35 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  public void setLabelVisibility(){
-    if (mLabelsCheckBox.isChecked()){
+  private void setLabelVisibility() {
+    if (mLabelsCheckBox.isChecked()) {
       mMapView.getGrid().setLabelVisible(true);
-    } else{
+    } else {
       mMapView.getGrid().setLabelVisible(false);
+    }
+  }
+
+  private void changeGridColor(int color) {
+    Grid grid = mMapView.getGrid();
+    int gridLevels = grid.getLevelCount();
+    for (int gridLavel = 0; gridLavel <= gridLevels - 1; gridLavel++) {
+      LineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, color, gridLavel + 1);
+      grid.setLineSymbol(gridLavel, lineSymbol);
+    }
+  }
+
+  private void changeLabelColor(int color) {
+    Grid grid = mMapView.getGrid();
+    int gridLevels = grid.getLevelCount();
+    for (int gridLevel = 0; gridLevel <= gridLevels - 1; gridLevel++) {
+      TextSymbol textSymbol = new TextSymbol();
+      textSymbol.setColor(color);
+      textSymbol.setSize(14);
+      textSymbol.setHorizontalAlignment(TextSymbol.HorizontalAlignment.LEFT);
+      textSymbol.setVerticalAlignment(TextSymbol.VerticalAlignment.BOTTOM);
+      textSymbol.setHaloColor(Color.WHITE);
+      textSymbol.setHaloWidth(gridLevel + 1);
+      grid.setTextSymbol(gridLevel, textSymbol);
     }
   }
 

@@ -6,4 +6,10 @@
         <item>UTM Grid</item>
         <item>USNG Grid</item>
     </string-array>
+    <string-array name="colors_array">
+        <item>red</item>
+        <item>white</item>
+        <item>blue</item>
+
+    </string-array>
 </resources>
