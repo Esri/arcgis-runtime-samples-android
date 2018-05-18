@@ -14,20 +14,27 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.distancemeasurementanalysis.;
+package com.esri.arcgisruntime.sample.distancemeasurementanalysis;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.Surface;
+import com.esri.arcgisruntime.mapping.view.AnalysisOverlay;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 
 public class MainActivity extends AppCompatActivity {
 
   private SceneView mSceneView;
+
+  private LocationDistance
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -38,21 +45,30 @@ public class MainActivity extends AppCompatActivity {
     ArcGISScene scene = new ArcGISScene();
     scene.setBasemap(Basemap.createImagery());
 
-    //[DocRef: Name=Display Scene-android, Category=Work with 3D, Topic=Display a scene]
     // create SceneView from layout
-    mSceneView = (SceneView) findViewById(R.id.sceneView);
+    mSceneView = findViewById(R.id.sceneView);
     mSceneView.setScene(scene);
-    //[DocRef: END]
 
-    //[DocRef: Name=Add elevation to base surface-android, Category=Work with 3D, Topic=Display a scene,
-    // RemoveChars=getResources().getString(R.string.elevation_image_service),
-    // ReplaceChars=http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer]
-    // create an elevation source, and add this to the base surface of the scene
-    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
-        getResources().getString(R.string.elevation_image_service));
-    scene.getBaseSurface().getElevationSources().add(elevationSource);
-    //[DocRef: END]
+    // add base surface for elevation data
+    Surface surface = new Surface();
+    surface.getElevationSources().add(new ArcGISTiledElevationSource("http://elevation3d.arcgis" +
+            ".com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"));
+    surface.getElevationSources().add(new ArcGISTiledElevationSource("https://tiles.arcgis.com/tiles/d3voDfTFbHOCRwVR/arcgis/rest/services/MNT_IDF/ImageServer"));
+    scene.setBaseSurface(surface);
 
+    final String buildings =  "http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0";
+    ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(buildings);
+    scene.getOperationalLayers().add(sceneLayer);
+
+    // create analysis overlay and add it to scene
+    AnalysisOverlay analysisOverlay = new AnalysisOverlay();
+    mSceneView.getAnalysisOverlays().addAll(analysisOverlay);
+
+    //initialize a distance measurement and add it to the analyssis overlay
+    Point start = new Point(-4.494677, 48.384472, 24.772694, SpatialReferences.getWgs84());
+    Point end = new Point(-4.495646, 48.384377, 58.501115, SpatialReferences.getWgs84());
+    distanceMeasurement = new LocationDistanceMeasurement(start, end);
+    analysisOverlay.getAnalyses().add(distanceMeasurement);
     // add a camera and initial camera position
     Camera camera = new Camera(28.4, 83.9, 10010.0, 10.0, 80.0, 0.0);
     mSceneView.setViewpointCamera(camera);
