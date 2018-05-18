@@ -7,9 +7,9 @@
         <item>USNG Grid</item>
     </string-array>
     <string-array name="colors_array">
-        <item>red</item>
-        <item>white</item>
-        <item>blue</item>
+        <item>Red</item>
+        <item>White</item>
+        <item>Blue</item>
 
     </string-array>
 </resources>
