@@ -6,7 +6,7 @@ within a polygon. For example, suppose you wanted to know how many restaurants a
  your home. The simplest proximity analysis would be to generate a buffer polygon of a certain distance 
  (say 1 mile) around your house.
 
-![Buffer Sample Image](Buffer.png)
+![Buffer App](buffer.png)
 
 ## How to use the sample
 Tap on the map to create a buffer around the tapped location. Change the spinner value (in miles) to set the 
@@ -17,14 +17,13 @@ To create a Polygon with a radius:
 The static method, `GeometryEngine.buffer`, is called by passing in a `Point` and a distance
  in meters. This returns a `Polygon` which can be displayed using a `Graphic`.
 
-## Features
+## Relevant API
 * GeometryEngine.Buffer
 * GraphicsOverlay 
 * Point
 * Polygon
 
-## Tags
-
+#### Tags
 * Analysis
 * Buffer
 * GeometryEngine

@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             Math.round(motionEvent.getY()));
         Point mapPoint = mMapView.screenToLocation(clickLocation);
         // only draw a buffer if a value was entered
-        if(mBufferInput.getText().toString().length() !=0){
+        if(!mBufferInput.getText().toString().isEmpty()){
           Polygon bufferGeometry = GeometryEngine
               .buffer(mapPoint,miles.convertTo(meters,Double.valueOf(mBufferInput.getText().toString())));
           // show the buffered region as a green graphic
