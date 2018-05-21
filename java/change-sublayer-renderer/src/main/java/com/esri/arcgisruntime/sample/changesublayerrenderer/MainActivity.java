@@ -16,12 +16,12 @@
 
 package com.esri.arcgisruntime.sample.changesublayerrenderer;
 
+import java.util.Arrays;
+
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.ArcGISMapImageSublayer;
@@ -35,13 +35,9 @@ import com.esri.arcgisruntime.symbology.ClassBreaksRenderer.ClassBreak;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 
-
-import java.util.Arrays;
-
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-  private Button mButton;
   private ArcGISMapImageSublayer countiesSublayer;
 
   @Override
@@ -57,38 +53,33 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // create button to apply the render
-    mButton = findViewById(R.id.applyRenderer);
+    Button mButton = findViewById(R.id.applyRenderer);
 
     // create map image layer from a service URL
-    final ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer("http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer");
+    final ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(getString(R.string.census_map_server));
 
     // load the layer and find one of its sublayers
-    imageLayer.addDoneLoadingListener(new Runnable() {
-      @Override public void run() {
-        if(imageLayer.getLoadStatus() == LoadStatus.LOADED){
-          // zoom to the image layers extent
-          mMapView.setViewpointGeometryAsync(imageLayer.getFullExtent());
-          // get the sublayers from the map image layer
-          SublayerList sublayers = imageLayer.getSublayers();
-          countiesSublayer = (ArcGISMapImageSublayer) sublayers.get(2);
-        } else {
-          Toast.makeText(MainActivity.this,"ERROR:Layer did not load",Toast.LENGTH_LONG).show();
-        }
+    imageLayer.addDoneLoadingListener(() -> {
+      if(imageLayer.getLoadStatus() == LoadStatus.LOADED){
+        // zoom to the image layers extent
+        mMapView.setViewpointGeometryAsync(imageLayer.getFullExtent());
+        // get the sublayers from the map image layer
+        SublayerList sublayers = imageLayer.getSublayers();
+        countiesSublayer = (ArcGISMapImageSublayer) sublayers.get(2);
+      } else {
+        imageLayer.getLoadError().getMessage();
       }
     });
 
     // add the layer to the map
     map.getOperationalLayers().add(imageLayer);
 
-    //create a class breaks renderer to switch to
+    // create a class breaks renderer to switch to
     final ClassBreaksRenderer classBreaksRenderer = createPopulationClassBreaksRenderer();
 
     // set the renderer on the counties sublayer when the button is pressed
-    mButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        countiesSublayer.setRenderer(classBreaksRenderer) ;
-      }
+    mButton.setOnClickListener(v -> {
+      countiesSublayer.setRenderer(classBreaksRenderer);
     });
 
   }
@@ -116,14 +107,16 @@ public class MainActivity extends AppCompatActivity {
     SimpleFillSymbol classSymbol5 = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, blue5, outline);
 
     // create 5 classes for different population ranges
-    ClassBreak classBreak1 = new ClassBreak( "-99 to 8560", "-99 to 8560", -99, 8560, classSymbol1);
-    ClassBreak classBreak2 = new ClassBreak("> 8,560 to 18,109", "> 8,560 to 18,109", 8560, 18109, classSymbol2);
-    ClassBreak classBreak3 = new ClassBreak("> 18,109 to 35,501", "> 18,109 to 35,501", 18109, 35501,
-        classSymbol3);
-    ClassBreak classBreak4 = new ClassBreak( "> 35,501 to 86,100", "> 35,501 to 86,100", 35501, 86100,
-        classSymbol4);
-    ClassBreak classBreak5 = new ClassBreak( "> 86,100 to 10,110,975", "> 86,100 to 10,110,975",  86100, 10110975,
-        classSymbol5);
+    ClassBreak classBreak1 = new ClassBreak("-99 to 8560", "-99 to 8560", -99,
+        8560, classSymbol1);
+    ClassBreak classBreak2 = new ClassBreak("> 8,560 to 18,109", "> 8,560 to 18,109", 8560,
+        18109, classSymbol2);
+    ClassBreak classBreak3 = new ClassBreak("> 18,109 to 35,501", "> 18,109 to 35,501", 18109,
+        35501, classSymbol3);
+    ClassBreak classBreak4 = new ClassBreak("> 35,501 to 86,100", "> 35,501 to 86,100", 35501,
+        86100, classSymbol4);
+    ClassBreak classBreak5 = new ClassBreak("> 86,100 to 10,110,975", "> 86,100 to 10,110,975", 86100,
+        10110975, classSymbol5);
 
     // create the renderer for the POP2007 field
     return new ClassBreaksRenderer("POP2007", Arrays.asList(classBreak1, classBreak2, classBreak3, classBreak4,
