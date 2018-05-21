@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     // inflate views from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     mCutButton = findViewById(R.id.cutButton);
 
     // create a map with the BasemapType topographic
@@ -65,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
     // create a blue polygon graphic to cut
     final Graphic polygonGraphic = new Graphic(createLakeSuperiorPolygon(),
-        new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID,
-            0x220000FF, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF0000FF, 2)));
+        new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID,0x220000FF,
+            new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF0000FF, 2)));
     graphicsOverlay.getGraphics().add(polygonGraphic);
 
     // create a red polyline graphic to cut the polygon
@@ -78,29 +78,26 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setViewpointGeometryAsync(polygonGraphic.getGeometry());
 
     // create a button to perform the cut operation
-    mCutButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        List<Geometry> parts = GeometryEngine
-            .cut(polygonGraphic.getGeometry(), (Polyline) polylineGraphic.getGeometry());
+    mCutButton.setOnClickListener(v -> {
+      List<Geometry> parts = GeometryEngine
+          .cut(polygonGraphic.getGeometry(), (Polyline) polylineGraphic.getGeometry());
 
-        // create graphics for the US and Canada sides
-        Graphic canadaSide = new Graphic(parts.get(0), new SimpleFillSymbol(SimpleFillSymbol.Style.BACKWARD_DIAGONAL,
-            0xFF00FF00, new SimpleLineSymbol(SimpleLineSymbol.Style.NULL, 0xFFFFFFFF, 0)));
-        Graphic usSide = new Graphic(parts.get(1), new SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL,
-            0xFFFFFF00, new SimpleLineSymbol(SimpleLineSymbol.Style.NULL, 0xFFFFFFFF, 0)));
-        graphicsOverlay.getGraphics().addAll(Arrays.asList(canadaSide, usSide));
-        mCutButton.setEnabled(false);
-      }
+      // create graphics for the US and Canada sides
+      Graphic canadaSide = new Graphic(parts.get(0), new SimpleFillSymbol(SimpleFillSymbol.Style.BACKWARD_DIAGONAL,
+          0xFF00FF00, new SimpleLineSymbol(SimpleLineSymbol.Style.NULL, 0xFFFFFFFF, 0)));
+      Graphic usSide = new Graphic(parts.get(1), new SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL,
+          0xFFFFFF00, new SimpleLineSymbol(SimpleLineSymbol.Style.NULL, 0xFFFFFFFF, 0)));
+      graphicsOverlay.getGraphics().addAll(Arrays.asList(canadaSide, usSide));
+      mCutButton.setEnabled(false);
     });
   }
 
   /**
    * Creates a polyline along the US/Canada border over Lake Superior.
    *
-   * @return poyline
+   * @return polyline
    */
-  private Polyline createBorder() {
+  private static Polyline createBorder() {
     PointCollection points = new PointCollection(SpatialReferences.getWebMercator());
     points.add(new Point(-9981328.687124, 6111053.281447));
     points.add(new Point(-9946518.044066, 6102350.620682));
@@ -117,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
    *
    * @return polygon
    */
-  private Polygon createLakeSuperiorPolygon() {
+  private static Polygon createLakeSuperiorPolygon() {
     PointCollection points = new PointCollection(SpatialReferences.getWebMercator());
     points.add(new Point(-10254374.668616, 5908345.076380));
     points.add(new Point(-10178382.525314, 5971402.386779));
