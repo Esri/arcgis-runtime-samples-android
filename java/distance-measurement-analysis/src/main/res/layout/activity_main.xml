@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent" tools:context=".MainActivity">
 
     <!-- MapView -->
@@ -8,5 +9,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
     </com.esri.arcgisruntime.mapping.view.SceneView>
+
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#adadad"
+                android:id="@+id/linear_layout">
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:id="@+id/total_distance"
+                  android:text="text1"
+                  android:textSize="20sp"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                 android:id="@+id/vertical_distance"
+                  android:text="text2"
+                  android:textSize="20sp"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:id="@+id/horizontal_distance"
+                android:text="text3"
+                android:textSize="20sp"/>
+    </LinearLayout>
+    <Spinner android:layout_width="wrap_content" android:layout_height="wrap_content"
+             android:id="@+id/units_spinner"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
