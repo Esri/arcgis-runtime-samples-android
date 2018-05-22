@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.EditText;
+import android.widget.Toast;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
@@ -92,7 +93,9 @@ public class MainActivity extends AppCompatActivity {
           Graphic markerGraphic = new Graphic(mapPoint, new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE,
               0xFFFF0000, 5));
           graphicsOverlay.getGraphics().add(markerGraphic);
-        }
+        } else {
+          Toast.makeText(MainActivity.this, "Please enter a buffer distance first.", Toast.LENGTH_LONG).show();
+      }
         return true;
       }
     });

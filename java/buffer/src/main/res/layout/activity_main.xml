@@ -19,5 +19,4 @@
                 android:inputType="number"
                 android:layout_alignTop="@id/mapView"/>
 
-
 </RelativeLayout>
