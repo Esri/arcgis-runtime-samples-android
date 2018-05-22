@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.esri.arcgisruntime.UnitSystem;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geoanalysis.LocationDistanceMeasurement;
@@ -41,7 +42,12 @@ import com.esri.arcgisruntime.mapping.view.AnalysisOverlay;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener;
+import com.esri.arcgisruntime.mapping.view.Graphic;
+import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.SceneView;
+import com.esri.arcgisruntime.symbology.SceneSymbol;
+import com.esri.arcgisruntime.symbology.SimpleMarkerSceneSymbol;
+import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
   private TextView mHorizontalDistance;
   private Spinner mUnitSpinner;
   boolean firstClick = true;
+  private Graphic sphereGraphic;
 
   private LocationDistanceMeasurement distanceMeasurement;
 
@@ -92,9 +99,12 @@ public class MainActivity extends AppCompatActivity {
     AnalysisOverlay analysisOverlay = new AnalysisOverlay();
     mSceneView.getAnalysisOverlays().add(analysisOverlay);
 
+
     //initialize a distance measurement and add it to the analyssis overlay
     Point start = new Point(-4.494677, 48.384472, 24.772694, SpatialReferences.getWgs84());
     Point end = new Point(-4.495646, 48.384377, 58.501115, SpatialReferences.getWgs84());
+    double size = 10;
+
     distanceMeasurement = new LocationDistanceMeasurement(start, end);
     analysisOverlay.getAnalyses().add(distanceMeasurement);
 
@@ -106,6 +116,8 @@ public class MainActivity extends AppCompatActivity {
     for(UnitSystem unitSystemItem :UnitSystem.values()){
       unitsList.add(unitSystemItem.toString());
     }
+
+    // set up drop-down
     ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,android.R.layout.simple_spinner_item,
         unitsList);
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -122,53 +134,71 @@ public class MainActivity extends AppCompatActivity {
         }
       }
 
-      @Override public void onNothingSelected(AdapterView<?> adapterView) {
-
-      }
+      @Override public void onNothingSelected(AdapterView<?> adapterView) { }
     });
 
     // show the distances in the UI when the measurement changes
     final DecimalFormat decimalFormat = new DecimalFormat("#.##");
-    distanceMeasurement.addMeasurementChangedListener(new LocationDistanceMeasurement.MeasurementChangedListener() {
-      @Override public void measurementChanged(
-          LocationDistanceMeasurement.MeasurementChangedEvent measurementChangedEvent) {
-        Distance directDistance = distanceMeasurement.getDirectDistance();
-        Distance verticalDistance = distanceMeasurement.getVerticalDistance();
-        Distance horizonalDistance = distanceMeasurement.getHorizontalDistance();
+    distanceMeasurement.addMeasurementChangedListener(measurementChangedEvent -> {
+      Distance directDistance = distanceMeasurement.getDirectDistance();
+      Distance verticalDistance = distanceMeasurement.getVerticalDistance();
+      Distance horizonalDistance = distanceMeasurement.getHorizontalDistance();
 
-        mDirectDistance.setText(decimalFormat.format(directDistance.getValue()) + " " + directDistance.getUnit().getAbbreviation());
-        mHorizontalDistance.setText(decimalFormat.format(verticalDistance.getValue()) + " " + directDistance.getUnit().getAbbreviation());
-        mVerticalDistance.setText(decimalFormat.format(horizonalDistance.getValue()) + " " + directDistance.getUnit().getAbbreviation());
-        Log.e("distance?",
-            distanceMeasurement.getDirectDistance().getValue() + " " + distanceMeasurement.getHorizontalDistance()
-                .getValue() + " " + distanceMeasurement.getVerticalDistance().getValue() + "");
-      }
+      mDirectDistance.setText(String.format("%s %s",
+          decimalFormat.format(directDistance.getValue()), directDistance.getUnit().getAbbreviation()));
+      mHorizontalDistance.setText(String.format("%s %s",
+          decimalFormat.format(verticalDistance.getValue()), directDistance.getUnit().getAbbreviation()));
+      mVerticalDistance.setText(String.format("%s %s",
+          decimalFormat.format(horizonalDistance.getValue()), directDistance.getUnit().getAbbreviation()));
     });
+
+
     // add onTouchListener to get the location of the user tap
     mSceneView.setOnTouchListener(new DefaultSceneViewOnTouchListener(mSceneView){
+
       @Override
-      public boolean onSingleTapConfirmed(MotionEvent event){
-        android.graphics.Point clickLocation = new android.graphics.Point(Math.round(event.getX()),Math.round(event.getY()));
-        final ListenableFuture<Point> pointFuture = mSceneView.screenToLocationAsync(clickLocation);
-        pointFuture.removeDoneListener(new Runnable() {
-          @Override public void run() {
-            try {
-              Point point = pointFuture.get();
-              if(firstClick){
-                distanceMeasurement.setStartLocation(point);
-              }else{
-                distanceMeasurement.setEndLocation(point);
-              }
-              firstClick  = !firstClick;
-              Log.e("firstClick", Boolean.toString(firstClick));
-            } catch (InterruptedException | ExecutionException e) {
-              e.printStackTrace();
-            }
+      public boolean onSingleTapConfirmed(MotionEvent motionEvent){
+
+        // convert from screen point to location point
+        android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
+            Math.round(motionEvent.getY()));
+        ListenableFuture<Point> locationPointFuture = mSceneView.screenToLocationAsync(screenPoint);
+        locationPointFuture.addDoneListener(() ->{
+
+          try {
+            Point location = locationPointFuture.get();
+            distanceMeasurement.setStartLocation(location);
+
+          } catch (InterruptedException | ExecutionException e ) {
+            String error = "Error converting screen point to location point: " + e.getMessage();
+            Log.e(MainActivity.this.toString(), error);
+            Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
           }
         });
-
         return true;
       }
+
+      // handles the double tap
+      @Override
+      public boolean onDoubleTouchDrag(MotionEvent motionEvent) {
+
+        // convert from screen point to location point
+        android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
+            Math.round(motionEvent.getY()));
+        ListenableFuture<Point> locationPointFuture = mSceneView.screenToLocationAsync(screenPoint);
+        locationPointFuture.addDoneListener(() ->{
+
+          try {
+            Point location = locationPointFuture.get();
+            distanceMeasurement.setEndLocation(location);
+
+          } catch (InterruptedException | ExecutionException e ) {
+            e.printStackTrace();
+          }
+        });
+        return true;
+      }
+
     });
   }
   @Override
