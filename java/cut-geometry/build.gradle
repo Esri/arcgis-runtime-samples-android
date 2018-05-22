@@ -5,7 +5,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-            applicationId "com.esri.arcgisruntime.sample.buffer"
+            applicationId "com.esri.arcgisruntime.sample.cutgeometry"
             minSdkVersion rootProject.ext.minSdkVersion
             targetSdkVersion rootProject.ext.targetSdkVersion
             versionCode rootProject.ext.versionCode
