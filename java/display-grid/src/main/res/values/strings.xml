@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Display Grid</string>
+    <string name="labels_visible">Labels Visible</string>
+    <string name="grid_color">Grid Color</string>
+    <string name="label_color">Label Color</string>
+    <string name="grid_type">Grid Type</string>
+    <string name="change_grid_button">Change Grid</string>
     <string-array name="layers_array">
         <item>Lat and Long</item>
         <item>MGRS Grid</item>

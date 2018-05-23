@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
+import android.widget.Toast;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -45,10 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private CheckBox mLabelsCheckBox;
-  private Spinner mGridSpinner;
-  private Spinner mColorsSpinner;
-  private Button mMenuButton;
-  private Spinner mLabelColorSpinner;
   private int mLineColor;
   private int mLabelColor;
 
@@ -59,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate views from activity_main
     mMapView = findViewById(R.id.mapView);
-    mMenuButton = findViewById(R.id.menu_button);
+    Button mMenuButton = findViewById(R.id.menu_button);
 
     // set up a popup menu to manage grid settings
     final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -68,10 +65,10 @@ public class MainActivity extends AppCompatActivity {
     final AlertDialog dialog = builder.create();
 
     // inflate views from popup_menu
-    mGridSpinner = view.findViewById(R.id.layer_spinner);
+    Spinner mGridSpinner = view.findViewById(R.id.layer_spinner);
     mLabelsCheckBox = view.findViewById(R.id.labels_checkBox);
-    mColorsSpinner = view.findViewById(R.id.line_color_spinner);
-    mLabelColorSpinner = view.findViewById(R.id.label_color_spinner);
+    Spinner mColorsSpinner = view.findViewById(R.id.line_color_spinner);
+    Spinner mLabelColorSpinner = view.findViewById(R.id.label_color_spinner);
 
     // create drop-down list of different grids
     ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item,
@@ -120,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
           case 3:
             mMapView.setGrid(new UsngGrid());
             break;
+          default:
+            Toast.makeText(MainActivity.this,"Unsupported option", Toast.LENGTH_SHORT).show();
+            break;
         }// make sure settings persist on grid type change
         setLabelVisibility();
         changeGridColor(mLineColor);
@@ -144,6 +144,9 @@ public class MainActivity extends AppCompatActivity {
           case 2:
             mLineColor = Color.BLUE;
             break;
+          default:
+            Toast.makeText(MainActivity.this,"Unsupported option", Toast.LENGTH_SHORT).show();
+            break;
         }
         changeGridColor(mLineColor);
       }
@@ -155,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
     // change grid labels color
     mLabelColorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        //set the color
+        // set the color
         switch (position) {
           case 0:
             mLabelColor = Color.RED;
@@ -166,6 +169,9 @@ public class MainActivity extends AppCompatActivity {
           case 2:
             mLabelColor = Color.BLUE;
             break;
+          default:
+            Toast.makeText(MainActivity.this,"Unsupported option", Toast.LENGTH_SHORT).show();
+            break;
         }
         changeLabelColor(mLabelColor);
       }
@@ -175,18 +181,10 @@ public class MainActivity extends AppCompatActivity {
     });
 
     // hide and show label visibility when the checkbox is clicked
-    mLabelsCheckBox.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        setLabelVisibility();
-      }
-    });
+    mLabelsCheckBox.setOnClickListener(v -> setLabelVisibility());
 
     // display pop-up box when button is clicked
-    mMenuButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        dialog.show();
-      }
-    });
+    mMenuButton.setOnClickListener(v -> dialog.show());
   }
 
   private void setLabelVisibility() {
@@ -200,9 +198,9 @@ public class MainActivity extends AppCompatActivity {
   private void changeGridColor(int color) {
     Grid grid = mMapView.getGrid();
     int gridLevels = grid.getLevelCount();
-    for (int gridLavel = 0; gridLavel <= gridLevels - 1; gridLavel++) {
-      LineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, color, gridLavel + 1);
-      grid.setLineSymbol(gridLavel, lineSymbol);
+    for (int gridLevel = 0; gridLevel <= gridLevels - 1; gridLevel++) {
+      LineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, color, gridLevel + 1);
+      grid.setLineSymbol(gridLevel, lineSymbol);
     }
   }
 
