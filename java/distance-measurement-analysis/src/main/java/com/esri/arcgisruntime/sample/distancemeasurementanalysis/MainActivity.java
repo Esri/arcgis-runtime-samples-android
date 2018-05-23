@@ -1,4 +1,4 @@
-/* Copyright 2017 Esri
+/* Copyright 2018 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
  */
 
 package com.esri.arcgisruntime.sample.distancemeasurementanalysis;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -40,18 +44,9 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.AnalysisOverlay;
 import com.esri.arcgisruntime.mapping.view.Camera;
-import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener;
-import com.esri.arcgisruntime.mapping.view.Graphic;
-import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.SceneView;
-import com.esri.arcgisruntime.symbology.SceneSymbol;
-import com.esri.arcgisruntime.symbology.SimpleMarkerSceneSymbol;
-import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
   private TextView mDirectDistance;
   private TextView mVerticalDistance;
   private TextView mHorizontalDistance;
-  private Spinner mUnitSpinner;
-  boolean firstClick = true;
-  private Graphic sphereGraphic;
 
   private LocationDistanceMeasurement distanceMeasurement;
 
@@ -74,24 +66,23 @@ public class MainActivity extends AppCompatActivity {
     final ArcGISScene scene = new ArcGISScene();
     scene.setBasemap(Basemap.createImagery());
 
-    // create views from layout
+    // inflate views from layout
     mSceneView = findViewById(R.id.sceneView);
     mDirectDistance = findViewById(R.id.total_distance);
     mHorizontalDistance = findViewById(R.id.horizontal_distance);
     mVerticalDistance = findViewById(R.id.vertical_distance);
-    mUnitSpinner = findViewById(R.id.units_spinner);
+    Spinner mUnitSpinner = findViewById(R.id.units_spinner);
+    // set the scene to the view
     mSceneView.setScene(scene);
-
 
     // add base surface for elevation data
     Surface surface = new Surface();
-    surface.getElevationSources().add(new ArcGISTiledElevationSource("http://elevation3d.arcgis" +
-        ".com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"));
-    surface.getElevationSources().add(new ArcGISTiledElevationSource(
-        "https://tiles.arcgis.com/tiles/d3voDfTFbHOCRwVR/arcgis/rest/services/MNT_IDF/ImageServer"));
+    surface.getElevationSources().add(new ArcGISTiledElevationSource(getResources().getString(R.string.world_terrain_3d)));
+    surface.getElevationSources().add(new ArcGISTiledElevationSource(getResources().getString(R.string.MNT_IDF)));
     scene.setBaseSurface(surface);
 
-    final String buildings = "http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0";
+    // add building layer
+    final String buildings = getResources().getString(R.string.buildings_tile);
     ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(buildings);
     scene.getOperationalLayers().add(sceneLayer);
 
@@ -99,12 +90,9 @@ public class MainActivity extends AppCompatActivity {
     AnalysisOverlay analysisOverlay = new AnalysisOverlay();
     mSceneView.getAnalysisOverlays().add(analysisOverlay);
 
-
-    //initialize a distance measurement and add it to the analyssis overlay
+    //initialize a distance measurement and add it to the analysis overlay
     Point start = new Point(-4.494677, 48.384472, 24.772694, SpatialReferences.getWgs84());
     Point end = new Point(-4.495646, 48.384377, 58.501115, SpatialReferences.getWgs84());
-    double size = 10;
-
     distanceMeasurement = new LocationDistanceMeasurement(start, end);
     analysisOverlay.getAnalyses().add(distanceMeasurement);
 
@@ -112,29 +100,36 @@ public class MainActivity extends AppCompatActivity {
     Camera camera = new Camera(start, 200.0, 0.0, 45.0, 0.0);
     mSceneView.setViewpointCamera(camera);
 
+    // Initialize a list to contain the available units
     ArrayList<String> unitsList = new ArrayList<>();
-    for(UnitSystem unitSystemItem :UnitSystem.values()){
+    for (UnitSystem unitSystemItem : UnitSystem.values()) {
       unitsList.add(unitSystemItem.toString());
     }
 
-    // set up drop-down
-    ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,android.R.layout.simple_spinner_item,
+    // set up drop-down list
+    ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item,
         unitsList);
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     mUnitSpinner.setAdapter(adapter);
     mUnitSpinner.setSelection(1);
 
     mUnitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        switch (i){
-          case 0: distanceMeasurement.setUnitSystem(UnitSystem.IMPERIAL);
+      @Override public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+        switch (position) {
+          case 0:
+            distanceMeasurement.setUnitSystem(UnitSystem.IMPERIAL);
             break;
-          case 1: distanceMeasurement.setUnitSystem(UnitSystem.METRIC);
+          case 1:
+            distanceMeasurement.setUnitSystem(UnitSystem.METRIC);
+            break;
+          default:
+            Toast.makeText(MainActivity.this,"Unsupported option", Toast.LENGTH_SHORT).show();
             break;
         }
       }
 
-      @Override public void onNothingSelected(AdapterView<?> adapterView) { }
+      @Override public void onNothingSelected(AdapterView<?> adapterView) {
+      }
     });
 
     // show the distances in the UI when the measurement changes
@@ -142,43 +137,40 @@ public class MainActivity extends AppCompatActivity {
     distanceMeasurement.addMeasurementChangedListener(measurementChangedEvent -> {
       Distance directDistance = distanceMeasurement.getDirectDistance();
       Distance verticalDistance = distanceMeasurement.getVerticalDistance();
-      Distance horizonalDistance = distanceMeasurement.getHorizontalDistance();
+      Distance horizontalDistance = distanceMeasurement.getHorizontalDistance();
 
       mDirectDistance.setText(String.format("%s %s",
           decimalFormat.format(directDistance.getValue()), directDistance.getUnit().getAbbreviation()));
       mHorizontalDistance.setText(String.format("%s %s",
           decimalFormat.format(verticalDistance.getValue()), directDistance.getUnit().getAbbreviation()));
       mVerticalDistance.setText(String.format("%s %s",
-          decimalFormat.format(horizonalDistance.getValue()), directDistance.getUnit().getAbbreviation()));
+          decimalFormat.format(horizontalDistance.getValue()), directDistance.getUnit().getAbbreviation()));
     });
 
-
-    // add onTouchListener to get the location of the user tap
-    mSceneView.setOnTouchListener(new DefaultSceneViewOnTouchListener(mSceneView){
-
+    // add onTouchListener to set the start point and end point with a SingleTap and a DoubleTapDrag
+    mSceneView.setOnTouchListener(new DefaultSceneViewOnTouchListener(mSceneView) {
       @Override
-      public boolean onSingleTapConfirmed(MotionEvent motionEvent){
+      public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
 
         // convert from screen point to location point
         android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
             Math.round(motionEvent.getY()));
         ListenableFuture<Point> locationPointFuture = mSceneView.screenToLocationAsync(screenPoint);
-        locationPointFuture.addDoneListener(() ->{
+        locationPointFuture.addDoneListener(() -> {
 
           try {
             Point location = locationPointFuture.get();
             distanceMeasurement.setStartLocation(location);
 
-          } catch (InterruptedException | ExecutionException e ) {
-            String error = "Error converting screen point to location point: " + e.getMessage();
-            Log.e(MainActivity.this.toString(), error);
+          } catch (InterruptedException | ExecutionException e) {
+            String error = "Error converting screen point to location point ";
+            Log.e(MainActivity.this.toString(), error + ":" + e.getMessage());
             Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
           }
         });
         return true;
       }
 
-      // handles the double tap
       @Override
       public boolean onDoubleTouchDrag(MotionEvent motionEvent) {
 
@@ -186,21 +178,23 @@ public class MainActivity extends AppCompatActivity {
         android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
             Math.round(motionEvent.getY()));
         ListenableFuture<Point> locationPointFuture = mSceneView.screenToLocationAsync(screenPoint);
-        locationPointFuture.addDoneListener(() ->{
+        locationPointFuture.addDoneListener(() -> {
 
           try {
             Point location = locationPointFuture.get();
             distanceMeasurement.setEndLocation(location);
 
-          } catch (InterruptedException | ExecutionException e ) {
-            e.printStackTrace();
+          } catch (InterruptedException | ExecutionException e) {
+            String error = "Error converting screen point to location point ";
+            Log.e(MainActivity.this.toString(), error + ":" + e.getMessage());
+            Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
           }
         });
         return true;
       }
-
     });
   }
+
   @Override
   protected void onPause() {
     super.onPause();
