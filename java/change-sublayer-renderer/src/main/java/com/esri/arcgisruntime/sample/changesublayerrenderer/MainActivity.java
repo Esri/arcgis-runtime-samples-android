@@ -79,9 +79,7 @@ public class MainActivity extends AppCompatActivity {
     final ClassBreaksRenderer classBreaksRenderer = createPopulationClassBreaksRenderer();
 
     // set the renderer on the counties sublayer when the button is pressed
-    mButton.setOnClickListener(v -> {
-      countiesSublayer.setRenderer(classBreaksRenderer);
-    });
+    mButton.setOnClickListener(v -> countiesSublayer.setRenderer(classBreaksRenderer));
 
   }
   /**
@@ -89,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
    *
    * @return class breaks renderer
    */
-  private ClassBreaksRenderer createPopulationClassBreaksRenderer() {
+  private static ClassBreaksRenderer createPopulationClassBreaksRenderer() {
 
     // create colors
     final int gray  = Color.rgb(153, 153, 153);
