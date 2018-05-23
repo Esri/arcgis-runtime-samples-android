@@ -21,6 +21,7 @@ import java.util.Arrays;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         SublayerList sublayers = imageLayer.getSublayers();
         countiesSublayer = (ArcGISMapImageSublayer) sublayers.get(2);
       } else {
-        imageLayer.getLoadError().getMessage();
+        Log.e(MainActivity.this.toString(),imageLayer.getLoadError().getMessage());
       }
     });
 

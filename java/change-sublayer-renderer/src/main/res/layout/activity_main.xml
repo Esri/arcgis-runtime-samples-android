@@ -7,7 +7,9 @@
     <com.esri.arcgisruntime.mapping.view.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="45dp">
+
     </com.esri.arcgisruntime.mapping.view.MapView>
 
     <Button
@@ -15,6 +17,5 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/render_button"
-            android:layout_marginBottom="24dp"
             android:layout_centerHorizontal="true" android:layout_alignParentBottom="true"/>
 </RelativeLayout>
