@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">vector-tiled-layer</string>
+    <string name="app_name">ArcGIS Vector Tiled Layer (URL)</string>
 
     <string name="mid_century_url">https://www.arcgis.com/home/item.html?id=7675d44bb1e4428aa2c30a9b68f97822</string>
     <string name="colored_pencil_url">https://www.arcgis.com/home/item.html?id=4cf7e1fb9f254dcda9c8fbadb15cf0f8</string>

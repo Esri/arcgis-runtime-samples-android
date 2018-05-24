@@ -72,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
     File extStorDir = Environment.getExternalStorageDirectory();
     // get the directory
     String extSDCardDirName =
-        this.getResources().getString(R.string.config_data_sdcard_offline_dir);
+        this.getResources().getString(R.string.raster_folder);
     // get raster filename
-    String filename = this.getString(R.string.config_raster_name);
+    String filename = this.getString(R.string.shasta);
     // create the full path to the raster file
     return extStorDir.getAbsolutePath()
         + File.separator
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     } else {
       // report to user that permission was denied
       Toast.makeText(MainActivity.this,
-          getResources().getString(R.string.location_permission_denied),
+          getResources().getString(R.string.raster_write_permission_denied),
           Toast.LENGTH_SHORT).show();
     }
   }

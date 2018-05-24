@@ -1,27 +1,16 @@
 # Transforms by Suitability
-
 Transformations (sometimes known as datum or geographic transformations) are used when projecting data from one spatial reference to another, when there is a difference in the underlying datum of the spatial references. Transformations can be mathematically defined by specific equations (equation-based transformations), or may rely on external supporting files (grid-based transformations). Choosing the most appropriate transformation for a situation can ensure the best possible accuracy for this operation. Some users familiar with transformations may wish to control which transformation is used in an operation.
 
 This sample demonstrates how to use the `TransformationCatalog` to get a list of available `DatumTransformations` that can be used to project a `Geometry` between two different `SpatialReferences`, and how to use one of the transformations to perform the `GeometryEngine.project` operation. The `TransformationCatalog` is also used to set the location of files upon which grid-based transformations depend, and to find the default transformation used for the two `SpatialReferences`.
 
 ![Transforms By Suitability App](transforms-by-suitability.png)
 
-## Features
-
-* TransformationCatalog
-* DatumTransformation
-* GeographicTransformation
-* GeographicTransformationStep
-* GeometryEngine.project
-
 ## How to use the sample
-
 Optionally, begin by [provisioning projection engine data](#provision-your-device) to your device before running this sample. When you provision projection engine data to your device, more transformations are available for use.
 
 Tap on a listed transformation to reproject the point geometry (shown in blue) using the selected transformation. The reprojected geometry will be shown in red. If there are grid-based transformations for which projection engine files are not available on your device, these will be highlighted in the list. The default transformation is shown in bold in the list.
 
-## Developer Patterns
-
+## How it works
 The sample sets the location of projection engine data on the device in the `MainActivity.setPeData()` method by calling `TransformationCatalog.setProjectionEngineDirectory`. If the directory is not accessible, an exception is thrown.
 
 ```java
@@ -81,9 +70,14 @@ When the user taps on a transformation in the list, the `OnItemClickListener` re
     }
 ```
 
+## Relevant API
+* TransformationCatalog
+* DatumTransformation
+* GeographicTransformation
+* GeographicTransformationStep
+* GeometryEngine.project
 
-## Provision your device
-
+## Offline data
 This sample can be used with or without provisioning projection engine data to your device.
 
 To download projection engine data to your device:
@@ -100,3 +94,6 @@ You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide
 
 You should now have the following directory containing projection engine data files on your target device:
   * `/sdcard/ArcGIS/samples/PEData`
+  
+#### Tags
+Edit and Manage Data

@@ -1,15 +1,12 @@
 # Blend Renderer
-
-Demonstrates how to use a `BlendRenderer` on a `RasterLayer`. `BlendRenderer` is used to blend elevation data with imagery, creating a 3D effect.
+Use a `BlendRenderer` on a `RasterLayer`. `BlendRenderer` is used to blend elevation data with imagery, creating a 3D effect.
 
 ![Blend Renderer App](blend-renderer.png)
 
 ## How to use the sample
-
 Choose and adjust the settings to update the `BlendRenderer` on the `RasterLayer`. To use a `ColorRamp` instead of satellite imagery, choose a `ColorRamp` type.
 
 ## How it works
-
 To apply a `BlendRenderer` to a `RasterLayer`:
 
 1. Create a `Raster` from a raster file.
@@ -20,8 +17,7 @@ To apply a `BlendRenderer` to a `RasterLayer`:
 	- If you specify a non-null `ColorRamp`, use the elevation `Raster` as the base raster in addition to the elevation raster parameter. That way the `ColorRamp` is used instead of the satellite imagery.
 6. Set the `Renderer` on the `RasterLayer` with `rasterLayer.setRenderer(renderer)`.
 
-## Features
-
+## Relevant API
 * ArcGISMap
 * Basemap
 * BlendRenderer
@@ -30,7 +26,7 @@ To apply a `BlendRenderer` to a `RasterLayer`:
 * Raster
 * RasterLayer
 
-## Provision your device
+## Offline data
 1. Download the **shasta-elevation.zip** data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=caeef9aa78534760b07158bb8e068462).  
 2. Extract the contents of the downloaded zip file to disk.  
 3. Create an ArcGIS/samples/raster folder on your device. You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
@@ -47,3 +43,6 @@ To apply a `BlendRenderer` to a `RasterLayer`:
 	---------|-------|
 	|[shasta-elevation.zip](https://arcgisruntime.maps.arcgis.com/home/item.html?id=caeef9aa78534760b07158bb8e068462)| `<sdcard>`/ArcGIS/samples/raster/Shasta.tif 		  |
 	|			   | `<sdcard>`/ArcGIS/samples/raster/Shasta_Elevation.tif |
+
+#### Tags
+Visualization

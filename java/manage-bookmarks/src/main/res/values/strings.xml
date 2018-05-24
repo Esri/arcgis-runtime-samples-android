@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">manage-bookmarks</string>
+    <string name="app_name">Manage Bookmarks</string>
     <string name="alert_dialog_title">Provide the bookmark name</string>
     <string name="bookmark_not_saved">Book mark could not be saved, ensure you entered a bookmark name and that it is not a duplicate</string>
 
