@@ -3,6 +3,7 @@ package com.esri.arcgisruntime.scenelayeridentify;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
+import com.esri.arcgisruntime.data.Field;
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
@@ -100,10 +102,22 @@ public class MainActivity extends AppCompatActivity {
                       FeatureQueryResult featureQueryResult = featureQueryResultFuture.get();
                       Iterator<Feature> featureQueryResultIterator = featureQueryResult.iterator();
                       List<Feature> selectedFeatures = new ArrayList<>();
+                      for (Field field: featureQueryResult.getFields()) {
+                        Log.d(TAG, "field name: " + field.getName());
+                      }
+
+
                       while(featureQueryResultIterator.hasNext()) {
                         selectedFeatures.add(featureQueryResultIterator.next());
                       }
-                      Log.d(TAG, "num selected features: " + selectedFeatures.size());
+
+                      for (Feature feature : selectedFeatures) {
+                        Iterator iterator = feature.getAttributes().entrySet().iterator();
+                        while (iterator.hasNext()) {
+                          Map.Entry pair = (Map.Entry) iterator.next();
+                          Log.d(TAG, pair.getKey() + " = " + pair.getValue());
+                        }
+                      }
                       if (selectedFeatures.contains(identifiedFeature)) {
                         sceneLayer.unselectFeature(identifiedFeature);
                         Log.d(TAG, "unselect " + identifiedFeature.getAttributes().get("name"));
