@@ -66,9 +66,13 @@ public class MainActivity extends AppCompatActivity {
         ToggleButton toggle = findViewById(R.id.toggleStyleButton);
         toggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
           if (isChecked) {
+            // set the sublayer's current style
             wmsLayer.getSublayers().get(0).setCurrentStyle(styles.get(1));
           } else {
+            //[DocRef: Name=Set WMS Layer Style, Category=Fundamentals, Topic=Symbols and Renderers]
+            // set the sublayer's current style
             wmsLayer.getSublayers().get(0).setCurrentStyle(styles.get(0));
+            //[DocRef: END]
           }
         });
       } else {
