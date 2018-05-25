@@ -4,7 +4,7 @@ Shows how to change the style of a WMS layer.
 ![Style WMS Layer App](style-wms-layer.png)
 
 ## How to use the sample
-Simply run the app.
+Click the toggle button at the bottom of the screen to switch between styles.
 
 ## How it works
 1. Create a `WmsLayer` specifying the URL of the service and the layer names you want with `new WmsLayer(url, names)`.
