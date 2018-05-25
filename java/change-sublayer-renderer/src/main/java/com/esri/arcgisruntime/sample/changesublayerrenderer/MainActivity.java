@@ -38,6 +38,8 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
+
   private MapView mMapView;
   private ArcGISMapImageSublayer countiesSublayer;
 
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // create button to apply the render
-    Button mButton = findViewById(R.id.applyRenderer);
+    Button renderButton = findViewById(R.id.applyRenderer);
 
     // create map image layer from a service URL
     final ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(getString(R.string.census_map_server));
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         SublayerList sublayers = imageLayer.getSublayers();
         countiesSublayer = (ArcGISMapImageSublayer) sublayers.get(2);
       } else {
-        Log.e(MainActivity.this.toString(),imageLayer.getLoadError().getMessage());
+        Log.e(TAG,imageLayer.getLoadError().getMessage());
       }
     });
 
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     final ClassBreaksRenderer classBreaksRenderer = createPopulationClassBreaksRenderer();
 
     // set the renderer on the counties sublayer when the button is pressed
-    mButton.setOnClickListener(v -> countiesSublayer.setRenderer(classBreaksRenderer));
+    renderButton.setOnClickListener(v -> countiesSublayer.setRenderer(classBreaksRenderer));
 
   }
   /**
