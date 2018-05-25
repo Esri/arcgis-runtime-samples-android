@@ -41,7 +41,6 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-  private Button mCutButton;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate views from layout
     mMapView = findViewById(R.id.mapView);
-    mCutButton = findViewById(R.id.cutButton);
+    Button cutButton = findViewById(R.id.cutButton);
 
     // create a map with the BasemapType topographic
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setViewpointGeometryAsync(polygonGraphic.getGeometry());
 
     // create a button to perform the cut operation
-    mCutButton.setOnClickListener(v -> {
+    cutButton.setOnClickListener(v -> {
       List<Geometry> parts = GeometryEngine
           .cut(polygonGraphic.getGeometry(), (Polyline) polylineGraphic.getGeometry());
 
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
       Graphic usSide = new Graphic(parts.get(1), new SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL,
           0xFFFFFF00, new SimpleLineSymbol(SimpleLineSymbol.Style.NULL, 0xFFFFFFFF, 0)));
       graphicsOverlay.getGraphics().addAll(Arrays.asList(canadaSide, usSide));
-      mCutButton.setEnabled(false);
+      cutButton.setEnabled(false);
     });
   }
 
