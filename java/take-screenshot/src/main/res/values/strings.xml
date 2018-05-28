@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Take screenshot</string>
+    <string name="app_name">Take Screenshot</string>
     <string name="menu_capture">Capture</string>
     <string name="storage_permission_denied">Storage Permission denied</string>
     <string name="map_export_failure">Fail to export map image: </string>

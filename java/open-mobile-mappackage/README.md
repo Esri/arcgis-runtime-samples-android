@@ -1,21 +1,19 @@
 # Open Mobile Map Package
-### Category: Manage Data
-This sample demonstrates how to open and display a map from a Mobile Map Package.
+Open and display a map from a Mobile Map Package.
 
 ![Open Mobile Map Package App](open-mobile-mappackage.png)
 
-## Features
+## How to use the sample
+Run the app and allow read permissions.
 
+## How it works
+This sample takes a Mobile Map Package that was created in ArcGIS Pro, and displays a `ArcGISMap` from within the package in a `MapView`. This is accomplished by calling `MobileMapPackage.loadAsyc()` and waiting for its load status to be completed. Once the package is loaded, you can access its maps, and assign one of the maps to be viewed in the `MapView`.
+
+## Relevant API
 * MapView
 * MobileMapPackage
 
-## Developer Pattern
-
-This sample takes a Mobile Map Package that was created in ArcGIS Pro, and displays a `ArcGISMap` from within the package in a `MapView`. This is accomplished by calling `MobileMapPackage.loadAsyc()` and waiting for its load status to be completed. Once the package is loaded, you can access its maps, and assign one of the maps to be viewed in the `MapView`.
-
-This sample uses the Android [Constraint Layout](https://developer.android.com/training/constraint-layout/index.html). In order to use you must ensure you have the latest Android Support Repository.  Details for installing can be found [here](https://developer.android.com/training/constraint-layout/index.html#add-constraintlayout-to-your-project).
-
-## Provision your device
+## Offline data
 1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=e1f3a7254cb845b09450f54937c16061).  
 2. Extract the contents of the downloaded zip file to disk.  
 3. Create an ArcGIS/samples/MapPackage folder on your device. You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
@@ -31,3 +29,7 @@ This sample uses the Android [Constraint Layout](https://developer.android.com/t
 Link | Local Location
 ---------|-------|
 |[Yellowstone Mobile Map Package](https://www.arcgis.com/home/item.html?id=e1f3a7254cb845b09450f54937c16061)| `<sdcard>`/ArcGIS/samples/MapPackage/Yellowstone.mmpk |
+
+
+#### Tags
+Edit and Manage Data

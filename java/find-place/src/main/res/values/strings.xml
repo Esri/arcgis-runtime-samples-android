@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Find A Place</string>
+    <string name="app_name">Find Place</string>
     <string name="location_permission_denied">LocationDisplayManager cannot run because location permission was denied.</string>
     <string name="search_hint">Enter POI</string>
     <string name="proximity_search_hint">In Proximity of...</string>

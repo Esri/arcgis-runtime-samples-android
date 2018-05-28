@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Portal User Info</string>
+
+    <string name="user_name">User Name</string>
+    <string name="email">E-Mail</string>
+    <string name="create_date">Member Since</string>
+    <string name="portal_name">Portal</string>
+    <string name="portal_url">https://www.arcgis.com</string>
+    <string name="date_format">dd-MMM-yyyy</string>
+    <string name="get_thumbnail_error">Error getting user thumbnail:</string>
+    <string name="authenticate_error">User did not authenticate against </string>
+</resources>

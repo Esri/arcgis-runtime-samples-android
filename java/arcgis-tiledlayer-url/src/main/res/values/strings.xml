@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TiledLayerFromUrl</string>
+    <string name="app_name">ArcGIS Tiled Layer (URL)</string>
     <string name="action_settings">Settings</string>
 
     <!-- World Topo Map Service URL -->
