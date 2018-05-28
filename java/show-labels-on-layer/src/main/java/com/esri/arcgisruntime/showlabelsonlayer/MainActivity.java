@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     // position the label above and along the direction of the road
     json.add("labelPlacement", new JsonPrimitive("esriServerLinePlacementAboveAlong"));
     // only show labels on the interstate highways (others have an empty rte_num1 attribute)
-    json.add("where", new JsonPrimitive("$feature.rte_num1 <> ' '"));
+    json.add("where", new JsonPrimitive("rte_num1 <> ' '"));
     // set the text symbol as the label symbol
     json.add("symbol", new JsonParser().parse(textSymbol.toJson()));
 
