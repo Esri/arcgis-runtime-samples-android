@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create a shapefile feature table from the local data
     ShapefileFeatureTable shapefileFeatureTable = new ShapefileFeatureTable(
-        Environment.getExternalStorageDirectory() + getString(R.string.local_folder) + getString(R.string.file_name));
+        Environment.getExternalStorageDirectory() + getString(R.string.shapefile_folder) + getString(R.string.subdivisions_shp));
 
     // use the shapefile feature table to create a feature layer
     FeatureLayer featureLayer = new FeatureLayer(shapefileFeatureTable);
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
       symbolizeShapefile();
     } else {
       // report to user that permission was denied
-      Toast.makeText(MainActivity.this, getResources().getString(R.string.read_permission_denied),
+      Toast.makeText(MainActivity.this, getResources().getString(R.string.shapefile_read_permission_denied),
           Toast.LENGTH_SHORT).show();
     }
   }

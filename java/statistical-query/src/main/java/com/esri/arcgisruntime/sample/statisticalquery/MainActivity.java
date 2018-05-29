@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.createStreetsVector());
 
     // create feature table using the world cities URI
-    mWorldCitiesTable = new ServiceFeatureTable(getString(R.string.world_cities_service));
+    mWorldCitiesTable = new ServiceFeatureTable(getString(R.string.world_cities_service_0));
 
     // create a new feature layer to display features in the world cities table
     FeatureLayer worldCitiesLayer = new FeatureLayer(mWorldCitiesTable);

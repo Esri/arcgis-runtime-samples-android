@@ -1,18 +1,12 @@
 # Add Graphics Renderer
+Add graphics to a List, create a SimpleRenderer to represent a symbol and style, and add the renderer to the MapView.
 
 ![Add Graphics Renderer App](add-graphics-renderer.png)
 
-The **Add Graphics Renderer** sample demonstrates how to add graphics to a List, create a `SimpleRenderer` to represent a symbol and style, and add the renderer to the `MapView`.
+## How to use the sample
+Simply run the sample.
 
-## Features
-* MapView
-* Graphic
-* GraphicsOverlay
-* ListenableList
-* SimpleRenderer
-* SimpleMarkerSymbol
-
-## Developer Pattern
+## How it works
 Graphics are added to a `GraphicsOverlay` without any symbols or styles. You create a `Renderer` to add to the `GraphicsOverlay` which defines the symbol as `SimpleMarkerSymbol` which sets the style to be rendered.
 
 ```java
@@ -32,3 +26,14 @@ pointGraphicOverlay.getGraphics().add(pointGraphic);
 // add graphics overlay to the MapView
 mMapView.getGraphicsOverlays().add(pointGraphicOverlay);
 ```
+
+## Relevant API
+* Graphic
+* GraphicsOverlay
+* ListenableList
+* MapView
+* SimpleRenderer
+* SimpleMarkerSymbol
+
+#### Tags
+Visualization

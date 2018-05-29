@@ -1,18 +1,12 @@
 # Add Graphics with Symbols
-The **Add Graphics with Symbols** sample demonstrates how to add points, polylines, and polygons as graphics, set a symbol renderer to the graphics and add to a `GraphicsOverlay`.  The sample also adds `TextSymbol` to represent text as symbols on the `GraphicsOverlay`.
+Add points, polylines, and polygons as graphics, set a symbol renderer to the graphics and add to a graphics overlay. The sample also adds text symbols to represent text as symbols on the graphics overlay.
 
-![Add Graphics with Symbols App](add-graphic-symbols.png)
+![Add Graphics with Symbols App](add-graphics-symbols.png)
 
-## Features
-* MapView
-* Graphic
-* GraphicsOverlay
-* Point
-* PointCollection
-* Polygon
-* Polyline
+## How to use the sample
+Simply run the sample.
 
-## Developer Pattern
+## How it works
 Graphics are added to a `GraphicsOverlay` without any symbols or styles. To include a symbol with a graphic, create a `Graphic` with a `Symbol` and `Geometry` and add it to the `GraphicsOverlay`. 
 
 ```java
@@ -25,3 +19,15 @@ Graphic boatTripGraphic = new Graphic(boatRoute, lineSymbol);
 //add to the graphic overlay
 graphicOverlay.getGraphics().add(boatTripGraphic);
 ```
+
+## Relevant API
+* Graphic
+* GraphicsOverlay
+* MapView
+* Point
+* PointCollection
+* Polygon
+* Polyline
+
+#### Tags
+Visualization

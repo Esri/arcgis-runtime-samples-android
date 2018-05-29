@@ -16,10 +16,6 @@
 
 package com.esri.arcgisruntime.sample.findroute;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -39,7 +35,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
-
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
@@ -59,6 +54,10 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters;
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult;
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask;
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_drawer);
+    setContentView(R.layout.directions_drawer);
 
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
@@ -104,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-    FloatingActionButton mDirectionFab = (FloatingActionButton) findViewById(R.id.fab);
+    FloatingActionButton mDirectionFab = (FloatingActionButton) findViewById(R.id.directionFAB);
 
     // update UI when attribution view changes
     final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mDirectionFab.getLayoutParams();
@@ -186,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Set the adapter for the list view
                 mDrawerList.setAdapter(new ArrayAdapter<>(getApplicationContext(),
-                    R.layout.drawer_layout_text, directionsArray));
+                    R.layout.directions_layout, directionsArray));
 
                 if (mProgressDialog.isShowing()) {
                   mProgressDialog.dismiss();

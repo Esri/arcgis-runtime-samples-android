@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Map Load Status</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="map_load_status">Map Load Status :</string>
+    <string name="status_loading">Loading</string>
+    <string name="status_loadFail">Failed to load</string>
+    <string name="status_notLoaded">Not loaded</string>
+    <string name="status_loaded">Loaded</string>
+    <string name="status_loadError">Error loading map</string>
+</resources>

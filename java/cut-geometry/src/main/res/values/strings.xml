@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Cut Geometry</string>
+    <string name="cut_button">Cut</string>
+</resources>
