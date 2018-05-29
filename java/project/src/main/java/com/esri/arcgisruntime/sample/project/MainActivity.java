@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // zoom to Minneapolis
-    Geometry startingEnvelope =  new Envelope(-10995912.335747, 5267868.874421, -9880363.974046, 5960699.183877,
+    Geometry startingEnvelope = new Envelope(-10995912.335747, 5267868.874421, -9880363.974046, 5960699.183877,
         SpatialReferences.getWebMercator());
     mMapView.setViewpointGeometryAsync(startingEnvelope);
 
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
     // create a red marker symbol for the input point
-    final SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE,0xFFFF0000,5);
+    final SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000, 5);
     Graphic inputPointGraphic = new Graphic();
     inputPointGraphic.setSymbol(markerSymbol);
     graphicsOverlay.getGraphics().add(inputPointGraphic);
@@ -74,16 +74,16 @@ public class MainActivity extends AppCompatActivity {
     DecimalFormat decimalFormat = new DecimalFormat("#.00000");
 
     // show the input location where the user clicks on the map
-    mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this,mMapView) {
+    mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
 
       @Override
-      public boolean onSingleTapConfirmed(MotionEvent motionEvent){
+      public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
         android.graphics.Point clickedLocation = new android.graphics.Point(Math.round(motionEvent.getX()),
             Math.round(motionEvent.getY()));
         Point originalPoint = mMapView.screenToLocation(clickedLocation);
         inputPointGraphic.setGeometry(originalPoint);
         // project the web mercator point to WGS84 (WKID 4326)
-        Point projectedPoint = (Point) GeometryEngine.project(originalPoint,SpatialReference.create(4236));
+        Point projectedPoint = (Point) GeometryEngine.project(originalPoint, SpatialReference.create(4236));
 
         // show the original and projected point coordinates in a callout from the graphic
         String ox = decimalFormat.format(originalPoint.getX());
