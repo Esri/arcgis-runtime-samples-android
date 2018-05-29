@@ -110,9 +110,11 @@ public class MainActivity extends AppCompatActivity {
             break;
           case 1:
             mMapView.setGrid(new MgrsGrid());
+            mMapView.setViewpointScaleAsync(3.5E6);
             break;
           case 2:
             mMapView.setGrid(new UtmGrid());
+             mMapView.setViewpointScaleAsync(1.4E7);
             break;
           case 3:
             mMapView.setGrid(new UsngGrid());
