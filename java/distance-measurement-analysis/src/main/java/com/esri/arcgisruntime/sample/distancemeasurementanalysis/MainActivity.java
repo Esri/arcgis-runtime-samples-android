@@ -22,7 +22,6 @@ import java.util.concurrent.ExecutionException;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,6 +30,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.esri.arcgisruntime.UnitSystem;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geoanalysis.LocationDistanceMeasurement;
@@ -90,17 +90,17 @@ public class MainActivity extends AppCompatActivity {
     AnalysisOverlay analysisOverlay = new AnalysisOverlay();
     mSceneView.getAnalysisOverlays().add(analysisOverlay);
 
-    //initialize a distance measurement and add it to the analysis overlay
+    // initialize a distance measurement and add it to the analysis overlay
     Point start = new Point(-4.494677, 48.384472, 24.772694, SpatialReferences.getWgs84());
     Point end = new Point(-4.495646, 48.384377, 58.501115, SpatialReferences.getWgs84());
     distanceMeasurement = new LocationDistanceMeasurement(start, end);
     analysisOverlay.getAnalyses().add(distanceMeasurement);
 
     // zoom to initial measurement
-    Camera camera = new Camera(start, 200.0, 0.0, 45.0, 0.0);
+    Camera camera = new Camera(start, 375.0, 0.0, 45.0, 0.0);
     mSceneView.setViewpointCamera(camera);
 
-    // Initialize a list to contain the available units
+    // initialize a list to contain the available units
     ArrayList<String> unitsList = new ArrayList<>();
     for (UnitSystem unitSystemItem : UnitSystem.values()) {
       unitsList.add(unitSystemItem.toString());

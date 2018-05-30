@@ -16,16 +16,9 @@ start a new measurement.
 # How It Works
 To measure distances with the `LocationDistanceMeasurement` analysis:
 
-1. Create an `AnalysisOverlay` and add it to your scene view's analysis overlay collection: 
-`sceneView.getAnalysisOverlays().add(analysisOverlay)`. 
-1. Create a `LocationDistanceMeasurement`, 
-specifying the `startLocation` and `endLocation`. These can be the same point to start with. 
-Add the analysis to the analysis overlay: 
-`analysisOverlay.getAnalyses().add(LocationDistanceMeasurement)`. 
-The measuring line will be drawn for you between the two points. 
-1. The `measurementChanged` callback will fire if the distances change. You can get the new values 
-for the `directDistance`, `horizontalDistance`, and `verticalDistance` from the `MeasurementChangedEvent` 
-returned by the callback. The distance objects contain both a scalar value and a unit of measurement.
+1. Create an `AnalysisOverlay` and add it to your scene view's analysis overlay collection: `sceneView.getAnalysisOverlays().add(analysisOverlay)`. 
+1. Create a `LocationDistanceMeasurement`, specifying the `startLocation` and `endLocation`. These can be the same point to start with. Add the analysis to the analysis overlay: `analysisOverlay.getAnalyses().add(LocationDistanceMeasurement)`. The measuring line will be drawn for you between the two points. 
+1. The `measurementChanged` callback will fire if the distances change. You can get the new values for the `directDistance`, `horizontalDistance`, and `verticalDistance` from the `MeasurementChangedEvent` returned by the callback. The distance objects contain both a scalar value and a unit of measurement.
 
 # Relevant API
 * AnalysisOverlay
@@ -38,5 +31,3 @@ large distances where the Earth's curvature needs to be taken into account.
 
 #Tags
 Analysis 
- 
-
