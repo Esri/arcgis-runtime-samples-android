@@ -107,22 +107,25 @@ public class MainActivity extends AppCompatActivity {
         switch (position) {
           case 0:
             mMapView.setGrid(new LatitudeLongitudeGrid());
+            mMapView.setViewpointScaleAsync(23227);
             break;
           case 1:
             mMapView.setGrid(new MgrsGrid());
-            mMapView.setViewpointScaleAsync(3.5E6);
+            mMapView.setViewpointScaleAsync(23227);
             break;
           case 2:
             mMapView.setGrid(new UtmGrid());
-             mMapView.setViewpointScaleAsync(1.4E7);
+             mMapView.setViewpointScaleAsync(10000000);
             break;
           case 3:
             mMapView.setGrid(new UsngGrid());
+            mMapView.setViewpointScaleAsync(23227);
             break;
           default:
             Toast.makeText(MainActivity.this,"Unsupported option", Toast.LENGTH_SHORT).show();
             break;
-        }// make sure settings persist on grid type change
+        }
+        // make sure settings persist on grid type change
         setLabelVisibility();
         changeGridColor(mLineColor);
         changeLabelColor(mLabelColor);
