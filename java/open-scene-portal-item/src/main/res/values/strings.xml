@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Open Scene</string>
+    <!-- arcgis online portal url -->
+    <string name="portal_url">http://www.arcgis.com/</string>
+</resources>
