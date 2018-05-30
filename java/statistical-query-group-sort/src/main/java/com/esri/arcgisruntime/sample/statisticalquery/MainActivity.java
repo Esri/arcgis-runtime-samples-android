@@ -23,11 +23,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -69,45 +73,12 @@ public class MainActivity extends AppCompatActivity {
   private RecyclerViewAdapter mStatisticsDefinitionAdapter;
   private RecyclerViewAdapter mGroupAdapter;
   private RecyclerViewAdapter mOrderByAdapter;
+  private AlertDialog mQueryExecutingAlert;
 
   private List<StatisticDefinition> mStatisticDefinitionList;
   private List<String> mStatisticDefinitionsAsStringsList;
   private List<String> mOrderByList;
   private List<String> mFieldNameList;
-
-  /**
-   * Helper method to get the sort order from a string containing a field and sort order.
-   *
-   * @param fieldAndOrder string from recycler view
-   * @return SortOrder (either ASCENDING or DESCENDING)
-   */
-  private static QueryParameters.SortOrder getSortOrderFrom(String fieldAndOrder) {
-    String orderString = fieldAndOrder.substring(fieldAndOrder.indexOf('(') + 1, fieldAndOrder.indexOf(')'));
-    QueryParameters.SortOrder sortOrder;
-    switch (orderString) {
-      case "DESCENDING":
-        sortOrder = QueryParameters.SortOrder.DESCENDING;
-        break;
-      case "ASCENDING":
-        sortOrder = QueryParameters.SortOrder.ASCENDING;
-        break;
-      default:
-        Log.e(TAG, "Invalid sort order: " + orderString);
-        sortOrder = null;
-        break;
-    }
-    return sortOrder;
-  }
-
-  /**
-   * Helper method to get a field from a string.
-   *
-   * @param fieldAndOrder string from recycler view
-   * @return field as a string
-   */
-  private static String getFieldFrom(String fieldAndOrder) {
-    return fieldAndOrder.substring(0, fieldAndOrder.indexOf(' '));
-  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +140,12 @@ public class MainActivity extends AppCompatActivity {
         }
       });
     });
+
+    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+    View queryExecutingView = getLayoutInflater().inflate(R.layout.query_executing_dialog, null);
+    dialogBuilder.setView(queryExecutingView);
+    mQueryExecutingAlert = dialogBuilder.create();
+    mQueryExecutingAlert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
   }
 
   /**
@@ -207,6 +184,10 @@ public class MainActivity extends AppCompatActivity {
     // execute the statistical query with these parameters and await the results
     ListenableFuture<StatisticsQueryResult> statisticsQueryResultFuture = mUsStatesFeatureTable
         .queryStatisticsAsync(statQueryParams);
+
+    // show a loading dialog on execution of query
+    mQueryExecutingAlert.show();
+
     statisticsQueryResultFuture.addDoneListener(() -> {
       try {
         // get the StatisticsQueryResult
@@ -412,5 +393,44 @@ public class MainActivity extends AppCompatActivity {
       }
     }
     return checkedFields;
+  }
+
+  /**
+   * Helper method to get the sort order from a string containing a field and sort order.
+   *
+   * @param fieldAndOrder string from recycler view
+   * @return SortOrder (either ASCENDING or DESCENDING)
+   */
+  private static QueryParameters.SortOrder getSortOrderFrom(String fieldAndOrder) {
+    String orderString = fieldAndOrder.substring(fieldAndOrder.indexOf('(') + 1, fieldAndOrder.indexOf(')'));
+    QueryParameters.SortOrder sortOrder;
+    switch (orderString) {
+      case "DESCENDING":
+        sortOrder = QueryParameters.SortOrder.DESCENDING;
+        break;
+      case "ASCENDING":
+        sortOrder = QueryParameters.SortOrder.ASCENDING;
+        break;
+      default:
+        Log.e(TAG, "Invalid sort order: " + orderString);
+        sortOrder = null;
+        break;
+    }
+    return sortOrder;
+  }
+
+  /**
+   * Helper method to get a field from a string.
+   *
+   * @param fieldAndOrder string from recycler view
+   * @return field as a string
+   */
+  private static String getFieldFrom(String fieldAndOrder) {
+    return fieldAndOrder.substring(0, fieldAndOrder.indexOf(' '));
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
+    mQueryExecutingAlert.dismiss();
   }
 }
