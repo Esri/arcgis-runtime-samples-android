@@ -68,9 +68,9 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate views from layout
     mSceneView = findViewById(R.id.sceneView);
-    mDirectDistance = findViewById(R.id.total_distance);
-    mHorizontalDistance = findViewById(R.id.horizontal_distance);
-    mVerticalDistance = findViewById(R.id.vertical_distance);
+    mDirectDistance = findViewById(R.id.totalDistance);
+    mHorizontalDistance = findViewById(R.id.horizontalDistance);
+    mVerticalDistance = findViewById(R.id.verticalDistance);
     Spinner mUnitSpinner = findViewById(R.id.units_spinner);
     // set the scene to the view
     mSceneView.setScene(scene);
