@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.editfeatureattachments;
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
   private String mSelectedArcGISFeatureAttributeValue;
   private String mAttributeID;
 
-  @Override
+  @SuppressLint("ClickableViewAccessibility") @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);

@@ -1,13 +1,13 @@
-# Change feature layer renderer
-### Category: Visualization
-This sample demonstrates how to override and reset a renderer of a feature layer. Use the buttons in the bottom toolbar to override or reset the renderer.
+# Change Feature Layer Renderer
+Override and reset a renderer of a feature layer. Use the buttons in the bottom toolbar to override or reset the renderer.
 
 ![Change Feature Layer Renderer](change-feature-layer-renderer.png)
 
-## How it works
-Feature layer has a property called renderer you can set to override the renderer. Feature layer also provides a method called reset renderer to reset the renderer back to the original one that is defined in its service definition.
+## How to use the sample
+Click the 'Override Renderer' button to change the `FeatureLayer`'s renderer.
 
-## Developer Pattern
+## How it works
+`FeatureLayer `has a property called `renderer` you can set to override the renderer. `FeatureLayer` also provides a method called reset renderer to reset the renderer back to the original one that is defined in its service definition.
 
 ```java
 private void overrideRenderer() {
@@ -25,3 +25,12 @@ private void resetRenderer() {
 
     }
 ```
+
+## Relevant API
+* FeatureLayer
+* MapView
+* SimpleRenderer
+* ServiceFeatureTable
+
+#### Tags
+Visualization
