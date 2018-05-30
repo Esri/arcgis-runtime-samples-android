@@ -67,11 +67,11 @@ public class MainActivity extends AppCompatActivity {
 
     // create a red marker symbol for the input point
     final SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000, 5);
-    Graphic inputPointGraphic = new Graphic();
+    final Graphic inputPointGraphic = new Graphic();
     inputPointGraphic.setSymbol(markerSymbol);
     graphicsOverlay.getGraphics().add(inputPointGraphic);
 
-    DecimalFormat decimalFormat = new DecimalFormat("#.00000");
+    final DecimalFormat decimalFormat = new DecimalFormat("#.00000");
 
     // show the input location where the user clicks on the map
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
