@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/background">
@@ -13,9 +12,9 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:textSize="20sp"
-        app:layout_constraintTop_toTopOf="@+id/totaldistanceLabel"
-        app:layout_constraintStart_toEndOf="@+id/totaldistanceLabel"
-        app:layout_constraintBottom_toBottomOf="@+id/totaldistanceLabel" />
+        app:layout_constraintTop_toTopOf="@+id/totalDistanceLabel"
+        app:layout_constraintStart_toEndOf="@+id/totalDistanceLabel"
+        app:layout_constraintBottom_toBottomOf="@+id/totalDistanceLabel" />
 
     <TextView
         android:id="@+id/horizontalDistance"
@@ -27,9 +26,9 @@
         android:layout_marginStart="8dp"
         android:minEms="4"
         android:textSize="20sp"
-        app:layout_constraintTop_toTopOf="@+id/horiztonalDistanceLabel"
-        app:layout_constraintBottom_toBottomOf="@+id/horiztonalDistanceLabel"
-        app:layout_constraintStart_toEndOf="@+id/horiztonalDistanceLabel"
+        app:layout_constraintTop_toTopOf="@+id/horizontalDistanceLabel"
+        app:layout_constraintBottom_toBottomOf="@+id/horizontalDistanceLabel"
+        app:layout_constraintStart_toEndOf="@+id/horizontalDistanceLabel"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
@@ -54,25 +53,25 @@
         app:layout_constraintStart_toEndOf="@+id/unitsLabel" />
 
     <TextView
-        android:id="@+id/totaldistanceLabel"
+        android:id="@+id/totalDistanceLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Total Distance:"
+        android:text="@string/total_distance"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/horiztonalDistanceLabel"
+        android:id="@+id/horizontalDistanceLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Horizontal Distance:"
-        app:layout_constraintTop_toBottomOf="@+id/totaldistanceLabel"
+        android:text="@string/horizontal_distance"
+        app:layout_constraintTop_toBottomOf="@+id/totalDistanceLabel"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -82,9 +81,9 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Vertical Distance:"
+        android:text="@string/vertical_distance"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horiztonalDistanceLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/horizontalDistanceLabel" />
 
     <TextView
         android:id="@+id/unitsLabel"
@@ -94,7 +93,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Units:"
+        android:text="@string/units"
         app:layout_constraintTop_toBottomOf="@+id/verticalDistanceLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
