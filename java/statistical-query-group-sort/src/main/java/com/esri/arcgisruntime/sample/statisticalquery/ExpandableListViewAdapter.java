@@ -1,4 +1,4 @@
-/* Copyright 2017 Esri
+/* Copyright 2018 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
 
 package com.esri.arcgisruntime.sample.statisticalquery;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -23,10 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  * Expandable list view which displays grouped results from a LinkedHashMap.
