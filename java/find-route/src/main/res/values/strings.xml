@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Find route</string>
+    <string name="app_name">Find Route</string>
     <!-- Navigation vectore URL-->
     <string name="navigation_vector">http://www.arcgis.com/sharing/rest/content/items/dcbbba0edf094eaa81af19298b9c6247/resources/styles/root.json</string>
     <string name="routing_service">http://sampleserver6.arcgisonline.com/arcgis/rest/services/NetworkAnalysis/SanDiego/NAServer/Route</string>

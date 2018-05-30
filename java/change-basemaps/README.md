@@ -1,18 +1,19 @@
 # Change Basemaps
-### Category: Maps and Scenes
+Change basemaps from an Android Navigation Drawer.
+
 ![Change Basemaps App](change-basemaps.png)
 
-The Change Basemaps sample app shows how you can change basemaps from an Android Navigation Drawer.  
+## How to use the sample
+Use the navigation drawer to select basemaps.
 
-## Features
+## How it works
+The `selectBasemaps()` method switches Basemaps based on the position of the navigation drawer selection. The Basemap is created from create methods on a `Basemap` object.  
+
+## Relevant API
 * ArcGISMap
-* MapView
 * Basemap
+* MapView
 * ViewPoint
 
-## Developer Pattern
-The `selectBasemaps()` method switches Basemaps based on the position of the navigation drawer selection. The **Basemap** is created from create methods on a `Basemap` object.  
-
-```java
-mMap.setBasemap(Basemap.createStreets());
-```
+#### Tags
+Maps and Scenes
