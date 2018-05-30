@@ -19,7 +19,7 @@
         android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/darker_gray"
+        android:background="@android:color/background_light"
         tools:layout_editor_absoluteX="8dp"
         app:layout_constraintTop_toTopOf="parent" />
 
