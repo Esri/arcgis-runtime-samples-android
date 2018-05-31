@@ -16,8 +16,11 @@
 
 package com.esri.arcgisruntime.sample.spatialrelationships;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polygon;
@@ -88,10 +91,18 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this,mMapView){
 
       @Override
-      public boolean
-    });
+      public boolean onSingleTapConfirmed(MotionEvent motionEvent){
+        showResults();
+        return true;
+      }
+    } );
 
+  }
 
+  private void showResults(){
+    Log.e("uhm","print");
+    Intent intent = new Intent(this,ResultsActivity.class);
+    startActivity(intent);
   }
 
   @Override
