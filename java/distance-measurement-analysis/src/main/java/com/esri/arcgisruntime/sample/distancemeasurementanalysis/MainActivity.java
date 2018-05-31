@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     analysisOverlay.getAnalyses().add(distanceMeasurement);
 
     // zoom to initial measurement
-    Camera camera = new Camera(start, 375.0, 0.0, 45.0, 0.0);
+    Camera camera = new Camera(start, 300.0, 315.0, 60.0, 0.0);
     mSceneView.setViewpointCamera(camera);
 
     // initialize a list to contain the available units
