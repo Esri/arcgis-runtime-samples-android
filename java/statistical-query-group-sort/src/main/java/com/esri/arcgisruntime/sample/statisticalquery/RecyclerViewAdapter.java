@@ -17,6 +17,7 @@
 package com.esri.arcgisruntime.sample.statisticalquery;
 
 import java.util.List;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -31,13 +32,13 @@ import android.widget.TextView;
  */
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-  private final LayoutInflater mInflater;
   private static final int FIELD = 0;
   private static final int FIELDWITHCHECKBOX = 1;
-  private List<String> mFields;
-  private int mSelectedPosition = 0;
+  private final LayoutInflater mInflater;
   private final boolean mHasCheckbox;
   private final boolean[] mCheckedList;
+  private List<String> mFields;
+  private int mSelectedPosition = 0;
 
   public RecyclerViewAdapter(Context context, List<String> fields, boolean hasCheckbox) {
     mInflater = LayoutInflater.from(context);
@@ -111,6 +112,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     return mFields.get(id);
   }
 
+  public boolean[] getCheckedList() {
+    return mCheckedList;
+  }
+
   class ViewHolderField extends RecyclerView.ViewHolder implements View.OnClickListener {
     final TextView mRowTextView;
 
@@ -149,10 +154,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       mSelectedPosition = getAdapterPosition();
       notifyItemChanged(mSelectedPosition);
     }
-  }
-
-  public boolean[] getCheckedList() {
-    return mCheckedList;
   }
 
 }

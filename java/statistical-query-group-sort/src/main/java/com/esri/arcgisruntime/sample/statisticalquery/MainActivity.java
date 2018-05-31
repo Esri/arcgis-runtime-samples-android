@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -80,6 +81,40 @@ public class MainActivity extends AppCompatActivity {
   private List<String> mOrderByList;
   private List<String> mFieldNameList;
 
+  /**
+   * Helper method to get the sort order from a string containing a field and sort order.
+   *
+   * @param fieldAndOrder string from recycler view
+   * @return SortOrder (either ASCENDING or DESCENDING)
+   */
+  private static QueryParameters.SortOrder getSortOrderFrom(String fieldAndOrder) {
+    String orderString = fieldAndOrder.substring(fieldAndOrder.indexOf('(') + 1, fieldAndOrder.indexOf(')'));
+    QueryParameters.SortOrder sortOrder;
+    switch (orderString) {
+      case "DESCENDING":
+        sortOrder = QueryParameters.SortOrder.DESCENDING;
+        break;
+      case "ASCENDING":
+        sortOrder = QueryParameters.SortOrder.ASCENDING;
+        break;
+      default:
+        Log.e(TAG, "Invalid sort order: " + orderString);
+        sortOrder = null;
+        break;
+    }
+    return sortOrder;
+  }
+
+  /**
+   * Helper method to get a field from a string.
+   *
+   * @param fieldAndOrder string from recycler view
+   * @return field as a string
+   */
+  private static String getFieldFrom(String fieldAndOrder) {
+    return fieldAndOrder.substring(0, fieldAndOrder.indexOf(' '));
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -126,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         addStatistic(fieldName, statType);
       });
       mRemoveStatisticButton.setOnClickListener(view -> removeStatistic());
-      mMoveRightButton.setOnClickListener(view ->  {
+      mMoveRightButton.setOnClickListener(view -> {
         // get the selected field from the group recycler view
         String field = mGroupAdapter.getItem(mGroupAdapter.getSelectedPosition());
         addFieldToOrderBy(field);
@@ -393,40 +428,6 @@ public class MainActivity extends AppCompatActivity {
       }
     }
     return checkedFields;
-  }
-
-  /**
-   * Helper method to get the sort order from a string containing a field and sort order.
-   *
-   * @param fieldAndOrder string from recycler view
-   * @return SortOrder (either ASCENDING or DESCENDING)
-   */
-  private static QueryParameters.SortOrder getSortOrderFrom(String fieldAndOrder) {
-    String orderString = fieldAndOrder.substring(fieldAndOrder.indexOf('(') + 1, fieldAndOrder.indexOf(')'));
-    QueryParameters.SortOrder sortOrder;
-    switch (orderString) {
-      case "DESCENDING":
-        sortOrder = QueryParameters.SortOrder.DESCENDING;
-        break;
-      case "ASCENDING":
-        sortOrder = QueryParameters.SortOrder.ASCENDING;
-        break;
-      default:
-        Log.e(TAG, "Invalid sort order: " + orderString);
-        sortOrder = null;
-        break;
-    }
-    return sortOrder;
-  }
-
-  /**
-   * Helper method to get a field from a string.
-   *
-   * @param fieldAndOrder string from recycler view
-   * @return field as a string
-   */
-  private static String getFieldFrom(String fieldAndOrder) {
-    return fieldAndOrder.substring(0, fieldAndOrder.indexOf(' '));
   }
 
   @Override protected void onPause() {

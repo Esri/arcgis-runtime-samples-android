@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.statisticalquery;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -42,7 +43,8 @@ public class ResultsActivity extends AppCompatActivity {
     Intent intent = getIntent();
     Gson gson = new Gson();
     // get linked hash map from intent
-    LinkedHashMap<String, List<String>> groupedStatistics =  gson.fromJson(intent.getStringExtra("results"), new ResultsActivity.LinkedHashMapTypeToken().getType());
+    LinkedHashMap<String, List<String>> groupedStatistics = gson
+        .fromJson(intent.getStringExtra("results"), new ResultsActivity.LinkedHashMapTypeToken().getType());
 
     // create expandable list view
     ExpandableListView expandableListView = findViewById(R.id.expandableListView);

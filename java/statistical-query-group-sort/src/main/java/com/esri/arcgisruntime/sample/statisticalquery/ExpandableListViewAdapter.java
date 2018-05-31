@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.sample.statisticalquery;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
