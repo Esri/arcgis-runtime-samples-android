@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_margin="16dp"
+              android:text="@string/grid_type"
+              android:textSize="20sp"
+              android:id="@+id/grid_type"
+              android:textColor="#000000"
+              app:layout_constraintTop_toTopOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              android:layout_marginTop="16dp"
+              android:layout_marginLeft="16dp" android:layout_marginStart="16dp"/>
+    <Spinner
+            android:id="@+id/layer_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" android:layout_alignParentEnd="true"
+            android:layout_marginStart="34dp" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toEndOf="@+id/grid_type" android:layout_marginLeft="34dp"
+            android:layout_alignParentRight="true">
+    </Spinner>
+
+    <CheckBox
+            android:id="@+id/labels_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/labels_visible"
+            android:textSize="20sp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:button="@null"
+            android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/label_color_text"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"/>
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/grid_color"
+              android:layout_marginStart="16dp"
+              android:textSize="20sp"
+              android:textColor="#000000"
+              android:id="@+id/textView"
+              app:layout_constraintStart_toStartOf="parent"
+              android:layout_marginTop="16dp"
+              app:layout_constraintTop_toBottomOf="@+id/grid_type"
+              android:layout_marginLeft="16dp"/>
+
+    <Spinner android:layout_width="wrap_content" android:layout_height="wrap_content"
+             android:id="@+id/line_color_spinner"
+             android:layout_marginStart="29dp"
+             app:layout_constraintStart_toEndOf="@+id/textView" android:layout_marginTop="20dp"
+             app:layout_constraintTop_toBottomOf="@+id/layer_spinner"
+             android:layout_marginLeft="29dp"/>
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/label_color"
+              android:textSize="20sp"
+              android:textColor="#000000"
+              android:id="@+id/label_color_text"
+              android:layout_marginTop="16dp"
+              android:layout_marginStart="16dp"
+              app:layout_constraintTop_toBottomOf="@+id/textView"
+              app:layout_constraintStart_toStartOf="parent"
+              android:layout_marginLeft="16dp"/>
+
+    <Spinner android:layout_width="wrap_content" android:layout_height="wrap_content"
+             android:id="@+id/label_color_spinner"
+             android:layout_marginStart="16dp"
+             android:layout_marginTop="16dp"
+             app:layout_constraintStart_toEndOf="@+id/label_color_text"
+             app:layout_constraintTop_toBottomOf="@+id/line_color_spinner"
+             android:layout_marginLeft="16dp"/>
+
+</android.support.constraint.ConstraintLayout>
