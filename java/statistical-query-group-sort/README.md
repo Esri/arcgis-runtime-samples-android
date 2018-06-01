@@ -1,7 +1,7 @@
 # Statistical Query Group and Sort
 Query a `ServiceFeatureTable` to get statistics for one or more specified fields. The sample queries a service feature table of US states to get the selected statistics. The results can be grouped and sorted using one or several fields in the table.
 
-![Statistical Query Parameters](statistical-query-parameters.png) ![Statistical Query Results](statistical-query-results.png)
+![Statistical Query Group and Sort App](statistical-query-group-and-sort.png)
 
 ## How to use the sample
 1. Select a combination of fields and statistic types to include in the query. Use the 'Add' button to add selections to the list.
