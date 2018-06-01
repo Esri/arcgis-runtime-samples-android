@@ -1,8 +1,6 @@
 package com.esri.arcgisruntime.sample.spatialrelationships;
 
 import android.content.Context;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,22 +8,20 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 
 public class ResultsExpandableListAdapter extends BaseExpandableListAdapter{
 
   private final Context context;
   private final List<String> mGroupList;
-  private final LinkedHashMap<String,List<String>> mChildList;
+  private final HashMap<String,List<String>> mChildList;
 
-  public ResultsExpandableListAdapter(Context context, List<String> header,LinkedHashMap<String,List<String>> child){
+  public ResultsExpandableListAdapter(Context context, List<String> header,HashMap<String,List<String>> child){
     this.context = context;
     mGroupList = new ArrayList<>(header);
     mChildList = child;
 
-    Log.e("check", "+" + mChildList.get("Point").size());
   }
 
   @Override public int getGroupCount() {
@@ -58,7 +54,6 @@ public class ResultsExpandableListAdapter extends BaseExpandableListAdapter{
 
   @Override public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
     String groupTitle = mGroupList.get(groupPosition);
-    Log.e("groupTitle",groupTitle+ "");
 
     if(convertView == null){
       LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

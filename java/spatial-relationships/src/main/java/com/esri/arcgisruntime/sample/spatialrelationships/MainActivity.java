@@ -21,6 +21,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.geometry.Geometry;
+import com.esri.arcgisruntime.geometry.GeometryEngine;
+import com.esri.arcgisruntime.geometry.GeometryType;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polygon;
@@ -31,10 +35,14 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
+import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -92,7 +100,28 @@ public class MainActivity extends AppCompatActivity {
 
       @Override
       public boolean onSingleTapConfirmed(MotionEvent motionEvent){
-        showResults();
+        android.graphics.Point clickLocation = new android.graphics.Point( (int)motionEvent.getX(),(int)motionEvent.getY());
+        ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphics =
+            mMapView.identifyGraphicsOverlayAsync(graphicsOverlay,clickLocation,1,false);
+        identifyGraphics.addDoneListener(() -> {
+
+          try {
+            IdentifyGraphicsOverlayResult result = identifyGraphics.get();
+            List<Graphic> identifiedGraphics = result.getGraphics();
+            if(identifiedGraphics.size() > 0){
+              //
+              graphicsOverlay.clearSelection();
+              Graphic identifiedGraphc = identifiedGraphics.get(0);
+              identifiedGraphc.setSelected(true);
+              Geometry selectedGeometry = identifiedGraphc.getGeometry();
+              GeometryType selectedGeometryType = selectedGeometry.getGeometryType();
+
+            }
+          } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+
+          }});
+//        showResults();
         return true;
       }
     } );
