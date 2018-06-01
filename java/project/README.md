@@ -16,4 +16,5 @@ To project a geometry to another spatial reference:
 * SpatialReference
 
 #### Tags
+Edit and Manage Data
 GeometryEngine
