@@ -16,12 +16,19 @@
 
 package com.esri.arcgisruntime.sample.spatialrelationships;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
+
+import android.widget.Toast;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.GeometryType;
@@ -32,6 +39,7 @@ import com.esri.arcgisruntime.geometry.Polyline;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -40,9 +48,6 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
-
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,10 +63,7 @@ public class MainActivity extends AppCompatActivity {
     // create a map with a topographic  basemap
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
 
-    // set the map to be displayed in this view
-    mMapView.setMap(map);
-
-    // create a grphics overlay
+    // create a graphics overlay
     GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
     graphicsOverlay.setSelectionColor(0xFFFFF00);
@@ -96,42 +98,113 @@ public class MainActivity extends AppCompatActivity {
     Graphic pointGraphic = new Graphic(point, locationMarker);
     graphicsOverlay.getGraphics().add(pointGraphic);
 
-    mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this,mMapView){
+    //create HashMap that will hold relationships in between graphics
+    HashMap<String, List<String>> relationships = new HashMap<>();
 
+    // set the initial view point and the map to be displayed in this view
+    map.setInitialViewpoint(new Viewpoint(point, 90000000));
+    mMapView.setMap(map);
+
+    // create intent to be passed to the other activity
+    Intent intent = new Intent(this, ResultsActivity.class);
+
+    // add a touch listener to identify the selected graphic
+    mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override
-      public boolean onSingleTapConfirmed(MotionEvent motionEvent){
-        android.graphics.Point clickLocation = new android.graphics.Point( (int)motionEvent.getX(),(int)motionEvent.getY());
+      public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+        //identify the clicked graphic(s)
+        android.graphics.Point clickLocation = new android.graphics.Point((int) motionEvent.getX(),
+            (int) motionEvent.getY());
         ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphics =
-            mMapView.identifyGraphicsOverlayAsync(graphicsOverlay,clickLocation,1,false);
+            mMapView.identifyGraphicsOverlayAsync(graphicsOverlay, clickLocation, 1, false);
         identifyGraphics.addDoneListener(() -> {
 
           try {
+            // get the first identified graphic
             IdentifyGraphicsOverlayResult result = identifyGraphics.get();
             List<Graphic> identifiedGraphics = result.getGraphics();
-            if(identifiedGraphics.size() > 0){
-              //
-              graphicsOverlay.clearSelection();
-              Graphic identifiedGraphc = identifiedGraphics.get(0);
-              identifiedGraphc.setSelected(true);
-              Geometry selectedGeometry = identifiedGraphc.getGeometry();
-              GeometryType selectedGeometryType = selectedGeometry.getGeometryType();
+            if (identifiedGraphics.size() > 0) {
+              // clear previous results
+              relationships.put("Point", new ArrayList<>());
+              relationships.put("Polyline", new ArrayList<>());
+              relationships.put("Polygon", new ArrayList<>());
 
+              // select the identified graphic
+              graphicsOverlay.clearSelection();
+              Graphic identifiedGraphic = identifiedGraphics.get(0);
+              identifiedGraphic.setSelected(true);
+              Geometry selectedGeometry = identifiedGraphic.getGeometry();
+              GeometryType selectedGeometryType = selectedGeometry.getGeometryType();
+              Toast.makeText(MainActivity.this,selectedGeometry.getGeometryType().toString() + " is selected",Toast.LENGTH_LONG).show();
+              //populate HashMap that will be passed to the expandable list view
+              if (selectedGeometryType != GeometryType.POINT) {
+                ArrayList<String> pointRelationships = relationshipStringList(getSpatialRelationships(selectedGeometry,
+                    pointGraphic.getGeometry()));
+                relationships.put("Point", pointRelationships);
+              }
+              if (selectedGeometryType != GeometryType.POLYLINE) {
+                ArrayList<String> polylineRelationships = relationshipStringList(
+                    getSpatialRelationships(selectedGeometry,
+                        polylineGraphic.getGeometry()));
+                relationships.put("Polyline", polylineRelationships);
+              }
+              if (selectedGeometryType != GeometryType.POLYGON) {
+                ArrayList<String> polygonRelationships = relationshipStringList(
+                    getSpatialRelationships(selectedGeometry,
+                        polygonGraphic.getGeometry()));
+                relationships.put("Polygon", polygonRelationships);
+              }
+              // pass the HashMap to the intent
+              intent.putExtra("HashMap", relationships);
+              startActivity(intent);
             }
           } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-
-          }});
-//        showResults();
+          }
+        });
         return true;
       }
-    } );
-
+    });
   }
 
-  private void showResults(){
-    Log.e("uhm","print");
-    Intent intent = new Intent(this,ResultsActivity.class);
-    startActivity(intent);
+  /**
+   * Gets a string representation of the spatial relationship list
+   *
+   * @param relationshipList a list of spatial relationships
+   * @return a string list of spatial relationships
+   */
+  private ArrayList<String> relationshipStringList(List<QueryParameters.SpatialRelationship> relationshipList) {
+    ArrayList<String> stringList = new ArrayList<>();
+    for (QueryParameters.SpatialRelationship relationship : relationshipList) {
+      stringList.add(relationship.toString());
+    }
+    return stringList;
+  }
+
+  /**
+   * Gets a list of spatial relationships that the first geometry has to the second geometry.
+   *
+   * @param a first geometry
+   * @param b second geometry
+   * @return list of relationships a has to b
+   */
+  private List<QueryParameters.SpatialRelationship> getSpatialRelationships(Geometry a, Geometry b) {
+    List<QueryParameters.SpatialRelationship> relationships = new ArrayList<>();
+    if (GeometryEngine.crosses(a, b))
+      relationships.add(QueryParameters.SpatialRelationship.CROSSES);
+    if (GeometryEngine.contains(a, b))
+      relationships.add(QueryParameters.SpatialRelationship.CONTAINS);
+    if (GeometryEngine.disjoint(a, b))
+      relationships.add(QueryParameters.SpatialRelationship.DISJOINT);
+    if (GeometryEngine.intersects(a, b))
+      relationships.add(QueryParameters.SpatialRelationship.INTERSECTS);
+    if (GeometryEngine.overlaps(a, b))
+      relationships.add(QueryParameters.SpatialRelationship.OVERLAPS);
+    if (GeometryEngine.touches(a, b))
+      relationships.add(QueryParameters.SpatialRelationship.TOUCHES);
+    if (GeometryEngine.within(a, b))
+      relationships.add(QueryParameters.SpatialRelationship.WITHIN);
+    return relationships;
   }
 
   @Override

@@ -1,19 +1,28 @@
+/* Copyright 2018 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.esri.arcgisruntime.sample.spatialrelationships;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-
-import com.esri.arcgisruntime.data.QueryParameters;
-import com.esri.arcgisruntime.geometry.Geometry;
-import com.esri.arcgisruntime.geometry.GeometryEngine;
-import com.esri.arcgisruntime.geometry.GeometryType;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 public class ResultsActivity extends AppCompatActivity {
 
@@ -24,47 +33,16 @@ public class ResultsActivity extends AppCompatActivity {
 
     // get intent from main activity
     Intent intent = getIntent();
-
-    LinkedHashMap<String,List<String>> child = new LinkedHashMap<>();
+    // get the HashMap created in MainActivity
+    HashMap<String,ArrayList<String>> child = (HashMap<String,ArrayList<String>>) intent.getSerializableExtra("HashMap");
     ArrayList<String> header = new ArrayList<>();
     header.add("Point");
     header.add("Polyline");
     header.add("Polygon");
-    ArrayList<String> relationships = new ArrayList<>();
-    relationships.add("me");
-    relationships.add("you");
-    relationships.add("lol");
-    child.put(header.get(0),relationships) ;
-    child.put(header.get(1),relationships);
-    child.put(header.get(2),relationships);
 
+    // create an expandable list view and an adapter to display in new activity.
     ExpandableListView expandableListView = findViewById(R.id.expandableList);
-    ResultsExpandableListAdapter expandableListAdapter = new ResultsExpandableListAdapter(this,header,child);
+    ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(this,header,child);
     expandableListView.setAdapter(expandableListAdapter);
-    GeometryType selectedGeometryType = (GeometryType) intent.getSerializableExtra("selectedGeometryType");
-
-    if(selectedGeometryType != GeometryType.POINT){
-//      getSpatialRelationships(selectedGeometryType,)
-    }
-
-
-  }
-  /**
-   * Gets a list of spatial relationships that the first geometry has to the second geometry.
-   *
-   * @param a first geometry
-   * @param b second geometry
-   * @return list of relationships a has to b
-   */
-  private List<QueryParameters.SpatialRelationship> getSpatialRelationships(Geometry a, Geometry b) {
-    List<QueryParameters.SpatialRelationship> relationships = new ArrayList<>();
-    if (GeometryEngine.crosses(a, b)) relationships.add(QueryParameters.SpatialRelationship.CROSSES);
-    if (GeometryEngine.contains(a, b)) relationships.add(QueryParameters.SpatialRelationship.CONTAINS);
-    if (GeometryEngine.disjoint(a, b)) relationships.add(QueryParameters.SpatialRelationship.DISJOINT);
-    if (GeometryEngine.intersects(a, b)) relationships.add(QueryParameters.SpatialRelationship.INTERSECTS);
-    if (GeometryEngine.overlaps(a, b)) relationships.add(QueryParameters.SpatialRelationship.OVERLAPS);
-    if (GeometryEngine.touches(a, b)) relationships.add(QueryParameters.SpatialRelationship.TOUCHES);
-    if (GeometryEngine.within(a, b)) relationships.add(QueryParameters.SpatialRelationship.WITHIN);
-    return relationships;
   }
 }

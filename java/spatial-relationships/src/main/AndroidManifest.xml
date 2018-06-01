@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.esri.arcgisruntime.sample.spatialrelationships.ResultsActivity"
-                  android:label="Relationships"/>
+                  android:label="@string/Relationships"/>
     </application>
 
 </manifest>

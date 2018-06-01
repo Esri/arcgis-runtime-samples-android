@@ -5,9 +5,8 @@
         android:layout_height="match_parent">
 
     <ExpandableListView
-            android:id="@+id/expandableList"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-    </ExpandableListView>
+        android:id="@+id/expandableList"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
 
 </android.support.constraint.ConstraintLayout>
