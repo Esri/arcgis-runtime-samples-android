@@ -24,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import android.widget.Toast;
@@ -51,6 +52,7 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
   private MapView mMapView;
 
   @Override
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
     graphicsOverlay.setSelectionColor(0xFFFFF00);
 
-    //create a polygon graphic
+    // create a polygon graphic
     PointCollection polygonPoints = new PointCollection(SpatialReferences.getWebMercator());
     polygonPoints.add(new Point(-5991501.677830, 5599295.131468));
     polygonPoints.add(new Point(-6928550.398185, 2087936.739807));
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     Graphic pointGraphic = new Graphic(point, locationMarker);
     graphicsOverlay.getGraphics().add(pointGraphic);
 
-    //create HashMap that will hold relationships in between graphics
+    // create HashMap that will hold relationships in between graphics
     HashMap<String, List<String>> relationships = new HashMap<>();
 
     // set the initial view point and the map to be displayed in this view
@@ -112,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override
       public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-        //identify the clicked graphic(s)
+        // identify the clicked graphic(s)
         android.graphics.Point clickLocation = new android.graphics.Point((int) motionEvent.getX(),
             (int) motionEvent.getY());
         ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphics =
@@ -123,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             // get the first identified graphic
             IdentifyGraphicsOverlayResult result = identifyGraphics.get();
             List<Graphic> identifiedGraphics = result.getGraphics();
-            if (identifiedGraphics.size() > 0) {
+            if (!identifiedGraphics.isEmpty()) {
               // clear previous results
               relationships.put("Point", new ArrayList<>());
               relationships.put("Polyline", new ArrayList<>());
@@ -136,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
               Geometry selectedGeometry = identifiedGraphic.getGeometry();
               GeometryType selectedGeometryType = selectedGeometry.getGeometryType();
               Toast.makeText(MainActivity.this,selectedGeometry.getGeometryType().toString() + " is selected",Toast.LENGTH_LONG).show();
-              //populate HashMap that will be passed to the expandable list view
+              // populate HashMap that will be passed to the expandable list view
               if (selectedGeometryType != GeometryType.POINT) {
                 ArrayList<String> pointRelationships = relationshipStringList(getSpatialRelationships(selectedGeometry,
                     pointGraphic.getGeometry()));
@@ -159,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
               startActivity(intent);
             }
           } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.toString());
           }
         });
         return true;
@@ -173,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
    * @param relationshipList a list of spatial relationships
    * @return a string list of spatial relationships
    */
-  private ArrayList<String> relationshipStringList(List<QueryParameters.SpatialRelationship> relationshipList) {
+  private static ArrayList<String> relationshipStringList(List<QueryParameters.SpatialRelationship> relationshipList) {
     ArrayList<String> stringList = new ArrayList<>();
     for (QueryParameters.SpatialRelationship relationship : relationshipList) {
       stringList.add(relationship.toString());
@@ -188,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
    * @param b second geometry
    * @return list of relationships a has to b
    */
-  private List<QueryParameters.SpatialRelationship> getSpatialRelationships(Geometry a, Geometry b) {
+  private static List<QueryParameters.SpatialRelationship> getSpatialRelationships(Geometry a, Geometry b) {
     List<QueryParameters.SpatialRelationship> relationships = new ArrayList<>();
     if (GeometryEngine.crosses(a, b))
       relationships.add(QueryParameters.SpatialRelationship.CROSSES);
