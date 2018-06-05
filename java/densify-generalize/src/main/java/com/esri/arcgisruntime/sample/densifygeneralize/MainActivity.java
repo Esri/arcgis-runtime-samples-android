@@ -18,10 +18,10 @@ package com.esri.arcgisruntime.sample.densifygeneralize;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.SeekBar;
+
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Multipoint;
 import com.esri.arcgisruntime.geometry.Point;
@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
   private SeekBar mMaxDeviationSlider;
   private CheckBox mDensifyCheckBox;
   private CheckBox mGeneralizeCheckBox;
-  Graphic resultPointGraphic;
-  Graphic resultPolylineGraphic;
-  Polyline originalPolyline;
+  private Graphic mResultPointGraphic;
+  private Graphic mResultPolylineGraphic;
+  private Polyline mOriginalPolyline;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +65,6 @@ public class MainActivity extends AppCompatActivity {
     mDensifyCheckBox = findViewById(R.id.densifyCheckBox);
     mGeneralizeCheckBox = findViewById(R.id.generalizeCheckBox);
 
-    mMaxDeviationSlider.setMax(249);
-    mMaxSegmentLengthSlider.setMax(400);
-    setListeners();
-
     // create graphics overlay
     GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
@@ -77,78 +73,88 @@ public class MainActivity extends AppCompatActivity {
     PointCollection points = createShipPoints();
 
     // show the original points as red dots on the map
-    Multipoint originalMultipoint = new Multipoint(points) ;
-    Graphic originalPointsGraphic = new Graphic(originalMultipoint, new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE,
-        0xFFFF0000,7));
+    Multipoint originalMultipoint = new Multipoint(points);
+    Graphic originalPointsGraphic = new Graphic(originalMultipoint,
+        new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000, 7));
     graphicsOverlay.getGraphics().add(originalPointsGraphic);
 
     // show a dotted red line connecting the original points
-     originalPolyline = new Polyline(points);
-    Graphic originalPolylineGraphic = new Graphic(originalPolyline, new SimpleLineSymbol(SimpleLineSymbol.Style.DOT,
-        0xFFFF0000,3));
+    mOriginalPolyline = new Polyline(points);
+    Graphic originalPolylineGraphic = new Graphic(mOriginalPolyline, new SimpleLineSymbol(SimpleLineSymbol.Style.DOT,
+        0xFFFF0000, 3));
     graphicsOverlay.getGraphics().add(originalPolylineGraphic);
 
     // show the result (densified and generalized) point as magenta dots on the map
-     resultPointGraphic = new Graphic();
-    resultPointGraphic.setSymbol(new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE,0xFFFF00FF,7));
-    graphicsOverlay.getGraphics().add(resultPointGraphic);
+    mResultPointGraphic = new Graphic();
+    mResultPointGraphic.setSymbol(new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF00FF, 7));
+    graphicsOverlay.getGraphics().add(mResultPointGraphic);
 
     // connect the results points with a magenta line
-     resultPolylineGraphic = new Graphic();
-    resultPolylineGraphic.setSymbol(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID,0xFFFF00FF,3));
-    graphicsOverlay.getGraphics().add(resultPolylineGraphic);
+    mResultPolylineGraphic = new Graphic();
+    mResultPolylineGraphic.setSymbol(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFFFF00FF, 3));
+    graphicsOverlay.getGraphics().add(mResultPolylineGraphic);
 
+    mMapView.setViewpointGeometryAsync(mOriginalPolyline.getExtent(), 100);
+
+    // set defaults
+    mMaxDeviationSlider.setMax(249);
+    mMaxSegmentLengthSlider.setMax(400);
     mGeneralizeCheckBox.setChecked(true);
     mDensifyCheckBox.setChecked(true);
+    setListeners();
     updateGeometry();
-    mMapView.setViewpointGeometryAsync(originalPolyline.getExtent(), 100);
   }
 
-  private void setListeners(){
+  private void setListeners() {
     mMaxDeviationSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-          @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            updateGeometry();
-          }
+      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        updateGeometry();
+      }
 
-          @Override public void onStartTrackingTouch(SeekBar seekBar) {}
-          @Override public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+      @Override public void onStartTrackingTouch(SeekBar seekBar) {
+      }
+
+      @Override public void onStopTrackingTouch(SeekBar seekBar) {
+      }
+    });
 
     mMaxSegmentLengthSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         updateGeometry();
       }
 
-      @Override public void onStartTrackingTouch(SeekBar seekBar) {}
-      @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+      @Override public void onStartTrackingTouch(SeekBar seekBar) {
+      }
+
+      @Override public void onStopTrackingTouch(SeekBar seekBar) {
+      }
     });
 
     mGeneralizeCheckBox.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-          updateGeometry();
+        updateGeometry();
       }
     });
     mDensifyCheckBox.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-          updateGeometry();
+        updateGeometry();
       }
     });
 
   }
 
-  public void updateGeometry(){
-    Polyline tempPolyline = originalPolyline;
-    if(mGeneralizeCheckBox.isChecked()){
-      tempPolyline = (Polyline) GeometryEngine.generalize(tempPolyline,mMaxDeviationSlider.getProgress() + 1,true);
+  private void updateGeometry() {
+    Polyline tempPolyline = mOriginalPolyline;
+    if (mGeneralizeCheckBox.isChecked()) {
+      tempPolyline = (Polyline) GeometryEngine.generalize(tempPolyline, mMaxDeviationSlider.getProgress() + 1, true);
     }
-    if (mDensifyCheckBox.isChecked()){
-      tempPolyline = (Polyline) GeometryEngine.densify(tempPolyline,mMaxSegmentLengthSlider.getProgress() + 100);
+    if (mDensifyCheckBox.isChecked()) {
+      tempPolyline = (Polyline) GeometryEngine.densify(tempPolyline, mMaxSegmentLengthSlider.getProgress() + 100);
     }
-    resultPolylineGraphic.setGeometry(tempPolyline);
+    mResultPolylineGraphic.setGeometry(tempPolyline);
     Multipoint multipoint = new Multipoint(tempPolyline.getParts().getPartsAsPoints());
-    resultPointGraphic.setGeometry(multipoint);
+    mResultPointGraphic.setGeometry(multipoint);
   }
-
 
   /**
    * Creates a collection of points along the Willamette River in Portland, OR.
