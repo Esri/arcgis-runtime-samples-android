@@ -105,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
     updateGeometry();
   }
 
+  /**
+   * Adds listeners to both seek bars and both check boxes.
+   */
   private void setListeners() {
     mMaxDeviationSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -143,6 +146,10 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
+  /**
+   * Called when any of the densify/generalize option values are changed. Applies the densify and generalize
+   * operations to the original polyline and updates the result graphics with the result geometry.
+   */
   private void updateGeometry() {
     Polyline tempPolyline = mOriginalPolyline;
     if (mGeneralizeCheckBox.isChecked()) {
