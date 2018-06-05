@@ -133,16 +133,8 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    mGeneralizeCheckBox.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        updateGeometry();
-      }
-    });
-    mDensifyCheckBox.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        updateGeometry();
-      }
-    });
+    mGeneralizeCheckBox.setOnClickListener(v -> updateGeometry());
+    mDensifyCheckBox.setOnClickListener(v -> updateGeometry());
 
   }
 
@@ -153,7 +145,8 @@ public class MainActivity extends AppCompatActivity {
   private void updateGeometry() {
     Polyline tempPolyline = mOriginalPolyline;
     if (mGeneralizeCheckBox.isChecked()) {
-      tempPolyline = (Polyline) GeometryEngine.generalize(tempPolyline, mMaxDeviationSlider.getProgress() + 1, true);
+      tempPolyline = (Polyline) GeometryEngine.generalize(tempPolyline, mMaxDeviationSlider.getProgress() + 1,
+          true);
     }
     if (mDensifyCheckBox.isChecked()) {
       tempPolyline = (Polyline) GeometryEngine.densify(tempPolyline, mMaxSegmentLengthSlider.getProgress() + 100);
