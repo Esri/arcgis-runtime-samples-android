@@ -8,7 +8,7 @@
 
     <TextView android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="Population Greater than "
+              android:text="@string/query_title"
               android:textColor="@color/colorPrimaryDark"/>
 
     <EditText android:layout_width="match_parent"
@@ -19,6 +19,6 @@
     <Button android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/queryButton"
-            android:text="Query"/>
+            android:text="@string/query"/>
 
 </LinearLayout>

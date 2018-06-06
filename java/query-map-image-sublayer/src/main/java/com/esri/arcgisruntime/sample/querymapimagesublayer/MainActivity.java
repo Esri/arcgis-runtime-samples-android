@@ -85,11 +85,13 @@ public class MainActivity extends AppCompatActivity {
     SimpleFillSymbol countySymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.DIAGONAL_CROSS, 0xFF00FFFF,
         countyLineSymbol);
 
-    queryInputBox.setText(Double.toString(1800000));
+    queryInputBox.setText(Integer.toString(1800000));
+    queryButton.setEnabled(false);
 
     // wait until the layer is loaded before enabling the query button
     imageLayer.addDoneLoadingListener(() -> {
       if (imageLayer.getLoadStatus() == LoadStatus.LOADED) {
+        queryButton.setEnabled(true);
 
         //get and load each sublayer to query
         ArcGISMapImageSublayer citiesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(0);
