@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Query Map Image Sublayer</string>
+    <string name="usa_map">https://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer</string>
 </resources>

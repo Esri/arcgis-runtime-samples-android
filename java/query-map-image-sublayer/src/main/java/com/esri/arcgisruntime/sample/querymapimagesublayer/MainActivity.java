@@ -16,31 +16,135 @@
 
 package com.esri.arcgisruntime.sample.querymapimagesublayer;
 
+import java.util.concurrent.ExecutionException;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import com.esri.arcgisruntime.geometry.SpatialReference;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.data.Feature;
+import com.esri.arcgisruntime.data.FeatureQueryResult;
+import com.esri.arcgisruntime.data.QueryParameters;
+import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
+import com.esri.arcgisruntime.layers.ArcGISMapImageSublayer;
+import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.Viewpoint;
+import com.esri.arcgisruntime.mapping.view.Graphic;
+import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
+import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+import com.esri.arcgisruntime.symbology.Symbol;
 
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
+  Button queryButton;
+  EditText queryInputBox;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // inflate MapView from layout
+    // inflate vies from layout
     mMapView = findViewById(R.id.mapView);
-    // create a map with a web mercator basemap
-    ArcGISMap map = new ArcGISMap(SpatialReference.create(3857));
-    map.setBasemap(Basemap.createNationalGeographic());
+    queryButton = findViewById(R.id.queryButton);
+    queryInputBox = findViewById(R.id.queryInputBox);
+
+    // create a map with a streets vector basemap and set initial viewpoint
+    ArcGISMap map = new ArcGISMap(Basemap.createStreetsVector());
+    Point initialLocation = new Point(-13171939.239529, 3923971.284048, SpatialReferences.getWebMercator());
+    Viewpoint viewpoint = new Viewpoint(initialLocation, 9500000);
+    map.setInitialViewpoint(viewpoint);
 
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
+    // create and add a map image layer to the map
+    ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(getString(R.string.usa_map));
+    map.getOperationalLayers().add(imageLayer);
+
+    // create a graphics overlay to show the results in
+    GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
+    mMapView.getGraphicsOverlays().add(graphicsOverlay);
+
+    // create symbols for showing the results of each sublayer
+    SimpleMarkerSymbol citySymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000, 16);
+    SimpleLineSymbol stateSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF0000FF, 6);
+    SimpleLineSymbol countyLineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, 0xFF00FFFF, 2);
+    SimpleFillSymbol countySymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.DIAGONAL_CROSS, 0xFF00FFFF,
+        countyLineSymbol);
+
+    queryInputBox.setText(Double.toString(1800000));
+
+    // wait until the layer is loaded before enabling the query button
+    imageLayer.addDoneLoadingListener(() -> {
+      if (imageLayer.getLoadStatus() == LoadStatus.LOADED) {
+
+        //get and load each sublayer to query
+        ArcGISMapImageSublayer citiesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(0);
+        ArcGISMapImageSublayer statesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(2);
+        ArcGISMapImageSublayer countiesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(3);
+        citiesSublayer.loadAsync();
+        statesSublayer.loadAsync();
+        countiesSublayer.loadAsync();
+
+        // query the sublayers when the button is clicked
+        queryButton.setOnClickListener(v -> {
+
+          // clear previous results
+          graphicsOverlay.getGraphics().clear();
+
+          // create query parameters filtering based on population and the map view's current viewpoint
+          QueryParameters populationQuery = new QueryParameters();
+          populationQuery.setWhereClause("POP2000 > " + queryInputBox.getText().toString());
+          populationQuery
+              .setGeometry(mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry());
+
+          QueryAndDisplayGraphics(citiesSublayer, citySymbol, populationQuery, graphicsOverlay);
+          QueryAndDisplayGraphics(statesSublayer, stateSymbol, populationQuery, graphicsOverlay);
+          QueryAndDisplayGraphics(countiesSublayer, countySymbol, populationQuery, graphicsOverlay);
+
+        });
+      }
+    });
+  }
+
+  /**
+   * Queries the sublayer's feature table with the query parameters and displays the result features as graphics
+   *
+   * @param sublayer        - type of sublayer to query from
+   * @param sublayerSymbol  - symbol to display on map
+   * @param query           - filters based on the population and the current view point
+   * @param graphicsOverlay - manages the graphics that will be added to the map view
+   */
+  private void QueryAndDisplayGraphics(ArcGISMapImageSublayer sublayer, Symbol sublayerSymbol, QueryParameters query,
+      GraphicsOverlay graphicsOverlay) {
+    if (sublayer.getLoadStatus() == LoadStatus.LOADED) {
+      ServiceFeatureTable sublayerTable = sublayer.getTable();
+      ListenableFuture<FeatureQueryResult> sublayerQuery = sublayerTable.queryFeaturesAsync(query);
+      sublayerQuery.addDoneListener(() -> {
+        try {
+          FeatureQueryResult result = sublayerQuery.get();
+          for (Feature feature : result) {
+            Graphic sublayerGraphic = new Graphic(feature.getGeometry(), sublayerSymbol);
+            graphicsOverlay.getGraphics().add(sublayerGraphic);
+          }
+        } catch (InterruptedException | ExecutionException e) {
+          Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
+      });
+    }
   }
 
   @Override
