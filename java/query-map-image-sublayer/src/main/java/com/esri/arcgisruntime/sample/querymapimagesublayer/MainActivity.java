@@ -20,9 +20,9 @@ import java.util.concurrent.ExecutionException;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
@@ -48,8 +48,8 @@ import com.esri.arcgisruntime.symbology.Symbol;
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-  Button queryButton;
-  EditText queryInputBox;
+  private Button mQueryButton;
+  private EditText mQueryInputBox;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate vies from layout
     mMapView = findViewById(R.id.mapView);
-    queryButton = findViewById(R.id.queryButton);
-    queryInputBox = findViewById(R.id.queryInputBox);
+    mQueryButton = findViewById(R.id.queryButton);
+    mQueryInputBox = findViewById(R.id.queryInputBox);
 
     // create a map with a streets vector basemap and set initial viewpoint
     ArcGISMap map = new ArcGISMap(Basemap.createStreetsVector());
@@ -85,15 +85,15 @@ public class MainActivity extends AppCompatActivity {
     SimpleFillSymbol countySymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.DIAGONAL_CROSS, 0xFF00FFFF,
         countyLineSymbol);
 
-    queryInputBox.setText(Integer.toString(1800000));
-    queryButton.setEnabled(false);
+    mQueryInputBox.setText(Integer.toString(1800000));
+    mQueryButton.setEnabled(false);
 
     // wait until the layer is loaded before enabling the query button
     imageLayer.addDoneLoadingListener(() -> {
       if (imageLayer.getLoadStatus() == LoadStatus.LOADED) {
-        queryButton.setEnabled(true);
+        mQueryButton.setEnabled(true);
 
-        //get and load each sublayer to query
+        // get and load each sublayer to query
         ArcGISMapImageSublayer citiesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(0);
         ArcGISMapImageSublayer statesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(2);
         ArcGISMapImageSublayer countiesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(3);
@@ -102,14 +102,14 @@ public class MainActivity extends AppCompatActivity {
         countiesSublayer.loadAsync();
 
         // query the sublayers when the button is clicked
-        queryButton.setOnClickListener(v -> {
+        mQueryButton.setOnClickListener(v -> {
 
           // clear previous results
           graphicsOverlay.getGraphics().clear();
 
           // create query parameters filtering based on population and the map view's current viewpoint
           QueryParameters populationQuery = new QueryParameters();
-          populationQuery.setWhereClause("POP2000 > " + queryInputBox.getText().toString());
+          populationQuery.setWhereClause("POP2000 > " + mQueryInputBox.getText().toString());
           populationQuery
               .setGeometry(mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry());
 
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
    * @param query           - filters based on the population and the current view point
    * @param graphicsOverlay - manages the graphics that will be added to the map view
    */
-  private void QueryAndDisplayGraphics(ArcGISMapImageSublayer sublayer, Symbol sublayerSymbol, QueryParameters query,
+  private static void QueryAndDisplayGraphics(ArcGISMapImageSublayer sublayer, Symbol sublayerSymbol, QueryParameters query,
       GraphicsOverlay graphicsOverlay) {
     if (sublayer.getLoadStatus() == LoadStatus.LOADED) {
       ServiceFeatureTable sublayerTable = sublayer.getTable();
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
             graphicsOverlay.getGraphics().add(sublayerGraphic);
           }
         } catch (InterruptedException | ExecutionException e) {
-          Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+          Log.e(MainActivity.class.getSimpleName(), e.toString());
         }
       });
     }
