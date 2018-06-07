@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.esri.arcgisruntime.sample.statisticalquery">
+          package="com.esri.arcgisruntime.sample.statisticalquerygroupandsort">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -11,14 +11,14 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity android:name="com.esri.arcgisruntime.sample.statisticalquerygroupandsort.MainActivity"
                   android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ResultsActivity"
+        <activity android:name="com.esri.arcgisruntime.sample.statisticalquerygroupandsort.ResultsActivity"
                   android:screenOrientation="portrait"
                   android:label="Statistical Query - results"/>
     </application>

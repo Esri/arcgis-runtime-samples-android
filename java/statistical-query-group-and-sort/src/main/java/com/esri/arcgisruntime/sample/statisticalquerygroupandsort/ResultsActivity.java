@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.statisticalquery;
+package com.esri.arcgisruntime.sample.statisticalquerygroupandsort;
 
 import java.util.LinkedHashMap;
 import java.util.List;
