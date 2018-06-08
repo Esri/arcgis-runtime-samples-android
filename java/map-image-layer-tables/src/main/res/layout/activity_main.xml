@@ -8,5 +8,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
     </com.esri.arcgisruntime.mapping.view.MapView>
+    <include layout="@layout/service_commetns"
+             android:layout_height="100dp"
+             android:layout_width="wrap_content"/>
 
 </RelativeLayout>
