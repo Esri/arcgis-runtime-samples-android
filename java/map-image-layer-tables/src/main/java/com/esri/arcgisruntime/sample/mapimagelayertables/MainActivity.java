@@ -16,6 +16,10 @@
 
 package com.esri.arcgisruntime.sample.mapimagelayertables;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,19 +49,13 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.Symbol;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
-  ListView list;
-  ArrayList<String> commentList;
-  ArrayList<Feature> featureList;
-  FeatureQueryResult commentQueryResult;
+  ListView mCommentListView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +64,12 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate views from layout
     mMapView = findViewById(R.id.mapView);
-    list = findViewById(R.id.comment_list);
-    // initialize list that will hold the comments for the list view
-    commentList = new ArrayList<>();
-    // initialize feature list that will hold the corresponding features for each comment
-    featureList = new ArrayList<>();
+    mCommentListView = findViewById(R.id.comment_list);
+
+    // initialize string list that will hold the comments for the mCommentListView
+    List<String> commentList = new ArrayList<>();
+    // initialize a feature list that will hold the corresponding features for each comment
+    ArrayList<Feature> featureList = new ArrayList<>();
     // create a map with a topographic basemap
     ArcGISMap map = new ArcGISMap(Basemap.createStreets());
 
@@ -94,15 +93,14 @@ public class MainActivity extends AppCompatActivity {
         QueryParameters queryParameters = new QueryParameters();
         queryParameters.setWhereClause("requestid <> '' AND comments <> ''");
         // query the table to get non-null records
-        ListenableFuture<FeatureQueryResult> commentQueryResultFuture = commentsTable
-            .queryFeaturesAsync(queryParameters,
-                ServiceFeatureTable.QueryFeatureFields.LOAD_ALL);
+        ListenableFuture<FeatureQueryResult> commentQueryResultFuture = commentsTable.queryFeaturesAsync(queryParameters,
+            ServiceFeatureTable.QueryFeatureFields.LOAD_ALL);
 
+        // get the feature query result when it is done
         commentQueryResultFuture.addDoneListener(() -> {
-          // get the feature query result
           try {
-            commentQueryResult = commentQueryResultFuture.get();
-            // loop through the results to add the comments and features to the correspoinding list
+            FeatureQueryResult commentQueryResult = commentQueryResultFuture.get();
+            // loop through the results to add the comments and features to the corresponding list
             for (Feature feature : commentQueryResult) {
               featureList.add(feature);
               commentList.add(feature.getAttributes().get("comments").toString());
@@ -111,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,
                 android.R.layout.simple_list_item_1,
                 commentList);
-            list.setAdapter(adapter);
+            // add the adapter to the List View
+            mCommentListView.setAdapter(adapter);
           } catch (InterruptedException | ExecutionException e) {
             Log.e(TAG, "Result Failure");
           }
@@ -119,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    list.setOnItemClickListener((parent, view, position, id) -> {
+    mCommentListView.setOnItemClickListener((parent, view, position, id) -> {
       // clear previous selections
       graphicsOverlay.getGraphics().clear();
       // get the comment clicked
@@ -165,12 +164,13 @@ public class MainActivity extends AppCompatActivity {
               mMapView.setViewpointCenterAsync(serviceRequestPoint, 150000);
             }
           });
-
         } catch (InterruptedException | ExecutionException e) {
-          e.printStackTrace();
+          Log.e(TAG,"Related Request Failure");
         }
       });
     });
+
+    //add the map layer to the map
     map.getOperationalLayers().add(serviceRequestMapImageLayer);
 
     // add graphics overlay to map view
