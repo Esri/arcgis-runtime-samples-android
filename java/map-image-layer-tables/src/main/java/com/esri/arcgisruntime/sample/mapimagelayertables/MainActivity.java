@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
-  ListView mCommentListView;
+  private ListView mCommentListView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
