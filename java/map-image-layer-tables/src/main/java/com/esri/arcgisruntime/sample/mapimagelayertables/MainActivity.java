@@ -80,12 +80,11 @@ public class MainActivity extends AppCompatActivity {
     // initialize graphics overlay
     GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
 
-    //TODO: check if initial viewpoint is working
     serviceRequestMapImageLayer.addDoneLoadingListener(() -> {
       if (serviceRequestMapImageLayer.getLoadStatus() == LoadStatus.LOADED) {
         // set initial viewpoint
         Envelope extent = serviceRequestMapImageLayer.getFullExtent();
-        map.setInitialViewpoint(new Viewpoint(extent));
+        mMapView.setViewpoint(new Viewpoint(extent));
 
         // get the service request comments table from the map image layer
         ServiceFeatureTable commentsTable = serviceRequestMapImageLayer.getTables().get(0);
