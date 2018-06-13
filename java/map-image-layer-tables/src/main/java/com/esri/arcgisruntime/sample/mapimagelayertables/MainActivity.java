@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private ListView mCommentListView;
+  private ArcGISFeature serviceRequestFeature;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -138,8 +139,15 @@ public class MainActivity extends AppCompatActivity {
         try {
           // get the first result
           RelatedFeatureQueryResult result = relatedRequestResult.get().get(0);
-          // get the first feature from the result. If it's null, then warn the user and return
-          ArcGISFeature serviceRequestFeature = (ArcGISFeature) result.iterator().next();
+          // get the first feature from the result and make sure it has a valid geometry
+           serviceRequestFeature = null;
+          for(Feature relatedFeature: result){
+            if(!relatedFeature.getGeometry().isEmpty()){
+              serviceRequestFeature  = (ArcGISFeature) relatedFeature;
+              break;
+            }
+          }
+          // if a valid related feature is not found, warn the user and return
           if (serviceRequestFeature == null) {
             Toast.makeText(MainActivity.this, "Related Feature not found", Toast.LENGTH_SHORT).show();
             return;
