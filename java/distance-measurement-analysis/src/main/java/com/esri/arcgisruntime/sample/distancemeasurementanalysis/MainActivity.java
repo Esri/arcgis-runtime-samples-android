@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
     // add base surface for elevation data
     Surface surface = new Surface();
     surface.getElevationSources().add(new ArcGISTiledElevationSource(getResources().getString(R.string.world_terrain_3d)));
-    surface.getElevationSources().add(new ArcGISTiledElevationSource(getResources().getString(R.string.MNT_IDF)));
     scene.setBaseSurface(surface);
 
     // add building layer
