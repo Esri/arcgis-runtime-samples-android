@@ -1,4 +1,4 @@
-package com.esri.arcgisruntime.scenelayerselectgeoelement;
+package com.esri.arcgisruntime.scenelayerselection;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;

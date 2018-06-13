@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Scene Layer Select GeoElement</string>
+    <string name="app_name">Scene Layer Selection</string>
     <string name="brest_buildings">
         "http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer"</string>
     <string name="world_elevation_url">http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
