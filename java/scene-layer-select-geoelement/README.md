@@ -1,7 +1,7 @@
 # Scene Layer Select GeoElement
 Select geoelements in a scene layer.
 
-![Scene Layer Select GeoElement App](sceene-layer-select-geoelement.png)
+![Scene Layer Select GeoElement App](scene-layer-select-geoelement.png)
 
 ## How to use the sample
 Click on a building in the scene layer to select it. Unselect buildings by clicking away from the buildings.
