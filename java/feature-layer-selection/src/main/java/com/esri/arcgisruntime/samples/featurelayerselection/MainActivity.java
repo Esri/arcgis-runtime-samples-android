@@ -73,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public boolean onSingleTapConfirmed(MotionEvent e) {
         // get the point that was clicked and convert it to a point in map coordinates
-        Point clickPoint = mMapView.screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
+        Point clickPoint = mMapView
+            .screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
         int tolerance = 10;
         double mapTolerance = tolerance * mMapView.getUnitsPerDensityIndependentPixel();
         // create objects required to do a selection with a query
