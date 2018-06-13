@@ -14,7 +14,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-        <activity android:name="com.esri.arcgisruntime.sample.displaylayerviewstate.MainActivity">
+        <activity android:name="com.esri.arcgisruntime.sample.displaylayerviewstate.MainActivity"
+                  android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

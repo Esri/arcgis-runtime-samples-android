@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Map Image Layer</string>
+    <string name="app_name">ArcGIS Map Image Layer (URL)</string>
     <string name="action_settings">Settings</string>
 
     <!-- World Topo Map Service URL -->

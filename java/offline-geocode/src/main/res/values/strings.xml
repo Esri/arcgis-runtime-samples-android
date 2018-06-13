@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Offline geocode</string>
+    <string name="app_name">Offline Geocode</string>
     <string name="geo_locate_error">Geocode failed on address</string>
     <string name="location_not_foud">We are sorry, we couldn\'t find a location with the name - </string>
     <!-- San Francisco tpk and locator paths -->

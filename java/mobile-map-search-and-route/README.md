@@ -1,8 +1,15 @@
 ## Mobile Map (Search and Route)
-### Category: Routing and Logistics
-This sample demonstrates how to search and route using data in a map package.
+Search and route using data in a map package.
 
-## Features
+![Mobile Map Search and Route App](mobile-map-search-and-route.png)
+
+## How to use the sample
+The sample loads maps from a `MobileMapPackage` and displays the first map in the map package (index 0) on the starting activity (MobileMapViewActivity). All maps contained within the map package are shown as a recycler view list in a seperate activity (MapChooserActivity). You can tap on a single map to load its contents to the main `MapView` on MobileMapViewActivity. The map chooser menu indicates if the map has `transportationNetworks` datasets (for routing) or a `LocatorTask` (for geocoding). If the mobile map supports routing or geocoding, you can tap on the map for results.
+
+## How it works
+The sample loads a map from a `MobileMapPackage` to instantiate a map package object. It uses the `LocatorTask` property on `MobileMapPackage` to check if the package supports geocoding. It uses the `transportationNetworks` property on each mobile map to see if routing is supported. The logic for routing and geocoding is similar to the one used in the individual routing and geocoding samples.
+
+## Relevant API
 * MobileMapPackage
 * LocatorTask
 * GeoCode
@@ -10,18 +17,7 @@ This sample demonstrates how to search and route using data in a map package.
 * NetworkAnalysis
 * Callout
 
-## How to use the sample
-
-The sample loads maps from a `MobileMapPackage` and displays the first map in the map package (index 0) on the starting activity (MobileMapViewActivity). All maps contained within the map package are shown as a recycler view list in a seperate activity (MapChooserActivity). You can tap on a single map to load its contents to the main `MapView` on MobileMapViewActivity. The map chooser menu indicates if the map has `transportationNetworks` datasets (for routing) or a `LocatorTask` (for geocoding). If the mobile map supports routing or geocoding, you can tap on the map for results.
-
-![Mobile Map Search and Route App](mobile-map-search-and-route.png)
-![Mobile Map Search and Route Menu](mobile-map-search-and-route-menu.png)
-
-## How it works
-
-The sample loads a map from a `MobileMapPackage` to instantiate a map package object. It uses the `LocatorTask` property on `MobileMapPackage` to check if the package supports geocoding. It uses the `transportationNetworks` property on each mobile map to see if routing is supported. The logic for routing and geocoding is similar to the one used in the individual routing and geocoding samples.
-
-## Provision your device
+## Offline data
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=260eb6535c824209964cf281766ebe43).  
 2. Extract the contents of the downloaded zip file to disk.  
 3. Create an ArcGIS/samples/MapPackage folder on your device. You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
@@ -37,3 +33,7 @@ The sample loads a map from a `MobileMapPackage` to instantiate a map package ob
 Link | Local Location
 ---------|-------|
 |[San Francisco Mobile Map Package](https://arcgisruntime.maps.arcgis.com/home/item.html?id=260eb6535c824209964cf281766ebe43)| `<sdcard>`/ArcGIS/samples/MapPackage/SanFrancisco.mmpk |
+
+
+#### Tags
+Routing and Logistics
