@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Distance Measurement Analysis</string>
+    <string name="world_terrain_3d">http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
+    <string name="MNT_IDF">https://tiles.arcgis.com/tiles/d3voDfTFbHOCRwVR/arcgis/rest/services/MNT_IDF/ImageServer</string>
+    <string name="buildings_tile">"http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0"</string>
+    <string name="total_distance">Total Distance:</string>
+    <string name="horizontal_distance">Horizontal Distance:</string>
+    <string name="vertical_distance">Vertical Distance:</string>
+    <string name="units">Units:</string>
+</resources>

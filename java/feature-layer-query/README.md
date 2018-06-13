@@ -1,6 +1,5 @@
 # Feature Layer Query
-### Category: Search and Query
-This sample demonstrates how to query a feature layer via feature table.
+Query a feature layer via feature table.
 
 ![Feature Layer Query App](feature-layer-query.png)
 
@@ -9,3 +8,11 @@ The sample provides a search bar on the top, where you can input the name of a U
 
 ## How it works
 When you hit the search button, the sample creates an query parameter object and specifies the where clause on it, using the text you provided. It then fires the query on the feature table using the query features method. In the completion block it gets back an feature query result. It iterates through the results and finds the first  feature which it then highlights using select features method on the feature layer.
+
+## Relevant API
+* FeatureLayer
+* FeatureTable
+* GeoPackage
+
+#### Tags
+Search and Query

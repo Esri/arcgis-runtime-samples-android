@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
       loadGeodatabase();
     } else {
       // report to user that permission was denied
-      Toast.makeText(MainActivity.this, getResources().getString(R.string.location_permission_denied),
+      Toast.makeText(MainActivity.this, getResources().getString(R.string.write_permission_denied),
           Toast.LENGTH_SHORT).show();
     }
   }

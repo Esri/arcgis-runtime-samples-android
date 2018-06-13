@@ -18,7 +18,8 @@
 
             </intent-filter>
         </activity>
-        <activity android:name="com.esri.arcgisruntime.sample.createsavemap.MapSaveActivity">
+        <activity android:name="com.esri.arcgisruntime.sample.createsavemap.MapSaveActivity"
+                  android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.PICK" />
