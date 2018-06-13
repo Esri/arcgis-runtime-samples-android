@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">Scene Layer Identify</string>
-    <string name="buildings_layer">
-        http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Boston/SceneServer?cacheKey=9f8a23166db37690
-    </string>
-</resources>
