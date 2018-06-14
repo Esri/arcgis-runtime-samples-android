@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // inflate vies from layout
+    // inflate views from layout
     mMapView = findViewById(R.id.mapView);
     mQueryButton = findViewById(R.id.queryButton);
     mQueryInputBox = findViewById(R.id.queryInputBox);
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
           // create query parameters filtering based on population and the map view's current viewpoint
           QueryParameters populationQuery = new QueryParameters();
-          populationQuery.setWhereClause("POP2000 > " + mQueryInputBox.getText().toString());
+          populationQuery.setWhereClause("POP2000 > " + mQueryInputBox.getText());
           populationQuery
               .setGeometry(mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry());
 
