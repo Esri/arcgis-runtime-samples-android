@@ -9,7 +9,8 @@
               android:layout_height="wrap_content"
               android:id="@+id/comment_list"
               android:divider="#7F7F7F"
-              android:dividerHeight="1dp"/>
+              android:dividerHeight="1dp"
+              android:fadeScrollbars="false"/>
 
 
 </LinearLayout>

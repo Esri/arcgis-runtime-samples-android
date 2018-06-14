@@ -6,8 +6,8 @@
     <com.esri.arcgisruntime.mapping.view.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-    </com.esri.arcgisruntime.mapping.view.MapView>
+            android:layout_height="match_parent"/>
+
     <include layout="@layout/service_comments"
              android:layout_height="100dp"
              android:layout_width="wrap_content"/>

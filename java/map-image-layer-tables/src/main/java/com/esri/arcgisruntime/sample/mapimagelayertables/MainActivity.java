@@ -27,6 +27,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.esri.arcgisruntime.arcgisservices.RelationshipInfo;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private ListView mCommentListView;
-  private ArcGISFeature serviceRequestFeature;
+  private ArcGISFeature mServiceRequestFeature;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
     mCommentListView = findViewById(R.id.comment_list);
 
-    // initialize string list that will hold the comments for the mCommentListView
+    // initialize list that will hold the comments
     List<String> commentList = new ArrayList<>();
     // initialize a feature list that will hold the corresponding features for each comment
-    ArrayList<Feature> featureList = new ArrayList<>();
+    List<Feature> featureList = new ArrayList<>();
     // create a map with a topographic basemap
     ArcGISMap map = new ArcGISMap(Basemap.createStreets());
 
@@ -92,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
         QueryParameters queryParameters = new QueryParameters();
         queryParameters.setWhereClause("requestid <> '' AND comments <> ''");
         // query the table to get non-null records
-        ListenableFuture<FeatureQueryResult> commentQueryResultFuture = commentsTable.queryFeaturesAsync(queryParameters,
-            ServiceFeatureTable.QueryFeatureFields.LOAD_ALL);
+        ListenableFuture<FeatureQueryResult> commentQueryResultFuture = commentsTable
+            .queryFeaturesAsync(queryParameters, ServiceFeatureTable.QueryFeatureFields.LOAD_ALL);
 
         // get the feature query result when it is done
         commentQueryResultFuture.addDoneListener(() -> {
@@ -111,9 +112,12 @@ public class MainActivity extends AppCompatActivity {
             // add the adapter to the List View
             mCommentListView.setAdapter(adapter);
           } catch (InterruptedException | ExecutionException e) {
-            Log.e(TAG, "Result Failure");
+            Log.e(TAG, "Error getting  feature query result: " + e.getMessage());
           }
         });
+      } else {
+        Log.e(TAG, "Service request failed to load");
+        Toast.makeText(MainActivity.this, "Service request failed to load", Toast.LENGTH_LONG).show();
       }
     });
 
@@ -140,26 +144,26 @@ public class MainActivity extends AppCompatActivity {
           // get the first result
           RelatedFeatureQueryResult result = relatedRequestResult.get().get(0);
           // get the first feature from the result and make sure it has a valid geometry
-           serviceRequestFeature = null;
-          for(Feature relatedFeature: result){
-            if(!relatedFeature.getGeometry().isEmpty()){
-              serviceRequestFeature  = (ArcGISFeature) relatedFeature;
+          mServiceRequestFeature = null;
+          for (Feature relatedFeature : result) {
+            if (!relatedFeature.getGeometry().isEmpty()) {
+              mServiceRequestFeature = (ArcGISFeature) relatedFeature;
               break;
             }
           }
           // if a valid related feature is not found, warn the user and return
-          if (serviceRequestFeature == null) {
+          if (mServiceRequestFeature == null) {
             Toast.makeText(MainActivity.this, "Related Feature not found", Toast.LENGTH_SHORT).show();
             return;
           }
 
           // load the related service feature request (so geometry is available)
-          serviceRequestFeature.loadAsync();
-          serviceRequestFeature.addDoneLoadingListener(() -> {
-            if (serviceRequestFeature.getLoadStatus() == LoadStatus.LOADED) {
+          mServiceRequestFeature.loadAsync();
+          mServiceRequestFeature.addDoneLoadingListener(() -> {
+            if (mServiceRequestFeature.getLoadStatus() == LoadStatus.LOADED) {
 
               // get the service request geometry
-              Point serviceRequestPoint = (Point) serviceRequestFeature.getGeometry();
+              Point serviceRequestPoint = (Point) mServiceRequestFeature.getGeometry();
               // create a marker symbol to display the related feature
               Symbol selectedRequestedSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE,
                   Color.CYAN, 14);
@@ -171,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
             }
           });
         } catch (InterruptedException | ExecutionException e) {
-          Log.e(TAG,"Related Request Failure");
+          Log.e(TAG, "Related Request Failure: " + e.getMessage());
         }
       });
     });

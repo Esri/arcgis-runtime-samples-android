@@ -3,7 +3,7 @@ Get a non-spatial table from an ArcGIS map image layer and query it to get relat
 
 The non-spatial tables contained by a map service may contain additional information about sublayer features. Such information can be accessed by traversing table relationships defined in the service.
 
-![Map Image Layer Tables](map-image-layer-tables.png)
+![Map Image Layer Tables App](map-image-layer-tables.png)
 
 ## How to use the sample
 1. Launch the sample, the map displays at the extent of the "Service Request" layer.
