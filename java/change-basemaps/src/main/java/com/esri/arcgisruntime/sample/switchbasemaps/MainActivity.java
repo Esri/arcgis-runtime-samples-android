@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     // inflate navigation drawer
-    mNavigationDrawerItemTitles = getResources().getStringArray(R.array.vector_tiled_types);
+    mNavigationDrawerItemTitles = getResources().getStringArray(R.array.basemap_types);
     mDrawerList = (ListView) findViewById(R.id.navList);
     mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     // get app title
