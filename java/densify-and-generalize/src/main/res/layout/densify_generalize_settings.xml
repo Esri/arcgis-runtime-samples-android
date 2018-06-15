@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/settings_layout"
+              android:orientation="vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:background="#FFFFFFFF">
+
+    <CheckBox android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/densify_text"
+              android:layout_marginTop="5dp"
+              android:layout_marginLeft="8dp"
+              android:layout_marginStart="8dp"
+              android:id="@+id/densifyCheckBox"
+              app:layout_constraintTop_toTopOf="parent"
+              app:layout_constraintStart_toStartOf="parent" />
+
+    <CheckBox android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/generalize_text"
+              android:layout_marginLeft="8dp"
+              android:layout_marginStart="8dp"
+              android:id="@+id/generalizeCheckBox"
+              android:layout_marginTop="16dp"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/maxSegmentLengthBar"/>
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/max_segment_length_text"
+              android:layout_marginLeft="8dp"
+              android:layout_marginStart="8dp"
+              android:layout_marginEnd="8dp"
+              android:layout_marginRight="8dp"
+              android:id="@+id/maxSegmentLengthText"
+              app:layout_constraintTop_toBottomOf="@id/densifyCheckBox"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"/>
+
+    <SeekBar  android:layout_width="140dp"
+              android:layout_height="wrap_content"
+              android:id="@+id/maxSegmentLengthBar"
+              android:layout_marginLeft="8dp"
+              android:layout_marginStart="8dp"
+              android:layout_marginTop="8dp"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/maxSegmentLengthText"/>
+
+    <SeekBar  android:layout_width="140dp"
+              android:layout_height="16dp"
+              android:id="@+id/maxDeviationBar"
+              android:layout_marginLeft="8dp"
+              android:layout_marginStart="8dp"
+              android:layout_marginTop="12dp"
+              android:layout_marginBottom="8dp"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/maxDeviationText"
+              app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/maxDeviationText"
+              android:text="@string/max_deviation_text"
+              android:layout_marginLeft="8dp"
+              android:layout_marginStart="8dp"
+              app:layout_constraintTop_toBottomOf="@id/generalizeCheckBox"
+              app:layout_constraintStart_toStartOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>
