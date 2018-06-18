@@ -20,4 +20,4 @@ The `TileCache` file is stored in _/sdcard/ArcGIS/Samples/TileCache_ under the n
 * TileCache
 
 #### Tags
-This sample demonstrates how to export tiles from a map server.
+Manage Data
