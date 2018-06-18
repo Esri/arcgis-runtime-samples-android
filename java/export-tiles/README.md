@@ -20,4 +20,4 @@ The `TileCache` file is stored in _/sdcard/ArcGIS/Samples/TileCache_ under the n
 * TileCache
 
 #### Tags
-Manage Data
+Edit and Manage Data
