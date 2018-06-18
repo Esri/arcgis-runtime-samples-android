@@ -18,5 +18,5 @@ The `GeometryEngine` methods `difference`, `intersection`, `symmetricDifference`
 * GraphicsOverlay
 * MapView.setViewpointGeometryWithPaddingAsync
 
-## Tags
-Manage Data
+#### Tags
+Edit and Manage Data
