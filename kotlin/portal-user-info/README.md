@@ -1,18 +1,12 @@
-# Authentication Profile
+# Portal User Info
+Use the `DefaultAuthenticationChallengeHandler` class to take care of showing an authentication dialog for logging into a `Portal`. Once authenticated against the portal, the app displays information about the authenticated user's profile.
 
-The Authentication Profile sample use the `DefaultAuthenticationChallengeHandler` class to take care of showing an authentication dialog for logging into a `Portal`. Once authenticated against the portal the app displays information about the authenticated user's profile.
+![Portal User Info App](portal-user-info.png) 
 
-![Authentication Profile App](authentication-profile.png) 
+## How to use the sample
+When prompted, enter your ArcGIS Online credentials.
 
-## Features
-
-* AuthenticationManager
-* DefaultAuthenticationChallengeHandler
-* PortalInfo
-* PortalUser
-
-## Developer Pattern
-
+## How it works
 The `DefaultAuthenticationChallengeHandler` is the default implementation of the `AuthenticationChallengeHandler` interface to handle  all security types that ArcGIS supports (including OAuth).  This sample uses it to authenticate with a portal.  This is set on the `AuthenticationManager`. To authenticate the user you create a `Portal` object, provide the essential credentials and then asynchronously load the portal as shown below:
 
 ```kotlin
@@ -44,3 +38,12 @@ val user = portal.user
 val fullname = user.fullName
 userName.text = fullname
 ```
+
+## Relevant API
+* AuthenticationManager
+* DefaultAuthenticationChallengeHandler
+* PortalInfo
+* PortalUser
+
+#### Tags
+Cloud and Portal

@@ -32,6 +32,3 @@ NOTE: The app uses OAuth2 protocol to authenticate the named users.  In order to
 * Portal
 * PortalSettings
 * PortalItem
- 
-#### Tags
-Cloud and Portal

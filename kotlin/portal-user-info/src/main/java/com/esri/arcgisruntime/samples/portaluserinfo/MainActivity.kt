@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.samples.authenticationprofile
+package com.esri.arcgisruntime.samples.portaluserinfo
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
