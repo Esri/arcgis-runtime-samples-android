@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Densify and Generalize</string>
+    <string name="densify_text">Densify</string>
+    <string name="generalize_text">Generalize</string>
+    <string name="max_segment_length_text">Max Segment Length</string>
+    <string name="max_deviation_text">Max Deviation</string>
+</resources>
