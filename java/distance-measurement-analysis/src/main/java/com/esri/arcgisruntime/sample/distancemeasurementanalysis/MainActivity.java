@@ -142,9 +142,9 @@ public class MainActivity extends AppCompatActivity {
       mDirectDistance.setText(String.format("%s %s",
           decimalFormat.format(directDistance.getValue()), directDistance.getUnit().getAbbreviation()));
       mHorizontalDistance.setText(String.format("%s %s",
-          decimalFormat.format(verticalDistance.getValue()), directDistance.getUnit().getAbbreviation()));
+          decimalFormat.format(horizontalDistance.getValue()), horizontalDistance.getUnit().getAbbreviation()));
       mVerticalDistance.setText(String.format("%s %s",
-          decimalFormat.format(horizontalDistance.getValue()), directDistance.getUnit().getAbbreviation()));
+          decimalFormat.format(verticalDistance.getValue()), verticalDistance.getUnit().getAbbreviation()));
     });
 
     // add onTouchListener to set the start point and end point with a SingleTap and a DoubleTapDrag
