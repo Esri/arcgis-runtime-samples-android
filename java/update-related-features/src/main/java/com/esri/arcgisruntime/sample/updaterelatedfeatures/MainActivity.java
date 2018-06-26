@@ -185,11 +185,11 @@ public class MainActivity extends AppCompatActivity {
     // create a text view for the callout
     View calloutLayout = LayoutInflater.from(getApplicationContext()).inflate(R.layout.callout, null);
     // create a text view and add park name
-    TextView parkText = (TextView) calloutLayout.findViewById(R.id.attribute);
+    TextView parkText = (TextView) calloutLayout.findViewById(R.id.park_name);
     String parkLabel = String.format(getResources().getString(R.string.callout_label), parkName);
     parkText.setText(parkLabel);
     // create spinner with selection options
-    final Spinner visitorSpinner = (Spinner) calloutLayout.findViewById(R.id.spinner_values);
+    final Spinner visitorSpinner = (Spinner) calloutLayout.findViewById(R.id.visitor_spinner);
     // create an array adapter using the string array and default spinner layout
     final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
         getApplicationContext(), R.array.visitors_range, android.R.layout.simple_spinner_item);
