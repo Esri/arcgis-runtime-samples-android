@@ -27,4 +27,4 @@ To densify and generalize a polyline
 * SpatialReference
 
 #### Tags
-Geometry
+Edit and Manage Data

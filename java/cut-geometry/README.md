@@ -28,3 +28,6 @@ To cut a geometry with a polyline:
 * SimpleFillSymbol
 * SimpleLineSymbol
 * SpatialReferences
+
+#### Tags
+Edit and Manage Data
