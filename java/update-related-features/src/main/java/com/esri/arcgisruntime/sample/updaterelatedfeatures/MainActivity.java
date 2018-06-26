@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void showCallout(String parkName) {
     // create a text view for the callout
-    View calloutLayout = LayoutInflater.from(getApplicationContext()).inflate(R.layout.callout, null);
+    View calloutLayout = LayoutInflater.from(getApplicationContext()).inflate(R.layout.related_features_callout, null);
     // create a text view and add park name
     TextView parkText = (TextView) calloutLayout.findViewById(R.id.park_name);
     String parkLabel = String.format(getResources().getString(R.string.callout_label), parkName);
