@@ -15,4 +15,4 @@ Converts screen coordinates to location coordinates to show the lat and long of 
 * MapView
 
 #### Tags
-MapViews, SceneView and UI
+MapViews, SceneViews and UI

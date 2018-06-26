@@ -19,4 +19,4 @@ Updates can be applied to the server using `ServiceFeatureTable.updateFeatureAsy
 * RelatedFeatureQueryResult
 
 #### Tags
-Manage Data
+Edit and Manage Data
