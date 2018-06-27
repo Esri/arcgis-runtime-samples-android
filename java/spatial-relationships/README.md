@@ -30,5 +30,5 @@ To check the relationship between geometries.
 * SimpleMarkerSymbol
 
 #### Tags
-Visualization 
+Analysis
 
