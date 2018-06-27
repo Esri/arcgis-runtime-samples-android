@@ -15,4 +15,4 @@ Click the toggle button at the bottom of the screen to switch between styles.
 * WmsLayer
 
 #### Tags
-Layers
+Visualization
