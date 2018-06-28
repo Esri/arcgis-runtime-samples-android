@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // inflate MapView from layout
+    // inflate views from layout
     mMapView = findViewById(R.id.mapView);
     mRasterFunctionButton = findViewById(R.id.rasterButton);
     mRasterFunctionButton.setEnabled(false);
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     final ImageServiceRaster imageServiceRaster = new ImageServiceRaster(getString(R.string.image_service_raster_url));
     final RasterLayer imageRasterLayer = new RasterLayer(imageServiceRaster);
     map.getOperationalLayers().add(imageRasterLayer);
+    // zoom to the extent of the raster service
     imageRasterLayer.addDoneLoadingListener(() -> {
       if (imageRasterLayer.getLoadStatus() == LoadStatus.LOADED) {
         // get the center point
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
+    // update the raster with simplified hillshade
     mRasterFunctionButton.setOnClickListener(v -> applyRasterFunction(imageServiceRaster));
 
     // set the map to be displayed in this view
