@@ -25,5 +25,4 @@ and modify it's properties like label visibility, grid line color, and grid labe
 * SimpleLineSymbol
 
 #### Tags
-Visualization
-
+MapViews, SceneViews and UI
