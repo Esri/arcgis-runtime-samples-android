@@ -10,9 +10,9 @@ When the sample loads, a scene from ArcGIS Online will be displayed.
 This sample uses the scene portal item constructor to open a scene from ArcGIS Online. 
 
 ## Relevant API
-* `PortalItem`
-* `Portal`
-* `ArcGISScene`
+* PortalItem
+* Portal
+* ArcGISScene
 
 #### Tags
 Maps and Scenes  
