@@ -1,4 +1,4 @@
-## Change Sublayer Renderer
+# Change Sublayer Renderer
 Change the renderer on a map image layer sublayer. In this example, a renderer is applied 
 to see the different population ranges in the counties sublayer data.
 
