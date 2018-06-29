@@ -1,4 +1,4 @@
-# Feature layer (GeoPackage)
+# Feature Layer (GeoPackage)
 Open a GeoPackage and show a GeoPackage feature table in a feature layer.
 
 ![Feature layer GeoPackage App](feature-layer-geopackage.png)
@@ -20,7 +20,6 @@ Provision the device with local data as per the 'Offline Data' section below. Ru
 1. Extract the contents of the downloaded zip file to disk.
 1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 1. Execute the following command: ```adb push AuroraCO.gpkg /sdcard/ArcGIS/Samples/GeoPackage/AuroraCO.gpkg```
-
 
 Link | Local Location
 ---------|-------|
