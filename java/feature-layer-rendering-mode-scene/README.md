@@ -1,7 +1,7 @@
 # Feature Layer Rendering Mode (Scene)
 Use load settings to set preferred rendering mode for feature layers, specifically static or dynamic rendering modes.
 
-![Feature Layer Rendering Mode App](feature-layer-rendering-mode-scene.png)
+![Feature Layer Rendering Mode Scene App](feature-layer-rendering-mode-scene.png)
 
 ## How to use the sample
 Use the 'Animated Zoom' button to trigger the same zoom animation on both static and dynamic scenes and note the difference.
