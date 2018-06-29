@@ -1,4 +1,4 @@
-# Find route
+# Find Route
 Get a route between two locations.
 
 ![Find Route App](find-route.png)
