@@ -1,4 +1,4 @@
-# Feature layer (GeoPackage)
+# Feature Layer (GeoPackage)
 Open a GeoPackage and show a GeoPackage feature table in a feature layer.
 
 ![Feature layer GeoPackage App](feature-layer-geopackage.png)
@@ -27,4 +27,4 @@ Link | Local Location
 |[Aurora CO GeoPackage](https://www.arcgis.com/home/item.html?id=68ec42517cdd439e81b036210483e8e7)| `<sdcard>`/ArcGIS/Samples/GeoPackage/AuroraCO.gpkg|
 
 #### Tags
-Edit and Manage Data
+Layers
