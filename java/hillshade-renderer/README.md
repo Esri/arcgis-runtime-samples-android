@@ -1,4 +1,4 @@
-# Hillshade renderer
+# Hillshade Renderer
 Use a hillshade renderer on a raster.
 
 ![Hillshade Renderer App](hillshade-renderer.png)
