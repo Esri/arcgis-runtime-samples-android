@@ -14,11 +14,11 @@ The non-spatial tables contained by a map service may contain additional informa
 The `ArcGISMapImageLayer` in the map uses the `ServiceRequests` map service as its data source. This service is hosted by ArcGIS Server, and is composed of one sublayer (`ServiceRequests`) and one non-spatial table (`ServiceRequestComments`). The non-spatial table is accessed using the Tables property of `ArcGISMapImageLayer`. The table can be queried like any other `FeatureTable`, including queries for related features. The comments table is queried for records where the `[comments]` field is not `null` and the result is used to populate the list box (should be four records or so). When a selection is made in the list box, the service request layer is queried for features related to the selected comment. The feature(s) selected by the query are then selected in the service request layer.
 
 ## Relevant API
-* `ServiceFeatureTable`
-* `ArcGISMapImageLayer`
-* `LoadTablesAndLayersAsync`
-* `Tables`
-* `ArcGISMapImageSublayer`
+* ServiceFeatureTable
+* ArcGISMapImageLayer
+* LoadTablesAndLayersAsync
+* Tables
+* ArcGISMapImageSublayer
 
 #### Tags
 Search and Query
