@@ -7,13 +7,13 @@ Raster functions are operations performed on a raster to apply on-the-fly proces
 Click on the button to apply the Raster service
 
 ## How it works
-- Create `AGSImageServiceRaster` using a `URL` and load it.
-- Create `AGSRasterFunction` using a `JSON` string.
-- Get raster function's arguments with `rasterFunction.arguments`
-- Set image service raster in the raster function arguments with name using  `setRaster(_ raster: AGSRaster, withName name: String)`.
-- Create `AGSRaster` using `AGSRasterFunction`.
-- Create `AGSRasterLayer` using `AGSRaster`.
-- Add `AGSRasterLayer`  to  `AGSMap.operationalLayers` array.
+* Create `ImageServiceRaster` using a `URL` and load it.
+* Create `RasterFunction` using a `JSON` string.
+* Get raster function's arguments with `RasterFunctionArguments`
+* Set image service raster in the raster function arguments using `setRaster(rasterName, raster)`.
+* Create `Raster` using the `RasterFunction`.
+* Create `RasterLayer` using `Raster`.
+* Add `RasterLayer`  to the map operational layers with `map.getOperationalLayers()`.
 
 ## Relevant API
 * ImageServiceRaster
