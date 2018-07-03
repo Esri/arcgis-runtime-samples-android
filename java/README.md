@@ -5,5 +5,5 @@
 
 ## Import Java Samples into Android Studio
 
-- From the Android Studio toolbar select **File > Import Project**, or **Import Non-Android Studio** project from the **Welcome Quick Start**.
+- From the Android Studio toolbar select **File > Import Project** from the **Welcome Quick Start**.
 - Navigate to the **java** project directory and click OK
