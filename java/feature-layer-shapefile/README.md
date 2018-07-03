@@ -1,7 +1,7 @@
 # Feature Layer Shapefile
 Open a shapefile stored on the device and display it as a feature layer with default symbology.
 
-![Feature Layer App](feature-layer-shapefile.png)
+![Feature Layer Shapefile App](feature-layer-shapefile.png)
 
 ## How to use the sample
 Run the sample and accept read permissions.

@@ -8,9 +8,7 @@ Click on the map to select a path destination. The geodesic path between the two
 
 ## How it works
 1. Create a `Polyline` using two points.
-1. Pass this polyline to: `GeometryEngine.densifyGeodetic(polyline, segmentLength, unitOfMeasurement, GeodeticCurveType
-    .GEODESIC)`. This will create a new polyline with segments of length `segmentLength` and 
-    `LinearUnit` set to `unitOfMeasurement`. The curve will be geodesic.
+1. Pass this polyline to: `GeometryEngine.densifyGeodetic(polyline, segmentLength, unitOfMeasurement, GeodeticCurveType.GEODESIC)`. This will create a new polyline with segments of length `segmentLength` and `LinearUnit` set to `unitOfMeasurement`. The curve will be geodesic.
 1. You can set this geometry to a `Graphic` to display the curve in a `GraphicsOverlay`.
 1. To get the distance, use `GeometryEngine.lengthGeodetic(pathGeometry, unitOfMeasurement, GeodeticCurveType.GEODESIC)`  
 

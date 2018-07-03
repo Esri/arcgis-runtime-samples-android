@@ -1,7 +1,7 @@
 # Feature Layer Rendering Mode (Map)
 Use load settings to set preferred rendering mode for feature layers, specifically static or dynamic rendering modes.
 
-![Feature Layer Rendering Mode App](feature-layer-rendering-mode-map.png)
+![Feature Layer Rendering Mode Map App](feature-layer-rendering-mode-map.png)
 
 ## How to use the sample
 Use the 'Animated Zoom' button to trigger the same zoom animation on both static and dynamic maps and note the difference.

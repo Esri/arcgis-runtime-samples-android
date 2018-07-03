@@ -1,4 +1,4 @@
-# Offline geocode
+# Offline Geocode
 Geocode addresses to locations and reverse geocode locations to addresses when the device does not have network connectivity.
 
 ![Offline Geocode App](offline-geocode.png)

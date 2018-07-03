@@ -1,4 +1,4 @@
-# Feature layer update attributes
+# Feature Layer Update Attributes
 Edit attributes of a feature in a feature layer.      
 
 ![Feature Layer Update Attributes App](feature-layer-update-attributes.png)

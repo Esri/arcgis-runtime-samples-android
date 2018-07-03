@@ -1,4 +1,4 @@
-# Feature layer feature service
+# Feature Layer Feature Service
 Use a layer from an ArcGIS feature service as a feature layer.
 
 ![Feature Layer Feature Service](feature-layer-feature-service.png)
