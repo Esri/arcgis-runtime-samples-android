@@ -6,5 +6,5 @@
 
 ## Import Kotlin Samples into Android Studio
 
-- From the Android Studio toolbar select **File > Import Project**, or **Import Non-Android Studio** project from the **Welcome Quick Start**.
+- From the Android Studio toolbar select **File > Import Project** project from the **Welcome Quick Start**.
 - Navigate to the **kotlin** project directory and click OK
