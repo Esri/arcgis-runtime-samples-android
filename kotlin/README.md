@@ -1,5 +1,4 @@
 # ArcGIS Android Kotlin Samples
-We are testing our **develop** branch with [Android Studio 3.0](https://developer.android.com/studio/preview/index.html) which includes Kotlin support bundled in the IDE. 
 
 ## Requirements 
 - [Android Plugin for Gradle 3.0.0](https://developer.android.com/studio/build/gradle-plugin-3-0-0.html)
