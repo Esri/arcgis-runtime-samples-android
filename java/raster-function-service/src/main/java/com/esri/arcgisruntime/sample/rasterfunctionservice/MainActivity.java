@@ -20,7 +20,9 @@ import java.util.List;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.RasterLayer;
@@ -35,9 +37,9 @@ import com.esri.arcgisruntime.raster.RasterFunctionArguments;
 
 public class MainActivity extends AppCompatActivity {
 
+  private final String TAG = MainActivity.class.getSimpleName();
   private MapView mMapView;
   private Button mRasterFunctionButton;
-  private ArcGISMap map;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     mRasterFunctionButton = findViewById(R.id.rasterButton);
     mRasterFunctionButton.setEnabled(false);
     // create a map with the BasemapType topographic
-    map = new ArcGISMap(Basemap.createDarkGrayCanvasVector());
+    ArcGISMap map = new ArcGISMap(Basemap.createDarkGrayCanvasVector());
     final ImageServiceRaster imageServiceRaster = new ImageServiceRaster(getString(R.string.image_service_raster_url));
     final RasterLayer imageRasterLayer = new RasterLayer(imageServiceRaster);
     map.getOperationalLayers().add(imageRasterLayer);
@@ -60,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
         Point centerPnt = imageServiceRaster.getServiceInfo().getFullExtent().getCenter();
         mMapView.setViewpointCenterAsync(centerPnt, 55000000);
         mRasterFunctionButton.setEnabled(true);
+      }
+      else{
+        String error = "Error loading image raster layer: " + imageRasterLayer.getLoadError();
+        Log.e(TAG,error);
+        Toast.makeText(this,error,Toast.LENGTH_LONG).show();
       }
     });
 
@@ -72,16 +79,16 @@ public class MainActivity extends AppCompatActivity {
 
   private void applyRasterFunction(Raster raster) {
     // create raster function from json string
-    RasterFunction rasterFunction = RasterFunction.fromJson(getString(R.string.hillshade_simplified));
+    RasterFunction rasterFuntionFromJson = RasterFunction.fromJson(getString(R.string.hillshade_simplified));
     // get parameter name value pairs used by hillside
-    RasterFunctionArguments rasterFunctionArguments = rasterFunction.getArguments();
-    // get a list of raster names associated with a raster function
-    List<String> rasterName = rasterFunctionArguments.getRasterNames();
-    rasterFunctionArguments.setRaster(rasterName.get(0), raster);
+    RasterFunctionArguments rasterFunctionArguments = rasterFuntionFromJson.getArguments();
+    // get a list of raster names associated with the raster function
+    List<String> rasterNames = rasterFunctionArguments.getRasterNames();
+    rasterFunctionArguments.setRaster(rasterNames.get(0), raster);
     // create raster as raster layer
-    raster = new Raster(rasterFunction);
+    raster = new Raster(rasterFuntionFromJson);
     RasterLayer hillshadeLayer = new RasterLayer(raster);
-    map.getOperationalLayers().add(hillshadeLayer);
+    mMapView.getMap().getOperationalLayers().add(hillshadeLayer);
   }
 
   @Override
