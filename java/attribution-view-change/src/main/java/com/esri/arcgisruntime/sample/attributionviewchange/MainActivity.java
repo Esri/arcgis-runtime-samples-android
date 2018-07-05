@@ -16,20 +16,14 @@
 
 package com.esri.arcgisruntime.sample.attributionviewchange;
 
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.view.DrawStatus;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,30 +39,24 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
     // create a map with a web mercator basemap
-    ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC,47.495052, -121.786863, 12);
+    ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 47.495052, -121.786863, 12);
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
     // create a FAB to respond to attribution bar
     mFab = findViewById(R.id.floatingActionButton);
-    mFab.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        Snackbar.make(v, "Button responds to attribution bar",Snackbar.LENGTH_LONG)
-            .setAction("Action",null).show();
-      }
-    });
+    mFab.setOnClickListener(v -> Snackbar.make(v, "Button responds to attribution bar", Snackbar.LENGTH_LONG)
+        .setAction("Action", null).show());
 
-    final ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mFab.getLayoutParams();
-    mMapView.addAttributionViewLayoutChangeListener(new View.OnLayoutChangeListener() {
-      @Override public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
-          int oldRight, int oldBottom) {
-        int heightDelta =   oldBottom - bottom ;
-        mFab.animate().translationYBy(heightDelta);
-        Toast.makeText(MainActivity.this, "new bounds [" + left + "," + top + "," + right + "," + bottom + "]" +
-            " old bounds [" + oldLeft + "," + oldTop + "," + oldRight + "," + oldBottom + "]", Toast.LENGTH_SHORT).show();
-      }
-    });
-
+    // set attribution bar listener
+    mMapView.addAttributionViewLayoutChangeListener(
+        (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+          int heightDelta = oldBottom - bottom;
+          mFab.animate().translationYBy(heightDelta);
+          Toast.makeText(MainActivity.this, "new bounds [" + left + "," + top + "," + right + "," + bottom + "]" +
+              " old bounds [" + oldLeft + "," + oldTop + "," + oldRight + "," + oldBottom + "]", Toast.LENGTH_SHORT)
+              .show();
+        });
   }
 
   @Override
