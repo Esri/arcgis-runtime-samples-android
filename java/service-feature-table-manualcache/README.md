@@ -15,4 +15,4 @@ Set the `ServiceFeatureTable.FeatureRequestMode` to `MANUAL_CACHE` on an service
 * ServiceFeatureTable.setFeatureRequestMode(...)
 
 #### Tags
-Maps and Scenes
+Edit and Manage Data

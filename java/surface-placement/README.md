@@ -26,4 +26,4 @@ Simply run the app.
 * Surface
 
 #### Tags
-MapViews, SceneViews and UI
+Maps and Scenes
