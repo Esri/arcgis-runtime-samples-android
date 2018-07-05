@@ -62,11 +62,10 @@ public class MainActivity extends AppCompatActivity {
         Point centerPnt = imageServiceRaster.getServiceInfo().getFullExtent().getCenter();
         mMapView.setViewpointCenterAsync(centerPnt, 55000000);
         mRasterFunctionButton.setEnabled(true);
-      }
-      else{
+      } else {
         String error = "Error loading image raster layer: " + imageRasterLayer.getLoadError();
-        Log.e(TAG,error);
-        Toast.makeText(this,error,Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
       }
     });
 
