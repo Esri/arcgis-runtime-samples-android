@@ -10,7 +10,7 @@ ext {
     kotlinVersion = '1.2.40'
     ankoVersion = '0.10.4'
     andSupportLibVersion = '27.1.0'
-    constraintLayoutVersion = '1.1.0'
+    constraintLayoutVersion = '1.1.2'
     arcgisVersion = '100.2.1'
     // plugin versions
     gradleVersion = '3.1.2'
