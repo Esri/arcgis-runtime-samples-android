@@ -16,15 +16,24 @@
 
 package com.esri.arcgisruntime.sample.wmtslayer;
 
+import java.util.List;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import com.esri.arcgisruntime.geometry.SpatialReference;
+import android.util.Log;
+import android.widget.Toast;
+import com.esri.arcgisruntime.layers.WmtsLayer;
+import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.ogc.wmts.WmtsLayerInfo;
+import com.esri.arcgisruntime.ogc.wmts.WmtsService;
+import com.esri.arcgisruntime.ogc.wmts.WmtsServiceInfo;
 
 public class MainActivity extends AppCompatActivity {
 
+  private final String TAG = MainActivity.class.getSimpleName();
   private MapView mMapView;
 
   @Override
@@ -34,13 +43,28 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
-    // create a map with a web mercator basemap
-    ArcGISMap map = new ArcGISMap(SpatialReference.create(3857));
-    map.setBasemap(Basemap.createNationalGeographic());
-
-    // set the map to be displayed in this view
+    // create an ArcGIS map
+    ArcGISMap map = new ArcGISMap();
     mMapView.setMap(map);
-
+    // create wmts service from url string
+    WmtsService wmtsService = new WmtsService(getString(R.string.wmts_url));
+    wmtsService.addDoneLoadingListener(() -> {
+      if (wmtsService.getLoadStatus() == LoadStatus.LOADED) {
+        // get service info
+        WmtsServiceInfo wmtsServiceInfo = wmtsService.getServiceInfo();
+        // get the first layer id
+        List<WmtsLayerInfo> layerInfoList = wmtsServiceInfo.getLayerInfos();
+        // create WMTS layer from layer info
+        WmtsLayer wmtsLayer = new WmtsLayer(layerInfoList.get(0));
+        // set the basemap of the map with WMTS layer
+        map.setBasemap(new Basemap(wmtsLayer));
+      } else {
+        String error = "Error loading WMTS Service: " + wmtsService.getLoadError();
+        Log.e(TAG, error);
+        Toast.makeText(this, error, Toast.LENGTH_LONG);
+      }
+    });
+    wmtsService.loadAsync();
   }
 
   @Override
