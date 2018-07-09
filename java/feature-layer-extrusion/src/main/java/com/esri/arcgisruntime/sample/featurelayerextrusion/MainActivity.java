@@ -74,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
     SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1.0f);
     SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLUE, lineSymbol);
     final SimpleRenderer renderer = new SimpleRenderer(fillSymbol);
-    // set renderer extrusion mode to base height, which includes base height of each vertex in calculating z values
-    renderer.getSceneProperties().setExtrusionMode(Renderer.SceneProperties.ExtrusionMode.BASE_HEIGHT);
+    // set renderer extrusion mode to absolute height, which extrudes the feature to the specified z-value as flat top
+    renderer.getSceneProperties().setExtrusionMode(Renderer.SceneProperties.ExtrusionMode.ABSOLUTE_HEIGHT);
     // set the simple renderer to the feature layer
     statesFeatureLayer.setRenderer(renderer);
 
