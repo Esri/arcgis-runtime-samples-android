@@ -83,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
     Point lookAtPoint = new Point(-10974490, 4814376, 0, SpatialReferences.getWebMercator());
     // add a camera and set it to orbit the look at point
     Camera camera = new Camera(lookAtPoint, 20000000, 0, 55, 0);
-    OrbitLocationCameraController orbitCamera = new OrbitLocationCameraController(lookAtPoint, 20000000);
-    mSceneView.setCameraController(orbitCamera);
     mSceneView.setViewpointCamera(camera);
 
     // set button listener
