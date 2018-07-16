@@ -17,11 +17,13 @@
 package com.esri.arcgisruntime.sample.createsavemap;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -29,6 +31,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -45,6 +49,8 @@ import com.esri.arcgisruntime.mapping.view.LayerViewStateChangedListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.security.OAuthLoginManager;
 
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity {
 
   private static final int MIN_SCALE = 60000000;
@@ -59,7 +65,12 @@ public class MainActivity extends AppCompatActivity {
   private CharSequence mDrawerTitle;
   private CharSequence mTitle;
   private ActionBarDrawerToggle mDrawerToggle;
+  private EditText mPortalurl;
+  private EditText mClientid;
+  private EditText mUri;
+  private Button mSaveButton;
   private Layer[] layer_array = new Layer[2];
+  AlertDialog mPortalMenu;
 
   public static OAuthLoginManager getOAuthLoginManagerInstance() {
     return oauthLoginManager;
@@ -77,6 +88,21 @@ public class MainActivity extends AppCompatActivity {
     mMap = new ArcGISMap(Basemap.Type.STREETS, 48.354388, -99.998245, 3);
     // set the map to be displayed in this view
     mMapView.setMap(mMap);
+
+    // set up a popup menu to manage portal settings
+    final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+    final View view = getLayoutInflater().inflate(R.layout.portal_menu, null);
+    builder.setView(view);
+    mPortalMenu = builder.create();
+
+    mPortalurl = view.findViewById(R.id.portal_input);
+    mClientid = view.findViewById(R.id.client_input);
+    mUri = view.findViewById(R.id.uri_input);
+    mSaveButton = view.findViewById(R.id.save_button);
+
+    mPortalurl.setText("http://arcgis.com");
+    mUri.setText("my-ags-app://auth");
+
 
     // create spatial reference for all points
     SpatialReference spatialReference = SpatialReferences.getWebMercator();
@@ -147,12 +173,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // if the progress dialog is showing, dismiss it
-        mMapView.addLayerViewStateChangedListener(new LayerViewStateChangedListener() {
-          @Override
-          public void layerViewStateChanged(LayerViewStateChangedEvent layerViewStateChangedEvent) {
-            if (progressDialog.isShowing()) {
-              progressDialog.dismiss();
-            }
+        mMapView.addLayerViewStateChangedListener(layerViewStateChangedEvent -> {
+          if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
           }
         });
         invalidateOptionsMenu();
@@ -164,6 +187,23 @@ public class MainActivity extends AppCompatActivity {
         invalidateOptionsMenu();
       }
     };
+    mSaveButton.setOnClickListener(v -> {
+      String[] portalSettings = new String[3];
+      portalSettings[0] = mPortalurl.getText().toString();
+      portalSettings[1] = mClientid.getText().toString();
+      portalSettings[2] = mUri.getText().toString();
+
+      if(!mClientid.getText().toString().isEmpty()){
+
+        oAuthBrowser(portalSettings[0],portalSettings[1],portalSettings[2]);
+      } else {
+        mClientid.setError("This field cannot be blank");
+
+      }
+
+//      mPortalMenu.hide();
+
+    });
 
     mDrawerToggle.setDrawerIndicatorEnabled(true);
     mDrawerLayout.addDrawerListener(mDrawerToggle);
@@ -185,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
     //noinspection SimplifiableIfStatement
     if (id == R.id.action_save) {
-      oAuthBrowser();
+      mPortalMenu.show();
     }
 
     // Activate the navigation drawer toggle
@@ -196,18 +236,19 @@ public class MainActivity extends AppCompatActivity {
   /**
    * launch the OAuth browser page to get credentials
    */
-  private void oAuthBrowser() {
+  private void oAuthBrowser(String portal,String client,String uri) {
+    Log.e("Portal Settings,", portal + client + uri);
+    mPortalMenu.hide();
 
-    try {
-      // create a OAuthLoginManager object with portalURL, clientID, redirectUri and expiration
-      String[] portalSettings = getResources().getStringArray(R.array.portal);
-      oauthLoginManager = new OAuthLoginManager(portalSettings[1], portalSettings[2], portalSettings[3], 0);
-      // launch the browser to get the credentials
-      oauthLoginManager.launchOAuthBrowserPage(getApplicationContext());
+    // create a OAuthLoginManager object with portalURL, clientID, redirectUri and expiration
+    oauthLoginManager = new OAuthLoginManager(portal, client, uri, 0);
+    // launch the browser to get the credentials
+    oauthLoginManager.launchOAuthBrowserPage(getApplicationContext());
 
-    } catch (Exception e) {
-      Log.e("error-", e.getMessage() + "");
-    }
+//    Intent intent = new Intent(this,MapSaveActivity.class);
+//    startActivity(intent);
+
+
 
   }
 

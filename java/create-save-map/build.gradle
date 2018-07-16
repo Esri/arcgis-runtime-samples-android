@@ -17,8 +17,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility rootProject.ext.targetJavaVersion
+        sourceCompatibility rootProject.ext.sourceJavaVersion
+    }
 }
 
 dependencies {
     // arcgis-android & appcompat lib dependencies from rootProject build.gradle
+    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
 }

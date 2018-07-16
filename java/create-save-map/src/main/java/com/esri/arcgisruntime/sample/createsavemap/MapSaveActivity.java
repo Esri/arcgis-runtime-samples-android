@@ -55,6 +55,7 @@ public class MapSaveActivity extends AppCompatActivity {
         Intent intent = getIntent();
         // Get the OAuthLoginManager object from the main activity.
         oauthLoginManager = MainActivity.getOAuthLoginManagerInstance();
+        Log.e("MapSaveActivity", "Im an here. ");
         if (oauthLoginManager == null) {
             return;
         }
@@ -91,31 +92,28 @@ public class MapSaveActivity extends AppCompatActivity {
                     progressDialog.setMessage(getString(R.string.wait));
                     progressDialog.show();
 
-                    portal.addDoneLoadingListener(new Runnable() {
-                        @Override
-                        public void run() {
-                            // if portal is LOADED, save the map to the portal
-                            if (portal.getLoadStatus() == LoadStatus.LOADED) {
-                                // Save the map to an authenticated Portal, with specified title, tags, description, and thumbnail.
-                                // Passing 'null' as portal folder parameter saves this to users root folder.
-                                final ListenableFuture<PortalItem> saveAsFuture = MainActivity.mMap.saveAsAsync(portal, null, mTitle, mTagsList, mDescription, null, true);
-                                saveAsFuture.addDoneListener(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // Check the result of the save operation.
-                                        try {
-                                            if (progressDialog.isShowing()) {
-                                                progressDialog.dismiss();
-                                            }
-                                            PortalItem newMapPortalItem = saveAsFuture.get();
-                                            Toast.makeText(getApplicationContext(), getString(R.string.map_successful), Toast.LENGTH_SHORT).show();
-                                        } catch (InterruptedException | ExecutionException e) {
-                                            // If saving failed, deal with failure depending on the cause...
-                                            Log.e("Exception", e.toString());
+                    portal.addDoneLoadingListener(() -> {
+                        // if portal is LOADED, save the map to the portal
+                        if (portal.getLoadStatus() == LoadStatus.LOADED) {
+                            // Save the map to an authenticated Portal, with specified title, tags, description, and thumbnail.
+                            // Passing 'null' as portal folder parameter saves this to users root folder.
+                            final ListenableFuture<PortalItem> saveAsFuture = MainActivity.mMap.saveAsAsync(portal, null, mTitle, mTagsList, mDescription, null, true);
+                            saveAsFuture.addDoneListener(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Check the result of the save operation.
+                                    try {
+                                        if (progressDialog.isShowing()) {
+                                            progressDialog.dismiss();
                                         }
+                                        PortalItem newMapPortalItem = saveAsFuture.get();
+                                        Toast.makeText(getApplicationContext(), getString(R.string.map_successful), Toast.LENGTH_SHORT).show();
+                                    } catch (InterruptedException | ExecutionException e) {
+                                        // If saving failed, deal with failure depending on the cause...
+                                        Log.e("Exception", e.toString());
                                     }
-                                });
-                            }
+                                }
+                            });
                         }
                     });
                     portal.loadAsync();
@@ -134,16 +132,14 @@ public class MapSaveActivity extends AppCompatActivity {
     private void fetchCredentials(Intent intent) {
         // Fetch oauth access token.
         final ListenableFuture<OAuthTokenCredential> future = oauthLoginManager.fetchOAuthTokenCredentialAsync(intent);
-        future.addDoneListener(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    oauthCred = future.get();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+        future.addDoneListener(() -> {
+            try {
+                oauthCred = future.get();
+                Log.e("credentials", oauthCred.toJson());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
         });
     }
 
