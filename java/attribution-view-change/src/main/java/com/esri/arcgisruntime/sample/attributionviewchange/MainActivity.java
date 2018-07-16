@@ -29,7 +29,6 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-  private FloatingActionButton mFab;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // create a FAB to respond to attribution bar
-    mFab = findViewById(R.id.floatingActionButton);
+    FloatingActionButton mFab = findViewById(R.id.floatingActionButton);
     mFab.setOnClickListener(v -> Snackbar.make(v, "Button responds to attribution bar", Snackbar.LENGTH_LONG)
         .setAction("Action", null).show());
 
@@ -53,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
         (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
           int heightDelta = oldBottom - bottom;
           mFab.animate().translationYBy(heightDelta);
-          Toast.makeText(MainActivity.this, "new bounds [" + left + "," + top + "," + right + "," + bottom + "]" +
-              " old bounds [" + oldLeft + "," + oldTop + "," + oldRight + "," + oldBottom + "]", Toast.LENGTH_SHORT)
+          Toast.makeText(MainActivity.this, "new bounds [" + left + ',' + top + ',' + right + ',' + bottom + ']' +
+              " old bounds [" + oldLeft + ',' + oldTop + ',' + oldRight + ',' + oldBottom + ']', Toast.LENGTH_SHORT)
               .show();
         });
   }
