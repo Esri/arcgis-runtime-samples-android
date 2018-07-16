@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
       } else {
         String error = "Error loading WMTS Service: " + wmtsService.getLoadError();
         Log.e(TAG, error);
-        Toast.makeText(this, error, Toast.LENGTH_LONG);
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
       }
     });
     wmtsService.loadAsync();
