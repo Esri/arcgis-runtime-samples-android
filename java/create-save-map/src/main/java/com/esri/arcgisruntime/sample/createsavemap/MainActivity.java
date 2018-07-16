@@ -17,7 +17,6 @@
 package com.esri.arcgisruntime.sample.createsavemap;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -36,20 +35,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.esri.arcgisruntime.geometry.SpatialReference;
-import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.view.LayerViewStateChangedEvent;
-import com.esri.arcgisruntime.mapping.view.LayerViewStateChangedListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.security.OAuthLoginManager;
-
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
   private EditText mPortalurl;
   private EditText mClientid;
   private EditText mUri;
-  private Button mSaveButton;
+
   private Layer[] layer_array = new Layer[2];
-  AlertDialog mPortalMenu;
+  private AlertDialog mPortalMenu;
 
   public static OAuthLoginManager getOAuthLoginManagerInstance() {
     return oauthLoginManager;
@@ -83,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     mTitle = mDrawerTitle = getTitle();
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     // create a map with Topographic Basemap
     mMap = new ArcGISMap(Basemap.Type.STREETS, 48.354388, -99.998245, 3);
     // set the map to be displayed in this view
@@ -98,14 +91,10 @@ public class MainActivity extends AppCompatActivity {
     mPortalurl = view.findViewById(R.id.portal_input);
     mClientid = view.findViewById(R.id.client_input);
     mUri = view.findViewById(R.id.uri_input);
-    mSaveButton = view.findViewById(R.id.save_button);
+    final Button mSaveButton = view.findViewById(R.id.save_button);
 
     mPortalurl.setText("http://arcgis.com");
     mUri.setText("my-ags-app://auth");
-
-
-    // create spatial reference for all points
-    SpatialReference spatialReference = SpatialReferences.getWebMercator();
 
     final ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(getApplication().getString(R.string.world_time_zones));
     final ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(getApplication().getString(R.string.us_census));
@@ -125,10 +114,10 @@ public class MainActivity extends AppCompatActivity {
     String[] mLayerTiles = getResources().getStringArray(R.array.operational_layer_array);
 
     // inflate the Basemap and Layer list views
-    mBasemapListView = (ListView) findViewById(R.id.basemap_list);
-    mLayerListView = (ListView) findViewById(R.id.layer_list);
+    mBasemapListView = findViewById(R.id.basemap_list);
+    mLayerListView = findViewById(R.id.layer_list);
 
-    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    mDrawerLayout = findViewById(R.id.drawer_layout);
 
     // Set the adapter for the Basemap list view
     mBasemapListView
@@ -145,28 +134,25 @@ public class MainActivity extends AppCompatActivity {
       // if the drawer is closed, get the checked items from LayerListView and add the checked layer
       public void onDrawerClosed(View view) {
         getSupportActionBar().setTitle(mTitle);
-        mMap.addDoneLoadingListener(new Runnable() {
-          @Override
-          public void run() {
-            if (mMap.getLoadStatus().name().equalsIgnoreCase(LoadStatus.LOADED.name())) {
-              // if both items are checked, add them
-              if (mLayerListView.getCheckedItemCount() > 1) {
+        mMap.addDoneLoadingListener(() -> {
+          if (mMap.getLoadStatus().name().equalsIgnoreCase(LoadStatus.LOADED.name())) {
+            // if both items are checked, add them
+            if (mLayerListView.getCheckedItemCount() > 1) {
+              progressDialog.show();
+              removeLayers();
+              mMap.getOperationalLayers().add(layer_array[0]);
+              mMap.getOperationalLayers().add(layer_array[1]);
+            } else { // if any one item is checked, add as layer
+              if (mLayerListView.isItemChecked(0)) {
                 progressDialog.show();
                 removeLayers();
                 mMap.getOperationalLayers().add(layer_array[0]);
+              } else if (mLayerListView.isItemChecked(1)) {
+                progressDialog.show();
+                removeLayers();
                 mMap.getOperationalLayers().add(layer_array[1]);
-              } else { // if any one item is checked, add as layer
-                if (mLayerListView.isItemChecked(0)) {
-                  progressDialog.show();
-                  removeLayers();
-                  mMap.getOperationalLayers().add(layer_array[0]);
-                } else if (mLayerListView.isItemChecked(1)) {
-                  progressDialog.show();
-                  removeLayers();
-                  mMap.getOperationalLayers().add(layer_array[1]);
-                } else {
-                  removeLayers();
-                }
+              } else {
+                removeLayers();
               }
             }
           }
@@ -193,15 +179,15 @@ public class MainActivity extends AppCompatActivity {
       portalSettings[1] = mClientid.getText().toString();
       portalSettings[2] = mUri.getText().toString();
 
-      if(!mClientid.getText().toString().isEmpty()){
+      if (!mClientid.getText().toString().isEmpty()) {
 
-        oAuthBrowser(portalSettings[0],portalSettings[1],portalSettings[2]);
+        oAuthBrowser(portalSettings[0], portalSettings[1], portalSettings[2]);
       } else {
         mClientid.setError("This field cannot be blank");
 
       }
 
-//      mPortalMenu.hide();
+      //      mPortalMenu.hide();
 
     });
 
@@ -236,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
   /**
    * launch the OAuth browser page to get credentials
    */
-  private void oAuthBrowser(String portal,String client,String uri) {
+  private void oAuthBrowser(String portal, String client, String uri) {
     Log.e("Portal Settings,", portal + client + uri);
     mPortalMenu.hide();
 
@@ -244,11 +230,6 @@ public class MainActivity extends AppCompatActivity {
     oauthLoginManager = new OAuthLoginManager(portal, client, uri, 0);
     // launch the browser to get the credentials
     oauthLoginManager.launchOAuthBrowserPage(getApplicationContext());
-
-//    Intent intent = new Intent(this,MapSaveActivity.class);
-//    startActivity(intent);
-
-
 
   }
 

@@ -26,7 +26,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -38,7 +37,6 @@ import com.esri.arcgisruntime.security.OAuthLoginManager;
 import com.esri.arcgisruntime.security.OAuthTokenCredential;
 
 public class MapSaveActivity extends AppCompatActivity {
-    private FloatingActionButton saveFab;
     private OAuthLoginManager oauthLoginManager;
     private OAuthTokenCredential oauthCred;
     private EditText mTitleEditText, mTagsEditText, mDescEditText;
@@ -64,70 +62,63 @@ public class MapSaveActivity extends AppCompatActivity {
         setContentView(R.layout.activity_map_save);
 
         // inflate the EditText boxes
-        mTitleEditText = (EditText) findViewById(R.id.titleText);
-        mTagsEditText = (EditText) findViewById(R.id.tagText);
-        mDescEditText = (EditText) findViewById(R.id.descText);
+        mTitleEditText = findViewById(R.id.titleText);
+        mTagsEditText = findViewById(R.id.tagText);
+        mDescEditText = findViewById(R.id.descText);
         progressDialog = new ProgressDialog(this);
-        saveFab = (FloatingActionButton) findViewById(R.id.saveFab);
+        FloatingActionButton saveFab = findViewById(R.id.saveFab);
 
         // add a click listener for Floating Action Button
-        saveFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        saveFab.setOnClickListener(v -> {
+            // get Title, Tags and Description from the UI
+            boolean flag = getMapAdditionalInfo();
 
-                // get Title, Tags and Description from the UI
-                boolean flag = getMapAdditionalInfo();
+            // if Title and tags are present
+            if (flag) {
+                // inflate portal settings from array
+                String[] portalSettings = getResources().getStringArray(R.array.portal);
+                // create a Portal using the portal url from the array
+                portal = new Portal(portalSettings[1], true);
+                // set the credentials from the browser
+                portal.setCredential(oauthCred);
 
-                // if Title and tags are present
-                if (flag) {
-                    // inflate portal settings from array
-                    String[] portalSettings = getResources().getStringArray(R.array.portal);
-                    // create a Portal using the portal url from the array
-                    portal = new Portal(portalSettings[1], true);
-                    // set the credentials from the browser
-                    portal.setCredential(oauthCred);
+                progressDialog.setTitle(getString(R.string.author_map_message));
+                progressDialog.setMessage(getString(R.string.wait));
+                progressDialog.show();
 
-
-                    progressDialog.setTitle(getString(R.string.author_map_message));
-                    progressDialog.setMessage(getString(R.string.wait));
-                    progressDialog.show();
-
-                    portal.addDoneLoadingListener(() -> {
-                        // if portal is LOADED, save the map to the portal
-                        if (portal.getLoadStatus() == LoadStatus.LOADED) {
-                            // Save the map to an authenticated Portal, with specified title, tags, description, and thumbnail.
-                            // Passing 'null' as portal folder parameter saves this to users root folder.
-                            final ListenableFuture<PortalItem> saveAsFuture = MainActivity.mMap.saveAsAsync(portal, null, mTitle, mTagsList, mDescription, null, true);
-                            saveAsFuture.addDoneListener(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // Check the result of the save operation.
-                                    try {
-                                        if (progressDialog.isShowing()) {
-                                            progressDialog.dismiss();
-                                        }
-                                        PortalItem newMapPortalItem = saveAsFuture.get();
-                                        Toast.makeText(getApplicationContext(), getString(R.string.map_successful), Toast.LENGTH_SHORT).show();
-                                    } catch (InterruptedException | ExecutionException e) {
-                                        // If saving failed, deal with failure depending on the cause...
-                                        Log.e("Exception", e.toString());
-                                    }
+                portal.addDoneLoadingListener(() -> {
+                    // if portal is LOADED, save the map to the portal
+                    if (portal.getLoadStatus() == LoadStatus.LOADED) {
+                        // Save the map to an authenticated Portal, with specified title, tags, description, and thumbnail.
+                        // Passing 'null' as portal folder parameter saves this to users root folder.
+                        final ListenableFuture<PortalItem> saveAsFuture = MainActivity.mMap
+                            .saveAsAsync(portal, null, mTitle, mTagsList, mDescription, null, true);
+                        saveAsFuture.addDoneListener(() -> {
+                            // Check the result of the save operation.
+                            try {
+                                if (progressDialog.isShowing()) {
+                                    progressDialog.dismiss();
                                 }
-                            });
-                        }
-                    });
-                    portal.loadAsync();
-                }
+                                PortalItem newMapPortalItem = saveAsFuture.get();
+                                Toast.makeText(getApplicationContext(), getString(R.string.map_successful),
+                                    Toast.LENGTH_SHORT).show();
+                            } catch (InterruptedException | ExecutionException e) {
+                                // If saving failed, deal with failure depending on the cause...
+                                Log.e("Exception", e.toString());
+                            }
+                        });
+                    }
+                });
+                portal.loadAsync();
             }
         });
-
 
     }
 
     /**
      * fetch the OAuth token from the OAuthLogin Manager
      *
-     * @param intent
+     * @param intent intent that will be passed in
      */
     private void fetchCredentials(Intent intent) {
         // Fetch oauth access token.

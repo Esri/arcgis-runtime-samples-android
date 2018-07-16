@@ -15,6 +15,11 @@
     <string name="map_successful">Map created successfully</string>
     <string name="title_error">Please enter a Title for your map</string>
     <string name="tags_error">Tags can not be empty</string>
+    <string name="portal_name">Portal:</string>
+    <string name="client_id">ClientI ID:</string>
+    <string name="hint_client_id">Enter Client ID</string>
+    <string name="uri">URI:</string>
+    <string name="save_text">Save</string>
     <!-- Basemap choice array -->
     <string-array name="basemap_array">
         <item>Streets</item>
