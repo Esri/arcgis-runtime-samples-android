@@ -106,4 +106,5 @@ include ':add-graphics-renderer',
         ':viewshed-geoprocessing',
         ':viewshed-location',
         ':web-tiledlayer',
-        ':wms-layer-url'
+        ':wms-layer-url',
+        ':wmts-layer'
