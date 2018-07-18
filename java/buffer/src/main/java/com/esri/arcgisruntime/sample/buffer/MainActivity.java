@@ -19,10 +19,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.GeodeticCurveType;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
@@ -44,7 +44,6 @@ import com.esri.arcgisruntime.symbology.SimpleRenderer;
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-  private EditText mBufferInput;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate views
     mMapView = findViewById(R.id.mapView);
-    mBufferInput = findViewById(R.id.bufferInput);
+    EditText bufferInput = findViewById(R.id.bufferInput);
 
     // create a map with the Basemap
     ArcGISMap map = new ArcGISMap(SpatialReferences.getWebMercator());
@@ -61,12 +60,8 @@ public class MainActivity extends AppCompatActivity {
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
-    final Geometry startingEnvelope = new Envelope(-10863035.97, 3838021.34, -10744801.344, 3887145.299,
-        SpatialReferences.getWebMercator());
-    mMapView.setViewpointGeometryAsync(startingEnvelope);
-
     // create a graphics overlay to contain the buffered geometry graphics
-    final GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
+    GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
     // create a fill symbol for geodesic buffer polygons
@@ -110,9 +105,9 @@ public class MainActivity extends AppCompatActivity {
         Point mapPoint = mMapView.screenToLocation(screenPoint);
 
         // only draw a buffer if a value was entered
-        if (!mBufferInput.getText().toString().isEmpty()) {
+        if (!bufferInput.getText().toString().isEmpty()) {
           // get the buffer distance (miles) entered in the text box.
-          double bufferInMiles = Double.valueOf(mBufferInput.getText().toString());
+          double bufferInMiles = Double.valueOf(bufferInput.getText().toString());
 
           // convert the input distance to meters, 1609.34 meters in one mile
           double bufferInMeters = bufferInMiles * 1609.34;
@@ -129,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
           // create a graphic for the user tap location
           Graphic locationGraphic = new Graphic(mapPoint);
 
-          // Add the buffer polygons and tap location graphics to the appropriate graphic overlays.
+          // add the buffer polygons and tap location graphics to the appropriate graphic overlays.
           planarGraphicsOverlay.getGraphics().add(planarBufferGraphic);
           geodesicGraphicsOverlay.getGraphics().add(geodesicBufferGraphic);
           tapLocationsOverlay.getGraphics().add(locationGraphic);
@@ -138,6 +133,14 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
       }
+    });
+
+    // clear all graphics on button click
+    Button clearButton = findViewById(R.id.clearButton);
+    clearButton.setOnClickListener(v -> {
+      planarGraphicsOverlay.getGraphics().clear();
+      geodesicGraphicsOverlay.getGraphics().clear();
+      tapLocationsOverlay.getGraphics().clear();
     });
   }
 

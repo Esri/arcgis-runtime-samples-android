@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:text="Geodesic Buffer"
+        android:text="@string/geodesic_buffer"
         app:layout_constraintStart_toEndOf="@+id/geodesicSwatch"
         app:layout_constraintTop_toTopOf="@+id/geodesicSwatch"
         app:layout_constraintBottom_toBottomOf="@+id/geodesicSwatch" />
@@ -62,7 +62,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:text="Planar Buffer"
+        android:text="@string/planar_buffer"
         app:layout_constraintStart_toEndOf="@+id/planarSwatch"
         app:layout_constraintTop_toTopOf="@+id/planarSwatch"
         app:layout_constraintBottom_toBottomOf="@+id/planarSwatch"
