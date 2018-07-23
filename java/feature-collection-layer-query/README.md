@@ -1,4 +1,4 @@
-# Feature collection layer (query)
+# Feature Collection Layer (Query)
 Create a feature collection layer to show a query result from a service feature table. The feature collection is then displayed on a map with a feature collection layer.
 
 ![Feature Collection Layer (Query) App](feature-collection-layer-query.png)

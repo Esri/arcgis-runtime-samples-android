@@ -19,8 +19,7 @@ package com.esri.arcgisruntime.sample.featurelayerextrusion;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
+import android.widget.ToggleButton;
 
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Point;
@@ -29,7 +28,6 @@ import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.Camera;
-import com.esri.arcgisruntime.mapping.view.OrbitLocationCameraController;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.symbology.Renderer;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     showTotalPopulation = true;
 
     // inflate population type toggle button
-    final Button togglePopButton = findViewById(R.id.toggle_button);
+    final ToggleButton togglePopButton = findViewById(R.id.toggleButton);
 
     // get us census data as a service feature table
     ServiceFeatureTable statesServiceFeatureTable = new ServiceFeatureTable(
@@ -71,39 +69,31 @@ public class MainActivity extends AppCompatActivity {
     scene.getOperationalLayers().add(statesFeatureLayer);
 
     // define line and fill symbols for a simple renderer
-    SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1.0f);
-    SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLUE, lineSymbol);
+    final SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1.0f);
+    final SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLUE, lineSymbol);
     final SimpleRenderer renderer = new SimpleRenderer(fillSymbol);
-    // set renderer extrusion mode to base height, which includes base height of each vertex in calculating z values
-    renderer.getSceneProperties().setExtrusionMode(Renderer.SceneProperties.ExtrusionMode.BASE_HEIGHT);
+    // set renderer extrusion mode to absolute height, which extrudes the feature to the specified z-value as flat top
+    renderer.getSceneProperties().setExtrusionMode(Renderer.SceneProperties.ExtrusionMode.ABSOLUTE_HEIGHT);
     // set the simple renderer to the feature layer
     statesFeatureLayer.setRenderer(renderer);
 
     // define a look at point for the camera at geographical center of the continental US
-    Point lookAtPoint = new Point(-10974490, 4814376, 0, SpatialReferences.getWebMercator());
+    final Point lookAtPoint = new Point(-10974490, 4814376, 0, SpatialReferences.getWebMercator());
     // add a camera and set it to orbit the look at point
-    Camera camera = new Camera(lookAtPoint, 20000000, 0, 55, 0);
-    OrbitLocationCameraController orbitCamera = new OrbitLocationCameraController(lookAtPoint, 20000000);
-    mSceneView.setCameraController(orbitCamera);
+    final Camera camera = new Camera(lookAtPoint, 20000000, 0, 55, 0);
     mSceneView.setViewpointCamera(camera);
 
     // set button listener
-    togglePopButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        // set extrusion properties to either show total population or population density based on flag
-        if (showTotalPopulation) {
-          // divide total population by 10 to make data legible
-          renderer.getSceneProperties().setExtrusionExpression("[POP2007] / 10");
-          // change text of button to total pop
-          togglePopButton.setText(R.string.total_pop);
-          showTotalPopulation = false;
-        } else {
-          // multiple population density by 5000 to make data legible
-          renderer.getSceneProperties().setExtrusionExpression("[POP07_SQMI] * 5000");
-          // change text of button to pop density
-          togglePopButton.setText(R.string.density_pop);
-          showTotalPopulation = true;
-        }
+    togglePopButton.setOnClickListener(v -> {
+      // set extrusion properties to either show total population or population density based on flag
+      if (showTotalPopulation) {
+        // divide total population by 10 to make data legible
+        renderer.getSceneProperties().setExtrusionExpression("[POP2007] / 10");
+        showTotalPopulation = false;
+      } else {
+        // multiple population density by 5000 to make data legible
+        renderer.getSceneProperties().setExtrusionExpression("[POP07_SQMI] * 5000 + 100000");
+        showTotalPopulation = true;
       }
     });
     // click to set initial state

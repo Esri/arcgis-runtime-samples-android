@@ -10,7 +10,7 @@ Slide the `SeekBar` at the bottom of the screen to apply a rotation to the `MapV
 1. Create an Android `SeekBar`.
 1. On progress change, use `MapView.setViewpointRotationAsync(...)` to a value obtained from the `SeekBar`.
 
-# Relevant API
+## Relevant API
 * ArcGISMap
 * Basemap
 * MapView

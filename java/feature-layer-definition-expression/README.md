@@ -1,4 +1,4 @@
-# Feature layer definition expression
+# Feature Layer Definition Expression
 Limit which features to display on the map.
 
 ![Feature Layer Definition Expression App](feature-layer-definition-expression.png)

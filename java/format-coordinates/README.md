@@ -1,4 +1,4 @@
-# Format coordinates
+# Format Coordinates
 Convert a map location `Point` in WGS 1984 spatial reference to a number of different coordinate notations (decimal degrees; degrees, minutes, seconds; Universal Transverse Mercator (UTM), and United States National Grid (USNG)), by using `CoordinateFormatter`.
 
 ![Format Coordinates App](format-coordinates.png)

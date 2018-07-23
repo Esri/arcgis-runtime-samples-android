@@ -15,4 +15,4 @@ Add multiple layers to an `ArcGISMap` including a `Basemap.Type` and an `ArcGISM
 * SublayerList
 
 #### Tags
-Layers
+Visualization

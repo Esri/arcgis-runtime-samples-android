@@ -15,4 +15,4 @@ Set the `ServiceFeatureTable.FeatureRequestMode` property of the service feature
 * ServiceFeatureTable.setFeatureRequestMode(...)
 
 #### Tags
-Maps and Scenes
+Edit and Manage Data

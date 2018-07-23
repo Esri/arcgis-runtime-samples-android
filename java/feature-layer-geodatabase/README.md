@@ -1,4 +1,4 @@
-# Feature layer (GeoDatabase)
+# Feature Layer (GeoDatabase)
 Consume an Esri mobile geodatabase by using a `FeatureLayer` and a `GeodatabaseFeatureTable`.
 
 ![feature layer geodatabase](feature-layer-geodatabase.png)
@@ -25,4 +25,4 @@ Link | Local Location
 |[Los Angeles Trailheads](https://www.arcgis.com/home/item.html?id=2b0f9e17105847809dfeb04e3cad69e0)| `<sdcard>`/ArcGIS/samples/FLGdb/LA_Trails.geodatabase|
 
 #### Tags
-Edit and Manage Data
+Layers

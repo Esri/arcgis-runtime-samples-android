@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Map Image Layer Tables</string>
+    <string name="map_service">https://sampleserver6.arcgisonline.com/arcgis/rest/services/ServiceRequest/MapServer</string>
+</resources>
