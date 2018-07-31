@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.sample.createsavemap;
 import java.util.Arrays;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -32,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -207,16 +209,29 @@ public class MainActivity extends AppCompatActivity {
     EditText descriptionEditText = saveMapDialogView.findViewById(R.id.descriptionEditText);
 
     // build the dialog
-    AlertDialog.Builder saveMapDialogBuilder = new AlertDialog.Builder(this);
-    AlertDialog saveMapDialog = saveMapDialogBuilder.create();
-    saveMapDialogBuilder.setView(saveMapDialogView);
-    saveMapDialogBuilder.setPositiveButton(R.string.save_map, (dialog, which) -> {
+    AlertDialog saveMapDialog = new AlertDialog.Builder(this)
+        .setView(saveMapDialogView)
+        .setPositiveButton(R.string.save_map, null)
+        .setNegativeButton(R.string.cancel, null)
+        .show();
+
+    // click handling for the save map button
+    Button saveMapButton = saveMapDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+    saveMapButton.setOnClickListener(v -> {
       Iterable<String> tags = Arrays.asList(tagsEditText.getText().toString().split(","));
-      // call save map passing in title, tags and description
-      saveMap(titleEditText.getText().toString(), tags, descriptionEditText.getText().toString());
+      // make sure the title edit text view has text
+      if (titleEditText.getText().length() > 0) {
+        // call save map passing in title, tags and description
+        saveMap(titleEditText.getText().toString(), tags, descriptionEditText.getText().toString());
+        saveMapDialog.dismiss();
+      } else {
+        Toast.makeText(this, "A title is required to save your map.", Toast.LENGTH_LONG).show();
+      }
     });
-    saveMapDialogBuilder.setNegativeButton(R.string.cancel, (dialog, which) -> saveMapDialog.dismiss());
-    saveMapDialogBuilder.show();
+
+    // click handling for the cancel button
+    Button cancelButton = saveMapDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+    cancelButton.setOnClickListener(v -> saveMapDialog.dismiss());
   }
 
   /**
