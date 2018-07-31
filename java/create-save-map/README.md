@@ -4,7 +4,7 @@ Create a map and save it to your portal.
 ![Create and Save a Map App](create-save-map.png)
 
 ## How to use the sample
-This sample uses the [named user login](https://developers.arcgis.com/authentication/#named-user-login) authentication pattern.  Before a user can save a map they have to login to their [ArcGIS Online](https://www.arcgis.com/) account. Follow the [authentication](#authentication) steps below before running the app.  
+This sample uses the [named user login](https://developers.arcgis.com/authentication/#named-user-login) authentication pattern. Before a user can save a map they have to login to their [ArcGIS Online](https://www.arcgis.com/) account. Follow the steps below before running the app.  
 
 1. Open the navigation drawer by tapping on the Drawer Toggle or sliding right from the left side of the screen. Choose basemap and operational layers to create a map. Tap on save menu option to save the map. User will be provided with an authentication page to login.  Once logged in you provide a title, tags and description (optional) for the map.
 1. Login to your [ArcGIS Developers site](http://developers.arcgis.com) account and [Register](https://developers.arcgis.com/applications/#/new/) your app.  Once registered, select the **Authentication** tab taking note of your **Client ID**.
