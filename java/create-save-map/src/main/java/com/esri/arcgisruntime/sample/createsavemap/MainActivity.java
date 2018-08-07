@@ -18,7 +18,6 @@ package com.esri.arcgisruntime.sample.createsavemap;
 
 import java.util.Arrays;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -56,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private static final int MIN_SCALE = 60000000;
-  private ProgressDialog progressDialog;
   private MapView mMapView;
   private DrawerLayout mDrawerLayout;
   private ListView mBasemapListView;
@@ -91,10 +89,6 @@ public class MainActivity extends AppCompatActivity {
     // setting the scales at which the map image layer layer can be viewed
     mapImageLayer.setMinScale(MIN_SCALE);
     mapImageLayer.setMaxScale(MIN_SCALE / 100);
-
-    progressDialog = new ProgressDialog(this);
-    progressDialog.setTitle(getApplication().getString(R.string.author_map_message));
-    progressDialog.setMessage(getApplication().getString(R.string.wait));
 
     // create base map array and set it to a list view adapter
     String[] basemapTiles = getResources().getStringArray(R.array.basemap_array);
@@ -133,17 +127,14 @@ public class MainActivity extends AppCompatActivity {
           if (map.getLoadStatus() == LoadStatus.LOADED) {
             // if both items are checked, add them
             if (mLayerListView.getCheckedItemCount() > 1) {
-              progressDialog.show();
               map.getOperationalLayers().clear();
               map.getOperationalLayers().add(tiledLayer);
               map.getOperationalLayers().add(mapImageLayer);
             } else { // if any one item is checked, add as layer
               if (mLayerListView.isItemChecked(0)) {
-                progressDialog.show();
                 map.getOperationalLayers().clear();
                 map.getOperationalLayers().add(tiledLayer);
               } else if (mLayerListView.isItemChecked(1)) {
-                progressDialog.show();
                 map.getOperationalLayers().clear();
                 map.getOperationalLayers().add(mapImageLayer);
               } else {
@@ -153,12 +144,6 @@ public class MainActivity extends AppCompatActivity {
           }
         });
 
-        // if the progress dialog is showing, dismiss it
-        mMapView.addLayerViewStateChangedListener(layerViewStateChangedEvent -> {
-          if (progressDialog.isShowing()) {
-            progressDialog.dismiss();
-          }
-        });
         invalidateOptionsMenu();
       }
 
