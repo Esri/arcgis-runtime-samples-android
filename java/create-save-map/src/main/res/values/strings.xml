@@ -4,17 +4,18 @@
     <string name="layer_selection">Add operational layers</string>
     <string name="title">Title</string>
     <string name="tags">Tags</string>
-    <string name="desc">Description</string>
 
     <!-- Services -->
     <string name="world_time_zones">http://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer</string>
     <string name="us_census">http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
     <!-- App messages -->
-    <string name="author_map_message">Creating your map</string>
-    <string name="wait">Please wait&#8230;</string>
-    <string name="map_successful">Map created successfully</string>
-    <string name="title_error">Please enter a Title for your map</string>
-    <string name="tags_error">Tags can not be empty</string>
+    <string name="description">Description</string>
+    <string name="unsupported_option">Unsupported option</string>
+    <string name="cancel">Cancel</string>
+    <string name="save_map">Save Map</string>
+    <string name="enter_tags_separated_by_commas">Enter tags separated by commas</string>
+    <string name="enter_description">Enter description</string>
+    <string name="enter_title">Enter title</string>
     <!-- Basemap choice array -->
     <string-array name="basemap_array">
         <item>Streets</item>
