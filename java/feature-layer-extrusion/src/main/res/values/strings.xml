@@ -3,6 +3,6 @@
     <string name="us_census_feature_service">
         http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer/3
     </string>
-    <string name="total_pop">Total Population</string>
-    <string name="density_pop">Population Density</string>
+    <string name="total_population">Total Population</string>
+    <string name="population_density">Population Density</string>
 </resources>
