@@ -19,7 +19,7 @@ package com.esri.arcgisruntime.sample.featurelayerextrusion;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ToggleButton;
+import android.widget.Switch;
 
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Point;
@@ -38,18 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
   private SceneView mSceneView;
 
-  private boolean showTotalPopulation;
-
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-
-    // set flag for showing total population or population density
-    showTotalPopulation = true;
-
-    // inflate population type toggle button
-    final ToggleButton togglePopButton = findViewById(R.id.toggleButton);
 
     // get us census data as a service feature table
     ServiceFeatureTable statesServiceFeatureTable = new ServiceFeatureTable(
@@ -83,21 +75,21 @@ public class MainActivity extends AppCompatActivity {
     final Camera camera = new Camera(lookAtPoint, 20000000, 0, 55, 0);
     mSceneView.setViewpointCamera(camera);
 
-    // set button listener
-    togglePopButton.setOnClickListener(v -> {
+    // set switch listener
+    Switch popSwitch = findViewById(R.id.populationSwitch);
+    popSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
       // set extrusion properties to either show total population or population density based on flag
-      if (showTotalPopulation) {
-        // divide total population by 10 to make data legible
-        renderer.getSceneProperties().setExtrusionExpression("[POP2007] / 10");
-        showTotalPopulation = false;
-      } else {
+      if (isChecked) {
         // multiple population density by 5000 to make data legible
         renderer.getSceneProperties().setExtrusionExpression("[POP07_SQMI] * 5000 + 100000");
-        showTotalPopulation = true;
+      } else {
+        // divide total population by 10 to make data legible
+        renderer.getSceneProperties().setExtrusionExpression("[POP2007] / 10");
       }
     });
-    // click to set initial state
-    togglePopButton.performClick();
+
+    // set initial switch state
+    popSwitch.setChecked(true);
   }
 
   @Override
