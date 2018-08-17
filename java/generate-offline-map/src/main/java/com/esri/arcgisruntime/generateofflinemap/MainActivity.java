@@ -54,16 +54,24 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
+  private Button mTakeMapOfflineButton;
+  private GraphicsOverlay mGraphicsOverlay;
+  private Graphic mDownloadArea;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // access MapView from layout
     mMapView = findViewById(R.id.mapView);
 
-    // define permission to request
-    String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+    // access button to take the map offline and disable it until map is loaded
+    mTakeMapOfflineButton = findViewById(R.id.takeMapOfflineButton);
+    mTakeMapOfflineButton.setEnabled(false);
+
+    // request write permission
+    String[] reqPermission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
     int requestCode = 2;
     // for API level 23+ request permission at runtime
     if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
@@ -72,16 +80,6 @@ public class MainActivity extends AppCompatActivity {
       // request permission
       ActivityCompat.requestPermissions(this, reqPermission, requestCode);
     }
-  }
-
-  /**
-   * Use generate offline map job to generate an offline map.
-   */
-  private void generateOfflineMap() {
-
-    // create a button to take the map offline
-    final Button takeMapOfflineButton = findViewById(R.id.takeMapOfflineButton);
-    takeMapOfflineButton.setEnabled(false);
 
     // handle authentication with the portal
     AuthenticationManager.setAuthenticationChallengeHandler(new DefaultAuthenticationChallengeHandler(this));
@@ -93,9 +91,14 @@ public class MainActivity extends AppCompatActivity {
     // create a map with the portal item
     ArcGISMap map = new ArcGISMap(portalItem);
     map.addDoneLoadingListener(() -> {
-      // enable the button when the map is loaded
       if (map.getLoadStatus() == LoadStatus.LOADED) {
-        takeMapOfflineButton.setEnabled(true);
+
+        // enable the map offline button only after the map is loaded
+        mTakeMapOfflineButton.setEnabled(true);
+
+        // limit the map scale to the largest layer scale
+        map.setMaxScale(map.getOperationalLayers().get(6).getMaxScale());
+        map.setMinScale(map.getOperationalLayers().get(6).getMinScale());
       }
     });
 
@@ -103,43 +106,50 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // create a graphics overlay for the map view
-    GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
-    mMapView.getGraphicsOverlays().add(graphicsOverlay);
+    mGraphicsOverlay = new GraphicsOverlay();
+    mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
 
     // create a graphic to show a box around the extent we want to download
-    Graphic downloadArea = new Graphic();
-    graphicsOverlay.getGraphics().add(downloadArea);
+    mDownloadArea = new Graphic();
+    mGraphicsOverlay.getGraphics().add(mDownloadArea);
     SimpleLineSymbol simpleLineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2);
-    downloadArea.setSymbol(simpleLineSymbol);
+    mDownloadArea.setSymbol(simpleLineSymbol);
 
-    // update the box whenever the viewpoint changes
+    // update the download area box whenever the viewpoint changes
     mMapView.addViewpointChangedListener(viewpointChangedEvent -> {
       if (map.getLoadStatus() == LoadStatus.LOADED) {
         // upper left corner of the area to take offline
         android.graphics.Point minScreenPoint = new android.graphics.Point(200, 200);
         // lower right corner of the downloaded area
-        android.graphics.Point maxScreenPoint = new android.graphics.Point(mMapView.getWidth() - 200, mMapView.getHeight() - 200);
+        android.graphics.Point maxScreenPoint = new android.graphics.Point(mMapView.getWidth() - 200,
+            mMapView.getHeight() - 200);
         // convert screen points to map points
         Point minPoint = mMapView.screenToLocation(minScreenPoint);
         Point maxPoint = mMapView.screenToLocation(maxScreenPoint);
         // use the points to define and return an envelope
         if (minPoint != null && maxPoint != null) {
           Envelope envelope = new Envelope(minPoint, maxPoint);
-          downloadArea.setGeometry(envelope);
+          mDownloadArea.setGeometry(envelope);
         }
       }
     });
+  }
+
+  /**
+   * Use the generate offline map job to generate an offline map.
+   */
+  private void generateOfflineMap() {
 
     // create a progress dialog to show download progress
     ProgressDialog progressDialog = new ProgressDialog(this);
-    progressDialog.setTitle("Generate Offline Map");
+    progressDialog.setTitle("Generate Offline Map Job");
     progressDialog.setMessage("Taking map offline...");
     progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     progressDialog.setIndeterminate(false);
     progressDialog.setProgress(0);
 
     // when the button is clicked, start the offline map task job
-    takeMapOfflineButton.setOnClickListener(v -> {
+    mTakeMapOfflineButton.setOnClickListener(v -> {
       progressDialog.show();
 
       // delete any offline map already in the cache
@@ -148,27 +158,29 @@ public class MainActivity extends AppCompatActivity {
 
       // specify the extent, min scale, and max scale as parameters
       double minScale = mMapView.getMapScale();
-      double maxScale = map.getMaxScale();
+      double maxScale = mMapView.getMap().getMaxScale();
       // minScale must always be larger than maxScale
       if (minScale <= maxScale) {
         minScale = maxScale + 1;
       }
-      GenerateOfflineMapParameters params = new GenerateOfflineMapParameters(downloadArea.getGeometry(), minScale,
+      GenerateOfflineMapParameters generateOfflineMapParameters = new GenerateOfflineMapParameters(
+          mDownloadArea.getGeometry(), minScale,
           maxScale);
 
-      // create an offline map task with the map
-      OfflineMapTask task = new OfflineMapTask(map);
+      // create an offline map offlineMapTask with the map
+      OfflineMapTask offlineMapTask = new OfflineMapTask(mMapView.getMap());
 
       // create an offline map job with the download directory path and parameters and start the job
-      GenerateOfflineMapJob job = task.generateOfflineMap(params, tempDirectoryPath);
+      GenerateOfflineMapJob job = offlineMapTask.generateOfflineMap(generateOfflineMapParameters, tempDirectoryPath);
 
       // replace the current map with the result offline map when the job finishes
       job.addJobDoneListener(() -> {
         if (job.getStatus() == Job.Status.SUCCEEDED) {
           GenerateOfflineMapResult result = job.getResult();
           mMapView.setMap(result.getOfflineMap());
-          graphicsOverlay.getGraphics().clear();
-          takeMapOfflineButton.setEnabled(false);
+          mGraphicsOverlay.getGraphics().clear();
+          mTakeMapOfflineButton.setEnabled(false);
+          Toast.makeText(this, "Now displaying offline map.", Toast.LENGTH_LONG).show();
         } else {
           String error = "Error in generate offline map job: " + job.getError().getAdditionalMessage();
           Toast.makeText(this, error, Toast.LENGTH_LONG).show();
@@ -187,20 +199,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Recursively deletes all files in the given directory.
-   *
-   * @param file to delete
-   */
-  void deleteDirectory(File file) {
-    if (file.isDirectory())
-      for (File subFile : file.listFiles())
-        deleteDirectory(subFile);
-    file.delete();
-  }
-
-  /**
    * Handle the permissions request response.
    */
+  @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       generateOfflineMap();
@@ -227,6 +228,19 @@ public class MainActivity extends AppCompatActivity {
   protected void onDestroy() {
     mMapView.dispose();
     super.onDestroy();
+  }
+
+  /**
+   * Recursively deletes all files in the given directory.
+   *
+   * @param file to delete
+   */
+  private static void deleteDirectory(File file) {
+    if (file.isDirectory())
+      for (File subFile : file.listFiles()) {
+        deleteDirectory(subFile);
+      }
+    file.delete();
   }
 }
 
