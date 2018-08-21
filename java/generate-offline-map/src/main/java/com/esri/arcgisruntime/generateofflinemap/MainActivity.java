@@ -99,6 +99,10 @@ public class MainActivity extends AppCompatActivity {
         // limit the map scale to the largest layer scale
         map.setMaxScale(map.getOperationalLayers().get(6).getMaxScale());
         map.setMinScale(map.getOperationalLayers().get(6).getMinScale());
+      } else {
+        String error = "Map failed to load: " + map.getLoadError().getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
       }
     });
 
@@ -164,8 +168,7 @@ public class MainActivity extends AppCompatActivity {
         minScale = maxScale + 1;
       }
       GenerateOfflineMapParameters generateOfflineMapParameters = new GenerateOfflineMapParameters(
-          mDownloadArea.getGeometry(), minScale,
-          maxScale);
+          mDownloadArea.getGeometry(), minScale, maxScale);
 
       // create an offline map offlineMapTask with the map
       OfflineMapTask offlineMapTask = new OfflineMapTask(mMapView.getMap());
@@ -240,7 +243,9 @@ public class MainActivity extends AppCompatActivity {
       for (File subFile : file.listFiles()) {
         deleteDirectory(subFile);
       }
-    file.delete();
+    if (!file.delete()) {
+      Log.e(TAG, "Failed to delete file: " + file.getPath());
+    }
   }
 }
 
