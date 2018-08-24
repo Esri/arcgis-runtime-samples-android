@@ -34,6 +34,14 @@ adb -d install path/to/sample.apk
 
 Built APK's are saved to **arcgis-runtime-samples-android/[module-name]/build/outputs/apk/**. More information about running apps on devices can be found [here](https://developer.android.com/studio/run/device.html).
 
+### Run samples through the sample viewer
+The samples in this repository can also be viewed in a single sample viewer app. It can be found on the Play Store or [on ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=baadf30b7fce4c8dbf7ca8b884b9c339). If downloading from ArcGIS Online, follow these instructions to run the app locally on your device:
+1. Download and unzip the file to get the apk **ArcGIS_Runtime_Sample_Viewer_Android.apk**.
+1. Install the APK with adb: 
+```
+adb -d install path/to/ArcGIS_Runtime_Sample_Viewer_Android.apk
+```
+
 ## Issues
 
 Have a question about functionality in the ArcGIS Runtime SDK for Android? Want to ask other users for development advice, discuss a workflow, ask Esri staff and other users about bugs in the SDK? Use [GeoNet](https://geonet.esri.com/community/developers/native-app-developers/arcgis-runtime-sdk-for-android) for any general ArcGIS Runtime Android SDK questions like this, so others can learn from and contribute to the discussion.
