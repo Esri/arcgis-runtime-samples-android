@@ -59,9 +59,6 @@ public class MainActivity extends AppCompatActivity {
     // set the map to the map view
     mMapView.setMap(map);
 
-    // set initial KML to URL
-    changeSourceToURL();
-
     requestReadPermission();
   }
 
@@ -176,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
     String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
     int requestCode = 2;
     if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+      // set initial KML to URL
       changeSourceToURL();
     } else {
       // request permission
@@ -189,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      // set initial KML to URL
       changeSourceToURL();
     } else {
       // report to user that permission was denied
