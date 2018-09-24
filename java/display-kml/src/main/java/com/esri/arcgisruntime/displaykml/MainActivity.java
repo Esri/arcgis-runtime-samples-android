@@ -162,6 +162,8 @@ public class MainActivity extends AppCompatActivity {
       case R.id.kmlFromExternalStorage:
         changeSourceToFileExternalStorage();
         break;
+      default:
+        Log.e(TAG, "Menu option not implemented");
     }
     return super.onOptionsItemSelected(item);
   }
@@ -192,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
       // report to user that permission was denied
       Toast.makeText(this, getString(R.string.kml_read_permission_denied), Toast.LENGTH_SHORT).show();
     }
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
   @Override
