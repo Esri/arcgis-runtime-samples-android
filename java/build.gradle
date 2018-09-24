@@ -34,3 +34,7 @@ subprojects{
         }
     }
 }
+
+repositories {
+    google()
+}

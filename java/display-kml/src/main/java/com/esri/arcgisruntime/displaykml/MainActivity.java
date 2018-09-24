@@ -152,12 +152,16 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.kmlFromUrl) {
-      changeSourceToURL();
-    } else if (item.getItemId() == R.id.kmlfromPortal) {
-      changeSourceToPortalItem();
-    } else if (item.getItemId() == R.id.kmlFromExternalStorage) {
-      changeSourceToFileExternalStorage();
+    switch (item.getItemId()) {
+      case R.id.kmlFromUrl:
+        changeSourceToURL();
+        break;
+      case R.id.kmlfromPortal:
+        changeSourceToPortalItem();
+        break;
+      case R.id.kmlFromExternalStorage:
+        changeSourceToFileExternalStorage();
+        break;
     }
     return super.onOptionsItemSelected(item);
   }
@@ -180,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Handle the permissions request response.
    */
+  @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       changeSourceToURL();

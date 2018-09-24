@@ -4,12 +4,12 @@ Display a KML layer from a URL, portal item, or local KML file.
 ![Display KML App](display-kml.png)
 
 ## How to use the sample
-Pan and zoom on the map to view changes in status.
+Select the KML layer you'd like to display from the dropdown menu in the upper right
 
 ## How it works
-1. To create a KML layer from a URL, create a `KMLDataset` using the URL to the KML file. Then pass the dataset to the `KmlLayer` constructor.
+1. To create a KML layer from a URL, create a `KMLDataset` using the URL to the KML file. Then pass the data set to the `KmlLayer` constructor.
 2. To create a KML layer from a portal item, construct a `PortalItem` with a portal and the KML portal item. Pass the portal item to the `KmlLayer` constructor.
-1. To create a KML layer from a local file, create a `KMLDataset` using a path to the local KML file in external storage. Then pass the dataset to the `KmlLayer` constructor.
+1. To create a KML layer from a local file, create a `KMLDataset` using a path to the local KML file in external storage. Then pass the data set to the `KmlLayer` constructor.
 1. Add the layer as an operational layer to the map with `map.getOperationalLayers().add(kmlLayer)`.
 
 ## Relevant API
