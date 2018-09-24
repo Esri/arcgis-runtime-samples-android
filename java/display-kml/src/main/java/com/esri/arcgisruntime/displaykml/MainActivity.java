@@ -1,6 +1,28 @@
+/* Copyright 2018 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.esri.arcgisruntime.displaykml;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -37,55 +59,86 @@ public class MainActivity extends AppCompatActivity {
     // set the map to the map view
     mMapView.setMap(map);
 
-    // Set the initial KML source
+    // set initial KML to URL
     changeSourceToURL();
 
+    requestReadPermission();
   }
 
+  /**
+   * Clear all operational layers and add the kml layer to the map as an operational layer.
+   *
+   * @param kmlLayer to add to the map
+   */
   private void display(KmlLayer kmlLayer) {
-
     // clear the existing layers from the map
     mMapView.getMap().getOperationalLayers().clear();
 
-    // add the loaded KML layer to the map
+    // add the KML layer to the map
     mMapView.getMap().getOperationalLayers().add(kmlLayer);
   }
 
+  /**
+   * Display a kml layer from a URL.
+   */
   private void changeSourceToURL() {
-    // create a kml dataset from a URL
+    // create a kml data set from a URL
     KmlDataset kmlDataset = new KmlDataset(getString(R.string.kml_url));
 
     // a KML layer created from a remote KML file
     KmlLayer kmlLayer = new KmlLayer(kmlDataset);
     display(kmlLayer);
-    //Toast.makeText(this, "Displaying a KML layer from a URL", Toast.LENGTH_LONG).show();
+
+    // report errors if failed to load
+    kmlDataset.addDoneLoadingListener(() -> {
+      if (kmlDataset.getLoadStatus() != LoadStatus.LOADED) {
+        String error = "Failed to load kml layer from URL: " + kmlDataset.getLoadError().getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
+      }
+    });
   }
 
-  private void changeSourceToLocalFile() {
-    // a dataset created by referencing the name of a KML file stored locally on the device
-    KmlDataset kmlDataset = new KmlDataset("US_State_Capitals");
-    // a KML layer created from a local KML file
-    KmlLayer kmlLayer = new KmlLayer(kmlDataset);
-    display(kmlLayer);
-    Toast.makeText(this, "Displaying a KML layer from a local file", Toast.LENGTH_LONG).show();
-  }
-
+  /**
+   * Display a kml layer from a portal item.
+   */
   private void changeSourceToPortalItem() {
     // create a portal to ArcGIS Online
     Portal portal = new Portal(getString(R.string.arcgis_online_url));
-    portal.loadAsync();
-    portal.addDoneLoadingListener(() -> {
-      if (portal.getLoadStatus() == LoadStatus.LOADED) {
-        // create a portal item from a kml item id
-        PortalItem portalItem = new PortalItem(portal, getString(R.string.kml_item_id));
-        portalItem.addDoneLoadingListener(() -> {
-          // a KML layer created from an ArcGIS Online portal item
-          KmlLayer kmlLayer = new KmlLayer(portalItem);
-          display(kmlLayer);
-          Toast.makeText(this, "Displaying a KML layer from a portal item", Toast.LENGTH_LONG).show();
-        });
-      } else {
-        String error = "Error loading portal: " + portal.getLoadError().getCause().getMessage();
+
+    // create a portal item from a kml item id
+    PortalItem portalItem = new PortalItem(portal, getString(R.string.kml_item_id));
+
+    // a KML layer created from an ArcGIS Online portal item
+    KmlLayer kmlLayer = new KmlLayer(portalItem);
+    display(kmlLayer);
+
+    // report errors if failed to load
+    kmlLayer.addDoneLoadingListener(() -> {
+      if (kmlLayer.getLoadStatus() != LoadStatus.LOADED) {
+        String error = "Failed to load kml layer from portal item: " + kmlLayer.getLoadError().getCause().getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
+      }
+    });
+  }
+
+  /**
+   * Display a kml layer from external storage.
+   */
+  private void changeSourceToFileExternalStorage() {
+    // a data set made from data in external storage
+    KmlDataset kmlDataset = new KmlDataset(Environment.getExternalStorageDirectory() + getString(R.string.kml_path));
+
+    // a KML layer created from a local KML file
+    KmlLayer kmlLayer = new KmlLayer(kmlDataset);
+    display(kmlLayer);
+
+    // report errors if failed to load
+    kmlDataset.addDoneLoadingListener(() -> {
+      if (kmlDataset.getLoadStatus() != LoadStatus.LOADED) {
+        String error =
+            "Failed to load kml data set from external storage: " + kmlDataset.getLoadError().getCause().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
@@ -103,8 +156,55 @@ public class MainActivity extends AppCompatActivity {
       changeSourceToURL();
     } else if (item.getItemId() == R.id.kmlfromPortal) {
       changeSourceToPortalItem();
+    } else if (item.getItemId() == R.id.kmlFromExternalStorage) {
+      changeSourceToFileExternalStorage();
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  /**
+   * Request read external storage for API level 23+.
+   */
+  private void requestReadPermission() {
+    // define permission to request
+    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
+    int requestCode = 2;
+    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+      changeSourceToURL();
+    } else {
+      // request permission
+      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
+    }
+  }
+
+  /**
+   * Handle the permissions request response.
+   */
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      changeSourceToURL();
+    } else {
+      // report to user that permission was denied
+      Toast.makeText(this, getString(R.string.kml_read_permission_denied), Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  @Override
+  protected void onPause() {
+    mMapView.pause();
+    super.onPause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    mMapView.dispose();
+    super.onDestroy();
   }
 }
 
