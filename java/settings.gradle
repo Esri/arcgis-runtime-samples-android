@@ -1,4 +1,4 @@
-include ':add-graphics-renderer',
+include ':add-graphics-renderer', ':display-kml',
         ':add-graphics-symbols',
         ':analyze-hotspots',
         ':arcgis-mapimagelayer-url',

@@ -5,13 +5,13 @@ ext {
     minSdkVersion = 19
     targetSdkVersion = 26
     versionCode = 100
-    versionName = '100.3'
+    versionName = '100.4'
     // library versions
     kotlinVersion = '1.2.41'
     ankoVersion = '0.10.5'
     andSupportLibVersion = '27.1.1'
     constraintLayoutVersion = '1.1.2'
-    arcgisVersion = '100.3.0'
+    arcgisVersion = '100.4.0-2188'
     // plugin versions
     gradleVersion = '3.1.2'
     // java versions
