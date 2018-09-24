@@ -34,7 +34,3 @@ subprojects{
         }
     }
 }
-
-repositories {
-    google()
-}
