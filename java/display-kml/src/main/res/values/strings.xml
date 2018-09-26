@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Display KML</string>
+    <string name="kml_url">https://www.wpc.ncep.noaa.gov/kml/noaa_chart/WPC_Day1_SigWx.kml</string>
+    <string name="arcgis_online_url">https://www.arcgis.com</string>
+    <string name="kml_item_id">9fe0b1bfdcd64c83bd77ea0452c76253</string>
+    <string name="kml_path">/ArcGIS/Samples/KML/US_State_Capitals.kml</string>
+    <string name="kml_from_url">KML from URL</string>
+    <string name="kml_from_portal">KML from Portal</string>
+    <string name="kml_from_external_storage">KML from External Storage</string>
+    <string name="kml_read_permission_denied">READ permission was denied. This permission is required to load a kml data
+        set from external storage.</string>
+</resources>
