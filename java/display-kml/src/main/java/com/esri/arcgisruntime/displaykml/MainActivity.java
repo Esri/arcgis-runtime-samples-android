@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
       case R.id.kmlFromUrl:
         changeSourceToURL();
         break;
-      case R.id.kmlfromPortal:
+      case R.id.kmlFromPortal:
         changeSourceToPortalItem();
         break;
       case R.id.kmlFromExternalStorage:

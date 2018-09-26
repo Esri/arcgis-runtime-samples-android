@@ -4,7 +4,9 @@ Display a KML layer from a URL, portal item, or local KML file.
 ![Display KML App](display-kml.png)
 
 ## How to use the sample
-Select the KML layer you'd like to display from the dropdown menu in the upper right
+Select the KML layer you'd like to display from the dropdown menu in the upper right.
+
+Before attempting to load a KML file from local storage, the file will have to be sideloaded onto the device. See [Offline Data](#offline-data).
 
 ## How it works
 1. To create a KML layer from a URL, create a `KMLDataset` using the URL to the KML file. Then pass the data set to the `KmlLayer` constructor.

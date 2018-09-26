@@ -6,7 +6,7 @@
         android:title="@string/kml_from_url" />
 
     <item
-        android:id="@+id/kmlfromPortal"
+        android:id="@+id/kmlFromPortal"
         android:title="@string/kml_from_portal" />
 
     <item
