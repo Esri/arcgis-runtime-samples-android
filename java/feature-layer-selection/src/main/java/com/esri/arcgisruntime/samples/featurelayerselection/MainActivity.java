@@ -39,6 +39,8 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
+
   private MapView mMapView;
 
   @Override
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView.getSelectionProperties().setColor(Color.YELLOW);
 
     // create a map with the streets basemap
     final ArcGISMap map = new ArcGISMap(Basemap.createStreets());
@@ -59,12 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
     // create feature layer with its service feature table
     // create the service feature table
-    final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(
-        getResources().getString(R.string.sample_service_url));
+    final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getString(R.string.sample_service_url));
     // create the feature layer using the service feature table
     final FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
-    featureLayer.setSelectionColor(Color.YELLOW);
-    featureLayer.setSelectionWidth(10);
     // add the layer to the map
     map.getOperationalLayers().add(featureLayer);
 
@@ -100,8 +100,7 @@ public class MainActivity extends AppCompatActivity {
               while (iterator.hasNext()) {
                 feature = iterator.next();
                 counter++;
-                Log.d(getResources().getString(R.string.app_name),
-                    "Selection #: " + counter + " Table name: " + feature.getFeatureTable().getTableName());
+                Log.d(TAG, "Selection #: " + counter + " Table name: " + feature.getFeatureTable().getTableName());
               }
               Toast.makeText(getApplicationContext(), counter + " features selected", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
@@ -116,22 +115,19 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    super.onPause();
-    // pause MapView
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    // resume MapView
     mMapView.resume();
   }
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
-    // dispose MapView
     mMapView.dispose();
+    super.onDestroy();
   }
 }
