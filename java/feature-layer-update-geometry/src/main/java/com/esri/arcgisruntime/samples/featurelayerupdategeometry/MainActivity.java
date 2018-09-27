@@ -75,11 +75,11 @@ public class MainActivity extends AppCompatActivity {
     // set an on touch listener to listen for click events
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override
-      public boolean onSingleTapConfirmed(MotionEvent e) {
+      public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
 
         if (mFeatureSelected) {
-          android.graphics.Point screenCoordinate = new android.graphics.Point(Math.round(e.getX()),
-              Math.round(e.getY()));
+          android.graphics.Point screenCoordinate = new android.graphics.Point(Math.round(motionEvent.getX()),
+              Math.round(motionEvent.getY()));
           double tolerance = 20;
 
           // identify Layers to find features
@@ -104,13 +104,12 @@ public class MainActivity extends AppCompatActivity {
                       .show();
                 }
               }
-            } catch (InterruptedException | ExecutionException e12) {
-              Log.e(TAG, "Update feature failed: " + e12.getMessage());
+            } catch (InterruptedException | ExecutionException e) {
+              Log.e(TAG, "Update feature failed: " + e.getMessage());
             }
           });
         } else {
-          Point movedPoint = mMapView
-              .screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
+          Point movedPoint = mMapView.screenToLocation(new android.graphics.Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY())));
           final Point normalizedPoint = (Point) GeometryEngine.normalizeCentralMeridian(movedPoint);
           mIdentifiedFeature.addDoneLoadingListener(() -> {
             mIdentifiedFeature.setGeometry(normalizedPoint);
@@ -134,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
           });
           mIdentifiedFeature.loadAsync();
         }
-        return super.onSingleTapConfirmed(e);
+        return super.onSingleTapConfirmed(motionEvent);
       }
     });
   }

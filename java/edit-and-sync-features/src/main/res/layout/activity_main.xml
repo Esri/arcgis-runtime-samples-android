@@ -17,6 +17,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="@string/gen_geodatabase_button_text" />
+        android:text="@string/geodatabase_action_button_text" />
 
 </RelativeLayout>

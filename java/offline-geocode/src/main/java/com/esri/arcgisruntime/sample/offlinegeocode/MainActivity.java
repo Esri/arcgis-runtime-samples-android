@@ -209,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
 
     // add a graphics overlay
     graphicsOverlay = new GraphicsOverlay();
-    //graphicsOverlay.setSelectionColor(Color.CYAN);
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
     mGeocodeParameters = new GeocodeParameters();
