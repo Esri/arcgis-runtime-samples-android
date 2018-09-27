@@ -147,28 +147,29 @@ public class MainActivity extends AppCompatActivity {
     });
 
     // when the button is clicked, start the offline map task job
-    mGenerateOfflineMapOverridesButton.setOnClickListener(v -> {
-      showParametersDialog();
-    });
+    mGenerateOfflineMapOverridesButton.setOnClickListener(v -> showParametersDialog());
   }
 
+  /**
+   * Creates parameters dialog and handles processing of input to generateOfflineMap(...) when Start Job button is clicked.
+   */
   private void showParametersDialog() {
 
-    AlertDialog.Builder overrideParametersDialogBuilder = new AlertDialog.Builder(this);
-    AlertDialog overrideParametersDialog = overrideParametersDialogBuilder.create();
     View overrideParametersView = getLayoutInflater().inflate(R.layout.override_parameters_dialog, null);
 
     // min and max seek bars
-    SeekBar minScaleSeekBar = overrideParametersView.findViewById(R.id.minScaleSeekBar);
-    SeekBar maxScaleSeekBar = overrideParametersView.findViewById(R.id.maxScaleSeekBar);
-    minScaleSeekBar.setMax(22);
-    minScaleSeekBar.setProgress(15);
-    TextView currMinScale = overrideParametersView.findViewById(R.id.currMinScaleTextView);
-    currMinScale.setText(String.valueOf(minScaleSeekBar.getProgress()));
+    TextView currMinScaleTextView = overrideParametersView.findViewById(R.id.currMinScaleTextView);
+    TextView currMaxScaleTextView = overrideParametersView.findViewById(R.id.currMaxScaleTextview);
+
+    SeekBar minScaleSeekBar = buildSeekBar(overrideParametersView.findViewById(R.id.minScaleSeekBar),
+        currMinScaleTextView, 22, 15);
+    SeekBar maxScaleSeekBar = buildSeekBar(overrideParametersView.findViewById(R.id.maxScaleSeekBar),
+        currMaxScaleTextView, 23, 23);
     minScaleSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        currMinScale.setText(String.valueOf(progress));
+        currMinScaleTextView.setText(String.valueOf(progress));
         if (progress >= maxScaleSeekBar.getProgress()) {
+          currMaxScaleTextView.setText(String.valueOf(progress + 1));
           maxScaleSeekBar.setProgress(progress + 1);
         }
       }
@@ -179,14 +180,11 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onStopTrackingTouch(SeekBar seekBar) {
       }
     });
-    maxScaleSeekBar.setMax(23);
-    maxScaleSeekBar.setProgress(23);
-    TextView currMaxScale = overrideParametersView.findViewById(R.id.currMaxScaleTextview);
-    currMaxScale.setText(String.valueOf(maxScaleSeekBar.getProgress()));
     maxScaleSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        currMaxScale.setText(String.valueOf(progress));
+        currMaxScaleTextView.setText(String.valueOf(progress));
         if (progress <= minScaleSeekBar.getProgress()) {
+          currMinScaleTextView.setText(String.valueOf(progress + 1));
           minScaleSeekBar.setProgress(progress - 1);
         }
       }
@@ -199,60 +197,61 @@ public class MainActivity extends AppCompatActivity {
     });
 
     // extent buffer seek bar
-    SeekBar extentBufferDistanceSeekBar = overrideParametersView.findViewById(R.id.extentBufferDistanceSeekBar);
-    extentBufferDistanceSeekBar.setMax(500);
-    extentBufferDistanceSeekBar.setProgress(300);
-    TextView currExtentBuffer = overrideParametersView.findViewById(R.id.currExtentBufferDistanceTextView);
-    currExtentBuffer.setText(String.valueOf(extentBufferDistanceSeekBar.getProgress()));
-    extentBufferDistanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        currExtentBuffer.setText(String.valueOf(progress));
-      }
-
-      @Override public void onStartTrackingTouch(SeekBar seekBar) {
-      }
-
-      @Override public void onStopTrackingTouch(SeekBar seekBar) {
-      }
-    });
+    SeekBar extentBufferDistanceSeekBar = buildSeekBar(
+        overrideParametersView.findViewById(R.id.extentBufferDistanceSeekBar),
+        overrideParametersView.findViewById(R.id.currExtentBufferDistanceTextView), 500, 300);
 
     // include layers checkboxes
-    CheckBox systemValves = overrideParametersDialog.findViewById(R.id.systemValvesCheckBox);
-    CheckBox serviceConnections = overrideParametersDialog.findViewById(R.id.serviceConnectionsCheckBox);
+    CheckBox systemValves = overrideParametersView.findViewById(R.id.systemValvesCheckBox);
+    CheckBox serviceConnections = overrideParametersView.findViewById(R.id.serviceConnectionsCheckBox);
 
     // min hydrant flow rate seek bar
-    SeekBar minHydrantFlowRateSeekBar = overrideParametersView.findViewById(R.id.minHydrantFlowRateSeekBar);
-    minHydrantFlowRateSeekBar.setMax(2000);
-    minHydrantFlowRateSeekBar.setProgress(500);
-    TextView currMinHydrant = overrideParametersView.findViewById(R.id.currMinHydrantFlowRateTextView);
-    currMinHydrant.setText(String.valueOf(extentBufferDistanceSeekBar.getProgress()));
-    minHydrantFlowRateSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        currMinHydrant.setText(String.valueOf(progress));
-      }
-
-      @Override public void onStartTrackingTouch(SeekBar seekBar) {
-      }
-
-      @Override public void onStopTrackingTouch(SeekBar seekBar) {
-      }
-    });
+    SeekBar minHydrantFlowRateSeekBar = buildSeekBar(
+        overrideParametersView.findViewById(R.id.minHydrantFlowRateSeekBar),
+        overrideParametersView.findViewById(R.id.currMinHydrantFlowRateTextView), 2000, 500);
 
     // crop layer to extent checkbox
-    CheckBox waterPipes = overrideParametersDialog.findViewById(R.id.waterPipesCheckBox);
+    CheckBox waterPipes = overrideParametersView.findViewById(R.id.waterPipesCheckBox);
 
     // setup dialog
+    AlertDialog.Builder overrideParametersDialogBuilder = new AlertDialog.Builder(this);
+    AlertDialog overrideParametersDialog = overrideParametersDialogBuilder.create();
     overrideParametersDialogBuilder.setView(overrideParametersView)
         .setTitle("Override Parameters")
         .setCancelable(true)
         .setNegativeButton("Cancel", (dialog, which) -> overrideParametersDialog.dismiss())
-        .setPositiveButton("Start Job", (dialog, which) -> {
-
-          generateOfflineMap(minScaleSeekBar.getProgress(), maxScaleSeekBar.getProgress(),
-              extentBufferDistanceSeekBar.getProgress(), systemValves.isChecked(), serviceConnections.isChecked(),
-              minHydrantFlowRateSeekBar.getProgress(), waterPipes.isChecked());
-        })
+        .setPositiveButton("Start Job",
+            (dialog, which) -> generateOfflineMap(minScaleSeekBar.getProgress(), maxScaleSeekBar.getProgress(),
+                extentBufferDistanceSeekBar.getProgress(), systemValves.isChecked(), serviceConnections.isChecked(),
+                minHydrantFlowRateSeekBar.getProgress(), waterPipes.isChecked()))
         .show();
+  }
+
+  /**
+   * Builds a seek bar and handles updating of the associated current seek bar text view.
+   *
+   * @param seekBar view to build
+   * @param currSeekBarTextView to be updated when the seek bar progress changes
+   * @param max max value for the seek bar
+   * @param progress initial progress position of the seek bar
+   * @return the built seek bar
+   */
+  private SeekBar buildSeekBar(SeekBar seekBar, TextView currSeekBarTextView, int max, int progress) {
+    seekBar.setMax(max);
+    seekBar.setProgress(progress);
+    currSeekBarTextView.setText(String.valueOf(seekBar.getProgress()));
+    seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        currSeekBarTextView.setText(String.valueOf(progress));
+      }
+
+      @Override public void onStartTrackingTouch(SeekBar seekBar) {
+      }
+
+      @Override public void onStopTrackingTouch(SeekBar seekBar) {
+      }
+    });
+    return seekBar;
   }
 
   /**
@@ -274,7 +273,9 @@ public class MainActivity extends AppCompatActivity {
     deleteDirectory(new File(tempDirectoryPath));
 
     GenerateOfflineMapParameters generateOfflineMapParameters = new GenerateOfflineMapParameters(
-        mDownloadArea.getGeometry(), minScale, maxScale);
+        mDownloadArea.getGeometry(), 23, 15);
+
+    Log.d(TAG, "Min: " + minScale + " Max: " + maxScale);
 
     // create an offline map offlineMapTask with the map
     OfflineMapTask offlineMapTask = new OfflineMapTask(mMapView.getMap());
@@ -291,10 +292,10 @@ public class MainActivity extends AppCompatActivity {
         OfflineMapParametersKey baseMapKey = new OfflineMapParametersKey(
             mMapView.getMap().getBasemap().getBaseLayers().get(0));
 
-
         // work with export tile cache parameter overrides
         Map<OfflineMapParametersKey, ExportTileCacheParameters> exportTileCacheParameters = mParameterOverrides
             .getExportTileCacheParameters();
+
         // add levels of detail based on min and max scales
         for (int i = minScale; i < maxScale; i++) {
           exportTileCacheParameters.get(baseMapKey).getLevelIDs().add(i);
@@ -310,7 +311,6 @@ public class MainActivity extends AppCompatActivity {
         if (!includeServiceConnections) {
           removeFeatureLayer("Service Connection");
         }
-
 
         Map<OfflineMapParametersKey, ExportVectorTilesParameters> exportVectorTileCacheParameters = mParameterOverrides
             .getExportVectorTilesParameters();
