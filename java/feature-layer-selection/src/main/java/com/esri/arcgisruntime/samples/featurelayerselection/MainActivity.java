@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     // create a map with the streets basemap
     final ArcGISMap map = new ArcGISMap(Basemap.createStreets());
 
-    //set an initial viewpoint
+    // set an initial viewpoint
     map.setInitialViewpoint(new Viewpoint(new Envelope(-1131596.019761, 3893114.069099, 3926705.982140, 7977912.461790,
         SpatialReferences.getWebMercator())));
 
