@@ -6,11 +6,6 @@
     <string name="tile_cache_folder">/ArcGIS/Samples/TileCache/</string>
     <string name="world_street_map_tpk">worldStreetMap.tpk</string>
     <string name="export_tiles_text">Export Tiles</string>
-    <string name="cancel_export_tiles_text">Cancel</string>
-    <string name="progress_starting">Starting</string>
-    <string name="progress_started">Started</string>
-    <string name="progress_fetching">Fetching result</string>
-    <string name="progress_done">Done</string>
     <string name="close_button_text">Close</string>
     <string name="preview_text">Preview</string>
 
