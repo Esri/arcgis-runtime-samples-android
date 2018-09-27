@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.app.ProgressDialog;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -50,6 +50,8 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
+
   private MapView mMapView;
 
   private ServiceFeatureTable mParksFeatureTable;
@@ -70,33 +72,38 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     // create MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
+
     // center the map over AK
     ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 65.399121, -151.521682, 4);
+
     // get callout and set style
     mCallout = mMapView.getCallout();
     Callout.Style calloutStyle = new Callout.Style(this, R.xml.callout_style);
     mCallout.setStyle(calloutStyle);
+
     // create progress dialog and set title
     mProgressDialog = new ProgressDialog(this);
-    mProgressDialog.setTitle(getResources().getString(R.string.app_name));
+    mProgressDialog.setTitle(getString(R.string.app_name));
+
     // set up feature tables and layers
-    mParksFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.parks_feature_table));
+    mParksFeatureTable = new ServiceFeatureTable(getString(R.string.parks_feature_table));
     mParksFeatureLayer = new FeatureLayer(mParksFeatureTable);
-    mParksFeatureLayer.setSelectionColor(Color.YELLOW);
-    mParksFeatureLayer.setSelectionWidth(5);
-    mPreservesFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.preserves_feature_table));
+    mPreservesFeatureTable = new ServiceFeatureTable(getString(R.string.preserves_feature_table));
     FeatureLayer preservesFeatureLayer = new FeatureLayer(mPreservesFeatureTable);
+
     // add feature layers to map
     map.getOperationalLayers().add(mParksFeatureLayer);
     map.getOperationalLayers().add(preservesFeatureLayer);
+
     // set the mArcGISMap to be displayed in this view
     mMapView.setMap(map);
+
     // identify feature
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override
       public boolean onSingleTapConfirmed(MotionEvent me) {
-        mProgressDialog.setMessage(getResources().getString(R.string.progress_identify));
+        mProgressDialog.setMessage(getString(R.string.progress_identify));
         mProgressDialog.show();
         // tapped point
         mTappedPoint = new Point((int) me.getX(), (int) me.getY());
@@ -106,29 +113,26 @@ public class MainActivity extends AppCompatActivity {
           mCallout.dismiss();
         }
 
-        final ListenableFuture<IdentifyLayerResult> identifyFuture = mMapView.identifyLayerAsync(
+        final ListenableFuture<IdentifyLayerResult> identifyLayerResultFuture = mMapView.identifyLayerAsync(
             mParksFeatureLayer, mTappedPoint, 5, false, 1);
-        identifyFuture.addDoneListener(new Runnable() {
-          @Override
-          public void run() {
-            try {
-              mProgressDialog.dismiss();
-              // call get on the future to get the result
-              IdentifyLayerResult layerResult = identifyFuture.get();
+        identifyLayerResultFuture.addDoneListener(() -> {
+          try {
+            mProgressDialog.dismiss();
+            // call get on the future to get the result
+            IdentifyLayerResult identifyLayerResult = identifyLayerResultFuture.get();
 
-              if (layerResult.getElements().size() > 0) {
-                mSelectedArcGISFeature = (ArcGISFeature) layerResult.getElements().get(0);
-                // highlight the selected feature
-                mParksFeatureLayer.selectFeature(mSelectedArcGISFeature);
-                mProgressDialog.setMessage(getResources().getString(R.string.progress_query));
-                mProgressDialog.show();
-                queryRelatedFeatures(mSelectedArcGISFeature);
-              }
-            } catch (InterruptedException e) {
-              e.printStackTrace();
-            } catch (ExecutionException e) {
-              e.printStackTrace();
+            if (!identifyLayerResult.getElements().isEmpty()) {
+              mSelectedArcGISFeature = (ArcGISFeature) identifyLayerResult.getElements().get(0);
+              // highlight the selected feature
+              mParksFeatureLayer.selectFeature(mSelectedArcGISFeature);
+              mProgressDialog.setMessage(getString(R.string.progress_query));
+              mProgressDialog.show();
+              queryRelatedFeatures(mSelectedArcGISFeature);
             }
+          } catch (InterruptedException | ExecutionException e) {
+            String error = "Error getting identify layer result: " + e.getMessage();
+            Toast.makeText(MainActivity.this, error,Toast.LENGTH_LONG).show();
+            Log.e(TAG, error);
           }
         });
         return super.onSingleTapConfirmed(me);
@@ -145,33 +149,30 @@ public class MainActivity extends AppCompatActivity {
     final ListenableFuture<List<RelatedFeatureQueryResult>> relatedFeatureQueryResultFuture = mParksFeatureTable
         .queryRelatedFeaturesAsync(feature);
 
-    relatedFeatureQueryResultFuture.addDoneListener(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          mProgressDialog.dismiss();
-          List<RelatedFeatureQueryResult> relatedFeatureQueryResultList = relatedFeatureQueryResultFuture.get();
+    relatedFeatureQueryResultFuture.addDoneListener(() -> {
+      try {
+        mProgressDialog.dismiss();
+        List<RelatedFeatureQueryResult> relatedFeatureQueryResultList = relatedFeatureQueryResultFuture.get();
 
-          // iterate over returned RelatedFeatureQueryResults
-          for (RelatedFeatureQueryResult relatedQueryResult : relatedFeatureQueryResultList) {
-            // iterate over Features returned
-            for (Feature relatedFeature : relatedQueryResult) {
-              // persist selected related feature
-              mSelectedRelatedFeature = (ArcGISFeature) relatedFeature;
-              // get preserve park name
-              String parkName = mSelectedRelatedFeature.getAttributes().get("UNIT_NAME").toString();
-              // use the Annual Visitors field to use as filter on related attributes
-              mAttributeValue = mSelectedRelatedFeature.getAttributes().get("ANNUAL_VISITORS").toString();
-              showCallout(parkName);
-              // center on tapped point
-              mMapView.setViewpointCenterAsync(mMapView.screenToLocation(mTappedPoint));
-            }
+        // iterate over returned RelatedFeatureQueryResults
+        for (RelatedFeatureQueryResult relatedQueryResult : relatedFeatureQueryResultList) {
+          // iterate over Features returned
+          for (Feature relatedFeature : relatedQueryResult) {
+            // persist selected related feature
+            mSelectedRelatedFeature = (ArcGISFeature) relatedFeature;
+            // get preserve park name
+            String parkName = mSelectedRelatedFeature.getAttributes().get("UNIT_NAME").toString();
+            // use the Annual Visitors field to use as filter on related attributes
+            mAttributeValue = mSelectedRelatedFeature.getAttributes().get("ANNUAL_VISITORS").toString();
+            showCallout(parkName);
+            // center on tapped point
+            mMapView.setViewpointCenterAsync(mMapView.screenToLocation(mTappedPoint));
           }
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        } catch (ExecutionException e) {
-          e.printStackTrace();
         }
+      } catch (InterruptedException | ExecutionException e) {
+        String error = "Error getting related feature query result: " + e.getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
       }
     });
   }
@@ -183,16 +184,15 @@ public class MainActivity extends AppCompatActivity {
    */
   private void showCallout(String parkName) {
     // create a text view for the callout
-    View calloutLayout = LayoutInflater.from(getApplicationContext()).inflate(R.layout.related_features_callout, null);
+    View calloutLayout = LayoutInflater.from(this).inflate(R.layout.related_features_callout, null);
     // create a text view and add park name
-    TextView parkText = (TextView) calloutLayout.findViewById(R.id.park_name);
-    String parkLabel = String.format(getResources().getString(R.string.callout_label), parkName);
+    TextView parkText = calloutLayout.findViewById(R.id.park_name);
+    String parkLabel = String.format(getString(R.string.callout_label), parkName);
     parkText.setText(parkLabel);
     // create spinner with selection options
-    final Spinner visitorSpinner = (Spinner) calloutLayout.findViewById(R.id.visitor_spinner);
+    final Spinner visitorSpinner = calloutLayout.findViewById(R.id.visitor_spinner);
     // create an array adapter using the string array and default spinner layout
-    final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-        getApplicationContext(), R.array.visitors_range, android.R.layout.simple_spinner_item);
+    final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.visitors_range, android.R.layout.simple_spinner_item);
     // Specify the layout to use when the list of choices appear
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     // apply the adapter to the spinner
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
         if (!selectedValue.equalsIgnoreCase(mAttributeValue)) {
           // selection changed, update the related feature
           mCallout.dismiss();
-          mProgressDialog.setMessage(getResources().getString(R.string.progress_update));
+          mProgressDialog.setMessage(getString(R.string.progress_update));
           mProgressDialog.show();
           updateRelatedFeature(selectedValue);
         }
@@ -221,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
       public void onNothingSelected(AdapterView<?> parent) {
       }
     });
-
   }
 
   /**
@@ -232,49 +231,40 @@ public class MainActivity extends AppCompatActivity {
   private void updateRelatedFeature(final String visitors) {
     // load the related feature
     mSelectedRelatedFeature.loadAsync();
-    mSelectedRelatedFeature.addDoneLoadingListener(new Runnable() {
-      @Override
-      public void run() {
-        if (mSelectedRelatedFeature.getLoadStatus() == LoadStatus.LOADED) {
-          // put new attribute value
-          mSelectedRelatedFeature.getAttributes().put("ANNUAL_VISITORS", visitors);
-          // persist the attribute value
-          mAttributeValue = visitors;
-          // update feature in the related feature table
-          ListenableFuture<Void> updateFeature = mPreservesFeatureTable.updateFeatureAsync(mSelectedRelatedFeature);
-          updateFeature.addDoneListener(new Runnable() {
-            @Override
-            public void run() {
-              // apply update to the server
-              final ListenableFuture<List<FeatureEditResult>> serverResult = mPreservesFeatureTable.applyEditsAsync();
-              serverResult.addDoneListener(new Runnable() {
-                @Override
-                public void run() {
-                  try {
-                    // check if server result successful
-                    List<FeatureEditResult> edits = serverResult.get();
-                    if (edits.size() > 0) {
-                      if (!edits.get(0).hasCompletedWithErrors()) {
-                        mParksFeatureLayer.clearSelection();
-                        mProgressDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.update_success), Toast.LENGTH_SHORT).show();
-                        // show callout with new value
-                        mCallout.show();
-                      } else {
-                        mProgressDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.update_fail), Toast.LENGTH_LONG).show();
-                      }
-                    }
-                  } catch (InterruptedException e) {
-                    e.printStackTrace();
-                  } catch (ExecutionException e) {
-                    e.printStackTrace();
-                  }
+    mSelectedRelatedFeature.addDoneLoadingListener(() -> {
+      if (mSelectedRelatedFeature.getLoadStatus() == LoadStatus.LOADED) {
+        // put new attribute value
+        mSelectedRelatedFeature.getAttributes().put("ANNUAL_VISITORS", visitors);
+        // persist the attribute value
+        mAttributeValue = visitors;
+        // update feature in the related feature table
+        ListenableFuture<Void> updateFeature = mPreservesFeatureTable.updateFeatureAsync(mSelectedRelatedFeature);
+        updateFeature.addDoneListener(() -> {
+          // apply update to the server
+          final ListenableFuture<List<FeatureEditResult>> serverResult = mPreservesFeatureTable.applyEditsAsync();
+          serverResult.addDoneListener(() -> {
+            try {
+              // check if server result successful
+              List<FeatureEditResult> edits = serverResult.get();
+              if (!edits.isEmpty()) {
+                if (!edits.get(0).hasCompletedWithErrors()) {
+                  mParksFeatureLayer.clearSelection();
+                  mProgressDialog.dismiss();
+                  Toast.makeText(this, getString(R.string.update_success), Toast.LENGTH_SHORT).show();
+                  // show callout with new value
+                  mCallout.show();
+                } else {
+                  mProgressDialog.dismiss();
+                  Toast.makeText(this, getString(R.string.update_fail), Toast.LENGTH_LONG).show();
                 }
-              });
+              }
+            } catch (InterruptedException | ExecutionException e) {
+              String error = "Error getting feature edit result: " + e.getMessage();
+              Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+              Log.e(TAG, error);
             }
           });
-        }
+        });
       }
     });
   }
@@ -302,22 +292,19 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    super.onPause();
-    // pause MapView
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    // resume MapView
     mMapView.resume();
   }
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
-    // dispose MapView
     mMapView.dispose();
+    super.onDestroy();
   }
 }

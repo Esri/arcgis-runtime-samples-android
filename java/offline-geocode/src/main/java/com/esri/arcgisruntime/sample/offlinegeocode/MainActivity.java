@@ -209,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
 
     // add a graphics overlay
     graphicsOverlay = new GraphicsOverlay();
-    graphicsOverlay.setSelectionColor(Color.CYAN);
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
     mGeocodeParameters = new GeocodeParameters();
@@ -219,7 +218,13 @@ public class MainActivity extends AppCompatActivity {
     //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from an app resource
     BitmapDrawable startDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin);
-    mPinSourceSymbol = new PictureMarkerSymbol(startDrawable);
+    try {
+      mPinSourceSymbol = PictureMarkerSymbol.createAsync(startDrawable).get();
+    } catch (InterruptedException | ExecutionException e) {
+      String error = "Error creating picture marker symbol: " + e.getMessage();
+      Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+      Log.e(TAG, error);
+    }
     mPinSourceSymbol.setHeight(90);
     mPinSourceSymbol.setWidth(20);
     mPinSourceSymbol.loadAsync();

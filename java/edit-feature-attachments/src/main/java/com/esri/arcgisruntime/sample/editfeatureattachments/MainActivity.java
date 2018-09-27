@@ -18,7 +18,6 @@ package com.esri.arcgisruntime.sample.editfeatureattachments;
 
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -49,27 +48,31 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
+
   private static final int REQUEST_CODE = 100;
   private ProgressDialog progressDialog;
   private RelativeLayout mCalloutLayout;
-  private Callout mCallout;
+
+  private MapView mMapView;
   private FeatureLayer mFeatureLayer;
   private ArcGISFeature mSelectedArcGISFeature;
+  private Callout mCallout;
   private android.graphics.Point mClickPoint;
-  private MapView mMapView;
+
   private List<Attachment> attachments;
   private String mSelectedArcGISFeatureAttributeValue;
   private String mAttributeID;
 
-  @SuppressLint("ClickableViewAccessibility") @Override
+  @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+
+    // get a reference to the map view
+    mMapView = findViewById(R.id.mapView);
     // create a map with the streets basemap
     ArcGISMap map = new ArcGISMap(Basemap.Type.STREETS, 44.354388, -119.998245, 5);
-    // set the map to be displayed in the mapview
+    // set the map to be displayed in the map view
     mMapView.setMap(map);
 
     progressDialog = new ProgressDialog(this);
@@ -78,18 +81,11 @@ public class MainActivity extends AppCompatActivity {
     createCallout();
     // get callout, set content and show
     mCallout = mMapView.getCallout();
-    // create feature layer with its service feature table
-    // create the service feature table
-    ServiceFeatureTable mServiceFeatureTable = new ServiceFeatureTable(
-        getResources().getString(R.string.sample_service_url));
+    // create feature layer with its service feature table and create the service feature table
+    ServiceFeatureTable mServiceFeatureTable = new ServiceFeatureTable(getString(R.string.sample_service_url));
     mServiceFeatureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.ON_INTERACTION_CACHE);
     // create the feature layer using the service feature table
     mFeatureLayer = new FeatureLayer(mServiceFeatureTable);
-
-    // set the color that is applied to a selected feature.
-    mFeatureLayer.setSelectionColor(Color.CYAN); //cyan, fully opaque
-    // set the width of selection color
-    mFeatureLayer.setSelectionWidth(5);
 
     // add the layer to the map
     map.getOperationalLayers().add(mFeatureLayer);
@@ -117,20 +113,16 @@ public class MainActivity extends AppCompatActivity {
             try {
               // call get on the future to get the result
               IdentifyLayerResult layerResult = futureIdentifyLayer.get();
-
               List<GeoElement> resultGeoElements = layerResult.getElements();
-              if (resultGeoElements.size() > 0) {
+              if (!resultGeoElements.isEmpty()) {
                 if (resultGeoElements.get(0) instanceof ArcGISFeature) {
                   progressDialog.show();
-
                   mSelectedArcGISFeature = (ArcGISFeature) resultGeoElements.get(0);
                   // highlight the selected feature
                   mFeatureLayer.selectFeature(mSelectedArcGISFeature);
                   mAttributeID = mSelectedArcGISFeature.getAttributes().get("objectid").toString();
                   // get the number of attachments
-                  final ListenableFuture<List<Attachment>> attachmentResults = mSelectedArcGISFeature
-                      .fetchAttachmentsAsync();
-
+                  final ListenableFuture<List<Attachment>> attachmentResults = mSelectedArcGISFeature.fetchAttachmentsAsync();
                   attachmentResults.addDoneListener(new Runnable() {
                     @Override
                     public void run() {
@@ -138,16 +130,12 @@ public class MainActivity extends AppCompatActivity {
                         attachments = attachmentResults.get();
                         Log.d("number of attachments :", attachments.size() + "");
                         // show callout with the value for the attribute "typdamage" of the selected feature
-                        mSelectedArcGISFeatureAttributeValue = (String) mSelectedArcGISFeature.getAttributes()
-                            .get("typdamage");
+                        mSelectedArcGISFeatureAttributeValue = (String) mSelectedArcGISFeature.getAttributes().get("typdamage");
                         if (progressDialog.isShowing()) {
                           progressDialog.dismiss();
                         }
                         showCallout(mSelectedArcGISFeatureAttributeValue, attachments.size());
-                        Toast
-                            .makeText(getApplicationContext(), getApplication().getString(R.string.info_button_message),
-                                Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(MainActivity.this, getApplication().getString(R.string.info_button_message), Toast.LENGTH_SHORT).show();
                       } catch (Exception e) {
                         Log.e(TAG, e.getMessage());
                       }
@@ -159,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 mCallout.dismiss();
               }
             } catch (Exception e) {
-              Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
+              Log.e(TAG, "Select feature failed: " + e.getMessage());
             }
           }
         });
@@ -176,14 +164,14 @@ public class MainActivity extends AppCompatActivity {
    */
   private void showCallout(String title, int noOfAttachments) {
 
-    TextView calloutContent = (TextView) mCalloutLayout.findViewById(R.id.calloutTextView);
+    TextView calloutContent = mCalloutLayout.findViewById(R.id.calloutTextView);
     calloutContent.setText(title);
 
-    TextView calloutAttachment = (TextView) mCalloutLayout.findViewById(R.id.attchTV);
-    String attachmentText = getApplication().getString(R.string.attachment_info_message) + noOfAttachments;
+    TextView calloutAttachment = mCalloutLayout.findViewById(R.id.attchTV);
+    String attachmentText = getString(R.string.attachment_info_message) + noOfAttachments;
     calloutAttachment.setText(attachmentText);
 
-    mCallout.setGeoElement(mSelectedArcGISFeature ,null);
+    mCallout.setGeoElement(mSelectedArcGISFeature, null);
     mCallout.setContent(mCalloutLayout);
     mCallout.show();
   }
@@ -225,7 +213,6 @@ public class MainActivity extends AppCompatActivity {
     mCalloutLayout.addView(calloutContent);
     mCalloutLayout.addView(imageView);
     mCalloutLayout.addView(calloutAttachment);
-
   }
 
   @Override
@@ -237,7 +224,24 @@ public class MainActivity extends AppCompatActivity {
       // update the callout with attachment count
       showCallout(mSelectedArcGISFeatureAttributeValue, noOfAttachments);
     }
+  }
 
+  @Override
+  protected void onPause() {
+    mMapView.pause();
+    super.onPause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    mMapView.dispose();
+    super.onDestroy();
   }
 
   /**
@@ -249,30 +253,10 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View v) {
       // start EditAttachmentActivity to view/edit the attachments
       Intent myIntent = new Intent(MainActivity.this, EditAttachmentActivity.class);
-      myIntent.putExtra(getApplication().getString(R.string.attribute), mAttributeID);
-      myIntent.putExtra(getApplication().getString(R.string.noOfAttachments), attachments.size());
+      myIntent.putExtra(getString(R.string.attribute), mAttributeID);
+      myIntent.putExtra(getString(R.string.noOfAttachments), attachments.size());
       Bundle bundle = new Bundle();
       startActivityForResult(myIntent, REQUEST_CODE, bundle);
-
     }
   }
-
-  @Override
-  protected void onPause() {
-    super.onPause();
-    mMapView.pause();
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    mMapView.resume();
-  }
-
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    mMapView.dispose();
-  }
-
 }
