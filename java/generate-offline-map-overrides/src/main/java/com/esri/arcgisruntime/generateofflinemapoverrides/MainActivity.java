@@ -18,7 +18,6 @@ package com.esri.arcgisruntime.generateofflinemapoverrides;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.Manifest;
@@ -44,6 +43,7 @@ import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
+import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.layers.Layer;
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
     SeekBar minScaleSeekBar = buildSeekBar(overrideParametersView.findViewById(R.id.minScaleSeekBar),
         currMinScaleTextView, 22, 15);
     SeekBar maxScaleSeekBar = buildSeekBar(overrideParametersView.findViewById(R.id.maxScaleSeekBar),
-        currMaxScaleTextView, 23, 23);
+        currMaxScaleTextView, 23, 20);
     minScaleSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         currMinScaleTextView.setText(String.valueOf(progress));
@@ -284,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
             // set basemap scale and area of interest
             setBasemapScaleAndAreaOfInterest(minScale, maxScale, bufferDistance);
             // exclude system valve layer
+
             if (!includeSystemValves) {
               excludeLayerFromDownload("System Valve");
             }
@@ -299,8 +300,12 @@ public class MainActivity extends AppCompatActivity {
             }
             // set flow rate where clause on the hydrant layer
             for (GenerateLayerOption generateLayerOption : getGenerateGeodatabaseParametersLayerOptions("Hydrant")) {
-              generateLayerOption.setWhereClause("FLOW >= " + flowRate);
+              if (generateLayerOption.getLayerId() == getServiceLayerId(getFeatureLayerByName("Hydrant"))) {
+                generateLayerOption.setWhereClause("FLOW >= " + flowRate);
+                generateLayerOption.setQueryOption(GenerateLayerOption.QueryOption.USE_FILTER);
+              }
             }
+
             // start a an offline map job from the task and parameters
             generateOfflineMap(offlineMapTask, generateOfflineMapParameters);
           } catch (InterruptedException | ExecutionException e) {
@@ -354,20 +359,15 @@ public class MainActivity extends AppCompatActivity {
    * @param bufferDistance
    */
   private void setBasemapScaleAndAreaOfInterest(int minScale, int maxScale, int bufferDistance) {
-    LayerList layers = mMapView.getMap().getBasemap().getBaseLayers();
-
-    // obtain a key for the given basemap-layer
-    OfflineMapParametersKey keyForTiledLayer = new OfflineMapParametersKey(layers.get(0));
-
-    // obtain the dictionary map of parameters for taking the basemap offline
-    Map<OfflineMapParametersKey, ExportTileCacheParameters> exportTileCacheParameters = mParameterOverrides.getExportTileCacheParameters();
-    if (!exportTileCacheParameters.containsKey(keyForTiledLayer))
-      return;
-
+    // get the export tile cache parameters
+    ExportTileCacheParameters exportTileCacheParameters = getExportTileCacheParameters(mMapView.getMap().getBasemap().getBaseLayers().get(0));
     // create a new sublist of LODs in the range requested by the user
+    exportTileCacheParameters.getLevelIDs().clear();
     for (int i = minScale; i < maxScale; i++) {
-      exportTileCacheParameters.get(keyForTiledLayer).getLevelIDs().add(i);
+      exportTileCacheParameters.getLevelIDs().add(i);
     }
+    // set the area of interest to the original download area plus a buffer
+    exportTileCacheParameters.setAreaOfInterest(GeometryEngine.buffer(mDownloadArea.getGeometry(), bufferDistance));
   }
 
   /**
@@ -378,12 +378,10 @@ public class MainActivity extends AppCompatActivity {
   private void excludeLayerFromDownload(String layerName) {
     // get the named feature layer
     FeatureLayer targetLayer = getFeatureLayerByName(layerName);
-    // get the generate geodatabase parameters from parameter overrides
-    GenerateGeodatabaseParameters generateGeodatabaseParameters = getGenerateGeodatabaseParameters(targetLayer);
     // get the layer's id
     long targetLayerId = getServiceLayerId(targetLayer);
     // get the layer's layer options
-    List<GenerateLayerOption> layerOptions = generateGeodatabaseParameters.getLayerOptions();
+    List<GenerateLayerOption> layerOptions = getGenerateGeodatabaseParametersLayerOptions(layerName);
     // remove the target layer
     for (GenerateLayerOption layerOption : layerOptions) {
       if (layerOption.getLayerId() == targetLayerId) {
@@ -394,10 +392,21 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Helper to class to get generate geodatabase parameters for the given layer.
+   * Helper method to get export tile cache parameters for the given layer.
    *
    * @param layer to get parameters for
-   * @return GenerateGeodatabaseParameters
+   * @return ExportTileCacheParameters for the given layer
+   */
+  private ExportTileCacheParameters getExportTileCacheParameters(Layer layer) {
+    OfflineMapParametersKey key = new OfflineMapParametersKey(layer);
+    return mParameterOverrides.getExportTileCacheParameters().get(key);
+  }
+
+  /**
+   * Helper method to get generate geodatabase parameters for the given layer.
+   *
+   * @param layer to get parameters for
+   * @return GenerateGeodatabaseParameters for the given layer
    */
   private GenerateGeodatabaseParameters getGenerateGeodatabaseParameters(Layer layer) {
     OfflineMapParametersKey key = new OfflineMapParametersKey(layer);
@@ -406,19 +415,7 @@ public class MainActivity extends AppCompatActivity {
 
 
   /**
-   * Helper to class to get export tile cache parameters for the given layer.
-   *
-   * @param layer to get parameters for
-   * @return ExportTileCacheParameters
-   */
-  private ExportTileCacheParameters getExportTileCacheParameters(Layer layer) {
-    OfflineMapParametersKey key = new OfflineMapParametersKey(layer);
-    return mParameterOverrides.getExportTileCacheParameters().get(key);
-  }
-
-
-  /**
-   * Helper class to get the generate geodatabase parameters layer options for the given layer
+   * Helper method to get the generate geodatabase parameters layer options for the given layer.
    *
    * @param layerName to get layer options for
    * @return list of GenerateLayerOptions
@@ -428,12 +425,12 @@ public class MainActivity extends AppCompatActivity {
     FeatureLayer targetFeatureLayer = getFeatureLayerByName(layerName);
     // get the generate geodatabase parameters for the layer
     GenerateGeodatabaseParameters generateGeodatabaseParameters = getGenerateGeodatabaseParameters(targetFeatureLayer);
-    // get the layer's table
+    // return the layer options
     return generateGeodatabaseParameters.getLayerOptions();
   }
 
   /**
-   * Helper class to get the service layer id for the given feature layer
+   * Helper method to get the service layer id for the given feature layer
    *
    * @param featureLayer to get service id for
    * @return service layer id as a long
@@ -444,7 +441,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Attempts to get the named feature layer from the map's operational layers.
+   * Helper method to get the named feature layer from the map's operational layers.
    *
    * @param layerName as a String
    * @return the named feature layer, or null, if not found or if named layer is not a feature layer
