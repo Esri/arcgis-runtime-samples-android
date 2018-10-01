@@ -17,12 +17,14 @@
 package com.esri.arcgisruntime.generateofflinemapoverrides;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -40,8 +42,8 @@ import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
-import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.layers.Layer;
@@ -57,6 +59,7 @@ import com.esri.arcgisruntime.security.AuthenticationManager;
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseParameters;
+import com.esri.arcgisruntime.tasks.geodatabase.GenerateLayerOption;
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapJob;
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapParameterOverrides;
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapParameters;
@@ -64,7 +67,6 @@ import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapResult;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapParametersKey;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask;
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheParameters;
-import com.esri.arcgisruntime.tasks.vectortilecache.ExportVectorTilesParameters;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -221,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         .setCancelable(true)
         .setNegativeButton("Cancel", (dialog, which) -> overrideParametersDialog.dismiss())
         .setPositiveButton("Start Job",
-            (dialog, which) -> generateOfflineMap(minScaleSeekBar.getProgress(), maxScaleSeekBar.getProgress(),
+            (dialog, which) -> defineParameters(minScaleSeekBar.getProgress(), maxScaleSeekBar.getProgress(),
                 extentBufferDistanceSeekBar.getProgress(), systemValves.isChecked(), serviceConnections.isChecked(),
                 minHydrantFlowRateSeekBar.getProgress(), waterPipes.isChecked()))
         .show();
@@ -230,10 +232,10 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Builds a seek bar and handles updating of the associated current seek bar text view.
    *
-   * @param seekBar view to build
+   * @param seekBar             view to build
    * @param currSeekBarTextView to be updated when the seek bar progress changes
-   * @param max max value for the seek bar
-   * @param progress initial progress position of the seek bar
+   * @param max                 max value for the seek bar
+   * @param progress            initial progress position of the seek bar
    * @return the built seek bar
    */
   private SeekBar buildSeekBar(SeekBar seekBar, TextView currSeekBarTextView, int max, int progress) {
@@ -255,114 +257,190 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Use the generate offline map job to generate an offline map.
+   * Use parameters from the override parameters dialog to define parameter overrides.
+   *
+   * @param minScale
+   * @param maxScale
+   * @param bufferDistance
+   * @param includeSystemValves
+   * @param includeServiceConnections
+   * @param flowRate
+   * @param cropWaterPipes
    */
-  private void generateOfflineMap(int minScale, int maxScale, int bufferDistance, boolean includeSystemValves,
-      boolean includeServiceConnections, int flowRate, boolean cropWaterPipes) {
-
-    // create a progress dialog to show download progress
-    ProgressDialog progressDialog = new ProgressDialog(this);
-    progressDialog.setTitle("Generate Offline Map Job");
-    progressDialog.setMessage("Taking map offline...");
-    progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-    progressDialog.setIndeterminate(false);
-    progressDialog.setProgress(0);
-
-    // delete any offline map already in the cache
-    String tempDirectoryPath = getCacheDir() + File.separator + "offlineMap";
-    deleteDirectory(new File(tempDirectoryPath));
-
-    GenerateOfflineMapParameters generateOfflineMapParameters = new GenerateOfflineMapParameters(
-        mDownloadArea.getGeometry(), 23, 15);
-
-    Log.d(TAG, "Min: " + minScale + " Max: " + maxScale);
-
+  private void defineParameters(int minScale, int maxScale, int bufferDistance, boolean includeSystemValves, boolean includeServiceConnections, int flowRate, boolean cropWaterPipes) {
     // create an offline map offlineMapTask with the map
     OfflineMapTask offlineMapTask = new OfflineMapTask(mMapView.getMap());
-
-    // create parameter overrides for greater control
-    ListenableFuture<GenerateOfflineMapParameterOverrides> parameterOverridesFuture = offlineMapTask
-        .createGenerateOfflineMapParameterOverridesAsync(generateOfflineMapParameters);
-    parameterOverridesFuture.addDoneListener(() -> {
+    // create default generate offline map parameters from the offline map task
+    ListenableFuture<GenerateOfflineMapParameters> generateOfflineMapParametersFuture = offlineMapTask.createDefaultGenerateOfflineMapParametersAsync(mDownloadArea.getGeometry());
+    generateOfflineMapParametersFuture.addDoneListener(() -> {
       try {
-        // get the parameter overrides
-        mParameterOverrides = parameterOverridesFuture.get();
-
-        // use the base map as the offline map parameters key
-        OfflineMapParametersKey baseMapKey = new OfflineMapParametersKey(
-            mMapView.getMap().getBasemap().getBaseLayers().get(0));
-
-        // work with export tile cache parameter overrides
-        Map<OfflineMapParametersKey, ExportTileCacheParameters> exportTileCacheParameters = mParameterOverrides
-            .getExportTileCacheParameters();
-
-        // add levels of detail based on min and max scales
-        for (int i = minScale; i < maxScale; i++) {
-          exportTileCacheParameters.get(baseMapKey).getLevelIDs().add(i);
-        }
-        // set the area of interest to be the initial area of interest with the given buffer distance
-        exportTileCacheParameters.get(baseMapKey)
-            .setAreaOfInterest(GeometryEngine.buffer(generateOfflineMapParameters.getAreaOfInterest(), bufferDistance));
-
-        if (!includeSystemValves) {
-          removeFeatureLayer("System Valve");
-        }
-
-        if (!includeServiceConnections) {
-          removeFeatureLayer("Service Connection");
-        }
-
-        Map<OfflineMapParametersKey, ExportVectorTilesParameters> exportVectorTileCacheParameters = mParameterOverrides
-            .getExportVectorTilesParameters();
-
-        // create an offline map job with the download directory path and parameters and start the job
-        GenerateOfflineMapJob job = offlineMapTask
-            .generateOfflineMap(generateOfflineMapParameters, tempDirectoryPath, mParameterOverrides);
-
-        // replace the current map with the result offline map when the job finishes
-        job.addJobDoneListener(() -> {
-          if (job.getStatus() == Job.Status.SUCCEEDED) {
-            GenerateOfflineMapResult result = job.getResult();
-            mMapView.setMap(result.getOfflineMap());
-            mGraphicsOverlay.getGraphics().clear();
-            mGenerateOfflineMapOverridesButton.setEnabled(false);
-            Toast.makeText(this, "Now displaying offline map.", Toast.LENGTH_LONG).show();
-          } else {
-            String error = "Error in generate offline map job: " + job.getError().getAdditionalMessage();
+        final GenerateOfflineMapParameters generateOfflineMapParameters = generateOfflineMapParametersFuture.get();
+        // create parameter overrides for greater control
+        ListenableFuture<GenerateOfflineMapParameterOverrides> parameterOverridesFuture = offlineMapTask.createGenerateOfflineMapParameterOverridesAsync(generateOfflineMapParameters);
+        parameterOverridesFuture.addDoneListener(() -> {
+          try {
+            // get the parameter overrides
+            mParameterOverrides = parameterOverridesFuture.get();
+            // set basemap scale and area of interest
+            setBasemapScaleAndAreaOfInterest(minScale, maxScale, bufferDistance);
+            // exclude system valve layer
+            if (!includeSystemValves) {
+              excludeLayerFromDownload("System Valve");
+            }
+            // exclude service connection layer
+            if (!includeServiceConnections) {
+              excludeLayerFromDownload("Service Connection");
+            }
+            // crop pipes layer
+            if (cropWaterPipes) {
+              for (GenerateLayerOption generateLayerOption : getGenerateGeodatabaseParametersLayerOptions("Main")) {
+                generateLayerOption.setUseGeometry(true);
+              }
+            }
+            // set flow rate where clause on the hydrant layer
+            for (GenerateLayerOption generateLayerOption : getGenerateGeodatabaseParametersLayerOptions("Hydrant")) {
+              generateLayerOption.setWhereClause("FLOW >= " + flowRate);
+            }
+            // start a an offline map job from the task and parameters
+            generateOfflineMap(offlineMapTask, generateOfflineMapParameters);
+          } catch (InterruptedException | ExecutionException e) {
+            String error = "Error creating parameter overrides: " + e.getCause().getMessage();
             Toast.makeText(this, error, Toast.LENGTH_LONG).show();
             Log.e(TAG, error);
           }
-          progressDialog.dismiss();
         });
-
-        // show the job's progress with the progress dialog
-        job.addProgressChangedListener(() -> progressDialog.setProgress(job.getProgress()));
-
-        // start the job
-        job.start();
-
       } catch (InterruptedException | ExecutionException e) {
-        String error = "Error creating parameter overrides: " + e.getCause().getMessage();
+        String error = "Error generating default generate offline map parameters: " + e.getCause().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
     });
   }
 
-  private void removeFeatureLayer(String layerName) {
+  /**
+   * Use the generate offline map job to generate an offline map.
+   */
+  private void generateOfflineMap(OfflineMapTask offlineMapTask, GenerateOfflineMapParameters generateOfflineMapParameters) {
+    // delete any offline map already in the cache
+    String tempDirectoryPath = getCacheDir() + File.separator + "offlineMap";
+    deleteDirectory(new File(tempDirectoryPath));
+    // create an offline map job with the download directory path and parameters and start the job
+    GenerateOfflineMapJob job = offlineMapTask.generateOfflineMap(generateOfflineMapParameters, tempDirectoryPath, mParameterOverrides);
+    // show the job's progress in a progress dialog
+    showProgressDialog(job);
+    // replace the current map with the result offline map when the job finishes
+    job.addJobDoneListener(() -> {
+      if (job.getStatus() == Job.Status.SUCCEEDED) {
+        GenerateOfflineMapResult result = job.getResult();
+        mMapView.setMap(result.getOfflineMap());
+        mGraphicsOverlay.getGraphics().clear();
+        mGenerateOfflineMapOverridesButton.setEnabled(false);
+        Toast.makeText(this, "Now displaying offline map.", Toast.LENGTH_LONG).show();
+      } else {
+        String error = "Error in generate offline map job: " + job.getError().getAdditionalMessage();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
+      }
+    });
+    // start the job
+    job.start();
+  }
 
+  /**
+   * Set basemap scale and area of interest using the given values
+   *
+   * @param minScale
+   * @param maxScale
+   * @param bufferDistance
+   */
+  private void setBasemapScaleAndAreaOfInterest(int minScale, int maxScale, int bufferDistance) {
+    LayerList layers = mMapView.getMap().getBasemap().getBaseLayers();
+
+    // obtain a key for the given basemap-layer
+    OfflineMapParametersKey keyForTiledLayer = new OfflineMapParametersKey(layers.get(0));
+
+    // obtain the dictionary map of parameters for taking the basemap offline
+    Map<OfflineMapParametersKey, ExportTileCacheParameters> exportTileCacheParameters = mParameterOverrides.getExportTileCacheParameters();
+    if (!exportTileCacheParameters.containsKey(keyForTiledLayer))
+      return;
+
+    // create a new sublist of LODs in the range requested by the user
+    for (int i = minScale; i < maxScale; i++) {
+      exportTileCacheParameters.get(keyForTiledLayer).getLevelIDs().add(i);
+    }
+  }
+
+  /**
+   * Remove the layer named from the generate layer options list in the generate geodatabase parameters.
+   *
+   * @param layerName as a string
+   */
+  private void excludeLayerFromDownload(String layerName) {
     // get the named feature layer
     FeatureLayer targetLayer = getFeatureLayerByName(layerName);
+    // get the generate geodatabase parameters from parameter overrides
+    GenerateGeodatabaseParameters generateGeodatabaseParameters = getGenerateGeodatabaseParameters(targetLayer);
+    // get the layer's id
+    long targetLayerId = getServiceLayerId(targetLayer);
+    // get the layer's layer options
+    List<GenerateLayerOption> layerOptions = generateGeodatabaseParameters.getLayerOptions();
+    // remove the target layer
+    for (GenerateLayerOption layerOption : layerOptions) {
+      if (layerOption.getLayerId() == targetLayerId) {
+        layerOptions.remove(layerOption);
+        break;
+      }
+    }
+  }
 
-    // get the feature layer's offline map parameter key
-    OfflineMapParametersKey key = new OfflineMapParametersKey(targetLayer);
+  /**
+   * Helper to class to get generate geodatabase parameters for the given layer.
+   *
+   * @param layer to get parameters for
+   * @return GenerateGeodatabaseParameters
+   */
+  private GenerateGeodatabaseParameters getGenerateGeodatabaseParameters(Layer layer) {
+    OfflineMapParametersKey key = new OfflineMapParametersKey(layer);
+    return mParameterOverrides.getGenerateGeodatabaseParameters().get(key);
+  }
 
-    Map<OfflineMapParametersKey, GenerateGeodatabaseParameters> generateGeodatabaseParameters = mParameterOverrides
-        .getGenerateGeodatabaseParameters();
 
-    // remove the target layer from the geodatabase parameters
-    generateGeodatabaseParameters.get(key).getLayerOptions().remove(targetLayer);
+  /**
+   * Helper to class to get export tile cache parameters for the given layer.
+   *
+   * @param layer to get parameters for
+   * @return ExportTileCacheParameters
+   */
+  private ExportTileCacheParameters getExportTileCacheParameters(Layer layer) {
+    OfflineMapParametersKey key = new OfflineMapParametersKey(layer);
+    return mParameterOverrides.getExportTileCacheParameters().get(key);
+  }
 
+
+  /**
+   * Helper class to get the generate geodatabase parameters layer options for the given layer
+   *
+   * @param layerName to get layer options for
+   * @return list of GenerateLayerOptions
+   */
+  private List<GenerateLayerOption> getGenerateGeodatabaseParametersLayerOptions(String layerName) {
+    // get the named feature layer
+    FeatureLayer targetFeatureLayer = getFeatureLayerByName(layerName);
+    // get the generate geodatabase parameters for the layer
+    GenerateGeodatabaseParameters generateGeodatabaseParameters = getGenerateGeodatabaseParameters(targetFeatureLayer);
+    // get the layer's table
+    return generateGeodatabaseParameters.getLayerOptions();
+  }
+
+  /**
+   * Helper class to get the service layer id for the given feature layer
+   *
+   * @param featureLayer to get service id for
+   * @return service layer id as a long
+   */
+  private long getServiceLayerId(FeatureLayer featureLayer) {
+    ServiceFeatureTable serviceFeatureTable = (ServiceFeatureTable) featureLayer.getFeatureTable();
+    return serviceFeatureTable.getLayerInfo().getServiceLayerId();
   }
 
   /**
@@ -372,7 +450,6 @@ public class MainActivity extends AppCompatActivity {
    * @return the named feature layer, or null, if not found or if named layer is not a feature layer
    */
   private FeatureLayer getFeatureLayerByName(String layerName) {
-    // find the feature layer with the given name
     LayerList operationalLayers = mMapView.getMap().getOperationalLayers();
     for (Layer layer : operationalLayers) {
       if (layer instanceof FeatureLayer && layer.getName().equals(layerName)) {
@@ -380,6 +457,30 @@ public class MainActivity extends AppCompatActivity {
       }
     }
     return null;
+  }
+
+  /**
+   * Shows a progress dialog for the given job.
+   *
+   * @param job to track progress from
+   */
+  private void showProgressDialog(Job job) {
+    // create a progress dialog to show download progress
+    ProgressDialog progressDialog = new ProgressDialog(this);
+    progressDialog.setTitle("Generate Offline Map Job");
+    progressDialog.setMessage("Taking map offline...");
+    progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+    progressDialog.setIndeterminate(false);
+    progressDialog.setProgress(0);
+    progressDialog.setCanceledOnTouchOutside(false);
+    progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", (dialog, which) -> job.cancel());
+    progressDialog.show();
+
+    // show the job's progress with the progress dialog
+    job.addProgressChangedListener(() -> progressDialog.setProgress(job.getProgress()));
+
+    // dismiss dialog when job is done
+    job.addJobDoneListener(progressDialog::dismiss);
   }
 
   /**
