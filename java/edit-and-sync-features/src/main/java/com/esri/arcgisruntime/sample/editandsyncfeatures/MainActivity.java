@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
               getCacheDir() + File.separator + getString(R.string.wildfire_geodatabase);
           // create and start the job
           final GenerateGeodatabaseJob generateGeodatabaseJob = mGeodatabaseSyncTask
-              .generateGeodatabaseAsync(parameters, localGeodatabasePath);
+              .generateGeodatabase(parameters, localGeodatabasePath);
           generateGeodatabaseJob.start();
           createProgressDialog(generateGeodatabaseJob);
           // get geodatabase when done
@@ -225,7 +225,8 @@ public class MainActivity extends AppCompatActivity {
       syncGeodatabaseParameters.getLayerOptions().add(syncLayerOption);
     }
 
-    final SyncGeodatabaseJob syncGeodatabaseJob = mGeodatabaseSyncTask.syncGeodatabaseAsync(syncGeodatabaseParameters, mGeodatabase);
+    final SyncGeodatabaseJob syncGeodatabaseJob = mGeodatabaseSyncTask
+        .syncGeodatabase(syncGeodatabaseParameters, mGeodatabase);
 
     syncGeodatabaseJob.start();
 
@@ -291,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
               }
             }
           } catch (Exception e) {
-            Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
+            Log.e(TAG, "Select feature failed: " + e.getMessage());
           }
         });
         // set current edit state to editing
