@@ -55,11 +55,12 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private Callout mCallout;
+  private ServiceFeatureTable mServiceFeatureTable;
   private FeatureLayer mFeatureLayer;
   private ArcGISFeature mSelectedArcGISFeature;
   private MapView mMapView;
   private android.graphics.Point mClickPoint;
-  private ServiceFeatureTable mServiceFeatureTable;
+
   private Snackbar mSnackbarSuccess;
   private Snackbar mSnackbarFailure;
   private String mSelectedArcGISFeatureAttributeValue;
@@ -74,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
 
     mCoordinatorLayout = findViewById(R.id.snackbarPosition);
 
-    // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    // get a reference to the map view
+    mMapView = findViewById(R.id.mapView);
 
     // create a map with the streets basemap
     final ArcGISMap map = new ArcGISMap(Basemap.createStreets());
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     //set an initial viewpoint
     map.setInitialViewpoint(new Viewpoint(new Point(-100.343, 34.585, SpatialReferences.getWgs84()), 1E8));
 
-    // set the map to be displayed in the mapview
+    // set the map to be displayed in the map view
     mMapView.setMap(map);
 
     // get callout, set content and show
@@ -93,16 +94,9 @@ public class MainActivity extends AppCompatActivity {
     mProgressDialog.setTitle(getResources().getString(R.string.progress_title));
     mProgressDialog.setMessage(getResources().getString(R.string.progress_message));
 
-    // create feature layer with its service feature table
-    // create the service feature table
+    // create feature layer with from the service feature table
     mServiceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
-    // create the feature layer using the service feature table
     mFeatureLayer = new FeatureLayer(mServiceFeatureTable);
-
-    // set the color that is applied to a selected feature.
-    mFeatureLayer.setSelectionColor(Color.CYAN);
-    // set the width of selection color
-    mFeatureLayer.setSelectionWidth(5);
 
     // add the layer to the map
     map.getOperationalLayers().add(mFeatureLayer);
@@ -132,8 +126,7 @@ public class MainActivity extends AppCompatActivity {
               // call get on the future to get the result
               IdentifyLayerResult layerResult = identifyFuture.get();
               List<GeoElement> resultGeoElements = layerResult.getElements();
-
-              if (resultGeoElements.size() > 0) {
+              if (!resultGeoElements.isEmpty()) {
                 if (resultGeoElements.get(0) instanceof ArcGISFeature) {
                   mSelectedArcGISFeature = (ArcGISFeature) resultGeoElements.get(0);
                   // highlight the selected feature
@@ -142,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                   mSelectedArcGISFeatureAttributeValue = (String) mSelectedArcGISFeature.getAttributes()
                       .get("typdamage");
                   showCallout(mSelectedArcGISFeatureAttributeValue);
-                  Toast.makeText(getApplicationContext(), "Tap on the info button to change attribute value",
+                  Toast.makeText(MainActivity.this, "Tap on the info button to change attribute value",
                       Toast.LENGTH_SHORT).show();
                 }
               } else {
@@ -170,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
             snackbar1.show();
           }
         });
-
     mSnackbarFailure = Snackbar.make(mCoordinatorLayout, "Feature update failed", Snackbar.LENGTH_LONG);
   }
 
@@ -223,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // check if server result successful
                     List<FeatureEditResult> edits = serverResult.get();
-                    if (edits.size() > 0) {
+                    if (!edits.isEmpty()) {
                       if (!edits.get(0).hasCompletedWithErrors()) {
                         Log.e(TAG, "Feature successfully updated");
                         mSnackbarSuccess.show();
@@ -293,8 +285,8 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    super.onPause();
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
@@ -305,8 +297,8 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     mMapView.dispose();
+    super.onDestroy();
   }
 
   /**
@@ -316,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override public void onClick(View v) {
       Intent myIntent = new Intent(MainActivity.this, DamageTypesListActivity.class);
-      MainActivity.this.startActivityForResult(myIntent, 100);
+      startActivityForResult(myIntent, 100);
     }
   }
 }

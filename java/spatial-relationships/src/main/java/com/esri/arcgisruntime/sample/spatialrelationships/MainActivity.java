@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,6 +54,7 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
+
   private MapView mMapView;
 
   @Override
@@ -62,13 +64,14 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
+    mMapView.getSelectionProperties().setColor(Color.RED);
+
     // create a map with a topographic  basemap
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
 
     // create a graphics overlay
     GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
-    graphicsOverlay.setSelectionColor(0xFFFFF00);
 
     // create a polygon graphic
     PointCollection polygonPoints = new PointCollection(SpatialReferences.getWebMercator());
@@ -211,8 +214,8 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    super.onPause();
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
@@ -223,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     mMapView.dispose();
+    super.onDestroy();
   }
 }

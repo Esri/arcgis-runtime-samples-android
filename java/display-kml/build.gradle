@@ -5,7 +5,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.esri.arcgisruntime.sample.listrelatedfeatures"
+        applicationId "com.esri.arcgisruntime.sample.displaykml"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
@@ -27,4 +27,5 @@ android {
 
 dependencies {
     // arcgis-android & appcompat lib dependencies from rootProject build.gradle
+    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
 }

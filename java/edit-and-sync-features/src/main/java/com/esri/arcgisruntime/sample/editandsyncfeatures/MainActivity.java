@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -34,9 +35,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.Job;
@@ -71,11 +69,8 @@ import com.esri.arcgisruntime.tasks.geodatabase.SyncLayerOption;
 public class MainActivity extends AppCompatActivity {
 
   private final String TAG = MainActivity.class.getSimpleName();
-  private final String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+  private final String[] reqPermission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
 
-  private RelativeLayout mProgressLayout;
-  private TextView mProgressTextView;
-  private ProgressBar mProgressBar;
   private Button mGeodatabaseButton;
 
   private MapView mMapView;
@@ -84,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
   private Geodatabase mGeodatabase;
 
   private List<Feature> mSelectedFeatures;
-  private EditState mCurrentEditState;
+  private MainActivity.EditState mCurrentEditState;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -92,28 +87,21 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     // set edit state to not ready until geodatabase job has completed successfully
-    mCurrentEditState = EditState.NotReady;
+    mCurrentEditState = MainActivity.EditState.NotReady;
 
     // create a map view and add a map
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     // create a graphics overlay and symbol to mark the extent
     mGraphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
 
-    // inflate button and progress layout
-    mGeodatabaseButton = (Button) findViewById(R.id.geodatabaseButton);
-    mProgressLayout = (RelativeLayout) findViewById(R.id.progressLayout);
-    mProgressTextView = (TextView) findViewById(R.id.progressTextView);
-    mProgressBar = (ProgressBar) findViewById(R.id.taskProgressBar);
-
     // add listener to handle generate/sync geodatabase button
-    mGeodatabaseButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (mCurrentEditState == EditState.NotReady) {
-          generateGeodatabase();
-        } else if (mCurrentEditState == EditState.Ready) {
-          syncGeodatabase();
-        }
+    mGeodatabaseButton = findViewById(R.id.geodatabaseButton);
+    mGeodatabaseButton.setOnClickListener(v -> {
+      if (mCurrentEditState == EditState.NotReady) {
+        generateGeodatabase();
+      } else if (mCurrentEditState == EditState.Ready) {
+        syncGeodatabase();
       }
     });
     // add listener to handle motion events, which only responds once a geodatabase is loaded
@@ -121,9 +109,9 @@ public class MainActivity extends AppCompatActivity {
         new DefaultMapViewOnTouchListener(MainActivity.this, mMapView) {
           @Override
           public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-            if (mCurrentEditState == EditState.Ready) {
+            if (mCurrentEditState == MainActivity.EditState.Ready) {
               selectFeaturesAt(mapPointFrom(motionEvent), 10);
-            } else if (mCurrentEditState == EditState.Editing) {
+            } else if (mCurrentEditState == MainActivity.EditState.Editing) {
               moveSelectedFeatureTo(mapPointFrom(motionEvent));
             }
             return true;
@@ -131,10 +119,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
     // request write permission to access local TileCache
-    if (ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]) != PackageManager.PERMISSION_GRANTED) {
+    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) != PackageManager.PERMISSION_GRANTED) {
       // request permission
       int requestCode = 2;
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
+      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
     } else {
       loadTileCache();
     }
@@ -156,88 +144,69 @@ public class MainActivity extends AppCompatActivity {
    * Generates a local geodatabase and sets it to the map.
    */
   private void generateGeodatabase() {
-    updateProgress(0);
     // define geodatabase sync task
     mGeodatabaseSyncTask = new GeodatabaseSyncTask(getString(R.string.wildfire_sync));
     mGeodatabaseSyncTask.loadAsync();
-    mGeodatabaseSyncTask.addDoneLoadingListener(new Runnable() {
-      @Override public void run() {
-        final SimpleLineSymbol boundarySymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5);
-        // show the extent used as a graphic
-        final Envelope extent = mMapView.getVisibleArea().getExtent();
-        Graphic boundary = new Graphic(extent, boundarySymbol);
-        mGraphicsOverlay.getGraphics().add(boundary);
-        // create generate geodatabase parameters for the current extent
-        final ListenableFuture<GenerateGeodatabaseParameters> defaultParameters = mGeodatabaseSyncTask
-            .createDefaultGenerateGeodatabaseParametersAsync(extent);
-        defaultParameters.addDoneListener(new Runnable() {
-          @Override public void run() {
-            try {
-              // set parameters and don't include attachments
-              GenerateGeodatabaseParameters parameters = defaultParameters.get();
-              parameters.setReturnAttachments(false);
-              // define the local path where the geodatabase will be stored
-              final String localGeodatabasePath =
-                  getCacheDir().toString() + File.separator + getString(R.string.wildfire_geodatabase);
-              // create and start the job
-              final GenerateGeodatabaseJob generateGeodatabaseJob = mGeodatabaseSyncTask
-                  .generateGeodatabaseAsync(parameters, localGeodatabasePath);
-              generateGeodatabaseJob.start();
-              generateGeodatabaseJob.addProgressChangedListener(new Runnable() {
-                @Override public void run() {
-                  updateProgress(generateGeodatabaseJob.getProgress());
+    mGeodatabaseSyncTask.addDoneLoadingListener(() -> {
+      final SimpleLineSymbol boundarySymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5);
+      // show the extent used as a graphic
+      final Envelope extent = mMapView.getVisibleArea().getExtent();
+      Graphic boundary = new Graphic(extent, boundarySymbol);
+      mGraphicsOverlay.getGraphics().add(boundary);
+      // create generate geodatabase parameters for the current extent
+      final ListenableFuture<GenerateGeodatabaseParameters> defaultParameters = mGeodatabaseSyncTask
+          .createDefaultGenerateGeodatabaseParametersAsync(extent);
+      defaultParameters.addDoneListener(() -> {
+        try {
+          // set parameters and don't include attachments
+          GenerateGeodatabaseParameters parameters = defaultParameters.get();
+          parameters.setReturnAttachments(false);
+          // define the local path where the geodatabase will be stored
+          final String localGeodatabasePath =
+              getCacheDir() + File.separator + getString(R.string.wildfire_geodatabase);
+          // create and start the job
+          final GenerateGeodatabaseJob generateGeodatabaseJob = mGeodatabaseSyncTask
+              .generateGeodatabaseAsync(parameters, localGeodatabasePath);
+          generateGeodatabaseJob.start();
+          createProgressDialog(generateGeodatabaseJob);
+          // get geodatabase when done
+          generateGeodatabaseJob.addJobDoneListener(() -> {
+            if (generateGeodatabaseJob.getStatus() == Job.Status.SUCCEEDED) {
+              mGeodatabase = generateGeodatabaseJob.getResult();
+              mGeodatabase.loadAsync();
+              mGeodatabase.addDoneLoadingListener(() -> {
+                if (mGeodatabase.getLoadStatus() == LoadStatus.LOADED) {
+                  // get only the first table which, contains points
+                  GeodatabaseFeatureTable pointsGeodatabaseFeatureTable = mGeodatabase
+                      .getGeodatabaseFeatureTables().get(0);
+                  pointsGeodatabaseFeatureTable.loadAsync();
+                  FeatureLayer geodatabaseFeatureLayer = new FeatureLayer(pointsGeodatabaseFeatureTable);
+                  // add geodatabase layer to the map as a feature layer and make it selectable
+                  mMapView.getMap().getOperationalLayers().add(geodatabaseFeatureLayer);
+                  mGeodatabaseButton.setVisibility(View.GONE);
+                  Log.i(TAG, "Local geodatabase stored at: " + localGeodatabasePath);
+                } else {
+                  Log.e(TAG, "Error loading geodatabase: " + mGeodatabase.getLoadError().getMessage());
                 }
               });
-              // get geodatabase when done
-              generateGeodatabaseJob.addJobDoneListener(new Runnable() {
-                @Override public void run() {
-                  updateProgress(generateGeodatabaseJob.getProgress());
-                  if (generateGeodatabaseJob.getStatus() == Job.Status.SUCCEEDED) {
-                    mGeodatabase = generateGeodatabaseJob.getResult();
-                    mGeodatabase.loadAsync();
-                    mGeodatabase.addDoneLoadingListener(new Runnable() {
-                      @Override public void run() {
-                        if (mGeodatabase.getLoadStatus() == LoadStatus.LOADED) {
-                          // get only the first table which, contains points
-                          GeodatabaseFeatureTable pointsGeodatabaseFeatureTable = mGeodatabase
-                              .getGeodatabaseFeatureTables().get(0);
-                          pointsGeodatabaseFeatureTable.loadAsync();
-                          FeatureLayer geodatabaseFeatureLayer = new FeatureLayer(pointsGeodatabaseFeatureTable);
-                          // add geodatabase layer to the map as a feature layer and make it selectable
-                          mMapView.getMap().getOperationalLayers().add(geodatabaseFeatureLayer);
-                          geodatabaseFeatureLayer.setSelectionColor(Color.CYAN);
-                          geodatabaseFeatureLayer.setSelectionWidth(5.0);
-                          mGeodatabaseButton.setVisibility(View.GONE);
-                          Log.i(TAG, "Local geodatabase stored at: " + localGeodatabasePath);
-                        } else {
-                          Log.e(TAG, "Error loading geodatabase: " + mGeodatabase.getLoadError().getMessage());
-                        }
-                      }
-                    });
-                    // set edit state to ready
-                    mCurrentEditState = EditState.Ready;
-                  } else if (generateGeodatabaseJob.getError() != null) {
-                    Log.e(TAG, "Error generating geodatabase: " + generateGeodatabaseJob.getError().getMessage());
-                    Toast.makeText(MainActivity.this,
-                        "Error generating geodatabase: " + generateGeodatabaseJob.getError().getMessage(),
-                        Toast.LENGTH_LONG).show();
-                    mProgressLayout.setVisibility(View.INVISIBLE);
-                  } else {
-                    Log.e(TAG, "Unknown Error generating geodatabase");
-                    Toast.makeText(MainActivity.this, "Unknown Error generating geodatabase", Toast.LENGTH_LONG).show();
-                    mProgressLayout.setVisibility(View.INVISIBLE);
-                  }
-                }
-              });
-            } catch (InterruptedException | ExecutionException e) {
-              Log.e(TAG, "Error generating geodatabase parameters : " + e.getMessage());
-              Toast.makeText(MainActivity.this, "Error generating geodatabase parameters: " + e.getMessage(),
+              // set edit state to ready
+              mCurrentEditState = EditState.Ready;
+            } else if (generateGeodatabaseJob.getError() != null) {
+              Log.e(TAG, "Error generating geodatabase: " + generateGeodatabaseJob.getError().getMessage());
+              Toast.makeText(this,
+                  "Error generating geodatabase: " + generateGeodatabaseJob.getError().getMessage(),
                   Toast.LENGTH_LONG).show();
-              mProgressLayout.setVisibility(View.INVISIBLE);
+            } else {
+              Log.e(TAG, "Unknown Error generating geodatabase");
+              Toast.makeText(this, "Unknown Error generating geodatabase", Toast.LENGTH_LONG).show();
             }
-          }
-        });
-      }
+          });
+        } catch (InterruptedException | ExecutionException e) {
+          Log.e(TAG, "Error generating geodatabase parameters : " + e.getMessage());
+          Toast.makeText(this, "Error generating geodatabase parameters: " + e.getMessage(),
+              Toast.LENGTH_LONG).show();
+        }
+      });
     });
   }
 
@@ -245,63 +214,47 @@ public class MainActivity extends AppCompatActivity {
    * Syncs changes made on either the local or web service geodatabase with each other.
    */
   private void syncGeodatabase() {
-    updateProgress(0);
-    // Create parameters for the sync task
+    // create parameters for the sync task
     SyncGeodatabaseParameters syncGeodatabaseParameters = new SyncGeodatabaseParameters();
     syncGeodatabaseParameters.setSyncDirection(SyncGeodatabaseParameters.SyncDirection.BIDIRECTIONAL);
     syncGeodatabaseParameters.setRollbackOnFailure(false);
-    // Get the layer ID for each feature table in the geodatabase, then add to the sync job
+    // get the layer ID for each feature table in the geodatabase, then add to the sync job
     for (GeodatabaseFeatureTable geodatabaseFeatureTable : mGeodatabase.getGeodatabaseFeatureTables()) {
       long serviceLayerId = geodatabaseFeatureTable.getServiceLayerId();
       SyncLayerOption syncLayerOption = new SyncLayerOption(serviceLayerId);
       syncGeodatabaseParameters.getLayerOptions().add(syncLayerOption);
     }
 
-    final SyncGeodatabaseJob syncGeodatabaseJob = mGeodatabaseSyncTask
-        .syncGeodatabaseAsync(syncGeodatabaseParameters, mGeodatabase);
+    final SyncGeodatabaseJob syncGeodatabaseJob = mGeodatabaseSyncTask.syncGeodatabaseAsync(syncGeodatabaseParameters, mGeodatabase);
 
     syncGeodatabaseJob.start();
 
-    syncGeodatabaseJob.addProgressChangedListener(new Runnable() {
-      @Override public void run() {
-        updateProgress(syncGeodatabaseJob.getProgress());
-      }
-    });
+    createProgressDialog(syncGeodatabaseJob);
 
-    syncGeodatabaseJob.addJobDoneListener(new Runnable() {
-      @Override public void run() {
-        if (syncGeodatabaseJob.getStatus() == Job.Status.SUCCEEDED) {
-          Toast.makeText(MainActivity.this, "Sync complete", Toast.LENGTH_SHORT).show();
-          mGeodatabaseButton.setVisibility(View.INVISIBLE);
-        } else {
-          Log.e(TAG, "Database did not sync correctly!");
-          Toast.makeText(MainActivity.this, "Database did not sync correctly!", Toast.LENGTH_LONG).show();
-        }
+    syncGeodatabaseJob.addJobDoneListener(() -> {
+      if (syncGeodatabaseJob.getStatus() == Job.Status.SUCCEEDED) {
+        Toast.makeText(this, "Sync complete", Toast.LENGTH_SHORT).show();
+        mGeodatabaseButton.setVisibility(View.INVISIBLE);
+      } else {
+        Log.e(TAG, "Database did not sync correctly!");
+        Toast.makeText(this, "Database did not sync correctly!", Toast.LENGTH_LONG).show();
       }
     });
   }
 
   /**
-   * Controls visibility and updates to the UI of job progress.
-   *
-   * @param progress from either generate and sync jobs
+   * Create a progress dialog to show sync state
    */
-  private void updateProgress(int progress) {
-    if (progress < 100) {
-      mProgressBar.setProgress(progress);
-      mProgressLayout.setVisibility(View.VISIBLE);
+  private void createProgressDialog(Job job) {
 
-      if (progress == 0) {
-        mProgressTextView.setText(getString(R.string.progress_starting));
-      } else if (progress < 10) {
-        mProgressTextView.setText(getString(R.string.progress_started));
-      } else {
-        mProgressTextView.setText(getString(R.string.progress_syncing));
-      }
-    } else {
-      mProgressTextView.setText(getString(R.string.progress_done));
-      mProgressLayout.setVisibility(View.INVISIBLE);
-    }
+    ProgressDialog syncProgressDialog = new ProgressDialog(this);
+    syncProgressDialog.setTitle("Sync Geodatabase Job");
+    syncProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+    syncProgressDialog.show();
+
+    job.addProgressChangedListener(() -> syncProgressDialog.setProgress(job.getProgress()));
+
+    job.addJobDoneListener(syncProgressDialog::dismiss);
   }
 
   /**
@@ -325,29 +278,24 @@ public class MainActivity extends AppCompatActivity {
       final ListenableFuture<FeatureQueryResult> featureQueryResultFuture = featureLayer
           .selectFeaturesAsync(query, FeatureLayer.SelectionMode.NEW);
       // add done loading listener to fire when the selection returns
-      featureQueryResultFuture.addDoneListener(new Runnable() {
-        @Override
-        public void run() {
-          // Get the selected features
-          final ListenableFuture<FeatureQueryResult> featureQueryResultFuture = featureLayer.getSelectedFeaturesAsync();
-          featureQueryResultFuture.addDoneListener(new Runnable() {
-            @Override public void run() {
-              try {
-                FeatureQueryResult layerFeatures = featureQueryResultFuture.get();
-                for (Feature feature : layerFeatures) {
-                  // Only select points for editing
-                  if (feature.getGeometry().getGeometryType() == GeometryType.POINT) {
-                    mSelectedFeatures.add(feature);
-                  }
-                }
-              } catch (Exception e) {
-                Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
+      featureQueryResultFuture.addDoneListener(() -> {
+        // Get the selected features
+        final ListenableFuture<FeatureQueryResult> featureQueryResultFuture1 = featureLayer.getSelectedFeaturesAsync();
+        featureQueryResultFuture1.addDoneListener(() -> {
+          try {
+            FeatureQueryResult layerFeatures = featureQueryResultFuture1.get();
+            for (Feature feature : layerFeatures) {
+              // Only select points for editing
+              if (feature.getGeometry().getGeometryType() == GeometryType.POINT) {
+                mSelectedFeatures.add(feature);
               }
             }
-          });
-          // set current edit state to editing
-          mCurrentEditState = EditState.Editing;
-        }
+          } catch (Exception e) {
+            Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
+          }
+        });
+        // set current edit state to editing
+        mCurrentEditState = EditState.Editing;
       });
     }
   }
@@ -363,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
       feature.getFeatureTable().updateFeatureAsync(feature);
     }
     mSelectedFeatures.clear();
-    mCurrentEditState = EditState.Ready;
+    mCurrentEditState = MainActivity.EditState.Ready;
     mGeodatabaseButton.setText(R.string.sync_geodatabase_button_text);
     mGeodatabaseButton.setVisibility(View.VISIBLE);
   }
@@ -384,8 +332,8 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    super.onPause();
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
@@ -395,26 +343,26 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override protected void onDestroy() {
-    super.onDestroy();
     mMapView.dispose();
+    super.onDestroy();
   }
 
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      // Write permission was granted, so load TileCache
+      // write permission was granted, so load TileCache
       loadTileCache();
     } else {
-      // If permission was denied, show toast to inform user write permission is required and remove Generate
+      // if permission was denied, show toast to inform user write permission is required and remove Generate
       // Geodatabase button
-      Toast.makeText(MainActivity.this, getResources().getString(R.string.write_permission), Toast
+      Toast.makeText(this, getResources().getString(R.string.edit_and_sync_write_permission), Toast
           .LENGTH_SHORT).show();
       mGeodatabaseButton.setVisibility(View.GONE);
     }
   }
 
-  // Enumeration to track editing of points
-  public enum EditState {
+  // enumeration to track editing of points
+  enum EditState {
     NotReady, // Geodatabase has not yet been generated
     Editing, // A feature is in the process of being moved
     Ready // The geodatabase is ready for synchronization or further edits
