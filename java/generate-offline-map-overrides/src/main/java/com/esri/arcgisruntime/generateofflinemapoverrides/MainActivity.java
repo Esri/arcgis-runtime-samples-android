@@ -233,13 +233,13 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Use parameters from the override parameters dialog to define parameter overrides.
    *
-   * @param minScale
-   * @param maxScale
-   * @param bufferDistance
-   * @param includeSystemValves
-   * @param includeServiceConnections
-   * @param flowRate
-   * @param cropWaterPipes
+   * @param minScale levelId
+   * @param maxScale levelId
+   * @param bufferDistance around the given area of interest
+   * @param includeSystemValves whether to include System Valves layer
+   * @param includeServiceConnections whether to include the Service Connections layer
+   * @param flowRate to limit hydrants in a where clause
+   * @param cropWaterPipes whether to crop the pipes layer
    */
   private void defineParameters(int minScale, int maxScale, int bufferDistance, boolean includeSystemValves,
       boolean includeServiceConnections, int flowRate, boolean cropWaterPipes) {
@@ -261,7 +261,6 @@ public class MainActivity extends AppCompatActivity {
             // set basemap scale and area of interest
             setBasemapScaleAndAreaOfInterest(minScale, maxScale, bufferDistance);
             // exclude system valve layer
-
             if (!includeSystemValves) {
               excludeLayerFromDownload("System Valve");
             }
@@ -283,7 +282,6 @@ public class MainActivity extends AppCompatActivity {
                 generateLayerOption.setQueryOption(GenerateLayerOption.QueryOption.USE_FILTER);
               }
             }
-
             // start a an offline map job from the task and parameters
             generateOfflineMap(offlineMapTask, generateOfflineMapParameters);
           } catch (InterruptedException | ExecutionException e) {
@@ -334,9 +332,9 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Set basemap scale and area of interest using the given values
    *
-   * @param minScale
-   * @param maxScale
-   * @param bufferDistance
+   * @param minScale levelId
+   * @param maxScale levelId
+   * @param bufferDistance around the given area of interest
    */
   private void setBasemapScaleAndAreaOfInterest(int minScale, int maxScale, int bufferDistance) {
     // get the export tile cache parameters
