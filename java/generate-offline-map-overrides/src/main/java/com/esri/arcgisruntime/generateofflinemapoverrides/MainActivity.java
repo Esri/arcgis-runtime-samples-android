@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.generateofflinemapoverrides;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import android.Manifest;
@@ -230,33 +231,6 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Builds a seek bar and handles updating of the associated current seek bar text view.
-   *
-   * @param seekBar             view to build
-   * @param currSeekBarTextView to be updated when the seek bar progress changes
-   * @param max                 max value for the seek bar
-   * @param progress            initial progress position of the seek bar
-   * @return the built seek bar
-   */
-  private SeekBar buildSeekBar(SeekBar seekBar, TextView currSeekBarTextView, int max, int progress) {
-    seekBar.setMax(max);
-    seekBar.setProgress(progress);
-    currSeekBarTextView.setText(String.valueOf(seekBar.getProgress()));
-    seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        currSeekBarTextView.setText(String.valueOf(progress));
-      }
-
-      @Override public void onStartTrackingTouch(SeekBar seekBar) {
-      }
-
-      @Override public void onStopTrackingTouch(SeekBar seekBar) {
-      }
-    });
-    return seekBar;
-  }
-
-  /**
    * Use parameters from the override parameters dialog to define parameter overrides.
    *
    * @param minScale
@@ -267,16 +241,19 @@ public class MainActivity extends AppCompatActivity {
    * @param flowRate
    * @param cropWaterPipes
    */
-  private void defineParameters(int minScale, int maxScale, int bufferDistance, boolean includeSystemValves, boolean includeServiceConnections, int flowRate, boolean cropWaterPipes) {
+  private void defineParameters(int minScale, int maxScale, int bufferDistance, boolean includeSystemValves,
+      boolean includeServiceConnections, int flowRate, boolean cropWaterPipes) {
     // create an offline map offlineMapTask with the map
     OfflineMapTask offlineMapTask = new OfflineMapTask(mMapView.getMap());
     // create default generate offline map parameters from the offline map task
-    ListenableFuture<GenerateOfflineMapParameters> generateOfflineMapParametersFuture = offlineMapTask.createDefaultGenerateOfflineMapParametersAsync(mDownloadArea.getGeometry());
+    ListenableFuture<GenerateOfflineMapParameters> generateOfflineMapParametersFuture = offlineMapTask
+        .createDefaultGenerateOfflineMapParametersAsync(mDownloadArea.getGeometry());
     generateOfflineMapParametersFuture.addDoneListener(() -> {
       try {
         final GenerateOfflineMapParameters generateOfflineMapParameters = generateOfflineMapParametersFuture.get();
         // create parameter overrides for greater control
-        ListenableFuture<GenerateOfflineMapParameterOverrides> parameterOverridesFuture = offlineMapTask.createGenerateOfflineMapParameterOverridesAsync(generateOfflineMapParameters);
+        ListenableFuture<GenerateOfflineMapParameterOverrides> parameterOverridesFuture = offlineMapTask
+            .createGenerateOfflineMapParameterOverridesAsync(generateOfflineMapParameters);
         parameterOverridesFuture.addDoneListener(() -> {
           try {
             // get the parameter overrides
@@ -300,7 +277,8 @@ public class MainActivity extends AppCompatActivity {
             }
             // set flow rate where clause on the hydrant layer
             for (GenerateLayerOption generateLayerOption : getGenerateGeodatabaseParametersLayerOptions("Hydrant")) {
-              if (generateLayerOption.getLayerId() == getServiceLayerId(getFeatureLayerByName("Hydrant"))) {
+              if (generateLayerOption.getLayerId() == getServiceLayerId(Objects
+                  .requireNonNull(getFeatureLayerByName("Hydrant")))) {
                 generateLayerOption.setWhereClause("FLOW >= " + flowRate);
                 generateLayerOption.setQueryOption(GenerateLayerOption.QueryOption.USE_FILTER);
               }
@@ -325,12 +303,14 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Use the generate offline map job to generate an offline map.
    */
-  private void generateOfflineMap(OfflineMapTask offlineMapTask, GenerateOfflineMapParameters generateOfflineMapParameters) {
+  private void generateOfflineMap(OfflineMapTask offlineMapTask,
+      GenerateOfflineMapParameters generateOfflineMapParameters) {
     // delete any offline map already in the cache
     String tempDirectoryPath = getCacheDir() + File.separator + "offlineMap";
     deleteDirectory(new File(tempDirectoryPath));
     // create an offline map job with the download directory path and parameters and start the job
-    GenerateOfflineMapJob job = offlineMapTask.generateOfflineMap(generateOfflineMapParameters, tempDirectoryPath, mParameterOverrides);
+    GenerateOfflineMapJob job = offlineMapTask
+        .generateOfflineMap(generateOfflineMapParameters, tempDirectoryPath, mParameterOverrides);
     // show the job's progress in a progress dialog
     showProgressDialog(job);
     // replace the current map with the result offline map when the job finishes
@@ -360,7 +340,8 @@ public class MainActivity extends AppCompatActivity {
    */
   private void setBasemapScaleAndAreaOfInterest(int minScale, int maxScale, int bufferDistance) {
     // get the export tile cache parameters
-    ExportTileCacheParameters exportTileCacheParameters = getExportTileCacheParameters(mMapView.getMap().getBasemap().getBaseLayers().get(0));
+    ExportTileCacheParameters exportTileCacheParameters = getExportTileCacheParameters(
+        mMapView.getMap().getBasemap().getBaseLayers().get(0));
     // create a new sublist of LODs in the range requested by the user
     exportTileCacheParameters.getLevelIDs().clear();
     for (int i = minScale; i < maxScale; i++) {
@@ -412,7 +393,6 @@ public class MainActivity extends AppCompatActivity {
     OfflineMapParametersKey key = new OfflineMapParametersKey(layer);
     return mParameterOverrides.getGenerateGeodatabaseParameters().get(key);
   }
-
 
   /**
    * Helper method to get the generate geodatabase parameters layer options for the given layer.
@@ -515,6 +495,33 @@ public class MainActivity extends AppCompatActivity {
   protected void onDestroy() {
     mMapView.dispose();
     super.onDestroy();
+  }
+
+  /**
+   * Builds a seek bar and handles updating of the associated current seek bar text view.
+   *
+   * @param seekBar             view to build
+   * @param currSeekBarTextView to be updated when the seek bar progress changes
+   * @param max                 max value for the seek bar
+   * @param progress            initial progress position of the seek bar
+   * @return the built seek bar
+   */
+  private static SeekBar buildSeekBar(SeekBar seekBar, TextView currSeekBarTextView, int max, int progress) {
+    seekBar.setMax(max);
+    seekBar.setProgress(progress);
+    currSeekBarTextView.setText(String.valueOf(seekBar.getProgress()));
+    seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        currSeekBarTextView.setText(String.valueOf(progress));
+      }
+
+      @Override public void onStartTrackingTouch(SeekBar seekBar) {
+      }
+
+      @Override public void onStopTrackingTouch(SeekBar seekBar) {
+      }
+    });
+    return seekBar;
   }
 
   /**
