@@ -1,5 +1,5 @@
 # Generate Offline Map Overrides
-Take a web map offline.
+Take a web map offline with additional overrides.
 
 ![Generate Offline Map Overrides App](generate-offline-map-overrides.png)
 
@@ -13,9 +13,9 @@ To take a web map offline:
 1. Use the check boxes to include/exclude the "System Valves" and "Service Connections" layers. 
 1. Use the "Min Hydrant Flow Rate" seek to select the maximum flow rate for the features from the "Hydrant" layer.
 1. Use the "Water Pipes" check box to crop the water pipes feature layer. 
-1. Click "Start Job"
+1. Click "Start Job".
 1. Wait for the progress bar to indicate that the task has completed.
-1. You should see that the basemap does not display outwith the min max scale selected. The System Valves and Service Connections should be included or omitted from the offline map and the Hydrants layer should contain a subset of the original features based on your selection. Finally, the network data set should extend past or be cropped to the target area based on your selection.
+1. You should see that the basemap does not display beyond the min max scale selected. The System Valves and Service Connections should be included or omitted from the offline map and the Hydrants layer should contain a subset of the original features based on your selection. Finally, the network data set should extend past or be cropped to the target area based on your selection.
 
 ## How it works
 The sample creates a `PortalItem` object using a web map’s ID. This portal item is also used to initialize an `OfflineMapTask` object. When the button is clicked, the sample requests the default parameters for the task, with the selected extent, by calling `OfflineMapTask.createDefaultGenerateOfflineMapParameters(areaOfInterest)`. Once the parameters are retrieved, they are used to create a set of `GenerateOfflineMapParameterOverrides` by calling `OfflineMapTask.createGenerateOfflineMapParameterOverridesAsync(generateOfflineMapParameters)`. The overrides are then adjusted so that specific layers will be taken offline using custom settings.

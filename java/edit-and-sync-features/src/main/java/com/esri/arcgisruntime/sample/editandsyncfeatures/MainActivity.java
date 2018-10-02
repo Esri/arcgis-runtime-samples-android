@@ -251,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog syncProgressDialog = new ProgressDialog(this);
     syncProgressDialog.setTitle("Sync Geodatabase Job");
     syncProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+    syncProgressDialog.setCanceledOnTouchOutside(false);
     syncProgressDialog.show();
 
     job.addProgressChangedListener(() -> syncProgressDialog.setProgress(job.getProgress()));

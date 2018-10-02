@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     AuthenticationManager.setAuthenticationChallengeHandler(new DefaultAuthenticationChallengeHandler(this));
 
     // create a portal item with the itemId of the web map
-    Portal portal = new Portal(getString(R.string.portal_url), true);
+    Portal portal = new Portal(getString(R.string.portal_url), false);
     PortalItem portalItem = new PortalItem(portal, getString(R.string.item_id));
 
     // create a map with the portal item
@@ -124,33 +124,43 @@ public class MainActivity extends AppCompatActivity {
     mGraphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
 
-    // create a graphic to show a box around the extent we want to download
+    // define the download area graphic
     mDownloadArea = new Graphic();
     mGraphicsOverlay.getGraphics().add(mDownloadArea);
     SimpleLineSymbol simpleLineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2);
     mDownloadArea.setSymbol(simpleLineSymbol);
+    mDownloadArea.setGeometry(createDownloadAreaGeometry());
 
     // update the download area box whenever the viewpoint changes
     mMapView.addViewpointChangedListener(viewpointChangedEvent -> {
       if (map.getLoadStatus() == LoadStatus.LOADED) {
-        // upper left corner of the area to take offline
-        android.graphics.Point minScreenPoint = new android.graphics.Point(200, 200);
-        // lower right corner of the downloaded area
-        android.graphics.Point maxScreenPoint = new android.graphics.Point(mMapView.getWidth() - 200,
-            mMapView.getHeight() - 200);
-        // convert screen points to map points
-        Point minPoint = mMapView.screenToLocation(minScreenPoint);
-        Point maxPoint = mMapView.screenToLocation(maxScreenPoint);
-        // use the points to define and return an envelope
-        if (minPoint != null && maxPoint != null) {
-          Envelope envelope = new Envelope(minPoint, maxPoint);
-          mDownloadArea.setGeometry(envelope);
-        }
+        mDownloadArea.setGeometry(createDownloadAreaGeometry());
       }
     });
 
     // when the button is clicked, start the offline map task job
     mGenerateOfflineMapOverridesButton.setOnClickListener(v -> showParametersDialog());
+  }
+
+  /**
+   * Create an envelope representing the download area, used to define an area of interest
+   *
+   * @return download area Envelope
+   */
+  private Envelope createDownloadAreaGeometry() {
+    // upper left corner of the area to take offline
+    android.graphics.Point minScreenPoint = new android.graphics.Point(200, 200);
+    // lower right corner of the downloaded area
+    android.graphics.Point maxScreenPoint = new android.graphics.Point(mMapView.getWidth() - 200,
+        mMapView.getHeight() - 200);
+    // convert screen points to map points
+    Point minPoint = mMapView.screenToLocation(minScreenPoint);
+    Point maxPoint = mMapView.screenToLocation(maxScreenPoint);
+    // use the points to define and return an envelope
+    if (minPoint != null && maxPoint != null) {
+      return new Envelope(minPoint, maxPoint);
+    }
+    return null;
   }
 
   /**
@@ -172,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         currMinScaleTextView.setText(String.valueOf(progress));
         if (progress >= maxScaleSeekBar.getProgress()) {
+          // set max to 1 more than min value (since max must always be greater than min)
           currMaxScaleTextView.setText(String.valueOf(progress + 1));
           maxScaleSeekBar.setProgress(progress + 1);
         }
@@ -187,7 +198,8 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         currMaxScaleTextView.setText(String.valueOf(progress));
         if (progress <= minScaleSeekBar.getProgress()) {
-          currMinScaleTextView.setText(String.valueOf(progress + 1));
+          // set min to 1 less than max value (since min must always be less than max)
+          currMinScaleTextView.setText(String.valueOf(progress - 1));
           minScaleSeekBar.setProgress(progress - 1);
         }
       }
@@ -233,13 +245,13 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Use parameters from the override parameters dialog to define parameter overrides.
    *
-   * @param minScale levelId
-   * @param maxScale levelId
-   * @param bufferDistance around the given area of interest
-   * @param includeSystemValves whether to include System Valves layer
+   * @param minScale                  levelId
+   * @param maxScale                  levelId
+   * @param bufferDistance            around the given area of interest
+   * @param includeSystemValves       whether to include System Valves layer
    * @param includeServiceConnections whether to include the Service Connections layer
-   * @param flowRate to limit hydrants in a where clause
-   * @param cropWaterPipes whether to crop the pipes layer
+   * @param flowRate                  to limit hydrants in a where clause
+   * @param cropWaterPipes            whether to crop the pipes layer
    */
   private void defineParameters(int minScale, int maxScale, int bufferDistance, boolean includeSystemValves,
       boolean includeServiceConnections, int flowRate, boolean cropWaterPipes) {
@@ -332,8 +344,8 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Set basemap scale and area of interest using the given values
    *
-   * @param minScale levelId
-   * @param maxScale levelId
+   * @param minScale       levelId
+   * @param maxScale       levelId
    * @param bufferDistance around the given area of interest
    */
   private void setBasemapScaleAndAreaOfInterest(int minScale, int maxScale, int bufferDistance) {
