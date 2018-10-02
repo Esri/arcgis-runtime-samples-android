@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Generate Offline Map (Overrides)</string>
+    <string name="portal_url">https://www.arcgis.com</string>
+    <string name="item_id">acc027394bc84c2fb04d1ed317aac674</string>
+    <string name="offline_map_write_permission_denied">Write permission required to generate offline map</string>
+    <string name="adjust_the_basemap">Adjust the Basemap</string>
+    <string name="min_scale_level">Min Scale Level:</string>
+    <string name="max_scale_level">Max Scale Level:</string>
+    <string name="extent_buffer_distance">Extent Buffer Distance:</string>
+    <string name="include_layers">Include Layers</string>
+    <string name="system_valves">System Valves</string>
+    <string name="service_connections">Service Connections</string>
+    <string name="filter_feature_layer">Filter Feature Layer</string>
+    <string name="min_hydrant_flow_rate">Min Hydrant Flow Rate:</string>
+    <string name="crop_layer_to_extent">Crop Layer to Extent</string>
+    <string name="water_pipes">Water Pipes</string>
+    <string name="meters">m</string>
+    <string name="gallons_per_minute">GPM</string>
+</resources>
