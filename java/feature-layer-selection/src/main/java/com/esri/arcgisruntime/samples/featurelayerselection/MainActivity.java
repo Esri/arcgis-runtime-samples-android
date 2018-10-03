@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     // get reference to map view
     mMapView = findViewById(R.id.mapView);
-    mMapView.getSelectionProperties().setColor(Color.YELLOW);
+    mMapView.getSelectionProperties().setColor(Color.RED);
 
     // create a map with the streets basemap
     final ArcGISMap map = new ArcGISMap(Basemap.createStreets());
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // create service feature table and a feature layer from it
-    final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getString(R.string.sample_service_url));
+    final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getString(R.string.gdp_per_capita_url));
     final FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
 
     // add the layer to the map
