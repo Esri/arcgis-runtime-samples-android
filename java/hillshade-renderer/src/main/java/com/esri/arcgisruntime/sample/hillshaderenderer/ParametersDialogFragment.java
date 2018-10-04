@@ -18,10 +18,10 @@ package com.esri.arcgisruntime.sample.hillshaderenderer;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -78,19 +78,11 @@ public class ParametersDialogFragment extends DialogFragment {
         @SuppressLint("InflateParams") View dialogView = inflater.inflate(R.layout.hillshade_dialog_box, null);
         paramDialog.setView(dialogView);
         paramDialog.setTitle(R.string.dialog_title);
-        paramDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dismiss();
-            }
-        });
-        paramDialog.setPositiveButton("Render", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                ParametersDialogFragment.ParametersListener activity =
-                        (ParametersDialogFragment.ParametersListener) getActivity();
-                activity.returnParameters(mAltitude, mAzimuth, mSlopeType);
-            }
+        paramDialog.setNegativeButton("Cancel", (dialog, which) -> dismiss());
+        paramDialog.setPositiveButton("Render", (dialog, which) -> {
+            ParametersListener activity =
+                    (ParametersListener) getActivity();
+            activity.returnParameters(mAltitude, mAzimuth, mSlopeType);
         });
 
         mCurrAltitudeTextView = dialogView.findViewById(R.id.hillshade_curr_altitude_text);
