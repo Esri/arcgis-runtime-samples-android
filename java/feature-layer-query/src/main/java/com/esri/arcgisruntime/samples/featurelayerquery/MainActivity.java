@@ -42,36 +42,38 @@ import com.esri.arcgisruntime.symbology.SimpleRenderer;
 
 public class MainActivity extends AppCompatActivity {
 
-  MapView mMapView;
-  ServiceFeatureTable mServiceFeatureTable;
-  FeatureLayer mFeaturelayer;
+  private static final String TAG = MainActivity.class.getSimpleName();
+
+  private MapView mMapView;
+  private ServiceFeatureTable mServiceFeatureTable;
+  private FeatureLayer mFeatureLayer;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
-
+    // get reference to map view
+    mMapView = findViewById(R.id.mapView);
     // create a map with the topographic basemap
     final ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
-    // set the map to be displayed in the mapview
+    // set the map to the map view
     mMapView.setMap(map);
 
-    // create feature layer with its service feature table
-    // create the service feature table
-    mServiceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
+    // create a service feature table and a feature layer from it
+    mServiceFeatureTable = new ServiceFeatureTable(getString(R.string.us_daytime_population_url));
     // create the feature layer using the service feature table
-    mFeaturelayer = new FeatureLayer(mServiceFeatureTable);
-    mFeaturelayer.setOpacity(0.8f);
+    mFeatureLayer = new FeatureLayer(mServiceFeatureTable);
+    mFeatureLayer.setOpacity(0.8f);
+    mFeatureLayer.setMaxScale(10000);
+
     //override the renderer
     SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1);
     SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.YELLOW, lineSymbol);
-    mFeaturelayer.setRenderer(new SimpleRenderer(fillSymbol));
+    mFeatureLayer.setRenderer(new SimpleRenderer(fillSymbol));
 
     // add the layer to the map
-    map.getOperationalLayers().add(mFeaturelayer);
+    map.getOperationalLayers().add(mFeatureLayer);
 
     // zoom to a view point of the USA
     mMapView.setViewpointCenterAsync(new Point(-11000000, 5000000, SpatialReferences.getWebMercator()), 100000000);
@@ -85,87 +87,70 @@ public class MainActivity extends AppCompatActivity {
     setIntent(intent);
     if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
       String searchString = intent.getStringExtra(SearchManager.QUERY);
-
       searchForState(searchString);
     }
   }
 
-  public void searchForState(final String searchString) {
-
+  private void searchForState(final String searchString) {
     // clear any previous selections
-    mFeaturelayer.clearSelection();
-
+    mFeatureLayer.clearSelection();
     // create objects required to do a selection with a query
     QueryParameters query = new QueryParameters();
-    //make search case insensitive
+    // make search case insensitive
     query.setWhereClause("upper(STATE_NAME) LIKE '%" + searchString.toUpperCase() + "%'");
-
     // call select features
     final ListenableFuture<FeatureQueryResult> future = mServiceFeatureTable.queryFeaturesAsync(query);
     // add done loading listener to fire when the selection returns
-    future.addDoneListener(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          // call get on the future to get the result
-          FeatureQueryResult result = future.get();
-
-          // check there are some results
-          if (result.iterator().hasNext()) {
-
-            // get the extend of the first feature in the result to zoom to
-            Feature feature = result.iterator().next();
-            Envelope envelope = feature.getGeometry().getExtent();
-            mMapView.setViewpointGeometryAsync(envelope, 10);
-
-            //Select the feature
-            mFeaturelayer.selectFeature(feature);
-
-          } else {
-            Toast.makeText(MainActivity.this, "No states found with name: " + searchString, Toast.LENGTH_SHORT).show();
-          }
-        } catch (Exception e) {
-          Toast.makeText(MainActivity.this, "Feature search failed for: " + searchString + ". Error=" + e.getMessage(),
-              Toast.LENGTH_SHORT).show();
-          Log.e(getResources().getString(R.string.app_name),
-              "Feature search failed for: " + searchString + ". Error=" + e.getMessage());
+    future.addDoneListener(() -> {
+      try {
+        // call get on the future to get the result
+        FeatureQueryResult result = future.get();
+        // check there are some results
+        if (result.iterator().hasNext()) {
+          // get the extend of the first feature in the result to zoom to
+          Feature feature = result.iterator().next();
+          Envelope envelope = feature.getGeometry().getExtent();
+          mMapView.setViewpointGeometryAsync(envelope, 10);
+          // select the feature
+          mFeatureLayer.selectFeature(feature);
+        } else {
+          Toast.makeText(this, "No states found with name: " + searchString, Toast.LENGTH_LONG).show();
         }
+      } catch (Exception e) {
+        String error = "Feature search failed for: " + searchString + ". Error: " + e.getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
       }
     });
   }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
+    // inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.menu_main, menu);
-
-    // Get the SearchView and set the searchable configuration
+    // get the SearchView and set the searchable configuration
     SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
     SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-    // Assumes current activity is the searchable activity
+    // assumes current activity is the searchable activity
     searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-    searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-
+    searchView.setIconifiedByDefault(false);
     return true;
   }
 
   @Override
   protected void onPause() {
-    super.onPause();
-    // pause MapView
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    // resume MapView
     mMapView.resume();
   }
 
   @Override protected void onDestroy() {
-    super.onDestroy();
-    // dispose MapView
     mMapView.dispose();
+    super.onDestroy();
   }
 }
