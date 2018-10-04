@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">WMS layer (URL)</string>
-    <string name="wms_layer_url">https://certmapper.cr.usgs.gov/arcgis/services/geology/africa/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS</string>
+    <string name="app_name">WMS Layer (URL)</string>
+    <string name="wms_layer_url">https://nowcoast.noaa.gov/arcgis/services/nowcoast/radar_meteo_imagery_nexrad_time/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS</string>
 </resources>
