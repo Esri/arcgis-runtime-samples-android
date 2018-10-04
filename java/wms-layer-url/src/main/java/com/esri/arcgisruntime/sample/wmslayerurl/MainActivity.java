@@ -39,13 +39,13 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
     // create a map with the BasemapType topographic
-    ArcGISMap map = new ArcGISMap(Basemap.Type.IMAGERY, 2.0, 18.0, 3);
+    ArcGISMap map = new ArcGISMap(Basemap.Type.LIGHT_GRAY_CANVAS, 39.8, -98.6, 3);
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
     // hold a list of uniquely-identifying WMS layer names to display
     List<String> wmsLayerNames = new ArrayList<>();
-    wmsLayerNames.add("0");
+    wmsLayerNames.add("1");
 
     // create a new WMS layer displaying the specified layers from the service
     WmsLayer wmsLayer = new WmsLayer(getString(R.string.wms_layer_url), wmsLayerNames);
@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    super.onPause();
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     mMapView.dispose();
+    super.onDestroy();
   }
 }

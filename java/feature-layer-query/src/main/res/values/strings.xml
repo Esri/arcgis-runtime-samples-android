@@ -2,5 +2,5 @@
     <string name="app_name">Feature Layer Query</string>
     <string name="action_search">Search</string>
     <string name="search_hint">Search for USA states</string>
-    <string name="sample_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer/2</string>
+    <string name="us_daytime_population_url">https://services.arcgis.com/jIL9msH9OI208GCb/arcgis/rest/services/USA_Daytime_Population_2016/FeatureServer/0</string>
 </resources>

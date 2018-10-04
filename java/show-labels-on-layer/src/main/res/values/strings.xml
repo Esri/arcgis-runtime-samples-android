@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Show labels on layer</string>
-    <string name="us_highways_1">http://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer/1</string>
-    <string name="error_message">Error loading feature layer: </string>
+    <string name="app_name">Show Labels on Layer</string>
+    <string name="congressional_districts_url">https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_115th_Congressional_Districts/FeatureServer/0</string>
 </resources>

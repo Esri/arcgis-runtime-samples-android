@@ -132,34 +132,32 @@
 
     <!-- Maximum Distance -->
     <TextView
-            android:text="@string/maximum_distance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/maximum_distance_seekbar"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/minimum_distance_textview"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"/>
+        android:id="@+id/maximum_distance_seekbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/maximum_distance"
+        app:layout_constraintTop_toBottomOf="@+id/minimum_distance_textview"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/curr_maximum_distance"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/curr_minimum_distance"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp"/>
+        android:id="@+id/curr_maximum_distance"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/curr_minimum_distance"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <SeekBar
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/max_distance_seekbar"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/min_distance_seekbar"
-            app:layout_constraintEnd_toStartOf="@+id/curr_maximum_distance"
-            app:layout_constraintStart_toEndOf="@+id/maximum_distance_seekbar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp"
-            android:minEms="6"/>
+        android:id="@+id/max_distance_seekbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:minEms="6"
+        app:layout_constraintTop_toBottomOf="@+id/min_distance_seekbar"
+        app:layout_constraintEnd_toStartOf="@+id/curr_maximum_distance"
+        app:layout_constraintStart_toEndOf="@+id/maximum_distance_seekbar" />
 
 </android.support.constraint.ConstraintLayout>
