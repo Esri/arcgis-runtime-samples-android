@@ -60,14 +60,7 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private ServiceFeatureTable mUsStatesFeatureTable;
-  private Button mAddButton;
-  private Button mRemoveStatisticButton;
-  private Button mMoveRightButton;
-  private Button mMoveLeftButton;
-  private Button mChangeSortOrder;
-  private Button mGetStatisticsButton;
-  private Spinner mFieldSpinner;
-  private Spinner mTypeSpinner;
+
   private RecyclerView mStatisticsDefinitionRecyclerView;
   private RecyclerView mGroupRecyclerView;
   private RecyclerView mOrderByRecyclerView;
@@ -81,40 +74,6 @@ public class MainActivity extends AppCompatActivity {
   private List<String> mOrderByList;
   private List<String> mFieldNameList;
 
-  /**
-   * Helper method to get the sort order from a string containing a field and sort order.
-   *
-   * @param fieldAndOrder string from recycler view
-   * @return SortOrder (either ASCENDING or DESCENDING)
-   */
-  private static QueryParameters.SortOrder getSortOrderFrom(String fieldAndOrder) {
-    String orderString = fieldAndOrder.substring(fieldAndOrder.indexOf('(') + 1, fieldAndOrder.indexOf(')'));
-    QueryParameters.SortOrder sortOrder;
-    switch (orderString) {
-      case "DESCENDING":
-        sortOrder = QueryParameters.SortOrder.DESCENDING;
-        break;
-      case "ASCENDING":
-        sortOrder = QueryParameters.SortOrder.ASCENDING;
-        break;
-      default:
-        Log.e(TAG, "Invalid sort order: " + orderString);
-        sortOrder = null;
-        break;
-    }
-    return sortOrder;
-  }
-
-  /**
-   * Helper method to get a field from a string.
-   *
-   * @param fieldAndOrder string from recycler view
-   * @return field as a string
-   */
-  private static String getFieldFrom(String fieldAndOrder) {
-    return fieldAndOrder.substring(0, fieldAndOrder.indexOf(' '));
-  }
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -123,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     inflateUiViews();
 
     // create US states feature table
-    mUsStatesFeatureTable = new ServiceFeatureTable(getString(R.string.us_states_census));
+    mUsStatesFeatureTable = new ServiceFeatureTable(getString(R.string.obesity_inactivity_diabetes_feature_service));
 
     // collection of (user-defined) statistics to use in the query
     mStatisticDefinitionList = new ArrayList<>();
@@ -142,33 +101,42 @@ public class MainActivity extends AppCompatActivity {
       createRecyclerViews();
 
       // fill the field spinner with field names
-      mFieldSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mFieldNameList));
+      Spinner fieldSpinner = findViewById(R.id.fieldSpinner);
+      fieldSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mFieldNameList));
 
       // fill the type spinner with StatisticType values
-      mTypeSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, StatisticType.values()));
+      Spinner typeSpinner = findViewById(R.id.typeSpinner);
+      typeSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, StatisticType.values()));
 
       // add default search values
-      addStatistic("POP2000", StatisticType.AVERAGE);
-      addStatistic("POP00_SQMI", StatisticType.AVERAGE);
-      mGroupAdapter.getCheckedList()[3] = true; // set check to true for sub_region
-      addFieldToOrderBy("SUB_REGION");
+      addStatistic("Diabetes_Percent", StatisticType.AVERAGE);
+      addStatistic("Diabetes_Percent", StatisticType.COUNT);
+      addStatistic("Diabetes_Percent", StatisticType.STANDARD_DEVIATION);
+      mGroupAdapter.getCheckedList()[3] = true;
+      addFieldToOrderBy("State");
 
       // wire up buttons to work only after the US states feature table has loaded
-      mAddButton.setOnClickListener(v -> {
+      Button addButton = findViewById(R.id.addButton);
+      addButton.setOnClickListener(v -> {
         // get field and stat type from the respective spinners
-        String fieldName = mFieldSpinner.getSelectedItem().toString();
-        StatisticType statType = StatisticType.valueOf(mTypeSpinner.getSelectedItem().toString());
+        String fieldName = fieldSpinner.getSelectedItem().toString();
+        StatisticType statType = StatisticType.valueOf(typeSpinner.getSelectedItem().toString());
         addStatistic(fieldName, statType);
       });
-      mRemoveStatisticButton.setOnClickListener(view -> removeStatistic());
-      mMoveRightButton.setOnClickListener(view -> {
+      Button removeStatisticButton = findViewById(R.id.removeStatisticButton);
+      removeStatisticButton.setOnClickListener(view -> removeStatistic());
+      Button moveRightButton = findViewById(R.id.moveRightButton);
+      moveRightButton.setOnClickListener(view -> {
         // get the selected field from the group recycler view
         String field = mGroupAdapter.getItem(mGroupAdapter.getSelectedPosition());
         addFieldToOrderBy(field);
       });
-      mMoveLeftButton.setOnClickListener(view -> removeFieldFromOrderBy());
-      mChangeSortOrder.setOnClickListener(view -> changeSortOrder());
-      mGetStatisticsButton.setOnClickListener(view -> {
+      Button moveLeftButton = findViewById(R.id.moveLeftButton);
+      moveLeftButton.setOnClickListener(view -> removeFieldFromOrderBy());
+      Button changeSortOrderButton = findViewById(R.id.changeSortOrderButton);
+      changeSortOrderButton.setOnClickListener(view -> changeSortOrder());
+      Button getStatisticsButton = findViewById(R.id.getStatisticsButton);
+      getStatisticsButton.setOnClickListener(view -> {
         // verify that there is at least one statistic definition in the statistic definition list before query
         if (!mStatisticDefinitionList.isEmpty()) {
           executeStatisticsQuery();
@@ -191,6 +159,9 @@ public class MainActivity extends AppCompatActivity {
 
     // create the statistics query parameters, pass in the list of statistic definitions
     StatisticsQueryParameters statQueryParams = new StatisticsQueryParameters(mStatisticDefinitionList);
+
+    // ignore counties with missing data
+    statQueryParams.setWhereClause("\"State\" IS NOT NULL");
 
     // specify the fields to group by (if any)
     List<String> groupList = new ArrayList<>();
@@ -377,14 +348,6 @@ public class MainActivity extends AppCompatActivity {
    * Inflate all views in the user interface.
    */
   private void inflateUiViews() {
-    mAddButton = findViewById(R.id.addButton);
-    mRemoveStatisticButton = findViewById(R.id.removeStatisticButton);
-    mMoveRightButton = findViewById(R.id.moveRightButton);
-    mMoveLeftButton = findViewById(R.id.moveLeftButton);
-    mChangeSortOrder = findViewById(R.id.changeSortOrderButton);
-    mGetStatisticsButton = findViewById(R.id.getStatisticsButton);
-    mFieldSpinner = findViewById(R.id.fieldSpinner);
-    mTypeSpinner = findViewById(R.id.typeSpinner);
     mStatisticsDefinitionRecyclerView = findViewById(R.id.fieldTypeRecyclerView);
     mGroupRecyclerView = findViewById(R.id.groupFieldRecyclerView);
     mOrderByRecyclerView = findViewById(R.id.orderFieldRecyclerView);
@@ -433,5 +396,39 @@ public class MainActivity extends AppCompatActivity {
   @Override protected void onPause() {
     super.onPause();
     mQueryExecutingAlert.dismiss();
+  }
+
+  /**
+   * Helper method to get the sort order from a string containing a field and sort order.
+   *
+   * @param fieldAndOrder string from recycler view
+   * @return SortOrder (either ASCENDING or DESCENDING)
+   */
+  private static QueryParameters.SortOrder getSortOrderFrom(String fieldAndOrder) {
+    String orderString = fieldAndOrder.substring(fieldAndOrder.indexOf('(') + 1, fieldAndOrder.indexOf(')'));
+    QueryParameters.SortOrder sortOrder;
+    switch (orderString) {
+      case "DESCENDING":
+        sortOrder = QueryParameters.SortOrder.DESCENDING;
+        break;
+      case "ASCENDING":
+        sortOrder = QueryParameters.SortOrder.ASCENDING;
+        break;
+      default:
+        Log.e(TAG, "Invalid sort order: " + orderString);
+        sortOrder = null;
+        break;
+    }
+    return sortOrder;
+  }
+
+  /**
+   * Helper method to get a field from a string.
+   *
+   * @param fieldAndOrder string from recycler view
+   * @return field as a string
+   */
+  private static String getFieldFrom(String fieldAndOrder) {
+    return fieldAndOrder.substring(0, fieldAndOrder.indexOf(' '));
   }
 }
