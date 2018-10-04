@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">Raster Layer Service</string>
-    <!-- Image service raster url -->
-    <string name="image_service_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/NLCDLandCover2001/ImageServer</string>
+    <string name="image_service_url">https://gis.ngdc.noaa.gov/arcgis/rest/services/bag_hillshades/ImageServer</string>
 </resources>

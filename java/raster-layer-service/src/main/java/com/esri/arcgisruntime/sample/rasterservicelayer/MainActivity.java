@@ -18,8 +18,11 @@ package com.esri.arcgisruntime.sample.rasterservicelayer;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.RasterLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -29,6 +32,8 @@ import com.esri.arcgisruntime.raster.ImageServiceRaster;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
+
   private MapView mMapView;
 
   @Override
@@ -36,35 +41,40 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // create MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    // get a reference to the map view
+    mMapView = findViewById(R.id.mapView);
+
     // create a Dark Gray Canvas Vector basemap
     ArcGISMap map = new ArcGISMap(Basemap.createDarkGrayCanvasVector());
+
     // add the map to a map view
     mMapView.setMap(map);
+
+    // zoom into San Francisco Bay
+    mMapView.setViewpointCenterAsync(new Point(-13643095.660131, 4550009.846004, SpatialReferences.getWebMercator()),
+        100000);
+
     // create image service raster as raster layer
-    final ImageServiceRaster imageServiceRaster = new ImageServiceRaster(
-        getResources().getString(R.string.image_service_url));
+    final ImageServiceRaster imageServiceRaster = new ImageServiceRaster(getString(R.string.image_service_url));
     final RasterLayer rasterLayer = new RasterLayer(imageServiceRaster);
-    // add raster layer as map operational layer
-    map.getOperationalLayers().add(rasterLayer);
-    // zoom to the extent of the raster service
-    rasterLayer.addDoneLoadingListener(new Runnable() {
-      @Override
-      public void run() {
-        if (rasterLayer.getLoadStatus() == LoadStatus.LOADED) {
-          // get the center point
-          Point centerPnt = imageServiceRaster.getServiceInfo().getFullExtent().getCenter();
-          mMapView.setViewpointCenterAsync(centerPnt, 55000000);
-        }
+
+    // check that the raster layer loaded
+    rasterLayer.addDoneLoadingListener(() -> {
+      if (rasterLayer.getLoadStatus() != LoadStatus.LOADED) {
+        String error = "Raster layer failed to load.";
+        Log.e(TAG, error);
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
       }
     });
+
+    // add raster layer as map operational layer
+    map.getOperationalLayers().add(rasterLayer);
   }
 
   @Override
   protected void onPause() {
-    super.onPause();
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
@@ -75,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     mMapView.dispose();
+    super.onDestroy();
   }
 }
