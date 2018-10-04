@@ -45,6 +45,7 @@ import com.esri.arcgisruntime.mapping.view.SceneView;
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
+
   // initial values
   private static final int mInitHeading = 0;
   private static final int mInitPitch = 60;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
   private static final int mInitVerticalAngle = 90;
   private static final int mInitMinDistance = 0;
   private static final int mInitMaxDistance = 1500;
+
   private SceneView mSceneView;
   private LocationViewshed mViewshed;
   private int mMinDistance;
@@ -148,12 +150,6 @@ public class MainActivity extends AppCompatActivity {
     });
 
     // get views from layout
-    mHeadingSeekBar = findViewById(R.id.heading_seek_bar);
-    mPitchSeekBar = findViewById(R.id.pitch_seek_bar);
-    mHorizontalAngleSeekBar = findViewById(R.id.horizontal_angle_seekbar);
-    mVerticalAngleSeekBar = findViewById(R.id.vertical_angle_seekbar);
-    mMinDistanceSeekBar = findViewById(R.id.min_distance_seekbar);
-    mMaxDistanceSeekBar = findViewById(R.id.max_distance_seekbar);
     mCurrHeading = findViewById(R.id.curr_heading);
     mCurrPitch = findViewById(R.id.curr_pitch);
     mCurrHorizontalAngle = findViewById(R.id.curr_horizontal_angle);
@@ -162,34 +158,39 @@ public class MainActivity extends AppCompatActivity {
     mCurrMaxDistance = findViewById(R.id.curr_maximum_distance);
 
     // heading range 0 - 360
+    mHeadingSeekBar = findViewById(R.id.heading_seek_bar);
     mHeadingSeekBar.setMax(360);
     setHeading(mInitHeading);
     mHeadingSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        int heading = seekBar.getProgress();
-        setHeading(heading);
+        setHeading(seekBar.getProgress());
       }
 
-      @Override public void onStartTrackingTouch(SeekBar seekBar) { }
+      @Override public void onStartTrackingTouch(SeekBar seekBar) {
+      }
 
-      @Override public void onStopTrackingTouch(SeekBar seekBar) { }
+      @Override public void onStopTrackingTouch(SeekBar seekBar) {
+      }
     });
 
     // set arbitrary max to 180 to avoid nonsensical pitch values
+    mPitchSeekBar = findViewById(R.id.pitch_seek_bar);
     mPitchSeekBar.setMax(180);
     setPitch(mInitPitch);
     mPitchSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        int pitch = seekBar.getProgress();
-        setPitch(pitch);
+        setPitch(seekBar.getProgress());
       }
 
-      @Override public void onStartTrackingTouch(SeekBar seekBar) { }
+      @Override public void onStartTrackingTouch(SeekBar seekBar) {
+      }
 
-      @Override public void onStopTrackingTouch(SeekBar seekBar) { }
+      @Override public void onStopTrackingTouch(SeekBar seekBar) {
+      }
     });
 
     // horizontal angle range 1 - 120
+    mHorizontalAngleSeekBar = findViewById(R.id.horizontal_angle_seekbar);
     mHorizontalAngleSeekBar.setMax(120);
     setHorizontalAngle(mInitHorizontalAngle);
     mHorizontalAngleSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -200,12 +201,15 @@ public class MainActivity extends AppCompatActivity {
         }
       }
 
-      @Override public void onStartTrackingTouch(SeekBar seekBar) { }
+      @Override public void onStartTrackingTouch(SeekBar seekBar) {
+      }
 
-      @Override public void onStopTrackingTouch(SeekBar seekBar) { }
+      @Override public void onStopTrackingTouch(SeekBar seekBar) {
+      }
     });
 
     // vertical angle range 1 - 120
+    mVerticalAngleSeekBar = findViewById(R.id.vertical_angle_seekbar);
     mVerticalAngleSeekBar.setMax(120);
     setVerticalAngle(mInitVerticalAngle);
     mVerticalAngleSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -216,12 +220,15 @@ public class MainActivity extends AppCompatActivity {
         }
       }
 
-      @Override public void onStartTrackingTouch(SeekBar seekBar) { }
+      @Override public void onStartTrackingTouch(SeekBar seekBar) {
+      }
 
-      @Override public void onStopTrackingTouch(SeekBar seekBar) { }
+      @Override public void onStopTrackingTouch(SeekBar seekBar) {
+      }
     });
 
     // set to 1000 below the arbitrary max
+    mMinDistanceSeekBar = findViewById(R.id.min_distance_seekbar);
     mMinDistanceSeekBar.setMax(8999);
     setMinDistance(mInitMinDistance);
     mMinDistanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -234,12 +241,15 @@ public class MainActivity extends AppCompatActivity {
         setMinDistance(mMinDistance);
       }
 
-      @Override public void onStartTrackingTouch(SeekBar seekBar) { }
+      @Override public void onStartTrackingTouch(SeekBar seekBar) {
+      }
 
-      @Override public void onStopTrackingTouch(SeekBar seekBar) { }
+      @Override public void onStopTrackingTouch(SeekBar seekBar) {
+      }
     });
 
     // set arbitrary max to 9999 to allow a maximum of 4 digits
+    mMaxDistanceSeekBar = findViewById(R.id.max_distance_seekbar);
     mMaxDistanceSeekBar.setMax(9999);
     setMaxDistance(mInitMaxDistance);
     mMaxDistanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -256,13 +266,13 @@ public class MainActivity extends AppCompatActivity {
         setMaxDistance(mMaxDistance);
       }
 
-      @Override public void onStartTrackingTouch(SeekBar seekBar) { }
+      @Override public void onStartTrackingTouch(SeekBar seekBar) {
+      }
 
-      @Override public void onStopTrackingTouch(SeekBar seekBar) { }
+      @Override public void onStopTrackingTouch(SeekBar seekBar) {
+      }
     });
   }
-
-  // helper methods
 
   /**
    * Set viewshed heading, seek bar progress, and current heading text view.
@@ -340,8 +350,8 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    super.onPause();
     mSceneView.pause();
+    super.onPause();
   }
 
   @Override
@@ -352,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     mSceneView.dispose();
+    super.onDestroy();
   }
 }
