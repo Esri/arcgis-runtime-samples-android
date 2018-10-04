@@ -93,8 +93,8 @@ public class ParametersDialogFragment extends DialogFragment {
             }
         });
 
-        mCurrAltitudeTextView = (TextView) dialogView.findViewById(R.id.curr_altitude_text);
-        SeekBar altitudeSeekBar = (SeekBar) dialogView.findViewById(R.id.altitude_seek_bar);
+        mCurrAltitudeTextView = (TextView) dialogView.findViewById(R.id.hillshade_curr_altitude_text);
+        SeekBar altitudeSeekBar = (SeekBar) dialogView.findViewById(R.id.hillshade_altitude_seek_bar);
         altitudeSeekBar.setMax(90); //altitude is restricted to 0 - 90
         //set initial altitude value
         updateAltitudeSeekBar(altitudeSeekBar);
@@ -138,7 +138,7 @@ public class ParametersDialogFragment extends DialogFragment {
                 R.layout.spinner_text_view,
                 slopeTypeArray);
 
-        Spinner slopeTypeSpinner = (Spinner) dialogView.findViewById(R.id.slope_type_spinner);
+        Spinner slopeTypeSpinner = (Spinner) dialogView.findViewById(R.id.hillshade_slope_type_spinner);
         slopeTypeSpinner.setAdapter(spinnerAdapter);
         slopeTypeSpinner.setSelection(mSlopeType.ordinal());
         slopeTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
