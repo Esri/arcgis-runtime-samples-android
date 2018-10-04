@@ -149,18 +149,15 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.kmlFromUrl:
-        changeSourceToURL();
-        break;
-      case R.id.kmlFromPortal:
-        changeSourceToPortalItem();
-        break;
-      case R.id.kmlFromExternalStorage:
-        changeSourceToFileExternalStorage();
-        break;
-      default:
-        Log.e(TAG, "Menu option not implemented");
+    int i = item.getItemId();
+    if (i == R.id.kmlFromUrl) {
+      changeSourceToURL();
+    } else if (i == R.id.kmlFromPortal) {
+      changeSourceToPortalItem();
+    } else if (i == R.id.kmlFromExternalStorage) {
+      changeSourceToFileExternalStorage();
+    } else {
+      Log.e(TAG, "Menu option not implemented");
     }
     return super.onOptionsItemSelected(item);
   }
