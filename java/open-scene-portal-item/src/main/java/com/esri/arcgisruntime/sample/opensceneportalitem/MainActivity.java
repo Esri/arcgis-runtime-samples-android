@@ -32,12 +32,12 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // inflate SceneView from layout
-    mSceneView= findViewById(R.id.sceneView);
+    // get a reference to the scene view
+    mSceneView = findViewById(R.id.sceneView);
 
     // get the portal url and portal item from ArcGIS online
-    Portal portal = new Portal(getResources().getString(R.string.portal_url), false);
-    PortalItem portalItem = new PortalItem(portal, getString(R.string.item_id));
+    Portal portal = new Portal(getString(R.string.arcgis_portal_url), false);
+    PortalItem portalItem = new PortalItem(portal, getString(R.string.buildings_brest));
 
     // create scene from a portal item
     ArcGISScene scene = new ArcGISScene(portalItem);
@@ -46,21 +46,18 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    super.onPause();
-    // pause SceneView
     mSceneView.pause();
+    super.onPause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    // resume SceneView
     mSceneView.resume();
   }
 
   @Override protected void onDestroy() {
-    super.onDestroy();
-    // dispose SceneView
     mSceneView.dispose();
+    super.onDestroy();
   }
 }

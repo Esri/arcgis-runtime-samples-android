@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Open Scene Portal Item</string>
     <!-- arcgis online portal url -->
-    <string name="portal_url">http://www.arcgis.com/</string>
-    <string name="item_id">a13c3c3540144967bc933cb5e498b8e4</string>
+    <string name="arcgis_portal_url">http://www.arcgis.com/</string>
+    <string name="buildings_brest">a13c3c3540144967bc933cb5e498b8e4</string>
 </resources>
