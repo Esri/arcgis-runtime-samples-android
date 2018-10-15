@@ -224,7 +224,6 @@ public class MainActivity extends AppCompatActivity {
     mPinSourceSymbol.setWidth(20);
     mPinSourceSymbol.loadAsync();
     mPinSourceSymbol.setLeaderOffsetY(45);
-    mPinSourceSymbol.setOffsetY(-48);
 
     mReverseGeocodeParameters = new ReverseGeocodeParameters();
     mReverseGeocodeParameters.getResultAttributeNames().add("*");
