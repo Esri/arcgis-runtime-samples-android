@@ -18,10 +18,10 @@ package com.esri.arcgisruntime.sample.hillshaderenderer;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -75,26 +75,18 @@ public class ParametersDialogFragment extends DialogFragment {
         }
 
         AlertDialog.Builder paramDialog = new AlertDialog.Builder(getContext());
-        @SuppressLint("InflateParams") View dialogView = inflater.inflate(R.layout.dialog_box, null);
+        @SuppressLint("InflateParams") View dialogView = inflater.inflate(R.layout.hillshade_dialog_box, null);
         paramDialog.setView(dialogView);
         paramDialog.setTitle(R.string.dialog_title);
-        paramDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dismiss();
-            }
-        });
-        paramDialog.setPositiveButton("Render", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                ParametersListener activity =
-                        (ParametersListener) getActivity();
-                activity.returnParameters(mAltitude, mAzimuth, mSlopeType);
-            }
+        paramDialog.setNegativeButton("Cancel", (dialog, which) -> dismiss());
+        paramDialog.setPositiveButton("Render", (dialog, which) -> {
+            ParametersListener activity =
+                    (ParametersListener) getActivity();
+            activity.returnParameters(mAltitude, mAzimuth, mSlopeType);
         });
 
-        mCurrAltitudeTextView = (TextView) dialogView.findViewById(R.id.hillshade_curr_altitude_text);
-        SeekBar altitudeSeekBar = (SeekBar) dialogView.findViewById(R.id.hillshade_altitude_seek_bar);
+        mCurrAltitudeTextView = dialogView.findViewById(R.id.hillshade_curr_altitude_text);
+        SeekBar altitudeSeekBar = dialogView.findViewById(R.id.hillshade_altitude_seek_bar);
         altitudeSeekBar.setMax(90); //altitude is restricted to 0 - 90
         //set initial altitude value
         updateAltitudeSeekBar(altitudeSeekBar);
@@ -110,8 +102,8 @@ public class ParametersDialogFragment extends DialogFragment {
             public void onStopTrackingTouch(SeekBar seekBar) { }
         });
 
-        mCurrAzimuthTextView = (TextView) dialogView.findViewById(R.id.curr_azimuth_text);
-        SeekBar azimuthSeekBar = (SeekBar) dialogView.findViewById(R.id.azimuth_seek_bar);
+        mCurrAzimuthTextView = dialogView.findViewById(R.id.hillshade_curr_azimuth_text);
+        SeekBar azimuthSeekBar = dialogView.findViewById(R.id.hillshade_azimuth_seek_bar);
         azimuthSeekBar.setMax(360); //azimuth measured in degrees 0 - 360
         //set initial azimuth value
         updateAzimuthSeekBar(azimuthSeekBar);
@@ -135,10 +127,10 @@ public class ParametersDialogFragment extends DialogFragment {
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
                 getContext(),
-                R.layout.spinner_text_view,
+                R.layout.hillshade_spinner_text_view,
                 slopeTypeArray);
 
-        Spinner slopeTypeSpinner = (Spinner) dialogView.findViewById(R.id.hillshade_slope_type_spinner);
+        Spinner slopeTypeSpinner = dialogView.findViewById(R.id.hillshade_slope_type_spinner);
         slopeTypeSpinner.setAdapter(spinnerAdapter);
         slopeTypeSpinner.setSelection(mSlopeType.ordinal());
         slopeTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -166,13 +158,11 @@ public class ParametersDialogFragment extends DialogFragment {
         return paramDialog.create();
     }
 
-    @SuppressLint("SetTextI18n")
     private void updateAltitudeSeekBar(SeekBar altitudeSeekBar) {
         altitudeSeekBar.setProgress(mAltitude);
         mCurrAltitudeTextView.setText(mAltitude.toString());
     }
 
-    @SuppressLint("SetTextI18n")
     private void updateAzimuthSeekBar(SeekBar azimuthSeekBar) {
         azimuthSeekBar.setProgress(mAzimuth);
         mCurrAzimuthTextView.setText(mAzimuth.toString());

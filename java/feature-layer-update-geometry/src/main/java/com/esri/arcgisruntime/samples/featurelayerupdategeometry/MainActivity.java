@@ -14,7 +14,7 @@ package com.esri.arcgisruntime.samples.featurelayerupdategeometry;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import android.graphics.Color;
+
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -37,103 +37,103 @@ import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
-
 public class MainActivity extends AppCompatActivity {
+
+  private static final String TAG = MainActivity.class.getSimpleName();
+
   private MapView mMapView;
   private FeatureLayer mFeatureLayer;
-  private boolean mFeatureSelected = false;
+  private boolean mFeatureSelected = true;
   private ArcGISFeature mIdentifiedFeature;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+
+    // get a reference to the map view
+    mMapView = findViewById(R.id.mapView);
+
     // create a map with the streets basemap
     ArcGISMap map = new ArcGISMap(Basemap.createStreets());
-    //set an initial viewpoint
+
+    // set an initial viewpoint
     map.setInitialViewpoint(new Viewpoint(new Point(-100.343, 34.585, SpatialReferences.getWgs84()), 1E8));
+
     // set the map to be displayed in the MapView
     mMapView.setMap(map);
 
     // create feature layer with its service feature table
-    // create the service feature table
-    final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
-    // create the feature layer using the service feature table
+    final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getString(R.string.sample_service_url));
     mFeatureLayer = new FeatureLayer(serviceFeatureTable);
-    mFeatureLayer.setSelectionColor(Color.CYAN); 
-    mFeatureLayer.setSelectionWidth(3);
+
     // add the layer to the map
     map.getOperationalLayers().add(mFeatureLayer);
-    Toast.makeText(getApplicationContext(), "Tap on a feature to select it", Toast.LENGTH_LONG).show();
+
+    Toast.makeText(getApplicationContext(), "Tap on a feature to select it.", Toast.LENGTH_LONG).show();
 
     // set an on touch listener to listen for click events
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override
-      public boolean onSingleTapConfirmed(MotionEvent e) {
+      public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
 
-        if (!mFeatureSelected) {
-          android.graphics.Point screenCoordinate = new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY()));
+        if (mFeatureSelected) {
+          android.graphics.Point screenCoordinate = new android.graphics.Point(Math.round(motionEvent.getX()),
+              Math.round(motionEvent.getY()));
           double tolerance = 20;
-          //Identify Layers to find features
-          final ListenableFuture<IdentifyLayerResult> identifyFuture = mMapView.identifyLayerAsync(mFeatureLayer, screenCoordinate, tolerance, false, 1);
-          identifyFuture.addDoneListener(new Runnable() {
-            @Override
-            public void run() {
-              try {
-                // call get on the future to get the result
-                IdentifyLayerResult layerResult = identifyFuture.get();
-                List<GeoElement> resultGeoElements = layerResult.getElements();
 
-                if(resultGeoElements.size() > 0){
-                  if(resultGeoElements.get(0) instanceof ArcGISFeature){
-                    mIdentifiedFeature = (ArcGISFeature) resultGeoElements.get(0);
-                    //Select the identified feature
-                    mFeatureLayer.selectFeature(mIdentifiedFeature);
-                    mFeatureSelected = true;
-                    Toast.makeText(getApplicationContext(), "Feature Selected. Tap on map to update its geometry " , Toast.LENGTH_LONG).show();
-                  }else{
-                    Toast.makeText(getApplicationContext(), "No Features Selected. Tap on a feature" , Toast.LENGTH_LONG).show();
-                  }
+          // identify Layers to find features
+          final ListenableFuture<IdentifyLayerResult> identifyFuture = mMapView
+              .identifyLayerAsync(mFeatureLayer, screenCoordinate, tolerance, false, 1);
+          identifyFuture.addDoneListener(() -> {
+            try {
+              // call get on the future to get the result
+              IdentifyLayerResult layerResult = identifyFuture.get();
+              List<GeoElement> resultGeoElements = layerResult.getElements();
+
+              if (!resultGeoElements.isEmpty()) {
+                if (resultGeoElements.get(0) instanceof ArcGISFeature) {
+                  mIdentifiedFeature = (ArcGISFeature) resultGeoElements.get(0);
+                  // select the identified feature
+                  mFeatureLayer.selectFeature(mIdentifiedFeature);
+                  mFeatureSelected = false;
+                  Toast.makeText(getApplicationContext(), "Feature Selected. Tap on map to update its geometry.",
+                      Toast.LENGTH_LONG).show();
+                } else {
+                  Toast.makeText(getApplicationContext(), "No Features Selected. Tap on a feature.", Toast.LENGTH_LONG)
+                      .show();
                 }
-              } catch (InterruptedException | ExecutionException e) {
-                Log.e(getResources().getString(R.string.app_name), "Update feature failed: " + e.getMessage());
               }
+            } catch (InterruptedException | ExecutionException e) {
+              Log.e(TAG, "Update feature failed: " + e.getMessage());
             }
           });
         } else {
-          Point movedPoint = mMapView.screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
+          Point movedPoint = mMapView.screenToLocation(new android.graphics.Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY())));
           final Point normalizedPoint = (Point) GeometryEngine.normalizeCentralMeridian(movedPoint);
-          mIdentifiedFeature.addDoneLoadingListener(new Runnable() {
-            @Override
-            public void run() {
-              mIdentifiedFeature.setGeometry(normalizedPoint);
-              final ListenableFuture<Void> updateFuture = mFeatureLayer.getFeatureTable().updateFeatureAsync(mIdentifiedFeature);
-              updateFuture.addDoneListener(new Runnable() {
-                @Override
-                public void run() {
-                  try {
-                    // track the update
-                    updateFuture.get();
-                    // apply edits once the update has completed
-                    if (updateFuture.isDone()) {
-                      applyEditsToServer();
-                      mFeatureLayer.clearSelection();
-                      mFeatureSelected = false;
-                    } else {
-                      Log.e(getResources().getString(R.string.app_name), "Update feature failed");
-                    }
-                  } catch (InterruptedException | ExecutionException e) {
-                    Log.e(getResources().getString(R.string.app_name), "Update feature failed: " + e.getMessage());
-                  }
+          mIdentifiedFeature.addDoneLoadingListener(() -> {
+            mIdentifiedFeature.setGeometry(normalizedPoint);
+            final ListenableFuture<Void> updateFuture = mFeatureLayer.getFeatureTable().updateFeatureAsync(mIdentifiedFeature);
+            updateFuture.addDoneListener(() -> {
+              try {
+                // track the update
+                updateFuture.get();
+                // apply edits once the update has completed
+                if (updateFuture.isDone()) {
+                  applyEditsToServer();
+                  mFeatureLayer.clearSelection();
+                  mFeatureSelected = true;
+                } else {
+                  Log.e(TAG, "Update feature failed!");
                 }
-              });
-            }
+              } catch (InterruptedException | ExecutionException e1) {
+                Log.e(TAG, "Update feature failed: " + e1.getMessage());
+              }
+            });
           });
           mIdentifiedFeature.loadAsync();
         }
-        return super.onSingleTapConfirmed(e);
+        return super.onSingleTapConfirmed(motionEvent);
       }
     });
   }
@@ -142,40 +142,37 @@ public class MainActivity extends AppCompatActivity {
    * Applies edits to the FeatureService
    */
   private void applyEditsToServer() {
-    final ListenableFuture<List<FeatureEditResult>> applyEditsFuture = ((ServiceFeatureTable) mFeatureLayer.getFeatureTable()).applyEditsAsync();
-    applyEditsFuture.addDoneListener(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          // get results of edit
-          List<FeatureEditResult> featureEditResultsList = applyEditsFuture.get();
-          if (!featureEditResultsList.get(0).hasCompletedWithErrors()) {
-            Toast.makeText(getApplicationContext(), "Applied Geometry Edits to Server. ObjectID: " + featureEditResultsList.get(0).getObjectId(), Toast.LENGTH_SHORT).show();
-          }
-        } catch (InterruptedException | ExecutionException e) {
-          Log.e(getResources().getString(R.string.app_name), "Update feature failed: " + e.getMessage());
+    final ListenableFuture<List<FeatureEditResult>> applyEditsFuture = ((ServiceFeatureTable) mFeatureLayer
+        .getFeatureTable()).applyEditsAsync();
+    applyEditsFuture.addDoneListener(() -> {
+      try {
+        // get results of edit
+        List<FeatureEditResult> featureEditResultsList = applyEditsFuture.get();
+        if (!featureEditResultsList.get(0).hasCompletedWithErrors()) {
+          Toast.makeText(this,
+              "Applied Geometry Edits to Server. ObjectID: " + featureEditResultsList.get(0).getObjectId(),
+              Toast.LENGTH_SHORT).show();
         }
+      } catch (InterruptedException | ExecutionException e) {
+        Log.e(TAG, "Update feature failed: " + e.getMessage());
       }
     });
   }
 
   @Override
   protected void onPause() {
-    super.onPause();
-    // pause MapView
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    // resume MapView
     mMapView.resume();
   }
 
   @Override protected void onDestroy() {
-    super.onDestroy();
-    // dispose MapView
     mMapView.dispose();
+    super.onDestroy();
   }
 }

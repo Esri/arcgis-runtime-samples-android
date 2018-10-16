@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/adjustBasemapTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/adjust_the_basemap"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/minScaleLevelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/min_scale_level"
+            app:layout_constraintTop_toBottomOf="@+id/adjustBasemapTextView"
+            app:layout_constraintEnd_toEndOf="@+id/maxScaleTextView" />
+
+        <TextView
+            android:id="@+id/maxScaleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/max_scale_level"
+            app:layout_constraintTop_toBottomOf="@+id/minScaleLevelTextView"
+            app:layout_constraintEnd_toEndOf="@+id/extentBufferDistanceTextView" />
+
+        <TextView
+            android:id="@+id/extentBufferDistanceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/extent_buffer_distance"
+            app:layout_constraintTop_toBottomOf="@+id/maxScaleTextView"
+            app:layout_constraintEnd_toEndOf="@+id/minHydrantFlowRateTextView" />
+
+        <TextView
+            android:id="@+id/includeLayersTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/include_layers"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/extentBufferDistanceTextView"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <CheckBox
+            android:id="@+id/systemValvesCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/system_valves"
+            app:layout_constraintTop_toBottomOf="@+id/includeLayersTextView"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <CheckBox
+            android:id="@+id/serviceConnectionsCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/service_connections"
+            app:layout_constraintTop_toBottomOf="@+id/systemValvesCheckBox"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/filterFeatureLayerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/filter_feature_layer"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/serviceConnectionsCheckBox"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/minHydrantFlowRateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/min_hydrant_flow_rate"
+            app:layout_constraintTop_toBottomOf="@+id/filterFeatureLayerTextView"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/cropLayerToExtentTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/crop_layer_to_extent"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/minHydrantFlowRateTextView"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <CheckBox
+            android:id="@+id/waterPipesCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/water_pipes"
+            app:layout_constraintTop_toBottomOf="@+id/cropLayerToExtentTextView"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/currMinScaleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/minScaleLevelTextView"
+            app:layout_constraintBottom_toBottomOf="@+id/minScaleLevelTextView"
+            app:layout_constraintStart_toStartOf="@+id/currMinHydrantFlowRateTextView" />
+
+        <SeekBar
+            android:id="@+id/minScaleSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/minScaleLevelTextView"
+            app:layout_constraintEnd_toStartOf="@+id/currMinScaleTextView"
+            app:layout_constraintTop_toTopOf="@+id/minScaleLevelTextView"
+            app:layout_constraintBottom_toBottomOf="@+id/minScaleLevelTextView" />
+
+        <TextView
+            android:id="@+id/currMaxScaleTextview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/maxScaleTextView"
+            app:layout_constraintTop_toTopOf="@+id/maxScaleTextView"
+            app:layout_constraintStart_toStartOf="@+id/currMinHydrantFlowRateTextView" />
+
+        <SeekBar
+            android:id="@+id/maxScaleSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/currMaxScaleTextview"
+            app:layout_constraintStart_toEndOf="@+id/maxScaleTextView"
+            app:layout_constraintTop_toTopOf="@+id/maxScaleTextView"
+            app:layout_constraintBottom_toBottomOf="@+id/maxScaleTextView" />
+
+        <SeekBar
+            android:id="@+id/extentBufferDistanceSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/extentBufferDistanceTextView"
+            app:layout_constraintBottom_toBottomOf="@+id/extentBufferDistanceTextView"
+            app:layout_constraintEnd_toStartOf="@+id/currExtentBufferDistanceTextView"
+            app:layout_constraintStart_toEndOf="@+id/extentBufferDistanceTextView" />
+
+        <TextView
+            android:id="@+id/currExtentBufferDistanceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/currMaxScaleTextview"
+            app:layout_constraintStart_toStartOf="@+id/currMinHydrantFlowRateTextView"
+            app:layout_constraintEnd_toStartOf="@+id/metersTextView" />
+
+        <SeekBar
+            android:id="@+id/minHydrantFlowRateSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/minHydrantFlowRateTextView"
+            app:layout_constraintBottom_toBottomOf="@+id/minHydrantFlowRateTextView"
+            app:layout_constraintStart_toEndOf="@+id/minHydrantFlowRateTextView"
+            app:layout_constraintEnd_toStartOf="@+id/currMinHydrantFlowRateTextView" />
+
+        <TextView
+            android:id="@+id/currMinHydrantFlowRateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minEms="2"
+            app:layout_constraintTop_toTopOf="@+id/minHydrantFlowRateTextView"
+            app:layout_constraintBottom_toBottomOf="@+id/minHydrantFlowRateTextView"
+            app:layout_constraintEnd_toStartOf="@+id/gpmTextView" />
+
+        <TextView
+            android:id="@+id/metersTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/meters"
+            app:layout_constraintTop_toTopOf="@+id/currExtentBufferDistanceTextView"
+            app:layout_constraintBottom_toBottomOf="@+id/currExtentBufferDistanceTextView"
+            app:layout_constraintStart_toEndOf="@+id/currExtentBufferDistanceTextView" />
+
+        <TextView
+            android:id="@+id/gpmTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/gallons_per_minute"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/currMinHydrantFlowRateTextView"
+            app:layout_constraintBottom_toBottomOf="@+id/currMinHydrantFlowRateTextView" />
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
