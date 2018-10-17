@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Change Sublayer Renderer</string>
     <string name="render_button">Apply Class Break Renderer</string>
-    <string name= "census_map_server">http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
+    <string name= "census_map_server">https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
 </resources>
