@@ -263,6 +263,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     mPoiAddress = newText;
+                    mPoiSearchView.setQuery(mPoiAddress, true);
                 }
               } catch (Exception e) {
                 Log.e(TAG, "Geocode suggestion error: " + e.getMessage());
