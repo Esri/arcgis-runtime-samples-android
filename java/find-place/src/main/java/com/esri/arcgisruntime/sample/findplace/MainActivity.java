@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
       }
 
       @Override
-      public boolean onQueryTextChange(String newText) {
+      public boolean onQueryTextChange(final String newText) {
         // as long as newText isn't empty, get suggestions from the locatorTask
         if (!newText.equals("")) {
           mPoiSuggestParameters.setSearchArea(mCurrentExtentGeometry);
@@ -230,35 +230,40 @@ public class MainActivity extends AppCompatActivity {
               try {
                 // get the results of the async operation
                 List<SuggestResult> suggestResults = suggestionsFuture.get();
-                MatrixCursor suggestionsCursor = new MatrixCursor(mColumnNames);
-                int key = 0;
-                // add each poi_suggestion result to a new row
-                for (SuggestResult result : suggestResults) {
-                  suggestionsCursor.addRow(new Object[] { key++, result.getLabel() });
-                }
-                // define SimpleCursorAdapter
-                String[] cols = new String[] { COLUMN_NAME_ADDRESS };
-                int[] to = new int[] { R.id.suggestion_address };
-                final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
-                    R.layout.suggestion, suggestionsCursor, cols, to, 0);
-                mPoiSearchView.setSuggestionsAdapter(suggestionAdapter);
-                // handle a poi_suggestion being chosen
-                mPoiSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-                  @Override public boolean onSuggestionSelect(int position) {
-                    return false;
-                  }
+                if(!suggestResults.isEmpty()) {
+                    MatrixCursor suggestionsCursor = new MatrixCursor(mColumnNames);
+                    int key = 0;
+                    // add each poi_suggestion result to a new row
+                    for (SuggestResult result : suggestResults) {
+                        suggestionsCursor.addRow(new Object[] { key++, result.getLabel() });
+                    }
+                    // define SimpleCursorAdapter
+                    String[] cols = new String[] { COLUMN_NAME_ADDRESS };
+                    int[] to = new int[] { R.id.suggestion_address };
+                    final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
+                            R.layout.suggestion, suggestionsCursor, cols, to, 0);
+                    mPoiSearchView.setSuggestionsAdapter(suggestionAdapter);
+                    // handle a poi_suggestion being chosen
+                    mPoiSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                        @Override public boolean onSuggestionSelect(int position) {
+                            return false;
+                        }
 
-                  @Override public boolean onSuggestionClick(int position) {
-                    // get the selected row
-                    MatrixCursor selectedRow = (MatrixCursor) suggestionAdapter.getItem(position);
-                    // get the row's index
-                    int selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS);
-                    // get the string from the row at index
-                    mPoiAddress = selectedRow.getString(selectedCursorIndex);
-                    mPoiSearchView.setQuery(mPoiAddress, true);
-                    return true;
-                  }
-                });
+                        @Override public boolean onSuggestionClick(int position) {
+                            // get the selected row
+                            MatrixCursor selectedRow = (MatrixCursor) suggestionAdapter.getItem(position);
+                            // get the row's index
+                            int selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS);
+                            // get the string from the row at index
+                            mPoiAddress = selectedRow.getString(selectedCursorIndex);
+                            mPoiSearchView.setQuery(mPoiAddress, true);
+                            return true;
+                        }
+                    });
+                }
+                else {
+                    mPoiAddress = newText;
+                }
               } catch (Exception e) {
                 Log.e(TAG, "Geocode suggestion error: " + e.getMessage());
               }
