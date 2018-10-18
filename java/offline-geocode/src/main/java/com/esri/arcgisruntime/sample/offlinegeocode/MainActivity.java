@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
     mLocatorTask = new LocatorTask(extern + getResources().getString(R.string.sandiego_loc));
 
     mCalloutContent = new TextView(getApplicationContext());
-    mCalloutContent.setTextColor(Color.BLUE);
+    mCalloutContent.setTextColor(Color.BLACK);
     mCalloutContent.setTextIsSelectable(true);
 
   }
