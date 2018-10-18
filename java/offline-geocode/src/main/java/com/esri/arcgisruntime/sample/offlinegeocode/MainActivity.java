@@ -216,14 +216,22 @@ public class MainActivity extends AppCompatActivity {
     mGeocodeParameters.getResultAttributeNames().add("*");
     mGeocodeParameters.setMaxResults(1);
 
-    //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from an app resource
     BitmapDrawable startDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin);
-    mPinSourceSymbol = new PictureMarkerSymbol(startDrawable);
-    mPinSourceSymbol.setHeight(90);
-    mPinSourceSymbol.setWidth(20);
-    mPinSourceSymbol.loadAsync();
-    mPinSourceSymbol.setLeaderOffsetY(45);
+
+    try {
+      mPinSourceSymbol = PictureMarkerSymbol.createAsync(startDrawable).get();
+      mPinSourceSymbol.loadAsync();
+      mPinSourceSymbol.setHeight(90);
+      mPinSourceSymbol.setWidth(20);
+      mPinSourceSymbol.setLeaderOffsetY(45);
+      mPinSourceSymbol.setOffsetY(-25);
+
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (ExecutionException e) {
+      e.printStackTrace();
+    }
 
     mReverseGeocodeParameters = new ReverseGeocodeParameters();
     mReverseGeocodeParameters.getResultAttributeNames().add("*");
@@ -233,8 +241,9 @@ public class MainActivity extends AppCompatActivity {
     mLocatorTask = new LocatorTask(extern + getResources().getString(R.string.sandiego_loc));
 
     mCalloutContent = new TextView(getApplicationContext());
-    mCalloutContent.setTextColor(Color.BLACK);
+    mCalloutContent.setTextColor(Color.BLUE);
     mCalloutContent.setTextIsSelectable(true);
+
   }
 
   /**
@@ -287,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
           });
 
         } else {
+
           Log.i(TAG, "Trying to reload locator task");
           mLocatorTask.retryLoadAsync();
         }
@@ -451,7 +461,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onLongPress(MotionEvent e) {
       android.graphics.Point screenPoint = new android.graphics.Point(Math.round(e.getX()),
-          Math.round(e.getY()));
+          Math.round(e.getY()-75));
 
       Point longPressPoint = mMapView.screenToLocation(screenPoint);
 
