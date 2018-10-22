@@ -1,4 +1,4 @@
-/* Copyright 2016 Esri
+/* Copyright 2018 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
   private MapView mMapView;
   private LocatorTask mLocatorTask;
   private ReverseGeocodeParameters mReverseGeocodeParameters;
-  private SearchView mSearchview;
+  private SearchView mSearchView;
   private SimpleMarkerSymbol mPointSymbol;
 
   @Override
@@ -79,21 +79,59 @@ public class MainActivity extends AppCompatActivity {
 
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
-
+    // define a map
+    ArcGISMap map = new ArcGISMap();
+    // set the map to the map view
+    mMapView.setMap(map);
+    // add a graphics overlay to the map view
+    mGraphicsOverlay = new GraphicsOverlay();
+    mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
+    // create a point symbol for showing the address location
+    mPointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 20.0f);
+    // add a touch listener to the map view
     mMapView.setOnTouchListener(new CustomMapViewOnTouchListener(this, mMapView));
 
     requestReadPermission();
   }
 
-  private void setSearchView() {
-    mSearchview = findViewById(R.id.searchView);
-    mSearchview.setIconifiedByDefault(true);
-    mSearchview.setQueryHint(getString(R.string.search_hint));
-    mSearchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+  /**
+   * Initialize variables.
+   */
+  private void setupOfflineMapGeocode() {
+    // load the tile cache from local storage
+    TileCache tileCache = new TileCache(Environment.getExternalStorageDirectory() + getString(R.string.san_diego_tpk));
+    // use the tile cache extent to set the view point
+    tileCache.addDoneLoadingListener(() -> mMapView.setViewpoint(new Viewpoint(tileCache.getFullExtent())));
+    // create a tiled layer and add it to as the base map
+    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(tileCache);
+    mMapView.getMap().setBasemap(new Basemap(tiledLayer));
+    // create geocode parameters
+    mGeocodeParameters = new GeocodeParameters();
+    mGeocodeParameters.getResultAttributeNames().add("*");
+    mGeocodeParameters.setMaxResults(1);
+    // create reverse geocode parameters
+    mReverseGeocodeParameters = new ReverseGeocodeParameters();
+    mReverseGeocodeParameters.getResultAttributeNames().add("*");
+    mReverseGeocodeParameters.setOutputSpatialReference(mMapView.getMap().getSpatialReference());
+    mReverseGeocodeParameters.setMaxResults(1);
+    // load the locator task from external storage
+    mLocatorTask = new LocatorTask(
+        Environment.getExternalStorageDirectory() + getResources().getString(R.string.san_diego_loc));
+    mLocatorTask.loadAsync();
+  }
+
+  /**
+   * Define behavior of the app's search view.
+   */
+  private void setupSearchView() {
+    mSearchView = findViewById(R.id.searchView);
+    mSearchView.setIconifiedByDefault(true);
+    mSearchView.setQueryHint(getString(R.string.search_hint));
+    mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override
       public boolean onQueryTextSubmit(String query) {
         geoCodeTypedAddress(query);
-        mSearchview.clearFocus();
+        mSearchView.clearFocus();
         return true;
       }
 
@@ -102,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
       }
     });
-    // create an ArrayAdapter using the string array and a default spinner layout
+    // create an array adapter using the string array and a default spinner layout
     final ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this,
         android.R.layout.simple_spinner_dropdown_item) {
       @Override
@@ -110,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         return super.getCount() - 1;
       }
     };
-    // Specify the layout to use when the list of choices appears
+    // specify the layout to use when the list of choices appears
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     adapter.addAll(getResources().getStringArray(R.array.suggestion_items));
     Spinner spinner = findViewById(R.id.spinner);
@@ -125,12 +163,12 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (position == adapter.getCount()) {
-          mSearchview.clearFocus();
+          mSearchView.clearFocus();
         } else {
-          mSearchview.setQuery(getResources().getStringArray(R.array.suggestion_items)[position], false);
+          mSearchView.setQuery(getResources().getStringArray(R.array.suggestion_items)[position], false);
           geoCodeTypedAddress(getResources().getStringArray(R.array.suggestion_items)[position]);
-          mSearchview.setIconified(false);
-          mSearchview.clearFocus();
+          mSearchView.setIconified(false);
+          mSearchView.clearFocus();
         }
       }
 
@@ -140,40 +178,8 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  private void setupOfflineMapGeocoding() {
-    // create ArcGISMap with imagery basemap
-    ArcGISMap map = new ArcGISMap();
-    // load the tile cache from local storage
-    TileCache tileCache = new TileCache(Environment.getExternalStorageDirectory() + getString(R.string.san_diego_tpk));
-    // use the tile cache extent to set the view point
-    tileCache.addDoneLoadingListener(() -> mMapView.setViewpoint(new Viewpoint(tileCache.getFullExtent())));
-    // create a tiled layer and add it to as the base map
-    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(tileCache);
-    map.setBasemap(new Basemap(tiledLayer));
-    // set the map to the map view
-    mMapView.setMap(map);
-    // create a point symbol for showing the address location
-    mPointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 20.0f);
-    // add a graphics overlay to the map view
-    mGraphicsOverlay = new GraphicsOverlay();
-    mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
-    // create geocode parameters
-    mGeocodeParameters = new GeocodeParameters();
-    mGeocodeParameters.getResultAttributeNames().add("*");
-    mGeocodeParameters.setMaxResults(1);
-    // create reverse geocode parameters
-    mReverseGeocodeParameters = new ReverseGeocodeParameters();
-    mReverseGeocodeParameters.getResultAttributeNames().add("*");
-    mReverseGeocodeParameters.setOutputSpatialReference(map.getSpatialReference());
-    mReverseGeocodeParameters.setMaxResults(1);
-    // load the locator task from external storage
-    mLocatorTask = new LocatorTask(
-        Environment.getExternalStorageDirectory() + getResources().getString(R.string.san_diego_loc));
-    mLocatorTask.loadAsync();
-  }
-
   /**
-   * Geocode the the given address.
+   * Use the locator task to geocode the the given address.
    *
    * @param address as a string
    */
@@ -208,9 +214,13 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
+  /**
+   * Uses the locator task to reverse geocode for the given point.
+   *
+   * @param point on which to perform the reverse geocode
+   */
   private void reverseGeocode(Point point) {
-    final ListenableFuture<List<GeocodeResult>> results = mLocatorTask
-        .reverseGeocodeAsync(point, mReverseGeocodeParameters);
+    final ListenableFuture<List<GeocodeResult>> results = mLocatorTask.reverseGeocodeAsync(point, mReverseGeocodeParameters);
     try {
       List<GeocodeResult> geocodeResults = results.get();
       if (!geocodeResults.isEmpty()) {
@@ -222,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
         String city = geocode.getAttributes().get("City").toString();
         String state = geocode.getAttributes().get("State").toString();
         String zip = geocode.getAttributes().get("ZIP").toString();
-        detail = city + ", " + state + ' ' + zip;
+        detail = city + ", " + state + " " + zip;
         String address = street + "," + detail;
         displayGeocodeResult(point, address);
       }
@@ -239,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
    * @param resultPoint geometry to show where the geocode result is
    * @param address     to display in the associated callout
    */
-  private void displayGeocodeResult(Point resultPoint, String address) {
+  private void displayGeocodeResult(Point resultPoint, CharSequence address) {
     // dismiss the callout if showing
     if (mMapView.getCallout().isShowing()) {
       mMapView.getCallout().dismiss();
@@ -258,8 +268,8 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Show a callout at the given point with the given text.
    *
-   * @param point
-   * @param text
+   * @param point to define callout location
+   * @param text to define callout content
    */
   private void showCallout(Point point, CharSequence text) {
     Callout callout = mMapView.getCallout();
@@ -278,8 +288,8 @@ public class MainActivity extends AppCompatActivity {
     String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
     int requestCode = 2;
     if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      setupOfflineMapGeocoding();
-      setSearchView();
+      setupOfflineMapGeocode();
+      setupSearchView();
     } else {
       // request permission
       ActivityCompat.requestPermissions(this, reqPermission, requestCode);
@@ -292,8 +302,8 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      setupOfflineMapGeocoding();
-      setSearchView();
+      setupOfflineMapGeocode();
+      setupSearchView();
     } else {
       // report to user that permission was denied
       Toast.makeText(this, getString(R.string.offline_geocode_read_permission_denied), Toast.LENGTH_SHORT).show();
