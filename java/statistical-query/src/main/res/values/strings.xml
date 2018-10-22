@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Statistical Query</string>
     <string name="world_cities_service_0">
-        http://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0
+        https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0
     </string>
     <string name="only_cities_in_current_extent">Only cities in current extent</string>
     <string name="only_cities_greater_than_5m">Only cities greater than 5M</string>

@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Viewshed GeoElement</string>
-    <string name="elevation_service">http://scene.arcgis.com/arcgis/rest/services/BREST_DTM_1M/ImageServer</string>
+    <string name="elevation_service">https://scene.arcgis.com/arcgis/rest/services/BREST_DTM_1M/ImageServer</string>
     <string name="buildings_layer">
-        http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0
+        https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0
     </string>
     <string name="bradley_model">bradle.3ds</string>
     <string name="bradley_skin">tank1.jpg</string>
