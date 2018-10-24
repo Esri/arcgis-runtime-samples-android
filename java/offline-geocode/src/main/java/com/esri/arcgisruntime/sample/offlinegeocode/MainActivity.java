@@ -390,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
           (int) event.getY());
       // identify graphics on the graphics overlay
       final ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphic = mMapView
-          .identifyGraphicsOverlayAsync(mGraphicsOverlay, screenPoint, 1.0, false, 1);
+          .identifyGraphicsOverlayAsync(mGraphicsOverlay, screenPoint, 10.0, false, 1);
       identifyGraphic.addDoneListener(() -> {
         try {
           IdentifyGraphicsOverlayResult grOverlayResult = identifyGraphic.get();
