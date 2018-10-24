@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayout1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="15dp"
@@ -9,13 +8,11 @@
     android:background="@color/colorWhiteBackground"
     android:orientation="horizontal" >
 
-
     <SearchView
-        android:id="@+id/searchView1"
+        android:id="@+id/searchView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="7" >
-    </SearchView>
+        android:layout_weight="7" />
 
     <Spinner
         android:layout_width="32dp"
