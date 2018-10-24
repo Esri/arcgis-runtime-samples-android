@@ -15,10 +15,10 @@
     <string name="unknown">Unknown</string>
 
     <!-- World Timezone Service URL -->
-    <string name="world_timezone_service_URL">http://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer</string>
+    <string name="world_timezone_service_URL">https://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer</string>
     <!-- World Census Service URL -->
-    <string name="world_census_service_URL">http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
+    <string name="world_census_service_URL">https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
     <!-- World Facilities Service URL -->
-    <string name="world_facilities_service_URL">http://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0</string>
+    <string name="world_facilities_service_URL">https://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0</string>
 
 </resources>

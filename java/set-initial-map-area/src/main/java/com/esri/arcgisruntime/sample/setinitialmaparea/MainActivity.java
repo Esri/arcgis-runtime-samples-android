@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.mapinitialextent;
+package com.esri.arcgisruntime.sample.setinitialmaparea;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -35,28 +35,30 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    // get a reference to the map view
+    mMapView = findViewById(R.id.mapView);
+
     // create a map with the basemap
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
 
     // create an initial extent envelope
-    Envelope mInitExtent = new Envelope(-12211308.778729, 4645116.003309, -12208257.879667, 4650542.535773,
+    Envelope initialExtent = new Envelope(-12211308.778729, 4645116.003309, -12208257.879667, 4650542.535773,
         SpatialReference.create(102100));
+
     // create a viewpoint from envelope
-    Viewpoint vp = new Viewpoint(mInitExtent);
+    Viewpoint viewpoint = new Viewpoint(initialExtent);
+
     // set initial map extent
-    map.setInitialViewpoint(vp);
+    map.setInitialViewpoint(viewpoint);
 
     // set the map to be displayed in this view
     mMapView.setMap(map);
-
   }
 
   @Override
   protected void onPause() {
-    super.onPause();
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     mMapView.dispose();
+    super.onDestroy();
   }
 }

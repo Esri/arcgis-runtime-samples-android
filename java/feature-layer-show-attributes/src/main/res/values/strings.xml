@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Feature Layer Show Attributes</string>
     <!-- Recreation Feature Service Facilities URL -->
-    <string name="sample_service_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0</string>
+    <string name="sample_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0</string>
 </resources>

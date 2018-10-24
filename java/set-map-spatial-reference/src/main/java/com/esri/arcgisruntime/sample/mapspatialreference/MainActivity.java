@@ -34,26 +34,29 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    // get a reference to the map view
+    mMapView = findViewById(R.id.mapView);
+
     // create a map with World_Bonne projection
-    ArcGISMap mMap = new ArcGISMap(SpatialReference.create(54024));
-    //Adding a map image layer which can reproject itself to the map's spatial reference
-    ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer(
-        getResources().getString(R.string.world_cities_service));
+    ArcGISMap map = new ArcGISMap(SpatialReference.create(54024));
+
+    //Adding a map image layer which can re-project itself to the map's spatial reference
+    ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer(getString(R.string.world_cities_service));
+
     // set the map image layer as basemap
     Basemap basemap = new Basemap(mapImageLayer);
-    // add the basemap to the map
-    mMap.setBasemap(basemap);
-    // set the map to be displayed in this view
-    mMapView.setMap(mMap);
 
+    // add the basemap to the map
+    map.setBasemap(basemap);
+
+    // set the map to be displayed in this view
+    mMapView.setMap(map);
   }
 
   @Override
   protected void onPause() {
-    super.onPause();
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     mMapView.dispose();
+    super.onDestroy();
   }
 }
