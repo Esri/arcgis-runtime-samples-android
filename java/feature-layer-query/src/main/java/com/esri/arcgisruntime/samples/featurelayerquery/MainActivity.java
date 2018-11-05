@@ -13,6 +13,8 @@
 
 package com.esri.arcgisruntime.samples.featurelayerquery;
 
+import java.util.Iterator;
+
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -106,9 +108,10 @@ public class MainActivity extends AppCompatActivity {
         // call get on the future to get the result
         FeatureQueryResult result = future.get();
         // check there are some results
-        if (result.iterator().hasNext()) {
+        Iterator<Feature> resultIterator = result.iterator();
+        if (resultIterator.hasNext()) {
           // get the extend of the first feature in the result to zoom to
-          Feature feature = result.iterator().next();
+          Feature feature = resultIterator.next();
           Envelope envelope = feature.getGeometry().getExtent();
           mMapView.setViewpointGeometryAsync(envelope, 10);
           // select the feature
