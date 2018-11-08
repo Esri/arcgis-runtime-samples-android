@@ -35,6 +35,7 @@ import com.google.gson.reflect.TypeToken;
 public class ResultsActivity extends AppCompatActivity {
 
   public static String results = "";
+
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.results_expandablelistview);
