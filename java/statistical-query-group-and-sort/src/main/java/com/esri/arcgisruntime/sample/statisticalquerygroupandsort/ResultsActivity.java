@@ -35,6 +35,7 @@ import com.google.gson.reflect.TypeToken;
  */
 public class ResultsActivity extends AppCompatActivity {
 
+  public static String results = "";
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.results_expandablelistview);
@@ -43,8 +44,11 @@ public class ResultsActivity extends AppCompatActivity {
     Intent intent = getIntent();
     Gson gson = new Gson();
     // get linked hash map from intent
+//    LinkedHashMap<String, List<String>> groupedStatistics = gson
+//        .fromJson(intent.getStringExtra("results"), new ResultsActivity.LinkedHashMapTypeToken().getType());
+
     LinkedHashMap<String, List<String>> groupedStatistics = gson
-        .fromJson(intent.getStringExtra("results"), new ResultsActivity.LinkedHashMapTypeToken().getType());
+        .fromJson(results, new ResultsActivity.LinkedHashMapTypeToken().getType());
 
     // create expandable list view
     ExpandableListView expandableListView = findViewById(R.id.expandableListView);

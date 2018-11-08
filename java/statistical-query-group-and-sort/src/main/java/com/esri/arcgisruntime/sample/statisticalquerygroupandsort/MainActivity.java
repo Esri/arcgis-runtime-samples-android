@@ -23,9 +23,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -137,10 +139,10 @@ public class MainActivity extends AppCompatActivity {
       changeSortOrderButton.setOnClickListener(view -> changeSortOrder());
       Button getStatisticsButton = findViewById(R.id.getStatisticsButton);
       getStatisticsButton.setOnClickListener(view -> {
-        // verify that there is at least one statistic definition in the statistic definition list before query
-        if (!mStatisticDefinitionList.isEmpty()) {
-          executeStatisticsQuery();
-        }
+
+        AsyncTaskRunner runner = new AsyncTaskRunner();
+        runner.execute();
+
       });
     });
 
@@ -192,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
         .queryStatisticsAsync(statQueryParams);
 
     // show a loading dialog on execution of query
-    mQueryExecutingAlert.show();
+//    mQueryExecutingAlert.show();
 
     statisticsQueryResultFuture.addDoneListener(() -> {
       try {
@@ -340,7 +342,8 @@ public class MainActivity extends AppCompatActivity {
    */
   private void displayResults(String groupedStatisticsJson) {
     Intent intent = new Intent(this, ResultsActivity.class);
-    intent.putExtra("results", groupedStatisticsJson);
+//    intent.putExtra("results", groupedStatisticsJson);
+    ResultsActivity.results = groupedStatisticsJson;
     startActivity(intent);
   }
 
@@ -430,5 +433,41 @@ public class MainActivity extends AppCompatActivity {
    */
   private static String getFieldFrom(String fieldAndOrder) {
     return fieldAndOrder.substring(0, fieldAndOrder.indexOf(' '));
+  }
+
+  private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+
+    @Override
+    protected String doInBackground(String... params) {
+      try {
+        // verify that there is at least one statistic definition in the statistic definition list before query
+        if (!mStatisticDefinitionList.isEmpty()) {
+          executeStatisticsQuery();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+//        resp = e.getMessage();
+      }
+      return null;
+    }
+
+
+    @Override
+    protected void onPostExecute(String result) {
+      // execution of result of Long time consuming operation
+
+    }
+
+
+    @Override
+    protected void onPreExecute() {
+
+    }
+
+
+    @Override
+    protected void onProgressUpdate(String... text) {
+
+    }
   }
 }
