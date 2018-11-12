@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">OAuthCustomChallengeHandler</string>
+    <string name="portal_url"></string>
+    <string name="webmap_id"></string>
+    <string name="client_id"></string>
+    <string name="redirect_url"></string>
+</resources>
