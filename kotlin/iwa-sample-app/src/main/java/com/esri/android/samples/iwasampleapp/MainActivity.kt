@@ -1,28 +1,21 @@
 package com.esri.android.samples.iwasampleapp
 
-import java.util.concurrent.CountDownLatch
-
 import android.app.Activity
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.widget.Toast
+import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
-
+import android.widget.Toast
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.loadable.Loadable
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.portal.Portal
-import com.esri.arcgisruntime.security.AuthenticationManager
-import com.esri.arcgisruntime.security.AuthenticationChallengeHandler
-import com.esri.arcgisruntime.security.AuthenticationChallenge
-import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
-import com.esri.arcgisruntime.security.UserCredential
-
+import com.esri.arcgisruntime.security.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.credential_dialog.view.*
+import java.util.concurrent.CountDownLatch
 
 /**
  * This sample app shows how to use a custom authentication challenge handler to work with
@@ -30,7 +23,7 @@ import kotlinx.android.synthetic.main.credential_dialog.view.*
  * 
  * 1. Enter url of the portal you want to connect in the edit text box. The url of a default test portal has
  * been set to the box.
- * 2. Tap on the "Sing In" button to connect to the portal as a named user. A dialog will be popped up for
+ * 2. Tap on the "Sign In" button to connect to the portal as a named user. A dialog will be popped up for
  * username/password. When a correct credential is passed, portal will be loaded. If you keep passing in
  * wrong credential, no more prompt for credential after 5 attempts, which is actually 4 times due to a known
  * issue in our SDK. Then portal will fail to load. You can click the "Cancel" button to cancel the sign-in
