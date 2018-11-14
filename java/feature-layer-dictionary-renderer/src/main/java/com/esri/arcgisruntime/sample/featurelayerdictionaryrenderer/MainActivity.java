@@ -54,18 +54,17 @@ public class MainActivity extends AppCompatActivity {
     // get the reference to the map view
     mMapView = findViewById(R.id.mapView);
     // create a map with the dark gray canvas basemap
-//    ArcGISMap map = new ArcGISMap(Type.DARK_GRAY_CANVAS_VECTOR, 51.960403, 10.029217, 5);
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
     // set the map to the map view
     mMapView.setMap(map);
 
     // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
       loadGeodatabaseSymbolDictionary();
     } else {
       // request permission
       int requestCode = 2;
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
+      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
     }
 
   }
@@ -122,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
       loadGeodatabaseSymbolDictionary();
     } else {
       // report to user that permission was denied
-      Toast.makeText(MainActivity.this, getResources().getString(R.string.write_permission_denied),
+      Toast.makeText(this, getResources().getString(R.string.write_permission_denied),
           Toast.LENGTH_SHORT).show();
     }
   }
