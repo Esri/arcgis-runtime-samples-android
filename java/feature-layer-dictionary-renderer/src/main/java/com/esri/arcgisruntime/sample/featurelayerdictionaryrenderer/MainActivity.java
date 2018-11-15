@@ -53,12 +53,12 @@ public class MainActivity extends AppCompatActivity {
 
     // get the reference to the map view
     mMapView = findViewById(R.id.mapView);
-    // create a map with the dark gray canvas basemap
+
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
     // set the map to the map view
     mMapView.setMap(map);
 
-    // For API level 23+ request permission at runtime
+    // for API level 23+ request permission at runtime
     if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
       loadGeodatabaseSymbolDictionary();
     } else {
@@ -66,17 +66,18 @@ public class MainActivity extends AppCompatActivity {
       int requestCode = 2;
       ActivityCompat.requestPermissions(this, reqPermission, requestCode);
     }
-
   }
 
   private void loadGeodatabaseSymbolDictionary() {
 
     // load geo-database from local location
-    Geodatabase geodatabase = new Geodatabase(Environment.getExternalStorageDirectory() + "/ArcGIS/samples/Dictionary/militaryoverlay.geodatabase");
+    Geodatabase geodatabase = new Geodatabase(
+        Environment.getExternalStorageDirectory() + getString(R.string.militaryoverlay_geodatabase));
     geodatabase.loadAsync();
 
     // render tells layer what symbols to apply to what features
-    DictionarySymbolStyle symbolDictionary = new DictionarySymbolStyle("mil2525d", Environment.getExternalStorageDirectory() + "/ArcGIS/samples/Dictionary/mil2525d.stylx");
+    DictionarySymbolStyle symbolDictionary = new DictionarySymbolStyle("mil2525d",
+        Environment.getExternalStorageDirectory() + getString(R.string.mil2525d_stylx));
     symbolDictionary.loadAsync();
 
     geodatabase.addDoneLoadingListener(() -> {
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
           // add each layer to map
           FeatureLayer featureLayer = new FeatureLayer(table);
           featureLayer.loadAsync();
-          // Features no longer show after this scale
+          // features no longer show after this scale
           featureLayer.setMinScale(1000000);
           mMapView.getMap().getOperationalLayers().add(featureLayer);
 
@@ -99,14 +100,14 @@ public class MainActivity extends AppCompatActivity {
               // initial viewpoint to encompass all graphics displayed on the map view
               mMapView.setViewpointGeometryAsync(featureLayer.getFullExtent());
             } else {
-              String error = "Feature Layer Failed to Load!";
+              String error = "Feature Layer Failed to Load: " + featureLayer.getLoadError().getMessage();
               Toast.makeText(this, error, Toast.LENGTH_LONG).show();
               Log.e(TAG, error);
             }
           });
         }
       } else {
-        String error = "Geodatabase Failed to Load!";
+        String error = "Geodatabase Failed to Load: " + geodatabase.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Handle the permissions request response
    */
+  @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       loadGeodatabaseSymbolDictionary();

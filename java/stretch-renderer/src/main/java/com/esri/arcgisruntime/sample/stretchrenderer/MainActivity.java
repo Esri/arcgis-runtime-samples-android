@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
   /**
    * Handle the permissions request response.
    */
-  public void onRequestPermissionsResult(int requestCode,
+  public void bonRequestPermissionsResult(int requestCode,
       @NonNull String[] permissions,
       @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
