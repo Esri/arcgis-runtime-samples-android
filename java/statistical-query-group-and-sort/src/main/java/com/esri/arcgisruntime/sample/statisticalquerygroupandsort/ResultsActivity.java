@@ -19,7 +19,6 @@ package com.esri.arcgisruntime.sample.statisticalquerygroupandsort;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -35,16 +34,16 @@ import com.google.gson.reflect.TypeToken;
  */
 public class ResultsActivity extends AppCompatActivity {
 
+  public static String results = "";
+
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.results_expandablelistview);
 
-    // get intent from main activity
-    Intent intent = getIntent();
     Gson gson = new Gson();
-    // get linked hash map from intent
+
     LinkedHashMap<String, List<String>> groupedStatistics = gson
-        .fromJson(intent.getStringExtra("results"), new ResultsActivity.LinkedHashMapTypeToken().getType());
+        .fromJson(results, new ResultsActivity.LinkedHashMapTypeToken().getType());
 
     // create expandable list view
     ExpandableListView expandableListView = findViewById(R.id.expandableListView);

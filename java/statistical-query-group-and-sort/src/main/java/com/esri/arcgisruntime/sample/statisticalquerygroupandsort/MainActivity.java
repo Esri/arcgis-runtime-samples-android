@@ -340,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void displayResults(String groupedStatisticsJson) {
     Intent intent = new Intent(this, ResultsActivity.class);
-    intent.putExtra("results", groupedStatisticsJson);
+    ResultsActivity.results = groupedStatisticsJson;
     startActivity(intent);
   }
 
@@ -431,4 +431,5 @@ public class MainActivity extends AppCompatActivity {
   private static String getFieldFrom(String fieldAndOrder) {
     return fieldAndOrder.substring(0, fieldAndOrder.indexOf(' '));
   }
+
 }
