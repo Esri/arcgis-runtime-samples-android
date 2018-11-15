@@ -32,6 +32,8 @@ import java.util.concurrent.CountDownLatch
 class MainActivity : AppCompatActivity() {
 
     private lateinit var map: ArcGISMap
+
+    private lateinit var portal : Portal
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,34 +48,33 @@ class MainActivity : AppCompatActivity() {
         AuthenticationManager.setAuthenticationChallengeHandler(IWACustomChallengeHandler(this))
         
         // Sign in a portal
-        signinButton.setOnClickListener{
+        signinButton.setOnClickListener {
             // Validate portal url
-            val url : String ? = portalUrl.text.toString()
+            val url: String? = portalUrl.text.toString()
             if (url.isNullOrEmpty()) {
                 Toast.makeText(applicationContext, "Portal url is empty. Please enter portal url!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            
-            // Clear credential cache. This is for test purpose. In a real app credential cache provides
-            // better user experience.
-            AuthenticationManager.CredentialCache.clear()
+
             // Create a Portal object with loginRequired as true, which forces user to sign in
-            val portal : Portal = Portal(url, true)
+            portal = Portal(url, true)
+            // IWACustomChallengeHandler handleChallenge() will be invoked when we try to load the portal
+            // as loginRequired is true for the Portal instance
             portal.loadAsync()
-            portal.addDoneLoadingListener{
+            portal.addDoneLoadingListener {
                 if (portal.loadStatus == LoadStatus.LOADED) {
-                    // Portal is loaded. Add more login here
+                    // Portal is loaded. Add more logic here
                     Toast.makeText(applicationContext, "Portal is loaded!", Toast.LENGTH_SHORT).show()
                 } else {
-                    // Portal is failed to load. Handler load errors
+                    // Portal is failed to load. Handle load errors
                     val error = portal.loadError
                     if (error.errorCode == 17) {
                         // User canceled exception
-                        Toast.makeText(applicationContext, "Portal loading is cancelled by user!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "Portal sign in was cancelled by user!", Toast.LENGTH_SHORT).show()
                     } else {
                         // Other failures
                         Toast.makeText(applicationContext, 
-                                "Portal fails to load: " + error.cause?.message ?: error.message, Toast.LENGTH_SHORT).show()
+                                "Portal sign in failed: " + error.cause?.message ?: error.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -84,35 +85,35 @@ class MainActivity : AppCompatActivity() {
 const val MAX_ATTEMPTS = 5
 
 /**
- * A custom authentication challenge handler to handle user credential challenge.
+ * A custom authentication challenge handler to handle user credential challenges.
  * 
- * When a user credential challenge is issues a dialog will be presented for credential.
- * The portal url will be displayed as message in the dialog. If wrong credential has been
- * passed in the previous attempt, a different message will be display in the dialog.
+ * When a user credential challenge is issued, a dialog will be presented to the user, to provide a credential.
+ * The portal url will be displayed as a message in the dialog. If a wrong credential has been
+ * passed in the previous attempt, a different message will be displayed in the dialog.
  * The dialog has two edit text boxes for username and password respectively. Other SDKs'
- * sample may have one more parameter for IWA domain. As indicated by the Javadoc of UseCredential
- * our SDK is in favor of passing username as username@domain. This sample doesn't provide
- * a edit text box for domain to simplify the logic.
+ * samples may have one more parameter for IWA domain. As indicated by the Javadoc of UseCredential
+ * the SDK is in favor of passing username as username@domain. This sample doesn't provide
+ * an edit text box for the domain for simplicity.
  *  
  * @see <a href="https://developers.arcgis.com/android/latest/api-reference/reference/com/esri/arcgisruntime/security/UserCredential.html#UserCredential(java.lang.String,%20java.lang.String)">Javadoc of UserCredential</a>
  * 
  */
 class IWACustomChallengeHandler(val activity: Activity) : AuthenticationChallengeHandler {
+
     override fun handleChallenge(challenge: AuthenticationChallenge): AuthenticationChallengeResponse {
         if (challenge.type == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE) {
             if (challenge.failureCount > MAX_ATTEMPTS) {
-                // Exceed maximum amount of attempts. Act like it was a cancel
+                // Exceeded maximum amount of attempts. Act like it was a cancel
                 Toast.makeText(activity, "Exceed maximum amount of attempts. Please try again!", Toast.LENGTH_SHORT).show()
                 return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, challenge)
             }
             
             // Create a countdown latch with a count of one to synchronize the dialog
-            val signal : CountDownLatch = CountDownLatch(1)
-            var credential : UserCredential?
-            credential = null
+            val signal = CountDownLatch(1)
+            var credential : UserCredential? = null
             
             // Present the sign-in dialog
-            activity.runOnUiThread(java.lang.Runnable { 
+            activity.runOnUiThread(java.lang.Runnable {
                 // Inflate the layout
                 val dialogView = activity.layoutInflater.inflate(R.layout.credential_dialog, null)
                 // Create the dialog
