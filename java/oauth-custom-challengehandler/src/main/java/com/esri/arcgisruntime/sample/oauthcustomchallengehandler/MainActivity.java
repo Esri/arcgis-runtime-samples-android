@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     mOAuthLoginDialog = new Dialog(this);
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapViewLayout);
+    mMapView = (MapView) findViewById(R.id.mapView);
 
     // add the OAuth configuration to the AuthenticationManager
     try {
@@ -171,11 +171,11 @@ public class MainActivity extends AppCompatActivity {
    */
   private class CustomWebViewClient extends WebViewClient {
 
-    private String mPortal;
+    private final String mPortal;
 
-    private String mClientId;
+    private final String mClientId;
 
-    private String mRedirectUri;
+    private final String mRedirectUri;
 
     CustomWebViewClient (String portal, String clientId, String redirectUri) {
       mPortal = portal;
