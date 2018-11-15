@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
 
     // create a portal instance for the portal to load
     Portal portal = new Portal(getString(R.string.portal_url));
-    portal.loadAsync();
 
     // create a portal item with the itemId of the web map
     PortalItem webMapItem = new PortalItem(portal, getString(R.string.webmap_id));
@@ -295,4 +294,11 @@ public class MainActivity extends AppCompatActivity {
     super.onPause();
     mMapView.pause();
   }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
+
 }
