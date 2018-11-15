@@ -113,15 +113,18 @@ public class MainActivity extends AppCompatActivity {
         try {
           mOAuthConfiguration = AuthenticationManager.getOAuthConfiguration(portalUrl);
         } catch (MalformedURLException e) {
-          throw new RuntimeException(e.getMessage(), e.getCause());
+          return null;
         }
-
-        // get the authorization url which loads the OAuth login page to display in the dialog
-        final String url = OAuthTokenCredentialRequest
-            .getAuthorizationUrl(portalUrl, mOAuthConfiguration.getClientId(), mOAuthConfiguration.getRedirectUri(), 0);
+        if (mOAuthConfiguration == null) {
+          return null;
+        }
 
         runOnUiThread(new Runnable() {
           @Override public void run() {
+
+            // get the authorization url which loads the OAuth login page to display in the dialog
+            final String url = OAuthTokenCredentialRequest
+                .getAuthorizationUrl(portalUrl, mOAuthConfiguration.getClientId(), mOAuthConfiguration.getRedirectUri(), 0);
 
             // setup webview
             WebView webView = new WebView(MainActivity.this);
@@ -164,75 +167,6 @@ public class MainActivity extends AppCompatActivity {
       return ret;
     }
   };
-
-  /**
-   * CustomWebViewClient overrides the shouldOverrideUrlLoading method to handle errors on the login page and to request
-   * OAuthTokenCredential after having received the auth code when the user provides the login credential/
-   */
-  private class CustomWebViewClient extends WebViewClient {
-
-    private final String mPortal;
-
-    private final String mClientId;
-
-    private final String mRedirectUri;
-
-    CustomWebViewClient (String portal, String clientId, String redirectUri) {
-      mPortal = portal;
-      mClientId = clientId;
-      mRedirectUri = redirectUri;
-    }
-
-    @Override
-    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
-      Uri responseUri = Uri.parse(url);
-      String schema = responseUri.getScheme();
-      if (schema == null) {
-        throw new RuntimeException("Invalid schema could not be parsed: " + responseUri.toString());
-      }
-
-      String error = responseUri.getQueryParameter("error");
-      String errorDescription = responseUri.getQueryParameter("error_description");
-      final String authCode = responseUri.getQueryParameter("code");
-
-      // an error is returned from the portal OAuth login page when the user presses cancel button
-      // that case is handled here
-      if (error != null && !error.isEmpty()) {
-        if (error.equalsIgnoreCase("access_denied") && errorDescription.equalsIgnoreCase("The user denied your request.")) {
-          Toast.makeText(getApplicationContext(), "No credentials provided, failed to load secured resource", Toast.LENGTH_LONG).show();
-          mOAuthLoginDialog.dismiss();
-          return true;
-        }
-      }
-
-      // if the user successfully provides the credential, the portal responds with the auth code
-      // we send another request for OAuthTokenCredential with that code here
-      if (authCode != null && !authCode.isEmpty()) {
-
-        OAuthTokenCredentialRequest request = new OAuthTokenCredentialRequest(mPortal, null, mClientId, mRedirectUri,
-            authCode);
-
-        final ListenableFuture<OAuthTokenCredential> future = request.executeAsync();
-        future.addDoneListener(new Runnable() {
-          @Override
-          public void run() {
-            OAuthTokenCredential cred = null;
-            try {
-              cred = future.get();
-            } catch (Exception e) {
-              // If there is an exception, cred will remain null and will be passed back to
-              // finish the challenge with a null credential
-            } finally {
-              finishOAuthChallenge(cred);
-            }
-          }
-        });
-        return true;
-      }
-      return (false);
-    }
-  }
 
   private static final class OAuthChallengeCountDownLatch extends CountDownLatch {
 
@@ -299,6 +233,76 @@ public class MainActivity extends AppCompatActivity {
   protected void onDestroy() {
     super.onDestroy();
     mMapView.dispose();
+  }
+
+  /**
+   * CustomWebViewClient overrides the shouldOverrideUrlLoading method to handle errors on the login page and to request
+   * OAuthTokenCredential after having received the auth code when the user provides the login credential/
+   */
+  private class CustomWebViewClient extends WebViewClient {
+
+    private final String mPortal;
+
+    private final String mClientId;
+
+    private final String mRedirectUri;
+
+    CustomWebViewClient (String portal, String clientId, String redirectUri) {
+      mPortal = portal;
+      mClientId = clientId;
+      mRedirectUri = redirectUri;
+    }
+
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+      Uri responseUri = Uri.parse(url);
+      String schema = responseUri.getScheme();
+      if (schema == null) {
+        throw new IllegalArgumentException("Invalid schema could not be parsed: " + responseUri.toString());
+      }
+
+      String error = responseUri.getQueryParameter("error");
+      String errorDescription = responseUri.getQueryParameter("error_description");
+      final String authCode = responseUri.getQueryParameter("code");
+
+      // an error is returned from the portal OAuth login page when the user presses cancel button
+      // that case is handled here
+      if (error != null && !error.isEmpty()) {
+        if (error.equalsIgnoreCase("access_denied") && errorDescription.equalsIgnoreCase("The user denied your request.")) {
+          Toast.makeText(getApplicationContext(), "No credentials provided, failed to load secured resource", Toast.LENGTH_LONG).show();
+          finishOAuthChallenge(null);
+          mOAuthLoginDialog.dismiss();
+          return true;
+        }
+      }
+
+      // if the user successfully provides the credential, the portal responds with the auth code
+      // we send another request for OAuthTokenCredential with that code here
+      if (authCode != null && !authCode.isEmpty()) {
+
+        OAuthTokenCredentialRequest request = new OAuthTokenCredentialRequest(mPortal, null, mClientId, mRedirectUri,
+            authCode);
+
+        final ListenableFuture<OAuthTokenCredential> future = request.executeAsync();
+        future.addDoneListener(new Runnable() {
+          @Override
+          public void run() {
+            OAuthTokenCredential cred = null;
+            try {
+              cred = future.get();
+            } catch (Exception e) {
+              // If there is an exception, cred will remain null and will be passed back to
+              // finish the challenge with a null credential
+            } finally {
+              finishOAuthChallenge(cred);
+            }
+          }
+        });
+        return true;
+      }
+      return (false);
+    }
   }
 
 }
