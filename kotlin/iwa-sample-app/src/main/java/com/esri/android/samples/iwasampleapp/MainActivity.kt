@@ -113,7 +113,7 @@ class IWACustomChallengeHandler(val activity: Activity) : AuthenticationChalleng
             var credential : UserCredential? = null
             
             // Present the sign-in dialog
-            activity.runOnUiThread(java.lang.Runnable {
+            activity.runOnUiThread {
                 // Inflate the layout
                 val dialogView = activity.layoutInflater.inflate(R.layout.credential_dialog, null)
                 // Create the dialog
@@ -158,7 +158,7 @@ class IWACustomChallengeHandler(val activity: Activity) : AuthenticationChalleng
                 }
                 username.addTextChangedListener(watcher)
                 password.addTextChangedListener(watcher)
-            })
+            }
             signal.await()
 
             // If credentials were set, return a new auth challenge response with them. otherwise, act like it was a cancel
