@@ -113,10 +113,10 @@ public class MainActivity extends AppCompatActivity {
         try {
           mOAuthConfiguration = AuthenticationManager.getOAuthConfiguration(portalUrl);
         } catch (MalformedURLException e) {
-          return null;
+          return new AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, challenge);
         }
         if (mOAuthConfiguration == null) {
-          return null;
+          return new AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, challenge);
         }
 
         runOnUiThread(new Runnable() {
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         // dismiss the dialog
         mOAuthLoginDialog.dismiss();
       }
-      return ret;
+      return ret != null ? ret : new AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, challenge);
     }
   };
 
