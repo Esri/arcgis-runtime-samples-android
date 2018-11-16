@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Map Reference Scale</string>
+    <string name="map_reference_read_permission_denied">Read permission required to load mobile map package for this sample.</string>
+    <string name="yenisey_mmpk_path">/ArcGIS/Samples/MapPackage/Yenisey.mmpk</string>
 </resources>
