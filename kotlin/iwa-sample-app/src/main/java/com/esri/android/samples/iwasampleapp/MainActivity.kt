@@ -8,7 +8,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
 import com.esri.arcgisruntime.loadable.LoadStatus
-import com.esri.arcgisruntime.loadable.Loadable
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.portal.Portal
@@ -128,11 +127,7 @@ class IWACustomChallengeHandler(val activity: Activity) : AuthenticationChalleng
                             signal.countDown()
                         }
                         .setNegativeButton("Cancel") {dialog, which ->
-                            // User cancel the loading process
-                            val remoteResource = challenge.remoteResource
-                            if (remoteResource is Loadable) {
-                                remoteResource.cancelLoad()
-                            }
+                            // User cancelled the signin process
                             signal.countDown()
                         }
                         .setView(dialogView)
