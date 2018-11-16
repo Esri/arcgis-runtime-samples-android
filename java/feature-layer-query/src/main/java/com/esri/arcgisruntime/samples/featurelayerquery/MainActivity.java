@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         // check there are some results
         Iterator<Feature> resultIterator = result.iterator();
         if (resultIterator.hasNext()) {
-          // get the extend of the first feature in the result to zoom to
+          // get the extent of the first feature in the result to zoom to
           Feature feature = resultIterator.next();
           Envelope envelope = feature.getGeometry().getExtent();
           mMapView.setViewpointGeometryAsync(envelope, 10);
