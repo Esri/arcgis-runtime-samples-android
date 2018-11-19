@@ -53,45 +53,10 @@ public class MainActivity extends AppCompatActivity {
 
   private Dialog mOAuthLoginDialog;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-
-    // set custom challenge handler on the AuthenticationManager
-    AuthenticationManager.setAuthenticationChallengeHandler(customAuthenticationChallengeHandler);
-
-    // initialize the dialog to display the OAuth login page
-    mOAuthLoginDialog = new Dialog(this);
-
-    // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
-
-    // add the OAuth configuration to the AuthenticationManager
-    try {
-      OAuthConfiguration config = new OAuthConfiguration(getString(R.string.portal_url), getString(R.string.client_id), getString(R.string.redirect_url));
-      AuthenticationManager.addOAuthConfiguration(config);
-    } catch (MalformedURLException e) {
-      throw new IllegalArgumentException(e.getMessage(), e.getCause());
-    }
-
-    // create a portal instance for the portal to load
-    Portal portal = new Portal(getString(R.string.portal_url));
-
-    // create a portal item with the itemId of the web map
-    PortalItem webMapItem = new PortalItem(portal, getString(R.string.webmap_id));
-
-    // create a map with the portal item
-    ArcGISMap map = new ArcGISMap(webMapItem);
-
-    // set the map to the map view
-    mMapView.setMap(map);
-  }
-
   /**
-   * Anonymous class to define our customAuthenticationChallengeHandler.
+   * Anonymous class to define our mCustomAuthenticationChallengeHandler.
    */
-  AuthenticationChallengeHandler customAuthenticationChallengeHandler = new AuthenticationChallengeHandler() {
+  AuthenticationChallengeHandler mCustomAuthenticationChallengeHandler = new AuthenticationChallengeHandler() {
     /**
      * Handles the incoming AuthenticationChallenge, returning a response that contains an action and
      * potentially a parameter with which to carry out the action.
@@ -113,10 +78,7 @@ public class MainActivity extends AppCompatActivity {
         try {
           mOAuthConfiguration = AuthenticationManager.getOAuthConfiguration(portalUrl);
         } catch (MalformedURLException e) {
-          return new AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, challenge);
-        }
-        if (mOAuthConfiguration == null) {
-          return new AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, challenge);
+
         }
 
         runOnUiThread(new Runnable() {
@@ -168,40 +130,39 @@ public class MainActivity extends AppCompatActivity {
     }
   };
 
-  private static final class OAuthChallengeCountDownLatch extends CountDownLatch {
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-    private OAuthTokenCredential mCredential;
+    // set custom challenge handler on the AuthenticationManager
+    AuthenticationManager.setAuthenticationChallengeHandler(mCustomAuthenticationChallengeHandler);
 
-    /**
-     * Constructs a {@code CountDownLatch} initialized with the given count.
-     *
-     * @param count the number of times {@link #countDown} must be invoked
-     *              before threads can pass through {@link #await}
-     * @throws IllegalArgumentException if {@code count} is negative
-     */
-    public OAuthChallengeCountDownLatch(int count) {
-      super(count);
+    // initialize the dialog to display the OAuth login page
+    mOAuthLoginDialog = new Dialog(this);
+
+    // inflate MapView from layout
+    mMapView = (MapView) findViewById(R.id.mapView);
+
+    // add the OAuth configuration to the AuthenticationManager
+    try {
+      OAuthConfiguration config = new OAuthConfiguration(getString(R.string.portal_url), getString(R.string.client_id), getString(R.string.redirect_url));
+      AuthenticationManager.addOAuthConfiguration(config);
+    } catch (MalformedURLException e) {
+      throw new IllegalArgumentException(e.getMessage(), e.getCause());
     }
 
-    /**
-     * Sets an OAuthTokenCredential on the CountDownLatch so that it can be
-     * received and returned to the calling request.
-     *
-     * @param credential the OAuthTokenCredential
-     */
-    public void setOAuthTokenCredential(OAuthTokenCredential credential) {
-      mCredential = credential;
-    }
+    // create a portal instance for the portal to load
+    Portal portal = new Portal(getString(R.string.portal_url));
 
-    /**
-     * Gets the OAuthTokenCredential that was obtained from the challenge so
-     * that it may be returned to the calling request.
-     *
-     * @return the OAuthTokenCredential
-     */
-    public OAuthTokenCredential getOAuthTokenCredential() {
-      return mCredential;
-    }
+    // create a portal item with the itemId of the web map
+    PortalItem webMapItem = new PortalItem(portal, getString(R.string.webmap_id));
+
+    // create a map with the portal item
+    ArcGISMap map = new ArcGISMap(webMapItem);
+
+    // set the map to the map view
+    mMapView.setMap(map);
   }
 
   /**
@@ -302,6 +263,42 @@ public class MainActivity extends AppCompatActivity {
         return true;
       }
       return (false);
+    }
+  }
+
+  private static final class OAuthChallengeCountDownLatch extends CountDownLatch {
+
+    private OAuthTokenCredential mCredential;
+
+    /**
+     * Constructs a {@code CountDownLatch} initialized with the given count.
+     *
+     * @param count the number of times {@link #countDown} must be invoked
+     *              before threads can pass through {@link #await}
+     * @throws IllegalArgumentException if {@code count} is negative
+     */
+    public OAuthChallengeCountDownLatch(int count) {
+      super(count);
+    }
+
+    /**
+     * Sets an OAuthTokenCredential on the CountDownLatch so that it can be
+     * received and returned to the calling request.
+     *
+     * @param credential the OAuthTokenCredential
+     */
+    public void setOAuthTokenCredential(OAuthTokenCredential credential) {
+      mCredential = credential;
+    }
+
+    /**
+     * Gets the OAuthTokenCredential that was obtained from the challenge so
+     * that it may be returned to the calling request.
+     *
+     * @return the OAuthTokenCredential
+     */
+    public OAuthTokenCredential getOAuthTokenCredential() {
+      return mCredential;
     }
   }
 
