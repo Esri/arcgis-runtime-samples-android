@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
 
-  private static OAuthChallengeCountDownLatch sOAuthChallengeCountDownLatch;
-
   private OAuthConfiguration mOAuthConfiguration = null;
 
   private Dialog mOAuthLoginDialog;
@@ -70,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
       AuthenticationChallengeResponse ret = null;
 
       if (challenge.getType() == AuthenticationChallenge.Type.OAUTH_CREDENTIAL_CHALLENGE) {
-        sOAuthChallengeCountDownLatch = new OAuthChallengeCountDownLatch(1);
+        final OAuthChallengeCountDownLatch oAuthChallengeCountDownLatch = new OAuthChallengeCountDownLatch(1);
 
         final String portalUrl = challenge.getRemoteResource().getUri();
 
@@ -98,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
             // setup webviewClient
             CustomWebViewClient customWebViewClient = new CustomWebViewClient(portalUrl,
-                mOAuthConfiguration.getClientId(), mOAuthConfiguration.getRedirectUri());
+                mOAuthConfiguration.getClientId(), mOAuthConfiguration.getRedirectUri(), oAuthChallengeCountDownLatch);
             webView.setWebViewClient(customWebViewClient);
 
             webView.loadUrl(url);
@@ -112,17 +110,15 @@ public class MainActivity extends AppCompatActivity {
         try {
           // Wait for the OAuth browser page to be shown and user to login and for the CustomWebViewClient
           // to get the auth code and request an OAuthTokenCredential with it
-          sOAuthChallengeCountDownLatch.await();
+          oAuthChallengeCountDownLatch.await();
         } catch (InterruptedException ie) {
         }
         // Get the credential from the latch once it has been counted down
-        OAuthTokenCredential credential = sOAuthChallengeCountDownLatch.getOAuthTokenCredential();
+        OAuthTokenCredential credential = oAuthChallengeCountDownLatch.getOAuthTokenCredential();
         if (credential != null) {
           ret = new AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
               credential);
         }
-        // Reset the latch for the next challenge
-        sOAuthChallengeCountDownLatch = null;
         // dismiss the dialog
         mOAuthLoginDialog.dismiss();
       }
@@ -165,19 +161,6 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
   }
 
-  /**
-   * Helper method to finish the OAuthCredential challenge by setting the credential on the OAuthChallengeCountDownLatch
-   * and counting down the latch.
-   *
-   * @param credential
-   */
-  public static void finishOAuthChallenge(OAuthTokenCredential credential) {
-    if(sOAuthChallengeCountDownLatch != null) {
-      sOAuthChallengeCountDownLatch.setOAuthTokenCredential(credential);
-      sOAuthChallengeCountDownLatch.countDown();
-    }
-  }
-
   @Override
   protected void onResume() {
     super.onResume();
@@ -208,10 +191,13 @@ public class MainActivity extends AppCompatActivity {
 
     private final String mRedirectUri;
 
-    CustomWebViewClient (String portal, String clientId, String redirectUri) {
+    private final OAuthChallengeCountDownLatch mOAuthChallengeCountDownLatch;
+
+    CustomWebViewClient (String portal, String clientId, String redirectUri, OAuthChallengeCountDownLatch oAuthChallengeCountDownLatch) {
       mPortal = portal;
       mClientId = clientId;
       mRedirectUri = redirectUri;
+      mOAuthChallengeCountDownLatch = oAuthChallengeCountDownLatch;
     }
 
     @Override
@@ -263,6 +249,19 @@ public class MainActivity extends AppCompatActivity {
         return true;
       }
       return (false);
+    }
+
+    /**
+     * Helper method to finish the OAuthCredential challenge by setting the credential on the OAuthChallengeCountDownLatch
+     * and counting down the latch.
+     *
+     * @param credential
+     */
+    public void finishOAuthChallenge(OAuthTokenCredential credential) {
+      if(mOAuthChallengeCountDownLatch != null) {
+        mOAuthChallengeCountDownLatch.setOAuthTokenCredential(credential);
+        mOAuthChallengeCountDownLatch.countDown();
+      }
     }
   }
 
