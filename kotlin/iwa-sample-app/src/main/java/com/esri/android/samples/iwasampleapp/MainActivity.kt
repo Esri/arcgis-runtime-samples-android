@@ -103,7 +103,7 @@ class IWACustomChallengeHandler(val activity: Activity) : AuthenticationChalleng
         if (challenge.type == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE) {
             if (challenge.failureCount > MAX_ATTEMPTS) {
                 // Exceeded maximum amount of attempts. Act like it was a cancel
-                Toast.makeText(activity, "Exceed maximum amount of attempts. Please try again!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Exceeded maximum amount of attempts. Please try again!", Toast.LENGTH_SHORT).show()
                 return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, challenge)
             }
             
