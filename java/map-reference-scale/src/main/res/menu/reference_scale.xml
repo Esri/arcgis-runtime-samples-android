@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/setScaleSymbolsCities"
+        android:title="Scale symbols Cities"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:checkable="true"/>
+
+    <item
+        android:id="@+id/setScaleSymbolsRiver"
+        android:title="Scale symbols River"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:checkable="true"/>
+
+</menu>
