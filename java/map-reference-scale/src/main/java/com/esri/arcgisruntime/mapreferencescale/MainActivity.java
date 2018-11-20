@@ -9,12 +9,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.layers.FeatureLayer;
-import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.MobileMapPackage;
@@ -50,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
 
       @Override public void onStopTrackingTouch(SeekBar seekBar) {
         mMapView.getMap().setReferenceScale(seekBar.getProgress());
-        Log.d(TAG, "reference scale: " + mMapView.getMap().getReferenceScale());
+        Toast.makeText(MainActivity.this, "Map's reference scale set to " + mMapView.getMap().getReferenceScale(),
+            Toast.LENGTH_SHORT).show();
       }
     });
-
 
   }
 
@@ -78,23 +80,43 @@ public class MainActivity extends AppCompatActivity {
           mReferenceScaleSeekBar.setMax(referenceScale * 2);
           mReferenceScaleSeekBar.setProgress(referenceScale);
         });
-
-        for (Layer layer : map.getOperationalLayers()) {
-          if (layer instanceof FeatureLayer) {
-            FeatureLayer featureLayer = (FeatureLayer) layer;
-            featureLayer.setScaleSymbols(true);
-          }
-          Log.d(TAG, layer.getName());
-        }
-
-
-
       } else {
         String error = "Map package failed to load: " + mapPackage.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
     });
+  }
+
+  private void setScaleSymbol(FeatureLayer featureLayer, boolean isScaleSymbols) {
+    featureLayer.setScaleSymbols(isScaleSymbols);
+    StringBuilder scalingMessage = new StringBuilder(featureLayer.getName());
+    if (isScaleSymbols) {
+      scalingMessage.append(" is being scaled.");
+    } else {
+      scalingMessage.append(" is not being scaled.");
+    }
+    Toast.makeText(this, scalingMessage, Toast.LENGTH_SHORT).show();
+  }
+
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.reference_scale, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int i = item.getItemId();
+    if (i == R.id.setScaleSymbolsCities) {
+      setScaleSymbol((FeatureLayer) mMapView.getMap().getOperationalLayers().get(0), !item.isChecked());
+      item.setChecked(!item.isChecked());
+    } else if (i == R.id.setScaleSymbolsRiver) {
+      setScaleSymbol((FeatureLayer) mMapView.getMap().getOperationalLayers().get(1), !item.isChecked());
+      item.setChecked(!item.isChecked());
+    } else {
+      Log.e(TAG, "Menu option not implemented");
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   /**
