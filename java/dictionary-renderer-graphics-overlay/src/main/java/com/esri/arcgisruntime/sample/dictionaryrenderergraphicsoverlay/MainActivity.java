@@ -53,8 +53,6 @@ import java.util.stream.Stream;
 
 public class MainActivity extends AppCompatActivity {
 
-  private static final String TAG = MainActivity.class.getSimpleName();
-
   // permission to read external storage
   private final String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
 
@@ -84,22 +82,15 @@ public class MainActivity extends AppCompatActivity {
       // create symbol dictionary from specification
       DictionarySymbolStyle symbolDictionary = new DictionarySymbolStyle("mil2525d",
           Environment.getExternalStorageDirectory() + getString(R.string.mil2525d_stylx));
-      ;
 
       // tells graphics overlay how to render graphics with symbol dictionary attributes set
       DictionaryRenderer renderer = new DictionaryRenderer(symbolDictionary);
       graphicsOverlay.setRenderer(renderer);
 
-      List<Map<String, Object>> messages = null;
-      try {
-        // parse graphic attributes from a XML file
-        messages = parseMessages();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+      // parse graphic attributes from a XML file
+      List<Map<String, Object>> messages = parseMessages();
 
       // create graphics with attributes and add to graphics overlay
-
       messages.stream()
           .map(MainActivity::createGraphic)
           .collect(Collectors.toCollection(() -> graphicsOverlay.getGraphics()));
@@ -119,62 +110,53 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Parses a XML file and creates a message for each block of attributes found.
    */
-  private List<Map<String, Object>> parseMessages() throws Exception {
+  private List<Map<String, Object>> parseMessages() {
     final List<Map<String, Object>> messages = new ArrayList<>();
 
     XmlPullParserFactory parserFactory;
     try {
       parserFactory = XmlPullParserFactory.newInstance();
       XmlPullParser parser = parserFactory.newPullParser();
-      InputStream is = getAssets().open("mil2525dmessages.xml");
+      InputStream is = getAssets().open(getString(R.string.mil2525dmessages_xml_file));
       parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
       parser.setInput(is, null);
 
-      //parsing code
-//      ArrayList<Message> players = new ArrayList<>();
       Map<String, Object> attributes = null;
 
       int eventType = parser.getEventType();
 
       while (eventType != XmlPullParser.END_DOCUMENT) {
-        String eltName = null;
+        String eltName;
         switch (eventType) {
           case XmlPullParser.START_TAG:
             eltName = parser.getName();
 
             if ("message".equals(eltName)) {
               attributes = new HashMap<>();
-              if(attributes != null) {
+              if (attributes != null) {
                 messages.add(attributes);
               }
             } else if (attributes != null) {
-              if ("_type".equals(eltName)) {
-                attributes.put("_type", parser.nextText());
-              } else if ("_action".equals(eltName)) {
-                attributes.put("_action", parser.nextText());
-              } else if ("_id".equals(eltName)) {
-                attributes.put("_id", parser.nextText());
-              }
-              else if ("_control_points".equals(eltName)) {
-                attributes.put("_control_points", parser.nextText());
-              }
-              else if ("_wkid".equals(eltName)) {
-                attributes.put("_wkid", parser.nextText());
-              }
-              else if ("sic".equals(eltName)) {
-                attributes.put("sic", parser.nextText());
-              }
-              else if ("identity".equals(eltName)) {
-                attributes.put("identity", parser.nextText());
-              }
-              else if ("symbolset".equals(eltName)) {
-                attributes.put("symbolset", parser.nextText());
-              }
-              else if ("symbolentity".equals(eltName)) {
-                attributes.put("symbolentity", parser.nextText());
-              }
-              else if ("uniquedesignation".equals(eltName)) {
-                attributes.put("uniquedesignation", parser.nextText());
+              if (getString(R.string.type).equals(eltName)) {
+                attributes.put(getString(R.string.type), parser.nextText());
+              } else if (getString(R.string.action).equals(eltName)) {
+                attributes.put(getString(R.string.action), parser.nextText());
+              } else if (getString(R.string.id).equals(eltName)) {
+                attributes.put(getString(R.string.id), parser.nextText());
+              } else if (getString(R.string.control_points).equals(eltName)) {
+                attributes.put(getString(R.string.control_points), parser.nextText());
+              } else if (getString(R.string.wkid).equals(eltName)) {
+                attributes.put(getString(R.string.wkid), parser.nextText());
+              } else if (getString(R.string.sic).equals(eltName)) {
+                attributes.put(getString(R.string.sic), parser.nextText());
+              } else if (getString(R.string.identity).equals(eltName)) {
+                attributes.put(getString(R.string.identity), parser.nextText());
+              } else if (getString(R.string.symbolset).equals(eltName)) {
+                attributes.put(getString(R.string.symbolset), parser.nextText());
+              } else if (getString(R.string.symbolentity).equals(eltName)) {
+                attributes.put(getString(R.string.symbolentity), parser.nextText());
+              } else if (getString(R.string.uniquedesignation).equals(eltName)) {
+                attributes.put(getString(R.string.uniquedesignation), parser.nextText());
               }
             }
             break;

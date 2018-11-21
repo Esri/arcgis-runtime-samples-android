@@ -3,4 +3,15 @@
     <string name="write_permission_denied">Data could not open because WRITE permission was denied.</string>
     <string name="militaryoverlay_geodatabase">/ArcGIS/samples/Dictionary/militaryoverlay.geodatabase</string>
     <string name="mil2525d_stylx">/ArcGIS/samples/Dictionary/mil2525d.stylx</string>
+    <string name="type">_type</string>
+    <string name="action">_action</string>
+    <string name="id">_id</string>
+    <string name="control_points">_control_points</string>
+    <string name="wkid">_wkid</string>
+    <string name="sic">sic</string>
+    <string name="identity">identity</string>
+    <string name="symbolset">symbolset</string>
+    <string name="symbolentity">symbolentity</string>
+    <string name="uniquedesignation">uniquedesignation</string>
+    <string name="mil2525dmessages_xml_file">mil2525dmessages.xml</string>
 </resources>
