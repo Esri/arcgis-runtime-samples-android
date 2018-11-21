@@ -1,21 +1,23 @@
-# Feature Layer Dictionary Renderer
+# Dictionary Renderer with Graphics Overlay
 
-Displays a FeatureLayer with military symbology, using ArcGIS Runtime's DictionaryRenderer.
+Display mil2525d symbols.
 
-![Feature Layer Dictionary Renderer App](feature-layer-dictionary-renderer.png)
+The dictionary renderer creates these graphics using a local mil2525d style file and a XML file with key, value attributes for each graphic.
+
+![Dictionary Renderer Graphics Overlay App](dictionary-renderer-graphics-overlay.png)
 
 ## How it works
 
-This sample loads a number of point, line, and polygon feature tables from a Runtime geodatabase. For each feature table, a FeatureLayer is created, and a DictionaryRenderer object is created and applied to the layer. Note that each layer needs its own renderer, though all renderers can share the DictionarySymbolStyle, in which case all layers will use the same symbology specification (MIL-STD-2525D in the case of this sample). Each layer is added to the map, and when all layers are loaded, the map's viewpoint is set to zoom to the full extent of all feature layers.
+This sample loads a number of point, line, and polygon military elements from an XML file and adds them as graphics to a `GraphicsOverlay`. A `DictionaryRenderer` is applied to the `GraphicsOverlay` in order to display the graphics with MIL-STD-2525D military symbology. When all graphics are created, the map's viewpoint is set to zoom to the full extent of all graphics.
 
 ## Relevant API
 
 * DictionaryRenderer
 * DictionarySymbolStyle
-* FeatureLayer
-* Geodatabase
+* GraphicsOverlay
 
 ## Offline data
+
 1. Download the data from the table below.
 2. Extract the contents of the downloaded zip file to disk.  
 3. Create an ArcGIS/samples/Dictionary folder on your device. You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
@@ -26,12 +28,10 @@ This sample loads a number of point, line, and polygon feature tables from a Run
 8. Exit the shell with the, ```exit``` command.
 9. While still in your command prompt, navigate to the folder where you extracted the contents of the data from step 1 and execute the following command: 
 	* ```adb push mil2525d.stylx /sdcard/ArcGIS/samples/Dictionary```
-	* ```adb push militaryoverlay.geodatabase /sdcard/ArcGIS/samples/Dictionary```
 
 Link | Local Location
 ---------|-------|
 |[Mil2525d Stylx File](https://www.arcgis.com/home/item.html?id=e34835bf5ec5430da7cf16bb8c0b075c)| `<sdcard>`/ArcGIS/samples/Dictionary/mil2525d.stylx |
-|[Military Overlay geodatabase](https://www.arcgis.com/home/item.html?id=e0d41b4b409a49a5a7ba11939d8535dc)| `<sdcard>`/ArcGIS/samples/Dictionary/militaryoverlay.geodatabase |
 
 ### Tags
 
