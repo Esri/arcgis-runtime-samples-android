@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
   private GraphicsOverlay graphicsOverlay;
 
-  @TargetApi(24)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -74,37 +73,42 @@ public class MainActivity extends AppCompatActivity {
 
     // for API level 23+ request permission at runtime
     if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      graphicsOverlay = new GraphicsOverlay();
-      // graphics no longer show after zooming passed this scale
-      graphicsOverlay.setMinScale(1000000);
-      mMapView.getGraphicsOverlays().add(graphicsOverlay);
-
-      // create symbol dictionary from specification
-      DictionarySymbolStyle symbolDictionary = new DictionarySymbolStyle("mil2525d",
-          Environment.getExternalStorageDirectory() + getString(R.string.mil2525d_stylx));
-
-      // tells graphics overlay how to render graphics with symbol dictionary attributes set
-      DictionaryRenderer renderer = new DictionaryRenderer(symbolDictionary);
-      graphicsOverlay.setRenderer(renderer);
-
-      // parse graphic attributes from a XML file
-      List<Map<String, Object>> messages = parseMessages();
-
-      // create graphics with attributes and add to graphics overlay
-      messages.stream()
-          .map(MainActivity::createGraphic)
-          .collect(Collectors.toCollection(() -> graphicsOverlay.getGraphics()));
-
-      // once view has loaded
-      mMapView.addSpatialReferenceChangedListener(e -> {
-        // set initial viewpoint
-        mMapView.setViewpointGeometryAsync(graphicsOverlay.getExtent());
-      });
+      applyDictionaRendererToGraphics();
     } else {
       // request permission
       int requestCode = 2;
       ActivityCompat.requestPermissions(this, reqPermission, requestCode);
     }
+  }
+
+  @TargetApi(24)
+  private void applyDictionaRendererToGraphics() {
+    graphicsOverlay = new GraphicsOverlay();
+    // graphics no longer show after zooming passed this scale
+    graphicsOverlay.setMinScale(1000000);
+    mMapView.getGraphicsOverlays().add(graphicsOverlay);
+
+    // create symbol dictionary from specification
+    DictionarySymbolStyle symbolDictionary = new DictionarySymbolStyle("mil2525d",
+        Environment.getExternalStorageDirectory() + getString(R.string.mil2525d_stylx));
+
+    // tells graphics overlay how to render graphics with symbol dictionary attributes set
+    DictionaryRenderer renderer = new DictionaryRenderer(symbolDictionary);
+    graphicsOverlay.setRenderer(renderer);
+
+    // parse graphic attributes from a XML file
+    List<Map<String, Object>> messages = parseMessages();
+
+    // create graphics with attributes and add to graphics overlay
+    messages.stream()
+        .map(MainActivity::createGraphic)
+        .collect(Collectors.toCollection(() -> graphicsOverlay.getGraphics()));
+
+    // once view has loaded
+    mMapView.addSpatialReferenceChangedListener(e -> {
+      // set initial viewpoint
+      mMapView.setViewpointGeometryAsync(graphicsOverlay.getExtent());
+    });
   }
 
   /**
@@ -203,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      //      loadGeodatabaseSymbolDictionary();
+      applyDictionaRendererToGraphics();
     } else {
       // report to user that permission was denied
       Toast.makeText(this, getResources().getString(R.string.write_permission_denied),
