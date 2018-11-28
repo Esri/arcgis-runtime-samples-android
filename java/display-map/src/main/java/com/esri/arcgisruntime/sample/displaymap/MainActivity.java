@@ -39,22 +39,4 @@ public class MainActivity extends AppCompatActivity {
     // set the map to be displayed in this view
     mMapView.setMap(map);
   }
-
-  @Override
-  protected void onPause() {
-    super.onPause();
-    mMapView.pause();
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    mMapView.resume();
-  }
-
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    mMapView.dispose();
-  }
 }
