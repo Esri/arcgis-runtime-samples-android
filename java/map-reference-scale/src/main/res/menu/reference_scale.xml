@@ -5,12 +5,12 @@
         android:id="@+id/setScaleSymbolsCities"
         android:title="Scale symbols Cities"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:checkable="true"/>
+        android:checkable="true" />
 
     <item
         android:id="@+id/setScaleSymbolsRiver"
         android:title="Scale symbols River"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:checkable="true"/>
+        android:checkable="true" />
 
 </menu>

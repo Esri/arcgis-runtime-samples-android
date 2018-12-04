@@ -1,4 +1,4 @@
-/* Copyright 2018 Esri
+/* Copyright 2019 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
-  private SeekBar mReferenceScaleSeekBar;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -53,31 +53,55 @@ public class MainActivity extends AppCompatActivity {
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
 
-    requestReadPermission();
-
-    TextView currReferenceScaleTextView = findViewById(R.id.currReferenceScale);
-    mReferenceScaleSeekBar = findViewById(R.id.reference_scale_seek_bar);
-    mReferenceScaleSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-        currReferenceScaleTextView.setText(String.valueOf(progress));
-        mMapView.getMap().setReferenceScale(seekBar.getProgress());
+    // get a reference to the reference scale spinner
+    Spinner referenceScaleSpinner = findViewById(R.id.reference_scale_spinner);
+    referenceScaleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+        // get the reference scale from the spinner in the one to twenty-five thousand format (ie 1:25,000)
+        String referenceScaleString = String.valueOf(adapterView.getItemAtPosition(position));
+        // use regex to get the reference scale as a number string
+        referenceScaleString = referenceScaleString.substring(referenceScaleString.indexOf(":") + 1)
+            .replaceAll(",", "");
+        // set the reference scale with the double value of the reference scale string
+        setReferenceScale(Double.valueOf(referenceScaleString));
       }
 
-      @Override public void onStartTrackingTouch(SeekBar seekBar) {
-
-      }
-
-      @Override public void onStopTrackingTouch(SeekBar seekBar) {
+      @Override public void onNothingSelected(AdapterView<?> adapterView) {
 
       }
     });
+    // start with the third entry in the array. 1:25,000,000
+    referenceScaleSpinner.setSelection(2);
 
+    // request read permission at runtime
+    requestReadPermission();
   }
 
   /**
-   * TODO
+   * Set and get the map's reference scale.
+   *
+   * @param referenceScale as a double
    */
-  private void mapReferenceScale() {
+  private void setReferenceScale(double referenceScale) {
+    mMapView.getMap().setReferenceScale(referenceScale);
+  }
+
+  /**
+   * Set and get scale symbols for the given feature layer.
+   *
+   * @param featureLayer   that should honor scale symbols or not
+   * @param isScaleSymbols true to honor reference scale, false to ignore reference scale
+   */
+  private void setScaleSymbol(FeatureLayer featureLayer, boolean isScaleSymbols) {
+    featureLayer.setScaleSymbols(isScaleSymbols);
+    Toast.makeText(this, featureLayer.getName() + " isScaleSymbols() = " + featureLayer.isScaleSymbols(),
+        Toast.LENGTH_LONG).show();
+  }
+
+  /**
+   * Load the sample's map package data.
+   */
+  private void loadMapPackage() {
     // load Yenisey mobile map package
     MobileMapPackage mapPackage = new MobileMapPackage(
         Environment.getExternalStorageDirectory() + getString(R.string.yenisey_mmpk_path));
@@ -88,30 +112,12 @@ public class MainActivity extends AppCompatActivity {
       if (mapPackage.getLoadStatus() == LoadStatus.LOADED) {
         // set the map package map to map view's map
         mMapView.setMap(map);
-
-        // initialize the seek bar to the map's initial reference scale
-        map.addDoneLoadingListener(() -> {
-          int referenceScale = (int) map.getReferenceScale();
-          mReferenceScaleSeekBar.setMax(referenceScale * 2);
-          mReferenceScaleSeekBar.setProgress(referenceScale);
-        });
       } else {
         String error = "Map package failed to load: " + mapPackage.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
     });
-  }
-
-  private void setScaleSymbol(FeatureLayer featureLayer, boolean isScaleSymbols) {
-    featureLayer.setScaleSymbols(isScaleSymbols);
-    StringBuilder scalingMessage = new StringBuilder(featureLayer.getName());
-    if (isScaleSymbols) {
-      scalingMessage.append(" is being scaled.");
-    } else {
-      scalingMessage.append(" is not being scaled.");
-    }
-    Toast.makeText(this, scalingMessage, Toast.LENGTH_SHORT).show();
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -142,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
     String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
     int requestCode = 2;
     if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      mapReferenceScale();
+      loadMapPackage();
     } else {
       ActivityCompat.requestPermissions(this, reqPermission, requestCode);
     }
@@ -154,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      mapReferenceScale();
+      loadMapPackage();
     } else {
       // report to user that permission was denied
       Toast.makeText(this, getString(R.string.map_reference_read_permission_denied), Toast.LENGTH_SHORT).show();
