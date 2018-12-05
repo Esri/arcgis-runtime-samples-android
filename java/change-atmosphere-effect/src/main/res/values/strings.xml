@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">change_atmosphere_effect</string>
+    <string name="app_name">Change Atmosphere Effect</string>
     <string name="elevation_image_service">
         https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
     <string name="noAtmosphereEffect">No Atmosphere Effect</string>

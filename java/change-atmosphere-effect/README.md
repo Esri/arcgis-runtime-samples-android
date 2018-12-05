@@ -1,7 +1,7 @@
 # Change Atmosphere Effect
-Change the appearance of the atmosphere in a scene.
+Change the appearance of the atmosphere in a scene view.
 
-![Change_Atmosphere_Effect](change_atmosphere.gif)
+![Change Atmosphere Effect App](change_atmosphere.gif)
 
 ## How to use the sample
 Select one of the three available atmosphere effects from the menu. The sky will change to display the selected atmosphere effect.

@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.change_atmosphere_effect;
+package com.esri.arcgisruntime.sample.changeatmosphereeffect;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,33 +47,31 @@ public class MainActivity extends AppCompatActivity {
         scene.setBasemap(Basemap.createImagery());
 
         // create SceneView from layout
-        mSceneView = (SceneView) findViewById(R.id.sceneView);
+        mSceneView = findViewById(R.id.sceneView);
         mSceneView.setScene(scene);
 
         // add base surface for elevation data
         Surface surface = new Surface();
-        ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
-                getResources().getString(R.string.elevation_image_service));
-       // scene.getBaseSurface().getElevationSources().add(elevationSource);
+        ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource("R.string.elevation_image_service");
         surface.getElevationSources().add(elevationSource);
         scene.setBaseSurface(surface);
 
         // add a camera and initial camera position
         Camera camera = new Camera(64.416919, -14.483728, 100, 318, 105, 0);
         mSceneView.setViewpointCamera(camera);
-
     }
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.atmosphere_sources, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     // setting different atmosphere effect on scene view
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         try {
-
-
             int i = item.getItemId();
             if (i == R.id.noAtmosphereEffect) {
                 mSceneView.setAtmosphereEffect(AtmosphereEffect.NONE);
@@ -85,15 +83,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "Menu option not implemented");
             }
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             // on any error, display the stack trace.
             e.printStackTrace();
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     protected void onPause() {
@@ -104,12 +99,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        super.onResume();
         // resume SceneView
         mSceneView.resume();
-        super.onResume();
     }
 
-    @Override protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
         // dispose SceneView
         mSceneView.dispose();
         super.onDestroy();
