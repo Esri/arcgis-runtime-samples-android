@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">Animate 3D Graphic</string>
+    <string-array name="missions">
+        <item>GrandCanyon.csv</item>
+        <item>Hawaii.csv</item>
+        <item>Pyrenees.csv</item>
+        <item>Snowdon.csv</item>
+    </string-array>
     <string name="bristol_model">Bristol.dae</string>
     <string name="bristol_skin">Bristol.png</string>
     <string name="write_permission_denied">Write permission required for this sample!</string>

@@ -23,6 +23,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     copyFileFromAssetsToCache(getString(R.string.bristol_model));
     copyFileFromAssetsToCache(getString(R.string.bristol_skin));
 
-    // create a scene
+    // create a scene and add it to the scene view
     mSceneView = findViewById(R.id.sceneView);
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
     mSceneView.setScene(scene);
@@ -149,9 +151,18 @@ public class MainActivity extends AppCompatActivity {
 
     // get UI elements
     mMissionSelector = findViewById(R.id.missionSelectorSpinner);
+    mMissionSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+        changeMission(mMissionSelector.getSelectedItem().toString());
+      }
+
+      @Override public void onNothingSelected(AdapterView<?> adapterView) {
+
+      }
+    });
     mMissionProgressSeekBar = findViewById(R.id.missionProgressSeekBar);
 
-    // set max speed and touch listener for speek seek bar
+    // set max speed and touch listener for speed seek bar
     mSpeedSeekBar = findViewById(R.id.speedSeekBar);
     mSpeedSeekBar.setMax(40);
     mSpeedSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -160,11 +171,9 @@ public class MainActivity extends AppCompatActivity {
       }
 
       @Override public void onStartTrackingTouch(SeekBar seekBar) {
-
       }
 
       @Override public void onStopTrackingTouch(SeekBar seekBar) {
-
       }
     });
     mCurrAltitude = findViewById(R.id.currAltitudeTextView);
@@ -194,9 +203,6 @@ public class MainActivity extends AppCompatActivity {
         startAnimation(mSpeedSeekBar.getProgress());
       }
     });
-
-    // open default mission selection
-    changeMission();
   }
 
   private void buildModel() {
@@ -210,26 +216,31 @@ public class MainActivity extends AppCompatActivity {
 
   /**
    * Change the mission data and reset the animation.
+   *
+   * @param mission name of .csv file containing mission data
    */
-  private void changeMission() {
+  private void changeMission(String mission) {
+
+    stopAnimation();
 
     // clear previous mission data
     mMissionData = new ArrayList<>();
 
     // get mission data
-    //String mission = mMissionSelector.getSelectedItem().toString();
-    String mission = "Hawaii.csv";
     mMissionData = getMissionData(mission);
     mMissionProgressSeekBar.setMax(mMissionData.size());
 
     // draw mission route on mini map
     PointCollection points = new PointCollection(SpatialReferences.getWgs84());
-    //points.addAll(mMissionData.stream().map(m -> (Point) m.get("POSITION")).collect(Collectors.toList()));
+    for (Map<String, Object> ordinates : mMissionData) {
+      points.add((Point) ordinates.get("POSITION"));
+    }
     Polyline route = new Polyline(points);
     mRouteGraphic.setGeometry(route);
 
     // refresh mini map zoom and show initial keyframe
-    //mMapView.setViewpointScaleAsync(100000).addDoneListener(() -> Platform.runLater(() -> animate(0)));
+    //mMapView.setViewpointScaleAsync(100000).addDoneListener(() -> animate(0));
+    mMapView.setViewpoint(new Viewpoint(route.getExtent().getCenter(), 100));
   }
 
   /**
@@ -243,10 +254,10 @@ public class MainActivity extends AppCompatActivity {
     List<Map<String, Object>> missionList = new ArrayList<>();
 
     // open a file reader to the mission file that automatically closes after read
-    try (BufferedReader missionFile = new BufferedReader(
-        new InputStreamReader(getAssets().open(mission)))) {
-      while (missionFile.readLine() != null) {
-        String[] l = missionFile.readLine().split(",");
+    try (BufferedReader missionFile = new BufferedReader(new InputStreamReader(getAssets().open(mission)))) {
+      String line;
+      while ((line = missionFile.readLine()) != null) {
+        String[] l = line.split(",");
         Map<String, Object> ordinates = new HashMap<>();
         ordinates.put("POSITION",
             new Point(Float.valueOf(l[0]), Float.valueOf(l[1]), Float.valueOf(l[2]), SpatialReferences.getWgs84()));
@@ -265,13 +276,10 @@ public class MainActivity extends AppCompatActivity {
 
   private void startAnimation(int speed) {
 
+    // stop the current animation timer
     stopAnimation();
 
     int period = mSpeedSeekBar.getMax() - speed + 10;
-
-    Log.d(TAG, "Speed: " + speed);
-    Log.d(TAG, "Max: " + String.valueOf(mSpeedSeekBar.getMax()));
-    Log.d(TAG, "Period: " + String.valueOf(period));
 
     // create a timer to animate the tank
     mTimer = new Timer();
