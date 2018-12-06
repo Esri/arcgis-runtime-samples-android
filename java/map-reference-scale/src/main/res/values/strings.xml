@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Map Reference Scale</string>
     <string-array name="reference_scales">
+        <item>1:50,000</item>
+        <item>1:100,000</item>
+        <item>1:250,000</item>
         <item>1:500,000</item>
-        <item>1:1,000,000</item>
-        <item>1:25,000,000</item>
-        <item>1:50,000,000</item>
     </string-array>
     <string name="map_reference_read_permission_denied">Read permission required to load mobile map package for this sample.</string>
-    <string name="yenisey_mmpk_path">/ArcGIS/Samples/MapPackage/Yenisey.mmpk</string>
+    <string name="isle_of_wight_mmpk_path">/ArcGIS/Samples/MapPackage/IsleOfWight.mmpk</string>
 </resources>

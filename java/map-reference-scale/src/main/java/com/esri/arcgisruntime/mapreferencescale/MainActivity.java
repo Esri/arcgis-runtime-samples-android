@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
   private void loadMapPackage() {
     // load Yenisey mobile map package
     MobileMapPackage mapPackage = new MobileMapPackage(
-        Environment.getExternalStorageDirectory() + getString(R.string.yenisey_mmpk_path));
+        Environment.getExternalStorageDirectory() + getString(R.string.isle_of_wight_mmpk_path));
     mapPackage.loadAsync();
     mapPackage.addDoneLoadingListener(() -> {
       // get the first map from the map package
