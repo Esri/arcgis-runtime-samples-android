@@ -31,6 +31,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polyline;
@@ -194,12 +195,8 @@ public class MainActivity extends AppCompatActivity {
     mPlayStopButton = findViewById(R.id.playStopButton);
     mPlayStopButton.setOnClickListener(view -> {
       if (mPlayStopButton.isSelected()) {
-        mPlayStopButton.setText("Play");
-        mPlayStopButton.setSelected(false);
         stopAnimation();
       } else {
-        mPlayStopButton.setText("Stop");
-        mPlayStopButton.setSelected(true);
         startAnimation(mSpeedSeekBar.getProgress());
       }
     });
@@ -238,9 +235,11 @@ public class MainActivity extends AppCompatActivity {
     Polyline route = new Polyline(points);
     mRouteGraphic.setGeometry(route);
 
-    // refresh mini map zoom and show initial keyframe
-    //mMapView.setViewpointScaleAsync(100000).addDoneListener(() -> animate(0));
-    mMapView.setViewpoint(new Viewpoint(route.getExtent().getCenter(), 100));
+    // set the mini map viewpoint to 25% larger than the route's extent
+    mMapView.setViewpoint(new Viewpoint(new Envelope(route.getExtent().getCenter(), route.getExtent().getWidth() * 1.25,
+        route.getExtent().getHeight() * 1.25)));
+
+    startAnimation(mSpeedSeekBar.getProgress());
   }
 
   /**
@@ -276,6 +275,10 @@ public class MainActivity extends AppCompatActivity {
 
   private void startAnimation(int speed) {
 
+    // update button
+    mPlayStopButton.setText("Stop");
+    mPlayStopButton.setSelected(false);
+
     // stop the current animation timer
     stopAnimation();
 
@@ -295,6 +298,12 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void stopAnimation() {
+
+    // update button
+    mPlayStopButton.setText("Play");
+    mPlayStopButton.setSelected(true);
+
+    // cancel the existing timer
     if (mTimer != null) {
       mTimer.cancel();
     }
