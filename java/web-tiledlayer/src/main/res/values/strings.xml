@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Web TiledLayer</string>
+    <string name="template_uri_stamen">https://stamen-tiles-{subdomain}.a.ssl.fastly.net/terrain/{level}/{col}/{row}.jpg</string>
+    <string name="stamen_attribution">Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.</string>
 </resources>

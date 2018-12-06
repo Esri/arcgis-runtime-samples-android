@@ -37,52 +37,41 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // access MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    // get reference to map view
+    mMapView = findViewById(R.id.mapView);
 
-    // list of subdomains
+    // list of sub-domains
     List<String> subDomains = Arrays.asList("a", "b", "c", "d");
-    // url pattern
-    String templateUri = "http://{subDomain}.tile.stamen.com/terrain/{level}/{col}/{row}.png";
 
-    // webtile layer
-    final WebTiledLayer webTiledLayer = new WebTiledLayer(templateUri, subDomains);
+    // build the web tiled layer from stamen
+    final WebTiledLayer webTiledLayer = new WebTiledLayer(getString(R.string.template_uri_stamen), subDomains);
     webTiledLayer.loadAsync();
-    webTiledLayer.addDoneLoadingListener(new Runnable() {
-      @Override
-      public void run() {
-        if (webTiledLayer.getLoadStatus() == LoadStatus.LOADED) {
-          // use webtile layer as Basemap
-          ArcGISMap map = new ArcGISMap(new Basemap(webTiledLayer));
-          mMapView.setMap(map);
-          // custom attributes
-          webTiledLayer.setAttribution("Map tiles by <a href=\"http://stamen.com/\">Stamen Design</a>, " +
-              "under <a href=\"http://creativecommons.org/licenses/by/3.0\">CC BY 3.0</a>. " +
-              "Data by <a href=\"http://openstreetmap.org/\">OpenStreetMap</a>, " +
-              "under <a href=\"http://creativecommons.org/licenses/by-sa/3.0\">CC BY SA</a>.");
-        }
+    webTiledLayer.addDoneLoadingListener(() -> {
+      if (webTiledLayer.getLoadStatus() == LoadStatus.LOADED) {
+        // use web tiled layer as Basemap
+        ArcGISMap map = new ArcGISMap(new Basemap(webTiledLayer));
+        mMapView.setMap(map);
+        // custom attributes
+        webTiledLayer.setAttribution(getString(R.string.stamen_attribution));
       }
     });
   }
 
   @Override
   protected void onPause() {
-    super.onPause();
-    // pause MapView
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    // resume MapView
     mMapView.resume();
   }
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
-    // dispose MapView
     mMapView.dispose();
+    super.onDestroy();
   }
 }

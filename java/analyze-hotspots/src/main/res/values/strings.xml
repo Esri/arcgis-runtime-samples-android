@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Analyze Hotspots</string>
     <string name="hotspot_911_calls" formatted="false">
-        http://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/GPServer/911%20Calls%20Hotspot
+        https://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/GPServer/911%20Calls%20Hotspot
     </string>
     <string name="select_date_range_for_analysis">Select Date Range for Analysis</string>
     <string name="from">From:</string>
