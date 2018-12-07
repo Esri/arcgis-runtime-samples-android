@@ -16,7 +16,13 @@
 
 package com.esri.arcgisruntime.mapreferencescale;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -25,14 +31,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.mapping.MobileMapPackage;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.portal.Portal;
-import com.esri.arcgisruntime.portal.PortalItem;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,26 +53,6 @@ public class MainActivity extends AppCompatActivity {
 
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
-    Portal portal = new Portal("https://runtime.maps.arcgis.com/", true);
-    portal.loadAsync();
-    portal.addDoneLoadingListener(() -> {
-      if (portal.getLoadStatus() == LoadStatus.LOADED) {
-        PortalItem portalItem = new PortalItem(portal, "01f73f76fee44a55ba0c8b55eadb711f");
-        portalItem.loadAsync();
-        portalItem.addDoneLoadingListener(() -> {
-          if (portalItem.getLoadStatus() == LoadStatus.LOADED) {
-            ArcGISMap map = new ArcGISMap(portalItem);
-            mMapView.setMap(map);
-          } else {
-            Log.e(TAG, portalItem.getLoadError().getCause().getMessage());
-          }
-        });
-
-      } else {
-        Log.e(TAG, portal.getLoadError().getCause().getMessage());
-      }
-    });
-
 
     // get a reference to the reference scale spinner
     Spinner referenceScaleSpinner = findViewById(R.id.reference_scale_spinner);
@@ -86,6 +72,15 @@ public class MainActivity extends AppCompatActivity {
     });
 
     referenceScaleSpinner.setSelection(2);
+
+    TextView mapScale = findViewById(R.id.mapScaleTextView);
+
+    mMapView.addMapScaleChangedListener(
+        mapScaleChangedEvent -> mapScale.setText(String.valueOf(mMapView.getMapScale())));
+
+
+    // request read permission at runtime
+    requestReadPermission();
   }
 
   /**
@@ -107,6 +102,55 @@ public class MainActivity extends AppCompatActivity {
     featureLayer.setScaleSymbols(isScaleSymbols);
     Toast.makeText(this, featureLayer.getName() + " isScaleSymbols() = " + featureLayer.isScaleSymbols(),
         Toast.LENGTH_LONG).show();
+  }
+
+  /**
+   * Load the sample's map package data.
+   */
+  private void loadMapPackage() {
+    // load Yenisey mobile map package
+    MobileMapPackage mapPackage = new MobileMapPackage(
+        Environment.getExternalStorageDirectory() + getString(R.string.isle_of_wight_mmpk_path));
+    mapPackage.loadAsync();
+    mapPackage.addDoneLoadingListener(() -> {
+      // get the first map from the map package
+      ArcGISMap map = mapPackage.getMaps().get(0);
+      if (mapPackage.getLoadStatus() == LoadStatus.LOADED) {
+        // set the map package map to map view's map
+        mMapView.setMap(map);
+      } else {
+        String error = "Map package failed to load: " + mapPackage.getLoadError().getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
+      }
+    });
+  }
+
+  /**
+   * Request read permission on the device for API level 23+.
+   */
+  private void requestReadPermission() {
+    // define permission to request
+    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
+    int requestCode = 2;
+    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+      loadMapPackage();
+    } else {
+      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
+    }
+  }
+
+  /**
+   * Handle the permissions request response.
+   */
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      loadMapPackage();
+    } else {
+      // report to user that permission was denied
+      Toast.makeText(this, getString(R.string.map_reference_read_permission_denied), Toast.LENGTH_SHORT).show();
+    }
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
