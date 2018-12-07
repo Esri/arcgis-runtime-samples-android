@@ -31,83 +31,75 @@ import com.esri.arcgisruntime.mapping.view.AtmosphereEffect;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.mapping.view.Camera;
 
-
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private SceneView mSceneView;
+  private static final String TAG = MainActivity.class.getSimpleName();
+  private SceneView mSceneView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        // create a scene and add a basemap to it
-        ArcGISScene scene = new ArcGISScene();
-        scene.setBasemap(Basemap.createImagery());
+    // create a scene and add a basemap to it
+    ArcGISScene scene = new ArcGISScene();
+    scene.setBasemap(Basemap.createImagery());
 
-        // create SceneView from layout
-        mSceneView = findViewById(R.id.sceneView);
-        mSceneView.setScene(scene);
+    // create SceneView from layout
+    mSceneView = findViewById(R.id.sceneView);
+    mSceneView.setScene(scene);
 
-        // add base surface for elevation data
-        Surface surface = new Surface();
-        ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource("R.string.elevation_image_service");
-        surface.getElevationSources().add(elevationSource);
-        scene.setBaseSurface(surface);
+    // add base surface for elevation data
+    Surface surface = new Surface();
+    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(getString(R.string.elevation_image_service));
+    surface.getElevationSources().add(elevationSource);
+    scene.setBaseSurface(surface);
 
-        // add a camera and initial camera position
-        Camera camera = new Camera(64.416919, -14.483728, 100, 318, 105, 0);
-        mSceneView.setViewpointCamera(camera);
-    }
+    // add a camera and initial camera position
+    Camera camera = new Camera(64.416919, -14.483728, 100, 318, 105, 0);
+    mSceneView.setViewpointCamera(camera);
+  }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.atmosphere_sources, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.atmosphere_sources, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
 
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
     // setting different atmosphere effect on scene view
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        try {
-            int i = item.getItemId();
-            if (i == R.id.noAtmosphereEffect) {
-                mSceneView.setAtmosphereEffect(AtmosphereEffect.NONE);
-            } else if (i == R.id.realisticAtmosphereEffect) {
-                mSceneView.setAtmosphereEffect(AtmosphereEffect.REALISTIC);
-            } else if (i == R.id.horizonAtmosphereEffect) {
-                mSceneView.setAtmosphereEffect(AtmosphereEffect.HORIZON_ONLY);
-            } else {
-                Log.e(TAG, "Menu option not implemented");
-            }
-
-        } catch (Exception e) {
-            // on any error, display the stack trace.
-            e.printStackTrace();
-        }
-        return super.onOptionsItemSelected(item);
+    int i = item.getItemId();
+    if (i == R.id.noAtmosphereEffect) {
+      mSceneView.setAtmosphereEffect(AtmosphereEffect.NONE);
+    } else if (i == R.id.realisticAtmosphereEffect) {
+      mSceneView.setAtmosphereEffect(AtmosphereEffect.REALISTIC);
+    } else if (i == R.id.horizonAtmosphereEffect) {
+      mSceneView.setAtmosphereEffect(AtmosphereEffect.HORIZON_ONLY);
+    } else {
+      Log.e(TAG, "Menu option not implemented");
     }
 
-    @Override
-    protected void onPause() {
-        // pause SceneView
-        mSceneView.pause();
-        super.onPause();
-    }
+    return super.onOptionsItemSelected(item);
+  }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // resume SceneView
-        mSceneView.resume();
-    }
+  @Override
+  protected void onPause() {
+    mSceneView.pause();
+    super.onPause();
+  }
 
-    @Override
-    protected void onDestroy() {
-        // dispose SceneView
-        mSceneView.dispose();
-        super.onDestroy();
-    }
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mSceneView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    mSceneView.dispose();
+    super.onDestroy();
+  }
 }
