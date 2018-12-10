@@ -17,7 +17,6 @@
 package com.esri.arcgisruntime.sample.dictionaryrenderergraphicsoverlay;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -48,8 +47,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
 
-  private GraphicsOverlay graphicsOverlay;
+  private GraphicsOverlay mGraphicsOverlay;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +64,12 @@ public class MainActivity extends AppCompatActivity {
 
     // get the reference to the map view
     mMapView = findViewById(R.id.mapView);
-
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
     mMapView.setMap(map);
 
     // for API level 23+ request permission at runtime
     if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      applyDictionaRendererToGraphics();
+      applyDictionaryRendererToGraphics();
     } else {
       // request permission
       int requestCode = 2;
@@ -81,12 +77,11 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  @TargetApi(24)
-  private void applyDictionaRendererToGraphics() {
-    graphicsOverlay = new GraphicsOverlay();
+  private void applyDictionaryRendererToGraphics() {
+    mGraphicsOverlay = new GraphicsOverlay();
     // graphics no longer show after zooming passed this scale
-    graphicsOverlay.setMinScale(1000000);
-    mMapView.getGraphicsOverlays().add(graphicsOverlay);
+    mGraphicsOverlay.setMinScale(1000000);
+    mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
 
     // create symbol dictionary from specification
     DictionarySymbolStyle symbolDictionary = new DictionarySymbolStyle("mil2525d",
@@ -94,21 +89,19 @@ public class MainActivity extends AppCompatActivity {
 
     // tells graphics overlay how to render graphics with symbol dictionary attributes set
     DictionaryRenderer renderer = new DictionaryRenderer(symbolDictionary);
-    graphicsOverlay.setRenderer(renderer);
+    mGraphicsOverlay.setRenderer(renderer);
 
     // parse graphic attributes from a XML file
     List<Map<String, Object>> messages = parseMessages();
 
-    // create graphics with attributes and add to graphics overlay
-    messages.stream()
-        .map(MainActivity::createGraphic)
-        .collect(Collectors.toCollection(() -> graphicsOverlay.getGraphics()));
+    //  create graphics with attributes and add to graphics overlay
+    for (Map<String, Object> attributes : messages) {
+      Graphic graphic = createGraphic(attributes);
+      mGraphicsOverlay.getGraphics().add(graphic);
+    }
 
-    // once view has loaded
-    mMapView.addSpatialReferenceChangedListener(e -> {
-      // set initial viewpoint
-      mMapView.setViewpointGeometryAsync(graphicsOverlay.getExtent());
-    });
+    // set initial viewpoint
+    mMapView.setViewpointGeometryAsync(mGraphicsOverlay.getExtent());
   }
 
   /**
@@ -182,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
    *
    * @param attributes tells symbol dictionary what symbol to apply to graphic
    */
-  @TargetApi(24)
   private static Graphic createGraphic(Map<String, Object> attributes) {
 
     // get spatial reference
@@ -192,10 +184,17 @@ public class MainActivity extends AppCompatActivity {
     // get points from coordinates' string
     PointCollection points = new PointCollection(sr);
     String[] coordinates = ((String) attributes.get("_control_points")).split(";");
-    Stream.of(coordinates)
-        .map(cs -> cs.split(","))
-        .map(c -> new Point(Double.valueOf(c[0]), Double.valueOf(c[1]), sr))
-        .collect(Collectors.toCollection(() -> points));
+
+    if (coordinates != null && coordinates.length > 0) {
+      for (int i = 0; i < coordinates.length; i++) {
+        String ps = coordinates[i];
+        String pointCoordinate[] = ps.split(",");
+        if (pointCoordinate != null && pointCoordinate.length > 0) {
+          Point point = new Point(Double.valueOf(pointCoordinate[0]), Double.valueOf(pointCoordinate[1]), sr);
+          points.add(point);
+        }
+      }
+    }
 
     // return a graphic with multipoint geometry
     return new Graphic(new Multipoint(points), attributes);
@@ -207,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      applyDictionaRendererToGraphics();
+      applyDictionaryRendererToGraphics();
     } else {
       // report to user that permission was denied
       Toast.makeText(this, getResources().getString(R.string.write_permission_denied),
