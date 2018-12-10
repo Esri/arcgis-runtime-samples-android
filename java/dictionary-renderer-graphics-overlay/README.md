@@ -1,14 +1,12 @@
 # Dictionary Renderer with Graphics Overlay
 
-Display mil2525d symbols.
-
-The dictionary renderer creates these graphics using a local mil2525d style file and a XML file with key, value attributes for each graphic.
+The dictionary renderer creates graphics using a local mil2525d style file and a XML file with key, value attributes for each graphic.
 
 ![Dictionary Renderer Graphics Overlay App](dictionary-renderer-graphics-overlay.png)
 
 ## How it works
 
-This sample loads a number of point, line, and polygon military elements from an XML file and adds them as graphics to a `GraphicsOverlay`. A `DictionaryRenderer` is applied to the `GraphicsOverlay` in order to display the graphics with MIL-STD-2525D military symbology. When all graphics are created, the map's viewpoint is set to zoom to the full extent of all graphics.
+This sample loads a number of point, line, and polygon military elements from an XML file and adds them as graphics to a `GraphicsOverlay`. A `DictionaryRenderer` is applied to the `GraphicsOverlay` in order to display the graphics with MIL-STD-2525D military symbology.
 
 ## Relevant API
 

@@ -24,8 +24,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
+import android.util.Log;
 import android.widget.Toast;
+
 import com.esri.arcgisruntime.geometry.Multipoint;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
@@ -49,6 +50,8 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
+
+  private static final String TAG = MainActivity.class.getSimpleName();
 
   // permission to read external storage
   private final String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
@@ -100,8 +103,11 @@ public class MainActivity extends AppCompatActivity {
       mGraphicsOverlay.getGraphics().add(graphic);
     }
 
-    // set initial viewpoint
-    mMapView.setViewpointGeometryAsync(mGraphicsOverlay.getExtent());
+    // once view has loaded
+    mMapView.addSpatialReferenceChangedListener(e -> {
+      // set initial viewpoint
+      mMapView.setViewpointGeometryAsync(mGraphicsOverlay.getExtent());
+    });
   }
 
   /**
@@ -112,27 +118,34 @@ public class MainActivity extends AppCompatActivity {
 
     XmlPullParserFactory parserFactory;
     try {
+      // create a new instance of the XMLPullParserFactory class
       parserFactory = XmlPullParserFactory.newInstance();
       XmlPullParser parser = parserFactory.newPullParser();
+      // load the XML file from the assets folder.
       InputStream is = getAssets().open(getString(R.string.mil2525dmessages_xml_file));
       parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
       parser.setInput(is, null);
+      // get the current event type from the parser
+      int eventType = parser.getEventType();
 
       Map<String, Object> attributes = null;
-
-      int eventType = parser.getEventType();
 
       while (eventType != XmlPullParser.END_DOCUMENT) {
         String eltName;
         switch (eventType) {
           case XmlPullParser.START_TAG:
+            // get the name of the current tag by calling the getName method
             eltName = parser.getName();
 
+            // When we have the message tag, create a new HashMap 'attributes' and we add it in the ArrayList of messages. This list will be used to store all the messages read from the XML file.
             if ("message".equals(eltName)) {
               attributes = new HashMap<>();
               if (attributes != null) {
                 messages.add(attributes);
               }
+              /* if the attribute is not null, check if tag is _type, _action, _id, _control_points, _wkid, sic, identity, symbolset, symbolentity or uniquedesignation.
+               * for each case, we call the nextText method of the parser to get the value associated to the tag. Then, we set the value on the current attribute.
+               */
             } else if (attributes != null) {
               if (getString(R.string.type).equals(eltName)) {
                 attributes.put(getString(R.string.type), parser.nextText());
@@ -158,15 +171,13 @@ public class MainActivity extends AppCompatActivity {
             }
             break;
         }
-
         eventType = parser.next();
       }
-
     } catch (XmlPullParserException e) {
-
+      Log.e(TAG, "Error in parsing the XML file: " + e.getMessage());
     } catch (IOException e) {
+      Log.d(TAG, e.getMessage());
     }
-
     return messages;
   }
 
@@ -184,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
     // get points from coordinates' string
     PointCollection points = new PointCollection(sr);
     String[] coordinates = ((String) attributes.get("_control_points")).split(";");
-
     if (coordinates != null && coordinates.length > 0) {
       for (int i = 0; i < coordinates.length; i++) {
         String ps = coordinates[i];
