@@ -11,6 +11,7 @@ Map annotations are typically only relevant at certain scales. For instance, ann
 ## How to use the sample
 * Use the spinner at the top to set the map's reference scale.
 * Use the menu checkboxes to set which feature layers should scale according to the reference scale.
+* Click the button at the bottom to set the map scale (zoom) to the reference scale.
 
 ## How it works
 * Get and set the reference scale property on the `ArcGISMap`.

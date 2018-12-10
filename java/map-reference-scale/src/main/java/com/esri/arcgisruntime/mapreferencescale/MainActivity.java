@@ -26,10 +26,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +37,9 @@ import android.widget.Toast;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.mapping.LayerList;
 import com.esri.arcgisruntime.mapping.MobileMapPackage;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,42 +47,74 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
+  private MobileMapPackage mMapPackage;
+  private LayerList mOperationalLayers;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // request read permission at runtime
+    requestReadPermission();
+  }
+
+  /**
+   * Load the sample's map package data.
+   */
+  private void mapReferenceScale() {
+
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
 
-    // get a reference to the reference scale spinner
-    Spinner referenceScaleSpinner = findViewById(R.id.reference_scale_spinner);
-    referenceScaleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-        // get the reference scale from the spinner in the one to twenty-five thousand format (ie 1:25,000)
-        String referenceScaleString = String.valueOf(adapterView.getItemAtPosition(position));
-        // use regex to get the reference scale as a number string
-        referenceScaleString = referenceScaleString.substring(referenceScaleString.indexOf(":") + 1).replaceAll(",", "");
-        // set the reference scale with the double value of the reference scale string
-        setReferenceScale(Double.valueOf(referenceScaleString));
-      }
+    // load Yenisey mobile map package
+    mMapPackage = new MobileMapPackage(
+        Environment.getExternalStorageDirectory() + getString(R.string.isle_of_wight_mmpk_path));
+    mMapPackage.loadAsync();
+    mMapPackage.addDoneLoadingListener(() -> {
+      // get the first map from the map package
+      ArcGISMap map = mMapPackage.getMaps().get(0);
+      if (mMapPackage.getLoadStatus() == LoadStatus.LOADED) {
+        // set the map package map to map view's map
+        mMapView.setMap(map);
 
-      @Override public void onNothingSelected(AdapterView<?> adapterView) {
+        // get a reference to the reference scale spinner
+        Spinner referenceScaleSpinner = findViewById(R.id.reference_scale_spinner);
+        referenceScaleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+          @Override public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+            // get the reference scale from the spinner in the one to twenty-five thousand format (ie 1:25,000)
+            String referenceScaleString = String.valueOf(adapterView.getItemAtPosition(position));
+            // use regex to get the reference scale as a number string
+            referenceScaleString = referenceScaleString.substring(referenceScaleString.indexOf(":") + 1)
+                .replaceAll(",", "");
+            // set the reference scale with the double value of the reference scale string
+            setReferenceScale(Double.valueOf(referenceScaleString));
+          }
 
+          @Override public void onNothingSelected(AdapterView<?> adapterView) {
+
+          }
+        });
+
+        // set initial selection to the 3rd option, 1:250,000
+        referenceScaleSpinner.setSelection(2);
+
+        // update map scale indicator on map scale change
+        TextView mapScale = findViewById(R.id.currMapScaleTextView);
+        mMapView.addMapScaleChangedListener(
+            mapScaleChangedEvent -> mapScale.setText(String.valueOf(Math.round(mMapView.getMapScale()))));
+
+        // user the current viewpoint's center and the current reference scale to set a new viewpoint
+        Button matchScalesButton = findViewById(R.id.matchScalesButton);
+        matchScalesButton.setOnClickListener(view -> mMapView.setViewpointAsync(new Viewpoint(
+            mMapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).getTargetGeometry().getExtent().getCenter(),
+            mMapView.getMap().getReferenceScale()), 1));
+      } else {
+        String error = "Map package failed to load: " + mMapPackage.getLoadError().getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
       }
     });
-
-    referenceScaleSpinner.setSelection(2);
-
-    TextView mapScale = findViewById(R.id.mapScaleTextView);
-
-    mMapView.addMapScaleChangedListener(
-        mapScaleChangedEvent -> mapScale.setText(String.valueOf(mMapView.getMapScale())));
-
-
-    // request read permission at runtime
-    requestReadPermission();
   }
 
   /**
@@ -100,30 +134,6 @@ public class MainActivity extends AppCompatActivity {
    */
   private void setScaleSymbol(FeatureLayer featureLayer, boolean isScaleSymbols) {
     featureLayer.setScaleSymbols(isScaleSymbols);
-    Toast.makeText(this, featureLayer.getName() + " isScaleSymbols() = " + featureLayer.isScaleSymbols(),
-        Toast.LENGTH_LONG).show();
-  }
-
-  /**
-   * Load the sample's map package data.
-   */
-  private void loadMapPackage() {
-    // load Yenisey mobile map package
-    MobileMapPackage mapPackage = new MobileMapPackage(
-        Environment.getExternalStorageDirectory() + getString(R.string.isle_of_wight_mmpk_path));
-    mapPackage.loadAsync();
-    mapPackage.addDoneLoadingListener(() -> {
-      // get the first map from the map package
-      ArcGISMap map = mapPackage.getMaps().get(0);
-      if (mapPackage.getLoadStatus() == LoadStatus.LOADED) {
-        // set the map package map to map view's map
-        mMapView.setMap(map);
-      } else {
-        String error = "Map package failed to load: " + mapPackage.getLoadError().getMessage();
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        Log.e(TAG, error);
-      }
-    });
   }
 
   /**
@@ -134,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
     int requestCode = 2;
     if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      loadMapPackage();
+      mapReferenceScale();
     } else {
       ActivityCompat.requestPermissions(this, reqPermission, requestCode);
     }
@@ -146,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      loadMapPackage();
+      mapReferenceScale();
     } else {
       // report to user that permission was denied
       Toast.makeText(this, getString(R.string.map_reference_read_permission_denied), Toast.LENGTH_SHORT).show();
@@ -154,22 +164,25 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.reference_scale, menu);
+    mMapPackage.addDoneLoadingListener(() -> {
+      // get the map's operational layer list
+      mOperationalLayers = mMapPackage.getMaps().get(0).getOperationalLayers();
+      // add each of those layers to the menu and set them to checked
+      for (int i = 0; i < mOperationalLayers.size(); i ++) {
+        menu.add(Menu.NONE, i, Menu.NONE, mOperationalLayers.get(i).getName());
+        menu.getItem(i).setChecked(true);
+        menu.getItem(i).setCheckable(true);
+      }
+      menu.setGroupCheckable(0, true, false);
+    });
     return super.onCreateOptionsMenu(menu);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int i = item.getItemId();
-    if (i == R.id.setScaleSymbolsCities) {
-      setScaleSymbol((FeatureLayer) mMapView.getMap().getOperationalLayers().get(0), !item.isChecked());
-      item.setChecked(!item.isChecked());
-    } else if (i == R.id.setScaleSymbolsRiver) {
-      setScaleSymbol((FeatureLayer) mMapView.getMap().getOperationalLayers().get(1), !item.isChecked());
-      item.setChecked(!item.isChecked());
-    } else {
-      Log.e(TAG, "Menu option not implemented");
-    }
+    // toggle the checkbox of the menu item
+    item.setChecked(!item.isChecked());
+    // set the feature layer to honor the reference scale, or not
+    setScaleSymbol((FeatureLayer) mOperationalLayers.get(item.getItemId()), item.isChecked());
     return super.onOptionsItemSelected(item);
   }
 
