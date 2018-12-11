@@ -97,8 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
     // add elevation data
     Surface surface = new Surface();
-    surface.getElevationSources().add(new ArcGISTiledElevationSource(
-        "http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"));
+    surface.getElevationSources().add(new ArcGISTiledElevationSource(getString(R.string.world_elevation_service_url)));
     scene.setBaseSurface(surface);
 
     // create a graphics overlay for the scene
@@ -143,13 +142,19 @@ public class MainActivity extends AppCompatActivity {
     mapOverlay.getGraphics().add(mPlane2D);
 
     // request read permission
-    requestWritePermission();
+    ModelSceneSymbol plane = requestWritePermission();
+    plane.addDoneLoadingListener(() -> {
+      // create an orbit camera controller to follow the plane
+      mOrbitCameraController = new OrbitGeoElementCameraController(mPlane3D, 30.0);
+      mOrbitCameraController.setCameraPitchOffset(75.0);
+      mSceneView.setCameraController(mOrbitCameraController);
+    });
 
-    // create an orbit camera controller to follow the plane
-    mOrbitCameraController = new OrbitGeoElementCameraController(mPlane3D, 30.0);
-    mOrbitCameraController.setCameraPitchOffset(75.0);
-    mSceneView.setCameraController(mOrbitCameraController);
+    // get references to and wire up UI elements
+    createUiElements();
+  }
 
+  private void createUiElements() {
     // get UI elements
     mMissionSelector = findViewById(R.id.missionSelectorSpinner);
     mMissionSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -161,7 +166,10 @@ public class MainActivity extends AppCompatActivity {
 
       }
     });
+
+    // set mission progress seek bar to ignore touch
     mMissionProgressSeekBar = findViewById(R.id.missionProgressSeekBar);
+    mMissionProgressSeekBar.setOnTouchListener((view, motionEvent) -> true);
 
     // set max speed and touch listener for speed seek bar
     mSpeedSeekBar = findViewById(R.id.speedSeekBar);
@@ -181,7 +189,9 @@ public class MainActivity extends AppCompatActivity {
     mCurrHeading = findViewById(R.id.currHeadingTextView);
     mCurrPitch = findViewById(R.id.currPitchTextView);
     mCurrRoll = findViewById(R.id.currRollTextView);
+
     mFollowFreeCamButton = findViewById(R.id.followFreeCamButton);
+    mFollowFreeCamButton.setSelected(true);
     mFollowFreeCamButton.setOnClickListener(view -> {
       if (mFollowFreeCamButton.isSelected()) {
         mFollowFreeCamButton.setText("Follow");
@@ -192,23 +202,34 @@ public class MainActivity extends AppCompatActivity {
       }
       toggleFollow(mFollowFreeCamButton.isSelected());
     });
+
+    // handle play button stop and start animation
     mPlayStopButton = findViewById(R.id.playStopButton);
+    mPlayStopButton.setSelected(true);
     mPlayStopButton.setOnClickListener(view -> {
       if (mPlayStopButton.isSelected()) {
         stopAnimation();
+        mPlayStopButton.setSelected(false);
+        mPlayStopButton.setText("PLAY");
       } else {
         startAnimation(mSpeedSeekBar.getProgress());
+        mPlayStopButton.setSelected(true);
+        mPlayStopButton.setText("STOP");
       }
     });
   }
 
-  private void buildModel() {
+  /**
+   * Load the plane model from the cache, use to construct a Model Scene Symbol and add it to the scene's graphic overlay.
+   */
+  private ModelSceneSymbol loadModel() {
     // create a graphic with a ModelSceneSymbol of a plane to add to the scene
     String pathToModel = getCacheDir() + File.separator + getString(R.string.bristol_model);
     ModelSceneSymbol plane3DSymbol = new ModelSceneSymbol(pathToModel, 1.0);
     plane3DSymbol.loadAsync();
     mPlane3D = new Graphic(new Point(0, 0, 0, SpatialReferences.getWgs84()), plane3DSymbol);
     mSceneOverlay.getGraphics().add(mPlane3D);
+    return plane3DSymbol;
   }
 
   /**
@@ -239,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setViewpoint(new Viewpoint(new Envelope(route.getExtent().getCenter(), route.getExtent().getWidth() * 1.25,
         route.getExtent().getHeight() * 1.25)));
 
+    // start the animation at the current key frame progress point
     startAnimation(mSpeedSeekBar.getProgress());
   }
 
@@ -275,10 +297,6 @@ public class MainActivity extends AppCompatActivity {
 
   private void startAnimation(int speed) {
 
-    // update button
-    mPlayStopButton.setText("Stop");
-    mPlayStopButton.setSelected(false);
-
     // stop the current animation timer
     stopAnimation();
 
@@ -298,10 +316,6 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void stopAnimation() {
-
-    // update button
-    mPlayStopButton.setText("Play");
-    mPlayStopButton.setSelected(true);
 
     // cancel the existing timer
     if (mTimer != null) {
@@ -329,6 +343,7 @@ public class MainActivity extends AppCompatActivity {
       mCurrRoll.setText(String.format("%.2f", (float) datum.get("ROLL")));
     });
 
+    // update mission progress seek bar
     mMissionProgressSeekBar.setProgress(mKeyFrame);
 
     // update plane's position and orientation
@@ -366,31 +381,32 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Request write permission on the device.
    */
-  private void requestWritePermission() {
+  private ModelSceneSymbol requestWritePermission() {
     // define permission to request
-    String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+    String[] reqPermission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
     int requestCode = 2;
-    // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(MainActivity.this,
-        reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      buildModel();
+    // for API level 23+ request permission at runtime
+    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+      loadModel();
     } else {
       // request permission
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
+      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
     }
+    return loadModel();
   }
 
   /**
    * Handle permission request response.
    */
+  @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      buildModel();
+      loadModel();
     } else {
       // report to user that permission was denied
-      Toast.makeText(MainActivity.this, getResources().getString(R.string.write_permission_denied),
-          Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, getString(R.string.write_permission_denied), Toast.LENGTH_SHORT).show();
     }
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
   /**

@@ -9,10 +9,10 @@
         android:id="@+id/missionSelectorSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:entries="@array/missions"
+        android:theme="@style/spinnerTheme"
+        android:popupBackground="@android:color/background_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Mission Progress"
+        android:text="@string/mission_progress"
         android:textColor="@android:color/background_light"
         app:layout_constraintTop_toBottomOf="@+id/missionSelectorSpinner"
         app:layout_constraintStart_toStartOf="parent" />
@@ -32,8 +32,6 @@
         android:id="@+id/missionProgressSeekBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/missionProgressTextView"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,8 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Play"
+        android:text="@string/stop"
         app:layout_constraintTop_toBottomOf="@+id/missionProgressSeekBar"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -55,8 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Free cam"
+        android:text="@string/free_cam"
         app:layout_constraintTop_toBottomOf="@+id/missionProgressSeekBar"
         app:layout_constraintStart_toEndOf="@+id/playStopButton"
         app:layout_constraintEnd_toEndOf="parent" />
