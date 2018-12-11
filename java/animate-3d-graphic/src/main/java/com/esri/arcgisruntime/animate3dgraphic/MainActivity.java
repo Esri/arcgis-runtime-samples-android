@@ -14,13 +14,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -31,7 +26,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polyline;
@@ -141,10 +135,8 @@ public class MainActivity extends AppCompatActivity {
     mPlane2D = new Graphic(new Point(0, 0, SpatialReferences.getWgs84()), attributes);
     mapOverlay.getGraphics().add(mPlane2D);
 
-    // request read permission
-    ModelSceneSymbol plane = requestWritePermission();
-    plane.addDoneLoadingListener(() -> {
-      // create an orbit camera controller to follow the plane
+    // when the plane model is done loading, create an orbit camera controller to follow the plane
+    loadModel().addDoneLoadingListener(() -> {
       mOrbitCameraController = new OrbitGeoElementCameraController(mPlane3D, 30.0);
       mOrbitCameraController.setCameraPitchOffset(75.0);
       mSceneView.setCameraController(mOrbitCameraController);
@@ -154,6 +146,9 @@ public class MainActivity extends AppCompatActivity {
     createUiElements();
   }
 
+  /**
+   * Setup the app's UI elements.
+   */
   private void createUiElements() {
     // get UI elements
     mMissionSelector = findViewById(R.id.missionSelectorSpinner);
@@ -166,12 +161,25 @@ public class MainActivity extends AppCompatActivity {
 
       }
     });
+    mMissionSelector.setSelection(0);
 
-    // set mission progress seek bar to ignore touch
+    // set mission progress seek bar to update key frame on change
     mMissionProgressSeekBar = findViewById(R.id.missionProgressSeekBar);
-    mMissionProgressSeekBar.setOnTouchListener((view, motionEvent) -> true);
+    mMissionProgressSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        mKeyFrame = i;
+      }
 
-    // set max speed and touch listener for speed seek bar
+      @Override public void onStartTrackingTouch(SeekBar seekBar) {
+
+      }
+
+      @Override public void onStopTrackingTouch(SeekBar seekBar) {
+
+      }
+    });
+
+    // set speed progress bar with max speed and set speed on change
     mSpeedSeekBar = findViewById(R.id.speedSeekBar);
     mSpeedSeekBar.setMax(40);
     mSpeedSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -185,11 +193,14 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onStopTrackingTouch(SeekBar seekBar) {
       }
     });
+
+    // get references to HUD text views
     mCurrAltitude = findViewById(R.id.currAltitudeTextView);
     mCurrHeading = findViewById(R.id.currHeadingTextView);
     mCurrPitch = findViewById(R.id.currPitchTextView);
     mCurrRoll = findViewById(R.id.currRollTextView);
 
+    // handle follow/free cam button actions
     mFollowFreeCamButton = findViewById(R.id.followFreeCamButton);
     mFollowFreeCamButton.setSelected(true);
     mFollowFreeCamButton.setOnClickListener(view -> {
@@ -203,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
       toggleFollow(mFollowFreeCamButton.isSelected());
     });
 
-    // handle play button stop and start animation
+    // handle play/stop button stop and start animation
     mPlayStopButton = findViewById(R.id.playStopButton);
     mPlayStopButton.setSelected(true);
     mPlayStopButton.setOnClickListener(view -> {
@@ -256,9 +267,8 @@ public class MainActivity extends AppCompatActivity {
     Polyline route = new Polyline(points);
     mRouteGraphic.setGeometry(route);
 
-    // set the mini map viewpoint to 25% larger than the route's extent
-    mMapView.setViewpoint(new Viewpoint(new Envelope(route.getExtent().getCenter(), route.getExtent().getWidth() * 1.25,
-        route.getExtent().getHeight() * 1.25)));
+    // set the mini map scale
+    mMapView.setViewpoint(new Viewpoint(mRouteGraphic.getGeometry().getExtent()));
 
     // start the animation at the current key frame progress point
     startAnimation(mSpeedSeekBar.getProgress());
@@ -267,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Loads the mission data from a .csv file into memory.
    *
-   * @param mission .csv file name containing the mission data
+   * @param mission name of the .csv file containing the mission data
    * @return ordered list of mapped key value pairs representing coordinates and rotation parameters for each step of
    * the mission
    */
@@ -295,29 +305,41 @@ public class MainActivity extends AppCompatActivity {
     return missionList;
   }
 
+  /**
+   * Start the animation.
+   *
+   * @param speed at which key frames increment
+   */
   private void startAnimation(int speed) {
 
     // stop the current animation timer
     stopAnimation();
 
+    // calculate period from speed
     int period = mSpeedSeekBar.getMax() - speed + 10;
 
     // create a timer to animate the tank
     mTimer = new Timer();
     mTimer.scheduleAtFixedRate(new TimerTask() {
       @Override public void run() {
+        if (mMissionData == null) {
+          return;
+        }
+        // reset key frame at end of mission
         if (mKeyFrame >= mMissionData.size()) {
           mKeyFrame = 0;
         }
+        // animate the given key frame
         animate(mKeyFrame);
         mKeyFrame++;
       }
     }, 0, period);
   }
 
+  /**
+   * Stop the animation by canceling the timer.
+   */
   private void stopAnimation() {
-
-    // cancel the existing timer
     if (mTimer != null) {
       mTimer.cancel();
     }
@@ -355,8 +377,11 @@ public class MainActivity extends AppCompatActivity {
     // update mini map plane's position and rotation
     mPlane2D.setGeometry(position);
     if (mFollowFreeCamButton.isSelected()) {
+      if (mMapView == null || position == null) {
+        return;
+      }
       // rotate the map view in the direction of motion to make graphic always point up
-      mMapView.setViewpoint(new Viewpoint(position, mMapView.getMapScale(), 360 + (float) datum.get("HEADING")));
+      mMapView.setViewpoint(new Viewpoint(position, 100000, 360 + (float) datum.get("HEADING")));
     } else {
       mPlane2D.getAttributes().put("ANGLE", 360 + (float) datum.get("HEADING") - mMapView.getMapRotation());
     }
@@ -366,7 +391,6 @@ public class MainActivity extends AppCompatActivity {
    * Switches between the orbiting camera controller and default globe camera controller.
    */
   private void toggleFollow(boolean follow) {
-
     if (follow) {
       // reset mini-map plane's rotation to point up
       mPlane2D.getAttributes().put("ANGLE", 0f);
@@ -379,46 +403,13 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Request write permission on the device.
-   */
-  private ModelSceneSymbol requestWritePermission() {
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    // for API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      loadModel();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-    return loadModel();
-  }
-
-  /**
-   * Handle permission request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      loadModel();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.write_permission_denied), Toast.LENGTH_SHORT).show();
-    }
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-  }
-
-  /**
    * Copy the given file from the app's assets folder to the app's cache directory.
    *
    * @param fileName as String
    */
   private void copyFileFromAssetsToCache(String fileName) {
     AssetManager assetManager = getApplicationContext().getAssets();
-
     File file = new File(getCacheDir() + File.separator + fileName);
-
     if (!file.exists()) {
       try {
         InputStream in = assetManager.open(fileName);
@@ -438,4 +429,25 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  @Override
+  protected void onPause(){
+    mSceneView.pause();
+    mMapView.pause();
+    mTimer.cancel();
+    super.onPause();
+  }
+
+  @Override
+  protected void onResume(){
+    super.onResume();
+    mSceneView.resume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mSceneView.resume();
+    mMapView.dispose();
+  }
 }
