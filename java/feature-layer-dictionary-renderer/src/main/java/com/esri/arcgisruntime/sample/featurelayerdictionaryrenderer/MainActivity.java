@@ -24,9 +24,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
 import android.util.Log;
 import android.widget.Toast;
+
 import com.esri.arcgisruntime.data.Geodatabase;
 import com.esri.arcgisruntime.data.GeodatabaseFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -59,17 +59,13 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // for API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      loadGeodatabaseSymbolDictionary();
-    } else {
-      // request permission
-      int requestCode = 2;
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
+    requestReadPermission();
   }
 
+  /**
+   * Load Geo-Database and display features from layer using mil2525d symbols.
+   */
   private void loadGeodatabaseSymbolDictionary() {
-
     // load geo-database from local location
     Geodatabase geodatabase = new Geodatabase(
         Environment.getExternalStorageDirectory() + getString(R.string.militaryoverlay_geodatabase));
@@ -112,6 +108,21 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, error);
       }
     });
+  }
+
+  /**
+   * Request read external storage for API level 23+.
+   */
+  private void requestReadPermission() {
+    // define permission to request
+    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
+    int requestCode = 2;
+    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+      loadGeodatabaseSymbolDictionary();
+    } else {
+      // request permission
+      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
+    }
   }
 
   /**
