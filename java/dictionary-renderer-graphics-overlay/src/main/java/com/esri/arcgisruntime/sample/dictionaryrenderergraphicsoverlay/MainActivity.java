@@ -53,9 +53,6 @@ public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
-  // permission to read external storage
-  private final String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
-
   private MapView mMapView;
 
   private GraphicsOverlay mGraphicsOverlay;
@@ -71,13 +68,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // for API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      applyDictionaryRendererToGraphics();
-    } else {
-      // request permission
-      int requestCode = 2;
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
+    requestReadPermission();
   }
 
   private void applyDictionaryRendererToGraphics() {
@@ -176,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
     } catch (XmlPullParserException e) {
       Log.e(TAG, "Error in parsing the XML file: " + e.getMessage());
     } catch (IOException e) {
-      Log.d(TAG, e.getMessage());
+      Log.e(TAG, e.getMessage());
     }
     return messages;
   }
@@ -205,9 +196,23 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     }
-
     // return a graphic with multipoint geometry
     return new Graphic(new Multipoint(points), attributes);
+  }
+
+  /**
+   * Request read external storage for API level 23+.
+   */
+  private void requestReadPermission() {
+    // define permission to request
+    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
+    int requestCode = 2;
+    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+      applyDictionaryRendererToGraphics();
+    } else {
+      // request permission
+      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
+    }
   }
 
   /**
