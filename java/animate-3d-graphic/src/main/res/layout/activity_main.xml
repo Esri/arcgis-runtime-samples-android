@@ -6,6 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/zoomInButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+"
+        app:layout_constraintTop_toTopOf="@+id/mapView"
+        app:layout_constraintStart_toStartOf="@+id/mapView"
+        android:minHeight="40dip"
+        android:minWidth="35dip"/>
+
+    <Button
+        android:id="@+id/zoomOutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="40dip"
+        android:minWidth="35dip"
+        android:text="-"
+        app:layout_constraintStart_toStartOf="@+id/mapView"
+        app:layout_constraintTop_toBottomOf="@+id/zoomInButton" />
+
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
         android:layout_width="150dp"

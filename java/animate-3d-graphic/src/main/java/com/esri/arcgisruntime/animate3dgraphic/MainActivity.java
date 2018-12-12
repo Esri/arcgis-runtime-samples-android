@@ -15,6 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.content.res.AssetManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -112,28 +113,29 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.createImagery());
     mMapView.setMap(map);
 
-    // create a graphics overlay for the mini map
-    GraphicsOverlay mapOverlay = new GraphicsOverlay();
-    mMapView.getGraphicsOverlays().add(mapOverlay);
-
-    // create renderer to rotate the plane graphic in the mini map
-    SimpleRenderer renderer2D = new SimpleRenderer();
-    SimpleMarkerSymbol plane2DSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.TRIANGLE, 0xFF0000FF, 10);
-    renderer2D.setSymbol(plane2DSymbol);
-    renderer2D.setRotationExpression("[ANGLE]");
-    mapOverlay.setRenderer(renderer2D);
-
+    // create a graphics overlay for route
+    GraphicsOverlay routeOverlay = new GraphicsOverlay();
     // create a placeholder graphic for showing the mission route in mini map
-    SimpleLineSymbol routeSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFFFF0000, 2);
+    SimpleLineSymbol routeSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2);
     mRouteGraphic = new Graphic();
     mRouteGraphic.setSymbol(routeSymbol);
-    mapOverlay.getGraphics().add(mRouteGraphic);
+    routeOverlay.getGraphics().add(mRouteGraphic);
+    mMapView.getGraphicsOverlays().add(routeOverlay);
 
-    // create a graphic with a blue (0xFF0000FF) triangle symbol to represent the plane on the mini map
+    // create a graphics overlay for plane symbol
+    GraphicsOverlay plane2dOverlay = new GraphicsOverlay();
+    // create renderer to rotate the plane graphic in the mini map
+    SimpleRenderer renderer2D = new SimpleRenderer();
+    SimpleMarkerSymbol plane2DSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.TRIANGLE, Color.BLUE, 10);
+    renderer2D.setSymbol(plane2DSymbol);
+    renderer2D.setRotationExpression("[ANGLE]");
+    plane2dOverlay.setRenderer(renderer2D);
+    // create a graphic with a blue triangle symbol to represent the plane on the mini map
     Map<String, Object> attributes = new HashMap<>();
     attributes.put("ANGLE", 0f);
     mPlane2D = new Graphic(new Point(0, 0, SpatialReferences.getWgs84()), attributes);
-    mapOverlay.getGraphics().add(mPlane2D);
+    plane2dOverlay.getGraphics().add(mPlane2D);
+    mMapView.getGraphicsOverlays().add(plane2dOverlay);
 
     // when the plane model is done loading, create an orbit camera controller to follow the plane
     loadModel().addDoneLoadingListener(() -> {
@@ -181,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
     // set speed progress bar with max speed and set speed on change
     mSpeedSeekBar = findViewById(R.id.speedSeekBar);
-    mSpeedSeekBar.setMax(40);
+    mSpeedSeekBar.setMax(30);
     mSpeedSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         startAnimation(i);
@@ -193,6 +195,11 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onStopTrackingTouch(SeekBar seekBar) {
       }
     });
+
+    Button zoomInButton = findViewById(R.id.zoomInButton);
+    zoomInButton.setOnClickListener(view -> mMapView.setViewpointScaleAsync(mMapView.getMapScale() / 5));
+    Button zoomOutButton = findViewById(R.id.zoomOutButton);
+    zoomOutButton.setOnClickListener(view -> mMapView.setViewpointScaleAsync(mMapView.getMapScale() * 5));
 
     // get references to HUD text views
     mCurrAltitude = findViewById(R.id.currAltitudeTextView);
@@ -268,10 +275,10 @@ public class MainActivity extends AppCompatActivity {
     mRouteGraphic.setGeometry(route);
 
     // set the mini map scale
-    mMapView.setViewpoint(new Viewpoint(mRouteGraphic.getGeometry().getExtent()));
-
-    // start the animation at the current key frame progress point
-    startAnimation(mSpeedSeekBar.getProgress());
+    mMapView.setViewpointScaleAsync(100000).addDoneListener(() -> {
+      // start the animation at the current key frame progress point
+      startAnimation(mSpeedSeekBar.getProgress());
+    });
   }
 
   /**
@@ -317,6 +324,8 @@ public class MainActivity extends AppCompatActivity {
 
     // calculate period from speed
     int period = mSpeedSeekBar.getMax() - speed + 10;
+    Log.d(TAG, "Speed: " + speed);
+    Log.d(TAG, "Period: " + period);
 
     // create a timer to animate the tank
     mTimer = new Timer();
@@ -381,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
         return;
       }
       // rotate the map view in the direction of motion to make graphic always point up
-      mMapView.setViewpoint(new Viewpoint(position, 100000, 360 + (float) datum.get("HEADING")));
+      mMapView.setViewpoint(new Viewpoint(position, mMapView.getMapScale(), 360 + (float) datum.get("HEADING")));
     } else {
       mPlane2D.getAttributes().put("ANGLE", 360 + (float) datum.get("HEADING") - mMapView.getMapRotation());
     }
