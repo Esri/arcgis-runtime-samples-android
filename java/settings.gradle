@@ -1,6 +1,7 @@
-include ':add-graphics-renderer', ':animate-3d-graphic',
+include ':add-graphics-renderer',
         ':add-graphics-symbols',
         ':analyze-hotspots',
+        ':animate-3d-graphic',
         ':arcgis-mapimagelayer-url',
         ':arcgis-tiledlayer-url',
         ':arcgis-vectortiledlayer-url',

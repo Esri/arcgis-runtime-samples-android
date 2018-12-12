@@ -29,14 +29,14 @@ To animate a `Graphic` by updating it's `Geometry` object's, heading, pitch, and
 1. Create a `GraphicsOverlay` and attach it to the `SceneView`.
 1. Create a `ModelSceneSymbol` with `AnchorPosition.CENTER`.
 1. Create a `Graphic(Geometry, Symbol)`.
-  * set the `Geometry` to a `Point` where the `Graphic` will be located in the `SceneView`.
-  * set the `Symbol` to the one we made above.
+   * set the `Geometry` to a `Point` where the `Graphic` will be located in the `SceneView`.
+   * set the `Symbol` to the one we made above.
 1. Add Attributes to graphic.
-  * Get attributes from graphic, `Graphic.getAttributes()`.
-  * Add heading, pitch, and roll attribute, `attributes.put("[HEADING]", heading)`.
+   * Get attributes from graphic, `Graphic.getAttributes()`.
+   * Add heading, pitch, and roll attribute, `attributes.put("[HEADING]", heading)`.
 1. Create a `SimpleRenderer` to access and set it's expression properties.
-  * Access properties with `Renderer.getSceneProperties()`.
-  * Set heading, pitch, and roll expressions, `SceneProperties.setHeadingExpression("[HEADING]")`.
+   * Access properties with `Renderer.getSceneProperties()`.
+   * Set heading, pitch, and roll expressions, `SceneProperties.setHeadingExpression("[HEADING]")`.
 1. Add `Graphic` to the `GraphicsOverlay`.
 1. Set `Renderer` to the `GraphicsOverlay`, `GraphicsOverlay.setRenderer(Renderer)`.
 1. Update the `Graphic` object's location, `Graphic.setGeometry(Point)`.
