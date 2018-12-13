@@ -178,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
    * @param attributes tells symbol dictionary what symbol to apply to graphic
    */
   private static Graphic createGraphic(Map<String, Object> attributes) {
-
     // get spatial reference
     int wkid = Integer.parseInt((String) attributes.get("_wkid"));
     SpatialReference sr = SpatialReference.create(wkid);
