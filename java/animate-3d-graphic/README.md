@@ -21,7 +21,6 @@ Speed Slider (Top Right Corner):
 Moving the Camera: 
 * Simply use regular zoom and pan interactions with the mouse. When in follow mode, the `OrbitGeoElementCameraController` will keep the camera locked to the plane.
 
-
 ## How it works
 
 To animate a `Graphic` by updating it's `Geometry` object's, heading, pitch, and roll:
@@ -50,7 +49,7 @@ To animate a `Graphic` by updating it's `Geometry` object's, heading, pitch, and
 * GraphicsOverlay
 * LayerSceneProperties.SurfacePlacement
 * ModelSceneSymbol
-* OrbitGeoElementCameraController</li>
+* OrbitGeoElementCameraController
 * Renderer
 * SceneView
 * Viewpoint
