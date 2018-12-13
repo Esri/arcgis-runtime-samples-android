@@ -67,22 +67,20 @@ public class MainActivity extends AppCompatActivity {
     return super.onCreateOptionsMenu(menu);
   }
 
-
   @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
+  public boolean onOptionsItemSelected(MenuItem menuItem) {
     // setting different atmosphere effect on scene view
-    int i = item.getItemId();
-    if (i == R.id.noAtmosphereEffect) {
+    int item = menuItem.getItemId();
+    if (item == R.id.noAtmosphereEffect) {
       mSceneView.setAtmosphereEffect(AtmosphereEffect.NONE);
-    } else if (i == R.id.realisticAtmosphereEffect) {
+    } else if (item == R.id.realisticAtmosphereEffect) {
       mSceneView.setAtmosphereEffect(AtmosphereEffect.REALISTIC);
-    } else if (i == R.id.horizonAtmosphereEffect) {
+    } else if (item == R.id.horizonAtmosphereEffect) {
       mSceneView.setAtmosphereEffect(AtmosphereEffect.HORIZON_ONLY);
     } else {
       Log.e(TAG, "Menu option not implemented");
     }
-
-    return super.onOptionsItemSelected(item);
+    return super.onOptionsItemSelected(menuItem);
   }
 
   @Override
