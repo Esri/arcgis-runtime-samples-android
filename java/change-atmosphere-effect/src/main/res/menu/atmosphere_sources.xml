@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/noAtmosphereEffect"
+        android:title="@string/noAtmosphereEffect" />
+
+    <item
+        android:id="@+id/realisticAtmosphereEffect"
+        android:title="@string/realisticAtmosphereEffect" />
+
+    <item
+        android:id="@+id/horizonAtmosphereEffect"
+        android:title="@string/horizonAtmosphereEffect" />
+
+</menu>
