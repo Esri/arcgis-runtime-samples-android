@@ -86,10 +86,10 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private SceneView mSceneView;
+  private OrbitGeoElementCameraController mOrbitCameraController;
   private Graphic mRouteGraphic;
   private Graphic mPlane2D;
   private Graphic mPlane3D;
-  private OrbitGeoElementCameraController mOrbitCameraController;
   private GraphicsOverlay mSceneOverlay;
 
   @Override
@@ -228,10 +228,10 @@ public class MainActivity extends AppCompatActivity {
     mFollowFreeCamButton.setSelected(true);
     mFollowFreeCamButton.setOnClickListener(view -> {
       if (mFollowFreeCamButton.isSelected()) {
-        mFollowFreeCamButton.setText("Follow");
+        mFollowFreeCamButton.setText(R.string.follow);
         mFollowFreeCamButton.setSelected(false);
       } else {
-        mFollowFreeCamButton.setText("Free cam");
+        mFollowFreeCamButton.setText(getString(R.string.free_cam));
         mFollowFreeCamButton.setSelected(true);
       }
       toggleFollow(mFollowFreeCamButton.isSelected());
@@ -244,11 +244,11 @@ public class MainActivity extends AppCompatActivity {
       if (mPlayStopButton.isSelected()) {
         stopAnimation();
         mPlayStopButton.setSelected(false);
-        mPlayStopButton.setText("PLAY");
+        mPlayStopButton.setText(R.string.play);
       } else {
         startAnimation(mSpeedSeekBar.getProgress());
         mPlayStopButton.setSelected(true);
-        mPlayStopButton.setText("STOP");
+        mPlayStopButton.setText(getString(R.string.stop));
       }
     });
   }
@@ -340,8 +340,6 @@ public class MainActivity extends AppCompatActivity {
 
     // calculate period from speed
     int period = mSpeedSeekBar.getMax() - speed + 10;
-    Log.d(TAG, "Speed: " + speed);
-    Log.d(TAG, "Period: " + period);
 
     // create a timer to animate the tank
     mTimer = new Timer();

@@ -12,10 +12,11 @@
     <string name="pitch">Pitch</string>
     <string name="roll">Roll</string>
     <string name="mission_progress">Mission Progress</string>
+    <string name="play">Play</string>
     <string name="stop">Stop</string>
+    <string name="follow">Follow</string>
     <string name="free_cam">Free Cam</string>
     <string name="speed">Speed</string>
     <string name="bristol_model">Bristol.dae</string>
     <string name="bristol_skin">Bristol.png</string>
-    <string name="write_permission_denied">Write permission required for this sample!</string>
 </resources>
