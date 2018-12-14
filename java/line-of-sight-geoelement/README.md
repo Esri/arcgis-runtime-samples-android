@@ -4,7 +4,7 @@ Show a line of sight between two moving objects.
 ## Use Case
 To determine if an observer can see a target, you can show a line of sight between them. The line will be green until it is obstructed, in which case it will turn red. By using the GeoElement variant of the line of sight, the line will automatically update when either GeoElement moves.
 
-![Line of Sight GeoElement App](line-of-sigh-geoelement.png)
+![Line of Sight GeoElement App](line-of-sight-geoelement.png)
 
 ## How to use the sample
 
