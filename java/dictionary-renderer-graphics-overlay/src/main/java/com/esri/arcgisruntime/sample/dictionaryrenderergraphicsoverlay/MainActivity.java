@@ -16,14 +16,25 @@
 
 package com.esri.arcgisruntime.sample.dictionaryrenderergraphicsoverlay;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -38,24 +49,12 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.DictionaryRenderer;
 import com.esri.arcgisruntime.symbology.DictionarySymbolStyle;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
-
-  private GraphicsOverlay mGraphicsOverlay;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -67,15 +66,19 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
     mMapView.setMap(map);
 
+    // once graphics overlay had loaded with a valid spatial reference, set the viewpoint to the graphics overlay extent
+    mMapView.addSpatialReferenceChangedListener(spatialReferenceChangedEvent -> mMapView
+        .setViewpointGeometryAsync(mMapView.getGraphicsOverlays().get(0).getExtent()));
+
     // for API level 23+ request permission at runtime
     requestReadPermission();
   }
 
   private void applyDictionaryRendererToGraphics() {
-    mGraphicsOverlay = new GraphicsOverlay();
+    GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
     // graphics no longer show after zooming passed this scale
-    mGraphicsOverlay.setMinScale(1000000);
-    mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
+    graphicsOverlay.setMinScale(1000000);
+    mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
     // create symbol dictionary from specification
     DictionarySymbolStyle symbolDictionary = new DictionarySymbolStyle("mil2525d",
@@ -83,22 +86,15 @@ public class MainActivity extends AppCompatActivity {
 
     // tells graphics overlay how to render graphics with symbol dictionary attributes set
     DictionaryRenderer renderer = new DictionaryRenderer(symbolDictionary);
-    mGraphicsOverlay.setRenderer(renderer);
+    graphicsOverlay.setRenderer(renderer);
 
     // parse graphic attributes from a XML file
     List<Map<String, Object>> messages = parseMessages();
 
-    //  create graphics with attributes and add to graphics overlay
+    // create graphics with attributes and add to graphics overlay
     for (Map<String, Object> attributes : messages) {
-      Graphic graphic = createGraphic(attributes);
-      mGraphicsOverlay.getGraphics().add(graphic);
+      graphicsOverlay.getGraphics().add(createGraphic(attributes));
     }
-
-    // once view has loaded
-    mMapView.addSpatialReferenceChangedListener(e -> {
-      // set initial viewpoint
-      mMapView.setViewpointGeometryAsync(mGraphicsOverlay.getExtent());
-    });
   }
 
   /**
@@ -106,68 +102,31 @@ public class MainActivity extends AppCompatActivity {
    */
   private List<Map<String, Object>> parseMessages() {
     final List<Map<String, Object>> messages = new ArrayList<>();
-
-    XmlPullParserFactory parserFactory;
     try {
-      // create a new instance of the XMLPullParserFactory class
-      parserFactory = XmlPullParserFactory.newInstance();
-      XmlPullParser parser = parserFactory.newPullParser();
-      // load the XML file from the assets folder.
-      InputStream is = getAssets().open(getString(R.string.mil2525dmessages_xml_file));
-      parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-      parser.setInput(is, null);
-      // get the current event type from the parser
-      int eventType = parser.getEventType();
-
-      Map<String, Object> attributes = null;
-
-      while (eventType != XmlPullParser.END_DOCUMENT) {
-        String eltName;
-        switch (eventType) {
-          case XmlPullParser.START_TAG:
-            // get the name of the current tag by calling the getName method
-            eltName = parser.getName();
-
-            // When we have the message tag, create a new HashMap 'attributes' and we add it in the ArrayList of messages. This list will be used to store all the messages read from the XML file.
-            if ("message".equals(eltName)) {
+      // create an XML pull parser
+      XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
+      // load the XML file from the assets folder
+      try (InputStream inputStream = getAssets().open(getString(R.string.mil2525dmessages_xml_file))) {
+        parser.setInput(inputStream, null);
+        // get the current event type from the parser
+        int eventType = parser.getEventType();
+        Map<String, Object> attributes = null;
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+          if (eventType == XmlPullParser.START_TAG) {
+            String name = parser.getName();
+            // create a new attribute map for new message
+            if (name.equals("message")) {
               attributes = new HashMap<>();
-              if (attributes != null) {
-                messages.add(attributes);
-              }
-              /* if the attribute is not null, check if tag is _type, _action, _id, _control_points, _wkid, sic, identity, symbolset, symbolentity or uniquedesignation.
-               * for each case, we call the nextText method of the parser to get the value associated to the tag. Then, we set the value on the current attribute.
-               */
+              messages.add(attributes);
             } else if (attributes != null) {
-              if (getString(R.string.type).equals(eltName)) {
-                attributes.put(getString(R.string.type), parser.nextText());
-              } else if (getString(R.string.action).equals(eltName)) {
-                attributes.put(getString(R.string.action), parser.nextText());
-              } else if (getString(R.string.id).equals(eltName)) {
-                attributes.put(getString(R.string.id), parser.nextText());
-              } else if (getString(R.string.control_points).equals(eltName)) {
-                attributes.put(getString(R.string.control_points), parser.nextText());
-              } else if (getString(R.string.wkid).equals(eltName)) {
-                attributes.put(getString(R.string.wkid), parser.nextText());
-              } else if (getString(R.string.sic).equals(eltName)) {
-                attributes.put(getString(R.string.sic), parser.nextText());
-              } else if (getString(R.string.identity).equals(eltName)) {
-                attributes.put(getString(R.string.identity), parser.nextText());
-              } else if (getString(R.string.symbolset).equals(eltName)) {
-                attributes.put(getString(R.string.symbolset), parser.nextText());
-              } else if (getString(R.string.symbolentity).equals(eltName)) {
-                attributes.put(getString(R.string.symbolentity), parser.nextText());
-              } else if (getString(R.string.uniquedesignation).equals(eltName)) {
-                attributes.put(getString(R.string.uniquedesignation), parser.nextText());
-              }
+              attributes.put(name, parser.nextText());
             }
-            break;
+          }
+          eventType = parser.next();
         }
-        eventType = parser.next();
       }
-    } catch (XmlPullParserException e) {
-      Log.e(TAG, "Error in parsing the XML file: " + e.getMessage());
-    } catch (IOException e) {
-      Log.e(TAG, e.getMessage());
+    } catch (XmlPullParserException | IOException e) {
+      Log.e(TAG, "Error reading XML file: " + e.getMessage());
     }
     return messages;
   }
@@ -180,17 +139,17 @@ public class MainActivity extends AppCompatActivity {
   private static Graphic createGraphic(Map<String, Object> attributes) {
     // get spatial reference
     int wkid = Integer.parseInt((String) attributes.get("_wkid"));
-    SpatialReference sr = SpatialReference.create(wkid);
+    SpatialReference spatialReference = SpatialReference.create(wkid);
 
     // get points from coordinates' string
-    PointCollection points = new PointCollection(sr);
+    PointCollection points = new PointCollection(spatialReference);
     String[] coordinates = ((String) attributes.get("_control_points")).split(";");
-    if (coordinates != null && coordinates.length > 0) {
-      for (int i = 0; i < coordinates.length; i++) {
-        String ps = coordinates[i];
-        String pointCoordinate[] = ps.split(",");
-        if (pointCoordinate != null && pointCoordinate.length > 0) {
-          Point point = new Point(Double.valueOf(pointCoordinate[0]), Double.valueOf(pointCoordinate[1]), sr);
+    if (coordinates.length > 0) {
+      for (String ordinate : coordinates) {
+        String[] pointCoordinate = ordinate.split(",");
+        if (pointCoordinate.length > 0) {
+          Point point = new Point(Double.valueOf(pointCoordinate[0]), Double.valueOf(pointCoordinate[1]),
+              spatialReference);
           points.add(point);
         }
       }
@@ -223,8 +182,7 @@ public class MainActivity extends AppCompatActivity {
       applyDictionaryRendererToGraphics();
     } else {
       // report to user that permission was denied
-      Toast.makeText(this, getResources().getString(R.string.write_permission_denied),
-          Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, getString(R.string.read_permission_denied), Toast.LENGTH_SHORT).show();
     }
   }
 
