@@ -1,11 +1,18 @@
 package com.esri.arcgisruntime.sample.lineofsightgeoelement;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -40,19 +47,27 @@ import com.esri.arcgisruntime.symbology.SimpleRenderer;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
   private static final LinearUnit METERS = new LinearUnit(LinearUnitId.METERS);
   private static final AngularUnit DEGREES = new AngularUnit(AngularUnitId.DEGREES);
 
-  private SceneView mSceneView;
-  private List<Point> mWaypoints;
   private int mWaypointIndex = 0;
-  //private Timeline animation;
+
+  private SceneView mSceneView;
   private Graphic mTaxiGraphic;
+  private List<Point> mWaypoints;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    // load taxi model from assets into cache directory
+    copyFileFromAssetsToCache(getString(R.string.dolmus_model));
+    copyFileFromAssetsToCache(getString(R.string.dolmus_back));
+    copyFileFromAssetsToCache(getString(R.string.dolmus_front));
+    copyFileFromAssetsToCache(getString(R.string.dolmus_side));
+    copyFileFromAssetsToCache(getString(R.string.tire_tread));
 
     // create a scene and add a basemap to it
     ArcGISScene scene = new ArcGISScene();
@@ -111,7 +126,8 @@ public class MainActivity extends AppCompatActivity {
 
       }
     });
-
+    // set seek bar initial progress with offset
+    heightSeekBar.setProgress((int) observationPoint.getZ() - 150);
 
     // create waypoints around a block for the taxi to drive to
     mWaypoints = Arrays.asList(
@@ -122,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
     );
 
     // create a graphic of a taxi to be the target
-    String modelURI = new File("./samples-data/dolmus_3ds/dolmus.3ds").getAbsolutePath();
-    ModelSceneSymbol taxiSymbol = new ModelSceneSymbol(modelURI, 1.0);
+    String pathToModel = getCacheDir() + File.separator + getString(R.string.dolmus_model);
+    ModelSceneSymbol taxiSymbol = new ModelSceneSymbol(pathToModel, 1.0);
     taxiSymbol.setAnchorPosition(SceneSymbol.AnchorPosition.BOTTOM);
     taxiSymbol.loadAsync();
     mTaxiGraphic = new Graphic(mWaypoints.get(0), taxiSymbol);
@@ -139,16 +155,17 @@ public class MainActivity extends AppCompatActivity {
     analysisOverlay.getAnalyses().add(lineOfSight);
 
     // select (highlight) the taxi when the line of sight target visibility changes to visible
-    lineOfSight.addTargetVisibilityChangedListener(targetVisibilityChangedEvent ->
-        mTaxiGraphic
-            .setSelected(targetVisibilityChangedEvent.getTargetVisibility() == LineOfSight.TargetVisibility.VISIBLE)
+    lineOfSight.addTargetVisibilityChangedListener(targetVisibilityChangedEvent -> mTaxiGraphic
+        .setSelected(targetVisibilityChangedEvent.getTargetVisibility() == LineOfSight.TargetVisibility.VISIBLE)
     );
 
-    // create a timeline to animate the taxi driving around the block
-    //animation = new Timeline();
-    //animation.setCycleCount(-1);
-    //animation.getKeyFrames().add(new KeyFrame(Duration.millis(100), e -> animate()));
-    //animation.play();
+    // create a timer to animate the tank
+    Timer timer = new Timer();
+    timer.scheduleAtFixedRate(new TimerTask() {
+      @Override public void run() {
+        animate();
+      }
+    }, 0, 50);
 
     // zoom to show the observer
     Camera camera = new Camera((Point) observer.getGeometry(), 700, -30, 45, 0);
@@ -177,5 +194,50 @@ public class MainActivity extends AppCompatActivity {
     if (distance.getDistance() <= 2) {
       mWaypointIndex = (mWaypointIndex + 1) % mWaypoints.size();
     }
+  }
+
+  /**
+   * Copy the given file from the app's assets folder to the app's cache directory.
+   *
+   * @param fileName as String
+   */
+  private void copyFileFromAssetsToCache(String fileName) {
+    AssetManager assetManager = getApplicationContext().getAssets();
+    File file = new File(getCacheDir() + File.separator + fileName);
+    if (!file.exists()) {
+      try {
+        InputStream in = assetManager.open(fileName);
+        OutputStream out = new FileOutputStream(getCacheDir() + File.separator + fileName);
+        byte[] buffer = new byte[1024];
+        int read = in.read(buffer);
+        while (read != -1) {
+          out.write(buffer, 0, read);
+          read = in.read(buffer);
+        }
+        Log.i(TAG, fileName + " copied to cache.");
+      } catch (Exception e) {
+        Log.e(TAG, "Error writing " + fileName + " to cache. " + e.getMessage());
+      }
+    } else {
+      Log.i(TAG, fileName + " already in cache.");
+    }
+  }
+
+  @Override
+  protected void onPause() {
+    mSceneView.pause();
+    super.onPause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mSceneView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    mSceneView.dispose();
+    super.onDestroy();
   }
 }
