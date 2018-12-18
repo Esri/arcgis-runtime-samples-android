@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     // add base surface for elevation data
     final Surface surface = new Surface();
     ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
-        getString(R.string.elevation_image_service));
+        getString(R.string.elevation_image_service_url));
     surface.getElevationSources().add(elevationSource);
     scene.setBaseSurface(surface);
 
@@ -65,9 +65,9 @@ public class MainActivity extends AppCompatActivity {
     mExaggerationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
         // set the text to SeekBar value
-        mExaggerationValueText.setText(String.valueOf((float) progress));
+        mExaggerationValueText.setText(String.valueOf(progress));
         // set exaggeration of surface to the value the user selected
-        surface.setElevationExaggeration((float) progress);
+        surface.setElevationExaggeration(progress);
       }
 
       @Override public void onStartTrackingTouch(SeekBar seekBar) {
