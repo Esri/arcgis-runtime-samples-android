@@ -32,24 +32,21 @@ import com.esri.arcgisruntime.mapping.view.SceneView;
 public class MainActivity extends AppCompatActivity {
 
   private SceneView mSceneView;
-  private TextView mExaggerationValueText;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // create a scene and add a basemap to it
-    ArcGISScene scene = new ArcGISScene();
-    scene.setBasemap(Basemap.createNationalGeographic());
-    // create SceneView from layout
+    // get a reference to the scene view
     mSceneView = findViewById(R.id.sceneView);
+    // create a scene and add it to the scene view
+    ArcGISScene scene = new ArcGISScene(Basemap.Type.NATIONAL_GEOGRAPHIC);
     mSceneView.setScene(scene);
 
     // add base surface for elevation data
     final Surface surface = new Surface();
-    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
-        getString(R.string.elevation_image_service_url));
+    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(getString(R.string.elevation_image_service_url));
     surface.getElevationSources().add(elevationSource);
     scene.setBaseSurface(surface);
 
@@ -59,13 +56,13 @@ public class MainActivity extends AppCompatActivity {
     mSceneView.setViewpointCamera(camera);
 
     // create TextView to show SeekBar value
-    mExaggerationValueText = findViewById(R.id.exaggerationSeekBarValueText);
+    final TextView exaggerationTextView = findViewById(R.id.exaggerationValueTextView);
     // create SeekBar
-    final SeekBar mExaggerationSeekBar = findViewById(R.id.exaggerationSeekBar);
-    mExaggerationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+    final SeekBar exaggerationSeekBar = findViewById(R.id.exaggerationSeekBar);
+    exaggerationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
         // set the text to SeekBar value
-        mExaggerationValueText.setText(String.valueOf(progress));
+        exaggerationTextView.setText(String.valueOf(progress));
         // set exaggeration of surface to the value the user selected
         surface.setElevationExaggeration(progress);
       }
