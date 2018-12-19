@@ -123,11 +123,13 @@ public class MainActivity extends AppCompatActivity {
     // create a slider to change the observer's Z value
     SeekBar heightSeekBar = findViewById(R.id.heightSeekBar);
     TextView currHeightTextView = findViewById(R.id.currHeightTextView);
-    heightSeekBar.setMax(150);
+    // offset the minimum height of the observer on the seek bar
+    int seekBarMinHeightOffset = 150;
+    heightSeekBar.setMax(seekBarMinHeightOffset);
     heightSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-        // offset progress bar to go from 150 - 300
-        int height = progress + 150;
+        // use the offset to calculate the height value
+        int height = progress + seekBarMinHeightOffset;
         currHeightTextView.setText(String.valueOf(height));
         PointBuilder pointBuilder = new PointBuilder((Point) observer.getGeometry());
         pointBuilder.setZ(height);
@@ -143,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
       }
     });
     // set seek bar initial progress with offset
-    heightSeekBar.setProgress((int) observationPoint.getZ() - 150);
+    heightSeekBar.setProgress((int) observationPoint.getZ() - seekBarMinHeightOffset);
 
     // create waypoints around a block for the taxi to drive to
     mWaypoints = Arrays.asList(
