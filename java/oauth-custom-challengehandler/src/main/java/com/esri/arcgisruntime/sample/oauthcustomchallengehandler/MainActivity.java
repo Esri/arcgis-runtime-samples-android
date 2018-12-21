@@ -122,8 +122,8 @@ public class MainActivity extends AppCompatActivity {
           // to get the auth code and request an OAuthTokenCredential with it
           oAuthChallengeCountDownLatch.await();
         } catch (InterruptedException ie) {
-          String errorToast = "Operation is interrupted when signing in. ";
-          String errorLogcat = "Operation is interrupted when signing in: " + ie.getMessage();
+          String errorToast = "Operation has been interrupted when signing in. ";
+          String errorLogcat = "Operation has been interrupted when signing in: " + ie.getMessage();
           return handleError(errorToast, errorLogcat, challenge);
         }
         
