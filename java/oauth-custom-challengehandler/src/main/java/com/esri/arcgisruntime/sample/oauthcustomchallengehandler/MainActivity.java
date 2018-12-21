@@ -23,6 +23,7 @@ import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -45,16 +46,16 @@ import com.esri.arcgisruntime.security.OAuthTokenCredentialRequest;
 
 public class MainActivity extends AppCompatActivity {
 
+  private final String TAG = MainActivity.class.getSimpleName();
+  
   private MapView mMapView;
-
   private OAuthConfiguration mOAuthConfiguration = null;
-
   private Dialog mOAuthLoginDialog;
 
   /**
    * Anonymous class to define our mCustomAuthenticationChallengeHandler.
    */
-  AuthenticationChallengeHandler mCustomAuthenticationChallengeHandler = new AuthenticationChallengeHandler() {
+  private final AuthenticationChallengeHandler mCustomAuthenticationChallengeHandler = new AuthenticationChallengeHandler() {
     /**
      * Handles the incoming AuthenticationChallenge, returning a response that contains an action and
      * potentially a parameter with which to carry out the action.
@@ -76,17 +77,26 @@ public class MainActivity extends AppCompatActivity {
         try {
           mOAuthConfiguration = AuthenticationManager.getOAuthConfiguration(portalUrl);
         } catch (MalformedURLException e) {
-
+          String errorToast = "Exception is thrown when retrieving OAuth configuration. ";
+          String errorLogcat = "Exception is thrown when retrieving OAuth configuration: " + e.getMessage();
+          return handleError(errorToast, errorLogcat, challenge);
         }
 
+        // Validate OAuth configuration
+        if (mOAuthConfiguration == null) {
+          String error = "OAuth configuration has not been set up yet. ";
+          return handleError(error, error, challenge);
+        }
+        
         runOnUiThread(new Runnable() {
-          @Override public void run() {
+          @Override
+          public void run() {
 
             // get the authorization url which loads the OAuth login page to display in the dialog
             final String url = OAuthTokenCredentialRequest
                 .getAuthorizationUrl(portalUrl, mOAuthConfiguration.getClientId(), mOAuthConfiguration.getRedirectUri(), 0);
 
-            // setup webview
+            // setup web view
             WebView webView = new WebView(MainActivity.this);
             webView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
@@ -94,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             webSettings.setBuiltInZoomControls(true);
             webSettings.setJavaScriptEnabled(true);
 
-            // setup webviewClient
+            // setup web view client
             CustomWebViewClient customWebViewClient = new CustomWebViewClient(portalUrl,
                 mOAuthConfiguration.getClientId(), mOAuthConfiguration.getRedirectUri(), oAuthChallengeCountDownLatch);
             webView.setWebViewClient(customWebViewClient);
@@ -108,22 +118,60 @@ public class MainActivity extends AppCompatActivity {
         });
 
         try {
-          // Wait for the OAuth browser page to be shown and user to login and for the CustomWebViewClient
+          // wait for the OAuth browser page to be shown and user to login and for the CustomWebViewClient
           // to get the auth code and request an OAuthTokenCredential with it
           oAuthChallengeCountDownLatch.await();
         } catch (InterruptedException ie) {
+          String errorToast = "Operation is interrupted when signing in. ";
+          String errorLogcat = "Operation is interrupted when signing in: " + ie.getMessage();
+          return handleError(errorToast, errorLogcat, challenge);
         }
+        
         // Get the credential from the latch once it has been counted down
         OAuthTokenCredential credential = oAuthChallengeCountDownLatch.getOAuthTokenCredential();
         if (credential != null) {
           ret = new AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
               credential);
         }
+        
         // dismiss the dialog
         mOAuthLoginDialog.dismiss();
       }
+      
       return ret != null ? ret : new AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, challenge);
     }
+
+    /**
+     * Deals with errors when handles the incoming AuthenticationChallenge. Shows error message through
+     * toast and logcat.
+     * 
+     * @param errorToast
+     * @param errorLogcat
+     * @param challenge
+     * @return
+     */
+    private AuthenticationChallengeResponse handleError(final String errorToast, String errorLogcat,
+        AuthenticationChallenge challenge) {
+      
+      // toast error message
+      runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          Toast.makeText(MainActivity.this, errorToast, Toast.LENGTH_LONG).show();
+        }
+      });
+      // display detail error message in logcat
+      Log.e(TAG, errorLogcat);
+      
+      // dismiss dialog
+      if (mOAuthLoginDialog != null) {
+        mOAuthLoginDialog.dismiss();
+      }
+      
+      // cancel the challenge
+      return new AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, challenge);
+    }
+    
   };
 
   @Override
@@ -137,8 +185,8 @@ public class MainActivity extends AppCompatActivity {
     // initialize the dialog to display the OAuth login page
     mOAuthLoginDialog = new Dialog(this);
 
-    // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    // inflate map view from layout
+    mMapView = findViewById(R.id.mapView);
 
     // add the OAuth configuration to the AuthenticationManager
     try {
@@ -149,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // create a portal instance for the portal to load
-    Portal portal = new Portal(getString(R.string.portal_url));
+    Portal portal = new Portal(getString(R.string.portal_url), true);
 
     // create a portal item with the itemId of the web map
     PortalItem webMapItem = new PortalItem(portal, getString(R.string.webmap_id));
@@ -157,7 +205,9 @@ public class MainActivity extends AppCompatActivity {
     // create a map with the portal item
     ArcGISMap map = new ArcGISMap(webMapItem);
 
-    // set the map to the map view
+    // set the map to the map view. This will automatically initiate the loading of the map,
+    // which will cause the custom AuthenticationChallengeHandler to be invoked, which was
+    // previously set on the AuthenticationManager.
     mMapView.setMap(map);
   }
 
@@ -169,14 +219,14 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    super.onPause();
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     mMapView.dispose();
+    super.onDestroy();
   }
 
   /**
@@ -186,11 +236,8 @@ public class MainActivity extends AppCompatActivity {
   private class CustomWebViewClient extends WebViewClient {
 
     private final String mPortal;
-
     private final String mClientId;
-
     private final String mRedirectUri;
-
     private final OAuthChallengeCountDownLatch mOAuthChallengeCountDownLatch;
 
     CustomWebViewClient (String portal, String clientId, String redirectUri, OAuthChallengeCountDownLatch oAuthChallengeCountDownLatch) {
@@ -248,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
         });
         return true;
       }
-      return (false);
+      return false;
     }
 
     /**
