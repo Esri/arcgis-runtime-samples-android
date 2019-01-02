@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
 
     <!-- World Topo Map Service URL -->
-    <string name="world_cities_service">http://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer</string>
+    <string name="world_cities_service">https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer</string>
     <!-- Menu Items -->
     <string name="Cities">Cities</string>
     <string name="Continents">Continents</string>

@@ -2,5 +2,5 @@
     <string name="app_name">Set Map Spatial Reference</string>
 
     <!-- World Cities Service URL -->
-    <string name="world_cities_service">http://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer</string>
+    <string name="world_cities_service">https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer</string>
 </resources>

@@ -7,7 +7,7 @@
     <string name="navbar_title">Open a map</string>
     
     <!-- arcgis online portal url -->
-    <string name="portal_url">http://www.arcgis.com/</string>
+    <string name="portal_url">https://www.arcgis.com/</string>
     <!-- webmap portal item id's -->
     <string name="webmap_houses_with_mortgages_id">2d6fa24b357d427f9c737774e7b0f977</string>
     <string name="webmap_usa_tapestry_segmentation_id">01f052c8995e4b9e889d73c3e210ebe3</string>
