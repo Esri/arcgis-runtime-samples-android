@@ -1,4 +1,5 @@
-include ':add-graphics-renderer',
+include ':add-enc-exchange-set',
+        ':add-graphics-renderer',
         ':add-graphics-symbols',
         ':analyze-hotspots',
         ':animate-3d-graphic',

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Add ENC Exchange Set</string>
+    <string name="enc_read_permission_denied">Read permission required to load ENC dataset.</string>
+    <string name="enc_path">/ArcGIS/Samples/ENC/ExchangeSetwithoutUpdates/ENC_ROOT/CATALOG.031</string>
+</resources>
