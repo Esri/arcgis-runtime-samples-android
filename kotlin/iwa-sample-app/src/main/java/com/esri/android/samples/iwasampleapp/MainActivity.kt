@@ -1,4 +1,4 @@
-/* Copyright 2018 Esri
+/* Copyright 2019 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package com.esri.android.samples.iwasampleapp
 
-import java.util.concurrent.CountDownLatch
-
 import android.app.Activity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -26,7 +24,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
-
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.loadable.Loadable
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -37,9 +34,9 @@ import com.esri.arcgisruntime.security.AuthenticationChallengeHandler
 import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.UserCredential
-
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.credential_dialog.view.*
+import java.util.concurrent.CountDownLatch
 
 /**
  * This sample app shows how to use a custom authentication challenge handler to work with
@@ -111,8 +108,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        super.onPause()
         mapView.pause()
+        super.onPause()
     }
 
     override fun onResume() {
@@ -121,8 +118,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         mapView.dispose()
+        super.onDestroy()
     }
 }
 
@@ -140,7 +137,7 @@ class MainActivity : AppCompatActivity() {
  * @see <a href="https://developers.arcgis.com/android/latest/api-reference/reference/com/esri/arcgisruntime/security/UserCredential.html#UserCredential(java.lang.String,%20java.lang.String)">Javadoc of UserCredential</a>
  * 
  */
-class IWACustomChallengeHandler(val activity: Activity) : AuthenticationChallengeHandler {
+class IWACustomChallengeHandler(private val activity: Activity) : AuthenticationChallengeHandler {
 
     private val maxAttempts = 5
     
