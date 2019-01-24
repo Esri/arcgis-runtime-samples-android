@@ -1,5 +1,7 @@
 package com.example.arcgisruntime.sample.integratedwindowsauthentication;
 
+import java.util.List;
+
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,9 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.esri.arcgisruntime.portal.PortalItem;
+
 public class PortalItemAdapter extends RecyclerView.Adapter<PortalItemAdapter.PortalItemViewHolder> {
 
-  private String[] mPortalItemNames;
+  public interface OnItemClickListener {
+    void onItemClick(PortalItem portalItem);
+  }
+
+  private List<PortalItem> mPortalItemList;
+  private OnItemClickListener mOnItemClickListener;
 
   public static class PortalItemViewHolder extends RecyclerView.ViewHolder {
 
@@ -20,11 +29,17 @@ public class PortalItemAdapter extends RecyclerView.Adapter<PortalItemAdapter.Po
       super(itemView);
       mPortalItemTextView = itemView.findViewById(R.id.itemTextView);
     }
+
+    public void bind(final PortalItem portalItem, final OnItemClickListener listener) {
+      mPortalItemTextView.setText(portalItem.getTitle());
+      // return the portal item object's itemID, rather than its title
+      itemView.setOnClickListener(v -> listener.onItemClick(portalItem));
+    }
   }
 
-  public PortalItemAdapter(String[] portalItemNames) {
-    mPortalItemNames = portalItemNames;
-    Log.d("stuff", "adapter size: " + portalItemNames.length);
+  public PortalItemAdapter(List<PortalItem> portalItemNames, OnItemClickListener onItemClickListener) {
+    mPortalItemList = portalItemNames;
+    mOnItemClickListener = onItemClickListener;
   }
 
   @Override
@@ -35,12 +50,12 @@ public class PortalItemAdapter extends RecyclerView.Adapter<PortalItemAdapter.Po
 
   @Override
   public void onBindViewHolder(PortalItemViewHolder holder, int position) {
-    holder.mPortalItemTextView.setText(mPortalItemNames[position]);
+    holder.bind(mPortalItemList.get(position), mOnItemClickListener);
+    Log.d("stuff", mPortalItemList.get(position).getTitle());
   }
 
   @Override
   public int getItemCount() {
-    Log.d("stuff", "get item count: " + mPortalItemNames.length);
-    return mPortalItemNames.length;
+    return mPortalItemList.size();
   }
 }

@@ -1,4 +1,4 @@
-# Integrated windows authentication
+# Integrated Windows Authentication
 Uses Windows credentials to access services hosted on a portal secured with Integrated Windows Authentication (IWA).
 
 ![Integrated windows authentication App](integrated-windows-authentication.png)
