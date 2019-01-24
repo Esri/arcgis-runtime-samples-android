@@ -18,19 +18,19 @@ public class PortalItemAdapter extends RecyclerView.Adapter<PortalItemAdapter.Po
     void onItemClick(PortalItem portalItem);
   }
 
-  private List<PortalItem> mPortalItemList;
-  private OnItemClickListener mOnItemClickListener;
+  private final List<PortalItem> mPortalItemList;
+  private final OnItemClickListener mOnItemClickListener;
 
-  public static class PortalItemViewHolder extends RecyclerView.ViewHolder {
+  static class PortalItemViewHolder extends RecyclerView.ViewHolder {
 
-    public TextView mPortalItemTextView;
+    final TextView mPortalItemTextView;
 
-    public PortalItemViewHolder(View itemView) {
+    PortalItemViewHolder(View itemView) {
       super(itemView);
       mPortalItemTextView = itemView.findViewById(R.id.itemTextView);
     }
 
-    public void bind(final PortalItem portalItem, final OnItemClickListener listener) {
+    void bind(final PortalItem portalItem, final OnItemClickListener listener) {
       mPortalItemTextView.setText(portalItem.getTitle());
       // return the portal item object's itemID, rather than its title
       itemView.setOnClickListener(v -> listener.onItemClick(portalItem));
@@ -42,14 +42,14 @@ public class PortalItemAdapter extends RecyclerView.Adapter<PortalItemAdapter.Po
     mOnItemClickListener = onItemClickListener;
   }
 
-  @Override
+  @NonNull @Override
   public PortalItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     View portalItemTextView = LayoutInflater.from(parent.getContext()).inflate(R.layout.portal_item_row, parent, false);
     return new PortalItemViewHolder(portalItemTextView);
   }
 
   @Override
-  public void onBindViewHolder(PortalItemViewHolder holder, int position) {
+  public void onBindViewHolder(@NonNull PortalItemViewHolder holder, int position) {
     holder.bind(mPortalItemList.get(position), mOnItemClickListener);
     Log.d("stuff", mPortalItemList.get(position).getTitle());
   }

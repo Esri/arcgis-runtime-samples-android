@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
     Button searchPublicButton = findViewById(R.id.searchPublicButton);
     searchPublicButton.setOnClickListener(v -> {
       // search the the public ArcGIS portal
-      searchPortal(new Portal("http://www.arcgis.com"));
+      searchPortal(new Portal(getString(R.string.arcgis_url)));
     });
 
     // get reference to load state UI elements
@@ -234,7 +234,9 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
       try {
         signal.await();
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        String error = "Interruption handling AuthenticationChallengeResponse: " + e.getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
       }
 
       // if credentials were set, return a new auth challenge response with them. otherwise, act like it was a cancel
