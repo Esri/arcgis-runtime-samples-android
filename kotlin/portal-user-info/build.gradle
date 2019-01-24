@@ -4,8 +4,6 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
-
 
     defaultConfig {
         applicationId "com.esri.arcgisruntime.samples.portaluserinfo"

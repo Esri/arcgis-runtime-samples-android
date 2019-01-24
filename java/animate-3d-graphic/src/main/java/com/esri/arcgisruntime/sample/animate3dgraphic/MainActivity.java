@@ -200,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
     // set speed progress bar with max speed and set speed on change
     mSpeedSeekBar = findViewById(R.id.speedSeekBar);
     mSpeedSeekBar.setMax(30);
+    mSpeedSeekBar.setProgress(30);
     mSpeedSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         startAnimation(i);
@@ -213,9 +214,9 @@ public class MainActivity extends AppCompatActivity {
     });
 
     Button zoomInButton = findViewById(R.id.zoomInButton);
-    zoomInButton.setOnClickListener(view -> mMapView.setViewpointScaleAsync(mMapView.getMapScale() / 5));
+    zoomInButton.setOnClickListener(view -> mMapView.setViewpoint( new Viewpoint((Point) mPlane2D.getGeometry(), mMapView.getMapScale() / 5)));
     Button zoomOutButton = findViewById(R.id.zoomOutButton);
-    zoomOutButton.setOnClickListener(view -> mMapView.setViewpointScaleAsync(mMapView.getMapScale() * 5));
+    zoomOutButton.setOnClickListener(view -> mMapView.setViewpoint(new Viewpoint((Point) mPlane2D.getGeometry(), mMapView.getMapScale() * 5)));
 
     // get references to HUD text views
     mCurrAltitude = findViewById(R.id.currAltitudeTextView);

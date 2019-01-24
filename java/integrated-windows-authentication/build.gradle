@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.esri.arcgisruntime.sample.integratedwindowsauthentication"
@@ -26,8 +25,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
-
     // arcgis-android & appcompat lib dependencies from rootProject build.gradle
+    implementation "com.android.support:recyclerview-v7:$andSupportLibVersion"
+    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
 }
