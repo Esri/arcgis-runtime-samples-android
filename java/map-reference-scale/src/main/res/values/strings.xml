@@ -8,4 +8,6 @@
     </string-array>
     <string name="map_reference_read_permission_denied">Read permission required to load mobile map package for this sample.</string>
     <string name="isle_of_wight_mmpk_path">/ArcGIS/Samples/MapPackage/IsleOfWight.mmpk</string>
+    <string name="runtime_portal_url">http://runtime.maps.arcgis.com</string>
+    <string name="isle_of_wight_portal_item">af3ef5e1636f4a4d9c17f4a6803e1ef1</string>
 </resources>

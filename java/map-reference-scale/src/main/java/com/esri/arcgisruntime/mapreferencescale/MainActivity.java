@@ -19,12 +19,10 @@ package com.esri.arcgisruntime.mapreferencescale;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,12 +33,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.layers.FeatureLayer;
-import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.LayerList;
 import com.esri.arcgisruntime.mapping.MobileMapPackage;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.portal.Portal;
+import com.esri.arcgisruntime.portal.PortalItem;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // get a reference to the map view
+    mMapView = findViewById(R.id.mapView);
+
     // request read permission at runtime
     requestReadPermission();
   }
@@ -64,57 +66,43 @@ public class MainActivity extends AppCompatActivity {
    */
   private void mapReferenceScale() {
 
-    // get a reference to the map view
-    mMapView = findViewById(R.id.mapView);
+    // load a map from a portal item
+    Portal portal = new Portal(getString(R.string.runtime_portal_url));
+    PortalItem portalItem = new PortalItem(portal, getString(R.string.isle_of_wight_portal_item));
+    ArcGISMap map = new ArcGISMap(portalItem);
+    // set the map package map to map view's map
+    mMapView.setMap(map);
 
-    // load Yenisey mobile map package
-    mMapPackage = new MobileMapPackage(
-        Environment.getExternalStorageDirectory() + getString(R.string.isle_of_wight_mmpk_path));
-    mMapPackage.loadAsync();
-    mMapPackage.addDoneLoadingListener(() -> {
-      // get the first map from the map package
-      ArcGISMap map = mMapPackage.getMaps().get(0);
-      if (mMapPackage.getLoadStatus() == LoadStatus.LOADED) {
-        // set the map package map to map view's map
-        mMapView.setMap(map);
-
-        // get a reference to the reference scale spinner
-        Spinner referenceScaleSpinner = findViewById(R.id.reference_scale_spinner);
-        referenceScaleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-          @Override public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-            // get the reference scale from the spinner in the one to twenty-five thousand format (ie 1:25,000)
-            String referenceScaleString = String.valueOf(adapterView.getItemAtPosition(position));
-            // use regex to get the reference scale as a number string
-            referenceScaleString = referenceScaleString.substring(referenceScaleString.indexOf(":") + 1)
-                .replaceAll(",", "");
-            // set the reference scale with the double value of the reference scale string
-            setReferenceScale(Double.valueOf(referenceScaleString));
-          }
-
-          @Override public void onNothingSelected(AdapterView<?> adapterView) {
-
-          }
-        });
-
-        // set initial selection to the 3rd option, 1:250,000
-        referenceScaleSpinner.setSelection(2);
-
-        // update map scale indicator on map scale change
-        TextView mapScale = findViewById(R.id.currMapScaleTextView);
-        mMapView.addMapScaleChangedListener(
-            mapScaleChangedEvent -> mapScale.setText(String.valueOf(Math.round(mMapView.getMapScale()))));
-
-        // user the current viewpoint's center and the current reference scale to set a new viewpoint
-        Button matchScalesButton = findViewById(R.id.matchScalesButton);
-        matchScalesButton.setOnClickListener(view -> mMapView.setViewpointAsync(new Viewpoint(
-            mMapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).getTargetGeometry().getExtent().getCenter(),
-            mMapView.getMap().getReferenceScale()), 1));
-      } else {
-        String error = "Map package failed to load: " + mMapPackage.getLoadError().getMessage();
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        Log.e(TAG, error);
+    // get a reference to the reference scale spinner
+    Spinner referenceScaleSpinner = findViewById(R.id.reference_scale_spinner);
+    referenceScaleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+        // get the reference scale from the spinner in the format "1:25,000"
+        String referenceScaleString = String.valueOf(adapterView.getItemAtPosition(position));
+        // use regex to get just the reference scale number as a string
+        referenceScaleString = referenceScaleString.substring(referenceScaleString.indexOf(":") + 1)
+            .replaceAll(",", "");
+        // set the reference scale with the double value of the reference scale string
+        setReferenceScale(Double.valueOf(referenceScaleString));
       }
+
+      @Override public void onNothingSelected(AdapterView<?> adapterView) { }
     });
+
+    // set initial selection to the 3rd option, 1:250,000
+    referenceScaleSpinner.setSelection(2);
+
+    // update map scale indicator on map scale change
+    TextView mapScale = findViewById(R.id.currMapScaleTextView);
+    mMapView.addMapScaleChangedListener(
+        mapScaleChangedEvent -> mapScale.setText(String.valueOf(Math.round(mMapView.getMapScale()))));
+
+    // user the current viewpoint's center and the current reference scale to set a new viewpoint
+    Button matchScalesButton = findViewById(R.id.matchScalesButton);
+    matchScalesButton.setOnClickListener(view -> mMapView.setViewpointAsync(new Viewpoint(
+        mMapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).getTargetGeometry().getExtent().getCenter(),
+        mMapView.getMap().getReferenceScale()), 1));
+
   }
 
   /**
@@ -164,17 +152,21 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
-    mMapPackage.addDoneLoadingListener(() -> {
+
+    // once the map is loaded
+    mMapView.getMap().addDoneLoadingListener(() -> {
       // get the map's operational layer list
-      mOperationalLayers = mMapPackage.getMaps().get(0).getOperationalLayers();
+      mOperationalLayers = mMapView.getMap().getOperationalLayers();
       // add each of those layers to the menu and set them to checked
-      for (int i = 0; i < mOperationalLayers.size(); i ++) {
+      for (int i = 0; i < mOperationalLayers.size(); i++) {
         menu.add(Menu.NONE, i, Menu.NONE, mOperationalLayers.get(i).getName());
-        menu.getItem(i).setChecked(true);
+        setScaleSymbol((FeatureLayer) mOperationalLayers.get(i), true);
         menu.getItem(i).setCheckable(true);
+        menu.getItem(i).setChecked(true);
       }
       menu.setGroupCheckable(0, true, false);
     });
+
     return super.onCreateOptionsMenu(menu);
   }
 
