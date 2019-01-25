@@ -16,12 +16,7 @@
 
 package com.esri.arcgisruntime.mapreferencescale;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,23 +25,20 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.LayerList;
-import com.esri.arcgisruntime.mapping.MobileMapPackage;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.portal.PortalItem;
+import com.esri.arcgisruntime.security.AuthenticationManager;
+import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler;
 
 public class MainActivity extends AppCompatActivity {
 
-  private static final String TAG = MainActivity.class.getSimpleName();
-
   private MapView mMapView;
-  private MobileMapPackage mMapPackage;
   private LayerList mOperationalLayers;
 
   @Override
@@ -57,19 +49,16 @@ public class MainActivity extends AppCompatActivity {
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
 
-    // request read permission at runtime
-    requestReadPermission();
-  }
+    //TODO - Remove once data approved for public
+    DefaultAuthenticationChallengeHandler handler = new DefaultAuthenticationChallengeHandler(this);
+    AuthenticationManager.setAuthenticationChallengeHandler(handler);
 
-  /**
-   * Load the sample's map package data.
-   */
-  private void mapReferenceScale() {
-
+    //TODO - Remove once data approved for public
     // load a map from a portal item
-    Portal portal = new Portal(getString(R.string.runtime_portal_url));
+    Portal portal = new Portal(getString(R.string.runtime_portal_url), true);
     PortalItem portalItem = new PortalItem(portal, getString(R.string.isle_of_wight_portal_item));
     ArcGISMap map = new ArcGISMap(portalItem);
+
     // set the map package map to map view's map
     mMapView.setMap(map);
 
@@ -80,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         // get the reference scale from the spinner in the format "1:25,000"
         String referenceScaleString = String.valueOf(adapterView.getItemAtPosition(position));
         // use regex to get just the reference scale number as a string
-        referenceScaleString = referenceScaleString.substring(referenceScaleString.indexOf(":") + 1)
+        referenceScaleString = referenceScaleString.substring(referenceScaleString.indexOf(':') + 1)
             .replaceAll(",", "");
         // set the reference scale with the double value of the reference scale string
         setReferenceScale(Double.valueOf(referenceScaleString));
@@ -94,15 +83,13 @@ public class MainActivity extends AppCompatActivity {
 
     // update map scale indicator on map scale change
     TextView mapScale = findViewById(R.id.currMapScaleTextView);
-    mMapView.addMapScaleChangedListener(
-        mapScaleChangedEvent -> mapScale.setText(String.valueOf(Math.round(mMapView.getMapScale()))));
+    mMapView.addMapScaleChangedListener(mapScaleChangedEvent -> mapScale.setText(String.valueOf(Math.round(mMapView.getMapScale()))));
 
     // user the current viewpoint's center and the current reference scale to set a new viewpoint
     Button matchScalesButton = findViewById(R.id.matchScalesButton);
     matchScalesButton.setOnClickListener(view -> mMapView.setViewpointAsync(new Viewpoint(
         mMapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).getTargetGeometry().getExtent().getCenter(),
         mMapView.getMap().getReferenceScale()), 1));
-
   }
 
   /**
@@ -124,35 +111,7 @@ public class MainActivity extends AppCompatActivity {
     featureLayer.setScaleSymbols(isScaleSymbols);
   }
 
-  /**
-   * Request read permission on the device for API level 23+.
-   */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      mapReferenceScale();
-    } else {
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      mapReferenceScale();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.map_reference_read_permission_denied), Toast.LENGTH_SHORT).show();
-    }
-  }
-
   @Override public boolean onCreateOptionsMenu(Menu menu) {
-
     // once the map is loaded
     mMapView.getMap().addDoneLoadingListener(() -> {
       // get the map's operational layer list
@@ -160,13 +119,12 @@ public class MainActivity extends AppCompatActivity {
       // add each of those layers to the menu and set them to checked
       for (int i = 0; i < mOperationalLayers.size(); i++) {
         menu.add(Menu.NONE, i, Menu.NONE, mOperationalLayers.get(i).getName());
-        setScaleSymbol((FeatureLayer) mOperationalLayers.get(i), true);
+        //setScaleSymbol((FeatureLayer) mOperationalLayers.get(i), true);
         menu.getItem(i).setCheckable(true);
         menu.getItem(i).setChecked(true);
       }
       menu.setGroupCheckable(0, true, false);
     });
-
     return super.onCreateOptionsMenu(menu);
   }
 
