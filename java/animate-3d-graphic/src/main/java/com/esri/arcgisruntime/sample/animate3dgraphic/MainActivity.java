@@ -212,11 +212,11 @@ public class MainActivity extends AppCompatActivity {
       @Override public void onStopTrackingTouch(SeekBar seekBar) {
       }
     });
-
+    
     Button zoomInButton = findViewById(R.id.zoomInButton);
-    zoomInButton.setOnClickListener(view -> mMapView.setViewpoint( new Viewpoint((Point) mPlane2D.getGeometry(), mMapView.getMapScale() / 5)));
+    zoomInButton.setOnClickListener(view -> mMapView.setViewpointScaleAsync(mMapView.getMapScale() / 5));
     Button zoomOutButton = findViewById(R.id.zoomOutButton);
-    zoomOutButton.setOnClickListener(view -> mMapView.setViewpoint(new Viewpoint((Point) mPlane2D.getGeometry(), mMapView.getMapScale() * 5)));
+    zoomOutButton.setOnClickListener(view -> mMapView.setViewpointScaleAsync(mMapView.getMapScale() * 5));
 
     // get references to HUD text views
     mCurrAltitude = findViewById(R.id.currAltitudeTextView);
