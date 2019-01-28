@@ -102,6 +102,12 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
    */
   private void searchPortal(Portal portal) {
 
+    // check if the the portal is null
+    if (portal == null) {
+      Log.e(TAG, "Portal null");
+      return;
+    }
+
     // clear any existing data in the recycler view
     mRecyclerView.setAdapter(null);
 
@@ -185,7 +191,8 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
    * of UseCredential the SDK is in favor of passing username as username@domain.
    */
   @Override public AuthenticationChallengeResponse handleChallenge(AuthenticationChallenge authenticationChallenge) {
-    if (authenticationChallenge.getType() == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE) {
+    if (authenticationChallenge.getType() == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE
+        && authenticationChallenge.getRemoteResource() instanceof Portal) {
       int maxAttempts = 5;
       if (authenticationChallenge.getFailureCount() > maxAttempts) {
         // exceeded maximum amount of attempts. Act like it was a cancel

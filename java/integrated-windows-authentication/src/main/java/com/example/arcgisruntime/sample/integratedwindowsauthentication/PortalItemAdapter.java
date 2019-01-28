@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,6 @@ public class PortalItemAdapter extends RecyclerView.Adapter<PortalItemAdapter.Po
   @Override
   public void onBindViewHolder(@NonNull PortalItemViewHolder holder, int position) {
     holder.bind(mPortalItemList.get(position), mOnItemClickListener);
-    Log.d("stuff", mPortalItemList.get(position).getTitle());
   }
 
   @Override

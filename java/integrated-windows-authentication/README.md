@@ -1,28 +1,33 @@
 # Integrated Windows Authentication
+
 Uses Windows credentials to access services hosted on a portal secured with Integrated Windows Authentication (IWA).
 
 ![Integrated windows authentication App](integrated-windows-authentication.png)
 
 ## Use case
+
 IWA, which is built into Microsoft Internet Information Server (IIS), works well for intranet applications, but isn't always practical for internet apps.
 
 ## How to use the sample
-1. Enter the URL to your IWA-secured portal in the edit text box at the top of the screen.
-1. Tap the "Sign in" button to search for web maps stored on the portal.
-1. You will be prompted for a username and password. 
-1. When a correct credential is passed, the portal will load. Repeatedly entering the wrong credential will increase the `FailureCount`. After 5 attempts (in this case), no more prompts for a credential will appear.
-1. Select a web map item to display it in the map view.
+
+1. Enter the URL to your IWA-secured portal in the edit text view at the top of the screen.
+2. Tap either the "Search Public" (which will search for portals on www.arcgis.com) or "Search Secure" (which will search your IWA-secured portal), for web maps stored on the portal.
+3. If you tap "Search Secure", you will be prompted for a username (including domain, ie username@DOMAIN), and password.
+4. If you authenticate successfully, portal item results will display in the recycler view.
+5. Tap a web map item to display it in the map view.
 
 ## How it works
-`MapView` has a `identifyLayersAsync(screenLocation, tolerance, returnPopupsOnly, maximumResults)` method that is used in the sample. The method takes a screen location, tolerance, boolean for returning (a pop-up/pop-up and geo-element), and maximum results per layer, which results in a `ListenableFuture<List<IdentifyLayerResult>>`.
-	
-Layer name and a count of identified features held by each `IdentifyLayerResult` in the `ListenableFuture<List<...>>` is then taken and written out to a String. Finally, the resulting String is displayed in an Android AlertDialog.
+
+1. The `AuthenticationManager` object is configured with a challenge handler that will prompt for a Windows login (username including domain, and password) if a secure resource is encountered.
+2. When a search for portal items is performed against an IWA-secured portal, the challenge handler creates an `UserCredential` object from the information entered by the user.
+3. If the user authenticates, the search returns a list of web maps (`PortalItem`) and the user can select one to display as a `Map`.
+4. On some platforms, the current Windows account is used by default and a login prompt will not be shown if it can authenticate successfully.
 
 ## Relevant API
-* ArcGISMapImageLayer
-* FeatureLayer
-* FeatureTable
-* MapView
+
+* AuthenticationManager
+* Portal
+* UserCredential
 
 #### Tags
-Search and Query
+Cloud and Portal
