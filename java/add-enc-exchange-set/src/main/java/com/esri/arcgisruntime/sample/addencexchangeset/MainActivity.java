@@ -40,10 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
-
     // create a map with the BasemapType topographic
     ArcGISMap map = new ArcGISMap(Basemap.createOceans());
-
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
@@ -55,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
     List<String> encPath = new ArrayList<>();
     encPath.add(Environment.getExternalStorageDirectory() + getString(R.string.enc_path));
 
-    Log.d(TAG, encPath.get(0));
-
     EncExchangeSet encExchangeSet = new EncExchangeSet(encPath);
     encExchangeSet.loadAsync();
     encExchangeSet.addDoneLoadingListener(() -> {
@@ -65,14 +61,24 @@ public class MainActivity extends AppCompatActivity {
         List<Geometry> dataSetExtents = new ArrayList<>();
         // add each data set as a layer
         for (EncDataset encDataset : encExchangeSet.getDatasets()) {
-          // create a layer from an enc cell from the data set
-          EncLayer encLayer = new EncLayer(new EncCell(encDataset));
-          // add the layer to the map
-          mMapView.getMap().getOperationalLayers().add(encLayer);
-          // add the data set extent to a list
           dataSetExtents.add(encDataset.getExtent());
-          encLayer.addDoneLoadingListener(() -> {
-            Log.e(TAG, encLayer.getLoadError().getAdditionalMessage());
+
+          // create a layer from an enc cell from the data set
+          EncCell encCell = new EncCell(encDataset);
+          Log.d(TAG, "ENC cell path: " + encCell.getPath());
+          encCell.loadAsync();
+          encCell.addDoneLoadingListener(() -> {
+            if (encCell.getLoadStatus() == LoadStatus.LOADED) {
+              Log.d(TAG, "ENC cell loaded");
+              EncLayer encLayer = new EncLayer(encCell);
+              // add the layer to the map
+              mMapView.getMap().getOperationalLayers().add(encLayer);
+              // add the data set extent to a list
+            } else {
+              String error = "Error loading ENC cell: " + encCell.getLoadError().getMessage();
+              Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+              Log.e(TAG, error);
+            }
           });
         }
         // use the geometry engine to compute the full extent of the ENC exchange set
@@ -89,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Request read external storage for API level 23+.
+   * Request read external storage permissions for API level 23+.
    */
   private void requestReadPermission() {
     // define permission to request
