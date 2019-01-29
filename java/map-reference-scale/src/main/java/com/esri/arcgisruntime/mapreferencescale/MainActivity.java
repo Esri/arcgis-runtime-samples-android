@@ -59,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
     PortalItem portalItem = new PortalItem(portal, getString(R.string.isle_of_wight_portal_item));
     ArcGISMap map = new ArcGISMap(portalItem);
 
-    // set the map package map to map view's map
+    // set the map tp the map view
     mMapView.setMap(map);
 
-    // get a reference to the reference scale spinner
+    // get a reference to the spinner
     Spinner referenceScaleSpinner = findViewById(R.id.reference_scale_spinner);
     referenceScaleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     TextView mapScale = findViewById(R.id.currMapScaleTextView);
     mMapView.addMapScaleChangedListener(mapScaleChangedEvent -> mapScale.setText(String.valueOf(Math.round(mMapView.getMapScale()))));
 
-    // user the current viewpoint's center and the current reference scale to set a new viewpoint
+    // use the current viewpoint's center and the current reference scale to set a new viewpoint
     Button matchScalesButton = findViewById(R.id.matchScalesButton);
     matchScalesButton.setOnClickListener(view -> mMapView.setViewpointAsync(new Viewpoint(
         mMapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).getTargetGeometry().getExtent().getCenter(),
@@ -119,11 +119,9 @@ public class MainActivity extends AppCompatActivity {
       // add each of those layers to the menu and set them to checked
       for (int i = 0; i < mOperationalLayers.size(); i++) {
         menu.add(Menu.NONE, i, Menu.NONE, mOperationalLayers.get(i).getName());
-        //setScaleSymbol((FeatureLayer) mOperationalLayers.get(i), true);
         menu.getItem(i).setCheckable(true);
         menu.getItem(i).setChecked(true);
       }
-      menu.setGroupCheckable(0, true, false);
     });
     return super.onCreateOptionsMenu(menu);
   }
