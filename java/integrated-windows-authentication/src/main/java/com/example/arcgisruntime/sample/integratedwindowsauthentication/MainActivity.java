@@ -144,12 +144,18 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
             mRecyclerView.setAdapter(portalItemAdapter);
             mPortalLoadStateView.setVisibility(View.GONE);
           } catch (ExecutionException | InterruptedException e) {
+            // hide load state view
+            mPortalLoadStateView.setVisibility(View.GONE);
+            // report error
             String error = "Error getting portal item set from portal: " + e.getMessage();
             Toast.makeText(this, error, Toast.LENGTH_LONG).show();
             Log.e(TAG, error);
           }
         });
       } else {
+        // hide load state view
+        mPortalLoadStateView.setVisibility(View.GONE);
+        // report error
         ArcGISRuntimeException loadError = portal.getLoadError();
         String error = loadError.getErrorCode() == 17 ?
             "Portal sign in was cancelled by user." :
@@ -188,9 +194,10 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
    * The portal URL will be displayed as a message in the dialog. If a wrong credential has been passed in the previous
    * attempt, a different message will be displayed in the dialog. The dialog has two edit text boxes for username and
    * password respectively. Other SDKs' samples may have one more parameter for IWA domain. As indicated by the Javadoc
-   * of UseCredential the SDK is in favor of passing username as username@domain.
+   * of UseCredential, the Android SDK is in favor of passing username as username@domain or domain\\username.
    */
-  @Override public AuthenticationChallengeResponse handleChallenge(AuthenticationChallenge authenticationChallenge) {
+  @Override
+  public AuthenticationChallengeResponse handleChallenge(AuthenticationChallenge authenticationChallenge) {
     if (authenticationChallenge.getType() == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE
         && authenticationChallenge.getRemoteResource() instanceof Portal) {
       int maxAttempts = 5;
