@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     PortalItem portalItem = new PortalItem(portal, getString(R.string.isle_of_wight_portal_item));
     ArcGISMap map = new ArcGISMap(portalItem);
 
-    // set the map tp the map view
+    // set the map to the map view
     mMapView.setMap(map);
 
     // get a reference to the spinner
