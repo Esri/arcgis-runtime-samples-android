@@ -14,7 +14,7 @@
  *
  */
 
-package com.example.arcgisruntime.sample.integratedwindowsauthentication;
+package com.esri.arcgisruntime.sample.integratedwindowsauthentication;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
    * The portal URL will be displayed as a message in the dialog. If a wrong credential has been passed in the previous
    * attempt, a different message will be displayed in the dialog. The dialog has two edit text boxes for username and
    * password respectively. Other SDKs' samples may have one more parameter for IWA domain. As indicated by the Javadoc
-   * of UseCredential, the Android SDK is in favor of passing username as username@domain or domain\username.
+   * of UseCredential, the Android SDK is in favor of passing username as username@domain or domain\\username.
    */
   @Override
   public AuthenticationChallengeResponse handleChallenge(AuthenticationChallenge authenticationChallenge) {
