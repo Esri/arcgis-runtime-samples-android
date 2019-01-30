@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:hint="@string/enter_portal_url"
         android:inputType="textUri"
-        android:text="https://portaliwads.ags.esri.com/gis"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
