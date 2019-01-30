@@ -12,7 +12,7 @@ IWA, which is built into Microsoft Internet Information Server (IIS), works well
 
 1. Enter the URL to your IWA-secured portal in the edit text view at the top of the screen.
 2. Tap either the "Search Public" (which will search for portals on www.arcgis.com) or "Search Secure" (which will search your IWA-secured portal), for web maps stored on the portal.
-3. If you tap "Search Secure", you will be prompted for a username (including domain, such as username@DOMAIN or domain\\username), and password.
+3. If you tap "Search Secure", you will be prompted for a username (including domain, such as username@DOMAIN or domain\username), and password.
 4. If you authenticate successfully, portal item results will display in the recycler view.
 5. Tap a web map item to display it in the map view.
 

@@ -1,3 +1,19 @@
+/* Copyright 2019 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.example.arcgisruntime.sample.integratedwindowsauthentication;
 
 import java.net.URI;
@@ -77,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
     mPortalLoadStateView = findViewById(R.id.portalLoadState);
     mPortalLoadStateView.setVisibility(View.GONE);
     mLoadStateTextView = findViewById(R.id.loadStateTextView);
+    mLoadWebMapTextView = findViewById(R.id.loadedWebMapTextView);
 
     Button searchSecureButton = findViewById(R.id.searchSecureButton);
     EditText portalUrlEditText = findViewById(R.id.portalUrlEditText);
@@ -92,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
         Log.e(TAG, error);
       }
     });
-    mLoadWebMapTextView = findViewById(R.id.loadedWebMapTextView);
   }
 
   /**
@@ -194,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
    * The portal URL will be displayed as a message in the dialog. If a wrong credential has been passed in the previous
    * attempt, a different message will be displayed in the dialog. The dialog has two edit text boxes for username and
    * password respectively. Other SDKs' samples may have one more parameter for IWA domain. As indicated by the Javadoc
-   * of UseCredential, the Android SDK is in favor of passing username as username@domain or domain\\username.
+   * of UseCredential, the Android SDK is in favor of passing username as username@domain or domain\username.
    */
   @Override
   public AuthenticationChallengeResponse handleChallenge(AuthenticationChallenge authenticationChallenge) {
