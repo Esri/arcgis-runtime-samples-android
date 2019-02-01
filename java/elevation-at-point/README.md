@@ -17,7 +17,7 @@ Tap anywhere on the surface to get the elevation at that point.
 1. Create a `SceneView` and `Scene` with an imagery base map.
 1. Set an `ArcGISTiledElevationService` as the elevation source of the scene's base surface.
 1. Use the `screenToBaseSurface(screenPoint)` method on the scene view to convert the tapped screen point into a point on surface.
-1. Use `getElevationAsync(surfacePoint)` on the base surface to asynchronously get the elevation.
+1. Use the `getElevationAsync(surfacePoint)` method on the base surface to asynchronously get the elevation.
 
 ## Relevant API
 
