@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onSingleTapConfirmed(motionEvent);
       }
     });
-
   }
 
   @Override
