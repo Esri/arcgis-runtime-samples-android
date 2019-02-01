@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, error);
           }
         });
-        return super.onSingleTapConfirmed(motionEvent);;
+        return super.onSingleTapConfirmed(motionEvent);
       }
     });
 
