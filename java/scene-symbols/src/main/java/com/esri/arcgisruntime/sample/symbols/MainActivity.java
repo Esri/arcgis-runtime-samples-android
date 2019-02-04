@@ -17,9 +17,11 @@
 package com.esri.arcgisruntime.sample.symbols;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
@@ -36,12 +38,8 @@ import com.esri.arcgisruntime.symbology.SceneSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSceneSymbol;
 
 public class MainActivity extends AppCompatActivity {
-  GraphicsOverlay graphicsOverlay;
-  double x = 44.975;
-  double y = 29;
-  double z = 500;
+
   private SceneView mSceneView;
-  private Graphic scenegraphics;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -56,53 +54,44 @@ public class MainActivity extends AppCompatActivity {
 
     // add base surface for elevation data
     final Surface surface = new Surface();
-    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
-        getString(R.string.elevation_image_service_url));
+    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(getString(R.string.elevation_image_service_url));
     surface.getElevationSources().add(elevationSource);
     scene.setBaseSurface(surface);
 
     // add a camera and initial camera position
     Camera camera = new Camera(29, 45, 12000, 0, 0, 0);
     mSceneView.setViewpointCamera(camera);
-    Point cameraLocation = camera.getLocation();
 
     // add graphics overlay(s)
-    graphicsOverlay = new GraphicsOverlay();
+    GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
     graphicsOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.ABSOLUTE);
-    // function to dynamically create the graphics and add them to the graphics overlay
-    createSymbols();
     mSceneView.getGraphicsOverlays().add(graphicsOverlay);
-  }
 
-  public void createSymbols() {
+    // function to dynamically create the graphics and add them to the graphics overlay
+    List<SimpleMarkerSceneSymbol> symbols = new ArrayList<>();
 
-    SimpleMarkerSceneSymbol cone = new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.CONE, 0xFFFF0000, 200, 200,
-        200, SceneSymbol.AnchorPosition.CENTER);
-    SimpleMarkerSceneSymbol tetrahedron = new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.TETRAHEDRON,
-        0xFF00FF00, 200, 200, 200, SceneSymbol.AnchorPosition.CENTER);
-    SimpleMarkerSceneSymbol spehere = new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.SPHERE, 0xFF0000FF, 200,
-        200, 200, SceneSymbol.AnchorPosition.CENTER);
-    SimpleMarkerSceneSymbol cylinder = new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.CYLINDER, 0xFFFF00FF,
-        200, 200, 200, SceneSymbol.AnchorPosition.CENTER);
-    SimpleMarkerSceneSymbol diamond = new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.DIAMOND, 0xFF00FFFF,
-        200, 200, 200, SceneSymbol.AnchorPosition.CENTER);
-    SimpleMarkerSceneSymbol cube = new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.CUBE, 0xFFFFFFFF, 200, 200,
-        200, SceneSymbol.AnchorPosition.CENTER);
+    int[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA, Color.CYAN, Color.WHITE};
+    SimpleMarkerSceneSymbol.Style[] symbolStyles = SimpleMarkerSceneSymbol.Style.values();
 
-    ArrayList<SimpleMarkerSceneSymbol> symbols = new ArrayList<SimpleMarkerSceneSymbol>();
-    symbols.add(cone);
-    symbols.add(tetrahedron);
-    symbols.add(spehere);
-    symbols.add(cylinder);
-    symbols.add(diamond);
-    symbols.add(cube);
-
-    for (int i = 0; i < symbols.size(); i++) {
-      scenegraphics = new Graphic(new Point(x + 0.01 * i, y, z, SpatialReferences.getWgs84()), symbols.get(i));
-      graphicsOverlay.getGraphics().add(scenegraphics);
+    for (int i = 0; i < symbolStyles.length; i ++) {
+      SimpleMarkerSceneSymbol simpleMarkerSceneSymbol = new SimpleMarkerSceneSymbol(symbolStyles[i], colors[i], 200, 200, 200, SceneSymbol.AnchorPosition.CENTER);
+      Graphic graphic = new Graphic()
     }
 
+
+    symbols.add(new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.CONE, 0xFFFF0000, 200, 200, 200, SceneSymbol.AnchorPosition.CENTER));
+    symbols.add(new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.TETRAHEDRON, 0xFF00FF00, 200, 200, 200, SceneSymbol.AnchorPosition.CENTER));
+    symbols.add(new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.SPHERE, 0xFF0000FF, 200, 200, 200, SceneSymbol.AnchorPosition.CENTER));
+    symbols.add(new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.CYLINDER, 0xFFFF00FF, 200, 200, 200, SceneSymbol.AnchorPosition.CENTER));
+    symbols.add(new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.DIAMOND, 0xFF00FFFF, 200, 200, 200, SceneSymbol.AnchorPosition.CENTER));
+    symbols.add(new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.CUBE, 0xFFFFFFFF, 200, 200, 200, SceneSymbol.AnchorPosition.CENTER));
+
+    for (int i = 0; i < symbols.size(); i++) {
+      Graphic graphic = new Graphic(new Point(44.975 + .01 * i, 29, 500, SpatialReferences.getWgs84()), symbols.get(i));
+      graphicsOverlay.getGraphics().add(graphic);
+    }
   }
+
 
   @Override
   protected void onPause() {
