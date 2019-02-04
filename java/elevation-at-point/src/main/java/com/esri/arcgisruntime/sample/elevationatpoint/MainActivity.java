@@ -42,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
     mSceneView.setScene(scene);
 
     // create an elevation source, and add this to the base surface of the scene
-    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(getString(R.string.elevation_image_service));
+    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
+        getString(R.string.elevation_image_service));
     scene.getBaseSurface().getElevationSources().add(elevationSource);
 
     // create a point symbol to mark where elevation is being measured
