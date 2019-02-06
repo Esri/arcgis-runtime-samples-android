@@ -1,6 +1,23 @@
+/* Copyright 2019 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.esri.arcgisruntime.sample.addencexchangeset;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.Manifest;
@@ -19,6 +36,7 @@ import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.hydrography.EncCell;
 import com.esri.arcgisruntime.hydrography.EncDataset;
+import com.esri.arcgisruntime.hydrography.EncEnvironmentSettings;
 import com.esri.arcgisruntime.hydrography.EncExchangeSet;
 import com.esri.arcgisruntime.layers.EncLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -50,30 +68,32 @@ public class MainActivity extends AppCompatActivity {
 
   private void addEncExchangeSet() {
 
-    List<String> encPath = new ArrayList<>();
-    encPath.add(Environment.getExternalStorageDirectory() + getString(R.string.enc_path));
+    // set paths using ENC environment settings
+    // point to the folder containing hydrography resources
+    EncEnvironmentSettings
+        .setResourcePath(Environment.getExternalStorageDirectory() + getString(R.string.hydrography_directory));
+    // use the app's cache to store processed System Electronic Navigational Chart (SENC) data
+    EncEnvironmentSettings.setSencDataPath(getApplicationContext().getCacheDir().getPath());
 
-    EncExchangeSet encExchangeSet = new EncExchangeSet(encPath);
+    // create the Exchange Set passing an array of paths. Update sets can be loaded alongside base data
+    EncExchangeSet encExchangeSet = new EncExchangeSet(
+        Collections.singleton(Environment.getExternalStorageDirectory() + getString(R.string.enc_path)));
     encExchangeSet.loadAsync();
     encExchangeSet.addDoneLoadingListener(() -> {
       if (encExchangeSet.getLoadStatus() == LoadStatus.LOADED) {
         // store a list of data set extent's - will be used to zoom the map view to the full extent of the Exchange Set
         List<Geometry> dataSetExtents = new ArrayList<>();
-        // add each data set as a layer
+        // add each data set's Enc cell as an ENC layer
         for (EncDataset encDataset : encExchangeSet.getDatasets()) {
           dataSetExtents.add(encDataset.getExtent());
-
           // create a layer from an enc cell from the data set
           EncCell encCell = new EncCell(encDataset);
-          Log.d(TAG, "ENC cell path: " + encCell.getPath());
           encCell.loadAsync();
           encCell.addDoneLoadingListener(() -> {
             if (encCell.getLoadStatus() == LoadStatus.LOADED) {
-              Log.d(TAG, "ENC cell loaded");
               EncLayer encLayer = new EncLayer(encCell);
               // add the layer to the map
               mMapView.getMap().getOperationalLayers().add(encLayer);
-              // add the data set extent to a list
             } else {
               String error = "Error loading ENC cell: " + encCell.getLoadError().getMessage();
               Toast.makeText(this, error, Toast.LENGTH_LONG).show();
@@ -83,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
         }
         // use the geometry engine to compute the full extent of the ENC exchange set
         Envelope fullExtent = GeometryEngine.combineExtents(dataSetExtents);
-
         // set the view point
         mMapView.setViewpointAsync(new Viewpoint(fullExtent));
       } else {
