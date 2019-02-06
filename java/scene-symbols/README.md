@@ -1,30 +1,27 @@
-# Symbols
-Create graphics with simple 3D shapes.
-Includes tetrahedrons, cubes, spheres, diamonds, cylinders, and cones.
+# Scene symbols
 
-![Symbols App](symbols.png)
+Show various kinds of 3D symbols in a scene.
+
+![Scene symbols app](scene-symbols.jpg)
+
+## How to use the sample
+
+Various symbols will be shown in the scene when it loads.
 
 ## How it works
-To create a SimpleMarkerSceneSymbol with a 3D shape:
 
 1. Create a `GraphicsOverlay`.
-2. Create a `SimpleMarkerSceneSymbol(Style, color, width, height, depth, AnchorPosition)`.
-    * You can also use `SimpleMarkerSceneSymbol.createCone(color, diameter, height)`
-    * color, hex code color of symbol (Red = 0xFFFF0000)
-    * (width, height, depth), size of the symbol
-    * AnchorPosition, where to position symbol on Graphic
-3. Create a graphic using the symbol, `Graphic(Geometry, Symbol)`.
-4. Add the graphic to the graphics overlay, `GraphicsOverlay.getGraphics().add(Graphic)`.
-5. Add the graphics overlay to the `SceneView`, `SceneView.getGraphicsOverlays().add(GraphicsOverlay)`.
+1. Create `SimpleMarkerSceneSymbol(Styler, color, width, height, depth, AnchorPosition)` objects.
+1. Pass the scene symbol object to `Graphic(geometry, symbol).`
+1. Add the graphics to the graphics overlay.
+1. Add the graphics overlay to the scene view.
 
 ## Relevant API
 
-* ArcGISScene
-* Graphic
-* GraphicsOverlay
 * SimpleMarkerSceneSymbol
-* SimpleMarkerSceneSymbol.STYLE
+* SimpleMarkerSceneSymbol.Style
 * SceneSymbol.AnchorPosition
 
-#### Tags
-Maps and Scenes
+## Tags
+
+Visualization, scene, symbols, graphics, graphics overlay, 3D, cone, cylinder, tube, sphere, diamond, tetrahedron
