@@ -1,4 +1,4 @@
-package com.esri.arcgisruntime.sample.elevationatpoint;
+package com.esri.arcgisruntime.sample.getelevationatpoint;
 
 import java.util.concurrent.ExecutionException;
 
@@ -19,8 +19,7 @@ import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.SceneView;
-import com.esri.arcgisruntime.symbology.SceneSymbol;
-import com.esri.arcgisruntime.symbology.SimpleMarkerSceneSymbol;
+import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,12 +32,12 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // create SceneView from layout
-    mSceneView = findViewById(R.id.sceneView);
-
     // create a scene and add a basemap to it
     ArcGISScene scene = new ArcGISScene();
     scene.setBasemap(Basemap.createImagery());
+
+    // get a reference to the scene view and set the scene to it
+    mSceneView = findViewById(R.id.sceneView);
     mSceneView.setScene(scene);
 
     // create an elevation source, and add this to the base surface of the scene
@@ -47,8 +46,7 @@ public class MainActivity extends AppCompatActivity {
     scene.getBaseSurface().getElevationSources().add(elevationSource);
 
     // create a point symbol to mark where elevation is being measured
-    SimpleMarkerSceneSymbol sphereSymbol = new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.SPHERE,
-        Color.RED, 200, 200, 200, SceneSymbol.AnchorPosition.CENTER);
+    SimpleMarkerSymbol circleSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10);
 
     // create a graphics overlay
     GraphicsOverlay graphicsOverlay = new GraphicsOverlay(GraphicsOverlay.RenderingMode.DYNAMIC);
@@ -68,8 +66,13 @@ public class MainActivity extends AppCompatActivity {
             Math.round(motionEvent.getY()));
         // convert the screen point to a point on the surface
         Point surfacePoint = mSceneView.screenToBaseSurface(screenPoint);
+        if (surfacePoint == null) {
+          Toast.makeText(MainActivity.this, "Cannot get an elevation for a point which is not on the surface.",
+              Toast.LENGTH_SHORT).show();
+          return super.onSingleTapConfirmed(motionEvent);
+        }
         // create a new graphic at the surface point and add it to the graphics overlay
-        Graphic surfacePointGraphic = new Graphic(surfacePoint, sphereSymbol);
+        Graphic surfacePointGraphic = new Graphic(surfacePoint, circleSymbol);
         graphicsOverlay.getGraphics().add(surfacePointGraphic);
 
         // get the surface elevation at the surface point
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, error);
           }
         });
+
         return super.onSingleTapConfirmed(motionEvent);
       }
     });

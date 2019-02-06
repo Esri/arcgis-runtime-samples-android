@@ -1,6 +1,6 @@
-# Elevation at point
+# Get elevation at point
 
-Get the elevation for a given point on a surface
+Get the elevation for a given point on a surface.
 
 ![Elevation at point app](elevation-at-point.png)
 
@@ -15,7 +15,7 @@ Tap anywhere on the surface to get the elevation at that point.
 ## How it works
 
 1. Create a `SceneView` and `Scene` with an imagery base map.
-1. Set an `ArcGISTiledElevationService` as the elevation source of the scene's base surface.
+1. Set an `ArcGISTiledElevationSource` as the elevation source of the scene's base surface.
 1. Use the `screenToBaseSurface(screenPoint)` method on the scene view to convert the tapped screen point into a point on surface.
 1. Use the `getElevationAsync(surfacePoint)` method on the base surface to asynchronously get the elevation.
 
