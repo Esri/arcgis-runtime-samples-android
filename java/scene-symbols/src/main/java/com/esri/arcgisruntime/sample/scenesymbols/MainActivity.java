@@ -14,10 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.symbols;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.esri.arcgisruntime.sample.scenesymbols;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -54,12 +51,13 @@ public class MainActivity extends AppCompatActivity {
 
     // add base surface for elevation data
     final Surface surface = new Surface();
-    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(getString(R.string.elevation_image_service_url));
+    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
+        getString(R.string.elevation_image_service_url));
     surface.getElevationSources().add(elevationSource);
     scene.setBaseSurface(surface);
 
     // add a camera and initial camera position
-    Camera camera = new Camera(29, 45, 12000, 0, 0, 0);
+    Camera camera = new Camera(28.9, 45, 12000, 0, 45, 0);
     mSceneView.setViewpointCamera(camera);
 
     // add graphics overlay(s)
@@ -67,31 +65,18 @@ public class MainActivity extends AppCompatActivity {
     graphicsOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.ABSOLUTE);
     mSceneView.getGraphicsOverlays().add(graphicsOverlay);
 
-    // function to dynamically create the graphics and add them to the graphics overlay
-    List<SimpleMarkerSceneSymbol> symbols = new ArrayList<>();
-
-    int[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA, Color.CYAN, Color.WHITE};
+    int[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA, Color.CYAN, Color.WHITE };
     SimpleMarkerSceneSymbol.Style[] symbolStyles = SimpleMarkerSceneSymbol.Style.values();
 
-    for (int i = 0; i < symbolStyles.length; i ++) {
-      SimpleMarkerSceneSymbol simpleMarkerSceneSymbol = new SimpleMarkerSceneSymbol(symbolStyles[i], colors[i], 200, 200, 200, SceneSymbol.AnchorPosition.CENTER);
-      Graphic graphic = new Graphic()
-    }
-
-
-    symbols.add(new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.CONE, 0xFFFF0000, 200, 200, 200, SceneSymbol.AnchorPosition.CENTER));
-    symbols.add(new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.TETRAHEDRON, 0xFF00FF00, 200, 200, 200, SceneSymbol.AnchorPosition.CENTER));
-    symbols.add(new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.SPHERE, 0xFF0000FF, 200, 200, 200, SceneSymbol.AnchorPosition.CENTER));
-    symbols.add(new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.CYLINDER, 0xFFFF00FF, 200, 200, 200, SceneSymbol.AnchorPosition.CENTER));
-    symbols.add(new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.DIAMOND, 0xFF00FFFF, 200, 200, 200, SceneSymbol.AnchorPosition.CENTER));
-    symbols.add(new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.CUBE, 0xFFFFFFFF, 200, 200, 200, SceneSymbol.AnchorPosition.CENTER));
-
-    for (int i = 0; i < symbols.size(); i++) {
-      Graphic graphic = new Graphic(new Point(44.975 + .01 * i, 29, 500, SpatialReferences.getWgs84()), symbols.get(i));
+    // for each symbol style (cube, cone, cylinder, diamond, sphere, tetrahedron)
+    for (int i = 0; i < symbolStyles.length; i++) {
+      SimpleMarkerSceneSymbol simpleMarkerSceneSymbol = new SimpleMarkerSceneSymbol(symbolStyles[i], colors[i], 200,
+          200, 200, SceneSymbol.AnchorPosition.CENTER);
+      Graphic graphic = new Graphic(new Point(44.975 + .01 * i, 29, 500, SpatialReferences.getWgs84()),
+          simpleMarkerSceneSymbol);
       graphicsOverlay.getGraphics().add(graphic);
     }
   }
-
 
   @Override
   protected void onPause() {
