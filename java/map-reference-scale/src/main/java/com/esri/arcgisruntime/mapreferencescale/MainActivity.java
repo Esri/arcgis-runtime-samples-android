@@ -33,8 +33,6 @@ import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.portal.PortalItem;
-import com.esri.arcgisruntime.security.AuthenticationManager;
-import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,20 +44,13 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // get a reference to the map view
-    mMapView = findViewById(R.id.mapView);
-
-    //TODO - Remove once data approved for public
-    DefaultAuthenticationChallengeHandler handler = new DefaultAuthenticationChallengeHandler(this);
-    AuthenticationManager.setAuthenticationChallengeHandler(handler);
-
-    //TODO - Remove once data approved for public
-    // load a map from a portal item
-    Portal portal = new Portal(getString(R.string.runtime_portal_url), true);
+    // get web map as an ArcGISMap
+    Portal portal = new Portal(getString(R.string.runtime_portal_url));
     PortalItem portalItem = new PortalItem(portal, getString(R.string.isle_of_wight_portal_item));
     ArcGISMap map = new ArcGISMap(portalItem);
 
-    // set the map to the map view
+    // get a reference to the map view and set the map to it
+    mMapView = findViewById(R.id.mapView);
     mMapView.setMap(map);
 
     // get a reference to the spinner
@@ -75,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
         setReferenceScale(Double.valueOf(referenceScaleString));
       }
 
-      @Override public void onNothingSelected(AdapterView<?> adapterView) { }
+      @Override public void onNothingSelected(AdapterView<?> adapterView) {
+      }
     });
 
     // set initial selection to the 3rd option, 1:250,000
@@ -83,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
 
     // update map scale indicator on map scale change
     TextView mapScale = findViewById(R.id.currMapScaleTextView);
-    mMapView.addMapScaleChangedListener(mapScaleChangedEvent -> mapScale.setText(String.valueOf(Math.round(mMapView.getMapScale()))));
+    mMapView.addMapScaleChangedListener(
+        mapScaleChangedEvent -> mapScale.setText(String.valueOf(Math.round(mMapView.getMapScale()))));
 
     // use the current viewpoint's center and the current reference scale to set a new viewpoint
     Button matchScalesButton = findViewById(R.id.matchScalesButton);
