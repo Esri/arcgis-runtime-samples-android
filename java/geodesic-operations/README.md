@@ -30,7 +30,7 @@ Click on the map to select a path destination. The geodesic path between the two
  * SimpleMarkerSymbol
  
  #### Tags
- Analysis
- Geometry
- Polyline
- GeometryEngine  
+Analysis
+Geometry
+Polyline
+GeometryEngine  
