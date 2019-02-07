@@ -32,5 +32,4 @@ Link | Local Location
 |[Mil2525d Stylx File](https://www.arcgis.com/home/item.html?id=e34835bf5ec5430da7cf16bb8c0b075c)| `<sdcard>`/ArcGIS/samples/Dictionary/mil2525d.stylx |
 
 ### Tags
-
-Layer
+Layers
