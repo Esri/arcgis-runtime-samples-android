@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    super.onPause();
     mSceneView.pause();
+    super.onPause();
   }
 
   @Override
@@ -65,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     mSceneView.dispose();
+    super.onDestroy();
   }
 
 }
