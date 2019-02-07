@@ -2,7 +2,7 @@
 
 Get the elevation for a given point on a surface.
 
-![Elevation at point app](elevation-at-point.png)
+![Elevation at point app](get-elevation-at-point.png)
 
 ## Use case
 
