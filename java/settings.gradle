@@ -1,4 +1,4 @@
-include ':add-graphics-renderer',
+include ':add-graphics-renderer', ':integrated-mesh-layer',
         ':add-graphics-symbols',
         ':analyze-hotspots',
         ':animate-3d-graphic',
