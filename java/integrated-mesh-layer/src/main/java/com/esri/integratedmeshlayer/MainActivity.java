@@ -20,43 +20,52 @@ package com.esri.integratedmeshlayer;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.layers.IntegratedMeshLayer;
+import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.mapping.view.Camera;
+import com.esri.arcgisruntime.mapping.view.SceneView;
 
 public class MainActivity extends AppCompatActivity {
 
-  private MapView mMapView;
+  private SceneView mSceneView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // create MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
-    // create a map with the BasemapType topographic
-    ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16);
-    // set the map to be displayed in this view
-    mMapView.setMap(mMap);
+    mSceneView = findViewById(R.id.sceneView);
+
+    ArcGISScene scene = new ArcGISScene();
+    scene.setBasemap(Basemap.createImagery());
+
+    mSceneView.setScene(scene);
+
+    IntegratedMeshLayer integratedMeshLayer = new IntegratedMeshLayer(getString(R.string.mesh_layer_url));
+    scene.getOperationalLayers().add(integratedMeshLayer);
+
+    // add a camera and initial camera position
+    Camera camera = new Camera(37.720650, -119.622075, 2104.901239, 315.50368761552056, 78.09465920130114, 0.0);
+    mSceneView.setViewpointCamera(camera);
   }
 
   @Override
   protected void onPause() {
     super.onPause();
-    mMapView.pause();
+    mSceneView.pause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    mMapView.resume();
+    mSceneView.resume();
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    mMapView.dispose();
+    mSceneView.dispose();
   }
 
 }

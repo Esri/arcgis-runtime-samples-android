@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Integrated Mesh Layer</string>
+    <string name="mesh_layer_url">https://tiles.arcgis.com/tiles/FQD0rKU8X5sAQfh8/arcgis/rest/services/VRICON_Yosemite_Sample_Integrated_Mesh_scene_layer/SceneServer</string>
 </resources>

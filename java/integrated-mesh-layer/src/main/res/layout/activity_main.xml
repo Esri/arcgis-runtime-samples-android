@@ -5,8 +5,8 @@
     tools:context=".MainActivity">
 
     <!-- MapView -->
-    <com.esri.arcgisruntime.mapping.view.MapView
-        android:id="@+id/mapView"
+    <com.esri.arcgisruntime.mapping.view.SceneView
+        android:id="@+id/sceneView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
