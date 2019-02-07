@@ -33,7 +33,6 @@ import java.util.TimerTask;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -130,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.createImagery());
     mMapView.setMap(map);
     // make sure the map view renders on top of the scene view
-    ViewCompat.setElevation(mMapView, 6);
+    mMapView.setZOrderMediaOverlay(true);
 
     // create a graphics overlay for route
     GraphicsOverlay routeOverlay = new GraphicsOverlay();

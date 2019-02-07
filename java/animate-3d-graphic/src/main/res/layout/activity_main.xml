@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <com.esri.arcgisruntime.mapping.view.SceneView
+        android:id="@+id/sceneView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.esri.arcgisruntime.mapping.view.MapView
+        android:id="@+id/mapView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <Button
         android:id="@+id/zoomInButton"
         android:layout_width="wrap_content"
@@ -25,19 +38,6 @@
         android:text="-"
         app:layout_constraintStart_toStartOf="@+id/mapView"
         app:layout_constraintTop_toBottomOf="@+id/zoomInButton" />
-
-    <com.esri.arcgisruntime.mapping.view.MapView
-        android:id="@+id/mapView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.esri.arcgisruntime.mapping.view.SceneView
-        android:id="@+id/sceneView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
     <include
         android:id="@+id/missionProgress"
