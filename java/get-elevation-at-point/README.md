@@ -33,5 +33,4 @@ Tap anywhere on the surface to get the elevation at that point.
 If multiple elevation sources are present in the surface the top most visible elevation source with a valid elevation in the given location is used to determine the result.
 
 #### Tags
-
-MapViews SceneViews and UI, elevation, surface
+MapViews SceneViews and UI
