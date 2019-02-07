@@ -2,7 +2,7 @@
 
 Show various kinds of 3D symbols in a scene.
 
-![Scene symbols app](scene-symbols.jpg)
+![Scene symbols app](scene-symbols.png)
 
 ## How to use the sample
 
