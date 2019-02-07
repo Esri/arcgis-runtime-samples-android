@@ -34,5 +34,4 @@ Link | Local Location
 |[Military Overlay geodatabase](https://www.arcgis.com/home/item.html?id=e0d41b4b409a49a5a7ba11939d8535dc)| `<sdcard>`/ArcGIS/samples/Dictionary/militaryoverlay.geodatabase |
 
 ### Tags
-
-Layer
+Layers
