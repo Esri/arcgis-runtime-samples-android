@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Integrated Windows Authentication</string>
+    <string name="arcgis_url">http://www.arcgis.com</string>
+    <string name="credential_required">Credential is required!</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="enter_portal_url">Enter portal url</string>
+    <string name="search_public">Search Public</string>
+    <string name="search_secure">Search Secure</string>
+</resources>
