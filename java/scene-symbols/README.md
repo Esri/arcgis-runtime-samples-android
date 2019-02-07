@@ -23,5 +23,4 @@ Various symbols will be shown in the scene when it loads.
 * SceneSymbol.AnchorPosition
 
 ## Tags
-
 Visualization, scene, symbols, graphics, graphics overlay, 3D, cone, cylinder, tube, sphere, diamond, tetrahedron
