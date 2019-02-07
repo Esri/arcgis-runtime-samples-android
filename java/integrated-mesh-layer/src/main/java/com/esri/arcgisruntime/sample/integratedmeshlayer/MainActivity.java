@@ -16,7 +16,7 @@
  *
  */
 
-package com.esri.integratedmeshlayer;
+package com.esri.arcgisruntime.sample.integratedmeshlayer;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +25,7 @@ import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SceneView;
+import com.esri.integratedmeshlayer.R;
 
 public class MainActivity extends AppCompatActivity {
 
