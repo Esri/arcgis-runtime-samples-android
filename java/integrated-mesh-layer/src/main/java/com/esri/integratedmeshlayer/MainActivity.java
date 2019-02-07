@@ -35,18 +35,19 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // create a scene and add it to the scene view
     mSceneView = findViewById(R.id.sceneView);
-
-    ArcGISScene scene = new ArcGISScene();
-    scene.setBasemap(Basemap.createImagery());
-
+    ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
     mSceneView.setScene(scene);
 
+    // create IntegratedMeshLayer and add to the scene's operational layers
     IntegratedMeshLayer integratedMeshLayer = new IntegratedMeshLayer(getString(R.string.mesh_layer_url));
     scene.getOperationalLayers().add(integratedMeshLayer);
 
-    // add a camera and initial camera position
+    // create a camera and initial camera position
     Camera camera = new Camera(37.720650, -119.622075, 2104.901239, 315.50368761552056, 78.09465920130114, 0.0);
+
+    // set Viewpoint for SceneView using camera
     mSceneView.setViewpointCamera(camera);
   }
 
