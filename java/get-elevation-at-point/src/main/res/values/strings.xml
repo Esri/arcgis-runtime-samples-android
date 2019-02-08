@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Elevation at point</string>
+    <string name="app_name">Get elevation at point</string>
     <string name="elevation_image_service">
         https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
 </resources>
