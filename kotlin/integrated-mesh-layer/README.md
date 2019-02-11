@@ -4,7 +4,7 @@ View an integrated mesh layer from a scene service.
 
 ![Integrated Mesh Layer](integrated-mesh-layer.png)
 
-## Use Case
+## Use case
 
 An integrated mesh can represent artificial and natural 3D features such as
 building walls, trees, valleys, and cliffs, with realistic textures and
@@ -22,6 +22,8 @@ scene service.
 
 - IntegratedMeshLayer
 
-## Tags
+#### Tags
 
-3D, integrated mesh, layers
+Layers
+3D
+integrated mesh
