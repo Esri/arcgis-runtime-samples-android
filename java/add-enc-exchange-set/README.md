@@ -44,4 +44,9 @@ Link | Local Location
 |[ENC Exchange Set](https://arcgisruntime.maps.arcgis.com/home/item.html?id=9d2987a825c646468b3ce7512fb76e2d)| `<sdcard>`/ArcGIS/Samples/ENC/ExchangeSetwithoutUpdates/|
  
 ## Tags
-Layers, ENC, maritime, nautical chart, hydrographic, data
+Layers
+ENC
+maritime
+nautical chart
+hydrographic
+data
