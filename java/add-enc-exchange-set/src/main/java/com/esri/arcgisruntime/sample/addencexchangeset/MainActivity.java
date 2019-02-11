@@ -16,9 +16,8 @@
 
 package com.esri.arcgisruntime.sample.addencexchangeset;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -32,7 +31,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.geometry.Envelope;
-import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.hydrography.EncCell;
 import com.esri.arcgisruntime.hydrography.EncDataset;
@@ -50,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
+  private Envelope mCompleteExtent;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -81,30 +80,30 @@ public class MainActivity extends AppCompatActivity {
     encExchangeSet.loadAsync();
     encExchangeSet.addDoneLoadingListener(() -> {
       if (encExchangeSet.getLoadStatus() == LoadStatus.LOADED) {
-        // store a list of data set extent's - will be used to zoom the map view to the full extent of the Exchange Set
-        List<Geometry> dataSetExtents = new ArrayList<>();
         // add each data set's Enc cell as an ENC layer
         for (EncDataset encDataset : encExchangeSet.getDatasets()) {
-          dataSetExtents.add(encDataset.getExtent());
-          // create a layer from an enc cell from the data set
-          EncCell encCell = new EncCell(encDataset);
-          encCell.loadAsync();
-          encCell.addDoneLoadingListener(() -> {
-            if (encCell.getLoadStatus() == LoadStatus.LOADED) {
-              EncLayer encLayer = new EncLayer(encCell);
-              // add the layer to the map
-              mMapView.getMap().getOperationalLayers().add(encLayer);
+          // create an ENC layer with an ENC cell using the dataset
+          EncLayer encLayer = new EncLayer(new EncCell(encDataset));
+          // add the ENC layer to the map's operational layers
+          mMapView.getMap().getOperationalLayers().add(encLayer);
+          encLayer.addDoneLoadingListener(() -> {
+            if (encLayer.getLoadStatus() == LoadStatus.LOADED) {
+              Envelope extent = encLayer.getFullExtent();
+              // combine extents of each layer
+              if (mCompleteExtent == null) {
+                mCompleteExtent = extent;
+              } else {
+                mCompleteExtent = GeometryEngine.combineExtents(Arrays.asList(mCompleteExtent, extent));
+              }
+              // set the view point to the extent of all enc layers
+              mMapView.setViewpointAsync(new Viewpoint(mCompleteExtent));
             } else {
-              String error = "Error loading ENC cell: " + encCell.getLoadError().getMessage();
+              String error = "Error loading ENC layer: " + encLayer.getLoadError().getMessage();
               Toast.makeText(this, error, Toast.LENGTH_LONG).show();
               Log.e(TAG, error);
             }
           });
         }
-        // use the geometry engine to compute the full extent of the ENC exchange set
-        Envelope fullExtent = GeometryEngine.combineExtents(dataSetExtents);
-        // set the view point
-        mMapView.setViewpointAsync(new Viewpoint(fullExtent));
       } else {
         String error = "Error loading ENC exchange set: " + encExchangeSet.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
