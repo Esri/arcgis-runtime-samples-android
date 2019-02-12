@@ -32,7 +32,7 @@ public class ProgressDialogFragment extends DialogFragment {
 
   private static final String ARGS_CANCEL_TEXT = ProgressDialogFragment.class.getSimpleName() + "cancel_text";
 
-  private OnProgressDialogCancelButtonClickedListener mOnProgressDialogCancelButtonClickedListener;
+  private OnProgressDialogDismissListener mOnProgressDialogDismissListener;
 
   private String title;
 
@@ -51,6 +51,7 @@ public class ProgressDialogFragment extends DialogFragment {
     super.onCreate(savedInstanceState);
     // prevent re-creation during configuration chance to allow us to dismiss this DialogFragment
     setRetainInstance(true);
+    setCancelable(false);
 
     if (getArguments() != null) {
       this.title = getArguments().getString(ARGS_TITLE);
@@ -60,8 +61,8 @@ public class ProgressDialogFragment extends DialogFragment {
 
   @Override public void onAttach(Context context) {
     super.onAttach(context);
-    if (context instanceof OnProgressDialogCancelButtonClickedListener) {
-      this.mOnProgressDialogCancelButtonClickedListener = (OnProgressDialogCancelButtonClickedListener) context;
+    if (context instanceof OnProgressDialogDismissListener) {
+      this.mOnProgressDialogDismissListener = (OnProgressDialogDismissListener) context;
     }
   }
 
@@ -73,24 +74,27 @@ public class ProgressDialogFragment extends DialogFragment {
     progressDialog.setIndeterminate(false);
     progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     progressDialog.setMax(100);
-    progressDialog.setCancelable(false);
     progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, cancelText, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        if (mOnProgressDialogCancelButtonClickedListener != null) {
-          mOnProgressDialogCancelButtonClickedListener.onProgressDialogCancelButtonClicked();
-        }
-        getDialog().dismiss();
+        onDismiss(dialog);
       }
     });
     return progressDialog;
+  }
+
+  @Override public void onDismiss(DialogInterface dialog) {
+    super.onDismiss(dialog);
+    if (mOnProgressDialogDismissListener != null) {
+      mOnProgressDialogDismissListener.onProgressDialogDismiss();
+    }
   }
 
   public void setProgress(int progress) {
     ((ProgressDialog) getDialog()).setProgress(progress);
   }
 
-  public interface OnProgressDialogCancelButtonClickedListener {
-    void onProgressDialogCancelButtonClicked();
+  public interface OnProgressDialogDismissListener {
+    void onProgressDialogDismiss();
   }
 }

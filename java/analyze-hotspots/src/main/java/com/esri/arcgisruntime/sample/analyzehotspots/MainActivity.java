@@ -36,7 +36,7 @@ import com.esri.arcgisruntime.tasks.geoprocessing.*;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity implements DateRangeDialogFragment.OnAnalyzeButtonClickListener,
-    ProgressDialogFragment.OnProgressDialogCancelButtonClickedListener {
+    ProgressDialogFragment.OnProgressDialogDismissListener {
 
   private final String TAG = MainActivity.class.getSimpleName();
 
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
     analyzeHotspots(fromDate, toDate);
   }
 
-  @Override public void onProgressDialogCancelButtonClicked() {
+  @Override public void onProgressDialogDismiss() {
     // set canceled flag to true
     mCancelled = true;
     if (mGeoprocessingJob != null) {
