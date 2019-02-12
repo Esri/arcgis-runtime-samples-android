@@ -6,9 +6,7 @@ View an integrated mesh layer from a scene service.
 
 ## Use case
 
-An integrated mesh can represent artificial and natural 3D features such as
-building walls, trees, valleys, and cliffs, with realistic textures and
-elevation information.
+An integrated mesh is used to generate a mesh over a point cloud data set, which may be derived from a detailed LiDAR survey. LiDAR data is often of a high enough resolution to capture 3D features as small as walls and trees, but also the irregular surfaces of geological features like cliffs. An integrated mesh made from a point cloud of LiDAR data will include realistic textures and elevation information.
 
 ## How it works
 
