@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
 
   private GeoprocessingJob mGeoprocessingJob;
 
-  private boolean canceled;
+  private boolean mCancelled;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
 
   @Override public void onProgressDialogCancelButtonClicked() {
     // set canceled flag to true
-    canceled = true;
+    mCancelled = true;
     if (mGeoprocessingJob != null) {
       mGeoprocessingJob.cancel();
     }
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
     mMapView.getMap().getOperationalLayers().clear();
 
     // set canceled flag to false
-    canceled = false;
+    mCancelled = false;
 
     // parameters
     final ListenableFuture<GeoprocessingParameters> paramsFuture = mGeoprocessingTask.createDefaultParametersAsync();
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
                     mMapView.setViewpointGeometryAsync(hotspotMapImageLayer.getFullExtent());
                   }
                 });
-              } else if (canceled) {
+              } else if (mCancelled) {
                 Toast.makeText(MainActivity.this, "Job canceled.", Toast.LENGTH_SHORT).show();
                 Log.i(TAG, "Job cancelled.");
               } else {

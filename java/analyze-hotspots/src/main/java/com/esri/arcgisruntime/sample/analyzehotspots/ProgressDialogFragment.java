@@ -28,7 +28,7 @@ import android.support.v4.app.DialogFragment;
 
 public class ProgressDialogFragment extends DialogFragment {
 
-  private OnProgressDialogCancelButtonClickedListener onProgressDialogCancelButtonClickedListener;
+  private OnProgressDialogCancelButtonClickedListener mOnProgressDialogCancelButtonClickedListener;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -38,7 +38,7 @@ public class ProgressDialogFragment extends DialogFragment {
   @Override public void onAttach(Context context) {
     super.onAttach(context);
     if (context instanceof OnProgressDialogCancelButtonClickedListener) {
-      this.onProgressDialogCancelButtonClickedListener = (OnProgressDialogCancelButtonClickedListener) context;
+      this.mOnProgressDialogCancelButtonClickedListener = (OnProgressDialogCancelButtonClickedListener) context;
     } else {
       throw new ClassCastException(context.toString()
           + " must implement OnProgressDialogCancelButtonClickedListener");
@@ -58,7 +58,7 @@ public class ProgressDialogFragment extends DialogFragment {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         getDialog().dismiss();
-        onProgressDialogCancelButtonClickedListener.onProgressDialogCancelButtonClicked();
+        mOnProgressDialogCancelButtonClickedListener.onProgressDialogCancelButtonClicked();
       }
     });
     return progressDialog;

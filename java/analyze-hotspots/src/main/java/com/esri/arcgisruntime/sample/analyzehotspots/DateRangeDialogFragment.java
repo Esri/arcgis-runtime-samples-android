@@ -48,7 +48,7 @@ public class DateRangeDialogFragment extends DialogFragment {
 
   private Date mMaxDate;
 
-  private OnAnalyzeButtonClickListener onAnalyzeButtonClickListener;
+  private OnAnalyzeButtonClickListener mOnAnalyzeButtonClickListener;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -67,7 +67,7 @@ public class DateRangeDialogFragment extends DialogFragment {
   @Override public void onAttach(Context context) {
     super.onAttach(context);
     if (context instanceof OnAnalyzeButtonClickListener) {
-      this.onAnalyzeButtonClickListener = (OnAnalyzeButtonClickListener) context;
+      this.mOnAnalyzeButtonClickListener = (OnAnalyzeButtonClickListener) context;
     } else {
       throw new ClassCastException(context.toString()
           + " must implement OnAnalyzeButtonClickListener");
@@ -105,8 +105,8 @@ public class DateRangeDialogFragment extends DialogFragment {
     analyzeButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        if (onAnalyzeButtonClickListener != null) {
-          onAnalyzeButtonClickListener
+        if (mOnAnalyzeButtonClickListener != null) {
+          mOnAnalyzeButtonClickListener
               .onAnalyzeButtonClick(fromEditText.getText().toString(), toEditText.getText().toString());
         }
         getDialog().dismiss();
