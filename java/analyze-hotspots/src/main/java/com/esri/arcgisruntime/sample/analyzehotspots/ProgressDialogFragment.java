@@ -28,37 +28,59 @@ import android.support.v4.app.DialogFragment;
 
 public class ProgressDialogFragment extends DialogFragment {
 
+  private static final String ARGS_TITLE = ProgressDialogFragment.class.getSimpleName() + "_title";
+
+  private static final String ARGS_CANCEL_TEXT = ProgressDialogFragment.class.getSimpleName() + "cancel_text";
+
   private OnProgressDialogCancelButtonClickedListener mOnProgressDialogCancelButtonClickedListener;
+
+  private String title;
+
+  private String cancelText;
+
+  public static ProgressDialogFragment newInstance(String title, String cancelText) {
+    ProgressDialogFragment fragment = new ProgressDialogFragment();
+    Bundle args = new Bundle();
+    args.putString(ARGS_TITLE, title);
+    args.putString(ARGS_CANCEL_TEXT, cancelText);
+    fragment.setArguments(args);
+    return fragment;
+  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    // prevent re-creation during configuration chance to allow us to dismiss this DialogFragment
     setRetainInstance(true);
+
+    if (getArguments() != null) {
+      this.title = getArguments().getString(ARGS_TITLE);
+      this.cancelText = getArguments().getString(ARGS_CANCEL_TEXT);
+    }
   }
 
   @Override public void onAttach(Context context) {
     super.onAttach(context);
     if (context instanceof OnProgressDialogCancelButtonClickedListener) {
       this.mOnProgressDialogCancelButtonClickedListener = (OnProgressDialogCancelButtonClickedListener) context;
-    } else {
-      throw new ClassCastException(context.toString()
-          + " must implement OnProgressDialogCancelButtonClickedListener");
     }
   }
 
   @NonNull @Override public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
     super.onCreateDialog(savedInstanceState);
-    // create a dialog to show progress of the geoprocessing job
+    // create a dialog to show progress
     final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-    progressDialog.setTitle("Running geoprocessing job");
+    progressDialog.setTitle(title);
     progressDialog.setIndeterminate(false);
     progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     progressDialog.setMax(100);
     progressDialog.setCancelable(false);
-    progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+    progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, cancelText, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        if (mOnProgressDialogCancelButtonClickedListener != null) {
+          mOnProgressDialogCancelButtonClickedListener.onProgressDialogCancelButtonClicked();
+        }
         getDialog().dismiss();
-        mOnProgressDialogCancelButtonClickedListener.onProgressDialogCancelButtonClicked();
       }
     });
     return progressDialog;

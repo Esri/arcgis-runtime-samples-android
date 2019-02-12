@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReference;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -39,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
     ProgressDialogFragment.OnProgressDialogCancelButtonClickedListener {
 
   private final String TAG = MainActivity.class.getSimpleName();
+
+  // String used to query input for GeoprocessingString
+  private static final String QUERY_INPUT_STRING = "(\"DATE\" > date '%1$s 00:00:00' AND \"DATE\" < date '%2$s 00:00:00')";
 
   private MapView mMapView;
 
@@ -59,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
     // create a map with the BasemapType topographic
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
 
-    //center for initial viewpoint
-    Point center = new Point(-13671170, 5693633, SpatialReference.create(3857));
+    //center for initial viewpoint with Web Mercator Spatial Reference
+    Point center = new Point(-13671170, 5693633, SpatialReferences.getWebMercator());
 
     //set initial viewpoint
     map.setInitialViewpoint(new Viewpoint(center, 57779));
@@ -87,7 +90,10 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
    */
   private void showDateRangeDialog() {
     if (getSupportFragmentManager().findFragmentByTag(DateRangeDialogFragment.class.getSimpleName()) == null) {
-      DateRangeDialogFragment dateRangeDialogFragment = new DateRangeDialogFragment();
+      DateRangeDialogFragment dateRangeDialogFragment = DateRangeDialogFragment.newInstance(
+          getString(R.string.date_range_dialog_title),
+          getString(R.string.date_range_dialog_submit_button_text)
+      );
       dateRangeDialogFragment.show(getSupportFragmentManager(), DateRangeDialogFragment.class.getSimpleName());
     }
   }
@@ -132,14 +138,8 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
           geoprocessingParameters.setProcessSpatialReference(mMapView.getSpatialReference());
           geoprocessingParameters.setOutputSpatialReference(mMapView.getSpatialReference());
 
-          StringBuilder queryString = new StringBuilder("(\"DATE\" > date '")
-              .append(from)
-              .append(" 00:00:00' AND \"DATE\" < date '")
-              .append(to)
-              .append(" 00:00:00')");
-
-          geoprocessingParameters.getInputs().put("Query", new GeoprocessingString(queryString.toString()));
-
+          String queryString = String.format(QUERY_INPUT_STRING, from, to);
+          geoprocessingParameters.getInputs().put("Query", new GeoprocessingString(queryString));
           Log.i(TAG, "Query: " + queryString.toString());
 
           // create job
@@ -149,7 +149,10 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
           mGeoprocessingJob.start();
 
           if (findProgressDialogFragment() == null) {
-            ProgressDialogFragment progressDialogFragment = new ProgressDialogFragment();
+            ProgressDialogFragment progressDialogFragment = ProgressDialogFragment.newInstance(
+                getString(R.string.progress_dialog_fragment_title),
+                getString(R.string.progress_dialog_fragment_cancel_text)
+            );
             progressDialogFragment.show(getSupportFragmentManager(), ProgressDialogFragment.class.getSimpleName());
           }
 
@@ -162,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
             }
           });
 
+          // listen for job completion
           mGeoprocessingJob.addJobDoneListener(new Runnable() {
             @Override public void run() {
               if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {

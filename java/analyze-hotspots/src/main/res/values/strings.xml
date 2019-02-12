@@ -1,13 +1,18 @@
 <resources>
     <string name="app_name">Analyze Hotspots</string>
-    <string name="hotspot_911_calls_url" formatted="false">
-        https://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/GPServer/911%20Calls%20Hotspot
-    </string>
+    <string name="hotspot_911_calls_url" formatted="false">https://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/GPServer/911%20Calls%20Hotspot</string>
+
     <string name="date_range_dialog_title">Select Date Range for Analysis</string>
     <string name="date_range_dialog_from_hint">From:</string>
     <string name="date_range_dialog_to_hint">To:</string>
-    <string name="date_range_dialog_analyze_button_text">Analyze</string>
+    <string name="date_range_dialog_submit_button_text">Analyze</string>
+
     <string name="query_date_format">yyyy-MM-dd</string>
     <string name="min_date">1998-01-01</string>
     <string name="max_date">1998-05-31</string>
+
+    <string name="progress_dialog_fragment_title">Running geoprocessing job</string>
+    <string name="progress_dialog_fragment_cancel_text">Cancel</string>
+
+    <string name="query_string">(\"DATE\" &gt; date \'1998–1–1 00:00:00\' AND \"DATE\" &lt; date \'1998–5–31 00:00:00\')</string>
 </resources>

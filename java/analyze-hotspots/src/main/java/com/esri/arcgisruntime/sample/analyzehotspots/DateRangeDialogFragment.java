@@ -42,6 +42,10 @@ public class DateRangeDialogFragment extends DialogFragment {
 
   private static final String TAG = DateRangeDialogFragment.class.getSimpleName();
 
+  private static final String ARG_TITLE = DateRangeDialogFragment.class.getSimpleName() + "_title";
+
+  private static final String ARG_BUTTON_TEXT = DateRangeDialogFragment.class.getSimpleName() + "_button_text";
+
   private SimpleDateFormat mSimpleDateFormatter;
 
   private Date mMinDate;
@@ -49,6 +53,19 @@ public class DateRangeDialogFragment extends DialogFragment {
   private Date mMaxDate;
 
   private OnAnalyzeButtonClickListener mOnAnalyzeButtonClickListener;
+
+  private String title;
+
+  private String buttonText;
+
+  public static DateRangeDialogFragment newInstance(String title, String buttonText) {
+    DateRangeDialogFragment fragment = new DateRangeDialogFragment();
+    Bundle args = new Bundle();
+    args.putString(ARG_TITLE, title);
+    args.putString(ARG_BUTTON_TEXT, buttonText);
+    fragment.setArguments(args);
+    return fragment;
+  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -61,6 +78,11 @@ public class DateRangeDialogFragment extends DialogFragment {
       mMaxDate = mSimpleDateFormatter.parse(getString(R.string.max_date));
     } catch (ParseException e) {
       Log.e(TAG, "Error in date format: " + e.getMessage());
+    }
+
+    if (getArguments() != null) {
+      this.title = getArguments().getString(ARG_TITLE);
+      this.buttonText = getArguments().getString(ARG_BUTTON_TEXT);
     }
   }
 
@@ -82,9 +104,9 @@ public class DateRangeDialogFragment extends DialogFragment {
 
     final EditText fromEditText = dialogView.findViewById(R.id.fromEditText);
     final EditText toEditText = dialogView.findViewById(R.id.toEditText);
-    Button analyzeButton = dialogView.findViewById(R.id.analyzeButton);
+    Button analyzeButton = dialogView.findViewById(R.id.submitButton);
 
-    final AlertDialog dateRangeDialog = builder.setTitle(R.string.date_range_dialog_title)
+    final AlertDialog dateRangeDialog = builder.setTitle(title)
         .setView(dialogView)
         .setCancelable(true)
         .create();
@@ -101,6 +123,7 @@ public class DateRangeDialogFragment extends DialogFragment {
       }
     });
 
+    analyzeButton.setText(buttonText);
     // if button is clicked, close the custom dialog
     analyzeButton.setOnClickListener(new View.OnClickListener() {
       @Override
