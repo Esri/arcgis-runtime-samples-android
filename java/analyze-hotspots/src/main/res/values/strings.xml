@@ -3,10 +3,10 @@
     <string name="hotspot_911_calls" formatted="false">
         https://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/GPServer/911%20Calls%20Hotspot
     </string>
-    <string name="select_date_range_for_analysis">Select Date Range for Analysis</string>
-    <string name="from">From:</string>
-    <string name="to">To:</string>
-    <string name="analyze">Analyze</string>
+    <string name="date_range_dialog_title">Select Date Range for Analysis</string>
+    <string name="date_range_dialog_from_hint">From:</string>
+    <string name="date_range_dialog_to_hint">To:</string>
+    <string name="date_range_dialog_analyze_button_text">Analyze</string>
     <string name="date_format">yyyy-MM-dd</string>
     <string name="min_date">1998-01-01</string>
     <string name="max_date">1998-05-31</string>
