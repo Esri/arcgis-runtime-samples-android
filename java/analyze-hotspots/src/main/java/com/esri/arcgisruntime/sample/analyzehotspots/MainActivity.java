@@ -16,8 +16,6 @@
 
 package com.esri.arcgisruntime.sample.analyzehotspots;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +35,8 @@ import com.esri.arcgisruntime.tasks.geoprocessing.*;
 
 import java.util.concurrent.ExecutionException;
 
-public class MainActivity extends AppCompatActivity implements DateRangeDialogFragment.OnAnalyzeButtonClickListener {
+public class MainActivity extends AppCompatActivity implements DateRangeDialogFragment.OnAnalyzeButtonClickListener,
+    ProgressDialogFragment.OnProgressDialogCancelButtonClickedListener {
 
   private final String TAG = MainActivity.class.getSimpleName();
 
@@ -97,6 +96,14 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
     analyzeHotspots(fromDate, toDate);
   }
 
+  @Override public void onProgressDialogCancelButtonClicked() {
+    // set canceled flag to true
+    canceled = true;
+    if (mGeoprocessingJob != null) {
+      mGeoprocessingJob.cancel();
+    }
+  }
+
   /**
    * Runs the geoprocessing job, updating progress while loading. On job done, loads the resulting
    * ArcGISMapImageLayer to the map and resets the Viewpoint of the MapView.
@@ -141,34 +148,22 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
           // start job
           mGeoprocessingJob.start();
 
-          // create a dialog to show progress of the geoprocessing job
-          final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-          progressDialog.setTitle("Running geoprocessing job");
-          progressDialog.setIndeterminate(false);
-          progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-          progressDialog.setMax(100);
-          progressDialog.setCancelable(false);
-          progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              dialog.dismiss();
-              // set canceled flag to true
-              canceled = true;
-              mGeoprocessingJob.cancel();
-            }
-          });
-          progressDialog.show();
+          if (findProgressDialogFragment() == null) {
+            ProgressDialogFragment progressDialogFragment = new ProgressDialogFragment();
+            progressDialogFragment.show(getSupportFragmentManager(), ProgressDialogFragment.class.getSimpleName());
+          }
 
           // update progress
           mGeoprocessingJob.addProgressChangedListener(new Runnable() {
             @Override public void run() {
-              progressDialog.setProgress(mGeoprocessingJob.getProgress());
+              if (findProgressDialogFragment() != null) {
+                findProgressDialogFragment().setProgress(mGeoprocessingJob.getProgress());
+              }
             }
           });
 
           mGeoprocessingJob.addJobDoneListener(new Runnable() {
             @Override public void run() {
-              progressDialog.dismiss();
               if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
                 Log.i(TAG, "Job succeeded.");
 
@@ -189,7 +184,10 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
                 Log.i(TAG, "Job cancelled.");
               } else {
                 Log.e(TAG, "Job did not succeed!");
-                Toast.makeText(MainActivity.this, "Job did not succeed!", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Job did not succeed", Toast.LENGTH_LONG).show();
+              }
+              if (findProgressDialogFragment() != null) {
+                findProgressDialogFragment().dismiss();
               }
             }
           });
@@ -198,6 +196,11 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
         }
       }
     });
+  }
+
+  private ProgressDialogFragment findProgressDialogFragment() {
+    return (ProgressDialogFragment) getSupportFragmentManager()
+        .findFragmentByTag(ProgressDialogFragment.class.getSimpleName());
   }
 
   @Override
@@ -225,4 +228,5 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
     mMapView.dispose();
     super.onDestroy();
   }
+
 }
