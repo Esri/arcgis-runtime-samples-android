@@ -54,7 +54,7 @@ public class DateRangeDialogFragment extends DialogFragment {
     super.onCreate(savedInstanceState);
 
     // create a simple date formatter to parse strings to date
-    mSimpleDateFormatter = new SimpleDateFormat(getString(R.string.date_format), Locale.US);
+    mSimpleDateFormatter = new SimpleDateFormat(getString(R.string.query_date_format), Locale.US);
     try {
       // set default date range for the data set
       mMinDate = mSimpleDateFormatter.parse(getString(R.string.min_date));

@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">Analyze Hotspots</string>
-    <string name="hotspot_911_calls" formatted="false">
+    <string name="hotspot_911_calls_url" formatted="false">
         https://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/GPServer/911%20Calls%20Hotspot
     </string>
     <string name="date_range_dialog_title">Select Date Range for Analysis</string>
     <string name="date_range_dialog_from_hint">From:</string>
     <string name="date_range_dialog_to_hint">To:</string>
     <string name="date_range_dialog_analyze_button_text">Analyze</string>
-    <string name="date_format">yyyy-MM-dd</string>
+    <string name="query_date_format">yyyy-MM-dd</string>
     <string name="min_date">1998-01-01</string>
     <string name="max_date">1998-05-31</string>
 </resources>

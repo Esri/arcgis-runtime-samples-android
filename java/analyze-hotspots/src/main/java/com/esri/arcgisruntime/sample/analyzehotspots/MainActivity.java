@@ -68,17 +68,17 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
     // set the map to the map view
     mMapView.setMap(map);
 
-    // initialize geoprocessing task with the url of the service
-    mGeoprocessingTask = new GeoprocessingTask(getString(R.string.hotspot_911_calls));
-    mGeoprocessingTask.loadAsync();
-
-    FloatingActionButton calendarFAB = findViewById(R.id.calendarButton);
-
-    calendarFAB.setOnClickListener(new View.OnClickListener() {
+    // setup OnClickListener for FloatingActionButton
+    FloatingActionButton calendarFab = findViewById(R.id.calendarButton);
+    calendarFab.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         showDateRangeDialog();
       }
     });
+
+    // initialize geoprocessing task with the url of the service
+    mGeoprocessingTask = new GeoprocessingTask(getString(R.string.hotspot_911_calls_url));
+    mGeoprocessingTask.loadAsync();
   }
 
   /**
