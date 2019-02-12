@@ -91,13 +91,13 @@ public class DateRangeDialogFragment extends DialogFragment {
 
     fromEditText.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        showCalendar(InputCalendar.To, (EditText) v);
+        showCalendar(InputCalendar.From, (EditText) v);
       }
     });
 
     toEditText.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        showCalendar(InputCalendar.From, (EditText) v);
+        showCalendar(InputCalendar.To, (EditText) v);
       }
     });
 
@@ -107,7 +107,7 @@ public class DateRangeDialogFragment extends DialogFragment {
       public void onClick(View v) {
         if (onAnalyzeButtonClickListener != null) {
           onAnalyzeButtonClickListener
-              .onAnalyzeButtonClick(fromEditText.getText().toString(), fromEditText.getText().toString());
+              .onAnalyzeButtonClick(fromEditText.getText().toString(), toEditText.getText().toString());
         }
         getDialog().dismiss();
       }
@@ -135,7 +135,6 @@ public class DateRangeDialogFragment extends DialogFragment {
             .append(dayOfMonth);
         // set the date to correct text view
         if (inputCalendar == InputCalendar.From) {
-          editText.setText(date);
           try {
             // limit the min date to after from date
             mMinDate = mSimpleDateFormatter.parse(date.toString());
@@ -143,7 +142,6 @@ public class DateRangeDialogFragment extends DialogFragment {
             e.printStackTrace();
           }
         } else if (inputCalendar == InputCalendar.To) {
-          editText.setText(date);
           try {
             // limit the maximum date to before the to date
             mMaxDate = mSimpleDateFormatter.parse(date.toString());
@@ -151,6 +149,7 @@ public class DateRangeDialogFragment extends DialogFragment {
             e.printStackTrace();
           }
         }
+        editText.setText(date);
       }
     };
 
