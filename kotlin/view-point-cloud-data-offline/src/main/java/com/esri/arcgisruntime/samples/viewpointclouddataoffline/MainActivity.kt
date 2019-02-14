@@ -42,10 +42,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-    }
-
-    override fun onResume() {
-        super.onResume()
 
         sceneView.also { sceneView ->
             // create a camera and initial camera position
@@ -107,5 +103,20 @@ class MainActivity : AppCompatActivity() {
 
         // Load the PointCloudLayer asynchronously
         pointCloudLayer.loadAsync()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sceneView.resume()
+    }
+
+    override fun onPause() {
+        sceneView.pause()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        sceneView.dispose()
+        super.onDestroy()
     }
 }

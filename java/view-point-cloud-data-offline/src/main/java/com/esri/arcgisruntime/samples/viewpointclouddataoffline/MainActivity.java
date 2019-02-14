@@ -109,4 +109,19 @@ public class MainActivity extends AppCompatActivity {
     // Load the PointCloudLayer asynchronously
     pointCloudLayer.loadAsync();
   }
+
+  @Override protected void onResume() {
+    super.onResume();
+    mSceneView.resume();
+  }
+
+  @Override protected void onPause() {
+    mSceneView.pause();
+    super.onPause();
+  }
+
+  @Override protected void onDestroy() {
+    mSceneView.dispose();
+    super.onDestroy();
+  }
 }
