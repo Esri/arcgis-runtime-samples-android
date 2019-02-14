@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    // Load the PointCloudLayer
+    // Load the PointCloudLayer asynchronously
     pointCloudLayer.loadAsync();
   }
 }
