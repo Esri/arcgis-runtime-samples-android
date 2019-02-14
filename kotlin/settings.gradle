@@ -9,4 +9,5 @@ include ':analyze-hotspots',
         ':raster-function-service',
         ':raster-rendering-rule',
         ':show-labels-on-layer',
+        ':view-point-cloud-data-offline',
         ':wmts-layer'
