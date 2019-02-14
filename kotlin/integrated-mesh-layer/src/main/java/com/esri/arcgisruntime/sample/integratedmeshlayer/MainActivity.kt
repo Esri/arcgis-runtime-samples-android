@@ -19,9 +19,12 @@ package com.esri.arcgisruntime.sample.integratedmeshlayer
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.IntegratedMeshLayer
 import com.esri.arcgisruntime.mapping.ArcGISScene
+import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.Surface
 import com.esri.arcgisruntime.mapping.view.Camera
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -38,10 +41,17 @@ class MainActivity : AppCompatActivity() {
                 scene.operationalLayers.add(this)
             }
             sceneView.scene = scene
+
+            // set the base surface with world elevation
+            with(Surface()) {
+                this.elevationSources.add(ArcGISTiledElevationSource(getString(R.string.elevation_source_url)))
+                scene.baseSurface = this
+            }
         }
 
         // create a camera and initial camera position
-        with(Camera(37.720650, -119.622075, 2104.901239, 315.50368761552056, 78.09465920130114, 0.0)) {
+        with(Camera(Point(-119.622075, 37.720650, 2104.901239), 315.50368761552056, 78.09465920130114,
+                0.0)) {
             // set Viewpoint for SceneView using camera
             sceneView.setViewpointCamera(this)
         }
