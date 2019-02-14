@@ -13,10 +13,10 @@ Restrict zooming to a specific scale range.
 
 ## Relevant API
 
-- ArcGISMap
-- Basemap
-- MapView
-- Viewpoint
+* ArcGISMap
+* Basemap
+* MapView
+* Viewpoint
 
 #### Tags
 
