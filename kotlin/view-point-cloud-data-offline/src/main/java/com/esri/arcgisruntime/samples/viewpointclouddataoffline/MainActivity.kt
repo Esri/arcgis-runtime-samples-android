@@ -24,6 +24,7 @@ import android.os.Environment
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
 import com.esri.arcgisruntime.layers.PointCloudLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
@@ -36,6 +37,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private val logTag = MainActivity::class.java.simpleName
     private val permissionsRequestCode = 1
     private val _permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
 
@@ -85,8 +87,10 @@ class MainActivity : AppCompatActivity() {
             createPointCloudLayer()
         } else {
             // report to user that permission was denied
-            Toast.makeText(this, resources.getString(R.string.read_permission_denied_message),
-                    Toast.LENGTH_SHORT).show()
+            getString(R.string.read_permission_denied_message).let { error ->
+                Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+                Log.e(logTag, error)
+            }
         }
     }
 
@@ -103,7 +107,10 @@ class MainActivity : AppCompatActivity() {
                 sceneView.scene.operationalLayers.add(pointCloudLayer)
             } else if (loadStatusChangedEvent.newLoadStatus == LoadStatus.FAILED_TO_LOAD) {
                 // Notify user that the PointCloudLayer has failed to load
-                Toast.makeText(this, R.string.point_cloud_layer_load_failure_message, Toast.LENGTH_LONG).show()
+                getString(R.string.point_cloud_layer_load_failure_message).let { error ->
+                    Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                    Log.e(logTag, error)
+                }
             }
         }
 

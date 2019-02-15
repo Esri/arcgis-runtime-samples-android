@@ -25,6 +25,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 import com.esri.arcgisruntime.layers.PointCloudLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -36,6 +37,8 @@ import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 
 public class MainActivity extends AppCompatActivity {
+
+  private static final String TAG = MainActivity.class.getSimpleName();
 
   private static final int PERMISSIONS_REQUEST_CODE = 1;
 
@@ -87,8 +90,9 @@ public class MainActivity extends AppCompatActivity {
       createPointCloudLayer();
     } else {
       // report to user that permission was denied
-      Toast.makeText(this, getResources().getString(R.string.read_permission_denied_message),
-          Toast.LENGTH_SHORT).show();
+      String error = getString(R.string.read_permission_denied_message);
+      Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+      Log.e(TAG, error);
     }
   }
 
@@ -106,7 +110,9 @@ public class MainActivity extends AppCompatActivity {
         mSceneView.getScene().getOperationalLayers().add(pointCloudLayer);
       } else if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
         // Notify user that the PointCloudLayer has failed to load
-        Toast.makeText(this, R.string.point_cloud_layer_load_failure_message, Toast.LENGTH_LONG).show();
+        String error = getString(R.string.point_cloud_layer_load_failure_message);
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
       }
     });
 
