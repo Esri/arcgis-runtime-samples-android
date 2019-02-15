@@ -50,13 +50,13 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // create a streets base map and set the map to the map view
+        // Create a streets base map and set the map to the map view
         mapView.map = ArcGISMap(Basemap.createStreets())
 
-        // set authentication challenge handler
+        // Set authentication challenge handler
         AuthenticationManager.setAuthenticationChallengeHandler(this)
 
-        // set up recycler view for listing portal items
+        // Set up recycler view for listing portal items
         recyclerView.layoutManager = LinearLayoutManager(this)
         PortalItemAdapter(this).let {
             this.portalItemAdapter = it
@@ -64,16 +64,16 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
         }
 
         searchPublicButton.setOnClickListener {
-            // search the the public ArcGIS portal
+            // Search the the public ArcGIS portal
             searchPortal(Portal(getString(R.string.arcgis_url)))
         }
 
         searchSecureButton.setOnClickListener {
-            // get the string entered for the secure portal URL.
+            // Get the string entered for the secure portal URL.
             portalUrlEditText.text?.toString().let {
-                // if the entered URL is a valid URL
+                // If the entered URL is a valid URL
                 if (Patterns.WEB_URL.matcher(it).matches()) {
-                    // search an instance of the IWA-secured portal, the user may be challenged for access
+                    // Search an instance of the IWA-secured portal, the user may be challenged for access
                     searchPortal(Portal(it, true))
                 } else {
                     getString(R.string.error_portal_url).let { errorString ->
@@ -86,11 +86,11 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
     }
 
     private fun searchPortal(portal: Portal) {
-        // Show portal load state as searching
+        // Show portal load state during search
         portalLoadStateView.visibility = View.VISIBLE
         portalLoadStateTextView.text = getString(R.string.portal_load_state_searching, portal.uri)
 
-        // Add Runnable to run when Portal has finished loading
+        // Add Runnable to execute when Portal has finished loading
         portal.addDoneLoadingListener {
             if (portal.loadStatus == LoadStatus.LOADED) {
                 // Update load state in UI with the portal URI
@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
                     }
                 }
             } else {
-                // report error
+                // Report error
                 portal.loadError?.let { loadError ->
                     (if (loadError.errorCode == 17) getString(R.string.error_portal_sign_in_cancelled) else
                         getString(R.string.error_portal_sign_in_failed, loadError.cause?.message)).let { errorString ->
@@ -149,17 +149,18 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
      * @param portalItem
      */
     private fun addMap(portalItem: PortalItem) {
-        // report error and return if portal is null
+        // Report error and return if portal is null
         if (portalItem.portal == null) {
-            val error = "Portal not instantiated."
-            Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-            Log.e(logTag, error)
+            getString(R.string.error_portal_not_instantiated).let { error ->
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                Log.e(logTag, error)
+            }
             return
         }
-        // create a map using the web map (portal item) and add it to the map view
+        // Create a map using the web map (portal item) and add it to the map view
         mapView.map = ArcGISMap(portalItem)
-        // show item ID in UI
-        loadedWebMapTextView.text = "Loaded web map from item ${portalItem.itemId}"
+        // Show item ID in UI
+        loadedWebMapTextView.text = getString(R.string.web_map_loaded_text, portalItem.itemId)
     }
 
     override fun handleChallenge(p0: AuthenticationChallenge?): AuthenticationChallengeResponse {

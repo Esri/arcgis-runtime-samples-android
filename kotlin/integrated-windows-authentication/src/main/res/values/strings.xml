@@ -11,9 +11,11 @@
     <string name="portal_load_state_connected">Connected to the portal on %s</string>
     <string name="portal_user_connected">Connected as: %s</string>
     <string name="portal_user_anonymous">Anonymous</string>
+    <string name="web_map_loaded_text">Loaded web map from item %s</string>
 
     <string name="error_portal_url">Portal URL is invalid. Please enter a valid portal URL.</string>
     <string name="error_item_set">Error getting portal item set from portal: %s</string>
     <string name="error_portal_sign_in_cancelled">Portal sign in was cancelled by user.</string>
     <string name="error_portal_sign_in_failed">Portal sign in failed: %s</string>
+    <string name="error_portal_not_instantiated">Portal not instantiated.</string>
 </resources>
