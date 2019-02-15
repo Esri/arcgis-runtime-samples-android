@@ -14,15 +14,18 @@
  *
  */
 
-package com.esri.arcgisruntime.generateofflinemap;
+package com.esri.arcgisruntime.sample.generateofflinemapwithlocalbasemap;
 
 import java.io.File;
+import java.util.concurrent.ExecutionException;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -32,6 +35,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.Job;
+import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -57,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
   private Button mTakeMapOfflineButton;
   private GraphicsOverlay mGraphicsOverlay;
   private Graphic mDownloadArea;
+
+  private boolean mShouldUseLocalBasemap;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -133,23 +139,10 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Use the generate offline map job to generate an offline map.
    */
-  private void generateOfflineMap() {
-
-    // create a progress dialog to show download progress
-    ProgressDialog progressDialog = new ProgressDialog(this);
-    progressDialog.setTitle("Generate Offline Map Job");
-    progressDialog.setMessage("Taking map offline...");
-    progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-    progressDialog.setIndeterminate(false);
-    progressDialog.setProgress(0);
+  private void setupOfflineMapTaskAndGenerateOfflineMapParameters() {
 
     // when the button is clicked, start the offline map task job
     mTakeMapOfflineButton.setOnClickListener(v -> {
-      progressDialog.show();
-
-      // delete any offline map already in the cache
-      String tempDirectoryPath = getCacheDir() + File.separator + "offlineMap";
-      deleteDirectory(new File(tempDirectoryPath));
 
       // specify the extent, min scale, and max scale as parameters
       double minScale = mMapView.getMapScale();
@@ -158,38 +151,110 @@ public class MainActivity extends AppCompatActivity {
       if (minScale <= maxScale) {
         minScale = maxScale + 1;
       }
-      GenerateOfflineMapParameters generateOfflineMapParameters = new GenerateOfflineMapParameters(
-          mDownloadArea.getGeometry(), minScale, maxScale);
 
-      // create an offline map offlineMapTask with the map
+      // create an offline map task with the map
       OfflineMapTask offlineMapTask = new OfflineMapTask(mMapView.getMap());
 
-      // create an offline map job with the download directory path and parameters and start the job
-      GenerateOfflineMapJob job = offlineMapTask.generateOfflineMap(generateOfflineMapParameters, tempDirectoryPath);
-
-      // replace the current map with the result offline map when the job finishes
-      job.addJobDoneListener(() -> {
-        if (job.getStatus() == Job.Status.SUCCEEDED) {
-          GenerateOfflineMapResult result = job.getResult();
-          mMapView.setMap(result.getOfflineMap());
-          mGraphicsOverlay.getGraphics().clear();
-          mTakeMapOfflineButton.setEnabled(false);
-          Toast.makeText(this, "Now displaying offline map.", Toast.LENGTH_LONG).show();
-        } else {
-          String error = "Error in generate offline map job: " + job.getError().getAdditionalMessage();
+      // create default generate offline map parameters
+      ListenableFuture<GenerateOfflineMapParameters> generateOfflineMapParametersFuture = offlineMapTask
+          .createDefaultGenerateOfflineMapParametersAsync(mDownloadArea.getGeometry(), minScale, maxScale);
+      generateOfflineMapParametersFuture.addDoneListener(() -> {
+        try {
+          GenerateOfflineMapParameters generateOfflineMapParameters = generateOfflineMapParametersFuture.get();
+          // define the samples directory file
+          File samplesDirectory = new File(
+              Environment.getExternalStorageDirectory() + getString(R.string.samples_directory));
+          // name of local basemap file as supplied by the map's author
+          String localBasemapFileName = generateOfflineMapParameters.getReferenceBasemapFilename();
+          // check if the offline map parameters include reference to a basemap file
+          if (!localBasemapFileName.isEmpty()) {
+            // search for the given file name (in this case, in the ArcGIS/Samples directory)
+            File localBasemapFile = searchForFile(samplesDirectory, localBasemapFileName);
+            // if a file of the given name was found
+            if (localBasemapFile != null) {
+              // get the file's directory
+              String localBasemapDirectory = localBasemapFile.getParent();
+              AlertDialog.Builder localDialogBuilder = showLocalBasemapDialog(localBasemapFileName);
+              localDialogBuilder.setPositiveButton("YES", (dialog, which) -> {
+                // set the directory of the local base map to the parameters
+                generateOfflineMapParameters.setReferenceBasemapDirectory(localBasemapDirectory);
+                // call generate offline map with parameters which now contain a reference basemap directory
+                generateOfflineMap(offlineMapTask, generateOfflineMapParameters);
+              });
+              localDialogBuilder.setNegativeButton("NO",
+                  (dialog, which) -> {
+                    // call generate offline map with parameters which contain an empty string for reference basemap directory
+                    generateOfflineMap(offlineMapTask, generateOfflineMapParameters);
+                  });
+              localDialogBuilder.show();
+              Log.i(TAG, "Local basemap file found in: " + localBasemapDirectory);
+            } else {
+              String error = "Local basemap file " + localBasemapFileName + " not found!";
+              Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+              Log.e(TAG, error);
+            }
+          } else {
+            String message = "The map's author has not specified a local basemap";
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            Log.i(TAG, message);
+          }
+        } catch (ExecutionException | InterruptedException e) {
+          String error = "Error creating generate offline map parameters: " + e.getMessage();
           Toast.makeText(this, error, Toast.LENGTH_LONG).show();
           Log.e(TAG, error);
         }
-        progressDialog.dismiss();
       });
+    });
+  }
 
-      // show the job's progress with the progress dialog
-      job.addProgressChangedListener(() -> progressDialog.setProgress(job.getProgress()));
+  private void generateOfflineMap(OfflineMapTask offlineMapTask, GenerateOfflineMapParameters generateOfflineMapParameters) {
 
-      // start the job
-      job.start();
+    // create a progress dialog to show download progress
+    ProgressDialog progressDialog = new ProgressDialog(this);
+    progressDialog.setTitle("Generate Offline Map Job");
+    progressDialog.setMessage("Taking map offline...");
+    progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+    progressDialog.setIndeterminate(false);
+    progressDialog.setProgress(0);
+    progressDialog.show();
+
+    // delete any offline map already in the cache
+    String tempDirectoryPath = getCacheDir() + File.separator + "offlineMap";
+    deleteDirectory(new File(tempDirectoryPath));
+
+    // create an offline map job with the download directory path and parameters and start the job
+    GenerateOfflineMapJob job = offlineMapTask
+        .generateOfflineMap(generateOfflineMapParameters, tempDirectoryPath);
+
+    // replace the current map with the result offline map when the job finishes
+    job.addJobDoneListener(() -> {
+      if (job.getStatus() == Job.Status.SUCCEEDED) {
+        GenerateOfflineMapResult result = job.getResult();
+        mMapView.setMap(result.getOfflineMap());
+        mGraphicsOverlay.getGraphics().clear();
+        mTakeMapOfflineButton.setEnabled(false);
+        Toast.makeText(this, "Now displaying offline map.", Toast.LENGTH_LONG).show();
+      } else {
+        String error = "Error in generate offline map job: " + job.getError().getAdditionalMessage();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
+      }
+      progressDialog.dismiss();
     });
 
+    // show the job's progress with the progress dialog
+    job.addProgressChangedListener(() -> progressDialog.setProgress(job.getProgress()));
+
+    // start the job
+    job.start();
+  }
+
+  private AlertDialog.Builder showLocalBasemapDialog(String localBasemapFileName) {
+    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+    alertDialogBuilder.setTitle("Local basemap found on the device");
+    alertDialogBuilder.setMessage("The local basemap file " + localBasemapFileName
+        + " was found on the device. Would you like to use the local file instead of an online basemap?");
+    return alertDialogBuilder;
   }
 
   /**
@@ -201,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
     int requestCode = 2;
     // for API level 23+ request permission at runtime
     if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      generateOfflineMap();
+      setupOfflineMapTaskAndGenerateOfflineMapParameters();
     } else {
       // request permission
       ActivityCompat.requestPermissions(this, reqPermission, requestCode);
@@ -214,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      generateOfflineMap();
+      setupOfflineMapTaskAndGenerateOfflineMapParameters();
       Log.d(TAG, "permission granted");
     } else {
       // report to user that permission was denied
@@ -238,6 +303,29 @@ public class MainActivity extends AppCompatActivity {
   protected void onDestroy() {
     mMapView.dispose();
     super.onDestroy();
+  }
+
+  /**
+   * Recursively search the given file for the given file name.
+   *
+   * @param file     to search in
+   * @param fileName to search for
+   * @return the file being searched for or, of not found, null
+   */
+  private static File searchForFile(File file, String fileName) {
+    if (file.isDirectory()) {
+      File[] arr = file.listFiles();
+      for (File f : arr) {
+        File found = searchForFile(f, fileName);
+        if (found != null)
+          return found;
+      }
+    } else {
+      if (file.getName().equals(fileName)) {
+        return file;
+      }
+    }
+    return null;
   }
 
   /**
