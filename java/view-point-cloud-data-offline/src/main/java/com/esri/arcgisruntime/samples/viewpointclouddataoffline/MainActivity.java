@@ -43,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
 
   private SceneView mSceneView;
 
-  private ArcGISScene mScene;
-
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -52,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
     mSceneView = findViewById(R.id.sceneView);
 
     // create a scene and add it to the scene view
-    mScene = new ArcGISScene(Basemap.createImagery());
-    mSceneView.setScene(mScene);
+    ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
+    mSceneView.setScene(scene);
 
     // create a camera and initial camera position
     Camera camera = new Camera(32.7321157, -117.150072, 452.282774, 25.481533, 78.0945859, 0.0);
@@ -64,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     // set the base surface with world elevation
     Surface surface = new Surface();
     surface.getElevationSources().add(new ArcGISTiledElevationSource(getString(R.string.elevation_source_url)));
-    mScene.setBaseSurface(surface);
+    scene.setBaseSurface(surface);
 
     // For API level 23+ request permission at runtime
     if (ContextCompat.checkSelfPermission(this, PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED) {
@@ -99,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
       // When PointCloudLayer loads
       if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.LOADED) {
         // Add the PointCloudLayer to the Operational Layers of the Scene
-        mScene.getOperationalLayers().add(pointCloudLayer);
+        mSceneView.getScene().getOperationalLayers().add(pointCloudLayer);
       } else if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
         // Notify user that the PointCloudLayer has failed to load
         Toast.makeText(this, R.string.point_cloud_layer_load_failure_message, Toast.LENGTH_LONG).show();
