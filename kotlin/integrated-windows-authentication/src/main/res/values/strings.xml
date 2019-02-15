@@ -7,4 +7,13 @@
     <string name="enter_portal_url">Enter portal url</string>
     <string name="search_public">Search Public</string>
     <string name="search_secure">Search Secure</string>
+    <string name="portal_load_state_searching">Searching for web map items on the portal at %s</string>
+    <string name="portal_load_state_connected">Connected to the portal on %s</string>
+    <string name="portal_user_connected">Connected as: %s</string>
+    <string name="portal_user_anonymous">Anonymous</string>
+
+    <string name="error_portal_url">Portal URL is invalid. Please enter a valid portal URL.</string>
+    <string name="error_item_set">Error getting portal item set from portal: %s</string>
+    <string name="error_portal_sign_in_cancelled">Portal sign in was cancelled by user.</string>
+    <string name="error_portal_sign_in_failed">Portal sign in failed: %s</string>
 </resources>

@@ -49,7 +49,7 @@ class PortalItemAdapter(private val onItemClickListener: OnItemClickListener) : 
             portalItem?.let {
                 itemTextView.text = it.title
                 itemView.setOnClickListener { _ ->
-                    onItemClickListener.onItemClick(it)
+                    onItemClickListener.onPortalItemClick(it)
                 }
             }
         }
@@ -61,12 +61,14 @@ class PortalItemAdapter(private val onItemClickListener: OnItemClickListener) : 
         } else {
             this.portalItems?.clear()
         }
-        this.portalItems?.addAll(portalItems)
-        DiffUtil.calculateDiff(PortalItemsDiffUtilCallback(this.portalItems, portalItems)).dispatchUpdatesTo(this)
+        DiffUtil.calculateDiff(PortalItemsDiffUtilCallback(this.portalItems, portalItems)).let {
+            this.portalItems?.addAll(portalItems)
+            it.dispatchUpdatesTo(this)
+        }
     }
 
     interface OnItemClickListener {
-        fun onItemClick(portalItem: PortalItem)
+        fun onPortalItemClick(portalItem: PortalItem)
     }
 }
 

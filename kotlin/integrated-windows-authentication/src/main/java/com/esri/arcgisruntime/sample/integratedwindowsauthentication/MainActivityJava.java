@@ -46,9 +46,9 @@ import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 
-public class MainActivity extends AppCompatActivity implements AuthenticationChallengeHandler {
+public class MainActivityJava extends AppCompatActivity implements AuthenticationChallengeHandler {
 
-  private static final String TAG = MainActivity.class.getSimpleName();
+  private static final String TAG = MainActivityJava.class.getSimpleName();
 
   private RecyclerView mRecyclerView;
 
@@ -89,9 +89,9 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
     });
 
     // get reference to load state UI elements
-    mPortalLoadStateView = findViewById(R.id.portalLoadState);
+    mPortalLoadStateView = findViewById(R.id.portalLoadStateView);
     mPortalLoadStateView.setVisibility(View.GONE);
-    mLoadStateTextView = findViewById(R.id.loadStateTextView);
+    mLoadStateTextView = findViewById(R.id.portalLoadStateTextView);
     mLoadWebMapTextView = findViewById(R.id.loadedWebMapTextView);
 
     Button searchSecureButton = findViewById(R.id.searchSecureButton);
