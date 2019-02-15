@@ -64,7 +64,13 @@ public class MainActivity extends AppCompatActivity {
     surface.getElevationSources().add(new ArcGISTiledElevationSource(getString(R.string.elevation_source_url)));
     scene.setBaseSurface(surface);
 
-    // For API level 23+ request permission at runtime
+    requestReadPermission();
+  }
+
+  /**
+   * Request read external storage for API level 23+.
+   */
+  private void requestReadPermission() {
     if (ContextCompat.checkSelfPermission(this, PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED) {
       createPointCloudLayer();
     } else {

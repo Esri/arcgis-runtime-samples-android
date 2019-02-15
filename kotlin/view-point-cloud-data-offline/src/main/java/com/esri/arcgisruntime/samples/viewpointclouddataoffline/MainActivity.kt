@@ -61,7 +61,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // For API level 23+ request permission at runtime
+        requestReadPermission()
+    }
+
+    /**
+     * Request read external storage for API level 23+.
+     */
+    private fun requestReadPermission() {
         if (ContextCompat.checkSelfPermission(this, _permissions[0]) == PackageManager.PERMISSION_GRANTED) {
             createPointCloudLayer()
         } else {
