@@ -9,5 +9,6 @@ include ':analyze-hotspots',
         ':portal-user-info',
         ':raster-function-service',
         ':raster-rendering-rule',
+        ':set-min-max-scale',
         ':show-labels-on-layer',
         ':wmts-layer'
