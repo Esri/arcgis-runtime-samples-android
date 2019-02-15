@@ -52,17 +52,17 @@ public class MainActivity extends AppCompatActivity {
 
     mSceneView = findViewById(R.id.sceneView);
 
-    // create a scene and add it to the scene view
+    // Create a scene and add it to the scene view
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
     mSceneView.setScene(scene);
 
-    // create a camera and initial camera position
+    // Create a camera and initial camera position
     Camera camera = new Camera(32.7321157, -117.150072, 452.282774, 25.481533, 78.0945859, 0.0);
 
-    // set Viewpoint for SceneView using camera
+    // Set viewpoint for SceneView using camera
     mSceneView.setViewpointCamera(camera);
 
-    // set the base surface with world elevation
+    // Set the base surface with world elevation
     Surface surface = new Surface();
     surface.getElevationSources().add(new ArcGISTiledElevationSource(getString(R.string.elevation_source_url)));
     scene.setBaseSurface(surface);
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     if (ContextCompat.checkSelfPermission(this, PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED) {
       createPointCloudLayer();
     } else {
-      // request permission
+      // Request permission
       ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSIONS_REQUEST_CODE);
     }
   }
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       createPointCloudLayer();
     } else {
-      // report to user that permission was denied
+      // Report to user that permission was denied
       String error = getString(R.string.read_permission_denied_message);
       Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
       Log.e(TAG, error);
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void createPointCloudLayer() {
-    // Add a point cloud layer to the scene by passing the URI of the Scene Layer Package to the constructor
+    // Add a PointCloudLayer to the scene by passing the URI of the scene layer package to the constructor
     PointCloudLayer pointCloudLayer = new PointCloudLayer(
         Environment.getExternalStorageDirectory() + getString(R.string.scene_layer_package_location));
 
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
       // When PointCloudLayer loads
       if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.LOADED) {
-        // Add the PointCloudLayer to the Operational Layers of the Scene
+        // Add the PointCloudLayer to the operational layers of the scene
         mSceneView.getScene().getOperationalLayers().add(pointCloudLayer);
       } else if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
         // Notify user that the PointCloudLayer has failed to load

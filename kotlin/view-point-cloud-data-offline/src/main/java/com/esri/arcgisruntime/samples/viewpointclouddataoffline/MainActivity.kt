@@ -46,18 +46,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         sceneView.also { sceneView ->
-            // create a camera and initial camera position
+            // Create a camera and initial camera position
             sceneView.setViewpointCamera(Camera(32.7321157, -117.150072, 452.282774, 25.481533, 78.0945859, 0.0))
 
-            // create a scene and add it to the scene view
+            // Create a scene and add it to the scene view
             with(ArcGISScene(Basemap.createImagery())) {
                 sceneView.scene = this
 
-                // set the base surface with world elevation
+                // Set the base surface with world elevation
                 Surface().apply {
                     elevationSources.add(ArcGISTiledElevationSource(getString(R.string.elevation_source_url)))
                 }.let { surface ->
-                    // set the base surface of the scene
+                    // Set the base surface of the scene
                     this.baseSurface = surface
                 }
             }
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this, _permissions[0]) == PackageManager.PERMISSION_GRANTED) {
             createPointCloudLayer()
         } else {
-            // request permission
+            // Request permission
             ActivityCompat.requestPermissions(this, _permissions, permissionsRequestCode)
         }
     }
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             createPointCloudLayer()
         } else {
-            // report to user that permission was denied
+            // Report to user that permission was denied
             getString(R.string.read_permission_denied_message).let { error ->
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
                 Log.e(logTag, error)
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createPointCloudLayer() {
-        // Add a point cloud layer to the scene by passing the URI of the Scene Layer Package to the constructor
+        // Add a PointCloudLayer to the scene by passing the URI of the scene layer package to the constructor
         val pointCloudLayer = PointCloudLayer(
                 Environment.getExternalStorageDirectory().toString() + getString(R.string.scene_layer_package_location))
 
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
         pointCloudLayer.addLoadStatusChangedListener { loadStatusChangedEvent ->
             // When PointCloudLayer loads
             if (loadStatusChangedEvent.newLoadStatus == LoadStatus.LOADED) {
-                // Add the PointCloudLayer to the Operational Layers of the Scene
+                // Add the PointCloudLayer to the operational layers of the scene
                 sceneView.scene.operationalLayers.add(pointCloudLayer)
             } else if (loadStatusChangedEvent.newLoadStatus == LoadStatus.FAILED_TO_LOAD) {
                 // Notify user that the PointCloudLayer has failed to load
