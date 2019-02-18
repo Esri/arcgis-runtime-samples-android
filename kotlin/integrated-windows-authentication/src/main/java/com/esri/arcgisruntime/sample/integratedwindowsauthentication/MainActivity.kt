@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
      * Handle sign in button click on CredentialDialogFragment
      *
      * @param username the username entered in the dialog
-     * @param password the passwored entered in the dialog
+     * @param password the password entered in the dialog
      */
     override fun onSignInClicked(username: String, password: String) {
         userCredential = UserCredential(username, password)
