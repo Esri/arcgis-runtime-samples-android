@@ -163,10 +163,6 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
         searchPortal(Portal(portalUrlEditText.text.toString(), true))
     }
 
-    override fun onCancelClicked() {
-        // TODO
-    }
-
     /**
      * Add the given portal item to a new map and set the map to the map view.
      *

@@ -74,7 +74,5 @@ class CredentialDialogFragment : DialogFragment() {
 
     interface OnCredentialDialogButtonClickListener {
         fun onSignInClicked(username: String, password: String)
-
-        fun onCancelClicked()
     }
 }
