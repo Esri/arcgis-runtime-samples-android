@@ -74,7 +74,9 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
                 // If the entered URL is a valid URL
                 if (Patterns.WEB_URL.matcher(it).matches()) {
                     if (userCredential == null) {
-                        showCredentialDialogFragment(it)
+                        // Show an the dialog fragment to request teh user to enter their credentials
+                        CredentialDialogFragment.newInstance(it).show(supportFragmentManager,
+                                CredentialDialogFragment::class.java.simpleName)
                     } else {
                         searchPortal(Portal(portalUrlEditText.text.toString(), true))
                     }
@@ -153,10 +155,12 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
         portal.loadAsync()
     }
 
-    private fun showCredentialDialogFragment(hostName: String) {
-        CredentialDialogFragment.newInstance(hostName).show(supportFragmentManager, CredentialDialogFragment::class.java.simpleName)
-    }
-
+    /**
+     * Handle sign in button click on CredentialDialogFragment
+     *
+     * @param username the username entered in the dialog
+     * @param password the passwored entered in the dialog
+     */
     override fun onSignInClicked(username: String, password: String) {
         userCredential = UserCredential(username, password)
         // Search an instance of the IWA-secured portal, the user may be challenged for access
@@ -187,7 +191,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
      * When a user credential challenge is issued, check the failure count of this challenge. If the failure count
      * is greater than zero, notify user and respond with a AuthenticationChallengeResponse with a cancel action.
      * Otherwise if the user credential has been set, respond with a AuthenticationChallengeResponse with a
-     * continue with credential action with the credentials as a parameter.
+     * continue with credential action and with the credentials as a parameter.
      *
      * @param authenticationChallenge
      */
@@ -202,6 +206,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
                     }
                     Log.e(logTag, it)
                 }
+                // CLear stored user credentials
                 userCredential = null
                 return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL,
                         authenticationChallenge)
