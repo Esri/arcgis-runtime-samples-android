@@ -184,22 +184,22 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
     }
 
     /**
-     * When a user credential challenge is issued, a dialog will be presented to the user to take credential information.
-     * The portal URL will be displayed as a message in the dialog. If a wrong credential has been passed in the previous
-     * attempt, a different message will be displayed in the dialog. The dialog has two edit text boxes for username and
-     * password respectively. Other SDKs' samples may have one more parameter for IWA domain. As indicated by the Javadoc
-     * of UseCredential, the Android SDK is in favor of passing username as username@domain or domain\\username.
+     * When a user credential challenge is issued, check the failure count of this challenge. If the failure count
+     * is greater than zero, notify user and respond with a AuthenticationChallengeResponse with a cancel action.
+     * Otherwise if the user credential has been set, respond with a AuthenticationChallengeResponse with a
+     * continue with credential action with the credentials as a parameter.
      *
      * @param authenticationChallenge
      */
     override fun handleChallenge(authenticationChallenge: AuthenticationChallenge?): AuthenticationChallengeResponse {
         if (authenticationChallenge?.type == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE
                 && authenticationChallenge.remoteResource is Portal) {
-            val maxAuthAttempts = 5
-            if (authenticationChallenge.failureCount > maxAuthAttempts) {
-                // Exceeded maximum amount of attempts. Act like it was a cancel
+            if (authenticationChallenge.failureCount > 0) {
+                // Authentication challenge was a failure, act like it was a cancel
                 getString(R.string.auth_max_attempts_reached).let {
-                    Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                    runOnUiThread {
+                        Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                    }
                     Log.e(logTag, it)
                 }
                 userCredential = null
@@ -217,7 +217,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
     }
 
     override fun onPortalItemClick(portalItem: PortalItem) {
-        addMap(portalItem);
+        addMap(portalItem)
     }
 
     override fun onResume() {
