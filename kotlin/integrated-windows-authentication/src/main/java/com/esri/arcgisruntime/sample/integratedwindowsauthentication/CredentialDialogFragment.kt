@@ -27,16 +27,32 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
 import kotlinx.android.synthetic.main.credential_dialog.*
+import kotlinx.android.synthetic.main.credential_dialog.view.*
 
 class CredentialDialogFragment : DialogFragment() {
 
     private val logTag = CredentialDialogFragment::class.java.simpleName
 
+    private var hostname: String? = null
+
     private var onDialogButtonClickListener: OnCredentialDialogButtonClickListener? = null
+
+    companion object {
+        private val ARG_HOSTNAME = "${CredentialDialogFragment::class.java.simpleName}_ARG_HOSTNAME"
+
+        fun newInstance(hostname: String): CredentialDialogFragment {
+            val fragment = CredentialDialogFragment()
+            val args = Bundle()
+            args.putString(ARG_HOSTNAME, hostname)
+            fragment.arguments = args
+            return fragment
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isCancelable = false
+        hostname = arguments?.getString(ARG_HOSTNAME)
     }
 
     override fun onAttach(context: Context) {
@@ -47,8 +63,11 @@ class CredentialDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val view = LayoutInflater.from(context).inflate(R.layout.credential_dialog, null)
+        view.credentialHostnameTextView.text = getString(R.string.credential_dialog_hostname, hostname)
         with(AlertDialog.Builder(context)) {
-            setView(LayoutInflater.from(context).inflate(R.layout.credential_dialog, null))
+            setTitle(R.string.credential_required)
+            setView(view)
             setPositiveButton(R.string.credential_dialog_positive_button_text, onButtonClickListener)
             setNegativeButton(R.string.credential_dialog_negative_button_text, onButtonClickListener)
             return this.create()

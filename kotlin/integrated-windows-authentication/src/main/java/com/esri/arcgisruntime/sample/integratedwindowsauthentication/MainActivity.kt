@@ -70,11 +70,11 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
 
         searchSecureButton.setOnClickListener {
             // Get the string entered for the secure portal URL.
-            portalUrlEditText.text?.toString().let {
+            portalUrlEditText.text?.toString()?.let {
                 // If the entered URL is a valid URL
                 if (Patterns.WEB_URL.matcher(it).matches()) {
                     if (userCredential == null) {
-                        showCredentialDialogFragment()
+                        showCredentialDialogFragment(it)
                     } else {
                         searchPortal(Portal(portalUrlEditText.text.toString(), true))
                     }
@@ -153,8 +153,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
         portal.loadAsync()
     }
 
-    private fun showCredentialDialogFragment() {
-        CredentialDialogFragment().show(supportFragmentManager, CredentialDialogFragment::class.java.simpleName)
+    private fun showCredentialDialogFragment(hostName: String) {
+        CredentialDialogFragment.newInstance(hostName).show(supportFragmentManager, CredentialDialogFragment::class.java.simpleName)
     }
 
     override fun onSignInClicked(username: String, password: String) {
@@ -206,13 +206,13 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
                 return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL,
                         authenticationChallenge)
             }
-            // if credentials were set, return a new auth challenge response with them. otherwise, act like it was a cancel
+            // If credentials were set, return a new auth challenge response with them
             userCredential?.let {
                 return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
                         it)
             }
         }
-        // no credentials were set, return a new auth challenge response with a cancel
+        // No credentials were set, return a new auth challenge response with a cancel
         return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, authenticationChallenge)
     }
 
