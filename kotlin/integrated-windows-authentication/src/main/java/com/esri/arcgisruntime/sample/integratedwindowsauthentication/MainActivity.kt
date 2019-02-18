@@ -30,21 +30,21 @@ import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.portal.PortalQueryParameters
-import com.esri.arcgisruntime.security.AuthenticationChallenge
-import com.esri.arcgisruntime.security.AuthenticationChallengeHandler
-import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
-import com.esri.arcgisruntime.security.AuthenticationManager
+import com.esri.arcgisruntime.security.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.portal_info.*
 import kotlinx.android.synthetic.main.portal_load_state.*
 import java.net.URI
 import java.util.concurrent.ExecutionException
 
-class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, PortalItemAdapter.OnItemClickListener {
+class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, PortalItemAdapter.OnItemClickListener,
+        CredentialDialogFragment.OnCredentialDialogButtonClickListener {
 
     private val logTag = MainActivity::class.java.simpleName
 
     private lateinit var portalItemAdapter: PortalItemAdapter
+
+    private var userCredential: UserCredential? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,8 +73,11 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
             portalUrlEditText.text?.toString().let {
                 // If the entered URL is a valid URL
                 if (Patterns.WEB_URL.matcher(it).matches()) {
-                    // Search an instance of the IWA-secured portal, the user may be challenged for access
-                    searchPortal(Portal(it, true))
+                    if (userCredential == null) {
+                        showCredentialDialogFragment()
+                    } else {
+                        searchPortal(Portal(portalUrlEditText.text.toString(), true))
+                    }
                 } else {
                     getString(R.string.error_portal_url).let { errorString ->
                         Toast.makeText(this, errorString, Toast.LENGTH_LONG).show()
@@ -122,6 +125,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
                                 Log.e(logTag, it)
                             }
                         }
+                        // Hide portal load state
+                        portalLoadStateView.visibility = View.GONE
                     }
                 }
             } else {
@@ -133,14 +138,27 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
                         Log.e(logTag, errorString)
                     }
                 }
+                // Hide portal load state
+                portalLoadStateView.visibility = View.GONE
             }
-
-            // Hide portal load state
-            portalLoadStateView.visibility = View.GONE
         }
 
         // Load portal asynchronously
         portal.loadAsync()
+    }
+
+    private fun showCredentialDialogFragment() {
+        CredentialDialogFragment().show(supportFragmentManager, CredentialDialogFragment::class.java.simpleName)
+    }
+
+    override fun onSignInClicked(username: String, password: String) {
+        userCredential = UserCredential(username, password)
+        // Search an instance of the IWA-secured portal, the user may be challenged for access
+        searchPortal(Portal(portalUrlEditText.text.toString(), true))
+    }
+
+    override fun onCancelClicked() {
+        // TODO
     }
 
     /**
@@ -163,8 +181,36 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
         loadedWebMapTextView.text = getString(R.string.web_map_loaded_text, portalItem.itemId)
     }
 
-    override fun handleChallenge(p0: AuthenticationChallenge?): AuthenticationChallengeResponse {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    /**
+     * When a user credential challenge is issued, a dialog will be presented to the user to take credential information.
+     * The portal URL will be displayed as a message in the dialog. If a wrong credential has been passed in the previous
+     * attempt, a different message will be displayed in the dialog. The dialog has two edit text boxes for username and
+     * password respectively. Other SDKs' samples may have one more parameter for IWA domain. As indicated by the Javadoc
+     * of UseCredential, the Android SDK is in favor of passing username as username@domain or domain\\username.
+     *
+     * @param authenticationChallenge
+     */
+    override fun handleChallenge(authenticationChallenge: AuthenticationChallenge?): AuthenticationChallengeResponse {
+        if (authenticationChallenge?.type == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE
+                && authenticationChallenge.remoteResource is Portal) {
+            val maxAuthAttempts = 5
+            if (authenticationChallenge.failureCount > maxAuthAttempts) {
+                // Exceeded maximum amount of attempts. Act like it was a cancel
+                getString(R.string.auth_max_attempts_reached).let {
+                    Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                    Log.e(logTag, it)
+                }
+                return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL,
+                        authenticationChallenge)
+            }
+            // if credentials were set, return a new auth challenge response with them. otherwise, act like it was a cancel
+            userCredential?.let {
+                return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
+                        it)
+            }
+        }
+        // no credentials were set, return a new auth challenge response with a cancel
+        return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, authenticationChallenge)
     }
 
     override fun onPortalItemClick(portalItem: PortalItem) {
