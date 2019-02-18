@@ -137,6 +137,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
             } else {
                 // Report error
                 portal.loadError?.let { loadError ->
+                    userCredential = null
                     (if (loadError.errorCode == 17) getString(R.string.error_portal_sign_in_cancelled) else
                         getString(R.string.error_portal_sign_in_failed, loadError.cause?.message)).let { errorString ->
                         Toast.makeText(this, errorString, Toast.LENGTH_LONG).show()
@@ -205,6 +206,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
                     Toast.makeText(this, it, Toast.LENGTH_LONG).show()
                     Log.e(logTag, it)
                 }
+                userCredential = null
                 return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL,
                         authenticationChallenge)
             }
