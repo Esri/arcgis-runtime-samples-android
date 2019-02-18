@@ -74,7 +74,7 @@ class PortalItemAdapter(private val onItemClickListener: OnItemClickListener) : 
 
 class PortalItemsDiffUtilCallback(private val oldPortalItems: List<PortalItem>?, private val newPortalItems: List<PortalItem>) : DiffUtil.Callback() {
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = oldPortalItems?.get(oldItemPosition)?.guid == newPortalItems[newItemPosition].guid
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = oldPortalItems?.get(oldItemPosition)?.itemId == newPortalItems[newItemPosition].itemId
 
     override fun getOldListSize() = oldPortalItems?.size ?: 0
 
