@@ -206,7 +206,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
                     }
                     Log.e(logTag, it)
                 }
-                // CLear stored user credentials
+                // Clear stored user credentials
                 userCredential = null
                 return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL,
                         authenticationChallenge)
