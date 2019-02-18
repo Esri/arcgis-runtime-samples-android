@@ -89,6 +89,9 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
     }
 
     private fun searchPortal(portal: Portal) {
+        // Hide portal list during search
+        recyclerView.visibility = View.INVISIBLE
+
         // Show portal load state during search
         portalLoadStateView.visibility = View.VISIBLE
         portalLoadStateTextView.text = getString(R.string.portal_load_state_searching, portal.uri)
@@ -127,6 +130,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
                         }
                         // Hide portal load state
                         portalLoadStateView.visibility = View.GONE
+                        // Show portal list
+                        recyclerView.visibility = View.VISIBLE
                     }
                 }
             } else {
