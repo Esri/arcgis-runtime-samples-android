@@ -13,6 +13,4 @@
 
     <string name="progress_dialog_fragment_title">Running geoprocessing job</string>
     <string name="progress_dialog_fragment_cancel_text">Cancel</string>
-
-    <string name="query_string">(\"DATE\" &gt; date \'1998–1–1 00:00:00\' AND \"DATE\" &lt; date \'1998–5–31 00:00:00\')</string>
 </resources>
