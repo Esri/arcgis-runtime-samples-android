@@ -70,6 +70,9 @@ public class DateRangeDialogFragment extends DialogFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    // prevent re-creation during configuration change
+    setRetainInstance(true);
+
     // create a simple date formatter to parse strings to date
     mSimpleDateFormatter = new SimpleDateFormat(getString(R.string.query_date_format), Locale.US);
     try {
@@ -187,6 +190,16 @@ public class DateRangeDialogFragment extends DialogFragment {
       datePickerDialog.updateDate(1998, 0, 1);
     }
     datePickerDialog.show();
+  }
+
+  @Override
+  public void onDestroyView() {
+    Dialog dialog = getDialog();
+    // handles https://code.google.com/p/android/issues/detail?id=17423
+    if (dialog != null && getRetainInstance()) {
+      dialog.setDismissMessage(null);
+    }
+    super.onDestroyView();
   }
 
   public interface OnAnalyzeButtonClickListener {
