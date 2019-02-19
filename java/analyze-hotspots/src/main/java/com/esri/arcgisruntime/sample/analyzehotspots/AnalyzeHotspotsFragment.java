@@ -98,6 +98,17 @@ public class AnalyzeHotspotsFragment extends Fragment {
     // set the map to the map view
     mMapView.setMap(map);
 
+    // setup OnClickListener for FloatingActionButton
+    FloatingActionButton calendarFab = view.findViewById(R.id.calendarButton);
+    calendarFab.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        showDateRangeDialog();
+      }
+    });
+  }
+
+  @Override public void onStart() {
+    super.onStart();
     // If the layer has already been created, add it to the map view
     if (mHotspotMapImageLayer != null) {
       addLayerToMapView(mHotspotMapImageLayer, mMapView);
@@ -108,14 +119,6 @@ public class AnalyzeHotspotsFragment extends Fragment {
         mMapView.setViewpoint(new Viewpoint(mHotspotMapImageLayer.getFullExtent()));
       }
     }
-
-    // setup OnClickListener for FloatingActionButton
-    FloatingActionButton calendarFab = view.findViewById(R.id.calendarButton);
-    calendarFab.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        showDateRangeDialog();
-      }
-    });
   }
 
   /**
