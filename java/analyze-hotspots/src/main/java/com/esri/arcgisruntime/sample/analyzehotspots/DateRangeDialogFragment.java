@@ -54,9 +54,9 @@ public class DateRangeDialogFragment extends DialogFragment {
 
   private OnAnalyzeButtonClickListener mOnAnalyzeButtonClickListener;
 
-  private String title;
+  private String mTitle;
 
-  private String buttonText;
+  private String mButtonText;
 
   public static DateRangeDialogFragment newInstance(String title, String buttonText) {
     DateRangeDialogFragment fragment = new DateRangeDialogFragment();
@@ -84,8 +84,8 @@ public class DateRangeDialogFragment extends DialogFragment {
     }
 
     if (getArguments() != null) {
-      this.title = getArguments().getString(ARG_TITLE);
-      this.buttonText = getArguments().getString(ARG_BUTTON_TEXT);
+      this.mTitle = getArguments().getString(ARG_TITLE);
+      this.mButtonText = getArguments().getString(ARG_BUTTON_TEXT);
     }
   }
 
@@ -109,7 +109,7 @@ public class DateRangeDialogFragment extends DialogFragment {
     final EditText toEditText = dialogView.findViewById(R.id.toEditText);
     Button analyzeButton = dialogView.findViewById(R.id.submitButton);
 
-    final AlertDialog dateRangeDialog = builder.setTitle(title)
+    final AlertDialog dateRangeDialog = builder.setTitle(mTitle)
         .setView(dialogView)
         .setCancelable(true)
         .create();
@@ -126,7 +126,7 @@ public class DateRangeDialogFragment extends DialogFragment {
       }
     });
 
-    analyzeButton.setText(buttonText);
+    analyzeButton.setText(mButtonText);
     // if button is clicked, close the custom dialog
     analyzeButton.setOnClickListener(new View.OnClickListener() {
       @Override
