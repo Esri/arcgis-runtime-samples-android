@@ -31,6 +31,8 @@ import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
+import com.esri.arcgisruntime.layers.Layer;
+import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
@@ -53,6 +55,8 @@ public class AnalyzeHotspotsFragment extends Fragment {
   private GeoprocessingJob mGeoprocessingJob;
 
   private boolean mCancelled;
+
+  private ArcGISMapImageLayer mHotspotMapImageLayer;
 
   public static AnalyzeHotspotsFragment newInstance() {
     return new AnalyzeHotspotsFragment();
@@ -79,21 +83,9 @@ public class AnalyzeHotspotsFragment extends Fragment {
 
   @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
     // inflate MapView from layout
     mMapView = view.findViewById(R.id.mapView);
 
-    // setup OnClickListener for FloatingActionButton
-    FloatingActionButton calendarFab = view.findViewById(R.id.calendarButton);
-    calendarFab.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        showDateRangeDialog();
-      }
-    });
-  }
-
-  @Override public void onStart() {
-    super.onStart();
     // create a map with the BasemapType topographic
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
 
@@ -105,30 +97,25 @@ public class AnalyzeHotspotsFragment extends Fragment {
 
     // set the map to the map view
     mMapView.setMap(map);
-  }
 
-  /**
-   * Creates the date range dialog. Includes listeners to handle click events, which call showCalendar(...) or
-   * analyzeHotspots(...).
-   */
-  private void showDateRangeDialog() {
-    if (findDateRangeDialogFragment() == null) {
-      DateRangeDialogFragment dateRangeDialogFragment = DateRangeDialogFragment.newInstance(
-          getString(R.string.date_range_dialog_title),
-          getString(R.string.date_range_dialog_submit_button_text)
-      );
-      dateRangeDialogFragment.show(getChildFragmentManager(), DateRangeDialogFragment.class.getSimpleName());
-    }
-  }
+    // If the layer has already been created, add it to the map view
+    if (mHotspotMapImageLayer != null) {
+      addLayerToMapView(mHotspotMapImageLayer, mMapView);
 
-  private void showProgressDialogFragment() {
-    if (findProgressDialogFragment() == null) {
-      ProgressDialogFragment progressDialogFragment = ProgressDialogFragment.newInstance(
-          getString(R.string.progress_dialog_fragment_title),
-          getString(R.string.progress_dialog_fragment_cancel_text)
-      );
-      progressDialogFragment.show(getChildFragmentManager(), ProgressDialogFragment.class.getSimpleName());
+      // If the layer has already been loaded, set the viewpoint of the map view equal to the full extent of the layer
+      if (mHotspotMapImageLayer.getLoadStatus() == LoadStatus.LOADED) {
+        // set the map viewpoint to the MapImageLayer, once loaded
+        mMapView.setViewpoint(new Viewpoint(mHotspotMapImageLayer.getFullExtent()));
+      }
     }
+
+    // setup OnClickListener for FloatingActionButton
+    FloatingActionButton calendarFab = view.findViewById(R.id.calendarButton);
+    calendarFab.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        showDateRangeDialog();
+      }
+    });
   }
 
   /**
@@ -145,7 +132,7 @@ public class AnalyzeHotspotsFragment extends Fragment {
     }
 
     // a map image layer is generated as a result. Remove any layer previously added to the map
-    mMapView.getMap().getOperationalLayers().clear();
+    mMapView.getMap().getOperationalLayers().remove(mHotspotMapImageLayer);
 
     // set canceled flag to false
     mCancelled = false;
@@ -188,17 +175,10 @@ public class AnalyzeHotspotsFragment extends Fragment {
                 Log.i(TAG, "Job succeeded.");
 
                 GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
-                final ArcGISMapImageLayer hotspotMapImageLayer = geoprocessingResult.getMapImageLayer();
+                mHotspotMapImageLayer = geoprocessingResult.getMapImageLayer();
 
-                // add the new layer to the map
-                mMapView.getMap().getOperationalLayers().add(hotspotMapImageLayer);
+                addLayerToMapView(mHotspotMapImageLayer, mMapView);
 
-                hotspotMapImageLayer.addDoneLoadingListener(new Runnable() {
-                  @Override public void run() {
-                    // set the map viewpoint to the MapImageLayer, once loaded
-                    mMapView.setViewpointGeometryAsync(hotspotMapImageLayer.getFullExtent());
-                  }
-                });
               } else if (mCancelled) {
                 Toast.makeText(getContext(), "Job canceled.", Toast.LENGTH_SHORT).show();
                 Log.i(TAG, "Job cancelled.");
@@ -218,7 +198,48 @@ public class AnalyzeHotspotsFragment extends Fragment {
     });
   }
 
+  private void addLayerToMapView(final Layer layer, final MapView mapView) {
+    // add the new layer to the map
+    mapView.getMap().getOperationalLayers().add(layer);
+
+    // Add a listener to set the viewpoint of the map view when it is finished loading only if the layer has not already
+    // finished loading
+    if (layer.getLoadStatus() != LoadStatus.LOADED) {
+      layer.addDoneLoadingListener(new Runnable() {
+        @Override public void run() {
+          // set the map viewpoint to the MapImageLayer, once loaded
+          mMapView.setViewpointGeometryAsync(layer.getFullExtent());
+        }
+      });
+    }
+  }
+
+  /**
+   * Creates the date range dialog. Includes listeners to handle click events, which call showCalendar(...) or
+   * analyzeHotspots(...).
+   */
+  private void showDateRangeDialog() {
+    if (findDateRangeDialogFragment() == null) {
+      DateRangeDialogFragment dateRangeDialogFragment = DateRangeDialogFragment.newInstance(
+          getString(R.string.date_range_dialog_title),
+          getString(R.string.date_range_dialog_submit_button_text)
+      );
+      dateRangeDialogFragment.show(getChildFragmentManager(), DateRangeDialogFragment.class.getSimpleName());
+    }
+  }
+
+  private void showProgressDialogFragment() {
+    if (findProgressDialogFragment() == null) {
+      ProgressDialogFragment progressDialogFragment = ProgressDialogFragment.newInstance(
+          getString(R.string.progress_dialog_fragment_title),
+          getString(R.string.progress_dialog_fragment_cancel_text)
+      );
+      progressDialogFragment.show(getChildFragmentManager(), ProgressDialogFragment.class.getSimpleName());
+    }
+  }
+
   void cancelGeoProcessingJob() {
+    mCancelled = true;
     mGeoprocessingJob.cancel();
   }
 
@@ -233,15 +254,17 @@ public class AnalyzeHotspotsFragment extends Fragment {
   }
 
   @Override
-  public void onPause() {
-    mMapView.pause();
-    super.onPause();
-  }
-
-  @Override
   public void onResume() {
     super.onResume();
     mMapView.resume();
+  }
+
+  @Override
+  public void onPause() {
+    // We have to disassociate the layer from the map before reattaching it when the Fragment is recreating
+    mMapView.getMap().getOperationalLayers().remove(mHotspotMapImageLayer);
+    mMapView.pause();
+    super.onPause();
   }
 
   @Override
