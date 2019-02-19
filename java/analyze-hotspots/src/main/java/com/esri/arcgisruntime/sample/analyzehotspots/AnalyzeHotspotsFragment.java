@@ -214,10 +214,23 @@ public class AnalyzeHotspotsFragment extends Fragment {
     }
   }
 
-  /**
-   * Creates the date range dialog. Includes listeners to handle click events, which call showCalendar(...) or
-   * analyzeHotspots(...).
-   */
+  void cancelGeoProcessingJob() {
+    mCancelled = true;
+    if (mGeoprocessingJob != null) {
+      mGeoprocessingJob.cancel();
+    }
+  }
+
+  private DateRangeDialogFragment findDateRangeDialogFragment() {
+    return (DateRangeDialogFragment) getChildFragmentManager()
+        .findFragmentByTag(DateRangeDialogFragment.class.getSimpleName());
+  }
+
+  private ProgressDialogFragment findProgressDialogFragment() {
+    return (ProgressDialogFragment) getChildFragmentManager()
+        .findFragmentByTag(ProgressDialogFragment.class.getSimpleName());
+  }
+
   private void showDateRangeDialog() {
     if (findDateRangeDialogFragment() == null) {
       DateRangeDialogFragment dateRangeDialogFragment = DateRangeDialogFragment.newInstance(
@@ -236,21 +249,6 @@ public class AnalyzeHotspotsFragment extends Fragment {
       );
       progressDialogFragment.show(getChildFragmentManager(), ProgressDialogFragment.class.getSimpleName());
     }
-  }
-
-  void cancelGeoProcessingJob() {
-    mCancelled = true;
-    mGeoprocessingJob.cancel();
-  }
-
-  private DateRangeDialogFragment findDateRangeDialogFragment() {
-    return (DateRangeDialogFragment) getChildFragmentManager()
-        .findFragmentByTag(DateRangeDialogFragment.class.getSimpleName());
-  }
-
-  private ProgressDialogFragment findProgressDialogFragment() {
-    return (ProgressDialogFragment) getChildFragmentManager()
-        .findFragmentByTag(ProgressDialogFragment.class.getSimpleName());
   }
 
   @Override
