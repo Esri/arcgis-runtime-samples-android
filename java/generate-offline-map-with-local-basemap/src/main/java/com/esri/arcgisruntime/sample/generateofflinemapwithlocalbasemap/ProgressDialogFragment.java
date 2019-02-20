@@ -32,11 +32,11 @@ public class ProgressDialogFragment extends DialogFragment {
   private static final String ARGS_MESSAGE = ProgressDialogFragment.class.getSimpleName() + "_message";
   private static final String ARGS_CANCEL = ProgressDialogFragment.class.getSimpleName() + "_cancel";
 
-  private OnProgressDialogDismissListener mOnProgressDialogDismissListener;
+  private ProgressDialogFragment.OnProgressDialogDismissListener mOnProgressDialogDismissListener;
 
-  private String title;
-  private String message;
-  private String cancel;
+  private String mTitle;
+  private String mMessage;
+  private String mCancel;
 
   public static ProgressDialogFragment newInstance(String title, String message, String cancel) {
     ProgressDialogFragment fragment = new ProgressDialogFragment();
@@ -55,16 +55,16 @@ public class ProgressDialogFragment extends DialogFragment {
     setCancelable(false);
 
     if (getArguments() != null) {
-      this.title = getArguments().getString(ARGS_TITLE);
-      this.message = getArguments().getString(ARGS_MESSAGE);
-      this.cancel = getArguments().getString(ARGS_CANCEL);
+      mTitle = getArguments().getString(ARGS_TITLE);
+      mMessage = getArguments().getString(ARGS_MESSAGE);
+      mCancel = getArguments().getString(ARGS_CANCEL);
     }
   }
 
   @Override public void onAttach(Context context) {
     super.onAttach(context);
-    if (context instanceof OnProgressDialogDismissListener) {
-      this.mOnProgressDialogDismissListener = (OnProgressDialogDismissListener) context;
+    if (context instanceof ProgressDialogFragment.OnProgressDialogDismissListener) {
+      mOnProgressDialogDismissListener = (ProgressDialogFragment.OnProgressDialogDismissListener) context;
     }
   }
 
@@ -72,12 +72,12 @@ public class ProgressDialogFragment extends DialogFragment {
     super.onCreateDialog(savedInstanceState);
     // create a dialog to show progress
     final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-    progressDialog.setTitle(title);
-    progressDialog.setMessage(message);
+    progressDialog.setTitle(mTitle);
+    progressDialog.setMessage(mMessage);
     progressDialog.setIndeterminate(false);
     progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     progressDialog.setMax(100);
-    progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, cancel, (dialog, which) -> onDismiss(dialog));
+    progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, mCancel, (dialog, which) -> onDismiss(dialog));
     return progressDialog;
   }
 
@@ -86,6 +86,16 @@ public class ProgressDialogFragment extends DialogFragment {
     if (mOnProgressDialogDismissListener != null) {
       mOnProgressDialogDismissListener.onProgressDialogDismiss();
     }
+  }
+
+  @Override
+  public void onDestroyView() {
+    Dialog dialog = getDialog();
+    // handles https://code.google.com/p/android/issues/detail?id=17423
+    if (dialog != null && getRetainInstance()) {
+      dialog.setDismissMessage(null);
+    }
+    super.onDestroyView();
   }
 
   public void setProgress(int progress) {

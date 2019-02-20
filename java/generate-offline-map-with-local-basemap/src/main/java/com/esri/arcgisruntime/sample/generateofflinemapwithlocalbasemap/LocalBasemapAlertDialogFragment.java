@@ -32,12 +32,12 @@ public class LocalBasemapAlertDialogFragment extends DialogFragment {
   private static final String ARGS_POSITIVE = ProgressDialogFragment.class.getSimpleName() + "_positive";
   private static final String ARGS_NEGATIVE = ProgressDialogFragment.class.getSimpleName() + "_negative";
 
-  private OnClickListener mOnClickListener;
+  private LocalBasemapAlertDialogFragment.OnClickListener mOnClickListener;
 
-  private String title;
-  private String message;
-  private String positive;
-  private String negative;
+  private String mTitle;
+  private String mMessage;
+  private String mPositive;
+  private String mNegative;
 
   public static LocalBasemapAlertDialogFragment newInstance(String title, String message, String positive, String negative) {
     LocalBasemapAlertDialogFragment fragment = new LocalBasemapAlertDialogFragment();
@@ -57,17 +57,17 @@ public class LocalBasemapAlertDialogFragment extends DialogFragment {
     setCancelable(false);
 
     if (getArguments() != null) {
-      this.title = getArguments().getString(ARGS_TITLE);
-      this.message = getArguments().getString(ARGS_MESSAGE);
-      this.positive = getArguments().getString(ARGS_POSITIVE);
-      this.negative = getArguments().getString(ARGS_NEGATIVE);
+      mTitle = getArguments().getString(ARGS_TITLE);
+      mMessage = getArguments().getString(ARGS_MESSAGE);
+      mPositive = getArguments().getString(ARGS_POSITIVE);
+      mNegative = getArguments().getString(ARGS_NEGATIVE);
     }
   }
 
   @Override public void onAttach(Context context) {
     super.onAttach(context);
-    if (context instanceof OnClickListener) {
-      this.mOnClickListener = (OnClickListener) context;
+    if (context instanceof LocalBasemapAlertDialogFragment.OnClickListener) {
+      mOnClickListener = (LocalBasemapAlertDialogFragment.OnClickListener) context;
     }
   }
 
@@ -75,19 +75,29 @@ public class LocalBasemapAlertDialogFragment extends DialogFragment {
     super.onCreateDialog(savedInstanceState);
     // create a dialog to show progress
     return new AlertDialog.Builder(getActivity())
-        .setTitle(title)
-        .setMessage(message)
-        .setPositiveButton(positive, (dialog, which) -> {
+        .setTitle(mTitle)
+        .setMessage(mMessage)
+        .setPositiveButton(mPositive, (dialog, which) -> {
           if (mOnClickListener != null) {
             mOnClickListener.onPositiveClick();
           }
         })
-        .setNegativeButton(negative, (dialog, which) -> {
+        .setNegativeButton(mNegative, (dialog, which) -> {
           if (mOnClickListener != null) {
             mOnClickListener.onNegativeClick();
           }
         })
         .create();
+  }
+
+  @Override
+  public void onDestroyView() {
+    Dialog dialog = getDialog();
+    // handles https://code.google.com/p/android/issues/detail?id=17423
+    if (dialog != null && getRetainInstance()) {
+      dialog.setDismissMessage(null);
+    }
+    super.onDestroyView();
   }
 
   interface OnClickListener {
