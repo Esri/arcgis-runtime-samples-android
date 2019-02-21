@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Map Rotation</string>
+    <string name="initial_rotation_text">0</string>
 </resources>
