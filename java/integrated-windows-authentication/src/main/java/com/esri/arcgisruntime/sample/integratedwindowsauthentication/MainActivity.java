@@ -16,11 +16,6 @@
 
 package com.esri.arcgisruntime.sample.integratedwindowsauthentication;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -32,7 +27,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.esri.arcgisruntime.ArcGISRuntimeException;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.io.RemoteResource;
@@ -45,22 +39,27 @@ import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.portal.PortalItem;
 import com.esri.arcgisruntime.portal.PortalQueryParameters;
 import com.esri.arcgisruntime.portal.PortalQueryResultSet;
-import com.esri.arcgisruntime.security.AuthenticationChallenge;
-import com.esri.arcgisruntime.security.AuthenticationChallengeHandler;
-import com.esri.arcgisruntime.security.AuthenticationChallengeResponse;
-import com.esri.arcgisruntime.security.AuthenticationManager;
-import com.esri.arcgisruntime.security.UserCredential;
+import com.esri.arcgisruntime.security.*;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity implements AuthenticationChallengeHandler {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private RecyclerView mRecyclerView;
+
   private TextView mLoadWebMapTextView;
+
   private View mPortalLoadStateView;
+
   private TextView mLoadStateTextView;
 
   private MapView mMapView;
+
   private UserCredential mUserCredential;
 
   @Override
@@ -216,6 +215,15 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
   public AuthenticationChallengeResponse handleChallenge(AuthenticationChallenge authenticationChallenge) {
     if (authenticationChallenge.getType() == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE
         && authenticationChallenge.getRemoteResource() instanceof Portal) {
+
+      // If challenge has been requested by a Portal and the Portal has been loaded, cancel the challenge
+      // This is required as some layers have private portal items associated with them and we don't
+      // want to auth against them
+      if (((Portal) authenticationChallenge.getRemoteResource()).getLoadStatus() == LoadStatus.LOADED) {
+        return new AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL,
+            authenticationChallenge);
+      }
+
       int maxAttempts = 5;
       if (authenticationChallenge.getFailureCount() > maxAttempts) {
         // exceeded maximum amount of attempts. Act like it was a cancel
