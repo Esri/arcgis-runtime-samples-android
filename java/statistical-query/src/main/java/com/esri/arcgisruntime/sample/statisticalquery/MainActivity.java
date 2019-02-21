@@ -16,6 +16,13 @@
 
 package com.esri.arcgisruntime.sample.statisticalquery;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -24,8 +31,16 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
-import com.esri.arcgisruntime.data.*;
+import com.esri.arcgisruntime.data.FeatureTable;
+import com.esri.arcgisruntime.data.QueryParameters;
+import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.StatisticDefinition;
+import com.esri.arcgisruntime.data.StatisticRecord;
+import com.esri.arcgisruntime.data.StatisticType;
+import com.esri.arcgisruntime.data.StatisticsQueryParameters;
+import com.esri.arcgisruntime.data.StatisticsQueryResult;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -33,20 +48,14 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
-  private MapView mMapView;
-
-  private FeatureTable mWorldCitiesTable;
-
   private CheckBox mCurrentExtentCheckbox;
-
   private CheckBox mGreater5mCheckbox;
+  private MapView mMapView;
+  private FeatureTable mWorldCitiesTable;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

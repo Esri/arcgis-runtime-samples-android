@@ -17,7 +17,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"></com.esri.arcgisruntime.mapping.view.MapView>
+        app:layout_constraintVertical_bias="0.0" />
 
     <SeekBar
         android:id="@+id/rotationSeekBar"
@@ -25,9 +25,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="68dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="68dp"
         android:layout_toStartOf="@+id/rotationValueText"
         android:max="360"
         app:layout_constraintBottom_toBottomOf="@+id/mapView"
@@ -38,12 +38,12 @@
         android:id="@+id/rotationValueText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/rotationSeekBar"
         android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/rotationSeekBar"
         android:layout_marginEnd="16dp"
+        android:text="@string/initial_rotation_text"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:text="@string/initial_rotation_text"
         app:layout_constraintBottom_toBottomOf="@+id/rotationSeekBar"
         app:layout_constraintRight_toRightOf="parent"
         tools:text="180" />
