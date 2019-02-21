@@ -220,7 +220,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
             URI(authenticationChallenge.remoteResource.uri).host?.let { remoteResourceHost ->
 
                 when {
-                    // If challenge has been requested by a Portal and the Portal has been loaded cancel the challenge
+                    // If challenge has been requested by a Portal and the Portal has been loaded, cancel the challenge
                     // This is required as some layers have private portal items associated with them and we don't
                     // want to auth against them
                     (authenticationChallenge.remoteResource as Portal).loadStatus == LoadStatus.LOADED -> {
