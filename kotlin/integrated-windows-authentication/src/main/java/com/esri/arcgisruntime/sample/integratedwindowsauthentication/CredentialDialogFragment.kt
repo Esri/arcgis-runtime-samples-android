@@ -19,7 +19,6 @@ package com.esri.arcgisruntime.sample.integratedwindowsauthentication
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
@@ -28,22 +27,21 @@ import android.view.LayoutInflater
 import android.widget.Toast
 import kotlinx.android.synthetic.main.credential_dialog.*
 import kotlinx.android.synthetic.main.credential_dialog.view.*
+import java.net.URI
 
 class CredentialDialogFragment : DialogFragment() {
 
-    private val logTag = CredentialDialogFragment::class.java.simpleName
-
-    private var hostname: String? = null
-
-    private var onDialogButtonClickListener: OnCredentialDialogButtonClickListener? = null
+    private var hostname: URI? = null
 
     companion object {
+        private val TAG: String = CredentialDialogFragment::class.java.simpleName
+
         private val ARG_HOSTNAME = "${CredentialDialogFragment::class.java.simpleName}_ARG_HOSTNAME"
 
-        fun newInstance(hostname: String): CredentialDialogFragment {
+        fun newInstance(hostname: URI): CredentialDialogFragment {
             val fragment = CredentialDialogFragment()
             val args = Bundle()
-            args.putString(ARG_HOSTNAME, hostname)
+            args.putSerializable(ARG_HOSTNAME, hostname)
             fragment.arguments = args
             return fragment
         }
@@ -52,14 +50,7 @@ class CredentialDialogFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isCancelable = false
-        hostname = arguments?.getString(ARG_HOSTNAME)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnCredentialDialogButtonClickListener) {
-            this.onDialogButtonClickListener = context
-        }
+        hostname = arguments?.getSerializable(ARG_HOSTNAME) as URI?
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -75,23 +66,36 @@ class CredentialDialogFragment : DialogFragment() {
     }
 
     private val onButtonClickListener = DialogInterface.OnClickListener { _: DialogInterface, which: Int ->
-        onDialogButtonClickListener?.let {
-            if (which == DialogInterface.BUTTON_POSITIVE) {
-                if (dialog.credentialUsernameEditText.text.isNotEmpty() && dialog.credentialPasswordEditText.text.isNotEmpty()) {
-                    it.onSignInClicked(dialog.credentialUsernameEditText.text.toString(), dialog.credentialPasswordEditText.text.toString())
-                } else {
-                    getString(R.string.credential_dialog_error_username_or_password_are_blank).let { error ->
-                        Toast.makeText(context, error, Toast.LENGTH_LONG).show()
-                        Log.e(logTag, error)
+        (context as? OnCredentialDialogButtonClickListener)?.let { listener ->
+            hostname?.let { hostname ->
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    if (dialog.credentialUsernameEditText.text.isNotEmpty() && dialog.credentialPasswordEditText.text.isNotEmpty()) {
+                        listener.onSignInClicked(
+                            hostname,
+                            dialog.credentialUsernameEditText.text.toString(),
+                            dialog.credentialPasswordEditText.text.toString()
+                        )
+                    } else {
+                        getString(R.string.credential_dialog_error_username_or_password_are_blank).let { error ->
+                            Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+                            Log.e(TAG, error)
+                        }
                     }
+                } else {
+                    listener.onCancelClicked(hostname)
                 }
-            } else {
-                this.dismiss()
             }
         }
     }
 
-    interface OnCredentialDialogButtonClickListener {
-        fun onSignInClicked(username: String, password: String)
+    override fun onDismiss(dialog: DialogInterface?) {
+        (context as? DialogInterface.OnDismissListener)?.onDismiss(dialog)
     }
+
+    interface OnCredentialDialogButtonClickListener {
+        fun onSignInClicked(uri: URI, username: String, password: String)
+
+        fun onCancelClicked(uri: URI)
+    }
+
 }

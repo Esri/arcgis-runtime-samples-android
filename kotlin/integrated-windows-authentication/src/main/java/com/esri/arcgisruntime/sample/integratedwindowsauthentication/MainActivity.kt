@@ -17,6 +17,7 @@
 
 package com.esri.arcgisruntime.sample.integratedwindowsauthentication
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -35,16 +36,22 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.portal_info.*
 import kotlinx.android.synthetic.main.portal_load_state.*
 import java.net.URI
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, PortalItemAdapter.OnItemClickListener,
-        CredentialDialogFragment.OnCredentialDialogButtonClickListener {
-
-    private val logTag = MainActivity::class.java.simpleName
+    CredentialDialogFragment.OnCredentialDialogButtonClickListener, DialogInterface.OnDismissListener {
 
     private lateinit var portalItemAdapter: PortalItemAdapter
 
-    private var userCredential: UserCredential? = null
+    private var userCredentials: MutableMap<String, UserCredential> = HashMap()
+
+    // Instance of CountDownLatch used to block the thread that handles authentication
+    private var authLatch: CountDownLatch? = null
+
+    companion object {
+        private val TAG: String = MainActivity::class.java.simpleName
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,17 +80,11 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
             portalUrlEditText.text?.toString()?.let {
                 // If the entered URL is a valid URL
                 if (Patterns.WEB_URL.matcher(it).matches()) {
-                    if (userCredential == null) {
-                        // Show an the dialog fragment to request teh user to enter their credentials
-                        CredentialDialogFragment.newInstance(it).show(supportFragmentManager,
-                                CredentialDialogFragment::class.java.simpleName)
-                    } else {
-                        searchPortal(Portal(portalUrlEditText.text.toString(), true))
-                    }
+                    searchPortal(Portal(portalUrlEditText.text.toString(), true))
                 } else {
                     getString(R.string.error_portal_url).let { errorString ->
                         Toast.makeText(this, errorString, Toast.LENGTH_LONG).show()
-                        Log.e(logTag, errorString)
+                        Log.e(TAG, errorString)
                     }
                 }
             }
@@ -107,43 +108,43 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
                 // Report the user name used for this connection.
                 portal.user?.let {
                     portalLoadStateTextView.text = getString(
-                            R.string.portal_user_connected,
-                            if (it.username != null) it.username else getString(R.string.portal_user_anonymous)
+                        R.string.portal_user_connected,
+                        if (it.username != null) it.username else getString(R.string.portal_user_anonymous)
                     )
                 }
 
                 // Search the portal for web maps
-                portal.findItemsAsync(PortalQueryParameters("type:(\"web map\" NOT \"web mapping application\")"))?.let { portalItemResult ->
-                    portalItemResult.addDoneListener {
-                        try {
-                            portalItemResult.get()?.results?.let { portalItemSetResults ->
-                                portalItemAdapter.updatePortalItems(portalItemSetResults)
+                portal.findItemsAsync(PortalQueryParameters("type:(\"web map\" NOT \"web mapping application\")"))
+                    ?.let { portalItemResult ->
+                        portalItemResult.addDoneListener {
+                            try {
+                                portalItemResult.get()?.results?.let { portalItemSetResults ->
+                                    portalItemAdapter.updatePortalItems(portalItemSetResults)
+                                }
+                            } catch (executionException: ExecutionException) {
+                                getString(R.string.error_item_set, executionException.message).let {
+                                    Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                                    Log.e(TAG, it)
+                                }
+                            } catch (interruptedException: InterruptedException) {
+                                getString(R.string.error_item_set, interruptedException.message).let {
+                                    Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                                    Log.e(TAG, it)
+                                }
                             }
-                        } catch (executionException: ExecutionException) {
-                            getString(R.string.error_item_set, executionException.message).let {
-                                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-                                Log.e(logTag, it)
-                            }
-                        } catch (interruptedException: InterruptedException) {
-                            getString(R.string.error_item_set, interruptedException.message).let {
-                                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-                                Log.e(logTag, it)
-                            }
+                            // Hide portal load state
+                            portalLoadStateView.visibility = View.GONE
+                            // Show portal list
+                            recyclerView.visibility = View.VISIBLE
                         }
-                        // Hide portal load state
-                        portalLoadStateView.visibility = View.GONE
-                        // Show portal list
-                        recyclerView.visibility = View.VISIBLE
                     }
-                }
             } else {
                 // Report error
                 portal.loadError?.let { loadError ->
-                    userCredential = null
                     (if (loadError.errorCode == 17) getString(R.string.error_portal_sign_in_cancelled) else
                         getString(R.string.error_portal_sign_in_failed, loadError.cause?.message)).let { errorString ->
                         Toast.makeText(this, errorString, Toast.LENGTH_LONG).show()
-                        Log.e(logTag, errorString)
+                        Log.e(TAG, errorString)
                     }
                 }
                 // Hide portal load state
@@ -158,13 +159,30 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
     /**
      * Handle sign in button click on CredentialDialogFragment
      *
+     * @param uri the URI requiring credentials
      * @param username the username entered in the dialog
      * @param password the password entered in the dialog
      */
-    override fun onSignInClicked(username: String, password: String) {
-        userCredential = UserCredential(username, password)
-        // Search an instance of the IWA-secured portal, the user may be challenged for access
-        searchPortal(Portal(portalUrlEditText.text.toString(), true))
+    override fun onSignInClicked(uri: URI, username: String, password: String) {
+        uri.host?.let {
+            userCredentials[it] = UserCredential(username, password)
+        }
+    }
+
+    /**
+     * Handle cancel button click on CredentialDialogFragment
+     *
+     * @param uri the URI requiring credentials
+     */
+    override fun onCancelClicked(uri: URI) {
+        uri.host?.let {
+            userCredentials.remove(it)
+        }
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        // Countdown auth latch to unblock thread
+        authLatch?.countDown()
     }
 
     /**
@@ -177,7 +195,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
         if (portalItem.portal == null) {
             getString(R.string.error_portal_not_instantiated).let { error ->
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-                Log.e(logTag, error)
+                Log.e(TAG, error)
             }
             return
         }
@@ -197,24 +215,73 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
      */
     override fun handleChallenge(authenticationChallenge: AuthenticationChallenge?): AuthenticationChallengeResponse {
         if (authenticationChallenge?.type == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE
-                && authenticationChallenge.remoteResource is Portal) {
-            if (authenticationChallenge.failureCount > 0) {
-                // Authentication challenge was a failure, act like it was a cancel
-                getString(R.string.auth_max_attempts_reached).let {
-                    runOnUiThread {
-                        Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+            && authenticationChallenge.remoteResource is Portal
+        ) {
+            URI(authenticationChallenge.remoteResource.uri).host?.let { remoteResourceHost ->
+
+                when {
+                    // If challenge has been requested by a Portal and the Portal has been loaded cancel the challenge
+                    // This is required as some layers have private portal items associated with them and we don't
+                    // want to auth against them
+                    (authenticationChallenge.remoteResource as Portal).loadStatus == LoadStatus.LOADED -> {
+                        return AuthenticationChallengeResponse(
+                            AuthenticationChallengeResponse.Action.CANCEL,
+                            authenticationChallenge
+                        )
                     }
-                    Log.e(logTag, it)
+
+                    // Authentication challenge was a failure, act like it was a cancel and notify user
+                    authenticationChallenge.failureCount > 5 -> {
+                        userCredentials.remove(remoteResourceHost)
+                        getString(R.string.auth_failure).let {
+                            runOnUiThread {
+                                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                            }
+                            Log.e(TAG, it)
+                        }
+                        return AuthenticationChallengeResponse(
+                            AuthenticationChallengeResponse.Action.CANCEL,
+                            authenticationChallenge
+                        )
+                    }
+
+                    // If we have not stored credentials against this host, request them from the user
+                    userCredentials[remoteResourceHost] == null -> {
+                        authLatch = CountDownLatch(1)
+                        // Show the dialog fragment to request the user to enter their credentials
+                        CredentialDialogFragment.newInstance(URI(authenticationChallenge.remoteResource.uri)).show(
+                            supportFragmentManager,
+                            CredentialDialogFragment::class.java.simpleName
+                        )
+                        try {
+                            // Wait for dialog to dismiss to capture credentials
+                            authLatch?.await()
+                        } catch (e: InterruptedException) {
+                            getString(R.string.error_interruption, e.message).let {
+                                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                                Log.e(TAG, it)
+                            }
+                        }
+                        // If the user has entered credentials, continue with those credentials
+                        return if (userCredentials[remoteResourceHost] != null) {
+                            AuthenticationChallengeResponse(
+                                AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
+                                userCredentials[remoteResourceHost]
+                            )
+                        } else {
+                            AuthenticationChallengeResponse(
+                                AuthenticationChallengeResponse.Action.CANCEL,
+                                authenticationChallenge
+                            )
+                        }
+                    }
+
+                    // We already have stored credentials for this host, continue with those credentials
+                    else -> return AuthenticationChallengeResponse(
+                        AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
+                        userCredentials[remoteResourceHost]
+                    )
                 }
-                // Clear stored user credentials
-                userCredential = null
-                return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL,
-                        authenticationChallenge)
-            }
-            // If credentials were set, return a new auth challenge response with them
-            userCredential?.let {
-                return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
-                        it)
             }
         }
         // No credentials were set, return a new auth challenge response with a cancel
