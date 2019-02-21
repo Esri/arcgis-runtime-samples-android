@@ -16,11 +16,6 @@
 
 package com.esri.arcgisruntime.generateofflinemapoverrides;
 
-import java.io.File;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ExecutionException;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -34,12 +29,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
@@ -61,22 +51,26 @@ import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseParameters;
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateLayerOption;
-import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapJob;
-import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapParameterOverrides;
-import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapParameters;
-import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapResult;
-import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapParametersKey;
-import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask;
+import com.esri.arcgisruntime.tasks.offlinemap.*;
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheParameters;
+
+import java.io.File;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
+
   private Button mGenerateOfflineMapOverridesButton;
+
   private GraphicsOverlay mGraphicsOverlay;
+
   private Graphic mDownloadArea;
+
   private GenerateOfflineMapParameterOverrides mParameterOverrides;
 
   @Override
@@ -129,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
     mGraphicsOverlay.getGraphics().add(mDownloadArea);
     SimpleLineSymbol simpleLineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2);
     mDownloadArea.setSymbol(simpleLineSymbol);
-    mDownloadArea.setGeometry(createDownloadAreaGeometry());
 
     // update the download area box whenever the viewpoint changes
     mMapView.addViewpointChangedListener(viewpointChangedEvent -> {
@@ -236,9 +229,13 @@ public class MainActivity extends AppCompatActivity {
         .setCancelable(true)
         .setNegativeButton("Cancel", (dialog, which) -> overrideParametersDialog.dismiss())
         .setPositiveButton("Start Job",
-            (dialog, which) -> defineParameters(minScaleSeekBar.getProgress(), maxScaleSeekBar.getProgress(),
-                extentBufferDistanceSeekBar.getProgress(), systemValves.isChecked(), serviceConnections.isChecked(),
-                minHydrantFlowRateSeekBar.getProgress(), waterPipes.isChecked()))
+            (dialog, which) -> {
+              // re-create download area geometry in case user hasn't changed the Viewpoint
+              mDownloadArea.setGeometry(createDownloadAreaGeometry());
+              defineParameters(minScaleSeekBar.getProgress(), maxScaleSeekBar.getProgress(),
+                  extentBufferDistanceSeekBar.getProgress(), systemValves.isChecked(), serviceConnections.isChecked(),
+                  minHydrantFlowRateSeekBar.getProgress(), waterPipes.isChecked());
+            })
         .show();
   }
 
