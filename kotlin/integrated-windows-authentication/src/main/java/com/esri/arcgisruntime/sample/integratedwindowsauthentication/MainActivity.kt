@@ -51,6 +51,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
 
     companion object {
         private val TAG: String = MainActivity::class.java.simpleName
+
+        private val MAX_AUTH_ATTEMPTS = 5
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -231,7 +233,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
                     }
 
                     // Authentication challenge was a failure, act like it was a cancel and notify user
-                    authenticationChallenge.failureCount > 5 -> {
+                    authenticationChallenge.failureCount > MAX_AUTH_ATTEMPTS -> {
                         userCredentials.remove(remoteResourceHost)
                         getString(R.string.auth_failure).let {
                             runOnUiThread {
@@ -258,7 +260,9 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
                             authLatch?.await()
                         } catch (e: InterruptedException) {
                             getString(R.string.error_interruption, e.message).let {
-                                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                                runOnUiThread {
+                                    Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                                }
                                 Log.e(TAG, it)
                             }
                         }
