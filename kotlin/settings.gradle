@@ -1,5 +1,6 @@
 include ':analyze-hotspots',
         ':attribution-view-change',
+        ':authenticate-with-oauth',
         ':change-basemaps',
         ':display-map',
         ':feature-layer-extrusion',
