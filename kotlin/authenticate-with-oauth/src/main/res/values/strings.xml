@@ -3,8 +3,8 @@
     <string name="portal_url">https://www.arcgis.com/</string>
     <string name="webmap_world_traffic_id">e5039444ef3c48b8a8fdc9227f9be7c1</string>
 
-    <string name="oauth_url">https://www.arcgis.com/sharing/rest/oauth2/token</string>
     <string name="oauth_client_id">lgAdHkYZYlwwfAhC</string>
     <string name="oauth_redirect_uri">"my-ags-app://auth"</string>
+
     <string name="error_auth_exception">Authorization Exception: %s</string>
 </resources>

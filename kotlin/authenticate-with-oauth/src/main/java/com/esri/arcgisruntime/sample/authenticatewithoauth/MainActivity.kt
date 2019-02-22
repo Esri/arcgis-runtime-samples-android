@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.sample.authenticatewithoauth
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
@@ -35,6 +36,7 @@ import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.OAuthConfiguration
 import com.esri.arcgisruntime.security.OAuthTokenCredentialRequest
+import com.esri.arcgisruntime.security.UserCredential
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -55,19 +57,16 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     setContentView(R.layout.activity_main)
 
     oAuthConfig = OAuthConfiguration(
-      getString(R.string.oauth_url),
+      getString(R.string.portal_url),
       getString(R.string.oauth_client_id),
       getString(R.string.oauth_redirect_uri)
     )
 
     AuthenticationManager.setAuthenticationChallengeHandler(this)
+    AuthenticationManager.addOAuthConfiguration(oAuthConfig)
 
     portal = Portal(getString(R.string.portal_url))
     portalItem = PortalItem(portal, getString(R.string.webmap_world_traffic_id))
-
-    portalItem.addLoadStatusChangedListener {
-      Log.d(TAG, "Portal Item Load Status: ${it.newLoadStatus}")
-    }
   }
 
   override fun onResume() {
@@ -81,12 +80,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   }
 
   private fun handleIntent(intent: Intent?): Boolean {
-    intent?.data?.getQueryParameter("code")?.let { code ->
-      getSharedPreferences("shared_prefs", Context.MODE_PRIVATE)
-        .edit()
-        .putString("auth_code", code)
-        .apply()
-      return true
+    intent?.authCode?.let { code ->
+      sharedPreferences.putAuthCode(code)
     }
     return false
   }
@@ -94,10 +89,29 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   override fun handleChallenge(authenticationChallenge: AuthenticationChallenge?): AuthenticationChallengeResponse {
     Log.d(TAG, "New Auth Challenge: ${authenticationChallenge?.type}")
     try {
-      if (!getSharedPreferences("shared_prefs", Context.MODE_PRIVATE).contains("code")) {
-        getNewAuthCode()
-        return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
-      } else {
+
+      sharedPreferences.accessToken?.let { accessToken ->
+        if (authenticationChallenge?.type == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE) {
+          // check for expiration of token
+          sharedPreferences.accessTokenExpiry.let {
+            Log.d(TAG, "Access Token Expiry: $it")
+            if (it in 1 until System.currentTimeMillis()) {
+              sharedPreferences.clearAccessToken()
+              getNewAuthCode()
+              return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
+            }
+          }
+        }
+
+        if (authenticationChallenge?.type == AuthenticationChallenge.Type.OAUTH_CREDENTIAL_CHALLENGE) {
+          return AuthenticationChallengeResponse(
+            AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
+            UserCredential.createFromToken(accessToken, authenticationChallenge.remoteResource?.uri)
+          )
+        }
+      }
+
+      sharedPreferences.authCode?.let {
         Log.d(TAG, "Use existing auth code")
         // use the authorization code to get a token
         val request = OAuthTokenCredentialRequest(
@@ -105,22 +119,30 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
           null,
           oAuthConfig.clientId,
           oAuthConfig.redirectUri,
-          getSharedPreferences("shared_prefs", Context.MODE_PRIVATE)
-            .getString("code", "")
+          sharedPreferences.authCode
         )
 
         val credential = request.executeAsync().get()
         Log.d(TAG, "Credential expiry: ${credential.expiresIn}")
+        with(sharedPreferences) {
+          putAccessToken(credential.accessToken)
+          putAccessTokenExpiry(System.currentTimeMillis() + (100 * 60))
+          clearAuthCode()
+        }
         return AuthenticationChallengeResponse(
           AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
           credential
         )
       }
+
+      getNewAuthCode()
+      return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
+
     } catch (e: Exception) {
       getString(R.string.error_auth_exception, e.message).let {
         Log.d(TAG, it)
         runOnUiThread {
-          Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+          logToUser(it)
         }
       }
       (e.cause as? JsonEmbeddedException)?.let {
@@ -136,7 +158,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     Log.d(TAG, "Get new auth code")
     // get the authorization code by sending user to the authorization screen
     val authorizationUrl = OAuthTokenCredentialRequest.getAuthorizationUrl(
-      oAuthConfig.portalUrl, oAuthConfig.clientId, oAuthConfig.redirectUri, 20160
+      oAuthConfig.portalUrl, oAuthConfig.clientId, oAuthConfig.redirectUri, 1
     )
 
     launchChromeTab(authorizationUrl)
@@ -156,3 +178,63 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     super.onDestroy()
   }
 }
+
+/**
+ * AppCompatActivity extensions
+ */
+val AppCompatActivity.sharedPreferences: SharedPreferences
+  get() = this.getSharedPreferences("${this::class.java.simpleName}_shared_prefs", Context.MODE_PRIVATE)
+
+fun AppCompatActivity.logToUser(logMessage: String) {
+  Log.d(this::class.java.simpleName, logMessage)
+  Toast.makeText(this, logMessage, Toast.LENGTH_LONG).show()
+}
+
+/**
+ * SharedPreferences extensions
+ */
+fun SharedPreferences.putAuthCode(authCode: String) {
+  this.edit().putString("auth_code", authCode)
+    .apply()
+}
+
+val SharedPreferences.authCode: String?
+  get() = this.getString("auth_code", null)
+
+fun SharedPreferences.clearAuthCode() {
+  this.edit().remove("auth_code")
+    .apply()
+}
+
+val SharedPreferences.accessToken: String?
+  get() = this.getString("access_token", null)
+
+fun SharedPreferences.putAccessToken(accessToken: String) {
+  this.edit().putString("access_token", accessToken)
+    .apply()
+}
+
+fun SharedPreferences.clearAccessToken() {
+  this.edit().remove("access_token")
+    .apply()
+  this.clearAccessTokenExpiry()
+}
+
+val SharedPreferences.accessTokenExpiry: Long
+  get() = this.getLong("access_token_expiry", 0)
+
+fun SharedPreferences.putAccessTokenExpiry(timeInMillis: Long) {
+  this.edit().putLong("access_token_expiry", timeInMillis)
+    .apply()
+}
+
+fun SharedPreferences.clearAccessTokenExpiry() {
+  this.edit().remove("access_token_expiry")
+    .apply()
+}
+
+/**
+ * Intent extensions
+ */
+val Intent.authCode: String?
+  get() = this.data?.getQueryParameter("code")
