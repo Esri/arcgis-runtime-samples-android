@@ -17,12 +17,15 @@
 
 package com.esri.arcgisruntime.sample.authenticatewithoauth
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.support.customtabs.CustomTabsClient
 import android.support.customtabs.CustomTabsIntent
+import android.support.customtabs.CustomTabsServiceConnection
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
@@ -160,7 +163,17 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
       oAuthConfig.portalUrl, oAuthConfig.clientId, oAuthConfig.redirectUri, 1
     )
 
-    launchChromeTab(authorizationUrl)
+    if (CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", object : CustomTabsServiceConnection() {
+        override fun onCustomTabsServiceConnected(p0: ComponentName?, p1: CustomTabsClient?) {
+          logToUser("Connected to Custom Tabs Service")
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+          logToUser("Disconnected from Custom Tabs Service")
+        }
+      })) {
+      launchChromeTab(authorizationUrl)
+    }
   }
 
   private fun launchChromeTab(uri: String) {
@@ -177,6 +190,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     super.onDestroy()
   }
 }
+
 
 /**
  * AppCompatActivity extensions
