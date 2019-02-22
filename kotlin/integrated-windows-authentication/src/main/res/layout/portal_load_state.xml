@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <ProgressBar
-        android:id="@+id/portalLoadStatePorgressBar"
+        android:id="@+id/portalLoadStateProgressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,8 +22,8 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/portalLoadStatePorgressBar"
-        app:layout_constraintStart_toStartOf="@+id/portalLoadStatePorgressBar"
-        app:layout_constraintTop_toBottomOf="@+id/portalLoadStatePorgressBar" />
+        app:layout_constraintEnd_toEndOf="@+id/portalLoadStateProgressBar"
+        app:layout_constraintStart_toStartOf="@+id/portalLoadStateProgressBar"
+        app:layout_constraintTop_toBottomOf="@+id/portalLoadStateProgressBar" />
 
 </android.support.constraint.ConstraintLayout>
