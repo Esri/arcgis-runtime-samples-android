@@ -17,8 +17,15 @@
 
 package com.esri.arcgisruntime.sample.authenticatewithoauth
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.support.customtabs.CustomTabsIntent
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.widget.Toast
+import com.esri.arcgisruntime.io.JsonEmbeddedException
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
@@ -27,6 +34,7 @@ import com.esri.arcgisruntime.security.AuthenticationChallengeHandler
 import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.OAuthConfiguration
+import com.esri.arcgisruntime.security.OAuthTokenCredentialRequest
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -36,62 +44,115 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     private val TAG = MainActivity::class.java.simpleName
   }
 
+  private lateinit var oAuthConfig: OAuthConfiguration
+
+  private lateinit var portal: Portal
+
+  private lateinit var portalItem: PortalItem
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    setupAuthenticationManager()
+    oAuthConfig = OAuthConfiguration(
+      getString(R.string.oauth_url),
+      getString(R.string.oauth_client_id),
+      getString(R.string.oauth_redirect_uri)
+    )
 
-    // get the portal url for ArcGIS Online
-    Portal(getString(R.string.portal_url)).run {
-      // get the pre-defined portal id and portal url
-      PortalItem(this, getString(R.string.webmap_world_traffic_id))
-    }.let {
-      // create a map from a PortalItem
-      ArcGISMap(it)
-    }.let {
-      // set the map to be displayed in this view
-      mapView.map = it
+    AuthenticationManager.setAuthenticationChallengeHandler(this)
+
+    portal = Portal(getString(R.string.portal_url))
+    portalItem = PortalItem(portal, getString(R.string.webmap_world_traffic_id))
+
+    portalItem.addLoadStatusChangedListener {
+      Log.d(TAG, "Portal Item Load Status: ${it.newLoadStatus}")
     }
   }
 
-  private fun setupAuthenticationManager() {
-    AuthenticationManager.setAuthenticationChallengeHandler(this)
-    val configuration = OAuthConfiguration(
-      getString(R.string.portal_url),
-      "lgAdHkYZYlwwfAhC",
-      "my-ags-app://auth"
-    )
+  override fun onResume() {
+    super.onResume()
+    mapView.resume()
 
-    AuthenticationManager.addOAuthConfiguration(configuration);
+    handleIntent(intent)
+
+    val map = ArcGISMap(portalItem)
+    mapView.map = map
+  }
+
+  private fun handleIntent(intent: Intent?): Boolean {
+    intent?.data?.getQueryParameter("code")?.let { code ->
+      getSharedPreferences("shared_prefs", Context.MODE_PRIVATE)
+        .edit()
+        .putString("auth_code", code)
+        .apply()
+      return true
+    }
+    return false
   }
 
   override fun handleChallenge(authenticationChallenge: AuthenticationChallenge?): AuthenticationChallengeResponse {
+    Log.d(TAG, "New Auth Challenge: ${authenticationChallenge?.type}")
     try {
-      // get config such as clientId from the authentication manager
-      val config = AuthenticationManager.getOAuthConfiguration(authenticationChallenge?.remoteResource?.uri)
+      if (!getSharedPreferences("shared_prefs", Context.MODE_PRIVATE).contains("code")) {
+        getNewAuthCode()
+        return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
+      } else {
+        Log.d(TAG, "Use existing auth code")
+        // use the authorization code to get a token
+        val request = OAuthTokenCredentialRequest(
+          oAuthConfig.portalUrl,
+          null,
+          oAuthConfig.clientId,
+          oAuthConfig.redirectUri,
+          getSharedPreferences("shared_prefs", Context.MODE_PRIVATE)
+            .getString("code", "")
+        )
 
-      // TODO
-      /*// get the authorization code by sending user to the authorization screen
-      val authorizationUrl = OAuthTokenCredentialRequest.getAuthorizationUrl(
-        config.portalUrl, config.clientId, config.redirectUri, 0
-      )
-      val authorizationCode = OAuthChallenge.getAuthorizationCode(authorizationUrl)
-
-      // use the authorization code to get a token
-      val request = OAuthTokenCredentialRequest(
-        config.portalUrl, null, config.clientId, null, authorizationCode
-      )
-
-      val credential = request.executeAsync().get()
-      return AuthenticationChallengeResponse(
-        AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
-        credential
-      )*/
-      return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
+        val credential = request.executeAsync().get()
+        Log.d(TAG, "Credential expiry: ${credential.expiresIn}")
+        return AuthenticationChallengeResponse(
+          AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
+          credential
+        )
+      }
     } catch (e: Exception) {
+      getString(R.string.error_auth_exception, e.message).let {
+        Log.d(TAG, it)
+        runOnUiThread {
+          Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+        }
+      }
+      (e.cause as? JsonEmbeddedException)?.let {
+        if (it.code == 400) {
+          getNewAuthCode()
+        }
+      }
       return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
     }
+  }
 
+  private fun getNewAuthCode() {
+    Log.d(TAG, "Get new auth code")
+    // get the authorization code by sending user to the authorization screen
+    val authorizationUrl = OAuthTokenCredentialRequest.getAuthorizationUrl(
+      oAuthConfig.portalUrl, oAuthConfig.clientId, oAuthConfig.redirectUri, 20160
+    )
+
+    launchChromeTab(authorizationUrl)
+  }
+
+  private fun launchChromeTab(uri: String) {
+    CustomTabsIntent.Builder().build().launchUrl(this, Uri.parse(uri))
+  }
+
+  override fun onPause() {
+    mapView.pause()
+    super.onPause()
+  }
+
+  override fun onDestroy() {
+    mapView.dispose()
+    super.onDestroy()
   }
 }
