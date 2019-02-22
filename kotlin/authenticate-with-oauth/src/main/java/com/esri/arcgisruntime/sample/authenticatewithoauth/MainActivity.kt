@@ -26,7 +26,6 @@ import android.support.customtabs.CustomTabsIntent
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
-import com.esri.arcgisruntime.io.JsonEmbeddedException
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
@@ -87,74 +86,74 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   }
 
   override fun handleChallenge(authenticationChallenge: AuthenticationChallenge?): AuthenticationChallengeResponse {
-    Log.d(TAG, "New Auth Challenge: ${authenticationChallenge?.type}")
-    try {
+    authenticationChallenge?.let { authChallenge ->
 
-      sharedPreferences.accessToken?.let { accessToken ->
-        if (authenticationChallenge?.type == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE) {
-          // check for expiration of token
-          sharedPreferences.accessTokenExpiry.let {
-            Log.d(TAG, "Access Token Expiry: $it")
-            if (it in 1 until System.currentTimeMillis()) {
-              sharedPreferences.clearAccessToken()
-              getNewAuthCode()
-              return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
+      Log.d(TAG, "New Auth Challenge: ${authChallenge.type}")
+      try {
+        sharedPreferences.accessToken?.let { accessToken ->
+          if (authChallenge.type == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE) {
+            // check for expiration of token
+            sharedPreferences.accessTokenExpiry.let {
+              Log.d(TAG, "Access Token Expiry: $it")
+              if (it in 1 until System.currentTimeMillis()) {
+                sharedPreferences.clearAccessToken()
+                beginOAuth()
+                return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
+              }
             }
+          }
+
+          if (authChallenge.type == AuthenticationChallenge.Type.OAUTH_CREDENTIAL_CHALLENGE) {
+            return AuthenticationChallengeResponse(
+              AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
+              UserCredential.createFromToken(accessToken, authChallenge.remoteResource?.uri)
+            )
           }
         }
 
-        if (authenticationChallenge?.type == AuthenticationChallenge.Type.OAUTH_CREDENTIAL_CHALLENGE) {
+        sharedPreferences.authCode?.let {
+          Log.d(TAG, "Use existing auth code")
+          // use the authorization code to get a token
+          val request = OAuthTokenCredentialRequest(
+            oAuthConfig.portalUrl,
+            null,
+            oAuthConfig.clientId,
+            oAuthConfig.redirectUri,
+            sharedPreferences.authCode
+          )
+
+          val credential = request.executeAsync().get()
+          Log.d(TAG, "Credential expiry: ${credential.expiresIn}")
+          with(sharedPreferences) {
+            putAccessToken(credential.accessToken)
+            putAccessTokenExpiry(System.currentTimeMillis() + (1 * 60))
+            clearAuthCode()
+          }
           return AuthenticationChallengeResponse(
             AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
-            UserCredential.createFromToken(accessToken, authenticationChallenge.remoteResource?.uri)
+            credential
           )
         }
-      }
 
-      sharedPreferences.authCode?.let {
-        Log.d(TAG, "Use existing auth code")
-        // use the authorization code to get a token
-        val request = OAuthTokenCredentialRequest(
-          oAuthConfig.portalUrl,
-          null,
-          oAuthConfig.clientId,
-          oAuthConfig.redirectUri,
-          sharedPreferences.authCode
-        )
-
-        val credential = request.executeAsync().get()
-        Log.d(TAG, "Credential expiry: ${credential.expiresIn}")
-        with(sharedPreferences) {
-          putAccessToken(credential.accessToken)
-          putAccessTokenExpiry(System.currentTimeMillis() + (100 * 60))
-          clearAuthCode()
+        // we only want to begin OAuth here if the user has yet to authorize successfully
+        if (authChallenge.failureCount < 2) {
+          beginOAuth()
         }
-        return AuthenticationChallengeResponse(
-          AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
-          credential
-        )
-      }
 
-      getNewAuthCode()
-      return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
-
-    } catch (e: Exception) {
-      getString(R.string.error_auth_exception, e.message).let {
-        Log.d(TAG, it)
-        runOnUiThread {
-          logToUser(it)
+        return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
+      } catch (e: Exception) {
+        getString(R.string.error_auth_exception, e.message).let {
+          Log.d(TAG, it)
+          runOnUiThread {
+            logToUser(it)
+          }
         }
       }
-      (e.cause as? JsonEmbeddedException)?.let {
-        if (it.code == 400) {
-          getNewAuthCode()
-        }
-      }
-      return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
     }
+    return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
   }
 
-  private fun getNewAuthCode() {
+  private fun beginOAuth() {
     Log.d(TAG, "Get new auth code")
     // get the authorization code by sending user to the authorization screen
     val authorizationUrl = OAuthTokenCredentialRequest.getAuthorizationUrl(
