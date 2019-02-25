@@ -52,32 +52,35 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
 
   companion object {
     private val TAG = MainActivity::class.java.simpleName
+
+    // maximum expiry is 2 weeks = 20160
+    private const val ACCESS_TOKEN_EXPIRY_MINS = 20160L
   }
 
-  private lateinit var oAuthConfig: OAuthConfiguration
+  // define configuration for OAuth Portal using custom redirect URL to receive code after auth has been granted
+  private val oAuthConfig: OAuthConfiguration by lazy {
+    OAuthConfiguration(
+      getString(R.string.portal_url),
+      getString(R.string.oauth_client_id),
+      getString(R.string.oauth_redirect_uri)
+    )
+  }
 
-  private lateinit var portal: Portal
+  // instances of Portal and PortalItem to define what is displayed in the map
+  private val portal: Portal by lazy { Portal(getString(R.string.portal_url)) }
 
-  private lateinit var portalItem: PortalItem
+  private val portalItem: PortalItem by lazy { PortalItem(portal, getString(R.string.webmap_world_traffic_id)) }
+
+  // Service connection used to determine if user has Google Chrome installed
+  private var chromeServiceConnection: CustomTabsServiceConnection? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // define configuration for OAuth Portal using custom redirect URL to receive code after auth has been granted
-    oAuthConfig = OAuthConfiguration(
-      getString(R.string.portal_url),
-      getString(R.string.oauth_client_id),
-      getString(R.string.oauth_redirect_uri)
-    )
-
     // setup AuthenticationManager to handle auth challenges
     AuthenticationManager.setAuthenticationChallengeHandler(this)
     AuthenticationManager.addOAuthConfiguration(oAuthConfig)
-
-    // create new instance of Portal and PortalItem to define what is displayed in the map
-    portal = Portal(getString(R.string.portal_url))
-    portalItem = PortalItem(portal, getString(R.string.webmap_world_traffic_id))
   }
 
   override fun onResume() {
@@ -164,7 +167,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
           val credential = request.executeAsync().get()
           with(sharedPreferences) {
             putAccessToken(credential.accessToken)
-            putAccessTokenExpiry(System.currentTimeMillis() + (1 * 60))
+            putAccessTokenExpiry(System.currentTimeMillis() + (ACCESS_TOKEN_EXPIRY_MINS * 60))
             clearAuthCode()
           }
           // continue with credentials generated using auth code
@@ -195,19 +198,21 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   private fun beginOAuth() {
     // get the authorization code by sending user to the authorization screen
     val authorizationUrl = OAuthTokenCredentialRequest.getAuthorizationUrl(
-      oAuthConfig.portalUrl, oAuthConfig.clientId, oAuthConfig.redirectUri, 1
+      oAuthConfig.portalUrl, oAuthConfig.clientId, oAuthConfig.redirectUri, ACCESS_TOKEN_EXPIRY_MINS
     )
 
     // if this user has Google Chrome stable installed, we will try to launch a new Custom Chrome tab
-    if (CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", object : CustomTabsServiceConnection() {
-        override fun onCustomTabsServiceConnected(p0: ComponentName?, p1: CustomTabsClient?) {
-          // no-op
-        }
+    chromeServiceConnection = object : CustomTabsServiceConnection() {
+      override fun onCustomTabsServiceConnected(p0: ComponentName?, p1: CustomTabsClient?) {
+        // no-op
+      }
 
-        override fun onServiceDisconnected(name: ComponentName?) {
-          // no-op
-        }
-      })) {
+      override fun onServiceDisconnected(name: ComponentName?) {
+        // no-op
+      }
+    }
+
+    if (CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", chromeServiceConnection)) {
       launchChromeTab(authorizationUrl)
     } else {
       // user doesn't have Google Chrome stable installed so we use a WebView to handle OAuth
@@ -269,6 +274,9 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   }
 
   override fun onDestroy() {
+    chromeServiceConnection?.let {
+      unbindService(it)
+    }
     mapView.dispose()
     super.onDestroy()
   }
