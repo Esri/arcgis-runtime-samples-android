@@ -64,15 +64,18 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // define configuration for OAuth Portal using custom redirect URL to receive code after auth has been granted
     oAuthConfig = OAuthConfiguration(
       getString(R.string.portal_url),
       getString(R.string.oauth_client_id),
       getString(R.string.oauth_redirect_uri)
     )
 
+    // setup AuthenticationManager to handle auth challenges
     AuthenticationManager.setAuthenticationChallengeHandler(this)
     AuthenticationManager.addOAuthConfiguration(oAuthConfig)
 
+    // create new instance of Portal and PortalItem to define what is displayed in the map
     portal = Portal(getString(R.string.portal_url))
     portalItem = PortalItem(portal, getString(R.string.webmap_world_traffic_id))
   }
@@ -83,35 +86,62 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
 
     handleIntent(intent)
 
-    val map = ArcGISMap(portalItem)
-    mapView.map = map
+    mapView.map = ArcGISMap(portalItem)
   }
 
+  /**
+   * Attempt to handle the Intent received by the Activity
+   * If the Intent contains an authorization code, store this in the SharedPreferences
+   *
+   * @param intent the Intent to handle
+   */
   private fun handleIntent(intent: Intent?) {
     intent?.authCode?.let { code ->
       sharedPreferences.putAuthCode(code)
     }
   }
 
+  /**
+   * Function for handling authentication challenges.
+   *
+   * Tries to use an access token if one is stored in SharedPreferences, if the token has expired, clear the token and
+   * expiry time and begin OAuth flow.
+   *
+   * If an authorization code exists in the SharedPreferences, it's likely that the user is partially through the OAuth flow
+   * and we need to try to obtain the token by performing a OAuthTokenCredentialRequest.
+   *
+   * If there is neither an access token or an authorization code in the SharedPreferences, it's likely that this is the
+   * user's first attempt at OAuth. So begin OAuth flow.
+   *
+   * @param authenticationChallenge the authentication challenge to handle
+   * @return the AuthenticationChallengeResponse indicating which action to take
+   */
   override fun handleChallenge(authenticationChallenge: AuthenticationChallenge?): AuthenticationChallengeResponse {
     authenticationChallenge?.let { authChallenge ->
 
-      Log.d(TAG, "New Auth Challenge: ${authChallenge.type}")
       try {
+        // if SharedPreferences has an access token
         sharedPreferences.accessToken?.let { accessToken ->
+          // USER_CREDENTIAL_CHALLENGE is issued when attempt to use access token fails
           if (authChallenge.type == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE) {
             // check for expiration of token
             sharedPreferences.accessTokenExpiry.let {
-              Log.d(TAG, "Access Token Expiry: $it")
+              // if expiry hasn't been set, the value of the expiry will be 0. If we have an expiry, we check if the value
+              // is less than the current epoch reported by the device
               if (it in 1 until System.currentTimeMillis()) {
+                // access token has expired so clear the token and expiry
                 sharedPreferences.clearAccessToken()
+                // begin OAuth flow to generate auth code
                 beginOAuth()
+                // treat as cancel
                 return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
               }
             }
           }
 
+          // OAUTH_CREDENTIAL_CHALLENGE is issued when the portal is detected as supporting OAuth
           if (authChallenge.type == AuthenticationChallenge.Type.OAUTH_CREDENTIAL_CHALLENGE) {
+            // attempt to use stored access token for auth
             return AuthenticationChallengeResponse(
               AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
               UserCredential.createFromToken(accessToken, authChallenge.remoteResource?.uri)
@@ -119,9 +149,10 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
           }
         }
 
+        // if SharedPreferences has an auth code, we've likely just been through the OAuth flow and now have an auth code
+        // we can use to request a new access token
         sharedPreferences.authCode?.let {
-          Log.d(TAG, "Use existing auth code")
-          // use the authorization code to get a token
+          // use the authorization code to get a new access token by executing an OAuthTokenCredentialRequest
           val request = OAuthTokenCredentialRequest(
             oAuthConfig.portalUrl,
             null,
@@ -131,12 +162,12 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
           )
 
           val credential = request.executeAsync().get()
-          Log.d(TAG, "Credential expiry: ${credential.expiresIn}")
           with(sharedPreferences) {
             putAccessToken(credential.accessToken)
             putAccessTokenExpiry(System.currentTimeMillis() + (1 * 60))
             clearAuthCode()
           }
+          // continue with credentials generated using auth code
           return AuthenticationChallengeResponse(
             AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
             credential
@@ -162,12 +193,12 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   }
 
   private fun beginOAuth() {
-    Log.d(TAG, "Get new auth code")
     // get the authorization code by sending user to the authorization screen
     val authorizationUrl = OAuthTokenCredentialRequest.getAuthorizationUrl(
       oAuthConfig.portalUrl, oAuthConfig.clientId, oAuthConfig.redirectUri, 1
     )
 
+    // if this user has Google Chrome stable installed, we will try to launch a new Custom Chrome tab
     if (CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", object : CustomTabsServiceConnection() {
         override fun onCustomTabsServiceConnected(p0: ComponentName?, p1: CustomTabsClient?) {
           // no-op
@@ -179,6 +210,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
       })) {
       launchChromeTab(authorizationUrl)
     } else {
+      // user doesn't have Google Chrome stable installed so we use a WebView to handle OAuth
       runOnUiThread {
         setupWebView()
         webView.loadUrl(authorizationUrl)
@@ -191,6 +223,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   }
 
   private fun setupWebView() {
+    // setup a WebViewClient to override handling of custom scheme and host for Intent
     webView.webViewClient = object : WebViewClient() {
       override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
         Uri.parse(url)?.let {
@@ -212,10 +245,16 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
       }
     }
 
+    // enabled to allow javascript to run on auth webpage.
     webView.settings.javaScriptEnabled = true
     webView.visibility = View.VISIBLE
   }
 
+  /**
+   * Generate the Intent that launches the MainActivity with the new auth code
+   *
+   * @param uri instance of Uri generated from URL that OAuth webpage redirects to after successful login
+   */
   private fun generateAuthIntent(uri: Uri): Intent {
     return Intent().also {
       it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
