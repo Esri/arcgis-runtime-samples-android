@@ -215,7 +215,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     if (CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", chromeServiceConnection)) {
       launchChromeTab(authorizationUrl)
     } else {
-      // user doesn't have Google Chrome stable installed so we use a WebView to handle OAuth
+      // user doesn't have Google Chrome stable installed so we use a WebView to handle OAuth. WebView methods must be
+      // called on UI thread
       runOnUiThread {
         setupWebView()
         webView.loadUrl(authorizationUrl)
