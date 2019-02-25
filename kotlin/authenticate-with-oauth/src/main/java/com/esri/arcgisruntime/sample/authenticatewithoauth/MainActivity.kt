@@ -17,17 +17,20 @@
 
 package com.esri.arcgisruntime.sample.authenticatewithoauth
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.support.customtabs.CustomTabsClient
+import android.support.annotation.RequiresApi
 import android.support.customtabs.CustomTabsIntent
-import android.support.customtabs.CustomTabsServiceConnection
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Toast
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.portal.Portal
@@ -81,11 +84,10 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     mapView.map = map
   }
 
-  private fun handleIntent(intent: Intent?): Boolean {
+  private fun handleIntent(intent: Intent?) {
     intent?.authCode?.let { code ->
       sharedPreferences.putAuthCode(code)
     }
-    return false
   }
 
   override fun handleChallenge(authenticationChallenge: AuthenticationChallenge?): AuthenticationChallengeResponse {
@@ -163,21 +165,59 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
       oAuthConfig.portalUrl, oAuthConfig.clientId, oAuthConfig.redirectUri, 1
     )
 
-    if (CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", object : CustomTabsServiceConnection() {
+    /*if (CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", object : CustomTabsServiceConnection() {
         override fun onCustomTabsServiceConnected(p0: ComponentName?, p1: CustomTabsClient?) {
-          logToUser("Connected to Custom Tabs Service")
+          // no-op
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-          logToUser("Disconnected from Custom Tabs Service")
+          // no-op
         }
       })) {
       launchChromeTab(authorizationUrl)
+    } else {
+
+    }*/
+    runOnUiThread {
+      setupWebView()
+      webView.loadUrl(authorizationUrl)
     }
   }
 
   private fun launchChromeTab(uri: String) {
     CustomTabsIntent.Builder().build().launchUrl(this, Uri.parse(uri))
+  }
+
+  private fun setupWebView() {
+    webView.webViewClient = object : WebViewClient() {
+      override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+        Uri.parse(url)?.let {
+          if (it.scheme == "my-ags-app" && it.host == "auth") {
+            with(Intent()) {
+              this.data = it
+              startActivity(this)
+            }
+            return true
+          }
+        }
+        return super.shouldOverrideUrlLoading(view, url)
+      }
+
+      @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+      override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+        if (request?.url?.scheme == "my-ags-app" && request.url?.host == "auth") {
+          with(Intent()) {
+            this.data = request.url
+            startActivity(this)
+          }
+          return true
+        }
+        return super.shouldOverrideUrlLoading(view, request)
+      }
+    }
+
+    webView.settings.javaScriptEnabled = true
+    webView.visibility = View.VISIBLE
   }
 
   override fun onPause() {
