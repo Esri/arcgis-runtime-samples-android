@@ -201,7 +201,6 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
       oAuthConfig.portalUrl, oAuthConfig.clientId, oAuthConfig.redirectUri, ACCESS_TOKEN_EXPIRY_MINS
     )
 
-    // if this user has Google Chrome stable installed, we will try to launch a new Custom Chrome tab
     chromeServiceConnection = object : CustomTabsServiceConnection() {
       override fun onCustomTabsServiceConnected(p0: ComponentName?, p1: CustomTabsClient?) {
         // no-op
@@ -212,6 +211,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
       }
     }
 
+    // if this user has Google Chrome stable installed, we will try to launch a new Custom Chrome tab
     if (CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", chromeServiceConnection)) {
       launchChromeTab(authorizationUrl)
     } else {
