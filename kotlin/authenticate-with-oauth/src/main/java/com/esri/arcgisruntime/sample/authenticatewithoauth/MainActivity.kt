@@ -17,6 +17,7 @@
 
 package com.esri.arcgisruntime.sample.authenticatewithoauth
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -24,7 +25,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
+import android.support.customtabs.CustomTabsClient
 import android.support.customtabs.CustomTabsIntent
+import android.support.customtabs.CustomTabsServiceConnection
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -165,7 +168,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
       oAuthConfig.portalUrl, oAuthConfig.clientId, oAuthConfig.redirectUri, 1
     )
 
-    /*if (CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", object : CustomTabsServiceConnection() {
+    if (CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", object : CustomTabsServiceConnection() {
         override fun onCustomTabsServiceConnected(p0: ComponentName?, p1: CustomTabsClient?) {
           // no-op
         }
@@ -176,11 +179,10 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
       })) {
       launchChromeTab(authorizationUrl)
     } else {
-
-    }*/
-    runOnUiThread {
-      setupWebView()
-      webView.loadUrl(authorizationUrl)
+      runOnUiThread {
+        setupWebView()
+        webView.loadUrl(authorizationUrl)
+      }
     }
   }
 
@@ -193,10 +195,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
       override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
         Uri.parse(url)?.let {
           if (it.scheme == "my-ags-app" && it.host == "auth") {
-            with(Intent()) {
-              this.data = it
-              startActivity(this)
-            }
+            startActivity(generateAuthIntent(it))
             return true
           }
         }
@@ -206,10 +205,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
       @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
       override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         if (request?.url?.scheme == "my-ags-app" && request.url?.host == "auth") {
-          with(Intent()) {
-            this.data = request.url
-            startActivity(this)
-          }
+          startActivity(generateAuthIntent(request.url))
           return true
         }
         return super.shouldOverrideUrlLoading(view, request)
@@ -218,6 +214,14 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
 
     webView.settings.javaScriptEnabled = true
     webView.visibility = View.VISIBLE
+  }
+
+  private fun generateAuthIntent(uri: Uri): Intent {
+    return Intent().also {
+      it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+      it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      it.data = uri
+    }
   }
 
   override fun onPause() {
@@ -230,7 +234,6 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     super.onDestroy()
   }
 }
-
 
 /**
  * AppCompatActivity extensions
