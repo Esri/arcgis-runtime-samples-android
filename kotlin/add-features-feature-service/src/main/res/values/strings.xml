@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Add Features - Feature Service</string>
+
+    <string name="service_layer_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
 </resources>
