@@ -17,17 +17,14 @@
 
 package com.esri.arcgisruntime.sample.authenticatewithoauth
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Browser
 import android.support.annotation.RequiresApi
-import android.support.customtabs.CustomTabsClient
-import android.support.customtabs.CustomTabsIntent
-import android.support.customtabs.CustomTabsServiceConnection
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -70,9 +67,6 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   private val portal: Portal by lazy { Portal(getString(R.string.portal_url)) }
 
   private val portalItem: PortalItem by lazy { PortalItem(portal, getString(R.string.webmap_world_traffic_id)) }
-
-  // Service connection used to determine if user has Google Chrome installed
-  private var chromeServiceConnection: CustomTabsServiceConnection? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -204,31 +198,24 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
       oAuthConfig.portalUrl, oAuthConfig.clientId, oAuthConfig.redirectUri, ACCESS_TOKEN_EXPIRY_MINS
     )
 
-    chromeServiceConnection = object : CustomTabsServiceConnection() {
-      override fun onCustomTabsServiceConnected(p0: ComponentName?, p1: CustomTabsClient?) {
-        // no-op
-      }
-
-      override fun onServiceDisconnected(name: ComponentName?) {
-        // no-op
-      }
-    }
-
-    // if this user has Google Chrome stable installed, we will try to launch a new Custom Chrome tab
-    if (CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", chromeServiceConnection)) {
-      launchChromeTab(authorizationUrl)
-    } else {
-      // user doesn't have Google Chrome stable installed so we use a WebView to handle OAuth. WebView methods must be
-      // called on UI thread
-      runOnUiThread {
-        setupWebView()
-        webView.loadUrl(authorizationUrl)
+    // create an Intent to attempt to handle the authorization URL
+    with(Intent(Intent.ACTION_VIEW, Uri.parse(authorizationUrl))) {
+      this.resolveActivity(packageManager)?.let {
+        // this identifier ensures that the browser will attempt to reuse the same window each time the application
+        // launches the browser with the same identifier, which in this case is static and will always only be our
+        // application ID
+        this.putExtra(Browser.EXTRA_APPLICATION_ID, BuildConfig.APPLICATION_ID)
+        startActivity(this)
+        return
       }
     }
-  }
 
-  private fun launchChromeTab(uri: String) {
-    CustomTabsIntent.Builder().build().launchUrl(this, Uri.parse(uri))
+    // user doesn't have a browser available to handle the Intent so we use a WebView to handle OAuth. WebView methods
+    // must be called on UI thread
+    runOnUiThread {
+      setupWebView()
+      webView.loadUrl(authorizationUrl)
+    }
   }
 
   private fun setupWebView() {
@@ -278,9 +265,6 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   }
 
   override fun onDestroy() {
-    chromeServiceConnection?.let {
-      unbindService(it)
-    }
     mapView.dispose()
     super.onDestroy()
   }
