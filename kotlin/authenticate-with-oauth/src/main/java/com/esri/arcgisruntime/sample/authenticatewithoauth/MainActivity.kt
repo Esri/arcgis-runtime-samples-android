@@ -184,12 +184,15 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
 
         return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
       } catch (e: Exception) {
+        // auth code has likely expired, clear existing auth code and begin OAuth flow
         getString(R.string.error_auth_exception, e.message).let {
           Log.d(TAG, it)
           runOnUiThread {
             logToUser(it)
           }
         }
+        sharedPreferences.clearAuthCode()
+        beginOAuth()
       }
     }
     return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
