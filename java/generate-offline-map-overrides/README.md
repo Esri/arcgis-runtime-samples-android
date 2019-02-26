@@ -6,7 +6,6 @@ Take a web map offline with additional overrides.
 ## How to use the sample
 To take a web map offline:
 
-1. When the sample starts, you may be prompted to sign into arcgis.com.
 1. Click on "Generate Offline Map (Overrides)".
 1. Use the seek bars to adjust the min/max "Scale Level"s to be taken offline for the Streets basemap.
 1. Use "Extent Buffer Distance" seek bar to set the buffer radius for the streets basemap. 
@@ -14,6 +13,7 @@ To take a web map offline:
 1. Use the "Min Hydrant Flow Rate" seek to select the maximum flow rate for the features from the "Hydrant" layer.
 1. Use the "Water Pipes" check box to crop the water pipes feature layer. 
 1. Click "Start Job".
+1. You may be prompted to sign into arcgis.com.
 1. Wait for the progress bar to indicate that the task has completed.
 1. You should see that the basemap does not display beyond the min max scale selected. The System Valves and Service Connections should be included or omitted from the offline map and the Hydrants layer should contain a subset of the original features based on your selection. Finally, the network data set should extend past or be cropped to the target area based on your selection.
 
