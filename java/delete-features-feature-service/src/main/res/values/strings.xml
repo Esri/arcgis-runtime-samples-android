@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Delete Features - Feature Service</string>
+
     <string name="feature_layer_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
+
+    <string name="error_getting_identify_result">Exception getting identify result: %s</string>
 </resources>
