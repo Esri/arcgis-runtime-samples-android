@@ -112,17 +112,9 @@ public class MainActivity extends AppCompatActivity {
     // check if feature can be added to feature table
     if (featureTable.canAdd()) {
       // add the new feature to the feature table and to server
-      featureTable.addFeatureAsync(feature).addDoneListener(new Runnable() {
-        @Override public void run() {
-          applyEdits(featureTable);
-        }
-      });
+      featureTable.addFeatureAsync(feature).addDoneListener(() -> applyEdits(featureTable));
     } else {
-      runOnUiThread(new Runnable() {
-        @Override public void run() {
-          logToUser(getString(R.string.error_cannot_add_to_feature_table));
-        }
-      });
+      runOnUiThread(() -> logToUser(getString(R.string.error_cannot_add_to_feature_table)));
     }
   }
 
@@ -135,29 +127,19 @@ public class MainActivity extends AppCompatActivity {
 
     // apply the changes to the server
     final ListenableFuture<List<FeatureEditResult>> editResult = featureTable.applyEditsAsync();
-    editResult.addDoneListener(new Runnable() {
-      @Override public void run() {
-        try {
-          List<FeatureEditResult> edits = editResult.get();
-          // check if the server edit was successful
-          if (edits != null && edits.size() > 0) {
-            if (!edits.get(0).hasCompletedWithErrors()) {
-              runOnUiThread(new Runnable() {
-                @Override public void run() {
-                  logToUser(getString(R.string.feature_added));
-                }
-              });
-            } else {
-              throw edits.get(0).getError();
-            }
+    editResult.addDoneListener(() -> {
+      try {
+        List<FeatureEditResult> edits = editResult.get();
+        // check if the server edit was successful
+        if (edits != null && edits.size() > 0) {
+          if (!edits.get(0).hasCompletedWithErrors()) {
+            runOnUiThread(() -> logToUser(getString(R.string.feature_added)));
+          } else {
+            throw edits.get(0).getError();
           }
-        } catch (InterruptedException | ExecutionException e) {
-          runOnUiThread(new Runnable() {
-            @Override public void run() {
-              logToUser(getString(R.string.error_applying_edits, e.getCause().getMessage()));
-            }
-          });
         }
+      } catch (InterruptedException | ExecutionException e) {
+        runOnUiThread(() -> logToUser(getString(R.string.error_applying_edits, e.getCause().getMessage())));
       }
     });
   }
