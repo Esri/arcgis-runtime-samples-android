@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
+import com.esri.arcgisruntime.ArcGISRuntimeException
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.Point
@@ -34,8 +35,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var featureTable: ServiceFeatureTable
-
   companion object {
     private val TAG = MainActivity::class.java.simpleName
   }
@@ -45,38 +44,43 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // create a map with streets basemap
-    with(ArcGISMap(Basemap.Type.STREETS, 40.0, -95.0, 4)) {
+    ArcGISMap(Basemap.Type.STREETS, 40.0, -95.0, 4).let { map ->
+
       // create service feature table from URL
-      featureTable = ServiceFeatureTable(getString(R.string.service_layer_url))
+      ServiceFeatureTable(getString(R.string.service_layer_url)).let { serviceFeatureTable ->
 
-      // create a feature layer from table
-      val featureLayer = FeatureLayer(featureTable)
+        // add a listener to the MapView to detect when a user has performed a single tap to add a new feature to
+        // the service feature table
+        mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
+          override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {
+            motionEvent?.let { event ->
+              // create a point from where the user clicked
+              android.graphics.Point(event.x.toInt(), event.y.toInt()).let { point ->
+                // create a map point from a point
+                mapView.screenToLocation(point)
+              }.let { mapPoint ->
+                // for a wrapped around map, the point coordinates include the wrapped around value
+                // for a service in projected coordinate system, this wrapped around value has to be normalized
+                GeometryEngine.normalizeCentralMeridian(mapPoint) as Point
+              }.let { normalizedMapPoint ->
+                // add a new feature to the service feature table
+                addFeature(normalizedMapPoint, serviceFeatureTable)
+              }
+            }
+            return super.onSingleTapConfirmed(motionEvent)
+          }
+        }
 
-      // add the layer to the ArcGISMap
-      this.operationalLayers.add(featureLayer)
+        // create a feature layer from table
+        FeatureLayer(serviceFeatureTable)
+      }.let { featureLayer ->
+
+        // add the layer to the ArcGISMap
+        map.operationalLayers.add(featureLayer)
+      }
 
       // set ArcGISMap to be displayed in map view
-      mapView.map = this
-    }
-
-    mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
-      override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {
-        motionEvent?.let { event ->
-          // create a point from where the user clicked
-          val point = android.graphics.Point(event.x.toInt(), event.y.toInt())
-
-          // create a map point from a point
-          val mapPoint = mapView.screenToLocation(point)
-
-          // for a wrapped around map, the point coordinates include the wrapped around value
-          // for a service in projected coordinate system, this wrapped around value has to be normalized
-          val normalizedMapPoint = GeometryEngine.normalizeCentralMeridian(mapPoint) as Point
-
-          // add a new feature to the service feature table
-          addFeature(normalizedMapPoint, featureTable)
-        }
-        return super.onSingleTapConfirmed(motionEvent)
-      }
+      mapView.map = map
     }
   }
 
@@ -90,20 +94,19 @@ class MainActivity : AppCompatActivity() {
   private fun addFeature(mapPoint: Point, featureTable: ServiceFeatureTable) {
 
     // create default attributes for the feature
-    val attributes = HashMap<String, Any>()
-    attributes["typdamage"] = "Destroyed"
-    attributes["primcause"] = "Earthquake"
-
-    // creates a new feature using default attributes and point
-    val feature = featureTable.createFeature(attributes, mapPoint)
-
-    // check if feature can be added to feature table
-    if (featureTable.canAdd()) {
-      // add the new feature to the feature table and to server
-      featureTable.addFeatureAsync(feature).addDoneListener { applyEdits(featureTable) }
-    } else {
-      logToUser(getString(R.string.error_cannot_add_to_feature_table))
+    hashMapOf<String, Any>("typdamage" to "Destroyed", "primcause" to "Earthquake").let { attributes ->
+      // creates a new feature using default attributes and point
+      featureTable.createFeature(attributes, mapPoint)
+    }.let { feature ->
+      // check if feature can be added to feature table
+      if (featureTable.canAdd()) {
+        // add the new feature to the feature table and to server
+        featureTable.addFeatureAsync(feature).addDoneListener { applyEdits(featureTable) }
+      } else {
+        logToUser(getString(R.string.error_cannot_add_to_feature_table))
+      }
     }
+
   }
 
   /**
@@ -114,22 +117,22 @@ class MainActivity : AppCompatActivity() {
   private fun applyEdits(featureTable: ServiceFeatureTable) {
 
     // apply the changes to the server
-    val editResult = featureTable.applyEditsAsync()
-    editResult.addDoneListener {
-      try {
-        val edits = editResult.get()
-        // check if the server edit was successful
-        if (edits != null && edits.size > 0) {
-          if (!edits[0].hasCompletedWithErrors()) {
-            logToUser(getString(R.string.feature_added))
-          } else {
-            throw edits[0].error
+    featureTable.applyEditsAsync().let { editResult ->
+      editResult.addDoneListener {
+        try {
+          editResult.get().let { edits ->
+            // check if the server edit was successful
+            if (edits != null && edits.size > 0) {
+              if (!edits[0].hasCompletedWithErrors()) {
+                logToUser(getString(R.string.feature_added))
+              } else {
+                throw edits[0].error
+              }
+            }
           }
+        } catch (e: ArcGISRuntimeException) {
+          logToUser(getString(R.string.error_applying_edits, e.cause?.message))
         }
-      } catch (e: InterruptedException) {
-        logToUser(getString(R.string.error_applying_edits, e.cause?.message))
-      } catch (e: Exception) {
-
       }
     }
   }
