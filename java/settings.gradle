@@ -1,4 +1,5 @@
 include ':add-enc-exchange-set',
+        ':add-features-feature-service',
         ':add-graphics-renderer',
         ':add-graphics-symbols',
         ':analyze-hotspots',
