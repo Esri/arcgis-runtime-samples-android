@@ -42,4 +42,19 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO
   }
+
+  @Override protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override protected void onPause() {
+    mMapView.pause();
+    super.onPause();
+  }
+
+  @Override protected void onDestroy() {
+    mMapView.dispose();
+    super.onDestroy();
+  }
 }
