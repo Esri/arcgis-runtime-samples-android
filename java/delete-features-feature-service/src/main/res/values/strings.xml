@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Delete Features - Feature Service</string>
+    <string name="feature_layer_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
 </resources>
