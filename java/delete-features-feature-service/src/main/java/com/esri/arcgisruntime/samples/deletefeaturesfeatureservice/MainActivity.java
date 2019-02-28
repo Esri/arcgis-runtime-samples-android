@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
+import com.esri.arcgisruntime.data.FeatureEditResult;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
@@ -126,7 +127,12 @@ public class MainActivity extends AppCompatActivity {
         try {
           FeatureQueryResult selected = selectionResult.get();
           // delete selected features
-          deleteFeatures(selected, mFeatureTable);
+          deleteFeatures(selected, mFeatureTable, new Runnable() {
+            @Override public void run() {
+              applyEdits(mFeatureTable);
+              callout.dismiss();
+            }
+          });
         } catch (InterruptedException | ExecutionException e) {
           logToUser(e.getCause().getMessage());
         }
@@ -141,13 +147,30 @@ public class MainActivity extends AppCompatActivity {
    * Deletes features from a ServiceFeatureTable and applies the changes to the
    * server.
    */
-  private void deleteFeatures(FeatureQueryResult features, ServiceFeatureTable featureTable) {
+  private void deleteFeatures(FeatureQueryResult features, ServiceFeatureTable featureTable,
+      Runnable onDeleteFeaturesDoneListener) {
     // delete feature from the feature table and apply edit to server
-    featureTable.deleteFeaturesAsync(features).addDoneListener(() -> applyEdits(featureTable));
+    featureTable.deleteFeaturesAsync(features).addDoneListener(onDeleteFeaturesDoneListener);
   }
 
   private void applyEdits(ServiceFeatureTable featureTable) {
-    //TODO
+    // apply the changes to the server
+    ListenableFuture<List<FeatureEditResult>> editResult = featureTable.applyEditsAsync();
+    editResult.addDoneListener(() -> {
+      try {
+        List<FeatureEditResult> edits = editResult.get();
+        // check if the server edit was successful
+        if (edits != null && edits.size() > 0) {
+          if (!edits.get(0).hasCompletedWithErrors()) {
+            logToUser("Feature successfully deleted");
+          } else {
+            throw edits.get(0).getError();
+          }
+        }
+      } catch (InterruptedException | ExecutionException e) {
+        logToUser(e.getCause().getMessage());
+      }
+    });
   }
 
   /**
