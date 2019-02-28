@@ -56,11 +56,15 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private RecyclerView mRecyclerView;
+
   private TextView mLoadWebMapTextView;
+
   private View mPortalLoadStateView;
+
   private TextView mLoadStateTextView;
 
   private MapView mMapView;
+
   private UserCredential mUserCredential;
 
   @Override
@@ -216,6 +220,15 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
   public AuthenticationChallengeResponse handleChallenge(AuthenticationChallenge authenticationChallenge) {
     if (authenticationChallenge.getType() == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE
         && authenticationChallenge.getRemoteResource() instanceof Portal) {
+
+      // If challenge has been requested by a Portal and the Portal has been loaded, cancel the challenge
+      // This is required as some layers have private portal items associated with them and we don't
+      // want to auth against them
+      if (((Portal) authenticationChallenge.getRemoteResource()).getLoadStatus() == LoadStatus.LOADED) {
+        return new AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL,
+            authenticationChallenge);
+      }
+
       int maxAttempts = 5;
       if (authenticationChallenge.getFailureCount() > maxAttempts) {
         // exceeded maximum amount of attempts. Act like it was a cancel

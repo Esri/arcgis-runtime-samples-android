@@ -27,7 +27,6 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SceneView;
-import com.esri.integratedmeshlayer.R;
 
 public class MainActivity extends AppCompatActivity {
 

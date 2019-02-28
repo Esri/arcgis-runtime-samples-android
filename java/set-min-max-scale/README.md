@@ -2,7 +2,7 @@
 
 Restrict zooming to a specific scale range.
 
-![Min max scale](min-max-scale.png)
+![Min max scale](set-min-max-scale.png)
 
 ## How it works
 

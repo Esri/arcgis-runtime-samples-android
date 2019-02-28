@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
-  private MapView mMapView;
   private Button mGenerateOfflineMapOverridesButton;
+  private MapView mMapView;
   private GraphicsOverlay mGraphicsOverlay;
   private Graphic mDownloadArea;
   private GenerateOfflineMapParameterOverrides mParameterOverrides;
@@ -129,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
     mGraphicsOverlay.getGraphics().add(mDownloadArea);
     SimpleLineSymbol simpleLineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2);
     mDownloadArea.setSymbol(simpleLineSymbol);
-    mDownloadArea.setGeometry(createDownloadAreaGeometry());
 
     // update the download area box whenever the viewpoint changes
     mMapView.addViewpointChangedListener(viewpointChangedEvent -> {
@@ -236,9 +235,13 @@ public class MainActivity extends AppCompatActivity {
         .setCancelable(true)
         .setNegativeButton("Cancel", (dialog, which) -> overrideParametersDialog.dismiss())
         .setPositiveButton("Start Job",
-            (dialog, which) -> defineParameters(minScaleSeekBar.getProgress(), maxScaleSeekBar.getProgress(),
-                extentBufferDistanceSeekBar.getProgress(), systemValves.isChecked(), serviceConnections.isChecked(),
-                minHydrantFlowRateSeekBar.getProgress(), waterPipes.isChecked()))
+            (dialog, which) -> {
+              // re-create download area geometry in case user hasn't changed the Viewpoint
+              mDownloadArea.setGeometry(createDownloadAreaGeometry());
+              defineParameters(minScaleSeekBar.getProgress(), maxScaleSeekBar.getProgress(),
+                  extentBufferDistanceSeekBar.getProgress(), systemValves.isChecked(), serviceConnections.isChecked(),
+                  minHydrantFlowRateSeekBar.getProgress(), waterPipes.isChecked());
+            })
         .show();
   }
 
