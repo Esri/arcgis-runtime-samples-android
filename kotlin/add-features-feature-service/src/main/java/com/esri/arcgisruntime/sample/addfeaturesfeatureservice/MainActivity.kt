@@ -152,6 +152,12 @@ class MainActivity : AppCompatActivity() {
 /*
 * AppCompatActivity Extensions
 */
+
+/**
+ * Shows a Toast to user and logs to logcat.
+ *
+ * @param message message to display
+ */
 fun AppCompatActivity.logToUser(message: String) {
   Toast.makeText(this, message, Toast.LENGTH_LONG).show()
   Log.d(this::class.java.simpleName, message)
