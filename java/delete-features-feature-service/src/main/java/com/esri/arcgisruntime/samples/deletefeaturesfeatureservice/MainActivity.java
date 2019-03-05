@@ -46,7 +46,7 @@ import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeatureDialog.OnButtonClickedListener {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -109,32 +109,41 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
   }
 
-  private Callout inflateCallout(MapView mapView, GeoElement geoElement, Point point) {
+  private Callout inflateCallout(MapView mapView, GeoElement feature, Point point) {
     Callout callout = mapView.getCallout();
     View view = LayoutInflater.from(this).inflate(R.layout.view_callout, null);
     view.findViewById(R.id.calloutViewCallToAction).setOnClickListener(v -> {
-      // query feature layer to find element by id
-      QueryParameters queryParameters = new QueryParameters();
-      queryParameters.setWhereClause("OBJECTID = " + geoElement.getAttributes().get("objectid").toString());
-
-      ListenableFuture<FeatureQueryResult> featureQueryResult = mFeatureLayer.getFeatureTable()
-          .queryFeaturesAsync(queryParameters);
-      featureQueryResult.addDoneListener(() -> {
-        try {
-          FeatureQueryResult foundFeatures = featureQueryResult.get();
-          // delete found features
-          deleteFeatures(foundFeatures, mFeatureTable, () -> {
-            applyEdits(mFeatureTable);
-            callout.dismiss();
-          });
-        } catch (InterruptedException | ExecutionException e) {
-          logToUser(e.getCause().getMessage());
-        }
-      });
+      confirmDeletion(feature.getAttributes().get("objectid").toString());
+      callout.dismiss();
     });
     callout.setContent(view);
-    callout.setGeoElement(geoElement, point);
+    callout.setGeoElement(feature, point);
     return callout;
+  }
+
+  private void confirmDeletion(String featureId) {
+    ConfirmDeleteFeatureDialog.newInstance(featureId)
+        .show(getSupportFragmentManager(), ConfirmDeleteFeatureDialog.class.getSimpleName());
+  }
+
+  @Override public void onDeleteFeatureClicked(String geoElementId) {
+    // query feature layer to find element by id
+    QueryParameters queryParameters = new QueryParameters();
+    queryParameters.setWhereClause(String.format("OBJECTID = %s", geoElementId));
+
+    ListenableFuture<FeatureQueryResult> featureQueryResult = mFeatureLayer.getFeatureTable()
+        .queryFeaturesAsync(queryParameters);
+    featureQueryResult.addDoneListener(() -> {
+      try {
+        FeatureQueryResult foundFeatures = featureQueryResult.get();
+        // delete found features
+        deleteFeatures(foundFeatures, mFeatureTable, () -> {
+          applyEdits(mFeatureTable);
+        });
+      } catch (InterruptedException | ExecutionException e) {
+        logToUser(e.getCause().getMessage());
+      }
+    });
   }
 
   /**
