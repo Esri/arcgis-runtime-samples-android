@@ -16,10 +16,10 @@
 
 package com.esri.arcgisruntime.sample.choosecameracontroller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import android.content.res.AssetManager;
 import android.os.Bundle;
@@ -144,14 +144,17 @@ public class MainActivity extends AppCompatActivity {
     File file = new File(getCacheDir() + File.separator + fileName);
     if (!file.exists()) {
       try {
-        InputStream in = assetManager.open(fileName);
-        OutputStream out = new FileOutputStream(getCacheDir() + File.separator + fileName);
-        byte[] buffer = new byte[1024];
-        int read = in.read(buffer);
+        BufferedInputStream bis = new BufferedInputStream(assetManager.open(fileName));
+        BufferedOutputStream bos = new BufferedOutputStream(
+            new FileOutputStream(getCacheDir() + File.separator + fileName));
+        byte[] buffer = new byte[bis.available()];
+        int read = bis.read(buffer);
         while (read != -1) {
-          out.write(buffer, 0, read);
-          read = in.read(buffer);
+          bos.write(buffer, 0, read);
+          read = bis.read(buffer);
         }
+        bos.close();
+        bis.close();
         Log.i(TAG, fileName + " copied to cache.");
       } catch (Exception e) {
         Log.e(TAG, "Error writing " + fileName + " to cache. " + e.getMessage());
