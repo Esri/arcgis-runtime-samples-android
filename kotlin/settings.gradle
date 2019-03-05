@@ -1,6 +1,7 @@
 include ':analyze-hotspots',
         ':attribution-view-change',
         ':change-basemaps',
+        ':delete-features-feature-service',
         ':display-map',
         ':feature-layer-extrusion',
         ':geodesic-operations',
