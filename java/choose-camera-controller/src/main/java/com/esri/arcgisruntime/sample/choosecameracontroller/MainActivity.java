@@ -1,16 +1,19 @@
-/* Copyright 2018 Esri
+/*
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  * Copyright 2019 Esri
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *  *
  *
  */
 
@@ -29,10 +32,14 @@ import android.util.Log;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
+import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.Surface;
+import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.LayerSceneProperties;
+import com.esri.arcgisruntime.mapping.view.OrbitGeoElementCameraController;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.symbology.ModelSceneSymbol;
 
@@ -52,18 +59,35 @@ public class MainActivity extends AppCompatActivity {
     // load plane model from assets into cache directory
     copyFileFromAssetsToCache(getString(R.string.bristol_model));
 
-    // create a graphics overlay for the scene
-    mSceneOverlay = new GraphicsOverlay();
-    mSceneOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.ABSOLUTE);
-    mSceneView.getGraphicsOverlays().add(mSceneOverlay);
-
     // create a scene and add it to the scene view
     mSceneView = findViewById(R.id.sceneView);
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
     mSceneView.setScene(scene);
 
+    // add base surface for elevation data
+    Surface surface = new Surface();
+    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
+        getString(R.string.world_elevation_service_url));
+    surface.getElevationSources().add(elevationSource);
+    scene.setBaseSurface(surface);
+
+    // create a graphics overlay for the scene
+    mSceneOverlay = new GraphicsOverlay();
+    mSceneOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.ABSOLUTE);
+    mSceneView.getGraphicsOverlays().add(mSceneOverlay);
+
+    // create a camera and set it as the viewpoint for when the scene loads
+    Camera camera = new Camera(38.459291, -109.937576, 5500, 150.0, 20.0, 0.0);
+    mSceneView.setViewpointCamera(camera);
+
     loadModel().addDoneLoadingListener(() -> {
-      // TODO
+      // instantiate a new camera controller which orbits the aeroplane at a set distance
+      OrbitGeoElementCameraController orbitAeroplaneCameraController = new OrbitGeoElementCameraController(mPlane3D,
+          100.0);
+      orbitAeroplaneCameraController.setCameraPitchOffset(30);
+      orbitAeroplaneCameraController.setCameraHeadingOffset(150);
+
+      mSceneView.setCameraController(orbitAeroplaneCameraController);
     });
   }
 
@@ -75,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     String pathToModel = getCacheDir() + File.separator + getString(R.string.bristol_model);
     ModelSceneSymbol plane3DSymbol = new ModelSceneSymbol(pathToModel, 1.0);
     plane3DSymbol.loadAsync();
-    mPlane3D = new Graphic(new Point(0, 0, 0, SpatialReferences.getWgs84()), plane3DSymbol);
+    mPlane3D = new Graphic(new Point(-109.937516, 38.456714, 5000, SpatialReferences.getWgs84()), plane3DSymbol);
     mSceneOverlay.getGraphics().add(mPlane3D);
     return plane3DSymbol;
   }
