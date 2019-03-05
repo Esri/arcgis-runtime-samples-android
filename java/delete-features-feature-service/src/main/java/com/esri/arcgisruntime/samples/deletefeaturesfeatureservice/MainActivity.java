@@ -16,7 +16,6 @@
 
 package com.esri.arcgisruntime.samples.deletefeaturesfeatureservice;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -34,6 +33,7 @@ import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureEditResult;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
+import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
@@ -92,18 +92,10 @@ public class MainActivity extends AppCompatActivity {
         results.addDoneListener(() -> {
           try {
             IdentifyLayerResult layer = results.get();
-            // search the layers for identified features
-            List<Feature> foundFeatures = new ArrayList<>();
-
-            for (GeoElement element : layer.getElements()) {
-              if (element instanceof Feature) {
-                foundFeatures.add((Feature) element);
-              }
-            }
-
-            if (foundFeatures.size() > 0) {
-              inflateCallout(mMapView, foundFeatures.get(0), normalizedMapPoint).show();
-              mFeatureLayer.selectFeature(foundFeatures.get(0));
+            // get first element found and ensure that it is an instance of Feature before allowing user to delete
+            // using callout
+            if (layer.getElements().size() > 0 && layer.getElements().get(0) instanceof Feature) {
+              inflateCallout(mMapView, layer.getElements().get(0), normalizedMapPoint).show();
             }
           } catch (InterruptedException | ExecutionException e) {
             logToUser(getString(R.string.error_getting_identify_result, e.getCause().getMessage()));
@@ -121,17 +113,19 @@ public class MainActivity extends AppCompatActivity {
     Callout callout = mapView.getCallout();
     View view = LayoutInflater.from(this).inflate(R.layout.view_callout, null);
     view.findViewById(R.id.calloutViewCallToAction).setOnClickListener(v -> {
-      // get selected features
-      ListenableFuture<FeatureQueryResult> selectionResult = mFeatureLayer.getSelectedFeaturesAsync();
-      selectionResult.addDoneListener(() -> {
+      // query feature layer to find element by id
+      QueryParameters queryParameters = new QueryParameters();
+      queryParameters.setWhereClause("OBJECTID = " + geoElement.getAttributes().get("objectid").toString());
+
+      ListenableFuture<FeatureQueryResult> featureQueryResult = mFeatureLayer.getFeatureTable()
+          .queryFeaturesAsync(queryParameters);
+      featureQueryResult.addDoneListener(() -> {
         try {
-          FeatureQueryResult selected = selectionResult.get();
-          // delete selected features
-          deleteFeatures(selected, mFeatureTable, new Runnable() {
-            @Override public void run() {
-              applyEdits(mFeatureTable);
-              callout.dismiss();
-            }
+          FeatureQueryResult foundFeatures = featureQueryResult.get();
+          // delete found features
+          deleteFeatures(foundFeatures, mFeatureTable, () -> {
+            applyEdits(mFeatureTable);
+            callout.dismiss();
           });
         } catch (InterruptedException | ExecutionException e) {
           logToUser(e.getCause().getMessage());
