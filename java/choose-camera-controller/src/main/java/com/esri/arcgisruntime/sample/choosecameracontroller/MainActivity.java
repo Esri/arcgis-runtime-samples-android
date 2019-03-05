@@ -23,7 +23,9 @@ import java.io.FileOutputStream;
 
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
     // load plane model from assets into cache directory
     copyFileFromAssetsToCache(getString(R.string.bristol_model));
 
+    setupToolbar();
+
     // create a scene and add it to the scene view
     mSceneView = findViewById(R.id.sceneView);
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
@@ -96,6 +100,12 @@ public class MainActivity extends AppCompatActivity {
       mOrbitAeroplaneCameraController.setCameraPitchOffset(30);
       mOrbitAeroplaneCameraController.setCameraHeadingOffset(150);
     });
+  }
+
+  private void setupToolbar() {
+    Toolbar toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+    toolbar.setOverflowIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_menu_camera));
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {

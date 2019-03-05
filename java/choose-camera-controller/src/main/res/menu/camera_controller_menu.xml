@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_camera_controller_aeroplane"
-        android:title="@string/menu_item_aeroplane" />
+        android:title="@string/menu_item_aeroplane"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_camera_controller_crater"
-        android:title="@string/menu_item_crater" />
+        android:title="@string/menu_item_crater"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_camera_controller_globe"
-        android:title="@string/menu_item_globe" />
+        android:title="@string/menu_item_globe"
+        app:showAsAction="never" />
 </menu>
