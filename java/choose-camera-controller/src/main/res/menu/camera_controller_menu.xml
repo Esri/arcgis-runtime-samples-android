@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_camera_controller_aeroplane"
+        android:title="@string/menu_item_aeroplane" />
+    <item
+        android:id="@+id/action_camera_controller_crater"
+        android:title="@string/menu_item_crater" />
+    <item
+        android:id="@+id/action_camera_controller_globe"
+        android:title="@string/menu_item_globe" />
+</menu>

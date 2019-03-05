@@ -25,6 +25,8 @@ import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
@@ -33,10 +35,12 @@ import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.Camera;
+import com.esri.arcgisruntime.mapping.view.GlobeCameraController;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.LayerSceneProperties;
 import com.esri.arcgisruntime.mapping.view.OrbitGeoElementCameraController;
+import com.esri.arcgisruntime.mapping.view.OrbitLocationCameraController;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.symbology.ModelSceneSymbol;
 
@@ -47,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
   private SceneView mSceneView;
   private Graphic mPlane3D;
   private GraphicsOverlay mSceneOverlay;
+  private OrbitGeoElementCameraController mOrbitAeroplaneCameraController;
+  private OrbitLocationCameraController mOrbitLocationCameraController;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -77,15 +83,41 @@ public class MainActivity extends AppCompatActivity {
     Camera camera = new Camera(38.459291, -109.937576, 5500, 150.0, 20.0, 0.0);
     mSceneView.setViewpointCamera(camera);
 
+    // instantiate a new camera controller which orbits a target location
+    Point locationPoint = new Point(-109.929589, 38.437304, 1700, SpatialReferences.getWgs84());
+    mOrbitLocationCameraController = new OrbitLocationCameraController(locationPoint, 5000);
+    mOrbitLocationCameraController.setCameraPitchOffset(3);
+    mOrbitLocationCameraController.setCameraHeadingOffset(150);
+
     loadModel().addDoneLoadingListener(() -> {
       // instantiate a new camera controller which orbits the aeroplane at a set distance
-      OrbitGeoElementCameraController orbitAeroplaneCameraController = new OrbitGeoElementCameraController(mPlane3D,
+      mOrbitAeroplaneCameraController = new OrbitGeoElementCameraController(mPlane3D,
           100.0);
-      orbitAeroplaneCameraController.setCameraPitchOffset(30);
-      orbitAeroplaneCameraController.setCameraHeadingOffset(150);
-
-      mSceneView.setCameraController(orbitAeroplaneCameraController);
+      mOrbitAeroplaneCameraController.setCameraPitchOffset(30);
+      mOrbitAeroplaneCameraController.setCameraHeadingOffset(150);
     });
+  }
+
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.camera_controller_menu, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.action_camera_controller_aeroplane:
+        mSceneView.setCameraController(mOrbitAeroplaneCameraController);
+        break;
+      case R.id.action_camera_controller_crater:
+        mSceneView.setCameraController(mOrbitLocationCameraController);
+        break;
+      case R.id.action_camera_controller_globe:
+        mSceneView.setCameraController(new GlobeCameraController());
+        break;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+    return true;
   }
 
   /**
