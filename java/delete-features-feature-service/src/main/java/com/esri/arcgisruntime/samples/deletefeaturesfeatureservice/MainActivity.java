@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
           applyEdits(mFeatureTable);
         });
       } catch (InterruptedException | ExecutionException e) {
-        logToUser(e.getCause().getMessage());
+        logToUser(getString(R.string.error_feature_deletion, e.getCause().getMessage()));
       }
     });
   }
@@ -165,13 +165,13 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
         // check if the server edit was successful
         if (edits != null && edits.size() > 0) {
           if (!edits.get(0).hasCompletedWithErrors()) {
-            logToUser("Feature successfully deleted");
+            logToUser(getString(R.string.success_feature_deleted));
           } else {
             throw edits.get(0).getError();
           }
         }
       } catch (InterruptedException | ExecutionException e) {
-        logToUser(e.getCause().getMessage());
+        logToUser(getString(R.string.error_applying_edits, e.getCause().getMessage()));
       }
     });
   }
