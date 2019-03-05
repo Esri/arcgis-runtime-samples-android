@@ -109,6 +109,15 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
     mMapView.setMap(map);
   }
 
+  /**
+   * Method gets an instance of {@link Callout} from a {@link MapView} and inflates a {@link View} from a layout
+   * to display as the content of the {@link Callout}.
+   *
+   * @param mapView instance of {@link MapView} where the {@link Callout} is to be displayed
+   * @param feature used to set the {@link GeoElement} of the {@link Callout}
+   * @param point   the location of the user's tap
+   * @return a {@link Callout} to display on a {@link MapView}
+   */
   private Callout inflateCallout(MapView mapView, GeoElement feature, Point point) {
     Callout callout = mapView.getCallout();
     View view = LayoutInflater.from(this).inflate(R.layout.view_callout, null);
@@ -121,25 +130,40 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
     return callout;
   }
 
+  /**
+   * Method displays instance of {@link ConfirmDeleteFeatureDialog} to allow user to confirm their intent to delete
+   * a {@link Feature}.
+   *
+   * @param featureId id of feature to be deleted
+   */
   private void confirmDeletion(String featureId) {
     ConfirmDeleteFeatureDialog.newInstance(featureId)
         .show(getSupportFragmentManager(), ConfirmDeleteFeatureDialog.class.getSimpleName());
   }
 
-  @Override public void onDeleteFeatureClicked(String geoElementId) {
+  /**
+   * Calllback from {@link ConfirmDeleteFeatureDialog}, invoked when positive button has been clicked in dialog.
+   *
+   * @param featureId id of feature to be deleted
+   */
+  @Override public void onDeleteFeatureClicked(String featureId) {
     // query feature layer to find element by id
     QueryParameters queryParameters = new QueryParameters();
-    queryParameters.setWhereClause(String.format("OBJECTID = %s", geoElementId));
+    queryParameters.setWhereClause(String.format("OBJECTID = %s", featureId));
 
     ListenableFuture<FeatureQueryResult> featureQueryResult = mFeatureLayer.getFeatureTable()
         .queryFeaturesAsync(queryParameters);
     featureQueryResult.addDoneListener(() -> {
       try {
-        FeatureQueryResult foundFeatures = featureQueryResult.get();
-        // delete found features
-        deleteFeatures(foundFeatures, mFeatureTable, () -> {
-          applyEdits(mFeatureTable);
-        });
+        // check result has a feature
+        if (featureQueryResult.get().iterator().hasNext()) {
+          // attempt to get first feature from result as it should be the only feature
+          Feature foundFeature = featureQueryResult.get().iterator().next();
+          // delete found features
+          deleteFeature(foundFeature, mFeatureTable, () -> {
+            applyEdits(mFeatureTable);
+          });
+        }
       } catch (InterruptedException | ExecutionException e) {
         logToUser(getString(R.string.error_feature_deletion, e.getCause().getMessage()));
       }
@@ -147,27 +171,38 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
   }
 
   /**
-   * Deletes features from a ServiceFeatureTable and applies the changes to the
+   * Deletes a feature from a {@link ServiceFeatureTable} and applies the changes to the
    * server.
+   *
+   * @param feature                     {@link Feature} to delete
+   * @param featureTable                {@link ServiceFeatureTable} to delete {@link Feature} from
+   * @param onDeleteFeatureDoneListener {@link Runnable} to be invoked when action has completed
    */
-  private void deleteFeatures(FeatureQueryResult features, ServiceFeatureTable featureTable,
-      Runnable onDeleteFeaturesDoneListener) {
+  private void deleteFeature(Feature feature, ServiceFeatureTable featureTable,
+      Runnable onDeleteFeatureDoneListener) {
     // delete feature from the feature table and apply edit to server
-    featureTable.deleteFeaturesAsync(features).addDoneListener(onDeleteFeaturesDoneListener);
+    featureTable.deleteFeatureAsync(feature).addDoneListener(onDeleteFeatureDoneListener);
   }
 
+  /**
+   * Sends any edits on the {@link ServiceFeatureTable} to the server.
+   *
+   * @param featureTable {@link ServiceFeatureTable} to apply edits to
+   */
   private void applyEdits(ServiceFeatureTable featureTable) {
     // apply the changes to the server
-    ListenableFuture<List<FeatureEditResult>> editResult = featureTable.applyEditsAsync();
-    editResult.addDoneListener(() -> {
+    ListenableFuture<List<FeatureEditResult>> editResults = featureTable.applyEditsAsync();
+    editResults.addDoneListener(() -> {
       try {
-        List<FeatureEditResult> edits = editResult.get();
-        // check if the server edit was successful
-        if (edits != null && edits.size() > 0) {
-          if (!edits.get(0).hasCompletedWithErrors()) {
+        // check result has an edit
+        if (editResults.get().iterator().hasNext()) {
+          // attempt to get first edit from result as it should be the only edit
+          FeatureEditResult edit = editResults.get().iterator().next();
+          // check if the server edit was successful
+          if (!edit.hasCompletedWithErrors()) {
             logToUser(getString(R.string.success_feature_deleted));
           } else {
-            throw edits.get(0).getError();
+            throw edit.getError();
           }
         }
       } catch (InterruptedException | ExecutionException e) {
@@ -179,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
   /**
    * Shows a Toast to user and logs to logcat.
    *
-   * @param message message to display
+   * @param message to display to user and log to LogCat
    */
   private void logToUser(String message) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show();
