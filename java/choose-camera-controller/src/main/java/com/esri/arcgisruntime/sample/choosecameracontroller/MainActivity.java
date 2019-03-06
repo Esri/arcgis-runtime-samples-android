@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
   private void setupToolbar() {
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
-    toolbar.setOverflowIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_menu_camera));
+    toolbar.setOverflowIcon(ContextCompat.getDrawable(this, R.drawable.ic_photo_camera));
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
