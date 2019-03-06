@@ -28,7 +28,7 @@ This terrain data comes from Monterey, California.
 ## Offline data
 
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=cce37043eb0440c7a5c109cf8aad55000).
-2. Extract the contents of the downloaded zip files to disk.
+2. Extract the contents of the downloaded zip file to disk.
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 4. Execute the following command:
 
