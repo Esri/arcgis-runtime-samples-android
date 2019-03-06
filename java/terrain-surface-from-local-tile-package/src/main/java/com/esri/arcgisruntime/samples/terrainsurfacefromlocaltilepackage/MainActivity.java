@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     ArcGISScene scene = new ArcGISScene();
     scene.setBasemap(Basemap.createImagery());
 
+    // add the scene to the sceneview
     mSceneView.setScene(scene);
 
     // specify the initial camera position
@@ -84,9 +85,7 @@ public class MainActivity extends AppCompatActivity {
       createTiledElevationSource();
     } else {
       // Report to user that permission was denied
-      String error = getString(R.string.error_read_permission_denied_message);
-      Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
-      Log.e(TAG, error);
+      logToUser(getString(R.string.error_read_permission_denied_message));
     }
   }
 
@@ -103,13 +102,16 @@ public class MainActivity extends AppCompatActivity {
         mSceneView.getScene().getBaseSurface().getElevationSources().add(tiledElevationSource);
       } else if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
         // Notify user that the ArcGISTiledElevationSource has failed to load
-        String error = getString(R.string.error_tiled_elevation_source_load_failure_message);
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        Log.e(TAG, error);
+        logToUser(getString(R.string.error_tiled_elevation_source_load_failure_message));
       }
     });
 
     // Load the ArcGISTiledElevationSource asynchronously
     tiledElevationSource.loadAsync();
+  }
+
+  private void logToUser(String message) {
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    Log.d(TAG, message);
   }
 }
