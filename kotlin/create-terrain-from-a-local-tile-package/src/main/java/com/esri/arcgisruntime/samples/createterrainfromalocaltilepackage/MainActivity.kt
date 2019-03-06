@@ -42,15 +42,14 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // create a scene and add a basemap to it
-    val scene = ArcGISScene()
-    scene.basemap = Basemap.createImagery()
-
-    // add the scene to the sceneview
-    sceneView.scene = scene
+    with(ArcGISScene()) {
+      this.basemap = Basemap.createImagery()
+      // add the scene to the sceneview
+      sceneView.scene = this
+    }
 
     // specify the initial camera position
-    val camera = Camera(36.525, -121.80, 300.0, 180.0, 80.0, 0.0)
-    sceneView.setViewpointCamera(camera)
+    sceneView.setViewpointCamera(Camera(36.525, -121.80, 300.0, 180.0, 80.0, 0.0))
 
     requestReadPermission()
   }
@@ -81,24 +80,28 @@ class MainActivity : AppCompatActivity() {
 
   private fun createTiledElevationSource() {
     // Add a ArcGISTiledElevationSource to the scene by passing the URI of the local tile package to the constructor
-    val tiledElevationSource = ArcGISTiledElevationSource(
-      Environment.getExternalStorageDirectory().toString() + getString(R.string.local_tile_package_location)
-    )
+    val tiledElevationSource =
 
-    // Add a listener to perform operations when the load status of the ArcGISTiledElevationSource changes
-    tiledElevationSource.addLoadStatusChangedListener { loadStatusChangedEvent ->
-      // When ArcGISTiledElevationSource loads
-      if (loadStatusChangedEvent.newLoadStatus == LoadStatus.LOADED) {
-        // Add the ArcGISTiledElevationSource to the elevation sources of the scene
-        sceneView.scene.baseSurface.elevationSources.add(tiledElevationSource)
-      } else if (loadStatusChangedEvent.newLoadStatus == LoadStatus.FAILED_TO_LOAD) {
-        // Notify user that the ArcGISTiledElevationSource has failed to load
-        logToUser(getString(R.string.error_tiled_elevation_source_load_failure_message))
+      with(
+        ArcGISTiledElevationSource(
+          Environment.getExternalStorageDirectory().toString() + getString(R.string.local_tile_package_location)
+        )
+      ) {
+        // Add a listener to perform operations when the load status of the ArcGISTiledElevationSource changes
+        this.addLoadStatusChangedListener { loadStatusChangedEvent ->
+          // When ArcGISTiledElevationSource loads
+          if (loadStatusChangedEvent.newLoadStatus == LoadStatus.LOADED) {
+            // Add the ArcGISTiledElevationSource to the elevation sources of the scene
+            sceneView.scene.baseSurface.elevationSources.add(this)
+          } else if (loadStatusChangedEvent.newLoadStatus == LoadStatus.FAILED_TO_LOAD) {
+            // Notify user that the ArcGISTiledElevationSource has failed to load
+            logToUser(getString(R.string.error_tiled_elevation_source_load_failure_message))
+          }
+        }
+
+        // Load the ArcGISTiledElevationSource asynchronously
+        this.loadAsync()
       }
-    }
-
-    // Load the ArcGISTiledElevationSource asynchronously
-    tiledElevationSource.loadAsync()
   }
 
 
