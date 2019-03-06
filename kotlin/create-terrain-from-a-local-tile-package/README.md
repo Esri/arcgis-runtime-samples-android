@@ -14,7 +14,7 @@ Terrain can be loaded offline from tile packages (.tpk).
 
 1. Create an `ArcGISScene` and add it to a `SceneView`.
 1. Create an `ArcGISTiledElevationSource` with the path to the local tile package.
-1. Add this source to the scene's base surface: `ArcGISScene.getBaseSurface().getElevationSources().add(ArcGISTiledElevationSource)`.
+1. Add this source to the scene's base surface: `ArcGISScene.baseSurface.elevationSources.add(ArcGISTiledElevationSource)`.
 
 ## Relevant API
 
