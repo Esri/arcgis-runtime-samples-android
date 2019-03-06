@@ -1,6 +1,7 @@
 include ':analyze-hotspots',
         ':attribution-view-change',
         ':change-basemaps',
+        ':choose-camera-controller',
         ':display-map',
         ':feature-layer-extrusion',
         ':geodesic-operations',
