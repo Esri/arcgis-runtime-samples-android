@@ -13,8 +13,8 @@ Terrain can be loaded offline from tile packages (.tpk).
 ## How it works
 
 1. Create an `ArcGISScene` and add it to a `SceneView`.
-2. Create an `ArcGISTiledElevationSource` with the path to the local tile package.
-3. Add this source to the scene's base surface: `ArcGISScene.getBaseSurface().getElevationSources().add(ArcGISTiledElevationSource)`.
+1. Create an `ArcGISTiledElevationSource` with the path to the local tile package.
+1. Add this source to the scene's base surface: `ArcGISScene.getBaseSurface().getElevationSources().add(ArcGISTiledElevationSource)`.
 
 ## Relevant API
 
@@ -28,9 +28,9 @@ This terrain data comes from Monterey, California.
 ## Offline data
 
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=cce37043eb0440c7a5c109cf8aad55000).
-2. Extract the contents of the downloaded zip file to disk.
-3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
-4. Execute the following command:
+1. Extract the contents of the downloaded zip file to disk.
+1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+1. Execute the following command:
 
 `adb push MontereyElevation.tpk /sdcard/ArcGIS/Samples/tpk/MontereyElevation.tpk`
 
