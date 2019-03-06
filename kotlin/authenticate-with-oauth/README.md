@@ -21,6 +21,11 @@ Your app may need to access items that are only shared with authorized users. Fo
 2. In response to the attempt to access secured content, the `AuthenticationManager` shows an OAuth authentication dialog from ArcGIS Online.
 3. If the user authenticates successfully, the private layers will display in the map.
 
+## Access token security
+
+The user's access token should be treated with the upmost of security, and as such, we do not recommend storing the user's Access Token in SharedPreferences as SharedPreferences are not encrypted. We have created this sample to highlight the use of our APIs.
+Please use the Android keystore provider where available: https://developer.android.com/training/articles/keystore#UsingAndroidKeyStore
+
 ## Relevant API
  * AuthenticationManager
  * AuthenticationChallengeHandler
