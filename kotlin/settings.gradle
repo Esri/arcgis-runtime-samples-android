@@ -1,6 +1,7 @@
 include ':analyze-hotspots',
         ':attribution-view-change',
         ':change-basemaps',
+        ':create-terrain-from-a-local-tile-package',
         ':display-map',
         ':feature-layer-extrusion',
         ':geodesic-operations',
