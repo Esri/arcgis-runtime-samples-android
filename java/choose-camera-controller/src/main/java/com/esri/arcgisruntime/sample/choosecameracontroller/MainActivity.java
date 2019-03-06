@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
     // load plane model from assets into cache directory
     copyFileFromAssetsToCache(getString(R.string.bristol_model));
+    copyFileFromAssetsToCache(getString(R.string.bristol_skin));
 
     setupToolbar();
 
