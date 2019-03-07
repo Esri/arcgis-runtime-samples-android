@@ -97,22 +97,22 @@ public class MainActivity extends AppCompatActivity {
     filePaths.add(Environment.getExternalStorageDirectory() + getString(R.string.raster_package_location));
 
     try {
-      // Add a RasterElevationSource to the scene by passing the URI of the local tile package to the constructor
+      // Add an elevation source to the scene by passing the URI of the local tile package to the constructor
       RasterElevationSource rasterElevationSource = new RasterElevationSource(filePaths);
 
-      // Add a listener to perform operations when the load status of the RasterElevationSource changes
+      // Add a listener to perform operations when the load status of the elevation source changes
       rasterElevationSource.addLoadStatusChangedListener(loadStatusChangedEvent -> {
-        // When RasterElevationSource loads
+        // When elevation source loads
         if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.LOADED) {
-          // Add the RasterElevationSource to the elevation sources of the scene
+          // Add the elevation source to the elevation sources of the scene
           mSceneView.getScene().getBaseSurface().getElevationSources().add(rasterElevationSource);
         } else if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-          // Notify user that the RasterElevationSource has failed to load
+          // Notify user that the elevation source has failed to load
           logErrorToUser(getString(R.string.error_tiled_elevation_source_load_failure_message, ""));
         }
       });
 
-      // Load the RasterElevationSource asynchronously
+      // Load the elevation source asynchronously
       rasterElevationSource.loadAsync();
     } catch (IllegalArgumentException e) {
       // catch exception thrown by RasterElevationSource when a file is invalid/not found
