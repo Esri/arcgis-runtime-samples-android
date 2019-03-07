@@ -27,7 +27,6 @@ import com.esri.arcgisruntime.ArcGISRuntimeException
 import com.esri.arcgisruntime.data.Feature
 import com.esri.arcgisruntime.data.QueryParameters
 import com.esri.arcgisruntime.data.ServiceFeatureTable
-import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -58,39 +57,35 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
 
     // create a map with streets basemap
     with(ArcGISMap(Basemap.Type.STREETS, 40.0, -95.0, 4)) {
-      // add the layer to the ArcGISMap
+      // add the layer to the map
       operationalLayers.add(featureLayer)
-      // set ArcGISMap to be displayed in map view
+      // set map to be displayed in map view
       mapView.map = this
     }
 
     mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
       override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {
         motionEvent?.let { event ->
-          // create a point from where the user clicked
-          android.graphics.Point(event.x.toInt(), event.y.toInt()).let { point ->
+          // create a screen point from where the user clicked
+          android.graphics.Point(event.x.toInt(), event.y.toInt()).let { screenPoint ->
             // identify the clicked feature
-            with(mapView.identifyLayerAsync(featureLayer, point, 1.0, false)) {
+            with(mapView.identifyLayerAsync(featureLayer, screenPoint, 1.0, false)) {
               this.addDoneListener {
                 try {
                   this.get().let { layer ->
                     // get first element found and ensure that it is an instance of Feature before allowing user to delete
                     // using callout
-                    (layer.elements[0] as? Feature)?.let {
-                      // create a map point from a point
-                      mapView.screenToLocation(point).let {
-                        // for a wrapped around map, the point coordinates include the wrapped around value
-                        // for a service in projected coordinate system, this wrapped around value has to be normalized
-                        GeometryEngine.normalizeCentralMeridian(it) as Point
-                      }.let {
-                        inflateCallout(mapView, layer.elements[0], it).show()
+                    (layer.elements.firstOrNull() as? Feature)?.let { feature ->
+                      // create a map point from a screen point
+                      mapView.screenToLocation(screenPoint).let {
+                        inflateCallout(mapView, feature, it).show()
                       }
                     }
                   }
                 } catch (e: InterruptedException) {
-                  logToUser(getString(R.string.error_getting_identify_result, e.cause?.message))
+                  logToUser(true, getString(R.string.error_getting_identify_result, e.cause?.message))
                 } catch (e: ExecutionException) {
-                  logToUser(getString(R.string.error_getting_identify_result, e.cause?.message))
+                  logToUser(true, getString(R.string.error_getting_identify_result, e.cause?.message))
                 }
               }
             }
@@ -139,7 +134,7 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
   }
 
   /**
-   * Calllback from [ConfirmDeleteFeatureDialog], invoked when positive button has been clicked in dialog.
+   * Callback from [ConfirmDeleteFeatureDialog], invoked when positive button has been clicked in dialog.
    *
    * @param featureId id of feature to be deleted
    */
@@ -159,9 +154,9 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
             })
           }
         } catch (e: InterruptedException) {
-          logToUser(getString(R.string.error_feature_deletion, e.cause?.message))
+          logToUser(true, getString(R.string.error_feature_deletion, e.cause?.message))
         } catch (e: ExecutionException) {
-          logToUser(getString(R.string.error_feature_deletion, e.cause?.message))
+          logToUser(true, getString(R.string.error_feature_deletion, e.cause?.message))
         }
       }
     }
@@ -197,27 +192,33 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
           this.get().iterator().next()?.let {
             // check if the server edit was successful
             if (!it.hasCompletedWithErrors()) {
-              logToUser(getString(R.string.success_feature_deleted))
+              logToUser(false, getString(R.string.success_feature_deleted))
             } else {
               throw it.error
             }
           }
         } catch (e: ArcGISRuntimeException) {
-          logToUser(getString(R.string.error_applying_edits, e.cause?.message))
+          logToUser(true, getString(R.string.error_applying_edits, e.cause?.message))
         } catch (e: InterruptedException) {
-          logToUser(getString(R.string.error_applying_edits, e.cause?.message))
+          logToUser(true, getString(R.string.error_applying_edits, e.cause?.message))
         } catch (e: ExecutionException) {
-          logToUser(getString(R.string.error_applying_edits, e.cause?.message))
+          logToUser(true, getString(R.string.error_applying_edits, e.cause?.message))
         }
       }
     }
   }
-}
 
-/**
- * AppCompatActivity extensions
- **/
-fun AppCompatActivity.logToUser(message: String) {
-  Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-  Log.d(this::class.java.simpleName, message)
+  /**
+   * AppCompatActivity extensions
+   **/
+  private val logTag get() = this::class.java.simpleName
+
+  private fun AppCompatActivity.logToUser(isError: Boolean, message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    if (isError) {
+      Log.e(logTag, message)
+    } else {
+      Log.d(logTag, message)
+    }
+  }
 }
