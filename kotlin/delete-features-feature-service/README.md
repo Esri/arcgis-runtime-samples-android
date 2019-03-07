@@ -6,12 +6,12 @@ Delete features from an online feature service.
 
 ## Use case
 
-A `FeatureLayer` created using this `SeviceFeatutreTable` that is applied to the `ArcGISMap` will display existing Features and allow a user to delete individual features by tapping on them.
+A `FeatureLayer` created using this `SeviceFeatureTable` that is applied to the `ArcGISMap` will display existing Features and allow a user to delete individual features by tapping on them.
 
 ## How it works
 
-1. Create a service feature table from a URL, `ServiceFeatureTable("URL")`
-1. Create a `FeatureLayer` from the service feature table, `FeatureLayer(ServiceFeatureTable)`
+1. Create a new `ServiceFeatureTable` from a URL
+1. Create a `FeatureLayer` from the `ServiceFeatureTable` created in step 1
 1. Detect a tap on a `Feature` and display a `Callout` by invoking `MapView.getCallout()`
 1. Detect a tap on the contents of the `Callout`, asking the user to confirm they wish to delete the `Feature`
 1. Get the `Feature` by querying the `FeatureTable` to obtain the `Feature` instance, invoking `FeatureLayer.getFeatureTable().queryFeaturesAsync()`
