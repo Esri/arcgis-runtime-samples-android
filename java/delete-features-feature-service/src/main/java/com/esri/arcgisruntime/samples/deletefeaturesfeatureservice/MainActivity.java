@@ -35,7 +35,6 @@ import com.esri.arcgisruntime.data.FeatureEditResult;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
-import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -72,40 +71,37 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
     // create a feature layer from table
     mFeatureLayer = new FeatureLayer(mFeatureTable);
 
-    // add the layer to the ArcGISMap
+    // add the layer to the map
     map.getOperationalLayers().add(mFeatureLayer);
 
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override public boolean onSingleTapConfirmed(MotionEvent event) {
         // create a point from where the user clicked
-        android.graphics.Point point = new android.graphics.Point((int) event.getX(), (int) event.getY());
+        android.graphics.Point screenPoint = new android.graphics.Point((int) event.getX(), (int) event.getY());
 
-        // create a map point from a point
-        Point mapPoint = mMapView.screenToLocation(point);
-
-        // for a wrapped around map, the point coordinates include the wrapped around value
-        // for a service in projected coordinate system, this wrapped around value has to be normalized
-        Point normalizedMapPoint = (Point) GeometryEngine.normalizeCentralMeridian(mapPoint);
+        // create a map point from a screen point
+        Point mapPoint = mMapView.screenToLocation(screenPoint);
 
         // identify the clicked feature
-        ListenableFuture<IdentifyLayerResult> results = mMapView.identifyLayerAsync(mFeatureLayer, point, 1, false);
+        ListenableFuture<IdentifyLayerResult> results = mMapView
+            .identifyLayerAsync(mFeatureLayer, screenPoint, 1, false);
         results.addDoneListener(() -> {
           try {
             IdentifyLayerResult layer = results.get();
             // get first element found and ensure that it is an instance of Feature before allowing user to delete
             // using callout
-            if (layer.getElements().size() > 0 && layer.getElements().get(0) instanceof Feature) {
-              inflateCallout(mMapView, layer.getElements().get(0), normalizedMapPoint).show();
+            if (!layer.getElements().isEmpty() && layer.getElements().get(0) instanceof Feature) {
+              inflateCallout(mMapView, layer.getElements().get(0), mapPoint).show();
             }
           } catch (InterruptedException | ExecutionException e) {
-            logToUser(getString(R.string.error_getting_identify_result, e.getCause().getMessage()));
+            logToUser(true, getString(R.string.error_getting_identify_result, e.getCause().getMessage()));
           }
         });
         return super.onSingleTapConfirmed(event);
       }
     });
 
-    // set ArcGISMap to be displayed in map view
+    // set map to be displayed in map view
     mMapView.setMap(map);
   }
 
@@ -142,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
   }
 
   /**
-   * Calllback from {@link ConfirmDeleteFeatureDialog}, invoked when positive button has been clicked in dialog.
+   * Callback from {@link ConfirmDeleteFeatureDialog}, invoked when positive button has been clicked in dialog.
    *
    * @param featureId id of feature to be deleted
    */
@@ -165,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
           });
         }
       } catch (InterruptedException | ExecutionException e) {
-        logToUser(getString(R.string.error_feature_deletion, e.getCause().getMessage()));
+        logToUser(true, getString(R.string.error_feature_deletion, e.getCause().getMessage()));
       }
     });
   }
@@ -200,13 +196,13 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
           FeatureEditResult edit = editResults.get().iterator().next();
           // check if the server edit was successful
           if (!edit.hasCompletedWithErrors()) {
-            logToUser(getString(R.string.success_feature_deleted));
+            logToUser(false, getString(R.string.success_feature_deleted));
           } else {
             throw edit.getError();
           }
         }
       } catch (InterruptedException | ExecutionException e) {
-        logToUser(getString(R.string.error_applying_edits, e.getCause().getMessage()));
+        logToUser(true, getString(R.string.error_applying_edits, e.getCause().getMessage()));
       }
     });
   }
@@ -216,9 +212,13 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
    *
    * @param message to display to user and log to LogCat
    */
-  private void logToUser(String message) {
+  private void logToUser(boolean isError, String message) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    Log.d(TAG, message);
+    if (isError) {
+      Log.e(TAG, message);
+    } else {
+      Log.d(TAG, message);
+    }
   }
 
   @Override protected void onResume() {
