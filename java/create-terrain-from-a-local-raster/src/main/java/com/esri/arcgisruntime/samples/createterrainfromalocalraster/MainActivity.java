@@ -87,36 +87,41 @@ public class MainActivity extends AppCompatActivity {
       createTiledElevationSource();
     } else {
       // Report to user that permission was denied
-      logToUser(getString(R.string.error_read_permission_denied_message));
+      logErrorToUser(getString(R.string.error_read_permission_denied_message));
     }
   }
 
   private void createTiledElevationSource() {
-    // File paths
+    // raster package file paths
     ArrayList<String> filePaths = new ArrayList<>();
     filePaths.add(Environment.getExternalStorageDirectory() + getString(R.string.raster_package_location));
 
-    // Add a RasterElevationSource to the scene by passing the URI of the local tile package to the constructor
-    RasterElevationSource rasterElevationSource = new RasterElevationSource(filePaths);
+    try {
+      // Add a RasterElevationSource to the scene by passing the URI of the local tile package to the constructor
+      RasterElevationSource rasterElevationSource = new RasterElevationSource(filePaths);
 
-    // Add a listener to perform operations when the load status of the RasterElevationSource changes
-    rasterElevationSource.addLoadStatusChangedListener(loadStatusChangedEvent -> {
-      // When RasterElevationSource loads
-      if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.LOADED) {
-        // Add the RasterElevationSource to the elevation sources of the scene
-        mSceneView.getScene().getBaseSurface().getElevationSources().add(rasterElevationSource);
-      } else if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-        // Notify user that the RasterElevationSource has failed to load
-        logToUser(getString(R.string.error_tiled_elevation_source_load_failure_message));
-      }
-    });
+      // Add a listener to perform operations when the load status of the RasterElevationSource changes
+      rasterElevationSource.addLoadStatusChangedListener(loadStatusChangedEvent -> {
+        // When RasterElevationSource loads
+        if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.LOADED) {
+          // Add the RasterElevationSource to the elevation sources of the scene
+          mSceneView.getScene().getBaseSurface().getElevationSources().add(rasterElevationSource);
+        } else if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+          // Notify user that the RasterElevationSource has failed to load
+          logErrorToUser(getString(R.string.error_tiled_elevation_source_load_failure_message, ""));
+        }
+      });
 
-    // Load the RasterElevationSource asynchronously
-    rasterElevationSource.loadAsync();
+      // Load the RasterElevationSource asynchronously
+      rasterElevationSource.loadAsync();
+    } catch (IllegalArgumentException e) {
+      // catch exception thrown by RasterElevationSource when a file is invalid/not found
+      logErrorToUser(getString(R.string.error_tiled_elevation_source_load_failure_message, e.getMessage()));
+    }
   }
 
-  private void logToUser(String message) {
+  private void logErrorToUser(String message) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    Log.d(TAG, message);
+    Log.e(TAG, message);
   }
 }

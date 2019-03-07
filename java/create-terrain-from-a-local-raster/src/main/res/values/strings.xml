@@ -4,5 +4,5 @@
     <string name="raster_package_location">/ArcGIS/Samples/dt2/MontereyElevation.dt2</string>
 
     <string name="error_read_permission_denied_message">Could not create Tiled Elevation Source as the read permission has been denied.</string>
-    <string name="error_tiled_elevation_source_load_failure_message">The ArcGISTiledElevationSource has failed to load. Please ensure that the .tpk has been pushed to the device\'s storage.</string>
+    <string name="error_tiled_elevation_source_load_failure_message">The ArcGISTiledElevationSource has failed to load. Please ensure that the .tpk has been pushed to the device\'s storage. %s</string>
 </resources>
