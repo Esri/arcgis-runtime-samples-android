@@ -25,7 +25,7 @@ The terrain surface is what the basemap, operational layers, and graphics are dr
 ## How it works
 
 1. Create an `ArcGISScene` and add it to a `SceneView`.
-1. Create an `RasterElevationSource` with a list of raster file paths.
+1. Create a `RasterElevationSource` with a list of raster file paths.
 1. Add this source to the scene's base surface: `ArcGISScene.getBaseSurface().getElevationSources().add(RasterElevationSource)`.
 
 ## Relevant API
