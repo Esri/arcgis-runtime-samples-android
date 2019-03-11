@@ -34,7 +34,6 @@ import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SceneView;
-import com.esri.arcgisruntime.samples.terrainsurfacefromlocaltilepackage.R;
 
 public class MainActivity extends AppCompatActivity {
 
