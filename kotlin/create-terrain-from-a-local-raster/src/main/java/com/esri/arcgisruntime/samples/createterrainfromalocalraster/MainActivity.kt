@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
       createRasterElevationSource()
     } else {
       // Report to user that permission was denied
-      logToUser(getString(R.string.error_read_permission_denied_message))
+      logErrorToUser(getString(R.string.error_read_permission_denied_message))
     }
   }
 
@@ -85,27 +85,27 @@ class MainActivity : AppCompatActivity() {
     filePaths.add(Environment.getExternalStorageDirectory().toString() + getString(R.string.raster_package_location))
 
     try {
-      // Add a RasterElevationSource to the scene by passing the URI of the local tile package to the constructor
+      // Add an elevation source to the scene by passing the URI of the raster package to the constructor
       with(RasterElevationSource(filePaths)) {
 
-        // Add a listener to perform operations when the load status of the RasterElevationSource changes
+        // Add a listener to perform operations when the load status of the elevation source changes
         this.addLoadStatusChangedListener { loadStatusChangedEvent ->
-          // When RasterElevationSource loads
+          // When elevation source loads
           if (loadStatusChangedEvent.newLoadStatus == LoadStatus.LOADED) {
-            // Add the RasterElevationSource to the elevation sources of the scene
+            // Add the elevation source to the elevation sources of the scene
             sceneView.scene.baseSurface.elevationSources.add(this)
           } else if (loadStatusChangedEvent.newLoadStatus == LoadStatus.FAILED_TO_LOAD) {
-            // Notify user that the RasterElevationSource has failed to load
-            logToUser(getString(R.string.error_tiled_elevation_source_load_failure_message, ""))
+            // Notify user that the elevation source has failed to load
+            logErrorToUser(getString(R.string.error_raster_elevation_source_load_failure_message, ""))
           }
         }
 
-        // Load the RasterElevationSource asynchronously
+        // Load the elevation source asynchronously
         this.loadAsync()
       }
     } catch (e: IllegalArgumentException) {
       // catch exception thrown by RasterElevationSource when a file is invalid/not found
-      logToUser(getString(R.string.error_tiled_elevation_source_load_failure_message, e.message))
+      logErrorToUser(getString(R.string.error_raster_elevation_source_load_failure_message, e.message))
     }
 
   }
@@ -115,9 +115,9 @@ class MainActivity : AppCompatActivity() {
    **/
   private val AppCompatActivity.logTag get() = this::class.java.simpleName
 
-  private fun AppCompatActivity.logToUser(message: String) {
+  private fun AppCompatActivity.logErrorToUser(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    Log.d(logTag, message)
+    Log.e(logTag, message)
   }
 
 }

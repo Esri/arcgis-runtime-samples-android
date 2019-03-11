@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void requestReadPermission() {
     if (ContextCompat.checkSelfPermission(this, PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED) {
-      createTiledElevationSource();
+      createRasterElevationSource();
     } else {
       // Request permission
       ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSIONS_REQUEST_CODE);
@@ -84,20 +84,20 @@ public class MainActivity extends AppCompatActivity {
    */
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      createTiledElevationSource();
+      createRasterElevationSource();
     } else {
       // Report to user that permission was denied
       logErrorToUser(getString(R.string.error_read_permission_denied_message));
     }
   }
 
-  private void createTiledElevationSource() {
+  private void createRasterElevationSource() {
     // raster package file paths
     ArrayList<String> filePaths = new ArrayList<>();
     filePaths.add(Environment.getExternalStorageDirectory() + getString(R.string.raster_package_location));
 
     try {
-      // Add an elevation source to the scene by passing the URI of the local tile package to the constructor
+      // Add an elevation source to the scene by passing the URI of the raster package to the constructor
       RasterElevationSource rasterElevationSource = new RasterElevationSource(filePaths);
 
       // Add a listener to perform operations when the load status of the elevation source changes
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
           mSceneView.getScene().getBaseSurface().getElevationSources().add(rasterElevationSource);
         } else if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
           // Notify user that the elevation source has failed to load
-          logErrorToUser(getString(R.string.error_tiled_elevation_source_load_failure_message, ""));
+          logErrorToUser(getString(R.string.error_raster_elevation_source_load_failure_message, ""));
         }
       });
 
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
       rasterElevationSource.loadAsync();
     } catch (IllegalArgumentException e) {
       // catch exception thrown by RasterElevationSource when a file is invalid/not found
-      logErrorToUser(getString(R.string.error_tiled_elevation_source_load_failure_message, e.getMessage()));
+      logErrorToUser(getString(R.string.error_raster_elevation_source_load_failure_message, e.getMessage()));
     }
   }
 
