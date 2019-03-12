@@ -72,14 +72,12 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
             with(mapView.identifyLayerAsync(featureLayer, screenPoint, 1.0, false)) {
               this.addDoneListener {
                 try {
-                  this.get().let { layer ->
-                    // get first element found and ensure that it is an instance of Feature before allowing user to delete
-                    // using callout
-                    (layer.elements.firstOrNull() as? Feature)?.let { feature ->
-                      // create a map point from a screen point
-                      mapView.screenToLocation(screenPoint).let {
-                        inflateCallout(mapView, feature, it).show()
-                      }
+                  // get first element found and ensure that it is an instance of Feature before allowing user to delete
+                  // using callout
+                  (this.get().elements?.firstOrNull() as? Feature)?.let { feature ->
+                    // create a map point from a screen point
+                    mapView.screenToLocation(screenPoint).let {
+                      inflateCallout(mapView, feature, it).show()
                     }
                   }
                 } catch (e: InterruptedException) {
