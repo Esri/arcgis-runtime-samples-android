@@ -5,7 +5,7 @@
     <string name="bristol_model">Bristol.dae</string>
     <string name="bristol_skin">Bristol.png</string>
 
-    <string name="menu_item_airplane">Orbit Camera Around Airplane</string>
+    <string name="menu_item_plane">Orbit Camera Around Plane</string>
     <string name="menu_item_crater">Orbit Camera Around Crater</string>
     <string name="menu_item_globe">Free Pan Around The Globe</string>
 </resources>

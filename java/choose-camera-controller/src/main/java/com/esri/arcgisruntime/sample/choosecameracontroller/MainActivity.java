@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
   private SceneView mSceneView;
   private Graphic mPlane3D;
   private GraphicsOverlay mSceneOverlay;
-  private OrbitGeoElementCameraController mOrbitAirplaneCameraController;
+  private OrbitGeoElementCameraController mOrbitPlaneCameraController;
   private OrbitLocationCameraController mOrbitLocationCameraController;
 
   @Override
@@ -95,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
     mOrbitLocationCameraController.setCameraHeadingOffset(150);
 
     loadModel().addDoneLoadingListener(() -> {
-      // instantiate a new camera controller which orbits the airplane at a set distance
-      mOrbitAirplaneCameraController = new OrbitGeoElementCameraController(mPlane3D, 100.0);
-      mOrbitAirplaneCameraController.setCameraPitchOffset(30);
-      mOrbitAirplaneCameraController.setCameraHeadingOffset(150);
+      // instantiate a new camera controller which orbits the plane at a set distance
+      mOrbitPlaneCameraController = new OrbitGeoElementCameraController(mPlane3D, 100.0);
+      mOrbitPlaneCameraController.setCameraPitchOffset(30);
+      mOrbitPlaneCameraController.setCameraHeadingOffset(150);
     });
   }
 
@@ -115,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int itemid = item.getItemId();
-    if (itemid == R.id.action_camera_controller_airplane) {
-      mSceneView.setCameraController(mOrbitAirplaneCameraController);
+    if (itemid == R.id.action_camera_controller_plane) {
+      mSceneView.setCameraController(mOrbitPlaneCameraController);
       return true;
     } else if (itemid == R.id.action_camera_controller_crater) {
       mSceneView.setCameraController(mOrbitLocationCameraController);
