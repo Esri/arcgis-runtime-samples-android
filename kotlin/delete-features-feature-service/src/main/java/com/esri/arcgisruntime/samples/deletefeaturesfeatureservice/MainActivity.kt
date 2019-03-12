@@ -206,6 +206,21 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
     }
   }
 
+  override fun onResume() {
+    super.onResume()
+    mapView.resume()
+  }
+
+  override fun onPause() {
+    mapView.pause()
+    super.onPause()
+  }
+
+  override fun onDestroy() {
+    mapView.dispose()
+    super.onDestroy()
+  }
+
   /**
    * AppCompatActivity extensions
    **/
