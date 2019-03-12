@@ -10,7 +10,7 @@ The globe camera controller (the default camera controller in all new scenes) al
 
 ## How to use the sample
 
-The application loads with the default globe camera controller. To rotate and fix the scene around the aeroplane, exit globe mode by choosing the "Orbit camera around aeroplane" option (i.e. camera will now be fixed to the aeroplane). Choose the "Orbit camera around location" option to rotate and centre the scene around the location of the Upheaval Dome crater structure, or choose the "Free pan round the globe" option to return to default free navigation.
+The application loads with the default globe camera controller. To rotate and fix the scene around the airplane, exit globe mode by choosing the "Orbit camera around airplane" option (i.e. camera will now be fixed to the airplane). Choose the "Orbit camera around location" option to rotate and centre the scene around the location of the Upheaval Dome crater structure, or choose the "Free pan round the globe" option to return to default free navigation.
 
 ## How it works
 
@@ -28,6 +28,7 @@ The application loads with the default globe camera controller. To rotate and fi
 
 #### Tags
 
+MapViews, SceneViews & UI
 Camera
 SceneView
 3D
