@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Delete Features - Feature Service</string>
+
+    <string name="feature_layer_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
+
+    <string name="dialog_confirm_delete_message">Are you sure you wish to delete feature %s?</string>
+    <string name="dialog_confirm_delete_positive">Delete</string>
+    <string name="dialog_confirm_delete_negative">Cancel</string>
+
+    <string name="success_feature_deleted">Feature successfully deleted</string>
+
+    <string name="error_getting_identify_result">Exception getting identify result: %s</string>
+    <string name="error_feature_deletion">Cannot delete feature: %s</string>
+    <string name="error_applying_edits">Exception applying edits on server: %s</string>
+</resources>
