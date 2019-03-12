@@ -54,6 +54,30 @@ class MainActivity : AppCompatActivity() {
     requestReadPermission()
   }
 
+  private fun createTiledElevationSource() {
+    // add a ArcGISTiledElevationSource to the scene by passing the URI of the local tile package to the constructor
+    with(
+      ArcGISTiledElevationSource(
+        Environment.getExternalStorageDirectory().toString() + getString(R.string.local_tile_package_location)
+      )
+    ) {
+      // add a listener to perform operations when the load status of the ArcGISTiledElevationSource changes
+      this.addLoadStatusChangedListener { loadStatusChangedEvent ->
+        // when ArcGISTiledElevationSource loads
+        if (loadStatusChangedEvent.newLoadStatus == LoadStatus.LOADED) {
+          // add the ArcGISTiledElevationSource to the elevation sources of the scene
+          sceneView.scene.baseSurface.elevationSources.add(this)
+        } else if (loadStatusChangedEvent.newLoadStatus == LoadStatus.FAILED_TO_LOAD) {
+          // notify user that the ArcGISTiledElevationSource has failed to load
+          logErrorToUser(getString(R.string.error_tiled_elevation_source_load_failure_message))
+        }
+      }
+
+      // load the ArcGISTiledElevationSource asynchronously
+      this.loadAsync()
+    }
+  }
+
   /**
    * Request read external storage for API level 23+.
    */
@@ -61,7 +85,7 @@ class MainActivity : AppCompatActivity() {
     if (ContextCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
       createTiledElevationSource()
     } else {
-      // Request permission
+      // request permission
       ActivityCompat.requestPermissions(this, permissions, permissionsRequestCode)
     }
   }
@@ -73,45 +97,18 @@ class MainActivity : AppCompatActivity() {
     if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       createTiledElevationSource()
     } else {
-      // Report to user that permission was denied
-      logToUser(getString(R.string.error_read_permission_denied_message))
+      // report to user that permission was denied
+      logErrorToUser(getString(R.string.error_read_permission_denied_message))
     }
   }
-
-  private fun createTiledElevationSource() {
-    // Add a ArcGISTiledElevationSource to the scene by passing the URI of the local tile package to the constructor
-    val tiledElevationSource =
-
-      with(
-        ArcGISTiledElevationSource(
-          Environment.getExternalStorageDirectory().toString() + getString(R.string.local_tile_package_location)
-        )
-      ) {
-        // Add a listener to perform operations when the load status of the ArcGISTiledElevationSource changes
-        this.addLoadStatusChangedListener { loadStatusChangedEvent ->
-          // When ArcGISTiledElevationSource loads
-          if (loadStatusChangedEvent.newLoadStatus == LoadStatus.LOADED) {
-            // Add the ArcGISTiledElevationSource to the elevation sources of the scene
-            sceneView.scene.baseSurface.elevationSources.add(this)
-          } else if (loadStatusChangedEvent.newLoadStatus == LoadStatus.FAILED_TO_LOAD) {
-            // Notify user that the ArcGISTiledElevationSource has failed to load
-            logToUser(getString(R.string.error_tiled_elevation_source_load_failure_message))
-          }
-        }
-
-        // Load the ArcGISTiledElevationSource asynchronously
-        this.loadAsync()
-      }
-  }
-
 
   /**
    * AppCompatActivity Extensions
    **/
   private val AppCompatActivity.logTag get() = this::class.java.simpleName
 
-  private fun AppCompatActivity.logToUser(message: String) {
+  private fun AppCompatActivity.logErrorToUser(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    Log.d(logTag, message)
+    Log.e(logTag, message)
   }
 }
