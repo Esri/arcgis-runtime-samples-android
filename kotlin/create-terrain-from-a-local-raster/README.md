@@ -2,7 +2,7 @@
 
 Set the terrain surface with elevation described by a raster file.
 
-![Create terrain from a local raster](create-terrain-from-a-local-raster.gif)
+![Create terrain from a local raster](create-terrain-from-a-local-raster.png)
 
 ## Use case
 
@@ -44,13 +44,15 @@ This raster data comes from Monterey, California.
 1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 1. Execute the following command:
 
-`adb push MontereyElevation.dt2 /sdcard/ArcGIS/Samples/dt2/MontereyElevation.dt2`
+`adb push MontereyElevation.dt2 /sdcard/ArcGIS/Raster/dt2/MontereyElevation.dt2`
 
 Link | Local Location
 ---------|-------|
-|[Monterey Elevation Raster File](https://arcgisruntime.maps.arcgis.com/home/item.html?id=98092369c4ae4d549bbbd45dba993ebc)| `<sdcard>`/ArcGIS/Samples/dt2/MontereyElevation.dt2 |
+|[Monterey Elevation Raster File](https://arcgisruntime.maps.arcgis.com/home/item.html?id=98092369c4ae4d549bbbd45dba993ebc)| `<sdcard>`/ArcGIS/Raster/dt2/MontereyElevation.dt2 |
 
 #### Tags
+
+Maps & Scenes
 3D
 Raster
 Elevation
