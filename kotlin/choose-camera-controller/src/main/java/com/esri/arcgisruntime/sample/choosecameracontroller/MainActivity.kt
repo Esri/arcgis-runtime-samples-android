@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
   private lateinit var sceneOverlay: GraphicsOverlay
   private lateinit var plane3d: Graphic
   private lateinit var orbitLocationCameraController: OrbitLocationCameraController
-  private lateinit var orbitAeroplaneCameraController: OrbitGeoElementCameraController
+  private lateinit var orbitAirplaneCameraController: OrbitGeoElementCameraController
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -92,8 +92,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     loadModel().addDoneLoadingListener {
-      // instantiate a new camera controller which orbits the aeroplane at a set distance
-      orbitAeroplaneCameraController = OrbitGeoElementCameraController(plane3d, 100.0).apply {
+      // instantiate a new camera controller which orbits the airplane at a set distance
+      orbitAirplaneCameraController = OrbitGeoElementCameraController(plane3d, 100.0).apply {
         this.cameraPitchOffset = 30.0
         this.cameraHeadingOffset = 150.0
       }
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     sceneView.cameraController = when (item.itemId) {
-      R.id.action_camera_controller_aeroplane -> orbitAeroplaneCameraController
+      R.id.action_camera_controller_airplane -> orbitAirplaneCameraController
       R.id.action_camera_controller_crater -> orbitLocationCameraController
       R.id.action_camera_controller_globe -> GlobeCameraController()
       else -> return super.onOptionsItemSelected(item)

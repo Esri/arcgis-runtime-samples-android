@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_camera_controller_aeroplane"
-        android:title="@string/menu_item_aeroplane"
+        android:id="@+id/action_camera_controller_airplane"
+        android:title="@string/menu_item_airplane"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_camera_controller_crater"
