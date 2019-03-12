@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
 
   private FeatureLayer mFeatureLayer;
 
-  @SuppressLint("ClickableViewAccessibility")
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -83,11 +82,11 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
         Point mapPoint = mMapView.screenToLocation(screenPoint);
 
         // identify the clicked feature
-        ListenableFuture<IdentifyLayerResult> results = mMapView
+        ListenableFuture<IdentifyLayerResult> identifyLayerFuture = mMapView
             .identifyLayerAsync(mFeatureLayer, screenPoint, 1, false);
-        results.addDoneListener(() -> {
+        identifyLayerFuture.addDoneListener(() -> {
           try {
-            IdentifyLayerResult layer = results.get();
+            IdentifyLayerResult layer = identifyLayerFuture.get();
             // get first element found and ensure that it is an instance of Feature before allowing user to delete
             // using callout
             if (!layer.getElements().isEmpty() && layer.getElements().get(0) instanceof Feature) {
@@ -156,9 +155,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
           // attempt to get first feature from result as it should be the only feature
           Feature foundFeature = featureQueryResult.get().iterator().next();
           // delete found features
-          deleteFeature(foundFeature, mFeatureTable, () -> {
-            applyEdits(mFeatureTable);
-          });
+          deleteFeature(foundFeature, mFeatureTable, () -> applyEdits(mFeatureTable));
         }
       } catch (InterruptedException | ExecutionException e) {
         logToUser(true, getString(R.string.error_feature_deletion, e.getCause().getMessage()));
@@ -176,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
    */
   private void deleteFeature(Feature feature, ServiceFeatureTable featureTable,
       Runnable onDeleteFeatureDoneListener) {
-    // delete feature from the feature table and apply edit to server
     featureTable.deleteFeatureAsync(feature).addDoneListener(onDeleteFeatureDoneListener);
   }
 
@@ -187,13 +183,13 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
    */
   private void applyEdits(ServiceFeatureTable featureTable) {
     // apply the changes to the server
-    ListenableFuture<List<FeatureEditResult>> editResults = featureTable.applyEditsAsync();
-    editResults.addDoneListener(() -> {
+    ListenableFuture<List<FeatureEditResult>> featureEditsFuture = featureTable.applyEditsAsync();
+    featureEditsFuture.addDoneListener(() -> {
       try {
         // check result has an edit
-        if (editResults.get().iterator().hasNext()) {
+        if (featureEditsFuture.get().iterator().hasNext()) {
           // attempt to get first edit from result as it should be the only edit
-          FeatureEditResult edit = editResults.get().iterator().next();
+          FeatureEditResult edit = featureEditsFuture.get().iterator().next();
           // check if the server edit was successful
           if (!edit.hasCompletedWithErrors()) {
             logToUser(false, getString(R.string.success_feature_deleted));
