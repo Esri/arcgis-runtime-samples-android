@@ -10,7 +10,7 @@
         <item>@string/file_bristol_skin</item>
     </string-array>
 
-    <string name="menu_item_airplane">Orbit Camera Around Airplane</string>
+    <string name="menu_item_plane">Orbit Camera Around Plane</string>
     <string name="menu_item_crater">Orbit Camera Around Crater</string>
     <string name="menu_item_globe">Free Pan Around The Globe</string>
     <string name="error_writing_to_cache">Error writing %1$s to cache. %2$s</string>
