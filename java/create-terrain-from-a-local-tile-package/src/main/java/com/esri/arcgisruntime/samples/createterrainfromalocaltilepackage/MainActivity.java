@@ -65,6 +65,27 @@ public class MainActivity extends AppCompatActivity {
     requestReadPermission();
   }
 
+  private void createTiledElevationSource() {
+    // add a ArcGISTiledElevationSource to the scene by passing the URI of the local tile package to the constructor
+    ArcGISTiledElevationSource tiledElevationSource = new ArcGISTiledElevationSource(
+        Environment.getExternalStorageDirectory() + getString(R.string.local_tile_package_location));
+
+    // add a listener to perform operations when the load status of the ArcGISTiledElevationSource changes
+    tiledElevationSource.addLoadStatusChangedListener(loadStatusChangedEvent -> {
+      // when ArcGISTiledElevationSource loads
+      if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.LOADED) {
+        // add the ArcGISTiledElevationSource to the elevation sources of the scene
+        mSceneView.getScene().getBaseSurface().getElevationSources().add(tiledElevationSource);
+      } else if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+        // notify user that the ArcGISTiledElevationSource has failed to load
+        logErrorToUser(getString(R.string.error_tiled_elevation_source_load_failure_message));
+      }
+    });
+
+    // load the ArcGISTiledElevationSource asynchronously
+    tiledElevationSource.loadAsync();
+  }
+
   /**
    * Request read external storage for API level 23+.
    */
@@ -72,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     if (ContextCompat.checkSelfPermission(this, PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED) {
       createTiledElevationSource();
     } else {
-      // Request permission
+      // request permission
       ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSIONS_REQUEST_CODE);
     }
   }
@@ -84,34 +105,13 @@ public class MainActivity extends AppCompatActivity {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       createTiledElevationSource();
     } else {
-      // Report to user that permission was denied
-      logToUser(getString(R.string.error_read_permission_denied_message));
+      // report to user that permission was denied
+      logErrorToUser(getString(R.string.error_read_permission_denied_message));
     }
   }
 
-  private void createTiledElevationSource() {
-    // Add a ArcGISTiledElevationSource to the scene by passing the URI of the local tile package to the constructor
-    ArcGISTiledElevationSource tiledElevationSource = new ArcGISTiledElevationSource(
-        Environment.getExternalStorageDirectory() + getString(R.string.local_tile_package_location));
-
-    // Add a listener to perform operations when the load status of the ArcGISTiledElevationSource changes
-    tiledElevationSource.addLoadStatusChangedListener(loadStatusChangedEvent -> {
-      // When ArcGISTiledElevationSource loads
-      if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.LOADED) {
-        // Add the ArcGISTiledElevationSource to the elevation sources of the scene
-        mSceneView.getScene().getBaseSurface().getElevationSources().add(tiledElevationSource);
-      } else if (loadStatusChangedEvent.getNewLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-        // Notify user that the ArcGISTiledElevationSource has failed to load
-        logToUser(getString(R.string.error_tiled_elevation_source_load_failure_message));
-      }
-    });
-
-    // Load the ArcGISTiledElevationSource asynchronously
-    tiledElevationSource.loadAsync();
-  }
-
-  private void logToUser(String message) {
+  private void logErrorToUser(String message) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    Log.d(TAG, message);
+    Log.e(TAG, message);
   }
 }
