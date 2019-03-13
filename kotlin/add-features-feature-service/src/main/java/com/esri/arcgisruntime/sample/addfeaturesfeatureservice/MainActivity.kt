@@ -24,7 +24,6 @@ import android.view.MotionEvent
 import android.widget.Toast
 import com.esri.arcgisruntime.ArcGISRuntimeException
 import com.esri.arcgisruntime.data.ServiceFeatureTable
-import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -55,12 +54,8 @@ class MainActivity : AppCompatActivity() {
                 // create a map point from a point
                 mapView.screenToLocation(point)
               }.let { mapPoint ->
-                // for a wrapped around map, the point coordinates include the wrapped around value
-                // for a service in projected coordinate system, this wrapped around value has to be normalized
-                GeometryEngine.normalizeCentralMeridian(mapPoint) as Point
-              }.let { normalizedMapPoint ->
                 // add a new feature to the service feature table
-                addFeature(normalizedMapPoint, serviceFeatureTable)
+                addFeature(mapPoint, serviceFeatureTable)
               }
             }
             return super.onSingleTapConfirmed(motionEvent)
@@ -71,11 +66,11 @@ class MainActivity : AppCompatActivity() {
         FeatureLayer(serviceFeatureTable)
       }.let { featureLayer ->
 
-        // add the layer to the ArcGISMap
+        // add the layer to the map
         map.operationalLayers.add(featureLayer)
       }
 
-      // set ArcGISMap to be displayed in map view
+      // set map to be displayed in map view
       mapView.map = map
     }
   }
@@ -99,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         // add the new feature to the feature table and to server
         featureTable.addFeatureAsync(feature).addDoneListener { applyEdits(featureTable) }
       } else {
-        logToUser(getString(R.string.error_cannot_add_to_feature_table))
+        logToUser(true, getString(R.string.error_cannot_add_to_feature_table))
       }
     }
 
@@ -116,18 +111,18 @@ class MainActivity : AppCompatActivity() {
     featureTable.applyEditsAsync().let { editResult ->
       editResult.addDoneListener {
         try {
-          editResult.get().let { edits ->
+          editResult.get()?.let { edits ->
             // check if the server edit was successful
-            if (edits != null && edits.size > 0) {
-              if (!edits[0].hasCompletedWithErrors()) {
-                logToUser(getString(R.string.feature_added))
+            edits.firstOrNull()?.let {
+              if (!it.hasCompletedWithErrors()) {
+                logToUser(false, getString(R.string.feature_added))
               } else {
-                throw edits[0].error
+                it.error
               }
             }
           }
         } catch (e: ArcGISRuntimeException) {
-          logToUser(getString(R.string.error_applying_edits, e.cause?.message))
+          logToUser(true, getString(R.string.error_applying_edits, e.cause?.message))
         }
       }
     }
@@ -156,9 +151,14 @@ class MainActivity : AppCompatActivity() {
 /**
  * Shows a Toast to user and logs to logcat.
  *
+ * @param isError whether message is an error. Determines log level.
  * @param message message to display
  */
-fun AppCompatActivity.logToUser(message: String) {
+fun AppCompatActivity.logToUser(isError: Boolean, message: String) {
   Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-  Log.d(this::class.java.simpleName, message)
+  if (isError) {
+    Log.e(this::class.java.simpleName, message)
+  } else {
+    Log.d(this::class.java.simpleName, message)
+  }
 }
