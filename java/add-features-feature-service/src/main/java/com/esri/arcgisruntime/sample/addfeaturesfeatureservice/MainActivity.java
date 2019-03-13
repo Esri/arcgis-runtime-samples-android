@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +32,6 @@ import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureEditResult;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
-import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -49,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
   private ServiceFeatureTable mServiceFeatureTable;
 
-  @SuppressLint("ClickableViewAccessibility")
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -65,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     // create a feature layer from table
     FeatureLayer featureLayer = new FeatureLayer(mServiceFeatureTable);
 
-    // add the layer to the ArcGISMap
+    // add the layer to the map
     map.getOperationalLayers().add(featureLayer);
 
     // add a listener to the MapView to detect when a user has performed a single tap to add a new feature to
@@ -78,17 +75,13 @@ public class MainActivity extends AppCompatActivity {
         // create a map point from a point
         Point mapPoint = mMapView.screenToLocation(point);
 
-        // for a wrapped around map, the point coordinates include the wrapped around value
-        // for a service in projected coordinate system, this wrapped around value has to be normalized
-        Point normalizedMapPoint = (Point) GeometryEngine.normalizeCentralMeridian(mapPoint);
-
         // add a new feature to the service feature table
-        addFeature(normalizedMapPoint, mServiceFeatureTable);
+        addFeature(mapPoint, mServiceFeatureTable);
         return super.onSingleTapConfirmed(event);
       }
     });
 
-    // set ArcGISMap to be displayed in map view
+    // set map to be displayed in map view
     mMapView.setMap(map);
   }
 
@@ -114,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
       // add the new feature to the feature table and to server
       featureTable.addFeatureAsync(feature).addDoneListener(() -> applyEdits(featureTable));
     } else {
-      runOnUiThread(() -> logToUser(getString(R.string.error_cannot_add_to_feature_table)));
+      runOnUiThread(() -> logToUser(true, getString(R.string.error_cannot_add_to_feature_table)));
     }
   }
 
@@ -129,17 +122,17 @@ public class MainActivity extends AppCompatActivity {
     final ListenableFuture<List<FeatureEditResult>> editResult = featureTable.applyEditsAsync();
     editResult.addDoneListener(() -> {
       try {
-        List<FeatureEditResult> edits = editResult.get();
+        List<FeatureEditResult> editResults = editResult.get();
         // check if the server edit was successful
-        if (edits != null && edits.size() > 0) {
-          if (!edits.get(0).hasCompletedWithErrors()) {
-            runOnUiThread(() -> logToUser(getString(R.string.feature_added)));
+        if (editResults != null && !editResults.isEmpty()) {
+          if (!editResults.get(0).hasCompletedWithErrors()) {
+            runOnUiThread(() -> logToUser(false, getString(R.string.feature_added)));
           } else {
-            throw edits.get(0).getError();
+            throw editResults.get(0).getError();
           }
         }
       } catch (InterruptedException | ExecutionException e) {
-        runOnUiThread(() -> logToUser(getString(R.string.error_applying_edits, e.getCause().getMessage())));
+        runOnUiThread(() -> logToUser(true, getString(R.string.error_applying_edits, e.getCause().getMessage())));
       }
     });
   }
@@ -147,11 +140,16 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Shows a Toast to user and logs to logcat.
    *
+   * @param isError whether message is an error. Determines log level.
    * @param message message to display
    */
-  private void logToUser(String message) {
+  private void logToUser(boolean isError, String message) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    Log.d(TAG, message);
+    if (isError) {
+      Log.e(TAG, message);
+    } else {
+      Log.d(TAG, message);
+    }
   }
 
   @Override protected void onResume() {
