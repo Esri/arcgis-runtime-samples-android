@@ -94,6 +94,16 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     mapView.map = ArcGISMap(portalItem)
   }
 
+  override fun onPause() {
+    mapView.pause()
+    super.onPause()
+  }
+
+  override fun onDestroy() {
+    mapView.dispose()
+    super.onDestroy()
+  }
+
   /**
    * Attempt to handle the Intent received by the Activity
    * If the Intent contains an authorization code, store this in the SharedPreferences
@@ -267,15 +277,6 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     }
   }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
-
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
 }
 
 /**
