@@ -50,7 +50,9 @@ import kotlinx.android.synthetic.main.activity_main.*
  * (an ArcGIS Online account, for example). This sample utilizes Android WebView to show theOAuth sign-in page in a dialog.
  *
  * The user's access token should be treated with the upmost of security, and as such, we do not recommend storing the user's
- * Access Token in SharedPreferences as SharedPreferences are not encrypted. We have created this sample to highlight the use of our APIs.
+ * Access Token in SharedPreferences as SharedPreferences are not encrypted. We have created this sample to highlight the use
+ * of the ArcGISRuntime API.
+ *
  * Please use the Android keystore provider where available: https://developer.android.com/training/articles/keystore#UsingAndroidKeyStore
  */
 class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
@@ -294,7 +296,9 @@ fun AppCompatActivity.logToUser(logMessage: String) {
  * SharedPreferences extensions
  *
  * The user's access token should be treated with the upmost of security, and as such, we do not recommend storing the user's
- * Access Token in SharedPreferences as SharedPreferences are not encrypted. We have created this sample to highlight the use of our APIs.
+ * Access Token in SharedPreferences as SharedPreferences are not encrypted. We have created this sample to highlight the use
+ * of the ArcGISRuntime API.
+ *
  * Please use the Android keystore provider where available: https://developer.android.com/training/articles/keystore#UsingAndroidKeyStore
  */
 fun SharedPreferences.putAuthCode(authCode: String) {
