@@ -15,5 +15,6 @@ include ':analyze-hotspots',
         ':raster-rendering-rule',
         ':set-min-max-scale',
         ':show-labels-on-layer',
+        ':token-authentication',
         ':view-point-cloud-data-offline',
         ':wmts-layer'
