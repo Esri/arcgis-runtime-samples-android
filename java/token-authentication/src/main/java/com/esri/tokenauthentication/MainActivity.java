@@ -39,15 +39,15 @@ public class MainActivity extends AppCompatActivity {
 
     mMapView = findViewById(R.id.mapView);
 
-    // set up an authentication handler to take credentials for access to the protected layer
+    // set up an authentication handler to take credentials for access to the protected map service
     AuthenticationChallengeHandler handler = new DefaultAuthenticationChallengeHandler(this);
     AuthenticationManager.setAuthenticationChallengeHandler(handler);
 
     // create a portal to ArcGIS Online
     Portal portal = new Portal(getString(R.string.arcgis_online_portal_url));
 
-    // create a portal item using the portal and the item id of a protected web map
-    PortalItem portalItem = new PortalItem(portal, getString(R.string.webmap_world_traffic_id));
+    // create a portal item using the portal and the item id of a protected map service
+    PortalItem portalItem = new PortalItem(portal, getString(R.string.map_service_world_traffic_id));
 
     // create a map with the portal item
     ArcGISMap map = new ArcGISMap(portalItem);
