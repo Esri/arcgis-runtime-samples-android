@@ -2,7 +2,7 @@
 
 View an integrated mesh layer from a scene service.
 
-![Integrated Mesh Layer](integrated-mesh-layer.png)
+![Integrated Mesh Layer App](integrated-mesh-layer.png)
 
 ## Use case
 
@@ -14,14 +14,13 @@ An integrated mesh is used to generate a mesh over a point cloud data set, which
 2. Create an `IntegratedMeshLayer` with the URL to an integrated mesh layer 
 scene service.
 3. Add the layer to the scene's operational layers collection.
-4. Create a `Camera` and set the `SceneView`'s viewpoint.
+4. Create a `Camera` and set the `SceneView` object's viewpoint.
 
 ## Relevant API
 
 * IntegratedMeshLayer
 
 #### Tags
-
 Layers
 3D
 integrated mesh
