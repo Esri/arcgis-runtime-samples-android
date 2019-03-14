@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Token Authentication</string>
+
+    <string name="map_image_layer_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/USA_secure_user1/MapServer</string>
 </resources>
