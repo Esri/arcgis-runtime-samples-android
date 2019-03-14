@@ -20,13 +20,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReference;
-import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.portal.Portal;
+import com.esri.arcgisruntime.portal.PortalItem;
 import com.esri.arcgisruntime.samples.tokenauthentication.R;
 import com.esri.arcgisruntime.security.AuthenticationChallengeHandler;
 import com.esri.arcgisruntime.security.AuthenticationManager;
@@ -46,20 +43,14 @@ public class MainActivity extends AppCompatActivity {
     AuthenticationChallengeHandler handler = new DefaultAuthenticationChallengeHandler(this);
     AuthenticationManager.setAuthenticationChallengeHandler(handler);
 
-    // create a ArcGISMap with a topographic basemap
-    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    // create a portal to ArcGIS Online
+    Portal portal = new Portal(getString(R.string.arcgis_online_portal_url));
 
-    // center for initial viewpoint of map
-    Point center = new Point(-12649954, 7123527, SpatialReference.create(3857));
+    // create a portal item using the portal and the item id of a protected web map
+    PortalItem portalItem = new PortalItem(portal, getString(R.string.webmap_world_traffic_id));
 
-    // set initial viewpoint of map
-    map.setInitialViewpoint(new Viewpoint(center, 167233023));
-
-    // create a layer with dynamically generated map images
-    ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer(getString(R.string.map_image_layer_url));
-
-    // add the layer to the operational layers of the map
-    map.getOperationalLayers().add(mapImageLayer);
+    // create a map with the portal item
+    ArcGISMap map = new ArcGISMap(portalItem);
 
     // set the map to be displayed in the map view
     mMapView.setMap(map);
