@@ -1,4 +1,4 @@
-# Open Scene Map Package
+# Open mobile scene package
 
 Opens and displays a scene from a Mobile Scene Package (.mspk).
 
@@ -27,6 +27,10 @@ Run the app and allow read permissions.
 1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 1. Execute the following command:
 `adb push philadelphia.mspk /ArcGIS/Samples/ScenePackage/philadelphia.mspk`
+
+Link | Local Location
+---------|-------|
+|[Philadelphia mobile scene package](https://www.arcgis.com/home/item.html?id=7dd2f97bb007466ea939160d0de96a9d)| `<sdcard>`/ArcGIS/Samples/ScenePackage/philadelphia.mspk|
 
 ## About the data
 
