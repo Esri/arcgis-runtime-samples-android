@@ -26,7 +26,7 @@ Run the app and allow read permissions.
 1. Extract the contents of the downloaded zip file to disk.
 1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 1. Execute the following command:
-`adb push philadelphia.mspk /ArcGIS/Samples/ScenePackage/philadelphia.mspk`
+`adb push philadelphia.mspk /sdcard/ArcGIS/Samples/ScenePackage/philadelphia.mspk`
 
 Link | Local Location
 ---------|-------|
