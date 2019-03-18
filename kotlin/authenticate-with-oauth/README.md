@@ -22,7 +22,7 @@ Your app may need to access items that are only shared with authorized users. Fo
 1. If the user authenticates successfully, the private layers will display in the map.
 
 ## Access token security
-The user's access token should be treated with the utmost of security, and as such, we do not recommend storing the user's Access Token in SharedPreferences as SharedPreferences are not encrypted. We have created this sample to highlight the use of our APIs.
+The user's access token should be treated with the utmost of security, and as such, we do not recommend storing the user's Access Token in SharedPreferences as SharedPreferences are not encrypted. We have created this sample to highlight the use of the ArcGISRuntime API.
 Please use the Android keystore provider where available: https://developer.android.com/training/articles/keystore#UsingAndroidKeyStore
 
 ## Relevant API
