@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     OAuthConfiguration(
       getString(R.string.portal_url),
       getString(R.string.oauth_client_id),
-      getString(R.string.oauth_redirect_uri)
+      "${BuildConfig.APPLICATION_ID}://${getString(R.string.oauth_redirect_host)}"
     )
   }
 
@@ -243,7 +243,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     webView.webViewClient = object : WebViewClient() {
       override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
         Uri.parse(url)?.let {
-          if (it.scheme == "my-ags-app" && it.host == "auth") {
+          if (it.scheme == BuildConfig.APPLICATION_ID && it.host == getString(R.string.oauth_redirect_host)) {
             startActivity(generateAuthIntent(it))
             return true
           }
@@ -253,7 +253,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
 
       @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
       override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-        if (request?.url?.scheme == "my-ags-app" && request.url?.host == "auth") {
+        if (request?.url?.scheme == BuildConfig.APPLICATION_ID && request.url?.host == getString(R.string.oauth_redirect_host)) {
           startActivity(generateAuthIntent(request.url))
           return true
         }

@@ -28,8 +28,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="auth"
-                    android:scheme="my-ags-app" />
+                    android:host="@string/oauth_redirect_host"
+                    android:scheme="${applicationId}" />
             </intent-filter>
         </activity>
 
