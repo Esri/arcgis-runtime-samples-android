@@ -13,12 +13,12 @@ This sample demonstrates how to access a web map that is secured with ArcGIS tok
 
 ## How it works
 
-1. Create an `AuthenticationChallengeHandler` using the `DefaultAuthenticationChallengeHandler` to handle authentication challenges sent by the protected map service, `DefaultAuthenticationChallengeHandler(Context)`.
-1. Set the `AuthenticationChallengeHandler` used by the `AuthenticationManager`, `AuthenticationManager.setAuthenticationChallengeHandler(AuthenticationChallengeHandler)`
-1. Create a portal to ArcGIS Online, `Portal("portal url")`
-1. Create a portal item for the protected web map using the portal and Item ID of the protected map service, `PortalItem(Portal, "map service ID")`
-1. Create a map to display in the map view using the portal item, `ArcGISMap(PortalItem)`
-1. Set the map to display in the map view, `MapView.setMap(ArcGISMap)`
+1. Create an `AuthenticationChallengeHandler` using the `DefaultAuthenticationChallengeHandler` to handle the challenges sent by the protected map service.
+1. Set the `AuthenticationChallengeHandler` used by the `AuthenticationManager`.
+1. Create a `Portal` to ArcGIS Online.
+1. Create a `PortalItem` for the protected web map using the `Portal` and Item ID of the protected map service.
+1. Create a map to display in the `MapView` using the `PortalItem`.
+1. Set the map to display in the `MapView`.
 
 ## Relevant API
 
