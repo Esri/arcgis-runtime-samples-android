@@ -1,4 +1,4 @@
-include ':add-enc-exchange-set',
+include ':add-enc-exchange-set', ':view-content-beneath-the-terrain-surface',
         ':add-graphics-renderer',
         ':add-graphics-symbols',
         ':analyze-hotspots',
