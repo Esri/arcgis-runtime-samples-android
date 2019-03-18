@@ -1,6 +1,7 @@
 include ':add-enc-exchange-set',
         ':add-graphics-renderer',
         ':add-graphics-symbols',
+        ':add-point-scene-layer',
         ':analyze-hotspots',
         ':animate-3d-graphic',
         ':arcgis-mapimagelayer-url',
