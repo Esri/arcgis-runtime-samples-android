@@ -51,7 +51,6 @@ Link | Local Location
 |[Monterey Elevation Raster File](https://arcgisruntime.maps.arcgis.com/home/item.html?id=98092369c4ae4d549bbbd45dba993ebc)| `<sdcard>`/ArcGIS/Samples/Raster/MontereyElevation.dt2 |
 
 #### Tags
-
 Maps & Scenes
 3D
 Raster
