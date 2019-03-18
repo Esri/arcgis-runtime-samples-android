@@ -31,5 +31,6 @@ This sample demonstrates how to access a web map that is secured with ArcGIS tok
 * MapView
 
 #### Tags
+Cloud & Portal
 Authentication
 Security
