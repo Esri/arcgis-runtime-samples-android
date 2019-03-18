@@ -34,4 +34,3 @@ Point scene layers can also be retrieved from scene layer packages (.slpk) and m
 Layers
 3D
 point scene layer
-layers
