@@ -63,29 +63,20 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // access MapView from layout
+    // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
 
     // access button to take the map offline and disable it until map is loaded
     mTakeMapOfflineButton = findViewById(R.id.takeMapOfflineButton);
     mTakeMapOfflineButton.setEnabled(false);
 
-    // request write permission
-    String[] reqPermission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    // for API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      generateOfflineMap();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
+    requestWritePermission();
 
     // handle authentication with the portal
     AuthenticationManager.setAuthenticationChallengeHandler(new DefaultAuthenticationChallengeHandler(this));
 
     // create a portal item with the itemId of the web map
-    Portal portal = new Portal(getString(R.string.portal_url), true);
+    Portal portal = new Portal(getString(R.string.portal_url), false);
     PortalItem portalItem = new PortalItem(portal, getString(R.string.item_id));
 
     // create a map with the portal item
@@ -199,6 +190,22 @@ public class MainActivity extends AppCompatActivity {
       job.start();
     });
 
+  }
+
+  /**
+   *
+   */
+  private void requestWritePermission() {
+    // request write permission
+    String[] reqPermission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+    int requestCode = 2;
+    // for API level 23+ request permission at runtime
+    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+      generateOfflineMap();
+    } else {
+      // request permission
+      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
+    }
   }
 
   /**
