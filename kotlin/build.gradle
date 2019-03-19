@@ -32,5 +32,11 @@ subprojects{
                 implementation "com.esri.arcgisruntime:arcgis-android:$arcgisVersion"
             }
         }
+        project.android {
+            compileOptions {
+                sourceCompatibility rootProject.ext.javaVersion
+                targetCompatibility rootProject.ext.javaVersion
+            }
+        }
     }
 }
