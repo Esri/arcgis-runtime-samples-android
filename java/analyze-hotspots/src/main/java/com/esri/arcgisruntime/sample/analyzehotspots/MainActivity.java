@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.Job;
@@ -47,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
-  // String used to query input for GeoprocessingString
+  // string used to query input for GeoprocessingString
   private static final String QUERY_INPUT_STRING = "(\"DATE\" > date '%1$s 00:00:00' AND \"DATE\" < date '%2$s 00:00:00')";
 
   private MapView mMapView;
@@ -71,10 +70,10 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
     // create a map with the BasemapType topographic
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
 
-    //center for initial viewpoint with Web Mercator Spatial Reference
+    // center for initial viewpoint with Web Mercator Spatial Reference
     Point center = new Point(-13671170, 5693633, SpatialReferences.getWebMercator());
 
-    //set initial viewpoint
+    // set initial viewpoint
     map.setInitialViewpoint(new Viewpoint(center, 57779));
 
     // set the map to the map view
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
    * @param from string which holds a date
    * @param to   string which holds a date
    */
-  void analyzeHotspots(final String from, final String to) {
+  private void analyzeHotspots(final String from, final String to) {
     // cancel previous job request
     if (mGeoprocessingJob != null) {
       mGeoprocessingJob.cancel();
@@ -124,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
 
         String queryString = String.format(QUERY_INPUT_STRING, from, to);
         geoprocessingParameters.getInputs().put("Query", new GeoprocessingString(queryString));
-        Log.i(TAG, "Query: " + queryString.toString());
+        Log.i(TAG, "Query: " + queryString);
 
         // create job
         mGeoprocessingJob = mGeoprocessingTask.createJob(geoprocessingParameters);
@@ -173,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
     // add the new layer to the map
     mapView.getMap().getOperationalLayers().add(layer);
 
-    // Add a listener to set the viewpoint of the map view when it is finished loading only if the layer has not already
+    // add a listener to set the viewpoint of the map view when it is finished loading only if the layer has not already
     // finished loading
     if (layer.getLoadStatus() != LoadStatus.LOADED) {
       layer.addDoneLoadingListener(() -> {
@@ -183,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
     }
   }
 
-  void cancelGeoProcessingJob() {
+  private void cancelGeoProcessingJob() {
     mCancelled = true;
     if (mGeoprocessingJob != null) {
       mGeoprocessingJob.cancel();
@@ -228,23 +227,10 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
   public void onResume() {
     super.onResume();
     mMapView.resume();
-
-    // If the layer has already been created, add it to the map view
-    if (mHotspotMapImageLayer != null) {
-      addLayerToMapView(mHotspotMapImageLayer, mMapView);
-
-      // If the layer has already been loaded, set the viewpoint of the map view equal to the full extent of the layer
-      if (mHotspotMapImageLayer.getLoadStatus() == LoadStatus.LOADED) {
-        // set the map viewpoint to the MapImageLayer, once loaded
-        mMapView.setViewpoint(new Viewpoint(mHotspotMapImageLayer.getFullExtent()));
-      }
-    }
   }
 
   @Override
   public void onPause() {
-    // We have to disassociate the layer from the map before reattaching it when the Fragment is recreating
-    mMapView.getMap().getOperationalLayers().remove(mHotspotMapImageLayer);
     mMapView.pause();
     super.onPause();
   }
