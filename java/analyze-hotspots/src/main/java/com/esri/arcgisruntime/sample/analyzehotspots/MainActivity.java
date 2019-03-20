@@ -137,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
         mGeoprocessingJob.addProgressChangedListener(() -> {
           if (findProgressDialogFragment() != null) {
             findProgressDialogFragment().setProgress(mGeoprocessingJob.getProgress());
-            Log.d(TAG, "Updating progress: " + mGeoprocessingJob.getProgress());
           }
         });
 
@@ -155,28 +154,35 @@ public class MainActivity extends AppCompatActivity implements DateRangeDialogFr
             Toast.makeText(MainActivity.this, "Job canceled.", Toast.LENGTH_SHORT).show();
             Log.i(TAG, "Job cancelled.");
           } else {
-            Log.e(TAG, "Job did not succeed!");
-            Toast.makeText(MainActivity.this, "Job did not succeed", Toast.LENGTH_LONG).show();
+            String error = mGeoprocessingJob.getError().getMessage();
+            Toast.makeText(MainActivity.this, "Job did not succeed! " + error, Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Job did not succeed! " + error);
           }
           if (findProgressDialogFragment() != null) {
             findProgressDialogFragment().dismiss();
           }
         });
       } catch (InterruptedException | ExecutionException e) {
-        e.printStackTrace();
+        String error = e.getMessage();
+        Toast.makeText(MainActivity.this, "Geoprocessing job failed " + error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, "Geoprocessing job failed " + error);
       }
     });
   }
 
+  /**
+   * Add a {@link Layer} to a {@link MapView} by getting the {@link ArcGISMap} from the {@link MapView}. We then check
+   * the {@link LoadStatus} to ensure it's loaded and set the {@link Viewpoint} of the {@link MapView} to the full
+   * extent of the {@link Layer}
+   *
+   * @param layer   to display on a {@link MapView}
+   * @param mapView to display the {@link Layer} on
+   */
   private void addLayerToMapView(final Layer layer, final MapView mapView) {
-    // add the new layer to the map
     mapView.getMap().getOperationalLayers().add(layer);
 
-    // add a listener to set the viewpoint of the map view when it is finished loading only if the layer has not already
-    // finished loading
     if (layer.getLoadStatus() != LoadStatus.LOADED) {
       layer.addDoneLoadingListener(() -> {
-        // set the map viewpoint to the MapImageLayer, once loaded
         mMapView.setViewpointGeometryAsync(layer.getFullExtent());
       });
     }
