@@ -12,6 +12,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:max="10"
+        android:progress="1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/exaggerationValueTextView"

@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
       }
 
       @Override public void onStopTrackingTouch(SeekBar seekBar) {
-
+        seekBar.setProgress(Math.max(1, seekBar.getProgress()));
       }
     });
   }
