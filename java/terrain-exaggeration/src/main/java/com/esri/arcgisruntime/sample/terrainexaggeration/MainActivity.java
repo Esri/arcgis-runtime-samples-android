@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     final SeekBar exaggerationSeekBar = findViewById(R.id.exaggerationSeekBar);
     exaggerationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+        progress = Math.max(1, progress);
         // set the text to SeekBar value
         exaggerationTextView.setText(String.valueOf(progress));
         // set exaggeration of surface to the value the user selected
