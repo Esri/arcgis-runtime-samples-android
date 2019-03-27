@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Read symbols from a mobile style file</string>
+    <string name="mobile_style_file_path">/ArcGIS/Samples/Style/emoji-mobile.stylx</string>
+    <string name="error_read_permission_denied">Mobile style file could not be opened because read permission was denied</string>
 </resources>

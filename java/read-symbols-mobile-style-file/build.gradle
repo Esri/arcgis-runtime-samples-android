@@ -19,8 +19,8 @@ android {
     }
 
     compileOptions {
-        targetCompatibility rootProject.ext.targetJavaVersion
-        sourceCompatibility rootProject.ext.sourceJavaVersion
+        targetCompatibility rootProject.ext.javaVersion
+        sourceCompatibility rootProject.ext.javaVersion
     }
 }
 
