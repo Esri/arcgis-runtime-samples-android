@@ -16,13 +16,17 @@
 
 package com.esri.arcgisruntime.sample.readsymbolsmobilestylefile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutionException;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -30,11 +34,17 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.loadable.LoadStatus;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SymbolStyle;
 import com.esri.arcgisruntime.symbology.SymbolStyleSearchParameters;
@@ -47,6 +57,13 @@ public class MainActivity extends AppCompatActivity implements Observer {
   private static final String[] PERMISSIONS = { Manifest.permission.READ_EXTERNAL_STORAGE };
 
   private MapView mMapView;
+  private RecyclerView mEyesRecyclerView;
+  private RecyclerView mMouthRecyclerView;
+  private RecyclerView mHatRecyclerView;
+  private SymbolAdapter mEyesAdapter;
+  private SymbolAdapter mMouthAdapter;
+  private SymbolAdapter mHatAdapter;
+
   private Symbols symbols = new Symbols();
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,10 +71,32 @@ public class MainActivity extends AppCompatActivity implements Observer {
     setContentView(R.layout.activity_main);
 
     mMapView = findViewById(R.id.mapView);
+    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    mMapView.setMap(map);
+
+    mEyesRecyclerView = findViewById(R.id.eyesRecyclerView);
+    mMouthRecyclerView = findViewById(R.id.mouthRecyclerView);
+    mHatRecyclerView = findViewById(R.id.hatRecyclerView);
+
+    setupRecyclerViews();
 
     symbols.addObserver(this);
 
     requestPermissions();
+  }
+
+  private void setupRecyclerViews() {
+    mEyesRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+    mEyesAdapter = new SymbolAdapter();
+    mEyesRecyclerView.setAdapter(mEyesAdapter);
+
+    mMouthRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+    mMouthAdapter = new SymbolAdapter();
+    mMouthRecyclerView.setAdapter(mMouthAdapter);
+
+    mHatRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+    mHatAdapter = new SymbolAdapter();
+    mHatRecyclerView.setAdapter(mHatAdapter);
   }
 
   private void loadSymbols() {
@@ -103,7 +142,18 @@ public class MainActivity extends AppCompatActivity implements Observer {
   @Override public void update(Observable o, Object arg) {
     if (o instanceof Symbols) {
       for (SymbolStyleSearchResult symbol : ((Symbols) o).getSymbols()) {
-        Log.d(TAG, symbol.getName());
+        switch (symbol.getCategory().toLowerCase(Locale.ROOT)) {
+          case "eyes":
+            mEyesAdapter.addSymbol(symbol);
+            break;
+          case "mouth":
+            mMouthAdapter.addSymbol(symbol);
+            break;
+          case "hat":
+            mHatAdapter.addSymbol(symbol);
+            break;
+        }
+        Log.d(TAG, symbol.getCategory());
       }
     }
   }
@@ -153,6 +203,46 @@ public class MainActivity extends AppCompatActivity implements Observer {
     super.onDestroy();
   }
 
+  private class SymbolAdapter extends RecyclerView.Adapter<SymbolAdapter.ViewHolder> {
+
+    private ArrayList<SymbolStyleSearchResult> symbols = new ArrayList<>();
+
+    @NonNull @Override public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+      return new ViewHolder(new ImageView(viewGroup.getContext()));
+    }
+
+    @Override public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+      viewHolder.bind(symbols.get(i));
+    }
+
+    @Override public int getItemCount() {
+      return symbols.size();
+    }
+
+    void addSymbol(SymbolStyleSearchResult symbol) {
+      this.symbols.add(symbol);
+      notifyItemInserted(symbols.size() - 1);
+    }
+
+    private class ViewHolder extends RecyclerView.ViewHolder {
+      public ViewHolder(@NonNull ImageView itemView) {
+        super(itemView);
+      }
+
+      private void bind(SymbolStyleSearchResult symbol) {
+        ListenableFuture<Bitmap> bitmapFuture = symbol.getSymbol().createSwatchAsync(itemView.getContext(),
+            Color.TRANSPARENT);
+        try {
+          // this will block. Can it be moved to a separate thread?
+          Bitmap bitmap = bitmapFuture.get();
+          ((ImageView) itemView).setImageBitmap(bitmap);
+        } catch (InterruptedException | ExecutionException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+
   private class Symbols extends Observable {
 
     private List<SymbolStyleSearchResult> mSymbols;
@@ -162,9 +252,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     void setSymbols(List<SymbolStyleSearchResult> symbols) {
-      mSymbols = symbols;
-      setChanged();
-      notifyObservers();
+      if (symbols.size() > 0) {
+        mSymbols = symbols;
+        setChanged();
+        notifyObservers();
+      }
     }
   }
+
 }
