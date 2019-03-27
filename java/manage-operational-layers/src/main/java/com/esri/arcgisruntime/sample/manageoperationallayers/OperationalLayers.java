@@ -59,7 +59,7 @@ public class OperationalLayers extends AppCompatActivity {
         mRemovedLayerListViewId = getResources().getIdentifier("listView", "id", this.getPackageName());
 
         // get the string array with the layer names from the strings resource file
-        String[] layers = getResources().getStringArray(R.array.operational_layer_array);
+        String[] layers = getResources().getStringArray(R.array.manage_operational_layer_array);
 
         // initialize the addedLayerList array with the names of the layer added initially to the Map
         mAddedLayerList = new ArrayList<>(Arrays.asList(layers));
