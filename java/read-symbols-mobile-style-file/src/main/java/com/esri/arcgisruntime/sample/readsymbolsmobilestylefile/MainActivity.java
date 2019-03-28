@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
   private SymbolAdapter mMouthAdapter;
   private SymbolAdapter mHatAdapter;
 
-  private SymbolStyleSearchResultObservable symbolStyleSearchResultObservable = new SymbolStyleSearchResultObservable();
+  private SymbolStyleSearchResultObservable mSymbolStyleSearchResultObservable = new SymbolStyleSearchResultObservable();
   private String mFaceSymbolKey;
 
   private SymbolStyle mSymbolStyle;
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
     setupRecyclerViews();
 
     // add observer to Observable to be notified when symbols are loaded
-    symbolStyleSearchResultObservable.addObserver((o, arg) -> {
+    mSymbolStyleSearchResultObservable.addObserver((o, arg) -> {
       for (SymbolStyleSearchResult symbol : ((SymbolStyleSearchResultObservable) o).getSymbols()) {
         // these categories are specific to this SymbolStyle
         switch (symbol.getCategory().toLowerCase(Locale.ROOT)) {
@@ -135,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
             mFaceSymbolKey = symbol.getKey();
             break;
         }
-        Log.d(TAG, symbol.getCategory());
       }
       animateRecyclerViews();
     });
@@ -214,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
           .searchSymbolsAsync(defaultSearchParameters);
       try {
         // wait for the future to complete and get the result
-        symbolStyleSearchResultObservable.setSymbols(symbolStyleSearchResultFuture.get());
+        mSymbolStyleSearchResultObservable.setSymbols(symbolStyleSearchResultFuture.get());
       } catch (InterruptedException | ExecutionException e) {
         logErrorToUser(this, getString(R.string.error_searching_for_symbols_failed, e.getMessage()));
       }
@@ -348,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
    */
   private class SymbolAdapter extends RecyclerView.Adapter<SymbolAdapter.ViewHolder> {
 
-    private ArrayList<SymbolStyleSearchResult> symbols = new ArrayList<>();
+    private ArrayList<SymbolStyleSearchResult> mSymbols = new ArrayList<>();
     private final OnSymbolPreviewTapListener mOnSymbolPreviewTapListener;
 
     public SymbolAdapter(OnSymbolPreviewTapListener onSymbolPreviewTapListener) {
@@ -361,16 +360,16 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
     }
 
     @Override public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-      viewHolder.bind(symbols.get(i), mOnSymbolPreviewTapListener);
+      viewHolder.bind(mSymbols.get(i), mOnSymbolPreviewTapListener);
     }
 
     @Override public int getItemCount() {
-      return symbols.size();
+      return mSymbols.size();
     }
 
     void addSymbol(SymbolStyleSearchResult symbol) {
-      this.symbols.add(symbol);
-      notifyItemInserted(symbols.size() - 1);
+      mSymbols.add(symbol);
+      notifyItemInserted(mSymbols.size() - 1);
     }
 
     private class ViewHolder extends RecyclerView.ViewHolder {
@@ -393,9 +392,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
         } catch (InterruptedException | ExecutionException e) {
           logErrorToUser(itemView.getContext(), getString(R.string.error_loading_symbol_bitmap_failed, e.getMessage()));
         }
-        itemView.setOnClickListener(v -> {
-          onSymbolPreviewTapListener.onSymbolPreviewTap(symbol);
-        });
+        itemView.setOnClickListener(v -> onSymbolPreviewTapListener.onSymbolPreviewTap(symbol));
       }
     }
   }
@@ -412,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
     }
 
     void setSymbols(List<SymbolStyleSearchResult> symbols) {
-      if (symbols.size() > 0) {
+      if (!symbols.isEmpty()) {
         mSymbols = symbols;
         setChanged();
         notifyObservers();
