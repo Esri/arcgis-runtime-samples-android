@@ -28,12 +28,22 @@
         app:layout_constraintEnd_toStartOf="@id/previewView"
         app:layout_constraintTop_toBottomOf="@id/eyesRecyclerView" />
 
+    <TextView
+        android:id="@+id/previewViewTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/preview_view_title"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@id/previewView"
+        app:layout_constraintEnd_toEndOf="@id/previewView" />
+
     <ImageView
         android:id="@+id/previewView"
         android:layout_width="@dimen/main_activity_palette_size"
         android:layout_height="0dp"
         android:scaleType="centerInside"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/previewViewTitle"
         app:layout_constraintBottom_toBottomOf="@id/mouthRecyclerView"
         app:layout_constraintEnd_toEndOf="parent" />
 
