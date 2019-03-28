@@ -8,7 +8,7 @@
     <string name="done">Done</string>
     <string name="added_layers"> Added layers</string>
     <string name="removed_layers"> Removed layers</string>
-    <string-array name="operational_layer_array">
+    <string-array name="manage_operational_layer_array">
         <item>World Elevations</item>
         <item>Census</item>
     </string-array>
