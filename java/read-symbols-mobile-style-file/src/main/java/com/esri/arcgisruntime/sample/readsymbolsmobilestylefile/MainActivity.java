@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
       // set this field to enable us to add this symbol to the graphics overlay
       mCurrentMultilayerSymbol = multilayerSymbol;
     } catch (InterruptedException | ExecutionException e) {
-      e.printStackTrace();
+      logToUser(this, true, "Getting multi layer bitmap failed: " + e.getMessage());
     }
   }
 
@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
       loadSymbols();
     } else {
       // report to user that permission was denied
-      Toast.makeText(this, getResources().getString(R.string.error_read_permission_denied), Toast.LENGTH_SHORT).show();
+      logToUser(this, true, getResources().getString(R.string.error_read_permission_denied));
     }
   }
 
@@ -318,15 +318,6 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
   protected void onDestroy() {
     mMapView.dispose();
     super.onDestroy();
-  }
-
-  private void logToUser(Context context, boolean isError, String message) {
-    if (isError) {
-      Log.e(TAG, message);
-    } else {
-      Log.d(TAG, message);
-    }
-    runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_LONG).show());
   }
 
   /**
@@ -378,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
           Bitmap bitmap = bitmapFuture.get();
           mImageView.setImageBitmap(bitmap);
         } catch (InterruptedException | ExecutionException e) {
-          e.printStackTrace();
+          logToUser(itemView.getContext(), true, "Getting symbol bitmap failed: " + e.getMessage());
         }
         itemView.setOnClickListener(v -> {
           onSymbolPreviewTapListener.onSymbolPreviewTap(symbol);
@@ -405,6 +396,15 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
         notifyObservers();
       }
     }
+  }
+
+  private void logToUser(Context context, boolean isError, String message) {
+    if (isError) {
+      Log.e(TAG, message);
+    } else {
+      Log.d(TAG, message);
+    }
+    runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_LONG).show());
   }
 }
 
