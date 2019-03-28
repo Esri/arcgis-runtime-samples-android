@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Display WFS layer</string>
+    <string name="wfs_service_url"><![CDATA[https://dservices2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/services/Seattle_Downtown_Features/WFSServer?service=wfs&request=getcapabilities]]></string>
+    <string name="seattle_downtown_table">Seattle_Downtown_Features:Buildings</string>
+</resources>
