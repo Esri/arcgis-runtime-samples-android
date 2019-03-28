@@ -21,10 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.ExecutionException;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -46,6 +46,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -59,7 +60,7 @@ import com.esri.arcgisruntime.symbology.SymbolStyle;
 import com.esri.arcgisruntime.symbology.SymbolStyleSearchParameters;
 import com.esri.arcgisruntime.symbology.SymbolStyleSearchResult;
 
-public class MainActivity extends AppCompatActivity implements Observer, OnSymbolPreviewTapListener {
+public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTapListener {
 
   private static final String TAG = MainActivity.class.getSimpleName();
   private static final int PERM_REQUEST_CODE = 1;
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements Observer, OnSymbo
   private SymbolAdapter mMouthAdapter;
   private SymbolAdapter mHatAdapter;
 
-  private Symbols symbols = new Symbols();
+  private SymbolStyleSearchResultObservable symbolStyleSearchResultObservable = new SymbolStyleSearchResultObservable();
   private String mFaceSymbolKey;
 
   private SymbolStyle mSymbolStyle;
@@ -89,91 +90,36 @@ public class MainActivity extends AppCompatActivity implements Observer, OnSymbo
     setContentView(R.layout.activity_main);
 
     mMapView = findViewById(R.id.mapView);
-    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
-    mMapView.setMap(map);
-
-    mGraphicsOverlay = new GraphicsOverlay();
-    mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
-
-    // add listener to handle motion events, which only responds once a geodatabase is loaded
-    mMapView.setOnTouchListener(
-        new DefaultMapViewOnTouchListener(MainActivity.this, mMapView) {
-          @Override
-          public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-            addGraphic(mGraphicsOverlay, mapPointFrom(motionEvent), mCurrentMultilayerSymbol);
-            return true;
-          }
-        });
-
     mEyesRecyclerView = findViewById(R.id.eyesRecyclerView);
     mMouthRecyclerView = findViewById(R.id.mouthRecyclerView);
     mHatRecyclerView = findViewById(R.id.hatRecyclerView);
     mPreviewView = findViewById(R.id.previewView);
 
+    // create a map
+    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    // add the map to the map view
+    mMapView.setMap(map);
+
+    // create a graphics overlay to add graphics to and add it to the map view
+    mGraphicsOverlay = new GraphicsOverlay();
+    mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
+
+    // add listener to handle motion events when the user taps on the map view
+    mMapView.setOnTouchListener(
+        new DefaultMapViewOnTouchListener(MainActivity.this, mMapView) {
+          @Override
+          public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+            addGraphic(mGraphicsOverlay, mapPointFrom(mMapView, motionEvent), mCurrentMultilayerSymbol);
+            return true;
+          }
+        });
+
     setupRecyclerViews();
 
-    symbols.addObserver(this);
-
-    requestPermissions();
-  }
-
-  private void setupRecyclerViews() {
-    mEyesRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-    mEyesAdapter = new SymbolAdapter(this);
-    mEyesRecyclerView.setAdapter(mEyesAdapter);
-
-    mMouthRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-    mMouthAdapter = new SymbolAdapter(this);
-    mMouthRecyclerView.setAdapter(mMouthAdapter);
-
-    mHatRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-    mHatAdapter = new SymbolAdapter(this);
-    mHatRecyclerView.setAdapter(mHatAdapter);
-  }
-
-  private void loadSymbols() {
-    mSymbolStyle = new SymbolStyle(
-        Environment.getExternalStorageDirectory() + getString(R.string.mobile_style_file_path));
-    mSymbolStyle.addDoneLoadingListener(() -> {
-      if (mSymbolStyle.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-        String error = "Mobile style file failed to load: " + mSymbolStyle.getLoadError();
-        Log.e(TAG, error);
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        return;
-      }
-
-      ListenableFuture<SymbolStyleSearchParameters> defaultSearchParametersFuture = mSymbolStyle
-          .getDefaultSearchParametersAsync();
-      SymbolStyleSearchParameters defaultSearchParameters = null;
-
-      try {
-        defaultSearchParameters = defaultSearchParametersFuture.get();
-      } catch (InterruptedException | ExecutionException e) {
-        String error = "Loading default symbol style search parameters failed: " + e.getMessage();
-        Log.e(TAG, error);
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-      }
-
-      if (defaultSearchParameters == null) {
-        return;
-      }
-
-      ListenableFuture<List<SymbolStyleSearchResult>> symbolStyleSearchResultFuture = mSymbolStyle
-          .searchSymbolsAsync(defaultSearchParameters);
-      try {
-        symbols.setSymbols(symbolStyleSearchResultFuture.get());
-      } catch (InterruptedException | ExecutionException e) {
-        String error = "Searching for symbols failed: " + e.getMessage();
-        Log.e(TAG, error);
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-      }
-    });
-    mSymbolStyle.loadAsync();
-  }
-
-  @Override public void update(Observable o, Object arg) {
-    if (o instanceof Symbols) {
-      for (SymbolStyleSearchResult symbol : ((Symbols) o).getSymbols()) {
+    // add observer to Observable to be notified when symbols are loaded
+    symbolStyleSearchResultObservable.addObserver((o, arg) -> {
+      for (SymbolStyleSearchResult symbol : ((SymbolStyleSearchResultObservable) o).getSymbols()) {
+        // these categories are specific to this SymbolStyle
         switch (symbol.getCategory().toLowerCase(Locale.ROOT)) {
           case "eyes":
             mEyesAdapter.addSymbol(symbol);
@@ -190,35 +136,112 @@ public class MainActivity extends AppCompatActivity implements Observer, OnSymbo
         }
         Log.d(TAG, symbol.getCategory());
       }
-    }
+    });
+
+    requestPermissions();
   }
 
+  /**
+   * Setup {@link RecyclerView}s to display symbols
+   */
+  private void setupRecyclerViews() {
+    mEyesRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+    mEyesAdapter = new SymbolAdapter(this);
+    mEyesRecyclerView.setAdapter(mEyesAdapter);
+
+    mMouthRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+    mMouthAdapter = new SymbolAdapter(this);
+    mMouthRecyclerView.setAdapter(mMouthAdapter);
+
+    mHatRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+    mHatAdapter = new SymbolAdapter(this);
+    mHatRecyclerView.setAdapter(mHatAdapter);
+  }
+
+  private void loadSymbols() {
+    // create a SymbolStyle by passing the location of the .stylx file in the constructor
+    mSymbolStyle = new SymbolStyle(
+        Environment.getExternalStorageDirectory() + getString(R.string.mobile_style_file_path));
+    // adda listener to run when the SymbolStyle has loaded
+    mSymbolStyle.addDoneLoadingListener(() -> {
+      if (mSymbolStyle.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+        logToUser(this, true, "Mobile style file failed to load: " + mSymbolStyle.getLoadError());
+        return;
+      }
+
+      // get the Future to load the default search parameters to search for symbols
+      ListenableFuture<SymbolStyleSearchParameters> defaultSearchParametersFuture = mSymbolStyle
+          .getDefaultSearchParametersAsync();
+      SymbolStyleSearchParameters defaultSearchParameters = null;
+
+      try {
+        // wait for the Future to complete and get the result
+        defaultSearchParameters = defaultSearchParametersFuture.get();
+      } catch (InterruptedException | ExecutionException e) {
+        logToUser(this, true, "Loading default symbol style search parameters failed: " + e.getMessage());
+      }
+
+      if (defaultSearchParameters == null) {
+        return;
+      }
+
+      // get the Future to perform the symbol search using the default search parameters previously obtained
+      ListenableFuture<List<SymbolStyleSearchResult>> symbolStyleSearchResultFuture = mSymbolStyle
+          .searchSymbolsAsync(defaultSearchParameters);
+      try {
+        // wait for the future to complete and get the result
+        symbolStyleSearchResultObservable.setSymbols(symbolStyleSearchResultFuture.get());
+      } catch (InterruptedException | ExecutionException e) {
+        logToUser(this, true, "Searching for symbolStyleSearchResultObservable failed: " + e.getMessage());
+      }
+    });
+
+    // load the SymbolStyle
+    mSymbolStyle.loadAsync();
+  }
+
+  /**
+   * Performed when a user taps on a symbol shown by a {@link SymbolAdapter}
+   *
+   * @param symbol the user tapped on
+   */
   @Override public void onSymbolPreviewTap(SymbolStyleSearchResult symbol) {
+    // add the symbol that was tapped on to the map of selected symbols, replacing an old value if the category has
+    // already been selected
     mSelectedSymbols.put(symbol.getCategory(), symbol);
 
+    // create a list of Strings to provide to the method that retrieves a multi layer symbol
     ArrayList<String> keys = new ArrayList<>();
+    // add the face symbol first as it should appear on the bottom of the multi layer symbol
     keys.add(mFaceSymbolKey);
+    // loop through the selected symbols map's values to obtain the symbol keys
     for (SymbolStyleSearchResult symbolStyleSearchResult : mSelectedSymbols.values()) {
+      // add the symbol key to the map
       keys.add(symbolStyleSearchResult.getKey());
     }
 
+    // get the Future to perform the generation of the multi layer symbol
     ListenableFuture<Symbol> symbolFuture = mSymbolStyle.getSymbolAsync(keys);
     Symbol multilayerSymbol = null;
     try {
+      // wait for the Future to complete and get the result
       multilayerSymbol = symbolFuture.get();
     } catch (InterruptedException | ExecutionException e) {
-      e.printStackTrace();
+      logToUser(this, true, "Getting multi layer symbol failed: " + e.getMessage());
     }
 
     if (multilayerSymbol == null) {
       return;
     }
 
+    // get the Future to create the swatch of the multi layer symbol
     ListenableFuture<Bitmap> bitmapFuture = multilayerSymbol.createSwatchAsync(this, Color.TRANSPARENT);
     try {
+      // wait for the Future to complete and get the result
       // this will block. Can it be moved to a separate thread?
       Bitmap bitmap = bitmapFuture.get();
       mPreviewView.setImageBitmap(bitmap);
+      // set this field to enable us to add this symbol to the graphics overlay
       mCurrentMultilayerSymbol = multilayerSymbol;
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
@@ -228,19 +251,27 @@ public class MainActivity extends AppCompatActivity implements Observer, OnSymbo
   /**
    * Converts motion event to an ArcGIS map point.
    *
+   * @param mapView     to convert the screen point
    * @param motionEvent containing coordinates of an Android screen point
    * @return a corresponding map point in the place
    */
-  private Point mapPointFrom(MotionEvent motionEvent) {
+  private Point mapPointFrom(MapView mapView, MotionEvent motionEvent) {
     // get the screen point
     android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
         Math.round(motionEvent.getY()));
     // return the point that was clicked in map coordinates
-    return mMapView.screenToLocation(screenPoint);
+    return mapView.screenToLocation(screenPoint);
   }
 
-  private void addGraphic(GraphicsOverlay graphicsOverlay, Point point, Symbol symbol) {
-    Graphic g = new Graphic(point, symbol);
+  /**
+   * Create a {@link Graphic} from a {@link Geometry} and {@link Symbol} and add it to a {@link GraphicsOverlay}
+   *
+   * @param graphicsOverlay to add the graphic to
+   * @param geometry        graphic's geometry on a {@link MapView}
+   * @param symbol          to be added to the {@link GraphicsOverlay}
+   */
+  private void addGraphic(GraphicsOverlay graphicsOverlay, Geometry geometry, Symbol symbol) {
+    Graphic g = new Graphic(geometry, symbol);
     graphicsOverlay.getGraphics().add(g);
   }
 
@@ -289,6 +320,18 @@ public class MainActivity extends AppCompatActivity implements Observer, OnSymbo
     super.onDestroy();
   }
 
+  private void logToUser(Context context, boolean isError, String message) {
+    if (isError) {
+      Log.e(TAG, message);
+    } else {
+      Log.d(TAG, message);
+    }
+    runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_LONG).show());
+  }
+
+  /**
+   * {@link RecyclerView.Adapter} subclass that displays symbols
+   */
   private class SymbolAdapter extends RecyclerView.Adapter<SymbolAdapter.ViewHolder> {
 
     private ArrayList<SymbolStyleSearchResult> symbols = new ArrayList<>();
@@ -326,9 +369,11 @@ public class MainActivity extends AppCompatActivity implements Observer, OnSymbo
       }
 
       private void bind(SymbolStyleSearchResult symbol, OnSymbolPreviewTapListener onSymbolPreviewTapListener) {
+        // get the Future to create the swatch of the multi layer symbol
         ListenableFuture<Bitmap> bitmapFuture = symbol.getSymbol().createSwatchAsync(itemView.getContext(),
             Color.TRANSPARENT);
         try {
+          // wait for the Future to complete and get the result
           // this will block. Can it be moved to a separate thread?
           Bitmap bitmap = bitmapFuture.get();
           mImageView.setImageBitmap(bitmap);
@@ -342,7 +387,10 @@ public class MainActivity extends AppCompatActivity implements Observer, OnSymbo
     }
   }
 
-  private class Symbols extends Observable {
+  /**
+   * Subclass of {@link Observable} that can be subscribed to to be notified when a symbol search has been completed
+   */
+  private class SymbolStyleSearchResultObservable extends Observable {
 
     private List<SymbolStyleSearchResult> mSymbols;
 
