@@ -30,6 +30,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -136,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
         }
         Log.d(TAG, symbol.getCategory());
       }
+      animateRecyclerViews();
     });
 
     requestPermissions();
@@ -158,6 +160,28 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
     mHatRecyclerView.setAdapter(mHatAdapter);
   }
 
+  /**
+   * Animates {@link RecyclerView}s to inform user that there are more options available
+   */
+  private void animateRecyclerViews() {
+    Handler handler = new Handler();
+
+    final Runnable resetScrollRunnable = () -> {
+      mHatRecyclerView.smoothScrollBy(-100, 0);
+      mEyesRecyclerView.smoothScrollBy(-100, 0);
+      mMouthRecyclerView.smoothScrollBy(-100, 0);
+    };
+
+    Runnable startScrollRunnable = () -> {
+      mHatRecyclerView.smoothScrollBy(100, 0);
+      mEyesRecyclerView.smoothScrollBy(100, 0);
+      mMouthRecyclerView.smoothScrollBy(100, 0);
+      handler.postDelayed(resetScrollRunnable, 1000);
+    };
+
+    runOnUiThread(() -> handler.postDelayed(startScrollRunnable, 2000));
+  }
+
   private void loadSymbols() {
     // create a SymbolStyle by passing the location of the .stylx file in the constructor
     mSymbolStyle = new SymbolStyle(
@@ -165,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
     // adda listener to run when the SymbolStyle has loaded
     mSymbolStyle.addDoneLoadingListener(() -> {
       if (mSymbolStyle.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-        logToUser(this, true, "Mobile style file failed to load: " + mSymbolStyle.getLoadError());
+        logErrorToUser(this, getString(R.string.error_mobile_style_file_failed_load, mSymbolStyle.getLoadError()));
         return;
       }
 
@@ -178,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
         // wait for the Future to complete and get the result
         defaultSearchParameters = defaultSearchParametersFuture.get();
       } catch (InterruptedException | ExecutionException e) {
-        logToUser(this, true, "Loading default symbol style search parameters failed: " + e.getMessage());
+        logErrorToUser(this, getString(R.string.error_default_search_parameters_load_failed, e.getMessage()));
       }
 
       if (defaultSearchParameters == null) {
@@ -192,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
         // wait for the future to complete and get the result
         symbolStyleSearchResultObservable.setSymbols(symbolStyleSearchResultFuture.get());
       } catch (InterruptedException | ExecutionException e) {
-        logToUser(this, true, "Searching for symbolStyleSearchResultObservable failed: " + e.getMessage());
+        logErrorToUser(this, getString(R.string.error_searching_for_symbols_failed, e.getMessage()));
       }
     });
 
@@ -227,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
       // wait for the Future to complete and get the result
       multilayerSymbol = symbolFuture.get();
     } catch (InterruptedException | ExecutionException e) {
-      logToUser(this, true, "Getting multi layer symbol failed: " + e.getMessage());
+      logErrorToUser(this, getString(R.string.error_loading_multilayer_symbol_failed, e.getMessage()));
     }
 
     if (multilayerSymbol == null) {
@@ -244,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
       // set this field to enable us to add this symbol to the graphics overlay
       mCurrentMultilayerSymbol = multilayerSymbol;
     } catch (InterruptedException | ExecutionException e) {
-      logToUser(this, true, "Getting multi layer bitmap failed: " + e.getMessage());
+      logErrorToUser(this, getString(R.string.error_loading_multilayer_bitmap_failed, e.getMessage()));
     }
   }
 
@@ -298,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
       loadSymbols();
     } else {
       // report to user that permission was denied
-      logToUser(this, true, getResources().getString(R.string.error_read_permission_denied));
+      logErrorToUser(this, getResources().getString(R.string.error_read_permission_denied));
     }
   }
 
@@ -369,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
           Bitmap bitmap = bitmapFuture.get();
           mImageView.setImageBitmap(bitmap);
         } catch (InterruptedException | ExecutionException e) {
-          logToUser(itemView.getContext(), true, "Getting symbol bitmap failed: " + e.getMessage());
+          logErrorToUser(itemView.getContext(), getString(R.string.error_loading_symbol_bitmap_failed, e.getMessage()));
         }
         itemView.setOnClickListener(v -> {
           onSymbolPreviewTapListener.onSymbolPreviewTap(symbol);
@@ -398,12 +422,8 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
     }
   }
 
-  private void logToUser(Context context, boolean isError, String message) {
-    if (isError) {
-      Log.e(TAG, message);
-    } else {
-      Log.d(TAG, message);
-    }
+  private void logErrorToUser(Context context, String message) {
+    Log.e(TAG, message);
     runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_LONG).show());
   }
 }
