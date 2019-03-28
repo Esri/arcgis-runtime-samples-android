@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">View content beneath the terrain surface</string>
+    <string name="arcgis_online_url">https://www.arcgis.com</string>
+    <string name="subsurface_item_id">91a4fafd747a47c7bab7797066cb9272</string>
+</resources>
