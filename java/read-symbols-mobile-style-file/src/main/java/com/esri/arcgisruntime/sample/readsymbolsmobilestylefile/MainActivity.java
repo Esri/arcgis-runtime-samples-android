@@ -37,6 +37,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -208,7 +210,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private ArrayList<SymbolStyleSearchResult> symbols = new ArrayList<>();
 
     @NonNull @Override public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-      return new ViewHolder(new ImageView(viewGroup.getContext()));
+      return new ViewHolder(
+          LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_symbol_adapter_item, viewGroup, false));
     }
 
     @Override public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
@@ -225,8 +228,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     private class ViewHolder extends RecyclerView.ViewHolder {
-      public ViewHolder(@NonNull ImageView itemView) {
+
+      private final ImageView mImageView;
+
+      ViewHolder(@NonNull View itemView) {
         super(itemView);
+        mImageView = itemView.findViewById(R.id.imageView);
       }
 
       private void bind(SymbolStyleSearchResult symbol) {
@@ -235,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         try {
           // this will block. Can it be moved to a separate thread?
           Bitmap bitmap = bitmapFuture.get();
-          ((ImageView) itemView).setImageBitmap(bitmap);
+          mImageView.setImageBitmap(bitmap);
         } catch (InterruptedException | ExecutionException e) {
           e.printStackTrace();
         }
