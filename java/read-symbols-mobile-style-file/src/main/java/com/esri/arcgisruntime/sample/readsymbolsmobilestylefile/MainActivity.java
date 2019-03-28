@@ -262,7 +262,6 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
     ListenableFuture<Bitmap> bitmapFuture = multilayerSymbol.createSwatchAsync(this, Color.TRANSPARENT);
     try {
       // wait for the Future to complete and get the result
-      // this will block. Can it be moved to a separate thread?
       Bitmap bitmap = bitmapFuture.get();
       mPreviewView.setImageBitmap(bitmap);
       // set this field to enable us to add this symbol to the graphics overlay
@@ -389,7 +388,6 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
             Color.TRANSPARENT);
         try {
           // wait for the Future to complete and get the result
-          // this will block. Can it be moved to a separate thread?
           Bitmap bitmap = bitmapFuture.get();
           mImageView.setImageBitmap(bitmap);
         } catch (InterruptedException | ExecutionException e) {
