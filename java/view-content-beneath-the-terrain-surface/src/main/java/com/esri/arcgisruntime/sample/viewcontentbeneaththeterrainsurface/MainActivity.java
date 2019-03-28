@@ -1,3 +1,20 @@
+/*
+ * Copyright 2019 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.esri.arcgisruntime.sample.viewcontentbeneaththeterrainsurface;
 
 import android.os.Bundle;
@@ -25,10 +42,10 @@ public class MainActivity extends AppCompatActivity {
 
     mSceneView = findViewById(R.id.sceneView);
 
-    Portal portal = new Portal("https://www.arcgis.com");
+    Portal portal = new Portal(getString(R.string.arcgis_online_url));
     portal.addDoneLoadingListener(() -> {
       if (portal.getLoadStatus() == LoadStatus.LOADED) {
-        PortalItem portalItem = new PortalItem(portal,"91a4fafd747a47c7bab7797066cb9272");
+        PortalItem portalItem = new PortalItem(portal, getString(R.string.subsurface_item_id));
         portalItem.addDoneLoadingListener(() -> {
           if (portalItem.getLoadStatus() == LoadStatus.LOADED) {
             // create a scene from a web scene Url and set it to the scene view
