@@ -17,6 +17,7 @@
 package com.esri.arcgisruntime.sample.readsymbolsmobilestylefile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Observable;
@@ -38,35 +39,50 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
+import com.esri.arcgisruntime.mapping.view.Graphic;
+import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.symbology.Symbol;
 import com.esri.arcgisruntime.symbology.SymbolStyle;
 import com.esri.arcgisruntime.symbology.SymbolStyleSearchParameters;
 import com.esri.arcgisruntime.symbology.SymbolStyleSearchResult;
 
-public class MainActivity extends AppCompatActivity implements Observer {
+public class MainActivity extends AppCompatActivity implements Observer, OnSymbolPreviewTapListener {
 
   private static final String TAG = MainActivity.class.getSimpleName();
   private static final int PERM_REQUEST_CODE = 1;
   private static final String[] PERMISSIONS = { Manifest.permission.READ_EXTERNAL_STORAGE };
 
   private MapView mMapView;
+  private GraphicsOverlay mGraphicsOverlay;
   private RecyclerView mEyesRecyclerView;
   private RecyclerView mMouthRecyclerView;
   private RecyclerView mHatRecyclerView;
+  private ImageView mPreviewView;
   private SymbolAdapter mEyesAdapter;
   private SymbolAdapter mMouthAdapter;
   private SymbolAdapter mHatAdapter;
 
   private Symbols symbols = new Symbols();
+  private String mFaceSymbolKey;
+
+  private SymbolStyle mSymbolStyle;
+
+  private HashMap<String, SymbolStyleSearchResult> mSelectedSymbols = new HashMap<>();
+
+  private Symbol mCurrentMultilayerSymbol;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -76,9 +92,23 @@ public class MainActivity extends AppCompatActivity implements Observer {
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
     mMapView.setMap(map);
 
+    mGraphicsOverlay = new GraphicsOverlay();
+    mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
+
+    // add listener to handle motion events, which only responds once a geodatabase is loaded
+    mMapView.setOnTouchListener(
+        new DefaultMapViewOnTouchListener(MainActivity.this, mMapView) {
+          @Override
+          public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+            addGraphic(mGraphicsOverlay, mapPointFrom(motionEvent), mCurrentMultilayerSymbol);
+            return true;
+          }
+        });
+
     mEyesRecyclerView = findViewById(R.id.eyesRecyclerView);
     mMouthRecyclerView = findViewById(R.id.mouthRecyclerView);
     mHatRecyclerView = findViewById(R.id.hatRecyclerView);
+    mPreviewView = findViewById(R.id.previewView);
 
     setupRecyclerViews();
 
@@ -89,30 +119,30 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
   private void setupRecyclerViews() {
     mEyesRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-    mEyesAdapter = new SymbolAdapter();
+    mEyesAdapter = new SymbolAdapter(this);
     mEyesRecyclerView.setAdapter(mEyesAdapter);
 
     mMouthRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-    mMouthAdapter = new SymbolAdapter();
+    mMouthAdapter = new SymbolAdapter(this);
     mMouthRecyclerView.setAdapter(mMouthAdapter);
 
     mHatRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-    mHatAdapter = new SymbolAdapter();
+    mHatAdapter = new SymbolAdapter(this);
     mHatRecyclerView.setAdapter(mHatAdapter);
   }
 
   private void loadSymbols() {
-    SymbolStyle symbolStyle = new SymbolStyle(
+    mSymbolStyle = new SymbolStyle(
         Environment.getExternalStorageDirectory() + getString(R.string.mobile_style_file_path));
-    symbolStyle.addDoneLoadingListener(() -> {
-      if (symbolStyle.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-        String error = "Mobile style file failed to load: " + symbolStyle.getLoadError();
+    mSymbolStyle.addDoneLoadingListener(() -> {
+      if (mSymbolStyle.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+        String error = "Mobile style file failed to load: " + mSymbolStyle.getLoadError();
         Log.e(TAG, error);
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         return;
       }
 
-      ListenableFuture<SymbolStyleSearchParameters> defaultSearchParametersFuture = symbolStyle
+      ListenableFuture<SymbolStyleSearchParameters> defaultSearchParametersFuture = mSymbolStyle
           .getDefaultSearchParametersAsync();
       SymbolStyleSearchParameters defaultSearchParameters = null;
 
@@ -128,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         return;
       }
 
-      ListenableFuture<List<SymbolStyleSearchResult>> symbolStyleSearchResultFuture = symbolStyle
+      ListenableFuture<List<SymbolStyleSearchResult>> symbolStyleSearchResultFuture = mSymbolStyle
           .searchSymbolsAsync(defaultSearchParameters);
       try {
         symbols.setSymbols(symbolStyleSearchResultFuture.get());
@@ -138,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
       }
     });
-    symbolStyle.loadAsync();
+    mSymbolStyle.loadAsync();
   }
 
   @Override public void update(Observable o, Object arg) {
@@ -154,10 +184,64 @@ public class MainActivity extends AppCompatActivity implements Observer {
           case "hat":
             mHatAdapter.addSymbol(symbol);
             break;
+          case "face":
+            mFaceSymbolKey = symbol.getKey();
+            break;
         }
         Log.d(TAG, symbol.getCategory());
       }
     }
+  }
+
+  @Override public void onSymbolPreviewTap(SymbolStyleSearchResult symbol) {
+    mSelectedSymbols.put(symbol.getCategory(), symbol);
+
+    ArrayList<String> keys = new ArrayList<>();
+    keys.add(mFaceSymbolKey);
+    for (SymbolStyleSearchResult symbolStyleSearchResult : mSelectedSymbols.values()) {
+      keys.add(symbolStyleSearchResult.getKey());
+    }
+
+    ListenableFuture<Symbol> symbolFuture = mSymbolStyle.getSymbolAsync(keys);
+    Symbol multilayerSymbol = null;
+    try {
+      multilayerSymbol = symbolFuture.get();
+    } catch (InterruptedException | ExecutionException e) {
+      e.printStackTrace();
+    }
+
+    if (multilayerSymbol == null) {
+      return;
+    }
+
+    ListenableFuture<Bitmap> bitmapFuture = multilayerSymbol.createSwatchAsync(this, Color.TRANSPARENT);
+    try {
+      // this will block. Can it be moved to a separate thread?
+      Bitmap bitmap = bitmapFuture.get();
+      mPreviewView.setImageBitmap(bitmap);
+      mCurrentMultilayerSymbol = multilayerSymbol;
+    } catch (InterruptedException | ExecutionException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Converts motion event to an ArcGIS map point.
+   *
+   * @param motionEvent containing coordinates of an Android screen point
+   * @return a corresponding map point in the place
+   */
+  private Point mapPointFrom(MotionEvent motionEvent) {
+    // get the screen point
+    android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
+        Math.round(motionEvent.getY()));
+    // return the point that was clicked in map coordinates
+    return mMapView.screenToLocation(screenPoint);
+  }
+
+  private void addGraphic(GraphicsOverlay graphicsOverlay, Point point, Symbol symbol) {
+    Graphic g = new Graphic(point, symbol);
+    graphicsOverlay.getGraphics().add(g);
   }
 
   /**
@@ -208,6 +292,11 @@ public class MainActivity extends AppCompatActivity implements Observer {
   private class SymbolAdapter extends RecyclerView.Adapter<SymbolAdapter.ViewHolder> {
 
     private ArrayList<SymbolStyleSearchResult> symbols = new ArrayList<>();
+    private final OnSymbolPreviewTapListener mOnSymbolPreviewTapListener;
+
+    public SymbolAdapter(OnSymbolPreviewTapListener onSymbolPreviewTapListener) {
+      mOnSymbolPreviewTapListener = onSymbolPreviewTapListener;
+    }
 
     @NonNull @Override public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
       return new ViewHolder(
@@ -215,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     @Override public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-      viewHolder.bind(symbols.get(i));
+      viewHolder.bind(symbols.get(i), mOnSymbolPreviewTapListener);
     }
 
     @Override public int getItemCount() {
@@ -236,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         mImageView = itemView.findViewById(R.id.imageView);
       }
 
-      private void bind(SymbolStyleSearchResult symbol) {
+      private void bind(SymbolStyleSearchResult symbol, OnSymbolPreviewTapListener onSymbolPreviewTapListener) {
         ListenableFuture<Bitmap> bitmapFuture = symbol.getSymbol().createSwatchAsync(itemView.getContext(),
             Color.TRANSPARENT);
         try {
@@ -246,6 +335,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
         } catch (InterruptedException | ExecutionException e) {
           e.printStackTrace();
         }
+        itemView.setOnClickListener(v -> {
+          onSymbolPreviewTapListener.onSymbolPreviewTap(symbol);
+        });
       }
     }
   }
@@ -266,5 +358,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
       }
     }
   }
+}
 
+interface OnSymbolPreviewTapListener {
+  void onSymbolPreviewTap(SymbolStyleSearchResult symbol);
 }
