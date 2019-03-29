@@ -1,4 +1,4 @@
-include ':add-enc-exchange-set',
+include ':add-enc-exchange-set', ':play-a-kml-tour',
         ':add-features-feature-service',
         ':add-graphics-renderer',
         ':add-graphics-symbols',
