@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         // set the text to SeekBar value
         exaggerationTextView.setText(String.valueOf(progress));
         // set exaggeration of surface to the value the user selected
-        surface.setElevationExaggeration(progress);
+        surface.setElevationExaggeration(progress+1);
       }
 
       @Override public void onStartTrackingTouch(SeekBar seekBar) {
