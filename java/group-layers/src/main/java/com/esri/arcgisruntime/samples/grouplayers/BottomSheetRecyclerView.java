@@ -21,12 +21,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 public class BottomSheetRecyclerView extends RecyclerView {
-
-  private static final String TAG = BottomSheetRecyclerView.class.getSimpleName();
 
   public BottomSheetRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
@@ -36,9 +33,14 @@ public class BottomSheetRecyclerView extends RecyclerView {
     super(context, attrs, defStyle);
   }
 
+  /**
+   * Intercept touch events and determine if {@link RecyclerView} should grab touch event to allow scrolling of RecyclerView
+   * within Bottom Sheet
+   * @param e
+   * @return
+   */
   @Override public boolean onInterceptTouchEvent(MotionEvent e) {
     if (e.getAction() == MotionEvent.ACTION_SCROLL && canScrollVertically(1)) {
-      Log.d(TAG, "onInterceptTouchEvent: click performed");
       return true;
     }
     return super.onInterceptTouchEvent(e);
