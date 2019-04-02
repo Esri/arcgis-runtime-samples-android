@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Group layers</string>
+    <string name="bottom_sheet_peek">Layers</string>
+    <string name="action_show_layer_list">Show layer list</string>
 </resources>

@@ -20,7 +20,11 @@ import java.util.Arrays;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
@@ -41,12 +45,17 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private SceneView mSceneView;
+  private View mBottomSheet;
+  private BottomSheetBehavior mBottomSheetBehavior;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
     mSceneView = findViewById(R.id.sceneView);
+    mBottomSheet = findViewById(R.id.bottomSheet);
+    mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
     // create a scene with a basemap and add it to the scene view
     ArcGISScene scene = new ArcGISScene();
@@ -90,4 +99,20 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+    return true;
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.action_show_layer_list) {
+      if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+      } else {
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+      }
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
 }
