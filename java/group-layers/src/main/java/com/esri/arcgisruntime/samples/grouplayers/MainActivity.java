@@ -29,6 +29,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -46,6 +47,7 @@ import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.Camera;
+import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.util.ListenableList;
 
@@ -68,6 +70,16 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     View bottomSheet = findViewById(R.id.bottomSheet);
     mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+    mSceneView.setOnTouchListener(new DefaultSceneViewOnTouchListener(mSceneView) {
+      @Override public boolean onTouch(View view, MotionEvent motionEvent) {
+        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+          mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+          return true;
+        }
+        return super.onTouch(view, motionEvent);
+      }
+    });
 
     // create a scene with a basemap and add it to the scene view
     ArcGISScene scene = new ArcGISScene();

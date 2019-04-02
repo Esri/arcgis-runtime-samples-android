@@ -37,7 +37,7 @@ public class BottomSheetRecyclerView extends RecyclerView {
   }
 
   @Override public boolean onInterceptTouchEvent(MotionEvent e) {
-    if (e.getAction() == MotionEvent.ACTION_DOWN && canScrollVertically(1)) {
+    if (e.getAction() == MotionEvent.ACTION_SCROLL && canScrollVertically(1)) {
       Log.d(TAG, "onInterceptTouchEvent: click performed");
       return true;
     }
