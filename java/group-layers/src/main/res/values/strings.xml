@@ -1,9 +1,3 @@
 <resources>
     <string name="app_name">Group layers</string>
-
-    <string-array name="scene_layer_urls">
-        <item>https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/DevA_Trees/SceneServer/layers/0</item>
-        <item>https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/DevA_Pathways/SceneServer/layers/0</item>
-        <item>https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/DevA_BuildingShell_Textured/SceneServer/layers/0</item>
-    </string-array>
 </resources>

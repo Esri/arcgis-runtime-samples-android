@@ -21,19 +21,20 @@ import java.util.Arrays;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.layers.GroupLayer;
 import com.esri.arcgisruntime.layers.Layer;
+import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SceneView;
+import com.esri.arcgisruntime.util.ListenableList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,37 +48,46 @@ public class MainActivity extends AppCompatActivity {
 
     mSceneView = findViewById(R.id.sceneView);
 
-    ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
+    // create a scene with a basemap and add it to the scene view
+    ArcGISScene scene = new ArcGISScene();
+    scene.setBasemap(Basemap.createImagery());
     mSceneView.setScene(scene);
 
+    // set the base surface with world elevation
     Surface surface = new Surface();
     surface.getElevationSources().add(new ArcGISTiledElevationSource(
         "http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"));
     scene.setBaseSurface(surface);
 
-    initializeGroupLayer(scene);
-  }
+    // create different types of layers
+    ArcGISSceneLayer devOne = new ArcGISSceneLayer(
+        "https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/DevA_Trees/SceneServer/layers/0");
+    ArcGISSceneLayer devTwo = new ArcGISSceneLayer(
+        "https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/DevA_Pathways/SceneServer/layers/0");
+    ArcGISSceneLayer devThree = new ArcGISSceneLayer(
+        "https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/DevA_BuildingShell_Textured/SceneServer/layers/0");
+    ArcGISSceneLayer nonDevOne = new ArcGISSceneLayer(
+        "https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/PlannedDemo_BuildingShell/SceneServer/layers/0");
+    FeatureLayer nonDevTwo = new FeatureLayer(new ServiceFeatureTable(
+        "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/DevelopmentProjectArea/FeatureServer/0"));
 
-  private void initializeGroupLayer(ArcGISScene scene) {
+    // create a group layer from scratch by adding the layers as children
     GroupLayer groupLayer = new GroupLayer();
     groupLayer.setName("Group: Dev A");
-    groupLayer.addLoadStatusChangedListener(loadStatusChangedEvent -> Log.d(TAG, "GroupLayer Load Status: " + groupLayer.getLoadStatus().toString()));
-    groupLayer.addDoneLoadingListener(() -> {
-      for (Layer layer : groupLayer.getLayers()) {
-        Log.d(TAG, layer.getLoadStatus().toString());
-      }
-      mSceneView.setViewpointCamera(new Camera(groupLayer.getFullExtent().getCenter(), 700, 0, 60, 0));
-    });
+    groupLayer.getLayers().addAll(Arrays.asList(devOne, devTwo, devThree));
 
-    for (String url : getResources().getStringArray(R.array.scene_layer_urls)) {
-      ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(url);
-      groupLayer.getLayers().add(sceneLayer);
-    }
-
-    ArcGISSceneLayer nonDevOne = new ArcGISSceneLayer("https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/PlannedDemo_BuildingShell/SceneServer/layers/0");
-    FeatureLayer nonDevTwo = new FeatureLayer(new ServiceFeatureTable("https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/DevelopmentProjectArea/FeatureServer/0"));
-
+    // add the group layer and other layers to the scene as operational layers
     scene.getOperationalLayers().addAll(Arrays.asList(groupLayer, nonDevOne, nonDevTwo));
+
+    // zoom to the extent of the group layer when the child layers are loaded
+    ListenableList<Layer> layers = groupLayer.getLayers();
+    for (Layer childLayer : layers) {
+      childLayer.addDoneLoadingListener(() -> {
+        if (childLayer.getLoadStatus() == LoadStatus.LOADED) {
+          mSceneView.setViewpointCamera(new Camera(groupLayer.getFullExtent().getCenter(), 700, 0, 60, 0));
+        }
+      });
+    }
   }
 
 }
