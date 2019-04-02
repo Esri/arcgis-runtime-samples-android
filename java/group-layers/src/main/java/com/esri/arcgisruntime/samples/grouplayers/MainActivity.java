@@ -26,7 +26,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private SceneView mSceneView;
-  private View mBottomSheet;
   private BottomSheetBehavior mBottomSheetBehavior;
   private RecyclerView mLayersRecyclerView;
   private LayersAdapter mLayersAdapter;
@@ -65,10 +63,10 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     setContentView(R.layout.activity_main);
 
     mSceneView = findViewById(R.id.sceneView);
-    mBottomSheet = findViewById(R.id.bottomSheet);
     mLayersRecyclerView = findViewById(R.id.layersRecyclerView);
 
-    mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+    View bottomSheet = findViewById(R.id.bottomSheet);
+    mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
     // create a scene with a basemap and add it to the scene view
@@ -120,10 +118,12 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     mLayersRecyclerView.setAdapter(mLayersAdapter);
 
     for (Layer layer : layers) {
-      layer.addDoneLoadingListener(() -> {
-        mLayersAdapter.addLayer(layer);
-      });
-      layer.loadAsync();
+      if (layer.canShowInLegend()) {
+        layer.addDoneLoadingListener(() -> {
+          mLayersAdapter.addLayer(layer);
+        });
+        layer.loadAsync();
+      }
     }
   }
 
@@ -175,7 +175,6 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     private static final int VIEW_TYPE_LAYER = 1;
 
     private List<Layer> mLayers = new ArrayList<>();
-    private List<Layer> mSelectedLayers = new ArrayList<>();
     private OnLayerCheckedChangedListener mOnLayerCheckedChangedListener;
 
     private LayersAdapter(OnLayerCheckedChangedListener onLayerCheckedChangedListener) {
@@ -188,14 +187,14 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
             LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_parent, viewGroup, false),
             this);
       } else {
-        return new ChildViewHolder(
+        return new LayerViewHolder(
             LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_layer, viewGroup, false),
             this);
       }
     }
 
     @Override public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-      viewHolder.bind(mLayers.get(i), mSelectedLayers.contains(mLayers.get(i)));
+      viewHolder.bind(mLayers.get(i), mLayers.get(i).isVisible());
     }
 
     @Override public int getItemViewType(int position) {
@@ -213,41 +212,25 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     void addLayer(Layer layer) {
       if (!mLayers.contains(layer)) {
         mLayers.add(layer);
-        mSelectedLayers.add(layer);
-
-        if (layer instanceof GroupLayer) {
-          if (((GroupLayer) layer).isShowChildrenInLegend()) {
-            mSelectedLayers.addAll(((GroupLayer) layer).getLayers());
-          }
-        }
-
         notifyItemInserted(mLayers.size() - 1);
       }
     }
 
     @Override public void layerCheckedChanged(Layer layer, boolean checked) {
-      Log.d(TAG, layer.getName() + " checked: " + checked);
-      if (!checked) {
-        mSelectedLayers.remove(layer);
-        if (layer instanceof GroupLayer) {
-          mSelectedLayers.removeAll(((GroupLayer) layer).getLayers());
-          notifyItemChanged(mLayers.indexOf(layer));
-        }
-      } else {
-        mSelectedLayers.add(layer);
-        if (layer instanceof GroupLayer) {
-          mSelectedLayers.removeAll(((GroupLayer) layer).getLayers());
-          mSelectedLayers.addAll(((GroupLayer) layer).getLayers());
-          notifyItemChanged(mLayers.indexOf(layer));
+      if (layer instanceof GroupLayer) {
+        for (Layer childLayer : ((GroupLayer) layer).getLayers()) {
+          childLayer.setVisible(checked);
         }
       }
+      notifyItemChanged(mLayers.indexOf(layer));
+
       if (mOnLayerCheckedChangedListener != null) {
-        mOnLayerCheckedChangedListener.layerCheckedChanged(layer, checked);
         if (layer instanceof GroupLayer) {
           for (Layer childLayer : ((GroupLayer) layer).getLayers()) {
             mOnLayerCheckedChangedListener.layerCheckedChanged(childLayer, checked);
           }
         }
+        mOnLayerCheckedChangedListener.layerCheckedChanged(layer, checked);
       }
     }
 
@@ -264,9 +247,9 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
         mChildLayout = itemView.findViewById(R.id.childLayout);
       }
 
-      @Override void bind(Layer layer, boolean selected) {
+      @Override void bind(Layer layer, boolean isVisible) {
         mParentCheckbox.setOnCheckedChangeListener(null);
-        mParentCheckbox.setChecked(selected);
+        mParentCheckbox.setChecked(isVisible);
         mParentTextView.setText(layer.getName());
 
         mParentCheckbox.setOnCheckedChangeListener(
@@ -281,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
                   .inflate(R.layout.adapter_item_layer, mChildLayout, false);
               ((LinearLayout.LayoutParams) view.getLayoutParams()).setMarginStart(
                   itemView.getResources().getDimensionPixelSize(R.dimen.adapter_item_child_margin_start));
-              ((CheckBox) view.findViewById(R.id.layerCheckbox)).setChecked(mSelectedLayers.contains(layer));
+              ((CheckBox) view.findViewById(R.id.layerCheckbox)).setChecked(layer.isVisible());
               ((CheckBox) view.findViewById(R.id.layerCheckbox)).setOnCheckedChangeListener(
                   (buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(childLayer, isChecked));
               ((TextView) view.findViewById(R.id.layerNameTextView)).setText(childLayer.getName());
@@ -293,19 +276,20 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
       }
     }
 
-    class ChildViewHolder extends ViewHolder {
+    class LayerViewHolder extends ViewHolder {
 
       private CheckBox mCheckbox;
       private TextView mTextView;
 
-      public ChildViewHolder(@NonNull View itemView, OnLayerCheckedChangedListener onLayerCheckedChangedListener) {
+      LayerViewHolder(@NonNull View itemView, OnLayerCheckedChangedListener onLayerCheckedChangedListener) {
         super(itemView, onLayerCheckedChangedListener);
         mCheckbox = itemView.findViewById(R.id.layerCheckbox);
         mTextView = itemView.findViewById(R.id.layerNameTextView);
       }
 
-      @Override void bind(Layer layer, boolean selected) {
-        mCheckbox.setChecked(selected);
+      @Override void bind(Layer layer, boolean isVisible) {
+        mCheckbox.setOnCheckedChangeListener(null);
+        mCheckbox.setChecked(isVisible);
         mTextView.setText(layer.getName());
 
         mCheckbox.setOnCheckedChangeListener(
@@ -314,14 +298,14 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     }
 
     abstract class ViewHolder extends RecyclerView.ViewHolder {
-      protected OnLayerCheckedChangedListener mOnLayerCheckedChangedListener;
+      OnLayerCheckedChangedListener mOnLayerCheckedChangedListener;
 
       ViewHolder(@NonNull View itemView, OnLayerCheckedChangedListener onLayerCheckedChangedListener) {
         super(itemView);
         mOnLayerCheckedChangedListener = onLayerCheckedChangedListener;
       }
 
-      abstract void bind(Layer layer, boolean selected);
+      abstract void bind(Layer layer, boolean isVisible);
     }
   }
 }
