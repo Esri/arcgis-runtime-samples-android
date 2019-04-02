@@ -32,6 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
@@ -162,12 +163,20 @@ public class MainActivity extends AppCompatActivity {
 
   private class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder> {
 
+    private static final int VIEW_TYPE_PARENT = 0;
+    private static final int VIEW_TYPE_LAYER = 1;
+
     private List<Layer> mLayers = new ArrayList<>();
     private List<Layer> mSelectedLayers = new ArrayList<>();
 
     @NonNull @Override public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-      return new ViewHolder(
-          LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_layer, viewGroup, false));
+      if (getItemViewType(i) == VIEW_TYPE_PARENT) {
+        return new ParentViewHolder(
+            LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_parent, viewGroup, false));
+      } else {
+        return new ChildViewHolder(
+            LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_layer, viewGroup, false));
+      }
     }
 
     @Override public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
@@ -175,8 +184,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override public int getItemViewType(int position) {
-
-      return super.getItemViewType(position);
+      if (mLayers.get(position) instanceof GroupLayer) {
+        return VIEW_TYPE_PARENT;
+      } else {
+        return VIEW_TYPE_LAYER;
+      }
     }
 
     @Override public int getItemCount() {
@@ -187,25 +199,75 @@ public class MainActivity extends AppCompatActivity {
       if (!mLayers.contains(layer)) {
         mLayers.add(layer);
         mSelectedLayers.add(layer);
+
+        if (layer instanceof GroupLayer) {
+          if (((GroupLayer) layer).isShowChildrenInLegend()) {
+            mSelectedLayers.addAll(((GroupLayer) layer).getLayers());
+          }
+        }
+
         notifyItemInserted(mLayers.size() - 1);
       }
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ParentViewHolder extends ViewHolder {
+
+      private CheckBox mParentCheckbox;
+      private TextView mParentTextView;
+      private final ViewGroup mChildLayout;
+
+      ParentViewHolder(@NonNull View itemView) {
+        super(itemView);
+        mParentCheckbox = itemView.findViewById(R.id.layerCheckbox);
+        mParentTextView = itemView.findViewById(R.id.layerNameTextView);
+        mChildLayout = itemView.findViewById(R.id.childLayout);
+      }
+
+      @Override void bind(Layer layer, boolean selected) {
+        mParentCheckbox.setChecked(selected);
+        mParentTextView.setText(layer.getName());
+
+        if (((GroupLayer) layer).isShowChildrenInLegend()) {
+          for (Layer childLayer : ((GroupLayer) layer).getLayers()) {
+            childLayer.addDoneLoadingListener(() -> {
+              View view = LayoutInflater.from(itemView.getContext())
+                  .inflate(R.layout.adapter_item_layer, mChildLayout, false);
+              ((LinearLayout.LayoutParams) view.getLayoutParams()).setMarginStart(
+                  itemView.getResources().getDimensionPixelSize(R.dimen.adapter_item_child_margin_start));
+              ((CheckBox) view.findViewById(R.id.layerCheckbox)).setChecked(mSelectedLayers.contains(layer));
+              ((TextView) view.findViewById(R.id.layerNameTextView)).setText(childLayer.getName());
+              mChildLayout.addView(view);
+            });
+            childLayer.loadAsync();
+          }
+        }
+      }
+    }
+
+    class ChildViewHolder extends ViewHolder {
 
       private CheckBox mCheckbox;
       private TextView mTextView;
 
-      public ViewHolder(@NonNull View itemView) {
+      public ChildViewHolder(@NonNull View itemView) {
         super(itemView);
         mCheckbox = itemView.findViewById(R.id.layerCheckbox);
         mTextView = itemView.findViewById(R.id.layerNameTextView);
       }
 
-      void bind(Layer layer, boolean selected) {
-        mCheckbox.setSelected(selected);
+      @Override void bind(Layer layer, boolean selected) {
+        mCheckbox.setChecked(selected);
         mTextView.setText(layer.getName());
       }
+    }
+
+    abstract class ViewHolder extends RecyclerView.ViewHolder {
+
+      ViewHolder(@NonNull View itemView) {
+        super(itemView);
+      }
+
+      abstract void bind(Layer layer, boolean selected);
     }
   }
 }
