@@ -16,15 +16,23 @@
 
 package com.esri.arcgisruntime.samples.grouplayers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
@@ -47,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
   private SceneView mSceneView;
   private View mBottomSheet;
   private BottomSheetBehavior mBottomSheetBehavior;
+  private RecyclerView mLayersRecyclerView;
+  private LayersAdapter mLayersAdapter;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -54,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
     mSceneView = findViewById(R.id.sceneView);
     mBottomSheet = findViewById(R.id.bottomSheet);
+    mLayersRecyclerView = findViewById(R.id.layersRecyclerView);
+
     mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
@@ -97,6 +109,20 @@ public class MainActivity extends AppCompatActivity {
         }
       });
     }
+
+    setupRecyclerView(scene.getOperationalLayers());
+  }
+
+  private void setupRecyclerView(List<Layer> layers) {
+    mLayersAdapter = new LayersAdapter();
+    mLayersRecyclerView.setAdapter(mLayersAdapter);
+
+    for (Layer layer : layers) {
+      layer.addDoneLoadingListener(() -> {
+        mLayersAdapter.addLayer(layer);
+      });
+      layer.loadAsync();
+    }
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -114,5 +140,72 @@ public class MainActivity extends AppCompatActivity {
       return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  protected void onPause() {
+    mSceneView.pause();
+    super.onPause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mSceneView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    mSceneView.dispose();
+    super.onDestroy();
+  }
+
+  private class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder> {
+
+    private List<Layer> mLayers = new ArrayList<>();
+    private List<Layer> mSelectedLayers = new ArrayList<>();
+
+    @NonNull @Override public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+      return new ViewHolder(
+          LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_layer, viewGroup, false));
+    }
+
+    @Override public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+      viewHolder.bind(mLayers.get(i), mSelectedLayers.contains(mLayers.get(i)));
+    }
+
+    @Override public int getItemViewType(int position) {
+
+      return super.getItemViewType(position);
+    }
+
+    @Override public int getItemCount() {
+      return mLayers.size();
+    }
+
+    void addLayer(Layer layer) {
+      if (!mLayers.contains(layer)) {
+        mLayers.add(layer);
+        mSelectedLayers.add(layer);
+        notifyItemInserted(mLayers.size() - 1);
+      }
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+
+      private CheckBox mCheckbox;
+      private TextView mTextView;
+
+      public ViewHolder(@NonNull View itemView) {
+        super(itemView);
+        mCheckbox = itemView.findViewById(R.id.layerCheckbox);
+        mTextView = itemView.findViewById(R.id.layerNameTextView);
+      }
+
+      void bind(Layer layer, boolean selected) {
+        mCheckbox.setSelected(selected);
+        mTextView.setText(layer.getName());
+      }
+    }
   }
 }
