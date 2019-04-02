@@ -26,6 +26,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,7 +50,7 @@ import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.util.ListenableList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnLayerCheckedChangedListener {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setupRecyclerView(List<Layer> layers) {
-    mLayersAdapter = new LayersAdapter();
+    mLayersAdapter = new LayersAdapter(this);
     mLayersRecyclerView.setAdapter(mLayersAdapter);
 
     for (Layer layer : layers) {
@@ -143,6 +144,10 @@ public class MainActivity extends AppCompatActivity {
     return super.onOptionsItemSelected(item);
   }
 
+  @Override public void layerCheckedChanged(Layer layer, boolean checked) {
+    layer.setVisible(checked);
+  }
+
   @Override
   protected void onPause() {
     mSceneView.pause();
@@ -161,21 +166,31 @@ public class MainActivity extends AppCompatActivity {
     super.onDestroy();
   }
 
-  private class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder> {
+  private class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder>
+      implements OnLayerCheckedChangedListener {
+
+    private final String TAG = LayersAdapter.class.getSimpleName();
 
     private static final int VIEW_TYPE_PARENT = 0;
     private static final int VIEW_TYPE_LAYER = 1;
 
     private List<Layer> mLayers = new ArrayList<>();
     private List<Layer> mSelectedLayers = new ArrayList<>();
+    private OnLayerCheckedChangedListener mOnLayerCheckedChangedListener;
+
+    private LayersAdapter(OnLayerCheckedChangedListener onLayerCheckedChangedListener) {
+      mOnLayerCheckedChangedListener = onLayerCheckedChangedListener;
+    }
 
     @NonNull @Override public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
       if (getItemViewType(i) == VIEW_TYPE_PARENT) {
         return new ParentViewHolder(
-            LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_parent, viewGroup, false));
+            LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_parent, viewGroup, false),
+            this);
       } else {
         return new ChildViewHolder(
-            LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_layer, viewGroup, false));
+            LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_layer, viewGroup, false),
+            this);
       }
     }
 
@@ -210,22 +225,54 @@ public class MainActivity extends AppCompatActivity {
       }
     }
 
+    @Override public void layerCheckedChanged(Layer layer, boolean checked) {
+      Log.d(TAG, layer.getName() + " checked: " + checked);
+      if (!checked) {
+        mSelectedLayers.remove(layer);
+        if (layer instanceof GroupLayer) {
+          mSelectedLayers.removeAll(((GroupLayer) layer).getLayers());
+          notifyItemChanged(mLayers.indexOf(layer));
+        }
+      } else {
+        mSelectedLayers.add(layer);
+        if (layer instanceof GroupLayer) {
+          mSelectedLayers.removeAll(((GroupLayer) layer).getLayers());
+          mSelectedLayers.addAll(((GroupLayer) layer).getLayers());
+          notifyItemChanged(mLayers.indexOf(layer));
+        }
+      }
+      if (mOnLayerCheckedChangedListener != null) {
+        mOnLayerCheckedChangedListener.layerCheckedChanged(layer, checked);
+        if (layer instanceof GroupLayer) {
+          for (Layer childLayer : ((GroupLayer) layer).getLayers()) {
+            mOnLayerCheckedChangedListener.layerCheckedChanged(childLayer, checked);
+          }
+        }
+      }
+    }
+
     class ParentViewHolder extends ViewHolder {
 
       private CheckBox mParentCheckbox;
       private TextView mParentTextView;
       private final ViewGroup mChildLayout;
 
-      ParentViewHolder(@NonNull View itemView) {
-        super(itemView);
+      ParentViewHolder(@NonNull View itemView, OnLayerCheckedChangedListener onLayerCheckedChangedListener) {
+        super(itemView, onLayerCheckedChangedListener);
         mParentCheckbox = itemView.findViewById(R.id.layerCheckbox);
         mParentTextView = itemView.findViewById(R.id.layerNameTextView);
         mChildLayout = itemView.findViewById(R.id.childLayout);
       }
 
       @Override void bind(Layer layer, boolean selected) {
+        mParentCheckbox.setOnCheckedChangeListener(null);
         mParentCheckbox.setChecked(selected);
         mParentTextView.setText(layer.getName());
+
+        mParentCheckbox.setOnCheckedChangeListener(
+            (buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(layer, isChecked));
+
+        mChildLayout.removeAllViews();
 
         if (((GroupLayer) layer).isShowChildrenInLegend()) {
           for (Layer childLayer : ((GroupLayer) layer).getLayers()) {
@@ -235,6 +282,8 @@ public class MainActivity extends AppCompatActivity {
               ((LinearLayout.LayoutParams) view.getLayoutParams()).setMarginStart(
                   itemView.getResources().getDimensionPixelSize(R.dimen.adapter_item_child_margin_start));
               ((CheckBox) view.findViewById(R.id.layerCheckbox)).setChecked(mSelectedLayers.contains(layer));
+              ((CheckBox) view.findViewById(R.id.layerCheckbox)).setOnCheckedChangeListener(
+                  (buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(childLayer, isChecked));
               ((TextView) view.findViewById(R.id.layerNameTextView)).setText(childLayer.getName());
               mChildLayout.addView(view);
             });
@@ -249,8 +298,8 @@ public class MainActivity extends AppCompatActivity {
       private CheckBox mCheckbox;
       private TextView mTextView;
 
-      public ChildViewHolder(@NonNull View itemView) {
-        super(itemView);
+      public ChildViewHolder(@NonNull View itemView, OnLayerCheckedChangedListener onLayerCheckedChangedListener) {
+        super(itemView, onLayerCheckedChangedListener);
         mCheckbox = itemView.findViewById(R.id.layerCheckbox);
         mTextView = itemView.findViewById(R.id.layerNameTextView);
       }
@@ -258,16 +307,25 @@ public class MainActivity extends AppCompatActivity {
       @Override void bind(Layer layer, boolean selected) {
         mCheckbox.setChecked(selected);
         mTextView.setText(layer.getName());
+
+        mCheckbox.setOnCheckedChangeListener(
+            (buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(layer, isChecked));
       }
     }
 
     abstract class ViewHolder extends RecyclerView.ViewHolder {
+      protected OnLayerCheckedChangedListener mOnLayerCheckedChangedListener;
 
-      ViewHolder(@NonNull View itemView) {
+      ViewHolder(@NonNull View itemView, OnLayerCheckedChangedListener onLayerCheckedChangedListener) {
         super(itemView);
+        mOnLayerCheckedChangedListener = onLayerCheckedChangedListener;
       }
 
       abstract void bind(Layer layer, boolean selected);
     }
   }
+}
+
+interface OnLayerCheckedChangedListener {
+  void layerCheckedChanged(Layer layer, boolean checked);
 }
