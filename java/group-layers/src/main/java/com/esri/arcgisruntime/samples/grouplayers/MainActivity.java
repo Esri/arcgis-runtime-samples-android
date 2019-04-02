@@ -53,8 +53,6 @@ import com.esri.arcgisruntime.util.ListenableList;
 
 public class MainActivity extends AppCompatActivity implements OnLayerCheckedChangedListener {
 
-  private static final String TAG = MainActivity.class.getSimpleName();
-
   private SceneView mSceneView;
   private BottomSheetBehavior mBottomSheetBehavior;
   private RecyclerView mLayersRecyclerView;
@@ -135,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     mLayersRecyclerView.setAdapter(mLayersAdapter);
 
     for (Layer layer : layers) {
+      // if layer can be shown in legend
       if (layer.canShowInLegend()) {
         layer.addDoneLoadingListener(() -> {
           mLayersAdapter.addLayer(layer);
@@ -265,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
       if (mOnLayerCheckedChangedListener != null) {
         mOnLayerCheckedChangedListener.layerCheckedChanged(layer, checked);
       }
-      notifyItemChanged(mLayers.indexOf(layer));
+      notifyDataSetChanged();
     }
 
     /**
@@ -292,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
         mParentCheckbox.setOnCheckedChangeListener(
             (buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(layer, isChecked));
 
-        // if children can be shown
+        // if children can be shown in legend
         if (((GroupLayer) layer).isShowChildrenInLegend()) {
           for (Layer childLayer : ((GroupLayer) layer).getLayers()) {
             // if the layer has not been loaded
