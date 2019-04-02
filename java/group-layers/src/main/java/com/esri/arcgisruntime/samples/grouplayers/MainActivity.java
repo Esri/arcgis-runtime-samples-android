@@ -146,6 +146,11 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
 
   @Override public void layerCheckedChanged(Layer layer, boolean checked) {
     layer.setVisible(checked);
+    if (layer instanceof GroupLayer) {
+      for (Layer childLayer : ((GroupLayer) layer).getLayers()) {
+        childLayer.setVisible(checked);
+      }
+    }
   }
 
   @Override
@@ -217,13 +222,6 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     }
 
     @Override public void layerCheckedChanged(Layer layer, boolean checked) {
-      if (layer instanceof GroupLayer) {
-        for (Layer childLayer : ((GroupLayer) layer).getLayers()) {
-          childLayer.setVisible(checked);
-        }
-      }
-      notifyItemChanged(mLayers.indexOf(layer));
-
       if (mOnLayerCheckedChangedListener != null) {
         if (layer instanceof GroupLayer) {
           for (Layer childLayer : ((GroupLayer) layer).getLayers()) {
@@ -232,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
         }
         mOnLayerCheckedChangedListener.layerCheckedChanged(layer, checked);
       }
+      notifyItemChanged(mLayers.indexOf(layer));
     }
 
     class ParentViewHolder extends ViewHolder {
