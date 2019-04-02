@@ -113,6 +113,11 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     setupRecyclerView(scene.getOperationalLayers());
   }
 
+  /**
+   * Setup {@link RecyclerView} to display layers
+   *
+   * @param layers
+   */
   private void setupRecyclerView(List<Layer> layers) {
     mLayersAdapter = new LayersAdapter(this);
     mLayersRecyclerView.setAdapter(mLayersAdapter);
@@ -134,9 +139,12 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.action_show_layer_list) {
+      // if bottom sheet is not shown
       if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+        // show bottom sheet
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
       } else {
+        // hide bottom sheet
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
       }
       return true;
@@ -144,6 +152,12 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     return super.onOptionsItemSelected(item);
   }
 
+  /**
+   * Called when a checkbox on a layer in the list is checked or unchecked
+   *
+   * @param layer   that has been checked or unchecked
+   * @param checked whether the checkbox has been checked or unchecked
+   */
   @Override public void layerCheckedChanged(Layer layer, boolean checked) {
     layer.setVisible(checked);
     if (layer instanceof GroupLayer) {
@@ -171,10 +185,11 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     super.onDestroy();
   }
 
+  /**
+   * An adapter that displays {@link Layer}s and their children if they are an instance of {@link GroupLayer}
+   */
   private class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder>
       implements OnLayerCheckedChangedListener {
-
-    private final String TAG = LayersAdapter.class.getSimpleName();
 
     private static final int VIEW_TYPE_PARENT = 0;
     private static final int VIEW_TYPE_LAYER = 1;
@@ -187,11 +202,13 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     }
 
     @NonNull @Override public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+      // inflate the layout for a GroupLayer
       if (getItemViewType(i) == VIEW_TYPE_PARENT) {
         return new ParentViewHolder(
             LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_parent, viewGroup, false),
             this);
       } else {
+        // inflate the layout for a Layer
         return new LayerViewHolder(
             LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_layer, viewGroup, false),
             this);
@@ -214,6 +231,11 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
       return mLayers.size();
     }
 
+    /**
+     * Add a {@link Layer} to the adapter
+     *
+     * @param layer
+     */
     void addLayer(Layer layer) {
       if (!mLayers.contains(layer)) {
         mLayers.add(layer);
@@ -221,18 +243,22 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
       }
     }
 
+    /**
+     * Called when a checkbox on a layer in the list is checked or unchecked
+     *
+     * @param layer   that has been checked or unchecked
+     * @param checked whether the checkbox has been checked or unchecked
+     */
     @Override public void layerCheckedChanged(Layer layer, boolean checked) {
       if (mOnLayerCheckedChangedListener != null) {
-        if (layer instanceof GroupLayer) {
-          for (Layer childLayer : ((GroupLayer) layer).getLayers()) {
-            mOnLayerCheckedChangedListener.layerCheckedChanged(childLayer, checked);
-          }
-        }
         mOnLayerCheckedChangedListener.layerCheckedChanged(layer, checked);
       }
       notifyItemChanged(mLayers.indexOf(layer));
     }
 
+    /**
+     * Subclass of {@link ViewHolder} to display {@link View}s related to {@link GroupLayer}s and their children {@link Layer}s
+     */
     class ParentViewHolder extends ViewHolder {
 
       private CheckBox mParentCheckbox;
@@ -254,27 +280,57 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
         mParentCheckbox.setOnCheckedChangeListener(
             (buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(layer, isChecked));
 
-        mChildLayout.removeAllViews();
-
+        // if children can be shown
         if (((GroupLayer) layer).isShowChildrenInLegend()) {
           for (Layer childLayer : ((GroupLayer) layer).getLayers()) {
-            childLayer.addDoneLoadingListener(() -> {
-              View view = LayoutInflater.from(itemView.getContext())
-                  .inflate(R.layout.adapter_item_layer, mChildLayout, false);
-              ((LinearLayout.LayoutParams) view.getLayoutParams()).setMarginStart(
-                  itemView.getResources().getDimensionPixelSize(R.dimen.adapter_item_child_margin_start));
-              ((CheckBox) view.findViewById(R.id.layerCheckbox)).setChecked(layer.isVisible());
-              ((CheckBox) view.findViewById(R.id.layerCheckbox)).setOnCheckedChangeListener(
-                  (buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(childLayer, isChecked));
-              ((TextView) view.findViewById(R.id.layerNameTextView)).setText(childLayer.getName());
-              mChildLayout.addView(view);
-            });
-            childLayer.loadAsync();
+            // if the layer has not been loaded
+            if (childLayer.getLoadStatus() != LoadStatus.LOADED) {
+              // add a listener to run when the layer has been loaded
+              childLayer.addDoneLoadingListener(() -> {
+                addChildLayer(childLayer);
+              });
+              // load layer
+              childLayer.loadAsync();
+            } else {
+              addChildLayer(childLayer);
+            }
           }
+        }
+      }
+
+      /**
+       * Add a {@link View} showing the child {@link Layer} of the {@link GroupLayer}
+       *
+       * @param childLayer layer to display
+       */
+      private void addChildLayer(Layer childLayer) {
+        View view;
+
+        // try to reuse the View if possible
+        if (mChildLayout.findViewWithTag(childLayer) == null) {
+          view = LayoutInflater.from(itemView.getContext())
+              .inflate(R.layout.adapter_item_layer, mChildLayout, false);
+          view.setTag(childLayer);
+        } else {
+          view = mChildLayout.findViewWithTag(childLayer);
+        }
+
+        ((LinearLayout.LayoutParams) view.getLayoutParams()).setMarginStart(
+            itemView.getResources().getDimensionPixelSize(R.dimen.adapter_item_child_margin_start));
+        ((CheckBox) view.findViewById(R.id.layerCheckbox)).setOnCheckedChangeListener(null);
+        ((CheckBox) view.findViewById(R.id.layerCheckbox)).setChecked(childLayer.isVisible());
+        ((CheckBox) view.findViewById(R.id.layerCheckbox)).setOnCheckedChangeListener(
+            (buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(childLayer, isChecked));
+        ((TextView) view.findViewById(R.id.layerNameTextView)).setText(childLayer.getName());
+        if (mChildLayout.findViewWithTag(childLayer) == null) {
+          mChildLayout.addView(view);
         }
       }
     }
 
+    /**
+     * Subclass of {@link ViewHolder} to display {@link View}s related to a {@link Layer}
+     */
     class LayerViewHolder extends ViewHolder {
 
       private CheckBox mCheckbox;
