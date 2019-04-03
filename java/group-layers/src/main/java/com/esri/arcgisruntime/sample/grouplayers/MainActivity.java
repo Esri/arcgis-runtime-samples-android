@@ -92,16 +92,11 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     scene.setBaseSurface(surface);
 
     // create different types of layers
-    ArcGISSceneLayer devOne = new ArcGISSceneLayer(
-        "https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/DevA_Trees/SceneServer/layers/0");
-    ArcGISSceneLayer devTwo = new ArcGISSceneLayer(
-        "https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/DevA_Pathways/SceneServer/layers/0");
-    ArcGISSceneLayer devThree = new ArcGISSceneLayer(
-        "https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/DevA_BuildingShell_Textured/SceneServer/layers/0");
-    ArcGISSceneLayer nonDevOne = new ArcGISSceneLayer(
-        "https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/PlannedDemo_BuildingShell/SceneServer/layers/0");
-    FeatureLayer nonDevTwo = new FeatureLayer(new ServiceFeatureTable(
-        "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/DevelopmentProjectArea/FeatureServer/0"));
+    ArcGISSceneLayer devOne = new ArcGISSceneLayer(getString(R.string.layer_dev_one));
+    ArcGISSceneLayer devTwo = new ArcGISSceneLayer(getString(R.string.layer_dev_two));
+    ArcGISSceneLayer devThree = new ArcGISSceneLayer(getString(R.string.layer_dev_three));
+    ArcGISSceneLayer nonDevOne = new ArcGISSceneLayer(getString(R.string.layer_non_dev_one));
+    FeatureLayer nonDevTwo = new FeatureLayer(new ServiceFeatureTable(getString(R.string.layer_non_dev_two)));
 
     // create a group layer from scratch by adding the layers as children
     GroupLayer groupLayer = new GroupLayer();
