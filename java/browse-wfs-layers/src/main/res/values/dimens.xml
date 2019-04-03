@@ -4,4 +4,5 @@
     <dimen name="adapter_item_layer_padding_vert">4dp</dimen>
     <dimen name="adapter_item_layer_padding_horz">8dp</dimen>
     <dimen name="adapter_item_layer_name_text_size">22sp</dimen>
+    <dimen name="loading_text_size">14sp</dimen>
 </resources>

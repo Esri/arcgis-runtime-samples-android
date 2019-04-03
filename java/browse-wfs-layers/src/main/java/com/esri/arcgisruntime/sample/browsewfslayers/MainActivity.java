@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.browsewfslayers;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -32,6 +33,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.data.FeatureQueryResult;
 import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
   private MapView mMapView;
   private RecyclerView mLayersRecyclerView;
+  private View mLoadingView;
   private BottomSheetBehavior<View> mBottomSheetBehavior;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     mMapView = findViewById(R.id.mapView);
     mLayersRecyclerView = findViewById(R.id.layersRecyclerView);
+    mLoadingView = findViewById(R.id.loadingView);
 
     View bottomSheet = findViewById(R.id.bottomSheet);
     mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -97,7 +102,11 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
   @Override public void onItemSelected(WfsLayerInfo layer) {
     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    mLoadingView.setVisibility(View.VISIBLE);
+    updateMap(layer);
+  }
 
+  private void updateMap(WfsLayerInfo layer) {
     // clear existing layers
     mMapView.getMap().getOperationalLayers().clear();
 
@@ -107,21 +116,34 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     // set the table's feature request mode
     featureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE);
 
-    // TODO axis order
+    ListenableFuture<FeatureQueryResult> featureQueryResultFuture = featureTable
+        .populateFromServiceAsync(new QueryParameters(), false, null);
 
-    featureTable.populateFromServiceAsync(new QueryParameters(), false, null);
+    new Thread(() -> {
+      try {
+        FeatureQueryResult featureQueryResult = featureQueryResultFuture.get();
 
-    // create a layer from the table
-    FeatureLayer featureLayer = new FeatureLayer(featureTable);
+        // create a layer from the table
+        FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
-    // set a renderer for the table
-    featureLayer.setRenderer(getRandomRendererForTable(featureTable));
+        // set a renderer for the table
+        featureLayer.setRenderer(getRandomRendererForTable(featureTable));
 
-    // add the layer to the map
-    mMapView.getMap().getOperationalLayers().add(featureLayer);
+        runOnUiThread(() -> {
+          // add the layer to the map
+          mMapView.getMap().getOperationalLayers().add(featureLayer);
 
-    // zoom to the extent of the layer
-    mMapView.setViewpointGeometryAsync(layer.getExtent(), 50);
+          // zoom to the extent of the layer
+          mMapView.setViewpointGeometryAsync(layer.getExtent(), 50);
+        });
+      } catch (InterruptedException | ExecutionException e) {
+        runOnUiThread(
+            () -> logErrorToUser(
+                getString(R.string.error_feature_table_populate_from_service_failure, e.getMessage())));
+      } finally {
+        runOnUiThread(() -> mLoadingView.setVisibility(View.GONE));
+      }
+    }).start();
   }
 
   private Renderer getRandomRendererForTable(FeatureTable table) {
@@ -131,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
       return new SimpleRenderer(
           new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, getRandomColor(random, 255), 2));
     } else if (table.getGeometryType() == GeometryType.POLYGON || table.getGeometryType() == GeometryType.ENVELOPE) {
-      return new SimpleRenderer(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, getRandomColor(random, 180), null));
+      return new SimpleRenderer(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, getRandomColor(random, 255), null));
     } else {
       return new SimpleRenderer(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, getRandomColor(random, 255), 1));
     }
