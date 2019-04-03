@@ -34,6 +34,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
 import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.data.QueryParameters;
@@ -119,9 +120,10 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     ListenableFuture<FeatureQueryResult> featureQueryResultFuture = featureTable
         .populateFromServiceAsync(new QueryParameters(), false, null);
 
+    // perform blocking task on a different thread to allow UI to remain responsive
     new Thread(() -> {
       try {
-        FeatureQueryResult featureQueryResult = featureQueryResultFuture.get();
+        featureQueryResultFuture.get();
 
         // create a layer from the table
         FeatureLayer featureLayer = new FeatureLayer(featureTable);
@@ -146,29 +148,38 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     }).start();
   }
 
+  /**
+   * Create a {@link SimpleRenderer} to render the {@link Feature}s in the {@link FeatureLayer}
+   *
+   * @param table containing the data
+   * @return a {@link SimpleRenderer} to render the features
+   */
   private Renderer getRandomRendererForTable(FeatureTable table) {
-    Random random = new Random();
-
     if (table.getGeometryType() == GeometryType.POINT || table.getGeometryType() == GeometryType.MULTIPOINT) {
       return new SimpleRenderer(
-          new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, getRandomColor(random, 255), 2));
+          new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, getRandomColor(), 2));
     } else if (table.getGeometryType() == GeometryType.POLYGON || table.getGeometryType() == GeometryType.ENVELOPE) {
-      return new SimpleRenderer(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, getRandomColor(random, 255), null));
+      return new SimpleRenderer(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, getRandomColor(), null));
     } else {
-      return new SimpleRenderer(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, getRandomColor(random, 255), 1));
+      return new SimpleRenderer(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, getRandomColor(), 1));
     }
   }
 
-  private int getRandomColor(Random random, int alpha) {
-    return Color.argb(alpha, random.nextInt(256), random.nextInt(256), random.nextInt(256));
+  private int getRandomColor() {
+    Random random = new Random();
+    return Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
   }
 
+  /**
+   * Setup {@link RecyclerView} with an adapter and add {@link WfsLayerInfo}s to the adapter
+   *
+   * @param layers to display in adapter
+   */
   private void setupRecyclerView(List<WfsLayerInfo> layers) {
     LayersAdapter layersAdapter = new LayersAdapter(this);
     mLayersRecyclerView.setAdapter(layersAdapter);
 
     for (WfsLayerInfo layer : layers) {
-      // if layer can be shown in legend
       layersAdapter.addLayer(layer);
     }
   }
