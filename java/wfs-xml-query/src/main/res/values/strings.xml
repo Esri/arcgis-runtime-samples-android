@@ -5,6 +5,6 @@
     <string name="wfs_feature_table_table_name">Seattle_Downtown_Features:Trees</string>
 
     <string name="xml_query_file_name">query.xml</string>
-    
+
     <string name="error_reading_xml_file">Error reading XML query file: %s</string>
 </resources>

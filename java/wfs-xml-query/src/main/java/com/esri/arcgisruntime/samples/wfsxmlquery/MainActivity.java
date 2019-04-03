@@ -79,13 +79,14 @@ public class MainActivity extends AppCompatActivity {
           try {
             featureQueryResultFuture.get();
 
-            // Create a feature layer to visualize the table.
+            // create a feature layer to visualize the table.
             FeatureLayer statesLayer = new FeatureLayer(statesTable);
 
             runOnUiThread(() -> {
-              // Add the layer to the map.
+              // add the layer to the map.
               mMapView.getMap().getOperationalLayers().add(statesLayer);
 
+              // set the viewpoint of the map view to the extent reported by the feature layer
               mMapView.setViewpointGeometryAsync(statesLayer.getFullExtent(), 50);
             });
           } catch (InterruptedException | ExecutionException e) {
