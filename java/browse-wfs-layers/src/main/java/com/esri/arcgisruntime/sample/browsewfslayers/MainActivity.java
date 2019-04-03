@@ -17,7 +17,9 @@
 package com.esri.arcgisruntime.sample.browsewfslayers;
 
 import java.util.List;
+import java.util.Random;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -30,13 +32,24 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.esri.arcgisruntime.data.FeatureTable;
+import com.esri.arcgisruntime.data.QueryParameters;
+import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.geometry.GeometryType;
+import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.ogc.wfs.WfsFeatureTable;
 import com.esri.arcgisruntime.ogc.wfs.WfsLayerInfo;
 import com.esri.arcgisruntime.ogc.wfs.WfsService;
+import com.esri.arcgisruntime.symbology.Renderer;
+import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
+import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+import com.esri.arcgisruntime.symbology.SimpleRenderer;
 
 public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
 
@@ -84,7 +97,48 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
   @Override public void onItemSelected(WfsLayerInfo layer) {
     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-    Toast.makeText(this, layer.getTitle(), Toast.LENGTH_SHORT).show();
+
+    // clear existing layers
+    mMapView.getMap().getOperationalLayers().clear();
+
+    // create feature table
+    WfsFeatureTable featureTable = new WfsFeatureTable(layer);
+
+    // set the table's feature request mode
+    featureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE);
+
+    // TODO axis order
+
+    featureTable.populateFromServiceAsync(new QueryParameters(), false, null);
+
+    // create a layer from the table
+    FeatureLayer featureLayer = new FeatureLayer(featureTable);
+
+    // set a renderer for the table
+    featureLayer.setRenderer(getRandomRendererForTable(featureTable));
+
+    // add the layer to the map
+    mMapView.getMap().getOperationalLayers().add(featureLayer);
+
+    // zoom to the extent of the layer
+    mMapView.setViewpointGeometryAsync(layer.getExtent(), 50);
+  }
+
+  private Renderer getRandomRendererForTable(FeatureTable table) {
+    Random random = new Random();
+
+    if (table.getGeometryType() == GeometryType.POINT || table.getGeometryType() == GeometryType.MULTIPOINT) {
+      return new SimpleRenderer(
+          new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, getRandomColor(random, 255), 2));
+    } else if (table.getGeometryType() == GeometryType.POLYGON || table.getGeometryType() == GeometryType.ENVELOPE) {
+      return new SimpleRenderer(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, getRandomColor(random, 180), null));
+    } else {
+      return new SimpleRenderer(new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, getRandomColor(random, 255), 1));
+    }
+  }
+
+  private int getRandomColor(Random random, int alpha) {
+    return Color.argb(alpha, random.nextInt(256), random.nextInt(256), random.nextInt(256));
   }
 
   private void setupRecyclerView(List<WfsLayerInfo> layers) {
@@ -120,5 +174,23 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
   private void logErrorToUser(String error) {
     Toast.makeText(this, error, Toast.LENGTH_LONG).show();
     Log.e(TAG, error);
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onPause() {
+    mMapView.pause();
+    super.onPause();
+  }
+
+  @Override
+  protected void onDestroy() {
+    mMapView.dispose();
+    super.onDestroy();
   }
 }
