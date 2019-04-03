@@ -31,6 +31,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -46,6 +47,7 @@ import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.ogc.wfs.OgcAxisOrder;
 import com.esri.arcgisruntime.ogc.wfs.WfsFeatureTable;
 import com.esri.arcgisruntime.ogc.wfs.WfsLayerInfo;
 import com.esri.arcgisruntime.ogc.wfs.WfsService;
@@ -60,15 +62,19 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
+  private CheckBox mAxisCheckbox;
   private RecyclerView mLayersRecyclerView;
   private View mLoadingView;
   private BottomSheetBehavior<View> mBottomSheetBehavior;
+
+  private WfsLayerInfo mSelectedWfsLayerInfo;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
     mMapView = findViewById(R.id.mapView);
+    mAxisCheckbox = findViewById(R.id.axisCheckbox);
     mLayersRecyclerView = findViewById(R.id.layersRecyclerView);
     mLoadingView = findViewById(R.id.loadingView);
 
@@ -83,6 +89,12 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
           return true;
         }
         return super.onTouch(view, motionEvent);
+      }
+    });
+
+    mAxisCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+      if (mSelectedWfsLayerInfo != null) {
+        updateMap(mSelectedWfsLayerInfo);
       }
     });
 
@@ -102,17 +114,21 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
   }
 
   @Override public void onItemSelected(WfsLayerInfo wfsLayerInfo) {
-    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-    mLoadingView.setVisibility(View.VISIBLE);
+    mSelectedWfsLayerInfo = wfsLayerInfo;
     updateMap(wfsLayerInfo);
   }
 
   private void updateMap(WfsLayerInfo wfsLayerInfo) {
+    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    mLoadingView.setVisibility(View.VISIBLE);
+
     // clear existing layer infos
     mMapView.getMap().getOperationalLayers().clear();
 
     // create feature table
     WfsFeatureTable featureTable = new WfsFeatureTable(wfsLayerInfo);
+
+    featureTable.setAxisOrder(mAxisCheckbox.isChecked() ? OgcAxisOrder.SWAP : OgcAxisOrder.NO_SWAP);
 
     // set the table's feature request mode
     featureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE);
@@ -136,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
           mMapView.getMap().getOperationalLayers().add(featureLayer);
 
           // zoom to the extent of the layer
-          mMapView.setViewpointGeometryAsync(wfsLayerInfo.getExtent(), 50);
+          mMapView.setViewpointGeometryAsync(featureLayer.getFullExtent(), 50);
         });
       } catch (InterruptedException | ExecutionException e) {
         runOnUiThread(
