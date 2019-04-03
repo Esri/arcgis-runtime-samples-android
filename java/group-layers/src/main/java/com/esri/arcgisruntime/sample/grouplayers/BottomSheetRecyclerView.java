@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.esri.arcgisruntime.samples.grouplayers;
+package com.esri.arcgisruntime.sample.grouplayers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

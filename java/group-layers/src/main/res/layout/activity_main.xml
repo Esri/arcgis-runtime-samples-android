@@ -18,7 +18,7 @@
         app:behavior_hideable="true"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-        <com.esri.arcgisruntime.samples.grouplayers.BottomSheetRecyclerView
+        <com.esri.arcgisruntime.sample.grouplayers.BottomSheetRecyclerView
             android:id="@+id/layersRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
