@@ -6,7 +6,7 @@
     <string name="action_show_layer_list">Show layer list</string>
     <string name="loading_text">Populating Feature Table...</string>
     <string name="axis_checkbox_text">Swap coordinate order</string>
-    
+
     <string name="error_wfs_service_load_failure">WFS Service failed to load: %s</string>
     <string name="coordinate_order_checkbox_text">Swap coordinate order</string>
     <string name="error_feature_table_populate_from_service_failure">Unable to populate Feature Table from service: %s</string>

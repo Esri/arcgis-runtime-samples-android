@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
   private Renderer getRandomRendererForTable(FeatureTable table) {
     if (table.getGeometryType() == GeometryType.POINT || table.getGeometryType() == GeometryType.MULTIPOINT) {
       return new SimpleRenderer(
-          new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, getRandomColor(), 2));
+          new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, getRandomColor(), 8));
     } else if (table.getGeometryType() == GeometryType.POLYGON || table.getGeometryType() == GeometryType.ENVELOPE) {
       return new SimpleRenderer(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, getRandomColor(), null));
     } else {
