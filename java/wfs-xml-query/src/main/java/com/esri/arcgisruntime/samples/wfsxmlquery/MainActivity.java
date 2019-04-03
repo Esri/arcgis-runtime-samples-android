@@ -39,6 +39,8 @@ import com.esri.arcgisruntime.ogc.wfs.WfsFeatureTable;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
+
   private MapView mMapView;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,34 +67,40 @@ public class MainActivity extends AppCompatActivity {
       try {
         xmlQuery = loadQueryFromAssets();
       } catch (IOException e) {
-        String error = "Error reading XML query file file: " + e.getMessage();
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        Log.e(MainActivity.class.getSimpleName(), error);
+        logErrorToUser(getString(R.string.error_reading_xml_file, e.getMessage()));
       }
 
-      ListenableFuture<FeatureQueryResult> featureQueryResultFuture = statesTable
-          .populateFromServiceAsync(xmlQuery, true);
+      if (xmlQuery != null) {
+        ListenableFuture<FeatureQueryResult> featureQueryResultFuture = statesTable
+            .populateFromServiceAsync(xmlQuery, true);
 
-      new Thread(() -> {
-        try {
-          featureQueryResultFuture.get();
+        // perform blocking task on a different thread to perform map operations after feature table has been populated
+        new Thread(() -> {
+          try {
+            featureQueryResultFuture.get();
 
-          // Create a feature layer to visualize the table.
-          FeatureLayer statesLayer = new FeatureLayer(statesTable);
+            // Create a feature layer to visualize the table.
+            FeatureLayer statesLayer = new FeatureLayer(statesTable);
 
-          runOnUiThread(() -> {
-            // Add the layer to the map.
-            mMapView.getMap().getOperationalLayers().add(statesLayer);
+            runOnUiThread(() -> {
+              // Add the layer to the map.
+              mMapView.getMap().getOperationalLayers().add(statesLayer);
 
-            mMapView.setViewpointGeometryAsync(statesLayer.getFullExtent(), 50);
-          });
-        } catch (InterruptedException | ExecutionException e) {
-          e.printStackTrace();
-        }
-      }).start();
+              mMapView.setViewpointGeometryAsync(statesLayer.getFullExtent(), 50);
+            });
+          } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+          }
+        }).start();
+      }
     });
 
     statesTable.loadAsync();
+  }
+
+  private void logErrorToUser(String error) {
+    Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    Log.e(TAG, error);
   }
 
   private String loadQueryFromAssets() throws IOException {
