@@ -36,8 +36,8 @@ public class BottomSheetRecyclerView extends RecyclerView {
   /**
    * Intercept touch events and determine if {@link RecyclerView} should grab touch event to allow scrolling of RecyclerView
    * within Bottom Sheet
-   * @param e
-   * @return
+   * @param e event intercepted
+   * @return return true to consume the event, false otherwise
    */
   @Override public boolean onInterceptTouchEvent(MotionEvent e) {
     if (e.getAction() == MotionEvent.ACTION_SCROLL && canScrollVertically(1)) {
