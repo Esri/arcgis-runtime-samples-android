@@ -31,50 +31,50 @@ import com.esri.arcgisruntime.ogc.wfs.WfsLayerInfo;
 /**
  * An adapter that displays {@link WfsLayerInfo}s
  */
-public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder> implements OnItemSelectedListener {
+public class WfsLayerInfoAdapter extends RecyclerView.Adapter<WfsLayerInfoAdapter.ViewHolder> implements OnItemSelectedListener {
 
   private final OnItemSelectedListener mOnItemSelectedListener;
 
-  private List<WfsLayerInfo> mLayers = new ArrayList<>();
-  private WfsLayerInfo mSelectedLayer;
+  private List<WfsLayerInfo> mWfsLayerInfos = new ArrayList<>();
+  private WfsLayerInfo mSelectedWfsLayerInfo;
 
-  LayersAdapter(OnItemSelectedListener onItemSelectedListener) {
+  WfsLayerInfoAdapter(OnItemSelectedListener onItemSelectedListener) {
     mOnItemSelectedListener = onItemSelectedListener;
   }
 
   @NonNull @Override public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-    // inflate the layout for a Layer
+    // inflate the layout for a WfsLayerInfo
     return new ViewHolder(
         LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_layer, viewGroup, false));
   }
 
   @Override public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-    viewHolder.bind(mLayers.get(i), mSelectedLayer == mLayers.get(i), this);
+    viewHolder.bind(mWfsLayerInfos.get(i), mSelectedWfsLayerInfo == mWfsLayerInfos.get(i), this);
   }
 
   @Override public int getItemCount() {
-    return mLayers.size();
+    return mWfsLayerInfos.size();
   }
 
   /**
    * Add a {@link WfsLayerInfo} to the adapter
    *
-   * @param layer
+   * @param wfsLayerInfo to display
    */
-  void addLayer(WfsLayerInfo layer) {
-    if (!mLayers.contains(layer)) {
-      mLayers.add(layer);
-      notifyItemInserted(mLayers.size() - 1);
+  void addLayer(WfsLayerInfo wfsLayerInfo) {
+    if (!mWfsLayerInfos.contains(wfsLayerInfo)) {
+      mWfsLayerInfos.add(wfsLayerInfo);
+      notifyItemInserted(mWfsLayerInfos.size() - 1);
     }
   }
 
-  @Override public void onItemSelected(WfsLayerInfo layer) {
-    int previousSelectedIndex = mLayers.indexOf(mSelectedLayer);
-    mSelectedLayer = layer;
+  @Override public void onItemSelected(WfsLayerInfo wfsLayerInfo) {
+    int previousSelectedIndex = mWfsLayerInfos.indexOf(mSelectedWfsLayerInfo);
+    mSelectedWfsLayerInfo = wfsLayerInfo;
     notifyItemChanged(previousSelectedIndex);
-    notifyItemChanged(mLayers.indexOf(layer));
+    notifyItemChanged(mWfsLayerInfos.indexOf(wfsLayerInfo));
     if (mOnItemSelectedListener != null) {
-      mOnItemSelectedListener.onItemSelected(layer);
+      mOnItemSelectedListener.onItemSelected(wfsLayerInfo);
     }
   }
 
@@ -90,18 +90,18 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
       mTextView = itemView.findViewById(R.id.layerNameTextView);
     }
 
-    void bind(WfsLayerInfo layer, boolean selected, OnItemSelectedListener onItemSelectedListener) {
-      mTextView.setText(layer.getTitle());
+    void bind(WfsLayerInfo wfsLayerInfo, boolean selected, OnItemSelectedListener onItemSelectedListener) {
+      mTextView.setText(wfsLayerInfo.getTitle());
 
       itemView.setBackgroundColor(selected ?
           itemView.getResources().getColor(R.color.colorPrimaryDark) :
           itemView.getResources().getColor(R.color.colorPrimary));
 
-      itemView.setOnClickListener(v -> onItemSelectedListener.onItemSelected(layer));
+      itemView.setOnClickListener(v -> onItemSelectedListener.onItemSelected(wfsLayerInfo));
     }
   }
 }
 
 interface OnItemSelectedListener {
-  void onItemSelected(WfsLayerInfo layer);
+  void onItemSelected(WfsLayerInfo wfsLayerInfo);
 }

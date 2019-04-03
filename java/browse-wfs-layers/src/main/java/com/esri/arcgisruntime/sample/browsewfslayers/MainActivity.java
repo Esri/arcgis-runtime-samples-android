@@ -101,18 +101,18 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     service.loadAsync();
   }
 
-  @Override public void onItemSelected(WfsLayerInfo layer) {
+  @Override public void onItemSelected(WfsLayerInfo wfsLayerInfo) {
     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     mLoadingView.setVisibility(View.VISIBLE);
-    updateMap(layer);
+    updateMap(wfsLayerInfo);
   }
 
-  private void updateMap(WfsLayerInfo layer) {
-    // clear existing layers
+  private void updateMap(WfsLayerInfo wfsLayerInfo) {
+    // clear existing layer infos
     mMapView.getMap().getOperationalLayers().clear();
 
     // create feature table
-    WfsFeatureTable featureTable = new WfsFeatureTable(layer);
+    WfsFeatureTable featureTable = new WfsFeatureTable(wfsLayerInfo);
 
     // set the table's feature request mode
     featureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE);
@@ -120,12 +120,12 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     ListenableFuture<FeatureQueryResult> featureQueryResultFuture = featureTable
         .populateFromServiceAsync(new QueryParameters(), false, null);
 
-    // perform blocking task on a different thread to allow UI to remain responsive
+    // perform blocking task on a different thread to perform map operations after feature table has been populated
     new Thread(() -> {
       try {
         featureQueryResultFuture.get();
 
-        // create a layer from the table
+        // create a feature layer from the table
         FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
         // set a renderer for the table
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
           mMapView.getMap().getOperationalLayers().add(featureLayer);
 
           // zoom to the extent of the layer
-          mMapView.setViewpointGeometryAsync(layer.getExtent(), 50);
+          mMapView.setViewpointGeometryAsync(wfsLayerInfo.getExtent(), 50);
         });
       } catch (InterruptedException | ExecutionException e) {
         runOnUiThread(
@@ -173,14 +173,14 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
   /**
    * Setup {@link RecyclerView} with an adapter and add {@link WfsLayerInfo}s to the adapter
    *
-   * @param layers to display in adapter
+   * @param wfsLayerInfos to display in adapter
    */
-  private void setupRecyclerView(List<WfsLayerInfo> layers) {
-    LayersAdapter layersAdapter = new LayersAdapter(this);
+  private void setupRecyclerView(List<WfsLayerInfo> wfsLayerInfos) {
+    WfsLayerInfoAdapter layersAdapter = new WfsLayerInfoAdapter(this);
     mLayersRecyclerView.setAdapter(layersAdapter);
 
-    for (WfsLayerInfo layer : layers) {
-      layersAdapter.addLayer(layer);
+    for (WfsLayerInfo wfsLayerInfo : wfsLayerInfos) {
+      layersAdapter.addLayer(wfsLayerInfo);
     }
   }
 
