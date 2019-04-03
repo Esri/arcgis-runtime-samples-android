@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingBottom="4dp"
-    android:paddingTop="4dp">
+    android:paddingBottom="@dimen/adapter_item_layer_padding_vert"
+    android:paddingTop="@dimen/adapter_item_layer_padding_vert">
 
     <CheckBox
         android:id="@+id/layerCheckbox"
@@ -16,6 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:textSize="@dimen/adapter_item_layer_name_text_size" />
 
 </LinearLayout>
