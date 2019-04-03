@@ -31,7 +31,8 @@ import com.esri.arcgisruntime.ogc.wfs.WfsLayerInfo;
 /**
  * An adapter that displays {@link WfsLayerInfo}s
  */
-public class WfsLayerInfoAdapter extends RecyclerView.Adapter<WfsLayerInfoAdapter.ViewHolder> implements OnItemSelectedListener {
+public class WfsLayerInfoAdapter extends RecyclerView.Adapter<WfsLayerInfoAdapter.ViewHolder>
+    implements OnItemSelectedListener {
 
   private final OnItemSelectedListener mOnItemSelectedListener;
 
@@ -97,7 +98,11 @@ public class WfsLayerInfoAdapter extends RecyclerView.Adapter<WfsLayerInfoAdapte
           itemView.getResources().getColor(R.color.colorPrimaryDark) :
           itemView.getResources().getColor(R.color.colorPrimary));
 
-      itemView.setOnClickListener(v -> onItemSelectedListener.onItemSelected(wfsLayerInfo));
+      itemView.setOnClickListener(v -> {
+        if (wfsLayerInfo != mSelectedWfsLayerInfo) {
+          onItemSelectedListener.onItemSelected(wfsLayerInfo);
+        }
+      });
     }
   }
 }
