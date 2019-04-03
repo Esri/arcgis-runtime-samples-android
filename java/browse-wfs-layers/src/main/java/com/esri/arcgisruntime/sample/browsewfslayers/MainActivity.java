@@ -16,14 +16,109 @@
 
 package com.esri.arcgisruntime.sample.browsewfslayers;
 
+import java.util.List;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import com.esri.arcgisruntime.loadable.LoadStatus;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
+import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.ogc.wfs.WfsLayerInfo;
+import com.esri.arcgisruntime.ogc.wfs.WfsService;
+
+public class MainActivity extends AppCompatActivity implements OnItemSelectedListener {
+
+  private static final String TAG = MainActivity.class.getSimpleName();
+
+  private MapView mMapView;
+  private RecyclerView mLayersRecyclerView;
+  private BottomSheetBehavior<View> mBottomSheetBehavior;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    mMapView = findViewById(R.id.mapView);
+    mLayersRecyclerView = findViewById(R.id.layersRecyclerView);
+
+    View bottomSheet = findViewById(R.id.bottomSheet);
+    mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+    mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
+      @Override public boolean onTouch(View view, MotionEvent motionEvent) {
+        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+          mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+          return true;
+        }
+        return super.onTouch(view, motionEvent);
+      }
+    });
+
+    ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+    mMapView.setMap(map);
+
+    // create WFS service
+    WfsService service = new WfsService(getString(R.string.wfs_service_url));
+    service.addDoneLoadingListener(() -> {
+      if (service.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+        logErrorToUser(getString(R.string.error_wfs_service_load_failure, service.getLoadError().getMessage()));
+      } else {
+        setupRecyclerView(service.getServiceInfo().getLayerInfos());
+      }
+    });
+    service.loadAsync();
+  }
+
+  @Override public void onItemSelected(WfsLayerInfo layer) {
+    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    Toast.makeText(this, layer.getTitle(), Toast.LENGTH_SHORT).show();
+  }
+
+  private void setupRecyclerView(List<WfsLayerInfo> layers) {
+    LayersAdapter layersAdapter = new LayersAdapter(this);
+    mLayersRecyclerView.setAdapter(layersAdapter);
+
+    for (WfsLayerInfo layer : layers) {
+      // if layer can be shown in legend
+      layersAdapter.addLayer(layer);
+    }
+  }
+
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+    return true;
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.action_show_layer_list) {
+      // if bottom sheet is not shown
+      if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+        // show bottom sheet
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+      } else {
+        // hide bottom sheet
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+      }
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void logErrorToUser(String error) {
+    Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+    Log.e(TAG, error);
   }
 }
