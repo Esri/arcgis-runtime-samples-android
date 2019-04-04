@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
     while ((line = bufferedReader.readLine()) != null) {
       xmlString.append(line);
     }
+    bufferedReader.close();
     return xmlString.toString();
   }
 
