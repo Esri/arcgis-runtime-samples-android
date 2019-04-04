@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.esri.arcgisruntime.samples.wfsxmlquery;
+package com.esri.arcgisruntime.sample.wfsxmlquery;
 
 import java.io.BufferedReader;
 import java.io.IOException;

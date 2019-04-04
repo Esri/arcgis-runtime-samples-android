@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.esri.arcgisruntime.samples.wfsxmlquery">
+    package="com.esri.arcgisruntime.sample.wfsxmlquery">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity">
+        <activity android:name="com.esri.arcgisruntime.sample.wfsxmlquery.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
