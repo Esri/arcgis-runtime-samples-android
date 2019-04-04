@@ -19,7 +19,6 @@ package com.esri.arcgisruntime.sample.wfsxmlquery;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.concurrent.ExecutionException;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -61,42 +60,25 @@ public class MainActivity extends AppCompatActivity {
     statesTable.setAxisOrder(OgcAxisOrder.NO_SWAP);
     statesTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE);
 
-    statesTable.addDoneLoadingListener(() -> {
-      String xmlQuery = null;
+    try {
+      String xmlQuery = loadQueryFromAssets();
 
-      try {
-        xmlQuery = loadQueryFromAssets();
-      } catch (IOException e) {
-        logErrorToUser(getString(R.string.error_reading_xml_file, e.getMessage()));
-      }
+      ListenableFuture<FeatureQueryResult> featureQueryResultFuture = statesTable
+          .populateFromServiceAsync(xmlQuery, true);
 
-      if (xmlQuery != null) {
-        ListenableFuture<FeatureQueryResult> featureQueryResultFuture = statesTable
-            .populateFromServiceAsync(xmlQuery, true);
+      featureQueryResultFuture.addDoneListener(() -> {
+        // create a feature layer to visualize the table.
+        FeatureLayer statesLayer = new FeatureLayer(statesTable);
 
-        // perform blocking task on a different thread to perform map operations after feature table has been populated
-        new Thread(() -> {
-          try {
-            featureQueryResultFuture.get();
+        // add the layer to the map.
+        mMapView.getMap().getOperationalLayers().add(statesLayer);
 
-            // create a feature layer to visualize the table.
-            FeatureLayer statesLayer = new FeatureLayer(statesTable);
-
-            runOnUiThread(() -> {
-              // add the layer to the map.
-              mMapView.getMap().getOperationalLayers().add(statesLayer);
-
-              // set the viewpoint of the map view to the extent reported by the feature layer
-              mMapView.setViewpointGeometryAsync(statesLayer.getFullExtent(), 50);
-            });
-          } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-          }
-        }).start();
-      }
-    });
-
-    statesTable.loadAsync();
+        // set the viewpoint of the map view to the extent reported by the feature layer
+        mMapView.setViewpointGeometryAsync(statesLayer.getFullExtent(), 50);
+      });
+    } catch (IOException e) {
+      logErrorToUser(getString(R.string.error_reading_xml_file, e.getMessage()));
+    }
   }
 
   private void logErrorToUser(String error) {
