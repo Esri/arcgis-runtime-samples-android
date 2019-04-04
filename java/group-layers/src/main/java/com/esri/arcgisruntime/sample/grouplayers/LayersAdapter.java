@@ -134,9 +134,7 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
           // if the layer has not been loaded
           if (childLayer.getLoadStatus() != LoadStatus.LOADED) {
             // add a listener to run when the layer has been loaded
-            childLayer.addDoneLoadingListener(() -> {
-              addChildLayer(childLayer);
-            });
+            childLayer.addDoneLoadingListener(() -> addChildLayer(childLayer));
             // load layer
             childLayer.loadAsync();
           } else {

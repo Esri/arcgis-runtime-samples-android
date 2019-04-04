@@ -123,9 +123,7 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     for (Layer layer : layers) {
       // if layer can be shown in legend
       if (layer.canShowInLegend()) {
-        layer.addDoneLoadingListener(() -> {
-          mLayersAdapter.addLayer(layer);
-        });
+        layer.addDoneLoadingListener(() -> mLayersAdapter.addLayer(layer));
         layer.loadAsync();
       }
     }
