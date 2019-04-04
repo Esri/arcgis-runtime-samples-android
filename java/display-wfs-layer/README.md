@@ -30,8 +30,9 @@ Pan and zoom to see features within the current map extent.
 
 * FeatureLayer
 * WfsFeatureTable
-* WfsFeatureTable.PopulateFromServiceAsync
-* MapView.NavigationCompleted
+* WfsFeatureTable.populateFromServiceAsync(...)
+* MapView.addNavigationChangedListener
+* QueryParameters
 
 ## About the data
 

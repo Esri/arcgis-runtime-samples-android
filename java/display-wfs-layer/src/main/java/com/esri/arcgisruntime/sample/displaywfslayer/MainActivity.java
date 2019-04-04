@@ -23,10 +23,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
-import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
-import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -52,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // create an initial extent to load
-    Point topLeft = new Point(-122.341581, 47.617207, SpatialReferences.getWgs84());
-    Point bottomRight = new Point(-122.336662, 47.613758, SpatialReferences.getWgs84());
+    Point topLeft = new Point(-13618106.950944, 6042391.201455, SpatialReference.create(3857));
+    Point bottomRight = new Point(-13617513.444292, 6041961.243171, SpatialReference.create(3857));
     Envelope initialExtent = new Envelope(topLeft, bottomRight);
     mMapView.setViewpoint(new Viewpoint(initialExtent));
 
@@ -76,8 +74,7 @@ public class MainActivity extends AppCompatActivity {
     map.getOperationalLayers().add(wfsFeatureLayer);
 
     // make an initial call to load the initial extent's data from the WFS, using the WFS spatial reference
-    populateFromServer(wfsFeatureTable,
-        (Envelope) GeometryEngine.project(initialExtent, SpatialReference.create(3857)));
+    populateFromServer(wfsFeatureTable, initialExtent);
 
     // use the navigation completed event to populate the table with the features needed for the current extent
     mMapView.addNavigationChangedListener(navigationChangedEvent -> {
