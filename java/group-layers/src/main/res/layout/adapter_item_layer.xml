@@ -9,13 +9,15 @@
     <CheckBox
         android:id="@+id/layerCheckbox"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:theme="@style/CheckboxTheme" />
 
     <TextView
         android:id="@+id/layerNameTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="@dimen/adapter_item_layer_name_text_size" />
 
 </LinearLayout>
