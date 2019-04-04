@@ -38,7 +38,6 @@ Some WFS services return coordinates in X,Y order, while others return coordinat
 This service shows features for downtown Seattle. For additional information, see the underlying service on [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=1b81d35c5b0942678140efc29bc25391).
 
 ## Tags
-
 layers
 OGC
 WFS
