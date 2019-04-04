@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.esri.arcgisruntime.sample.wfsxmlquery.MainActivity">
+        <activity
+            android:name="com.esri.arcgisruntime.sample.wfsxmlquery.MainActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
