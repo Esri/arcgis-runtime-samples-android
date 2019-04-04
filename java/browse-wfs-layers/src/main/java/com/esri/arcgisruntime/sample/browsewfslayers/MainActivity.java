@@ -18,7 +18,6 @@ package com.esri.arcgisruntime.sample.browsewfslayers;
 
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -133,35 +132,25 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     // set the table's feature request mode
     featureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE);
 
+    // populate the table
     ListenableFuture<FeatureQueryResult> featureQueryResultFuture = featureTable
         .populateFromServiceAsync(new QueryParameters(), false, null);
 
-    // perform blocking task on a different thread to perform map operations after feature table has been populated
-    new Thread(() -> {
-      try {
-        featureQueryResultFuture.get();
+    // run when the table has been populated
+    featureQueryResultFuture.addDoneListener(() -> {
+      // create a feature layer from the table
+      FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
-        // create a feature layer from the table
-        FeatureLayer featureLayer = new FeatureLayer(featureTable);
+      // set a renderer for the table
+      featureLayer.setRenderer(getRandomRendererForTable(featureTable));
 
-        // set a renderer for the table
-        featureLayer.setRenderer(getRandomRendererForTable(featureTable));
+      // add the layer to the map
+      mMapView.getMap().getOperationalLayers().add(featureLayer);
 
-        runOnUiThread(() -> {
-          // add the layer to the map
-          mMapView.getMap().getOperationalLayers().add(featureLayer);
-
-          // zoom to the extent of the layer
-          mMapView.setViewpointGeometryAsync(featureLayer.getFullExtent(), 50);
-        });
-      } catch (InterruptedException | ExecutionException e) {
-        runOnUiThread(
-            () -> logErrorToUser(
-                getString(R.string.error_feature_table_populate_from_service_failure, e.getMessage())));
-      } finally {
-        runOnUiThread(() -> mLoadingView.setVisibility(View.GONE));
-      }
-    }).start();
+      // zoom to the extent of the layer
+      mMapView.setViewpointGeometryAsync(featureLayer.getFullExtent(), 50);
+      mLoadingView.setVisibility(View.GONE);
+    });
   }
 
   /**
