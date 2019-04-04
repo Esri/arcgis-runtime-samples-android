@@ -18,8 +18,8 @@ Runtime `QueryParameters` objects can't represent all possible queries that can 
 
 * FeatureLayer
 * WfsFeatureTable
-* WfsFeatureTable.AxisOrder
-* WfsFeatureTable.PopulateFromServiceAsync
+* WfsFeatureTable.setAxisOrder()
+* WfsFeatureTable.populateFromServiceAsync()
 
 ## About the data
 
@@ -28,7 +28,6 @@ This service shows trees in downtown Seattle and the surrounding area. An XML-en
 For additional information, see the underlying service on [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=1b81d35c5b0942678140efc29bc25391).
 
 ## Tags
-
 Search & Query
 OGC
 WFS
