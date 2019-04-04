@@ -80,8 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
 
     // set the base surface with world elevation
     Surface surface = new Surface();
-    surface.getElevationSources().add(new ArcGISTiledElevationSource(
-        "http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"));
+    surface.getElevationSources().add(new ArcGISTiledElevationSource(getString(R.string.elevation_source_url)));
     scene.setBaseSurface(surface);
 
     // create different types of layers
