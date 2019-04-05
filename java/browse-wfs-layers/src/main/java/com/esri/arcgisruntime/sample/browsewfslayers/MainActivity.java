@@ -132,21 +132,21 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     // set the table's feature request mode
     featureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE);
 
+    // create a feature layer from the table
+    FeatureLayer featureLayer = new FeatureLayer(featureTable);
+
+    // set a renderer for the table
+    featureLayer.setRenderer(getRandomRendererForTable(featureTable));
+
+    // add the layer to the map
+    mMapView.getMap().getOperationalLayers().add(featureLayer);
+
     // populate the table
     ListenableFuture<FeatureQueryResult> featureQueryResultFuture = featureTable
         .populateFromServiceAsync(new QueryParameters(), false, null);
 
     // run when the table has been populated
     featureQueryResultFuture.addDoneListener(() -> {
-      // create a feature layer from the table
-      FeatureLayer featureLayer = new FeatureLayer(featureTable);
-
-      // set a renderer for the table
-      featureLayer.setRenderer(getRandomRendererForTable(featureTable));
-
-      // add the layer to the map
-      mMapView.getMap().getOperationalLayers().add(featureLayer);
-
       // zoom to the extent of the layer
       mMapView.setViewpointGeometryAsync(featureLayer.getFullExtent(), 50);
       mLoadingView.setVisibility(View.GONE);
