@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
 
     View bottomSheet = findViewById(R.id.bottomSheet);
     mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
     mSceneView.setOnTouchListener(new DefaultSceneViewOnTouchListener(mSceneView) {
       @Override public boolean onTouch(View view, MotionEvent motionEvent) {
