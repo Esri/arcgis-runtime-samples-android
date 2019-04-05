@@ -66,13 +66,13 @@ public class MainActivity extends AppCompatActivity {
       ListenableFuture<FeatureQueryResult> featureQueryResultFuture = statesTable
           .populateFromServiceAsync(xmlQuery, true);
 
+      // create a feature layer to visualize the table.
+      FeatureLayer statesLayer = new FeatureLayer(statesTable);
+
+      // add the layer to the map.
+      mMapView.getMap().getOperationalLayers().add(statesLayer);
+
       featureQueryResultFuture.addDoneListener(() -> {
-        // create a feature layer to visualize the table.
-        FeatureLayer statesLayer = new FeatureLayer(statesTable);
-
-        // add the layer to the map.
-        mMapView.getMap().getOperationalLayers().add(statesLayer);
-
         // set the viewpoint of the map view to the extent reported by the feature layer
         mMapView.setViewpointGeometryAsync(statesLayer.getFullExtent(), 50);
       });
