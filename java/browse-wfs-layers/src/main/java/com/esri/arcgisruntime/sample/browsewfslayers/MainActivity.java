@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
 
     View bottomSheet = findViewById(R.id.bottomSheet);
     mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override public boolean onTouch(View view, MotionEvent motionEvent) {
