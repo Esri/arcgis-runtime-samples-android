@@ -60,17 +60,17 @@ public class MainActivity extends AppCompatActivity {
     statesTable.setAxisOrder(OgcAxisOrder.NO_SWAP);
     statesTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE);
 
+    // create a feature layer to visualize the table.
+    FeatureLayer statesLayer = new FeatureLayer(statesTable);
+
+    // add the layer to the map.
+    mMapView.getMap().getOperationalLayers().add(statesLayer);
+
     try {
       String xmlQuery = loadQueryFromAssets();
 
       ListenableFuture<FeatureQueryResult> featureQueryResultFuture = statesTable
           .populateFromServiceAsync(xmlQuery, true);
-
-      // create a feature layer to visualize the table.
-      FeatureLayer statesLayer = new FeatureLayer(statesTable);
-
-      // add the layer to the map.
-      mMapView.getMap().getOperationalLayers().add(statesLayer);
 
       featureQueryResultFuture.addDoneListener(() -> {
         // set the viewpoint of the map view to the extent reported by the feature layer
