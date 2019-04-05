@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     // create feature table
     WfsFeatureTable featureTable = new WfsFeatureTable(wfsLayerInfo);
 
+    // set the axis order dependant on whether the checkbox is ticked or not
     featureTable.setAxisOrder(mAxisCheckbox.isChecked() ? OgcAxisOrder.SWAP : OgcAxisOrder.NO_SWAP);
 
     // set the table's feature request mode
