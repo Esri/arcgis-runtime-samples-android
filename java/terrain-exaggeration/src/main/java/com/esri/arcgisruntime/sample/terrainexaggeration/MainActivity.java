@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     final SeekBar exaggerationSeekBar = findViewById(R.id.exaggerationSeekBar);
     exaggerationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+        // disallow any progress value below 1
+        progress = Math.max(1, progress);
         // set the text to SeekBar value
         exaggerationTextView.setText(String.valueOf(progress));
         // set exaggeration of surface to the value the user selected
@@ -72,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
       }
 
       @Override public void onStopTrackingTouch(SeekBar seekBar) {
-
+        // disallow any progress value below 1
+        seekBar.setProgress(Math.max(1, seekBar.getProgress()));
       }
     });
   }
