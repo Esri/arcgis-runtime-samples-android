@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorAccent">#4CAF50</color>
     <color name="loading_view_bg">#40000000</color>
+    <color name="adapter_item_Selected_bg">#BDBDBD</color>
 </resources>

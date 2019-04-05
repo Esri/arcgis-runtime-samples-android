@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
+    android:background="@android:color/white"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/adapter_item_layer_padding_vert"
     android:paddingEnd="@dimen/adapter_item_layer_padding_horz"
@@ -13,7 +13,7 @@
         android:id="@+id/layerNameTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="@dimen/adapter_item_layer_name_text_size" />
 
 </LinearLayout>

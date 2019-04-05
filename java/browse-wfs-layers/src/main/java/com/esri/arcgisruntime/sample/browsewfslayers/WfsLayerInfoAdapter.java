@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.sample.browsewfslayers;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -95,8 +96,9 @@ public class WfsLayerInfoAdapter extends RecyclerView.Adapter<WfsLayerInfoAdapte
       mTextView.setText(wfsLayerInfo.getTitle());
 
       itemView.setBackgroundColor(selected ?
-          itemView.getResources().getColor(R.color.colorPrimaryDark) :
-          itemView.getResources().getColor(R.color.colorPrimary));
+          itemView.getResources().getColor(R.color.adapter_item_Selected_bg) :
+          Color.WHITE
+      );
 
       itemView.setOnClickListener(v -> {
         if (wfsLayerInfo != mSelectedWfsLayerInfo) {
