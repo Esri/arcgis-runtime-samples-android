@@ -24,7 +24,10 @@ import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
+<<<<<<< HEAD
+=======
 import com.esri.arcgisruntime.geometry.SpatialReference;
+>>>>>>> fc6ca89799fc423ae6f64f196359ae0697f5c6c8
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -50,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // create an initial extent to load
-    Point topLeft = new Point(-13618106.950944, 6042391.201455, SpatialReference.create(3857));
-    Point bottomRight = new Point(-13617513.444292, 6041961.243171, SpatialReference.create(3857));
+    Point topLeft = new Point(-13618106.950944, 6042391.201455);
+    Point bottomRight = new Point(-13617513.444292, 6041961.243171);
     Envelope initialExtent = new Envelope(topLeft, bottomRight);
     mMapView.setViewpoint(new Viewpoint(initialExtent));
 
