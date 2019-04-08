@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Group layers</string>
+
+    <string name="elevation_source_url">http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
+
+    <string name="layer_dev_one">https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/DevA_Trees/SceneServer/layers/0</string>
+    <string name="layer_dev_two">https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/DevA_Pathways/SceneServer/layers/0</string>
+    <string name="layer_dev_three">https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/DevA_BuildingShell_Textured/SceneServer/layers/0</string>
+
+    <string name="layer_non_dev_one">https://scenesampleserverdev.arcgis.com/arcgis/rest/services/Hosted/PlannedDemo_BuildingShell/SceneServer/layers/0</string>
+    <string name="layer_non_dev_two">https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/DevelopmentProjectArea/FeatureServer/0</string>
+
+    <string name="action_show_layer_list">Show layer list</string>
+</resources>
