@@ -142,5 +142,6 @@ include ':add-enc-exchange-set',
         ':viewshed-geoprocessing',
         ':viewshed-location',
         ':web-tiledlayer',
+        ':wfs-xml-query',
         ':wms-layer-url',
         ':wmts-layer'

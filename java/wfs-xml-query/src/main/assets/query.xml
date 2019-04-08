@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wfs:GetFeature service="WFS" version="2.0.0"
+    xmlns:Seattle_Downtown_Features="https://dservices2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/services/Seattle_Downtown_Features/WFSServer"
+    xmlns:wfs="http://www.opengis.net/wfs/2.0"
+    xmlns:fes="http://www.opengis.net/fes/2.0"
+    xmlns:gml="http://www.opengis.net/gml/3.2">
+    <wfs:Query typeNames="Seattle_Downtown_Features:Trees">
+        <fes:Filter>
+            <fes:PropertyIsLike wildCard="*" escapeChar="\">
+                <fes:ValueReference>Trees:SCIENTIFIC</fes:ValueReference>
+                <fes:Literal>Tilia *</fes:Literal>
+            </fes:PropertyIsLike>
+        </fes:Filter>
+    </wfs:Query>
+</wfs:GetFeature>
