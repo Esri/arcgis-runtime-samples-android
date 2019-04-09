@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+    getMenuInflater().inflate(R.menu.menu_layer_list, menu);
     return true;
   }
 
