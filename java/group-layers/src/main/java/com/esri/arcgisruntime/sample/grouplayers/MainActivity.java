@@ -42,7 +42,6 @@ import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.SceneView;
-import com.esri.arcgisruntime.samples.grouplayers.R;
 import com.esri.arcgisruntime.util.ListenableList;
 
 public class MainActivity extends AppCompatActivity implements OnLayerCheckedChangedListener {

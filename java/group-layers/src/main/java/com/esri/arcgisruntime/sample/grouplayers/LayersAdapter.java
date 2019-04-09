@@ -31,7 +31,6 @@ import android.widget.TextView;
 import com.esri.arcgisruntime.layers.GroupLayer;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
-import com.esri.arcgisruntime.samples.grouplayers.R;
 
 /**
  * An adapter that displays {@link Layer}s and their children if they are an instance of {@link GroupLayer}
