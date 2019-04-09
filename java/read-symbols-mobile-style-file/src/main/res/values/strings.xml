@@ -10,4 +10,13 @@
     <string name="error_loading_multilayer_symbol_failed">Loading multi layer symbol failed: %s</string>
     <string name="error_loading_multilayer_bitmap_failed">Loading multi layer bitmap failed: %s</string>
     <string name="error_loading_symbol_bitmap_failed">Getting symbol bitmap failed: %s</string>
+    <string name="preview_of_multilayer_symbol">Preview of multilayer symbol</string>
+    <string name="clear_button_text">Clear</string>
+
+    <string-array name="color_arrays">
+        <item>Red</item>
+        <item>Green</item>
+        <item>Blue</item>
+    </string-array>
+
 </resources>
