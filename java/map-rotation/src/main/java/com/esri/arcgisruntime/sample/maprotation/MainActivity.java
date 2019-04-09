@@ -22,9 +22,9 @@ public class MainActivity extends AppCompatActivity {
     // create MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
     // create a map with the Basemap.Type topographic
-    ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 10);
+    ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 10);
     // set the map to be displayed in this view
-    mMapView.setMap(mMap);
+    mMapView.setMap(map);
     // create TextView to show angle of rotation
     mRotationValueText = (TextView) findViewById(R.id.rotationValueText);
     // create SeekBar

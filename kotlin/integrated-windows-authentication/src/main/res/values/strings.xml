@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Integrated Windows Authentication</string>
+    <string name="arcgis_url">http://www.arcgis.com</string>
+    <string name="credential_required">Credential is required!</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="enter_portal_url">Enter portal url</string>
+    <string name="search_public">Search Public</string>
+    <string name="search_secure">Search Secure</string>
+    <string name="portal_load_state_searching">Searching for web map items on the portal at %s</string>
+    <string name="portal_load_state_connected">Connected to the portal on %s</string>
+    <string name="portal_user_connected">Connected as: %s</string>
+    <string name="portal_user_anonymous">Anonymous</string>
+    <string name="web_map_loaded_text">Loaded web map from item %s</string>
+
+    <string name="error_portal_url">Portal URL is invalid. Please enter a valid portal URL.</string>
+    <string name="error_item_set">Error getting portal item set from portal: %s</string>
+    <string name="error_portal_sign_in_cancelled">Portal sign in was cancelled by user.</string>
+    <string name="error_portal_sign_in_failed">Portal sign in failed: %s</string>
+    <string name="error_portal_not_instantiated">Portal not instantiated.</string>
+    <string name="auth_failure">Authentication Failed</string>
+
+    <string name="credential_dialog_positive_button_text">Sign In</string>
+    <string name="credential_dialog_negative_button_text">Cancel</string>
+    <string name="credential_dialog_error_username_or_password_are_blank">Username and password must not be blank</string>
+    <string name="credential_dialog_hostname">Credential is required to access %s</string>
+    <string name="error_interruption">Interruption handling AuthenticationChallengeResponse: %s</string>
+</resources>
