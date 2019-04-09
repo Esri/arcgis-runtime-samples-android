@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.esri.arcgisruntime.samples.grouplayers">
+    package="com.esri.arcgisruntime.sample.grouplayers">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
