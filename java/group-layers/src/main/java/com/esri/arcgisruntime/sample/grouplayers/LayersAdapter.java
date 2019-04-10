@@ -52,12 +52,12 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
     // inflate the layout for a GroupLayer
     if (getItemViewType(i) == VIEW_TYPE_PARENT) {
       return new ParentViewHolder(
-          LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_parent, viewGroup, false),
+          LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_group_layer_parent, viewGroup, false),
           this);
     } else {
       // inflate the layout for a Layer
       return new LayerViewHolder(
-          LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_layer, viewGroup, false),
+          LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_group_layer, viewGroup, false),
           this);
     }
   }
@@ -154,7 +154,7 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
       // try to reuse the View if possible
       if (mChildLayout.findViewWithTag(childLayer) == null) {
         view = LayoutInflater.from(itemView.getContext())
-            .inflate(R.layout.adapter_item_layer, mChildLayout, false);
+            .inflate(R.layout.adapter_item_group_layer, mChildLayout, false);
         view.setTag(childLayer);
       } else {
         view = mChildLayout.findViewWithTag(childLayer);

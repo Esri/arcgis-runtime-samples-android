@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/adapter_item_layer" />
+    <include layout="@layout/adapter_item_group_layer" />
 
     <LinearLayout
         android:id="@+id/childLayout"
