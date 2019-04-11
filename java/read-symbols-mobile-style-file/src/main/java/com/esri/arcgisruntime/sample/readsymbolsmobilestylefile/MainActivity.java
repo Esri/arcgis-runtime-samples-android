@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
   private MultilayerPointSymbol mCurrentMultilayerSymbol;
   private ArrayList<String> mKeys;
   private int mColor = -1;
+  private Spinner mColorSpinner;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -143,8 +144,8 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
     });
 
     // add a spinner to change the color of the first layer of the multilayer symbol
-    Spinner colorSpinner = findViewById(R.id.colorSpinner);
-    colorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    mColorSpinner = findViewById(R.id.colorSpinner);
+    mColorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         setLayerColor(position);
       }
@@ -275,6 +276,8 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
   }
 
   private void createSwatchAsync() {
+    Log.d(TAG, "in create swatch");
+    Log.d(TAG, "mColor = " + mColor);
     // get the Future to perform the generation of the multi layer symbol
     ListenableFuture<Symbol> symbolFuture = mEmojiStyle.getSymbolAsync(mKeys);
     symbolFuture.addDoneListener(() -> {
@@ -284,8 +287,10 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
         if (multilayerSymbol == null) {
           return;
         }
-        if (mColor >= 0) {
+        if (mColorSpinner.getSelectedItemPosition() >= 0) {
+          Log.d(TAG, "color selected");
           // set the symbols color
+          multilayerSymbol.getSymbolLayers().get(0).setColorLocked(false);
           multilayerSymbol.setColor(mColor);
         }
 

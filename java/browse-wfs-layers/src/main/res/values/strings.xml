@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Browse WFS layers</string>
+
+    <string name="wfs_service_url">https://dservices2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/services/Seattle_Downtown_Features/WFSServer?service=wfs&amp;request=getcapabilities</string>
+
+    <string name="action_show_layer_list">Show layer list</string>
+    <string name="loading_text">Populating Feature Table...</string>
+    <string name="axis_checkbox_text">Swap coordinate order</string>
+
+    <string name="error_wfs_service_load_failure">WFS Service failed to load: %s</string>
+    <string name="coordinate_order_checkbox_text">Swap coordinate order</string>
+</resources>
