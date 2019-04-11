@@ -136,8 +136,8 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     // create a feature layer from the table
     FeatureLayer featureLayer = new FeatureLayer(featureTable);
 
-    // set a renderer for the table
-    featureLayer.setRenderer(getRandomRendererForTable(featureTable));
+    // set a renderer to the table once is loaded, since the renderer is chosen based on the table's geometry type
+    featureTable.addDoneLoadingListener(() -> featureLayer.setRenderer(getRandomRendererForTable(featureTable)));
 
     // add the layer to the map
     mMapView.getMap().getOperationalLayers().add(featureLayer);
