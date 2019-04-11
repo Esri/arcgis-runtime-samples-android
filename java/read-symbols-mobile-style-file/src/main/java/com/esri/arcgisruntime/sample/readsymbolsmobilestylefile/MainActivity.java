@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.Manifest;
@@ -59,6 +60,7 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.MultilayerPointSymbol;
 import com.esri.arcgisruntime.symbology.Symbol;
+import com.esri.arcgisruntime.symbology.SymbolLayer;
 import com.esri.arcgisruntime.symbology.SymbolStyle;
 import com.esri.arcgisruntime.symbology.SymbolStyleSearchParameters;
 import com.esri.arcgisruntime.symbology.SymbolStyleSearchResult;
@@ -83,12 +85,13 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
 
   private SymbolStyle mEmojiStyle;
 
-  private HashMap<String, SymbolStyleSearchResult> mSelectedSymbols = new HashMap<>();
+  private final Map<String, SymbolStyleSearchResult> mSelectedSymbols = new HashMap<>();
 
   private MultilayerPointSymbol mCurrentMultilayerSymbol;
   private ArrayList<String> mKeys;
   private int mColor = -1;
   private Spinner mColorSpinner;
+  private int mSize = 25;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -127,11 +130,11 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
 
     // add a seek bar to change the size of the current multilayer symbol
     SeekBar sizeSeekBar = findViewById(R.id.sizeSeekBar);
+    // set initial progress to 25
+    sizeSeekBar.setProgress(mSize);
     sizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (mCurrentMultilayerSymbol != null) {
-          mCurrentMultilayerSymbol.setSize(progress);
-        }
+        setSymbolSize(progress);
       }
 
       @Override public void onStartTrackingTouch(SeekBar seekBar) {
@@ -199,6 +202,9 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
     runOnUiThread(() -> handler.postDelayed(startScrollRunnable, 2000));
   }
 
+  /**
+   *
+   */
   private void loadSymbols() {
     // create a SymbolStyle by passing the location of the .stylx file in the constructor
     mEmojiStyle = new SymbolStyle(
@@ -225,7 +231,8 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
               List<SymbolStyleSearchResult> symbolStyleSearchResults = symbolStyleSearchResultFuture.get();
               for (SymbolStyleSearchResult symbolStyleSearchResult : symbolStyleSearchResults) {
                 // these categories are specific to this SymbolStyle
-                switch (symbolStyleSearchResult.getCategory().toLowerCase(Locale.ROOT)) {
+                String category = symbolStyleSearchResult.getCategory().toLowerCase(Locale.ROOT);
+                switch (category) {
                   case "eyes":
                     mEyesAdapter.addSymbol(symbolStyleSearchResult);
                     break;
@@ -237,6 +244,9 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
                     break;
                   case "face":
                     mFaceSymbolKey = symbolStyleSearchResult.getKey();
+                    break;
+                  default:
+                    logErrorToUser(this, getString(R.string.error_unknown_symbol_search_result_category, category));
                     break;
                 }
                 animateRecyclerViews();
@@ -275,34 +285,44 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
     createSwatchAsync();
   }
 
+  /**
+   * Create a new multilayer point symbol based on selected symbol keys, selected size and selected color.
+   */
   private void createSwatchAsync() {
-    Log.d(TAG, "in create swatch");
-    Log.d(TAG, "mColor = " + mColor);
     // get the Future to perform the generation of the multi layer symbol
     ListenableFuture<Symbol> symbolFuture = mEmojiStyle.getSymbolAsync(mKeys);
     symbolFuture.addDoneListener(() -> {
       try {
         // wait for the Future to complete and get the result
-        MultilayerPointSymbol multilayerSymbol = (MultilayerPointSymbol) symbolFuture.get();
-        if (multilayerSymbol == null) {
+        MultilayerPointSymbol faceSymbol = (MultilayerPointSymbol) symbolFuture.get();
+        if (faceSymbol == null) {
           return;
         }
-        if (mColorSpinner.getSelectedItemPosition() >= 0) {
-          Log.d(TAG, "color selected");
-          // set the symbols color
-          multilayerSymbol.getSymbolLayers().get(0).setColorLocked(false);
-          multilayerSymbol.setColor(mColor);
+
+        // set size to current size as defined by seek bar
+        faceSymbol.setSize(mSize);
+
+        // lock the color on all symbol layers
+        for (SymbolLayer symbolLayer : faceSymbol.getSymbolLayers()) {
+          symbolLayer.setColorLocked(true);
+        }
+
+        // if the user has chosen a color other than default (spinner position 0)
+        if (mColorSpinner.getSelectedItemPosition() > 0) {
+          // unlock the first layer and set it to the selected color
+          faceSymbol.getSymbolLayers().get(0).setColorLocked(false);
+          faceSymbol.setColor(mColor);
         }
 
         // get the Future to create the swatch of the multi layer symbol
-        ListenableFuture<Bitmap> bitmapFuture = multilayerSymbol.createSwatchAsync(this, Color.TRANSPARENT);
+        ListenableFuture<Bitmap> bitmapFuture = faceSymbol.createSwatchAsync(this, Color.TRANSPARENT);
         // wait for the Future to complete and get the result
         bitmapFuture.addDoneListener(() -> {
           try {
             Bitmap bitmap = bitmapFuture.get();
             mPreviewView.setImageBitmap(bitmap);
             // set this field to enable us to add this symbol to the graphics overlay
-            mCurrentMultilayerSymbol = multilayerSymbol;
+            mCurrentMultilayerSymbol = faceSymbol;
           } catch (InterruptedException | ExecutionException e) {
             logErrorToUser(this, getString(R.string.error_loading_multilayer_bitmap_failed, e.getMessage()));
           }
@@ -350,26 +370,34 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
   }
 
   /**
-   * Get the color for the given position.
+   * Get the color for the given spinner position.
    *
    * @param position in an array of colors
-   * @return the color as an int
    */
   private void setLayerColor(int position) {
     switch (position) {
-      case 0:
+      case 0: // default
+        mColor = -1;
+        break;
+      case 1: // red
         mColor = Color.RED;
         break;
-      case 1:
+      case 2: // green
         mColor = Color.GREEN;
         break;
-      case 2:
+      case 3: // blue
         mColor = Color.BLUE;
         break;
       default:
-        Log.e(TAG, "No color option defined for this entry");
+        logErrorToUser(this, getString(R.string.error_color_not_defined));
         break;
     }
+    createSwatchAsync();
+  }
+
+  private void setSymbolSize(int progress) {
+    // set size to progress with a minimum of 1
+    mSize = Math.max(1, progress);
     createSwatchAsync();
   }
 

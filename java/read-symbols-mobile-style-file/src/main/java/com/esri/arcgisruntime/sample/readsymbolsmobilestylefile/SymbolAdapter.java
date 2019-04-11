@@ -40,7 +40,7 @@ class SymbolAdapter extends RecyclerView.Adapter<SymbolAdapter.ViewHolder> {
 
   private static final String TAG = SymbolAdapter.class.getSimpleName();
 
-  private ArrayList<SymbolStyleSearchResult> mSymbols = new ArrayList<>();
+  private final ArrayList<SymbolStyleSearchResult> mSymbols = new ArrayList<>();
   private final OnSymbolPreviewTapListener mOnSymbolPreviewTapListener;
 
   public SymbolAdapter(OnSymbolPreviewTapListener onSymbolPreviewTapListener) {

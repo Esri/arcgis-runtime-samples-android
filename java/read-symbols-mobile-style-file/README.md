@@ -4,7 +4,7 @@ Open a mobile style (.stylx) and read its contents. Combine several
 symbols from the style into a single multilayer point symbol, then use
 it to display graphics in the map view.
 
-![Read symbols from a mobile style App](read-symbols-from-a-mobile-style.png)
+![Read symbols from a mobile style App](read-symbols-mobile-style.png)
 
 ## Use case
 

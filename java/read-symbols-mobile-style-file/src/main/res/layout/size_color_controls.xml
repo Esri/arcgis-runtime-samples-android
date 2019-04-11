@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Color"
+        android:text="@string/color"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="@+id/colorSpinner"
         app:layout_constraintEnd_toEndOf="@+id/colorSpinner" />
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Size"
+        android:text="@string/size"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="@+id/sizeSeekBar"
         app:layout_constraintEnd_toEndOf="@+id/sizeSeekBar" />

@@ -3,4 +3,5 @@
     android:id="@+id/imageView"
     android:layout_width="@dimen/symbol_adapter_item_size"
     android:layout_height="@dimen/symbol_adapter_item_size"
+    android:contentDescription="@string/content_desc_adapter_image_view"
     android:scaleType="centerInside" />
