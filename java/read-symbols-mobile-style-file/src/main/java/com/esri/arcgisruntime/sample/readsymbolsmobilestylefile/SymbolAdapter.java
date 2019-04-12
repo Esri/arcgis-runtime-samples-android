@@ -65,7 +65,7 @@ class SymbolAdapter extends RecyclerView.Adapter<SymbolAdapter.ViewHolder> {
     notifyItemInserted(mSymbols.size() - 1);
   }
 
-  class ViewHolder extends RecyclerView.ViewHolder {
+  static class ViewHolder extends RecyclerView.ViewHolder {
 
     private final ImageView mImageView;
 

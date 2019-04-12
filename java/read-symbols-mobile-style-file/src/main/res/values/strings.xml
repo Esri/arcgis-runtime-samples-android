@@ -16,7 +16,6 @@
     <string name="error_read_permission_denied">Mobile style file could not be opened because read permission was denied</string>
     <string name="error_mobile_style_file_failed_load">Mobile style file failed to load: %s</string>
     <string name="error_default_search_parameters_load_failed">Loading default symbol style search parameters failed: %s</string>
-    <string name="error_unknown_symbol_search_result_category">Unknown symbol style search result category: %s</string>
     <string name="error_searching_for_symbols_failed">Searching for symbols failed: %s</string>
     <string name="error_loading_multilayer_symbol_failed">Loading multi layer symbol failed: %s</string>
     <string name="error_loading_multilayer_bitmap_failed">Loading multi layer bitmap failed: %s</string>
