@@ -49,7 +49,8 @@ combine them as needed in your app.
 * SymbolStyleSearchParameters
 
 ## Offline Data
-1. Download the data from [ArcGIS Online](hhttps://arcgisruntime.maps.arcgis.com/home/item.html?id=1bd036f221f54a99abc9e46ff3511cbf).
+1. Download the data from
+   [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=1bd036f221f54a99abc9e46ff3511cbf).
 1. Extract the contents of the downloaded zip file to disk.
 1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 4. Execute the following command: `adb push emoji-mobile.stylx
