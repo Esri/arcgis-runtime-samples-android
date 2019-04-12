@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
   private GraphicsOverlay mGraphicsOverlay;
   private SymbolStyle mEmojiStyle;
   private MultilayerPointSymbol mCurrentMultilayerSymbol;
+  private SeekBar mSizeSeekBar;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -110,21 +111,13 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
     mGraphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
 
-    // add listener to handle motion events when the user taps on the map view
-    mMapView.setOnTouchListener(
-        new DefaultMapViewOnTouchListener(this, mMapView) {
-          @Override
-          public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-            addGraphic(mGraphicsOverlay, mapPointFrom(mMapView, motionEvent), mCurrentMultilayerSymbol);
-            return true;
-          }
-        });
-
     // add a seek bar to change the size of the current multilayer symbol
-    SeekBar sizeSeekBar = findViewById(R.id.sizeSeekBar);
+    mSizeSeekBar = findViewById(R.id.sizeSeekBar);
+    // disable seek bar until read permission is granted
+    mSizeSeekBar.setEnabled(false);
     // set initial progress to 25
-    sizeSeekBar.setProgress(mSize);
-    sizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+    mSizeSeekBar.setProgress(mSize);
+    mSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         setSymbolSize(progress);
       }
@@ -140,9 +133,13 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
 
     // add a spinner to change the color of the first layer of the multilayer symbol
     mColorSpinner = findViewById(R.id.colorSpinner);
+    // disable spinner until read permission is granted
+    mColorSpinner.setEnabled(false);
     mColorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        setLayerColor(position);
+        if (position > 0) { // only set color when not on index 0 ("Select color...")
+          setLayerColor(position);
+        }
       }
 
       @Override public void onNothingSelected(AdapterView<?> parent) {
@@ -160,10 +157,33 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
   }
 
   /**
+   * Create a touch listener to call addGraphic on single tap.
+   */
+  private void createMapViewOnTouchListener() {
+    // add listener to handle motion events when the user taps on the map view
+    mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
+      @Override
+      public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+        if (mCurrentMultilayerSymbol != null) {
+          addGraphic(mGraphicsOverlay, mapPointFrom(mMapView, motionEvent), mCurrentMultilayerSymbol);
+        } else {
+          logErrorToUser(MainActivity.this, getString(R.string.error_symbol_must_be_defined));
+        }
+        return true;
+      }
+    });
+  }
+
+  /**
    * Loads the stylx file and searches for all symbols contained within. Put the resulting symbols into recycler views
    * based on their category (eyes, mouth, hat, face).
    */
   private void loadSymbolsFromStyleFile() {
+    // read permission accepted, enable UI elements
+    mColorSpinner.setEnabled(true);
+    mSizeSeekBar.setEnabled(true);
+    createMapViewOnTouchListener();
+
     // create a SymbolStyle by passing the location of the .stylx file in the constructor
     mEmojiStyle = new SymbolStyle(
         Environment.getExternalStorageDirectory() + getString(R.string.mobile_style_file_path));
@@ -235,8 +255,8 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
         for (SymbolLayer symbolLayer : faceSymbol.getSymbolLayers()) {
           symbolLayer.setColorLocked(true);
         }
-        // if the user has chosen a color other than default (spinner position 0)
-        if (mColorSpinner.getSelectedItemPosition() > 0) {
+        // if the user has chosen a color other than "Select color..." (index 0) or "Default" (index 1)
+        if (mColorSpinner.getSelectedItemPosition() > 1) {
           // unlock the first layer and set it to the selected color
           faceSymbol.getSymbolLayers().get(0).setColorLocked(false);
           faceSymbol.setColor(mColor);
@@ -288,16 +308,16 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
    */
   private void setLayerColor(int position) {
     switch (position) {
-      case 0: // default
+      case 1: // default
         mColor = -1;
         break;
-      case 1: // red
+      case 2: // red
         mColor = Color.RED;
         break;
-      case 2: // green
+      case 3: // green
         mColor = Color.GREEN;
         break;
-      case 3: // blue
+      case 4: // blue
         mColor = Color.BLUE;
         break;
       default:
