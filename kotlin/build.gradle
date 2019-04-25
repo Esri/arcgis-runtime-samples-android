@@ -18,7 +18,7 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://esri.bintray.com/arcgis' }
-        maven { url 'http://android:8080/artifactory/arcgis' }
+	maven { url 'http://android:8080/artifactory/arcgis' }
     }
     var
 }
@@ -30,6 +30,12 @@ subprojects{
                 implementation "com.android.support:appcompat-v7:$andSupportLibVersion"
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
                 implementation "com.esri.arcgisruntime:arcgis-android:$arcgisVersion"
+            }
+        }
+        project.android {
+            compileOptions {
+                sourceCompatibility rootProject.ext.javaVersion
+                targetCompatibility rootProject.ext.javaVersion
             }
         }
     }

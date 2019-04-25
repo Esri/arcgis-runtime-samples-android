@@ -18,10 +18,6 @@ android {
         }
     }
 
-    compileOptions {
-        targetCompatibility rootProject.ext.targetJavaVersion
-        sourceCompatibility rootProject.ext.sourceJavaVersion
-    }
 }
 
 dependencies {

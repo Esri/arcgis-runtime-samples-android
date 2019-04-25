@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Read symbols from a mobile style file</string>
+    <string name="mobile_style_file_path">/ArcGIS/Samples/Style/emoji-mobile.stylx</string>
+    <string name="preview_view_title">Preview</string>
+    <string name="content_desc_adapter_image_view">Symbol adapter image view</string>
+    <string name="color">Color</string>
+    <string name="size">Size</string>
+
+    <string-array name="color_arrays">
+        <item>Select color…</item>
+        <item>Default</item>
+        <item>Red</item>
+        <item>Green</item>
+        <item>Blue</item>
+    </string-array>
+
+    <string name="error_read_permission_denied">Mobile style file could not be opened because read permission was denied</string>
+    <string name="error_symbol_must_be_defined">A symbol must be defined before it can be added to the map!</string>
+    <string name="error_mobile_style_file_failed_load">Mobile style file failed to load: %s</string>
+    <string name="error_default_search_parameters_load_failed">Loading default symbol style search parameters failed: %s</string>
+    <string name="error_searching_for_symbols_failed">Searching for symbols failed: %s</string>
+    <string name="error_loading_multilayer_symbol_failed">Loading multi layer symbol failed: %s</string>
+    <string name="error_loading_multilayer_bitmap_failed">Loading multi layer bitmap failed: %s</string>
+    <string name="error_loading_symbol_bitmap_failed">Getting symbol bitmap failed: %s</string>
+    <string name="preview_of_multilayer_symbol">Preview of multilayer symbol</string>
+    <string name="clear_button_text">Clear</string>
+    <string name="error_color_not_defined">No color option defined for this entry</string>
+
+</resources>

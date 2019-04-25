@@ -1,4 +1,5 @@
-include ':analyze-hotspots',
+include ':add-features-feature-service',
+        ':analyze-hotspots',
         ':attribution-view-change',
         ':authenticate-with-oauth',
         ':change-basemaps',
@@ -16,5 +17,6 @@ include ':analyze-hotspots',
         ':raster-rendering-rule',
         ':set-min-max-scale',
         ':show-labels-on-layer',
+        ':token-authentication',
         ':view-point-cloud-data-offline',
         ':wmts-layer'
