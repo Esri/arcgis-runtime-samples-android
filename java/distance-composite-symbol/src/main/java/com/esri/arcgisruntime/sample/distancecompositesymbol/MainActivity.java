@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.distancecompositesymbol;
+package com.esri.arcgisruntime.sample.distancecompositesymbol;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     // add base surface for elevation data
     Surface surface = new Surface();
-    surface.getElevationSources().add(new ArcGISTiledElevationSource(getString(R.string.world_elevation_service)));
+    surface.getElevationSources().add(new ArcGISTiledElevationSource(getString(R.string.world_elevation_service_3D)));
     scene.setBaseSurface(surface);
 
     // add a graphics overlay
