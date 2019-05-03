@@ -1,4 +1,4 @@
-include ':add-enc-exchange-set',
+include ':add-enc-exchange-set', ':find-service-area',
         ':add-features-feature-service',
         ':add-graphics-renderer',
         ':add-graphics-symbols',
