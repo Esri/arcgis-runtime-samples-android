@@ -37,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
   private SceneView mSceneView;
 
+  private static final int PITCH_OFFSET = 90;
+  private static final String HEADING_EXPRESSION = "HEADING";
+  private static final String PITCH_EXPRESSION = "PITCH";
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -63,22 +67,22 @@ public class MainActivity extends AppCompatActivity {
 
     // add renderer using rotation expressions
     SimpleRenderer renderer = new SimpleRenderer();
-    renderer.getSceneProperties().setHeadingExpression("[HEADING]");
-    renderer.getSceneProperties().setPitchExpression("[PITCH]");
+    renderer.getSceneProperties().setHeadingExpression('[' + HEADING_EXPRESSION + ']');
+    renderer.getSceneProperties().setPitchExpression('[' + PITCH_EXPRESSION + ']');
     graphicsOverlay.setRenderer(renderer);
 
     // create a red cone graphic
     SimpleMarkerSceneSymbol coneSymbol = SimpleMarkerSceneSymbol.createCone(Color.RED, 100, 100);
-    coneSymbol.setPitch(-90);  // correct symbol's default pitch
+    coneSymbol.setPitch(-PITCH_OFFSET);  // correct symbol's default pitch
     Graphic cone = new Graphic(new Point(83.9, 28.41, 200, SpatialReferences.getWgs84()), coneSymbol);
     graphicsOverlay.getGraphics().add(cone);
 
     // bind attribute based on values in seek bars
     SeekBar headingSeekBar = findViewById(R.id.headingSeekBar);
-    cone.getAttributes().put("HEADING", headingSeekBar.getProgress());
+    cone.getAttributes().put(HEADING_EXPRESSION, headingSeekBar.getProgress());
     headingSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        cone.getAttributes().put("HEADING", progress);
+        cone.getAttributes().put(HEADING_EXPRESSION, progress);
       }
 
       @Override public void onStartTrackingTouch(SeekBar seekBar) {
@@ -90,10 +94,10 @@ public class MainActivity extends AppCompatActivity {
       }
     });
     SeekBar pitchSeekBar = findViewById(R.id.pitchSeekBar);
-    cone.getAttributes().put("PITCH", pitchSeekBar.getProgress() - 90);
+    cone.getAttributes().put(PITCH_EXPRESSION, pitchSeekBar.getProgress() - PITCH_OFFSET);
     pitchSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        cone.getAttributes().put("PITCH", progress - 90);
+        cone.getAttributes().put(PITCH_EXPRESSION, progress - PITCH_OFFSET);
       }
 
       @Override public void onStartTrackingTouch(SeekBar seekBar) {
@@ -104,5 +108,23 @@ public class MainActivity extends AppCompatActivity {
 
       }
     });
+  }
+
+  @Override
+  protected void onPause() {
+    mSceneView.pause();
+    super.onPause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mSceneView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    mSceneView.dispose();
+    super.onDestroy();
   }
 }
