@@ -1,6 +1,6 @@
 # Search for webmap
 
-Find webmap portal item by using a search term.
+Find webmap portal items by using a search term.
 
 ![Search for webmap App](search-for-webmap.png)
 
@@ -14,7 +14,8 @@ search for webmap portal items using a text search.
 
 Enter search terms into the search bar. Once the search is complete a
 drawer will open listing the resultant webmaps. Tap on a webmap to set
-it to the map view.
+it to the map view. Scrolling to the bottom of the webmap recycler view
+will get more results.
 
 ## How it works
 
