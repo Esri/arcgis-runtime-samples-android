@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
   private PortalQueryResultSet<PortalItem> mPortalQueryResultSet;
   private DrawerLayout mDrawer;
   private ActionBarDrawerToggle mDrawerToggle;
+  private ListenableFuture<PortalQueryResultSet<PortalItem>> mMoreResults;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,11 @@ public class MainActivity extends AppCompatActivity {
       public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
         if (!recyclerView.canScrollVertically(1)) {
-          getMoreResults();
+          // only get more results if some results have already been returned and no more results are currently being
+          // returned
+          if (mPortalQueryResultSet != null && mMoreResults.isDone()) {
+            getMoreResults();
+          }
         }
       }
     });
@@ -124,12 +129,11 @@ public class MainActivity extends AppCompatActivity {
   private void getMoreResults() {
     if (mPortalQueryResultSet.getNextQueryParameters() != null) {
       // find the next 10 matching portal items
-      ListenableFuture<PortalQueryResultSet<PortalItem>> results = mPortal
-          .findItemsAsync(mPortalQueryResultSet.getNextQueryParameters());
-      results.addDoneListener(() -> {
+      mMoreResults = mPortal.findItemsAsync(mPortalQueryResultSet.getNextQueryParameters());
+      mMoreResults.addDoneListener(() -> {
         try {
           // replace the result set with the current set of results
-          mPortalQueryResultSet = results.get();
+          mPortalQueryResultSet = mMoreResults.get();
           List<PortalItem> portalItems = mPortalQueryResultSet.getResults();
           // add results to the recycler view
           mPortalItemList.addAll(portalItems);
@@ -205,13 +209,6 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-  }
-
-  @Override
-  protected void onPostCreate(Bundle savedInstanceState) {
-    super.onPostCreate(savedInstanceState);
-    // Sync the toggle state after onRestoreInstanceState has occurred.
-    mDrawerToggle.syncState();
   }
 
   @Override

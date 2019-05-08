@@ -1,14 +1,14 @@
 # Search for webmap
 
-Find portal items by using a keyword, and limit the results to webmaps.
+Find webmap portal item by using a search term.
 
 ![Search for webmap App](search-for-webmap.png)
 
 ## Use case
 
 Portals can contain many portal items and at times you may wish to query
-the the portal to find what you're looking for. In this case we search
-for webmap portal items using a text search.
+the the portal to find what you're looking for. In this example, we
+search for webmap portal items using a text search.
 
 ## How to use the sample
 
