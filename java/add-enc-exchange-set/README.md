@@ -34,13 +34,10 @@ An ENC exchange set is a catalog of data files which can be loaded as cells. The
 1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1 & 2.
 1. Execute the following command:
 
-`adb push hydrography /sdcard/ArcGIS/hydrography`
-
 `adb push ExchangeSetwithoutUpdates /sdcard/ArcGIS/Samples/ENC/ExchangeSetwithoutUpdates`
 
 Link | Local Location
 ---------|-------|
-|[Hydrography Data](https://developers.arcgis.com/downloads/data)| `<sdcard>`/ArcGIS/hydrography/|
 |[ENC Exchange Set](https://arcgisruntime.maps.arcgis.com/home/item.html?id=9d2987a825c646468b3ce7512fb76e2d)| `<sdcard>`/ArcGIS/Samples/ENC/ExchangeSetwithoutUpdates/|
  
 #### Tags
