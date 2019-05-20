@@ -25,6 +25,10 @@ Your app may need to access items that are only shared with authorized users. Fo
 The user's access token should be treated with the utmost of security, and as such, we do not recommend storing the user's Access Token in SharedPreferences as SharedPreferences are not encrypted. We have created this sample to highlight the use of the ArcGISRuntime API.
 Please use the Android keystore provider where available: https://developer.android.com/training/articles/keystore#UsingAndroidKeyStore
 
+## WebView
+Please note that we have chosen to include use of the `WebView` as a fallback mechanism if the user does not have a web browser installed, only as a matter of course to allow you to use this sample in all circumstances.
+We do not recommend using `WebView` as part of your OAuth flow as per Google's recommendations: https://developers.googleblog.com/2016/08/modernizing-oauth-interactions-in-native-apps.html
+
 ## Relevant API
  * AuthenticationManager
  * AuthenticationChallengeHandler
