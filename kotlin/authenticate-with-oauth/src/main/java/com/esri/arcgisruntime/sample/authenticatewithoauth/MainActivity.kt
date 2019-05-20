@@ -59,9 +59,6 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
 
   companion object {
     private val TAG = MainActivity::class.java.simpleName
-
-    // maximum expiry is 2 weeks = 20160
-    private const val ACCESS_TOKEN_EXPIRY_MINS = 20160L
   }
 
   // define configuration for OAuth Portal using custom redirect URL to receive code after auth has been granted
@@ -141,19 +138,11 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
         sharedPreferences.accessToken?.let { accessToken ->
           // USER_CREDENTIAL_CHALLENGE is issued when attempt to use access token fails
           if (authChallenge.type == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE) {
-            // check for expiration of token
-            sharedPreferences.accessTokenExpiry.let {
-              // if expiry hasn't been set, the value of the expiry will be 0. If we have an expiry, we check if the value
-              // is less than the current epoch reported by the device
-              if (it in 1 until System.currentTimeMillis()) {
-                // access token has expired so clear the token and expiry
-                sharedPreferences.clearAccessToken()
-                // begin OAuth flow to generate auth code
-                beginOAuth()
-                // treat as cancel
-                return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
-              }
-            }
+            sharedPreferences.clearAccessToken()
+            // begin OAuth flow to generate auth code
+            beginOAuth()
+            // treat as cancel
+            return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
           }
 
           // OAUTH_CREDENTIAL_CHALLENGE is issued when the portal is detected as supporting OAuth
@@ -181,7 +170,6 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
           val credential = request.executeAsync().get()
           with(sharedPreferences) {
             putAccessToken(credential.accessToken)
-            putAccessTokenExpiry(System.currentTimeMillis() + (ACCESS_TOKEN_EXPIRY_MINS * 60))
             clearAuthCode()
           }
           // continue with credentials generated using auth code
@@ -215,7 +203,10 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   private fun beginOAuth() {
     // get the authorization code by sending user to the authorization screen
     val authorizationUrl = OAuthTokenCredentialRequest.getAuthorizationUrl(
-      oAuthConfig.portalUrl, oAuthConfig.clientId, oAuthConfig.redirectUri, ACCESS_TOKEN_EXPIRY_MINS
+      oAuthConfig.portalUrl,
+      oAuthConfig.clientId,
+      oAuthConfig.redirectUri,
+      0
     )
 
     // create an Intent to attempt to handle the authorization URL
@@ -324,20 +315,6 @@ fun SharedPreferences.putAccessToken(accessToken: String) {
 
 fun SharedPreferences.clearAccessToken() {
   this.edit().remove("access_token")
-    .apply()
-  this.clearAccessTokenExpiry()
-}
-
-val SharedPreferences.accessTokenExpiry: Long
-  get() = this.getLong("access_token_expiry", 0)
-
-fun SharedPreferences.putAccessTokenExpiry(timeInMillis: Long) {
-  this.edit().putLong("access_token_expiry", timeInMillis)
-    .apply()
-}
-
-fun SharedPreferences.clearAccessTokenExpiry() {
-  this.edit().remove("access_token_expiry")
     .apply()
 }
 
