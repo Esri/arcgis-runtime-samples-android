@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.searchforwebmap;
 
 import java.util.List;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,6 +30,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -44,8 +47,10 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
-  private RecyclerView mRecyclerView;
   private Portal mPortal;
+  private TextView mSearchInstructionsTextView;
+
+  private RecyclerView mRecyclerView;
   private List<PortalItem> mPortalItemList;
   private PortalQueryResultSet<PortalItem> mPortalQueryResultSet;
   private DrawerLayout mDrawer;
@@ -59,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
 
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
+
+    // get a reference to the search instructions text view
+    mSearchInstructionsTextView = findViewById(R.id.searchInstructionsTextView);
 
     // load a portal using arcgis.com
     mPortal = new Portal(getString(R.string.arcgis_url));
@@ -105,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
     ListenableFuture<PortalQueryResultSet<PortalItem>> results = mPortal.findItemsAsync(params);
     results.addDoneListener(() -> {
       try {
+        // hide search instructions
+        mSearchInstructionsTextView.setVisibility(View.GONE);
         // update the results list view with matching items
         mPortalQueryResultSet = results.get();
         mPortalItemList = mPortalQueryResultSet.getResults();
@@ -184,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.search_menu, menu);
-
     MenuItem myActionMenuItem = menu.findItem(R.id.action_search);
     SearchView searchView = (SearchView) myActionMenuItem.getActionView();
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -209,6 +218,18 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  protected void onPostCreate(Bundle savedInstanceState) {
+    super.onPostCreate(savedInstanceState);
+    mDrawerToggle.syncState();
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    mDrawerToggle.onConfigurationChanged(newConfig);
   }
 
   @Override
