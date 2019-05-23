@@ -41,7 +41,6 @@ import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.OAuthConfiguration
 import com.esri.arcgisruntime.security.OAuthTokenCredentialRequest
-import com.esri.arcgisruntime.security.UserCredential
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -118,14 +117,11 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   /**
    * Function for handling authentication challenges.
    *
-   * Tries to use an access token if one is stored in SharedPreferences, if the token has expired, clear the token and
-   * expiry time and begin OAuth flow.
-   *
    * If an authorization code exists in the SharedPreferences, it's likely that the user is partially through the OAuth flow
    * and we need to try to obtain the token by performing a OAuthTokenCredentialRequest.
    *
-   * If there is neither an access token or an authorization code in the SharedPreferences, it's likely that this is the
-   * user's first attempt at OAuth. So begin OAuth flow.
+   * If there is not an authorization code in the SharedPreferences, it's likely that this is the user's first attempt
+   * at OAuth. So begin OAuth flow.
    *
    * @param authenticationChallenge the authentication challenge to handle
    * @return the AuthenticationChallengeResponse indicating which action to take
@@ -134,27 +130,6 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     authenticationChallenge?.let { authChallenge ->
 
       try {
-        // if SharedPreferences has an access token
-        sharedPreferences.accessToken?.let { accessToken ->
-          // USER_CREDENTIAL_CHALLENGE is issued when attempt to use access token fails
-          if (authChallenge.type == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE) {
-            sharedPreferences.clearAccessToken()
-            // begin OAuth flow to generate auth code
-            beginOAuth()
-            // treat as cancel
-            return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
-          }
-
-          // OAUTH_CREDENTIAL_CHALLENGE is issued when the portal is detected as supporting OAuth
-          if (authChallenge.type == AuthenticationChallenge.Type.OAUTH_CREDENTIAL_CHALLENGE) {
-            // attempt to use stored access token for auth
-            return AuthenticationChallengeResponse(
-              AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
-              UserCredential.createFromToken(accessToken, authChallenge.remoteResource?.uri)
-            )
-          }
-        }
-
         // if SharedPreferences has an auth code, we've likely just been through the OAuth flow and now have an auth code
         // we can use to request a new access token
         sharedPreferences.authCode?.let {
@@ -167,11 +142,9 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
             sharedPreferences.authCode
           )
 
+          // we've used the auth code to obtain an access token, so clear it
+          sharedPreferences.clearAuthCode()
           val credential = request.executeAsync().get()
-          with(sharedPreferences) {
-            putAccessToken(credential.accessToken)
-            clearAuthCode()
-          }
           // continue with credentials generated using auth code
           return AuthenticationChallengeResponse(
             AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
@@ -302,19 +275,6 @@ val SharedPreferences.authCode: String?
 
 fun SharedPreferences.clearAuthCode() {
   this.edit().remove("auth_code")
-    .apply()
-}
-
-val SharedPreferences.accessToken: String?
-  get() = this.getString("access_token", null)
-
-fun SharedPreferences.putAccessToken(accessToken: String) {
-  this.edit().putString("access_token", accessToken)
-    .apply()
-}
-
-fun SharedPreferences.clearAccessToken() {
-  this.edit().remove("access_token")
     .apply()
 }
 
