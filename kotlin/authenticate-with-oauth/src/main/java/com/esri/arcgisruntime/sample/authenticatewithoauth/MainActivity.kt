@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
             null,
             oAuthConfig.clientId,
             oAuthConfig.redirectUri,
-            sharedPreferences.authCode
+            it
           )
 
           // we've used the auth code to obtain an access token, so clear it
