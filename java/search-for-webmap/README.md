@@ -7,7 +7,7 @@ Find webmap portal items by using a search term.
 ## Use case
 
 Portals can contain many portal items and at times you may wish to query
-the the portal to find what you're looking for. In this example, we
+the portal to find what you're looking for. In this example, we
 search for webmap portal items using a text search.
 
 ## How to use the sample

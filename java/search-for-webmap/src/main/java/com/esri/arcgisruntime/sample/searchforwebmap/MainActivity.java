@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         // get 10 more results to fill the recycler view
         getMoreResults();
       } catch (Exception e) {
-        String error = "Error getting portal query result set: " + e;
+        String error = "Error getting portal query result set: " + e.getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
           mRecyclerView.getAdapter().notifyDataSetChanged();
           mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 9);
         } catch (Exception e) {
-          String error = "Error getting portal query result set: " + e;
+          String error = "Error getting portal query result set: " + e.getMessage();
           Toast.makeText(this, error, Toast.LENGTH_LONG).show();
           Log.e(TAG, error);
         }
