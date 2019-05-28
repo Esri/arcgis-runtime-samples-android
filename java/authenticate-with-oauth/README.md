@@ -2,11 +2,11 @@
 
 This sample demonstrates how to authenticate with ArcGIS Online (or your own portal) using OAuth2 to access secured resources (such as private web maps or layers). Accessing secured items requires logging in to the portal that hosts them (an ArcGIS Online account, for example).
 
+![Authenticate with OAuth App](authenticate-with-oauth.png)
+
 ## Use case
 
 Your app may need to access items that are only shared with authorized users. For example, your organization may host private data layers or feature services that are only accessible to verified users. You may also need to take advantage of premium ArcGIS Online services, such as geocoding or routing services, which require a named user login.
-
-![Authenticate with OAuth App](authenticate-with-oauth.png)
 
 ## How to use the sample
 
