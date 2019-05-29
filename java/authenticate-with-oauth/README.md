@@ -12,8 +12,8 @@ Your app may need to access items that are only shared with authorized users. Fo
 
 1. When you run the sample, the app will load a web map which contains premium content. You will be challenged for an ArcGIS Online login to view the private layers.
 1. Enter a user name and password for an ArcGIS Online named user account (such as your ArcGIS for Developers account).
-4. If you authenticate successfully, the traffic layer will display, otherwise the map will contain only the public basemap layer.
-5. You can alter the code to supply OAuth configuration settings specific to your app.
+1. If you authenticate successfully, the traffic layer will display, otherwise the map will contain only the public basemap layer.
+1. You can alter the code to supply OAuth configuration settings specific to your app.
 
 ## How it works
 

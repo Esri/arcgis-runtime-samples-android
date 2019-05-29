@@ -24,6 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- You must declare this activity, an intent receiver, to display the OAuth login -->
         <activity
             android:name="com.esri.arcgisruntime.security.DefaultOAuthIntentReceiver"
             android:launchMode="singleTask">

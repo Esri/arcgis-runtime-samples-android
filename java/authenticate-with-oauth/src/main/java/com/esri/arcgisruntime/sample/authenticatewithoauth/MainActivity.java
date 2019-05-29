@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
 
     try {
       // set up an oauth config with url to portal, a client id and a re-direct url
-      // a custom client id for your app can be
+      // a custom client id for your app can be set on the ArcGIS for Developers dashboard under
+      // Authentication --> Redirect URIs
       OAuthConfiguration oAuthConfiguration = new OAuthConfiguration(getString(R.string.portal_url),
           getString(R.string.oauth_client_id),
           BuildConfig.APPLICATION_ID + "://" + getString(R.string.oauth_redirect_host));
@@ -56,12 +57,11 @@ public class MainActivity extends AppCompatActivity {
       DefaultAuthenticationChallengeHandler defaultAuthenticationChallengeHandler = new DefaultAuthenticationChallengeHandler(
           this);
 
-      // define this app's challenge handler as default
+      // use the DefaultChallengeHandler to handle authentication challenges
       AuthenticationManager.setAuthenticationChallengeHandler(defaultAuthenticationChallengeHandler);
 
       // add an OAuth configuration
-      // NOTE: for this configuration to work, you must add an intent receiver to the app's manifest to handle starting
-      // a browser
+      // NOTE: you must add the DefaultOAuthIntentReceiver Activity to the app's manifest to handle starting a browser
       AuthenticationManager.addOAuthConfiguration(oAuthConfiguration);
 
       // load the
