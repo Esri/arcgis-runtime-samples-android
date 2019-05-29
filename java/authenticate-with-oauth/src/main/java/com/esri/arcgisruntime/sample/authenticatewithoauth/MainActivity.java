@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
       // NOTE: you must add the DefaultOAuthIntentReceiver Activity to the app's manifest to handle starting a browser
       AuthenticationManager.addOAuthConfiguration(oAuthConfiguration);
 
-      // load the
+      // load the portal and add the portal item as a map to the map view
       Portal portal = new Portal(getString(R.string.portal_url));
       PortalItem portalItem = new PortalItem(portal, getString(R.string.webmap_world_traffic_id));
       ArcGISMap map = new ArcGISMap(portalItem);
