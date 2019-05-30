@@ -15,12 +15,9 @@ Enter search terms into the search bar (use simple searches like "fire", "census
 ## How it works
 
 1. Create a new `Portal` and load it.
-2. Create new `PortalItemQueryParameters`. Set the type to
-   `PortalItem.Type.WEBMAP` and the query a keyword you want to search.
-3. Use `portal.findItemsAsync(params)` to get the first set (10 by
-   default) of matching items.
-4. Get more results with
-   `portal.findItemsAsync(portalQueryResultSet.getNextQueryParameters())`.
+2. Create new `PortalItemQueryParameters`. Set the type to `PortalItem.Type.WEBMAP` and the query a keyword you want to search.
+3. Use `portal.findItemsAsync(params)` to get the first set (10 by default) of matching items.
+4. Get more results with `portal.findItemsAsync(portalQueryResultSet.getNextQueryParameters())`.
 
 
 ## Relevant API
@@ -31,5 +28,8 @@ Enter search terms into the search bar (use simple searches like "fire", "census
 * PortalQueryResultSet
 
 ## Tags
-
-webmap, query, search, keyword
+Edit & Manage Data
+webmap
+query
+search
+keyword
