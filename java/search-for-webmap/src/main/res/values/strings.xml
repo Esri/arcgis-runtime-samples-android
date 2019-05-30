@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Search for webmap</string>
+    <string name="arcgis_url">http://arcgis.com</string>
+    <string name="search">Search</string>
+</resources>
