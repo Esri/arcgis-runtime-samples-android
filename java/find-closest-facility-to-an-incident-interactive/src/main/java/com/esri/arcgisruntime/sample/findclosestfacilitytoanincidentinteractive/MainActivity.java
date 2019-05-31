@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -52,17 +53,16 @@ public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
+  private final SpatialReference mWebMercator = SpatialReferences.getWebMercator();
+
   private MapView mMapView;
   private GraphicsOverlay mFacilityGraphicsOverlay;
   private GraphicsOverlay mIncidentGraphicsOverlay;
+  private SimpleLineSymbol mRouteSymbol;
+  private List<Facility> mFacilities;
   private ClosestFacilityTask mClosestFacilityTask;
   private ClosestFacilityParameters mClosestFacilityParameters;
-  private List<Facility> mFacilities;
-  private SimpleLineSymbol mRouteSymbol;
   private Point mIncidentPoint;
-
-  // same spatial reference of the map
-  private final SpatialReference spatialReference = SpatialReferences.getWebMercator();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     mIncidentGraphicsOverlay = new GraphicsOverlay();
     createFacilitiesAndGraphics();
 
-    // to load graphics faster, add graphics overlay to view once all graphics are in graphics overlay
+    // add graphics overlays to the map view
     mMapView.getGraphicsOverlays().add(mFacilityGraphicsOverlay);
     mMapView.getGraphicsOverlays().add(mIncidentGraphicsOverlay);
 
@@ -111,9 +111,9 @@ public class MainActivity extends AppCompatActivity {
     });
     mClosestFacilityTask.loadAsync();
 
-    // symbols that display incident(black cross) and route(blue line) to view
-    SimpleMarkerSymbol incidentSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, 0xFF000000, 20);
-    mRouteSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF0000FF, 2.0f);
+    // symbols that display incident (black cross) and route (blue line) to view
+    SimpleMarkerSymbol incidentSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, Color.BLACK, 20);
+    mRouteSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 2.0f);
 
     // place incident were user clicks and display route to closest facility
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         // show incident to the map view
         Point mapPoint = mMapView
             .screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
-        mIncidentPoint = new Point(mapPoint.getX(), mapPoint.getY(), spatialReference);
+        mIncidentPoint = new Point(mapPoint.getX(), mapPoint.getY(), mWebMercator);
         Graphic graphic = new Graphic(mIncidentPoint, incidentSymbol);
         mIncidentGraphicsOverlay.getGraphics().add(graphic);
         populateParametersAndSolveRoute();
@@ -139,13 +139,13 @@ public class MainActivity extends AppCompatActivity {
   private void createFacilitiesAndGraphics() {
     // list of known facilities in the San Diego area
     mFacilities = Arrays.asList(
-        new Facility(new Point(-1.3042129900625112E7, 3860127.9479775648, spatialReference)),
-        new Facility(new Point(-1.3042193400557665E7, 3862448.873041752, spatialReference)),
-        new Facility(new Point(-1.3046882875518233E7, 3862704.9896770366, spatialReference)),
-        new Facility(new Point(-1.3040539754780494E7, 3862924.5938606677, spatialReference)),
-        new Facility(new Point(-1.3042571225655518E7, 3858981.773018156, spatialReference)),
-        new Facility(new Point(-1.3039784633928463E7, 3856692.5980474586, spatialReference)),
-        new Facility(new Point(-1.3049023883956768E7, 3861993.789732541, spatialReference)));
+        new Facility(new Point(-1.3042129900625112E7, 3860127.9479775648, mWebMercator)),
+        new Facility(new Point(-1.3042193400557665E7, 3862448.873041752, mWebMercator)),
+        new Facility(new Point(-1.3046882875518233E7, 3862704.9896770366, mWebMercator)),
+        new Facility(new Point(-1.3040539754780494E7, 3862924.5938606677, mWebMercator)),
+        new Facility(new Point(-1.3042571225655518E7, 3858981.773018156, mWebMercator)),
+        new Facility(new Point(-1.3039784633928463E7, 3856692.5980474586, mWebMercator)),
+        new Facility(new Point(-1.3049023883956768E7, 3861993.789732541, mWebMercator)));
 
     // image for displaying facility
     String facilityUrl = getString(R.string.hospital_symbol_url);
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Adds facilities(hospitals) and user's incident(black cross) to closest facility parameters which will be used to
+   * Adds facilities (hospitals) and user's incident (black cross) to closest facility parameters, which will be used to
    * display the closest route from the user's incident to its' nearest facility.
    */
   private void populateParametersAndSolveRoute() {
@@ -181,11 +181,9 @@ public class MainActivity extends AppCompatActivity {
         mIncidentGraphicsOverlay.getGraphics().add(new Graphic(route.getRouteGeometry(), mRouteSymbol));
       } catch (ExecutionException | InterruptedException e) {
         String error;
-        if (e.getMessage().contains("Unable to complete operation")) {
-          error = "Incident not within the San Diego Area!";
-        } else {
-          error = "Error getting closest facility result: " + e.getMessage();
-        }
+        error = e.getMessage().contains("Unable to complete operation") ?
+            "Incident not within the San Diego Area!" :
+            "Error getting closest facility result: " + e.getMessage();
         Log.e(TAG, error);
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
       }
