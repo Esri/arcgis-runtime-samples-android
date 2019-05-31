@@ -5,31 +5,22 @@ Find the service area within a network from a given point.
 ![Find service area App](find-service-area.png)
 
 ## Use case
-A service area shows locations that can be reached from a facility based
-off a certain impedance (such as travel time or distance). Barriers can
-also be added which can effect the impedance by not letting traffic
-through or adding the time is takes to pass that barrier.
 
-Service areas might be used by a hospital to know the areas they can
-reach in a set amount of time.
+A service area shows locations that can be reached from a facility based off a certain impedance, such as travel time or distance. Barriers can increase impedance by either adding to the time it takes to pass through the barrier or by altogether preventing passage.
+
+You might calculate the region around a hospital in which ambulances can service in 30 min or less.
 
 ## How to use the sample
-In order to find any service areas at least one facility needs to be
-added to the map view.
-1. To add a facility, click the facility button, then click anywhere on
-   the map.
-2. To add a barrier, click the barrier button, and click multiple
-   locations on map.
-3. Hit the barrier button again to finish drawing barrier. Hitting any
-   other button will also stop the barrier from drawing.
-4. To show service areas around facilities that were added, click show
-   service areas button. 
-   
-The reset button, clears all graphics and reset ServiceAreaTask.
+
+In order to find any service areas at least one facility needs to be added to the map view.
+* To add a facility, click the facility button, then click anywhere on the map.
+* To add a barrier, click the barrier button, and click multiple locations on map. Hit the barrier button again to finish drawing barrier. Hitting any other button will also stop the barrier from drawing.
+* To show service areas around facilities that were added, click show service areas button. 
+* The reset button clears all graphics and resets the service area task.
    
 ## How it works
 
-1. Create a new `ServiceAreaTask` from an online service.
+1. Create a new `ServiceAreaTask` from a network service.
 2. Create default `ServiceAreaParameters` from the service area task.
 3. Set the parameters to return polygons (true) to return all service
    areas.
@@ -50,5 +41,8 @@ The reset button, clears all graphics and reset ServiceAreaTask.
 * ServiceAreaResult
 * ServiceAreaTask
 
-#### Tags
-Routing and Logistics 
+## Tags
+Routing and Logistics
+facilities
+barriers
+impedance
