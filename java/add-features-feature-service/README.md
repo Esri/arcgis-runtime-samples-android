@@ -30,5 +30,4 @@ Tap on the map to add a feature.
 * ServiceFeatureTable
 
 #### Tags
-
-Layers
+Edit & Manage Data
