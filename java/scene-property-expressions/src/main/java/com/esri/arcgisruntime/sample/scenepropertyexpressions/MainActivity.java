@@ -30,6 +30,7 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.LayerSceneProperties;
 import com.esri.arcgisruntime.mapping.view.SceneView;
+import com.esri.arcgisruntime.symbology.SceneSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSceneSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
 
@@ -72,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
     graphicsOverlay.setRenderer(renderer);
 
     // create a red cone graphic
-    SimpleMarkerSceneSymbol coneSymbol = SimpleMarkerSceneSymbol.createCone(Color.RED, 100, 100);
+    // in this sample we've set the anchor position to center. By default, the anchor position is BOTTOM
+    SimpleMarkerSceneSymbol coneSymbol = SimpleMarkerSceneSymbol.createCone(Color.RED, 100, 100, SceneSymbol.AnchorPosition.CENTER);
     coneSymbol.setPitch(-PITCH_OFFSET);  // correct symbol's default pitch
     Graphic cone = new Graphic(new Point(83.9, 28.41, 200, SpatialReferences.getWgs84()), coneSymbol);
     graphicsOverlay.getGraphics().add(cone);
