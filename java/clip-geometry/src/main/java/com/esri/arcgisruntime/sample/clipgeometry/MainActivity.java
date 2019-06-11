@@ -101,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
           clipAreasOverlay.getGraphics().add(clippedGraphic);
         }
       }
+      // disable button
+      clipButton.setEnabled(false);
     });
   }
 

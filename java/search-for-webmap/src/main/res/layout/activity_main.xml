@@ -9,7 +9,7 @@
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
     </com.esri.arcgisruntime.mapping.view.MapView>
 
@@ -18,14 +18,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Use the search bar at the top to search for web maps" />
+        android:text="@string/to_search_text" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/webmapRecyclerView"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/drawerBackground"/>
+        android:background="@color/drawerBackground"
+        android:scrollbars="vertical" />
 
 </android.support.v4.widget.DrawerLayout>
 
