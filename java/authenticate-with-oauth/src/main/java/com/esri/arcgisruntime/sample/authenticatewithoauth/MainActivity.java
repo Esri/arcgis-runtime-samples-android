@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
       // Authentication --> Redirect URIs
       OAuthConfiguration oAuthConfiguration = new OAuthConfiguration(getString(R.string.portal_url),
           getString(R.string.oauth_client_id),
-          BuildConfig.APPLICATION_ID + "://" + getString(R.string.oauth_redirect_host));
+          getString(R.string.oauth_redirect_uri) + "://" + getString(R.string.oauth_redirect_host));
 
       // setup AuthenticationManager to handle auth challenges
       DefaultAuthenticationChallengeHandler defaultAuthenticationChallengeHandler = new DefaultAuthenticationChallengeHandler(
