@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
     // create a button to perform the clip operation
     Button clipButton = findViewById(R.id.clipButton);
     clipButton.setOnClickListener(v -> {
+      // disable button
+      clipButton.setEnabled(false);
       // for each envelope, clip the Colorado geometry and show the result, replacing the original Colorado graphic
       coloradoGraphic.setVisible(false);
       for (Graphic graphic : envelopesOverlay.getGraphics()) {

@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.esri.arcgisruntime.sample.findservicearea;
+package com.esri.arcgisruntime.sample.findserviceareainteractive;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,10 +101,10 @@ public class MainActivity extends AppCompatActivity {
     mBarrierBuilder = new PolylineBuilder(mMapView.getSpatialReference());
     List<ServiceAreaFacility> serviceAreaFacilities = new ArrayList<>();
 
-    SimpleLineSymbol outline = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 3.0f);
+    SimpleLineSymbol barrierLine = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 3.0f);
     ArrayList<SimpleFillSymbol> fillSymbols = new ArrayList<>();
-    fillSymbols.add(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, getResources().getColor(R.color.colorTransparentRed), outline));
-    fillSymbols.add(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, getResources().getColor(R.color.colorTransparentOrange), outline));
+    fillSymbols.add(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, getResources().getColor(R.color.colorTransparentRed), null));
+    fillSymbols.add(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, getResources().getColor(R.color.colorTransparentOrange), null));
 
     // icon used to display facilities to map view
     PictureMarkerSymbol facilitySymbol = new PictureMarkerSymbol(getString(R.string.hospital_icon_url));
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
           // create barrier and display to map view
           mBarrierBuilder.addPoint(new Point(mapPoint.getX(), mapPoint.getY(), mMapView.getSpatialReference()));
           barrierOverlay.getGraphics()
-              .add(barrierOverlay.getGraphics().size(), new Graphic(mBarrierBuilder.toGeometry(), outline));
+              .add(barrierOverlay.getGraphics().size(), new Graphic(mBarrierBuilder.toGeometry(), barrierLine));
         }
         return super.onSingleTapConfirmed(e);
       }
