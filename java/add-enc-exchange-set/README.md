@@ -28,17 +28,17 @@ An ENC exchange set is a catalog of data files which can be loaded as cells. The
 
 ## Offline Data
 
-1. To use ENC in ArcGIS Runtime, extra resources are required [Hydrography Data](https://developers.arcgis.com/downloads/data).
+1. To use ENC in ArcGIS Runtime, extra resources are required [Hydrography Data](https://developers.arcgis.com/downloads/data). For this sample, please place the Hydrography data in `<sdcard>/ArcGIS/hydrography`.
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=9d2987a825c646468b3ce7512fb76e2d).
 1. Extract the contents of the downloaded zip files to disk.
 1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1 & 2.
 1. Execute the following command:
 
-`adb push ExchangeSetwithoutUpdates /sdcard/ArcGIS/Samples/ENC/ExchangeSetwithoutUpdates`
+`adb push ExchangeSetwithoutUpdates /sdcard/ArcGIS/Samples/ENC/ExchangeSetwithoutUpdates/ENC_ROOT/`
 
 Link | Local Location
 ---------|-------|
-|[ENC Exchange Set](https://arcgisruntime.maps.arcgis.com/home/item.html?id=9d2987a825c646468b3ce7512fb76e2d)| `<sdcard>`/ArcGIS/Samples/ENC/ExchangeSetwithoutUpdates/|
+|[ENC Exchange Set](https://arcgisruntime.maps.arcgis.com/home/item.html?id=9d2987a825c646468b3ce7512fb76e2d)| `<sdcard>`/ArcGIS/Samples/ENC/ExchangeSetwithoutUpdates/ENC_ROOT/|
  
 #### Tags
 Layers
