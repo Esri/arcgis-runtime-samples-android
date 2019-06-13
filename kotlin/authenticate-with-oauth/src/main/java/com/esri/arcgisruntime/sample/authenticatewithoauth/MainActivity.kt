@@ -196,6 +196,14 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     }
   }
 
+  /**
+   * Sets up the WebView.
+   *
+   * Please note that we have chosen to include use of the WebView as a fallback mechanism if the user does not have a
+   * web browser installed, only as a matter of course to allow you to use this sample in all circumstances. We do not
+   * recommend using WebView as part of your OAuth flow as per Google's recommendations:
+   * https://developers.googleblog.com/2016/08/modernizing-oauth-interactions-in-native-apps.html
+   */
   private fun setupWebView() {
     // setup a WebViewClient to override handling of custom scheme and host for Intent
     webView.webViewClient = object : WebViewClient() {
