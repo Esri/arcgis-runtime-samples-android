@@ -1,0 +1,41 @@
+{
+    "category": "Visualization",
+    "description": "@@TODO: Update the orientation of a graphic using expressions based on its attributes.",
+    "ignore": false,
+    "images": [
+        "scene-property-expressions.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "rotation",
+        "expression",
+        "heading",
+        "pitch",
+        "scene",
+        "3D",
+        "symbology",
+        "graphics",
+        "GraphicsOverlay",
+        "SimpleRenderer",
+        "SceneProperties",
+        "SimpleRenderer.SceneProperties",
+        "SceneProperties.HeadingExpression",
+        "SceneProperties.PitchExpression",
+        "Graphic.Attributes"
+    ],
+    "redirect_from": "@@TODO: /android/latest/sample-code/scene-property-expressions.htm",
+    "relevant_apis": [
+        "GraphicsOverlay",
+        "SimpleRenderer",
+        "SceneProperties",
+        "SimpleRenderer.SceneProperties",
+        "SceneProperties.HeadingExpression",
+        "SceneProperties.PitchExpression",
+        "Graphic.Attributes"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/scenepropertyexpressions/MainActivity.java"
+    ],
+    "title": "@@TODO: Scene property expressions"
+}

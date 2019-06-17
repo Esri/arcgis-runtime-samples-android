@@ -37,7 +37,7 @@
     ],
     "snippets": [
         "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
-        "src/main/java/com/esri/arcgisruntime/distancecompositesymbol/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/distancecompositesymbol/MainActivity.java"
     ],
     "title": "@@TODO: Distance Composite Symbol"
 }

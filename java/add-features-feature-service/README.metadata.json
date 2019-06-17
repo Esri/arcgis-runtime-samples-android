@@ -1,12 +1,15 @@
 {
-    "category": "Layers",
+    "category": "Edit and Manage Data",
     "description": "@@TODO: Add new features to an online feature service.",
     "ignore": false,
     "images": [
         "add-features-feature-service.png"
     ],
     "keywords": [
-        "Layers",
+        "Edit",
+        "and",
+        "Manage",
+        "Data",
         "ArcGISMap",
         "Feature",
         "FeatureEditResult",
