@@ -1,8 +1,8 @@
-# Find service area
+# Find service area (interactive)
 
 Find the service area within a network from a given point.
 
-![Find service area App](find-service-area.png)
+![Find service area App](find-service-area-interactive.png)
 
 ## Use case
 
