@@ -1,0 +1,27 @@
+{
+    "category": "Maps and Scenes",
+    "description": "@@TODO: Open a scene from a Portal item. These scenes can be stored in ArcGIS Online or Portal.",
+    "ignore": false,
+    "images": [
+        "open-scene-portal-item.png"
+    ],
+    "keywords": [
+        "Maps",
+        "and",
+        "Scenes",
+        "PortalItem",
+        "Portal",
+        "ArcGISScene"
+    ],
+    "redirect_from": "@@TODO: /android/latest/sample-code/open-scene--portal-item.htm",
+    "relevant_apis": [
+        "PortalItem",
+        "Portal",
+        "ArcGISScene"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/opensceneportalitem/MainActivity.java"
+    ],
+    "title": "@@TODO: Open Scene - Portal Item"
+}

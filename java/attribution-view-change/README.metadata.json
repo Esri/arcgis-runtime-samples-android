@@ -1,0 +1,24 @@
+{
+    "category": "MapViews, SceneViews and UI",
+    "description": "@@TODO: This sample demonstrates showing UI components responding to attribution view.",
+    "ignore": false,
+    "images": [
+        "attribution-view-change.png"
+    ],
+    "keywords": [
+        "MapViews",
+        " SceneViews and UI",
+        "ArcGISMap",
+        "Basemap"
+    ],
+    "redirect_from": "/android/latest/sample-code/attribution-view-change.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "Basemap"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/attributionviewchange/MainActivity.java"
+    ],
+    "title": "@@TODO: Attribution View Change"
+}

@@ -1,0 +1,31 @@
+{
+    "category": "Layers",
+    "description": "@@TODO: Add new features to an online feature service.",
+    "ignore": false,
+    "images": [
+        "add-features-feature-service.png"
+    ],
+    "keywords": [
+        "Layers",
+        "ArcGISMap",
+        "Feature",
+        "FeatureEditResult",
+        "FeatureLayer",
+        "MapView",
+        "ServiceFeatureTable"
+    ],
+    "redirect_from": "/android/latest/sample-code/add-features-feature-service-.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "Feature",
+        "FeatureEditResult",
+        "FeatureLayer",
+        "MapView",
+        "ServiceFeatureTable"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/addfeaturesfeatureservice/MainActivity.java"
+    ],
+    "title": "@@TODO: Add features (Feature Service)"
+}

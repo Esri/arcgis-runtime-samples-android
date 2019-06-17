@@ -1,0 +1,29 @@
+{
+    "category": "Maps and Scenes",
+    "description": "@@TODO: Display a scene with elevation data.",
+    "ignore": false,
+    "images": [
+        "display-scene.png"
+    ],
+    "keywords": [
+        "Maps",
+        "and",
+        "Scenes",
+        "ArcGISScene",
+        "ArcGISTiledElevationSource",
+        "Camera",
+        "SceneView"
+    ],
+    "redirect_from": "@@TODO: /android/latest/sample-code/display-a-scene.htm",
+    "relevant_apis": [
+        "ArcGISScene",
+        "ArcGISTiledElevationSource",
+        "Camera",
+        "SceneView"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/displayscene/MainActivity.java"
+    ],
+    "title": "@@TODO: Display a Scene"
+}

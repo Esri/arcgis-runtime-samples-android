@@ -1,0 +1,27 @@
+{
+    "category": "Layers",
+    "description": "@@TODO: Load an ArcGIS Vector Tiled Layer from a URL.",
+    "ignore": false,
+    "images": [
+        "arcgis-vectortiledlayer-url.png"
+    ],
+    "keywords": [
+        "Layers",
+        "ArcGISMap",
+        "ArcGISVectorTiledLayer",
+        "Basemap",
+        "MapView"
+    ],
+    "redirect_from": "/android/latest/sample-code/arcgis-vector-tiled-layer-url.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "ArcGISVectorTiledLayer",
+        "Basemap",
+        "MapView"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/arcgisvectortiledlayerurl/MainActivity.java"
+    ],
+    "title": "@@TODO: ArcGIS Vector Tiled Layer URL"
+}

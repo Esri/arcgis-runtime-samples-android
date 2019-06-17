@@ -1,0 +1,24 @@
+{
+    "category": "Layers",
+    "description": "@@TODO: View an integrated mesh layer from a scene service.",
+    "ignore": false,
+    "images": [
+        "integrated-mesh-layer.png"
+    ],
+    "keywords": [
+        "Layers",
+        "3D",
+        "integrated",
+        "mesh",
+        "IntegratedMeshLayer"
+    ],
+    "redirect_from": "/android/latest/sample-code/add-an-integrated-mesh-layer.htm",
+    "relevant_apis": [
+        "IntegratedMeshLayer"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/integratedmeshlayer/MainActivity.java"
+    ],
+    "title": "@@TODO: Add an integrated mesh layer"
+}

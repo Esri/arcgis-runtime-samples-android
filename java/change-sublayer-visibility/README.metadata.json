@@ -1,0 +1,25 @@
+{
+    "category": "Visualization",
+    "description": "@@TODO: Toggle visibility of the map\u2019s sublayers.",
+    "ignore": false,
+    "images": [
+        "change-sublayer-visibility.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "ArcGISMap",
+        "ArcGISMapImageLayer",
+        "SublayerList"
+    ],
+    "redirect_from": "/android/latest/sample-code/change-sublayer-visibility.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "ArcGISMapImageLayer",
+        "SublayerList"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/mapimagelayersublayervisibility/MainActivity.java"
+    ],
+    "title": "@@TODO: Change Sublayer Visibility"
+}

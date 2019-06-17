@@ -1,0 +1,31 @@
+{
+    "category": "Visualization",
+    "description": "@@TODO: Add graphics to a List, create a SimpleRenderer to represent a symbol and style, and add the renderer to the MapView.",
+    "ignore": false,
+    "images": [
+        "add-graphics-renderer.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "Graphic",
+        "GraphicsOverlay",
+        "ListenableList",
+        "MapView",
+        "SimpleRenderer",
+        "SimpleMarkerSymbol"
+    ],
+    "redirect_from": "/android/latest/sample-code/add-graphics-renderer.htm",
+    "relevant_apis": [
+        "Graphic",
+        "GraphicsOverlay",
+        "ListenableList",
+        "MapView",
+        "SimpleRenderer",
+        "SimpleMarkerSymbol"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/addgraphicsrenderer/MainActivity.java"
+    ],
+    "title": "@@TODO: Add Graphics Renderer"
+}

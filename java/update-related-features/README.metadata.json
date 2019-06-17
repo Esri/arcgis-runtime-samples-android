@@ -1,0 +1,31 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "@@TODO: A MapView loaded with two related FeatureLayer\u2019s, national parks and preserves. The relationships between the layers is defined in the service. When you tap on a national park Feat",
+    "ignore": false,
+    "images": [
+        "update-related-features.png",
+        "legend.png"
+    ],
+    "keywords": [
+        "Edit",
+        "and",
+        "Manage",
+        "Data",
+        "ArcGISFeature",
+        "ServiceFeatureTable",
+        "RelatedQueryParameters",
+        "RelatedFeatureQueryResult"
+    ],
+    "redirect_from": "/android/latest/sample-code/update-related-features.htm",
+    "relevant_apis": [
+        "ArcGISFeature",
+        "ServiceFeatureTable",
+        "RelatedQueryParameters",
+        "RelatedFeatureQueryResult"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/updaterelatedfeatures/MainActivity.java"
+    ],
+    "title": "@@TODO: Update Related Features"
+}

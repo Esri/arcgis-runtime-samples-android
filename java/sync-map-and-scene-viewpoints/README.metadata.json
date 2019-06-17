@@ -1,0 +1,30 @@
+{
+    "category": "MapViews, SceneViews and UI",
+    "description": "@@TODO: This sample demonstrates how to keep the viewpoints of multiple map or scene views in sync, so that navigating one view immediately updates the others.",
+    "ignore": false,
+    "images": [
+        "sync-map-and-scene-viewpoints.png"
+    ],
+    "keywords": [
+        "MapViews",
+        " SceneViews and UI",
+        "GeoView",
+        "GeoView.addViewpointChangedListener(...)",
+        "GeoView.isNavigating()",
+        "GeoView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE)",
+        "GeoView.setViewpoint(...)"
+    ],
+    "redirect_from": "/android/latest/sample-code/sync-map-and-scene-viewpoints.htm",
+    "relevant_apis": [
+        "GeoView",
+        "GeoView.addViewpointChangedListener(...)",
+        "GeoView.isNavigating()",
+        "GeoView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE)",
+        "GeoView.setViewpoint(...)"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/syncmapandsceneviewpoints/MainActivity.java"
+    ],
+    "title": "@@TODO: Sync Map and Scene Viewpoints"
+}

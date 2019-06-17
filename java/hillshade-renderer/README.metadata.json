@@ -1,0 +1,21 @@
+{
+    "category": "Visualization",
+    "description": "@@TODO: Use a hillshade renderer on a raster.",
+    "ignore": false,
+    "images": [
+        "hillshade-renderer.png"
+    ],
+    "keywords": [
+        "Visualization"
+    ],
+    "redirect_from": "/android/latest/sample-code/hillshade-renderer.htm",
+    "relevant_apis": [
+        "@@TODO: *** PLEASE ADD RELEVANT APIS ***"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/hillshaderenderer/ParametersDialogFragment.java",
+        "src/main/java/com/esri/arcgisruntime/sample/hillshaderenderer/MainActivity.java"
+    ],
+    "title": "@@TODO: Hillshade Renderer"
+}

@@ -1,0 +1,23 @@
+{
+    "category": "Layers",
+    "description": "@@TODO: Open a shapefile stored on the device and display it as a feature layer with default symbology.",
+    "ignore": false,
+    "images": [
+        "feature-layer-shapefile.png"
+    ],
+    "keywords": [
+        "Layers",
+        "FeatureLayer",
+        "ShapefileFeatureTable"
+    ],
+    "redirect_from": "/android/latest/sample-code/feature-layer-shapefile.htm",
+    "relevant_apis": [
+        "FeatureLayer",
+        "ShapefileFeatureTable"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayershapefile/MainActivity.java"
+    ],
+    "title": "@@TODO: Feature Layer Shapefile"
+}

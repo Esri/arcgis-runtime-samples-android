@@ -1,0 +1,29 @@
+{
+    "category": "Visualization",
+    "description": "@@TODO: Override the default renderer of a shapefile when displaying with a FeatureLayer.",
+    "ignore": false,
+    "images": [
+        "symbolize-shapefile.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "FeatureLayer",
+        "ShapefileFeatureTable",
+        "SimpleRenderer",
+        "SimpleFillSymbol",
+        "SimpleLineSymbol"
+    ],
+    "redirect_from": "@@TODO: /android/latest/sample-code/symbolize-a-shapefile.htm",
+    "relevant_apis": [
+        "FeatureLayer",
+        "ShapefileFeatureTable",
+        "SimpleRenderer",
+        "SimpleFillSymbol",
+        "SimpleLineSymbol"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/symbolizeshapefile/MainActivity.java"
+    ],
+    "title": "@@TODO: Symbolize a Shapefile"
+}

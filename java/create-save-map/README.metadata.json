@@ -1,0 +1,34 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "@@TODO: Create a map and save it to your portal.",
+    "ignore": false,
+    "images": [
+        "create-save-map.png"
+    ],
+    "keywords": [
+        "Edit",
+        "and",
+        "Manage",
+        "Data",
+        "ArcGISMap",
+        "OAuthLoginManager",
+        "OAuthTokenCredential",
+        "Portal",
+        "PortalSettings",
+        "PortalItem"
+    ],
+    "redirect_from": "@@TODO: /android/latest/sample-code/create-and-save-a-map.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "OAuthLoginManager",
+        "OAuthTokenCredential",
+        "Portal",
+        "PortalSettings",
+        "PortalItem"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/createsavemap/MainActivity.java"
+    ],
+    "title": "@@TODO: Create and Save a Map"
+}

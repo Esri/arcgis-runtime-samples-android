@@ -1,0 +1,31 @@
+{
+    "category": "Search and Query",
+    "description": "@@TODO: Shows related features to any feature tapped on.",
+    "ignore": false,
+    "images": [
+        "list-related-features.png"
+    ],
+    "keywords": [
+        "Search",
+        "and",
+        "Query",
+        "ArcGISFeature",
+        "ArcGISFeatureLayerInfo",
+        "ArcGISFeatureTable",
+        "RelatedFeatureQueryResult",
+        "RelatedQueryParameters"
+    ],
+    "redirect_from": "/android/latest/sample-code/list-related-features.htm",
+    "relevant_apis": [
+        "ArcGISFeature",
+        "ArcGISFeatureLayerInfo",
+        "ArcGISFeatureTable",
+        "RelatedFeatureQueryResult",
+        "RelatedQueryParameters"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/listrelatedfeatures/MainActivity.java"
+    ],
+    "title": "@@TODO: List Related Features"
+}

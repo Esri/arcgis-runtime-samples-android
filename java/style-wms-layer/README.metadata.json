@@ -1,0 +1,21 @@
+{
+    "category": "Visualization",
+    "description": "@@TODO: Shows how to change the style of a WMS layer.",
+    "ignore": false,
+    "images": [
+        "style-wms-layer.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "WmsLayer"
+    ],
+    "redirect_from": "/android/latest/sample-code/style-wms-layer.htm",
+    "relevant_apis": [
+        "WmsLayer"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/stylewmslayer/MainActivity.java"
+    ],
+    "title": "@@TODO: Style WMS Layer"
+}

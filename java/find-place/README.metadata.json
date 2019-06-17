@@ -1,0 +1,31 @@
+{
+    "category": "Search and Query",
+    "description": "@@TODO: Use geocode functionality to search for points of interest, around a location or within an extent.",
+    "ignore": false,
+    "images": [
+        "find-place.png"
+    ],
+    "keywords": [
+        "Search",
+        "and",
+        "Query",
+        "GeocodeParameters",
+        "GeocodeResult",
+        "LocatorTask",
+        "SuggestParameters",
+        "SuggestResult"
+    ],
+    "redirect_from": "/android/latest/sample-code/find-place.htm",
+    "relevant_apis": [
+        "GeocodeParameters",
+        "GeocodeResult",
+        "LocatorTask",
+        "SuggestParameters",
+        "SuggestResult"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/findplace/MainActivity.java"
+    ],
+    "title": "@@TODO: Find Place"
+}

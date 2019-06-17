@@ -1,0 +1,43 @@
+{
+    "category": "Visualization",
+    "description": "@@TODO: Play tours in KML files.",
+    "ignore": false,
+    "images": [
+        "play-a-kml-tour.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "KML",
+        "tour",
+        "story",
+        "interactive",
+        "narration",
+        "play",
+        "pause",
+        "animation",
+        "KmlTourController",
+        "KmlTourController.Tour",
+        "KmlTourController.Play()",
+        "KmlTourController.Pause()",
+        "KmlTourController.Reset()",
+        "KmlTour",
+        "KmlTour.TourStatus",
+        "KmlTour.PropertyChanged"
+    ],
+    "redirect_from": "/android/latest/sample-code/play-a-kml-tour.htm",
+    "relevant_apis": [
+        "KmlTourController",
+        "KmlTourController.Tour",
+        "KmlTourController.Play()",
+        "KmlTourController.Pause()",
+        "KmlTourController.Reset()",
+        "KmlTour",
+        "KmlTour.TourStatus",
+        "KmlTour.PropertyChanged"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/playakmltour/MainActivity.java"
+    ],
+    "title": "@@TODO: Play a KML tour"
+}

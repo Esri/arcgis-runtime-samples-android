@@ -1,0 +1,47 @@
+{
+    "category": "@@TODO: Java",
+    "description": "@@TODO: Use the GeometryEngine to calculate a geodesic path between two points and measure its distance.",
+    "ignore": false,
+    "images": [
+        "geodesic-operations.png"
+    ],
+    "keywords": [
+        "@@TODO: *** PLEASE ADD ADDITIONAL KEYWORDS ***",
+        "ArcGISMap",
+        "GeodeticCurveType",
+        "Geometry",
+        "GeometryEngine",
+        "Graphic",
+        "GraphicsOverlay",
+        "LinearUnit",
+        "LinearUnitId",
+        "MapView",
+        "Point",
+        "PointCollection",
+        "Polyline",
+        "SimpleLineSymbol",
+        "SimpleMarkerSymbol"
+    ],
+    "redirect_from": "/android/latest/sample-code/geodesic-operations.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "GeodeticCurveType",
+        "Geometry",
+        "GeometryEngine",
+        "Graphic",
+        "GraphicsOverlay",
+        "LinearUnit",
+        "LinearUnitId",
+        "MapView",
+        "Point",
+        "PointCollection",
+        "Polyline",
+        "SimpleLineSymbol",
+        "SimpleMarkerSymbol"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/geodesicoperations/MainActivity.java"
+    ],
+    "title": "@@TODO: Geodesic Operations"
+}

@@ -1,0 +1,36 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "@@TODO: Generate a geodatabase from a feature service.",
+    "ignore": false,
+    "images": [
+        "generate-geodatabase.png"
+    ],
+    "keywords": [
+        "Edit",
+        "and",
+        "Manage",
+        "Data",
+        "ArcGISMap",
+        "FeatureLayer",
+        "Geodatabase",
+        "GenerateGeodatabaseJob",
+        "GenerateGeodatabaseParameters",
+        "MapView",
+        "ServiceFeatureTable"
+    ],
+    "redirect_from": "/android/latest/sample-code/generate-geodatabase.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "FeatureLayer",
+        "Geodatabase",
+        "GenerateGeodatabaseJob",
+        "GenerateGeodatabaseParameters",
+        "MapView",
+        "ServiceFeatureTable"
+    ],
+    "snippets": [
+        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
+        "src/main/java/com/esri/arcgisruntime/sample/generategeodatabase/MainActivity.java"
+    ],
+    "title": "@@TODO: Generate Geodatabase"
+}
