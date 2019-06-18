@@ -18,7 +18,6 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://esri.bintray.com/arcgis' }
-	maven { url 'http://olympus.esri.com/artifactory/arcgisruntime-repo/'}
     }
     var
 }
