@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     Button solveRoutesButton = findViewById(R.id.solveRoutesButton);
     solveRoutesButton.setEnabled(false);
 
-    // set the map to be displayed in this view
+    // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
 
     // create a ArcGISMap with a Basemap instance with an Imagery base layer

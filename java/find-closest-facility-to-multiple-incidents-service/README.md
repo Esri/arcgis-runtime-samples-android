@@ -1,12 +1,12 @@
-# Find closest facility (static)
+# Find closest facility to multiple incidents (service)
 
 Find routes from several locations to the respective closest facility.
 
-![Find closest facility static App](find-closest-facility-static.png)
+![Find closest facility to multiple incidents service App](find-closest-facility-to-multiple-incidents-service.png)
 
 ## Use case
 
-Quickly and accurately determining the most efficient route between a location and a facility is a frequently encountered task for emergency services.
+Quickly and accurately determining the most efficient route between a location and a facility is a frequently encountered task. For example, a city's fire department may need to know which firestations in the vicinity offer the quickest routes to multiple fires. Solving for the closest fire station to the fire's location using an impedance of "travel time" would provide this information.
 
 ## How to use the sample
 
@@ -23,19 +23,19 @@ Click the 'Solve Routes' button to solve and display the route from each inciden
 4. Add a list of all facilities to the task parameters: `closestFacilityParameters.setFacilities(facilitiesList)`.
 5. Add a list of all incidents to the task parameters: `closestFacilityParameters.setIncidents(incidentsList)`.
 6. Get `ClosestFacilityResult` by solving the task with the provided parameters: `closestFacilityTask.solveClosestFacilityAsync(closestFacilityParameters)`.
-7. Find the closest facility for each incident by iterating over the incidentsList.
+7. Find the closest facility for each incident by iterating over the list of `Incident`s.
 8. Display the route as a `Graphic` using the `closestFacilityRoute.getRouteGeometry()`.
 
 ## Relevant API
 
-*   ClosestFacilityParameters
-*   ClosestFacilityResult
-*   ClosestFacilityRoute
-*   ClosestFacilityTask
-*   Facility
-*   Graphic
-*   GraphicsOverlay
-*   Incident
+*  ClosestFacilityParameters
+*  ClosestFacilityResult
+*  ClosestFacilityRoute
+*  ClosestFacilityTask
+*  Facility
+*  Graphic
+*  GraphicsOverlay
+*  Incident
 
 #### Tags
 Routing & Logistics
