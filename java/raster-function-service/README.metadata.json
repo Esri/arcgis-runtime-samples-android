@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Layers",
     "description": "@@TODO: Raster functions are operations performed on a raster to apply on-the-fly processing. This sample demonstrates how to create an image service raster and apply a hillshade raster fu",
     "ignore": false,
     "images": [

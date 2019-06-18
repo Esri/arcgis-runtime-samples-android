@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Cloud and Portal",
     "description": "@@TODO: Uses Windows credentials to access services hosted on a portal secured with Integrated Windows Authentication (IWA).",
     "ignore": false,
     "images": [

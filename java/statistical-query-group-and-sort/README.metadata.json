@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Search and Query",
     "description": "@@TODO: Query a ServiceFeatureTable to get statistics for one or more specified fields. The sample queries a service feature table of US states to get the selected statistics. The results ",
     "ignore": false,
     "images": [

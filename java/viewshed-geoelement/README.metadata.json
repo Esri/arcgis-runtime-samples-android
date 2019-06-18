@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Analysis",
     "description": "@@TODO: A viewshed shows the visible and obstructed areas from an observer\u2019s vantage point. This sample demonstrates how to attach a viewshed to a moving GeoElement.",
     "ignore": false,
     "images": [

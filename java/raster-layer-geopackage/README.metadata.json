@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Layers",
     "description": "@@TODO: Open a GeoPackage, obtain a raster from the package, and display the table as a RasterLayer.",
     "ignore": false,
     "images": [

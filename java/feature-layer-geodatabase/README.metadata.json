@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Layers",
     "description": "@@TODO: Consume an Esri mobile geodatabase by using a FeatureLayer and a GeodatabaseFeatureTable.",
     "ignore": false,
     "images": [

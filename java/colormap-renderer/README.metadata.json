@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Visualization",
     "description": "@@TODO: Use a ColormapRenderer on RasterLayer. ColormapRenderer can be used to replace values on a RasterLayer with a color based on the original value brightness.",
     "ignore": false,
     "images": [

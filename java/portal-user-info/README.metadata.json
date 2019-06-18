@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Cloud and Portal",
     "description": "@@TODO: Use the DefaultAuthenticationChallengeHandler class to take care of showing an authentication dialog for logging into a Portal. Once authenticated against the portal, the app displ",
     "ignore": false,
     "images": [

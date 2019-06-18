@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Analysis",
     "description": "@@TODO: This sample demonstrates how to use GeometryEngine.Buffer to create polygons from a map location and linear distance (radius). For each input location, the sample creates two buffe",
     "ignore": false,
     "images": [

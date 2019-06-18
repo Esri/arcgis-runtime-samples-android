@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Layers",
     "description": "@@TODO: Load an ArcGIS Vector Tiled Layer from a URL.",
     "ignore": false,
     "images": [

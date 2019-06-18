@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Visualization",
     "description": "@@TODO: Add graphics to a List, create a SimpleRenderer to represent a symbol and style, and add the renderer to the MapView.",
     "ignore": false,
     "images": [

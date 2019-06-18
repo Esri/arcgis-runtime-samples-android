@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Visualization",
     "description": "@@TODO: Create a graphic using a distance composite scene symbol. Distance composite scene symbols can render different symbols depending on the distance between the camera and the graphic",
     "ignore": false,
     "images": [

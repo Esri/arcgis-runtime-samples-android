@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Layers",
     "description": "@@TODO: KML files can reference other KML files on the network as well as refresh intervals. This can be used to create a map that will periodically refresh itself with the latest data. Th",
     "ignore": false,
     "images": [

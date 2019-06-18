@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Visualization",
     "description": "@@TODO: Add points, polylines, and polygons as graphics, set a symbol renderer to the graphics and add to a graphics overlay. The sample also adds text symbols to represent text as symbols",
     "ignore": false,
     "images": [

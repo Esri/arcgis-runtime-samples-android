@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Search and Query",
     "description": "@@TODO: Execute an attribute and spatial query on the sublayers of an ArcGIS map image layer.",
     "ignore": false,
     "images": [

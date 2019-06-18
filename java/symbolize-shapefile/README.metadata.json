@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Visualization",
     "description": "@@TODO: Override the default renderer of a shapefile when displaying with a FeatureLayer.",
     "ignore": false,
     "images": [

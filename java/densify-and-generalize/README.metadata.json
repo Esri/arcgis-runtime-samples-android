@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Edit and Manage Data",
     "description": "@@TODO: Demonstrates how to densify or generalize a polyline geometry. In this example, points representing a ships location are shown at irregular intervals. One can densify the polyline ",
     "ignore": false,
     "images": [

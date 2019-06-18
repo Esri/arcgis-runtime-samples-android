@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Visualization",
     "description": "@@TODO: Use an RGBRenderer on a RasterLayer. An RGBRenderer is used to adjust the color bands of a multispectral image.",
     "ignore": false,
     "images": [

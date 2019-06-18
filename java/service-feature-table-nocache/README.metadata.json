@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Edit and Manage Data",
     "description": "@@TODO: Use a feature service in on-interaction-no-cache mode. This mode always fetches features from the server and does not cache features client side by setting the ServiceFeatureTable.",
     "ignore": false,
     "images": [

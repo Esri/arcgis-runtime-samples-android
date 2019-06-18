@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Edit and Manage Data",
     "description": "@@TODO: Perform geometry-on-geometry spatial operations by using GeometryEngine. Two input Polygons are added as Graphics to a GraphicsOverlay and displayed in a MapView.",
     "ignore": false,
     "images": [

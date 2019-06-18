@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Visualization",
     "description": "@@TODO: Use a BlendRenderer on a RasterLayer. BlendRenderer is used to blend elevation data with imagery, creating a 3D effect.",
     "ignore": false,
     "images": [

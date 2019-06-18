@@ -1,5 +1,5 @@
 {
-    "category": "@@TODO: Java",
+    "category": "Visualization",
     "description": "@@TODO: A StretchRenderer can be used on a RasterLayer. A StretchRenderer can be used to stretch tightly grouped values across the available value spectrum, creating more contrast between ",
     "ignore": false,
     "images": [
