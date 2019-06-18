@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.mapimagelayersublayervisibility;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 48.354406, -99.998267, 2);
     // create a MapImageLayer with dynamically generated map images
     mMapImageLayer = new ArcGISMapImageLayer(getResources().getString(R.string.world_cities_service));
-    mMapImageLayer.setOpacity(0.5f);
+    mMapImageLayer.setOpacity(0.9f);
     // add world cities layers as map operational layer
     map.getOperationalLayers().add(mMapImageLayer);
     // set the map to be displayed in this view
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
       } else if (!mLayers.get(0).isVisible() && !mCities.isChecked()) {
         // cities layer is off and menu item unchecked
         mLayers.get(0).setVisible(true);
+        Log.d("cities", String.valueOf(mLayers.get(0).getOpacity()));
         mCities.setChecked(true);
       }
       return true;
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
       } else if (!mLayers.get(1).isVisible() && !mContinent.isChecked()) {
         // continent layer is off and menu item unchecked
         mLayers.get(1).setVisible(true);
+        Log.d("continents", String.valueOf(mLayers.get(1).getOpacity()));
         mContinent.setChecked(true);
       }
       return true;
@@ -130,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
       } else if (!mLayers.get(2).isVisible() && !mWorld.isChecked()) {
         // world layer is off and menu item unchecked
         mLayers.get(2).setVisible(true);
+        Log.d("world", String.valueOf(mLayers.get(2).getOpacity()));
         mWorld.setChecked(true);
       }
       return true;
