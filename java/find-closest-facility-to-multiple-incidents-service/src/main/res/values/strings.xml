@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Find closest facility (static)</string>
+    <string name="app_name">Find closest facility to multiple incidents (service)</string>
     <string name="solve_routes">Solve routes</string>
     <string name="fire_station_symbol_url">https://static.arcgis.com/images/Symbols/SafetyHealth/FireStation.png</string>
     <string name="crime_symbol_url">https://static.arcgis.com/images/Symbols/SafetyHealth/esriCrimeMarker_56_Gradient.png</string>

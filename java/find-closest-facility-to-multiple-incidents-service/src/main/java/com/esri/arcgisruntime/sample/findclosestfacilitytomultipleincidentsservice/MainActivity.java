@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.esri.arcgisruntime.sample.findclosestfacilitystatic;
+package com.esri.arcgisruntime.sample.findclosestfacilitytomultipleincidentsservice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
