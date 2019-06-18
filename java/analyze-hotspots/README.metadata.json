@@ -1,5 +1,5 @@
 {
-    "category": "Analysis",
+    "category": "@@TODO: Java",
     "description": "@@TODO: Execute a geoprocessing task to calculate a hotspot analysis based on the frequency of 911 calls. It calculates the frequency of these calls within a given study area during a spec",
     "ignore": false,
     "images": [

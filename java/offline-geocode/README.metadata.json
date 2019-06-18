@@ -1,5 +1,5 @@
 {
-    "category": "Search and Query",
+    "category": "@@TODO: Java",
     "description": "@@TODO: Geocode addresses to locations and reverse geocode locations to addresses when the device does not have network connectivity.",
     "ignore": false,
     "images": [

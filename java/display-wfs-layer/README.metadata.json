@@ -1,5 +1,5 @@
 {
-    "category": "Layers",
+    "category": "@@TODO: Java",
     "description": "@@TODO: Display a layer from a WFS service, requesting only features for the current extent.",
     "ignore": false,
     "images": [

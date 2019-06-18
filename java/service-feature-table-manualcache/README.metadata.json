@@ -1,5 +1,5 @@
 {
-    "category": "Edit and Manage Data",
+    "category": "@@TODO: Java",
     "description": "@@TODO: Use a feature service in manual cache mode. This mode does not fetch features until a call to populate from service is called. From this point onwards, no additional queries are se",
     "ignore": false,
     "images": [

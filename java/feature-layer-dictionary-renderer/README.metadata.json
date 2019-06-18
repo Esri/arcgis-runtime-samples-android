@@ -1,5 +1,5 @@
 {
-    "category": "Visualization",
+    "category": "@@TODO: Java",
     "description": "@@TODO: Displays a FeatureLayer with military symbology, using ArcGIS Runtime\u2019s DictionaryRenderer.",
     "ignore": false,
     "images": [

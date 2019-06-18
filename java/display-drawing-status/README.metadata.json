@@ -1,5 +1,5 @@
 {
-    "category": "MapViews, SceneViews and UI",
+    "category": "@@TODO: Java",
     "description": "@@TODO: Use the DrawStatus value representing drawing state of the MapView to display an Android ProgressBar while the map is loading.",
     "ignore": false,
     "images": [

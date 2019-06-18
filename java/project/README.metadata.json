@@ -1,5 +1,5 @@
 {
-    "category": "Edit and Manage Data",
+    "category": "@@TODO: Java",
     "description": "@@TODO: Being able to project between spatial references is fundamental to a GIS. An example of when you would need to re-project data is if you had data in two different spatial reference",
     "ignore": false,
     "images": [

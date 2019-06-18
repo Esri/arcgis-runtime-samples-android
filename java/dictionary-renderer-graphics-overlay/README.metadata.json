@@ -1,5 +1,5 @@
 {
-    "category": "Visualization",
+    "category": "@@TODO: Java",
     "description": "@@TODO: The dictionary renderer creates graphics using a local mil2525d style file and a XML file with key, value attributes for each graphic.",
     "ignore": false,
     "images": [

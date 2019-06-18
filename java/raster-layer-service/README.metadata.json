@@ -1,5 +1,5 @@
 {
-    "category": "Layers",
+    "category": "@@TODO: Java",
     "description": "@@TODO: Create an ImageServiceRaster and add it to a RasterLayer. An ImageServiceRaster allows you to work with an image map service exposed by the ArcGIS Server Rest API.",
     "ignore": false,
     "images": [

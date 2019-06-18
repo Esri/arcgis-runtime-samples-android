@@ -1,5 +1,5 @@
 {
-    "category": "MapViews, SceneViews and UI",
+    "category": "@@TODO: Java",
     "description": "@@TODO: Draw a callout on a map view and manage its behavior. A callout displays an Android View that contains text and/or other content. It has a leader that points to the location the ca",
     "ignore": false,
     "images": [

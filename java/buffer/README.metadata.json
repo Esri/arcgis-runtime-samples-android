@@ -6,7 +6,9 @@
         "buffer.png"
     ],
     "keywords": [
-        "Analysis Buffer GeometryEngine",
+        "Analysis",
+        "Buffer",
+        "GeometryEngine",
         "GeometryEngine.Buffer",
         "GeometryEngine.BufferGeodetic",
         "GraphicsOverlay"

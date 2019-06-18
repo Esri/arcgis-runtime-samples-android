@@ -1,5 +1,5 @@
 {
-    "category": "Visualization",
+    "category": "@@TODO: Java",
     "description": "@@TODO: Create an ImageServiceRaster, fetch the RenderingRules from the service info, and use a RenderingRule to create an ImageServiceRaster and add it to a raster layer.",
     "ignore": false,
     "images": [

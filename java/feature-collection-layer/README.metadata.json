@@ -1,5 +1,5 @@
 {
-    "category": "Layers",
+    "category": "@@TODO: Java",
     "description": "@@TODO: Creates a new Feature Collection with a Point, Polyline, and Polygon Feature Collection Table. The Collection is then displayed on the ArcGISMap as a Feature Collection Layer.",
     "ignore": false,
     "images": [

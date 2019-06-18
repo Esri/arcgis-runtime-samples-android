@@ -1,5 +1,5 @@
 {
-    "category": "Visualization",
+    "category": "@@TODO: Java",
     "description": "@@TODO: Create a simple renderer and add it to a graphics overlay. Renderers define the symbology for all graphics in a graphics overlay (unless they are overridden by setting the symbol d",
     "ignore": false,
     "images": [

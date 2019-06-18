@@ -1,5 +1,5 @@
 {
-    "category": "MapViews, SceneViews and UI",
+    "category": "@@TODO: Java",
     "description": "@@TODO: Export a map as an image file. MapView.exportImageAsync exports the map to Bitmap format which can be saved in any image file format.",
     "ignore": false,
     "images": [

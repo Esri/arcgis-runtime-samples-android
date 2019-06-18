@@ -1,5 +1,5 @@
 {
-    "category": "Cloud and Portal",
+    "category": "@@TODO: Java",
     "description": "@@TODO: This sample demonstrates how to authenticate with ArcGIS Online (or your own portal) using OAuth2 to access secured resources (such as private web maps or layers). Accessing secure",
     "ignore": false,
     "images": [
