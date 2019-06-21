@@ -6,9 +6,7 @@
         "find-place.png"
     ],
     "keywords": [
-        "Search",
-        "and",
-        "Query",
+        "Search and Query",
         "GeocodeParameters",
         "GeocodeResult",
         "LocatorTask",

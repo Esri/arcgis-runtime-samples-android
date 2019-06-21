@@ -18,7 +18,7 @@
         "cache",
         "FeatureLayer",
         "WfsFeatureTable",
-        "WfsFeatureTable.populateFromServiceAsync(\u2026)",
+        "WfsFeatureTable.populateFromServiceAsync(...)",
         "MapView.addNavigationChangedListener",
         "QueryParameters"
     ],
@@ -26,7 +26,7 @@
     "relevant_apis": [
         "FeatureLayer",
         "WfsFeatureTable",
-        "WfsFeatureTable.populateFromServiceAsync(\u2026)",
+        "WfsFeatureTable.populateFromServiceAsync(...)",
         "MapView.addNavigationChangedListener",
         "QueryParameters"
     ],

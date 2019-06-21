@@ -1,16 +1,13 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: A MapView loaded with two related FeatureLayer\u2019s, national parks and preserves. The relationships between the layers is defined in the service. When you tap on a national park Feat",
+    "description": "@@TODO: A MapView loaded with two related FeatureLayer's, national parks and preserves. The relationships between the layers is defined in the service. When you tap on a national park Feat",
     "ignore": false,
     "images": [
         "update-related-features.png",
         "legend.png"
     ],
     "keywords": [
-        "Edit",
-        "and",
-        "Manage",
-        "Data",
+        "Edit and Manage Data",
         "ArcGISFeature",
         "ServiceFeatureTable",
         "RelatedQueryParameters",

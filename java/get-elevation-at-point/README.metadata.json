@@ -6,8 +6,7 @@
         "get-elevation-at-point.png"
     ],
     "keywords": [
-        "MapViews",
-        " SceneViews and UI",
+        "MapViews, SceneViews and UI",
         "ArcGISTiledElevationSource",
         "BaseSurface",
         "ElevationSourcesList",

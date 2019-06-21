@@ -6,8 +6,7 @@
         "take-screenshot.png"
     ],
     "keywords": [
-        "MapViews",
-        " SceneViews and UI",
+        "MapViews, SceneViews and UI",
         "ArcGISMap",
         "ExportImageAsync",
         "ListenableFuture<Bitmap>",

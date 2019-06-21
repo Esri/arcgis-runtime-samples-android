@@ -6,19 +6,16 @@
         "service-feature-table-manualcache.png"
     ],
     "keywords": [
-        "Edit",
-        "and",
-        "Manage",
-        "Data",
+        "Edit and Manage Data",
         "FeatureLayer",
         "ServiceFeatureTable",
-        "ServiceFeatureTable.setFeatureRequestMode(\u2026)"
+        "ServiceFeatureTable.setFeatureRequestMode(...)"
     ],
     "redirect_from": "@@TODO: /android/latest/sample-code/service-feature-table-manual-cache-.htm",
     "relevant_apis": [
         "FeatureLayer",
         "ServiceFeatureTable",
-        "ServiceFeatureTable.setFeatureRequestMode(\u2026)"
+        "ServiceFeatureTable.setFeatureRequestMode(...)"
     ],
     "snippets": [
         "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",

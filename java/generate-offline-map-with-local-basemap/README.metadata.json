@@ -6,10 +6,7 @@
         "generate-offline-map-with-local-basemap.png"
     ],
     "keywords": [
-        "Edit",
-        "and",
-        "Manage",
-        "Data",
+        "Edit and Manage Data",
         "OfflineMapTask",
         "GenerateOfflineMapParameters",
         "GenerateOfflineMapParameterOverrides",

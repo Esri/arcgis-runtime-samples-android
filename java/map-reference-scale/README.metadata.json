@@ -1,14 +1,12 @@
 {
     "category": "Maps and Scenes",
-    "description": "@@TODO: Set the map\u2019s reference scale and which feature layers should honor the reference scale.",
+    "description": "@@TODO: Set the map's reference scale and which feature layers should honor the reference scale.",
     "ignore": false,
     "images": [
         "map-reference-scale.png"
     ],
     "keywords": [
-        "Maps",
-        "and",
-        "Scenes",
+        "Maps and Scenes",
         "ArcGISMap",
         "FeatureLayer"
     ],

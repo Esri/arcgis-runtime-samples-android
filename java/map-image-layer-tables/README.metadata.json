@@ -6,9 +6,7 @@
         "map-image-layer-tables.png"
     ],
     "keywords": [
-        "Search",
-        "and",
-        "Query",
+        "Search and Query",
         "ServiceFeatureTable",
         "ArcGISMapImageLayer",
         "LoadTablesAndLayersAsync",

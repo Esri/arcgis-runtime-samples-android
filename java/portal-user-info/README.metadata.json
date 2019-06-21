@@ -6,9 +6,7 @@
         "portal-user-info.png"
     ],
     "keywords": [
-        "Cloud",
-        "and",
-        "Portal",
+        "Cloud and Portal",
         "AuthenticationManager",
         "DefaultAuthenticationChallengeHandler",
         "PortalInfo",

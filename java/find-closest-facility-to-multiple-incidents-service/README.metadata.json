@@ -1,9 +1,9 @@
 {
     "category": "Routing and Logistics",
-    "description": "@@TODO: Find a route to the closest facility from a location.",
+    "description": "@@TODO: Find routes from several locations to the respective closest facility.",
     "ignore": false,
     "images": [
-        "find-closest-facility-to-an-incident-interactive.png"
+        "find-closest-facility-to-multiple-incidents-service.png"
     ],
     "keywords": [
         "Analysis",
@@ -21,7 +21,7 @@
         "GraphicsOverlay",
         "Incident"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/find-closest-facility-to-an-incident-interactive-.htm",
+    "redirect_from": "@@TODO: /android/latest/sample-code/find-closest-facility-to-multiple-incidents-service-.htm",
     "relevant_apis": [
         "ClosestFacilityParameters",
         "ClosestFacilityResult",
@@ -34,7 +34,7 @@
     ],
     "snippets": [
         "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
-        "src/main/java/com/esri/arcgisruntime/sample/findclosestfacilitytoanincidentinteractive/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/findclosestfacilitytomultipleincidentsservice/MainActivity.java"
     ],
-    "title": "@@TODO: Find closest facility to an incident (interactive)"
+    "title": "@@TODO: Find closest facility to multiple incidents (service)"
 }

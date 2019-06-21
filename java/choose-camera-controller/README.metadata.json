@@ -6,8 +6,10 @@
         "choose-camera-controller.png"
     ],
     "keywords": [
-        "MapViews",
-        " SceneViews and UI Camera SceneView 3D",
+        "MapViews, SceneViews and UI",
+        "Camera",
+        "SceneView",
+        "3D",
         "ArcGISScene",
         "Camera",
         "GlobeCameraController",

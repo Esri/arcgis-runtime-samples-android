@@ -6,9 +6,7 @@
         "offline-geocode.png"
     ],
     "keywords": [
-        "Search",
-        "and",
-        "Query",
+        "Search and Query",
         "GeocodeResult",
         "GeocodeParameters",
         "LocatorTask",

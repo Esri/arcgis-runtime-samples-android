@@ -6,8 +6,7 @@
         "feature-layer-rendering-mode-map.png"
     ],
     "keywords": [
-        "MapViews",
-        " SceneViews and UI",
+        "MapViews, SceneViews and UI",
         "FeatureLayer",
         "FeatureLayer.RenderingMode",
         "LoadSettings"

@@ -6,11 +6,22 @@
         "hillshade-renderer.png"
     ],
     "keywords": [
-        "Visualization"
+        "Visualization",
+        "ArcGISMap",
+        "Basemap",
+        "HillshadeRenderer",
+        "MapView",
+        "Raster",
+        "RasterLayer"
     ],
     "redirect_from": "/android/latest/sample-code/hillshade-renderer.htm",
     "relevant_apis": [
-        "@@TODO: *** PLEASE ADD RELEVANT APIS ***"
+        "ArcGISMap",
+        "Basemap",
+        "HillshadeRenderer",
+        "MapView",
+        "Raster",
+        "RasterLayer"
     ],
     "snippets": [
         "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",

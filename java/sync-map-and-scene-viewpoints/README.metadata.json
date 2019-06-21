@@ -6,8 +6,7 @@
         "sync-map-and-scene-viewpoints.png"
     ],
     "keywords": [
-        "MapViews",
-        " SceneViews and UI",
+        "MapViews, SceneViews and UI",
         "GeoView",
         "GeoView.addViewpointChangedListener(...)",
         "GeoView.isNavigating()",

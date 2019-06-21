@@ -6,10 +6,7 @@
         "edit-feature-attachments.png"
     ],
     "keywords": [
-        "Edit",
-        "and",
-        "Manage",
-        "Data",
+        "Edit and Manage Data",
         "ServiceFeatureTable",
         "FeatureLayer",
         "FetchAttachmentsAsync",

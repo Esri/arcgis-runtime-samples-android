@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Displays a FeatureLayer with military symbology, using ArcGIS Runtime\u2019s DictionaryRenderer.",
+    "description": "@@TODO: Displays a FeatureLayer with military symbology, using ArcGIS Runtime's DictionaryRenderer.",
     "ignore": false,
     "images": [
         "feature-layer-dictionary-renderer.png"

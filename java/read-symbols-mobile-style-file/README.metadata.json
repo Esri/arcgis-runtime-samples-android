@@ -14,19 +14,19 @@
         "style",
         "stylx",
         "MultilayerPointSymbol",
-        "MultilayerSymbol.createSwatchAsync(\u2026)",
+        "MultilayerSymbol.createSwatchAsync(...)",
         "SymbolLayer",
         "SymbolStyle",
-        "SymbolStyle.getSymbolAsync(\u2026)",
+        "SymbolStyle.getSymbolAsync(...)",
         "SymbolStyleSearchParameters"
     ],
     "redirect_from": "@@TODO: /android/latest/sample-code/read-symbols-from-a-mobile-style.htm",
     "relevant_apis": [
         "MultilayerPointSymbol",
-        "MultilayerSymbol.createSwatchAsync(\u2026)",
+        "MultilayerSymbol.createSwatchAsync(...)",
         "SymbolLayer",
         "SymbolStyle",
-        "SymbolStyle.getSymbolAsync(\u2026)",
+        "SymbolStyle.getSymbolAsync(...)",
         "SymbolStyleSearchParameters"
     ],
     "snippets": [

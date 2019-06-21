@@ -6,9 +6,7 @@
         "feature-layer-selection.png"
     ],
     "keywords": [
-        "Search",
-        "and",
-        "Query",
+        "Search and Query",
         "DefaultMapViewOnTouchListener",
         "Feature",
         "FeatureQueryResult",
