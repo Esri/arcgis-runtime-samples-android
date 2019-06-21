@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Find closest facility to multiple incidents (service)</string>
+    <string name="solve_routes">Solve routes</string>
+    <string name="fire_station_symbol_url">https://static.arcgis.com/images/Symbols/SafetyHealth/FireStation.png</string>
+    <string name="crime_symbol_url">https://static.arcgis.com/images/Symbols/SafetyHealth/esriCrimeMarker_56_Gradient.png</string>
+    <string name="san_diego_network_analysis_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/NetworkAnalysis/SanDiego/NAServer/ClosestFacility</string>
+    <string name="san_diego_facilities_service_url">https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/ArcGIS/rest/services/San_Diego_Facilities/FeatureServer/0</string>
+    <string name="san_diego_incidents_service_url">https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/ArcGIS/rest/services/San_Diego_Incidents/FeatureServer/0</string>
+</resources>
