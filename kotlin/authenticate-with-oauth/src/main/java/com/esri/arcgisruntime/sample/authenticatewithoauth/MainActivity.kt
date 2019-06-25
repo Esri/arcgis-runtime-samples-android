@@ -17,9 +17,7 @@
 
 package com.esri.arcgisruntime.sample.authenticatewithoauth
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -96,10 +94,10 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   /**
    * Function for handling authentication challenges.
    *
-   * If an authorization code exists in the SharedPreferences, it's likely that the user is partially through the OAuth flow
+   * If an authorization code exists in the Intent, it's likely that the user is partially through the OAuth flow
    * and we need to try to obtain the token by performing a OAuthTokenCredentialRequest.
    *
-   * If there is not an authorization code in the SharedPreferences, it's likely that this is the user's first attempt
+   * If there is not an authorization code in the Intent, it's likely that this is the user's first attempt
    * at OAuth. So begin OAuth flow.
    *
    * @param authenticationChallenge the authentication challenge to handle
@@ -109,7 +107,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     authenticationChallenge?.let { authChallenge ->
 
       try {
-        // if SharedPreferences has an auth code, we've likely just been through the OAuth flow and now have an auth code
+        // if Intent has an auth code, we've likely just been through the OAuth flow and now have an auth code
         // we can use to request a new access token
         intent?.authCode?.let {
           // use the authorization code to get a new access token by executing an OAuthTokenCredentialRequest
@@ -232,9 +230,6 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
 /**
  * AppCompatActivity extensions
  */
-val AppCompatActivity.sharedPreferences: SharedPreferences
-  get() = this.getSharedPreferences("${this::class.java.simpleName}_shared_prefs", Context.MODE_PRIVATE)
-
 fun AppCompatActivity.logToUser(logMessage: String) {
   Log.d(this::class.java.simpleName, logMessage)
   Toast.makeText(this, logMessage, Toast.LENGTH_LONG).show()
