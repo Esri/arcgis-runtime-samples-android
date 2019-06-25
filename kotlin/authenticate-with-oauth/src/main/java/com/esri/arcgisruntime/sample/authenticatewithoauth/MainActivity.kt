@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+    mapView.map = ArcGISMap(portalItem)
 
     // setup AuthenticationManager to handle auth challenges
     AuthenticationManager.setAuthenticationChallengeHandler(this)
@@ -80,10 +81,6 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   override fun onResume() {
     super.onResume()
     mapView.resume()
-
-    handleIntent(intent)
-
-    mapView.map = ArcGISMap(portalItem)
   }
 
   override fun onPause() {
@@ -94,18 +91,6 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   override fun onDestroy() {
     mapView.dispose()
     super.onDestroy()
-  }
-
-  /**
-   * Attempt to handle the Intent received by the Activity
-   * If the Intent contains an authorization code, store this in the SharedPreferences
-   *
-   * @param intent the Intent to handle
-   */
-  private fun handleIntent(intent: Intent?) {
-    intent?.authCode?.let { code ->
-      sharedPreferences.putAuthCode(code)
-    }
   }
 
   /**
@@ -126,7 +111,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
       try {
         // if SharedPreferences has an auth code, we've likely just been through the OAuth flow and now have an auth code
         // we can use to request a new access token
-        sharedPreferences.authCode?.let {
+        intent?.authCode?.let {
           // use the authorization code to get a new access token by executing an OAuthTokenCredentialRequest
           val request = OAuthTokenCredentialRequest(
             oAuthConfig.portalUrl,
@@ -136,8 +121,6 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
             it
           )
 
-          // we've used the auth code to obtain an access token, so clear it
-          sharedPreferences.clearAuthCode()
           val credential = request.executeAsync().get()
           // continue with credentials generated using auth code
           return AuthenticationChallengeResponse(
@@ -153,14 +136,13 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
 
         return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
       } catch (e: Exception) {
-        // auth code has likely expired, clear existing auth code and begin OAuth flow
+        // auth code has likely expired, begin OAuth flow
         getString(R.string.error_auth_exception, e.message).let {
           Log.d(TAG, it)
           runOnUiThread {
             logToUser(it)
           }
         }
-        sharedPreferences.clearAuthCode()
         beginOAuth()
       }
     }
@@ -256,22 +238,6 @@ val AppCompatActivity.sharedPreferences: SharedPreferences
 fun AppCompatActivity.logToUser(logMessage: String) {
   Log.d(this::class.java.simpleName, logMessage)
   Toast.makeText(this, logMessage, Toast.LENGTH_LONG).show()
-}
-
-/**
- * SharedPreferences extensions
- */
-fun SharedPreferences.putAuthCode(authCode: String) {
-  this.edit().putString("auth_code", authCode)
-    .apply()
-}
-
-val SharedPreferences.authCode: String?
-  get() = this.getString("auth_code", null)
-
-fun SharedPreferences.clearAuthCode() {
-  this.edit().remove("auth_code")
-    .apply()
 }
 
 /**
