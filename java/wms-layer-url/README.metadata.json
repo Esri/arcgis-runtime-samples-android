@@ -11,7 +11,7 @@
         "MapView",
         "WmsLayer"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/wms-layer-url-.htm",
+    "redirect_from": "/android/latest/sample-code/wms-layer-url.htm",
     "relevant_apis": [
         "Map",
         "MapView",
