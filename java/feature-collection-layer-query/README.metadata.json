@@ -14,7 +14,7 @@
         "QueryParameters",
         "ServiceFeatureTable"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/feature-collection-layer-query-.htm",
+    "redirect_from": "/android/latest/sample-code/feature-collection-layer-query.htm",
     "relevant_apis": [
         "FeatureCollection",
         "FeatureCollectionLayer",
