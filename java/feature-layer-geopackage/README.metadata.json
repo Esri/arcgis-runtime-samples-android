@@ -11,7 +11,7 @@
         "FeatureTable",
         "GeoPackage"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/feature-layer-geopackage-.htm",
+    "redirect_from": "/android/latest/sample-code/feature-layer-geopackage.htm",
     "relevant_apis": [
         "FeatureLayer",
         "FeatureTable",
