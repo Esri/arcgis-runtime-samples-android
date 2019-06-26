@@ -11,7 +11,7 @@
         "ServiceFeatureTable",
         "ServiceFeatureTable.setFeatureRequestMode(...)"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/service-feature-table-no-cache-.htm",
+    "redirect_from": "/android/latest/sample-code/service-feature-table-no-cache.htm",
     "relevant_apis": [
         "FeatureLayer",
         "ServiceFeatureTable",
