@@ -21,7 +21,7 @@
         "GraphicsOverlay",
         "Incident"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/find-closest-facility-to-an-incident-interactive-.htm",
+    "redirect_from": "/android/latest/sample-code/find-closest-facility-to-an-incident-interactive.htm",
     "relevant_apis": [
         "ClosestFacilityParameters",
         "ClosestFacilityResult",
