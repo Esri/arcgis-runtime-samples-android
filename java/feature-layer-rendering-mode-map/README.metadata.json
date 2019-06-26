@@ -11,7 +11,7 @@
         "FeatureLayer.RenderingMode",
         "LoadSettings"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/feature-layer-rendering-mode-map-.htm",
+    "redirect_from": "/android/latest/sample-code/feature-layer-rendering-mode-map.htm",
     "relevant_apis": [
         "FeatureLayer",
         "FeatureLayer.RenderingMode",
