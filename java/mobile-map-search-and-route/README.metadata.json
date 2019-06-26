@@ -14,7 +14,7 @@
         "NetworkAnalysis",
         "Callout"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/mobile-map-search-and-route-.htm",
+    "redirect_from": "/android/latest/sample-code/mobile-map-search-and-route.htm",
     "relevant_apis": [
         "MobileMapPackage",
         "LocatorTask",
