@@ -11,7 +11,7 @@
         "Geodatabase",
         "GeodatabaseFeatureTable"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/feature-layer-geodatabase-.htm",
+    "redirect_from": "/android/latest/sample-code/feature-layer-geodatabase.htm",
     "relevant_apis": [
         "FeatureLayer",
         "Geodatabase",
