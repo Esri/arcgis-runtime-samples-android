@@ -13,7 +13,7 @@
         "Scene",
         "SceneView"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/feature-layer-rendering-mode-scene-.htm",
+    "redirect_from": "/android/latest/sample-code/feature-layer-rendering-mode-scene.htm",
     "relevant_apis": [
         "FeatureLayer",
         "FeatureLayer.RenderingMode",
