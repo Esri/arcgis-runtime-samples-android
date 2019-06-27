@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Load an ArcGIS Tiled Layer from a URL.",
+    "description": "Load an ArcGIS Tiled Layer from a URL.",
     "ignore": false,
     "images": [
         "arcgis-tiledlayer-url.png"
@@ -20,8 +20,7 @@
         "MapView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/tiledlayerfromurl/MainActivity.java"
     ],
-    "title": "@@TODO: ArcGIS Tiled Layer URL"
+    "title": "ArcGIS Tiled Layer URL"
 }
