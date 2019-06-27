@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Toggle visibility of the map's sublayers.",
+    "description": "Toggle visibility of the map's sublayers.",
     "ignore": false,
     "images": [
         "change-sublayer-visibility.png"
@@ -18,8 +18,7 @@
         "SublayerList"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/mapimagelayersublayervisibility/MainActivity.java"
     ],
-    "title": "@@TODO: Change Sublayer Visibility"
+    "title": "Change Sublayer Visibility"
 }
