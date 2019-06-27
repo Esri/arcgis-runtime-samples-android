@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Delete features from an online feature service.",
+    "description": "Delete features from an online feature service.",
     "ignore": false,
     "images": [
         "delete-features-feature-service.png"
@@ -24,9 +24,8 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/samples/deletefeaturesfeatureservice/ConfirmDeleteFeatureDialog.java",
         "src/main/java/com/esri/arcgisruntime/samples/deletefeaturesfeatureservice/MainActivity.java"
     ],
-    "title": "@@TODO: Delete features (Feature Service)"
+    "title": "Delete features (Feature Service)"
 }
