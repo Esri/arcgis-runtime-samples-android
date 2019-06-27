@@ -1,6 +1,6 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "@@TODO: Control the behaviour of the camera in a scene.",
+    "description": "Control the behaviour of the camera in a scene.",
     "ignore": false,
     "images": [
         "choose-camera-controller.png"
@@ -27,8 +27,7 @@
         "SceneView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/choosecameracontroller/MainActivity.java"
     ],
-    "title": "@@TODO: Choose camera controller"
+    "title": "Choose camera controller"
 }
