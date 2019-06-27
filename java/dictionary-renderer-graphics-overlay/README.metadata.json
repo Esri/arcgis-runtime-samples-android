@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: The dictionary renderer creates graphics using a local mil2525d style file and a XML file with key, value attributes for each graphic.",
+    "description": "The dictionary renderer creates graphics using a local mil2525d style file and a XML file with key, value attributes for each graphic.",
     "ignore": false,
     "images": [
         "dictionary-renderer-graphics-overlay.png"
@@ -18,8 +18,7 @@
         "GraphicsOverlay"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/dictionaryrenderergraphicsoverlay/MainActivity.java"
     ],
-    "title": "@@TODO: Dictionary Renderer with Graphics Overlay"
+    "title": "Dictionary Renderer with Graphics Overlay"
 }
