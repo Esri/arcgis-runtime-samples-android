@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Create a graphic using a distance composite scene symbol. Distance composite scene symbols can render different symbols depending on the distance between the camera and the graphic",
+    "description": "Create a graphic using a distance composite scene symbol. Distance composite scene symbols can render different symbols depending on the distance between the camera and the graphic",
     "ignore": false,
     "images": [
         "distance-composite-symbol.png"
@@ -36,8 +36,7 @@
         "SimpleMarkerSceneSymbol"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/distancecompositesymbol/MainActivity.java"
     ],
-    "title": "@@TODO: Distance Composite Symbol"
+    "title": "Distance Composite Symbol"
 }
