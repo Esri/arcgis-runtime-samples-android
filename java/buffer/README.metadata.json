@@ -1,6 +1,6 @@
 {
     "category": "Analysis",
-    "description": "@@TODO: This sample demonstrates how to use GeometryEngine.Buffer to create polygons from a map location and linear distance (radius). For each input location, the sample creates two buffe",
+    "description": "This sample demonstrates how to use GeometryEngine.Buffer to create polygons from a map location and linear distance (radius). For each input location, the sample creates two buffe",
     "ignore": false,
     "images": [
         "buffer.png"
@@ -20,8 +20,7 @@
         "GraphicsOverlay"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/buffer/MainActivity.java"
     ],
-    "title": "@@TODO: Buffer"
+    "title": "Buffer"
 }
