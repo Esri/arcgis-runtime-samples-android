@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Download tiles to a local tile cache file stored on the device.",
+    "description": "Download tiles to a local tile cache file stored on the device.",
     "ignore": false,
     "images": [
         "export-tiles.png"
@@ -20,8 +20,7 @@
         "TileCache"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/exporttiles/MainActivity.java"
     ],
-    "title": "@@TODO: Export tiles"
+    "title": "Export tiles"
 }
