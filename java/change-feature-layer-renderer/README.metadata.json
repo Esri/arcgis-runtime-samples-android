@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Override and reset a renderer of a feature layer. Use the buttons in the bottom toolbar to override or reset the renderer.",
+    "description": "Override and reset a renderer of a feature layer. Use the buttons in the bottom toolbar to override or reset the renderer.",
     "ignore": false,
     "images": [
         "change-feature-layer-renderer.png"
@@ -20,8 +20,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/samples/changefeaturelayerrenderer/MainActivity.java"
     ],
-    "title": "@@TODO: Change Feature Layer Renderer"
+    "title": "Change Feature Layer Renderer"
 }
