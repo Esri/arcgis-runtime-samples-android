@@ -1,6 +1,6 @@
 {
     "category": "Analysis",
-    "description": "@@TODO: Measure 3D distances between two points in a scene.",
+    "description": "Measure 3D distances between two points in a scene.",
     "ignore": false,
     "images": [
         "distance-measurement-analysis.png"
@@ -18,8 +18,7 @@
         "UnitSystem"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/distancemeasurementanalysis/MainActivity.java"
     ],
-    "title": "@@TODO: Distance Measurement Analysis"
+    "title": "Distance Measurement Analysis"
 }
