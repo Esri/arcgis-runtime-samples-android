@@ -1,6 +1,6 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "@@TODO: Use the DrawStatus value representing drawing state of the MapView to display an Android ProgressBar while the map is loading.",
+    "description": "Use the DrawStatus value representing drawing state of the MapView to display an Android ProgressBar while the map is loading.",
     "ignore": false,
     "images": [
         "display-drawing-status.png"
@@ -24,8 +24,7 @@
         "DrawStatusChangedListener"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/displaydrawingstatus/MainActivity.java"
     ],
-    "title": "@@TODO: Display Drawing Status"
+    "title": "Display Drawing Status"
 }
