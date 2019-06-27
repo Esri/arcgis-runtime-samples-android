@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Add, delete or fetch attachments for a specific feature in a feature layer.",
+    "description": "Add, delete or fetch attachments for a specific feature in a feature layer.",
     "ignore": false,
     "images": [
         "edit-feature-attachments.png"
@@ -26,10 +26,9 @@
         "ApplyEditsAsync"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/arrayadapter/CustomList.java",
         "src/main/java/com/esri/arcgisruntime/sample/editfeatureattachments/EditAttachmentActivity.java",
         "src/main/java/com/esri/arcgisruntime/sample/editfeatureattachments/MainActivity.java"
     ],
-    "title": "@@TODO: Edit feature attachments"
+    "title": "Edit feature attachments"
 }
