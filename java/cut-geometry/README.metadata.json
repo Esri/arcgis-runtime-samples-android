@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Cut a geometry with a polyline using the GeometryEngine.",
+    "description": "Cut a geometry with a polyline using the GeometryEngine.",
     "ignore": false,
     "images": [
         "cut-geometry.png"
@@ -40,8 +40,7 @@
         "SpatialReferences"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/cutgeometry/MainActivity.java"
     ],
-    "title": "@@TODO: Cut Geometry"
+    "title": "Cut Geometry"
 }
