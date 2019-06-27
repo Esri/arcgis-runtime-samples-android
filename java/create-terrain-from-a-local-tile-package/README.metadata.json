@@ -1,6 +1,6 @@
 {
     "category": "Maps and Scenes",
-    "description": "@@TODO: Set the terrain surface with elevation described by a local tile package.",
+    "description": "Set the terrain surface with elevation described by a local tile package.",
     "ignore": false,
     "images": [
         "create-terrain-from-a-local-tile-package.png"
@@ -21,8 +21,7 @@
         "Surface"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/samples/createterrainfromalocaltilepackage/MainActivity.java"
     ],
-    "title": "@@TODO: Create terrain from a local tile package"
+    "title": "Create terrain from a local tile package"
 }
