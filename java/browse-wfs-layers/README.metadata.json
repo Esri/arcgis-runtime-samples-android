@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Browse a WFS service for layers and add them to the map.",
+    "description": "Browse a WFS service for layers and add them to the map.",
     "ignore": false,
     "images": [
         "browse-wfs-layers.png"
@@ -31,10 +31,9 @@
         "WfsFeatureTable.AxisOrder"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/WfsLayerInfoAdapter.java",
         "src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/BottomSheetRecyclerView.java",
         "src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/MainActivity.java"
     ],
-    "title": "@@TODO: Browse WFS layers"
+    "title": "Browse WFS layers"
 }
