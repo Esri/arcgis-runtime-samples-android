@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Synchronize offline edits with a feature service.",
+    "description": "Synchronize offline edits with a feature service.",
     "ignore": false,
     "images": [
         "edit-and-sync-features.png"
@@ -28,8 +28,7 @@
         "SyncLayerOption"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/editandsyncfeatures/MainActivity.java"
     ],
-    "title": "@@TODO: Edit and sync features"
+    "title": "Edit and sync features"
 }
