@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Load an ArcGIS Map Image Layer from a URL.",
+    "description": "Load an ArcGIS Map Image Layer from a URL.",
     "ignore": false,
     "images": [
         "arcgis-mapimagelayer-url.png"
@@ -20,8 +20,7 @@
         "Basemap"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/mapimagelayer/MainActivity.java"
     ],
-    "title": "@@TODO: ArcGIS Map Image Layer URL"
+    "title": "ArcGIS Map Image Layer URL"
 }
