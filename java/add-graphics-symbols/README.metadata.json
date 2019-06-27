@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Add points, polylines, and polygons as graphics, set a symbol renderer to the graphics and add to a graphics overlay. The sample also adds text symbols to represent text as symbols",
+    "description": "Add points, polylines, and polygons as graphics, set a symbol renderer to the graphics and add to a graphics overlay. The sample also adds text symbols to represent text as symbols",
     "ignore": false,
     "images": [
         "add-graphics-symbols.png"
@@ -26,8 +26,7 @@
         "Polyline"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/addgraphicssymbols/MainActivity.java"
     ],
-    "title": "@@TODO: Add Graphics with Symbols"
+    "title": "Add Graphics with Symbols"
 }
