@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Clip a geometry with another geometry.",
+    "description": "Clip a geometry with another geometry.",
     "ignore": false,
     "images": [
         "clip-geometry.png"
@@ -16,7 +16,7 @@
         "Graphic",
         "GraphicsOverlay"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/clip-geometry.htm",
+    "redirect_from": "/android/latest/sample-code/clip-geometry.htm",
     "relevant_apis": [
         "Envelope",
         "Geometry",
@@ -25,8 +25,7 @@
         "GraphicsOverlay"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/clipgeometry/MainActivity.java"
     ],
-    "title": "@@TODO: Clip geometry"
+    "title": "Clip geometry"
 }
