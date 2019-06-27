@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Add graphics to a List, create a SimpleRenderer to represent a symbol and style, and add the renderer to the MapView.",
+    "description": "Add graphics to a List, create a SimpleRenderer to represent a symbol and style, and add the renderer to the MapView.",
     "ignore": false,
     "images": [
         "add-graphics-renderer.png"
@@ -24,8 +24,7 @@
         "SimpleMarkerSymbol"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/addgraphicsrenderer/MainActivity.java"
     ],
-    "title": "@@TODO: Add Graphics Renderer"
+    "title": "Add Graphics Renderer"
 }
