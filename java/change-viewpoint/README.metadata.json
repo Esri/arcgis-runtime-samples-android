@@ -1,6 +1,6 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "@@TODO: Set the ViewPoint of a map.",
+    "description": "Set the ViewPoint of a map.",
     "ignore": false,
     "images": [
         "change-viewpoint.png"
@@ -24,8 +24,7 @@
         "SpatialReference"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/changeviewpoint/MainActivity.java"
     ],
-    "title": "@@TODO: Change Viewpoint"
+    "title": "Change Viewpoint"
 }
