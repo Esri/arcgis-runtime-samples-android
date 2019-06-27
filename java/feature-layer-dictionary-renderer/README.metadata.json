@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Displays a FeatureLayer with military symbology, using ArcGIS Runtime's DictionaryRenderer.",
+    "description": "Displays a FeatureLayer with military symbology, using ArcGIS Runtime's DictionaryRenderer.",
     "ignore": false,
     "images": [
         "feature-layer-dictionary-renderer.png"
@@ -20,8 +20,7 @@
         "Geodatabase"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/featurelayerdictionaryrenderer/MainActivity.java"
     ],
-    "title": "@@TODO: Feature Layer Dictionary Renderer"
+    "title": "Feature Layer Dictionary Renderer"
 }
