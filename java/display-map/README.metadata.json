@@ -1,6 +1,6 @@
 {
     "category": "Maps and Scenes",
-    "description": "@@TODO: Inflate a map view and add an ArcGIS map to it.",
+    "description": "Inflate a map view and add an ArcGIS map to it.",
     "ignore": false,
     "images": [
         "display-map.png"
@@ -18,8 +18,7 @@
         "Basemap"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/displaymap/MainActivity.java"
     ],
-    "title": "@@TODO: Display a Map"
+    "title": "Display a Map"
 }
