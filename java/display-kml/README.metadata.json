@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Display a KML layer from a URL, portal item, or local KML file.",
+    "description": "Display a KML layer from a URL, portal item, or local KML file.",
     "ignore": false,
     "images": [
         "display-kml.png"
@@ -20,8 +20,7 @@
         "PortalItem"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/displaykml/MainActivity.java"
     ],
-    "title": "@@TODO: Display KML"
+    "title": "Display KML"
 }
