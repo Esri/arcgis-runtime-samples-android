@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Display nautical charts conforming to the ENC specification.",
+    "description": "Display nautical charts conforming to the ENC specification.",
     "ignore": false,
     "images": [
         "add-enc-exchange-set.png"
@@ -26,8 +26,7 @@
         "EncLayer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/addencexchangeset/MainActivity.java"
     ],
-    "title": "@@TODO: Add ENC exchange set"
+    "title": "Add ENC exchange set"
 }
