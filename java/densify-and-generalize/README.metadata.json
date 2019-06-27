@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Demonstrates how to densify or generalize a polyline geometry. In this example, points representing a ships location are shown at irregular intervals. One can densify the polyline ",
+    "description": "Demonstrates how to densify or generalize a polyline geometry. In this example, points representing a ships location are shown at irregular intervals. One can densify the polyline ",
     "ignore": false,
     "images": [
         "densify-and-generalize.png"
@@ -38,8 +38,7 @@
         "SpatialReference"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/densifygeneralize/MainActivity.java"
     ],
-    "title": "@@TODO: Densify and Generalize"
+    "title": "Densify and Generalize"
 }
