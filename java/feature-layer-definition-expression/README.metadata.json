@@ -1,6 +1,6 @@
 {
     "category": "Search and Query",
-    "description": "@@TODO: Limit which features to display on the map.",
+    "description": "Limit which features to display on the map.",
     "ignore": false,
     "images": [
         "feature-layer-definition-expression.png"
@@ -16,8 +16,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/samples/featurelayerdefinitionexpression/MainActivity.java"
     ],
-    "title": "@@TODO: Feature Layer Definition Expression"
+    "title": "Feature Layer Definition Expression"
 }
