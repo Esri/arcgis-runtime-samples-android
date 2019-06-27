@@ -1,6 +1,6 @@
 {
     "category": "Maps and Scenes",
-    "description": "@@TODO: Set the terrain surface with elevation described by a raster file.",
+    "description": "Set the terrain surface with elevation described by a raster file.",
     "ignore": false,
     "images": [
         "create-terrain-from-a-local-raster.png"
@@ -20,8 +20,7 @@
         "Surface"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/samples/createterrainfromalocalraster/MainActivity.java"
     ],
-    "title": "@@TODO: Create terrain from a local raster"
+    "title": "Create terrain from a local raster"
 }
