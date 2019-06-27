@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Animate a graphic's position and orientation and follow it with the camera.",
+    "description": "Animate a graphic's position and orientation and follow it with the camera.",
     "ignore": false,
     "images": [
         "animate-3d-graphic.png"
@@ -32,8 +32,7 @@
         "Viewpoint"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/animate3dgraphic/MainActivity.java"
     ],
-    "title": "@@TODO: Animate 3D Graphic"
+    "title": "Animate 3D Graphic"
 }
