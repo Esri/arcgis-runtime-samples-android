@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Apply extrusion to a renderer on a feature layer.",
+    "description": "Apply extrusion to a renderer on a feature layer.",
     "ignore": false,
     "images": [
         "feature-layer-extrusion.png"
@@ -20,8 +20,7 @@
         "SceneProperties"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/featurelayerextrusion/MainActivity.java"
     ],
-    "title": "@@TODO: Feature Layer Extrusion"
+    "title": "Feature Layer Extrusion"
 }
