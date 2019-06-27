@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Creates a new Feature Collection with a Point, Polyline, and Polygon Feature Collection Table. The Collection is then displayed on the ArcGISMap as a Feature Collection Layer.",
+    "description": "Creates a new Feature Collection with a Point, Polyline, and Polygon Feature Collection Table. The Collection is then displayed on the ArcGISMap as a Feature Collection Layer.",
     "ignore": false,
     "images": [
         "feature-collection-layer.png"
@@ -30,8 +30,7 @@
         "SimpleRenderer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/featurecollectionlayer/MainActivity.java"
     ],
-    "title": "@@TODO: Feature Collection Layer"
+    "title": "Feature Collection Layer"
 }
