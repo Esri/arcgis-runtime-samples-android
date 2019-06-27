@@ -1,6 +1,6 @@
 {
     "category": "Search and Query",
-    "description": "@@TODO: Create a feature collection layer to show a query result from a service feature table. The feature collection is then displayed on a map with a feature collection layer.",
+    "description": "Create a feature collection layer to show a query result from a service feature table. The feature collection is then displayed on a map with a feature collection layer.",
     "ignore": false,
     "images": [
         "feature-collection-layer-query.png"
@@ -24,8 +24,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/featurecollectionlayerquery/MainActivity.java"
     ],
-    "title": "@@TODO: Feature Collection Layer (Query)"
+    "title": "Feature Collection Layer (Query)"
 }
