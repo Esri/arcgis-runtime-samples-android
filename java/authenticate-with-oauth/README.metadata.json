@@ -1,6 +1,6 @@
 {
     "category": "Cloud and Portal",
-    "description": "@@TODO: This sample demonstrates how to authenticate with ArcGIS Online (or your own portal) using OAuth2 to access secured resources (such as private web maps or layers). Accessing secure",
+    "description": "This sample demonstrates how to authenticate with ArcGIS Online (or your own portal) using OAuth2 to access secured resources (such as private web maps or layers). Accessing secure",
     "ignore": false,
     "images": [
         "authenticate-with-oauth.png"
@@ -24,8 +24,7 @@
         "PortalItem"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/authenticatewithoauth/MainActivity.java"
     ],
-    "title": "@@TODO: Authenticate with OAuth"
+    "title": "Authenticate with OAuth"
 }
