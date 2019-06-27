@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Display a layer from a WFS service, requesting only features for the current extent.",
+    "description": "Display a layer from a WFS service, requesting only features for the current extent.",
     "ignore": false,
     "images": [
         "display-wfs-layer.png"
@@ -31,8 +31,7 @@
         "QueryParameters"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/displaywfslayer/MainActivity.java"
     ],
-    "title": "@@TODO: Display WFS layer"
+    "title": "Display WFS layer"
 }
