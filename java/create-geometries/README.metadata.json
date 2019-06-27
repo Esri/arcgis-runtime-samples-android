@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Create different types of geometries on a map.",
+    "description": "Create different types of geometries on a map.",
     "ignore": false,
     "images": [
         "create-geometries.png"
@@ -28,8 +28,7 @@
         "MapView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/creategeometries/MainActivity.java"
     ],
-    "title": "@@TODO: Create geometries"
+    "title": "Create geometries"
 }
