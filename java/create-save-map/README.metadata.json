@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Create a map and save it to your portal.",
+    "description": "Create a map and save it to your portal.",
     "ignore": false,
     "images": [
         "create-save-map.png"
@@ -24,8 +24,7 @@
         "PortalItem"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/createsavemap/MainActivity.java"
     ],
-    "title": "@@TODO: Create and Save a Map"
+    "title": "Create and Save a Map"
 }
