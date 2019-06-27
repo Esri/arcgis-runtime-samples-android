@@ -1,6 +1,6 @@
 {
     "category": "Maps and Scenes",
-    "description": "@@TODO: Change the appearance of the atmosphere in a scene view.",
+    "description": "Change the appearance of the atmosphere in a scene view.",
     "ignore": false,
     "images": [
         "change-atmosphere-effect.png"
@@ -18,8 +18,7 @@
         "SceneView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/changeatmosphereeffect/MainActivity.java"
     ],
-    "title": "@@TODO: Change Atmosphere Effect"
+    "title": "Change Atmosphere Effect"
 }
