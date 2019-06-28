@@ -14,7 +14,7 @@
         "PortalSettings",
         "PortalItem"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/create-and-save-a-map.htm",
+    "redirect_from": "",
     "relevant_apis": [
         "ArcGISMap",
         "OAuthLoginManager",
