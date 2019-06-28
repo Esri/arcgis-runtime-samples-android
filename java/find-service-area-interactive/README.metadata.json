@@ -1,6 +1,6 @@
 {
     "category": "Routing and Logistics",
-    "description": "@@TODO: Find the service area within a network from a given point.",
+    "description": "Find the service area within a network from a given point.",
     "ignore": false,
     "images": [
         "find-service-area-interactive.png"
@@ -27,8 +27,7 @@
         "ServiceAreaTask"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/findserviceareainteractive/MainActivity.java"
     ],
-    "title": "@@TODO: Find service area (interactive)"
+    "title": "Find service area (interactive)"
 }
