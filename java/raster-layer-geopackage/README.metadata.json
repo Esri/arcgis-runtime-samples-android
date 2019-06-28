@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Open a GeoPackage, obtain a raster from the package, and display the table as a RasterLayer.",
+    "description": "Open a GeoPackage, obtain a raster from the package, and display the table as a RasterLayer.",
     "ignore": false,
     "images": [
         "raster-layer-geopackage.png"
@@ -18,8 +18,7 @@
         "RasterLayer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/rasterlayergeopackage/MainActivity.java"
     ],
-    "title": "@@TODO: Raster Layer GeoPackage"
+    "title": "Raster Layer GeoPackage"
 }
