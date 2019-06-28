@@ -1,6 +1,6 @@
 {
     "category": "Maps and Scenes",
-    "description": "@@TODO: Vertically exaggerate terrain.",
+    "description": "Vertically exaggerate terrain.",
     "ignore": false,
     "images": [
         "terrain-exaggeration.png"
@@ -18,8 +18,7 @@
         "ArcGISTiledElevationSource"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/terrainexaggeration/MainActivity.java"
     ],
-    "title": "@@TODO: Terrain Exaggeration"
+    "title": "Terrain Exaggeration"
 }
