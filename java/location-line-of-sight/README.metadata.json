@@ -1,6 +1,6 @@
 {
     "category": "Analysis",
-    "description": "@@TODO: Perform a line of sight analysis between two points in a SceneView.",
+    "description": "Perform a line of sight analysis between two points in a SceneView.",
     "ignore": false,
     "images": [
         "location-line-of-sight.png"
@@ -22,8 +22,7 @@
         "Surface"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/locationlineofsight/MainActivity.java"
     ],
-    "title": "@@TODO: Location Line of Sight"
+    "title": "Location Line of Sight"
 }
