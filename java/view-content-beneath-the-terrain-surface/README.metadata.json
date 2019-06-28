@@ -1,12 +1,12 @@
 {
-    "category": "Edit and Manage Data",
+    "category": "Visualization",
     "description": "See through terrain in a scene and move the camera underground.",
     "ignore": false,
     "images": [
         "view-content-beneath-the-terrain-surface.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
+        "Visualization",
         "ArcGISFeature",
         "ServiceFeatureTable",
         "RelatedQueryParameters",
