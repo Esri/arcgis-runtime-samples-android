@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: See through terrain in a scene and move the camera underground.",
+    "description": "See through terrain in a scene and move the camera underground.",
     "ignore": false,
     "images": [
         "view-content-beneath-the-terrain-surface.png"
@@ -20,8 +20,7 @@
         "RelatedFeatureQueryResult"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/viewcontentbeneaththeterrainsurface/MainActivity.java"
     ],
-    "title": "@@TODO: View content beneath the terrain surface"
+    "title": "View content beneath the terrain surface"
 }
