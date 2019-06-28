@@ -1,0 +1,34 @@
+{
+    "category": "Maps and Scenes",
+    "description": "Position graphics above a surface using different Surface Placements.",
+    "ignore": false,
+    "images": [
+        "surface-placement.png"
+    ],
+    "keywords": [
+        "Maps and Scenes",
+        "ArcGISScene",
+        "Camera",
+        "Graphic",
+        "GraphicsOverlay",
+        "LayerSceneProperties.SurfacePlacement",
+        "SceneProperties",
+        "SceneView",
+        "Surface"
+    ],
+    "redirect_from": "/android/latest/sample-code/surface-placement.htm",
+    "relevant_apis": [
+        "ArcGISScene",
+        "Camera",
+        "Graphic",
+        "GraphicsOverlay",
+        "LayerSceneProperties.SurfacePlacement",
+        "SceneProperties",
+        "SceneView",
+        "Surface"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/surfaceplacement/MainActivity.java"
+    ],
+    "title": "Surface Placement"
+}

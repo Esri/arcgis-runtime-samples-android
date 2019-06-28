@@ -1,0 +1,32 @@
+{
+    "category": "Search and Query",
+    "description": "Query a table to get aggregated statistics back for a specific field.",
+    "ignore": false,
+    "images": [
+        "statistical-query.png"
+    ],
+    "keywords": [
+        "Search and Query",
+        "QueryParameters",
+        "ServiceFeatureTable",
+        "StatisticDefinition",
+        "StatisticRecord",
+        "StatisticType",
+        "StatisticsQueryParameters",
+        "StatisticsQueryResult"
+    ],
+    "redirect_from": "/android/latest/sample-code/statistical-query.htm",
+    "relevant_apis": [
+        "QueryParameters",
+        "ServiceFeatureTable",
+        "StatisticDefinition",
+        "StatisticRecord",
+        "StatisticType",
+        "StatisticsQueryParameters",
+        "StatisticsQueryResult"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/statisticalquery/MainActivity.java"
+    ],
+    "title": "Statistical Query"
+}

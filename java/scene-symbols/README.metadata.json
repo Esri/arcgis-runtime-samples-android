@@ -1,0 +1,24 @@
+{
+    "category": "Visualization",
+    "description": "Show various kinds of 3D symbols in a scene.",
+    "ignore": false,
+    "images": [
+        "scene-symbols.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "SimpleMarkerSceneSymbol",
+        "SimpleMarkerSceneSymbol.Style",
+        "SceneSymbol.AnchorPosition"
+    ],
+    "redirect_from": "/android/latest/sample-code/scene-symbols.htm",
+    "relevant_apis": [
+        "SimpleMarkerSceneSymbol",
+        "SimpleMarkerSceneSymbol.Style",
+        "SceneSymbol.AnchorPosition"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/scenesymbols/MainActivity.java"
+    ],
+    "title": "Scene symbols"
+}

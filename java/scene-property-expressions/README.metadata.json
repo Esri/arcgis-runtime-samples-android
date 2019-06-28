@@ -1,0 +1,40 @@
+{
+    "category": "Visualization",
+    "description": "Update the orientation of a graphic using expressions based on its attributes.",
+    "ignore": false,
+    "images": [
+        "scene-property-expressions.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "rotation",
+        "expression",
+        "heading",
+        "pitch",
+        "scene",
+        "3D",
+        "symbology",
+        "graphics",
+        "GraphicsOverlay",
+        "SimpleRenderer",
+        "SceneProperties",
+        "SimpleRenderer.SceneProperties",
+        "SceneProperties.HeadingExpression",
+        "SceneProperties.PitchExpression",
+        "Graphic.Attributes"
+    ],
+    "redirect_from": "",
+    "relevant_apis": [
+        "GraphicsOverlay",
+        "SimpleRenderer",
+        "SceneProperties",
+        "SimpleRenderer.SceneProperties",
+        "SceneProperties.HeadingExpression",
+        "SceneProperties.PitchExpression",
+        "Graphic.Attributes"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/scenepropertyexpressions/MainActivity.java"
+    ],
+    "title": "Scene property expressions"
+}

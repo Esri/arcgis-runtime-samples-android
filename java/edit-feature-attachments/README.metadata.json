@@ -1,0 +1,34 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "Add, delete or fetch attachments for a specific feature in a feature layer.",
+    "ignore": false,
+    "images": [
+        "edit-feature-attachments.png"
+    ],
+    "keywords": [
+        "Edit and Manage Data",
+        "ServiceFeatureTable",
+        "FeatureLayer",
+        "FetchAttachmentsAsync",
+        "FetchDataAsync",
+        "DeleteAttachmentAsync",
+        "UpdateFeatureAsync",
+        "ApplyEditsAsync"
+    ],
+    "redirect_from": "/android/latest/sample-code/edit-feature-attachments.htm",
+    "relevant_apis": [
+        "ServiceFeatureTable",
+        "FeatureLayer",
+        "FetchAttachmentsAsync",
+        "FetchDataAsync",
+        "DeleteAttachmentAsync",
+        "UpdateFeatureAsync",
+        "ApplyEditsAsync"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/arrayadapter/CustomList.java",
+        "src/main/java/com/esri/arcgisruntime/sample/editfeatureattachments/EditAttachmentActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/editfeatureattachments/MainActivity.java"
+    ],
+    "title": "Edit feature attachments"
+}

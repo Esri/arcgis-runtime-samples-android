@@ -1,0 +1,30 @@
+{
+    "category": "MapViews, SceneViews and UI",
+    "description": "Set the ViewPoint of a map.",
+    "ignore": false,
+    "images": [
+        "change-viewpoint.png"
+    ],
+    "keywords": [
+        "MapViews, SceneViews and UI",
+        "MapView",
+        "setViewpointCenterWithScaleAsync",
+        "setViewpointGeometryAsync",
+        "setViewpointWithDurationAsync",
+        "setViewpointCenterWithScaleAsync",
+        "SpatialReference"
+    ],
+    "redirect_from": "/android/latest/sample-code/change-viewpoint.htm",
+    "relevant_apis": [
+        "MapView",
+        "setViewpointCenterWithScaleAsync",
+        "setViewpointGeometryAsync",
+        "setViewpointWithDurationAsync",
+        "setViewpointCenterWithScaleAsync",
+        "SpatialReference"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/changeviewpoint/MainActivity.java"
+    ],
+    "title": "Change Viewpoint"
+}

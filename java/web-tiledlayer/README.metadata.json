@@ -1,0 +1,26 @@
+{
+    "category": "Layers",
+    "description": "Display map tiles from Stamen terrain as an online resource using the WebTiledLayer. WebTiledLayer provides a simple way to integrate non-ArcGIS Services as a layer in a map.",
+    "ignore": false,
+    "images": [
+        "web-tiledlayer.png"
+    ],
+    "keywords": [
+        "Layers",
+        "ArcGISMap",
+        "Basemap",
+        "MapView",
+        "WebTiledLayer"
+    ],
+    "redirect_from": "/android/latest/sample-code/web-tiled-layer.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "Basemap",
+        "MapView",
+        "WebTiledLayer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/webtiledlayer/MainActivity.java"
+    ],
+    "title": "Web Tiled Layer"
+}

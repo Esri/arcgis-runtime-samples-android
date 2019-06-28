@@ -1,0 +1,42 @@
+{
+    "category": "Visualization",
+    "description": "Create a graphic using a distance composite scene symbol. Distance composite scene symbols can render different symbols depending on the distance between the camera and the graphic",
+    "ignore": false,
+    "images": [
+        "distance-composite-symbol.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "ArcGISScene",
+        "ArcGISTiledElevationSource",
+        "Camera",
+        "DistanceCompositeSceneSymbol",
+        "DistanceCompositeSceneSymbol.Range",
+        "Graphic",
+        "GraphicsOverlay",
+        "ModelSceneSymbol",
+        "Range",
+        "RangeCollection",
+        "SceneView",
+        "SimpleMarkerSceneSymbol"
+    ],
+    "redirect_from": "/android/latest/sample-code/distance-composite-symbol.htm",
+    "relevant_apis": [
+        "ArcGISScene",
+        "ArcGISTiledElevationSource",
+        "Camera",
+        "DistanceCompositeSceneSymbol",
+        "DistanceCompositeSceneSymbol.Range",
+        "Graphic",
+        "GraphicsOverlay",
+        "ModelSceneSymbol",
+        "Range",
+        "RangeCollection",
+        "SceneView",
+        "SimpleMarkerSceneSymbol"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/distancecompositesymbol/MainActivity.java"
+    ],
+    "title": "Distance Composite Symbol"
+}

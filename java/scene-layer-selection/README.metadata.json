@@ -1,0 +1,24 @@
+{
+    "category": "Search and Query",
+    "description": "Select geoelements in a scene layer.",
+    "ignore": false,
+    "images": [
+        "scene-layer-selection.png"
+    ],
+    "keywords": [
+        "Search and Query",
+        "ArcGISScene",
+        "SceneView",
+        "SceneLayer"
+    ],
+    "redirect_from": "/android/latest/sample-code/scene-layer-selection.htm",
+    "relevant_apis": [
+        "ArcGISScene",
+        "SceneView",
+        "SceneLayer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/scenelayerselection/MainActivity.java"
+    ],
+    "title": "Scene Layer Selection"
+}

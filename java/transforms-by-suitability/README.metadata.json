@@ -1,0 +1,29 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "Transformations (sometimes known as datum or geographic transformations) are used when projecting data from one spatial reference to another, when there is a difference in the unde",
+    "ignore": false,
+    "images": [
+        "transforms-by-suitability.png"
+    ],
+    "keywords": [
+        "Edit and Manage Data",
+        "TransformationCatalog",
+        "DatumTransformation",
+        "GeographicTransformation",
+        "GeographicTransformationStep",
+        "GeometryEngine.project"
+    ],
+    "redirect_from": "/android/latest/sample-code/transforms-by-suitability.htm",
+    "relevant_apis": [
+        "TransformationCatalog",
+        "DatumTransformation",
+        "GeographicTransformation",
+        "GeographicTransformationStep",
+        "GeometryEngine.project"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/transformsbysuitability/DatumTransformationAdapter.java",
+        "src/main/java/com/esri/arcgisruntime/sample/transformsbysuitability/MainActivity.java"
+    ],
+    "title": "Transforms by Suitability"
+}

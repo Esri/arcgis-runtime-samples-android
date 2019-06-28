@@ -1,0 +1,32 @@
+{
+    "category": "Layers",
+    "description": "Display nautical charts conforming to the ENC specification.",
+    "ignore": false,
+    "images": [
+        "add-enc-exchange-set.png"
+    ],
+    "keywords": [
+        "Layers",
+        "ENC",
+        "maritime",
+        "nautical",
+        "chart",
+        "hydrographic",
+        "data",
+        "EncCell",
+        "EncDataset",
+        "EncExchangeSet",
+        "EncLayer"
+    ],
+    "redirect_from": "/android/latest/sample-code/add-enc-exchange-set.htm",
+    "relevant_apis": [
+        "EncCell",
+        "EncDataset",
+        "EncExchangeSet",
+        "EncLayer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/addencexchangeset/MainActivity.java"
+    ],
+    "title": "Add ENC exchange set"
+}

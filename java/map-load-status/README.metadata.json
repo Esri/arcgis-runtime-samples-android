@@ -1,0 +1,24 @@
+{
+    "category": "Maps and Scenes",
+    "description": "Tell what the map's load status is, obtained from the enum value from a LoadStatus class.",
+    "ignore": false,
+    "images": [
+        "map-load-status.png"
+    ],
+    "keywords": [
+        "Maps and Scenes",
+        "ArcGISMap",
+        "LoadStatusChangedListener",
+        "MapView"
+    ],
+    "redirect_from": "/android/latest/sample-code/map-load-status.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "LoadStatusChangedListener",
+        "MapView"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/maploaded/MainActivity.java"
+    ],
+    "title": "Map Load Status"
+}

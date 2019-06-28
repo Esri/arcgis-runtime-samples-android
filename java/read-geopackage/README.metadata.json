@@ -1,0 +1,30 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "Read rasters and feature tables from geopackages and display them as layers in a map.",
+    "ignore": false,
+    "images": [
+        "read-geopackage.png"
+    ],
+    "keywords": [
+        "Edit and Manage Data",
+        "FeatureLayer",
+        "GeoPackage",
+        "GeoPackageFeatureTable",
+        "GeoPackageRaster",
+        "Layer",
+        "RasterLayer"
+    ],
+    "redirect_from": "/android/latest/sample-code/read-geopackage.htm",
+    "relevant_apis": [
+        "FeatureLayer",
+        "GeoPackage",
+        "GeoPackageFeatureTable",
+        "GeoPackageRaster",
+        "Layer",
+        "RasterLayer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/readgeopackage/MainActivity.java"
+    ],
+    "title": "Read GeoPackage"
+}

@@ -1,0 +1,26 @@
+{
+    "category": "Search and Query",
+    "description": "Geocode addresses to locations and reverse geocode locations to addresses when the device does not have network connectivity.",
+    "ignore": false,
+    "images": [
+        "offline-geocode.png"
+    ],
+    "keywords": [
+        "Search and Query",
+        "GeocodeResult",
+        "GeocodeParameters",
+        "LocatorTask",
+        "ReverseGeocodeParameters"
+    ],
+    "redirect_from": "/android/latest/sample-code/offline-geocode.htm",
+    "relevant_apis": [
+        "GeocodeResult",
+        "GeocodeParameters",
+        "LocatorTask",
+        "ReverseGeocodeParameters"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/offlinegeocode/MainActivity.java"
+    ],
+    "title": "Offline Geocode"
+}

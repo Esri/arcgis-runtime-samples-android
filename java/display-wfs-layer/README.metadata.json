@@ -1,0 +1,37 @@
+{
+    "category": "Layers",
+    "description": "Display a layer from a WFS service, requesting only features for the current extent.",
+    "ignore": false,
+    "images": [
+        "display-wfs-layer.png"
+    ],
+    "keywords": [
+        "Layers",
+        "OGC",
+        "WFS",
+        "feature",
+        "web",
+        "service",
+        "browse",
+        "catalog",
+        "interaction",
+        "cache",
+        "FeatureLayer",
+        "WfsFeatureTable",
+        "WfsFeatureTable.populateFromServiceAsync(...)",
+        "MapView.addNavigationChangedListener",
+        "QueryParameters"
+    ],
+    "redirect_from": "/android/latest/sample-code/display-wfs-layer.htm",
+    "relevant_apis": [
+        "FeatureLayer",
+        "WfsFeatureTable",
+        "WfsFeatureTable.populateFromServiceAsync(...)",
+        "MapView.addNavigationChangedListener",
+        "QueryParameters"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/displaywfslayer/MainActivity.java"
+    ],
+    "title": "Display WFS layer"
+}
