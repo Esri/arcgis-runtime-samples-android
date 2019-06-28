@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Take a web map offline with additional overrides.",
+    "description": "Take a web map offline with additional overrides.",
     "ignore": false,
     "images": [
         "generate-offline-map-overrides.png"
@@ -26,8 +26,7 @@
         "ExportTileCacheParameters"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/generateofflinemapoverrides/MainActivity.java"
     ],
-    "title": "@@TODO: Generate Offline Map Overrides"
+    "title": "Generate Offline Map Overrides"
 }
