@@ -1,6 +1,6 @@
 {
     "category": "Search and Query",
-    "description": "@@TODO: Use geocode functionality to search for points of interest, around a location or within an extent.",
+    "description": "Use geocode functionality to search for points of interest, around a location or within an extent.",
     "ignore": false,
     "images": [
         "find-place.png"
@@ -22,8 +22,7 @@
         "SuggestResult"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/findplace/MainActivity.java"
     ],
-    "title": "@@TODO: Find Place"
+    "title": "Find Place"
 }
