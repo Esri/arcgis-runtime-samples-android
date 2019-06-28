@@ -1,6 +1,6 @@
 {
     "category": "Routing and Logistics",
-    "description": "@@TODO: Find a route to the closest facility from a location.",
+    "description": "Find a route to the closest facility from a location.",
     "ignore": false,
     "images": [
         "find-closest-facility-to-an-incident-interactive.png"
@@ -33,8 +33,7 @@
         "Incident"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/findclosestfacilitytoanincidentinteractive/MainActivity.java"
     ],
-    "title": "@@TODO: Find closest facility to an incident (interactive)"
+    "title": "Find closest facility to an incident (interactive)"
 }
