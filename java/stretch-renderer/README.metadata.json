@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: A StretchRenderer can be used on a RasterLayer. A StretchRenderer can be used to stretch tightly grouped values across the available value spectrum, creating more contrast between ",
+    "description": "A StretchRenderer can be used on a RasterLayer. A StretchRenderer can be used to stretch tightly grouped values across the available value spectrum, creating more contrast between ",
     "ignore": false,
     "images": [
         "stretch-renderer.png"
@@ -20,9 +20,8 @@
         "StretchRenderer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/stretchrenderer/ParametersDialogFragment.java",
         "src/main/java/com/esri/arcgisruntime/sample/stretchrenderer/MainActivity.java"
     ],
-    "title": "@@TODO: Stretch Renderer"
+    "title": "Stretch Renderer"
 }
