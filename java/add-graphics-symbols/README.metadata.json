@@ -15,7 +15,7 @@
         "Polygon",
         "Polyline"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/add-graphics-with-symbols.htm",
+    "redirect_from": "",
     "relevant_apis": [
         "Graphic",
         "GraphicsOverlay",
