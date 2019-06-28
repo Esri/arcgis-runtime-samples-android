@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Add the OpenStreetMap layer to a map as a Basemap.",
+    "description": "Add the OpenStreetMap layer to a map as a Basemap.",
     "ignore": false,
     "images": [
         "openstreetmap-layer.png"
@@ -11,15 +11,14 @@
         "Basemap",
         "MapView"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/openstreetmap-layer.htm",
+    "redirect_from": "",
     "relevant_apis": [
         "ArcGISMap",
         "Basemap",
         "MapView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/openstreetmaplayer/MainActivity.java"
     ],
-    "title": "@@TODO: OpenStreetMap Layer"
+    "title": "OpenStreetMap Layer"
 }
