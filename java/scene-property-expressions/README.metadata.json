@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Update the orientation of a graphic using expressions based on its attributes.",
+    "description": "Update the orientation of a graphic using expressions based on its attributes.",
     "ignore": false,
     "images": [
         "scene-property-expressions.png"
@@ -23,7 +23,7 @@
         "SceneProperties.PitchExpression",
         "Graphic.Attributes"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/scene-property-expressions.htm",
+    "redirect_from": "",
     "relevant_apis": [
         "GraphicsOverlay",
         "SimpleRenderer",
@@ -34,8 +34,7 @@
         "Graphic.Attributes"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/scenepropertyexpressions/MainActivity.java"
     ],
-    "title": "@@TODO: Scene property expressions"
+    "title": "Scene property expressions"
 }
