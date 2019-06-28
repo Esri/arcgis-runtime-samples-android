@@ -1,6 +1,6 @@
 {
     "category": "Search and Query",
-    "description": "@@TODO: Identify features on a map across different layers.",
+    "description": "Identify features on a map across different layers.",
     "ignore": false,
     "images": [
         "identify-layers.png"
@@ -20,8 +20,7 @@
         "MapView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/identifylayers/MainActivity.java"
     ],
-    "title": "@@TODO: Identify Layers"
+    "title": "Identify Layers"
 }
