@@ -1,6 +1,6 @@
 {
     "category": "Search and Query",
-    "description": "@@TODO: Shows related features to any feature tapped on.",
+    "description": "Shows related features to any feature tapped on.",
     "ignore": false,
     "images": [
         "list-related-features.png"
@@ -22,8 +22,7 @@
         "RelatedQueryParameters"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/listrelatedfeatures/MainActivity.java"
     ],
-    "title": "@@TODO: List Related Features"
+    "title": "List Related Features"
 }
