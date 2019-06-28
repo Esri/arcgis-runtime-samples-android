@@ -1,6 +1,6 @@
 {
     "category": "Search and Query",
-    "description": "@@TODO: Execute an attribute and spatial query on the sublayers of an ArcGIS map image layer.",
+    "description": "Execute an attribute and spatial query on the sublayers of an ArcGIS map image layer.",
     "ignore": false,
     "images": [
         "query-map-image-sublayer.png"
@@ -20,8 +20,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/querymapimagesublayer/MainActivity.java"
     ],
-    "title": "@@TODO: Query Map Image Sublayer"
+    "title": "Query Map Image Sublayer"
 }
