@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Add a graphic to a graphics overlay with a symbol of a red point specified via a simple marker symbol.",
+    "description": "Add a graphic to a graphics overlay with a symbol of a red point specified via a simple marker symbol.",
     "ignore": false,
     "images": [
         "simple-marker-symbol.png"
@@ -18,8 +18,7 @@
         "SimpleMarkerSymbol"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/simplemarkersymbol/MainActivity.java"
     ],
-    "title": "@@TODO: Simple Marker Symbol"
+    "title": "Simple Marker Symbol"
 }
