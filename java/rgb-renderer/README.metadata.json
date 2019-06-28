@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Use an RGBRenderer on a RasterLayer. An RGBRenderer is used to adjust the color bands of a multispectral image.",
+    "description": "Use an RGBRenderer on a RasterLayer. An RGBRenderer is used to adjust the color bands of a multispectral image.",
     "ignore": false,
     "images": [
         "rgb-renderer.png"
@@ -26,9 +26,8 @@
         "RGBRenderer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/rgbrenderer/ParametersDialogFragment.java",
         "src/main/java/com/esri/arcgisruntime/sample/rgbrenderer/MainActivity.java"
     ],
-    "title": "@@TODO: RGB Renderer"
+    "title": "RGB Renderer"
 }
