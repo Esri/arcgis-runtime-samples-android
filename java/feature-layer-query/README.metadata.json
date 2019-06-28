@@ -1,6 +1,6 @@
 {
     "category": "Search and Query",
-    "description": "@@TODO: Query a feature layer via feature table.",
+    "description": "Query a feature layer via feature table.",
     "ignore": false,
     "images": [
         "feature-layer-query.png"
@@ -18,8 +18,7 @@
         "GeoPackage"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/samples/featurelayerquery/MainActivity.java"
     ],
-    "title": "@@TODO: Feature Layer Query"
+    "title": "Feature Layer Query"
 }
