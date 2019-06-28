@@ -1,6 +1,6 @@
 {
     "category": "Search and Query",
-    "description": "@@TODO: Select features in a feature layer.",
+    "description": "Select features in a feature layer.",
     "ignore": false,
     "images": [
         "feature-layer-selection.png"
@@ -24,8 +24,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/samples/featurelayerselection/MainActivity.java"
     ],
-    "title": "@@TODO: Feature Layer Selection"
+    "title": "Feature Layer Selection"
 }
