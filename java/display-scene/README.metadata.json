@@ -12,7 +12,7 @@
         "Camera",
         "SceneView"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/display-a-scene.htm",
+    "redirect_from": "",
     "relevant_apis": [
         "ArcGISScene",
         "ArcGISTiledElevationSource",
