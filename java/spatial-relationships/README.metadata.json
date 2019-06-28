@@ -1,6 +1,6 @@
 {
     "category": "Analysis",
-    "description": "@@TODO: Shows how to use the GeometryEngine to determine spatial relationships between two geometries",
+    "description": "Shows how to use the GeometryEngine to determine spatial relationships between two geometries",
     "ignore": false,
     "images": [
         "spatial-relationships.png"
@@ -42,10 +42,9 @@
         "SimpleMarkerSymbol"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/spatialrelationships/ExpandableListAdapter.java",
         "src/main/java/com/esri/arcgisruntime/sample/spatialrelationships/MainActivity.java",
         "src/main/java/com/esri/arcgisruntime/sample/spatialrelationships/ResultsActivity.java"
     ],
-    "title": "@@TODO: Spatial Relationships"
+    "title": "Spatial Relationships"
 }
