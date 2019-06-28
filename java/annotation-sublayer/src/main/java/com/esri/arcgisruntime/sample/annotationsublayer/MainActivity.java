@@ -16,15 +16,20 @@
 
 package com.esri.arcgisruntime.sample.annotationsublayer;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.esri.arcgisruntime.layers.AnnotationLayer;
-import com.esri.arcgisruntime.layers.AnnotationSublayer;
-import com.esri.arcgisruntime.layers.LayerContent;
+import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.MobileMapPackage;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,9 +47,31 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16);
     // set the map to be displayed in this view
     mMapView.setMap(map);
+
+    requestReadPermission();
+
+  }
+
+  private void addSublayersWithAnnotation() {
+
+    MobileMapPackage mobileMapPackage = new MobileMapPackage(Environment.getExternalStorageDirectory() + "/ArcGIS/Samples/MapPackage/LothianRiversAnno.mmpk");
+    mobileMapPackage.loadAsync();
+    mobileMapPackage.addDoneLoadingListener(() -> {
+      if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED) {
+
+        mMapView.setMap(mobileMapPackage.getMaps().get(0));
+
+      } else {
+        Toast.makeText(this, "MMPK didn't load: " + mobileMapPackage.getLoadError().getMessage(), Toast.LENGTH_LONG).show();
+      }
+
+    });
+
+
+/*
     AnnotationLayer annotationLayer = new AnnotationLayer(
         "https://craigwilliams.esri.com/server/rest/services/Loudoun/FeatureServer/1");
-    map.getOperationalLayers().add(annotationLayer);
+    mMapView.getMap().getOperationalLayers().add(annotationLayer);
 
     LayerContent sublayerContent = annotationLayer.getSubLayerContents().get(0);
     AnnotationSublayer sublayer = (AnnotationSublayer) sublayerContent;
@@ -55,8 +82,40 @@ public class MainActivity extends AppCompatActivity {
     maxScaleTextView.setText(String.valueOf(sublayer.getMaxScale()));
     TextView isVisibleTextView = findViewById(R.id.currIsVisible);
     mMapView.addMapScaleChangedListener(mapScaleChangedEvent -> isVisibleTextView
-        .setText(String.valueOf(sublayer.isVisibleAtScale(mMapView.getMapScale()))));
+        .setText(String.valueOf(sublayer.isVisibleAtScale(mMapView.getMapScale()))));*/
   }
+
+  /**
+   * Request read external storage for API level 23+.
+   */
+  private void requestReadPermission() {
+    // define permission to request
+    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
+    int requestCode = 2;
+    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+      // do something
+      addSublayersWithAnnotation();
+    } else {
+      // request permission
+      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
+    }
+  }
+
+  /**
+   * Handle the permissions request response.
+   */
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      // do something
+      addSublayersWithAnnotation();
+    } else {
+      // report to user that permission was denied
+      Toast.makeText(this, "TODO FAIL", Toast.LENGTH_SHORT).show();
+    }
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+  }
+
 
   @Override
   protected void onPause() {
