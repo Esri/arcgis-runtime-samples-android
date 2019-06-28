@@ -1,6 +1,6 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "@@TODO: Export a map as an image file. MapView.exportImageAsync exports the map to Bitmap format which can be saved in any image file format.",
+    "description": "Export a map as an image file. MapView.exportImageAsync exports the map to Bitmap format which can be saved in any image file format.",
     "ignore": false,
     "images": [
         "take-screenshot.png"
@@ -20,8 +20,7 @@
         "MapView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/takescreenshot/MainActivity.java"
     ],
-    "title": "@@TODO: Take Screenshot"
+    "title": "Take Screenshot"
 }
