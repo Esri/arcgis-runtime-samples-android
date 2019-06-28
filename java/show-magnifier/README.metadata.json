@@ -1,6 +1,6 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "@@TODO: Tap and hold on a map to get a magnifier.",
+    "description": "Tap and hold on a map to get a magnifier.",
     "ignore": false,
     "images": [
         "show-magnifier.png"
@@ -18,8 +18,7 @@
         "Basemap.Type"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/showmagnifier/MainActivity.java"
     ],
-    "title": "@@TODO: Show Magnifier"
+    "title": "Show Magnifier"
 }
