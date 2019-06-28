@@ -1,6 +1,6 @@
 {
     "category": "Routing and Logistics",
-    "description": "@@TODO: Get a route between two locations.",
+    "description": "Get a route between two locations.",
     "ignore": false,
     "images": [
         "find-route.png"
@@ -22,8 +22,7 @@
         "RouteTask"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/findroute/MainActivity.java"
     ],
-    "title": "@@TODO: Find Route"
+    "title": "Find Route"
 }
