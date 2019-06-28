@@ -1,6 +1,6 @@
 {
     "category": "Maps and Scenes",
-    "description": "@@TODO: Add, remove and reorder operational layers in a map.",
+    "description": "Add, remove and reorder operational layers in a map.",
     "ignore": false,
     "images": [
         "manage-operational-layers.png"
@@ -20,11 +20,10 @@
         "LayerList"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/MainActivity.java",
         "src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/OperationalLayers.java",
         "src/main/java/com/esri/arcgisruntime/sample/listviewdragginganimation/DynamicListView.java",
         "src/main/java/com/esri/arcgisruntime/sample/listviewdragginganimation/StableArrayAdapter.java"
     ],
-    "title": "@@TODO: Manage Operational Layers"
+    "title": "Manage Operational Layers"
 }
