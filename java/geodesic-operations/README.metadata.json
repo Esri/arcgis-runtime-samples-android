@@ -1,6 +1,6 @@
 {
     "category": "Analysis",
-    "description": "@@TODO: Use the GeometryEngine to calculate a geodesic path between two points and measure its distance.",
+    "description": "Use the GeometryEngine to calculate a geodesic path between two points and measure its distance.",
     "ignore": false,
     "images": [
         "geodesic-operations.png"
@@ -43,8 +43,7 @@
         "SimpleMarkerSymbol"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/geodesicoperations/MainActivity.java"
     ],
-    "title": "@@TODO: Geodesic Operations"
+    "title": "Geodesic Operations"
 }
