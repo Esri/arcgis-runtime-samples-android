@@ -1,6 +1,6 @@
 {
     "category": "Search and Query",
-    "description": "@@TODO: Geocode addresses to locations and reverse geocode locations to addresses when the device does not have network connectivity.",
+    "description": "Geocode addresses to locations and reverse geocode locations to addresses when the device does not have network connectivity.",
     "ignore": false,
     "images": [
         "offline-geocode.png"
@@ -20,8 +20,7 @@
         "ReverseGeocodeParameters"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/offlinegeocode/MainActivity.java"
     ],
-    "title": "@@TODO: Offline Geocode"
+    "title": "Offline Geocode"
 }
