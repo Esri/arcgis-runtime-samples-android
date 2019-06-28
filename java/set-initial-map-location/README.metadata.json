@@ -1,6 +1,6 @@
 {
     "category": "Maps and Scenes",
-    "description": "@@TODO: Create a map with an initial location by passing lat, long and level of detail values.",
+    "description": "Create a map with an initial location by passing lat, long and level of detail values.",
     "ignore": false,
     "images": [
         "set-initial-map-location.png"
@@ -18,8 +18,7 @@
         "MapView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/setinitialmaplocation/MainActivity.java"
     ],
-    "title": "@@TODO: Set Initial Map Location"
+    "title": "Set Initial Map Location"
 }
