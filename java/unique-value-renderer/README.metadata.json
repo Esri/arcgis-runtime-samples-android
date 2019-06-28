@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Use a unique value renderer to style different features in a feature layer with different symbols. Features do not have a symbol property for you to set, renderers should be used t",
+    "description": "Use a unique value renderer to style different features in a feature layer with different symbols. Features do not have a symbol property for you to set, renderers should be used t",
     "ignore": false,
     "images": [
         "unique-value-renderer.png"
@@ -20,8 +20,7 @@
         "UniqueValueRenderer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/uniquevaluerenderer/MainActivity.java"
     ],
-    "title": "@@TODO: Unique Value Renderer"
+    "title": "Unique Value Renderer"
 }
