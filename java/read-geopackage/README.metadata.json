@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Read rasters and feature tables from geopackages and display them as layers in a map.",
+    "description": "Read rasters and feature tables from geopackages and display them as layers in a map.",
     "ignore": false,
     "images": [
         "read-geopackage.png"
@@ -24,8 +24,7 @@
         "RasterLayer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/readgeopackage/MainActivity.java"
     ],
-    "title": "@@TODO: Read GeoPackage"
+    "title": "Read GeoPackage"
 }
