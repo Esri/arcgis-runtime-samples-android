@@ -1,6 +1,6 @@
 {
     "category": "Search and Query",
-    "description": "@@TODO: Query a table to get aggregated statistics back for a specific field.",
+    "description": "Query a table to get aggregated statistics back for a specific field.",
     "ignore": false,
     "images": [
         "statistical-query.png"
@@ -26,8 +26,7 @@
         "StatisticsQueryResult"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/statisticalquery/MainActivity.java"
     ],
-    "title": "@@TODO: Statistical Query"
+    "title": "Statistical Query"
 }
