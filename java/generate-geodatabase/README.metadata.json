@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Generate a geodatabase from a feature service.",
+    "description": "Generate a geodatabase from a feature service.",
     "ignore": false,
     "images": [
         "generate-geodatabase.png"
@@ -26,8 +26,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/generategeodatabase/MainActivity.java"
     ],
-    "title": "@@TODO: Generate Geodatabase"
+    "title": "Generate Geodatabase"
 }
