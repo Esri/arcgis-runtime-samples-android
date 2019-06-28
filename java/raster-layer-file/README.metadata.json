@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Create and use a raster layer made from a local raster file.",
+    "description": "Create and use a raster layer made from a local raster file.",
     "ignore": false,
     "images": [
         "raster-layer-file.png"
@@ -16,8 +16,7 @@
         "RasterLayer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/rasterlayerfile/MainActivity.java"
     ],
-    "title": "@@TODO: Raster Layer File"
+    "title": "Raster Layer File"
 }
