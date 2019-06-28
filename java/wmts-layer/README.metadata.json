@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Display a layer from a Web Map Tile Service.",
+    "description": "Display a layer from a Web Map Tile Service.",
     "ignore": false,
     "images": [
         "wmts-layer.png"
@@ -13,7 +13,7 @@
         "WmtsLayer",
         "WmtsService"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/wmts-layer.htm",
+    "redirect_from": "",
     "relevant_apis": [
         "ArcGISMap",
         "Basemap",
@@ -22,8 +22,7 @@
         "WmtsService"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/wmtslayer/MainActivity.java"
     ],
-    "title": "@@TODO: WMTS Layer"
+    "title": "WMTS Layer"
 }
