@@ -11,7 +11,7 @@
         "MapView",
         "Basemap"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/display-a-map.htm",
+    "redirect_from": "",
     "relevant_apis": [
         "ArcGISMap",
         "MapView",
