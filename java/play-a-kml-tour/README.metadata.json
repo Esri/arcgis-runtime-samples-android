@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Play tours in KML files.",
+    "description": "Play tours in KML files.",
     "ignore": false,
     "images": [
         "play-a-kml-tour.png"
@@ -36,8 +36,7 @@
         "KmlTour.PropertyChanged"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/playakmltour/MainActivity.java"
     ],
-    "title": "@@TODO: Play a KML tour"
+    "title": "Play a KML tour"
 }
