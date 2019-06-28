@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Display local 3D point cloud data.",
+    "description": "Display local 3D point cloud data.",
     "ignore": false,
     "images": [
         "view-point-cloud-data-offline.png"
@@ -14,8 +14,7 @@
         "PointCloudLayer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/samples/viewpointclouddataoffline/MainActivity.java"
     ],
-    "title": "@@TODO: View point cloud data offline"
+    "title": "View point cloud data offline"
 }
