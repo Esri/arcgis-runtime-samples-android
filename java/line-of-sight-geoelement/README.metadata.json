@@ -1,6 +1,6 @@
 {
     "category": "Analysis",
-    "description": "@@TODO: Show a line of sight between two moving objects.",
+    "description": "Show a line of sight between two moving objects.",
     "ignore": false,
     "images": [
         "line-of-sight-geoelement.png"
@@ -18,8 +18,7 @@
         "LineOfSight.TargetVisibility"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/lineofsightgeoelement/MainActivity.java"
     ],
-    "title": "@@TODO: Line of Sight GeoElement"
+    "title": "Line of Sight GeoElement"
 }
