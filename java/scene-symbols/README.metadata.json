@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Show various kinds of 3D symbols in a scene.",
+    "description": "Show various kinds of 3D symbols in a scene.",
     "ignore": false,
     "images": [
         "scene-symbols.png"
@@ -18,8 +18,7 @@
         "SceneSymbol.AnchorPosition"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/scenesymbols/MainActivity.java"
     ],
-    "title": "@@TODO: Scene symbols"
+    "title": "Scene symbols"
 }
