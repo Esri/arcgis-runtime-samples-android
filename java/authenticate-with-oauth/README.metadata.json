@@ -16,7 +16,7 @@
         "OAuthConfiguration",
         "PortalItem"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/authenticate-with-oauth.htm",
+    "redirect_from": "",
     "relevant_apis": [
         "AuthenticationManager",
         "AuthenticationChallengeHandler",
