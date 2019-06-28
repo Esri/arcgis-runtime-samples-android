@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Demonstrates how to show labels on a feature layer.",
+    "description": "Demonstrates how to show labels on a feature layer.",
     "ignore": false,
     "images": [
         "show-labels-on-layer.png"
@@ -18,8 +18,7 @@
         "TextSymbol"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/showlabelsonlayer/MainActivity.java"
     ],
-    "title": "@@TODO: Show Labels on Layer"
+    "title": "Show Labels on Layer"
 }
