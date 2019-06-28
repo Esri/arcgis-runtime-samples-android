@@ -1,6 +1,6 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "@@TODO: Rotate a map on your Android device using an Android SeekBar.",
+    "description": "Rotate a map on your Android device using an Android SeekBar.",
     "ignore": false,
     "images": [
         "map-rotation.png"
@@ -18,8 +18,7 @@
         "MapView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/maprotation/MainActivity.java"
     ],
-    "title": "@@TODO: Map Rotation"
+    "title": "Map Rotation"
 }
