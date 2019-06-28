@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Edit attributes of a feature in a feature layer.",
+    "description": "Edit attributes of a feature in a feature layer.",
     "ignore": false,
     "images": [
         "feature-layer-update-attributes.png"
@@ -24,9 +24,8 @@
         "IdentifyLayerResult"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/featurelayerupdateattributes/MainActivity.java",
         "src/main/java/com/esri/arcgisruntime/sample/featurelayerupdateattributes/DamageTypesListActivity.java"
     ],
-    "title": "@@TODO: Feature Layer Update Attributes"
+    "title": "Feature Layer Update Attributes"
 }
