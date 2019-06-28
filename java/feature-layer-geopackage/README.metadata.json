@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Open a GeoPackage and show a GeoPackage feature table in a feature layer.",
+    "description": "Open a GeoPackage and show a GeoPackage feature table in a feature layer.",
     "ignore": false,
     "images": [
         "feature-layer-geopackage.png"
@@ -18,8 +18,7 @@
         "GeoPackage"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/featurelayergeopackage/MainActivity.java"
     ],
-    "title": "@@TODO: Feature Layer (GeoPackage)"
+    "title": "Feature Layer (GeoPackage)"
 }
