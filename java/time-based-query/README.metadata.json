@@ -1,6 +1,6 @@
 {
     "category": "Search and Query",
-    "description": "@@TODO: Apply a time-based parameter to a feature layer query",
+    "description": "Apply a time-based parameter to a feature layer query",
     "ignore": false,
     "images": [
         "time-based-query.png"
@@ -18,8 +18,7 @@
         "TimeExtent"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/timebasedquery/MainActivity.java"
     ],
-    "title": "@@TODO: Time Based Query"
+    "title": "Time Based Query"
 }
