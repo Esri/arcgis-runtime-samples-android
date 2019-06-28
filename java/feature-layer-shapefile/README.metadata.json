@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Open a shapefile stored on the device and display it as a feature layer with default symbology.",
+    "description": "Open a shapefile stored on the device and display it as a feature layer with default symbology.",
     "ignore": false,
     "images": [
         "feature-layer-shapefile.png"
@@ -16,8 +16,7 @@
         "ShapefileFeatureTable"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/featurelayershapefile/MainActivity.java"
     ],
-    "title": "@@TODO: Feature Layer Shapefile"
+    "title": "Feature Layer Shapefile"
 }
