@@ -1,6 +1,6 @@
 {
     "category": "Analysis",
-    "description": "@@TODO: A viewshed shows the visible and obstructed areas from an observer's vantage point. This sample demonstrates how to create and update a viewshed from a camera.",
+    "description": "A viewshed shows the visible and obstructed areas from an observer's vantage point. This sample demonstrates how to create and update a viewshed from a camera.",
     "ignore": false,
     "images": [
         "viewshed-camera.png"
@@ -26,8 +26,7 @@
         "SceneView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/viewshedcamera/MainActivity.java"
     ],
-    "title": "@@TODO: Viewshed Camera"
+    "title": "Viewshed Camera"
 }
