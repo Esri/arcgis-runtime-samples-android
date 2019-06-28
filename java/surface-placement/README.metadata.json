@@ -1,6 +1,6 @@
 {
     "category": "Maps and Scenes",
-    "description": "@@TODO: Position graphics above a surface using different Surface Placements.",
+    "description": "Position graphics above a surface using different Surface Placements.",
     "ignore": false,
     "images": [
         "surface-placement.png"
@@ -28,8 +28,7 @@
         "Surface"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/surfaceplacement/MainActivity.java"
     ],
-    "title": "@@TODO: Surface Placement"
+    "title": "Surface Placement"
 }
