@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Use a layer from an ArcGIS feature service as a feature layer.",
+    "description": "Use a layer from an ArcGIS feature service as a feature layer.",
     "ignore": false,
     "images": [
         "feature-layer-feature-service.png"
@@ -18,8 +18,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/samples/featurelayerfeatureservice/MainActivity.java"
     ],
-    "title": "@@TODO: Feature Layer Feature Service"
+    "title": "Feature Layer Feature Service"
 }
