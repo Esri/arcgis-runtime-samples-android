@@ -1,6 +1,6 @@
 {
     "category": "Maps and Scenes",
-    "description": "@@TODO: The Sketch Editor can be used to draw on a map.",
+    "description": "The Sketch Editor can be used to draw on a map.",
     "ignore": false,
     "images": [
         "sketch-editor.png"
@@ -18,8 +18,7 @@
         "SketchEditor"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/sketcheditor/MainActivity.java"
     ],
-    "title": "@@TODO: Sketch Editor"
+    "title": "Sketch Editor"
 }
