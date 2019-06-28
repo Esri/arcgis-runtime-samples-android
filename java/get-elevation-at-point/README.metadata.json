@@ -1,6 +1,6 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "@@TODO: Get the elevation for a given point on a surface.",
+    "description": "Get the elevation for a given point on a surface.",
     "ignore": false,
     "images": [
         "get-elevation-at-point.png"
@@ -20,8 +20,7 @@
         "SceneView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/getelevationatpoint/MainActivity.java"
     ],
-    "title": "@@TODO: Get elevation at point"
+    "title": "Get elevation at point"
 }
