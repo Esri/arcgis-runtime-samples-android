@@ -1,6 +1,6 @@
 {
     "category": "Search and Query",
-    "description": "@@TODO: Return all loaded features from a query to show all attributes.",
+    "description": "Return all loaded features from a query to show all attributes.",
     "ignore": false,
     "images": [
         "feature-layer-show-attributes.png"
@@ -20,8 +20,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/featurelayershowattributes/MainActivity.java"
     ],
-    "title": "@@TODO: Feature Layer Show Attributes"
+    "title": "Feature Layer Show Attributes"
 }
