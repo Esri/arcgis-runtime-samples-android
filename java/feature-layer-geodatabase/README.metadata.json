@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Consume an Esri mobile geodatabase by using a FeatureLayer and a GeodatabaseFeatureTable.",
+    "description": "Consume an Esri mobile geodatabase by using a FeatureLayer and a GeodatabaseFeatureTable.",
     "ignore": false,
     "images": [
         "feature-layer-geodatabase.png"
@@ -18,8 +18,7 @@
         "GeodatabaseFeatureTable"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/featurelayergeodatabase/MainActivity.java"
     ],
-    "title": "@@TODO: Feature Layer (GeoDatabase)"
+    "title": "Feature Layer (GeoDatabase)"
 }
