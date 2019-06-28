@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Add a scene layer to a scene.",
+    "description": "Add a scene layer to a scene.",
     "ignore": false,
     "images": [
         "scene-layer.png"
@@ -18,8 +18,7 @@
         "SceneLayer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/scenelayer/MainActivity.java"
     ],
-    "title": "@@TODO: Scene Layer"
+    "title": "Scene Layer"
 }
