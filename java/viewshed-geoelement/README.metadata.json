@@ -1,6 +1,6 @@
 {
     "category": "Analysis",
-    "description": "@@TODO: A viewshed shows the visible and obstructed areas from an observer's vantage point. This sample demonstrates how to attach a viewshed to a moving GeoElement.",
+    "description": "A viewshed shows the visible and obstructed areas from an observer's vantage point. This sample demonstrates how to attach a viewshed to a moving GeoElement.",
     "ignore": false,
     "images": [
         "viewshed-geoelement.png"
@@ -22,8 +22,7 @@
         "SceneView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/viewshedgeoelement/MainActivity.java"
     ],
-    "title": "@@TODO: Viewshed GeoElement"
+    "title": "Viewshed GeoElement"
 }
