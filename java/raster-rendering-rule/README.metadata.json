@@ -1,6 +1,6 @@
 {
     "category": "Visualization",
-    "description": "@@TODO: Create an ImageServiceRaster, fetch the RenderingRules from the service info, and use a RenderingRule to create an ImageServiceRaster and add it to a raster layer.",
+    "description": "Create an ImageServiceRaster, fetch the RenderingRules from the service info, and use a RenderingRule to create an ImageServiceRaster and add it to a raster layer.",
     "ignore": false,
     "images": [
         "raster-rendering-rule.png"
@@ -18,8 +18,7 @@
         "RasterLayer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/samples/renderingrule/MainActivity.java"
     ],
-    "title": "@@TODO: Raster Rendering Rule"
+    "title": "Raster Rendering Rule"
 }
