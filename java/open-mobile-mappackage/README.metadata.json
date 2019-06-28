@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Open and display a map from a Mobile Map Package.",
+    "description": "Open and display a map from a Mobile Map Package.",
     "ignore": false,
     "images": [
         "open-mobile-mappackage.png"
@@ -16,8 +16,7 @@
         "MobileMapPackage"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/openmobilemappackage/MainActivity.java"
     ],
-    "title": "@@TODO: Open Mobile Map Package"
+    "title": "Open Mobile Map Package"
 }
