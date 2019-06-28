@@ -1,6 +1,6 @@
 {
     "category": "Maps and Scenes",
-    "description": "@@TODO: Tell what the map's load status is\u2013obtained from the enum value from a LoadStatus class.",
+    "description": "Tell what the map's load status is, obtained from the enum value from a LoadStatus class.",
     "ignore": false,
     "images": [
         "map-load-status.png"
@@ -18,8 +18,7 @@
         "MapView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/maploaded/MainActivity.java"
     ],
-    "title": "@@TODO: Map Load Status"
+    "title": "Map Load Status"
 }
