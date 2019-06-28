@@ -1,6 +1,6 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "@@TODO: Access and add bookmarks to a map.",
+    "description": "Access and add bookmarks to a map.",
     "ignore": false,
     "images": [
         "manage-bookmarks.png"
@@ -22,8 +22,7 @@
         "Viewpoint"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/managebookmarks/MainActivity.java"
     ],
-    "title": "@@TODO: Manage Bookmarks"
+    "title": "Manage Bookmarks"
 }
