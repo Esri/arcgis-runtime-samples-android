@@ -1,6 +1,6 @@
 {
     "category": "Analysis",
-    "description": "@@TODO: A viewshed shows the visible and obstructed areas from an observer's vantage point. This sample demonstrates all of the configurable properties of a viewshed.",
+    "description": "A viewshed shows the visible and obstructed areas from an observer's vantage point. This sample demonstrates all of the configurable properties of a viewshed.",
     "ignore": false,
     "images": [
         "viewshed-location.png"
@@ -22,8 +22,7 @@
         "Viewshed"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/viewshedlocation/MainActivity.java"
     ],
-    "title": "@@TODO: Viewshed Location"
+    "title": "Viewshed Location"
 }
