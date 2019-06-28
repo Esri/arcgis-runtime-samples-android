@@ -16,7 +16,7 @@
         "PortalQueryParameters",
         "PortalQueryResultSet"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/search-for-webmap.htm",
+    "redirect_from": "",
     "relevant_apis": [
         "Portal",
         "PortalItem",
