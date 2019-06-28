@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Take a web map offline.",
+    "description": "Take a web map offline.",
     "ignore": false,
     "images": [
         "generate-offline-map.png"
@@ -20,8 +20,7 @@
         "OfflineMapTask"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/generateofflinemap/MainActivity.java"
     ],
-    "title": "@@TODO: Generate Offline Map"
+    "title": "Generate Offline Map"
 }
