@@ -1,6 +1,6 @@
 {
     "category": "Search and Query",
-    "description": "@@TODO: Geocode an address and show it on a map view.",
+    "description": "Geocode an address and show it on a map view.",
     "ignore": false,
     "images": [
         "find-address.png"
@@ -32,8 +32,7 @@
         "Point"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/findaddress/MainActivity.java"
     ],
-    "title": "@@TODO: Find Address"
+    "title": "Find Address"
 }
