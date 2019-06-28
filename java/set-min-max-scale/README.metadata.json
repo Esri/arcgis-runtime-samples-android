@@ -1,6 +1,6 @@
 {
     "category": "Maps and Scenes",
-    "description": "@@TODO: Restrict zooming to a specific scale range.",
+    "description": "Restrict zooming to a specific scale range.",
     "ignore": false,
     "images": [
         "set-min-max-scale.png"
@@ -12,7 +12,7 @@
         "MapView",
         "Viewpoint"
     ],
-    "redirect_from": "@@TODO: /android/latest/sample-code/min-max-scale.htm",
+    "redirect_from": "",
     "relevant_apis": [
         "ArcGISMap",
         "Basemap",
@@ -20,8 +20,7 @@
         "Viewpoint"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/samples/setminxmaxscale/MainActivity.java"
     ],
-    "title": "@@TODO: Min max scale"
+    "title": "Min max scale"
 }
