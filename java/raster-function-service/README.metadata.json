@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Raster functions are operations performed on a raster to apply on-the-fly processing. This sample demonstrates how to create an image service raster and apply a hillshade raster fu",
+    "description": "Raster functions are operations performed on a raster to apply on-the-fly processing. This sample demonstrates how to create an image service raster and apply a hillshade raster fu",
     "ignore": false,
     "images": [
         "raster-function-service.png"
@@ -18,8 +18,7 @@
         "RasterLayer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/rasterfunctionservice/MainActivity.java"
     ],
-    "title": "@@TODO: Raster Function Service"
+    "title": "Raster Function Service"
 }
