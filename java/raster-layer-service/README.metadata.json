@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Create an ImageServiceRaster and add it to a RasterLayer. An ImageServiceRaster allows you to work with an image map service exposed by the ArcGIS Server Rest API.",
+    "description": "Create an ImageServiceRaster and add it to a RasterLayer. An ImageServiceRaster allows you to work with an image map service exposed by the ArcGIS Server Rest API.",
     "ignore": false,
     "images": [
         "raster-layer-service.png"
@@ -16,8 +16,7 @@
         "RasterLayer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/rasterservicelayer/MainActivity.java"
     ],
-    "title": "@@TODO: Raster Layer Service"
+    "title": "Raster Layer Service"
 }
