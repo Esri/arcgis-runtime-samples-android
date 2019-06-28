@@ -1,6 +1,6 @@
 {
     "category": "Search and Query",
-    "description": "@@TODO: Select geoelements in a scene layer.",
+    "description": "Select geoelements in a scene layer.",
     "ignore": false,
     "images": [
         "scene-layer-selection.png"
@@ -18,8 +18,7 @@
         "SceneLayer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/scenelayerselection/MainActivity.java"
     ],
-    "title": "@@TODO: Scene Layer Selection"
+    "title": "Scene Layer Selection"
 }
