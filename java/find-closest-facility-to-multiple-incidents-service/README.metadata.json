@@ -1,6 +1,6 @@
 {
     "category": "Routing and Logistics",
-    "description": "@@TODO: Find routes from several locations to the respective closest facility.",
+    "description": "Find routes from several locations to the respective closest facility.",
     "ignore": false,
     "images": [
         "find-closest-facility-to-multiple-incidents-service.png"
@@ -33,8 +33,7 @@
         "Incident"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/findclosestfacilitytomultipleincidentsservice/MainActivity.java"
     ],
-    "title": "@@TODO: Find closest facility to multiple incidents (service)"
+    "title": "Find closest facility to multiple incidents (service)"
 }
