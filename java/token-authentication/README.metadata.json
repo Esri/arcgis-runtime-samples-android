@@ -1,6 +1,6 @@
 {
     "category": "Cloud and Portal",
-    "description": "@@TODO: This sample demonstrates how to access a web map that is secured with ArcGIS token-based authentication.",
+    "description": "This sample demonstrates how to access a web map that is secured with ArcGIS token-based authentication.",
     "ignore": false,
     "images": [
         "token-authentication.png"
@@ -28,8 +28,7 @@
         "MapView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/tokenauthentication/MainActivity.java"
     ],
-    "title": "@@TODO: Token authentication"
+    "title": "Token authentication"
 }
