@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Find webmap portal items by using a search term.",
+    "description": "Find webmap portal items by using a search term.",
     "ignore": false,
     "images": [
         "search-for-webmap.png"
@@ -24,9 +24,8 @@
         "PortalQueryResultSet"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/searchforwebmap/MainActivity.java",
         "src/main/java/com/esri/arcgisruntime/sample/searchforwebmap/PortalItemAdapter.java"
     ],
-    "title": "@@TODO: Search for webmap"
+    "title": "Search for webmap"
 }
