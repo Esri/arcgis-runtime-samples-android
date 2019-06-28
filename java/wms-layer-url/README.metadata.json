@@ -1,6 +1,6 @@
 {
     "category": "Layers",
-    "description": "@@TODO: Display a WMS Layer from an online URL.",
+    "description": "Display a WMS Layer from an online URL.",
     "ignore": false,
     "images": [
         "wms-layer-url.png"
@@ -18,8 +18,7 @@
         "WmsLayer"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/wmslayerurl/MainActivity.java"
     ],
-    "title": "@@TODO: WMS Layer (URL)"
+    "title": "WMS Layer (URL)"
 }
