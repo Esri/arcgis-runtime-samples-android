@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "@@TODO: Opens and displays a scene from a Mobile Scene Package (.mspk).",
+    "description": "Opens and displays a scene from a Mobile Scene Package (.mspk).",
     "ignore": false,
     "images": [
         "open-mobile-scene-package.png"
@@ -16,8 +16,7 @@
         "SceneView"
     ],
     "snippets": [
-        "@@TODO: *** PLEASE VERIFY THE INCLUSION OF THESE SNIPPETS ***",
         "src/main/java/com/esri/arcgisruntime/sample/openmobilescenepackage/MainActivity.java"
     ],
-    "title": "@@TODO: Open mobile scene package"
+    "title": "Open mobile scene package"
 }
