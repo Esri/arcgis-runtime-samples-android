@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     OAuthConfiguration(
       getString(R.string.portal_url),
       getString(R.string.oauth_client_id),
-      "${BuildConfig.APPLICATION_ID}://${getString(R.string.oauth_redirect_host)}"
+      "${getString(R.string.oauth_redirect_scheme)}://${getString(R.string.oauth_redirect_host)}"
     )
   }
 

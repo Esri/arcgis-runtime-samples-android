@@ -29,7 +29,7 @@
 
                 <data
                     android:host="@string/oauth_redirect_host"
-                    android:scheme="${applicationId}" />
+                    android:scheme="@string/oauth_redirect_scheme" />
             </intent-filter>
         </activity>
 

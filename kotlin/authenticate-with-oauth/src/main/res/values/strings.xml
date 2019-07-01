@@ -5,6 +5,7 @@
 
     <string name="oauth_client_id">lgAdHkYZYlwwfAhC</string>
 
+    <string name="oauth_redirect_scheme">my-ags-app</string>
     <string name="oauth_redirect_host">auth</string>
 
     <string name="error_auth_exception">Authorization Exception: %s</string>
