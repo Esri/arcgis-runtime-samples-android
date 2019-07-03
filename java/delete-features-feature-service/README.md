@@ -28,4 +28,4 @@ A `FeatureLayer` created using this `ServiceFeatureTable` that is applied to the
 * ServiceFeatureTable
 
 #### Tags
-Layers
+Edit & Manage Data
