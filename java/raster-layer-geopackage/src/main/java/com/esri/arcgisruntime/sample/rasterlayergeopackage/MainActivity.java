@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.esri.arcgisruntime.sample.rasterlayergeopackage;
 
 import android.Manifest;
@@ -30,12 +46,10 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // inflate MapView from layout
+    // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
-
     // create a map with the BasemapType light gray canvas
     ArcGISMap map = new ArcGISMap(Basemap.Type.LIGHT_GRAY_CANVAS, 39.7294, -104.8319, 11);
-
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
@@ -43,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void rasterLayerGeoPackage() {
-
     // open the GeoPackage
     GeoPackage geoPackage = new GeoPackage(
         Environment.getExternalStorageDirectory() + getString(R.string.geopackage_path));
@@ -53,21 +66,18 @@ public class MainActivity extends AppCompatActivity {
         if (!geoPackage.getGeoPackageRasters().isEmpty()) {
           // read raster images and get the first one
           Raster geoPackageRaster = geoPackage.getGeoPackageRasters().get(0);
-
           // create a layer to show the raster
           RasterLayer geoPackageRasterLayer = new RasterLayer(geoPackageRaster);
-
           // add the image as a raster layer to the map (with default symbology)
           mMapView.getMap().getOperationalLayers().add(geoPackageRasterLayer);
-          
         } else {
           String emptyMessage = "No rasters found in this GeoPackage!";
-          Toast.makeText(MainActivity.this, emptyMessage, Toast.LENGTH_LONG).show();
+          Toast.makeText(this, emptyMessage, Toast.LENGTH_LONG).show();
           Log.e(TAG, emptyMessage);
         }
       } else {
         String error = "GeoPackage failed to load!";
-        Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
     });
@@ -98,15 +108,15 @@ public class MainActivity extends AppCompatActivity {
       rasterLayerGeoPackage();
     } else {
       // report to user that permission was denied
-      Toast.makeText(MainActivity.this, getResources().getString(R.string.read_permission_denied),
+      Toast.makeText(this, getResources().getString(R.string.read_permission_denied),
           Toast.LENGTH_SHORT).show();
     }
   }
 
   @Override
   protected void onPause() {
-    super.onPause();
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
@@ -117,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     mMapView.dispose();
+    super.onDestroy();
   }
 }
