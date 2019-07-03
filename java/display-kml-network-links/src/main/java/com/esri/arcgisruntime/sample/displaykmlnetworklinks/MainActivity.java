@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // create a kml data set from a URL
-    KmlDataset kmlDataset = new KmlDataset(getString(R.string.kml_url));
+    KmlDataset kmlDataset = new KmlDataset(getString(R.string.european_air_traffic_kml_url));
     // show an alert when any network link messages are received
     kmlDataset.addKmlNetworkLinkMessageReceivedListener(kmlNetworkLinkMessageReceivedEvent -> {
       String message = "KML Network Link Message: " + kmlNetworkLinkMessageReceivedEvent.getMessage();
