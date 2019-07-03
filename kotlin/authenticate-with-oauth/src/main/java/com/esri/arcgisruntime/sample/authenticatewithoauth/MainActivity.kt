@@ -40,6 +40,7 @@ import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.OAuthConfiguration
 import com.esri.arcgisruntime.security.OAuthTokenCredentialRequest
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.concurrent.CountDownLatch
 
 /**
  * This sample demonstrates how to authenticate with ArcGIS Online (or your own portal) using OAuth2 to access secured
@@ -63,8 +64,12 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
 
   // instances of Portal and PortalItem to define what is displayed in the map
   private val portal: Portal by lazy { Portal(getString(R.string.portal_url)) }
-
   private val portalItem: PortalItem by lazy { PortalItem(portal, getString(R.string.webmap_world_traffic_id)) }
+
+  // auth code store as a property as auth code isn't obtainable from intent when called from unblocked thread
+  private var authCode: String? = null
+  // CountDownLatch used to block auth challenge when performing oauth authorization
+  private val authCountDownLatch: CountDownLatch = CountDownLatch(1)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -74,6 +79,23 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     // setup AuthenticationManager to handle auth challenges
     AuthenticationManager.setAuthenticationChallengeHandler(this)
     AuthenticationManager.addOAuthConfiguration(oAuthConfig)
+  }
+
+  override fun onNewIntent(intent: Intent?) {
+    super.onNewIntent(intent)
+
+    // check the intent for an auth code
+    intent?.authCode?.let {
+      authCode = it
+
+      // hide WebView if it is visible
+      if (webView.visibility == View.VISIBLE) {
+        webView.visibility = View.GONE
+      }
+
+      // count down the latch to allow the auth challenge thread to continue
+      authCountDownLatch.countDown()
+    }
   }
 
   override fun onResume() {
@@ -94,11 +116,14 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   /**
    * Function for handling authentication challenges.
    *
-   * If an authorization code exists in the Intent, it's likely that the user is partially through the OAuth flow
-   * and we need to try to obtain the token by performing a OAuthTokenCredentialRequest.
+   * If the [authCode] property is null, it's likely that this is the user's first attempt at OAuth. So begin OAuth flow.
+   * We do this by launching the Intent to open the user's browser or as a last resort we use a WebView. Directly after
+   * launching the Intent or opening the WebView we block the auth challenge thread to allow the user to enter their
+   * credentials.
    *
-   * If there is not an authorization code in the Intent, it's likely that this is the user's first attempt
-   * at OAuth. So begin OAuth flow.
+   * We release the thread when the Intent is received and it contains an auth code, setting this auth code as a property
+   * on the [MainActivity] class. When the thread is released we check that the auth code isn't null and perform a
+   * OAuthTokenCredentialRequest.
    *
    * @param authenticationChallenge the authentication challenge to handle
    * @return the AuthenticationChallengeResponse indicating which action to take
@@ -106,42 +131,41 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   override fun handleChallenge(authenticationChallenge: AuthenticationChallenge?): AuthenticationChallengeResponse {
     authenticationChallenge?.let { authChallenge ->
 
-      try {
-        // if Intent has an auth code, we've likely just been through the OAuth flow and now have an auth code
-        // we can use to request a new access token
-        intent?.authCode?.let {
-          // use the authorization code to get a new access token by executing an OAuthTokenCredentialRequest
-          val request = OAuthTokenCredentialRequest(
-            oAuthConfig.portalUrl,
-            null,
-            oAuthConfig.clientId,
-            oAuthConfig.redirectUri,
-            it
-          )
+      if (authChallenge.type == AuthenticationChallenge.Type.OAUTH_CREDENTIAL_CHALLENGE) {
 
-          val credential = request.executeAsync().get()
-          // continue with credentials generated using auth code
-          return AuthenticationChallengeResponse(
-            AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
-            credential
-          )
-        }
-
-        // we only want to begin OAuth here if the user has yet to authorize successfully
-        if (authChallenge.failureCount < 2) {
+        if (authCode == null) {
           beginOAuth()
-        }
+          authCountDownLatch.await()
 
-        return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
-      } catch (e: Exception) {
-        // auth code has likely expired, begin OAuth flow
-        getString(R.string.error_auth_exception, e.message).let {
-          Log.d(TAG, it)
-          runOnUiThread {
-            logToUser(it)
+          try {
+            // if we have an auth code, we've likely just been through the OAuth flow and now have an auth code
+            // we can use it to request a new access token
+            authCode?.let {
+              // use the authorization code to get a new access token by executing an OAuthTokenCredentialRequest
+              val request = OAuthTokenCredentialRequest(
+                oAuthConfig.portalUrl,
+                null,
+                oAuthConfig.clientId,
+                oAuthConfig.redirectUri,
+                it
+              )
+
+              // clear stored auth code after usage
+              authCode = null
+
+              val credential = request.executeAsync().get()
+              // continue with credentials generated using auth code
+              return AuthenticationChallengeResponse(
+                AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
+                credential
+              )
+            }
+          } catch (e: Exception) {
+            runOnUiThread {
+              logToUser(getString(R.string.error_auth_exception, e.message))
+            }
           }
         }
-        beginOAuth()
       }
     }
     return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
@@ -189,7 +213,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
     webView.webViewClient = object : WebViewClient() {
       override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
         Uri.parse(url)?.let {
-          if (it.scheme == BuildConfig.APPLICATION_ID && it.host == getString(R.string.oauth_redirect_host)) {
+          if (it.scheme == getString(R.string.oauth_redirect_scheme) && it.host == getString(R.string.oauth_redirect_host)) {
             startActivity(generateAuthIntent(it))
             return true
           }
@@ -199,9 +223,11 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
 
       @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
       override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-        if (request?.url?.scheme == BuildConfig.APPLICATION_ID && request.url?.host == getString(R.string.oauth_redirect_host)) {
-          startActivity(generateAuthIntent(request.url))
-          return true
+        request?.url?.let { url ->
+          if (url.scheme == getString(R.string.oauth_redirect_scheme) && url.host == getString(R.string.oauth_redirect_host)) {
+            startActivity(generateAuthIntent(url))
+            return true
+          }
         }
         return super.shouldOverrideUrlLoading(view, request)
       }
