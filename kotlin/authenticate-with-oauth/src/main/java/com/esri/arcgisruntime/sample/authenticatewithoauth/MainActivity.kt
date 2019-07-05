@@ -243,7 +243,13 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
    */
   private fun generateAuthIntent(uri: Uri): Intent {
     return Intent().also {
+      // sets a flag to define the following behaviour: if the MainActivity activity being launched is already running
+      // in the current task, then instead of launching a new instance of that activity, all of the other activities on
+      // top of it will be closed and this Intent will be delivered to the (now on top) old activity as a new Intent.
       it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+      // sets a flag to define the following behaviour: if a task is already running for the MainActivity you are now
+      // starting, then a new activity will not be started; instead, the current task will simply be brought to the
+      // front of the screen with the state it was last in.
       it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
       it.data = uri
     }
