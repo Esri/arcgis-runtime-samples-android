@@ -136,17 +136,17 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
         beginOAuth()
         authCountDownLatch.await()
 
-        try {
-          // if we have an auth code, we've likely just been through the OAuth flow and now have an auth code
-          // we can use it to request a new access token
-          authCode?.let {
+        // if we have an auth code, we've likely just been through the OAuth flow and now have an auth code
+        // we can use it to request a new access token
+        if (authCode != null) {
+          try {
             // use the authorization code to get a new access token by executing an OAuthTokenCredentialRequest
             val request = OAuthTokenCredentialRequest(
               oAuthConfig.portalUrl,
               null,
               oAuthConfig.clientId,
               oAuthConfig.redirectUri,
-              it
+              authCode
             )
 
             // clear stored auth code after usage
@@ -158,10 +158,10 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
               AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
               credential
             )
-          }
-        } catch (e: Exception) {
-          runOnUiThread {
-            logToUser(getString(R.string.error_auth_exception, e.message))
+          } catch (e: Exception) {
+            runOnUiThread {
+              logToUser(getString(R.string.error_auth_exception, e.message))
+            }
           }
         }
       }
