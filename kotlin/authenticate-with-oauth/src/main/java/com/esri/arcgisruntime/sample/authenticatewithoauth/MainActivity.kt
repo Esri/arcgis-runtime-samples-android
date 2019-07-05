@@ -133,37 +133,35 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
 
       if (authChallenge.type == AuthenticationChallenge.Type.OAUTH_CREDENTIAL_CHALLENGE) {
 
-        if (authCode == null) {
-          beginOAuth()
-          authCountDownLatch.await()
+        beginOAuth()
+        authCountDownLatch.await()
 
-          try {
-            // if we have an auth code, we've likely just been through the OAuth flow and now have an auth code
-            // we can use it to request a new access token
-            authCode?.let {
-              // use the authorization code to get a new access token by executing an OAuthTokenCredentialRequest
-              val request = OAuthTokenCredentialRequest(
-                oAuthConfig.portalUrl,
-                null,
-                oAuthConfig.clientId,
-                oAuthConfig.redirectUri,
-                it
-              )
+        try {
+          // if we have an auth code, we've likely just been through the OAuth flow and now have an auth code
+          // we can use it to request a new access token
+          authCode?.let {
+            // use the authorization code to get a new access token by executing an OAuthTokenCredentialRequest
+            val request = OAuthTokenCredentialRequest(
+              oAuthConfig.portalUrl,
+              null,
+              oAuthConfig.clientId,
+              oAuthConfig.redirectUri,
+              it
+            )
 
-              // clear stored auth code after usage
-              authCode = null
+            // clear stored auth code after usage
+            authCode = null
 
-              val credential = request.executeAsync().get()
-              // continue with credentials generated using auth code
-              return AuthenticationChallengeResponse(
-                AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
-                credential
-              )
-            }
-          } catch (e: Exception) {
-            runOnUiThread {
-              logToUser(getString(R.string.error_auth_exception, e.message))
-            }
+            val credential = request.executeAsync().get()
+            // continue with credentials generated using auth code
+            return AuthenticationChallengeResponse(
+              AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
+              credential
+            )
+          }
+        } catch (e: Exception) {
+          runOnUiThread {
+            logToUser(getString(R.string.error_auth_exception, e.message))
           }
         }
       }
