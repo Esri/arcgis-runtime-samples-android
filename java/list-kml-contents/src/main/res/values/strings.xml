@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">List KML Contents</string>
+    <string name="kmz_read_permission_denied">Read permission required to read KMZ file!</string>
+    <string name="kmz_data_path">/ArcGIS/Samples/KML/esri_test_data.kmz</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+</resources>
