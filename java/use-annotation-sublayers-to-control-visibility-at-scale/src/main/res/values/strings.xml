@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Annotation sublayer</string>
+    <string name="map_scale">Current map scale: %1$d</string>
+    <string name="sublayer_name">Sublayer name: %1$s</string>
+    <string name="min_scale">Min scale: 1:%1$d</string>
+    <string name="max_scale">Max scale: 1:%1$d</string>
+    <string name="is_visible">Is visible: %1$b</string>
+</resources>
