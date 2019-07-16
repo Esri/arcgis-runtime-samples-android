@@ -52,22 +52,19 @@ public class MainActivity extends AppCompatActivity {
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
     // create a map with the BasemapType topographic
-    ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16);
+    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
     // set the map to be displayed in this view
     mMapView.setMap(map);
     // show current map scale
     TextView currentMapScaleTextView = findViewById(R.id.mapScale);
-    mMapView.addMapScaleChangedListener(mapScaleChangedEvent -> currentMapScaleTextView
-        .setText(getString(R.string.map_scale, Math.round(mMapView.getMapScale()))));
+    mMapView.addMapScaleChangedListener(mapScaleChangedEvent -> currentMapScaleTextView.setText(getString(R.string.map_scale, Math.round(mMapView.getMapScale()))));
 
     requestReadPermission();
-
   }
 
   private void addSublayersWithAnnotation() {
-
     MobileMapPackage mobileMapPackage = new MobileMapPackage(
-        Environment.getExternalStorageDirectory() + "/ArcGIS/Samples/MapPackage/LothianRiversAnno.mmpk");
+        Environment.getExternalStorageDirectory() + "/ArcGIS/Samples/MapPackage/GasDeviceAnno.mmpk");
     mobileMapPackage.loadAsync();
     mobileMapPackage.addDoneLoadingListener(() -> {
       if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED) {
@@ -80,37 +77,26 @@ public class MainActivity extends AppCompatActivity {
             layer.loadAsync();
             layer.addDoneLoadingListener(() -> {
               // bind water metadata to views
-              bindSublayerMetadataToViews((AnnotationSublayer) layer.getSubLayerContents().get(0),
-                  findViewById(R.id.waterMetadata));
+              bindSublayerMetadataToViews((AnnotationSublayer) layer.getSubLayerContents().get(0), findViewById(R.id.waterMetadata));
               // bind burn metadata to views
-              bindSublayerMetadataToViews((AnnotationSublayer) layer.getSubLayerContents().get(1),
-                  findViewById(R.id.burnMetadata));
+              bindSublayerMetadataToViews((AnnotationSublayer) layer.getSubLayerContents().get(1), findViewById(R.id.burnMetadata));
             });
           }
         }
       } else {
-        Toast.makeText(this, "MMPK didn't load: " + mobileMapPackage.getLoadError().getMessage(), Toast.LENGTH_LONG)
-            .show();
+        String error = "Mobile map package failed load: " + mobileMapPackage.getLoadError().getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
       }
     });
   }
 
   private void bindSublayerMetadataToViews(AnnotationSublayer annotationSublayer, View view) {
     // update the layer title
-    TextView layerNameTextView = view.findViewById(R.id.sublayerName);
-    layerNameTextView.setText((getString(R.string.sublayer_name, annotationSublayer.getName())));
-    // update the min scale
-    TextView minScaleTextView = view.findViewById(R.id.minScale);
-    minScaleTextView.setText(getString(R.string.min_scale, Math.round(annotationSublayer.getMinScale())));
-    // update the max scale
-    TextView maxScaleTextView = view.findViewById(R.id.maxScale);
-    maxScaleTextView.setText(getString(R.string.max_scale, Math.round(annotationSublayer.getMaxScale())));
-    Log.d(TAG, annotationSublayer.getName() + annotationSublayer.getMinScale() + annotationSublayer.getMaxScale());
-    // update the is visible boolean on map scale changes
-    TextView isVisibleTextView = view.findViewById(R.id.isVisible);
-    isVisibleTextView.setText(getString(R.string.is_visible, annotationSublayer.isVisibleAtScale(mMapView.getMapScale())));
-    mMapView.addMapScaleChangedListener(mapScaleChangedEvent -> isVisibleTextView
-        .setText(getString(R.string.is_visible, annotationSublayer.isVisibleAtScale(mMapView.getMapScale()))));
+    TextView layerNameTextView = view.findViewById(R.id.sublayerNameVisibility);
+    layerNameTextView.setText(getString(R.string.sublayer_name_visibility, annotationSublayer.getName(), annotationSublayer.isVisibleAtScale(mMapView.getMapScale())));
+    mMapView.addMapScaleChangedListener(mapScaleChangedEvent -> layerNameTextView
+        .setText(getString(R.string.sublayer_name_visibility, annotationSublayer.getName(), annotationSublayer.isVisibleAtScale(mMapView.getMapScale()))));
   }
 
   /**
@@ -161,5 +147,4 @@ public class MainActivity extends AppCompatActivity {
     super.onDestroy();
     mMapView.dispose();
   }
-
 }
