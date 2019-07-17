@@ -16,19 +16,23 @@
 
 package com.esri.arcgisruntime.sample.listkmlcontents;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
+import android.view.Gravity;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.layers.KmlLayer;
@@ -36,21 +40,30 @@ import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.SceneView;
+import com.esri.arcgisruntime.ogc.kml.KmlContainer;
 import com.esri.arcgisruntime.ogc.kml.KmlDataset;
+import com.esri.arcgisruntime.ogc.kml.KmlNetworkLink;
+import com.esri.arcgisruntime.ogc.kml.KmlNode;
 
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private SceneView mSceneView;
-  private ConstraintLayout mDrawerLayout;
+  private DrawerLayout mDrawerLayout;
+  private ListView mDrawerListView;
+  private ArrayAdapter<String> mNodeNameAdapter;
   private ActionBarDrawerToggle mDrawerToggle;
+  private ActionBarDrawerToggle mActionBarDrawerToggle;
+
+  static List<KmlNode> kmlNodes = new ArrayList<>();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    mDrawerListView = findViewById(R.id.listView);
     mDrawerLayout = findViewById(R.id.drawer);
 
     // get a reference to the scene view
@@ -59,6 +72,12 @@ public class MainActivity extends AppCompatActivity {
     // create a map and add it to the map view
     ArcGISScene scene = new ArcGISScene(Basemap.createImageryWithLabels());
     mSceneView.setScene(scene);
+
+    // initialize the array adaptor
+    mNodeNameAdapter = new ArrayAdapter<>(this, R.layout.node_row);
+
+    // set the adapter for the list view
+    mDrawerListView.setAdapter(mNodeNameAdapter);
 
     requestReadPermission();
 
@@ -74,17 +93,58 @@ public class MainActivity extends AppCompatActivity {
     // when the dataset is loaded, recursively build the tree view with KML nodes starting with the root node(s)
     kmlDataset.addDoneLoadingListener(() -> {
       if (kmlDataset.getLoadStatus() == LoadStatus.LOADED) {
-        Log.d(TAG, "LOADED");
-        ExpandableListView expandableListView = findViewById(R.id.expandableListView);
-        ExpandableListAdapter expandableListAdapter = new ExpandableListViewAdapter(this, kmlDataset.getRootNodes());
-        expandableListView.setAdapter(expandableListAdapter);
-        ((ExpandableListViewAdapter) expandableListAdapter).notifyDataSetChanged();
+
+
+        flattenKmlNodes(kmlDataset.getRootNodes().get(0));
+
+
+        for (KmlNode kmlNode : kmlNodes) {
+          mNodeNameAdapter.add(kmlNode.getName());
+          Log.d(TAG, kmlNode.getName());
+        }
+
+        mNodeNameAdapter.notifyDataSetChanged();
+
+        // on tapping a layer in the drawer list view, toggle the check box and call toggleLayer
+        mDrawerListView.setOnItemClickListener(
+            (adapterView, view, i, l) -> {
+              //CheckBox checkBox = view.findViewById(R.id.geopackageLayerCheckBox);
+              // checkBox.setChecked(!checkBox.isChecked());
+              // toggles the given layer on and off
+              // toggleLayer(mLayersHashMap.get(mDrawerListView.getItemAtPosition(i).toString()));
+            });
+
+        // open the drawer
+        mDrawerLayout.openDrawer(Gravity.START);
       } else {
         String error = "Error loading KML dataset: " + kmlDataset.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
     });
+  }
+
+  private void flattenKmlNodes(KmlNode kmlNode) {
+      if(!getChildren(kmlNode).isEmpty()) {
+        for (KmlNode child : getChildren(kmlNode)) {
+          kmlNodes.add(child);
+          flattenKmlNodes(child);
+        }
+      }
+    }
+
+
+  private List<KmlNode> getChildren(KmlNode parentNode) {
+    List<KmlNode> children = new ArrayList<>();
+    if (parentNode instanceof KmlContainer) {
+      children.addAll(((KmlContainer) parentNode).getChildNodes());
+    } else if (parentNode instanceof KmlNetworkLink) {
+      children.addAll(((KmlNetworkLink) parentNode).getChildNodes());
+    }
+    for (KmlNode child : children) {
+      Log.d(TAG, "Get children: " + child.getName());
+    }
+    return children;
   }
 
   /**

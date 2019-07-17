@@ -4,4 +4,6 @@
     <string name="kmz_data_path">/ArcGIS/Samples/KML/esri_test_data.kmz</string>
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
+    <string name="drawer_opened">opened</string>
+    <string name="drawer_closed">closed</string>
 </resources>
