@@ -26,16 +26,11 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.geometry.Envelope;
@@ -59,10 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
-  private ActionBarDrawerToggle mDrawerToggle;
-  private DrawerLayout mDrawerLayout;
-  private ListView mDrawerListView;
-  private List<KmlNode> mFlattenedKmlNodeList;
+  private TextView mBreadcrumbTextView;
+  private ListView mListView;
+  private List<KmlNode> mKmlNodeList;
   private ArrayAdapter<String> mNodeNameAdapter;
 
   private SceneView mSceneView;
@@ -72,9 +66,8 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    mDrawerListView = findViewById(R.id.listView);
-    mDrawerLayout = findViewById(R.id.drawer);
-    setUpDrawerToggle();
+    mListView = findViewById(R.id.listView);
+    mBreadcrumbTextView = findViewById(R.id.breadcrumbTextView);
 
     // get a reference to the scene view
     mSceneView = findViewById(R.id.sceneView);
@@ -84,17 +77,21 @@ public class MainActivity extends AppCompatActivity {
     mSceneView.setScene(scene);
 
     // initialize the flattened list of kml nodes
-    mFlattenedKmlNodeList = new ArrayList<>();
+    mKmlNodeList = new ArrayList<>();
 
     // initialize the array adaptor
     mNodeNameAdapter = new ArrayAdapter<>(this, R.layout.node_row);
 
     // set the adapter for the list view
-    mDrawerListView.setAdapter(mNodeNameAdapter);
+    mListView.setAdapter(mNodeNameAdapter);
 
     requestReadPermission();
   }
 
+  /**
+   * Load a KML dataset and for each KML node, convert its children to a flattened list. On tapping a KML node in the
+   * list, set the scene view to a viewpoint around the tapped KML node.
+   */
   private void listKmlContents() {
     // load a KML dataset from a local KMZ file and show it as an operational layer
     KmlDataset kmlDataset = new KmlDataset(Environment.getExternalStorageDirectory() + getString(R.string.kmz_data_path));
@@ -107,26 +104,49 @@ public class MainActivity extends AppCompatActivity {
         // for each KML node in the dataset
         for (KmlNode kmlNode : kmlDataset.getRootNodes()) {
           // add the parent node to a list
-          mFlattenedKmlNodeList.add(kmlNode);
+          mKmlNodeList.add(kmlNode);
           // add the parent node to the adapter for use in the drawer list view
           mNodeNameAdapter.add(kmlNode.getName());
-          // add the flattened list of children to the lists
-          flattenKmlNodes(kmlNode, 1);
         }
         // once all nodes have been written out to the
         mNodeNameAdapter.notifyDataSetChanged();
         // on tapping a layer in the drawer list view, set the scene view to the selected node's extent
-        mDrawerListView.setOnItemClickListener(
+        mListView.setOnItemClickListener(
             (adapterView, view, i, l) -> {
-              KmlNode selectedNode = mFlattenedKmlNodeList.get(i);
+              KmlNode selectedNode = mKmlNodeList.get(i);
+
+              // set the scene view viewpoint to the extent of the selected node
               Envelope nodeExtent = selectedNode.getExtent();
               if (nodeExtent != null && !nodeExtent.isEmpty()) {
                 mSceneView.setViewpointAsync(new Viewpoint(nodeExtent));
-                mDrawerLayout.closeDrawer(Gravity.START);
+              }
+              // if the node has children, update the list view with the children
+              if (!getChildren(selectedNode).isEmpty()) {
+                createListForKmlNode(selectedNode);
+                StringBuilder breadcrumbPathBuilder = new StringBuilder();
+                buildKmlBreadcrumbPath(selectedNode, breadcrumbPathBuilder);
+                mBreadcrumbTextView.setText(breadcrumbPathBuilder.toString());
               }
             });
-        // open the drawer once the dataset is first loaded
-        mDrawerLayout.openDrawer(Gravity.START);
+        mBreadcrumbTextView.setOnClickListener(
+            v ->  {
+              if (!mKmlNodeList.isEmpty()) {
+                KmlNode grandparentNode = mKmlNodeList.get(0).getParentNode().getParentNode();
+                if (grandparentNode != null) {
+                  createListForKmlNode(grandparentNode);
+
+                  // set the scene view viewpoint to the extent of the selected node
+                  Envelope nodeExtent = grandparentNode.getExtent();
+                  if (nodeExtent != null && !nodeExtent.isEmpty()) {
+                    mSceneView.setViewpointAsync(new Viewpoint(nodeExtent));
+                  }
+
+                  StringBuilder breadcrumbPathBuilder = new StringBuilder();
+                  buildKmlBreadcrumbPath(grandparentNode, breadcrumbPathBuilder);
+                  mBreadcrumbTextView.setText(breadcrumbPathBuilder.toString());
+                }
+              }
+            });
       } else {
         String error = "Error loading KML dataset: " + kmlDataset.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
@@ -135,28 +155,35 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  /**
-   * Flatten all child nodes of the given KML node into a list, keeping track of the recursion depth.
-   *
-   * @param kmlNode for which to flatten children
-   * @param recursionDepth as an int
-   */
-  private void flattenKmlNodes(KmlNode kmlNode, int recursionDepth) {
-    // set all nodes to be visible
-    kmlNode.setVisible(true);
-    // peek to see if the kml node has children
-    if (!getChildren(kmlNode).isEmpty()) {
-      // get each child
-      for (KmlNode child : getChildren(kmlNode)) {
-        // add the child to a list
-        mFlattenedKmlNodeList.add(child);
-        // add the kml node's name prepended with spaces to reflect the node's recursion depth and appended with the
-        // layer's type
-        mNodeNameAdapter.add(spacesForRecursionDepth(recursionDepth) + child.getName() + getKmlNodeType(child));
-        // recursively call to get all children, keeping track of the recursion depth
-        flattenKmlNodes(child, recursionDepth + 1);
+
+
+  private void createListForKmlNode(KmlNode selectedNode) {
+    // get the children of the selected node and add them to the list
+    mKmlNodeList = getChildren(selectedNode);
+    // clear the node name adapter and current selection
+    mNodeNameAdapter.clear();
+    mListView.clearChoices();
+    for (KmlNode childNode : mKmlNodeList) {
+      // some of the nodes in the dataset have their default visibility to off, so set all nodes to visible
+      childNode.setVisible(true);
+      // build a string consisting of node name, type and a chevron implying whether the node has children
+      StringBuilder nodeName = new StringBuilder(childNode.getName() + getKmlNodeType(childNode));
+      if (!getChildren(childNode).isEmpty()) {
+        nodeName.append(" > ");
       }
+      // add the node name to the node name adapter
+      mNodeNameAdapter.add(nodeName.toString());
     }
+    // notify that the node name adapter's dataset has changed
+    mNodeNameAdapter.notifyDataSetChanged();
+  }
+
+  private void buildKmlBreadcrumbPath(KmlNode kmlNode, StringBuilder pathBuilder) {
+    if (kmlNode.getParentNode() != null) {
+      buildKmlBreadcrumbPath(kmlNode.getParentNode(), pathBuilder);
+      pathBuilder.append(" > ");
+    }
+    pathBuilder.append(kmlNode.getName());
   }
 
   /**
@@ -196,51 +223,6 @@ public class MainActivity extends AppCompatActivity {
       type = "KmlPlacemark";
     }
     return " - " + type;
-  }
-
-  /**
-   * Return a string with a number of spaces equal to the recursion depth.
-   *
-   * @param recursionDepth as an int
-   * @return a string of spaces equal to recursion depth
-   */
-  private static String spacesForRecursionDepth(int recursionDepth) {
-    String spaces = "";
-    if (recursionDepth > 0) {
-      spaces = String.format("%1$" + recursionDepth * 2 + 's', "");
-    }
-    return spaces;
-  }
-
-  private void setUpDrawerToggle() {
-    ActionBar actionBar = getSupportActionBar();
-    actionBar.setDisplayHomeAsUpEnabled(true);
-    actionBar.setHomeButtonEnabled(true);
-
-    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
-      @Override
-      public void onDrawerClosed(View drawerView) {
-        invalidateOptionsMenu();
-      }
-
-      @Override
-      public void onDrawerOpened(View drawerView) {
-        invalidateOptionsMenu();
-      }
-    };
-
-    mDrawerLayout.addDrawerListener(mDrawerToggle);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-  }
-
-  @Override
-  protected void onPostCreate(Bundle savedInstanceState) {
-    super.onPostCreate(savedInstanceState);
-    mDrawerToggle.syncState();
   }
 
   /**

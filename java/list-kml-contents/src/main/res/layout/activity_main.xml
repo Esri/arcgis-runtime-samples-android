@@ -1,22 +1,41 @@
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- The main content view -->
-        <com.esri.arcgisruntime.mapping.view.SceneView
-            android:id="@+id/sceneView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/breadcrumbTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Click on a KML node below to explore it's child nodes..."
+        android:padding="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="8dp" />
 
-    <!-- The navigation drawer -->
-    <ListView android:id="@+id/listView"
-        android:layout_width="250dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:choiceMode="multipleChoice"
-        android:divider="@android:color/background_dark"
-        android:dividerHeight="1dp"
-        android:background="@android:color/background_light"/>
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@android:color/background_dark"
+        app:layout_constraintTop_toTopOf="@+id/listView"
+        app:layout_constraintBottom_toTopOf="@+id/listView" />
 
-</android.support.v4.widget.DrawerLayout>
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/background_light"
+        android:choiceMode="singleChoice"
+        app:layout_constraintBottom_toTopOf="@+id/sceneView"
+        app:layout_constraintTop_toBottomOf="@+id/breadcrumbTextView" />
+
+    <com.esri.arcgisruntime.mapping.view.SceneView
+        android:id="@+id/sceneView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listView" />
+
+</android.support.constraint.ConstraintLayout>
