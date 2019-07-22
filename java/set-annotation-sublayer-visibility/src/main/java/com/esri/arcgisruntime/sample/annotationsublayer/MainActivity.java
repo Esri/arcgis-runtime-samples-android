@@ -25,12 +25,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.layers.AnnotationLayer;
-import com.esri.arcgisruntime.layers.AnnotationSublayer;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -55,16 +54,23 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
     // set the map to be displayed in this view
     mMapView.setMap(map);
-    // show current map scale
+
+    // show current map scale in a text view at the bottom of the screen
     TextView currentMapScaleTextView = findViewById(R.id.mapScale);
-    mMapView.addMapScaleChangedListener(mapScaleChangedEvent -> currentMapScaleTextView.setText(getString(R.string.map_scale, Math.round(mMapView.getMapScale()))));
+    mMapView.addMapScaleChangedListener(mapScaleChangedEvent -> currentMapScaleTextView
+        .setText(getString(R.string.map_scale, Math.round(mMapView.getMapScale()))));
 
     requestReadPermission();
   }
 
   private void addSublayersWithAnnotation() {
+    // get a reference to checkboxes
+    CheckBox closedCheckBox = findViewById(R.id.closedCheckBox);
+    CheckBox openCheckBox = findViewById(R.id.openCheckBox);
+
+    // load the mobile map package
     MobileMapPackage mobileMapPackage = new MobileMapPackage(
-        Environment.getExternalStorageDirectory() + "/ArcGIS/Samples/MapPackage/GasDeviceAnno.mmpk");
+        Environment.getExternalStorageDirectory() + getString(R.string.gas_device_anno_mmpk_path));
     mobileMapPackage.loadAsync();
     mobileMapPackage.addDoneLoadingListener(() -> {
       if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED) {
@@ -76,10 +82,14 @@ public class MainActivity extends AppCompatActivity {
             // load the annotation layer. The layer must be loaded in order to access sub-layer contents
             layer.loadAsync();
             layer.addDoneLoadingListener(() -> {
-              // bind water metadata to views
-              bindSublayerMetadataToViews((AnnotationSublayer) layer.getSubLayerContents().get(0), findViewById(R.id.waterMetadata));
-              // bind burn metadata to views
-              bindSublayerMetadataToViews((AnnotationSublayer) layer.getSubLayerContents().get(1), findViewById(R.id.burnMetadata));
+              // get annotation sublayer name from sublayer contents
+              closedCheckBox.setText(layer.getSubLayerContents().get(0).getName());
+              openCheckBox.setText(layer.getSubLayerContents().get(1).getName());
+              // toggle annotation sublayer visibility on check
+              closedCheckBox.setOnCheckedChangeListener(
+                  (buttonView, isChecked) -> layer.getSubLayerContents().get(0).setVisible(isChecked));
+              openCheckBox.setOnCheckedChangeListener(
+                  (buttonView, isChecked) -> layer.getSubLayerContents().get(1).setVisible(isChecked));
             });
           }
         }
@@ -89,14 +99,6 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, error);
       }
     });
-  }
-
-  private void bindSublayerMetadataToViews(AnnotationSublayer annotationSublayer, View view) {
-    // update the layer title
-    TextView layerNameTextView = view.findViewById(R.id.sublayerNameVisibility);
-    layerNameTextView.setText(getString(R.string.sublayer_name_visibility, annotationSublayer.getName(), annotationSublayer.isVisibleAtScale(mMapView.getMapScale())));
-    mMapView.addMapScaleChangedListener(mapScaleChangedEvent -> layerNameTextView
-        .setText(getString(R.string.sublayer_name_visibility, annotationSublayer.getName(), annotationSublayer.isVisibleAtScale(mMapView.getMapScale()))));
   }
 
   /**
@@ -132,8 +134,8 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    super.onPause();
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
@@ -144,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     mMapView.dispose();
+    super.onDestroy();
   }
 }

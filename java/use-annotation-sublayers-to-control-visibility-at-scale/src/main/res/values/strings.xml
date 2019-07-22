@@ -1,5 +1,0 @@
-<resources>
-    <string name="app_name">Annotation sublayer</string>
-    <string name="sublayer_name_visibility">%1$s is visible: %2$b</string>
-    <string name="map_scale">Current map scale: 1:%1$d</string>
-</resources>
