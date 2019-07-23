@@ -1,0 +1,39 @@
+{
+    "category": "Layers",
+    "description": "Browse a WFS service for layers and add them to the map.",
+    "ignore": false,
+    "images": [
+        "browse-wfs-layers.png"
+    ],
+    "keywords": [
+        "Layers",
+        "OGC",
+        "WFS",
+        "feature",
+        "web",
+        "service",
+        "browse",
+        "catalog",
+        "WfsService",
+        "WfsServiceInfo",
+        "WfsLayerInfo",
+        "WfsFeatureTable",
+        "FeatureLayer",
+        "WfsFeatureTable.AxisOrder"
+    ],
+    "redirect_from": "/android/latest/sample-code/browse-wfs-layers.htm",
+    "relevant_apis": [
+        "WfsService",
+        "WfsServiceInfo",
+        "WfsLayerInfo",
+        "WfsFeatureTable",
+        "FeatureLayer",
+        "WfsFeatureTable.AxisOrder"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/WfsLayerInfoAdapter.java",
+        "src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/BottomSheetRecyclerView.java",
+        "src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/MainActivity.java"
+    ],
+    "title": "Browse WFS layers"
+}

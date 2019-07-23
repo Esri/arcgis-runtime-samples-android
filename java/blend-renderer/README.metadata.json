@@ -1,0 +1,33 @@
+{
+    "category": "Visualization",
+    "description": "Use a BlendRenderer on a RasterLayer. BlendRenderer is used to blend elevation data with imagery, creating a 3D effect.",
+    "ignore": false,
+    "images": [
+        "blend-renderer.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "ArcGISMap",
+        "Basemap",
+        "BlendRenderer",
+        "ColorRamp",
+        "MapView",
+        "Raster",
+        "RasterLayer"
+    ],
+    "redirect_from": "/android/latest/sample-code/blend-renderer.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "Basemap",
+        "BlendRenderer",
+        "ColorRamp",
+        "MapView",
+        "Raster",
+        "RasterLayer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/blendrenderer/ParametersDialogFragment.java",
+        "src/main/java/com/esri/arcgisruntime/sample/blendrenderer/MainActivity.java"
+    ],
+    "title": "Blend Renderer"
+}

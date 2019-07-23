@@ -31,5 +31,10 @@ This map shows the current air traffic in parts of Europe with heading, altitude
 
 
 ## Tags
-
-Layers, KML, KMZ, OGC, Keyhole, Network Link, Network Link Control.
+Layers
+KML
+KMZ
+OGC
+Keyhole
+Network Link
+Network Link Control

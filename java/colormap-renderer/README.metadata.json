@@ -1,0 +1,28 @@
+{
+    "category": "Visualization",
+    "description": "Use a ColormapRenderer on RasterLayer. ColormapRenderer can be used to replace values on a RasterLayer with a color based on the original value brightness.",
+    "ignore": false,
+    "images": [
+        "colormap-renderer.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "ArcGISMap",
+        "Basemap",
+        "ColormapRenderer",
+        "Raster",
+        "RasterLayer"
+    ],
+    "redirect_from": "/android/latest/sample-code/colormap-renderer.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "Basemap",
+        "ColormapRenderer",
+        "Raster",
+        "RasterLayer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/colormaprenderer/MainActivity.java"
+    ],
+    "title": "Colormap Renderer"
+}

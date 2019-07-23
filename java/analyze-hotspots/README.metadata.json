@@ -1,0 +1,26 @@
+{
+    "category": "Analysis",
+    "description": "Execute a geoprocessing task to calculate a hotspot analysis based on the frequency of 911 calls. It calculates the frequency of these calls within a given study area during a spec",
+    "ignore": false,
+    "images": [
+        "analyze-hotspots.png"
+    ],
+    "keywords": [
+        "Analysis",
+        "GeoprocessingJob",
+        "GeoprocessingParameters",
+        "GeoprocessingResult",
+        "GeoprocessingTask"
+    ],
+    "redirect_from": "/android/latest/sample-code/analyze-hotspots.htm",
+    "relevant_apis": [
+        "GeoprocessingJob",
+        "GeoprocessingParameters",
+        "GeoprocessingResult",
+        "GeoprocessingTask"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/analyzehotspots/MainActivity.java"
+    ],
+    "title": "Analyze Hotspots"
+}

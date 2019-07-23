@@ -1,0 +1,24 @@
+{
+    "category": "Search and Query",
+    "description": "Query a feature layer via feature table.",
+    "ignore": false,
+    "images": [
+        "feature-layer-query.png"
+    ],
+    "keywords": [
+        "Search and Query",
+        "FeatureLayer",
+        "FeatureTable",
+        "GeoPackage"
+    ],
+    "redirect_from": "/android/latest/sample-code/feature-layer-query.htm",
+    "relevant_apis": [
+        "FeatureLayer",
+        "FeatureTable",
+        "GeoPackage"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/samples/featurelayerquery/MainActivity.java"
+    ],
+    "title": "Feature Layer Query"
+}

@@ -1,0 +1,24 @@
+{
+    "category": "Layers",
+    "description": "Add the OpenStreetMap layer to a map as a Basemap.",
+    "ignore": false,
+    "images": [
+        "openstreetmap-layer.png"
+    ],
+    "keywords": [
+        "Layers",
+        "ArcGISMap",
+        "Basemap",
+        "MapView"
+    ],
+    "redirect_from": "",
+    "relevant_apis": [
+        "ArcGISMap",
+        "Basemap",
+        "MapView"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/openstreetmaplayer/MainActivity.java"
+    ],
+    "title": "OpenStreetMap Layer"
+}
