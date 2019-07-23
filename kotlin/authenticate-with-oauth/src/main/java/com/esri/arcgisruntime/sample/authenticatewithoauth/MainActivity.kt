@@ -92,10 +92,10 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
       if (webView.visibility == View.VISIBLE) {
         webView.visibility = View.GONE
       }
-
-      // count down the latch to allow the auth challenge thread to continue
-      authCountDownLatch.countDown()
     }
+
+    // count down the latch to allow the auth challenge thread to continue
+    authCountDownLatch.countDown()
   }
 
   override fun onResume() {
