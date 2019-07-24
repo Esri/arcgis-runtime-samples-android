@@ -16,20 +16,23 @@
 
 package com.esri.arcgisruntime.sample.listkmlcontents;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,14 +53,16 @@ import com.esri.arcgisruntime.ogc.kml.KmlNode;
 import com.esri.arcgisruntime.ogc.kml.KmlPlacemark;
 import com.esri.arcgisruntime.ogc.kml.KmlScreenOverlay;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.OnItemClickListener {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private TextView mBreadcrumbTextView;
-  private ListView mListView;
+  private RecyclerView mRecyclerView;
   private List<KmlNode> mKmlNodeList;
-  private ArrayAdapter<String> mNodeNameAdapter;
+  private List<String> mKmlNodeNames;
+  private List<BitmapDrawable> mKmlNodeUxIcons;
+  private KmlNodeAdapter mKmlNodeAdapter;
 
   private SceneView mSceneView;
 
@@ -66,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    mListView = findViewById(R.id.listView);
+    mRecyclerView = findViewById(R.id.recyclerView);
     mBreadcrumbTextView = findViewById(R.id.breadcrumbTextView);
 
     // get a reference to the scene view
@@ -76,14 +81,19 @@ public class MainActivity extends AppCompatActivity {
     ArcGISScene scene = new ArcGISScene(Basemap.createImageryWithLabels());
     mSceneView.setScene(scene);
 
-    // initialize the flattened list of kml nodes
+    // initialize arrays
     mKmlNodeList = new ArrayList<>();
+    mKmlNodeNames = new ArrayList<>();
+    mKmlNodeUxIcons = new ArrayList<>();
 
     // initialize the array adaptor
-    mNodeNameAdapter = new ArrayAdapter<>(this, R.layout.node_row);
+    mKmlNodeAdapter = new KmlNodeAdapter(mKmlNodeNames, mKmlNodeUxIcons, this);
 
     // set the adapter for the list view
-    mListView.setAdapter(mNodeNameAdapter);
+    mRecyclerView.setAdapter(mKmlNodeAdapter);
+    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+    mRecyclerView.setLayoutManager(linearLayoutManager);
 
     requestReadPermission();
   }
@@ -103,50 +113,38 @@ public class MainActivity extends AppCompatActivity {
       if (kmlDataset.getLoadStatus() == LoadStatus.LOADED) {
         // for each KML node in the dataset
         for (KmlNode kmlNode : kmlDataset.getRootNodes()) {
-          // add the parent node to a list
+          // add the parent node to the list
           mKmlNodeList.add(kmlNode);
-          // add the parent node to the adapter for use in the drawer list view
-          mNodeNameAdapter.add(kmlNode.getName());
+          // add the node name to the list
+          mKmlNodeNames.add(kmlNode.getName());
+          // add the node icon to the list, if the node has an icon
+          if (kmlNode.getUxIcon() != null) {
+            mKmlNodeUxIcons.add(getBitmapFromByteArray(kmlNode.getUxIcon()));
+          }
         }
-        // once all nodes have been written out to the
-        mNodeNameAdapter.notifyDataSetChanged();
-        // on tapping a layer in the drawer list view, set the scene view to the selected node's extent
-        mListView.setOnItemClickListener(
-            (adapterView, view, i, l) -> {
-              KmlNode selectedNode = mKmlNodeList.get(i);
+
+        mKmlNodeAdapter.notifyDataSetChanged();
+
+        // on tapping the bread crumb
+        mBreadcrumbTextView.setOnClickListener(v -> {
+          if (!mKmlNodeList.isEmpty() && mKmlNodeList.get(0).getParentNode() != null) {
+            // get a reference to the grand parent node
+            KmlNode grandparentNode = mKmlNodeList.get(0).getParentNode().getParentNode();
+            if (grandparentNode != null) {
+              createListForKmlNode(grandparentNode);
 
               // set the scene view viewpoint to the extent of the selected node
-              Envelope nodeExtent = selectedNode.getExtent();
+              Envelope nodeExtent = grandparentNode.getExtent();
               if (nodeExtent != null && !nodeExtent.isEmpty()) {
                 mSceneView.setViewpointAsync(new Viewpoint(nodeExtent));
               }
-              // if the node has children, update the list view with the children
-              if (!getChildren(selectedNode).isEmpty()) {
-                createListForKmlNode(selectedNode);
-                StringBuilder breadcrumbPathBuilder = new StringBuilder();
-                buildKmlBreadcrumbPath(selectedNode, breadcrumbPathBuilder);
-                mBreadcrumbTextView.setText(breadcrumbPathBuilder.toString());
-              }
-            });
-        mBreadcrumbTextView.setOnClickListener(
-            v ->  {
-              if (!mKmlNodeList.isEmpty()) {
-                KmlNode grandparentNode = mKmlNodeList.get(0).getParentNode().getParentNode();
-                if (grandparentNode != null) {
-                  createListForKmlNode(grandparentNode);
 
-                  // set the scene view viewpoint to the extent of the selected node
-                  Envelope nodeExtent = grandparentNode.getExtent();
-                  if (nodeExtent != null && !nodeExtent.isEmpty()) {
-                    mSceneView.setViewpointAsync(new Viewpoint(nodeExtent));
-                  }
-
-                  StringBuilder breadcrumbPathBuilder = new StringBuilder();
-                  buildKmlBreadcrumbPath(grandparentNode, breadcrumbPathBuilder);
-                  mBreadcrumbTextView.setText(breadcrumbPathBuilder.toString());
-                }
-              }
-            });
+              StringBuilder breadcrumbPathBuilder = new StringBuilder();
+              buildKmlBreadcrumbPath(grandparentNode, breadcrumbPathBuilder);
+              mBreadcrumbTextView.setText(breadcrumbPathBuilder.toString());
+            }
+          }
+        });
       } else {
         String error = "Error loading KML dataset: " + kmlDataset.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
@@ -155,27 +153,55 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-
+  /**
+   * On tapping a layer in the drawer list view, set the scene view to the tapped node's extent
+   *
+   * @param position
+   */
+  @Override public void onItemClick(int position) {
+    KmlNode selectedNode = mKmlNodeList.get(position);
+    // set the scene view viewpoint to the extent of the selected node
+    Envelope nodeExtent = selectedNode.getExtent();
+    if (nodeExtent != null && !nodeExtent.isEmpty()) {
+      mSceneView.setViewpointAsync(new Viewpoint(nodeExtent));
+    }
+    // if the node has children, update the list view with the children
+    if (!getChildren(selectedNode).isEmpty()) {
+      createListForKmlNode(selectedNode);
+      StringBuilder breadcrumbPathBuilder = new StringBuilder();
+      buildKmlBreadcrumbPath(selectedNode, breadcrumbPathBuilder);
+      mBreadcrumbTextView.setText(breadcrumbPathBuilder.toString());
+    }
+  }
 
   private void createListForKmlNode(KmlNode selectedNode) {
-    // get the children of the selected node and add them to the list
-    mKmlNodeList = getChildren(selectedNode);
     // clear the node name adapter and current selection
-    mNodeNameAdapter.clear();
-    mListView.clearChoices();
+    mKmlNodeList.clear();
+    mKmlNodeNames.clear();
+    mKmlNodeUxIcons.clear();
+    mKmlNodeList = getChildren(selectedNode);
     for (KmlNode childNode : mKmlNodeList) {
       // some of the nodes in the dataset have their default visibility to off, so set all nodes to visible
       childNode.setVisible(true);
       // build a string consisting of node name, type and a chevron implying whether the node has children
-      StringBuilder nodeName = new StringBuilder(childNode.getName() + getKmlNodeType(childNode));
+      StringBuilder nodeName = new StringBuilder(childNode.getName());
+      // if the node doesn't have an icon, append text indicating the node type instead
+      if (childNode.getUxIcon() == null) {
+        nodeName.append(getKmlNodeType(childNode));
+      }
+      // if the node has children, append a > to indicate further drill down is possible
       if (!getChildren(childNode).isEmpty()) {
         nodeName.append(" > ");
       }
-      // add the node name to the node name adapter
-      mNodeNameAdapter.add(nodeName.toString());
+      // add the node name to the list
+      mKmlNodeNames.add(nodeName.toString());
+      // add the node icon to the list
+      if (childNode.getUxIcon() != null) {
+        mKmlNodeUxIcons.add(getBitmapFromByteArray(childNode.getUxIcon()));
+      }
     }
     // notify that the node name adapter's dataset has changed
-    mNodeNameAdapter.notifyDataSetChanged();
+    mKmlNodeAdapter.notifyDataSetChanged();
   }
 
   private void buildKmlBreadcrumbPath(KmlNode kmlNode, StringBuilder pathBuilder) {
@@ -184,6 +210,12 @@ public class MainActivity extends AppCompatActivity {
       pathBuilder.append(" > ");
     }
     pathBuilder.append(kmlNode.getName());
+  }
+
+  private BitmapDrawable getBitmapFromByteArray(byte[] byteArray) {
+    ByteArrayInputStream bytes = new ByteArrayInputStream(byteArray);
+    BitmapDrawable bitmapDrawable = (BitmapDrawable) Drawable.createFromStream(bytes, "thumbnail");
+    return bitmapDrawable;
   }
 
   /**

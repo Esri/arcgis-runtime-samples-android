@@ -19,11 +19,11 @@
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:background="@android:color/background_dark"
-        app:layout_constraintTop_toTopOf="@+id/listView"
-        app:layout_constraintBottom_toTopOf="@+id/listView" />
+        app:layout_constraintTop_toTopOf="@+id/recyclerView"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView" />
 
-    <ListView
-        android:id="@+id/listView"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/background_light"
@@ -36,6 +36,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listView" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
 </android.support.constraint.ConstraintLayout>
