@@ -87,9 +87,9 @@ public class MainActivity extends AppCompatActivity {
               openCheckBox.setText(layer.getSubLayerContents().get(1).getName());
               // toggle annotation sublayer visibility on check
               closedCheckBox.setOnCheckedChangeListener(
-                  (buttonView, isChecked) -> layer.getSubLayerContents().get(0).setVisible(isChecked));
+                  (checkBoxView, isChecked) -> layer.getSubLayerContents().get(0).setVisible(isChecked));
               openCheckBox.setOnCheckedChangeListener(
-                  (buttonView, isChecked) -> layer.getSubLayerContents().get(1).setVisible(isChecked));
+                  (checkBoxView, isChecked) -> layer.getSubLayerContents().get(1).setVisible(isChecked));
             });
           }
         }
