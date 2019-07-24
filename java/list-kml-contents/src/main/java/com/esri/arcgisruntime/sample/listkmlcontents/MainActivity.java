@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
             mKmlNodeUxIcons.add(getBitmapFromByteArray(kmlNode.getUxIcon()));
           }
         }
-
         mKmlNodeAdapter.notifyDataSetChanged();
 
         // on tapping the bread crumb
@@ -204,6 +203,12 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
     mKmlNodeAdapter.notifyDataSetChanged();
   }
 
+  /**
+   * Recursively build the node's bread crumb path for display at the the top of the drill down menu.
+   *
+   * @param kmlNode
+   * @param pathBuilder
+   */
   private void buildKmlBreadcrumbPath(KmlNode kmlNode, StringBuilder pathBuilder) {
     if (kmlNode.getParentNode() != null) {
       buildKmlBreadcrumbPath(kmlNode.getParentNode(), pathBuilder);
@@ -214,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
 
   private BitmapDrawable getBitmapFromByteArray(byte[] byteArray) {
     ByteArrayInputStream bytes = new ByteArrayInputStream(byteArray);
-    BitmapDrawable bitmapDrawable = (BitmapDrawable) Drawable.createFromStream(bytes, "thumbnail");
+    BitmapDrawable bitmapDrawable = (BitmapDrawable) Drawable.createFromStream(bytes, "kmlIcon");
     return bitmapDrawable;
   }
 
