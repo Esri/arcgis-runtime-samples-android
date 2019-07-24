@@ -14,7 +14,7 @@
 	"OGC",
 	"Keyhole"
     ],
-    "redirect_from": "/android/latest/sample-code/identify-graphics.htm",
+    "redirect_from": "",
     "relevant_apis": [
         "KmlLayer",
         "KmlPlacemark",
