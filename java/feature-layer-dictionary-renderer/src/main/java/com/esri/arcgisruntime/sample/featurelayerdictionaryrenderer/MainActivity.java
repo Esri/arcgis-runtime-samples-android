@@ -18,12 +18,12 @@ package com.esri.arcgisruntime.sample.featurelayerdictionaryrenderer;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
     geodatabase.loadAsync();
 
     // render tells layer what symbols to apply to what features
-    DictionarySymbolStyle symbolDictionary = new DictionarySymbolStyle("mil2525d",
-        Environment.getExternalStorageDirectory() + getString(R.string.mil2525d_stylx));
+    DictionarySymbolStyle symbolDictionary = DictionarySymbolStyle
+        .createFromFile(Environment.getExternalStorageDirectory() + getString(R.string.mil2525d_stylx));
     symbolDictionary.loadAsync();
 
     geodatabase.addDoneLoadingListener(() -> {

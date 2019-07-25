@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
     // create symbol dictionary from specification
-    DictionarySymbolStyle symbolDictionary = new DictionarySymbolStyle("mil2525d",
-        Environment.getExternalStorageDirectory() + getString(R.string.mil2525d_stylx));
+    DictionarySymbolStyle symbolDictionary = DictionarySymbolStyle
+        .createFromFile(Environment.getExternalStorageDirectory() + getString(R.string.mil2525d_stylx));
 
     // tells graphics overlay how to render graphics with symbol dictionary attributes set
     DictionaryRenderer renderer = new DictionaryRenderer(symbolDictionary);
