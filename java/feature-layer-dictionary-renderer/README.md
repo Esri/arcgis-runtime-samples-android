@@ -30,7 +30,7 @@ This sample loads a number of point, line, and polygon feature tables from a Run
 
 Link | Local Location
 ---------|-------|
-|[Mil2525d Stylx File](http://arcgisfordefense.maps.arcgis.com/home/item.html?id=5de1ff8d2aa243558ba057fa922beb84)| `<sdcard>`/ArcGIS/samples/Dictionary/mil2525d.stylx |
+|[Mil2525d Stylx File](https://www.arcgis.com/home/item.html?id=c78b149a1d52414682c86a5feeb13d30)| `<sdcard>`/ArcGIS/samples/Dictionary/mil2525d.stylx |
 |[Military Overlay geodatabase](https://www.arcgis.com/home/item.html?id=e0d41b4b409a49a5a7ba11939d8535dc)| `<sdcard>`/ArcGIS/samples/Dictionary/militaryoverlay.geodatabase |
 
 ### Tags
