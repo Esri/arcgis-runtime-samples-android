@@ -29,7 +29,7 @@ This sample loads a number of point, line, and polygon military elements from an
 
 Link | Local Location
 ---------|-------|
-|[Mil2525d Stylx File](http://arcgisfordefense.maps.arcgis.com/home/item.html?id=5de1ff8d2aa243558ba057fa922beb84)| `<sdcard>`/ArcGIS/samples/Dictionary/mil2525d.stylx |
+|[Mil2525d Stylx File](https://www.arcgis.com/home/item.html?id=c78b149a1d52414682c86a5feeb13d30)| `<sdcard>`/ArcGIS/samples/Dictionary/mil2525d.stylx |
 
 ### Tags
 Visualization
