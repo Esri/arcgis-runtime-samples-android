@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Honor MMPK expiration</string>
+    <string name="read_local_storage_denied_mmpk">Read local storage permissions are required to access the MMPK.</string>
+</resources>
