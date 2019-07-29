@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.honormmpkexpiration;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -29,6 +30,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Chronometer;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -40,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
-  private Chronometer mChronometer;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,57 +51,37 @@ public class MainActivity extends AppCompatActivity {
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
 
-    // get a reference to the chronometer
-    mChronometer = findViewById(R.id.chronometer);
-
     requestReadPermission();
   }
 
   private void loadMobileMapPackage() {
     MobileMapPackage mobileMapPackage = new MobileMapPackage(
-        Environment.getExternalStorageDirectory() + "/ArcGIS/Samples/MapPackage/LothianRiversAnno.mmpk");
+        Environment.getExternalStorageDirectory() + getString(R.string.path_to_expired_mmpk));
 
+    // get a reference to the chronometer and expiration views
+    Chronometer chronometerView = findViewById(R.id.chronometerView);
+    TextView expirationMessageTextView = findViewById(R.id.expirationMessageTextView);
+
+    // wait for the map package to load
     mobileMapPackage.addDoneLoadingListener(() -> {
       if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED && !mobileMapPackage.getMaps().isEmpty()) {
+        // add the map to the map view
         mMapView.setMap(mobileMapPackage.getMaps().get(0));
-
+        // if the map is expired
         if (mobileMapPackage.getExpiration().isExpired()) {
-          Toast.makeText(this, mobileMapPackage.getExpiration().getMessage(), Toast.LENGTH_LONG).show();
-          Date dateOfExpiration = mobileMapPackage.getExpiration().getDateTime().getTime();
-
-          SimpleDateFormat sdf = new SimpleDateFormat("yy 'years' MM 'months' dd 'days' hh:mm:ss");
-
-          Log.d(TAG, "Expired: " + sdf.format(dateOfExpiration));
-
-          Date now = new Date();
-
-          Log.d(TAG, "Now: " + sdf.format(now));
-
-          mChronometer.setBase(mobileMapPackage.getExpiration().getDateTime().getTimeInMillis());
-          mChronometer.setOnChronometerTickListener(chronometer -> {
-            long time = now.getTime() - chronometer.getBase();
-
-            Log.d(TAG, "Chronometer base: " + sdf.format(time));
-
-
-
-            int d = (int) (time / 1500);
-            int h = (int) (time / 3600000);
-            int m = (int) (time - h * 3600000) / 60000;
-            int s = (int) (time - h * 3600000 - m * 60000) / 1000;
-            String dd = d < 10 ? "0" + d : d + "";
-            String hh = h < 10 ? "0" + h : h + "";
-            String mm = m < 10 ? "0" + m : m + "";
-            String ss = s < 10 ? "0" + s : s + "";
-            chronometer.setText(dd + ":" + hh + ":" + mm + ":" + ss);
+          // set the expiration message to the expiration text view
+          expirationMessageTextView.setText(mobileMapPackage.getExpiration().getMessage());
+          // define a format for the time passed
+          SimpleDateFormat daysHoursFormat = new SimpleDateFormat("dd' days and 'HH:mm:ss' hours'", Locale.US);
+          // set the base time to the date of expiration of the mmpk
+          chronometerView.setBase(mobileMapPackage.getExpiration().getDateTime().getTimeInMillis());
+          chronometerView.setOnChronometerTickListener(chronometer -> {
+            // the time passed since the mmpk expired, in milliseconds
+            long timePassedInMilliseconds = new Date().getTime() - chronometer.getBase();
+            chronometer.setText("Expired " + daysHoursFormat.format(new Date(timePassedInMilliseconds)) + " ago.");
           });
-
-          mChronometer.start();
-
-          Log.d(TAG, "Time passed: " + sdf.format(new Date(now.getTime() - dateOfExpiration.getTime())));
+          chronometerView.start();
         }
-        //mobileMapPackage.getExpiration().getDateTime()
-
       } else {
         String error = "Failed to load mobile scene package: " + mobileMapPackage.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
@@ -108,30 +89,6 @@ public class MainActivity extends AppCompatActivity {
       }
     });
     mobileMapPackage.loadAsync();
-  }
-
-  private String timeSinceExpiration(Date dateOfExpiration) {
-
-    long timePassed = System.nanoTime() - dateOfExpiration.getTime();
-
-    long secondsInMilli = 1000;
-    long minutesInMilli = secondsInMilli * 60;
-    long hoursInMilli = minutesInMilli * 60;
-    long daysInMilli = hoursInMilli * 24;
-
-    long elapsedDays = timePassed / daysInMilli;
-    timePassed = timePassed % daysInMilli;
-
-    long elapsedHours = timePassed / hoursInMilli;
-    timePassed = timePassed % hoursInMilli;
-
-    long elapsedMinutes = timePassed / minutesInMilli;
-    timePassed = timePassed % minutesInMilli;
-
-    long elapsedSeconds = timePassed / secondsInMilli;
-
-    return elapsedDays + " days, " + elapsedHours + " hours, " + elapsedMinutes + " minutes, " + elapsedSeconds
-        + " seconds";
   }
 
   @Override
