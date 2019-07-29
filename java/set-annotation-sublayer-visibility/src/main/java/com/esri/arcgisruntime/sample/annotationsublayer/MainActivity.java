@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
     if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
       addSublayersWithAnnotation();
     } else {
-      // request permission
       ActivityCompat.requestPermissions(this, reqPermission, requestCode);
     }
   }
