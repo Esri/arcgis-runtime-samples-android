@@ -57,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
     requestReadPermission();
   }
 
+  /**
+   * Load the mobile map package and get layer names for both annotation sublayers. Use those names to populate
+   * checkboxes which are used to set the visibility of the associated annotation sublayers to a boolean value.
+   */
   private void addSublayersWithAnnotation() {
     // get a reference to checkboxes
     CheckBox closedCheckBox = findViewById(R.id.closedCheckBox);
