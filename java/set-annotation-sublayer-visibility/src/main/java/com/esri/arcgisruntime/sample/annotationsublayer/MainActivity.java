@@ -32,8 +32,6 @@ import android.widget.Toast;
 import com.esri.arcgisruntime.layers.AnnotationLayer;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
-import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.MobileMapPackage;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
@@ -50,10 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
-    // create a map with the BasemapType topographic
-    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
-    // set the map to be displayed in this view
-    mMapView.setMap(map);
 
     // show current map scale in a text view at the bottom of the screen
     TextView currentMapScaleTextView = findViewById(R.id.mapScale);
@@ -109,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
     String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
     int requestCode = 2;
     if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      // do something
       addSublayersWithAnnotation();
     } else {
       // request permission
@@ -123,11 +116,10 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      // do something
       addSublayersWithAnnotation();
     } else {
       // report to user that permission was denied
-      Toast.makeText(this, "TODO FAIL", Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, getString(R.string.read_local_mmpk_denied_message), Toast.LENGTH_SHORT).show();
     }
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
