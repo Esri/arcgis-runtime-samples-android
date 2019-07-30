@@ -29,6 +29,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
+  private Chronometer mChronometerView;
+  private TextView mExpirationMessageTextView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -51,44 +54,64 @@ public class MainActivity extends AppCompatActivity {
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
 
+    // get a reference to the chronometer and expiration views
+    mChronometerView = findViewById(R.id.chronometerView);
+    mExpirationMessageTextView = findViewById(R.id.expirationMessageTextView);
+
     requestReadPermission();
   }
 
+  /**
+   * Load the mobile map package and set it's first map to the map view. If the mobile map package has expired, call a
+   * method to pass expiration information on to the user.
+   */
   private void loadMobileMapPackage() {
     MobileMapPackage mobileMapPackage = new MobileMapPackage(
         Environment.getExternalStorageDirectory() + getString(R.string.path_to_expired_mmpk));
 
-    // get a reference to the chronometer and expiration views
-    Chronometer chronometerView = findViewById(R.id.chronometerView);
-    TextView expirationMessageTextView = findViewById(R.id.expirationMessageTextView);
-
     // wait for the map package to load
     mobileMapPackage.addDoneLoadingListener(() -> {
-      if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED && !mobileMapPackage.getMaps().isEmpty()) {
+      if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED) {
         // add the map to the map view
         mMapView.setMap(mobileMapPackage.getMaps().get(0));
         // if the map is expired
-        if (mobileMapPackage.getExpiration().isExpired()) {
-          // set the expiration message to the expiration text view
-          expirationMessageTextView.setText(mobileMapPackage.getExpiration().getMessage());
-          // define a format for the time passed
-          SimpleDateFormat daysHoursFormat = new SimpleDateFormat("dd' days and 'HH:mm:ss' hours'", Locale.US);
-          // set the base time to the date of expiration of the mmpk
-          chronometerView.setBase(mobileMapPackage.getExpiration().getDateTime().getTimeInMillis());
-          chronometerView.setOnChronometerTickListener(chronometer -> {
-            // the time passed since the mmpk expired, in milliseconds
-            long timePassedInMilliseconds = new Date().getTime() - chronometer.getBase();
-            chronometer.setText("Expired " + daysHoursFormat.format(new Date(timePassedInMilliseconds)) + " ago.");
-          });
-          chronometerView.start();
+        if (mobileMapPackage.getExpiration() != null && mobileMapPackage.getExpiration().isExpired()) {
+          handleMobileMapPackageExpiration(mobileMapPackage);
         }
       } else {
-        String error = "Failed to load mobile scene package: " + mobileMapPackage.getLoadError().getMessage();
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        Log.e(TAG, error);
+        if (mobileMapPackage.getExpiration() != null && mobileMapPackage.getExpiration().isExpired()) {
+          handleMobileMapPackageExpiration(mobileMapPackage);
+        } else {
+          String error = "Failed to load mobile map package: " + mobileMapPackage.getLoadError().getMessage();
+          Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+          Log.e(TAG, error);
+        }
       }
     });
     mobileMapPackage.loadAsync();
+  }
+
+  /**
+   * Populate UI elements with relevant information regarding the expiration of the map.
+   *
+   * @param mobileMapPackage which has expired
+   */
+  private void handleMobileMapPackageExpiration(MobileMapPackage mobileMapPackage) {
+    // show the views
+    mExpirationMessageTextView.setVisibility(View.VISIBLE);
+    mChronometerView.setVisibility(View.VISIBLE);
+    // set the expiration message to the expiration text view
+    mExpirationMessageTextView.setText(mobileMapPackage.getExpiration().getMessage());
+    // define a format for the time passed
+    SimpleDateFormat daysHoursFormat = new SimpleDateFormat("dd' days and 'HH:mm:ss' hours'", Locale.US);
+    // set the base time to the mobile map package's expiration date
+    mChronometerView.setBase(mobileMapPackage.getExpiration().getDateTime().getTimeInMillis());
+    mChronometerView.setOnChronometerTickListener(chronometer -> {
+      // the time passed since the mobile map package expired, in milliseconds
+      long timePassedInMilliseconds = new Date().getTime() - chronometer.getBase();
+      chronometer.setText(String.format(getResources().getString(R.string.chronometer_text), daysHoursFormat.format(new Date(timePassedInMilliseconds))));
+    });
+    mChronometerView.start();
   }
 
   @Override

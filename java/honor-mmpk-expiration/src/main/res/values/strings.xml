@@ -1,5 +1,0 @@
-<resources>
-    <string name="app_name">Honor MMPK expiration</string>
-    <string name="read_local_storage_denied_mmpk">Read local storage permissions are required to access the MMPK.</string>
-    <string name="path_to_expired_mmpk">/ArcGIS/Samples/MapPackage/LothianRiversAnno.mmpk</string>
-</resources>
