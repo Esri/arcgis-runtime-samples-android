@@ -33,7 +33,7 @@ Load the app. The author of the MMPK used in this sample chose to set the MMPK's
 2. Extract the contents of the downloaded zip file to disk.
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 4. Execute the following command:
-`adb LothianRiversAnno.mmpk /sdcard/ArcGIS/Samples/MapPackage/LothianRiversAnno.mmpk`
+`adb push LothianRiversAnno.mmpk /sdcard/ArcGIS/Samples/MapPackage/LothianRiversAnno.mmpk`
 
 Link | Local Location
 ---------|-------|
