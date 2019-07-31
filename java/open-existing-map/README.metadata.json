@@ -1,0 +1,26 @@
+{
+    "category": "Cloud and Portal",
+    "description": "Open an existing map as a PortalItem from a Portal.",
+    "ignore": false,
+    "images": [
+        "open-existing-map.png"
+    ],
+    "keywords": [
+        "Cloud and Portal",
+        "ArcGISMap",
+        "MapView",
+        "Portal",
+        "PortalItem"
+    ],
+    "redirect_from": "/android/latest/sample-code/open-existing-map.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "MapView",
+        "Portal",
+        "PortalItem"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/openexistingmap/MainActivity.java"
+    ],
+    "title": "Open Existing Map"
+}

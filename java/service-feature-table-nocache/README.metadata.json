@@ -1,0 +1,24 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "Use a feature service in on-interaction-no-cache mode. This mode always fetches features from the server and does not cache features client side by setting the ServiceFeatureTable.",
+    "ignore": false,
+    "images": [
+        "service-feature-table-nocache.png"
+    ],
+    "keywords": [
+        "Edit and Manage Data",
+        "FeatureLayer",
+        "ServiceFeatureTable",
+        "ServiceFeatureTable.setFeatureRequestMode(...)"
+    ],
+    "redirect_from": "/android/latest/sample-code/service-feature-table-no-cache.htm",
+    "relevant_apis": [
+        "FeatureLayer",
+        "ServiceFeatureTable",
+        "ServiceFeatureTable.setFeatureRequestMode(...)"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/samples/servicefeaturetablenocache/MainActivity.java"
+    ],
+    "title": "Service Feature Table (No Cache)"
+}

@@ -1,0 +1,24 @@
+{
+    "category": "Layers",
+    "description": "Use a layer from an ArcGIS feature service as a feature layer.",
+    "ignore": false,
+    "images": [
+        "feature-layer-feature-service.png"
+    ],
+    "keywords": [
+        "Layers",
+        "ArcGISMap",
+        "FeatureLayer",
+        "ServiceFeatureTable"
+    ],
+    "redirect_from": "/android/latest/sample-code/feature-layer-feature-service.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "FeatureLayer",
+        "ServiceFeatureTable"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/samples/featurelayerfeatureservice/MainActivity.java"
+    ],
+    "title": "Feature Layer Feature Service"
+}

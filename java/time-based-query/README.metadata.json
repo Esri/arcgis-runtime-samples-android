@@ -1,0 +1,24 @@
+{
+    "category": "Search and Query",
+    "description": "Apply a time-based parameter to a feature layer query",
+    "ignore": false,
+    "images": [
+        "time-based-query.png"
+    ],
+    "keywords": [
+        "Search and Query",
+        "QueryParameters",
+        "ServiceFeatureTable",
+        "TimeExtent"
+    ],
+    "redirect_from": "/android/latest/sample-code/time-based-query.htm",
+    "relevant_apis": [
+        "QueryParameters",
+        "ServiceFeatureTable",
+        "TimeExtent"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/timebasedquery/MainActivity.java"
+    ],
+    "title": "Time Based Query"
+}

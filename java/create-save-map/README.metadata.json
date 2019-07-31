@@ -1,0 +1,30 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "Create a map and save it to your portal.",
+    "ignore": false,
+    "images": [
+        "create-save-map.png"
+    ],
+    "keywords": [
+        "Edit and Manage Data",
+        "ArcGISMap",
+        "OAuthLoginManager",
+        "OAuthTokenCredential",
+        "Portal",
+        "PortalSettings",
+        "PortalItem"
+    ],
+    "redirect_from": "",
+    "relevant_apis": [
+        "ArcGISMap",
+        "OAuthLoginManager",
+        "OAuthTokenCredential",
+        "Portal",
+        "PortalSettings",
+        "PortalItem"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/createsavemap/MainActivity.java"
+    ],
+    "title": "Create and Save a Map"
+}

@@ -1,0 +1,25 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "Being able to project between spatial references is fundamental to a GIS. An example of when you would need to re-project data is if you had data in two different spatial reference",
+    "ignore": false,
+    "images": [
+        "project.png"
+    ],
+    "keywords": [
+        "Edit and Manage Data",
+        "GeometryEngine",
+        "GeometryEngine",
+        "Point",
+        "SpatialReference"
+    ],
+    "redirect_from": "/android/latest/sample-code/project.htm",
+    "relevant_apis": [
+        "GeometryEngine",
+        "Point",
+        "SpatialReference"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/project/MainActivity.java"
+    ],
+    "title": "Project"
+}

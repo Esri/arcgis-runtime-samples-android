@@ -28,7 +28,7 @@ The application loads with the default globe camera controller. To rotate and fi
 
 #### Tags
 
-MapViews, SceneViews & UI
+MapViews, SceneViews and UI
 Camera
 SceneView
 3D

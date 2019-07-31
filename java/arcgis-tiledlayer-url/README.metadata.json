@@ -1,0 +1,26 @@
+{
+    "category": "Layers",
+    "description": "Load an ArcGIS Tiled Layer from a URL.",
+    "ignore": false,
+    "images": [
+        "arcgis-tiledlayer-url.png"
+    ],
+    "keywords": [
+        "Layers",
+        "ArcGISMap",
+        "ArcGISTiledLayer",
+        "Basemap",
+        "MapView"
+    ],
+    "redirect_from": "/android/latest/sample-code/arcgis-tiled-layer-url.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "ArcGISTiledLayer",
+        "Basemap",
+        "MapView"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/tiledlayerfromurl/MainActivity.java"
+    ],
+    "title": "ArcGIS Tiled Layer URL"
+}

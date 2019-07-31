@@ -1,0 +1,32 @@
+{
+    "category": "Routing and Logistics",
+    "description": "Search and route using data in a map package.",
+    "ignore": false,
+    "images": [
+        "mobile-map-search-and-route.png"
+    ],
+    "keywords": [
+        "Routing and Logistics",
+        "MobileMapPackage",
+        "LocatorTask",
+        "GeoCode",
+        "Route",
+        "NetworkAnalysis",
+        "Callout"
+    ],
+    "redirect_from": "/android/latest/sample-code/mobile-map-search-and-route.htm",
+    "relevant_apis": [
+        "MobileMapPackage",
+        "LocatorTask",
+        "GeoCode",
+        "Route",
+        "NetworkAnalysis",
+        "Callout"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MapChooserActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MapPreview.java"
+    ],
+    "title": "Mobile Map (Search and Route)"
+}

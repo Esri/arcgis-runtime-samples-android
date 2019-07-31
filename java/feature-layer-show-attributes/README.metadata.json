@@ -1,0 +1,26 @@
+{
+    "category": "Search and Query",
+    "description": "Return all loaded features from a query to show all attributes.",
+    "ignore": false,
+    "images": [
+        "feature-layer-show-attributes.png"
+    ],
+    "keywords": [
+        "Search and Query",
+        "Feature",
+        "FeatureLayer",
+        "FeatureQueryResult",
+        "ServiceFeatureTable"
+    ],
+    "redirect_from": "/android/latest/sample-code/feature-layer-show-attributes.htm",
+    "relevant_apis": [
+        "Feature",
+        "FeatureLayer",
+        "FeatureQueryResult",
+        "ServiceFeatureTable"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayershowattributes/MainActivity.java"
+    ],
+    "title": "Feature Layer Show Attributes"
+}

@@ -19,5 +19,4 @@ Restrict zooming to a specific scale range.
 * Viewpoint
 
 #### Tags
-
 Maps and Scenes

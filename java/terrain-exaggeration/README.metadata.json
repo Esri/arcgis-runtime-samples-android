@@ -1,0 +1,24 @@
+{
+    "category": "Maps and Scenes",
+    "description": "Vertically exaggerate terrain.",
+    "ignore": false,
+    "images": [
+        "terrain-exaggeration.png"
+    ],
+    "keywords": [
+        "Maps and Scenes",
+        "ArcGISScene",
+        "Surface",
+        "ArcGISTiledElevationSource"
+    ],
+    "redirect_from": "/android/latest/sample-code/terrain-exaggeration.htm",
+    "relevant_apis": [
+        "ArcGISScene",
+        "Surface",
+        "ArcGISTiledElevationSource"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/terrainexaggeration/MainActivity.java"
+    ],
+    "title": "Terrain Exaggeration"
+}

@@ -1,0 +1,24 @@
+{
+    "category": "Layers",
+    "description": "Consume an Esri mobile geodatabase by using a FeatureLayer and a GeodatabaseFeatureTable.",
+    "ignore": false,
+    "images": [
+        "feature-layer-geodatabase.png"
+    ],
+    "keywords": [
+        "Layers",
+        "FeatureLayer",
+        "Geodatabase",
+        "GeodatabaseFeatureTable"
+    ],
+    "redirect_from": "/android/latest/sample-code/feature-layer-geodatabase.htm",
+    "relevant_apis": [
+        "FeatureLayer",
+        "Geodatabase",
+        "GeodatabaseFeatureTable"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayergeodatabase/MainActivity.java"
+    ],
+    "title": "Feature Layer (GeoDatabase)"
+}

@@ -1,0 +1,39 @@
+{
+    "category": "Routing and Logistics",
+    "description": "Find routes from several locations to the respective closest facility.",
+    "ignore": false,
+    "images": [
+        "find-closest-facility-to-multiple-incidents-service.png"
+    ],
+    "keywords": [
+        "Analysis",
+        "Routing and Logistics",
+        "incident",
+        "network",
+        "route",
+        "search",
+        "ClosestFacilityParameters",
+        "ClosestFacilityResult",
+        "ClosestFacilityRoute",
+        "ClosestFacilityTask",
+        "Facility",
+        "Graphic",
+        "GraphicsOverlay",
+        "Incident"
+    ],
+    "redirect_from": "/android/latest/sample-code/find-closest-facility-to-multiple-incidents-service.htm",
+    "relevant_apis": [
+        "ClosestFacilityParameters",
+        "ClosestFacilityResult",
+        "ClosestFacilityRoute",
+        "ClosestFacilityTask",
+        "Facility",
+        "Graphic",
+        "GraphicsOverlay",
+        "Incident"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/findclosestfacilitytomultipleincidentsservice/MainActivity.java"
+    ],
+    "title": "Find closest facility to multiple incidents (service)"
+}
