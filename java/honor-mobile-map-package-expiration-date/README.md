@@ -8,7 +8,7 @@ Access the expiration information of an expired mobile map package.
 
 The data contained within a mobile map package (MMPK) may only be relevant for a fixed period of time. Using ArcGIS Pro, the author of an MMPK can set an expiration date to ensure the user is aware the data is out of date.
 
-As long as the author of an MMPK has set an expiration date, the expiration date can be read even if the MMPK has not yet expired. So users may wish to use this API to instead warn users that an MMPK may be expiring soon.
+As long as the author of an MMPK has set an expiration date, the expiration date can be read even if the MMPK has not yet expired. For example, developers could also use this API to warn app users that an MMPK may be expiring soon.
 
 ## How to use the sample
 
