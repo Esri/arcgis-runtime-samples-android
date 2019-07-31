@@ -1,0 +1,32 @@
+{
+    "category": "Layers",
+    "description": "List the contents of a KML file.",
+    "ignore": false,
+    "images": [
+        "list-kml-contents.png"
+    ],
+    "keywords": [
+        "KML",
+	"KMZ",
+	"OGC",
+	"Keyhole"
+    ],
+    "redirect_from": "/android/latest/sample-code/integrated-windows-authentication.htm",
+    "relevant_apis": [
+        "KmlContainer",
+	"KmlDataset",
+	"KmlDocument",
+	"KmlFolder",
+	"KmlGroundOverlay",
+	"KmlLayer",
+	"KmlNetworkLink",
+	"KmlNode",
+	"KmlPlacemark",
+	"KmlScreenOverlay"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/listkmlcontents/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/listkmlcontents/KmlNodeAdapter.java"
+    ],
+    "title": "List KML contents"
+}
