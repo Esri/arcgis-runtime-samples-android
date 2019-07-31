@@ -1,8 +1,8 @@
-# Set annotation sublayer visibility
+# Control annotation sublayer visibility
 
-Use annotation sublayers to control the scales at which different annotation is visible.
+Use annotation sublayers to gain finer control of annotation layer subtypes.
 
-![Set annotation sublayer visibility App](set-annotation-sublayer-visibility.png)
+![Control annotation sublayer visibility App](control-annotation-sublayer-visibility.png)
 
 ## Use case
 
@@ -14,17 +14,21 @@ An annotation dataset which marks valves as "Opened" or "Closed", might be set t
 
 Start the sample and take note of the visibility of the annotation. Zoom in and out to see the annotation turn on and off based on scale ranges set on the data. The scale ranges were set by the map's author using ArcGIS Pro:
 
-* The "Open" annotation sublayer has its minimum scale set to 1:500 and its maximum scale set to 1:1500.
-* The "Closed" annotation sublayer has its minimum scale set to 1:500 and its maximum scale set to 1:5000.
+* The "Open" annotation sublayer has its maximum scale set to 1:500 and its minimum scale set to 1:2000.
+* The "Closed" annotation sublayer has no minimum or maximum scales set, so will be drawn at all scales.
 
-Use the checkboxes to manually turn the "Open" and "Closed" annotation sublayers on and off.
+Use the checkboxes to manually set "Open" and "Closed" annotation sublayers visibility to on or off.
 
 ## How it works
 
 1. Load the `MobileMapPackage`.
-2. Populate checkbox text with the `AnnotationSublayer` names.
+2. Populate checkbox text with the `AnnotationSublayer` names (including maximum and minimum scales, where relevant).
 3. Wire up the checkboxes to toggle the annotation sublayer's visibility.
-4. Add a listener for changes in map view navigation and update the current scale UI element at the bottom of the screen on navigation.
+4. To a listener for changes in map view navigation add code to:
+  * Update the current scale UI element at the bottom of the screen on navigation.
+  * Set the "Open" annotation sublayer checkbox text to:
+     * Black, when the layer is drawn at the current map scale
+     * Light gray, when the layer is not drawn at the current map scale
  
 ## Relevant API
 

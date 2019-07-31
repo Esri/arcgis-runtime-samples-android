@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.annotationsublayer;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.layers.AnnotationLayer;
+import com.esri.arcgisruntime.layers.AnnotationSublayer;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.MobileMapPackage;
@@ -81,13 +83,29 @@ public class MainActivity extends AppCompatActivity {
             layer.loadAsync();
             layer.addDoneLoadingListener(() -> {
               // get annotation sublayer name from sublayer contents
-              closedCheckBox.setText(layer.getSubLayerContents().get(0).getName());
-              openCheckBox.setText(layer.getSubLayerContents().get(1).getName());
+              AnnotationSublayer closedLayer = (AnnotationSublayer) layer.getSubLayerContents().get(0);
+              AnnotationSublayer openLayer = (AnnotationSublayer) layer.getSubLayerContents().get(1);
+
+              // set the layer name from the
+              closedCheckBox.setText(buildLayerName(closedLayer));
+              openCheckBox.setText(buildLayerName(openLayer));
+
               // toggle annotation sublayer visibility on check
               closedCheckBox.setOnCheckedChangeListener(
-                  (checkBoxView, isChecked) -> layer.getSubLayerContents().get(0).setVisible(isChecked));
+                  (checkBoxView, isChecked) -> closedLayer.setVisible(isChecked));
               openCheckBox.setOnCheckedChangeListener(
-                  (checkBoxView, isChecked) -> layer.getSubLayerContents().get(1).setVisible(isChecked));
+                  (checkBoxView, isChecked) -> openLayer.setVisible(isChecked));
+
+              // when the map scale changes
+              mMapView.addMapScaleChangedListener(mapScaleChangedEvent -> {
+                // if the "open" layer is visible, set text color to black, otherwise set it to gray
+                if (openLayer.isVisibleAtScale(mMapView.getMapScale())) {
+                  openCheckBox.setTextColor(Color.BLACK);
+                } else {
+                  openCheckBox.setTextColor(Color.LTGRAY);
+                }
+              });
+
             });
           }
         }
@@ -97,6 +115,21 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, error);
       }
     });
+  }
+
+  /**
+   * Get name, and where relevant, append min and max scales of each annotation sublayer.
+   *
+   * @param annotationSublayer
+   * @return the layer name with min max scales, where relevant
+   */
+  private String buildLayerName(AnnotationSublayer annotationSublayer) {
+    StringBuilder layerNameBuilder = new StringBuilder(annotationSublayer.getName());
+    if (!Double.isNaN(annotationSublayer.getMaxScale()) && !Double.isNaN(annotationSublayer.getMinScale())) {
+      layerNameBuilder.append(" (1:").append((int) annotationSublayer.getMaxScale()).append(" - 1:")
+          .append((int) annotationSublayer.getMinScale()).append(")");
+    }
+    return layerNameBuilder.toString();
   }
 
   /**

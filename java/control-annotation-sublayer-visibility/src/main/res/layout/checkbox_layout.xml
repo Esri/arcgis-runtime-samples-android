@@ -21,6 +21,7 @@
         android:checked="true"
         android:padding="4dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/ltGray"/>
 
 </android.support.constraint.ConstraintLayout>
