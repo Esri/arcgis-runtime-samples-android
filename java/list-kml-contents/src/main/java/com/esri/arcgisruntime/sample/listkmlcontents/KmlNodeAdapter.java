@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.sample.listkmlcontents;
 import java.util.List;
 
 import android.graphics.drawable.BitmapDrawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +33,8 @@ public class KmlNodeAdapter extends RecyclerView.Adapter<KmlNodeAdapter.KmlNodeV
   private final OnItemClickListener mOnItemClickListener;
 
   static class KmlNodeViewHolder extends RecyclerView.ViewHolder {
-    TextView textView;
-    ImageView imageView;
+    final TextView textView;
+    final ImageView imageView;
     KmlNodeViewHolder(View itemView) {
       super(itemView);
       itemView.setClickable(true);
@@ -52,8 +53,8 @@ public class KmlNodeAdapter extends RecyclerView.Adapter<KmlNodeAdapter.KmlNodeV
     mOnItemClickListener = onItemClickListener;
   }
 
-  @Override
-  public KmlNodeAdapter.KmlNodeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  @NonNull @Override
+  public KmlNodeAdapter.KmlNodeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.node_row, parent, false);
     KmlNodeViewHolder kmlNodeViewHolder = new KmlNodeViewHolder(view);
     kmlNodeViewHolder.setIsRecyclable(false);
@@ -61,7 +62,7 @@ public class KmlNodeAdapter extends RecyclerView.Adapter<KmlNodeAdapter.KmlNodeV
   }
 
   @Override
-  public void onBindViewHolder(KmlNodeViewHolder holder, int position) {
+  public void onBindViewHolder(@NonNull KmlNodeViewHolder holder, int position) {
     holder.textView.setText(mNodeNames.get(position));
     if (position < mKmlUxIcons.size() && mKmlUxIcons.get(position) != null) {
       holder.imageView.setImageDrawable(mKmlUxIcons.get(position));

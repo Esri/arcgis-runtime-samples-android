@@ -9,7 +9,7 @@
         android:id="@+id/breadcrumbTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Click on a KML node below to explore it's child nodes..."
+        android:text="@string/breadcrumb_initial_text"
         android:padding="8dp"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="8dp" />

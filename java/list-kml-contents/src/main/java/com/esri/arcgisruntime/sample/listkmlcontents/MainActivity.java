@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private TextView mBreadcrumbTextView;
-  private RecyclerView mRecyclerView;
   private List<KmlNode> mKmlNodeList;
   private List<String> mKmlNodeNames;
   private List<BitmapDrawable> mKmlNodeUxIcons;
@@ -71,11 +70,12 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    mRecyclerView = findViewById(R.id.recyclerView);
-    mBreadcrumbTextView = findViewById(R.id.breadcrumbTextView);
-
     // get a reference to the scene view
     mSceneView = findViewById(R.id.sceneView);
+
+    // get a reference to the android views
+    RecyclerView recyclerView = findViewById(R.id.recyclerView);
+    mBreadcrumbTextView = findViewById(R.id.breadcrumbTextView);
 
     // create a map and add it to the map view
     ArcGISScene scene = new ArcGISScene(Basemap.createImageryWithLabels());
@@ -90,10 +90,10 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
     mKmlNodeAdapter = new KmlNodeAdapter(mKmlNodeNames, mKmlNodeUxIcons, this);
 
     // set the adapter for the list view
-    mRecyclerView.setAdapter(mKmlNodeAdapter);
+    recyclerView.setAdapter(mKmlNodeAdapter);
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-    mRecyclerView.setLayoutManager(linearLayoutManager);
+    recyclerView.setLayoutManager(linearLayoutManager);
 
     requestReadPermission();
   }
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
               if (nodeExtent != null && !nodeExtent.isEmpty()) {
                 mSceneView.setViewpointAsync(new Viewpoint(nodeExtent));
               }
-
+              // build the breadcrumb path
               StringBuilder breadcrumbPathBuilder = new StringBuilder();
               buildKmlBreadcrumbPath(grandparentNode, breadcrumbPathBuilder);
               mBreadcrumbTextView.setText(breadcrumbPathBuilder.toString());
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
    * @param kmlNode
    * @param pathBuilder
    */
-  private void buildKmlBreadcrumbPath(KmlNode kmlNode, StringBuilder pathBuilder) {
+  private static void buildKmlBreadcrumbPath(KmlNode kmlNode, StringBuilder pathBuilder) {
     if (kmlNode.getParentNode() != null) {
       buildKmlBreadcrumbPath(kmlNode.getParentNode(), pathBuilder);
       pathBuilder.append(" > ");
@@ -217,10 +217,9 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
     pathBuilder.append(kmlNode.getName());
   }
 
-  private BitmapDrawable getBitmapFromByteArray(byte[] byteArray) {
+  private static BitmapDrawable getBitmapFromByteArray(byte[] byteArray) {
     ByteArrayInputStream bytes = new ByteArrayInputStream(byteArray);
-    BitmapDrawable bitmapDrawable = (BitmapDrawable) Drawable.createFromStream(bytes, "kmlIcon");
-    return bitmapDrawable;
+    return (BitmapDrawable) Drawable.createFromStream(bytes, "kmlIcon");
   }
 
   /**
