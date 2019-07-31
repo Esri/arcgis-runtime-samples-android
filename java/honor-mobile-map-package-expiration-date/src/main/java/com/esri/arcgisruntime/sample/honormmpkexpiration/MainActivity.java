@@ -71,21 +71,17 @@ public class MainActivity extends AppCompatActivity {
 
     // wait for the map package to load
     mobileMapPackage.addDoneLoadingListener(() -> {
+      // handle map package expiration, if expired
+      if (mobileMapPackage.getExpiration() != null && mobileMapPackage.getExpiration().isExpired()) {
+        handleMobileMapPackageExpiration(mobileMapPackage);
+      }
       if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED) {
         // add the map to the map view
         mMapView.setMap(mobileMapPackage.getMaps().get(0));
-        // if the map is expired
-        if (mobileMapPackage.getExpiration() != null && mobileMapPackage.getExpiration().isExpired()) {
-          handleMobileMapPackageExpiration(mobileMapPackage);
-        }
       } else {
-        if (mobileMapPackage.getExpiration() != null && mobileMapPackage.getExpiration().isExpired()) {
-          handleMobileMapPackageExpiration(mobileMapPackage);
-        } else {
-          String error = "Failed to load mobile map package: " + mobileMapPackage.getLoadError().getMessage();
-          Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-          Log.e(TAG, error);
-        }
+        String error = "Failed to load mobile map package: " + mobileMapPackage.getLoadError().getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
       }
     });
     mobileMapPackage.loadAsync();
@@ -109,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
     mChronometerView.setOnChronometerTickListener(chronometer -> {
       // the time passed since the mobile map package expired, in milliseconds
       long timePassedInMilliseconds = new Date().getTime() - chronometer.getBase();
-      chronometer.setText(String.format(getResources().getString(R.string.chronometer_text), daysHoursFormat.format(new Date(timePassedInMilliseconds))));
+      chronometer.setText(String.format(getResources().getString(R.string.chronometer_text),
+          daysHoursFormat.format(new Date(timePassedInMilliseconds))));
     });
     mChronometerView.start();
   }

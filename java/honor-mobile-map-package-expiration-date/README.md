@@ -18,7 +18,7 @@ Load the app. The author of the MMPK used in this sample chose to mark set the M
 2. Load the mobile map package.
 3. If the mobile map package has expired, get information regarding the expiration with `getExpiration()`.
   * Use `getMessage()` to get the expiration message set by the author of the MMPK.
-  * Use `getDate()` to get the expiration date set by the authoer of the MMPK.
+  * Use `getDate()` to get the expiration date set by the author of the MMPK.
 
 ## Relevant API
 
