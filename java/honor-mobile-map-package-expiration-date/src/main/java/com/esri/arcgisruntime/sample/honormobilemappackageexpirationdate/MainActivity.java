@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.esri.arcgisruntime.sample.honormmpkexpiration;
+package com.esri.arcgisruntime.sample.honormobilemappackageexpirationdate;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
