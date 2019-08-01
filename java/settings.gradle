@@ -1,4 +1,4 @@
-include ':add-enc-exchange-set',
+include ':add-enc-exchange-set', ':apply-scheduled-updates-to-preplanned-map-area',
         ':add-features-feature-service',
         ':add-graphics-renderer',
         ':add-graphics-symbols',
