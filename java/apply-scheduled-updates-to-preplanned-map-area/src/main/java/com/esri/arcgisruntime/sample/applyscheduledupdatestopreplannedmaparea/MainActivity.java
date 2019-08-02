@@ -16,16 +16,26 @@
 
 package com.esri.arcgisruntime.sample.applyscheduledupdatestopreplannedmaparea;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.concurrent.ExecutionException;
 
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -38,10 +48,16 @@ import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapSyncJob;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapSyncParameters;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapSyncResult;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapSyncTask;
+import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapUpdatesInfo;
+import com.esri.arcgisruntime.tasks.offlinemap.OfflineUpdateAvailability;
+import com.esri.arcgisruntime.tasks.offlinemap.PreplannedScheduledUpdatesOption;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
+
   private MapView mMapView;
+  private File mCopyOfMmpk;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -49,52 +65,39 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     // create a map view
-    mapView = new MapView();
+    mMapView = findViewById(R.id.mapView);
 
-    // create progress indicator
-    ProgressIndicator progressIndicator = new ProgressIndicator();
-    progressIndicator.setVisible(false);
+    // this is the original mmpk, not updated by the scheduled update
+    File originalMmpk = new File(Environment.getExternalStorageDirectory() + "/ArcGIS/Samples/MapPackage/canyonlands");
+    // copy of the mmpk file which will have the update applied to it
+    mCopyOfMmpk = new File(getCacheDir() + "/canyonlands");
 
-    // create a button to update the offline map
-    Button applyUpdatesButton = new Button("Apply Scheduled Updates");
-    applyUpdatesButton.setDisable(true);
+    try {
+      // copy the original mmpk into the cache, overwriting there's already a copy of the mmpk there
+      copyDirectory(originalMmpk, mCopyOfMmpk);
+    } catch (IOException e) {
+      Log.e(TAG, "Error copying MMPK file: " + e.getMessage());
+    }
 
-    // create labels to show update availability and size
-    Label updateAvailableLabel = new Label("Updates: ");
-    updateAvailableLabel.setTextFill(Color.WHITE);
-    Label updateSizeLabel = new Label("Update size: ");
-    updateSizeLabel.setTextFill(Color.WHITE);
+    requestReadPermission();
+  }
 
-    // create a control panel for the UI elements
-    VBox controlsVBox = new VBox(6);
-    controlsVBox.setBackground(new Background(new BackgroundFill(Paint.valueOf("rgba(0,0,0,0.3)"), CornerRadii.EMPTY,
-        Insets.EMPTY)));
-    controlsVBox.setPadding(new Insets(10.0));
-    controlsVBox.setMaxSize(180, 110);
-    controlsVBox.getChildren().addAll(applyUpdatesButton, updateAvailableLabel, updateSizeLabel);
-
-    // create a temporary copy of the local offline map files, so that updating does not overwrite them permanently
-    Path tempMobileMapPackageDirectory = Files.createTempDirectory("canyonlands_offline_map");
-    tempMobileMapPackageDirectory.toFile().deleteOnExit();
-    Path sourceDirectory = Paths.get("./samples-data/canyonlands/");
-    FileUtils.copyDirectory(sourceDirectory.toFile(), tempMobileMapPackageDirectory.toFile());
+  private void applyScheduledUpdate() {
+    // get a reference to the UI views
+    TextView updateAvailableTextView = findViewById(R.id.updateAvailableTextView);
+    TextView updateSizeTextView = findViewById(R.id.updateSizeTextView);
+    Button applyScheduledUpdatesButton = findViewById(R.id.applyScheduledUpdatesButton);
 
     // load the offline map as a mobile map package
-    MobileMapPackage mobileMapPackage = new MobileMapPackage(tempMobileMapPackageDirectory.toString());
+    MobileMapPackage mobileMapPackage = new MobileMapPackage(mCopyOfMmpk.getPath());
     mobileMapPackage.loadAsync();
     mobileMapPackage.addDoneLoadingListener(() -> {
       if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED && !mobileMapPackage.getMaps().isEmpty()) {
-
         // add the map from the mobile map package to the map view
         ArcGISMap offlineMap = mobileMapPackage.getMaps().get(0);
         mMapView.setMap(offlineMap);
-
-        // show progress indicator
-        progressIndicator.setVisible(true);
-
         // create an offline map sync task with the preplanned area
         OfflineMapSyncTask offlineMapSyncTask = new OfflineMapSyncTask(offlineMap);
-
         // check for updates to the offline map
         ListenableFuture<OfflineMapUpdatesInfo> offlineMapUpdatesInfoFuture = offlineMapSyncTask.checkForUpdatesAsync();
         offlineMapUpdatesInfoFuture.addDoneListener(() -> {
@@ -104,91 +107,172 @@ public class MainActivity extends AppCompatActivity {
 
             // update UI for available updates
             if (offlineMapUpdatesInfo.getDownloadAvailability() == OfflineUpdateAvailability.AVAILABLE) {
-              updateAvailableLabel.setText("Updates: AVAILABLE");
-
+              updateAvailableTextView.setText("Updates: " + OfflineUpdateAvailability.AVAILABLE.name());
               // check and show update size
-              long updateSize = offlineMapUpdatesInfo.getScheduledUpdatesDownloadSize();
-              updateSizeLabel.setText("Update size: " + updateSize + " bytes.");
-
-              // hide the progress indicator
-              progressIndicator.setVisible(false);
-
+              updateSizeTextView.setText("Update size: " + offlineMapUpdatesInfo.getScheduledUpdatesDownloadSize() + " bytes.");
               // enable the 'Apply Scheduled Updates' button
-              applyUpdatesButton.setDisable(false);
+              applyScheduledUpdatesButton.setEnabled(true);
               // when the button is clicked, synchronize the mobile map package
-              applyUpdatesButton.setOnAction(e -> {
-
-                // show progress indicator
-                progressIndicator.setVisible(true);
-
+              applyScheduledUpdatesButton.setOnClickListener(v -> {
                 // create default parameters for the sync task
-                ListenableFuture<OfflineMapSyncParameters> offlineMapSyncParametersFuture = offlineMapSyncTask.createDefaultOfflineMapSyncParametersAsync();
+                ListenableFuture<OfflineMapSyncParameters> offlineMapSyncParametersFuture = offlineMapSyncTask
+                    .createDefaultOfflineMapSyncParametersAsync();
                 offlineMapSyncParametersFuture.addDoneListener(() -> {
                   try {
                     OfflineMapSyncParameters offlineMapSyncParameters = offlineMapSyncParametersFuture.get();
-
                     // set the sync direction to none, since we only want to update
                     offlineMapSyncParameters.setSyncDirection(SyncGeodatabaseParameters.SyncDirection.NONE);
                     // set the parameters to download all updates for the mobile map packages
-                    offlineMapSyncParameters.setPreplannedScheduledUpdatesOption(PreplannedScheduledUpdatesOption.DOWNLOAD_ALL_UPDATES);
+                    offlineMapSyncParameters
+                        .setPreplannedScheduledUpdatesOption(PreplannedScheduledUpdatesOption.DOWNLOAD_ALL_UPDATES);
                     // set the map package to rollback to the old state should the sync job fail
                     offlineMapSyncParameters.setRollbackOnFailure(true);
-
                     // create a sync job using the parameters
                     OfflineMapSyncJob offlineMapSyncJob = offlineMapSyncTask.syncOfflineMap(offlineMapSyncParameters);
-
                     // start the job and get the results
                     offlineMapSyncJob.start();
                     offlineMapSyncJob.addJobDoneListener(() -> {
                       if (offlineMapSyncJob.getStatus() == Job.Status.SUCCEEDED) {
                         OfflineMapSyncResult offlineMapSyncResult = offlineMapSyncJob.getResult();
-
                         // if mobile map package reopen is required, close the existing mobile map package and load it again
                         if (offlineMapSyncResult.isMobileMapPackageReopenRequired()) {
                           mobileMapPackage.close();
                           mobileMapPackage.loadAsync();
                           mobileMapPackage.addDoneLoadingListener(() -> {
-                            if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED && !mobileMapPackage.getMaps().isEmpty()) {
-
+                            if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED && !mobileMapPackage.getMaps()
+                                .isEmpty()) {
                               // add the map from the mobile map package to the map view
-                              mapView.setMap(mobileMapPackage.getMaps().get(0));
-
+                              mMapView.setMap(mobileMapPackage.getMaps().get(0));
                             } else {
-                              new Alert(Alert.AlertType.ERROR, "Failed to load the mobile map package.").show();
+                              String error =
+                                  "Failed to load mobile map package: " + mobileMapPackage.getLoadError().getMessage();
+                              Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                              Log.e(TAG, error);
                             }
                           });
                         }
-
-                        // update labels
-                        updateAvailableLabel.setText("Updates: Up to date");
-                        updateSizeLabel.setText("Update size: N/A");
-
+                        // check if map is up to date against the server. This is not required, since in most cases,
+                        // you'll be confident the update was applied by virtue of the offline map sync job completing
+                        // successfully
+                        ListenableFuture<OfflineMapUpdatesInfo> offlineMapsUpdateInfoAfterUpdateFuture = offlineMapSyncTask.checkForUpdatesAsync();
+                        offlineMapsUpdateInfoAfterUpdateFuture.addDoneListener(() -> {
+                          try {
+                            OfflineMapUpdatesInfo offlineMapsUpdatesInfoAfterUpdate = offlineMapsUpdateInfoAfterUpdateFuture.get();
+                            updateAvailableTextView.setText("Updates: " + offlineMapsUpdatesInfoAfterUpdate.getDownloadAvailability().name());
+                            if (offlineMapsUpdatesInfoAfterUpdate.getDownloadAvailability() != OfflineUpdateAvailability.NONE) {
+                              // server still reports that updates are available
+                              updateSizeTextView.setText("Update size: " + offlineMapsUpdatesInfoAfterUpdate.getScheduledUpdatesDownloadSize() + " bytes.");
+                              applyScheduledUpdatesButton.setEnabled(true);
+                            } else {
+                              // no updates available
+                              updateSizeTextView.setText("Update size: N/A");
+                              applyScheduledUpdatesButton.setEnabled(false);
+                            }
+                          } catch (Exception e) {
+                            String error = "Error checking for Scheduled Updates Availability: " + e.getMessage();
+                            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                            Log.e(TAG, error);
+                          }
+                        });
                       } else {
-                        new Alert(Alert.AlertType.ERROR, "Error syncing the offline map: " + offlineMapSyncJob.getError().getMessage()).show();
+                        String error = "Error syncing the offline map: " + offlineMapSyncJob.getError().getMessage();
+                        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                        Log.e(TAG, error);
                       }
-
                       // disable the 'Apply Scheduled Updates' button
-                      applyUpdatesButton.setDisable(true);
-                      // hide progress indicator
-                      progressIndicator.setVisible(false);
-
+                      applyScheduledUpdatesButton.setEnabled(false);
                     });
                   } catch (InterruptedException | ExecutionException ex) {
-                    new Alert(Alert.AlertType.ERROR, "Error creating DefaultOfflineMapSyncParameters" + ex.getMessage()).show();
+                    String error = "Error creating DefaultOfflineMapSyncParameters" + ex.getMessage();
+                    Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                    Log.e(TAG, error);
                   }
                 });
               });
 
             } else {
-              updateAvailableLabel.setText("Updates: NOT AVAILABLE");
+              updateAvailableTextView.setText("Updates: NOT AVAILABLE");
             }
           } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR, "Error checking for Scheduled Updates Availability: " + e.getMessage()).show();
+            String error = "Error checking for Scheduled Updates Availability: " + e.getMessage();
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+            Log.e(TAG, error);
           }
         });
       } else {
-        new Alert(Alert.AlertType.ERROR, "Failed to load the mobile map package.").show();
+        String error = "Failed to load the mobile map package: " + mobileMapPackage.getLoadError().getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
       }
     });
+  }
+
+  /**
+   * Request read external storage for API level 23+.
+   */
+  private void requestReadPermission() {
+    // define permission to request
+    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
+    int requestCode = 2;
+    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+      applyScheduledUpdate();
+    } else {
+      // request permission
+      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
+    }
+  }
+
+  /**
+   * Handle the permissions request response.
+   */
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      applyScheduledUpdate();
+    } else {
+      Toast.makeText(this, getString(R.string.canyonlands_mmpk_read_permission_denied), Toast.LENGTH_SHORT).show();
+    }
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    mMapView.dispose();
+  }
+
+  public static void copyDirectory(File sourceLocation, File targetLocation) throws IOException {
+    if (sourceLocation.isDirectory()) {
+      if (!targetLocation.exists()) {
+        targetLocation.mkdirs();
+      }
+      String[] children = sourceLocation.list();
+      for (int i = 0; i < children.length; i++) {
+        copyDirectory(new File(sourceLocation, children[i]), new File(
+            targetLocation, children[i]));
+      }
+    } else {
+      InputStream in = new FileInputStream(sourceLocation);
+      OutputStream out = new FileOutputStream(targetLocation);
+      byte[] buf = new byte[1024];
+      int len;
+      while ((len = in.read(buf)) > 0) {
+        out.write(buf, 0, len);
+      }
+      in.close();
+      out.close();
+    }
   }
 }
