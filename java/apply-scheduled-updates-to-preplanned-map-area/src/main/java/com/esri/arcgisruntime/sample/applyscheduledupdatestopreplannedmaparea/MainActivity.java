@@ -68,9 +68,9 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
 
     // this is the original mmpk, not updated by the scheduled update
-    File originalMmpk = new File(Environment.getExternalStorageDirectory() + "/ArcGIS/Samples/MapPackage/canyonlands");
+    File originalMmpk = new File(Environment.getExternalStorageDirectory() + getString(R.string.canyonlands_mmpk_path));
     // copy of the mmpk file which will have the update applied to it
-    mCopyOfMmpk = new File(getCacheDir() + "/canyonlands");
+    mCopyOfMmpk = new File(getCacheDir() + getString(R.string.canyonlands_folder));
 
     try {
       // copy the original mmpk into the cache, overwriting there's already a copy of the mmpk there
@@ -107,9 +107,10 @@ public class MainActivity extends AppCompatActivity {
 
             // update UI for available updates
             if (offlineMapUpdatesInfo.getDownloadAvailability() == OfflineUpdateAvailability.AVAILABLE) {
-              updateAvailableTextView.setText("Updates: " + OfflineUpdateAvailability.AVAILABLE.name());
+              updateAvailableTextView.setText(getString(R.string.update_status, OfflineUpdateAvailability.AVAILABLE.name()));
               // check and show update size
-              updateSizeTextView.setText("Update size: " + offlineMapUpdatesInfo.getScheduledUpdatesDownloadSize() + " bytes.");
+              updateSizeTextView
+                  .setText(getString(R.string.update_size, offlineMapUpdatesInfo.getScheduledUpdatesDownloadSize()));
               // enable the 'Apply Scheduled Updates' button
               applyScheduledUpdatesButton.setEnabled(true);
               // when the button is clicked, synchronize the mobile map package
@@ -152,20 +153,24 @@ public class MainActivity extends AppCompatActivity {
                           });
                         }
                         // check if map is up to date against the server. This is not required, since in most cases,
-                        // you'll be confident the update was applied by virtue of the offline map sync job completing
-                        // successfully
-                        ListenableFuture<OfflineMapUpdatesInfo> offlineMapsUpdateInfoAfterUpdateFuture = offlineMapSyncTask.checkForUpdatesAsync();
+                        // you'll be confident the update was applied by virtue of the offline map sync job completing successfully
+                        ListenableFuture<OfflineMapUpdatesInfo> offlineMapsUpdateInfoAfterUpdateFuture = offlineMapSyncTask
+                            .checkForUpdatesAsync();
                         offlineMapsUpdateInfoAfterUpdateFuture.addDoneListener(() -> {
                           try {
-                            OfflineMapUpdatesInfo offlineMapsUpdatesInfoAfterUpdate = offlineMapsUpdateInfoAfterUpdateFuture.get();
-                            updateAvailableTextView.setText("Updates: " + offlineMapsUpdatesInfoAfterUpdate.getDownloadAvailability().name());
-                            if (offlineMapsUpdatesInfoAfterUpdate.getDownloadAvailability() != OfflineUpdateAvailability.NONE) {
+                            OfflineMapUpdatesInfo offlineMapsUpdatesInfoAfterUpdate = offlineMapsUpdateInfoAfterUpdateFuture
+                                .get();
+                            updateAvailableTextView.setText(getString(R.string.update_status,
+                                offlineMapsUpdatesInfoAfterUpdate.getDownloadAvailability().name()));
+                            if (offlineMapsUpdatesInfoAfterUpdate.getDownloadAvailability()
+                                != OfflineUpdateAvailability.NONE) {
                               // server still reports that updates are available
-                              updateSizeTextView.setText("Update size: " + offlineMapsUpdatesInfoAfterUpdate.getScheduledUpdatesDownloadSize() + " bytes.");
+                              updateSizeTextView.setText(getString(R.string.update_size,
+                                  offlineMapsUpdatesInfoAfterUpdate.getScheduledUpdatesDownloadSize()));
                               applyScheduledUpdatesButton.setEnabled(true);
                             } else {
                               // no updates available
-                              updateSizeTextView.setText("Update size: N/A");
+                              updateSizeTextView.setText(getString(R.string.update_size_na));
                               applyScheduledUpdatesButton.setEnabled(false);
                             }
                           } catch (Exception e) {
@@ -189,9 +194,8 @@ public class MainActivity extends AppCompatActivity {
                   }
                 });
               });
-
             } else {
-              updateAvailableTextView.setText("Updates: NOT AVAILABLE");
+              updateAvailableTextView.setText(getString(R.string.update_status, offlineMapUpdatesInfo.getDownloadAvailability()));
             }
           } catch (Exception e) {
             String error = "Error checking for Scheduled Updates Availability: " + e.getMessage();
@@ -253,15 +257,15 @@ public class MainActivity extends AppCompatActivity {
     mMapView.dispose();
   }
 
-  public static void copyDirectory(File sourceLocation, File targetLocation) throws IOException {
+  private static void copyDirectory(File sourceLocation, File targetLocation) throws IOException {
     if (sourceLocation.isDirectory()) {
       if (!targetLocation.exists()) {
         targetLocation.mkdirs();
       }
       String[] children = sourceLocation.list();
-      for (int i = 0; i < children.length; i++) {
-        copyDirectory(new File(sourceLocation, children[i]), new File(
-            targetLocation, children[i]));
+      for (String child : children) {
+        copyDirectory(new File(sourceLocation, child), new File(
+            targetLocation, child));
       }
     } else {
       InputStream in = new FileInputStream(sourceLocation);
