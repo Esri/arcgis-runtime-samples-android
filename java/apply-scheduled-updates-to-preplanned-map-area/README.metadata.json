@@ -1,0 +1,28 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "Apply scheduled updates to a downloaded preplanned map area.",
+    "ignore": false,
+    "images": [
+        "apply-scheduled-updates-to-preplanned-map-area.png"
+    ],
+    "keywords": [
+        "offline",
+        "preplanned",
+        "pre-planned",
+        "synchronize",
+        "update"
+    ],
+    "redirect_from": "",
+    "relevant_apis": [
+        "MobileMapPackage",
+        "OfflineMapSyncJob",
+        "OfflineMapSyncParameters",
+        "OfflineMapSyncResult",
+        "OfflineMapSyncTask",
+        "OfflineMapUpdatesInfo"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/applyscheduledupdatestopreplannedmaparea/MainActivity.java"
+    ],
+    "title": "Apply scheduled updates to preplanned map area"
+}
