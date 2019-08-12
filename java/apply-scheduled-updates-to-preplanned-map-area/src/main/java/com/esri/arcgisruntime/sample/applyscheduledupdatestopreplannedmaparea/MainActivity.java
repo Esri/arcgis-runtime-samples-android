@@ -43,7 +43,6 @@ import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.MobileMapPackage;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.tasks.geodatabase.SyncGeodatabaseParameters;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapSyncJob;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapSyncParameters;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapSyncResult;
@@ -126,9 +125,8 @@ public class MainActivity extends AppCompatActivity {
                     .createDefaultOfflineMapSyncParametersAsync();
                 offlineMapSyncParametersFuture.addDoneListener(() -> {
                   try {
+                    // get the offline sync parameters from the listenable future
                     OfflineMapSyncParameters offlineMapSyncParameters = offlineMapSyncParametersFuture.get();
-                    // set the sync direction to none, since we only want to update
-                    offlineMapSyncParameters.setSyncDirection(SyncGeodatabaseParameters.SyncDirection.NONE);
                     // set the parameters to download all updates for the mobile map packages
                     offlineMapSyncParameters
                         .setPreplannedScheduledUpdatesOption(PreplannedScheduledUpdatesOption.DOWNLOAD_ALL_UPDATES);
@@ -167,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                           // get and check the results
                           OfflineMapUpdatesInfo offlineMapUpdatesInfoAfterUpdate = null;
                           try {
+                            // get the offline sync parameters from the listenable future
                             offlineMapUpdatesInfoAfterUpdate = offlineMapUpdatesInfoFuture.get();
                           } catch (Exception e) {
                             String error = "Error checking for Scheduled Updates Availability: " + e.getMessage();
