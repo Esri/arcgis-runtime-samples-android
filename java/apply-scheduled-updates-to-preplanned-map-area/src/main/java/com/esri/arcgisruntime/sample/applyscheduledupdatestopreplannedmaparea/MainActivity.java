@@ -103,11 +103,13 @@ public class MainActivity extends AppCompatActivity {
         // create an offline map sync task with the preplanned area
         OfflineMapSyncTask offlineMapSyncTask = new OfflineMapSyncTask(offlineMap);
         // check for updates to the offline map
-        ListenableFuture<OfflineMapUpdatesInfo> offlineMapUpdatesInfoFuture = checkForUpdatesFuture(offlineMapSyncTask);
+        ListenableFuture<OfflineMapUpdatesInfo> offlineMapUpdatesInfoFuture = offlineMapSyncTask.checkForUpdatesAsync();
         offlineMapUpdatesInfoFuture.addDoneListener(() -> {
           try {
             // get and check the results
             OfflineMapUpdatesInfo offlineMapUpdatesInfo = offlineMapUpdatesInfoFuture.get();
+            // update the UI with update info
+            setUiUpdateInfo(offlineMapUpdatesInfo);
             // if there are available updates
             if (offlineMapUpdatesInfo.getDownloadAvailability() == OfflineUpdateAvailability.AVAILABLE) {
               mUpdateAvailableTextView
@@ -126,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                   try {
                     OfflineMapSyncParameters offlineMapSyncParameters = offlineMapSyncParametersFuture.get();
                     // set the sync direction to none, since we only want to update
-                    offlineMapSyncParameters.setSyncDirection(SyncGeodatabaseParameters.SyncDirection.DOWNLOAD);
+                    offlineMapSyncParameters.setSyncDirection(SyncGeodatabaseParameters.SyncDirection.NONE);
                     // set the parameters to download all updates for the mobile map packages
                     offlineMapSyncParameters
                         .setPreplannedScheduledUpdatesOption(PreplannedScheduledUpdatesOption.DOWNLOAD_ALL_UPDATES);
@@ -158,7 +160,22 @@ public class MainActivity extends AppCompatActivity {
                         }
                         // check if the map is up to date against the server. This is not required, since in most cases,
                         // you'll be confident the update was applied because the offline map sync job completed successfully
-                        checkForUpdatesFuture(offlineMapSyncTask);
+                        // check for updates to the offline map
+                        ListenableFuture<OfflineMapUpdatesInfo> offlineMapUpdatesInfoAfterUpdateFuture = offlineMapSyncTask
+                            .checkForUpdatesAsync();
+                        offlineMapUpdatesInfoAfterUpdateFuture.addDoneListener(() -> {
+                          // get and check the results
+                          OfflineMapUpdatesInfo offlineMapUpdatesInfoAfterUpdate = null;
+                          try {
+                            offlineMapUpdatesInfoAfterUpdate = offlineMapUpdatesInfoFuture.get();
+                          } catch (Exception e) {
+                            String error = "Error checking for Scheduled Updates Availability: " + e.getMessage();
+                            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                            Log.e(TAG, error);
+                          }
+                          // update the UI with update info
+                          setUiUpdateInfo(offlineMapUpdatesInfoAfterUpdate);
+                        });
                       } else {
                         String error = "Error syncing the offline map: " + offlineMapSyncJob.getError().getMessage();
                         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
@@ -193,38 +210,22 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Check for updates using the offline map sync task.
-   *
-   * @param offlineMapSyncTask from which to check for updates
-   * @return the offline map updates info future
+   * Update UI with update status.
    */
-  private ListenableFuture<OfflineMapUpdatesInfo> checkForUpdatesFuture(OfflineMapSyncTask offlineMapSyncTask) {
-    // check for updates using the offline map sync task
-    ListenableFuture<OfflineMapUpdatesInfo> offlineMapsUpdateInfoAfterUpdateFuture = offlineMapSyncTask
-        .checkForUpdatesAsync();
-    offlineMapsUpdateInfoAfterUpdateFuture.addDoneListener(() -> {
-      try {
-        OfflineMapUpdatesInfo offlineMapsUpdatesInfoAfterUpdate = offlineMapsUpdateInfoAfterUpdateFuture.get();
-        // set the download availability status to the text view
-        mUpdateAvailableTextView.setText(getString(R.string.update_status,
-            offlineMapsUpdatesInfoAfterUpdate.getDownloadAvailability().name()));
-        if (offlineMapsUpdatesInfoAfterUpdate.getDownloadAvailability() != OfflineUpdateAvailability.NONE) {
-          // server still reports that updates are available
-          mUpdateSizeTextView.setText(
-              getString(R.string.update_size, offlineMapsUpdatesInfoAfterUpdate.getScheduledUpdatesDownloadSize()));
-          mApplyScheduledUpdatesButton.setEnabled(true);
-        } else {
-          // server reports that no updates are available
-          mUpdateSizeTextView.setText(getString(R.string.update_size_na));
-          mApplyScheduledUpdatesButton.setEnabled(false);
-        }
-      } catch (Exception e) {
-        String error = "Error checking for Scheduled Updates Availability: " + e.getMessage();
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        Log.e(TAG, error);
-      }
-    });
-    return offlineMapsUpdateInfoAfterUpdateFuture;
+  private void setUiUpdateInfo(OfflineMapUpdatesInfo offlineMapUpdatesInfo) {
+    // set the download availability status to the text view
+    mUpdateAvailableTextView
+        .setText(getString(R.string.update_status, offlineMapUpdatesInfo.getDownloadAvailability().name()));
+    if (offlineMapUpdatesInfo.getDownloadAvailability() != OfflineUpdateAvailability.NONE) {
+      // server still reports that updates are available
+      mUpdateSizeTextView
+          .setText(getString(R.string.update_size, offlineMapUpdatesInfo.getScheduledUpdatesDownloadSize()));
+      mApplyScheduledUpdatesButton.setEnabled(true);
+    } else {
+      // server reports that no updates are available
+      mUpdateSizeTextView.setText(getString(R.string.update_size_na));
+      mApplyScheduledUpdatesButton.setEnabled(false);
+    }
   }
 
   /**
@@ -292,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
       }
     } else {
       try (InputStream in = new FileInputStream(sourceLocation)) {
-        try (OutputStream out = new FileOutputStream(targetLocation)){
+        try (OutputStream out = new FileOutputStream(targetLocation)) {
           byte[] buf = new byte[1024];
           int len;
           while ((len = in.read(buf)) > 0) {
