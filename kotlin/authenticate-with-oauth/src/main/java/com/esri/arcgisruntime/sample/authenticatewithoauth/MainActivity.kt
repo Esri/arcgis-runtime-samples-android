@@ -84,14 +84,14 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   override fun onNewIntent(intent: Intent?) {
     super.onNewIntent(intent)
 
+    // hide WebView if it is visible
+    if (webView.visibility == View.VISIBLE) {
+      webView.visibility = View.GONE
+    }
+
     // check the intent for an auth code
     intent?.authCode?.let {
       authCode = it
-
-      // hide WebView if it is visible
-      if (webView.visibility == View.VISIBLE) {
-        webView.visibility = View.GONE
-      }
     }
 
     // count down the latch to allow the auth challenge thread to continue
