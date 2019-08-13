@@ -45,7 +45,7 @@ import java.util.concurrent.CountDownLatch
 /**
  * This sample demonstrates how to authenticate with ArcGIS Online (or your own portal) using OAuth2 to access secured
  * resources (such as private web maps or layers). Accessing secured items requires a login on the portal that hosts them
- * (an ArcGIS Online account, for example). This sample utilizes Android WebView to show theOAuth sign-in page in a dialog.
+ * (an ArcGIS Online account, for example). This sample utilizes Android WebView to show the OAuth sign-in page in a dialog.
  */
 class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
 
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   private val portal: Portal by lazy { Portal(getString(R.string.portal_url)) }
   private val portalItem: PortalItem by lazy { PortalItem(portal, getString(R.string.webmap_world_traffic_id)) }
 
-  // auth code store as a property as auth code isn't obtainable from intent when called from unblocked thread
+  // auth code stored as a property as auth code isn't obtainable from intent when called from unblocked thread
   private var authCode: String? = null
   // CountDownLatch used to block auth challenge when performing oauth authorization
   private val authCountDownLatch: CountDownLatch = CountDownLatch(1)
@@ -116,14 +116,12 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   /**
    * Function for handling authentication challenges.
    *
-   * If the [authCode] property is null, it's likely that this is the user's first attempt at OAuth. So begin OAuth flow.
-   * We do this by launching the Intent to open the user's browser or as a last resort we use a WebView. Directly after
+   * We launch the Intent to open the user's browser or as a last resort we use a WebView. Directly after
    * launching the Intent or opening the WebView we block the auth challenge thread to allow the user to enter their
    * credentials.
    *
-   * We release the thread when the Intent is received and it contains an auth code, setting this auth code as a property
-   * on the [MainActivity] class. When the thread is released we check that the auth code isn't null and perform a
-   * OAuthTokenCredentialRequest.
+   * We release the thread when the Intent is received. If we receive an auth code in the intent, we perform a credential
+   * request using this auth code, otherwise we cancel the auth challenge.
    *
    * @param authenticationChallenge the authentication challenge to handle
    * @return the AuthenticationChallengeResponse indicating which action to take
@@ -163,6 +161,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
               logToUser(getString(R.string.error_auth_exception, e.message))
             }
           }
+        } else {
+          return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
         }
       }
     }
@@ -203,8 +203,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
    *
    * Please note that we have chosen to include use of the WebView as a fallback mechanism if the user does not have a
    * web browser installed, only as a matter of course to allow you to use this sample in all circumstances. We do not
-   * recommend using WebView as part of your OAuth flow as per Google's recommendations:
-   * https://developers.googleblog.com/2016/08/modernizing-oauth-interactions-in-native-apps.html
+   * recommend using WebView as part of your OAuth flow as per IETF's recommendations:
+   * https://tools.ietf.org/html/rfc8252
    */
   private fun setupWebView() {
     // setup a WebViewClient to override handling of custom scheme and host for Intent
@@ -237,7 +237,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   }
 
   /**
-   * Generate the Intent that launches the MainActivity with the new auth code
+   * Generate the Intent that launches the MainActivity when the OAuth portal redirects using the registered scheme and
+   * host.
    *
    * @param uri instance of Uri generated from URL that OAuth webpage redirects to after successful login
    */

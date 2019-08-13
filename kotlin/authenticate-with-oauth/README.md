@@ -23,7 +23,7 @@ Your app may need to access items that are only shared with authorized users. Fo
 
 ## WebView
 Please note that we have chosen to include use of the `WebView` as a fallback mechanism if the user does not have a web browser installed, only as a matter of course to allow you to use this sample in all circumstances.
-We do not recommend using `WebView` as part of your OAuth flow as per Google's recommendations: https://developers.googleblog.com/2016/08/modernizing-oauth-interactions-in-native-apps.html
+We do not recommend using `WebView` as part of your OAuth flow as per IEFT's recommendations: https://tools.ietf.org/html/rfc8252
 
 ## Relevant API
  * AuthenticationManager
