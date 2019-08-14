@@ -207,10 +207,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
     }
 
     /**
-     * When a user credential challenge is issued, check the failure count of this challenge before prompting for
-     * user credential. If the failure count is equal to or greater than the predefined maximum number of attempts,
-     * notify user and respond with a AuthenticationChallengeResponse with a cancel action. Otherwise pop up a dialog
-     * for user credential. When the user credential has been set, respond with a AuthenticationChallengeResponse with
+     * When a user credential challenge is issued, pop up a dialog for user credential. When
+     * the user credential has been set, respond with a AuthenticationChallengeResponse with
      * a continue with credential action and with the credentials as a parameter.
      *
      * @param authenticationChallenge
