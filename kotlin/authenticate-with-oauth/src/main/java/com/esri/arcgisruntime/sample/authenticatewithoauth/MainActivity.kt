@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   // auth code stored as a property as auth code isn't obtainable from intent when called from unblocked thread
   private var authCode: String? = null
   // CountDownLatch used to block auth challenge when performing oauth authorization
-  private val authCountDownLatch: CountDownLatch = CountDownLatch(1)
+  private var authCountDownLatch: CountDownLatch? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -84,22 +84,23 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
   override fun onNewIntent(intent: Intent?) {
     super.onNewIntent(intent)
 
+    // check the intent for an auth code
+    intent?.authCode?.let {
+      authCode = it
+    }
+  }
+
+  override fun onResume() {
+    super.onResume()
+
     // hide WebView if it is visible
     if (webView.visibility == View.VISIBLE) {
       webView.visibility = View.GONE
     }
 
-    // check the intent for an auth code
-    intent?.authCode?.let {
-      authCode = it
-    }
-
     // count down the latch to allow the auth challenge thread to continue
-    authCountDownLatch.countDown()
-  }
+    authCountDownLatch?.countDown()
 
-  override fun onResume() {
-    super.onResume()
     mapView.resume()
   }
 
@@ -120,8 +121,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
    * launching the Intent or opening the WebView we block the auth challenge thread to allow the user to enter their
    * credentials.
    *
-   * We release the thread when the Intent is received. If we receive an auth code in the intent, we perform a credential
-   * request using this auth code, otherwise we cancel the auth challenge.
+   * We release the thread when the Activity is resumed. If we receive an auth code in the intent during onNewIntent(),
+   * we perform a credential request using this auth code, otherwise we cancel the auth challenge.
    *
    * @param authenticationChallenge the authentication challenge to handle
    * @return the AuthenticationChallengeResponse indicating which action to take
@@ -132,7 +133,9 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
       if (authChallenge.type == AuthenticationChallenge.Type.OAUTH_CREDENTIAL_CHALLENGE) {
 
         beginOAuth()
-        authCountDownLatch.await()
+
+        authCountDownLatch = CountDownLatch(1)
+        authCountDownLatch?.await()
 
         // if we have an auth code, we've likely just been through the OAuth flow and now have an auth code
         // we can use it to request a new access token
