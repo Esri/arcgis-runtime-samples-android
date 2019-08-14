@@ -221,33 +221,16 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
         ) {
             URI(authenticationChallenge.remoteResource.uri).host?.let { remoteResourceHost ->
 
-                when {
-                    // If challenge has been requested by a Portal and the Portal has been loaded, cancel the challenge
-                    // This is required as some layers have private portal items associated with them and we don't
-                    // want to auth against them
-                    (authenticationChallenge.remoteResource as Portal).loadStatus == LoadStatus.LOADED -> {
-                        return AuthenticationChallengeResponse(
-                                AuthenticationChallengeResponse.Action.CANCEL,
-                                authenticationChallenge
-                        )
-                    }
-
-                    // Exceed maximum number of attempts, act like it was a cancel and notify user
-                    authenticationChallenge.failureCount >= MAX_AUTH_ATTEMPTS -> {
-                        userCredentials.remove(remoteResourceHost)
-                        getString(R.string.error_exceed_max_attempt).let {
-                            runOnUiThread {
-                                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-                            }
-                            Log.e(TAG, it)
-                        }
-                        return AuthenticationChallengeResponse(
-                                AuthenticationChallengeResponse.Action.CANCEL,
-                                authenticationChallenge
-                        )
-                    }
+                // If challenge has been requested by a Portal and the Portal has been loaded, cancel the challenge
+                // This is required as some layers have private portal items associated with them and we don't
+                // want to auth against them
+                if ((authenticationChallenge.remoteResource as Portal).loadStatus == LoadStatus.LOADED) {
+                    return AuthenticationChallengeResponse(
+                        AuthenticationChallengeResponse.Action.CANCEL,
+                        authenticationChallenge
+                    )
                 }
-
+                
                 // If we have not stored credentials against this host or an invalid credential was passed, 
                 // request them from the user
                 authLatch = CountDownLatch(1)

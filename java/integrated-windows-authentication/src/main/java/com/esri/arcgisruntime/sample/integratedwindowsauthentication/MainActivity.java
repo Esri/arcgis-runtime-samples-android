@@ -228,16 +228,6 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
             authenticationChallenge);
       }
 
-      int maxAttempts = 5;
-      if (authenticationChallenge.getFailureCount() >= maxAttempts) {
-        // exceeded maximum amount of attempts. Act like it was a cancel
-        runOnUiThread(() -> {
-          Toast.makeText(this, "Exceeded maximum amount of attempts. Please try again!", Toast.LENGTH_LONG).show();
-        });
-        return new AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL,
-            authenticationChallenge);
-      }
-
       // inflate and create the credential dialog
       View dialogView = getLayoutInflater().inflate(R.layout.credential_dialog, null);
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
