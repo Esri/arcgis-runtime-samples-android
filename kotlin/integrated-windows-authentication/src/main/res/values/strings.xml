@@ -18,7 +18,6 @@
     <string name="error_portal_sign_in_cancelled">Portal sign in was cancelled by user.</string>
     <string name="error_portal_sign_in_failed">Portal sign in failed: %s</string>
     <string name="error_portal_not_instantiated">Portal not instantiated.</string>
-    <string name="error_exceed_max_attempt">Exceeded maximum amount of attempts. Please try again!</string>
 
     <string name="credential_dialog_positive_button_text">Sign In</string>
     <string name="credential_dialog_negative_button_text">Cancel</string>
