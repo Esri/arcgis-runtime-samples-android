@@ -1,0 +1,28 @@
+{
+    "category": "Visualization",
+    "description": "Create picture marker symbols from the different types of picture resources available, whether they are sourced from a URL, locally on the device, or in the app.",
+    "ignore": false,
+    "images": [
+        "picture-marker-symbols.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "Graphic",
+        "GraphicsOverlay",
+        "MapView",
+        "PictureMarkerSymbol",
+        "Point"
+    ],
+    "redirect_from": "/android/latest/sample-code/picture-marker-symbols.htm",
+    "relevant_apis": [
+        "Graphic",
+        "GraphicsOverlay",
+        "MapView",
+        "PictureMarkerSymbol",
+        "Point"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/picturemarkersymbols/MainActivity.java"
+    ],
+    "title": "Picture Marker Symbols"
+}

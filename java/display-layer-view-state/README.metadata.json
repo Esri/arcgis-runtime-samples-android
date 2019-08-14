@@ -1,0 +1,26 @@
+{
+    "category": "MapViews, SceneViews and UI",
+    "description": "View the status of the layers on the map.",
+    "ignore": false,
+    "images": [
+        "display-layer-view-state.png"
+    ],
+    "keywords": [
+        "MapViews, SceneViews and UI",
+        "ArcGISMap",
+        "LayerViewStateChangedEvent",
+        "LayerViewStateChangedListener",
+        "MapView"
+    ],
+    "redirect_from": "/android/latest/sample-code/display-layer-view-state.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "LayerViewStateChangedEvent",
+        "LayerViewStateChangedListener",
+        "MapView"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/displaylayerviewstate/MainActivity.java"
+    ],
+    "title": "Display Layer View State"
+}

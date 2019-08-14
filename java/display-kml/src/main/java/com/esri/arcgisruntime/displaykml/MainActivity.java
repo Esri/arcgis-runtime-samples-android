@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void changeSourceToURL() {
     // create a kml data set from a URL
-    KmlDataset kmlDataset = new KmlDataset(getString(R.string.kml_url));
+    KmlDataset kmlDataset = new KmlDataset(getString(R.string.noaa_weather_kml_url));
 
     // a KML layer created from a remote KML file
     KmlLayer kmlLayer = new KmlLayer(kmlDataset);

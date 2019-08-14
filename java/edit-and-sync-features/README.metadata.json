@@ -1,0 +1,34 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "Synchronize offline edits with a feature service.",
+    "ignore": false,
+    "images": [
+        "edit-and-sync-features.png"
+    ],
+    "keywords": [
+        "Edit and Manage Data",
+        "FeatureLayer",
+        "FeatureTable",
+        "GeodatabaseSyncTask",
+        "GenerateGeodatabaseJob",
+        "GenerateGeodatabaseParameters",
+        "SyncGeodatabaseJob",
+        "SyncGeodatabaseParameters",
+        "SyncLayerOption"
+    ],
+    "redirect_from": "/android/latest/sample-code/edit-and-sync-features.htm",
+    "relevant_apis": [
+        "FeatureLayer",
+        "FeatureTable",
+        "GeodatabaseSyncTask",
+        "GenerateGeodatabaseJob",
+        "GenerateGeodatabaseParameters",
+        "SyncGeodatabaseJob",
+        "SyncGeodatabaseParameters",
+        "SyncLayerOption"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/editandsyncfeatures/MainActivity.java"
+    ],
+    "title": "Edit and sync features"
+}

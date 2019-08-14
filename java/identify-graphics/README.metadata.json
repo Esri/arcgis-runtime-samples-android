@@ -1,0 +1,28 @@
+{
+    "category": "Search and Query",
+    "description": "Create a Graphic and add it to a GraphicOverlay where it can be identified from the MapView.",
+    "ignore": false,
+    "images": [
+        "identify-graphics.png"
+    ],
+    "keywords": [
+        "Search and Query",
+        "ArcGISMap",
+        "DefaultMapViewOnTouchListener",
+        "Graphic",
+        "GraphicsOverlay",
+        "MapView"
+    ],
+    "redirect_from": "/android/latest/sample-code/identify-graphics.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "DefaultMapViewOnTouchListener",
+        "Graphic",
+        "GraphicsOverlay",
+        "MapView"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/identifygraphics/MainActivity.java"
+    ],
+    "title": "Identify Graphics"
+}

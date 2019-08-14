@@ -1,0 +1,24 @@
+{
+    "category": "Analysis",
+    "description": "Calculate a viewshed using a geoprocessing service.",
+    "ignore": false,
+    "images": [
+        "viewshed-geoprocessing.png"
+    ],
+    "keywords": [
+        "Analysis",
+        "FeatureCollectionTable",
+        "GeoprocessingJob",
+        "GeoprocessingTask"
+    ],
+    "redirect_from": "/android/latest/sample-code/viewshed-geoprocessing.htm",
+    "relevant_apis": [
+        "FeatureCollectionTable",
+        "GeoprocessingJob",
+        "GeoprocessingTask"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/viewshedgeoprocessing/MainActivity.java"
+    ],
+    "title": "Viewshed Geoprocessing"
+}

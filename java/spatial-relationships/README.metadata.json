@@ -1,0 +1,50 @@
+{
+    "category": "Analysis",
+    "description": "Shows how to use the GeometryEngine to determine spatial relationships between two geometries",
+    "ignore": false,
+    "images": [
+        "spatial-relationships.png"
+    ],
+    "keywords": [
+        "Analysis",
+        "ArcGISMap",
+        "Basemap",
+        "Geometry",
+        "GeometryEngine",
+        "GeometryType",
+        "Graphic",
+        "GraphicsOverlay",
+        "MapView",
+        "Point",
+        "PointCollection",
+        "Polygon",
+        "Polyline",
+        "SimpleFillSymbol",
+        "SimpleLineSymbol",
+        "SimpleMarkerSymbol"
+    ],
+    "redirect_from": "/android/latest/sample-code/spatial-relationships.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "Basemap",
+        "Geometry",
+        "GeometryEngine",
+        "GeometryType",
+        "Graphic",
+        "GraphicsOverlay",
+        "MapView",
+        "Point",
+        "PointCollection",
+        "Polygon",
+        "Polyline",
+        "SimpleFillSymbol",
+        "SimpleLineSymbol",
+        "SimpleMarkerSymbol"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/spatialrelationships/ExpandableListAdapter.java",
+        "src/main/java/com/esri/arcgisruntime/sample/spatialrelationships/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/spatialrelationships/ResultsActivity.java"
+    ],
+    "title": "Spatial Relationships"
+}

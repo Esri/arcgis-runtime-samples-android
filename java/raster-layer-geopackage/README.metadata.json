@@ -1,0 +1,24 @@
+{
+    "category": "Layers",
+    "description": "Open a GeoPackage, obtain a raster from the package, and display the table as a RasterLayer.",
+    "ignore": false,
+    "images": [
+        "raster-layer-geopackage.png"
+    ],
+    "keywords": [
+        "Layers",
+        "GeoPackage",
+        "GeoPackageRaster",
+        "RasterLayer"
+    ],
+    "redirect_from": "/android/latest/sample-code/raster-layer-geopackage.htm",
+    "relevant_apis": [
+        "GeoPackage",
+        "GeoPackageRaster",
+        "RasterLayer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/rasterlayergeopackage/MainActivity.java"
+    ],
+    "title": "Raster Layer GeoPackage"
+}

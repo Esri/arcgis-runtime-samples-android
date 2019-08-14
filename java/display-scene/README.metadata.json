@@ -1,0 +1,26 @@
+{
+    "category": "Maps and Scenes",
+    "description": "Display a scene with elevation data.",
+    "ignore": false,
+    "images": [
+        "display-scene.png"
+    ],
+    "keywords": [
+        "Maps and Scenes",
+        "ArcGISScene",
+        "ArcGISTiledElevationSource",
+        "Camera",
+        "SceneView"
+    ],
+    "redirect_from": "",
+    "relevant_apis": [
+        "ArcGISScene",
+        "ArcGISTiledElevationSource",
+        "Camera",
+        "SceneView"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/displayscene/MainActivity.java"
+    ],
+    "title": "Display a Scene"
+}

@@ -1,0 +1,28 @@
+{
+    "category": "Visualization",
+    "description": "Override the default renderer of a shapefile when displaying with a FeatureLayer.",
+    "ignore": false,
+    "images": [
+        "symbolize-shapefile.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "FeatureLayer",
+        "ShapefileFeatureTable",
+        "SimpleRenderer",
+        "SimpleFillSymbol",
+        "SimpleLineSymbol"
+    ],
+    "redirect_from": "",
+    "relevant_apis": [
+        "FeatureLayer",
+        "ShapefileFeatureTable",
+        "SimpleRenderer",
+        "SimpleFillSymbol",
+        "SimpleLineSymbol"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/symbolizeshapefile/MainActivity.java"
+    ],
+    "title": "Symbolize a Shapefile"
+}

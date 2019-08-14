@@ -1,0 +1,24 @@
+{
+    "category": "Maps and Scenes",
+    "description": "The Sketch Editor can be used to draw on a map.",
+    "ignore": false,
+    "images": [
+        "sketch-editor.png"
+    ],
+    "keywords": [
+        "Maps and Scenes",
+        "MapView",
+        "SketchCreationMode",
+        "SketchEditor"
+    ],
+    "redirect_from": "/android/latest/sample-code/sketch-editor.htm",
+    "relevant_apis": [
+        "MapView",
+        "SketchCreationMode",
+        "SketchEditor"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/sketcheditor/MainActivity.java"
+    ],
+    "title": "Sketch Editor"
+}

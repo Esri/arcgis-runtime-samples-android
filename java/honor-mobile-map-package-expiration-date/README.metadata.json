@@ -1,0 +1,21 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "Access the expiration information of an expired mobile map package.",
+    "ignore": false,
+    "images": [
+        "honor-mobile-map-package-expiration-date.png"
+    ],
+    "keywords": [
+        "Expiration",
+        "Mmpk"
+    ],
+    "redirect_from": "",
+    "relevant_apis": [
+        "Expiration",
+        "MobileMapPackage"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/honormobilemappackageexpirationdate/MainActivity.java"
+    ],
+    "title": "Honor mobile map package expiration date"
+}

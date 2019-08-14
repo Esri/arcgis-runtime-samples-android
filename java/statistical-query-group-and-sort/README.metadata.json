@@ -1,0 +1,31 @@
+{
+    "category": "Search and Query",
+    "description": "Query a ServiceFeatureTable to get statistics for one or more specified fields. The sample queries a service feature table of US states to get the selected statistics. The results ",
+    "ignore": false,
+    "images": [
+        "statistical-query-group-and-sort.png"
+    ],
+    "keywords": [
+        "Search and Query",
+        "QueryParameters",
+        "StatisticDefinition",
+        "StatisticType",
+        "StatisticsQueryParameters",
+        "StatisticsQueryResult"
+    ],
+    "redirect_from": "/android/latest/sample-code/statistical-query-group-and-sort.htm",
+    "relevant_apis": [
+        "QueryParameters",
+        "StatisticDefinition",
+        "StatisticType",
+        "StatisticsQueryParameters",
+        "StatisticsQueryResult"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/RecyclerViewAdapter.java",
+        "src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/ExpandableListViewAdapter.java",
+        "src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/ResultsActivity.java"
+    ],
+    "title": "Statistical Query Group and Sort"
+}

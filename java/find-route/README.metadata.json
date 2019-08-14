@@ -1,0 +1,28 @@
+{
+    "category": "Routing and Logistics",
+    "description": "Get a route between two locations.",
+    "ignore": false,
+    "images": [
+        "find-route.png"
+    ],
+    "keywords": [
+        "Routing and Logistics",
+        "DirectionManeuver",
+        "Route",
+        "RouteParameters",
+        "RouteResult",
+        "RouteTask"
+    ],
+    "redirect_from": "/android/latest/sample-code/find-route.htm",
+    "relevant_apis": [
+        "DirectionManeuver",
+        "Route",
+        "RouteParameters",
+        "RouteResult",
+        "RouteTask"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/findroute/MainActivity.java"
+    ],
+    "title": "Find Route"
+}

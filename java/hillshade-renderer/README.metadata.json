@@ -1,0 +1,31 @@
+{
+    "category": "Visualization",
+    "description": "Use a hillshade renderer on a raster.",
+    "ignore": false,
+    "images": [
+        "hillshade-renderer.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "ArcGISMap",
+        "Basemap",
+        "HillshadeRenderer",
+        "MapView",
+        "Raster",
+        "RasterLayer"
+    ],
+    "redirect_from": "/android/latest/sample-code/hillshade-renderer.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "Basemap",
+        "HillshadeRenderer",
+        "MapView",
+        "Raster",
+        "RasterLayer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/hillshaderenderer/ParametersDialogFragment.java",
+        "src/main/java/com/esri/arcgisruntime/sample/hillshaderenderer/MainActivity.java"
+    ],
+    "title": "Hillshade Renderer"
+}

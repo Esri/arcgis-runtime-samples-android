@@ -1,0 +1,26 @@
+{
+    "category": "Search and Query",
+    "description": "Identify features on a map across different layers.",
+    "ignore": false,
+    "images": [
+        "identify-layers.png"
+    ],
+    "keywords": [
+        "Search and Query",
+        "ArcGISMapImageLayer",
+        "FeatureLayer",
+        "FeatureTable",
+        "MapView"
+    ],
+    "redirect_from": "/android/latest/sample-code/identify-layers.htm",
+    "relevant_apis": [
+        "ArcGISMapImageLayer",
+        "FeatureLayer",
+        "FeatureTable",
+        "MapView"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/identifylayers/MainActivity.java"
+    ],
+    "title": "Identify Layers"
+}

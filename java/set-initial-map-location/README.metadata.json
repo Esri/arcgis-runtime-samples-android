@@ -1,0 +1,24 @@
+{
+    "category": "Maps and Scenes",
+    "description": "Create a map with an initial location by passing lat, long and level of detail values.",
+    "ignore": false,
+    "images": [
+        "set-initial-map-location.png"
+    ],
+    "keywords": [
+        "Maps and Scenes",
+        "ArcGISMap",
+        "BasemapType",
+        "MapView"
+    ],
+    "redirect_from": "/android/latest/sample-code/set-initial-map-location.htm",
+    "relevant_apis": [
+        "ArcGISMap",
+        "BasemapType",
+        "MapView"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/setinitialmaplocation/MainActivity.java"
+    ],
+    "title": "Set Initial Map Location"
+}

@@ -1,0 +1,38 @@
+{
+    "category": "Visualization",
+    "description": "Animate a graphic's position and orientation and follow it with the camera.",
+    "ignore": false,
+    "images": [
+        "animate-3d-graphic.png"
+    ],
+    "keywords": [
+        "Visualization",
+        "Camera",
+        "GlobeCameraController",
+        "Graphic",
+        "GraphicsOverlay",
+        "LayerSceneProperties.SurfacePlacement",
+        "ModelSceneSymbol",
+        "OrbitGeoElementCameraController",
+        "Renderer",
+        "SceneView",
+        "Viewpoint"
+    ],
+    "redirect_from": "/android/latest/sample-code/animate-3d-graphic.htm",
+    "relevant_apis": [
+        "Camera",
+        "GlobeCameraController",
+        "Graphic",
+        "GraphicsOverlay",
+        "LayerSceneProperties.SurfacePlacement",
+        "ModelSceneSymbol",
+        "OrbitGeoElementCameraController",
+        "Renderer",
+        "SceneView",
+        "Viewpoint"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/animate3dgraphic/MainActivity.java"
+    ],
+    "title": "Animate 3D Graphic"
+}

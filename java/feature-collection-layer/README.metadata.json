@@ -1,0 +1,36 @@
+{
+    "category": "Layers",
+    "description": "Creates a new Feature Collection with a Point, Polyline, and Polygon Feature Collection Table. The Collection is then displayed on the ArcGISMap as a Feature Collection Layer.",
+    "ignore": false,
+    "images": [
+        "feature-collection-layer.png"
+    ],
+    "keywords": [
+        "Layers",
+        "FeatureCollection",
+        "FeatureCollectionLayer",
+        "FeatureCollectionTable",
+        "Feature",
+        "Field",
+        "SimpleFillSymbol",
+        "SimpleLineSymbol",
+        "SimpleMarkerSymbol",
+        "SimpleRenderer"
+    ],
+    "redirect_from": "/android/latest/sample-code/feature-collection-layer.htm",
+    "relevant_apis": [
+        "FeatureCollection",
+        "FeatureCollectionLayer",
+        "FeatureCollectionTable",
+        "Feature",
+        "Field",
+        "SimpleFillSymbol",
+        "SimpleLineSymbol",
+        "SimpleMarkerSymbol",
+        "SimpleRenderer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/featurecollectionlayer/MainActivity.java"
+    ],
+    "title": "Feature Collection Layer"
+}
