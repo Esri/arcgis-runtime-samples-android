@@ -89,8 +89,6 @@ class CredentialDialogFragment : DialogFragment() {
     }
 
     override fun onDismiss(dialog: DialogInterface?) {
-        super.onDismiss(dialog)
-        
         (context as? DialogInterface.OnDismissListener)?.onDismiss(dialog)
     }
 
