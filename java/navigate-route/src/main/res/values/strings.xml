@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Navigate route</string>
+    <string name="location_permission_denied">Device location permission required for navigation.</string>
+</resources>
