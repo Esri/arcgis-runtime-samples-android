@@ -243,7 +243,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
    * Generate the Intent that launches the MainActivity when the OAuth portal redirects using the registered scheme and
    * host.
    *
-   * @param uri instance of Uri generated from URL that OAuth webpage redirects to after successful login
+   * @param uri instance of Uri generated from URL that OAuth webpage redirects to after successful login or cancellation
    */
   private fun generateAuthIntent(uri: Uri): Intent {
     return Intent().also {
