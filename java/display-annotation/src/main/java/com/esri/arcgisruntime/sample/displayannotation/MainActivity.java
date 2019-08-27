@@ -18,11 +18,16 @@ package com.esri.arcgisruntime.sample.displayannotation;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
+import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.AnnotationLayer;
+import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.security.AuthenticationManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,18 +38,46 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    AuthenticationManager.setTrustAllSigners(true);
+
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
 
-    // create a map and set it to the map view
-    ArcGISMap map = new ArcGISMap(Basemap.createStreets());
-    mMapView.setMap(map);
+    AnnotationLayer annotationLayer0 = new AnnotationLayer(
+        "https://craigwilliams.esri.com/server/rest/services/Loudoun/FeatureServer/0");
 
-    // create an annotation layer from an enterprise service
-    AnnotationLayer annotationLayer = new AnnotationLayer("https://craigwilliams.esri.com/server/rest/services/Loudoun/FeatureServer");
+    AnnotationLayer annotationLayer1 = new AnnotationLayer(
+        "https://craigwilliams.esri.com/server/rest/services/Loudoun/FeatureServer/1");
 
-    // add the annotation layer to the map
-    map.getOperationalLayers().add(annotationLayer);
+    AnnotationLayer annotationLayer2 = new AnnotationLayer(
+        "https://craigwilliams.esri.com/server/rest/services/Loudoun/FeatureServer/2");
+
+    AnnotationLayer annotationLayer3 = new AnnotationLayer(
+        "https://craigwilliams.esri.com/server/rest/services/Loudoun/FeatureServer/3");
+
+    annotationLayer1.loadAsync();
+    annotationLayer1.addDoneLoadingListener(() -> {
+      if (annotationLayer1.getLoadStatus() == LoadStatus.LOADED) {
+
+        // create a map and set it to the map view
+        ArcGISMap map = new ArcGISMap(annotationLayer1.getSpatialReference());
+
+        map.setBasemap(Basemap.createLightGrayCanvas());
+        map.getOperationalLayers().add(annotationLayer0);
+        map.getOperationalLayers().add(annotationLayer1);
+        map.getOperationalLayers().add(annotationLayer2);
+        map.getOperationalLayers().add(annotationLayer3);
+        mMapView.setMap(map);
+
+        mMapView.setViewpointAsync(
+            new Viewpoint(new Point(annotationLayer1.getFullExtent().getCenter().getX(),
+                annotationLayer1.getFullExtent().getCenter().getY(),
+                annotationLayer1.getSpatialReference()), 2000));
+      } else {
+        Log.e("stuff", "Annotation layer failed to load: " + annotationLayer1.getLoadError());
+      }
+    });
+
   }
 
   @Override
