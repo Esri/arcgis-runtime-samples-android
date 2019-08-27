@@ -17,7 +17,6 @@
 package com.esri.arcgisruntime.sample.navigateroute;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -54,6 +53,7 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.navigation.RouteTracker;
 import com.esri.arcgisruntime.navigation.VoiceGuidance;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
+import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters;
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult;
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask;
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             LocationDisplay locationDisplay = mMapView.getLocationDisplay();
 
             // set up a RouteLocationDataSource which simulates movement along the route
-            locationDisplay.setLocationDataSource(new RouteLocationDataSource(routeGeometry, getApplicationContext()));
+            locationDisplay.setLocationDataSource(new RouteLocationDataSource(routeGeometry, MainActivity.this));
             locationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.NAVIGATION);
 
             // set up a RouteTracker for navigation along the calculated route
@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
     private Timer mTimer;
 
     private double distance = 0.0;
-    private double distanceInterval = 10.0;
+    private double distanceInterval = .001;
 
     RouteLocationDataSource(Polyline route, Context context) {
       mContext = context;
@@ -264,13 +264,21 @@ public class MainActivity extends AppCompatActivity {
       Handler handler = new Handler(mContext.getMainLooper());
       handler.post(() -> {
 
-
-
+        if (!mMapView.getLocationDisplay().isStarted()) {
+          mMapView.getLocationDisplay().startAsync();
+          Log.d(TAG, "Starting in loop");
+        } else {
+          Log.d(TAG, "Location display not started");
+        }
 
         // start at the beginning of the route
         mCurrentLocation = mRoute.getParts().get(0).getStartPoint();
         updateLocation(
-            new LocationDataSource.Location(mCurrentLocation, 1.0, 1.0, 10.0, 0.0, false, Calendar.getInstance()));
+            new LocationDataSource.Location(mCurrentLocation));
+
+        SimpleMarkerSymbol simpleMarkerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10);
+        GraphicsOverlay graphicsOverlay = new GraphicsOverlay(GraphicsOverlay.RenderingMode.DYNAMIC);
+        mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
         mTimer = new Timer("RouteLocationDataSource Timer", false);
         mTimer.scheduleAtFixedRate(new TimerTask() {
@@ -279,16 +287,9 @@ public class MainActivity extends AppCompatActivity {
             mCurrentLocation = GeometryEngine.createPointAlong(mRoute, distance);
             updateLocation(new Location(mCurrentLocation));
 
-            if (mMapView.getLocationDisplay().isStarted()) {
-              Log.d(TAG, "loc display started");
-            } else {
-              Log.d(TAG, "loc display not started");
-            }
-
-
-            Log.d(TAG,  "Distance: " + distance);
-
-            Log.d(TAG, "Current location: " + mCurrentLocation.getX() +", " + mCurrentLocation.getY());
+            Graphic graphic = new Graphic(mCurrentLocation, simpleMarkerSymbol);
+            graphicsOverlay.getGraphics().clear();
+            graphicsOverlay.getGraphics().add(graphic);
 
             distance += distanceInterval;
 
@@ -298,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
               stop();
             }
           }
-        }, 3000, 1000);
+        }, 0, 1000);
       });
     }
   }
