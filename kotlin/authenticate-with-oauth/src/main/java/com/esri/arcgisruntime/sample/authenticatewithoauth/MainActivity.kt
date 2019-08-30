@@ -51,7 +51,7 @@ import java.util.concurrent.CountDownLatch
  * Authentication Challenges themselves compared to the DefaultAuthenticationChallengeHandler
  * http://android.esri.com:8080/docs/arcgis-android/publicAPIRelease/WebJavadoc/com/esri/arcgisruntime/security/DefaultAuthenticationChallengeHandler.html
  * where the ArcGISRuntime handles prompting of the Authentication Challenges.
- * 
+ *
  * This sample utilizes the system installed web browser to prompt the user with an OAUTH_CREDENTIAL_CHALLENGE
  * http://android.esri.com:8080/docs/arcgis-android/publicAPIRelease/WebJavadoc/com/esri/arcgisruntime/security/AuthenticationChallenge.Type.html#OAUTH_CREDENTIAL_CHALLENGE,
  * and includes use of the WebView as a fallback mechanism if the user does not have a web browser
