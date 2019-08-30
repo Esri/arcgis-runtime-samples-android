@@ -18,7 +18,7 @@ Your app may need to access items that are only shared with authorized users. Fo
 
 ## How it works
 1. When the app loads, a web map containing premium content (world traffic service) is attempted to be loaded in the map view.
-1. In response to the attempt to access secured content, the `AuthenticationManager` shows an OAuth authentication dialog from ArcGIS Online.
+1. In response to the attempt to access secured content, an OAUTH_CREDENTIAL_CHALLENGE is issued and it is handled in the handleChallenge() by opening the OAuth authentication page from ArcGIS Online in the web browser installed on the device or in the web view (in the absence of the web browser).
 1. If the user authenticates successfully, the private layers will display in the map.
 
 ## WebView

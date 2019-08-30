@@ -45,7 +45,20 @@ import java.util.concurrent.CountDownLatch
 /**
  * This sample demonstrates how to authenticate with ArcGIS Online (or your own portal) using OAuth2 to access secured
  * resources (such as private web maps or layers). Accessing secured items requires a login on the portal that hosts them
- * (an ArcGIS Online account, for example). This sample utilizes Android WebView to show the OAuth sign-in page in a dialog.
+ * (an ArcGIS Online account, for example).
+ *
+ * This sample utilizes custom AuthenticationChallengeHandler where user handles the prompting of
+ * Authentication Challenges themselves compared to the DefaultAuthenticationChallengeHandler
+ * http://android.esri.com:8080/docs/arcgis-android/publicAPIRelease/WebJavadoc/com/esri/arcgisruntime/security/DefaultAuthenticationChallengeHandler.html
+ * where the ArcGISRuntime handles prompting of the Authentication Challenges.
+ * 
+ * This sample utilizes the system installed web browser to prompt the user with an OAUTH_CREDENTIAL_CHALLENGE
+ * http://android.esri.com:8080/docs/arcgis-android/publicAPIRelease/WebJavadoc/com/esri/arcgisruntime/security/AuthenticationChallenge.Type.html#OAUTH_CREDENTIAL_CHALLENGE,
+ * and includes use of the WebView as a fallback mechanism if the user does not have a web browser
+ * installed, only to allow the user to use this sample in all circumstances. We do not recommend
+ * using WebView as part of your OAuth flow as per IETF's recommendations:
+ *
+ * https://tools.ietf.org/html/rfc8252
  */
 class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler {
 
