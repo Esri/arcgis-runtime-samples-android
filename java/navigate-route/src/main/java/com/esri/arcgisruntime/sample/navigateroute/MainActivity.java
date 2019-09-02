@@ -18,9 +18,9 @@ package com.esri.arcgisruntime.sample.navigateroute;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
   private RouteTracker mRouteTracker;
   private Graphic mRouteAheadGraphic;
   private Graphic mRouteTraveledGraphic;
+  private Button mRecenterButton;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
     // create a map and set it to the map view
-    ArcGISMap map = new ArcGISMap(Basemap.createLightGrayCanvas());
+    ArcGISMap map = new ArcGISMap(Basemap.createStreetsVector());
     mMapView.setMap(map);
 
     // create a graphics overlay to hold our route graphics
@@ -84,24 +85,10 @@ public class MainActivity extends AppCompatActivity {
     // initialize text-to-speech to replay navigation voice guidance
     mTextToSpeech = new TextToSpeech(this, status -> {
       if (status != TextToSpeech.ERROR) {
-        mTextToSpeech.setLanguage(Locale.UK);
+        mTextToSpeech.setLanguage(Resources.getSystem().getConfiguration().locale);
         mIsTextToSpeechInitialized = true;
       }
     });
-
-    createRoute();
-
-    Button resetButton = findViewById(R.id.resetButton);
-    resetButton.setOnClickListener(v -> {
-      // if there's already a simulated location data source, stop it
-      if (mSimulatedLocationDataSource != null) {
-        mSimulatedLocationDataSource.onStop();
-      }
-      createRoute();
-    });
-  }
-
-  private void createRoute() {
 
     // clear any graphics from the current graphics overlay
     mMapView.getGraphicsOverlays().get(0).getGraphics().clear();
@@ -136,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
             Button navigateRouteButton = findViewById(R.id.navigateRouteButton);
             navigateRouteButton.setOnClickListener(v -> startNavigation(routeTask, routeParameters, routeResult));
 
+            // start navigating
+            startNavigation(routeTask, routeParameters, routeResult);
+
           } catch (ExecutionException | InterruptedException e) {
             String error = "Error creating default route parameters: " + e.getMessage();
             Toast.makeText(this, error, Toast.LENGTH_LONG).show();
@@ -147,6 +137,14 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
+    });
+
+    // wire up recenter button
+    mRecenterButton = findViewById(R.id.recenterButton);
+    mRecenterButton.setEnabled(false);
+    mRecenterButton.setOnClickListener(v -> {
+      mMapView.getLocationDisplay().setAutoPanMode(LocationDisplay.AutoPanMode.NAVIGATION);
+      mRecenterButton.setEnabled(false);
     });
   }
 
@@ -170,9 +168,11 @@ public class MainActivity extends AppCompatActivity {
     LocationDisplay locationDisplay = mMapView.getLocationDisplay();
     // set up a simulated location data source which simulates movement along the route
     mSimulatedLocationDataSource = new SimulatedLocationDataSource(routeGeometry);
-    // set it the simulated location data source as the location data source for this app
+    // set the simulated location data source as the location data source for this app
     locationDisplay.setLocationDataSource(mSimulatedLocationDataSource);
     locationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.NAVIGATION);
+    // if the user navigates the map view away from the location display, activate the recenter button
+    locationDisplay.addAutoPanModeChangedListener(autoPanModeChangedEvent -> mRecenterButton.setEnabled(true));
     // set up a RouteTracker for navigation along the calculated route
     mRouteTracker = new RouteTracker(getApplicationContext(), routeResult, 0);
     mRouteTracker.enableReroutingAsync(routeTask, routeParameters,
@@ -191,8 +191,7 @@ public class MainActivity extends AppCompatActivity {
         mRouteTracker.addNewVoiceGuidanceListener(newVoiceGuidanceEvent -> {
           // use Android's text to speech to speak the voice guidance
           speakVoiceGuidance(newVoiceGuidanceEvent.getVoiceGuidance().getText());
-          nextDirectionTextView
-              .setText(getString(R.string.next_direction, newVoiceGuidanceEvent.getVoiceGuidance().getText()));
+          nextDirectionTextView.setText(getString(R.string.next_direction, newVoiceGuidanceEvent.getVoiceGuidance().getText()));
         });
 
         // get the route's tracking status
@@ -241,16 +240,12 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Creates a list of stops along a route.
    */
-  private List<Stop> getStops() {
+  private static List<Stop> getStops() {
     List<Stop> stops = new ArrayList<>(2);
-
-    Stop oldPointLomaLighthouse = new Stop(
-        new Point(-117.160386727066026, 32.706608204740171, SpatialReferences.getWgs84()));
-    Stop plazaDePanama = new Stop(
-        new Point(-117.147230, 32.730467, SpatialReferences.getWgs84()));
-
-    stops.add(oldPointLomaLighthouse);
-    stops.add(plazaDePanama);
+    Stop sanDiegoConventionCenter = new Stop(new Point(-117.160386, 32.706608, SpatialReferences.getWgs84()));
+    Stop sanDeigoAreAndSpaceMuseum = new Stop(new Point(-117.147230, 32.730467, SpatialReferences.getWgs84()));
+    stops.add(sanDiegoConventionCenter);
+    stops.add(sanDeigoAreAndSpaceMuseum);
 
     return stops;
   }

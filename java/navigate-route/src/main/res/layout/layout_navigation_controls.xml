@@ -10,16 +10,16 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Navigate Route"
+        android:text="@string/navigate_route"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/resetButton"
+        android:id="@+id/recenterButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="Reset"
+        android:text="@string/recenter"
         app:layout_constraintTop_toBottomOf="@+id/navigateRouteButton"
         app:layout_constraintStart_toStartOf="@+id/navigateRouteButton"
         app:layout_constraintEnd_toEndOf="@+id/navigateRouteButton"
@@ -27,43 +27,35 @@
 
     <TextView
         android:id="@+id/distanceRemainingTextView"
-        android:layout_width="0dp"
+        android:layout_width="247dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Distance remaining: 4 Kilometers"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toTopOf="@+id/navigateRouteButton"
         app:layout_constraintStart_toEndOf="@+id/navigateRouteButton"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintBottom_toTopOf="@+id/timeRemainingTextView" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/timeRemainingTextView"
-        android:layout_width="0dp"
+        android:layout_width="247dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Time remaining: 00:06:18"
         app:layout_constraintTop_toBottomOf="@+id/distanceRemainingTextView"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/navigateRouteButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintBottom_toTopOf="@+id/nextDirectionTextView" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/nextDirectionTextView"
-        android:layout_width="0dp"
+        android:layout_width="247dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Next direction:"
         app:layout_constraintTop_toBottomOf="@+id/timeRemainingTextView"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/navigateRouteButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

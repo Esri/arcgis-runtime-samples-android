@@ -38,12 +38,12 @@ import com.esri.arcgisruntime.location.LocationDataSource;
 class SimulatedLocationDataSource extends LocationDataSource {
 
   private Point mCurrentLocation;
-  private Polyline mRoute;
+  private final Polyline mRoute;
 
   private Timer mTimer;
 
   private double distance = 0.0;
-  private double distanceInterval = .00025;
+  private static final double distanceInterval = .00025;
 
   SimulatedLocationDataSource(Polyline route) {
     mRoute = route;
@@ -72,9 +72,11 @@ class SimulatedLocationDataSource extends LocationDataSource {
         GeodeticDistanceResult distanceResult = GeometryEngine.distanceGeodetic(previousPoint, mCurrentLocation,
             new LinearUnit(LinearUnitId.METERS), new AngularUnit(AngularUnitId.DEGREES), GeodeticCurveType.GEODESIC);
         // update the location with the current location and use the geodetic distance result to get the azimuth
-        updateLocation(new Location(mCurrentLocation, 1, 1, distanceResult.getAzimuth1(), false));
+        updateLocation(new LocationDataSource.Location(mCurrentLocation, 1, 1, distanceResult.getAzimuth1(), false));
         // increment the distance
         distance += distanceInterval;
+
+
       }
     }, 0, 1000);
     // this method must be called by the subclass once the location data source has finished its starting process
