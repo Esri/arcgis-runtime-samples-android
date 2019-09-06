@@ -22,6 +22,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,9 +36,7 @@ import android.widget.Toast;
 
 import com.esri.arcgisruntime.ArcGISRuntimeException;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
-import com.esri.arcgisruntime.io.RemoteResource;
 import com.esri.arcgisruntime.loadable.LoadStatus;
-import com.esri.arcgisruntime.loadable.Loadable;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -177,9 +176,9 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
         mPortalLoadStateView.setVisibility(View.GONE);
         // report error
         ArcGISRuntimeException loadError = portal.getLoadError();
-        String error = loadError.getErrorCode() == 17 ?
-            "Portal sign in was cancelled by user." :
-            "Portal sign in failed: " + portal.getLoadError().getCause().getMessage();
+        String error = "Portal sign in failed: " + loadError.getCause() == null ?
+            loadError.getMessage() :
+            loadError.getCause().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
@@ -229,14 +228,6 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
             authenticationChallenge);
       }
 
-      int maxAttempts = 5;
-      if (authenticationChallenge.getFailureCount() > maxAttempts) {
-        // exceeded maximum amount of attempts. Act like it was a cancel
-        Toast.makeText(this, "Exceeded maximum amount of attempts. Please try again!", Toast.LENGTH_LONG).show();
-        return new AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL,
-            authenticationChallenge);
-      }
-
       // inflate and create the credential dialog
       View dialogView = getLayoutInflater().inflate(R.layout.credential_dialog, null);
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -257,12 +248,16 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
           }
           signal.countDown();
         }).setNegativeButton("Cancel", (dialog, which) -> {
-          // user cancelled the sign in process
-          RemoteResource remoteResource = authenticationChallenge.getRemoteResource();
-          if (remoteResource instanceof Loadable) {
-            ((Loadable) remoteResource).cancelLoad();
-          }
+          // user cancelled the sign in process. Reset credential to null
+          mUserCredential = null;
           signal.countDown();
+        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+          @Override
+          public void onCancel(DialogInterface dialog) {
+            // act like it was a cancel. Reset credential to null
+            mUserCredential = null;
+            signal.countDown();  
+          }
         }).setView(dialogView);
         AlertDialog credentialDialog = builder.create();
         credentialDialog.setCanceledOnTouchOutside(false);
@@ -278,7 +273,9 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
         signal.await();
       } catch (InterruptedException e) {
         String error = "Interruption handling AuthenticationChallengeResponse: " + e.getMessage();
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        runOnUiThread(() -> {
+          Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        });
         Log.e(TAG, error);
       }
 
