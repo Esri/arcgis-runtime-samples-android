@@ -22,14 +22,6 @@ android {
 dependencies {
     // arcgis-android & appcompat lib dependencies from rootProject build.gradle
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    implementation "com.esri.arcgisruntime:arcgis-android-toolkit:$arcgisVersion"
     implementation "com.android.support:appcompat-v7:$andSupportLibVersion"
-    implementation "com.android.support:multidex:1.0.3"
-    implementation "com.esri.arcgisruntime:arcgis-android:$arcgisVersion"
-    implementation "android.arch.lifecycle:runtime:1.1.1"
-    api "android.arch.lifecycle:common-java8:1.1.1"
-    api "com.google.ar.sceneform.ux:sceneform-ux:1.11.0"
-    api "com.google.ar.sceneform:core:1.11.0"
-    implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
 }
