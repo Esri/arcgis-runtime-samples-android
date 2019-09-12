@@ -1,4 +1,4 @@
-include ':add-enc-exchange-set',
+include ':add-enc-exchange-set', ':explore-scenes-in-ar',
         ':add-features-feature-service',
         ':add-graphics-renderer',
         ':add-graphics-symbols',
