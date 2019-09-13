@@ -31,6 +31,8 @@ import com.esri.arcgisruntime.mapping.NavigationConstraint;
 import com.esri.arcgisruntime.mapping.view.AtmosphereEffect;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SpaceEffect;
+import com.esri.arcgisruntime.portal.Portal;
+import com.esri.arcgisruntime.portal.PortalItem;
 import com.esri.arcgisruntime.toolkit.ar.ArcGISArView;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,11 +54,14 @@ public class MainActivity extends AppCompatActivity {
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
 
     // create an integrated mesh layer
-    IntegratedMeshLayer integratedMeshLayer = new IntegratedMeshLayer("https://www.arcgis.com/home/item.html?id=d4fb271d1cb747e696bb80adca8487fa");
+    Portal portal = new Portal(getString(R.string.arcgis_portal_url));
+    PortalItem portalItem = new PortalItem(portal, getString(R.string.vricon_integrated_mesh_layer_url));
+    IntegratedMeshLayer integratedMeshLayer = new IntegratedMeshLayer(portalItem);
     scene.getOperationalLayers().add(integratedMeshLayer);
 
     // create an elevation source and add it to the scene
-    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource("https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer");
+    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
+        getString(R.string.world_terrain_service_url));
     scene.getBaseSurface().getElevationSources().add(elevationSource);
     scene.getBaseSurface().setNavigationConstraint(NavigationConstraint.NONE);
 
@@ -70,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         Camera camera = new Camera(envelope.getCenter().getY(), envelope.getCenter().getX(), 250, 0, 90, 0);
         mArView.setOriginCamera(camera);
       } else {
-        String error = "Error loading integrated mesh layer: " + integratedMeshLayer.getLoadError().getMessage();
+        String error = getString(R.string.error_loading_integrated_mesh_layer) + integratedMeshLayer.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
