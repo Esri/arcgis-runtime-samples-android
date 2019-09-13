@@ -63,7 +63,6 @@ class SimulatedLocationDataSource extends LocationDataSource {
     mTimer = new Timer("SimulatedLocationDataSource Timer", false);
     mTimer.scheduleAtFixedRate(new TimerTask() {
       @Override public void run() {
-
         // get a reference to the previous point
         Point previousPoint = mCurrentLocation;
         // update current location by moving [distanceInterval] meters along the route
@@ -75,8 +74,6 @@ class SimulatedLocationDataSource extends LocationDataSource {
         updateLocation(new LocationDataSource.Location(mCurrentLocation, 1, 1, distanceResult.getAzimuth1(), false));
         // increment the distance
         distance += distanceInterval;
-
-
       }
     }, 0, 1000);
     // this method must be called by the subclass once the location data source has finished its starting process

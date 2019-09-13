@@ -6,7 +6,7 @@ Use a routing service to navigate between two points.
 
 ## Use case
 
-Navigation is often used by field workers while traveling between two points to get live directions based on their location.
+Navigation is often used by field workers while traveling between points to get live directions based on their location.
 
 ## How to use the sample
 
@@ -42,8 +42,16 @@ Click 'Navigate Route' to simulate travelling and to receive directions from a p
 
 ## About the data
 
-The route taken in this sample goes from the San Diego Convention Center, site of the annual Esri User Conference, to the Fleet Science Center, San Diego.
+The route taken in this sample interacts with three locations:
+- Starts at the San Diego Convention Center, site of the annual Esri User Conference
+- Stops at the USS San Diego Memorial
+- Ends at the Fleet Science Center, San Diego.
 
 ## Tags
-
-directions, maneuver, navigation, route, turn-by-turn, voice
+Routing and logistics
+directions
+maneuver
+navigation
+route
+turn-by-turn
+voice

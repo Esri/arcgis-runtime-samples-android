@@ -99,21 +99,21 @@ public class MainActivity extends AppCompatActivity {
     routeParametersFuture.addDoneListener(() -> {
 
       try {
+        // define the route parameters
         RouteParameters routeParameters = routeParametersFuture.get();
-
         routeParameters.setStops(getStops());
         routeParameters.setReturnDirections(true);
         routeParameters.setReturnStops(true);
+        routeParameters.setReturnRoutes(true);
         ListenableFuture<RouteResult> routeResultFuture = routeTask.solveRouteAsync(routeParameters);
         routeParametersFuture.addDoneListener(() -> {
-          // get the route result
           try {
+            // get the route geometry from the route result
             RouteResult routeResult = routeResultFuture.get();
-
-            // get the route geometry
             Polyline routeGeometry = routeResult.getRoutes().get(0).getRouteGeometry();
             // create a graphic for the route geometry
-            Graphic routeGraphic = new Graphic(routeGeometry, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f));
+            Graphic routeGraphic = new Graphic(routeGeometry,
+                new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f));
             // add it to the graphics overlay
             mMapView.getGraphicsOverlays().get(0).getGraphics().add(routeGraphic);
             // set the map view view point to show the whole route
@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
 
             // start navigating
             startNavigation(routeTask, routeParameters, routeResult);
-
           } catch (ExecutionException | InterruptedException e) {
             String error = "Error creating default route parameters: " + e.getMessage();
             Toast.makeText(this, error, Toast.LENGTH_LONG).show();
@@ -191,7 +190,8 @@ public class MainActivity extends AppCompatActivity {
         mRouteTracker.addNewVoiceGuidanceListener(newVoiceGuidanceEvent -> {
           // use Android's text to speech to speak the voice guidance
           speakVoiceGuidance(newVoiceGuidanceEvent.getVoiceGuidance().getText());
-          nextDirectionTextView.setText(getString(R.string.next_direction, newVoiceGuidanceEvent.getVoiceGuidance().getText()));
+          nextDirectionTextView
+              .setText(getString(R.string.next_direction, newVoiceGuidanceEvent.getVoiceGuidance().getText()));
         });
 
         // get the route's tracking status
@@ -204,24 +204,30 @@ public class MainActivity extends AppCompatActivity {
         TrackingStatus.Distance remainingDistance = trackingStatus.getDestinationProgress()
             .getRemainingDistance();
         // covert remaining minutes to hours:minutes:seconds
-        String remainingTimeString = DateUtils.formatElapsedTime((long) (trackingStatus.getDestinationProgress().getRemainingTime() * 60));
+        String remainingTimeString = DateUtils
+            .formatElapsedTime((long) (trackingStatus.getDestinationProgress().getRemainingTime() * 60));
 
         // update text views
         distanceRemainingTextView.setText(getString(R.string.distance_remaining, remainingDistance.getDisplayText(),
             remainingDistance.getDisplayTextUnits().getPluralDisplayName()));
         timeRemainingTextView.setText(getString(R.string.time_remaining, remainingTimeString));
 
-        // once the destination is reached
+        // if a destination has been reached
         if (trackingStatus.getDestinationStatus() == DestinationStatus.REACHED) {
-          // stop the simulated location data source
-          mSimulatedLocationDataSource.onStop();
+          // if there are still more destinations to visit
+          if (mRouteTracker.getTrackingStatus().getRemainingDestinationCount() > 0) {
+            // switch to the next destination
+            mRouteTracker.switchToNextDestinationAsync();
+          } else {
+            // the final destination has been reached, stop the simulated location data source
+            mSimulatedLocationDataSource.onStop();
+          }
         }
       });
     });
 
     // start the LocationDisplay, which starts the SimulatedLocationDataSource
     locationDisplay.startAsync();
-
   }
 
   /**
@@ -241,12 +247,16 @@ public class MainActivity extends AppCompatActivity {
    * Creates a list of stops along a route.
    */
   private static List<Stop> getStops() {
-    List<Stop> stops = new ArrayList<>(2);
-    Stop sanDiegoConventionCenter = new Stop(new Point(-117.160386, 32.706608, SpatialReferences.getWgs84()));
-    Stop sanDeigoAreAndSpaceMuseum = new Stop(new Point(-117.147230, 32.730467, SpatialReferences.getWgs84()));
-    stops.add(sanDiegoConventionCenter);
-    stops.add(sanDeigoAreAndSpaceMuseum);
-
+    List<Stop> stops = new ArrayList<>(3);
+    // San Diego Convention Center
+    Stop conventionCenter = new Stop(new Point(-117.160386, 32.706608, SpatialReferences.getWgs84()));
+    stops.add(conventionCenter);
+    // USS San Diego Memorial
+    Stop memorial = new Stop(new Point(-117.173034, 32.712327, SpatialReferences.getWgs84()));
+    stops.add(memorial);
+    // RH Fleet Aerospace Museum
+    Stop aerospaceMuseum = new Stop(new Point(-117.147230, 32.730467, SpatialReferences.getWgs84()));
+    stops.add(aerospaceMuseum);
     return stops;
   }
 

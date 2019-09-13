@@ -10,8 +10,8 @@
         "Manoeuvre",
         "Navigation",
         "Route",
-	"turn-by-turn",
-	"voice"
+        "turn-by-turn",
+	    "voice"
     ],
     "redirect_from": "",
     "relevant_apis": [
@@ -19,17 +19,17 @@
         "DirectionManeuver",
         "Location",
         "LocationDataSource",
-	"ReroutingStrategy",
-	"Route",
-	"RouteParameters",
-	"RouteTask",
-	"RouteTracker",
-	"Stop",
-	"VoiceGuidance
+	    "ReroutingStrategy",
+	    "Route",
+	    "RouteParameters",
+	    "RouteTask",
+	    "RouteTracker",
+	    "Stop",
+	    "VoiceGuidance"
     ],
     "snippets": [
-	"src/main/java/com/esri/arcgisruntime/sample/navigateroute/MainActivity.java",
-	"src/main/java/com/esri/arcgisruntime/sample/navigateroute/SimulatedLocationDataSource.java"
+	    "src/main/java/com/esri/arcgisruntime/sample/navigateroute/MainActivity.java",
+	    "src/main/java/com/esri/arcgisruntime/sample/navigateroute/SimulatedLocationDataSource.java"
     ],
     "title": "Navigate route"
 }
