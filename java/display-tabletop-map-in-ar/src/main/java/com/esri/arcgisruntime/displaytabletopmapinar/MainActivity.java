@@ -72,48 +72,47 @@ public class MainActivity extends AppCompatActivity {
     mArView = findViewById(R.id.arView);
     mArView.registerLifecycle(getLifecycle());
 
-    // show planes identified by ArCore
-    mArView.getArSceneView().getPlaneRenderer().setEnabled(true);
-    mArView.getArSceneView().getPlaneRenderer().setVisible(true);
-
     // show simple instructions to the user. Refer to the README for more details
     Toast.makeText(this,
         "Move the camera back and forth over a plane. When a plane is detected, tap on the plane to place a scene",
         Toast.LENGTH_LONG).show();
 
     // on tap
-    mArView.getSceneView().setOnTouchListener(new DefaultSceneViewOnTouchListener(mArView.getSceneView()) {
-      @Override public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-        // get the hit results for the tap
-        List<HitResult> hitResults = mArView.getArSceneView().getArFrame().hitTest(motionEvent);
-        // check if the tapped point is recognized as a plane by ArCore
-        if (!hitResults.isEmpty() && hitResults.get(0).getTrackable() instanceof Plane) {
-          // get a reference to the tapped plane
-          Plane plane = (Plane) hitResults.get(0).getTrackable();
-          Toast.makeText(MainActivity.this, "Plane detected with a width of: " + plane.getExtentX(), Toast.LENGTH_SHORT)
-              .show();
+    mArView.getSceneView()
+        .setOnTouchListener(new DefaultSceneViewOnTouchListener(mArView.getSceneView()) {
+          @Override public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+            // get the hit results for the tap
+            List<HitResult> hitResults = mArView.getArSceneView().getArFrame().hitTest(motionEvent);
+            // check if the tapped point is recognized as a plane by ArCore
+            if (!hitResults.isEmpty() && hitResults.get(0).getTrackable() instanceof Plane) {
+              // get a reference to the tapped plane
+              Plane plane = (Plane) hitResults.get(0).getTrackable();
+              Toast.makeText(MainActivity.this,
+                  "Plane detected with a width of: " + plane.getExtentX(), Toast.LENGTH_SHORT)
+                  .show();
 
-          // get the tapped point as a graphics point
-          android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
-              Math.round(motionEvent.getY()));
-          // if initial transformation set correctly
-          if (mArView.setInitialTransformationMatrix(screenPoint)) {
-            // the scene hasn't been configured
-            if (!mHasConfiguredScene) {
-              loadSceneFromPackage(plane);
-            } else if (mArView.getSceneView().getScene() != null) {
-              // use information from the scene to determine the origin camera and translation factor
-              updateTranslationFactorAndOriginCamera(mArView.getSceneView().getScene(), plane);
+              // get the tapped point as a graphics point
+              android.graphics.Point screenPoint = new android.graphics.Point(
+                  Math.round(motionEvent.getX()),
+                  Math.round(motionEvent.getY()));
+              // if initial transformation set correctly
+              if (mArView.setInitialTransformationMatrix(screenPoint)) {
+                // the scene hasn't been configured
+                if (!mHasConfiguredScene) {
+                  loadSceneFromPackage(plane);
+                } else if (mArView.getSceneView().getScene() != null) {
+                  // use information from the scene to determine the origin camera and translation factor
+                  updateTranslationFactorAndOriginCamera(mArView.getSceneView().getScene(), plane);
+                }
+              }
+            } else {
+              String error = "ArCore doesn't recognize this point as a plane.";
+              Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
+              Log.e(TAG, error);
             }
+            return super.onSingleTapConfirmed(motionEvent);
           }
-        } else {
-          String error = "ArCore doesn't recognize this point as a plane.";
-          Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
-          Log.e(TAG, error);
-        }
-        return super.onSingleTapConfirmed(motionEvent);
-      }
-    });
+        });
   }
 
   /**
@@ -126,12 +125,14 @@ public class MainActivity extends AppCompatActivity {
   private void loadSceneFromPackage(Plane plane) {
     // create a mobile scene package from a path a local .mspk
     MobileScenePackage mobileScenePackage = new MobileScenePackage(
-        Environment.getExternalStorageDirectory() + getString(R.string.philadelphia_mobile_scene_package_path));
+        Environment.getExternalStorageDirectory() + getString(
+            R.string.philadelphia_mobile_scene_package_path));
     // load the mobile scene package
     mobileScenePackage.loadAsync();
     mobileScenePackage.addDoneLoadingListener(() -> {
       // if it loaded successfully and the mobile scene package contains a scene
-      if (mobileScenePackage.getLoadStatus() == LoadStatus.LOADED && !mobileScenePackage.getScenes().isEmpty()) {
+      if (mobileScenePackage.getLoadStatus() == LoadStatus.LOADED && !mobileScenePackage.getScenes()
+          .isEmpty()) {
         // get a reference to the first scene in the mobile scene package, which is of a section of philadelphia
         ArcGISScene philadelphiaScene = mobileScenePackage.getScenes().get(0);
         // add the scene to the AR view's scene view
@@ -147,7 +148,8 @@ public class MainActivity extends AppCompatActivity {
         updateTranslationFactorAndOriginCamera(philadelphiaScene, plane);
 
       } else {
-        String error = "Failed to load mobile scene package: " + mobileScenePackage.getLoadError().getMessage();
+        String error = "Failed to load mobile scene package: " + mobileScenePackage.getLoadError()
+            .getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
@@ -171,7 +173,8 @@ public class MainActivity extends AppCompatActivity {
       Envelope layerExtent = scene.getOperationalLayers().get(0).getFullExtent();
       // calculate the width of the layer content in meters
       double width = GeometryEngine
-          .lengthGeodetic(layerExtent, new LinearUnit(LinearUnitId.METERS), GeodeticCurveType.GEODESIC);
+          .lengthGeodetic(layerExtent, new LinearUnit(LinearUnitId.METERS),
+              GeodeticCurveType.GEODESIC);
 
       // set the translation factor based on scene content width and desired physical size
       mArView.setTranslationFactor(width / plane.getExtentX());
@@ -186,7 +189,8 @@ public class MainActivity extends AppCompatActivity {
         try {
           double elevation = elevationFuture.get();
           // create a new origin camera looking at the bottom center of the scene
-          mArView.setOriginCamera(new Camera(new Point(centerPoint.getX(), centerPoint.getY(), elevation), 0, 90, 0));
+          mArView.setOriginCamera(
+              new Camera(new Point(centerPoint.getX(), centerPoint.getY(), elevation), 0, 90, 0));
         } catch (Exception e) {
           Log.e(TAG, "Error getting elevation at point: " + e.getMessage());
         }
@@ -199,9 +203,11 @@ public class MainActivity extends AppCompatActivity {
    */
   private void requestPermissions() {
     // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA };
+    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.CAMERA };
     int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+    if (ContextCompat.checkSelfPermission(this, reqPermission[0])
+        == PackageManager.PERMISSION_GRANTED) {
       setupArView();
     } else {
       // request permission
@@ -213,31 +219,28 @@ public class MainActivity extends AppCompatActivity {
    * Handle the permissions request response.
    */
   @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       setupArView();
     } else {
       // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.tabletop_map_permission_denied), Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, getString(R.string.tabletop_map_permission_denied), Toast.LENGTH_SHORT)
+          .show();
     }
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
   @Override
   protected void onPause() {
-    mArView.getSceneView().pause();
+    mArView.stopTracking();
     super.onPause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    mArView.getSceneView().resume();
+    mArView.startTracking(ArcGISArView.ARLocationTrackingMode.IGNORE);
   }
 
-  @Override
-  protected void onDestroy() {
-    mArView.getSceneView().dispose();
-    super.onDestroy();
-  }
 }
