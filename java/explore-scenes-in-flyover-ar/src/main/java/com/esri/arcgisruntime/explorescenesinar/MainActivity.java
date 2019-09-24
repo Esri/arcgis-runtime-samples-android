@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
     // create an integrated mesh layer
     Portal portal = new Portal(getString(R.string.arcgis_portal_url));
-    PortalItem portalItem = new PortalItem(portal, getString(R.string.vricon_integrated_mesh_layer_url));
+    PortalItem portalItem = new PortalItem(portal,
+        getString(R.string.vricon_integrated_mesh_layer_url));
     IntegratedMeshLayer integratedMeshLayer = new IntegratedMeshLayer(portalItem);
     scene.getOperationalLayers().add(integratedMeshLayer);
 
@@ -71,10 +72,12 @@ public class MainActivity extends AppCompatActivity {
     integratedMeshLayer.addDoneLoadingListener(() -> {
       if (integratedMeshLayer.getLoadStatus() == LoadStatus.LOADED) {
         Envelope envelope = integratedMeshLayer.getFullExtent();
-        Camera camera = new Camera(envelope.getCenter().getY(), envelope.getCenter().getX(), 250, 0, 90, 0);
+        Camera camera = new Camera(envelope.getCenter().getY(), envelope.getCenter().getX(), 250, 0,
+            90, 0);
         mArView.setOriginCamera(camera);
       } else {
-        String error = getString(R.string.error_loading_integrated_mesh_layer) + integratedMeshLayer.getLoadError().getMessage();
+        String error = getString(R.string.error_loading_integrated_mesh_layer) + integratedMeshLayer
+            .getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
@@ -82,27 +85,18 @@ public class MainActivity extends AppCompatActivity {
 
     // set the translation factor to enable rapid movement through the scene
     mArView.setTranslationFactor(1000);
-
-    // turn the space and atmosphere effects on for an immersive experience
-    mArView.getSceneView().setSpaceEffect(SpaceEffect.STARS);
-    mArView.getSceneView().setAtmosphereEffect(AtmosphereEffect.REALISTIC);
   }
 
   @Override
   protected void onPause() {
-    mArView.getSceneView().pause();
+    mArView.stopTracking();
     super.onPause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    mArView.getSceneView().resume();
+    mArView.startTracking(ArcGISArView.ARLocationTrackingMode.IGNORE);
   }
 
-  @Override
-  protected void onDestroy() {
-    mArView.getSceneView().dispose();
-    super.onDestroy();
-  }
 }
