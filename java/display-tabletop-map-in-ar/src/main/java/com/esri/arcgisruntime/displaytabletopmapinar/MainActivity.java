@@ -72,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
     mArView = findViewById(R.id.arView);
     mArView.registerLifecycle(getLifecycle());
 
-    // use ArCore and tracking
-    mArView.setTracking(true);
     // show planes identified by ArCore
     mArView.getArSceneView().getPlaneRenderer().setEnabled(true);
     mArView.getArSceneView().getPlaneRenderer().setVisible(true);
