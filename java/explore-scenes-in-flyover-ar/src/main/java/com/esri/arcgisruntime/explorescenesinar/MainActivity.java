@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
     mArView = findViewById(R.id.arView);
     mArView.registerLifecycle(getLifecycle());
-    mArView.setTracking(true);
 
     // create scene with imagery basemap
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
