@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.esri.arcgisruntime.explorescenesinar;
+package com.esri.arcgisruntime.sample.explorescenesinflyoverar;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -28,9 +28,7 @@ import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.NavigationConstraint;
-import com.esri.arcgisruntime.mapping.view.AtmosphereEffect;
 import com.esri.arcgisruntime.mapping.view.Camera;
-import com.esri.arcgisruntime.mapping.view.SpaceEffect;
 import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.portal.PortalItem;
 import com.esri.arcgisruntime.toolkit.ar.ArcGISArView;
@@ -54,8 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create an integrated mesh layer
     Portal portal = new Portal(getString(R.string.arcgis_portal_url));
-    PortalItem portalItem = new PortalItem(portal,
-        getString(R.string.vricon_integrated_mesh_layer_url));
+    PortalItem portalItem = new PortalItem(portal, getString(R.string.vricon_integrated_mesh_layer_url));
     IntegratedMeshLayer integratedMeshLayer = new IntegratedMeshLayer(portalItem);
     scene.getOperationalLayers().add(integratedMeshLayer);
 
@@ -72,12 +69,11 @@ public class MainActivity extends AppCompatActivity {
     integratedMeshLayer.addDoneLoadingListener(() -> {
       if (integratedMeshLayer.getLoadStatus() == LoadStatus.LOADED) {
         Envelope envelope = integratedMeshLayer.getFullExtent();
-        Camera camera = new Camera(envelope.getCenter().getY(), envelope.getCenter().getX(), 250, 0,
-            90, 0);
+        Camera camera = new Camera(envelope.getCenter().getY(), envelope.getCenter().getX(), 250, 0, 90, 0);
         mArView.setOriginCamera(camera);
       } else {
-        String error = getString(R.string.error_loading_integrated_mesh_layer) + integratedMeshLayer
-            .getLoadError().getMessage();
+        String error =
+            getString(R.string.error_loading_integrated_mesh_layer) + integratedMeshLayer.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
@@ -98,5 +94,4 @@ public class MainActivity extends AppCompatActivity {
     super.onResume();
     mArView.startTracking(ArcGISArView.ARLocationTrackingMode.IGNORE);
   }
-
 }
