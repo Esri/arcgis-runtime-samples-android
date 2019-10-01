@@ -74,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
     mUpdateSizeTextView = findViewById(R.id.updateSizeTextView);
     mApplyScheduledUpdatesButton = findViewById(R.id.applyScheduledUpdatesButton);
 
+    requestReadPermission();
+  }
+
+  private void applyScheduledUpdate() {
+
     // this is the original mmpk, not updated by the scheduled update
     File originalMmpk = new File(Environment.getExternalStorageDirectory() + getString(R.string.canyonlands_mmpk_path));
     // copy of the mmpk file which will have the update applied to it
@@ -85,11 +90,6 @@ public class MainActivity extends AppCompatActivity {
     } catch (IOException e) {
       Log.e(TAG, "Error copying MMPK file: " + e.getMessage());
     }
-
-    requestReadPermission();
-  }
-
-  private void applyScheduledUpdate() {
 
     // load the offline map as a mobile map package
     MobileMapPackage mobileMapPackage = new MobileMapPackage(mCopyOfMmpk.getPath());
@@ -130,8 +130,6 @@ public class MainActivity extends AppCompatActivity {
                     // set the parameters to download all updates for the mobile map packages
                     offlineMapSyncParameters
                         .setPreplannedScheduledUpdatesOption(PreplannedScheduledUpdatesOption.DOWNLOAD_ALL_UPDATES);
-                    // set the map package to rollback to the old state should the sync job fail
-                    offlineMapSyncParameters.setRollbackOnFailure(true);
                     // create a sync job using the parameters
                     OfflineMapSyncJob offlineMapSyncJob = offlineMapSyncTask.syncOfflineMap(offlineMapSyncParameters);
                     // start the job and get the results
@@ -139,15 +137,21 @@ public class MainActivity extends AppCompatActivity {
                     offlineMapSyncJob.addJobDoneListener(() -> {
                       if (offlineMapSyncJob.getStatus() == Job.Status.SUCCEEDED) {
                         OfflineMapSyncResult offlineMapSyncResult = offlineMapSyncJob.getResult();
-                        // if mobile map package reopen is required, close the existing mobile map package and load it again
+                        // if mobile map package reopen is required
                         if (offlineMapSyncResult.isMobileMapPackageReopenRequired()) {
+                          // release the mobile map package maps from the map view
+                          mMapView.setMap(null);
+                          // close the old mobile map package
                           mobileMapPackage.close();
-                          mobileMapPackage.loadAsync();
-                          mobileMapPackage.addDoneLoadingListener(() -> {
-                            if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED && !mobileMapPackage.getMaps()
-                                .isEmpty()) {
+                          // create a new instance of the now updated mobile map package
+                          MobileMapPackage updatedMobileMapPackage = new MobileMapPackage(mCopyOfMmpk.getPath());
+                          updatedMobileMapPackage.loadAsync();
+                          // wait for the new instance of the mobile map package to load
+                          updatedMobileMapPackage.addDoneLoadingListener(() -> {
+                            if (updatedMobileMapPackage.getLoadStatus() == LoadStatus.LOADED && !updatedMobileMapPackage
+                                .getMaps().isEmpty()) {
                               // add the map from the mobile map package to the map view
-                              mMapView.setMap(mobileMapPackage.getMaps().get(0));
+                              mMapView.setMap(updatedMobileMapPackage.getMaps().get(0));
                             } else {
                               String error =
                                   "Failed to load mobile map package: " + mobileMapPackage.getLoadError().getMessage();
