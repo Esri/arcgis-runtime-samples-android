@@ -15,7 +15,7 @@
         "MobileMapPackage"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/honormmpkexpiration/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/honormobilemappackageexpirationdate/MainActivity.java"
     ],
     "title": "Honor mobile map package expiration date"
 }

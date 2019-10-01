@@ -17,29 +17,16 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorTransparentGray"
+        android:paddingBottom="8dp"
         android:paddingTop="8dp"
         android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textSize="13sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/chronometerView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Chronometer
-        android:id="@+id/chronometerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:background="@color/colorTransparentGray"
-        android:padding="8dp"
-        android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textSize="13sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/mapView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.6" />
 
 </android.support.constraint.ConstraintLayout>
