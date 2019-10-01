@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -36,29 +35,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.location.AndroidLocationDataSource;
-import com.esri.arcgisruntime.location.LocationDataSource;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.NavigationConstraint;
 import com.esri.arcgisruntime.mapping.Surface;
-import com.esri.arcgisruntime.mapping.view.AtmosphereEffect;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.LayerSceneProperties;
 import com.esri.arcgisruntime.mapping.view.SceneView;
-import com.esri.arcgisruntime.mapping.view.SpaceEffect;
 import com.esri.arcgisruntime.navigation.RouteTracker;
 import com.esri.arcgisruntime.symbology.MultilayerPolylineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
 import com.esri.arcgisruntime.symbology.SolidStrokeSymbolLayer;
 import com.esri.arcgisruntime.symbology.StrokeSymbolLayer;
 import com.esri.arcgisruntime.symbology.SymbolLayer;
-import com.esri.arcgisruntime.tasks.networkanalysis.Route;
-import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters;
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult;
-import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask;
 import com.esri.arcgisruntime.toolkit.ar.ArcGISArView;
 import com.esri.arcgisruntime.toolkit.control.JoystickSeekBar;
 
@@ -71,29 +64,20 @@ public class ARNavigateActivity extends AppCompatActivity implements TextToSpeec
   private TextView mHelpLabel;
   private View mCalibrationView;
 
-  // TODO - don't pass data this way.
-  public static RouteResult routeResult;
-  public static RouteParameters routeParameters;
-  public static RouteTask routeTask;
+  public static RouteResult sRouteResult;
 
-  private RouteTracker routeTracker;
-
-  private TextToSpeech textToSpeech;
-
-  private GraphicsOverlay routeOverlay;
-  private ArcGISTiledElevationSource elevationSource;
-  private Surface elevationSurface;
   private ArcGISScene mScene;
 
   // Calibration state fields
   private boolean isCalibrating = false;
   private float altitudeOffsetValue = 0f;
+  private RouteTracker mRouteTracker;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (routeResult.getRoutes().get(0) == null) {
+    if (sRouteResult.getRoutes().get(0) == null) {
       String error = "Route not set before launching activity";
       Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
       Log.e(TAG, error);
@@ -202,8 +186,8 @@ public class ARNavigateActivity extends AppCompatActivity implements TextToSpeec
     sceneView.setScene(mScene);
 
     // Create and add an elevation surface to the scene
-    elevationSource = new ArcGISTiledElevationSource(getString(R.string.elevation_url));
-    elevationSurface = new Surface();
+    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(getString(R.string.elevation_url));
+    Surface elevationSurface = new Surface();
     elevationSurface.getElevationSources().add(elevationSource);
     sceneView.getScene().setBaseSurface(elevationSurface);
 
@@ -214,9 +198,14 @@ public class ARNavigateActivity extends AppCompatActivity implements TextToSpeec
     // Hide the basemap. The image feed provides map context while navigating in AR
     elevationSurface.setOpacity(0f);
 
-    // Create and add a graphics overlay for showing the route line
-    routeOverlay = new GraphicsOverlay();
+    // create and add a graphics overlay for showing the route line
+    GraphicsOverlay routeOverlay = new GraphicsOverlay();
     sceneView.getGraphicsOverlays().add(routeOverlay);
+    Graphic routeGraphic = new Graphic(sRouteResult.getRoutes().get(0).getRouteGeometry());
+    routeOverlay.getGraphics().add(routeGraphic);
+    // display the graphic 3 meters above the ground
+    routeOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
+    routeOverlay.getSceneProperties().setAltitudeOffset(3);
 
     // Create a renderer for the route geometry
     SolidStrokeSymbolLayer strokeSymbolLayer = new SolidStrokeSymbolLayer(1, Color.YELLOW, new LinkedList<>(), StrokeSymbolLayer.LineStyle3D.TUBE);
@@ -227,85 +216,38 @@ public class ARNavigateActivity extends AppCompatActivity implements TextToSpeec
     SimpleRenderer polylineRenderer = new SimpleRenderer(polylineSymbol);
     routeOverlay.setRenderer(polylineRenderer);
 
-    // Create and start a location data source for use with the route tracker
+    // create and start a location data source for use with the route tracker
     AndroidLocationDataSource trackingLocationDataSource = new AndroidLocationDataSource(this);
-    trackingLocationDataSource.addLocationChangedListener(this::HandleUpdatedLocation);
+    trackingLocationDataSource.addLocationChangedListener(locationChangedEvent -> {
+      if (mRouteTracker != null) {
+        // pass new location to the route tracker
+        mRouteTracker.trackLocationAsync(locationChangedEvent.getLocation());
+      }
+    });
     trackingLocationDataSource.startAsync();
-
-    // Turn off the space effect and atmosphere effect rendering
-    sceneView.setSpaceEffect(SpaceEffect.TRANSPARENT);
-    sceneView.setAtmosphereEffect(AtmosphereEffect.NONE);
-
-    // Start displaying the route in AR
-    setRoute(routeResult.getRoutes().get(0));
   }
 
-  private void setRoute(Route inputRoute) {
-    // Clear any existing route lines
-    routeOverlay.getGraphics().clear();
-
-    // Create a graphic for the route geometry
-    Graphic routeGraphic = new Graphic(inputRoute.getRouteGeometry());
-
-    // Add the graphic to the overlay
-    routeOverlay.getGraphics().add(routeGraphic);
-
-    // Display the graphic 3 meters above the ground
-    routeOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
-    routeOverlay.getSceneProperties().setAltitudeOffset(3);
-  }
-
-  private void HandleUpdatedLocation(LocationDataSource.LocationChangedEvent locationEvent) {
-    if (routeTracker != null) {
-      // Pass new location to the route tracker
-      routeTracker.trackLocationAsync(locationEvent.getLocation());
-    }
-  }
 
   private void startTurnByTurn() {
-    routeTracker = new RouteTracker(this, routeResult, 0);
+    mRouteTracker = new RouteTracker(this, sRouteResult, 0);
 
-    textToSpeech = new TextToSpeech(this, this, "com.google.android.tts");
+    TextToSpeech textToSpeech = new TextToSpeech(this, this, "com.google.android.tts");
 
-    routeTracker.addNewVoiceGuidanceListener((RouteTracker.NewVoiceGuidanceEvent newVoiceGuidanceEvent) -> {
+    mRouteTracker.addNewVoiceGuidanceListener((RouteTracker.NewVoiceGuidanceEvent newVoiceGuidanceEvent) -> {
       // Get new guidance
-      String newGuidance = newVoiceGuidanceEvent.getVoiceGuidance().getText();
+      String newGuidanceText = newVoiceGuidanceEvent.getVoiceGuidance().getText();
 
       // Display and then read out the new guidance
-      mHelpLabel.setText(newGuidance);
-      speak(newGuidance);
+      mHelpLabel.setText(newGuidanceText);
+      // read out directions
+      textToSpeech.stop();
+      textToSpeech.speak(newGuidanceText, TextToSpeech.QUEUE_FLUSH, null);
     });
 
-    routeTracker.addTrackingStatusChangedListener((RouteTracker.TrackingStatusChangedEvent trackingStatusChangedEvent) -> {
+    mRouteTracker.addTrackingStatusChangedListener((RouteTracker.TrackingStatusChangedEvent trackingStatusChangedEvent) -> {
       // Display updated guidance
-      mHelpLabel.setText(routeTracker.generateVoiceGuidance().getText());
+      mHelpLabel.setText(mRouteTracker.generateVoiceGuidance().getText());
     });
-
-    // Only configure rerouting if it is supported by the route task
-    if (routeTask.getRouteTaskInfo().isSupportsRerouting()) {
-      // Add listeners for reroute events
-      routeTracker.addRerouteStartedListener((RouteTracker.RerouteStartedEvent rerouteStartedEvent) -> mHelpLabel.setText(R.string.nav_rerouting_helptext));
-
-      routeTracker.addRerouteCompletedListener((RouteTracker.RerouteCompletedEvent rerouteCompletedEvent) -> {
-        // Get the new route
-        Route newRoute = rerouteCompletedEvent.getTrackingStatus().getRouteResult().getRoutes().get(0);
-
-        // If the route is different, use it
-        if (!newRoute.equals(routeResult.getRoutes().get(0))) {
-          setRoute(newRoute);
-        }
-      });
-
-      // Enable rerouting
-      routeTracker.enableReroutingAsync(routeTask, routeParameters, RouteTracker.ReroutingStrategy.TO_NEXT_STOP, true);
-    }
-  }
-
-  @TargetApi(21)
-  private void speak(String utterance) {
-    // Read out directions
-    textToSpeech.stop();
-    textToSpeech.speak(utterance, TextToSpeech.QUEUE_FLUSH, null, null);
   }
 
   /**
@@ -353,4 +295,5 @@ public class ARNavigateActivity extends AppCompatActivity implements TextToSpeec
   public void onInit(int status) {
     // Had to put this here because of the voice guidance text-to-speech
   }
+
 }

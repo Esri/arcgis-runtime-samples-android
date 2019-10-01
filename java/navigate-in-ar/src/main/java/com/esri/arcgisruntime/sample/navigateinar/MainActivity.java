@@ -88,9 +88,8 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.createImagery());
     mMapView.setMap(map);
 
-    // Get references to the views defined in the layout
+    // get references to the views defined in the layout
     mHelpLabel = findViewById(R.id.helpLabel);
-
     mNavigateButton = findViewById(R.id.navigateButton);
 
     // request location permissions before starting
@@ -153,14 +152,15 @@ public class MainActivity extends AppCompatActivity {
     // notify the user to place start point
     mHelpLabel.setText(R.string.place_start_message);
 
-    // on single tap
+    // listen for a single tap
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override
       public boolean onSingleTapConfirmed(MotionEvent e) {
         // if no start point has been defined
         if (mStartPoint == null) {
           // create a start point at the tapped point
-          mStartPoint = MainActivity.this.mMapView.screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
+          mStartPoint = MainActivity.this.mMapView
+              .screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
           Graphic graphic = new Graphic(mStartPoint);
           mStopsOverlay.getGraphics().add(graphic);
           // notify user to place end point
@@ -168,7 +168,8 @@ public class MainActivity extends AppCompatActivity {
           // if no end point has been defined
         } else if (mEndPoint == null) {
           // crate an end point at the tapped point
-          mEndPoint = MainActivity.this.mMapView.screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
+          mEndPoint = MainActivity.this.mMapView
+              .screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
           Graphic graphic = new Graphic(mEndPoint);
           mStopsOverlay.getGraphics().add(graphic);
           // solve the route between the two points
@@ -181,17 +182,13 @@ public class MainActivity extends AppCompatActivity {
 
   private void enableNavigation() {
     mNavigateButton.setOnClickListener(v -> {
-      // TODO - this seems bad, but route doesn't implement serializable so..
-      // I'd just pass the start and end point, but I don't want to have to re-connect to the route service
-      // and re-calculate in the AR activity
-      ARNavigateActivity.routeParameters = mRouteParameters;
-      ARNavigateActivity.routeResult = mRouteResult;
-      ARNavigateActivity.routeTask = mRouteTask;
+      // set the route result in ar navigate activity
+      ARNavigateActivity.sRouteResult = mRouteResult;
 
       // Pass route to activity and navigate
-      Intent myIntent = new Intent(MainActivity.this, ARNavigateActivity.class);
+      Intent intent = new Intent(this, ARNavigateActivity.class);
       Bundle bundle = new Bundle();
-      startActivity(myIntent, bundle);
+      startActivity(intent, bundle);
     });
 
     mNavigateButton.setVisibility(View.VISIBLE);
@@ -213,29 +210,15 @@ public class MainActivity extends AppCompatActivity {
           mRouteParameters.setReturnDirections(true);
           mRouteParameters.setReturnRoutes(true);
 
-          // This sample is intended for navigating while walking only
+          // this sample is intended for navigating while walking only
           List<TravelMode> travelModes = mRouteTask.getRouteTaskInfo().getTravelModes();
           TravelMode walkingMode = travelModes.get(0);
-          // TODO - streams aren't allowed???
-          // TravelMode walkingMode = travelModes.stream().filter(tm -> tm.getName().contains("Walking")).findFirst();
-          for (TravelMode tm : travelModes) {
-            if (tm.getName().contains("Walking")) {
-              walkingMode = tm;
-              break;
-            }
-          }
-
           mRouteParameters.setTravelMode(walkingMode);
 
-          // create stops
-          Stop stop1 = new Stop(mStartPoint);
-          Stop stop2 = new Stop(mEndPoint);
-
-          List<Stop> routeStops = new ArrayList<>();
-
           // add stops
-          routeStops.add(stop1);
-          routeStops.add(stop2);
+          List<Stop> routeStops = new ArrayList<>();
+          routeStops.add(new Stop(mStartPoint));
+          routeStops.add(new Stop(mEndPoint));
           mRouteParameters.setStops(routeStops);
 
           // set return directions as true to return turn-by-turn directions in the result of

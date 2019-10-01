@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.esri.arcgisruntime.navigateinar.ARNavigateActivity">
+    tools:context="com.esri.arcgisruntime.sample.navigateinar.ARNavigateActivity">
 
     <com.esri.arcgisruntime.toolkit.ar.ArcGISArView
         android:layout_width="0dp"
@@ -13,7 +13,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:renderVideoFeed="true">
 
     </com.esri.arcgisruntime.toolkit.ar.ArcGISArView>
 

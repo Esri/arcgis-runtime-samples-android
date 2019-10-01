@@ -1,10 +1,5 @@
 package com.esri.arcgisruntime.sample.navigateinar;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -13,9 +8,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.GpsStatus;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.location.OnNmeaMessageListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +20,11 @@ import android.os.Handler;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.location.LocationDataSource;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import static java.util.Locale.ENGLISH;
 
@@ -417,7 +419,7 @@ public class MSLAdjustedARLocationDataSource extends LocationDataSource {
     public void onAccuracyChanged(Sensor sensor, int accuracy) { }
   }
 
-  private class InternalNmeaListener implements GpsStatus.NmeaListener {
+  private class InternalNmeaListener implements GpsStatus.NmeaListener, OnNmeaMessageListener {
 
     @Override
     public void onNmeaReceived(long timestamp, String nmea) {
@@ -447,6 +449,10 @@ public class MSLAdjustedARLocationDataSource extends LocationDataSource {
           lastNmeaUpdateTimestamp = timestamp;
         }
       }
+    }
+
+    @Override public void onNmeaMessage(String s, long l) {
+
     }
   }
 
@@ -513,4 +519,4 @@ public class MSLAdjustedARLocationDataSource extends LocationDataSource {
   private float toDegrees(float input){
     return input * 180f / (float)Math.PI;
   }
-} 
+}
