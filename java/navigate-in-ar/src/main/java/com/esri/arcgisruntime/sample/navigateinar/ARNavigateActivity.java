@@ -69,31 +69,35 @@ public class ARNavigateActivity extends AppCompatActivity implements TextToSpeec
   private ArcGISScene mScene;
 
   // Calibration state fields
-  private boolean isCalibrating = false;
+  private boolean mIsCalibrating = false;
   private float altitudeOffsetValue = 0f;
   private RouteTracker mRouteTracker;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_ar);
 
+    // ensure at route has been set by the previous activity
     if (sRouteResult.getRoutes().get(0) == null) {
-      String error = "Route not set before launching activity";
+      String error = "Route not set before launching activity!";
       Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
       Log.e(TAG, error);
     }
 
-    setContentView(R.layout.activity_ar);
-
-    // Get references to the views defined in the layout
+    // get references to the views defined in the layout
     mHelpLabel = findViewById(R.id.helpLabel);
     mArView = findViewById(R.id.arView);
-    Button mCalibrationButton = findViewById(R.id.calibrateButton);
-
-    Button mNavigateButton = findViewById(R.id.navigateStartButton);
     mCalibrationView = findViewById(R.id.calibrationView);
     JoystickSeekBar mHeadingSlider = findViewById(R.id.headingJoystick);
     JoystickSeekBar mAltitudeSlider = findViewById(R.id.altitudeJoystick);
+    // show/hide calibration view
+    Button calibrationButton = findViewById(R.id.calibrateButton);
+    calibrationButton.setOnClickListener(v -> toggleCalibration());
+    Button navigateButton = findViewById(R.id.navigateStartButton);
+    // start turn-by-turn when the user is ready
+    navigateButton.setOnClickListener(v -> startTurnByTurn());
+
 
     // Set up a special location data source that provides flexibility for calibration
     //     and provides locations with height above mean sea level, rather than height above ellipsoid.
@@ -109,17 +113,7 @@ public class ARNavigateActivity extends AppCompatActivity implements TextToSpeec
     mArView.getArSceneView().getPlaneRenderer().setEnabled(false);
     mArView.getArSceneView().getPlaneRenderer().setVisible(false);
 
-    mNavigateButton.setOnClickListener(v -> {
-      // Start turn-by-turn when the user is ready
-      startTurnByTurn();
-    });
-
-    // Show/hide calibration view
-    mCalibrationButton.setOnClickListener(v -> setIsCalibrating(!isCalibrating));
-
-    // Begin listening for calibration value changes for heading
-    // This behavior makes larger adjustments the further from the center you move on the slider
-    // The slider automatically snaps to the center (no change) when you stop interacting with it
+    // listen for calibration value changes for heading
     mHeadingSlider.addDeltaProgressUpdatedListener(delta -> {
       // Note: jsb_min and jsb_max must be set to ensure you get usable delta values
       // Sample uses -10 and 10, set in activity_ar.xml
@@ -165,10 +159,10 @@ public class ARNavigateActivity extends AppCompatActivity implements TextToSpeec
     configureRouteDisplay();
   }
 
-  private void setIsCalibrating(boolean isCalibrating) {
-    // Show the basemap for reference while calibration is in progress
-    this.isCalibrating = isCalibrating;
-    if (isCalibrating) {
+  private void toggleCalibration() {
+    // toggle calibration
+    mIsCalibrating = !mIsCalibrating;
+    if (mIsCalibrating) {
       mScene.getBaseSurface().setOpacity(0.5f);
       mCalibrationView.setVisibility(View.VISIBLE);
     } else {
@@ -207,7 +201,7 @@ public class ARNavigateActivity extends AppCompatActivity implements TextToSpeec
     routeOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
     routeOverlay.getSceneProperties().setAltitudeOffset(3);
 
-    // Create a renderer for the route geometry
+    // create a renderer for the route geometry
     SolidStrokeSymbolLayer strokeSymbolLayer = new SolidStrokeSymbolLayer(1, Color.YELLOW, new LinkedList<>(), StrokeSymbolLayer.LineStyle3D.TUBE);
     strokeSymbolLayer.setCapStyle(StrokeSymbolLayer.CapStyle.ROUND);
     ArrayList<SymbolLayer> layers = new ArrayList<>();

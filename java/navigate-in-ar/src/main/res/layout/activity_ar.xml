@@ -14,9 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:renderVideoFeed="true">
-
-    </com.esri.arcgisruntime.toolkit.ar.ArcGISArView>
+        app:renderVideoFeed="true"/>
 
     <TextView
         android:id="@+id/helpLabel"
@@ -36,84 +34,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TableLayout
-        android:id="@+id/calibrationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:alpha="0.5"
-        android:background="#D81B60"
-        android:paddingStart="8dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="8dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/calibrateButton"
-        app:layout_constraintEnd_toEndOf="parent"
+    <include
+        layout="@layout/layout_calibration_controls"
+        app:layout_constraintBottom_toTopOf="@+id/calibrateButton"
         app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="visible">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="fill_horizontal">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/altitude_slider_label"
-                android:textColor="#4CAF50"
-                tools:text="Altitude" />
-
-            <com.esri.arcgisruntime.toolkit.control.JoystickSeekBar
-                android:id="@+id/altitudeJoystick"
-                android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_gravity="fill_horizontal"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                app:jsb_max="10"
-                app:jsb_min="-10" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:gravity="fill_horizontal">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/heading_slider_label"
-                android:textColor="#4CAF50"
-                tools:text="Heading" />
-
-            <com.esri.arcgisruntime.toolkit.control.JoystickSeekBar
-                android:id="@+id/headingJoystick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_gravity="fill_horizontal"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                app:jsb_max="10"
-                app:jsb_min="-10" />
-        </TableRow>
-    </TableLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"/>
+    
     <Button
         android:id="@+id/calibrateButton"
-        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
         android:text="@string/calibrate_button"
-        android:textColor="#D81B60"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -121,14 +55,12 @@
 
     <Button
         android:id="@+id/navigateStartButton"
-        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
+        android:layout_marginBottom="24dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         android:text="@string/navigation_start"
         app:layout_constraintBottom_toBottomOf="@+id/arView"
-        app:layout_constraintEnd_toEndOf="@+id/arView"
-        tools:text="Navigate" />
+        app:layout_constraintEnd_toEndOf="@+id/arView" />
 
 </android.support.constraint.ConstraintLayout>
