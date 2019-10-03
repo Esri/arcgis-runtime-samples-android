@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // get references to the views defined in the layout
-    mHelpLabel = findViewById(R.id.helpLabel);
+    mHelpLabel = findViewById(R.id.helpLabelTextView);
     mNavigateButton = findViewById(R.id.navigateButton);
 
     // request location permissions before starting
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
       if (mRouteTask.getLoadStatus() == LoadStatus.LOADED) {
         enableTapToPlace();
       } else {
-        String error = "Error connecting to route service: " + mRouteTask.getLoadError().getMessage();
+        String error = "Error connecting to route service: " + mRouteTask.getLoadError().getCause();
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
         Log.e(TAG, error);
         mHelpLabel.setText(getString(R.string.route_failed_error_message));
@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
       initialize();
     } else {
       // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.navigate_ar_permission_denied), Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, getString(R.string.location_permission_denied), Toast.LENGTH_SHORT).show();
     }
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
