@@ -191,11 +191,9 @@ public class MainActivity extends AppCompatActivity {
    */
   private void requestPermissions() {
     // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.CAMERA };
+    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA };
     int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0])
-        == PackageManager.PERMISSION_GRANTED) {
+    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
       setupArView();
     } else {
       // request permission
