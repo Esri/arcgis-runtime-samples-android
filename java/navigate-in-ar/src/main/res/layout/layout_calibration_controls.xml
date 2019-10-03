@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/calibrationView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:alpha="0.5"
+    android:background="@android:color/background_light"
+    app:layout_constraintBottom_toTopOf="@id/calibrateButton"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent">
+
+    <TextView
+        android:id="@+id/altitudeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/altitude_slider_label"
+        android:textColor="@android:color/background_dark"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/headingTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/heading_slider_label"
+        android:textColor="@android:color/background_dark"
+        app:layout_constraintTop_toBottomOf="@+id/altitudeTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <com.esri.arcgisruntime.toolkit.control.JoystickSeekBar
+        android:id="@+id/altitudeJoystick"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:jsb_max="10"
+        app:jsb_min="-10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/altitudeTextView"
+        app:layout_constraintStart_toEndOf="@+id/headingTextView"
+        app:layout_constraintBottom_toBottomOf="@+id/altitudeTextView" />
+
+    <com.esri.arcgisruntime.toolkit.control.JoystickSeekBar
+        android:id="@+id/headingJoystick"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:jsb_max="10"
+        app:jsb_min="-10"
+        app:layout_constraintStart_toEndOf="@+id/headingTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/headingTextView"
+        app:layout_constraintBottom_toBottomOf="@+id/headingTextView" />
+
+</android.support.constraint.ConstraintLayout>
