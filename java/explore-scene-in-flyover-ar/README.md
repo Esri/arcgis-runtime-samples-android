@@ -1,8 +1,8 @@
-# Explore scenes in flyover AR
+# Explore scene in flyover AR
 
 Use augmented reality (AR) to quickly explore a scene more naturally than you could with a touch or mouse interface.
 
-![Explore scenes in flyover AR App](explore-scenes-in-flyover-ar.png)
+![Explore scene in flyover AR App](explore-scene-in-flyover-ar.png)
 
 ## Use case
 
@@ -23,10 +23,8 @@ When you open the sample, you'll be viewing the scene from above. You can walk a
 ## Relevant API
 
 * ArcGISARView
-* ArcGISARView.originCamera
-* ArcGISARView.translationFactor
-* SceneView.AtmosphereEffect
-* SceneView.SpaceEffect
+* ArcGISARView.setOriginCamera(...)
+* ArcGISARView.setTranslationFactor(...)
 
 ## About the data
 

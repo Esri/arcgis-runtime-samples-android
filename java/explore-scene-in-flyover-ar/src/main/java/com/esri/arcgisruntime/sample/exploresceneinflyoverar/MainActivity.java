@@ -14,9 +14,14 @@
  *  limitations under the License.
  */
 
-package com.esri.arcgisruntime.sample.explorescenesinflyoverar;
+package com.esri.arcgisruntime.sample.exploresceneinflyoverar;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -44,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    requestCameraPermission();
+  }
+
+  private void displaySceneInAr() {
     mArView = findViewById(R.id.arView);
     mArView.registerLifecycle(getLifecycle());
 
@@ -83,15 +92,48 @@ public class MainActivity extends AppCompatActivity {
     mArView.setTranslationFactor(1000);
   }
 
+  /**
+   * Request read external storage for API level 23+.
+   */
+  private void requestCameraPermission() {
+    // define permission to request
+    String[] reqPermission = { Manifest.permission.CAMERA };
+    int requestCode = 2;
+    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
+      displaySceneInAr();
+    } else {
+      // request permission
+      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
+    }
+  }
+
+  /**
+   * Handle the permissions request response.
+   */
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      displaySceneInAr();
+    } else {
+      // report to user that permission was denied
+      Toast.makeText(this, getString(R.string.camera_permission_required_for_ar), Toast.LENGTH_SHORT).show();
+    }
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+  }
+
   @Override
   protected void onPause() {
-    mArView.stopTracking();
+    if (mArView != null) {
+      mArView.stopTracking();
+    }
     super.onPause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    mArView.startTracking(ArcGISArView.ARLocationTrackingMode.IGNORE);
+    if (mArView != null) {
+      mArView.startTracking(ArcGISArView.ARLocationTrackingMode.IGNORE);
+    }
   }
 }
