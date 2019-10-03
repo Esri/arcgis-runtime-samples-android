@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.esri.arcgisruntime.displaytabletopmapinar;
+package com.esri.arcgisruntime.sample.displaysceneintabletopar;
 
 import java.util.List;
 
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Load the scene's first layer and calculate it'd geographical width. Use the scene's width and ArCore's assessment
+   * Load the scene's first layer and calculate its geographical width. Use the scene's width and ArCore's assessment
    * of the plane's width to set the AR view's translation transformation factor. Use the center of the scene, corrected
    * for elevation, as the origin camera's look at point.
    *
@@ -220,14 +220,17 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    mArView.stopTracking();
+    if (mArView != null) {
+      mArView.stopTracking();
+    }
     super.onPause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    mArView.startTracking(ArcGISArView.ARLocationTrackingMode.IGNORE);
+    if (mArView != null) {
+      mArView.startTracking(ArcGISArView.ARLocationTrackingMode.IGNORE);
+    }
   }
-
 }

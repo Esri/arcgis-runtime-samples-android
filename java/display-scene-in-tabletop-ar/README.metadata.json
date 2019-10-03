@@ -11,9 +11,9 @@
         "pin",
         "place",
         "mixed reality",
-	"model",
-	"tabletop",
-	"table-top"
+	    "model",
+	    "tabletop",
+	    "table-top"
     ],
     "redirect_from": "",
     "relevant_apis": [
@@ -27,5 +27,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/displaytabletopmapinar/MainActivity.java"
     ],
-    "title": "Display tabletop map in AR"
+    "title": "Display scene in tabletop AR"
 }
