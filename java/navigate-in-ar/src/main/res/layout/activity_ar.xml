@@ -17,7 +17,7 @@
         app:renderVideoFeed="true"/>
 
     <TextView
-        android:id="@+id/helpLabel"
+        android:id="@+id/helpLabelTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#99000000"
@@ -40,7 +40,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="gone"/>
-    
+
     <Button
         android:id="@+id/calibrateButton"
         android:layout_width="wrap_content"
