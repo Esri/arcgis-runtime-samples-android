@@ -1,8 +1,8 @@
-# Display tabletop map in AR
+# Display scene in tabletop in AR
 
 Use augmented reality (AR) to pin a scene to a table or desk for easy exploration.
 
-![Display tabletop map in AR App](display-tabletop-map-in-ar.png)
+![Display scene in tabletop AR App](display-scene-in-tabletop-ar.png)
 
 ## Use case
 
