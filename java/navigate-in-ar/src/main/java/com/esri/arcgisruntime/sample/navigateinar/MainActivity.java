@@ -17,7 +17,9 @@
 package com.esri.arcgisruntime.sample.navigateinar;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import android.Manifest;
 import android.content.Intent;
@@ -45,6 +47,7 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.LocationDisplay;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.security.AuthenticationChallengeHandler;
 import com.esri.arcgisruntime.security.AuthenticationManager;
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
@@ -72,11 +75,6 @@ public class MainActivity extends AppCompatActivity {
   private Point mStartPoint;
   private Point mEndPoint;
 
-  private RouteTask mRouteTask;
-  private Route mRoute;
-  private RouteResult mRouteResult;
-  private RouteParameters mRouteParameters;
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -87,11 +85,9 @@ public class MainActivity extends AppCompatActivity {
     // create a map with an imagery base map and set to to the map view
     ArcGISMap map = new ArcGISMap(Basemap.createImagery());
     mMapView.setMap(map);
-
     // get references to the views defined in the layout
     mHelpLabel = findViewById(R.id.helpLabelTextView);
     mNavigateButton = findViewById(R.id.navigateButton);
-
     // request location permissions before starting
     requestPermissions();
   }
@@ -99,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Start location display and define route task and graphic overlays.
    */
-  private void initialize() {
+  private void solveRouteBetweenTwoPoints() {
     // enable the map view's location display
     LocationDisplay locationDisplay = mMapView.getLocationDisplay();
     // listen for changes in the status of the location data source.
@@ -116,19 +112,100 @@ public class MainActivity extends AppCompatActivity {
     locationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER);
     locationDisplay.startAsync();
     // set up activity to handle authentication
-    DefaultAuthenticationChallengeHandler authenticationChallengeHandler = new DefaultAuthenticationChallengeHandler(
+    AuthenticationChallengeHandler authenticationChallengeHandler = new DefaultAuthenticationChallengeHandler(
         this);
     // set the challenge handler onto the AuthenticationManager
     AuthenticationManager.setAuthenticationChallengeHandler(authenticationChallengeHandler);
     // create and load a route task from the world routing service. This will trigger logging in to your AGOL account
-    mRouteTask = new RouteTask(this, getString(R.string.world_routing_service_url));
-    mRouteTask.loadAsync();
+    RouteTask routeTask = new RouteTask(this, getString(R.string.world_routing_service_url));
+    routeTask.loadAsync();
     // enable the user to specify a route once the service is ready
-    mRouteTask.addDoneLoadingListener(() -> {
-      if (mRouteTask.getLoadStatus() == LoadStatus.LOADED) {
-        enableTapToPlace();
+    routeTask.addDoneLoadingListener(() -> {
+      if (routeTask.getLoadStatus() == LoadStatus.LOADED) {
+        // notify the user to place start point
+        mHelpLabel.setText(R.string.place_start_message);
+        // listen for a single tap
+        mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
+          @Override
+          public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+            // if no start point has been defined
+            if (mStartPoint == null) {
+              // create a start point at the tapped point
+              mStartPoint = MainActivity.this.mMapView.screenToLocation(
+                  new android.graphics.Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY())));
+              Graphic graphic = new Graphic(mStartPoint);
+              mStopsOverlay.getGraphics().add(graphic);
+              // notify user to place end point
+              mHelpLabel.setText(R.string.place_end_message);
+              // if no end point has been defined
+            } else if (mEndPoint == null) {
+              // crate an end point at the tapped point
+              mEndPoint = MainActivity.this.mMapView.screenToLocation(
+                  new android.graphics.Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY())));
+              Graphic graphic = new Graphic(mEndPoint);
+              mStopsOverlay.getGraphics().add(graphic);
+              // solve the route between the two points
+              // update UI
+              mHelpLabel.setText(R.string.solving_route_message);
+              final ListenableFuture<RouteParameters> listenableFuture = routeTask.createDefaultParametersAsync();
+              listenableFuture.addDoneListener(() -> {
+                try {
+                  RouteParameters routeParameters = listenableFuture.get();
+                  // parameters needed for navigation (happens in ARNavigate)
+                  routeParameters.setReturnStops(true);
+                  routeParameters.setReturnDirections(true);
+                  routeParameters.setReturnRoutes(true);
+                  // this sample is intended for navigating while walking only
+                  List<TravelMode> travelModes = routeTask.getRouteTaskInfo().getTravelModes();
+                  TravelMode walkingMode = travelModes.get(0);
+                  routeParameters.setTravelMode(walkingMode);
+                  // add stops
+                  Collection<Stop> routeStops = new ArrayList<>();
+                  routeStops.add(new Stop(mStartPoint));
+                  routeStops.add(new Stop(mEndPoint));
+                  routeParameters.setStops(routeStops);
+                  // set return directions as true to return turn-by-turn directions in the result of
+                  routeParameters.setReturnDirections(true);
+                  // solve the route
+                  ListenableFuture<RouteResult> routeResultFuture = routeTask.solveRouteAsync(routeParameters);
+                  routeResultFuture.addDoneListener(() -> {
+                    try {
+                      // get the route result
+                      RouteResult routeResult = routeResultFuture.get();
+                      // get the route from the route result
+                      Route route = routeResult.getRoutes().get(0);
+                      // create a mRouteSymbol graphic
+                      Graphic routeGraphic = new Graphic(route.getRouteGeometry());
+                      // add mRouteSymbol graphic to the map
+                      mRouteOverlay.getGraphics().add(routeGraphic);
+                      mNavigateButton.setOnClickListener(v -> {
+                        // set the route result in ar navigate activity
+                        ARNavigateActivity.sRouteResult = routeResult;
+                        // pass route to activity and navigate
+                        Intent intent = new Intent(MainActivity.this, ARNavigateActivity.class);
+                        Bundle bundle = new Bundle();
+                        startActivity(intent, bundle);
+                      });
+                      mNavigateButton.setVisibility(View.VISIBLE);
+                      mHelpLabel.setText(R.string.nav_ready_message);
+                    } catch (InterruptedException | ExecutionException e) {
+                      String error = "Error getting route result: " + e.getMessage();
+                      Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+                      Log.e(TAG, error);
+                    }
+                  });
+                } catch (InterruptedException | ExecutionException ex) {
+                  String error = "Error generating route parameters: " + ex.getMessage();
+                  Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+                  Log.e(TAG, error);
+                }
+              });
+            }
+            return true;
+          }
+        });
       } else {
-        String error = "Error connecting to route service: " + mRouteTask.getLoadError().getCause();
+        String error = "Error connecting to route service: " + routeTask.getLoadError().getCause();
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
         Log.e(TAG, error);
         mHelpLabel.setText(getString(R.string.route_failed_error_message));
@@ -148,99 +225,6 @@ public class MainActivity extends AppCompatActivity {
     mMapView.getGraphicsOverlays().add(mStopsOverlay);
   }
 
-  private void enableTapToPlace() {
-    // notify the user to place start point
-    mHelpLabel.setText(R.string.place_start_message);
-
-    // listen for a single tap
-    mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
-      @Override
-      public boolean onSingleTapConfirmed(MotionEvent e) {
-        // if no start point has been defined
-        if (mStartPoint == null) {
-          // create a start point at the tapped point
-          mStartPoint = MainActivity.this.mMapView
-              .screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
-          Graphic graphic = new Graphic(mStartPoint);
-          mStopsOverlay.getGraphics().add(graphic);
-          // notify user to place end point
-          mHelpLabel.setText(R.string.place_end_message);
-          // if no end point has been defined
-        } else if (mEndPoint == null) {
-          // crate an end point at the tapped point
-          mEndPoint = MainActivity.this.mMapView
-              .screenToLocation(new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY())));
-          Graphic graphic = new Graphic(mEndPoint);
-          mStopsOverlay.getGraphics().add(graphic);
-          // solve the route between the two points
-          solveRoute();
-        }
-        return true;
-      }
-    });
-  }
-
-  private void enableNavigation() {
-    mNavigateButton.setOnClickListener(v -> {
-      // set the route result in ar navigate activity
-      ARNavigateActivity.sRouteResult = mRouteResult;
-
-      // Pass route to activity and navigate
-      Intent intent = new Intent(this, ARNavigateActivity.class);
-      Bundle bundle = new Bundle();
-      startActivity(intent, bundle);
-    });
-
-    mNavigateButton.setVisibility(View.VISIBLE);
-    mHelpLabel.setText(R.string.nav_ready_message);
-  }
-
-  private void solveRoute() {
-    // Update UI
-    mHelpLabel.setText(R.string.solving_route_message);
-
-    final ListenableFuture<RouteParameters> listenableFuture = mRouteTask.createDefaultParametersAsync();
-    listenableFuture.addDoneListener(() -> {
-      try {
-        if (listenableFuture.isDone()) {
-          mRouteParameters = listenableFuture.get();
-
-          // Parameters needed for navigation (happens in ARNavigate)
-          mRouteParameters.setReturnStops(true);
-          mRouteParameters.setReturnDirections(true);
-          mRouteParameters.setReturnRoutes(true);
-
-          // this sample is intended for navigating while walking only
-          List<TravelMode> travelModes = mRouteTask.getRouteTaskInfo().getTravelModes();
-          TravelMode walkingMode = travelModes.get(0);
-          mRouteParameters.setTravelMode(walkingMode);
-
-          // add stops
-          List<Stop> routeStops = new ArrayList<>();
-          routeStops.add(new Stop(mStartPoint));
-          routeStops.add(new Stop(mEndPoint));
-          mRouteParameters.setStops(routeStops);
-
-          // set return directions as true to return turn-by-turn directions in the result of
-          mRouteParameters.setReturnDirections(true);
-
-          // solve
-          mRouteResult = mRouteTask.solveRouteAsync(mRouteParameters).get();
-          final List routes = mRouteResult.getRoutes();
-          mRoute = (Route) routes.get(0);
-          // create a mRouteSymbol graphic
-          Graphic routeGraphic = new Graphic(mRoute.getRouteGeometry());
-          // add mRouteSymbol graphic to the map
-          mRouteOverlay.getGraphics().add(routeGraphic);
-
-          enableNavigation();
-        }
-      } catch (Exception e) {
-        Log.e(TAG, e.getMessage());
-      }
-    });
-  }
-
   /**
    * Request read external storage for API level 23+.
    */
@@ -250,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
     int requestCode = 2;
     if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED
         && ContextCompat.checkSelfPermission(this, reqPermission[1]) == PackageManager.PERMISSION_GRANTED) {
-      initialize();
+      solveRouteBetweenTwoPoints();
     } else {
       // request permission
       ActivityCompat.requestPermissions(this, reqPermission, requestCode);
@@ -264,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-      initialize();
+      solveRouteBetweenTwoPoints();
     } else {
       // report to user that permission was denied
       Toast.makeText(this, getString(R.string.location_permission_denied), Toast.LENGTH_SHORT).show();
@@ -274,9 +258,19 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    AuthenticationManager.CredentialCache.clear();
-    AuthenticationManager.clearOAuthConfigurations();
-
+    mMapView.pause();
     super.onPause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    mMapView.dispose();
+    super.onDestroy();
   }
 }

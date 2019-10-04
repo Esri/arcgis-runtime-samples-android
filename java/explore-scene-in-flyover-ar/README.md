@@ -41,7 +41,7 @@ This sample requires a device that is compatible with ARCore 1.8 on Android.
 This sample uses the ArcGIS Runtime Toolkit. See [Augmented Reality](https://developers.arcgis.com/android/latest/guide/display-scenes-in-augmented-reality.htm) in the guide to learn about the toolkit and how to add it to your app.
 
 ## Tags
-augmented reality
+Augmented Reality
 bird's eye
 birds-eye-view
 fly over
