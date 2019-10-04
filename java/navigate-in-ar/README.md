@@ -49,7 +49,7 @@ Unlike other scene samples, there's no need for a basemap while navigating, beca
 
 A digital elevation model is used to ensure that the displayed route is positioned appropriately relative to the terrain of the route. If you don't want to display the route line floating, you could show the line draped on the surface instead.
 
-**Real-scale AR** is one of three main patterns for working with geographic information in augmented reality. See [Augmented reality](https://developersdev.arcgis.com/rt/shared_for_review/display-scenes-in-augmented-reality.htm) in the guide for more information.
+**Real-scale AR** is one of three main patterns for working with geographic information in augmented reality. See [Augmented reality](https://developers.arcgis.com/android/latest/guide/display-scenes-in-augmented-reality.htm) in the guide for more information.
 
 Because most navigation scenarios involve traveling beyond the accurate range for ARCore positioning, this sample relies on **continuous location updates** from the location data source.
 
