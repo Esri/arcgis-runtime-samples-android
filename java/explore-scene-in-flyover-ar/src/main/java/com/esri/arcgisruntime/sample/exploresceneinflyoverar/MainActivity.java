@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
   private void displaySceneInAr() {
     mArView = findViewById(R.id.arView);
     mArView.registerLifecycle(getLifecycle());
+    // disable touch interactions with the scene view
+    mArView.getSceneView().setOnTouchListener((view, motionEvent) -> true);
 
     // create scene with imagery basemap
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());

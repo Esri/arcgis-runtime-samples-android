@@ -95,6 +95,8 @@ public class ARNavigateActivity extends AppCompatActivity {
     // get a reference to the ar view
     mArView = findViewById(R.id.arView);
     mArView.registerLifecycle(getLifecycle());
+    // disable touch interactions with the scene view
+    mArView.getSceneView().setOnTouchListener((view, motionEvent) -> true);
     // create a scene and add it to the scene view
     mScene = new ArcGISScene(Basemap.createImagery());
     mArView.getSceneView().setScene(mScene);
