@@ -3,7 +3,7 @@
     "description": "Use augmented reality (AR) to pin a scene to a table or desk for easy exploration.",
     "ignore": false,
     "images": [
-        "display-tabletop-map-in-ar.png"
+        "display-scene-in-tabletop-ar.png"
     ],
     "keywords": [
         "Augmented reality",
