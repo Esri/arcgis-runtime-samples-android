@@ -166,18 +166,17 @@ public class MainActivity extends AppCompatActivity {
                         ListenableFuture<OfflineMapUpdatesInfo> offlineMapUpdatesInfoAfterUpdateFuture = offlineMapSyncTask
                             .checkForUpdatesAsync();
                         offlineMapUpdatesInfoAfterUpdateFuture.addDoneListener(() -> {
-                          // get and check the results
-                          OfflineMapUpdatesInfo offlineMapUpdatesInfoAfterUpdate = null;
                           try {
-                            // get the offline sync parameters from the listenable future
-                            offlineMapUpdatesInfoAfterUpdate = offlineMapUpdatesInfoFuture.get();
+                            // get the update results
+                            OfflineMapUpdatesInfo offlineMapUpdatesInfoAfterUpdate = offlineMapUpdatesInfoAfterUpdateFuture.get();
+                            // update the UI with update info
+                            setUiUpdateInfo(offlineMapUpdatesInfoAfterUpdate);
+                            Log.d(TAG, "Update: " + offlineMapUpdatesInfoAfterUpdate.getDownloadAvailability().name());
                           } catch (Exception e) {
                             String error = "Error checking for Scheduled Updates Availability: " + e.getMessage();
                             Toast.makeText(this, error, Toast.LENGTH_LONG).show();
                             Log.e(TAG, error);
                           }
-                          // update the UI with update info
-                          setUiUpdateInfo(offlineMapUpdatesInfoAfterUpdate);
                         });
                       } else {
                         String error = "Error syncing the offline map: " + offlineMapSyncJob.getError().getMessage();
