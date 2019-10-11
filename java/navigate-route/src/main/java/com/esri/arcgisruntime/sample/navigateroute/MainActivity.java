@@ -201,8 +201,7 @@ public class MainActivity extends AppCompatActivity {
         mRouteTraveledGraphic.setGeometry(trackingStatus.getRouteProgress().getTraversedGeometry());
 
         // get remaining distance information
-        TrackingStatus.Distance remainingDistance = trackingStatus.getDestinationProgress()
-            .getRemainingDistance();
+        TrackingStatus.Distance remainingDistance = trackingStatus.getDestinationProgress().getRemainingDistance();
         // covert remaining minutes to hours:minutes:seconds
         String remainingTimeString = DateUtils
             .formatElapsedTime((long) (trackingStatus.getDestinationProgress().getRemainingTime() * 60));
@@ -214,13 +213,15 @@ public class MainActivity extends AppCompatActivity {
 
         // if a destination has been reached
         if (trackingStatus.getDestinationStatus() == DestinationStatus.REACHED) {
-          // if there are still more destinations to visit
-          if (mRouteTracker.getTrackingStatus().getRemainingDestinationCount() > 0) {
+          // if there are more destinations to visit. Greater than 1 because the start point is considered a "stop"
+          if (mRouteTracker.getTrackingStatus().getRemainingDestinationCount() > 1) {
             // switch to the next destination
             mRouteTracker.switchToNextDestinationAsync();
+            Toast.makeText(this, "Navigating to the second stop, the Fleet Science Center.", Toast.LENGTH_LONG).show();
           } else {
             // the final destination has been reached, stop the simulated location data source
             mSimulatedLocationDataSource.onStop();
+            Toast.makeText(this, "Arrived at the final destination.", Toast.LENGTH_LONG).show();
           }
         }
       });
@@ -228,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
 
     // start the LocationDisplay, which starts the SimulatedLocationDataSource
     locationDisplay.startAsync();
+    Toast.makeText(this, "Navigating to the first stop, the USS San Diego Memorial.", Toast.LENGTH_LONG).show();
   }
 
   /**
