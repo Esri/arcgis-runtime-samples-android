@@ -1,22 +1,16 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+    <style name="NoBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="Toolbar">
         <item name="android:background">?attr/colorPrimary</item>
         <item name="titleTextColor">@android:color/white</item>
-        <item name="popupTheme">@style/ThemeOverlay.Popup</item>
-    </style>
-
-    <style name="ThemeOverlay.Popup" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:colorBackground">?attr/colorPrimary</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
 </resources>

@@ -1,4 +1,5 @@
-/* Copyright 2017 Esri
+/*
+ * Copyright 2017 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,9 +32,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -81,35 +80,24 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     // create a simple date formatter to parse strings to date
-    mSimpleDateFormatter = new SimpleDateFormat(getString(R.string.date_format), Locale.US);
+    mSimpleDateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
-    // inflate MapView from layout
+    // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
-
-    // create a map with the BasemapType topographic
+    // create a map with a topographic basemap
     ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
-
-    //center for initial viewpoint
-    Point center = new Point(-13671170, 5693633, SpatialReference.create(3857));
-
-    //set initial viewpoint
-    map.setInitialViewpoint(new Viewpoint(center, 57779));
-
+    // set an initial viewpoint
+    map.setInitialViewpoint(new Viewpoint(new Point(-13671170, 5693633, SpatialReference.create(3857)), 57779));
     // set the map to the map view
     mMapView.setMap(map);
 
-    // initialize geoprocessing task with the url of the service
+    // initialize a geoprocessing task
     mGeoprocessingTask = new GeoprocessingTask(getString(R.string.hotspot_911_calls));
     mGeoprocessingTask.loadAsync();
 
     FloatingActionButton calendarFAB = findViewById(R.id.calendarButton);
-
-    calendarFAB.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        showDateRangeDialog();
-      }
-    });
-
+    // show the data range dialog on click
+    calendarFAB.setOnClickListener(v -> showDateRangeDialog());
     calendarFAB.performClick();
   }
 
@@ -119,40 +107,28 @@ public class MainActivity extends AppCompatActivity {
    */
   private void showDateRangeDialog() {
     // create custom dialog
-    final Dialog dialog = new Dialog(MainActivity.this);
+    final Dialog dialog = new Dialog(this);
     dialog.setContentView(R.layout.custom_alert_dialog);
     dialog.setCancelable(true);
 
     try {
       // set default date range for the data set
-      mMinDate = mSimpleDateFormatter.parse(getString(R.string.min_date));
-      mMaxDate = mSimpleDateFormatter.parse(getString(R.string.max_date));
+      mMinDate = mSimpleDateFormatter.parse("1998-01-01");
+      mMaxDate = mSimpleDateFormatter.parse("1998-05-31");
     } catch (ParseException e) {
       Log.e(TAG, "Error in date format: " + e.getMessage());
     }
 
     fromDateText = dialog.findViewById(R.id.fromDateText);
+    fromDateText.setOnClickListener(v -> showCalendar(InputCalendar.From));
     toDateText = dialog.findViewById(R.id.toDateText);
-
-    fromDateText.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        showCalendar(InputCalendar.From);
-      }
-    });
-    toDateText.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        showCalendar(InputCalendar.To);
-      }
-    });
+    toDateText.setOnClickListener(v -> showCalendar(InputCalendar.To));
 
     Button analyzeButton = dialog.findViewById(R.id.analyzeButton);
-    // if button is clicked, close the custom dialog
-    analyzeButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        analyzeHotspots(fromDateText.getText().toString(), toDateText.getText().toString());
-        dialog.dismiss();
-      }
+    // on button click
+    analyzeButton.setOnClickListener(v -> {
+      analyzeHotspots(fromDateText.getText().toString(), toDateText.getText().toString());
+      dialog.dismiss();
     });
 
     dialog.show();
@@ -165,39 +141,37 @@ public class MainActivity extends AppCompatActivity {
    */
   private void showCalendar(final InputCalendar inputCalendar) {
     // create a date set listener
-    DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
-      @Override public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        // build the correct date format for the query
-        StringBuilder date = new StringBuilder()
-            .append(year)
-            .append("-")
-            .append(month + 1)
-            .append("-")
-            .append(dayOfMonth);
-        // set the date to correct text view
-        if (inputCalendar == InputCalendar.From) {
-          fromDateText.setText(date);
-          try {
-            // limit the min date to after from date
-            mMinDate = mSimpleDateFormatter.parse(date.toString());
-          } catch (ParseException e) {
-            e.printStackTrace();
-          }
-        } else if (inputCalendar == InputCalendar.To) {
-          toDateText.setText(date);
-          try {
-            // limit the maximum date to before the to date
-            mMaxDate = mSimpleDateFormatter.parse(date.toString());
-          } catch (ParseException e) {
-            e.printStackTrace();
-          }
+    DatePickerDialog.OnDateSetListener onDateSetListener = (view, year, month, dayOfMonth) -> {
+      // build the correct date format for the query
+      StringBuilder date = new StringBuilder()
+          .append(year)
+          .append('-')
+          .append(month + 1)
+          .append('-')
+          .append(dayOfMonth);
+      // set the date to correct text view
+      if (inputCalendar == InputCalendar.From) {
+        fromDateText.setText(date);
+        try {
+          // limit the min date to after from date
+          mMinDate = mSimpleDateFormatter.parse(date.toString());
+        } catch (ParseException e) {
+          Log.e(TAG, "Error parsing date: " + e.getMessage());
+        }
+      } else if (inputCalendar == InputCalendar.To) {
+        toDateText.setText(date);
+        try {
+          // limit the maximum date to before the to date
+          mMaxDate = mSimpleDateFormatter.parse(date.toString());
+        } catch (ParseException e) {
+          Log.e(TAG, "Error parsing date: " + e.getMessage());
         }
       }
     };
 
     // define the date picker dialog
     Calendar calendar = Calendar.getInstance();
-    DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, onDateSetListener,
+    DatePickerDialog datePickerDialog = new DatePickerDialog(this, onDateSetListener,
         calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
     datePickerDialog.getDatePicker().setMinDate(mMinDate.getTime());
     datePickerDialog.getDatePicker().setMaxDate(mMaxDate.getTime());
@@ -229,92 +203,82 @@ public class MainActivity extends AppCompatActivity {
 
     // parameters
     final ListenableFuture<GeoprocessingParameters> paramsFuture = mGeoprocessingTask.createDefaultParametersAsync();
-    paramsFuture.addDoneListener(new Runnable() {
-      @Override public void run() {
-        try {
-          GeoprocessingParameters geoprocessingParameters = paramsFuture.get();
-          geoprocessingParameters.setProcessSpatialReference(mMapView.getSpatialReference());
-          geoprocessingParameters.setOutputSpatialReference(mMapView.getSpatialReference());
+    paramsFuture.addDoneListener(() -> {
+      try {
+        GeoprocessingParameters geoprocessingParameters = paramsFuture.get();
+        geoprocessingParameters.setProcessSpatialReference(mMapView.getSpatialReference());
+        geoprocessingParameters.setOutputSpatialReference(mMapView.getSpatialReference());
 
-          StringBuilder queryString = new StringBuilder("(\"DATE\" > date '")
-              .append(from)
-              .append(" 00:00:00' AND \"DATE\" < date '")
-              .append(to)
-              .append(" 00:00:00')");
+        StringBuilder queryString = new StringBuilder("(\"DATE\" > date '")
+            .append(from)
+            .append(" 00:00:00' AND \"DATE\" < date '")
+            .append(to)
+            .append(" 00:00:00')");
 
-          geoprocessingParameters.getInputs().put("Query", new GeoprocessingString(queryString.toString()));
+        geoprocessingParameters.getInputs().put("Query", new GeoprocessingString(queryString.toString()));
 
-          Log.i(TAG, "Query: " + queryString.toString());
+        Log.i(TAG, "Query: " + queryString);
 
-          // create job
-          mGeoprocessingJob = mGeoprocessingTask.createJob(geoprocessingParameters);
+        // create job
+        mGeoprocessingJob = mGeoprocessingTask.createJob(geoprocessingParameters);
 
-          // start job
-          mGeoprocessingJob.start();
+        // start job
+        mGeoprocessingJob.start();
 
-          // create a dialog to show progress of the geoprocessing job
-          final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-          progressDialog.setTitle("Running geoprocessing job");
-          progressDialog.setIndeterminate(false);
-          progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-          progressDialog.setMax(100);
-          progressDialog.setCancelable(false);
-          progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              dialog.dismiss();
-              // set canceled flag to true
-              canceled = true;
-              mGeoprocessingJob.cancel();
-            }
-          });
-          progressDialog.show();
+        // create a dialog to show progress of the geoprocessing job
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Running geoprocessing job");
+        progressDialog.setIndeterminate(false);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setMax(100);
+        progressDialog.setCancelable(false);
+        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", (dialog, which) -> {
+          dialog.dismiss();
+          // set canceled flag to true
+          canceled = true;
+          mGeoprocessingJob.cancel();
+        });
+        progressDialog.show();
 
-          // update progress
-          mGeoprocessingJob.addProgressChangedListener(new Runnable() {
-            @Override public void run() {
-              progressDialog.setProgress(mGeoprocessingJob.getProgress());
-            }
-          });
+        // update progress
+        mGeoprocessingJob.addProgressChangedListener(() -> progressDialog.setProgress(mGeoprocessingJob.getProgress()));
 
-          mGeoprocessingJob.addJobDoneListener(new Runnable() {
-            @Override public void run() {
-              progressDialog.dismiss();
-              if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
-                Log.i(TAG, "Job succeeded.");
+        mGeoprocessingJob.addJobDoneListener(() -> {
+          progressDialog.dismiss();
+          if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
+            Log.i(TAG, "Job succeeded.");
 
-                GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
-                final ArcGISMapImageLayer hotspotMapImageLayer = geoprocessingResult.getMapImageLayer();
+            GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
+            final ArcGISMapImageLayer hotspotMapImageLayer = geoprocessingResult.getMapImageLayer();
 
-                // add the new layer to the map
-                mMapView.getMap().getOperationalLayers().add(hotspotMapImageLayer);
+            // add the new layer to the map
+            mMapView.getMap().getOperationalLayers().add(hotspotMapImageLayer);
 
-                hotspotMapImageLayer.addDoneLoadingListener(new Runnable() {
-                  @Override public void run() {
-                    // set the map viewpoint to the MapImageLayer, once loaded
-                    mMapView.setViewpointGeometryAsync(hotspotMapImageLayer.getFullExtent());
-                  }
-                });
-              } else if (canceled) {
-                Toast.makeText(MainActivity.this, "Job canceled.", Toast.LENGTH_SHORT).show();
-                Log.i(TAG, "Job cancelled.");
-              } else {
-                Log.e(TAG, "Job did not succeed!");
-                Toast.makeText(MainActivity.this, "Job did not succeed!", Toast.LENGTH_LONG).show();
-              }
-            }
-          });
-        } catch (InterruptedException | ExecutionException e) {
-          e.printStackTrace();
-        }
+            // set the map viewpoint to the MapImageLayer, once loaded
+            hotspotMapImageLayer
+                .addDoneLoadingListener(() -> mMapView.setViewpointGeometryAsync(hotspotMapImageLayer.getFullExtent()));
+          } else if (canceled) {
+            String jobCanceledMessage = "Job canceled.";
+            Toast.makeText(this, jobCanceledMessage, Toast.LENGTH_SHORT).show();
+            Log.i(TAG, jobCanceledMessage);
+          } else {
+            String error = "Job did not succeed!";
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+            Log.e(TAG, error);
+          }
+        });
+      } catch (InterruptedException | ExecutionException e) {
+        String error = "error getting geoprocessing parameters: " + e.getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
       }
     });
   }
 
   @Override
   protected void onPause() {
-    super.onPause();
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
@@ -325,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     mMapView.dispose();
+    super.onDestroy();
   }
 }

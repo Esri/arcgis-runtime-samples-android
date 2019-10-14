@@ -7,7 +7,6 @@
     <string name="from">From:</string>
     <string name="to">To:</string>
     <string name="analyze">Analyze</string>
-    <string name="date_format">yyyy-MM-dd</string>
-    <string name="min_date">1998-01-01</string>
-    <string name="max_date">1998-05-31</string>
+    <string name="start_date_hint">Enter a start date…</string>
+    <string name="end_date_hint">Enter an end date…</string>
 </resources>
