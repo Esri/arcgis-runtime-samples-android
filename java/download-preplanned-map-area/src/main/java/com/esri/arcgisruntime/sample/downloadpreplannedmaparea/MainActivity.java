@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.sample.downloadpreplannedmaparea;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.graphics.Color;
@@ -30,7 +31,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.esri.arcgisruntime.ArcGISRuntimeException;
+import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.layers.Layer;
@@ -48,6 +52,7 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
 import com.esri.arcgisruntime.tasks.offlinemap.DownloadPreplannedOfflineMapJob;
 import com.esri.arcgisruntime.tasks.offlinemap.DownloadPreplannedOfflineMapParameters;
+import com.esri.arcgisruntime.tasks.offlinemap.DownloadPreplannedOfflineMapResult;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask;
 import com.esri.arcgisruntime.tasks.offlinemap.PreplannedMapArea;
 import com.esri.arcgisruntime.tasks.offlinemap.PreplannedUpdateMode;
@@ -84,12 +89,14 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
     if (mOfflineMapDirectory.mkdirs()) {
       Log.i(TAG, "Created directory for offline maps in " + mOfflineMapDirectory.getPath());
     } else if (mOfflineMapDirectory.exists()) {
-      Log.i(TAG, "Did not create a new offline maps directory, one already exists at " + mOfflineMapDirectory.getPath());
+      Log.i(TAG,
+          "Did not create a new offline maps directory, one already exists at " + mOfflineMapDirectory.getPath());
     } else {
       Log.e(TAG, "Error creating offline maps directory at: " + mOfflineMapDirectory.getPath());
     }
 
     // set the authentication manager to handle challenges when accessing the portal
+    // Note: The sample data is publicly available, so you shouldn't be challenged
     AuthenticationManager.setAuthenticationChallengeHandler(new DefaultAuthenticationChallengeHandler(this));
 
     // create a portal to ArcGIS Online
@@ -168,7 +175,6 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
               mDownloadButton.setEnabled(false);
             }
           } else {
-            // deactivate the download button, this map has already been downloaded
             mDownloadButton.setEnabled(false);
           }
         });
@@ -212,7 +218,8 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
     if (mSelectedPreplannedMapArea != null) {
 
       // create default download parameters from the offline map task
-      ListenableFuture<DownloadPreplannedOfflineMapParameters> offlineMapParametersFuture = mOfflineMapTask.createDefaultDownloadPreplannedOfflineMapParametersAsync(mSelectedPreplannedMapArea);
+      ListenableFuture<DownloadPreplannedOfflineMapParameters> offlineMapParametersFuture = mOfflineMapTask
+          .createDefaultDownloadPreplannedOfflineMapParametersAsync(mSelectedPreplannedMapArea);
       offlineMapParametersFuture.addDoneListener(() -> {
         try {
           // get the offline map parameters
@@ -220,13 +227,16 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
           // set the update mode to not receive updates
           offlineMapParameters.setUpdateMode(PreplannedUpdateMode.NO_UPDATES);
           // create a job to download the preplanned offline map to a temporary directory
-          mDownloadPreplannedOfflineMapJob = mOfflineMapTask.downloadPreplannedOfflineMap(offlineMapParameters, mOfflineMapDirectory.getPath() + File.separator + mSelectedPreplannedMapArea.getPortalItem().getTitle());
+          mDownloadPreplannedOfflineMapJob = mOfflineMapTask.downloadPreplannedOfflineMap(offlineMapParameters,
+              mOfflineMapDirectory.getPath() + File.separator + mSelectedPreplannedMapArea.getPortalItem().getTitle());
           // start the job
           mDownloadPreplannedOfflineMapJob.start();
 
           // show progress of the download preplanned offline map job in a dialog
           if (findProgressDialogFragment() == null) {
-            ProgressDialogFragment progressDialogFragment = ProgressDialogFragment.newInstance("Job", "Downloading preplanned map area", "Cancel");
+            ProgressDialogFragment progressDialogFragment = ProgressDialogFragment
+                .newInstance("Download preplanned offline map job", "Downloading the requested preplanned map area...",
+                    "Cancel");
             progressDialogFragment.show(getSupportFragmentManager(), ProgressDialogFragment.class.getSimpleName());
           }
           mDownloadPreplannedOfflineMapJob.addProgressChangedListener(() -> {
@@ -242,32 +252,50 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
               findProgressDialogFragment().dismiss();
             }
             // if there's a result from the download preplanned offline map job
-            if (mDownloadPreplannedOfflineMapJob.getResult() != null) {
-              // get the offline map
-              ArcGISMap offlineMap = mDownloadPreplannedOfflineMapJob.getResult().getOfflineMap();
-              // add it to the map view
-              mMapView.setMap(offlineMap);
-              // add the map name to the list view of downloaded map areas
-              mDownloadedMapAreaNames.add(offlineMap.getItem().getTitle());
-              // select the downloaded map area
-              mDownloadedMapAreasListView.setItemChecked(mDownloadedMapAreaNames.size() - 1, true);
-              mDownloadedMapAreasAdapter.notifyDataSetChanged();
-              // de-select the area in the preplanned areas list view
-              mPreplannedAreasListView.clearChoices();
-              mPreplannedMapAreasAdapter.notifyDataSetChanged();
-              // add the offline map to a list of downloaded map areas
-              mDownloadedMapAreas.add(offlineMap);
-              // hide the area of interest graphics
-              mAreasOfInterestGraphicsOverlay.setVisible(false);
-              // disable the download button
-              mDownloadButton.setEnabled(false);
-            } else if (mDownloadPreplannedOfflineMapJob.getResult() != null && mDownloadPreplannedOfflineMapJob
-                .getResult().hasErrors()) {
-              for (Layer layer : mDownloadPreplannedOfflineMapJob.getResult().getLayerErrors().keySet()) {
-                Log.e(TAG, layer.getLoadError().getCause().getMessage());
+            if (mDownloadPreplannedOfflineMapJob.getStatus() == Job.Status.SUCCEEDED) {
+              DownloadPreplannedOfflineMapResult downloadPreplannedOfflineMapResult = mDownloadPreplannedOfflineMapJob
+                  .getResult();
+              if (downloadPreplannedOfflineMapResult.hasErrors()) {
+                // get the offline map
+                ArcGISMap offlineMap = downloadPreplannedOfflineMapResult.getOfflineMap();
+                // add it to the map view
+                mMapView.setMap(offlineMap);
+                // add the map name to the list view of downloaded map areas
+                mDownloadedMapAreaNames.add(offlineMap.getItem().getTitle());
+                // select the downloaded map area
+                mDownloadedMapAreasListView.setItemChecked(mDownloadedMapAreaNames.size() - 1, true);
+                mDownloadedMapAreasAdapter.notifyDataSetChanged();
+                // de-select the area in the preplanned areas list view
+                mPreplannedAreasListView.clearChoices();
+                mPreplannedMapAreasAdapter.notifyDataSetChanged();
+                // add the offline map to a list of downloaded map areas
+                mDownloadedMapAreas.add(offlineMap);
+                // hide the area of interest graphics
+                mAreasOfInterestGraphicsOverlay.setVisible(false);
+                // disable the download button
+                mDownloadButton.setEnabled(false);
+              } else {
+                // collect the layer and table errors into a single alert message
+                StringBuilder stringBuilder = new StringBuilder("Errors: ");
+                Map<Layer, ArcGISRuntimeException> layerErrors = downloadPreplannedOfflineMapResult.getLayerErrors();
+                for (Map.Entry<Layer, ArcGISRuntimeException> layer : layerErrors.entrySet()) {
+                  stringBuilder.append("Layer: ").append(layer.getKey().getName()).append(". Exception: ")
+                      .append(layer.getValue().getMessage()).append(". ");
+                }
+                Map<FeatureTable, ArcGISRuntimeException> tableErrors = downloadPreplannedOfflineMapResult
+                    .getTableErrors();
+                for (Map.Entry<FeatureTable, ArcGISRuntimeException> table : tableErrors.entrySet()) {
+                  stringBuilder.append("Table: ").append(table.getKey().getTableName()).append(". Exception: ")
+                      .append(table.getValue().getMessage()).append(". ");
+                }
+                Toast.makeText(this, "One or more errors occurred with the Offline Map Result: " + stringBuilder,
+                    Toast.LENGTH_LONG).show();
               }
             } else {
-              Log.e(TAG, "Download preplanned offline map job finished with a null result!");
+              String error =
+                  "Job finished with an error: " + mDownloadPreplannedOfflineMapJob.getError().getCause().getMessage();
+              Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+              Log.e(TAG, error);
             }
           });
         } catch (InterruptedException | ExecutionException e) {
