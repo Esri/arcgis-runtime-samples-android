@@ -28,8 +28,11 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.security.AuthenticationManager;
+import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler;
 
 public class MainActivity extends AppCompatActivity {
+
+  private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
 
@@ -39,42 +42,28 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     AuthenticationManager.setTrustAllSigners(true);
+    AuthenticationManager.setAuthenticationChallengeHandler(new DefaultAuthenticationChallengeHandler(this));
 
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
 
-    AnnotationLayer annotationLayer0 = new AnnotationLayer(
-        "https://craigwilliams.esri.com/server/rest/services/Loudoun/FeatureServer/0");
+    AnnotationLayer annotationLayer = new AnnotationLayer("https://ec2-35-172-138-30.compute-1.amazonaws.com:6443/arcgis/rest/services/RiversAnnotation/FeatureServer/1");
 
-    AnnotationLayer annotationLayer1 = new AnnotationLayer(
-        "https://craigwilliams.esri.com/server/rest/services/Loudoun/FeatureServer/1");
+    // create a map and set it to the map view
+    ArcGISMap map = new ArcGISMap(Basemap.createOpenStreetMap());
+    map.getOperationalLayers().add(annotationLayer);
+    mMapView.setMap(map);
 
-    AnnotationLayer annotationLayer2 = new AnnotationLayer(
-        "https://craigwilliams.esri.com/server/rest/services/Loudoun/FeatureServer/2");
-
-    AnnotationLayer annotationLayer3 = new AnnotationLayer(
-        "https://craigwilliams.esri.com/server/rest/services/Loudoun/FeatureServer/3");
-
-    annotationLayer1.loadAsync();
-    annotationLayer1.addDoneLoadingListener(() -> {
-      if (annotationLayer1.getLoadStatus() == LoadStatus.LOADED) {
-
-        // create a map and set it to the map view
-        ArcGISMap map = new ArcGISMap(annotationLayer1.getSpatialReference());
-
-        map.setBasemap(Basemap.createLightGrayCanvas());
-        map.getOperationalLayers().add(annotationLayer0);
-        map.getOperationalLayers().add(annotationLayer1);
-        map.getOperationalLayers().add(annotationLayer2);
-        map.getOperationalLayers().add(annotationLayer3);
-        mMapView.setMap(map);
-
+    annotationLayer.loadAsync();
+    annotationLayer.addDoneLoadingListener(() -> {
+      if (annotationLayer.getLoadStatus() == LoadStatus.LOADED) {
+        Log.d(TAG, "Annotation layer loaded");
         mMapView.setViewpointAsync(
-            new Viewpoint(new Point(annotationLayer1.getFullExtent().getCenter().getX(),
-                annotationLayer1.getFullExtent().getCenter().getY(),
-                annotationLayer1.getSpatialReference()), 2000));
+            new Viewpoint(new Point(annotationLayer.getFullExtent().getCenter().getX(),
+                annotationLayer.getFullExtent().getCenter().getY(),
+                annotationLayer.getSpatialReference()), 2000));
       } else {
-        Log.e("stuff", "Annotation layer failed to load: " + annotationLayer1.getLoadError());
+        Log.e(TAG, "Annotation layer failed to load: " + annotationLayer.getLoadError().getCause().getMessage());
       }
     });
 
