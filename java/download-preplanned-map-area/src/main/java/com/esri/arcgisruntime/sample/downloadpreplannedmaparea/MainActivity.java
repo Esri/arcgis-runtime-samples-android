@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
       Log.e(TAG, "Error creating offline maps directory at: " + mOfflineMapDirectory.getPath());
     }
 
-    // set the authentication manager to handle OAuth challenges when accessing the portal
+    // set the authentication manager to handle challenges when accessing the portal
     AuthenticationManager.setAuthenticationChallengeHandler(new DefaultAuthenticationChallengeHandler(this));
 
     // create a portal to ArcGIS Online
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
     mAreasOfInterestGraphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(mAreasOfInterestGraphicsOverlay);
     // create a red outline to mark the areas of interest of the preplanned map areas
-    SimpleLineSymbol areaOfInterestLineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0x80FF0000, 5.0f);
+    SimpleLineSymbol areaOfInterestLineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5.0f);
     SimpleRenderer areaOfInterestRenderer = new SimpleRenderer();
     areaOfInterestRenderer.setSymbol(areaOfInterestLineSymbol);
     mAreasOfInterestGraphicsOverlay.setRenderer(areaOfInterestRenderer);
@@ -297,15 +298,6 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
     }
   }
 
-  private void deleteCache() {
-    try {
-      File directory = getCacheDir();
-      deleteDirectory(directory);
-    } catch (Exception e) {
-      Log.e(TAG, "Error deleting cache: " + e.getMessage());
-    }
-  }
-
   /**
    * Recursively deletes all files in the given directory.
    *
@@ -331,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
   @Override
   protected void onPause() {
     mMapView.pause();
-    deleteCache();
+    deleteDirectory(getCacheDir());
     super.onPause();
   }
 
