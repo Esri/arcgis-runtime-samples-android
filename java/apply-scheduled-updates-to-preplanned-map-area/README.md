@@ -43,7 +43,7 @@ Start the app. It will display an offline map, check for available updates, and 
 
 Link | Local Location
 ---------|-------|
-|[Canyonlands MMPK](https://arcgisruntime.maps.arcgis.com/home/item.html?id=740b663bff5e4198b9b6674af93f638a)| `<sdcard>`/ArcGIS/Samples/MapPackage/canyonlands|
+|[Canyonlands MMPK](https://arcgisruntime.maps.arcgis.com/home/item.html?id=740b663bff5e4198b9b6674af93f638a)| `<sdcard>`/ArcGIS/Samples/MapPackage/canyonlands/|
 
 ## About the data
 

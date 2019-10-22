@@ -1,0 +1,35 @@
+{
+    "category": "Routing and Logistics",
+    "description": "Navigation is often used by field workers while traveling between two points to get live directions based on their location.",
+    "ignore": false,
+    "images": [
+        "navigate-route.png"
+    ],
+    "keywords": [
+        "Directions",
+        "Manoeuvre",
+        "Navigation",
+        "Route",
+        "turn-by-turn",
+	    "voice"
+    ],
+    "redirect_from": "",
+    "relevant_apis": [
+        "DestinationStatus",
+        "DirectionManeuver",
+        "Location",
+        "LocationDataSource",
+	    "ReroutingStrategy",
+	    "Route",
+	    "RouteParameters",
+	    "RouteTask",
+	    "RouteTracker",
+	    "Stop",
+	    "VoiceGuidance"
+    ],
+    "snippets": [
+	    "src/main/java/com/esri/arcgisruntime/sample/navigateroute/MainActivity.java",
+	    "src/main/java/com/esri/arcgisruntime/sample/navigateroute/SimulatedLocationDataSource.java"
+    ],
+    "title": "Navigate route"
+}

@@ -37,7 +37,7 @@ import com.esri.arcgisruntime.symbology.TextSymbol;
 
 public class MainActivity extends AppCompatActivity {
 
-  private final SpatialReference wgs84 = SpatialReference.create(4326);
+  private final SpatialReference wgs84 = SpatialReference.create(4236);
   private MapView mMapView;
 
   @Override

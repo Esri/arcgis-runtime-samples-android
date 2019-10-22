@@ -266,6 +266,8 @@ public class MainActivity extends AppCompatActivity {
     generateOfflineMapParametersFuture.addDoneListener(() -> {
       try {
         final GenerateOfflineMapParameters generateOfflineMapParameters = generateOfflineMapParametersFuture.get();
+        // don't let generate offline map parameters continue on errors (including canceling during authentication)
+        generateOfflineMapParameters.setContinueOnErrors(false);
         // create parameter overrides for greater control
         ListenableFuture<GenerateOfflineMapParameterOverrides> parameterOverridesFuture = offlineMapTask
             .createGenerateOfflineMapParameterOverridesAsync(generateOfflineMapParameters);
