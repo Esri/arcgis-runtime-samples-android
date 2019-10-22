@@ -3,8 +3,9 @@
     android:id="@+id/mapAreaTextView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="8dp"
-    android:paddingEnd="4dp"
+    android:background="?android:attr/activatedBackgroundIndicator"
     android:paddingStart="4dp"
     android:paddingTop="8dp"
-    android:textColor="@android:color/black"/>
+    android:paddingEnd="4dp"
+    android:paddingBottom="8dp"
+    android:textColor="@android:color/black" />
