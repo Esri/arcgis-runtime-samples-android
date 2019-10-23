@@ -87,12 +87,12 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
     // create up a temporary directory in the app's cache for saving downloaded preplanned maps
     mOfflineMapDirectory = new File(getCacheDir() + getString(R.string.preplanned_offline_map_dir));
     if (mOfflineMapDirectory.mkdirs()) {
-      Log.i(TAG, "Created directory for offline maps in " + mOfflineMapDirectory.getPath());
+      Log.i(TAG, "Created directory for offline map in " + mOfflineMapDirectory.getPath());
     } else if (mOfflineMapDirectory.exists()) {
       Log.i(TAG,
-          "Did not create a new offline maps directory, one already exists at " + mOfflineMapDirectory.getPath());
+          "Did not create a new offline map directory, one already exists at " + mOfflineMapDirectory.getPath());
     } else {
-      Log.e(TAG, "Error creating offline maps directory at: " + mOfflineMapDirectory.getPath());
+      Log.e(TAG, "Error creating offline map directory at: " + mOfflineMapDirectory.getPath());
     }
 
     // set the authentication manager to handle challenges when accessing the portal
@@ -169,10 +169,11 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
                 .getExtent();
             mMapView.setViewpointAsync(new Viewpoint(areaOfInterest), 1.5f);
             // enable download button only for those map areas which have not been downloaded already
-            if (!mDownloadedMapAreaNames.contains(mSelectedPreplannedMapArea.getPortalItem().getTitle())) {
-              mDownloadButton.setEnabled(true);
-            } else {
+            if (new File(getCacheDir() + getString(R.string.preplanned_offline_map_dir) + File.separator
+                + mSelectedPreplannedMapArea.getPortalItem().getTitle()).exists()) {
               mDownloadButton.setEnabled(false);
+            } else {
+              mDownloadButton.setEnabled(true);
             }
           } else {
             mDownloadButton.setEnabled(false);
@@ -255,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
             if (mDownloadPreplannedOfflineMapJob.getStatus() == Job.Status.SUCCEEDED) {
               DownloadPreplannedOfflineMapResult downloadPreplannedOfflineMapResult = mDownloadPreplannedOfflineMapJob
                   .getResult();
-              if (downloadPreplannedOfflineMapResult.hasErrors()) {
+              if (mDownloadPreplannedOfflineMapJob != null && !downloadPreplannedOfflineMapResult.hasErrors()) {
                 // get the offline map
                 ArcGISMap offlineMap = downloadPreplannedOfflineMapResult.getOfflineMap();
                 // add it to the map view
@@ -288,12 +289,13 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
                   stringBuilder.append("Table: ").append(table.getKey().getTableName()).append(". Exception: ")
                       .append(table.getValue().getMessage()).append(". ");
                 }
-                Toast.makeText(this, "One or more errors occurred with the Offline Map Result: " + stringBuilder,
-                    Toast.LENGTH_LONG).show();
+                String error = "One or more errors occurred with the Offline Map Result: " + stringBuilder;
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                Log.e(TAG, error);
               }
             } else {
               String error =
-                  "Job finished with an error: " + mDownloadPreplannedOfflineMapJob.getError().getCause().getMessage();
+                  "Job finished with an error: " + mDownloadPreplannedOfflineMapJob.getError();
               Toast.makeText(this, error, Toast.LENGTH_LONG).show();
               Log.e(TAG, error);
             }
