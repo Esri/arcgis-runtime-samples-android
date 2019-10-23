@@ -83,26 +83,27 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     scene.setBaseSurface(surface);
 
     // create different types of layers
-    ArcGISSceneLayer devOne = new ArcGISSceneLayer(getString(R.string.layer_dev_one));
-    ArcGISSceneLayer devTwo = new ArcGISSceneLayer(getString(R.string.layer_dev_two));
-    ArcGISSceneLayer devThree = new ArcGISSceneLayer(getString(R.string.layer_dev_three));
-    ArcGISSceneLayer nonDevOne = new ArcGISSceneLayer(getString(R.string.layer_non_dev_one));
-    FeatureLayer nonDevTwo = new FeatureLayer(new ServiceFeatureTable(getString(R.string.layer_non_dev_two)));
+    ArcGISSceneLayer trees = new ArcGISSceneLayer(getString(R.string.tree_scene_service));
+    FeatureLayer pathways = new FeatureLayer(new ServiceFeatureTable(getString(R.string.pathway_feature_service)));
+    ArcGISSceneLayer buildingsA = new ArcGISSceneLayer(getString(R.string.building_scene_service_a));
+    ArcGISSceneLayer buildingsB = new ArcGISSceneLayer(getString(R.string.building_scene_service_b));
+    FeatureLayer projectArea = new FeatureLayer(
+        new ServiceFeatureTable(getString(R.string.project_area_feature_service)));
 
     // create a group layer from scratch by adding the layers as children
-    GroupLayer groupLayer = new GroupLayer();
-    groupLayer.setName("Group: Dev A");
-    groupLayer.getLayers().addAll(Arrays.asList(devOne, devTwo, devThree));
+    GroupLayer buildingsGroupLayer = new GroupLayer();
+    buildingsGroupLayer.setName("Buildings group");
+    buildingsGroupLayer.getLayers().addAll(Arrays.asList(buildingsA, buildingsB));
 
     // add the group layer and other layers to the scene as operational layers
-    scene.getOperationalLayers().addAll(Arrays.asList(groupLayer, nonDevOne, nonDevTwo));
+    scene.getOperationalLayers().addAll(Arrays.asList(projectArea, buildingsGroupLayer, trees, pathways));
 
     // zoom to the extent of the group layer when the child layers are loaded
-    ListenableList<Layer> layers = groupLayer.getLayers();
+    ListenableList<Layer> layers = buildingsGroupLayer.getLayers();
     for (Layer childLayer : layers) {
       childLayer.addDoneLoadingListener(() -> {
         if (childLayer.getLoadStatus() == LoadStatus.LOADED) {
-          mSceneView.setViewpointCamera(new Camera(groupLayer.getFullExtent().getCenter(), 700, 0, 60, 0));
+          mSceneView.setViewpointCamera(new Camera(buildingsGroupLayer.getFullExtent().getCenter(), 700, 0, 60, 0));
         }
       });
     }
