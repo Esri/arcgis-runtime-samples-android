@@ -16,9 +16,9 @@
 package com.esri.arcgisruntime.sample.attributionchange
 
 import android.os.Bundle
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
@@ -38,12 +38,12 @@ class MainActivity : AppCompatActivity() {
 
         // create a FAB to respond to attribution bar
         fab.setOnClickListener { view ->
-            Snackbar.make(view, resources.getString(R.string.message), Snackbar.LENGTH_LONG)
+            com.google.android.material.snackbar.Snackbar.make(view, resources.getString(R.string.message), com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
 
         // set attribution bar listener
-        val params = fab.layoutParams as CoordinatorLayout.LayoutParams
+        val params = fab.layoutParams as androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams
         mapView.addAttributionViewLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             val heightDelta = bottom - oldBottom
             params.bottomMargin += heightDelta

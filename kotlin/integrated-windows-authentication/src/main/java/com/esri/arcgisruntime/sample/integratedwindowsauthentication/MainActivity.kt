@@ -19,8 +19,8 @@ package com.esri.arcgisruntime.sample.integratedwindowsauthentication
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.util.Patterns
 import android.view.View
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
         AuthenticationManager.setAuthenticationChallengeHandler(this)
 
         // Set up recycler view for listing portal items
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         PortalItemAdapter(this).let {
             this.portalItemAdapter = it
             recyclerView.adapter = it
