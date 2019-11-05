@@ -18,21 +18,15 @@ package com.esri.arcgisruntime.sample.displayannotation;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.AnnotationLayer;
-import com.esri.arcgisruntime.loadable.LoadStatus;
+import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.security.AuthenticationManager;
-import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler;
 
 public class MainActivity extends AppCompatActivity {
-
-  private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
 
@@ -41,32 +35,23 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    AuthenticationManager.setTrustAllSigners(true);
-    AuthenticationManager.setAuthenticationChallengeHandler(new DefaultAuthenticationChallengeHandler(this));
+    // create a map with a topographic basemap
+    ArcGISMap map = new ArcGISMap(Basemap.Type.LIGHT_GRAY_CANVAS, 55.882436, -2.725610, 13);
+
+    // create a feature layer from a feature service
+    FeatureLayer riverFeatureLayer = new FeatureLayer(new ServiceFeatureTable(getString(R.string.river_feature_layer_url)));
+    // add the feature layer to the map
+    map.getOperationalLayers().add(riverFeatureLayer);
+
+    // create an annotation layer from a feature service
+    AnnotationLayer annotationLayer = new AnnotationLayer(getString(R.string.annotation_feature_service_url));
+    // add the annotation layer to the map
+    map.getOperationalLayers().add(annotationLayer);
 
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
-
-    AnnotationLayer annotationLayer = new AnnotationLayer("https://ec2-35-172-138-30.compute-1.amazonaws.com:6443/arcgis/rest/services/RiversAnnotation/FeatureServer/1");
-
-    // create a map and set it to the map view
-    ArcGISMap map = new ArcGISMap(Basemap.createOpenStreetMap());
-    map.getOperationalLayers().add(annotationLayer);
+    // set the map to the map view
     mMapView.setMap(map);
-
-    annotationLayer.loadAsync();
-    annotationLayer.addDoneLoadingListener(() -> {
-      if (annotationLayer.getLoadStatus() == LoadStatus.LOADED) {
-        Log.d(TAG, "Annotation layer loaded");
-        mMapView.setViewpointAsync(
-            new Viewpoint(new Point(annotationLayer.getFullExtent().getCenter().getX(),
-                annotationLayer.getFullExtent().getCenter().getY(),
-                annotationLayer.getSpatialReference()), 2000));
-      } else {
-        Log.e(TAG, "Annotation layer failed to load: " + annotationLayer.getLoadError().getCause().getMessage());
-      }
-    });
-
   }
 
   @Override
