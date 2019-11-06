@@ -16,10 +16,8 @@
 
 package com.esri.arcgisruntime.sample.findconnectedfeaturesinutilitynetworks
 
-import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 
 class UtilityTerminalSelectionDialog : androidx.fragment.app.DialogFragment() {
 
@@ -29,7 +27,7 @@ class UtilityTerminalSelectionDialog : androidx.fragment.app.DialogFragment() {
   private val onButtonClickedListener = DialogInterface.OnClickListener { _, which ->
     if (context is OnButtonClickedListener) {
       if (which == DialogInterface.BUTTON_POSITIVE) {
-        (context as OnButtonClickedListener).onDeleteFeatureClicked(featureId)
+        (context as OnButtonClickedListener).onDeleteFeatureClicked(terminalNames.get(0))
       } else {
         dismiss()
       }
@@ -54,19 +52,20 @@ class UtilityTerminalSelectionDialog : androidx.fragment.app.DialogFragment() {
     super.onCreate(savedInstanceState)
     arguments?.let {
       it.getSerializable(ARG_FEATURE_ID)?.let { terminalNames ->
-        this.terminalNames = terminalNames
+        //this.terminalNames = terminalNames
       }
     }
   }
-
+/*
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return AlertDialog.Builder(context!!)
         .setMessage(getString(R.string.dialog_confirm_delete_message, featureId))
         .setPositiveButton(R.string.dialog_confirm_delete_positive, onButtonClickedListener)
         .setNegativeButton(R.string.dialog_confirm_delete_negative, onButtonClickedListener)
         .create()
-  }
+  }*/
 
   interface OnButtonClickedListener {
     fun onDeleteFeatureClicked(featureId: String)
   }
+}
