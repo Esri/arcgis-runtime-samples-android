@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
   private ListView mDownloadedMapAreasListView;
   private List<String> mDownloadedMapAreaNames;
   private ArrayAdapter<String> mDownloadedMapAreasAdapter;
-  private List<ArcGISMap> mDownloadedMapAreas;
+  private List<ArcGISMap> mDownloadedMapAreas = new ArrayList<>();
   private Button mDownloadButton;
 
   private PreplannedMapArea mSelectedPreplannedMapArea;
@@ -123,93 +123,14 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
     areaOfInterestRenderer.setSymbol(areaOfInterestLineSymbol);
     mAreasOfInterestGraphicsOverlay.setRenderer(areaOfInterestRenderer);
 
-    // create a list view which holds available preplanned map areas
-    mPreplannedAreasListView = findViewById(R.id.availablePreplannedAreasListView);
-    mPreplannedMapAreas = new ArrayList<>();
-    mPreplannedMapAreaNames = new ArrayList<>();
-    mPreplannedMapAreasAdapter = new ArrayAdapter<>(this, R.layout.item_map_area, mPreplannedMapAreaNames);
-    mPreplannedAreasListView.setAdapter(mPreplannedMapAreasAdapter);
-    // get the preplanned map areas from the offline map task and show them in the list view
-    ListenableFuture<List<PreplannedMapArea>> preplannedMapAreasFuture = offlineMapTask.getPreplannedMapAreasAsync();
-    preplannedMapAreasFuture.addDoneListener(() -> {
-      try {
-        // get the preplanned areas and add them to the list view
-        mPreplannedMapAreas = preplannedMapAreasFuture.get();
-        for (PreplannedMapArea preplannedMapArea : mPreplannedMapAreas) {
-          mPreplannedMapAreaNames.add(preplannedMapArea.getPortalItem().getTitle());
-        }
-        mPreplannedMapAreasAdapter.notifyDataSetChanged();
-        // load each area and show a red border around their area of interest
-        for (PreplannedMapArea preplannedMapArea : mPreplannedMapAreas) {
-          preplannedMapArea.loadAsync();
-          preplannedMapArea.addDoneLoadingListener(() -> {
-            if (preplannedMapArea.getLoadStatus() == LoadStatus.LOADED) {
-              mAreasOfInterestGraphicsOverlay.getGraphics().add(new Graphic(preplannedMapArea.getAreaOfInterest()));
-            } else {
-              String error = "Failed to load preplanned map area: " + preplannedMapArea.getLoadError().getMessage();
-              Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-              Log.e(TAG, error);
-            }
-          });
-        }
-        // on list view click
-        mPreplannedAreasListView.setOnItemClickListener((adapterView, view, i, l) -> {
-          mSelectedPreplannedMapArea = mPreplannedMapAreas.get(i);
-          if (mSelectedPreplannedMapArea != null) {
-            // show graphics overlay which highlights available preplanned map areas
-            mAreasOfInterestGraphicsOverlay.setVisible(true);
-            // clear the download jobs list view selection
-            mDownloadedMapAreasListView.clearChoices();
-            mDownloadedMapAreasAdapter.notifyDataSetChanged();
-            // show the online map with the areas of interest
-            mMapView.setMap(onlineMap);
-            mAreasOfInterestGraphicsOverlay.setVisible(true);
-            // set the viewpoint to the preplanned map area's area of interest
-            Envelope areaOfInterest = GeometryEngine.buffer(mSelectedPreplannedMapArea.getAreaOfInterest(), 50)
-                .getExtent();
-            mMapView.setViewpointAsync(new Viewpoint(areaOfInterest), 1.5f);
-            // enable download button only for those map areas which have not been downloaded already
-            if (new File(getCacheDir() + getString(R.string.preplanned_offline_map_dir) + File.separator
-                + mSelectedPreplannedMapArea.getPortalItem().getTitle()).exists()) {
-              mDownloadButton.setEnabled(false);
-            } else {
-              mDownloadButton.setEnabled(true);
-            }
-          } else {
-            mDownloadButton.setEnabled(false);
-          }
-        });
-      } catch (InterruptedException | ExecutionException e) {
-        String error = "Failed to get the Preplanned Map Areas from the Offline Map Task.";
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        Log.e(TAG, error);
-      }
-    });
+    createPreplannedAreasListView(onlineMap, offlineMapTask);
+
+    createDownloadAreasListView();
 
     // create download button
     mDownloadButton = findViewById(R.id.downloadButton);
     mDownloadButton.setEnabled(false);
     mDownloadButton.setOnClickListener(view -> handleDownloadPreplannedArea());
-
-    // create a list view which holds downloaded map areas
-    mDownloadedMapAreasListView = findViewById(R.id.downloadedMapAreasListView);
-    mDownloadedMapAreaNames = new ArrayList<>();
-    mDownloadedMapAreasAdapter = new ArrayAdapter<>(this, R.layout.item_map_area, mDownloadedMapAreaNames);
-    mDownloadedMapAreasListView.setAdapter(mDownloadedMapAreasAdapter);
-    mDownloadedMapAreasListView.setOnItemClickListener((adapterView, view, i, l) -> {
-      // set the downloaded map to the map view
-      mMapView.setMap(mDownloadedMapAreas.get(i));
-      // disable the download button
-      mDownloadButton.setEnabled(false);
-      // clear the available map areas list view selection
-      mPreplannedAreasListView.clearChoices();
-      mPreplannedMapAreasAdapter.notifyDataSetChanged();
-
-      // hide the graphics overlays
-      mAreasOfInterestGraphicsOverlay.setVisible(false);
-    });
-
-    mDownloadedMapAreas = new ArrayList<>();
   }
 
   /**
@@ -217,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
    */
   private void handleDownloadPreplannedArea() {
     if (mSelectedPreplannedMapArea != null) {
-
       // create default download parameters from the offline map task
       ListenableFuture<DownloadPreplannedOfflineMapParameters> offlineMapParametersFuture = mOfflineMapTask
           .createDefaultDownloadPreplannedOfflineMapParametersAsync(mSelectedPreplannedMapArea);
@@ -307,6 +227,91 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
         }
       });
     }
+  }
+
+  private void createPreplannedAreasListView(ArcGISMap onlineMap, OfflineMapTask offlineMapTask) {
+    // create a list view which holds available preplanned map areas
+    mPreplannedAreasListView = findViewById(R.id.availablePreplannedAreasListView);
+    mPreplannedMapAreas = new ArrayList<>();
+    mPreplannedMapAreaNames = new ArrayList<>();
+    mPreplannedMapAreasAdapter = new ArrayAdapter<>(this, R.layout.item_map_area, mPreplannedMapAreaNames);
+    mPreplannedAreasListView.setAdapter(mPreplannedMapAreasAdapter);
+    // get the preplanned map areas from the offline map task and show them in the list view
+    ListenableFuture<List<PreplannedMapArea>> preplannedMapAreasFuture = offlineMapTask.getPreplannedMapAreasAsync();
+    preplannedMapAreasFuture.addDoneListener(() -> {
+      try {
+        // get the preplanned areas and add them to the list view
+        mPreplannedMapAreas = preplannedMapAreasFuture.get();
+        for (PreplannedMapArea preplannedMapArea : mPreplannedMapAreas) {
+          mPreplannedMapAreaNames.add(preplannedMapArea.getPortalItem().getTitle());
+        }
+        mPreplannedMapAreasAdapter.notifyDataSetChanged();
+        // load each area and show a red border around their area of interest
+        for (PreplannedMapArea preplannedMapArea : mPreplannedMapAreas) {
+          preplannedMapArea.loadAsync();
+          preplannedMapArea.addDoneLoadingListener(() -> {
+            if (preplannedMapArea.getLoadStatus() == LoadStatus.LOADED) {
+              mAreasOfInterestGraphicsOverlay.getGraphics().add(new Graphic(preplannedMapArea.getAreaOfInterest()));
+            } else {
+              String error = "Failed to load preplanned map area: " + preplannedMapArea.getLoadError().getMessage();
+              Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+              Log.e(TAG, error);
+            }
+          });
+        }
+        // on list view click
+        mPreplannedAreasListView.setOnItemClickListener((adapterView, view, i, l) -> {
+          mSelectedPreplannedMapArea = mPreplannedMapAreas.get(i);
+          if (mSelectedPreplannedMapArea != null) {
+            // show graphics overlay which highlights available preplanned map areas
+            mAreasOfInterestGraphicsOverlay.setVisible(true);
+            // clear the download jobs list view selection
+            mDownloadedMapAreasListView.clearChoices();
+            mDownloadedMapAreasAdapter.notifyDataSetChanged();
+            // show the online map with the areas of interest
+            mMapView.setMap(onlineMap);
+            mAreasOfInterestGraphicsOverlay.setVisible(true);
+            // set the viewpoint to the preplanned map area's area of interest
+            Envelope areaOfInterest = GeometryEngine.buffer(mSelectedPreplannedMapArea.getAreaOfInterest(), 50)
+                .getExtent();
+            mMapView.setViewpointAsync(new Viewpoint(areaOfInterest), 1.5f);
+            // enable download button only for those map areas which have not been downloaded already
+            if (new File(getCacheDir() + getString(R.string.preplanned_offline_map_dir) + File.separator
+                + mSelectedPreplannedMapArea.getPortalItem().getTitle()).exists()) {
+              mDownloadButton.setEnabled(false);
+            } else {
+              mDownloadButton.setEnabled(true);
+            }
+          } else {
+            mDownloadButton.setEnabled(false);
+          }
+        });
+      } catch (InterruptedException | ExecutionException e) {
+        String error = "Failed to get the Preplanned Map Areas from the Offline Map Task.";
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        Log.e(TAG, error);
+      }
+    });
+  }
+
+  private void createDownloadAreasListView() {
+    // create a list view which holds downloaded map areas
+    mDownloadedMapAreasListView = findViewById(R.id.downloadedMapAreasListView);
+    mDownloadedMapAreaNames = new ArrayList<>();
+    mDownloadedMapAreasAdapter = new ArrayAdapter<>(this, R.layout.item_map_area, mDownloadedMapAreaNames);
+    mDownloadedMapAreasListView.setAdapter(mDownloadedMapAreasAdapter);
+    mDownloadedMapAreasListView.setOnItemClickListener((adapterView, view, i, l) -> {
+      // set the downloaded map to the map view
+      mMapView.setMap(mDownloadedMapAreas.get(i));
+      // disable the download button
+      mDownloadButton.setEnabled(false);
+      // clear the available map areas list view selection
+      mPreplannedAreasListView.clearChoices();
+      mPreplannedMapAreasAdapter.notifyDataSetChanged();
+
+      // hide the graphics overlays
+      mAreasOfInterestGraphicsOverlay.setVisible(false);
+    });
   }
 
   /**
