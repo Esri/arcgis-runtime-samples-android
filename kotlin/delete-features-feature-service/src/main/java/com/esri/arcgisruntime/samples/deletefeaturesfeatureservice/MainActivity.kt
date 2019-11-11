@@ -35,7 +35,7 @@ import com.esri.arcgisruntime.mapping.GeoElement
 import com.esri.arcgisruntime.mapping.view.Callout
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.MapView
-
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonClickedListener {
