@@ -130,13 +130,13 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
     // create download button
     mDownloadButton = findViewById(R.id.downloadButton);
     mDownloadButton.setEnabled(false);
-    mDownloadButton.setOnClickListener(view -> handleDownloadPreplannedArea());
+    mDownloadButton.setOnClickListener(view -> downloadPreplannedArea());
   }
 
   /**
    * Download the selected preplanned map area from the list view to a temporary directory. The download job is tracked in another list view.
    */
-  private void handleDownloadPreplannedArea() {
+  private void downloadPreplannedArea() {
     if (mSelectedPreplannedMapArea != null) {
       // create default download parameters from the offline map task
       ListenableFuture<DownloadPreplannedOfflineMapParameters> offlineMapParametersFuture = mOfflineMapTask
