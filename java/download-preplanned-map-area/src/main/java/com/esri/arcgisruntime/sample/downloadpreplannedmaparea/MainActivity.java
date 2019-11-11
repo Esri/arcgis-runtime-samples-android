@@ -153,25 +153,12 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
           // start the job
           mDownloadPreplannedOfflineMapJob.start();
 
-          // show progress of the download preplanned offline map job in a dialog
-          if (findProgressDialogFragment() == null) {
-            ProgressDialogFragment progressDialogFragment = ProgressDialogFragment
-                .newInstance("Download preplanned offline map job", "Downloading the requested preplanned map area...",
-                    "Cancel");
-            progressDialogFragment.show(getSupportFragmentManager(), ProgressDialogFragment.class.getSimpleName());
-          }
-          mDownloadPreplannedOfflineMapJob.addProgressChangedListener(() -> {
-            if (findProgressDialogFragment() != null) {
-              findProgressDialogFragment().setProgress(mDownloadPreplannedOfflineMapJob.getProgress());
-            }
-          });
+          // show progress dialog for download, includes tracking progress
+          showProgressDialog();
 
           // when the job finishes
           mDownloadPreplannedOfflineMapJob.addJobDoneListener(() -> {
-            // dismiss progress dialog
-            if (findProgressDialogFragment() != null) {
-              findProgressDialogFragment().dismiss();
-            }
+            dismissDialog();
             // if there's a result from the download preplanned offline map job
             if (mDownloadPreplannedOfflineMapJob.getStatus() == Job.Status.SUCCEEDED) {
               DownloadPreplannedOfflineMapResult downloadPreplannedOfflineMapResult = mDownloadPreplannedOfflineMapJob
@@ -214,8 +201,7 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
                 Log.e(TAG, error);
               }
             } else {
-              String error =
-                  "Job finished with an error: " + mDownloadPreplannedOfflineMapJob.getError();
+              String error = "Job finished with an error: " + mDownloadPreplannedOfflineMapJob.getError();
               Toast.makeText(this, error, Toast.LENGTH_LONG).show();
               Log.e(TAG, error);
             }
@@ -312,6 +298,36 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
       // hide the graphics overlays
       mAreasOfInterestGraphicsOverlay.setVisible(false);
     });
+  }
+
+  /**
+   * Dismiss the dialog.
+   */
+  private void dismissDialog() {
+    // dismiss progress dialog
+    if (findProgressDialogFragment() != null) {
+      findProgressDialogFragment().dismiss();
+    }
+  }
+
+  /**
+   * Show dialog and track progress.
+   */
+  private void showProgressDialog() {
+    // show progress of the download preplanned offline map job in a dialog
+    if (findProgressDialogFragment() == null) {
+      ProgressDialogFragment progressDialogFragment = ProgressDialogFragment
+          .newInstance("Download preplanned offline map job", "Downloading the requested preplanned map area...",
+              "Cancel");
+      progressDialogFragment.show(getSupportFragmentManager(), ProgressDialogFragment.class.getSimpleName());
+
+      // track progress
+      mDownloadPreplannedOfflineMapJob.addProgressChangedListener(() -> {
+        if (findProgressDialogFragment() != null) {
+          findProgressDialogFragment().setProgress(mDownloadPreplannedOfflineMapJob.getProgress());
+        }
+      });
+    }
   }
 
   /**
