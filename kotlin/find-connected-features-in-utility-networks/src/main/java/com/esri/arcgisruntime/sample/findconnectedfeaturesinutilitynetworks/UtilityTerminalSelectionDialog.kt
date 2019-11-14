@@ -16,23 +16,20 @@
 
 package com.esri.arcgisruntime.sample.findconnectedfeaturesinutilitynetworks
 
-import android.content.DialogInterface
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import kotlinx.android.synthetic.main.dialog_terminal_picker.*
+import kotlinx.android.synthetic.main.dialog_terminal_picker.view.*
 
 class UtilityTerminalSelectionDialog : androidx.fragment.app.DialogFragment() {
 
 
   private lateinit var terminalNames: List<String>
 
-  private val onButtonClickedListener = DialogInterface.OnClickListener { _, which ->
-    if (context is OnButtonClickedListener) {
-      if (which == DialogInterface.BUTTON_POSITIVE) {
-        (context as OnButtonClickedListener).onDeleteFeatureClicked(terminalNames.get(0))
-      } else {
-        dismiss()
-      }
-    }
-  }
+  private var onButtonClickedListener : OnButtonClickedListener? = null
 
   companion object {
 
@@ -52,20 +49,35 @@ class UtilityTerminalSelectionDialog : androidx.fragment.app.DialogFragment() {
     super.onCreate(savedInstanceState)
     arguments?.let {
       it.getSerializable(ARG_FEATURE_ID)?.let { terminalNames ->
-        //this.terminalNames = terminalNames
+        this.terminalNames = terminalNames as List<String>
       }
     }
   }
-/*
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(context!!)
-        .setMessage(getString(R.string.dialog_confirm_delete_message, featureId))
-        .setPositiveButton(R.string.dialog_confirm_delete_positive, onButtonClickedListener)
-        .setNegativeButton(R.string.dialog_confirm_delete_negative, onButtonClickedListener)
-        .create()
-  }*/
+
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                            savedInstanceState: Bundle?): View? {
+    val dialogView = inflater.inflate(R.layout.dialog_terminal_picker, null)
+
+    val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, terminalNames)
+    dialogView.terminalSpinner.adapter  = adapter
+
+    dialogView.continueButton.setOnClickListener {
+      onButtonClickedListener?.onContinueClicked(terminalSpinner.selectedItemPosition)
+      dismiss()
+    }
+
+    dialogView.cancelButton.setOnClickListener {
+      dismiss()
+    }
+
+    return dialogView
+  }
+
+  fun setOnClickListener(listener: OnButtonClickedListener) {
+    onButtonClickedListener = listener
+  }
 
   interface OnButtonClickedListener {
-    fun onDeleteFeatureClicked(featureId: String)
+    fun onContinueClicked(terminalIndex: Int)
   }
 }
