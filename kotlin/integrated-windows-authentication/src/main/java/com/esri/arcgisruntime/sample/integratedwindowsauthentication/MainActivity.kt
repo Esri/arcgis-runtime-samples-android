@@ -19,19 +19,22 @@ package com.esri.arcgisruntime.sample.integratedwindowsauthentication
 
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.portal.PortalQueryParameters
-import com.esri.arcgisruntime.security.*
+import com.esri.arcgisruntime.security.AuthenticationChallenge
+import com.esri.arcgisruntime.security.AuthenticationChallengeHandler
+import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
+import com.esri.arcgisruntime.security.AuthenticationManager
+import com.esri.arcgisruntime.security.UserCredential
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.portal_info.*
 import kotlinx.android.synthetic.main.portal_load_state.*
@@ -143,8 +146,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
             } else {
                 // Report error
                 portal.loadError?.let { loadError ->
-                    (if (loadError.errorCode == 17) getString(R.string.error_portal_sign_in_cancelled) else
-                        getString(R.string.error_portal_sign_in_failed, loadError.cause?.message)).let { errorString ->
+                    (getString(R.string.error_portal_sign_in_failed, loadError.cause?.message)).let { errorString ->
                         Toast.makeText(this, errorString, Toast.LENGTH_LONG).show()
                         Log.e(TAG, errorString)
                     }
@@ -181,7 +183,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
             userCredentials.remove(it)
         }
     }
-
+    
     override fun onDismiss(dialog: DialogInterface?) {
         // Countdown auth latch to unblock thread
         authLatch?.countDown()
@@ -208,10 +210,9 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
     }
 
     /**
-     * When a user credential challenge is issued, check the failure count of this challenge. If the failure count
-     * is greater than zero, notify user and respond with a AuthenticationChallengeResponse with a cancel action.
-     * Otherwise if the user credential has been set, respond with a AuthenticationChallengeResponse with a
-     * continue with credential action and with the credentials as a parameter.
+     * When a user credential challenge is issued, pop up a dialog for user credential. When
+     * the user credential has been set, respond with a AuthenticationChallengeResponse with
+     * a continue with credential action and with the credentials as a parameter.
      *
      * @param authenticationChallenge
      */
@@ -221,74 +222,52 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler, Portal
         ) {
             URI(authenticationChallenge.remoteResource.uri).host?.let { remoteResourceHost ->
 
-                when {
-                    // If challenge has been requested by a Portal and the Portal has been loaded, cancel the challenge
-                    // This is required as some layers have private portal items associated with them and we don't
-                    // want to auth against them
-                    (authenticationChallenge.remoteResource as Portal).loadStatus == LoadStatus.LOADED -> {
-                        return AuthenticationChallengeResponse(
-                            AuthenticationChallengeResponse.Action.CANCEL,
-                            authenticationChallenge
-                        )
-                    }
-
-                    // Authentication challenge was a failure, act like it was a cancel and notify user
-                    authenticationChallenge.failureCount > MAX_AUTH_ATTEMPTS -> {
-                        userCredentials.remove(remoteResourceHost)
-                        getString(R.string.auth_failure).let {
-                            runOnUiThread {
-                                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-                            }
-                            Log.e(TAG, it)
+                // If challenge has been requested by a Portal and the Portal has been loaded, cancel the challenge
+                // This is required as some layers have private portal items associated with them and we don't
+                // want to auth against them
+                if ((authenticationChallenge.remoteResource as Portal).loadStatus == LoadStatus.LOADED) {
+                    return AuthenticationChallengeResponse(
+                        AuthenticationChallengeResponse.Action.CANCEL,
+                        authenticationChallenge
+                    )
+                }
+                
+                // If we have not stored credentials against this host or an invalid credential was passed, 
+                // request them from the user
+                authLatch = CountDownLatch(1)
+                // Show the dialog fragment to request the user to enter their credentials
+                CredentialDialogFragment.newInstance(URI(authenticationChallenge.remoteResource.uri)).show(
+                    supportFragmentManager,
+                    CredentialDialogFragment::class.java.simpleName
+                )
+                try {
+                    // Wait for dialog to dismiss to capture credentials
+                    authLatch?.await()
+                } catch (e: InterruptedException) {
+                    getString(R.string.error_interruption, e.message).let {
+                        runOnUiThread {
+                            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
                         }
-                        return AuthenticationChallengeResponse(
-                            AuthenticationChallengeResponse.Action.CANCEL,
-                            authenticationChallenge
-                        )
+                        Log.e(TAG, it)
                     }
-
-                    // If we have not stored credentials against this host, request them from the user
-                    userCredentials[remoteResourceHost] == null -> {
-                        authLatch = CountDownLatch(1)
-                        // Show the dialog fragment to request the user to enter their credentials
-                        CredentialDialogFragment.newInstance(URI(authenticationChallenge.remoteResource.uri)).show(
-                            supportFragmentManager,
-                            CredentialDialogFragment::class.java.simpleName
-                        )
-                        try {
-                            // Wait for dialog to dismiss to capture credentials
-                            authLatch?.await()
-                        } catch (e: InterruptedException) {
-                            getString(R.string.error_interruption, e.message).let {
-                                runOnUiThread {
-                                    Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-                                }
-                                Log.e(TAG, it)
-                            }
-                        }
-                        // If the user has entered credentials, continue with those credentials
-                        return if (userCredentials[remoteResourceHost] != null) {
-                            AuthenticationChallengeResponse(
-                                AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
-                                userCredentials[remoteResourceHost]
-                            )
-                        } else {
-                            AuthenticationChallengeResponse(
-                                AuthenticationChallengeResponse.Action.CANCEL,
-                                authenticationChallenge
-                            )
-                        }
-                    }
-
-                    // We already have stored credentials for this host, continue with those credentials
-                    else -> return AuthenticationChallengeResponse(
+                }
+                // If the user has entered credentials, continue with those credentials
+                return if (userCredentials[remoteResourceHost] != null) {
+                    AuthenticationChallengeResponse(
                         AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
                         userCredentials[remoteResourceHost]
+                    )
+                } else {
+                    // No credentials were set, return a new auth challenge response with a cancel
+                    AuthenticationChallengeResponse(
+                        AuthenticationChallengeResponse.Action.CANCEL,
+                        authenticationChallenge
                     )
                 }
             }
         }
-        // No credentials were set, return a new auth challenge response with a cancel
+        
+        // Return a new auth challenge response with a cancel for other challenge types or other remote resources.
         return AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, authenticationChallenge)
     }
 
