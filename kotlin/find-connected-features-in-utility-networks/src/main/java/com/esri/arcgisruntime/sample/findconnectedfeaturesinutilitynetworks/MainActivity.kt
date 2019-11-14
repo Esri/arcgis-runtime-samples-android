@@ -22,6 +22,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.data.ArcGISFeature
+import com.esri.arcgisruntime.data.QueryParameters
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Envelope
 import com.esri.arcgisruntime.geometry.GeometryEngine
@@ -51,9 +52,7 @@ import kotlinx.android.synthetic.main.utility_network_controls_layout.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
-import java.util.*
 import java.util.concurrent.ExecutionException
-import kotlin.collections.ArrayList
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlin.math.roundToInt
@@ -269,92 +268,53 @@ class MainActivity : AppCompatActivity() {
    * then selects all connected elements found in the trace to highlight them.
    */
   fun traceUtilityNetwork(view: View) {
-
     // check that the utility trace parameters are valid
     if (startingLocations.isEmpty()) {
       reportError("No starting locations provided for trace.")
       return
     }
-
     // show the progress indicator and update the status text
     progressIndicator.visibility = View.VISIBLE
     statusTextView.text = getString(R.string.find_connected_features_message)
-
     disableButtons()
-
     // create utility trace parameters for a connected trace
     utilityTraceParameters = UtilityTraceParameters(UtilityTraceType.CONNECTED, startingLocations)
-
     // if any barriers have been created, add them to the parameters
-    if (barriers.isNotEmpty()) {
-      utilityTraceParameters!!.barriers.addAll(barriers)
-    }
-
+    utilityTraceParameters?.barriers?.addAll(barriers)
     // run the utility trace and get the results
     val utilityTraceResultsFuture = utilityNetwork
         .traceAsync(utilityTraceParameters)
     utilityTraceResultsFuture.addDoneListener {
       try {
-        val utilityTraceResults = utilityTraceResultsFuture.get()
-
-        if (utilityTraceResults[0] is UtilityElementTraceResult) {
-          val utilityElementTraceResult = utilityTraceResults[0] as UtilityElementTraceResult
-
+        // get the utility trace results from the future and if its first result is a utility element trace result
+        (utilityTraceResultsFuture.get()[0] as? UtilityElementTraceResult)?.let { utilityElementTraceResult ->
+          // ensure the result is not empty
           if (utilityElementTraceResult.elements.isNotEmpty()) {
-            // clear the previous selection from the layer
-            for (layer in mapView!!.map.operationalLayers) {
-              if (layer is FeatureLayer) {
-                layer.clearSelection()
-              }
+            // clear the previous selection from all layers
+            mapView.map.operationalLayers.forEach { layer ->
+              (layer as? FeatureLayer)?.clearSelection()
             }
-
-            // group the utility elements by their network source
-            val utilityElementGroups = HashMap<String, MutableList<UtilityElement>>()
-            for (utilityElement in utilityElementTraceResult.elements) {
-              val networkSourceName = utilityElement.networkSource.name
-              if (!utilityElementGroups.containsKey(utilityElement.networkSource.name)) {
-                val list = ArrayList<UtilityElement>()
-                list.add(utilityElement)
-                utilityElementGroups[networkSourceName] = list
-              } else {
-                utilityElementGroups[networkSourceName]?.add(utilityElement)
-              }
-            }
-
-            // get the feature layer for the utility element
-            for ((networkSourceName, utilityElements) in utilityElementGroups) {
-              // get the layer for the utility element
-              val layer = mapView!!.map.operationalLayers[0] as FeatureLayer
-
-              if (layer.featureTable.tableName == networkSourceName) {
-                // convert the elements to features to highlight the result
-                val fetchUtilityFeaturesFuture =
-                    utilityNetwork.fetchFeaturesForElementsAsync(utilityElements)
-                fetchUtilityFeaturesFuture.addDoneListener {
-                  try {
-                    val features = fetchUtilityFeaturesFuture.get()
-                    // select all the features to highlight them
-                    for (feature in features) {
-                      layer.selectFeature(feature)
-                    }
-                    // update the status label
-                    statusTextView.text = getString(R.string.trace_completed)
-                    // enable the UI
-                    enableButtons()
-                  } catch (e: InterruptedException) {
-                    reportError(
-                        "Error fetching corresponding features for utility elements: " + e.message)
-                  } catch (e: ExecutionException) {
-                    reportError(
-                        "Error fetching corresponding features for utility elements: " + e.message)
+            // iterate through the map's feature layers
+            mapView.map.operationalLayers.forEach { layer ->
+              (layer as? FeatureLayer)?.let { featureLayer ->
+                // create query parameters to find features who's network source name matches the layer's feature table name
+                val queryParameters = QueryParameters()
+                utilityElementTraceResult.elements.forEach { utilityElement ->
+                  if (utilityElement.networkSource.name == featureLayer.featureTable.tableName) {
+                    queryParameters.objectIds.add(utilityElement.objectId)
                   }
                 }
+                // select features that match the query
+                featureLayer.selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW)
+                    .addDoneListener {
+                      // update the status text, enable the buttons and hide the progress indicator
+                      statusTextView.text = getString(R.string.trace_completed)
+                      enableButtons()
+                      progressIndicator.visibility = View.GONE
+                    }
               }
             }
           }
-        } else {
-          statusTextView.text = getString(R.string.failed_message)
-          reportError("Trace result not a utility element.")
         }
         // enable the UI
         enableButtons()
@@ -399,10 +359,8 @@ class MainActivity : AppCompatActivity() {
     barriers.clear()
     utilityTraceParameters = null
     // clear any selected features in all map layers
-    for (layer in mapView.map.operationalLayers) {
-      (layer as? FeatureLayer)?.apply {
-        clearSelection()
-      }
+    mapView.map.operationalLayers.forEach { layer ->
+      (layer as? FeatureLayer)?.clearSelection()
     }
     // clear the graphics overlay
     graphicsOverlay.graphics.clear()

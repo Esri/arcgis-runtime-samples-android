@@ -5,8 +5,8 @@
     <string name="find_connected_features_message">Finding connected features…</string>
     <string name="fraction_message">Fraction along edge: %f</string>
     <string name="select_utility_terminal">Select utility terminal:</string>
-    <string name="cancel">Cancel</string>
-    <string name="continue">Continue</string>
+    <string name="cancel_button_text">Cancel</string>
+    <string name="continue_button_text">Continue</string>
     <string name="add_starting_location">Add starting location(s)</string>
     <string name="add_barrier">Add barrier(s)</string>
     <string name="reset">Reset</string>
