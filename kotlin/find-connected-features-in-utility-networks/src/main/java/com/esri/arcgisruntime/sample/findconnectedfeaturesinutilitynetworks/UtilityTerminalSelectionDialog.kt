@@ -29,17 +29,17 @@ class UtilityTerminalSelectionDialog : androidx.fragment.app.DialogFragment() {
 
   private lateinit var terminalNames: List<String>
 
-  private var onButtonClickedListener : OnButtonClickedListener? = null
+  private var onButtonClickedListener: OnButtonClickedListener? = null
 
   companion object {
 
-    private val ARG_FEATURE_ID =
-        UtilityTerminalSelectionDialog::class.java.simpleName + "_feature_id"
+    private val TERMINAL_NAMES =
+        UtilityTerminalSelectionDialog::class.java.simpleName + "_terminal_names"
 
     fun newInstance(terminals: ArrayList<String>): UtilityTerminalSelectionDialog {
       val fragment = UtilityTerminalSelectionDialog()
       val args = Bundle()
-      args.putSerializable(ARG_FEATURE_ID, terminals)
+      args.putSerializable(TERMINAL_NAMES, terminals)
       fragment.arguments = args
       return fragment
     }
@@ -47,10 +47,8 @@ class UtilityTerminalSelectionDialog : androidx.fragment.app.DialogFragment() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    arguments?.let {
-      it.getSerializable(ARG_FEATURE_ID)?.let { terminalNames ->
-        this.terminalNames = terminalNames as List<String>
-      }
+    arguments?.getSerializable(TERMINAL_NAMES)?.let { terminalNames ->
+      this.terminalNames = terminalNames as List<String>
     }
   }
 
@@ -58,18 +56,16 @@ class UtilityTerminalSelectionDialog : androidx.fragment.app.DialogFragment() {
                             savedInstanceState: Bundle?): View? {
     val dialogView = inflater.inflate(R.layout.dialog_terminal_picker, null)
 
-    val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, terminalNames)
-    dialogView.terminalSpinner.adapter  = adapter
-
+    val adapter =
+        ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, terminalNames)
+    dialogView.terminalSpinner.adapter = adapter
     dialogView.continueButton.setOnClickListener {
       onButtonClickedListener?.onContinueClicked(terminalSpinner.selectedItemPosition)
       dismiss()
     }
-
     dialogView.cancelButton.setOnClickListener {
       dismiss()
     }
-
     return dialogView
   }
 

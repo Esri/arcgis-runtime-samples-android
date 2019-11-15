@@ -4,29 +4,24 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:color/background_light">
-
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
         <RadioButton
             android:id="@+id/startingLocationsRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="@string/add_starting_location" />
-
         <RadioButton
             android:id="@+id/barrierLocationsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_barrier" />
-
     </RadioGroup>
-
     <Button
         android:id="@+id/resetButton"
         android:layout_width="wrap_content"
@@ -38,7 +33,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
     <Button
         android:id="@+id/traceButton"
         android:layout_width="wrap_content"
@@ -50,7 +44,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/resetButton"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
     <TextView
         android:id="@+id/statusTextView"
         android:layout_width="0dp"
@@ -63,5 +56,4 @@
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/resetButton" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

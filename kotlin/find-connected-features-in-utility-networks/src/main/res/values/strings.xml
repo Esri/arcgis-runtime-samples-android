@@ -14,4 +14,5 @@
     <string name="click_to_add_points">Click on the network lines or points to add a utility element.</string>
     <string name="trace_completed">Trace completed.</string>
     <string name="add_utility_element">Click on the network lines or points to add a utility element.</string>
+    <string name="terminal_name">Terminal: %s</string>
 </resources>

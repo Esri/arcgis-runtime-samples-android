@@ -59,7 +59,7 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-  private val graphicsOverlay: GraphicsOverlay = GraphicsOverlay()
+  private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
   private val utilityNetwork: UtilityNetwork by lazy {
     UtilityNetwork(getString(R.string.naperville_utility_network_service), mapView.map)
   }
@@ -75,7 +75,6 @@ class MainActivity : AppCompatActivity() {
   private val mBarrierPointSymbol: SimpleMarkerSymbol by lazy {
     SimpleMarkerSymbol(SimpleMarkerSymbol.Style.X, Color.RED, 20f)
   }
-  private var utilityTraceParameters: UtilityTraceParameters? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -139,11 +138,12 @@ class MainActivity : AppCompatActivity() {
     // get the clicked map point
     val mapPoint = mapView.screenToLocation(screenPoint)
     // identify the feature to be used
-    mapView.identifyLayersAsync(screenPoint, 10.0, false).let { identifyLayerResultFuture ->
+    val identifyLayerResultFuture = mapView.identifyLayersAsync(screenPoint, 10.0, false)
+    identifyLayerResultFuture.addDoneListener {
       // get the result of the query
-      val identifyLayerResults = identifyLayerResultFuture.get()
-      // retrieve the geoelement as an ArcGISFeature
-      (identifyLayerResults[0].elements[0] as? ArcGISFeature)?.let { identifiedFeature ->
+      val identifyResults = identifyLayerResultFuture.get()
+      // if the identify returns a result, retrieve the geoelement as an ArcGISFeature
+      (identifyResults.getOrNull(0)?.elements?.get(0) as? ArcGISFeature)?.let { identifiedFeature ->
         // get the network source of the identified feature
         (utilityNetwork.definition.getNetworkSource(
             identifiedFeature.featureTable.tableName)).let { utilityNetworkSource ->
@@ -151,10 +151,11 @@ class MainActivity : AppCompatActivity() {
           if (utilityNetworkSource.sourceType == UtilityNetworkSource.Type.JUNCTION) {
             GlobalScope.launch {
               // create a utility element with the identified feature
-              val utilityElement = createUtilityElement(identifiedFeature, utilityNetworkSource)
-              // set the trace location graphic to the nearest coordinate to the tapped point
-              utilityElement?.let {
-                addUtilityElementToMap(identifiedFeature, mapPoint, it)
+             createUtilityElement(identifiedFeature, utilityNetworkSource)?.let {utilityElement ->
+                // add the utility element to the map
+                addUtilityElementToMap(identifiedFeature, mapPoint, utilityElement)
+               // show the utility element name in the UI
+                showTerminalNameInStatusLabel(utilityElement.terminal)
               }
             }
           } else {
@@ -199,53 +200,39 @@ class MainActivity : AppCompatActivity() {
    */
   private suspend fun createUtilityElement(identifiedFeature: ArcGISFeature,
                                            networkSource: UtilityNetworkSource): UtilityElement? {
-    // get the attributes of the identified feature
-    val attributes = identifiedFeature.attributes
-    // get the name of the utility asset group's attribute field from the feature
-    val assetGroupFieldName = identifiedFeature.featureTable.subtypeField
     // find the code matching the asset group name in the feature's attributes
-    val assetGroupCode = attributes[assetGroupFieldName.toLowerCase()] as Int
+    val assetGroupCode =
+        identifiedFeature.attributes[identifiedFeature.featureTable.subtypeField.toLowerCase()] as Int
 
     var utilityElement: UtilityElement? = null
     // iterate through the network source's asset groups to find the group with the matching code
-    with(networkSource.assetGroups) {
-      for (assetGroup in this) {
-        if (assetGroup.code == assetGroupCode) {
-          // get the code for the feature's asset type from it's attributes
-          val assetTypeCode = attributes["assettype"]!!.toString()
-          // iterate through the asset group's asset types to find the type matching the feature's asset type code
-          val utilityAssetTypes = assetGroup.assetTypes
-          for (assetType in utilityAssetTypes) {
-            if (assetType.code == Integer.parseInt(assetTypeCode)) {
-              // get the list of terminals for the feature
-              val terminals = assetType.terminalConfiguration.terminals
-              // if there is only one terminal, use it to create a utility element
-              if (terminals.size == 1) {
-                utilityElement = utilityNetwork.createElement(identifiedFeature, terminals[0])
-                // show the name of the terminal in the status label
-                runOnUiThread {
-                  showTerminalNameInStatusLabel(terminals[0])
-                }
-              } else { // if there is more than one terminal, prompt the user to select one
-                // get a list of terminal names from the terminals
-                val terminalNames = ArrayList<String>()
-                assetType.terminalConfiguration.terminals.mapTo(terminalNames) { it.name }
-                // pass the terminal names to a dialog
-                val utilityTerminalSelectionDialog =
-                    UtilityTerminalSelectionDialog.newInstance(terminalNames)
-                utilityTerminalSelectionDialog.show(supportFragmentManager, "stuff")
-                // use a coroutine to set utility element after user has picked a terminal
-                utilityElement = suspendCoroutine<UtilityElement> { cont ->
-                  utilityTerminalSelectionDialog.setOnClickListener(object :
-                      UtilityTerminalSelectionDialog.OnButtonClickedListener {
-                    override fun onContinueClicked(terminalIndex: Int) {
-                      cont.resume(
-                          utilityNetwork.createElement(identifiedFeature, terminals[terminalIndex]))
-                    }
-                  })
-                }
+    networkSource.assetGroups.filter { it.code == assetGroupCode }.forEach { assetGroup ->
+      // get the code for the feature's asset type from it's attributes
+      val assetTypeCode = identifiedFeature.attributes["assettype"].toString()
+      // iterate through the asset group's asset types to find the type matching the feature's asset type code
+      assetGroup.assetTypes.filter { it.code == assetTypeCode.toInt() }.forEach { assetType ->
+        // get the list of terminals for the feature
+        val terminals = assetType.terminalConfiguration.terminals
+        // if there is only one terminal, use it to create a utility element
+        if (terminals.size == 1) {
+          utilityElement = utilityNetwork.createElement(identifiedFeature, terminals[0])
+          // show the name of the terminal in the status label
+        } else { // if there is more than one terminal, prompt the user to select one
+          // get a list of terminal names from the terminals
+          val terminalNames = ArrayList<String>()
+          assetType.terminalConfiguration.terminals.mapTo(terminalNames) { it.name }
+          // pass the terminal names to a dialog
+          val utilityTerminalSelectionDialog =
+              UtilityTerminalSelectionDialog.newInstance(terminalNames)
+          utilityTerminalSelectionDialog.show(supportFragmentManager, "terminal_fragment")
+          // use a coroutine to set utility element after user has picked a terminal
+          utilityElement = suspendCoroutine<UtilityElement> { cont ->
+            utilityTerminalSelectionDialog.setOnClickListener(object :
+                UtilityTerminalSelectionDialog.OnButtonClickedListener {
+              override fun onContinueClicked(terminalIndex: Int) {
+                cont.resume(utilityNetwork.createElement(identifiedFeature, terminals[terminalIndex]))
               }
-            }
+            })
           }
         }
       }
@@ -260,7 +247,7 @@ class MainActivity : AppCompatActivity() {
    */
   private fun showTerminalNameInStatusLabel(terminal: UtilityTerminal) {
     val terminalName = if (terminal.name != "") terminal.name else "default"
-    statusTextView.text = "Terminal: $terminalName"
+    statusTextView.text = getString(R.string.terminal_name, terminalName)
   }
 
   /**
@@ -278,41 +265,40 @@ class MainActivity : AppCompatActivity() {
     statusTextView.text = getString(R.string.find_connected_features_message)
     disableButtons()
     // create utility trace parameters for a connected trace
-    utilityTraceParameters = UtilityTraceParameters(UtilityTraceType.CONNECTED, startingLocations)
+    val utilityTraceParameters =
+        UtilityTraceParameters(UtilityTraceType.CONNECTED, startingLocations)
     // if any barriers have been created, add them to the parameters
-    utilityTraceParameters?.barriers?.addAll(barriers)
+    utilityTraceParameters.barriers.addAll(barriers)
     // run the utility trace and get the results
     val utilityTraceResultsFuture = utilityNetwork
         .traceAsync(utilityTraceParameters)
     utilityTraceResultsFuture.addDoneListener {
       try {
-        // get the utility trace results from the future and if its first result is a utility element trace result
+        // get the utility trace result's first result as a utility element trace result
         (utilityTraceResultsFuture.get()[0] as? UtilityElementTraceResult)?.let { utilityElementTraceResult ->
           // ensure the result is not empty
           if (utilityElementTraceResult.elements.isNotEmpty()) {
-            // clear the previous selection from all layers
-            mapView.map.operationalLayers.forEach { layer ->
-              (layer as? FeatureLayer)?.clearSelection()
+            // clear any selected features in the map's feature layers
+            mapView.map.operationalLayers.filterIsInstance<FeatureLayer>().forEach { featureLayer ->
+              featureLayer.clearSelection()
             }
             // iterate through the map's feature layers
-            mapView.map.operationalLayers.forEach { layer ->
-              (layer as? FeatureLayer)?.let { featureLayer ->
-                // create query parameters to find features who's network source name matches the layer's feature table name
-                val queryParameters = QueryParameters()
-                utilityElementTraceResult.elements.forEach { utilityElement ->
-                  if (utilityElement.networkSource.name == featureLayer.featureTable.tableName) {
-                    queryParameters.objectIds.add(utilityElement.objectId)
-                  }
+            mapView.map.operationalLayers.filterIsInstance<FeatureLayer>().forEach { featureLayer ->
+              // create query parameters to find features who's network source name matches the layer's feature table name
+              val queryParameters = QueryParameters()
+              utilityElementTraceResult.elements.forEach { utilityElement ->
+                if (utilityElement.networkSource.name == featureLayer.featureTable.tableName) {
+                  queryParameters.objectIds.add(utilityElement.objectId)
                 }
-                // select features that match the query
-                featureLayer.selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW)
-                    .addDoneListener {
-                      // update the status text, enable the buttons and hide the progress indicator
-                      statusTextView.text = getString(R.string.trace_completed)
-                      enableButtons()
-                      progressIndicator.visibility = View.GONE
-                    }
               }
+              // select features that match the query
+              featureLayer.selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW)
+                  .addDoneListener {
+                    // when done, update status text, enable buttons and hide progress indicator
+                    statusTextView.text = getString(R.string.trace_completed)
+                    enableButtons()
+                    progressIndicator.visibility = View.GONE
+                  }
             }
           }
         }
@@ -357,10 +343,9 @@ class MainActivity : AppCompatActivity() {
     // clear the utility trace parameters
     startingLocations.clear()
     barriers.clear()
-    utilityTraceParameters = null
-    // clear any selected features in all map layers
-    mapView.map.operationalLayers.forEach { layer ->
-      (layer as? FeatureLayer)?.clearSelection()
+    // clear any selected features in the map's feature layers
+    mapView.map.operationalLayers.filterIsInstance<FeatureLayer>().forEach {
+      it.clearSelection()
     }
     // clear the graphics overlay
     graphicsOverlay.graphics.clear()
