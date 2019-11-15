@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             Math.round(motionEvent.getY()));
         Point originalPoint = mMapView.screenToLocation(clickedLocation);
         inputPointGraphic.setGeometry(originalPoint);
-        // project the web mercator point to WGS84 (WKID 4326)
+        // project the web mercator point to WGS84 (WKID 4236)
         Point projectedPoint = (Point) GeometryEngine.project(originalPoint, SpatialReference.create(4236));
 
         // show the original and projected point coordinates in a callout from the graphic
