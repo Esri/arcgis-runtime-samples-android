@@ -49,7 +49,7 @@ public class ProgressDialogFragment extends DialogFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    // prevent re-creation during configuration chance to allow us to dismiss this DialogFragment
+    // prevent re-creation during configuration change to allow us to dismiss this DialogFragment
     setRetainInstance(true);
     setCancelable(false);
 
