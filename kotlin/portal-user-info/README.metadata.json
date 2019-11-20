@@ -20,7 +20,7 @@
         "PortalUser"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/portaluserinfo/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/portaluserinfo/MainActivity.kt"
     ],
     "title": "Portal User Info"
 }

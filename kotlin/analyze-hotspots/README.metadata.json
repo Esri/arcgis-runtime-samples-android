@@ -20,7 +20,7 @@
         "GeoprocessingTask"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/analyzehotspots/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/analyzehotspots/MainActivity.kt"
     ],
     "title": "Analyze Hotspots"
 }
