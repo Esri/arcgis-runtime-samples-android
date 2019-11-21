@@ -16,7 +16,7 @@
 
 package com.esri.arcgisruntime.sample.displaymap
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
 //[DocRef: Name=Import map types-Android, Category=Get started, Topic=Develop your first map app with Kotlin]

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Display annotation</string>
+    <string name="river_annotation_feature_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/RiversAnnotation/FeatureServer/0</string>
+    <string name="river_feature_service_url">https://services1.arcgis.com/6677msI40mnLuuLr/arcgis/rest/services/East_Lothian_Rivers/FeatureServer/0</string>
+</resources>

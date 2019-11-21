@@ -1,6 +1,6 @@
 {
     "category": "Cloud and Portal",
-    "description": "Use the DefaultAuthenticationChallengeHandler class to take care of showing an authentication dialog for logging into a Portal. Once authenticated against the portal, the app displ",
+    "description": "Use the DefaultAuthenticationChallengeHandler class to take care of showing an authentication dialog for logging into a Portal.",
     "ignore": false,
     "images": [
         "portal-user-info.png"

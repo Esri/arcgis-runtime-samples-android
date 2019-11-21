@@ -24,5 +24,5 @@ android {
 
 dependencies {
     implementation "org.jetbrains.anko:anko-commons:$ankoVersion"
-    implementation "com.android.support:design:$andSupportLibVersion"
+    implementation 'com.google.android.material:material:1.0.0'
 }

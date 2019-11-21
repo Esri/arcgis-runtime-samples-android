@@ -19,7 +19,7 @@ package com.esri.arcgisruntime.sample.authenticatewithoauth;
 import java.net.MalformedURLException;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 

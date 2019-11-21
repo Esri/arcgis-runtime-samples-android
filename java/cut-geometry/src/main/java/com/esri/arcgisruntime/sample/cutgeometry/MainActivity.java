@@ -18,7 +18,7 @@ package com.esri.arcgisruntime.sample.cutgeometry;
 import java.util.Arrays;
 import java.util.List;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.widget.Button;
