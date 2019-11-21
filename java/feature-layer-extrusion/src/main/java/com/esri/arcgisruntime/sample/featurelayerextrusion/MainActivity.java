@@ -18,7 +18,7 @@ package com.esri.arcgisruntime.sample.featurelayerextrusion;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Switch;
 
 import com.esri.arcgisruntime.data.ServiceFeatureTable;

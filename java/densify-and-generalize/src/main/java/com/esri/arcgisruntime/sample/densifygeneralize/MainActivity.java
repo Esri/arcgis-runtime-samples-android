@@ -16,7 +16,7 @@
 
 package com.esri.arcgisruntime.sample.densifygeneralize;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.SeekBar;

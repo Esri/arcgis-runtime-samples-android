@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.esri.arcgisruntime.layers.WmsLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;

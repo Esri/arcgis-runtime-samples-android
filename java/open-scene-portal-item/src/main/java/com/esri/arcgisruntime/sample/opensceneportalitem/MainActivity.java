@@ -15,7 +15,7 @@
  */
 package com.esri.arcgisruntime.sample.opensceneportalitem;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.esri.arcgisruntime.mapping.ArcGISScene;

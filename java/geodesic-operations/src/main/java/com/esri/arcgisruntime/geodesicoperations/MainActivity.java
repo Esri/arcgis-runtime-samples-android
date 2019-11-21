@@ -19,7 +19,7 @@ package com.esri.arcgisruntime.geodesicoperations;
 import java.util.Arrays;
 
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.TextView;
