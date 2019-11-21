@@ -24,14 +24,13 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.data.QueryParameters;
@@ -47,6 +46,7 @@ import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         // show the results in a snackbar
         Snackbar reportSnackbar = Snackbar.make(findViewById(R.id.activityMain), result, Snackbar.LENGTH_INDEFINITE);
         reportSnackbar.setAction("New Query", view -> reportSnackbar.dismiss());
-        TextView snackbarTextView = reportSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+        TextView snackbarTextView = reportSnackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
         snackbarTextView.setSingleLine(false);
         reportSnackbar.show();
 

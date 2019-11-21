@@ -21,7 +21,7 @@ android {
 
 dependencies {
     // arcgis-android & appcompat lib dependencies from rootProject build.gradle
-    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     implementation "com.esri.arcgisruntime:arcgis-android-toolkit:$arcgisVersion"
-    implementation "com.android.support:appcompat-v7:$andSupportLibVersion"
+    implementation 'androidx.appcompat:appcompat:1.0.0'
 }

@@ -1,12 +1,11 @@
 {
-    "category": "Layers",
+    "category": "Edit and Manage Data",
     "description": "Delete features from an online feature service.",
     "ignore": false,
     "images": [
         "delete-features-feature-service.png"
     ],
     "keywords": [
-        "Layers",
         "ArcGISMap",
         "Feature",
         "FeatureEditResult",
