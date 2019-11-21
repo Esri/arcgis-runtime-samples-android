@@ -18,7 +18,7 @@ package com.esri.arcgisruntime.sample.locationlineofsight;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.widget.Toast;
 

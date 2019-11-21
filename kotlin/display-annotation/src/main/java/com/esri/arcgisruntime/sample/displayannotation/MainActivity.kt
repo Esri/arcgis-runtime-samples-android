@@ -17,7 +17,7 @@
 package com.esri.arcgisruntime.sample.displayannotation
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.layers.AnnotationLayer
@@ -35,9 +35,11 @@ class MainActivity : AppCompatActivity() {
     // create a map with a topographic basemap
     mapView.map = ArcGISMap(Basemap.Type.LIGHT_GRAY_CANVAS, 55.882436, -2.725610, 13).apply {
       // add a feature layer from a feature service
-      operationalLayers.add(FeatureLayer(ServiceFeatureTable(getString(R.string.river_feature_service_url))))
+      operationalLayers.add(
+          FeatureLayer(ServiceFeatureTable(getString(R.string.river_feature_service_url))))
       // add an annotation layer from a feature service
-      operationalLayers.add(AnnotationLayer(getString(R.string.river_annotation_feature_service_url)))
+      operationalLayers.add(
+          AnnotationLayer(getString(R.string.river_annotation_feature_service_url)))
     }
   }
 

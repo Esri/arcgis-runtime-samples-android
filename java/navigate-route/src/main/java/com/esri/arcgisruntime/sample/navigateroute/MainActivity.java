@@ -25,7 +25,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.widget.Button;

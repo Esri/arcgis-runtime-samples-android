@@ -27,7 +27,7 @@ import java.util.TimerTask;
 
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;

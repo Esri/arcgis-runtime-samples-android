@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;

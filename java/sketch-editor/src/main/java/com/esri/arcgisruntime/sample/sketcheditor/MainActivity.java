@@ -17,8 +17,6 @@
 package com.esri.arcgisruntime.sample.sketcheditor;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +24,7 @@ import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.GeometryType;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -38,6 +37,7 @@ import com.esri.arcgisruntime.mapping.view.SketchEditor;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
     String report = "Sketch geometry invalid:\n" + validIf;
     Snackbar reportSnackbar = Snackbar.make(findViewById(R.id.toolbarInclude), report, Snackbar.LENGTH_INDEFINITE);
     reportSnackbar.setAction("Dismiss", view -> reportSnackbar.dismiss());
-    TextView snackbarTextView = reportSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+    TextView snackbarTextView = reportSnackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
     snackbarTextView.setSingleLine(false);
     reportSnackbar.show();
     Log.e(TAG, report);

@@ -1,6 +1,6 @@
 {
     "category": "Analysis",
-    "description": "Execute a geoprocessing task to calculate a hotspot analysis based on the frequency of 911 calls. It calculates the frequency of these calls within a given study area during a spec",
+    "description": "Execute a geoprocessing task to calculate a hotspot analysis based on the frequency of 911 calls.",
     "ignore": false,
     "images": [
         "analyze-hotspots.png"

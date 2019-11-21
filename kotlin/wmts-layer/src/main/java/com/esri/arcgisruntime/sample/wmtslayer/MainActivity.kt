@@ -17,7 +17,7 @@
 package com.esri.arcgisruntime.sample.wmtslayer
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 
 import com.esri.arcgisruntime.layers.WmtsLayer
 import com.esri.arcgisruntime.loadable.LoadStatus

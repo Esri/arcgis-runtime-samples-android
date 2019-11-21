@@ -18,7 +18,7 @@ package com.esri.arcgisruntime.samples.portaluserinfo
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.security.AuthenticationManager

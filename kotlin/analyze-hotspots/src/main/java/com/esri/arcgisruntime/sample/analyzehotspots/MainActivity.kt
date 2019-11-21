@@ -19,9 +19,9 @@ package com.esri.arcgisruntime.sample.analyzehotspots
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReference
