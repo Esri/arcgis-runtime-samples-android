@@ -20,18 +20,17 @@ class MainActivity : AppCompatActivity() {
     // create a new map with a streets basemap and set it to the map view
     mapView.map = ArcGISMap(Basemap.createStreetsVector()).apply {
       // create the restaurants feature layer from a service feature table
-      FeatureLayer(ServiceFeatureTable(getString(R.string.restaurants_url))).let { featureLayer ->
+      with(FeatureLayer(ServiceFeatureTable(getString(R.string.restaurants_url)))) {
         // set a dictionary renderer to the restaurant layer made from a custom style file
-        featureLayer.renderer =
-          DictionaryRenderer(DictionarySymbolStyle.createFromFile(
+        this.renderer = DictionaryRenderer(DictionarySymbolStyle.createFromFile(
             getExternalFilesDir(getString(R.string.restaurant_stylx_path))?.path))
         // once the feature layer is loaded
-        featureLayer.addDoneLoadingListener {
+        this.addDoneLoadingListener {
           // set the map view's viewpoint to the feature layer extent
-          mapView.setViewpointAsync(Viewpoint(featureLayer.fullExtent))
+          mapView.setViewpointAsync(Viewpoint(this.fullExtent))
         }
         // add the the restaurant feature layer to the map's operational layers
-        operationalLayers.add(featureLayer)
+        operationalLayers.add(this)
       }
     }
   }
