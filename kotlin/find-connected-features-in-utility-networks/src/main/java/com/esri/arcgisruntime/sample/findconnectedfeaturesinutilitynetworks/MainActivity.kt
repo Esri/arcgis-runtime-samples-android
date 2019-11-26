@@ -39,7 +39,7 @@ import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
-import com.esri.arcgisruntime.symbology.SimpleRenderer
+import com.esri.arcgisruntime.symbology.UniqueValueRenderer
 import com.esri.arcgisruntime.utilitynetworks.UtilityElement
 import com.esri.arcgisruntime.utilitynetworks.UtilityElementTraceResult
 import com.esri.arcgisruntime.utilitynetworks.UtilityNetwork
@@ -70,10 +70,10 @@ class MainActivity : AppCompatActivity() {
 
   // create symbols for the starting point and barriers
   private val mStartingPointSymbol: SimpleMarkerSymbol by lazy {
-    SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, Color.GREEN, 20f)
+    SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, Color.GREEN, 25f)
   }
   private val mBarrierPointSymbol: SimpleMarkerSymbol by lazy {
-    SimpleMarkerSymbol(SimpleMarkerSymbol.Style.X, Color.RED, 20f)
+    SimpleMarkerSymbol(SimpleMarkerSymbol.Style.X, Color.RED, 25f)
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,39 +81,69 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // setup the map view
-    mapView.apply {
-
+    mapView.let { mapView ->
       // add a map with streets night vector basemap
-      map = ArcGISMap(Basemap.createStreetsNightVector()).apply {
+      mapView.map = ArcGISMap(Basemap.createStreetsNightVector()).apply {
         operationalLayers.apply {
           // create electrical distribution line layer
-          add(FeatureLayer(ServiceFeatureTable(
-              getString(R.string.naperville_utility_network_service) + "/115")).apply {
+          add(FeatureLayer(ServiceFeatureTable(getString(R.string.naperville_utility_network_service) + "/115")).apply {
+            // define a solid line for medium voltage lines
+            val mediumVoltageValue = UniqueValueRenderer.UniqueValue(
+              "N/A",
+              "Medium voltage",
+              SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.CYAN, 3f),
+              listOf(5)
+            )
+            // define a dashed line for low voltage lines
+            val lowVoltageValue = UniqueValueRenderer.UniqueValue(
+              "N/A",
+              "Low voltage",
+              SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.CYAN, 3f),
+              listOf(3)
+            )
             // create and apply a renderer solid light gray renderer
             renderer =
-                SimpleRenderer(SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.LTGRAY, 2f))
+              UniqueValueRenderer(
+                listOf("ASSETGROUP"),
+                listOf(mediumVoltageValue, lowVoltageValue),
+                "",
+                SimpleLineSymbol()
+              )
           })
           // create electrical device layer
-          add(FeatureLayer(
-              ServiceFeatureTable(getString(R.string.naperville_utility_network_service) + "/100")))
+          add(
+            FeatureLayer(ServiceFeatureTable(getString(R.string.naperville_utility_network_service) + "/100"))
+          )
         }
       }
 
       // set the viewpoint to a section in the southeast of the network
-      setViewpointAsync(Viewpoint(
-          Envelope(-9813547.35557238, 5129980.36635111, -9813185.0602376, 5130215.41254146,
-              SpatialReferences.getWebMercator())))
+      mapView.setViewpointAsync(
+        Viewpoint(
+          Envelope(
+            -9813547.35557238,
+            5129980.36635111,
+            -9813185.0602376,
+            5130215.41254146,
+            SpatialReferences.getWebMercator()
+          )
+        )
+      )
+
+      // set the selection color for features in the map view
+      mapView.selectionProperties.color = Color.YELLOW
 
       // add a graphics overlay
-      graphicsOverlays.add(graphicsOverlay)
+      mapView.graphicsOverlays.add(graphicsOverlay)
 
       // handle taps on the map view
-      onTouchListener = object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
+      mapView.onTouchListener = object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
           // only pass taps to identify nearest utility element once the utility network has loaded
           if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
             identifyNearestUtilityElement(
-                android.graphics.Point(e.x.roundToInt(), e.y.roundToInt()))
+              android.graphics.Point(e.x.roundToInt(), e.y.roundToInt())
+            )
           }
           return super.onSingleTapConfirmed(e)
         }
@@ -150,10 +180,11 @@ class MainActivity : AppCompatActivity() {
       (identifyResults.getOrNull(0)?.elements?.get(0) as? ArcGISFeature)?.let { identifiedFeature ->
         // get the network source of the identified feature
         (utilityNetwork.definition.getNetworkSource(
-            identifiedFeature.featureTable.tableName)).let { utilityNetworkSource ->
+          identifiedFeature.featureTable.tableName
+        )).let { utilityNetworkSource ->
           // check if the network source is a junction or an edge
-          if (utilityNetworkSource.sourceType == UtilityNetworkSource.Type.JUNCTION) {
-            GlobalScope.launch {
+          when {
+            utilityNetworkSource.sourceType == UtilityNetworkSource.Type.JUNCTION -> GlobalScope.launch {
               // create a utility element with the identified feature
               createUtilityElement(identifiedFeature, utilityNetworkSource)?.let { utilityElement ->
                 // add the utility element to the map
@@ -162,40 +193,54 @@ class MainActivity : AppCompatActivity() {
                 showTerminalNameInStatusLabel(utilityElement.terminal)
               }
             }
-          } else {
-            //  create a utility element with the identified feature
-            val utilityElement = utilityNetwork.createElement(identifiedFeature, null).apply {
-              // calculate how far the clicked location is along the edge feature
-              this.fractionAlongEdge = GeometryEngine.fractionAlong(
-                  GeometryEngine.removeZ(identifiedFeature.geometry) as Polyline, mapPoint, -1.0)
-            }.also {
-              // update the status label text
-              statusTextView.text = getString(R.string.fraction_message, it.fractionAlongEdge)
+            utilityNetworkSource.sourceType == UtilityNetworkSource.Type.EDGE -> {
+              //  create a utility element with the identified feature
+              val utilityElement = utilityNetwork.createElement(identifiedFeature, null).apply {
+                // calculate how far the clicked location is along the edge feature
+                this.fractionAlongEdge = GeometryEngine.fractionAlong(
+                  GeometryEngine.removeZ(identifiedFeature.geometry) as Polyline, mapPoint, -1.0
+                )
+              }.also {
+                // update the status label text
+                statusTextView.text = getString(R.string.fraction_message, it.fractionAlongEdge)
+              }
+              // set the trace location graphic to the nearest coordinate to the tapped point
+              addUtilityElementToMap(identifiedFeature, mapPoint, utilityElement)
             }
-            // set the trace location graphic to the nearest coordinate to the tapped point
-            addUtilityElementToMap(identifiedFeature, mapPoint, utilityElement)
+            else ->
+              error("Unexpected utility network source type!")
           }
         }
       }
     }
   }
 
-  private fun addUtilityElementToMap(identifiedFeature: ArcGISFeature, mapPoint: Point?,
-                                     utilityElement: UtilityElement) {
-    Graphic(
-        GeometryEngine.nearestCoordinate(identifiedFeature.geometry, mapPoint).coordinate).apply {
-      // add the element to the appropriate list (starting locations or barriers), and add the
-      // appropriate symbol to the graphic
-      symbol = if (startingLocationsRadioButton.isChecked) {
-        startingLocations.add(utilityElement)
-        mStartingPointSymbol
-      } else {
-        barriers.add(utilityElement)
-        mBarrierPointSymbol
-      }
-    }.apply {
-      graphicsOverlay.graphics.add(this)
-    }
+  /**
+   * Add utility element to either the starting locations or barriers list and add a graphic
+   * representing it to the graphics overlay.
+   */
+  private fun addUtilityElementToMap(
+    identifiedFeature: ArcGISFeature,
+    mapPoint: Point?,
+    utilityElement: UtilityElement
+  ) {
+    graphicsOverlay.graphics.add(
+      Graphic(
+        GeometryEngine.nearestCoordinate(
+          identifiedFeature.geometry,
+          mapPoint
+        ).coordinate
+      ).apply {
+        // add the element to the appropriate list (starting locations or barriers), and add the
+        // appropriate symbol to the graphic
+        symbol = if (startingLocationsRadioButton.isChecked) {
+          startingLocations.add(utilityElement)
+          mStartingPointSymbol
+        } else {
+          barriers.add(utilityElement)
+          mBarrierPointSymbol
+        }
+      })
   }
 
   /**
@@ -205,46 +250,49 @@ class MainActivity : AppCompatActivity() {
    * @param networkSource     the UtilityNetworkSource to which the created UtilityElement is associated
    * @return the created UtilityElement
    */
-  private suspend fun createUtilityElement(identifiedFeature: ArcGISFeature,
-                                           networkSource: UtilityNetworkSource): UtilityElement? {
+  private suspend fun createUtilityElement(
+    identifiedFeature: ArcGISFeature,
+    networkSource: UtilityNetworkSource
+  ): UtilityElement? {
     // find the code matching the asset group name in the feature's attributes
     val assetGroupCode =
-        identifiedFeature.attributes[identifiedFeature.featureTable.subtypeField.toLowerCase()] as Int
+      identifiedFeature.attributes[identifiedFeature.featureTable.subtypeField.toLowerCase()] as Int
 
     // find the network source's asset group with the matching code
     return networkSource.assetGroups.filter { it.code == assetGroupCode }[0].assetTypes
-        // find the asset group type code matching the feature's asset type code
-        .filter { it.code == identifiedFeature.attributes["assettype"].toString().toInt() }[0]
-        .let { utilityAssetType ->
-          // get the list of terminals for the feature
-          val terminals = utilityAssetType.terminalConfiguration.terminals
-          // if there is only one terminal, use it to create a utility element
-          when (terminals.size) {
-            1 -> {
-              utilityNetwork.createElement(identifiedFeature, terminals[0])
-            }
-            // if there is more than one terminal, prompt the user to select one
-            else -> {
-              // get a list of terminal names from the terminals
-              val terminalNames = ArrayList<String>()
-              utilityAssetType.terminalConfiguration.terminals.mapTo(terminalNames) { it.name }
-              // pass the terminal names to a dialog
-              val utilityTerminalSelectionDialog =
-                  UtilityTerminalSelectionDialog.newInstance(terminalNames)
-              utilityTerminalSelectionDialog.show(supportFragmentManager, "terminal_fragment")
-              // use a coroutine to set utility element after user has picked a terminal
-              suspendCoroutine<UtilityElement> { cont ->
-                utilityTerminalSelectionDialog.setOnClickListener(object :
-                    UtilityTerminalSelectionDialog.OnButtonClickedListener {
-                  override fun onContinueClicked(terminalIndex: Int) {
-                    cont.resume(
-                        utilityNetwork.createElement(identifiedFeature, terminals[terminalIndex]))
-                  }
-                })
-              }
+      // find the asset group type code matching the feature's asset type code
+      .filter { it.code == identifiedFeature.attributes["assettype"].toString().toInt() }[0]
+      .let { utilityAssetType ->
+        // get the list of terminals for the feature
+        val terminals = utilityAssetType.terminalConfiguration.terminals
+        // if there is only one terminal, use it to create a utility element
+        when (terminals.size) {
+          1 -> {
+            utilityNetwork.createElement(identifiedFeature, terminals[0])
+          }
+          // if there is more than one terminal, prompt the user to select one
+          else -> {
+            // get a list of terminal names from the terminals
+            val terminalNames = ArrayList<String>()
+            utilityAssetType.terminalConfiguration.terminals.mapTo(terminalNames) { it.name }
+            // pass the terminal names to a dialog
+            val utilityTerminalSelectionDialog =
+              UtilityTerminalSelectionDialog.newInstance(terminalNames)
+            utilityTerminalSelectionDialog.show(supportFragmentManager, "terminal_fragment")
+            // use a coroutine to set utility element after user has picked a terminal
+            suspendCoroutine<UtilityElement> { cont ->
+              utilityTerminalSelectionDialog.setOnClickListener(object :
+                UtilityTerminalSelectionDialog.OnButtonClickedListener {
+                override fun onContinueClicked(terminalIndex: Int) {
+                  cont.resume(
+                    utilityNetwork.createElement(identifiedFeature, terminals[terminalIndex])
+                  )
+                }
+              })
             }
           }
         }
+      }
   }
 
   /**
@@ -254,7 +302,7 @@ class MainActivity : AppCompatActivity() {
    */
   private fun showTerminalNameInStatusLabel(terminal: UtilityTerminal) {
     statusTextView.text =
-        getString(R.string.terminal_name, if (terminal.name != "") terminal.name else "default")
+      getString(R.string.terminal_name, if (terminal.name != "") terminal.name else "default")
   }
 
   /**
@@ -288,27 +336,28 @@ class MainActivity : AppCompatActivity() {
             if (utilityElementTraceResult.elements.isNotEmpty()) {
               // iterate through the map's feature layers
               mapView.map.operationalLayers.filterIsInstance<FeatureLayer>()
-                  .forEach { featureLayer ->
+                .forEach { featureLayer ->
 
-                    // clear previous selection
-                    featureLayer.clearSelection()
+                  // clear previous selection
+                  featureLayer.clearSelection()
 
-                    // create query parameters to find features who's network source name matches the layer's feature table name
-                    with(QueryParameters()) {
-                      utilityElementTraceResult.elements.filter { it.networkSource.name == featureLayer.featureTable.tableName }
-                          .forEach { utilityElement ->
-                            this.objectIds.add(utilityElement.objectId)
-                          }
+                  // create query parameters to find features who's network source name matches the layer's feature table name
+                  with(QueryParameters()) {
+                    utilityElementTraceResult.elements.filter { it.networkSource.name == featureLayer.featureTable.tableName }
+                      .forEach { utilityElement ->
+                        this.objectIds.add(utilityElement.objectId)
+                      }
 
-                      // select features that match the query
-                      featureLayer.selectFeaturesAsync(this, FeatureLayer.SelectionMode.NEW).addDoneListener {
+                    // select features that match the query
+                    featureLayer.selectFeaturesAsync(this, FeatureLayer.SelectionMode.NEW)
+                      .addDoneListener {
                         // when done, update status text, enable buttons and hide progress indicator
                         statusTextView.text = getString(R.string.trace_completed)
                         enableButtons()
                         progressIndicator.visibility = View.GONE
                       }
-                    }
                   }
+                }
             }
           }
           // enable the UI

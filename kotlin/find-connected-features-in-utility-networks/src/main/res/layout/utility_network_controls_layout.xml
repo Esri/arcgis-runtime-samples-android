@@ -1,27 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:color/background_light">
+
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <RadioButton
             android:id="@+id/startingLocationsRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="@string/add_starting_location" />
+
         <RadioButton
             android:id="@+id/barrierLocationsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_barrier" />
+
     </RadioGroup>
+
+    <Spinner
+        android:id="@+id/traceTypeSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/traceTypeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        android:background="@drawable/spinner_background" />
+
     <Button
         android:id="@+id/resetButton"
         android:layout_width="wrap_content"
@@ -32,7 +47,8 @@
         app:layout_constraintEnd_toStartOf="@+id/traceButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/traceTypeSpinner" />
+
     <Button
         android:id="@+id/traceButton"
         android:layout_width="wrap_content"
@@ -43,7 +59,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/resetButton"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/traceTypeSpinner" />
+
     <TextView
         android:id="@+id/statusTextView"
         android:layout_width="0dp"
@@ -52,8 +69,18 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/radioGroup"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/resetButton" />
+
+    <TextView
+        android:id="@+id/traceTypeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Trace type:"
+        app:layout_constraintBottom_toTopOf="@+id/resetButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 </androidx.constraintlayout.widget.ConstraintLayout>
