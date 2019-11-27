@@ -20,6 +20,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.data.ArcGISFeature
 import com.esri.arcgisruntime.data.QueryParameters
@@ -137,17 +138,18 @@ class MainActivity : AppCompatActivity() {
       mapView.graphicsOverlays.add(graphicsOverlay)
 
       // handle taps on the map view
-      mapView.onTouchListener = object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
-        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-          // only pass taps to identify nearest utility element once the utility network has loaded
-          if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
-            identifyNearestUtilityElement(
-              android.graphics.Point(e.x.roundToInt(), e.y.roundToInt())
-            )
+      mapView.onTouchListener =
+        object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
+          override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+            // only pass taps to identify nearest utility element once the utility network has loaded
+            if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
+              identifyNearestUtilityElement(
+                android.graphics.Point(e.x.roundToInt(), e.y.roundToInt())
+              )
+            }
+            return super.onSingleTapConfirmed(e)
           }
-          return super.onSingleTapConfirmed(e)
         }
-      }
     }
 
     // load the utility network
@@ -160,6 +162,11 @@ class MainActivity : AppCompatActivity() {
       }
     }
     utilityNetwork.loadAsync()
+
+    // add all utility trace types to the trace type spinner as strings
+    traceTypeSpinner.adapter = ArrayAdapter<String>(
+      applicationContext, android.R.layout.simple_spinner_item, UtilityTraceType.values().map { it.toString() }
+    )
   }
 
   /**
@@ -273,8 +280,7 @@ class MainActivity : AppCompatActivity() {
           // if there is more than one terminal, prompt the user to select one
           else -> {
             // get a list of terminal names from the terminals
-            val terminalNames = ArrayList<String>()
-            utilityAssetType.terminalConfiguration.terminals.mapTo(terminalNames) { it.name }
+            val terminalNames = ArrayList<String>(utilityAssetType.terminalConfiguration.terminals.map{ it.name })
             // pass the terminal names to a dialog
             val utilityTerminalSelectionDialog =
               UtilityTerminalSelectionDialog.newInstance(terminalNames)
@@ -321,9 +327,9 @@ class MainActivity : AppCompatActivity() {
     statusTextView.text = getString(R.string.find_connected_features_message)
     disableButtons()
 
-
-    // create utility trace parameters for a connected trace
-    with(UtilityTraceParameters(UtilityTraceType.CONNECTED, startingLocations)) {
+    // create utility trace parameters for the given trace type
+    val traceType = UtilityTraceType.valueOf(traceTypeSpinner.selectedItem.toString())
+    with(UtilityTraceParameters(traceType, startingLocations)) {
       // if any barriers have been created, add them to the parameters
       this.barriers.addAll(barriers)
       // run the utility trace and get the results
