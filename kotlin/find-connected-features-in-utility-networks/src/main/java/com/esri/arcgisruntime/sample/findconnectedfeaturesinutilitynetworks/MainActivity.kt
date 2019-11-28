@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.findconnectedfeaturesinutilitynetworks
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ArrayAdapter
@@ -46,20 +47,19 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityElementTraceResult
 import com.esri.arcgisruntime.utilitynetworks.UtilityNetwork
 import com.esri.arcgisruntime.utilitynetworks.UtilityNetworkSource
 import com.esri.arcgisruntime.utilitynetworks.UtilityTerminal
+import com.esri.arcgisruntime.utilitynetworks.UtilityTier
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceType
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.utility_network_controls_layout.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import org.jetbrains.anko.alert
+import org.jetbrains.anko.selector
+import org.jetbrains.anko.toast
 import java.util.concurrent.ExecutionException
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
+  private lateinit var mediumVoltageTier : UtilityTier
   private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
   private val utilityNetwork: UtilityNetwork by lazy {
     UtilityNetwork(getString(R.string.naperville_utility_network_service), mapView.map)
@@ -157,6 +157,11 @@ class MainActivity : AppCompatActivity() {
       if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
         // update the status text
         statusTextView.text = getString(R.string.click_to_add_points)
+
+        // Get the utility tier used for traces in this network. For this data set, the "Medium Voltage Radial" tier from the "ElectricDistribution" domain network is used.
+        val domainNetwork = utilityNetwork.definition.getDomainNetwork("ElectricDistribution")
+        mediumVoltageTier = domainNetwork.getTier("Medium Voltage Radial")
+
       } else {
         reportError("Error loading utility network: " + utilityNetwork.loadError.cause?.message)
       }
@@ -165,8 +170,12 @@ class MainActivity : AppCompatActivity() {
 
     // add all utility trace types to the trace type spinner as strings
     traceTypeSpinner.adapter = ArrayAdapter<String>(
-      applicationContext, android.R.layout.simple_spinner_item, UtilityTraceType.values().map { it.toString() }
+      applicationContext,
+      android.R.layout.simple_spinner_item,
+      UtilityTraceType.values().map { it.toString() }
     )
+
+
   }
 
   /**
@@ -191,14 +200,9 @@ class MainActivity : AppCompatActivity() {
         )).let { utilityNetworkSource ->
           // check if the network source is a junction or an edge
           when {
-            utilityNetworkSource.sourceType == UtilityNetworkSource.Type.JUNCTION -> GlobalScope.launch {
+            utilityNetworkSource.sourceType == UtilityNetworkSource.Type.JUNCTION -> {
               // create a utility element with the identified feature
-              createUtilityElement(identifiedFeature, utilityNetworkSource)?.let { utilityElement ->
-                // add the utility element to the map
-                addUtilityElementToMap(identifiedFeature, mapPoint, utilityElement)
-                // show the utility element name in the UI
-                showTerminalNameInStatusLabel(utilityElement.terminal)
-              }
+              createUtilityElement(identifiedFeature, utilityNetworkSource)
             }
             utilityNetworkSource.sourceType == UtilityNetworkSource.Type.EDGE -> {
               //  create a utility element with the identified feature
@@ -257,16 +261,16 @@ class MainActivity : AppCompatActivity() {
    * @param networkSource     the UtilityNetworkSource to which the created UtilityElement is associated
    * @return the created UtilityElement
    */
-  private suspend fun createUtilityElement(
+  private fun createUtilityElement(
     identifiedFeature: ArcGISFeature,
     networkSource: UtilityNetworkSource
-  ): UtilityElement? {
+  ) {
     // find the code matching the asset group name in the feature's attributes
     val assetGroupCode =
-      identifiedFeature.attributes[identifiedFeature.featureTable.subtypeField.toLowerCase()] as Int
+      identifiedFeature.attributes[identifiedFeature.featureTable.subtypeField] as Int
 
     // find the network source's asset group with the matching code
-    return networkSource.assetGroups.filter { it.code == assetGroupCode }[0].assetTypes
+    networkSource.assetGroups.filter { it.code == assetGroupCode }[0].assetTypes
       // find the asset group type code matching the feature's asset type code
       .filter { it.code == identifiedFeature.attributes["assettype"].toString().toInt() }[0]
       .let { utilityAssetType ->
@@ -280,21 +284,21 @@ class MainActivity : AppCompatActivity() {
           // if there is more than one terminal, prompt the user to select one
           else -> {
             // get a list of terminal names from the terminals
-            val terminalNames = ArrayList<String>(utilityAssetType.terminalConfiguration.terminals.map{ it.name })
-            // pass the terminal names to a dialog
-            val utilityTerminalSelectionDialog =
-              UtilityTerminalSelectionDialog.newInstance(terminalNames)
-            utilityTerminalSelectionDialog.show(supportFragmentManager, "terminal_fragment")
-            // use a coroutine to set utility element after user has picked a terminal
-            suspendCoroutine<UtilityElement> { cont ->
-              utilityTerminalSelectionDialog.setOnClickListener(object :
-                UtilityTerminalSelectionDialog.OnButtonClickedListener {
-                override fun onContinueClicked(terminalIndex: Int) {
-                  cont.resume(
-                    utilityNetwork.createElement(identifiedFeature, terminals[terminalIndex])
-                  )
-                }
-              })
+            val terminalNames =
+              ArrayList<String>(utilityAssetType.terminalConfiguration.terminals.map { it.name })
+
+            selector("Select utility terminal:", terminalNames) { _, i ->
+              val utilityElement = utilityNetwork.createElement(identifiedFeature, terminals[i])
+
+              // add the utility element to the map
+              addUtilityElementToMap(
+                identifiedFeature,
+                identifiedFeature.geometry as? Point,
+                utilityElement
+              )
+
+              // show the utility element name in the UI
+              showTerminalNameInStatusLabel(utilityElement.terminal)
             }
           }
         }
@@ -329,9 +333,12 @@ class MainActivity : AppCompatActivity() {
 
     // create utility trace parameters for the given trace type
     val traceType = UtilityTraceType.valueOf(traceTypeSpinner.selectedItem.toString())
+    Log.e("tt", traceType.toString())
     with(UtilityTraceParameters(traceType, startingLocations)) {
       // if any barriers have been created, add them to the parameters
       this.barriers.addAll(barriers)
+      // Set the trace configuration using the tier from the utility domain network.
+      this.traceConfiguration = mediumVoltageTier.traceConfiguration
       // run the utility trace and get the results
       val utilityTraceResultsFuture = utilityNetwork.traceAsync(this)
       utilityTraceResultsFuture.addDoneListener {
@@ -341,8 +348,7 @@ class MainActivity : AppCompatActivity() {
             // ensure the result is not empty
             if (utilityElementTraceResult.elements.isNotEmpty()) {
               // iterate through the map's feature layers
-              mapView.map.operationalLayers.filterIsInstance<FeatureLayer>()
-                .forEach { featureLayer ->
+              mapView.map.operationalLayers.filterIsInstance<FeatureLayer>().forEach { featureLayer ->
 
                   // clear previous selection
                   featureLayer.clearSelection()
@@ -370,10 +376,10 @@ class MainActivity : AppCompatActivity() {
           enableButtons()
         } catch (e: InterruptedException) {
           statusTextView.text = getString(R.string.failed_message)
-          reportError("Error running utility network connected trace.")
+          reportError("Error running utility network connected trace: " + e.message)
         } catch (e: ExecutionException) {
           statusTextView.text = getString(R.string.failed_message)
-          reportError("Error running utility network connected trace.")
+          reportError("Error running utility network connected trace: " + e.message)
         }
       }
     }
@@ -424,8 +430,8 @@ class MainActivity : AppCompatActivity() {
    * @param error as a string
    */
   private fun reportError(error: String) {
-    alert(error)
-    error(error)
+    toast(error)
+    Log.e(this::class.java.simpleName, error)
   }
 
   override fun onPause() {
