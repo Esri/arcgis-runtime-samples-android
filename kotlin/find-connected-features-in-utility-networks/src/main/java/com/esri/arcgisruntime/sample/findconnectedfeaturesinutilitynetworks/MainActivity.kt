@@ -59,7 +59,7 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var mediumVoltageTier : UtilityTier
+  private lateinit var mediumVoltageTier: UtilityTier
   private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
   private val utilityNetwork: UtilityNetwork by lazy {
     UtilityNetwork(getString(R.string.naperville_utility_network_service), mapView.map)
@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
         // update the status text
         statusTextView.text = getString(R.string.click_to_add_points)
 
-        // Get the utility tier used for traces in this network. For this data set, the "Medium Voltage Radial" tier from the "ElectricDistribution" domain network is used.
+        // get the utility tier used for traces in this network, in this case "Medium Voltage Radial"
         val domainNetwork = utilityNetwork.definition.getDomainNetwork("ElectricDistribution")
         mediumVoltageTier = domainNetwork.getTier("Medium Voltage Radial")
 
@@ -337,7 +337,7 @@ class MainActivity : AppCompatActivity() {
     with(UtilityTraceParameters(traceType, startingLocations)) {
       // if any barriers have been created, add them to the parameters
       this.barriers.addAll(barriers)
-      // Set the trace configuration using the tier from the utility domain network.
+      // set the trace configuration using the tier from the utility domain network
       this.traceConfiguration = mediumVoltageTier.traceConfiguration
       // run the utility trace and get the results
       val utilityTraceResultsFuture = utilityNetwork.traceAsync(this)
@@ -348,7 +348,8 @@ class MainActivity : AppCompatActivity() {
             // ensure the result is not empty
             if (utilityElementTraceResult.elements.isNotEmpty()) {
               // iterate through the map's feature layers
-              mapView.map.operationalLayers.filterIsInstance<FeatureLayer>().forEach { featureLayer ->
+              mapView.map.operationalLayers.filterIsInstance<FeatureLayer>()
+                .forEach { featureLayer ->
 
                   // clear previous selection
                   featureLayer.clearSelection()
