@@ -17,7 +17,7 @@
 package com.esri.arcgisruntime.sample.mapspatialreference;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;

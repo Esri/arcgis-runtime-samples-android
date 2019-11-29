@@ -19,6 +19,11 @@ package com.esri.arcgisruntime.sample.integratedwindowsauthentication
 
 import android.content.DialogInterface
 import android.os.Bundle
+<<<<<<< HEAD
+=======
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+>>>>>>> 822bd8d3b8dd7a6126ac79aaf18adb9ee280cca6
 import android.util.Log
 import android.util.Patterns
 import android.view.View

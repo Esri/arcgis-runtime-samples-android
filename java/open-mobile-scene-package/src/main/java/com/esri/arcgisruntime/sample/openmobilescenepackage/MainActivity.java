@@ -21,14 +21,13 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
@@ -62,41 +61,12 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Check if the mobile scene package supports direct read and, if not, unpack the mobile scene package to the cache.
-   * Then call loadMobileScenePackage on with the mobile scene package.
-   */
-  private void checkReadSupport() {
-    final String mspkPath = Environment.getExternalStorageDirectory() + getString(R.string.mspk_path);
-    String mspkCachePath = getCacheDir().getPath() + getString(R.string.mspk_cache_path);
-
-    // check if direct read is supported by the mobile scene package
-    ListenableFuture<Boolean> isDirectReadSupportedFuture = MobileScenePackage.isDirectReadSupportedAsync(mspkPath);
-    isDirectReadSupportedFuture.addDoneListener(() -> {
-      try {
-        if (isDirectReadSupportedFuture.get()) {
-          // load the mobile scene package from the direct read path directory
-          MobileScenePackage directReadMSPK = new MobileScenePackage(mspkPath);
-          loadMobileScenePackage(directReadMSPK);
-        } else {
-          // unpack the mobile scene package and store it in the app's cache directory
-          MobileScenePackage.unpackAsync(mspkPath, mspkCachePath).addDoneListener(() -> {
-            MobileScenePackage unpackedMSPK = new MobileScenePackage(mspkCachePath);
-            loadMobileScenePackage(unpackedMSPK);
-          });
-        }
-      } catch (Exception e) {
-        String error = "Mobile scene package direct read could not be determined: " + e.getMessage();
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        Log.e(TAG, error);
-      }
-    });
-  }
-
-  /**
    * Loads the mobile scene package asynchronously, and once it has loaded, sets the first scene within the package to
    * the scene view.
    */
-  private void loadMobileScenePackage(MobileScenePackage mobileScenePackage) {
+  private void loadMobileScenePackage() {
+
+    MobileScenePackage mobileScenePackage = new MobileScenePackage(Environment.getExternalStorageDirectory() + getString(R.string.mspk_path));
     mobileScenePackage.addDoneLoadingListener(() -> {
       if (mobileScenePackage.getLoadStatus() == LoadStatus.LOADED && !mobileScenePackage.getScenes().isEmpty()) {
         mSceneView.setScene(mobileScenePackage.getScenes().get(0));
@@ -135,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
     int requestCode = 2;
     if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      checkReadSupport();
+      loadMobileScenePackage();
     } else {
       // request permission
       ActivityCompat.requestPermissions(this, reqPermission, requestCode);
@@ -148,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      checkReadSupport();
+      loadMobileScenePackage();
     } else {
       // report to user that permission was denied
       Toast.makeText(this, getString(R.string.location_permission_denied), Toast.LENGTH_SHORT).show();

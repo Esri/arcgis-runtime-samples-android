@@ -1,11 +1,10 @@
-package com.esri.tokenauthentication
+package com.esri.arcgisruntime.sample.tokenauthentication
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
-import com.esri.arcgisruntime.samples.tokenauthentication.R
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
 import kotlinx.android.synthetic.main.activity_main.*

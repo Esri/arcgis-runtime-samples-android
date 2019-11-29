@@ -21,7 +21,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
