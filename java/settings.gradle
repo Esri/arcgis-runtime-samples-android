@@ -98,13 +98,8 @@ include ':add-enc-exchange-set',
         ':map-reference-scale',
         ':map-rotation',
         ':mobile-map-search-and-route',
-<<<<<<< HEAD
-        ':navigate-route',
-        ':navigate-in-ar',
-=======
         ':navigate-in-ar',
         ':navigate-route',
->>>>>>> 822bd8d3b8dd7a6126ac79aaf18adb9ee280cca6
         ':offline-geocode',
         ':open-existing-map',
         ':open-mobile-mappackage',

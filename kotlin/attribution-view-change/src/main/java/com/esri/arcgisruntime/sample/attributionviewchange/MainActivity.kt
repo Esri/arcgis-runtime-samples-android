@@ -13,15 +13,15 @@
  * limitations under the License.
  *
  */
-package com.esri.arcgisruntime.sample.attributionchange
+package com.esri.arcgisruntime.sample.attributionviewchange
 
 import android.os.Bundle
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -38,12 +38,12 @@ class MainActivity : AppCompatActivity() {
 
         // create a FAB to respond to attribution bar
         fab.setOnClickListener { view ->
-            com.google.android.material.snackbar.Snackbar.make(view, resources.getString(R.string.message), com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
+            Snackbar.make(view, resources.getString(R.string.message), Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
 
         // set attribution bar listener
-        val params = fab.layoutParams as androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams
+        val params = fab.layoutParams as CoordinatorLayout.LayoutParams
         mapView.addAttributionViewLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             val heightDelta = bottom - oldBottom
             params.bottomMargin += heightDelta
