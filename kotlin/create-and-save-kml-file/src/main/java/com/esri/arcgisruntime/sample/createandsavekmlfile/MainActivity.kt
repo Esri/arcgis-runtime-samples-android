@@ -16,12 +16,20 @@
 
 package com.esri.arcgisruntime.sample.createandsavekmlfile
 
+import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Shader
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RectShape
 import android.net.Uri
 import android.os.Bundle
-import android.view.KeyEvent
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.GeometryType
@@ -43,16 +51,18 @@ import com.esri.arcgisruntime.ogc.kml.KmlPolygonStyle
 import com.esri.arcgisruntime.ogc.kml.KmlStyle
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.kml_geometry_controls_layout.*
-import sun.jvm.hotspot.utilities.IntArray
-import java.awt.Event.ENTER
-import java.io.File
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.customView
+import org.jetbrains.anko.editText
+import org.jetbrains.anko.toast
+import org.jetbrains.anko.verticalLayout
 
 val kmlDocument by lazy { KmlDocument() }
 
+var color: Int = 0
 
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var iconResources: List<Int>
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -60,25 +70,39 @@ class MainActivity : AppCompatActivity() {
 
     mapView.apply {
       // create a map and add it to the map view
-      ArcGISMap(Basemap.createDarkGrayCanvasVector()).apply {
+      map = ArcGISMap(Basemap.createDarkGrayCanvasVector()).apply {
         // create a KML layer from a blank KML document and add it to the map
         operationalLayers.add(KmlLayer(KmlDataset(kmlDocument)))
-        // start with POINT selected
-        addDoneLoadingListener { sketchCreationModeSpinner.setSelection(0) }
+        addDoneLoadingListener {
+          createSpinners()
+        }
       }
+
       // create a sketch editor and add it to the map view
       sketchEditor = SketchEditor()
 
     }
+  }
 
-    // add geometry options for KML placemarks
+  private fun createSpinners() {
+    // create sketch create mode type spinner
     sketchCreationModeSpinner.apply {
       adapter = ArrayAdapter<String>(
         applicationContext,
         android.R.layout.simple_spinner_item,
-        SketchCreationMode.values().map { it.toString() })
+        listOf(
+          SketchCreationMode.POINT.toString(),
+          SketchCreationMode.POLYLINE.toString(),
+          SketchCreationMode.POLYGON.toString()
+        )
+      )
       onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        override fun onItemSelected(
+          parent: AdapterView<*>?,
+          view: View?,
+          position: Int,
+          id: Long
+        ) {
           // get the sketch creation mode
           with(SketchCreationMode.valueOf(selectedItem.toString())) {
             startSketch(mapView.sketchEditor, this)
@@ -86,10 +110,10 @@ class MainActivity : AppCompatActivity() {
             when {
               this == SketchCreationMode.POINT -> {
                 pointSymbolSpinner.visibility = View.VISIBLE
-                colorSymbolSpinner.visibility = View.GONE
+                colorSymbolSeekbar.visibility = View.GONE
               }
               else -> {
-                colorSymbolSpinner.visibility = View.VISIBLE
+                colorSymbolSeekbar.visibility = View.VISIBLE
                 pointSymbolSpinner.visibility = View.GONE
               }
             }
@@ -100,48 +124,116 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    // set the images for the icon selection combo box
-    iconResources = listOf(
-      R.drawable.blue_circle,
-      R.drawable.blue_diamond,
-      R.drawable.blue_pin_1,
-      R.drawable.blue_pin_2,
-      R.drawable.blue_square,
-      R.drawable.blue_star
-    )
+    // create point symbol spinner
+    pointSymbolSpinner.apply {
+      adapter = PointSymbolAdapter(
+        applicationContext, listOf(
+          R.drawable.blue_circle,
+          R.drawable.blue_diamond,
+          R.drawable.blue_pin_1,
+          R.drawable.blue_pin_2,
+          R.drawable.blue_square,
+          R.drawable.blue_star
+        )
+      )
 
-    pointSymbolSpinner.adapter = PointSymbolAdapter(applicationContext, iconResources)
+    }
 
-    getExternalFilesDir("myKmz.kmz")
+
+
+    colorSymbolSeekbar.apply {
+      // create the bar as a rectangle with a linear gradient
+      progressDrawable = ShapeDrawable(RectShape()).apply {
+        paint.shader = LinearGradient(
+          0f, 0f, 600f, 0f,
+          intArrayOf(
+            Color.BLACK,
+            Color.BLUE,
+            Color.GREEN,
+            Color.CYAN,
+            Color.RED,
+            Color.MAGENTA,
+            Color.YELLOW,
+            Color.WHITE
+          ),
+          null, Shader.TileMode.CLAMP
+        )
+      }
+
+
+      setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+          if (fromUser) {
+            var r = 0
+            var g = 0
+            var b = 0
+
+            if (progress < 256) {
+              b = progress
+            } else if (progress < 256 * 2) {
+              g = progress % 256
+              b = 256 - progress % 256
+            } else if (progress < 256 * 3) {
+              g = 255
+              b = progress % 256
+            } else if (progress < 256 * 4) {
+              r = progress % 256
+              g = 256 - progress % 256;
+              b = 256 - progress % 256;
+            } else if (progress < 256 * 5) {
+              r = 255
+              g = 0
+              b = progress % 256
+            } else if (progress < 256 * 6) {
+              r = 255
+              g = progress % 256
+              b = 256 - progress % 256
+            } else if (progress < 256 * 7) {
+              r = 255
+              g = 255
+              b = progress % 256
+            }
+            color = Color.rgb(r, g, b)
+          }
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {
+          Log.d("seekbar", seekBar?.progress.toString())
+        }
+      })
+    }
   }
 
   /**
    * Starts the sketch editor based on the selected sketch creation mode.
    */
   private fun startSketch(sketchEditor: SketchEditor, sketchCreationMode: SketchCreationMode) {
-
+    mapView.run {
+      // stop the sketch editor
+      sketchEditor.stop()
+      // start the sketch editor with the selected creation mode
+      sketchEditor.start(sketchCreationMode)
+    }
   }
 
-  /**
-   * Discard or commit the current sketch to a KML placemark if ESCAPE or ENTER are pressed while sketching.
-   *
-   * @param keyEvent the key event
-   */
-  @FXML
-  private fun handleKeyReleased(keyEvent: KeyEvent) {
-    if (keyEvent.getCode() === KeyCode.ESCAPE) {
-      
-      mapView.run {
-        // stop the sketch editor
-        sketchEditor.stop()
-        // start the sketch editor with the selected creation mode
-        sketchEditor.start(SketchCreationMode.valueOf(sketchCreationModeSpinner.selectedItem.toString())
-      }
 
-    } else if (keyEvent.getCode() === KeyCode.ENTER && sketchEditor.isSketchValid) {
+  /**
+   * Discard or commit the current sketch to a KML placemark if ESCAPE or ENTER are pressed while
+   * sketching.
+   */
+  private fun addKmlPlaceMark() {
+    if (mapView.sketchEditor.isSketchValid) {
+
+
       // project the sketched geometry to WGS84 to comply with the KML standard
-      val sketchGeometry = sketchEditor.geometry
+      val sketchGeometry = mapView.sketchEditor.geometry
       val projectedGeometry = GeometryEngine.project(sketchGeometry, SpatialReferences.getWgs84())
+
+      mapView.sketchEditor.stop()
 
       // create a new KML placemark
       val kmlGeometry = KmlGeometry(projectedGeometry, KmlAltitudeMode.CLAMP_TO_GROUND)
@@ -155,56 +247,81 @@ class MainActivity : AppCompatActivity() {
       when (sketchGeometry.geometryType) {
         GeometryType.POINT -> {
           val iconPath =
-            Uri.parse("android.resource://com.esri.arcgisruntime.sample/" + pointSymbolSpinner.selectedItem)
+            Uri.parse(Uri.parse("android.resource://" + this.packageName + "/" + pointSymbolSpinner.selectedItem).toString())
               .toString()
           val kmlIcon = KmlIcon(iconPath)
           val kmlIconStyle = KmlIconStyle(kmlIcon, 1.0)
           kmlStyle.iconStyle = kmlIconStyle
         }
         GeometryType.POLYLINE -> {
-          val polylineColor = colorPicker.getValue()
-          if (polylineColor != null) {
-            val kmlLineStyle = KmlLineStyle(ColorUtil.colorToArgb(polylineColor), 8.0)
-            kmlStyle.lineStyle = kmlLineStyle
-          }
+          val kmlLineStyle = KmlLineStyle(color, 8.0)
+          kmlStyle.lineStyle = kmlLineStyle
         }
         GeometryType.POLYGON -> {
-          val polygonColor = colorPicker.getValue()
-          if (polygonColor != null) {
-            val kmlPolygonStyle = KmlPolygonStyle(ColorUtil.colorToArgb(polygonColor))
-            kmlPolygonStyle.isFilled = true
-            kmlPolygonStyle.isOutlined = false
-            kmlStyle.polygonStyle = kmlPolygonStyle
-          }
+          val kmlPolygonStyle = KmlPolygonStyle(color)
+          kmlPolygonStyle.isFilled = true
+          kmlPolygonStyle.isOutlined = false
+          kmlStyle.polygonStyle = kmlPolygonStyle
+        }
+        else -> {
+          toast("Geometry type not supported in this sample.")
         }
       }
 
       // add the placemark to the kml document
       kmlDocument.childNodes.add(currentKmlPlacemark)
-
-      // start a new sketch
-      startSketch(
-        mapView.sketchEditor,
-        SketchCreationMode.valueOf(sketchCreationModeSpinner.selectedItem.toString())
-      )
+    } else {
+      toast("Sketch invalid!")
     }
+    // start a new sketch
+    startSketch(
+      mapView.sketchEditor,
+      SketchCreationMode.valueOf(sketchCreationModeSpinner.selectedItem.toString())
+    )
   }
 
-  /**
-   * Open the file chooser to save the KML Document to a KMZ file.
-   */
-  @FXML
-  private void handleSaveAction()
-  {
 
-    // get a path from the file chooser
-    File kmzFile = fileChooser . showSaveDialog (mapView.getScene().getWindow());
-    if (kmzFile != null) {
-      // save the KML document to the file
-      kmlDocument.saveAsAsync(kmzFile.getPath()).addDoneListener(() ->
-      new Alert (Alert.AlertType.INFORMATION, "KMZ file saved.").show()
-      )
+  /**
+   * Create a save dialog to get a file name and save the KML Document to a KMZ file.
+   */
+  private fun createSaveDialog() {
+
+    alert("Please define a file name:") {
+      customView {
+        verticalLayout {
+          // get the file name from the edit text box
+          val fileName = editText {
+            // set a default file name
+            setText("MyKMLDocument.kmz")
+          }.text
+          // on save button
+          positiveButton("Save") {
+            // save the KML document to the device with the file name from the edit text box
+            kmlDocument.saveAsAsync(getExternalFilesDir(fileName.toString())?.path)
+              .addDoneListener {
+                // notify the file has been saved
+                toast("Your KML document was saved as $fileName saved.")
+              }
+          }
+          negativeButton("Cancel") {}
+        }
+      }
+    }.show()
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    menuInflater.inflate(R.menu.undo_redo_stop_menu, menu)
+    return super.onCreateOptionsMenu(menu)
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    when (item.itemId) {
+      R.id.undo -> mapView.sketchEditor.undo()
+      R.id.redo -> mapView.sketchEditor.redo()
+      R.id.check -> addKmlPlaceMark()
+      R.id.save -> createSaveDialog()
     }
+    return super.onOptionsItemSelected(item)
   }
 
   override fun onPause() {

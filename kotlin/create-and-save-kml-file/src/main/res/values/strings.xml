@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Create and save KML file</string>
+    <string name="undoButtonDescription">undo button</string>
+    <string name="redoButtonDescription">redo button</string>
+    <string name="stopButtonDescription">stop button</string>
+    <string name="saveButtonDescription">save button</string>
 </resources>

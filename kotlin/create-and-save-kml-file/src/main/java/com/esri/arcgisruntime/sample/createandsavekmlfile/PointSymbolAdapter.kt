@@ -10,7 +10,6 @@ import kotlinx.android.synthetic.main.point_symbol.view.*
 
 class PointSymbolAdapter(context: Context, pointSymbolUrls: List<Int>) : ArrayAdapter<Int>(context, R.layout.point_symbol, pointSymbolUrls) {
 
-
   override fun getView(position: Int, recycledView: View?, parent: ViewGroup): View {
     return this.createView(position, recycledView, parent)
   }
@@ -22,12 +21,11 @@ class PointSymbolAdapter(context: Context, pointSymbolUrls: List<Int>) : ArrayAd
   private fun createView(position: Int, recycledView: View?, parent: ViewGroup): View {
     val pointDrawable = getItem(position)!!
     val view = recycledView ?: LayoutInflater.from(context).inflate(
-      pointDrawable,
+      R.layout.point_symbol,
       parent,
       false
     )
-
-    view.pointSymbol.setImageResource(R.drawable.blue_circle)
+    view.pointSymbol.setImageResource(pointDrawable)
     return view
   }
 }
