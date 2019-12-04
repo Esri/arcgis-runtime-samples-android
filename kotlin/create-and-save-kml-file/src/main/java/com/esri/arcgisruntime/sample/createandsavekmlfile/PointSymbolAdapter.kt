@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import kotlinx.android.synthetic.main.point_symbol.view.*
 
 
@@ -26,6 +27,7 @@ class PointSymbolAdapter(context: Context, pointSymbolUrls: List<Int>) : ArrayAd
       false
     )
     view.pointSymbol.setImageResource(pointDrawable)
+    view.pointSymbol.scaleType = ImageView.ScaleType.MATRIX
     return view
   }
 }

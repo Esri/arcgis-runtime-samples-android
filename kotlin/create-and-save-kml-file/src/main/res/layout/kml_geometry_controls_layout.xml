@@ -3,45 +3,95 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/linearLayout"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@android:color/background_light">
 
     <Spinner
         android:id="@+id/sketchCreationModeSpinner"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/geometryTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/geometryTextView"
+        app:layout_constraintTop_toTopOf="@+id/geometryTextView" />
 
     <Spinner
         android:id="@+id/pointSymbolSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sketchCreationModeSpinner" />
+        app:layout_constraintBottom_toBottomOf="@+id/pointSymbolTextView"
+        app:layout_constraintEnd_toEndOf="@+id/sketchCreationModeSpinner"
+        app:layout_constraintStart_toEndOf="@+id/pointSymbolTextView"
+        app:layout_constraintTop_toTopOf="@+id/pointSymbolTextView" />
 
     <SeekBar
         android:id="@+id/colorSymbolSeekbar"
         android:layout_width="200dip"
-        android:layout_height="30dip"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_height="20dip"
         android:max="1535"
-        android:progress="768"
-        android:minHeight="6dip"
         android:maxHeight="6dip"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:minHeight="6dip"
+        android:progress="768"
+        app:layout_constraintBottom_toBottomOf="@+id/colorTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/colorTextView"
+        app:layout_constraintTop_toTopOf="@+id/colorTextView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/geometryTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Geometry:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pointSymbolSpinner" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/pointSymbolTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="Point symbol:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/geometryTextView" />
+
+    <TextView
+        android:id="@+id/colorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="Color:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/geometryTextView" />
+
+    <Button
+        android:id="@+id/completeSketchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:onClick="addKmlPlaceMark"
+        android:text="Complete sketch"
+        app:layout_constraintEnd_toStartOf="@+id/saveKmlButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colorTextView" />
+
+    <Button
+        android:id="@+id/saveKmlButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:onClick="createSaveDialog"
+        android:text="Save KML"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/completeSketchButton"
+        app:layout_constraintTop_toBottomOf="@+id/colorTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
