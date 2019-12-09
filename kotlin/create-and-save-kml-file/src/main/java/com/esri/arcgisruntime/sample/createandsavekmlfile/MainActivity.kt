@@ -74,20 +74,25 @@ class MainActivity : AppCompatActivity() {
     // create a new kml document
     kmlDocument = KmlDocument()
 
+    // create a map with a dark gray vector basemap and add a KML layer
+    val map = ArcGISMap(Basemap.createDarkGrayCanvasVector()).apply {
+      // create a KML layer from a blank KML document and add it to the map
+      operationalLayers.add(KmlLayer(KmlDataset(kmlDocument)))
+    }
+
     mapView.apply {
-      // create a map and add it to the map view
-      map = ArcGISMap(Basemap.createDarkGrayCanvasVector()).apply {
-        // create a KML layer from a blank KML document and add it to the map
-        operationalLayers.add(KmlLayer(KmlDataset(kmlDocument)))
-        addDoneLoadingListener {
-          createSpinners()
-        }
-      }
+      // add the map to the map view
+      this.map = map
 
       // create a sketch editor and add it to the map view
       sketchEditor = SketchEditor().apply {
         sketchStyle = SketchStyle()
       }
+    }
+
+    // once the map is done loading, create spinners
+    map.addDoneLoadingListener {
+      createSpinners()
     }
   }
 
@@ -206,8 +211,8 @@ class MainActivity : AppCompatActivity() {
           with(SketchCreationMode.valueOf(selectedItem.toString())) {
             startSketch(mapView.sketchEditor, this)
             // show style controls relevant to the selected sketch creation mode
-            when {
-              this == SketchCreationMode.POINT -> {
+            when (SketchCreationMode.POINT) {
+              this -> {
                 pointSymbolSpinner.visibility = View.VISIBLE
                 pointSymbolTextView.visibility = View.VISIBLE
                 colorSpinner.visibility = View.INVISIBLE
