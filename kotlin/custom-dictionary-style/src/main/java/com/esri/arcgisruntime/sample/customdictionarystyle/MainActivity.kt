@@ -17,21 +17,23 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // create a feature layer from a service feature table
+    val featureTable = ServiceFeatureTable(getString(R.string.restaurants_url))
+    val featureLayer = FeatureLayer(featureTable).apply {
+      // use a custom style to create a dictionary renderer and set it to the feature layer renderer
+      renderer =
+        DictionaryRenderer(DictionarySymbolStyle.createFromFile(getExternalFilesDir(getString(R.string.restaurant_stylx_path))?.path))
+    }
+
+    // set the map view's viewpoint to the feature layer extent when loaded
+    featureLayer.addDoneLoadingListener {
+      mapView.setViewpointAsync(Viewpoint(featureLayer.fullExtent))
+    }
+
     // create a new map with a streets basemap and set it to the map view
-    mapView.map = ArcGISMap(Basemap.createStreetsVector()).apply {
-      // create a feature layer from a service feature table
-      with(FeatureLayer(ServiceFeatureTable(getString(R.string.restaurants_url)))) {
-        // use a custom style to create a dictionary renderer and set it to the feature layer renderer
-        this.renderer = DictionaryRenderer(DictionarySymbolStyle.createFromFile(
-            getExternalFilesDir(getString(R.string.restaurant_stylx_path))?.path))
-        // once the feature layer has loaded
-        this.addDoneLoadingListener {
-          // set the map view's viewpoint to the feature layer extent
-          mapView.setViewpointAsync(Viewpoint(this.fullExtent))
-        }
-        // add the the feature layer to the map's operational layers
-        operationalLayers.add(this)
-      }
+    mapView.map =  ArcGISMap(Basemap.createStreetsVector()).apply {
+      // add the the feature layer to the map's operational layers
+      operationalLayers.add(featureLayer)
     }
   }
 
