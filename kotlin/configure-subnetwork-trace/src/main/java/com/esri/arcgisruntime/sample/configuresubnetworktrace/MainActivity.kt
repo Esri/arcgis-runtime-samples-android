@@ -80,23 +80,6 @@ class MainActivity : AppCompatActivity() {
         applicationContext,
         android.R.layout.simple_spinner_item,
         operators.map { it.name })
-      operatorSpinner.onItemSelectedListener =
-        object : AdapterView.OnItemSelectedListener {
-
-          override fun onItemSelected(
-            parent: AdapterView<*>?,
-            view: View?,
-            position: Int,
-            id: Long
-          ) {
-
-          }
-
-          override fun onNothingSelected(parent: AdapterView<*>?) {}
-
-
-        }
-
 
       // create a default starting location
       val networkSource = utilityNetwork.definition.getNetworkSource("Electric Distribution Device")
@@ -119,17 +102,27 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * When a comparison source is chosen which doesn
+   */
   private fun onComparisonSourceChanged(domain: Domain) {
-    (domain as? CodedValueDomain)?.let { domain ->
-      values = domain.codedValues
-
+    // if the domain is a coded value domain
+    (domain as? CodedValueDomain)?.let { codedValueDomain ->
+      // update the list of coded values
+      values = codedValueDomain.codedValues
+      // show the values spinner
       valuesSpinner.visibility = View.VISIBLE
+      // update the values spinner adapter
       valuesSpinner.adapter = ArrayAdapter<String>(
         applicationContext,
         android.R.layout.simple_spinner_item,
-        values.map { it.name }
+        // add the the coded values from the coded value domain to the values spinner
+        codedValueDomain.codedValues.map { it.name }
       )
-      valuesSpinner.visibility = View.VISIBLE
+      // if the domain is not a coded value domain
+    } ?: kotlin.run {
+      // hide the values spinner
+      valuesSpinner.visibility = View.GONE
     }
   }
 
@@ -139,8 +132,6 @@ class MainActivity : AppCompatActivity() {
       // if the trace configuration doesn't contain traversability, create one
       traversability ?: UtilityTraversability()
     }
-
-
 
     // NOTE: You may also create a UtilityCategoryComparison with UtilityNetworkDefinition.Categories and UtilityCategoryComparisonOperator.
     (sources[sourceSpinner.selectedItemPosition] as? UtilityNetworkAttribute)?.let { attribute ->
@@ -174,23 +165,18 @@ class MainActivity : AppCompatActivity() {
       return
     }
     try {
-
       val parameters =
         UtilityTraceParameters(UtilityTraceType.SUBNETWORK, listOf(startingLocation)).apply {
           if (sourceTier.traceConfiguration is UtilityTraceConfiguration) {
             traceConfiguration = sourceTier.traceConfiguration
           }
         }
-
       val traceFuture = utilityNetwork.traceAsync(parameters)
       traceFuture.addDoneListener {
 
         val results = traceFuture.get()
         (results.firstOrNull() as? UtilityElementTraceResult)?.let { elementResult ->
-          alert(
-            elementResult.elements?.count().toString() + " elements found.",
-            "Trace result"
-          ).show()
+          alert(elementResult.elements.count().toString() + " elements found.", "Trace result").show()
         } ?: alert("For a working barrier condition, try \"Transformer Load\" Equal \"15\".").show()
       }
     } catch (exception: ArcGISRuntimeException) {
@@ -199,40 +185,32 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun getExpression(expression: UtilityTraceConditionalExpression): String? {
-
-
-
-
-
-
     when (expression) {
+      // when the expression is a category comparison expression
       is UtilityCategoryComparison -> {
         return expression.category.name + " " + expression.comparisonOperator
       }
+      // when the expression is an attribute comparison expression
       is UtilityNetworkAttributeComparison -> {
-        when
-          (expression.networkAttribute.domain as? CodedValueDomain)?.let { codedValueDomain ->
-            val cvdName = codedValueDomain.codedValues.firstOrNull {
-              convertToDataType(
-                it.code,
-                expression.networkAttribute.dataType
-              ) == convertToDataType(
-                expression.value,
-                expression.networkAttribute.dataType
-              )
-            }?.name
-            return expression.networkAttribute.name + " " + attributeComparison.comparisonOperator + " " + cvdName
-          }
-            ?: return expression.networkAttribute.name + " " + attributeComparison.comparisonOperator + " " + attributeComparison.otherNetworkAttribute.name
+        (expression.networkAttribute.domain as? CodedValueDomain)?.let { codedValueDomain ->
+          // if there's a coded value domain name
+          val codedValueDomainName = codedValueDomain.codedValues.first {
+            convertToDataType(it.code, expression.networkAttribute.dataType) == convertToDataType(expression.value, expression.networkAttribute.dataType)
+          }.name
+          return expression.networkAttribute.name + " " + expression.comparisonOperator + " " + codedValueDomainName
         }
-       is UtilityTraceAndCondition -> {
-          return getExpression(expression.leftExpression) + " AND\n" + getExpression(expression.rightExpression)
-        }
-       is UtilityTraceOrCondition -> {
-          return getExpression(expression.leftExpression) + " OR\n" + getExpression(expression.rightExpression)
-        }
-       else -> {
-         return null
+          ?: return expression.networkAttribute.name + " " + expression.comparisonOperator + " " + expression.otherNetworkAttribute.name
+      }
+      // when the expression is an utility trace AND condition
+      is UtilityTraceAndCondition -> {
+        return getExpression(expression.leftExpression) + " AND\n" + getExpression(expression.rightExpression)
+      }
+      // when the expression is an utility trace OR condition
+      is UtilityTraceOrCondition -> {
+        return getExpression(expression.leftExpression) + " OR\n" + getExpression(expression.rightExpression)
+      }
+      else -> {
+        return null
       }
     }
   }

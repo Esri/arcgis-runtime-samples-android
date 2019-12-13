@@ -48,7 +48,7 @@
 
     <Spinner
         android:id="@+id/sourceSpinner"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/operatorSpinner"
@@ -58,7 +58,7 @@
 
     <Spinner
         android:id="@+id/operatorSpinner"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/valuesSpinner"
@@ -68,7 +68,7 @@
 
     <Spinner
         android:id="@+id/valuesSpinner"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/addButton"
