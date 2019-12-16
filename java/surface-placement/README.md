@@ -14,12 +14,12 @@ The application loads a scene showing three points that use the individual surfa
 
 ## How it works
 
-1. Create a `GraphicsOverlay` for each placement mode, setting `SceneProperties.setSurfacePlacement`:
+1. Create a `GraphicsOverlay` for each placement mode, setting `LayerSceneProperties.setSurfacePlacement(...)`:
     * `ABSOLUTE`, position graphic using only its Z value.
     * `RELATIVE`, position graphic using its Z value plus the elevation of the surface.
     * `DRAPED_BILLBOARDED`, position graphic upright on the surface and always facing the camera, not using its z value.
     * `DRAPED_FLAT`, position graphic flat on the surface, not using its z value.
-2. Add graphics to the graphics overlay, `GraphicsOverlay.getGraphics().add(Graphic)`.
+2. Add graphics to the graphics overlay, `GraphicsOverlay.getGraphics().add(graphic)`.
 3. Add each graphics overlay to the scene view by calling `SceneView.getGraphicsOverlays().add(overlay)`.
 
 ## Relevant API
@@ -36,7 +36,7 @@ The scene launches with a view of northern Snowdonia National Park. Three points
 
 ## Additional information
 
-This sample uses an elevation service to add elevation/terrain to the scene. Graphics are positioned relative to that surface for the `DrapedBillboarded`, `DrapedFlat`, and `Relative` surface placement modes. 
+This sample uses an elevation service to add elevation/terrain to the scene. Graphics are positioned relative to that surface for the `DRAPED_BILLBOARDED`, `DRAPED_FLAT`, `ABSOLUTE` and `RELATIVE` surface placement modes. 
 
 ## Tags
 Maps and Scenes

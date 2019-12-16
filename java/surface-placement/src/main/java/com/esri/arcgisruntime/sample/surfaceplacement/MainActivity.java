@@ -19,8 +19,8 @@ package com.esri.arcgisruntime.sample.surfaceplacement;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.ToggleButton;
-
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     scene.getBaseSurface().getElevationSources().add(elevationSource);
 
     // add a camera and initial camera position
-    Camera camera = new Camera(53.04, -4.04, 1300, 0, 90.0, 0);
+    Camera camera = new Camera(53.05, -4.01, 1115, 299, 88, 0);
     mSceneView.setViewpointCamera(camera);
 
     // create point for graphic location
@@ -70,16 +70,18 @@ public class MainActivity extends AppCompatActivity {
     GraphicsOverlay drapedFlatOverlay = new GraphicsOverlay();
     drapedFlatOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.DRAPED_FLAT);
     drapedFlatOverlay.getGraphics().add(new Graphic(point, triangleSymbol));
+    // create a text symbol for elevation mode
     TextSymbol drapedFlatText = new TextSymbol(10, "DRAPED FLAT", Color.WHITE, HorizontalAlignment.LEFT,
         VerticalAlignment.MIDDLE);
     drapedFlatText.setOffsetY(20);
     drapedFlatOverlay.getGraphics().add(new Graphic(point, drapedFlatText));
     mSceneView.getGraphicsOverlays().add(drapedFlatOverlay);
 
-    // create the draped flat overlay
+    // create the draped billboarded overlay
     GraphicsOverlay drapedBillboardedOverlay = new GraphicsOverlay();
     drapedBillboardedOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.DRAPED_BILLBOARDED);
     drapedBillboardedOverlay.getGraphics().add(new Graphic(point, triangleSymbol));
+    // create a text symbol for elevation mode
     TextSymbol drapedBillboardedText = new TextSymbol(10, "DRAPED BILLBOARDED", Color.WHITE, HorizontalAlignment.LEFT,
         VerticalAlignment.MIDDLE);
     drapedBillboardedText.setOffsetY(20);
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     GraphicsOverlay relativeOverlay = new GraphicsOverlay();
     relativeOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.RELATIVE);
     relativeOverlay.getGraphics().add(new Graphic(point, triangleSymbol));
+    // create a text symbol for elevation mode
     TextSymbol relativeText = new TextSymbol(10, "RELATIVE", Color.WHITE, HorizontalAlignment.LEFT,
         VerticalAlignment.MIDDLE);
     relativeText.setOffsetY(20);
@@ -101,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
     GraphicsOverlay absoluteOverlay = new GraphicsOverlay();
     absoluteOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.ABSOLUTE);
     absoluteOverlay.getGraphics().add(new Graphic(point, triangleSymbol));
+    // create a text symbol for elevation mode
     TextSymbol absoluteText = new TextSymbol(10, "ABSOLUTE", Color.WHITE, HorizontalAlignment.LEFT,
         VerticalAlignment.MIDDLE);
     absoluteText.setOffsetY(20);
