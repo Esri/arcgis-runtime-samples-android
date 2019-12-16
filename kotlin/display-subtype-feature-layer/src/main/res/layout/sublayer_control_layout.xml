@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:color/background_light">
@@ -10,65 +9,81 @@
         android:id="@+id/currentMapScaleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Current map scale: 1:1234"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/rendererRadioGroup" />
 
     <CheckBox
         android:id="@+id/showSubtypeSublayerCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:checked="true"
-        android:text="Show sublayer"
-        app:layout_constraintBottom_toBottomOf="@+id/toggleRendererButton"
-        app:layout_constraintEnd_toStartOf="@+id/toggleRendererButton"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:text="@string/show_sublayer"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toggleRendererButton" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ToggleButton
-        android:id="@+id/toggleRendererButton"
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:id="@+id/rendererRadioGroup"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/showSubtypeSublayerCheckBox">
+
+        <RadioButton
+            android:id="@+id/originalRendererButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/show_original_renderer" />
+
+        <RadioButton
+            android:id="@+id/alternativeRendererButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/show_alternative_renderer" />
+
+    </RadioGroup>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="2dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:textOff="Default Renderer"
-        android:textOn="Custom Renderer"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@+id/currentMapScaleTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/showSubtypeSublayerCheckBox"
-        app:layout_constraintTop_toBottomOf="@+id/currentMapScaleTextView" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rendererRadioGroup" />
 
     <TextView
         android:id="@+id/labelingScaleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
         android:layout_weight="1"
-        android:text="Sublayer labelling min scale: not set"
-        app:layout_constraintBottom_toBottomOf="@+id/setMinScaleButton"
-        app:layout_constraintEnd_toStartOf="@+id/setMinScaleButton"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:text="@string/sublayer_min_scale_not_set"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/setMinScaleButton" />
+        app:layout_constraintTop_toBottomOf="@+id/currentMapScaleTextView" />
 
     <Button
         android:id="@+id/setMinScaleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Set min scale"
+        android:text="@string/set_sublayer_minimum_scale"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/labelingScaleTextView"
-        app:layout_constraintTop_toBottomOf="@+id/toggleRendererButton" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/labelingScaleTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

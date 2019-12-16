@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         )
       )
     }
-    
+
     // on any navigation on the map view
     mapView.addMapScaleChangedListener {
       currentMapScaleTextView.text =
@@ -50,27 +50,36 @@ class MainActivity : AppCompatActivity() {
 
     // once the subtype feature layer is loaded
     subtypeFeatureLayer.addDoneLoadingListener {
+      // create a subtype sublayer
       val subtypeSublayer = subtypeFeatureLayer.getSublayerWithSubtypeName("Street Light").apply {
         isLabelsEnabled = true
         labelDefinitions.add(LabelDefinition.fromJson(getString(R.string.label_json)))
       }
 
-      // show subtype sublayer when checked
+      // show subtype sublayer when checked, hide when unchecked
       showSubtypeSublayerCheckBox.setOnClickListener {
         subtypeSublayer.isVisible = showSubtypeSublayerCheckBox.isChecked
       }
 
       // get the original renderer of the subtype sublayer
       val originalRenderer = subtypeSublayer.renderer
-      toggleRendererButton.setOnClickListener {
-        subtypeSublayer.renderer = when {
-          toggleRendererButton.isChecked -> {
-            // use a custom renderer
-            SimpleRenderer(SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.MAGENTA, 20f))
+
+      // when the selected radio button changes
+      rendererRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+        // set the sublayer renderer to
+        subtypeSublayer.renderer = when (checkedId) {
+          alternativeRendererButton.id -> {
+            // use an alternative renderer
+            SimpleRenderer(
+              SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.MAGENTA, 20f)
+            )
           }
-          else -> {
+          originalRendererButton.id -> {
             // use the original renderer
             originalRenderer
+          }
+          else -> {
+            error("Invalid radio button.")
           }
         }
       }
