@@ -18,14 +18,14 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://esri.bintray.com/arcgis' }
-        maven { url 'http://olympus.esri.com/artifactory/arcgisruntime-repo/'}
+        maven { url 'http://olympus.esri.com/artifactory/arcgisruntime-repo/' }
     }
     var
 }
 
-subprojects{
-    afterEvaluate {project ->
-        if(project.hasProperty("dependencies")){
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty("dependencies")) {
             dependencies {
                 implementation "com.android.support:appcompat-v7:$andSupportLibVersion"
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
