@@ -189,6 +189,7 @@ class MainActivity : AppCompatActivity() {
               Toast.LENGTH_LONG
             ).show()
           } catch (e : Exception) {
+            // notify the file was not saved correctly
             Toast.makeText(applicationContext, "KML document was not saved: " + e.message, Toast.LENGTH_LONG).show()
           }
         }
