@@ -48,7 +48,7 @@ import com.esri.arcgisruntime.ogc.kml.KmlStyle
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.kml_geometry_controls_layout.*
 
-lateinit var kmlDocument: KmlDocument
+val kmlDocument by lazy { KmlDocument() }
 
 val pointSymbolUrls by lazy {
   listOf(
@@ -69,9 +69,6 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-
-    // create a new kml document
-    kmlDocument = KmlDocument()
 
     // create a map with a dark gray vector basemap and add a KML layer
     val map = ArcGISMap(Basemap.createDarkGrayCanvasVector()).apply {
@@ -167,7 +164,7 @@ class MainActivity : AppCompatActivity() {
     // create an edit text to choose a file name to save the KML document to
     val fileNameEditText = EditText(applicationContext).apply {
       // set a default file name
-      setText("MyKmlDocument.kmz")
+      setText(getString(R.string.default_save_name))
     }
     // create an alert dialog
     AlertDialog.Builder(this).apply {
@@ -189,6 +186,9 @@ class MainActivity : AppCompatActivity() {
     }.show()
   }
 
+  /**
+   * Create the geometry, point symbol and color spinners.
+   */
   private fun createSpinners() {
     // create sketch create mode type spinner
     sketchCreationModeSpinner.apply {
