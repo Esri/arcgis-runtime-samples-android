@@ -1,4 +1,5 @@
-/* Copyright 2017 Esri
+/*
+ * Copyright 2019 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -175,12 +176,22 @@ class MainActivity : AppCompatActivity() {
       // set positive button to call save async on the KML document
       setPositiveButton("Save") { _: DialogInterface, _: Int ->
         // save the KML document to the device with the file name from the edit text box
-        kmlDocument.saveAsAsync(getExternalFilesDir(fileNameEditText.text.toString())?.path)
-          .addDoneListener {
+        val saveFuture =
+          kmlDocument.saveAsAsync(getExternalFilesDir(fileNameEditText.text.toString())?.path)
+        saveFuture.addDoneListener {
+          try {
+            // call get on the save future to check if it saved correctly
+            saveFuture.get()
             // notify the file has been saved
-            Toast.makeText(applicationContext, "Your KML document was saved as: " + fileNameEditText.text, Toast.LENGTH_LONG
+            Toast.makeText(
+              applicationContext,
+              "Your KML document was saved as: " + fileNameEditText.text,
+              Toast.LENGTH_LONG
             ).show()
+          } catch (e : Exception) {
+            Toast.makeText(applicationContext, "KML document was not saved: " + e.message, Toast.LENGTH_LONG).show()
           }
+        }
       }
       setCancelable(true)
     }.show()
