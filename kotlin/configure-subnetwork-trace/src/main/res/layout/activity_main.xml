@@ -21,60 +21,57 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Include barriers"
-        app:layout_constraintBottom_toBottomOf="@+id/containersCheckbox"
         app:layout_constraintStart_toEndOf="@+id/traceOptionsTextView"
-        app:layout_constraintTop_toTopOf="@+id/containersCheckbox" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
         android:id="@+id/containersCheckbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="Include containers"
+        app:layout_constraintBottom_toBottomOf="@+id/barriersCheckBox"
         app:layout_constraintStart_toEndOf="@+id/barriersCheckBox"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/barriersCheckBox" />
 
     <TextView
         android:id="@+id/defineConditionTextBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Define new condition:"
-        app:layout_constraintBottom_toBottomOf="@+id/sourceSpinner"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/sourceSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/barriersCheckBox" />
 
     <Spinner
         android:id="@+id/sourceSpinner"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/operatorSpinner"
-        app:layout_constraintEnd_toStartOf="@+id/operatorSpinner"
-        app:layout_constraintStart_toEndOf="@+id/defineConditionTextBox"
-        app:layout_constraintTop_toTopOf="@+id/operatorSpinner" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/defineConditionTextBox" />
 
     <Spinner
         android:id="@+id/operatorSpinner"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/valuesSpinner"
-        app:layout_constraintEnd_toStartOf="@+id/valuesSpinner"
-        app:layout_constraintStart_toEndOf="@+id/sourceSpinner"
-        app:layout_constraintTop_toTopOf="@+id/valuesSpinner" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sourceSpinner" />
 
     <Spinner
         android:id="@+id/valuesSpinner"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/addButton"
-        app:layout_constraintEnd_toStartOf="@+id/addButton"
-        app:layout_constraintStart_toEndOf="@+id/operatorSpinner"
-        app:layout_constraintTop_toTopOf="@+id/addButton" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/operatorSpinner" />
 
     <Button
         android:id="@+id/addButton"
@@ -84,18 +81,17 @@
         android:layout_marginTop="8dp"
         android:onClick="addCondition"
         android:text="Add"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/valuesSpinner"
-        app:layout_constraintTop_toBottomOf="@+id/containersCheckbox" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/valuesSpinner" />
 
     <TextView
         android:id="@+id/barrierConditionsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Barrier conditions:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/expressionTextView" />
+        app:layout_constraintStart_toStartOf="@+id/expressionTextView"
+        app:layout_constraintTop_toBottomOf="@+id/containersCheckbox" />
 
     <TextView
         android:id="@+id/expressionTextView"
@@ -103,20 +99,19 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/traceButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/barrierConditionsTextView"
-        app:layout_constraintTop_toBottomOf="@+id/addButton" />
+        app:layout_constraintStart_toEndOf="@+id/operatorSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/barrierConditionsTextView" />
 
     <Button
         android:id="@+id/traceButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:onClick="trace"
         android:text="Trace"

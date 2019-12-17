@@ -1,5 +1,6 @@
 package com.esri.arcgisruntime.sample.configuresubnetworktrace
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -48,6 +49,8 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
 
     // create a utility network and wait for it to finish to load
