@@ -16,11 +16,15 @@
 
 package com.esri.arcgisruntime.sample.createandsavekmlfile
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.GeometryType
@@ -43,11 +47,6 @@ import com.esri.arcgisruntime.ogc.kml.KmlPolygonStyle
 import com.esri.arcgisruntime.ogc.kml.KmlStyle
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.kml_geometry_controls_layout.*
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.customView
-import org.jetbrains.anko.editText
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.verticalLayout
 
 lateinit var kmlDocument: KmlDocument
 
@@ -142,7 +141,8 @@ class MainActivity : AppCompatActivity() {
           }
         }
         else -> {
-          toast("Geometry type not supported in this sample.")
+          Toast.makeText(this, "Geometry type not supported in this sample.", Toast.LENGTH_LONG)
+            .show()
         }
       }
       currentKmlPlacemark.style = kmlStyle
@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity() {
       // add the placemark to the kml document
       kmlDocument.childNodes.add(currentKmlPlacemark)
     } else {
-      toast("Sketch invalid!")
+      Toast.makeText(this, "Sketch invalid!", Toast.LENGTH_LONG).show()
     }
     // start a new sketch
     startSketch(
@@ -164,27 +164,28 @@ class MainActivity : AppCompatActivity() {
    * Create a save dialog to get a file name and save the KML Document to a KMZ file.
    */
   fun createSaveDialog(view: View) {
-
-    alert("Please define a file name:") {
-      customView {
-        verticalLayout {
-          // get the file name from the edit text box
-          val fileName = editText {
-            // set a default file name
-            setText(context.getString(R.string.default_save_name))
-          }.text
-          // on save button
-          positiveButton("Save") {
-            // save the KML document to the device with the file name from the edit text box
-            kmlDocument.saveAsAsync(getExternalFilesDir(fileName.toString())?.path)
-              .addDoneListener {
-                // notify the file has been saved
-                toast("Your KML document was saved as $fileName saved.")
-              }
+    // create an edit text to choose a file name to save the KML document to
+    val fileNameEditText = EditText(applicationContext).apply {
+      // set a default file name
+      setText("MyKmlDocument.kmz")
+    }
+    // create an alert dialog
+    AlertDialog.Builder(this).apply {
+      // set the alert dialog title
+      setTitle("Please define a file name:")
+      // add the edit text to the view
+      setView(fileNameEditText)
+      // set positive button to call save async on the KML document
+      setPositiveButton("Save") { _: DialogInterface, _: Int ->
+        // save the KML document to the device with the file name from the edit text box
+        kmlDocument.saveAsAsync(getExternalFilesDir(fileNameEditText.text.toString())?.path)
+          .addDoneListener {
+            // notify the file has been saved
+            Toast.makeText(applicationContext, "Your KML document was saved as: " + fileNameEditText.text, Toast.LENGTH_LONG
+            ).show()
           }
-          negativeButton("Cancel") {}
-        }
       }
+      setCancelable(true)
     }.show()
   }
 
