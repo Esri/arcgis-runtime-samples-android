@@ -177,7 +177,7 @@ class MainActivity : AppCompatActivity() {
       setPositiveButton("Save") { _: DialogInterface, _: Int ->
         // save the KML document to the device with the file name from the edit text box
         val saveFuture =
-          kmlDocument.saveAsAsync(getExternalFilesDir(fileNameEditText.text.toString())?.path)
+          kmlDocument.saveAsAsync(getExternalFilesDir(null)?.path + fileNameEditText.text.toString())
         saveFuture.addDoneListener {
           try {
             // call get on the save future to check if it saved correctly
@@ -188,9 +188,13 @@ class MainActivity : AppCompatActivity() {
               "Your KML document was saved as: " + fileNameEditText.text,
               Toast.LENGTH_LONG
             ).show()
-          } catch (e : Exception) {
+          } catch (e: Exception) {
             // notify the file was not saved correctly
-            Toast.makeText(applicationContext, "KML document was not saved: " + e.message, Toast.LENGTH_LONG).show()
+            Toast.makeText(
+              applicationContext,
+              "KML document was not saved: " + e.message,
+              Toast.LENGTH_LONG
+            ).show()
           }
         }
       }
