@@ -1,34 +1,26 @@
 # WMTS Layer
+ Display a layer from a Web Map Tile Service. 
+ 
+ ![WMTS Layer App](wmts-layer.png)
 
-This sample created a WMTS layer from the given url and the first layer id, which is retrieved by loading the associated WMTS service and obtaining the layer info list. Then the WMTS layer will be added to the map as a basemap layer.
+## How to use the sample
+Simply run the app
+ 
+## How it works
+To display a `WmtsLayer` from a `WmtsService`:
+ 
+1. Create a `WmtsService` using the URL of the WMTS Service.
+1. After loading the WmtsService, get the list of `WmtsLayerInfos` from the service info: `service.getServiceInfo().getLayerInfos()`
+1. For the layer you want to display, get the layer ID using `getLayerInfos().get(0).getId()`
+1. Use the LayerInfo to create the WMTSLayer: `new WmtsLayer(layerInfos.get(0))`
+1. Set it as the maps' basemap with `map.setBasemap(new Basemap(wmtsLayer))`
 
-![WMTS Layer App](wmts-layer.png)
-
-## Features
-
-* Basemap
+## Relevant API
 * ArcGISMap
-* WmtsService
+* Basemap
+* MapView
 * WmtsLayer
+* WmtsService
 
-## Developer Pattern
-
-Create a `WmtsService` from a `String` url and load the service.  Once loaded use the service info to get the LayerInfo and use to create the `WmtsLayer`.  Add the layer to the map as a `Basemap`. 
-
-```kotlin
- // create wmts service from url string
- val wmtsService = WmtsService(getString(R.string.wmts_url))
- wmtsService.addDoneLoadingListener({
-     if(wmtsService.loadStatus == LoadStatus.LOADED){
-         // get service info
-         val wmtsServiceInfo = wmtsService.serviceInfo
-         // get the first layers id
-         val layerInfos = wmtsServiceInfo.layerInfos
-         // create WMTS layer from layer info
-         val wmtsLayer = WmtsLayer(layerInfos[0])
-         // set the basemap of the map with WMTS layer
-         map.basemap = Basemap(wmtsLayer)
-     }
- })
- wmtsService.loadAsync()
-```
+#### Tags
+Layers

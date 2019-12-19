@@ -2,7 +2,6 @@
 apply from: '../version.gradle'
 
 buildscript {
-    ext.kotlin_version = '1.3.50'
 
     apply from: '../version.gradle'
     repositories {
@@ -20,6 +19,7 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://esri.bintray.com/arcgis' }
+        maven { url 'http://olympus.esri.com/artifactory/arcgisruntime-repo/' }
     }
     var
 }
