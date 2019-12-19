@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Display subtype feature layer</string>
+    <string name="label_json">"{ \"labelExpression\":\"[nominalvoltage]\",\"labelPlacement\":\"esriServerPointLabelPlacementAboveRight\",\"useCodedValues\":true,\"symbol\":{\"angle\":0,\"backgroundColor\":[0,0,0,0],\"borderLineColor\":[0,0,0,0],\"borderLineSize\":0,\"color\":[0,0,255,255],\"font\":{\"decoration\":\"none\",\"size\":10.5,\"style\":\"normal\",\"weight\":\"normal\"},\"haloColor\":[255,255,255,255],\"haloSize\":2,\"horizontalAlignment\":\"center\",\"kerning\":false,\"type\":\"esriTS\",\"verticalAlignment\":\"middle\",\"xoffset\":0,\"yoffset\":0}}"</string>
+    <string name="subtype_sublayer_scale_text">Sublayer labelling min scale: 1:%d</string>
+    <string name="current_map_scale_text">Current map scale: 1:%d</string>
+    <string name="set_sublayer_minimum_scale">Set sublayer minimum scale</string>
+    <string name="sublayer_min_scale_not_set">Sublayer min scale: not set</string>
+    <string name="show_alternative_renderer">Show alternative renderer</string>
+    <string name="show_original_renderer">Show original renderer</string>
+    <string name="show_sublayer">Show sublayer</string>
+</resources>
