@@ -22,9 +22,9 @@ allprojects {
     var
 }
 
-subprojects{
-    afterEvaluate {project ->
-        if(project.hasProperty("dependencies")){
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty("dependencies")) {
             dependencies {
                 implementation "com.android.support:appcompat-v7:$andSupportLibVersion"
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"

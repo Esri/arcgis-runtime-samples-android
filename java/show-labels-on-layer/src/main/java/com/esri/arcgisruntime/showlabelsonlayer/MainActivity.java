@@ -21,10 +21,10 @@ import java.util.Arrays;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.arcgisservices.LabelDefinition;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -96,11 +96,11 @@ public class MainActivity extends AppCompatActivity {
     // create a copy of the json with a custom where clause and symbol only for republican districts
     JsonObject republicanJson = json.deepCopy();
     republicanJson.add("where", new JsonPrimitive("PARTY = 'Republican'"));
-    republicanJson.add("symbol", new JsonParser().parse(republicanTextSymbol.toJson()));
+    republicanJson.add("symbol", JsonParser.parseString(republicanTextSymbol.toJson()));
     // create a copy of the json with a custom where clause and symbol only for democrat districts
     JsonObject democratJson = json.deepCopy();
     democratJson.add("where", new JsonPrimitive("PARTY = 'Democrat'"));
-    democratJson.add("symbol", new JsonParser().parse(democratTextSymbol.toJson()));
+    democratJson.add("symbol", JsonParser.parseString(democratTextSymbol.toJson()));
     // create label definitions from the JSON strings
     LabelDefinition republicanLabelDefinition = LabelDefinition.fromJson(republicanJson.toString());
     LabelDefinition democratLabelDefinition = LabelDefinition.fromJson(democratJson.toString());
