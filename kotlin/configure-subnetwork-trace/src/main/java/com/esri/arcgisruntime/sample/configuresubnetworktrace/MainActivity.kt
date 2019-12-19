@@ -2,14 +2,15 @@ package com.esri.arcgisruntime.sample.configuresubnetworktrace
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.esri.arcgisruntime.ArcGISRuntimeException
 import com.esri.arcgisruntime.data.CodedValue
 import com.esri.arcgisruntime.data.CodedValueDomain
-import com.esri.arcgisruntime.data.Domain
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.utilitynetworks.UtilityAttributeComparisonOperator
 import com.esri.arcgisruntime.utilitynetworks.UtilityCategoryComparison
@@ -28,8 +29,6 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityTraceType
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraversability
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraversabilityScope
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.toast
 
 
 class MainActivity : AppCompatActivity() {
@@ -68,11 +67,9 @@ class MainActivity : AppCompatActivity() {
       sourceSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-          (sources[sourceSpinner.selectedItemPosition].domain)?.run {
-            onComparisonSourceChanged(sources[sourceSpinner.selectedItemPosition].domain)
-          } ?: run {
-            valuesSpinner.visibility = android.view.View.GONE
-          }
+          onComparisonSourceChanged(sources[sourceSpinner.selectedItemPosition])
+
+
         }
 
         override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -108,13 +105,13 @@ class MainActivity : AppCompatActivity() {
   /**
    * When a comparison source is chosen which doesn
    */
-  private fun onComparisonSourceChanged(domain: Domain) {
+  private fun onComparisonSourceChanged(attribute: UtilityNetworkAttribute) {
     // if the domain is a coded value domain
-    (domain as? CodedValueDomain)?.let { codedValueDomain ->
+    (attribute.domain as? CodedValueDomain)?.let { codedValueDomain ->
       // update the list of coded values
       values = codedValueDomain.codedValues
       // show the values spinner
-      valuesSpinner.visibility = View.VISIBLE
+      setVisible(valuesSpinner.id)
       // update the values spinner adapter
       valuesSpinner.adapter = ArrayAdapter<String>(
         applicationContext,
@@ -124,8 +121,41 @@ class MainActivity : AppCompatActivity() {
       )
       // if the domain is not a coded value domain
     } ?: kotlin.run {
-      // hide the values spinner
-      valuesSpinner.visibility = View.GONE
+      when(attribute.dataType) {
+        UtilityNetworkAttribute.DataType.BOOLEAN -> {
+          setVisible(valueBooleanButton.id)
+        }
+        UtilityNetworkAttribute.DataType.DOUBLE, UtilityNetworkAttribute.DataType.FLOAT -> {
+          valuesEditText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+          setVisible(valuesEditText.id)
+        }
+        UtilityNetworkAttribute.DataType.INTEGER -> {
+          // show the values edit text
+          valuesEditText.inputType = InputType.TYPE_CLASS_NUMBER
+          setVisible(valuesEditText.id)
+        }
+
+      }
+    }
+  }
+
+  private fun setVisible(id: Int) {
+    when (id) {
+      valuesSpinner.id -> {
+        valuesSpinner.visibility = View.VISIBLE
+        valueBooleanButton.visibility = View.INVISIBLE
+        valuesEditText.visibility = View.INVISIBLE
+      }
+      valuesEditText.id -> {
+        valuesEditText.visibility = View.VISIBLE
+        valueBooleanButton.visibility = View.INVISIBLE
+        valuesSpinner.visibility = View.INVISIBLE
+      }
+      valueBooleanButton.id -> {
+        valueBooleanButton.visibility = View.VISIBLE
+        valuesSpinner.visibility = View.INVISIBLE
+        valuesEditText.visibility = View.INVISIBLE
+      }
     }
   }
 
@@ -136,34 +166,36 @@ class MainActivity : AppCompatActivity() {
       traversability ?: UtilityTraversability()
     }
 
+
     // NOTE: You may also create a UtilityCategoryComparison with UtilityNetworkDefinition.Categories and UtilityCategoryComparisonOperator.
     (sources[sourceSpinner.selectedItemPosition] as? UtilityNetworkAttribute)?.let { attribute ->
       (operators[operatorSpinner.selectedItemPosition] as? UtilityAttributeComparisonOperator)?.let { attributeOperator ->
-        (values[valuesSpinner.selectedItemPosition] as? CodedValue)?.let { codedValue ->
-          val otherValue = if (attribute.domain is CodedValueDomain) {
-            convertToDataType(codedValue.code, attribute.dataType)
+        // NOTE: You may also create a UtilityCategoryComparison with UtilityNetworkDefinition.Categories and UtilityCategoryComparisonOperator.
+        val otherValue =
+          if (attribute.domain is CodedValueDomain && values[valuesSpinner.selectedItemPosition] is CodedValue) {
+            convertToDataType(values[valuesSpinner.selectedItemPosition], attribute.dataType)
           } else {
-            convertToDataType(attribute, attribute.dataType)
+            convertToDataType(valuesEditText.text, attribute.dataType)
           }
 
-          // NOTE: You may also create a UtilityNetworkAttributeComparison with another NetworkAttribute.
-          var expression: UtilityTraceConditionalExpression = UtilityNetworkAttributeComparison(
-            attribute,
-            attributeOperator,
-            otherValue
-          )
-          (traceConfiguration.traversability.barriers as? UtilityTraceConditionalExpression)?.let { otherExpression ->
-            // NOTE: You may also combine expressions with UtilityTraceAndCondition
-            expression = UtilityTraceOrCondition(otherExpression, expression)
-          }
-          traceConfiguration.traversability.barriers = expression
-          expressionTextView.text = getExpression(expression)
+        // NOTE: You may also create a UtilityNetworkAttributeComparison with another NetworkAttribute.
+        var expression: UtilityTraceConditionalExpression = UtilityNetworkAttributeComparison(
+          attribute,
+          attributeOperator,
+          otherValue
+        )
+        (traceConfiguration.traversability.barriers as? UtilityTraceConditionalExpression)?.let { otherExpression ->
+          // NOTE: You may also combine expressions with UtilityTraceAndCondition
+          expression = UtilityTraceOrCondition(otherExpression, expression)
         }
+        traceConfiguration.traversability.barriers = expression
+        expressionTextView.text = getExpression(expression)
       }
     }
   }
 
   fun trace(view: View) {
+    // don't attempt a trace on an unloaded utility network
     if (utilityNetwork.loadStatus != LoadStatus.LOADED) {
       return
     }
@@ -176,14 +208,28 @@ class MainActivity : AppCompatActivity() {
         }
       val traceFuture = utilityNetwork.traceAsync(parameters)
       traceFuture.addDoneListener {
-
-        val results = traceFuture.get()
-        (results.firstOrNull() as? UtilityElementTraceResult)?.let { elementResult ->
-          alert(elementResult.elements.count().toString() + " elements found.", "Trace result").show()
-        } ?: alert("For a working barrier condition, try \"Transformer Load\" Equal \"15\".").show()
+        try {
+          val results = traceFuture.get()
+          (results.firstOrNull() as? UtilityElementTraceResult)?.let { elementResult ->
+            // create an alert dialog
+            AlertDialog.Builder(this).apply {
+              // set the alert dialog title
+              setTitle("Trace result")
+              // show the element result count
+              setMessage(elementResult.elements.count().toString() + " elements found.")
+            }.show()
+          }
+        } catch (e: Exception) {
+          Toast.makeText(
+            this,
+            e.cause?.message + "\nFor a working barrier condition, try \"Transformer Load\" Equal \"15\".",
+            Toast.LENGTH_LONG
+          ).show()
+        }
       }
-    } catch (exception: ArcGISRuntimeException) {
-      toast("Error during trace operation: " + exception.message)
+    } catch (exception: Exception) {
+      Toast.makeText(this, "Error during trace operation: " + exception.message, Toast.LENGTH_LONG)
+        .show()
     }
   }
 
@@ -198,11 +244,15 @@ class MainActivity : AppCompatActivity() {
         (expression.networkAttribute.domain as? CodedValueDomain)?.let { codedValueDomain ->
           // if there's a coded value domain name
           val codedValueDomainName = codedValueDomain.codedValues.first {
-            convertToDataType(it.code, expression.networkAttribute.dataType) == convertToDataType(expression.value, expression.networkAttribute.dataType)
+            convertToDataType(it.code, expression.networkAttribute.dataType) == convertToDataType(
+              expression.value,
+              expression.networkAttribute.dataType
+            )
           }.name
           return expression.networkAttribute.name + " " + expression.comparisonOperator + " " + codedValueDomainName
         }
-          ?: return expression.networkAttribute.name + " " + expression.comparisonOperator + " " + expression.otherNetworkAttribute.name
+          ?: return expression.networkAttribute.name + " " + expression.comparisonOperator + " " + (expression.otherNetworkAttribute?.name
+            ?: expression.value)
       }
       // when the expression is an utility trace AND condition
       is UtilityTraceAndCondition -> {
@@ -225,11 +275,15 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun convertToDataType(otherValue: Any, dataType: UtilityNetworkAttribute.DataType): Any {
-    return when (dataType) {
-      UtilityNetworkAttribute.DataType.BOOLEAN -> otherValue.toString().toBoolean()
-      UtilityNetworkAttribute.DataType.DOUBLE -> otherValue.toString().toDouble()
-      UtilityNetworkAttribute.DataType.FLOAT -> otherValue.toString().toFloat()
-      UtilityNetworkAttribute.DataType.INTEGER -> otherValue.toString().toInt()
+    return try {
+      when (dataType) {
+        UtilityNetworkAttribute.DataType.BOOLEAN -> otherValue.toString().toBoolean()
+        UtilityNetworkAttribute.DataType.DOUBLE -> otherValue.toString().toDouble()
+        UtilityNetworkAttribute.DataType.FLOAT -> otherValue.toString().toFloat()
+        UtilityNetworkAttribute.DataType.INTEGER -> otherValue.toString().toInt()
+      }
+    } catch (e: Exception) {
+      Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
     }
   }
 }
