@@ -21,8 +21,11 @@ class MainActivity : AppCompatActivity() {
     val featureTable = ServiceFeatureTable(getString(R.string.restaurants_url))
     val featureLayer = FeatureLayer(featureTable).apply {
       // use a custom style to create a dictionary renderer and set it to the feature layer renderer
-      renderer =
-        DictionaryRenderer(DictionarySymbolStyle.createFromFile(getExternalFilesDir(getString(R.string.restaurant_stylx_path))?.path))
+      renderer = DictionaryRenderer(
+        DictionarySymbolStyle.createFromFile(
+          getExternalFilesDir(null)?.path + getString(R.string.restaurant_stylx_path)
+        )
+      )
     }
 
     // set the map view's viewpoint to the feature layer extent when loaded
@@ -31,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create a new map with a streets basemap and set it to the map view
-    mapView.map =  ArcGISMap(Basemap.createStreetsVector()).apply {
+    mapView.map = ArcGISMap(Basemap.createStreetsVector()).apply {
       // add the the feature layer to the map's operational layers
       operationalLayers.add(featureLayer)
     }
