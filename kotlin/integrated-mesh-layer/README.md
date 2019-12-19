@@ -21,7 +21,6 @@ scene service.
 - IntegratedMeshLayer
 
 #### Tags
-
 Layers
 3D
 integrated mesh
