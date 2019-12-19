@@ -39,7 +39,6 @@ Link | Local Location
 |[Monterey Elevation TPK](https://arcgisruntime.maps.arcgis.com/home/item.html?id=cce37043eb0440c7a5c109cf8aad5500)| `<sdcard>`/ArcGIS/Samples/TileCache/MontereyElevation.tpk |
 
 #### Tags
-
 Maps & Scenes
 3D
 Tile Cache
