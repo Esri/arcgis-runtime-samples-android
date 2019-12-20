@@ -21,6 +21,5 @@ include ':add-features-feature-service',
         ':set-min-max-scale',
         ':show-labels-on-layer',
         ':token-authentication',
-        ':trace-utility-network',
         ':view-point-cloud-data-offline',
         ':wmts-layer'

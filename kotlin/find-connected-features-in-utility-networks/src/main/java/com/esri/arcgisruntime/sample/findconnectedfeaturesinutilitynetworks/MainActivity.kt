@@ -22,6 +22,8 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.data.ArcGISFeature
 import com.esri.arcgisruntime.data.QueryParameters
@@ -52,8 +54,6 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceType
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.utility_network_controls_layout.*
-import org.jetbrains.anko.selector
-import org.jetbrains.anko.toast
 import java.util.concurrent.ExecutionException
 import kotlin.math.roundToInt
 
@@ -199,12 +199,12 @@ class MainActivity : AppCompatActivity() {
           identifiedFeature.featureTable.tableName
         )).let { utilityNetworkSource ->
           // check if the network source is a junction or an edge
-          when {
-            utilityNetworkSource.sourceType == UtilityNetworkSource.Type.JUNCTION -> {
+          when (utilityNetworkSource.sourceType) {
+            UtilityNetworkSource.Type.JUNCTION -> {
               // create a utility element with the identified feature
               createUtilityElement(identifiedFeature, utilityNetworkSource)
             }
-            utilityNetworkSource.sourceType == UtilityNetworkSource.Type.EDGE -> {
+            UtilityNetworkSource.Type.EDGE -> {
               //  create a utility element with the identified feature
               val utilityElement = utilityNetwork.createElement(identifiedFeature, null).apply {
                 // calculate how far the clicked location is along the edge feature
@@ -218,8 +218,7 @@ class MainActivity : AppCompatActivity() {
               // set the trace location graphic to the nearest coordinate to the tapped point
               addUtilityElementToMap(identifiedFeature, mapPoint, utilityElement)
             }
-            else ->
-              error("Unexpected utility network source type!")
+            else -> error("Unexpected utility network source type!")
           }
         }
       }
@@ -284,22 +283,25 @@ class MainActivity : AppCompatActivity() {
           // if there is more than one terminal, prompt the user to select one
           else -> {
             // get a list of terminal names from the terminals
-            val terminalNames =
-              ArrayList<String>(utilityAssetType.terminalConfiguration.terminals.map { it.name })
+            val terminalNames = utilityAssetType.terminalConfiguration.terminals.map { it.name }
 
-            selector("Select utility terminal:", terminalNames) { _, i ->
-              val utilityElement = utilityNetwork.createElement(identifiedFeature, terminals[i])
+            AlertDialog.Builder(this).apply {
+              setTitle("Select utility terminal:")
+              setItems(terminalNames.toTypedArray()) { _, which ->
+                val utilityElement = utilityNetwork.createElement(identifiedFeature, terminals[which])
 
-              // add the utility element to the map
-              addUtilityElementToMap(
-                identifiedFeature,
-                identifiedFeature.geometry as? Point,
-                utilityElement
-              )
+                // add the utility element to the map
+                addUtilityElementToMap(
+                  identifiedFeature,
+                  identifiedFeature.geometry as? Point,
+                  utilityElement
+                )
 
-              // show the utility element name in the UI
-              showTerminalNameInStatusLabel(utilityElement.terminal)
-            }
+                // show the utility element name in the UI
+                showTerminalNameInStatusLabel(utilityElement.terminal)
+              }
+
+            }.show()
           }
         }
       }
@@ -431,7 +433,7 @@ class MainActivity : AppCompatActivity() {
    * @param error as a string
    */
   private fun reportError(error: String) {
-    toast(error)
+    Toast.makeText(this, error, Toast.LENGTH_LONG).show()
     Log.e(this::class.java.simpleName, error)
   }
 
