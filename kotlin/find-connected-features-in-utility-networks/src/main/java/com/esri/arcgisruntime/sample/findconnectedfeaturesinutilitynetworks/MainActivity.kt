@@ -59,7 +59,7 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var mediumVoltageTier: UtilityTier
+  private var mediumVoltageTier: UtilityTier? = null
   private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
   private val utilityNetwork: UtilityNetwork by lazy {
     UtilityNetwork(getString(R.string.naperville_utility_network_service), mapView.map)
@@ -70,10 +70,10 @@ class MainActivity : AppCompatActivity() {
   private val barriers: MutableList<UtilityElement> by lazy { ArrayList<UtilityElement>() }
 
   // create symbols for the starting point and barriers
-  private val mStartingPointSymbol: SimpleMarkerSymbol by lazy {
+  private val startingPointSymbol: SimpleMarkerSymbol by lazy {
     SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, Color.GREEN, 25f)
   }
-  private val mBarrierPointSymbol: SimpleMarkerSymbol by lazy {
+  private val barrierPointSymbol: SimpleMarkerSymbol by lazy {
     SimpleMarkerSymbol(SimpleMarkerSymbol.Style.X, Color.RED, 25f)
   }
 
@@ -81,45 +81,49 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // setup the map view
-    mapView.let { mapView ->
-      // add a map with streets night vector basemap
-      mapView.map = ArcGISMap(Basemap.createStreetsNightVector()).apply {
-        operationalLayers.apply {
-          // create electrical distribution line layer
-          add(FeatureLayer(ServiceFeatureTable(getString(R.string.naperville_utility_network_service) + "/115")).apply {
-            // define a solid line for medium voltage lines
-            val mediumVoltageValue = UniqueValueRenderer.UniqueValue(
-              "N/A",
-              "Medium voltage",
-              SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.CYAN, 3f),
-              listOf(5)
-            )
-            // define a dashed line for low voltage lines
-            val lowVoltageValue = UniqueValueRenderer.UniqueValue(
-              "N/A",
-              "Low voltage",
-              SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.CYAN, 3f),
-              listOf(3)
-            )
-            // create and apply a renderer solid light gray renderer
-            renderer =
-              UniqueValueRenderer(
-                listOf("ASSETGROUP"),
-                listOf(mediumVoltageValue, lowVoltageValue),
-                "",
-                SimpleLineSymbol()
-              )
-          })
-          // create electrical device layer
-          add(
-            FeatureLayer(ServiceFeatureTable(getString(R.string.naperville_utility_network_service) + "/100"))
+    // create electrical distribution line layer
+    val electricalDistributionFeatureLayer =
+      FeatureLayer(ServiceFeatureTable(getString(R.string.naperville_utility_network_service) + "/115")).apply {
+        // define a solid line for medium voltage lines
+        val mediumVoltageValue = UniqueValueRenderer.UniqueValue(
+          "N/A",
+          "Medium voltage",
+          SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.CYAN, 3f),
+          listOf(5)
+        )
+        // define a dashed line for low voltage lines
+        val lowVoltageValue = UniqueValueRenderer.UniqueValue(
+          "N/A",
+          "Low voltage",
+          SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.CYAN, 3f),
+          listOf(3)
+        )
+        // create and apply a renderer solid light gray renderer
+        renderer =
+          UniqueValueRenderer(
+            listOf("ASSETGROUP"),
+            listOf(mediumVoltageValue, lowVoltageValue),
+            "",
+            SimpleLineSymbol()
           )
+      }
+
+    // create electrical device layer
+    val electricalDeviceFeatureLayer =
+      FeatureLayer(ServiceFeatureTable(getString(R.string.naperville_utility_network_service) + "/100"))
+
+    // setup the map view
+    mapView.apply {
+      // add a map with streets night vector basemap
+      map = ArcGISMap(Basemap.createStreetsNightVector()).apply {
+        operationalLayers.apply {
+          add(electricalDistributionFeatureLayer)
+          add(electricalDeviceFeatureLayer)
         }
       }
 
       // set the viewpoint to a section in the southeast of the network
-      mapView.setViewpointAsync(
+      setViewpointAsync(
         Viewpoint(
           Envelope(
             -9813547.35557238,
@@ -132,13 +136,13 @@ class MainActivity : AppCompatActivity() {
       )
 
       // set the selection color for features in the map view
-      mapView.selectionProperties.color = Color.YELLOW
+      selectionProperties.color = Color.YELLOW
 
       // add a graphics overlay
-      mapView.graphicsOverlays.add(graphicsOverlay)
+      graphicsOverlays.add(graphicsOverlay)
 
       // handle taps on the map view
-      mapView.onTouchListener =
+      onTouchListener =
         object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
           override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
             // only pass taps to identify nearest utility element once the utility network has loaded
@@ -245,10 +249,10 @@ class MainActivity : AppCompatActivity() {
         // appropriate symbol to the graphic
         symbol = if (startingLocationsRadioButton.isChecked) {
           startingLocations.add(utilityElement)
-          mStartingPointSymbol
+          startingPointSymbol
         } else {
           barriers.add(utilityElement)
-          mBarrierPointSymbol
+          barrierPointSymbol
         }
       })
   }
@@ -288,7 +292,8 @@ class MainActivity : AppCompatActivity() {
             AlertDialog.Builder(this).apply {
               setTitle("Select utility terminal:")
               setItems(terminalNames.toTypedArray()) { _, which ->
-                val utilityElement = utilityNetwork.createElement(identifiedFeature, terminals[which])
+                val utilityElement =
+                  utilityNetwork.createElement(identifiedFeature, terminals[which])
 
                 // add the utility element to the map
                 addUtilityElementToMap(
@@ -335,12 +340,11 @@ class MainActivity : AppCompatActivity() {
 
     // create utility trace parameters for the given trace type
     val traceType = UtilityTraceType.valueOf(traceTypeSpinner.selectedItem.toString())
-    Log.e("tt", traceType.toString())
     with(UtilityTraceParameters(traceType, startingLocations)) {
       // if any barriers have been created, add them to the parameters
       this.barriers.addAll(barriers)
       // set the trace configuration using the tier from the utility domain network
-      this.traceConfiguration = mediumVoltageTier.traceConfiguration
+      this.traceConfiguration = mediumVoltageTier?.traceConfiguration
       // run the utility trace and get the results
       val utilityTraceResultsFuture = utilityNetwork.traceAsync(this)
       utilityTraceResultsFuture.addDoneListener {
