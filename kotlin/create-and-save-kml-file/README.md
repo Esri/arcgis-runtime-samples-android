@@ -27,12 +27,12 @@ Click on the map to add the type of geometry selected in the spinner. Click the 
 
 ## Relevant API
 
-* GeometryEngine.Project
+* GeometryEngine.project
 * KmlDataset
 * KmlDocument
 * KmlGeometry
 * KmlLayer
-* KmlNode.SaveAsASync
+* KmlNode.saveAsASync
 * KmlPlacemark
 * KmlStyle
 * SketchEditor
