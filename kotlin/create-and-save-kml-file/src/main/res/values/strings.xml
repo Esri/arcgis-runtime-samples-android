@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Create and save KML file</string>
+    <string name="content_description_point_symbols">Point symbols</string>
+    <string name="geometry">Geometry:</string>
+    <string name="point_symbol">Point symbol:</string>
+    <string name="color">Color:</string>
+    <string name="complete_sketch">Complete sketch</string>
+    <string name="save_kml">Save KML</string>
+    <string name="default_save_name">MyKMLDocument.kmz</string>
+</resources>
