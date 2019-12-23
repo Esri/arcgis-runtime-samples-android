@@ -21,7 +21,7 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.widget.EditText
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.concurrent.Job
@@ -33,9 +33,8 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingString
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingTask
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.custom_alert_dialog.*
+import kotlinx.android.synthetic.main.date_range_dialog.*
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -47,8 +46,7 @@ enum class InputCalendar {
 
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var fromDate: EditText
-  private lateinit var toDate: EditText
+  private val TAG = this::class.java.simpleName
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -81,18 +79,15 @@ class MainActivity : AppCompatActivity() {
 
     // create custom dialog
     Dialog(this).apply {
-      setContentView(R.layout.custom_alert_dialog)
+      setContentView(R.layout.date_range_dialog)
       setCancelable(true)
 
-      fromDate = this.findViewById(R.id.fromDateText)
-      toDate = this.findViewById(R.id.toDateText)
-
       fromDateText.setOnClickListener {
-        showCalendar(InputCalendar.From)
+        showCalendar(this, InputCalendar.From)
       }
 
       toDateText.setOnClickListener {
-        showCalendar(InputCalendar.To)
+        showCalendar(this, InputCalendar.To)
       }
 
       analyzeButton.setOnClickListener {
@@ -106,10 +101,9 @@ class MainActivity : AppCompatActivity() {
    * Shows a date picker dialog and writes the date chosen to the correct editable text.
    *
    * @param inputCalendar enum which specifies which editable text the chosen date should be written to
-   * @param minDate
-   * @param maxDate
    */
-  private fun showCalendar(inputCalendar: InputCalendar) {
+  private fun showCalendar(dialog: Dialog, inputCalendar: InputCalendar) {
+
 
     // define the date picker dialog
     val calendar = Calendar.getInstance()
@@ -119,7 +113,6 @@ class MainActivity : AppCompatActivity() {
 
     DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
 
-
       val dateString = StringBuilder()
         .append(year)
         .append("-")
@@ -127,17 +120,14 @@ class MainActivity : AppCompatActivity() {
         .append("-")
         .append(dayOfMonth)
 
-      (parseDate(dateString.toString())?.let { date ->
-
-        when (inputCalendar) {
-          InputCalendar.From -> {
-            fromDate.setText(date.toString())
-          }
-          InputCalendar.To -> {
-            toDate.setText(date.toString())
-          }
+      when (inputCalendar) {
+        InputCalendar.From -> {
+          dialog.fromDateText.setText(dateString)
         }
-      })
+        InputCalendar.To -> {
+          dialog.toDateText.setText(dateString)
+        }
+      }
     }, year, month, day).apply {
       datePicker.minDate = parseDate(getString(R.string.min_date))!!.time
       datePicker.maxDate = parseDate(getString(R.string.max_date))!!.time
@@ -145,8 +135,6 @@ class MainActivity : AppCompatActivity() {
         updateDate(1998, 0, 1)
       }
     }.show()
-
-
   }
 
   /**
@@ -156,7 +144,6 @@ class MainActivity : AppCompatActivity() {
    * @param geoprocessingTask Geoprocessing task to generate hotspots
    * @param from string which holds a date
    * @param to   string which holds a date
-   * @param isCanceled flag to cancel operation
    */
   private fun analyzeHotspots(geoprocessingTask: GeoprocessingTask, from: String, to: String) {
     geoprocessingTask.loadAsync()
@@ -167,69 +154,73 @@ class MainActivity : AppCompatActivity() {
     // create parameters for geoprocessing job
     val paramsFuture = geoprocessingTask.createDefaultParametersAsync()
     paramsFuture.addDoneListener {
-      val geoprocessingParameters = paramsFuture.get()
-      geoprocessingParameters.processSpatialReference = mapView.spatialReference
-      geoprocessingParameters.outputSpatialReference = mapView.spatialReference
+      try {
+        val geoprocessingParameters = paramsFuture.get()
+        geoprocessingParameters.processSpatialReference = mapView.spatialReference
+        geoprocessingParameters.outputSpatialReference = mapView.spatialReference
 
-      val queryString = StringBuilder("(\"DATE\" > date '")
-        .append(from)
-        .append(" 00:00:00' AND \"DATE\" < date '")
-        .append(to)
-        .append(" 00:00:00')")
+        val queryString = StringBuilder("(\"DATE\" > date '")
+          .append(from)
+          .append(" 00:00:00' AND \"DATE\" < date '")
+          .append(to)
+          .append(" 00:00:00')")
 
-      val geoprocessingString = GeoprocessingString(queryString.toString())
-      geoprocessingParameters.inputs.put("Query", geoprocessingString)
-      // create and start geoprocessing job
-      val geoprocessingJob = geoprocessingTask.createJob(geoprocessingParameters)
-      geoprocessingJob.start()
+        val geoprocessingString = GeoprocessingString(queryString.toString())
+        geoprocessingParameters.inputs["Query"] = geoprocessingString
+        // create and start geoprocessing job
+        val geoprocessingJob = geoprocessingTask.createJob(geoprocessingParameters)
+        geoprocessingJob.start()
 
-      // show progress
-      val progressDialog = ProgressDialog(this).apply {
-        setTitle(getString(R.string.app_name))
-        setMessage(getString(R.string.dialog_text))
-        setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
-        show()
-      }
-
-      // update progress
-      geoprocessingJob.addProgressChangedListener {
-        val progress = geoprocessingJob.progress
-        progressDialog.progress = progress
-      }
-
-      // when the job finishes
-      geoprocessingJob.addJobDoneListener {
-        // dismiss the dialog
-        progressDialog.dismiss()
-
-        when (geoprocessingJob.status) {
-          Job.Status.SUCCEEDED -> {
-            // get results
-            val geoprocessingResult = geoprocessingJob.result
-            val hotspotMapImageLayer = geoprocessingResult.mapImageLayer
-            hotspotMapImageLayer.opacity = 0.5f
-
-            // add new layer to map
-            mapView.map.operationalLayers.add(hotspotMapImageLayer)
-
-            // zoom to the layer extent
-            hotspotMapImageLayer.addDoneLoadingListener {
-              mapView.setViewpointGeometryAsync(hotspotMapImageLayer.fullExtent)
-            }
-          }
-          else -> Toast.makeText(this, getString(R.string.job_failed), Toast.LENGTH_LONG).show()
+        // show progress
+        val progressDialog = ProgressDialog(this).apply {
+          setTitle(getString(R.string.app_name))
+          setMessage(getString(R.string.dialog_text))
+          setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+          show()
         }
+
+        // update progress
+        geoprocessingJob.addProgressChangedListener {
+          val progress = geoprocessingJob.progress
+          progressDialog.progress = progress
+        }
+
+        // when the job finishes
+        geoprocessingJob.addJobDoneListener {
+          // dismiss the dialog
+          progressDialog.dismiss()
+
+          when (geoprocessingJob.status) {
+            Job.Status.SUCCEEDED -> {
+              // get results
+              val geoprocessingResult = geoprocessingJob.result
+              val hotspotMapImageLayer = geoprocessingResult.mapImageLayer
+              hotspotMapImageLayer.opacity = 0.5f
+
+              // add new layer to map
+              mapView.map.operationalLayers.add(hotspotMapImageLayer)
+
+              // zoom to the layer extent
+              hotspotMapImageLayer.addDoneLoadingListener {
+                mapView.setViewpointGeometryAsync(hotspotMapImageLayer.fullExtent)
+              }
+            }
+            else -> Toast.makeText(this, getString(R.string.job_failed), Toast.LENGTH_LONG).show()
+          }
+        }
+      } catch (e: Exception) {
+        val error = "Error generating geoprocessing parameters: " + e.message
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+        Log.e(TAG, error)
       }
     }
   }
 
   /**
-   * parse String to Date
+   * Parse the date using a simple date format.
    */
   private fun parseDate(date: String): Date? {
-    // create a simple date formatter to parse strings to date
-    val simpleDateFormatter = DateTimeFormatter("yyyy-MM-dd", Locale.US)
-    return simpleDateFormatter.parse(date)
+    return SimpleDateFormat(getString(R.string.date_format), Locale.US).parse(date)
   }
 
   override fun onPause() {

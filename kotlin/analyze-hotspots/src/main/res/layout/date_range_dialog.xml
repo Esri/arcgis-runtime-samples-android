@@ -31,6 +31,7 @@
         android:ems="10"
         android:focusable="false"
         android:inputType="date"
+        android:text="@string/min_date"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
@@ -44,6 +45,7 @@
         android:ems="10"
         android:focusable="false"
         android:inputType="date"
+        android:text="@string/max_date"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fromDateText" />
 
@@ -90,4 +92,5 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toDateText" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
