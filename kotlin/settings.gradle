@@ -1,6 +1,7 @@
 include ':add-features-feature-service',
         ':analyze-hotspots',
         ':attribution-view-change',
+        ':change-atmosphere-effect',
         ':change-basemaps',
         ':choose-camera-controller',
         ':create-terrain-from-a-local-raster',
