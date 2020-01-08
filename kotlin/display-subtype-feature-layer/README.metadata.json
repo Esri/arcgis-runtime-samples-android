@@ -1,24 +1,29 @@
 {
-    "category": "Maps and Scenes",
-    "description": "Inflate a map view and add an ArcGIS map to it.",
+    "category": "Layers",
+    "description": "Displays a composite layer of all the subtype values in a feature class.",
     "ignore": false,
     "images": [
-        "display-map.png"
+        "display-subtype-feature-layer.png"
     ],
     "keywords": [
-        "Maps and Scenes",
-        "ArcGISMap",
-        "MapView",
-        "Basemap"
+        "asset group",
+        "feature layer",
+        "labeling",
+        "sublayer",
+        "subtype",
+        "symbology",
+        "utility network",
+        "visible scale range"
     ],
     "redirect_from": "",
     "relevant_apis": [
         "ArcGISMap",
         "MapView",
-        "Basemap"
+        "SubtypeFeatureLayer",
+        "SubtypeSublayer"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/displaymap/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/displaysubtypefeaturelayer/MainActivity.kt"
     ],
-    "title": "Display a Map"
+    "title": "Display subtype feature layer"
 }
