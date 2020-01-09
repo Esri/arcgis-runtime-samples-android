@@ -23,7 +23,7 @@ To change the atmosphere effect:
 * AtmosphereEffect
 * SceneView
 
-## Additional Information
+## Additional information
 There are three atmosphere effect options:
 
 - **Realistic** - A realistic atmosphere effect is applied over the entire surface.
