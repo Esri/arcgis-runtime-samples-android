@@ -4,7 +4,7 @@
   <string name="kml_item_id">9fe0b1bfdcd64c83bd77ea0452c76253</string>
   <string name="kml_from_url">KML from URL</string>
   <string name="kml_from_portal">KML from Portal</string>
-  <string name="kml_from_external_storage">KML from External Storage</string>
+  <string name="kml_from_local_storage">KML from local storage</string>
   <string name="noaa_weather_kml_url">https://www.wpc.ncep.noaa.gov/kml/noaa_chart/WPC_Day1_SigWx.kml</string>
   <string name="kml_path">/US_State_Capitals.kml</string>
 </resources>

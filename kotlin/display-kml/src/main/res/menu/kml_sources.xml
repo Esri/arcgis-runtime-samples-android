@@ -11,6 +11,6 @@
 
   <item
     android:id="@+id/kmlFromExternalStorage"
-    android:title="@string/kml_from_external_storage" />
+    android:title="@string/kml_from_local_storage" />
 
 </menu>
