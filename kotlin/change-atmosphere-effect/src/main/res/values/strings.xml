@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Change atmosphere effect</string>
+    <string name="no_atmosphere">No Atmosphere Effect</string>
+    <string name="realistic_atmosphere">Realistic Atmosphere Effect</string>
+    <string name="horizon_atmosphere">Horizon Atmosphere Effect</string>
+    <string name="elevation_image_service">
+        http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
+</resources>
