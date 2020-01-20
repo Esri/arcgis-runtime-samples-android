@@ -39,13 +39,10 @@ class MainActivity : AppCompatActivity() {
         sceneView.scene = scene
 
         // add base surface for elevation data
-        with(Surface()) {
-            this.elevationSources.add(
-              ArcGISTiledElevationSource(
-                      getString(R.string.elevation_image_service)
-              )
+        sceneView.scene.baseSurface = Surface().apply {
+            elevationSources.add(
+                ArcGISTiledElevationSource(getString(R.string.elevation_image_service))
             )
-            sceneView.scene.baseSurface = this
         }
 
         // create a camera and set it as the viewpoint for when the scene loads

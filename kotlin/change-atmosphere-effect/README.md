@@ -15,7 +15,7 @@ Select one of the three available atmosphere effects. The sky will change to dis
 To change the atmosphere effect:
 
 1. Create an `ArcGISScene` and display it in a `SceneView`.
-2. Change the atmosphere effect with `sceneView.AtmosphereEffect(AtmosphereEffect)`.
+2. Change the atmosphere effect with `sceneView.atmosphereEffect(AtmosphereEffect)`.
 
 ## Relevant API
 
@@ -26,9 +26,9 @@ To change the atmosphere effect:
 ## Additional information
 There are three atmosphere effect options:
 
-- **Realistic** - A realistic atmosphere effect is applied over the entire surface.
-- **Horizon only** - Atmosphere effect applied to the sky (horizon) only.
-- **None** - No atmosphere effect. The sky is rendered black with a starfield consisting of randomly placed white dots.
+- **REALISTIC** - A realistic atmosphere effect is applied over the entire surface.
+- **HORIZON_ONLY** - Atmosphere effect applied to the sky (horizon) only.
+- **NONE** - No atmosphere effect. The sky is rendered black with a starfield consisting of randomly placed white dots.
 
 #### Tags
 atmosphere
