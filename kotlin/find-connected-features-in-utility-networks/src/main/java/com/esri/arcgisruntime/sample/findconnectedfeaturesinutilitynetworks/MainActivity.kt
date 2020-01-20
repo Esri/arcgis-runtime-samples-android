@@ -54,7 +54,6 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceType
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.utility_network_controls_layout.*
-import java.util.concurrent.ExecutionException
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
@@ -230,9 +229,7 @@ class MainActivity : AppCompatActivity() {
           }
         }
       } catch (e: Exception) {
-        val error = "Error getting identify results: " + e.message
-        Log.e(TAG, error)
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+        reportError("Error getting identify results: " + e.message)
       }
     }
   }
@@ -399,12 +396,9 @@ class MainActivity : AppCompatActivity() {
             enableButtons()
           }
         }
-      } catch (e: InterruptedException) {
+      } catch (e: Exception) {
         statusTextView.text = getString(R.string.failed_message)
-        reportError("Error running utility network connected trace: " + e.message)
-      } catch (e: ExecutionException) {
-        statusTextView.text = getString(R.string.failed_message)
-        reportError("Error running utility network connected trace: " + e.message)
+        reportError("Error running connected trace: " + e.message)
       }
     }
   }
