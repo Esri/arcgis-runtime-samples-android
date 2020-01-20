@@ -21,6 +21,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.layers.KmlLayer
@@ -40,19 +42,37 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        progressBar.visibility = View.VISIBLE
 
         // create a map with the dark gray canvas basemap
         val map = ArcGISMap(Basemap.Type.DARK_GRAY_CANVAS_VECTOR, 39.0, -98.0, 4);
         // set the map to the map view
         mapView.map = map
-    }
+        // prompt user to make a KML source selection when the app has loaded
+        map.addDoneLoadingListener {
+            if (map.loadStatus == LoadStatus.LOADED) {
+                Toast.makeText(applicationContext, R.string.user_prompt, Toast.LENGTH_LONG).show()
+                // hide progress bar once map has loaded
+                progressBar.visibility = View.GONE
+            }
+        }
+            }
 
     /**
-     * Clear all operational layers and add the kml layer to the map as an operational layer.
+     * Shows progress indicator if the KmlLayer is loading, clears all operational layers and adds
+     * the kml layer to the map as an operational layer.
      *
      * @param kmlLayer to add to the map
      */
     fun display(kmlLayer: KmlLayer) {
+        // show progress indicator if kml dataset is loading
+        progressBar.visibility = View.VISIBLE
+        kmlLayer.addDoneLoadingListener {
+            if (kmlLayer.loadStatus == LoadStatus.LOADED) {
+                progressBar.visibility = View.GONE
+            }
+        }
+        // clear operational layers before adding the KML layer to the map
         val operationalLayers = mapView.map.operationalLayers
         operationalLayers.clear()
         operationalLayers.add(kmlLayer)
@@ -93,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     fun changeSourceToFileExternalStorage() {
         // get the data set stored locally in device external storage
         val file = getExternalFilesDir(null)?.path + getString(R.string.kml_path)
-        val kmlDataset = KmlDataset(getExternalFilesDir(null)?.path + getString(R.string.kml_path))
+        val kmlDataset = KmlDataset(file)
         // create a KML layer from the locally stored data set
         val kmlLayer = KmlLayer(kmlDataset)
         display(kmlLayer)
