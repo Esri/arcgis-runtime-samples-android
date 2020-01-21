@@ -33,5 +33,5 @@
         "src/main/java/com/esri/arcgisruntime/sample/readsymbolsmobilestylefile/MainActivity.java",
         "src/main/java/com/esri/arcgisruntime/sample/readsymbolsmobilestylefile/SymbolAdapter.java"
     ],
-    "title": "Read symbols from a mobile style"
+    "title": "Read symbols mobile style file"
 }
