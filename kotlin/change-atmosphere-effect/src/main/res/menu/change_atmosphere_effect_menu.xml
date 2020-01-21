@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_no_atmosphere_effect"
+        android:title="@string/no_atmosphere"/>
+    <item
+        android:id="@+id/action_realistic_atmosphere_effect"
+        android:title="@string/realistic_atmosphere" />
+    <item
+        android:id="@+id/action_horizon_atmosphere_effect"
+        android:title="@string/horizon_atmosphere"
+        app:showAsAction="never" />
+</menu>
