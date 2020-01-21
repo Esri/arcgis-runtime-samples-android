@@ -44,8 +44,8 @@ Link | Local Location
 This sample displays three different KML files:
 
 * From URL - this is a map of the significant weather outlook produced by NOAA/NWS. It uses KML network links to always show the latest data.
-* From local file - this is a map of U.S. state capitals. It doesn't define an icon, so the default pushpin is used for the points.
-* From portal item - this is a map of U.S. states.
+* From LOCAL_FILE - this is a map of U.S. state capitals. It doesn't define an icon, so the default pushpin is used for the points.
+* From PORTAL_ITEM - this is a map of U.S. states.
 
 ## Tags
 keyhole, KML, KMZ, OGC
