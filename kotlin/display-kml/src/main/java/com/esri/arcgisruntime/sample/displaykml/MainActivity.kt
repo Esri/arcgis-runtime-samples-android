@@ -22,7 +22,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.layers.KmlLayer
@@ -56,11 +55,11 @@ class MainActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
             }
         }
-            }
+    }
 
     /**
-     * Shows progress indicator if the KmlLayer is loading, clears all operational layers and adds
-     * the kml layer to the map as an operational layer.
+     * Shows progress indicator if the KML Layer is loading, clears all operational layers and adds
+     * the KML layer to the map as an operational layer.
      *
      * @param kmlLayer to add to the map
      */
@@ -79,32 +78,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Display a kml layer from a URL.
+     * Display a KML layer from a URL.
      */
     fun changeSourceToURL() {
-        // create a kml data set from a URL
+        // create a KML data set from a URL
         val kmlDataset = KmlDataset(getString(R.string.noaa_weather_kml_url))
-        // create a kml layer created from the kml data set
+        // create a KML layer created from the KML data set and display it on the map
         val kmlLayer = KmlLayer(kmlDataset)
         display(kmlLayer)
         // report layers if failed to load
-        reportErrors(kmlLayer, "Failed to load kml layer from URL: ")
+        reportErrors(kmlLayer, "Failed to load KML layer from URL: ")
     }
 
     /**
-     * Display a kml layer from a portal item.
+     * Display a KML layer from a portal item.
      */
     fun changeSourceToPortalItem() {
         // create a portal to ArcGIS Online
         val portal = Portal(getString(R.string.arcgis_online_url))
-        // create a portal item from a kml item id
+        // create a portal item from a KML item id
         val portalItem = PortalItem(portal, getString(R.string.kml_item_id))
 
         // a KML layer created from an ArcGIS Online portal item
         val kmlLayer = KmlLayer(portalItem)
         display(kmlLayer)
         // report layers if failed to load
-        reportErrors(kmlLayer, "Failed to load kml layer from portal item: ")
+        reportErrors(kmlLayer, "Failed to load KML layer from portal item: ")
     }
 
     /**
@@ -122,7 +121,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Reports any loading errors of the kml datasets
+     * Reports any loading errors of the KML datasets
      *
      * @param kmlData any loadable containing a kml data set e.g. KmlDataset or KmlLayer
      * @param string the error message to display
