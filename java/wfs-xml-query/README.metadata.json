@@ -28,5 +28,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/wfsxmlquery/MainActivity.java"
     ],
-    "title": "Load WFS with XML query"
+    "title": "WFS XML query"
 }

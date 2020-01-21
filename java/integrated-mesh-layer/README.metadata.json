@@ -19,5 +19,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/integratedmeshlayer/MainActivity.java"
     ],
-    "title": "Add an integrated mesh layer"
+    "title": "Integrated mesh layer"
 }

@@ -27,7 +27,7 @@
         "SketchEditor"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/createandsavekmlfile/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/createandsavekmlfile/MainActivity.kt",
         "src/main/java/com/esri/arcgisruntime/sample/createandsavekmlfile/PointSymbolAdapter.kt"
     ],
     "title": "Create and save kml file"
