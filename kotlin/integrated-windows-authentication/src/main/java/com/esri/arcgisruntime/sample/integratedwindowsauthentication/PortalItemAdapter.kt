@@ -25,7 +25,7 @@ import android.view.ViewGroup
 import com.esri.arcgisruntime.portal.PortalItem
 import kotlinx.android.synthetic.main.portal_item_row.view.*
 
-class PortalItemAdapter(private val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<PortalItemAdapter.PortalItemViewHolder>() {
+class PortalItemAdapter(private val onItemClickListener: OnItemClickListener) : androidx.recyclerview.widget.RecyclerView.Adapter<PortalItemAdapter.PortalItemViewHolder>() {
 
     // List of PortalItems to display
     private var portalItems: MutableList<PortalItem>? = null
@@ -42,7 +42,7 @@ class PortalItemAdapter(private val onItemClickListener: OnItemClickListener) : 
 
     override fun getItemCount() = portalItems?.size ?: 0
 
-    class PortalItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class PortalItemViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         private val itemTextView = itemView.itemTextView
 
         fun bind(portalItem: PortalItem?, onItemClickListener: OnItemClickListener) {
