@@ -36,23 +36,24 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val TAG: String = MainActivity::class.java.getSimpleName()
+    private val TAG: String = MainActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        progressBar.visibility = View.VISIBLE
+        // show progress indicator when app starts
+        progressIndicator.visibility = View.VISIBLE
 
         // create a map with the dark gray canvas basemap
-        val map = ArcGISMap(Basemap.Type.DARK_GRAY_CANVAS_VECTOR, 39.0, -98.0, 4);
+        val map = ArcGISMap(Basemap.Type.DARK_GRAY_CANVAS_VECTOR, 39.0, -98.0, 4)
         // set the map to the map view
         mapView.map = map
         // prompt user to make a KML source selection when the app has loaded
         map.addDoneLoadingListener {
             if (map.loadStatus == LoadStatus.LOADED) {
                 Toast.makeText(applicationContext, R.string.user_prompt, Toast.LENGTH_LONG).show()
-                // hide progress bar once map has loaded
-                progressBar.visibility = View.GONE
+                // hide progress indicator once map has loaded
+                progressIndicator.visibility = View.GONE
             }
         }
     }
@@ -63,12 +64,13 @@ class MainActivity : AppCompatActivity() {
      *
      * @param kmlLayer to add to the map
      */
-    fun display(kmlLayer: KmlLayer) {
+    private fun display(kmlLayer: KmlLayer) {
         // show progress indicator if kml dataset is loading
-        progressBar.visibility = View.VISIBLE
+        progressIndicator.visibility = View.VISIBLE
+        // hide progress indicator when kml dataset has loaded
         kmlLayer.addDoneLoadingListener {
             if (kmlLayer.loadStatus == LoadStatus.LOADED) {
-                progressBar.visibility = View.GONE
+                progressIndicator.visibility = View.GONE
             }
         }
         // clear operational layers before adding the KML layer to the map
@@ -80,20 +82,20 @@ class MainActivity : AppCompatActivity() {
     /**
      * Display a KML layer from a URL.
      */
-    fun changeSourceToURL() {
+    private fun changeSourceToURL() {
         // create a KML data set from a URL
         val kmlDataset = KmlDataset(getString(R.string.noaa_weather_kml_url))
         // create a KML layer created from the KML data set and display it on the map
         val kmlLayer = KmlLayer(kmlDataset)
         display(kmlLayer)
         // report layers if failed to load
-        reportErrors(kmlLayer, "Failed to load KML layer from URL: ")
+        reportErrors(kmlLayer, "Failed to load KML layer from URL")
     }
 
     /**
      * Display a KML layer from a portal item.
      */
-    fun changeSourceToPortalItem() {
+    private fun changeSourceToPortalItem() {
         // create a portal to ArcGIS Online
         val portal = Portal(getString(R.string.arcgis_online_url))
         // create a portal item from a KML item id
@@ -103,13 +105,13 @@ class MainActivity : AppCompatActivity() {
         val kmlLayer = KmlLayer(portalItem)
         display(kmlLayer)
         // report layers if failed to load
-        reportErrors(kmlLayer, "Failed to load KML layer from portal item: ")
+        reportErrors(kmlLayer, "Failed to load KML layer from portal item")
     }
 
     /**
      * Display a kml layer from external storage.
      */
-    fun changeSourceToFileExternalStorage() {
+    private fun changeSourceToFileExternalStorage() {
         // get the data set stored locally in device external storage
         val file = getExternalFilesDir(null)?.path + getString(R.string.kml_path)
         val kmlDataset = KmlDataset(file)
@@ -117,7 +119,7 @@ class MainActivity : AppCompatActivity() {
         val kmlLayer = KmlLayer(kmlDataset)
         display(kmlLayer)
         // report layers if failed to load
-        reportErrors(kmlLayer, "Failed to load kml data set from external storage: " + file)
+        reportErrors(kmlLayer, "Failed to load kml data set from external storage: $file ")
     }
 
     /**
@@ -126,10 +128,13 @@ class MainActivity : AppCompatActivity() {
      * @param kmlData any loadable containing a kml data set e.g. KmlDataset or KmlLayer
      * @param string the error message to display
      */
-    fun reportErrors(kmlData: Loadable, string: String) {
+    private fun reportErrors(kmlData: Loadable, string: String) {
         // report errors if failed to load
         kmlData.addDoneLoadingListener {
             if (kmlData.loadStatus != LoadStatus.LOADED) {
+                // remove the progress indicator
+                progressIndicator.visibility = View.GONE
+                // report the error
                 val error = string + kmlData.loadError.message
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show()
                 Log.e(TAG, error)
@@ -153,8 +158,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        super.onPause()
         mapView.pause()
+        super.onPause()
     }
 
     override fun onResume() {
@@ -163,7 +168,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         mapView.dispose()
+        super.onDestroy()
     }
 }

@@ -18,7 +18,7 @@ Before attempting to load a KML file from local storage, the file will have to b
 1. To create a KML layer from a URL, create a `KmlDataset` using the URL to the KML file. Then pass the data set to the `KmlLayer` constructor.
 1. To create a KML layer from a portal item, construct a `PortalItem` with a portal and the KML portal item. Pass the portal item to the `KmlLayer` constructor.
 1. To create a KML layer from a local file, create a `KmlDataset` using a path to the local KML file in external storage. Then pass the data set to the `KmlLayer` constructor.
-1. Add the layer as an operational layer to the map with `map.operationalLayers().add(kmlLayer)`.
+1. Add the layer as an operational layer to the map with `map.operationalLayers.add(kmlLayer)`.
 
 ## Relevant API
 
