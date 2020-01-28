@@ -25,11 +25,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16)
+        val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 51.5, 0.0, 5)
         mapView.map = map
 
     }
