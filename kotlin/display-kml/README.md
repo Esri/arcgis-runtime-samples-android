@@ -36,8 +36,7 @@ Before attempting to load a KML file from local storage, the file will have to b
 
 Link | Local Location
 ---------|-------|
-|[US State Capitals KML](https://arcgisruntime.maps.arcgis.com/home/item.html?id=324e4742820e46cfbe5029ff2c32cb1f)| 
-/Android/data/com.esri.arcgisruntime.sample.displaykml/files/US_State_Capitals.kml|
+|[US State Capitals KML](https://arcgisruntime.maps.arcgis.com/home/item.html?id=324e4742820e46cfbe5029ff2c32cb1f)| /Android/data/com.esri.arcgisruntime.sample.displaykml/files/US_State_Capitals.kml |
 
 ## About the data
 
