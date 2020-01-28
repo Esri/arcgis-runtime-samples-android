@@ -3,6 +3,7 @@ package com.esri.arcgisruntime.sample.configuresubnetworktrace
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.text.InputType
+import android.text.method.ScrollingMovementMethod
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -51,11 +52,11 @@ class MainActivity : AppCompatActivity() {
 
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
+    exampleTextView.movementMethod = ScrollingMovementMethod()
 
     // create a utility network and wait for it to finish to load
     utilityNetwork.loadAsync()
     utilityNetwork.addDoneLoadingListener {
-
 
       // populate spinners for network attribute comparison
       sources =
@@ -83,17 +84,20 @@ class MainActivity : AppCompatActivity() {
 
       // create a default starting location
       val networkSource = utilityNetwork.definition.getNetworkSource("Electric Distribution Device")
-      val assetGroup = networkSource.getAssetGroup("Service Point")
-      val assetType = assetGroup.getAssetType("Three Phase Low Voltage Meter")
-      val globalId = java.util.UUID.fromString("3AEC2649-D867-4EA7-965F-DBFE1F64B090")
+      val assetGroup = networkSource.getAssetGroup("Circuit Breaker")
+      val assetType = assetGroup.getAssetType("Three Phase")
+      val globalId = java.util.UUID.fromString("1CAF7740-0BF4-4113-8DB2-654E18800028")
+      // utility element to start the trace from
       startingLocation = utilityNetwork.createElement(assetType, globalId)
+      startingLocation.terminal =
+        startingLocation.assetType.terminalConfiguration.terminals.first { it.name == "Load" }
 
       // get a default trace configuration from a tier to update the UI
       val domainNetwork = utilityNetwork.definition.getDomainNetwork("ElectricDistribution")
       sourceTier = domainNetwork.getTier("Medium Voltage Radial")
 
       (sourceTier.traceConfiguration.traversability.barriers as? UtilityTraceConditionalExpression)?.let {
-        expressionTextView.text = getExpression(it)
+        expressionTextView.text = expressionToString(it)
         initialExpression = it
       }
 
@@ -111,7 +115,7 @@ class MainActivity : AppCompatActivity() {
       // update the list of coded values
       values = codedValueDomain.codedValues
       // show the values spinner
-      setVisible(valuesSpinner.id)
+      setVisible(valuesBackgroundView.id)
       // update the values spinner adapter
       valuesSpinner.adapter = ArrayAdapter<String>(
         applicationContext,
@@ -121,16 +125,18 @@ class MainActivity : AppCompatActivity() {
       )
       // if the domain is not a coded value domain
     } ?: kotlin.run {
-      when(attribute.dataType) {
+      when (attribute.dataType) {
         UtilityNetworkAttribute.DataType.BOOLEAN -> {
           setVisible(valueBooleanButton.id)
         }
         UtilityNetworkAttribute.DataType.DOUBLE, UtilityNetworkAttribute.DataType.FLOAT -> {
-          valuesEditText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+          // show the edit text and only allow numbers (decimals allowed)
+          valuesEditText.inputType =
+            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
           setVisible(valuesEditText.id)
         }
         UtilityNetworkAttribute.DataType.INTEGER -> {
-          // show the values edit text
+          // show the edit text only allowing for integer input
           valuesEditText.inputType = InputType.TYPE_CLASS_NUMBER
           setVisible(valuesEditText.id)
         }
@@ -141,19 +147,19 @@ class MainActivity : AppCompatActivity() {
 
   private fun setVisible(id: Int) {
     when (id) {
-      valuesSpinner.id -> {
-        valuesSpinner.visibility = View.VISIBLE
+      valuesBackgroundView.id -> {
+        valuesBackgroundView.visibility = View.VISIBLE
         valueBooleanButton.visibility = View.INVISIBLE
         valuesEditText.visibility = View.INVISIBLE
       }
       valuesEditText.id -> {
         valuesEditText.visibility = View.VISIBLE
         valueBooleanButton.visibility = View.INVISIBLE
-        valuesSpinner.visibility = View.INVISIBLE
+        valuesBackgroundView.visibility = View.INVISIBLE
       }
       valueBooleanButton.id -> {
         valueBooleanButton.visibility = View.VISIBLE
-        valuesSpinner.visibility = View.INVISIBLE
+        valuesBackgroundView.visibility = View.INVISIBLE
         valuesEditText.visibility = View.INVISIBLE
       }
     }
@@ -166,19 +172,18 @@ class MainActivity : AppCompatActivity() {
       traversability ?: UtilityTraversability()
     }
 
-
-    // NOTE: You may also create a UtilityCategoryComparison with UtilityNetworkDefinition.Categories and UtilityCategoryComparisonOperator.
+    // NOTE: You may also create a UtilityCategoryComparison with UtilityNetworkDefinition.Categories and UtilityCategoryComparisonOperator
     (sources[sourceSpinner.selectedItemPosition] as? UtilityNetworkAttribute)?.let { attribute ->
       (operators[operatorSpinner.selectedItemPosition] as? UtilityAttributeComparisonOperator)?.let { attributeOperator ->
-        // NOTE: You may also create a UtilityCategoryComparison with UtilityNetworkDefinition.Categories and UtilityCategoryComparisonOperator.
+        // NOTE: You may also create a UtilityCategoryComparison with UtilityNetworkDefinition.Categories and UtilityCategoryComparisonOperator
         val otherValue =
-          if (attribute.domain is CodedValueDomain && values[valuesSpinner.selectedItemPosition] is CodedValue) {
-            convertToDataType(values[valuesSpinner.selectedItemPosition], attribute.dataType)
+          if (attribute.domain is CodedValueDomain) {
+            convertToDataType(values[valuesSpinner.selectedItemPosition].code, attribute.dataType)
           } else {
             convertToDataType(valuesEditText.text, attribute.dataType)
           }
 
-        // NOTE: You may also create a UtilityNetworkAttributeComparison with another NetworkAttribute.
+        // NOTE: You may also create a UtilityNetworkAttributeComparison with another NetworkAttribute
         var expression: UtilityTraceConditionalExpression = UtilityNetworkAttributeComparison(
           attribute,
           attributeOperator,
@@ -189,7 +194,7 @@ class MainActivity : AppCompatActivity() {
           expression = UtilityTraceOrCondition(otherExpression, expression)
         }
         traceConfiguration.traversability.barriers = expression
-        expressionTextView.text = getExpression(expression)
+        expressionTextView.text = expressionToString(expression)
       }
     }
   }
@@ -233,7 +238,7 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  private fun getExpression(expression: UtilityTraceConditionalExpression): String? {
+  private fun expressionToString(expression: UtilityTraceConditionalExpression): String? {
     when (expression) {
       // when the expression is a category comparison expression
       is UtilityCategoryComparison -> {
@@ -256,11 +261,15 @@ class MainActivity : AppCompatActivity() {
       }
       // when the expression is an utility trace AND condition
       is UtilityTraceAndCondition -> {
-        return getExpression(expression.leftExpression) + " AND\n" + getExpression(expression.rightExpression)
+        return expressionToString(expression.leftExpression) + " AND\n" + expressionToString(
+          expression.rightExpression
+        )
       }
       // when the expression is an utility trace OR condition
       is UtilityTraceOrCondition -> {
-        return getExpression(expression.leftExpression) + " OR\n" + getExpression(expression.rightExpression)
+        return expressionToString(expression.leftExpression) + " OR\n" + expressionToString(
+          expression.rightExpression
+        )
       }
       else -> {
         return null
@@ -271,7 +280,7 @@ class MainActivity : AppCompatActivity() {
   fun reset(view: View) {
     val traceConfiguration = sourceTier.traceConfiguration as UtilityTraceConfiguration
     traceConfiguration.traversability.barriers = initialExpression
-    expressionTextView.text = getExpression(initialExpression)
+    expressionTextView.text = expressionToString(initialExpression)
   }
 
   private fun convertToDataType(otherValue: Any, dataType: UtilityNetworkAttribute.DataType): Any {
