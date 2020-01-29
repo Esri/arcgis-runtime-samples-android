@@ -39,6 +39,9 @@ subprojects {
                 sourceCompatibility rootProject.ext.javaVersion
                 targetCompatibility rootProject.ext.javaVersion
             }
+            defaultConfig {
+                multiDexEnabled true
+            }
         }
     }
 }
