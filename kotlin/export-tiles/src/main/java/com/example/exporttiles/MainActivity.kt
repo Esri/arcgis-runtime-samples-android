@@ -19,20 +19,47 @@ package com.example.exporttiles
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import com.esri.arcgisruntime.geometry.Point
+import com.esri.arcgisruntime.geometry.SpatialReferences
+import com.esri.arcgisruntime.layers.ArcGISTiledLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.Viewpoint
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    
+    private lateinit var tiledLayer: ArcGISTiledLayer
+    private var progressBarStatus = 0
+    var dummy:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 51.5, 0.0, 5)
-        mapView.map = map
+        tiledLayer = ArcGISTiledLayer(getString(R.string.world_street_map))
+        val map = ArcGISMap().apply {
+            this.basemap = Basemap(tiledLayer)
+            this.minScale = 10000000.0
+        }
+
+        mapView.apply {
+            this.map = map
+            this.setViewpoint(Viewpoint(51.5, 0.0, 10000000.0))
+        }
+
+
+
+
+        exportTilesButton.setOnClickListener{
+            progressBar.visibility = View.VISIBLE
+            progressBar.progress = 50
+
+            //todo
+        }
+
+
 
     }
 
