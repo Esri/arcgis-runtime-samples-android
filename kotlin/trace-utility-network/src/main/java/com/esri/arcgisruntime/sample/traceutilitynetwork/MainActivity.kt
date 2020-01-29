@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.esri.arcgisruntime.sample.findconnectedfeaturesinutilitynetworks
+package com.esri.arcgisruntime.sample.traceutilitynetwork
 
 import android.graphics.Color
 import android.os.Bundle
