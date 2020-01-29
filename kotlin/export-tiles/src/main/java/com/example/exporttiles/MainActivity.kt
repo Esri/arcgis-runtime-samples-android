@@ -20,8 +20,6 @@ package com.example.exporttiles
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import com.esri.arcgisruntime.geometry.Point
-import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
@@ -31,8 +29,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var tiledLayer: ArcGISTiledLayer
-    private var progressBarStatus = 0
-    var dummy:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
