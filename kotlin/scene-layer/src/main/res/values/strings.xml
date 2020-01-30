@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Scene layer</string>
+    <string name="brest_buildings">
+        https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer</string>
+</resources>

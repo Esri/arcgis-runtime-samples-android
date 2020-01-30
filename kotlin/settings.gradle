@@ -1,4 +1,4 @@
-include ':add-features-feature-service',
+include ':add-features-feature-service', ':scene-layer',
         ':analyze-hotspots',
         ':attribution-view-change',
         ':change-atmosphere-effect',
