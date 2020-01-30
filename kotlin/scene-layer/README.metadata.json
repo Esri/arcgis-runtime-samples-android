@@ -11,7 +11,7 @@
         "SceneView",
         "SceneLayer"
     ],
-    "redirect_from": "/android/latest/sample-code/scene-layer.htm",
+    "redirect_from": "",
     "relevant_apis": [
         "ArcGISScene",
         "SceneView",
@@ -20,5 +20,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/scenelayer/MainActivity.kt"
     ],
-    "title": "Scene Layer"
+    "title": "Scene layer"
 }
