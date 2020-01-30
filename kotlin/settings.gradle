@@ -1,4 +1,4 @@
-include ':add-features-feature-service', ':scene-layer',
+include ':add-features-feature-service',
         ':analyze-hotspots',
         ':attribution-view-change',
         ':change-atmosphere-effect',
@@ -17,8 +17,11 @@ include ':add-features-feature-service', ':scene-layer',
         ':portal-user-info',
         ':raster-function-service',
         ':raster-rendering-rule',
-        ':set-min-max-scale',
+	':scene-layer',
+	':set-min-max-scale',
         ':show-labels-on-layer',
         ':token-authentication',
         ':view-point-cloud-data-offline',
         ':wmts-layer'
+
+
