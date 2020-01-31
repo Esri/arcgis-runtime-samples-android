@@ -140,19 +140,38 @@
     tools:layout_constraintLeft_creator="1"
     tools:layout_constraintRight_creator="1" />
 
-  <ProgressBar
-    android:id="@+id/progressBar"
-    style="@android:style/Widget.ProgressBar.Horizontal"
-    android:visibility="invisible"
-    android:progress="50"
-    android:layout_width="200dp"
-    android:layout_height="10dp"
-    android:indeterminate="true"
-    android:theme="@style/progressBarBlue"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+
+
+<!--  <LinearLayout-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:id="@+id/root_layout"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:orientation="vertical"-->
+<!--    android:padding="16dp"-->
+<!--    >-->
+
+<!--    <ProgressBar-->
+<!--      android:id="@+id/progressBar"-->
+<!--      style="@android:style/Widget.ProgressBar.Horizontal"-->
+<!--      android:visibility="invisible"-->
+<!--      android:layout_width="200dp"-->
+<!--      android:layout_height="10dp"-->
+<!--      android:indeterminate="false"-->
+<!--      android:theme="@style/progressBarBlue"-->
+<!--      app:layout_constraintBottom_toBottomOf="parent"-->
+<!--      app:layout_constraintEnd_toEndOf="parent"-->
+<!--      app:layout_constraintStart_toStartOf="parent"-->
+<!--      app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--    <Button-->
+<!--      android:id="@+id/button"-->
+<!--      android:layout_width="wrap_content"-->
+<!--      android:layout_height="wrap_content"-->
+<!--      android:text="Show Me Alert Dialog"-->
+<!--      />-->
+<!--  </LinearLayout>-->
 
 
 
