@@ -26,50 +26,49 @@ import com.esri.arcgisruntime.mapping.view.Camera
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    // create a scene layer from a url
+    val sceneLayer = ArcGISSceneLayer(getString(R.string.brest_buildings))
 
-        // create a scene layer from a url
-        val sceneLayer = ArcGISSceneLayer(getString(R.string.brest_buildings))
+    // create a camera with initial camera position
+    val camera = Camera(48.378, -4.494, 200.0, 345.0, 65.0, 0.0)
 
-        // create a camera with initial camera position
-        val camera = Camera(48.378, -4.494, 200.0, 345.0, 65.0, 0.0)
-
-        // create a scene
-        val scene = ArcGISScene().apply {
-            // add a base map
-            basemap = Basemap.createImagery()
-            // add a scene service to the scene for viewing buildings
-            operationalLayers.add(sceneLayer)
-        }
-
-        // create a scene view
-        sceneView.apply {
-            // add the scene to the scene view
-            setScene(scene)
-            // set initial camera position
-            setViewpointCamera(camera)
-        }
+    // create a scene
+    val scene = ArcGISScene().apply {
+      // add a base map
+      basemap = Basemap.createImagery()
+      // add a scene service to the scene for viewing buildings
+      operationalLayers.add(sceneLayer)
     }
 
-    override fun onPause() {
-        super.onPause()
-        // pause SceneView
-        sceneView.pause()
+    // create a scene view
+    sceneView.apply {
+      // add the scene to the scene view
+      setScene(scene)
+      // set initial camera position
+      setViewpointCamera(camera)
     }
+  }
 
-    override fun onResume() {
-        // resume SceneView
-        sceneView.resume()
-        super.onResume()
-    }
+  override fun onPause() {
+    super.onPause()
+    // pause SceneView
+    sceneView.pause()
+  }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        // dispose SceneView
-        sceneView.dispose()
-    }
+  override fun onResume() {
+    // resume SceneView
+    sceneView.resume()
+    super.onResume()
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    // dispose SceneView
+    sceneView.dispose()
+  }
 }
 
