@@ -31,18 +31,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // create a scene and add a basemap to it
-        val scene = ArcGISScene()
-        scene.basemap = Basemap.createImagery()
-        sceneView.scene = scene;
+        // create a scene layer from a url
+        val sceneLayer = ArcGISSceneLayer(getString(R.string.brest_buildings))
 
-        // add a scene service to the scene for viewing buildings
-        val sceneLayer = ArcGISSceneLayer(resources.getString(R.string.brest_buildings))
-        scene.operationalLayers.add(sceneLayer)
-
-        // add a camera and initial camera position
+        // create a camera with initial camera position
         val camera = Camera(48.378, -4.494, 200.0, 345.0, 65.0, 0.0)
-        sceneView.setViewpointCamera(camera)
+
+        // create a scene
+        val scene = ArcGISScene().apply {
+            // add a base map
+            basemap = Basemap.createImagery()
+            // add a scene service to the scene for viewing buildings
+            operationalLayers.add(sceneLayer)
+        }
+
+        // create a scene view
+        sceneView.apply {
+            // add the scene to the scene view
+            setScene(scene)
+            // set initial camera position
+            setViewpointCamera(camera)
+        }
     }
 
     override fun onPause() {
