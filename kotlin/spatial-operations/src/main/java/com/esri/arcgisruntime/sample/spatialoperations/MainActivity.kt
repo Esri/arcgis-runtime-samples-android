@@ -21,7 +21,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import com.esri.arcgisruntime.geometry.*
+import com.esri.arcgisruntime.geometry.Geometry
+import com.esri.arcgisruntime.geometry.GeometryEngine
+import com.esri.arcgisruntime.geometry.Part
+import com.esri.arcgisruntime.geometry.PartCollection
+import com.esri.arcgisruntime.geometry.Point
+import com.esri.arcgisruntime.geometry.PointCollection
+import com.esri.arcgisruntime.geometry.Polygon
+import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.Graphic
@@ -38,8 +45,7 @@ class MainActivity : AppCompatActivity() {
   // simple black (0xFF000000) line symbol for outlines
   private val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, -0x1000000, 1f)
   private val resultFillSymbol = SimpleFillSymbol(
-    SimpleFillSymbol.Style.SOLID, -0x16e0e1,
-    lineSymbol
+    SimpleFillSymbol.Style.SOLID, -0x16e0e1, lineSymbol
   )
   private var inputPolygon1: Polygon? = null
   private var inputPolygon2: Polygon? = null
@@ -70,8 +76,6 @@ class MainActivity : AppCompatActivity() {
     GeometryEngine.union(inputPolygon1, inputPolygon2).extent.let {
       mapView.setViewpointGeometryAsync(it, 20.0)
     }
-
-
   }
 
   private fun showGeometry(resultGeometry: Geometry) {
@@ -84,7 +88,6 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-
   private fun createPolygons() {
     // create input polygon 1
     PointCollection(SpatialReferences.getWebMercator()).run {
@@ -94,7 +97,6 @@ class MainActivity : AppCompatActivity() {
       add(Point(-14660.0, 6710000.0))
       add(Point(-13960.0, 6709400.0))
       inputPolygon1 = Polygon(this)
-
     }
 
     // create and add a blue graphic to show input polygon 1
