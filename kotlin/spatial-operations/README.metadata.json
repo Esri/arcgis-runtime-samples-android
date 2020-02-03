@@ -15,7 +15,7 @@
         "GraphicsOverlay",
         "MapView.setViewpointGeometryWithPaddingAsync"
     ],
-    "redirect_from": ""
+    "redirect_from": "",
     "relevant_apis": [
         "GeometryEngine.difference",
         "GeometryEngine.intersection",

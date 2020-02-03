@@ -17,10 +17,11 @@
 
 package com.esri.arcgisruntime.sample.spatialoperations
 
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.geometry.Geometry
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.Part
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity() {
   private val resultGeometryOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
 
   // simple black (0xFF000000) line symbol for outlines
-  private val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, -0x1000000, 1f)
+  private val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1f)
   private val resultFillSymbol = SimpleFillSymbol(
     SimpleFillSymbol.Style.SOLID, -0x16e0e1, lineSymbol
   )
@@ -61,21 +62,22 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create ArcGISMap with topographic basemap
-    ArcGISMap(Basemap.createLightGrayCanvas()).let {
-      mapView.map = it
+    mapView.apply {
+      // create ArcGISMap with topographic basemap
+      map = ArcGISMap(Basemap.createLightGrayCanvas())
+
+      // create graphics overlays to show the inputs and results of the spatial operation
+      graphicsOverlays.add(inputGeometryOverlay)
+      graphicsOverlays.add(resultGeometryOverlay)
+
+      // create input polygons and add graphics to display these polygons in an overlay
+      createPolygons()
+
+      // center the map view on the input geometries
+      val envelope = GeometryEngine.union(inputPolygon1, inputPolygon2).extent
+      setViewpointGeometryAsync(envelope, 20.0)
     }
 
-    // create graphics overlays to show the inputs and results of the spatial operation
-    mapView.graphicsOverlays.add(inputGeometryOverlay)
-    mapView.graphicsOverlays.add(resultGeometryOverlay)
-
-    // create input polygons and add graphics to display these polygons in an overlay
-    createPolygons()
-
-    GeometryEngine.union(inputPolygon1, inputPolygon2).extent.let {
-      mapView.setViewpointGeometryAsync(it, 20.0)
-    }
   }
 
   private fun showGeometry(resultGeometry: Geometry) {
@@ -100,26 +102,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create and add a blue graphic to show input polygon 1
-    SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, -0x66ffff34, lineSymbol).let {
-      inputGeometryOverlay.getGraphics().add(Graphic(inputPolygon1, it))
+    SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLUE, lineSymbol).let {
+      inputGeometryOverlay.graphics.add(Graphic(inputPolygon1, it))
     }
 
     // outer ring
-    val outerRing = Part(PointCollection(SpatialReferences.getWebMercator()).also {
-      it.add(Point(-13060.0, 6711030.0))
-      it.add(Point(-12160.0, 6710730.0))
-      it.add(Point(-13160.0, 6709700.0))
-      it.add(Point(-14560.0, 6710730.0))
-      it.add(Point(-13060.0, 6711030.0))
+    val outerRing = Part(PointCollection(SpatialReferences.getWebMercator()).apply {
+      add(Point(-13060.0, 6711030.0))
+      add(Point(-12160.0, 6710730.0))
+      add(Point(-13160.0, 6709700.0))
+      add(Point(-14560.0, 6710730.0))
+      add(Point(-13060.0, 6711030.0))
     })
 
     // inner ring
-    val innerRing = Part(PointCollection(SpatialReferences.getWebMercator()).also {
-      it.add(Point(-13060.0, 6710910.0))
-      it.add(Point(-12450.0, 6710660.0))
-      it.add(Point(-13160.0, 6709900.0))
-      it.add(Point(-14160.0, 6710630.0))
-      it.add(Point(-13060.0, 6710910.0))
+    val innerRing = Part(PointCollection(SpatialReferences.getWebMercator()).apply {
+      add(Point(-13060.0, 6710910.0))
+      add(Point(-12450.0, 6710660.0))
+      add(Point(-13160.0, 6709900.0))
+      add(Point(-14160.0, 6710630.0))
+      add(Point(-13060.0, 6710910.0))
     })
 
     // add both parts (rings) to a part collection and create a geometry from it
@@ -130,12 +132,7 @@ class MainActivity : AppCompatActivity() {
 
     // create and add a green graphic to show input polygon 2
     SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, -0x66ff6700, lineSymbol).let {
-      inputGeometryOverlay.getGraphics().add(Graphic(inputPolygon2, it))
-    }
-
-    // center the map view on the input geometries
-    GeometryEngine.union(inputPolygon1, inputPolygon2).extent.let {
-      mapView.setViewpointGeometryAsync(it, 20.0)
+      inputGeometryOverlay.graphics.add(Graphic(inputPolygon2, it))
     }
 
   }
@@ -152,7 +149,7 @@ class MainActivity : AppCompatActivity() {
     symmetricDifferenceMenuItem = menu?.getItem(4)
 
     // set the 'no-op' menu item checked by default
-    noOperationMenuItem?.setChecked(true)
+    noOperationMenuItem?.isChecked = true
 
     return true
   }
@@ -165,30 +162,41 @@ class MainActivity : AppCompatActivity() {
     resultGeometryOverlay.graphics.clear()
 
     // perform spatial operations and add results as graphics, depending on the option selected
-    // if-else is used because this sample is used elsewhere as a Library module
-    if (itemId == R.id.action_no_operation) {
-      // no spatial operation - graphics have been cleared previously
-      noOperationMenuItem?.setChecked(true)
-      return true
-    } else if (itemId == R.id.action_intersection) {
-      intersectionMenuItem?.setChecked(true)
-      showGeometry(GeometryEngine.intersection(inputPolygon1, inputPolygon2))
-      return true
-    } else if (itemId == R.id.action_union) {
-      unionMenuItem?.setChecked(true)
-      showGeometry(GeometryEngine.union(inputPolygon1, inputPolygon2))
-      return true
-    } else if (itemId == R.id.action_difference) {
-      differenceMenuItem?.setChecked(true)
-      // note that the difference method gives different results depending on the order of input geometries
-      showGeometry(GeometryEngine.difference(inputPolygon1, inputPolygon2))
-      return true
-    } else if (itemId == R.id.action_symmetric_difference) {
-      symmetricDifferenceMenuItem?.setChecked(true)
-      showGeometry(GeometryEngine.symmetricDifference(inputPolygon1, inputPolygon2))
-      return true
-    } else {
-      return super.onOptionsItemSelected(item)
+    when (itemId) {
+      R.id.action_no_operation -> {
+        // no spatial operation - graphics have been cleared previously
+        noOperationMenuItem?.isChecked = true
+        return true
+      }
+
+      R.id.action_intersection -> {
+        intersectionMenuItem?.isChecked = true
+        showGeometry(GeometryEngine.intersection(inputPolygon1, inputPolygon2))
+        return true
+      }
+
+      R.id.action_union -> {
+        unionMenuItem?.isChecked = true
+        showGeometry(GeometryEngine.union(inputPolygon1, inputPolygon2))
+        return true
+      }
+
+      R.id.action_difference -> {
+        differenceMenuItem?.isChecked = true
+        // note that the difference method gives different results depending on the order of input geometries
+        showGeometry(GeometryEngine.difference(inputPolygon1, inputPolygon2))
+        return true
+      }
+
+      R.id.action_symmetric_difference -> {
+        symmetricDifferenceMenuItem?.isChecked = true
+        showGeometry(GeometryEngine.symmetricDifference(inputPolygon1, inputPolygon2))
+        return true
+      }
+
+      else -> {
+        return super.onOptionsItemSelected(item)
+      }
     }
   }
 
