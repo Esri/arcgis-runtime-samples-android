@@ -17,16 +17,15 @@
 
 package com.example.exporttiles
 
-import android.content.Context
 import android.graphics.Point
 import android.os.Bundle
-import android.util.AttributeSet
+import android.util.Log
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.concurrent.ListenableFuture
+import com.esri.arcgisruntime.data.TileCache
 import com.esri.arcgisruntime.geometry.Envelope
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -36,14 +35,13 @@ import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheJob
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheParameters
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheTask
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_layout.view.*
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var tiledLayer: ArcGISTiledLayer
-
+    private val TAG: String = MainActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,30 +62,91 @@ class MainActivity : AppCompatActivity() {
             this.setViewpoint(Viewpoint(51.5, 0.0, 10000000.0))
         }
 
-        // setting up an AlertDialog Builder
+        // export tiles
         exportTilesButton.setOnClickListener {
-
             val exportTileCacheTask = ExportTileCacheTask(tiledLayer.uri)
             val parametersFuture: ListenableFuture<ExportTileCacheParameters> =
                 exportTileCacheTask.createDefaultExportTileCacheParametersAsync(viewToExtent(), mapView.mapScale, tiledLayer.maxScale)
+
             parametersFuture.addDoneListener {
                 val parameters: ExportTileCacheParameters = parametersFuture.get()
+                // export tiles to device
                 val exportTileCacheJob = exportTileCacheTask.exportTileCache(parameters, exportTilesDirectory.path + "file.tpk")
                 exportTileCacheJob.start()
 
-                createProgressDialog(exportTileCacheJob)
+                // create a progress dialog to show export tile progress
+                val dialog = createProgressDialog(exportTileCacheJob)
+                // Display the alert dialog on app interface
+                dialog.show()
+                // get the dialog layout
+                val view = dialog.layoutInflater.inflate(R.layout.dialog_layout, null)
 
-                exportTileCacheJob.addJobDoneListener{
-                    
+                exportTileCacheJob.addProgressChangedListener {
+                    // get the progress bar and set it's progress to that of the export tile cache job
+                    view.progressBar2.setProgress(exportTileCacheJob.progress)
+                    // todo: show the progress as toast: seems to run slower than the actual job though
+                    Toast.makeText(this, exportTileCacheJob.progress.toString(), Toast.LENGTH_SHORT).show()
                 }
 
-
+                exportTileCacheJob.addJobDoneListener {
+                    dialog.dismiss()
+                    if (exportTileCacheJob.result != null) {
+                        val exportedTileCacheResult: TileCache = exportTileCacheJob.result
+                        showMapPreview(exportedTileCacheResult)
+                        Toast.makeText(this, "export tile cache job done", Toast.LENGTH_LONG).show()
+                    } else {
+                        Log.e(TAG, "Tile cache job result null. File size may be too big.")
+                        Toast.makeText(this,
+                            "Tile cache job result null. File size may be too big. Try zooming in before exporting tiles",
+                            Toast.LENGTH_LONG).show()
+                    }
+                }
             }
-
         }
+
+        // close the preview window on close button click and also when starting
+        closeButton.setOnClickListener{clearPreview()}
+        clearPreview()
     }
 
-    private fun createProgressDialog(exportTileCacheJob: ExportTileCacheJob) {
+    /**
+     * Clear the preview window.
+     */
+    private fun clearPreview() {
+        previewMapView.getChildAt(0).visibility = View.INVISIBLE
+        mapView.bringToFront()
+        previewMask.bringToFront()
+        exportTilesButton.visibility = View.VISIBLE
+    }
+
+    /**
+     * Show tile cache preview window including MapView.
+     *
+     * @param result takes th TileCache from the ExportTileCacheJob
+     */
+    private fun showMapPreview(result: TileCache){
+        val newTiledLayer = ArcGISTiledLayer(result)
+        val previewMap = ArcGISMap(Basemap(newTiledLayer))
+
+        previewMapView.apply {
+            map = previewMap
+            setViewpoint(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE))
+            visibility = View.VISIBLE
+            getChildAt(0).visibility = View.VISIBLE
+        }
+
+        mapPreviewLayout.bringToFront()
+        exportTilesButton.visibility = View.GONE
+
+    }
+
+    /**
+     * Show progress dialog box for tracking the export tile cache job.
+     *
+     * @param exportTileCacheJob the export tile cache job progress to be tracked
+     * @return an AlertDialog inflated with the dialog layout view
+     */
+    private fun createProgressDialog(exportTileCacheJob: ExportTileCacheJob): AlertDialog {
 
         // Initialize a new instance of
         val builder = AlertDialog.Builder(this@MainActivity)
@@ -102,16 +161,15 @@ class MainActivity : AppCompatActivity() {
         builder.setView(R.layout.dialog_layout)
         // Finally, make the alert dialog using builder
         val dialog: AlertDialog = builder.create()
-        // get the layout
-        val view = dialog.layoutInflater.inflate(R.layout.dialog_layout, null)
-        //get the progress bar
-        view.progressBar2.setProgress(exportTileCacheJob.progress)
-        // Display the alert dialog on app interface
-        dialog.show()
 
+        return dialog
     }
 
-
+    /**
+     * Uses the current MapView to define an Envelope larger on all sides by one MapView in the relevant dimension.
+     *
+     * @return an Envelope three times as high and three times as wide as the main MapView
+     */
     private fun viewToExtent(): Envelope? { // upper left corner of the downloaded tile cache area
         val minScreenPoint = Point(mapView.getLeft() - mapView.getWidth(),
             mapView.getTop() - mapView.getHeight())
@@ -146,8 +204,6 @@ class MainActivity : AppCompatActivity() {
             false
         }
     }
-
-
 
     override fun onResume() {
         super.onResume()
