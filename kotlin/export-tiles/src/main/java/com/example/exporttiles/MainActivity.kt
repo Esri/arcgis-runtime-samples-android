@@ -17,14 +17,18 @@
 
 package com.example.exporttiles
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.Point
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.TileCache
@@ -80,16 +84,14 @@ class MainActivity : AppCompatActivity() {
                 // upper left corner of the downloaded tile cache area
                 val minScreenPoint = Point(150, 175)
                 // lower right corner of the downloaded tile cache area
-                val maxScreenPoint = Point(mapView.getWidth() -150,
-                    mapView.getHeight() -250)
+                val maxScreenPoint = Point(mapView.getWidth() - 150,
+                    mapView.getHeight() - 250)
                 // convert screen points to map points
-                    val minPoint: com.esri.arcgisruntime.geometry.Point? = mapView?.screenToLocation(minScreenPoint)
-                    val maxPoint: com.esri.arcgisruntime.geometry.Point? = mapView?.screenToLocation(maxScreenPoint)
-                    // use the points to define and return an envelope
-                if (minScreenPoint != null && maxScreenPoint != null) {
-                    val envelope = Envelope(minPoint, maxPoint)
-                    downloadArea.geometry = envelope
-                }
+                val minPoint: com.esri.arcgisruntime.geometry.Point? = mapView?.screenToLocation(minScreenPoint)
+                val maxPoint: com.esri.arcgisruntime.geometry.Point? = mapView?.screenToLocation(maxScreenPoint)
+                // use the points to define and return an envelope
+                val envelope = Envelope(minPoint, maxPoint)
+                downloadArea.geometry = envelope
             }
         }
 
@@ -108,10 +110,15 @@ class MainActivity : AppCompatActivity() {
                 val exportTileCacheJob = exportTileCacheTask.exportTileCache(parameters, exportTilesDirectory.path + "file.tpk")
                 exportTileCacheJob.start()
                 // create a progress dialog to show export tile progress
-                val dialog = createProgressDialog(exportTileCacheJob)
-                dialog.show()
+                val dialog = createProgressDialog(exportTileCacheJob).apply {
+                    getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(R.style.progressBarBlue)
+                    // show the dialog
+                    show()
+                }
+
+                // show progress of the export tile cache job on the progress bar
                 exportTileCacheJob.addProgressChangedListener {
-                    dialog.progressBar2.setProgress(exportTileCacheJob.progress)
+                    dialog.progressBar.progress = exportTileCacheJob.progress
                 }
 
                 exportTileCacheJob.addJobDoneListener {
@@ -130,7 +137,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // close the preview window
-        closeButton.setOnClickListener{clearPreview()}
+        closeButton.setOnClickListener { clearPreview() }
         clearPreview()
     }
 
@@ -139,7 +146,7 @@ class MainActivity : AppCompatActivity() {
      *
      * @param result takes the TileCache from the ExportTileCacheJob
      */
-    private fun showMapPreview(result: TileCache){
+    private fun showMapPreview(result: TileCache) {
         val newTiledLayer = ArcGISTiledLayer(result)
         val previewMap = ArcGISMap(Basemap(newTiledLayer))
 
@@ -161,13 +168,15 @@ class MainActivity : AppCompatActivity() {
      */
     private fun createProgressDialog(exportTileCacheJob: ExportTileCacheJob): AlertDialog {
         val builder = AlertDialog.Builder(this@MainActivity)
-        builder.setTitle("Exporting tiles...")
-        // provide a cancel button on the dialog
-        builder.setNeutralButton("Cancel") { _, _ ->
-            exportTileCacheJob.cancel()
+        with(builder) {
+            setTitle("Exporting tiles...")
+            // provide a cancel button on the dialog
+            setNeutralButton("Cancel") { _, _ ->
+                exportTileCacheJob.cancel()
+            }
+            setView(R.layout.dialog_layout)
         }
 
-        builder.setView(R.layout.dialog_layout)
         return builder.create()
     }
 
