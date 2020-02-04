@@ -55,17 +55,17 @@ class MainActivity : AppCompatActivity() {
         // create an ArcGISTiledLayer to use as the basemap
         val tiledLayer = ArcGISTiledLayer(getString(R.string.world_street_map))
         val map = ArcGISMap().apply {
-            this.basemap = Basemap(tiledLayer)
-            this.minScale = 10000000.0
+            basemap = Basemap(tiledLayer)
+            minScale = 10000000.0
         }
         // create a graphics overlay
         val graphicsOverlay = GraphicsOverlay()
         mapView.apply {
             // set the map to the map view
             this.map = map
-            this.setViewpoint(Viewpoint(51.5, 0.0, 10000000.0))
+            setViewpoint(Viewpoint(51.5, 0.0, 10000000.0))
             // add the graphics overlay to the map view
-            this.graphicsOverlays.add(graphicsOverlay)
+            graphicsOverlays.add(graphicsOverlay)
         }
 
         // create a graphic to show a red box around the tiles we want to download
