@@ -17,6 +17,7 @@
 
 package com.example.exporttiles
 
+import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
@@ -24,105 +25,119 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.TileCache
 import com.esri.arcgisruntime.geometry.Envelope
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer
+import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.view.Graphic
+import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheJob
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheParameters
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheTask
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_layout.view.*
+import kotlinx.android.synthetic.main.dialog_layout.*
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var tiledLayer: ArcGISTiledLayer
     private val TAG: String = MainActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // create a temporary directory in the app's cache for saving exported tiles to
-        // create up a temporary directory in the app's cache for saving downloaded preplanned maps
-        val exportTilesDirectory = File(cacheDir, getString(R.string.tile_cache_folder))
-
-        tiledLayer = ArcGISTiledLayer(getString(R.string.world_street_map))
+        // create an ArcGISTiledLayer to use as the basemap
+        val tiledLayer = ArcGISTiledLayer(getString(R.string.world_street_map))
         val map = ArcGISMap().apply {
             this.basemap = Basemap(tiledLayer)
             this.minScale = 10000000.0
         }
-
+        // create a graphics overlay
+        val graphicsOverlay = GraphicsOverlay()
         mapView.apply {
+            // set the map to the map view
             this.map = map
             this.setViewpoint(Viewpoint(51.5, 0.0, 10000000.0))
+            // add the graphics overlay to the map view
+            this.graphicsOverlays.add(graphicsOverlay)
         }
 
-        // export tiles
+        // create a graphic to show a red box around the tiles we want to download
+        val downloadArea = Graphic()
+        graphicsOverlay.graphics.add(downloadArea)
+        val simpleLineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2f)
+        downloadArea.symbol = simpleLineSymbol
+
+        // update the box whenever the viewpoint changes
+        mapView.addViewpointChangedListener {
+            if (mapView.map.loadStatus == LoadStatus.LOADED) {
+                // upper left corner of the downloaded tile cache area
+                val minScreenPoint = Point(150, 175)
+                // lower right corner of the downloaded tile cache area
+                val maxScreenPoint = Point(mapView.getWidth() -150,
+                    mapView.getHeight() -250)
+                // convert screen points to map points
+                    val minPoint: com.esri.arcgisruntime.geometry.Point? = mapView?.screenToLocation(minScreenPoint)
+                    val maxPoint: com.esri.arcgisruntime.geometry.Point? = mapView?.screenToLocation(maxScreenPoint)
+                    // use the points to define and return an envelope
+                if (minScreenPoint != null && maxScreenPoint != null) {
+                    val envelope = Envelope(minPoint, maxPoint)
+                    downloadArea.geometry = envelope
+                }
+            }
+        }
+
+        // create up a temporary directory in the app's cache for saving exported tiles
+        val exportTilesDirectory = File(cacheDir, getString(R.string.tile_cache_folder))
+
+        // when the button is clicked, export the tiles to a temporary file
         exportTilesButton.setOnClickListener {
             val exportTileCacheTask = ExportTileCacheTask(tiledLayer.uri)
             val parametersFuture: ListenableFuture<ExportTileCacheParameters> =
-                exportTileCacheTask.createDefaultExportTileCacheParametersAsync(viewToExtent(), mapView.mapScale, tiledLayer.maxScale)
+                exportTileCacheTask.createDefaultExportTileCacheParametersAsync(downloadArea.geometry, mapView.mapScale, tiledLayer.maxScale)
 
             parametersFuture.addDoneListener {
                 val parameters: ExportTileCacheParameters = parametersFuture.get()
-                // export tiles to device
+                // export tiles to temporary cache on device
                 val exportTileCacheJob = exportTileCacheTask.exportTileCache(parameters, exportTilesDirectory.path + "file.tpk")
                 exportTileCacheJob.start()
-
                 // create a progress dialog to show export tile progress
                 val dialog = createProgressDialog(exportTileCacheJob)
-                // Display the alert dialog on app interface
                 dialog.show()
-                // get the dialog layout
-                val view = dialog.layoutInflater.inflate(R.layout.dialog_layout, null)
-
                 exportTileCacheJob.addProgressChangedListener {
-                    // get the progress bar and set it's progress to that of the export tile cache job
-                    view.progressBar2.setProgress(exportTileCacheJob.progress)
-                    // todo: show the progress as toast: seems to run slower than the actual job though
-                    Toast.makeText(this, exportTileCacheJob.progress.toString(), Toast.LENGTH_SHORT).show()
+                    dialog.progressBar2.setProgress(exportTileCacheJob.progress)
                 }
 
                 exportTileCacheJob.addJobDoneListener {
                     dialog.dismiss()
-                    if (exportTileCacheJob.result != null) {
+                    if (exportTileCacheJob.status == Job.Status.SUCCEEDED) {
                         val exportedTileCacheResult: TileCache = exportTileCacheJob.result
                         showMapPreview(exportedTileCacheResult)
-                        Toast.makeText(this, "export tile cache job done", Toast.LENGTH_LONG).show()
                     } else {
-                        Log.e(TAG, "Tile cache job result null. File size may be too big.")
+                        Log.e(TAG, exportTileCacheJob.error.additionalMessage)
                         Toast.makeText(this,
-                            "Tile cache job result null. File size may be too big. Try zooming in before exporting tiles",
+                            exportTileCacheJob.error.additionalMessage,
                             Toast.LENGTH_LONG).show()
                     }
                 }
             }
         }
 
-        // close the preview window on close button click and also when starting
+        // close the preview window
         closeButton.setOnClickListener{clearPreview()}
         clearPreview()
     }
 
     /**
-     * Clear the preview window.
-     */
-    private fun clearPreview() {
-        previewMapView.getChildAt(0).visibility = View.INVISIBLE
-        mapView.bringToFront()
-        previewMask.bringToFront()
-        exportTilesButton.visibility = View.VISIBLE
-    }
-
-    /**
-     * Show tile cache preview window including MapView.
+     * Show tile cache preview window including containing the exported tils.
      *
-     * @param result takes th TileCache from the ExportTileCacheJob
+     * @param result takes the TileCache from the ExportTileCacheJob
      */
     private fun showMapPreview(result: TileCache){
         val newTiledLayer = ArcGISTiledLayer(result)
@@ -134,53 +149,35 @@ class MainActivity : AppCompatActivity() {
             visibility = View.VISIBLE
             getChildAt(0).visibility = View.VISIBLE
         }
-
         mapPreviewLayout.bringToFront()
         exportTilesButton.visibility = View.GONE
-
     }
 
     /**
-     * Show progress dialog box for tracking the export tile cache job.
+     * Create a progress dialog box for tracking the export tile cache job.
      *
      * @param exportTileCacheJob the export tile cache job progress to be tracked
-     * @return an AlertDialog inflated with the dialog layout view
+     * @return an AlertDialog set with the dialog layout view
      */
     private fun createProgressDialog(exportTileCacheJob: ExportTileCacheJob): AlertDialog {
-
-        // Initialize a new instance of
         val builder = AlertDialog.Builder(this@MainActivity)
-        // Set the alert dialog title
-        builder.setTitle("Exporting Tiles")
-        // Display a neutral button on alert dialog
+        builder.setTitle("Exporting tiles...")
+        // provide a cancel button on the dialog
         builder.setNeutralButton("Cancel") { _, _ ->
             exportTileCacheJob.cancel()
-            Toast.makeText(applicationContext, "You cancelled the tile export.", Toast.LENGTH_SHORT).show()
         }
 
         builder.setView(R.layout.dialog_layout)
-        // Finally, make the alert dialog using builder
-        val dialog: AlertDialog = builder.create()
-
-        return dialog
+        return builder.create()
     }
 
     /**
-     * Uses the current MapView to define an Envelope larger on all sides by one MapView in the relevant dimension.
-     *
-     * @return an Envelope three times as high and three times as wide as the main MapView
+     * Clear the preview window.
      */
-    private fun viewToExtent(): Envelope? { // upper left corner of the downloaded tile cache area
-        val minScreenPoint = Point(mapView.getLeft() - mapView.getWidth(),
-            mapView.getTop() - mapView.getHeight())
-        // lower right corner of the downloaded tile cache area
-        val maxScreenPoint = Point(minScreenPoint.x + mapView.getWidth() * 3,
-            minScreenPoint.y + mapView.getHeight() * 3)
-        // convert screen points to map points
-        val minPoint: com.esri.arcgisruntime.geometry.Point = mapView.screenToLocation(minScreenPoint)
-        val maxPoint: com.esri.arcgisruntime.geometry.Point = mapView.screenToLocation(maxScreenPoint)
-        // use the points to define and return an envelope
-        return Envelope(minPoint, maxPoint)
+    private fun clearPreview() {
+        previewMapView.getChildAt(0).visibility = View.INVISIBLE
+        mapView.bringToFront()
+        exportTilesButton.visibility = View.VISIBLE
     }
 
     /**
