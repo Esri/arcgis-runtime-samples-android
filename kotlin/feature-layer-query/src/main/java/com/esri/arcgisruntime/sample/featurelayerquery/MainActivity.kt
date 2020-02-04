@@ -17,26 +17,21 @@
 
 package com.esri.arcgisruntime.sample.featurelayerquery
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
-import android.R
+import android.os.Bundle
 import android.view.Menu
-
-
-
-
-
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
   }
-
 
   /**
    * Handle the search intent from the search widget
@@ -50,30 +45,30 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//    // inflate the menu; this adds items to the action bar if it is present.
-//    menuInflater.inflate(R.menu.menu_main, menu)
-//    // get the SearchView and set the searchable configuration
-//    val searchManager = getSystemService<Any>(Context.SEARCH_SERVICE) as SearchManager
-//    val searchView = menu.findItem(R.id.action_search).getActionView() as SearchView
-//    // assumes current activity is the searchable activity
-//    searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-//    searchView.setIconifiedByDefault(false)
+    // inflate the menu; this adds items to the action bar if it is present.
+    menuInflater.inflate(R.menu.menu_main, menu)
+    // get the SearchView and set the searchable configuration
+    val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+    val searchView = menu.findItem(R.id.action_search).getActionView() as SearchView
+    // assumes current activity is the searchable activity
+    searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+    searchView.setIconifiedByDefault(false)
     return true
   }
 
-//  override fun onPause() {
-//    mapView.pause()
-//    super.onPause()
-//  }
-//
-//  override fun onResume() {
-//    super.onResume()
-//    mapView.resume()
-//  }
-//
-//  override fun onDestroy() {
-//    mapView.dispose()
-//    super.onDestroy()
-//  }
+  override fun onPause() {
+    mapView.pause()
+    super.onPause()
+  }
+
+  override fun onResume() {
+    super.onResume()
+    mapView.resume()
+  }
+
+  override fun onDestroy() {
+    mapView.dispose()
+    super.onDestroy()
+  }
 
 }

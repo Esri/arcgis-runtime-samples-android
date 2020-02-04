@@ -11,14 +11,14 @@
         "FeatureTable",
         "GeoPackage"
     ],
-    "redirect_from": "/android/latest/sample-code/feature-layer-query.htm",
+    "redirect_from": "",
     "relevant_apis": [
         "FeatureLayer",
         "FeatureTable",
         "GeoPackage"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/samples/featurelayerquery/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/samples/featurelayerquery/MainActivity.kt"
     ],
     "title": "Feature Layer Query"
 }
