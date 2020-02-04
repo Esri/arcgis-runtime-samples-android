@@ -21,4 +21,5 @@ include ':add-features-feature-service',
         ':show-labels-on-layer',
         ':token-authentication',
         ':view-point-cloud-data-offline',
+        ':viewshed-location',
         ':wmts-layer'
