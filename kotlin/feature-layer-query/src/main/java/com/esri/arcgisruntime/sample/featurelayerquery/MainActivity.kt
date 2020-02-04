@@ -99,8 +99,8 @@ class MainActivity : AppCompatActivity() {
         // check there are some results
         val resultIterator = result.iterator()
         if (resultIterator.hasNext()) {
-          // get the extent of the first feature in the result to zoom to
           resultIterator.next().run {
+            // get the extent of the first feature in the result to zoom to
             val envelope = geometry.extent
             mapView.setViewpointGeometryAsync(envelope, 10.0)
             // select the feature
@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
     val searchView = menu.findItem(R.id.action_search).actionView as SearchView
 
     searchView.run {
-      // assumes current activity is the searchable activity
+      // assumes current activity is the searchable activity, as specified in manifest.
       setSearchableInfo(searchManager.getSearchableInfo(componentName))
       setIconifiedByDefault(false)
     }
