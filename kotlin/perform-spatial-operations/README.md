@@ -35,7 +35,6 @@ The sample provides an option to select a spatial operation. When an operation i
 - GeometryEngine.union
 - Graphic
 - GraphicsOverlay
-- MapView.setViewpointGeometryWithPaddingAsync
 
 ## Tags
 
