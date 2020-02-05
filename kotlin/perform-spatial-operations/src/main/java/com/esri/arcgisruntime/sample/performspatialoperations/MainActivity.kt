@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
   private val inputGeometryGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
   private val resultGeometryGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
 
-  // simple black (0xFF000000) line symbol for outlines
+  // simple black line symbol for outlines
   private val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1f)
   private val resultFillSymbol = SimpleFillSymbol(
     SimpleFillSymbol.Style.SOLID, Color.RED, lineSymbol
