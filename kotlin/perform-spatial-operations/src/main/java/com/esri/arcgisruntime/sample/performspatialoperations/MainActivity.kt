@@ -15,7 +15,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.spatialoperations
+package com.esri.arcgisruntime.sample.performspatialoperations
 
 import android.graphics.Color
 import android.os.Bundle
@@ -40,8 +40,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-  private val inputGeometryOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
-  private val resultGeometryOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
+  private val inputGeometryGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
+  private val resultGeometryGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
 
   // simple black (0xFF000000) line symbol for outlines
   private val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1f)
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
   private var inputPolygon1: Polygon? = null
   private var inputPolygon2: Polygon? = null
 
-  // The spatial operation switching menu items.
+  // the spatial operation switching menu items.
   private var noOperationMenuItem: MenuItem? = null
   private var intersectionMenuItem: MenuItem? = null
   private var unionMenuItem: MenuItem? = null
@@ -63,27 +63,27 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     mapView.apply {
-      // create ArcGISMap with topographic basemap
+      // create an ArcGISMap with a light gray canvas basemap
       map = ArcGISMap(Basemap.createLightGrayCanvas())
 
       // create graphics overlays to show the inputs and results of the spatial operation
-      graphicsOverlays.add(inputGeometryOverlay)
-      graphicsOverlays.add(resultGeometryOverlay)
+      graphicsOverlays.add(inputGeometryGraphicsOverlay)
+      graphicsOverlays.add(resultGeometryGraphicsOverlay)
 
-      // create input polygons and add graphics to display these polygons in an overlay
-      createPolygons()
-
-      // center the map view on the input geometries
-      val envelope = GeometryEngine.union(inputPolygon1, inputPolygon2).extent
-      setViewpointGeometryAsync(envelope, 20.0)
     }
 
+    // create input polygons and add graphics to display these polygons in an overlay
+    createPolygons()
+
+    // center the map view on the input geometries
+    val envelope = GeometryEngine.union(inputPolygon1, inputPolygon2).extent
+    mapView.setViewpointGeometryAsync(envelope, 20.0)
   }
 
   private fun showGeometry(resultGeometry: Geometry) {
     // add a graphic from the result geometry, showing result in red (0xFFE91F1F)
     Graphic(resultGeometry, resultFillSymbol).let {
-      resultGeometryOverlay.graphics.add(it)
+      resultGeometryGraphicsOverlay.graphics.add(it)
 
       // select the result to highlight it
       it.isSelected = true
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
 
     // create and add a blue graphic to show input polygon 1
     SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLUE, lineSymbol).let {
-      inputGeometryOverlay.graphics.add(Graphic(inputPolygon1, it))
+      inputGeometryGraphicsOverlay.graphics.add(Graphic(inputPolygon1, it))
     }
 
     // outer ring
@@ -132,13 +132,13 @@ class MainActivity : AppCompatActivity() {
 
     // create and add a green graphic to show input polygon 2
     SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, -0x66ff6700, lineSymbol).let {
-      inputGeometryOverlay.graphics.add(Graphic(inputPolygon2, it))
+      inputGeometryGraphicsOverlay.graphics.add(Graphic(inputPolygon2, it))
     }
 
   }
 
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-    // Inflate the menu; this adds items to the action bar if it is present.
+    // inflate the menu; this adds items to the action bar if it is present.
     menuInflater.inflate(R.menu.menu_main, menu)
 
     // Get the menu items that perform spatial operations.
@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
     val itemId = item.itemId
 
     // clear previous operation result
-    resultGeometryOverlay.graphics.clear()
+    resultGeometryGraphicsOverlay.graphics.clear()
 
     // perform spatial operations and add results as graphics, depending on the option selected
     when (itemId) {

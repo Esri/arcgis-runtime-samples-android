@@ -3,7 +3,7 @@
     "description": "Perform geometry-on-geometry spatial operations by using GeometryEngine. Two input Polygons are added as Graphics to a GraphicsOverlay and displayed in a MapView.",
     "ignore": false,
     "images": [
-        "spatial-operations.png"
+        "perform-spatial-operations.png"
     ],
     "keywords": [
         "Edit and Manage Data",
@@ -13,20 +13,20 @@
         "GeometryEngine.union",
         "Graphic",
         "GraphicsOverlay",
-        "MapView.setViewpointGeometryWithPaddingAsync"
     ],
-    "redirect_from": "",
+    "redirect_from": "/android/latest/sample-code/spatial-operations.htm",
     "relevant_apis": [
-        "GeometryEngine.difference",
+	"Geometry",
+	"GeometryEngine",
+	"GeometryEngine.difference",
         "GeometryEngine.intersection",
         "GeometryEngine.symmetricDifference",
         "GeometryEngine.union",
         "Graphic",
-        "GraphicsOverlay",
-        "MapView.setViewpointGeometryWithPaddingAsync"
+        "GraphicsOverlay"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisandroid/sample/spatialoperations/MainActivity.kt"
+        "src/main/java/com/esri/arcgisandroid/sample/performspatialoperations/MainActivity.kt"
     ],
-    "title": "Spatial operations"
+    "title": "Perform spatial operations"
 }
