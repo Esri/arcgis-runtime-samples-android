@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.samples.rasterfunctionservice
+package com.esri.arcgisruntime.sample.rasterfunctionservice
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // create a Dark Gray Vectory BaseMap
+        // create a Dark Gray Vector BaseMap
         val map = ArcGISMap(Basemap.createDarkGrayCanvasVector())
         // set the map to be displayed in this view
         mapView.map = map

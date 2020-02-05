@@ -17,7 +17,7 @@
         "KmlLayer"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/displaykml/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/displaykml/MainActivity.kt"
     ],
     "title": "Display KML"
 }
