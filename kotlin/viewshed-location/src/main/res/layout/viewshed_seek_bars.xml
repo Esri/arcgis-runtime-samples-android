@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <!-- Heading -->
+    <TextView
+            android:text="@string/heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/heading_textview"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/pitch_textview"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/curr_heading"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@+id/heading_seek_bar"/>
+    <SeekBar
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/heading_seek_bar"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/heading_textview"
+            app:layout_constraintEnd_toEndOf="@+id/max_distance_seekbar"/>
+
+    <!-- Pitch -->
+    <TextView
+            android:text="@string/pitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pitch_textview"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/heading_textview"
+            app:layout_constraintEnd_toEndOf="@+id/horizontal_angle_textview"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/curr_pitch"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/curr_heading"
+            app:layout_constraintStart_toEndOf="@+id/pitch_seek_bar"/>
+    <SeekBar
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/pitch_seek_bar"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/heading_seek_bar"
+            app:layout_constraintStart_toEndOf="@+id/pitch_textview"
+            app:layout_constraintEnd_toEndOf="@+id/max_distance_seekbar"/>
+
+    <!-- Horizontal Angle -->
+    <TextView
+            android:text="@string/horizontal_angle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/horizontal_angle_textview"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/pitch_textview"
+            app:layout_constraintEnd_toEndOf="@+id/vertical_angle_textview"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/curr_horizontal_angle"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/curr_pitch"
+            app:layout_constraintStart_toEndOf="@+id/horizontal_angle_seekbar"/>
+    <SeekBar
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/horizontal_angle_seekbar"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/pitch_seek_bar"
+            app:layout_constraintStart_toEndOf="@+id/horizontal_angle_textview"
+            app:layout_constraintEnd_toEndOf="@+id/max_distance_seekbar"/>
+
+    <!-- Vertical Angle -->
+    <TextView
+            android:text="@string/vertical_angle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/vertical_angle_textview"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/horizontal_angle_textview"
+            app:layout_constraintEnd_toEndOf="@+id/minimum_distance_textview"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/curr_vertical_angle"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/curr_horizontal_angle"
+            app:layout_constraintStart_toEndOf="@+id/vertical_angle_seekbar"/>
+    <SeekBar
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/vertical_angle_seekbar"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/horizontal_angle_seekbar"
+            app:layout_constraintStart_toEndOf="@+id/vertical_angle_textview"
+            app:layout_constraintEnd_toEndOf="@+id/max_distance_seekbar"/>
+
+    <!-- Minimum Distance -->
+    <TextView
+            android:text="@string/minimum_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/minimum_distance_textview"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/vertical_angle_textview"
+            app:layout_constraintEnd_toEndOf="@+id/maximum_distance_seekbar"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/curr_minimum_distance"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/curr_vertical_angle"
+            app:layout_constraintStart_toEndOf="@+id/min_distance_seekbar"/>
+    <SeekBar
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/min_distance_seekbar"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/vertical_angle_seekbar"
+            app:layout_constraintStart_toEndOf="@+id/minimum_distance_textview"
+            app:layout_constraintEnd_toEndOf="@+id/max_distance_seekbar"/>
+
+    <!-- Maximum Distance -->
+    <TextView
+        android:id="@+id/maximum_distance_seekbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/maximum_distance"
+        app:layout_constraintTop_toBottomOf="@+id/minimum_distance_textview"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/curr_maximum_distance"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/curr_minimum_distance"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <SeekBar
+        android:id="@+id/max_distance_seekbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:minEms="6"
+        app:layout_constraintTop_toBottomOf="@+id/min_distance_seekbar"
+        app:layout_constraintEnd_toStartOf="@+id/curr_maximum_distance"
+        app:layout_constraintStart_toEndOf="@+id/maximum_distance_seekbar" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
