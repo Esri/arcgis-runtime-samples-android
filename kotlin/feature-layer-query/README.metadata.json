@@ -8,14 +8,14 @@
     "keywords": [
         "Search and Query",
         "FeatureLayer",
-        "FeatureTable",
-        "GeoPackage"
+        "FeatureQueryResult",
+        "ServiceFeatureTable"
     ],
-    "redirect_from": "",
+    "redirect_from": "/android/latest/sample-code/feature-layer-query.htm",
     "relevant_apis": [
         "FeatureLayer",
-        "FeatureTable",
-        "GeoPackage"
+        "FeatureQueryResult",
+        "ServiceFeatureTable"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/samples/featurelayerquery/MainActivity.kt"
