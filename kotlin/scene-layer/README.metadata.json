@@ -6,16 +6,25 @@
         "scene-layer.png"
     ],
     "keywords": [
-        "Layers",
+        "layer",
+	"scene",
+	"3D",
+        "ArcGISScene",
+	"ArcGISSceneLayer",
+	"ArcGISTileElevationSource",
+        "SceneView",
+        "Surface"	
         "ArcGISScene",
         "SceneView",
         "SceneLayer"
     ],
-    "redirect_from": "",
+    "redirect_from": "/android/latest/sample-code/scene-layer.htm",
     "relevant_apis": [
         "ArcGISScene",
+	"ArcGISSceneLayer",
+	"ArcGISTileElevationSource",
         "SceneView",
-        "SceneLayer"
+        "Surface"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/scenelayer/MainActivity.kt"
