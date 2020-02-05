@@ -30,54 +30,54 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
 
-        // create a scene and add a base map to it
-        val scene = ArcGISScene(Basemap.createImagery())
-        sceneView.scene = scene
+    // create a scene and add a base map to it
+    val scene = ArcGISScene(Basemap.createImagery())
+    sceneView.scene = scene
 
-        // add base surface for elevation data
-        sceneView.scene.baseSurface = Surface().apply {
-            elevationSources.add(
-                ArcGISTiledElevationSource(getString(R.string.elevation_image_service))
-            )
-        }
-
-        // create a camera and set it as the viewpoint for when the scene loads
-        val camera = Camera(64.416919, -14.483728, 100.0, 318.0, 105.0, 0.0)
-        sceneView.setViewpointCamera(camera)
+    // add base surface for elevation data
+    sceneView.scene.baseSurface = Surface().apply {
+      elevationSources.add(
+        ArcGISTiledElevationSource(getString(R.string.elevation_image_service))
+      )
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.change_atmosphere_effect_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
+    // create a camera and set it as the viewpoint for when the scene loads
+    val camera = Camera(64.416919, -14.483728, 100.0, 318.0, 105.0, 0.0)
+    sceneView.setViewpointCamera(camera)
+  }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // set different atmosphere effects on the scene view
-        sceneView.atmosphereEffect = when (item.itemId) {
-            R.id.action_no_atmosphere_effect -> AtmosphereEffect.NONE
-            R.id.action_realistic_atmosphere_effect -> AtmosphereEffect.REALISTIC
-            R.id.action_horizon_atmosphere_effect -> AtmosphereEffect.HORIZON_ONLY
-            else -> return super.onOptionsItemSelected(item)
-        }
-        return true
-    }
+  override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    menuInflater.inflate(R.menu.change_atmosphere_effect_menu, menu)
+    return super.onCreateOptionsMenu(menu)
+  }
 
-    override fun onResume() {
-        super.onResume()
-        sceneView.resume()
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    // set different atmosphere effects on the scene view
+    sceneView.atmosphereEffect = when (item.itemId) {
+      R.id.action_no_atmosphere_effect -> AtmosphereEffect.NONE
+      R.id.action_realistic_atmosphere_effect -> AtmosphereEffect.REALISTIC
+      R.id.action_horizon_atmosphere_effect -> AtmosphereEffect.HORIZON_ONLY
+      else -> return super.onOptionsItemSelected(item)
     }
+    return true
+  }
 
-    override fun onPause() {
-        sceneView.pause()
-        super.onPause()
-    }
+  override fun onResume() {
+    super.onResume()
+    sceneView.resume()
+  }
 
-    override fun onDestroy() {
-        sceneView.dispose()
-        super.onDestroy()
-    }
+  override fun onPause() {
+    sceneView.pause()
+    super.onPause()
+  }
+
+  override fun onDestroy() {
+    sceneView.dispose()
+    super.onDestroy()
+  }
 }
