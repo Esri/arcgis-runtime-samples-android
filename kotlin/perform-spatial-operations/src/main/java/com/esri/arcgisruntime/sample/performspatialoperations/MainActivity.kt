@@ -46,10 +46,10 @@ class MainActivity : AppCompatActivity() {
   // simple black (0xFF000000) line symbol for outlines
   private val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1f)
   private val resultFillSymbol = SimpleFillSymbol(
-    SimpleFillSymbol.Style.SOLID, -0x16e0e1, lineSymbol
+    SimpleFillSymbol.Style.SOLID, Color.RED, lineSymbol
   )
-  private var inputPolygon1: Polygon? = null
-  private var inputPolygon2: Polygon? = null
+  private lateinit var inputPolygon1: Polygon
+  private lateinit var inputPolygon2: Polygon
 
   // the spatial operation switching menu items.
   private var noOperationMenuItem: MenuItem? = null
@@ -82,12 +82,12 @@ class MainActivity : AppCompatActivity() {
 
   private fun showGeometry(resultGeometry: Geometry) {
     // add a graphic from the result geometry, showing result in red (0xFFE91F1F)
-    Graphic(resultGeometry, resultFillSymbol).let {
-      resultGeometryGraphicsOverlay.graphics.add(it)
-
+    val graphic = Graphic(resultGeometry, resultFillSymbol).also {
       // select the result to highlight it
       it.isSelected = true
     }
+
+    resultGeometryGraphicsOverlay.graphics.add(graphic)
   }
 
   private fun createPolygons() {
@@ -102,9 +102,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create and add a blue graphic to show input polygon 1
-    SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLUE, lineSymbol).let {
-      inputGeometryGraphicsOverlay.graphics.add(Graphic(inputPolygon1, it))
-    }
+    val blueFill = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLUE, lineSymbol)
+    inputGeometryGraphicsOverlay.graphics.add(Graphic(inputPolygon1, blueFill))
 
     // outer ring
     val outerRing = Part(PointCollection(SpatialReferences.getWebMercator()).apply {
@@ -131,9 +130,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create and add a green graphic to show input polygon 2
-    SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, -0x66ff6700, lineSymbol).let {
-      inputGeometryGraphicsOverlay.graphics.add(Graphic(inputPolygon2, it))
-    }
+    val greenFill = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, -0x66ff6700, lineSymbol)
+    inputGeometryGraphicsOverlay.graphics.add(Graphic(inputPolygon2, greenFill))
 
   }
 
@@ -168,32 +166,27 @@ class MainActivity : AppCompatActivity() {
         noOperationMenuItem?.isChecked = true
         return true
       }
-
       R.id.action_intersection -> {
         intersectionMenuItem?.isChecked = true
         showGeometry(GeometryEngine.intersection(inputPolygon1, inputPolygon2))
         return true
       }
-
       R.id.action_union -> {
         unionMenuItem?.isChecked = true
         showGeometry(GeometryEngine.union(inputPolygon1, inputPolygon2))
         return true
       }
-
       R.id.action_difference -> {
         differenceMenuItem?.isChecked = true
         // note that the difference method gives different results depending on the order of input geometries
         showGeometry(GeometryEngine.difference(inputPolygon1, inputPolygon2))
         return true
       }
-
       R.id.action_symmetric_difference -> {
         symmetricDifferenceMenuItem?.isChecked = true
         showGeometry(GeometryEngine.symmetricDifference(inputPolygon1, inputPolygon2))
         return true
       }
-
       else -> {
         return super.onOptionsItemSelected(item)
       }
