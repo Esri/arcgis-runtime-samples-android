@@ -40,13 +40,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //UNSURE: I originally had this down below with the graphics overlay stuff, but moved it out
-        // to prevent too much nesting.
-        // the traceutilitynetwork sample has a triple nested apply{apply{apply}}}.
-
         // create a map with the Basemap
         mapView.map = ArcGISMap(SpatialReferences.getWebMercator()).apply {
-            basemap = Basemap.createTopographic() //UNSURE: Is the apply block necessary here? Should I not just separate it into two lines?
+            basemap = Basemap.createTopographic()
         }
 
         // create a fill symbol for geodesic buffer polygons
