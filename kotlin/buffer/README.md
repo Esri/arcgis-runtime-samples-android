@@ -2,7 +2,7 @@
 
 Create a buffer around a map point and display the results as a `Graphic`
 
-![Image](screenshot.jpg)
+![Image](buffer.png)
 
 ## Use case
 
