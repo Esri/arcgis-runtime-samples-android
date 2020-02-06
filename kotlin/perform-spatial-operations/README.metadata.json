@@ -13,13 +13,7 @@
         "intersection",
         "merge",
         "polygon",
-        "union",
-        "GeometryEngine.difference",
-        "GeometryEngine.intersection",
-        "GeometryEngine.symmetricDifference",
-        "GeometryEngine.union",
-        "Graphic",
-        "GraphicsOverlay",
+        "union"
     ],
     "redirect_from": "/android/latest/sample-code/spatial-operations.htm",
     "relevant_apis": [
