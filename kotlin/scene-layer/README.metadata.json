@@ -8,15 +8,7 @@
     "keywords": [
         "layer",
         "scene",
-        "3D",
-        "ArcGISScene",
-        "ArcGISSceneLayer",
-        "ArcGISTileElevationSource",
-        "SceneView",
-        "Surface"
-        "ArcGISScene",
-        "SceneView",
-        "SceneLayer"
+        "3D"
     ],
     "redirect_from": "/android/latest/sample-code/scene-layer.htm",
     "relevant_apis": [
