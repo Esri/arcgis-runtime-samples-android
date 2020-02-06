@@ -35,6 +35,7 @@ import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.Viewpoint
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Exception
 import java.util.Locale
@@ -64,12 +65,9 @@ class MainActivity : AppCompatActivity() {
 
     mapView.map = ArcGISMap(Basemap.createTopographic()).apply {
       operationalLayers.add(featureLayer)
+      initialViewpoint =
+        Viewpoint(Point(-11000000.0, 5000000.0, SpatialReferences.getWebMercator()), 100000000.0)
     }
-
-    mapView.setViewpointCenterAsync(
-      Point(-11000000.0, 5000000.0, SpatialReferences.getWebMercator()),
-      100000000.0
-    )
 
   }
 
