@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create and add a green graphic to show input polygon 2
-    val greenFill = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, -0x66ff6700, lineSymbol)
+    val greenFill = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.GREEN, lineSymbol)
     inputGeometryGraphicsOverlay.graphics.add(Graphic(inputPolygon2, greenFill))
 
   }
