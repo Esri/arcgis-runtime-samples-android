@@ -30,45 +30,49 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
 
-        // create a scene to add the IntegratedMeshLayer to add subsequently add it to the SceneView
-        ArcGISScene(Basemap.createImagery()).let { scene ->
-            // create IntegratedMeshLayer and add to the scene's operational layers
-            with(IntegratedMeshLayer(getString(R.string.mesh_layer_url))) {
-                scene.operationalLayers.add(this)
-            }
-            sceneView.scene = scene
+    // create a scene to add the IntegratedMeshLayer to add subsequently add it to the SceneView
+    ArcGISScene(Basemap.createImagery()).let { scene ->
+      // create IntegratedMeshLayer and add to the scene's operational layers
+      with(IntegratedMeshLayer(getString(R.string.mesh_layer_url))) {
+        scene.operationalLayers.add(this)
+      }
+      sceneView.scene = scene
 
-            // set the base surface with world elevation
-            with(Surface()) {
-                this.elevationSources.add(ArcGISTiledElevationSource(getString(R.string.elevation_source_url)))
-                scene.baseSurface = this
-            }
-        }
-
-        // create a camera and initial camera position
-        with(Camera(Point(-119.622075, 37.720650, 2104.901239), 315.50368761552056, 78.09465920130114,
-                0.0)) {
-            // set Viewpoint for SceneView using camera
-            sceneView.setViewpointCamera(this)
-        }
+      // set the base surface with world elevation
+      with(Surface()) {
+        this.elevationSources.add(ArcGISTiledElevationSource(getString(R.string.elevation_source_url)))
+        scene.baseSurface = this
+      }
     }
 
-    override fun onPause() {
-        sceneView.pause()
-        super.onPause()
+    // create a camera and initial camera position
+    with(
+      Camera(
+        Point(-119.622075, 37.720650, 2104.901239), 315.50368761552056, 78.09465920130114,
+        0.0
+      )
+    ) {
+      // set Viewpoint for SceneView using camera
+      sceneView.setViewpointCamera(this)
     }
+  }
 
-    override fun onResume() {
-        super.onResume()
-        sceneView.resume()
-    }
+  override fun onPause() {
+    sceneView.pause()
+    super.onPause()
+  }
 
-    override fun onDestroy() {
-        sceneView.dispose()
-        super.onDestroy()
-    }
+  override fun onResume() {
+    super.onResume()
+    sceneView.resume()
+  }
+
+  override fun onDestroy() {
+    sceneView.dispose()
+    super.onDestroy()
+  }
 }

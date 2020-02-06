@@ -18,7 +18,6 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://esri.bintray.com/arcgis' }
-        maven { url 'http://olympus.esri.com/artifactory/arcgisruntime-repo/'}
     }
     var
 }
@@ -30,12 +29,16 @@ subprojects{
                 implementation "com.android.support:appcompat-v7:$andSupportLibVersion"
                 implementation "com.android.support:design:$andSupportLibVersion"
                 implementation "com.esri.arcgisruntime:arcgis-android:$arcgisVersion"
+                implementation "androidx.multidex:multidex:$multidexVersion"
             }
         }
         project.android {
             compileOptions {
                 sourceCompatibility rootProject.ext.javaVersion
                 targetCompatibility rootProject.ext.javaVersion
+            }
+            defaultConfig {
+                multiDexEnabled true
             }
         }
     }
