@@ -22,6 +22,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -40,6 +41,10 @@ import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
+  companion object {
+    private val TAG: String = MainActivity::class.java.simpleName
+  }
+
   private val serviceFeatureTable: ServiceFeatureTable by lazy {
     ServiceFeatureTable(getString(R.string.us_daytime_population_url))
   }
@@ -57,15 +62,14 @@ class MainActivity : AppCompatActivity() {
       maxScale = 10000.0
     }
 
-    mapView.apply {
-      map = ArcGISMap(Basemap.createTopographic())
-    }.run {
-      map.operationalLayers.add(featureLayer)
-      setViewpointCenterAsync(
-        Point(-11000000.0, 5000000.0, SpatialReferences.getWebMercator()),
-        100000000.0
-      )
+    mapView.map = ArcGISMap(Basemap.createTopographic()).apply {
+      operationalLayers.add(featureLayer)
     }
+
+    mapView.setViewpointCenterAsync(
+      Point(-11000000.0, 5000000.0, SpatialReferences.getWebMercator()),
+      100000000.0
+    )
 
   }
 
@@ -73,11 +77,14 @@ class MainActivity : AppCompatActivity() {
    * Handle the search intent from the search widget
    */
   override fun onNewIntent(intent: Intent) {
-    setIntent(intent)
+    this.intent = intent
+
     if (Intent.ACTION_SEARCH == intent.action) {
-      val searchString: String? = intent.getStringExtra(SearchManager.QUERY)
-      if (searchString != null && !searchString.isEmpty())
-        searchForState(searchString)
+      intent.getStringExtra(SearchManager.QUERY)?.let {
+        if (it.isNotEmpty()) {
+          searchForState(it)
+        }
+      }
     }
   }
 
@@ -107,11 +114,17 @@ class MainActivity : AppCompatActivity() {
             featureLayer.selectFeature(this)
           }
         } else {
-          Toast.makeText(this, "No states found with name: $searchString", Toast.LENGTH_LONG).show()
+          "No states found with name: $searchString".also {
+            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+            Log.d(TAG, it)
+          }
         }
       } catch (e: Exception) {
-        val error = "Feature search failed for: $searchString. Error: ${e.message}"
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+        "Feature search failed for: $searchString. Error: ${e.message}".also {
+          Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+          Log.e(TAG, it)
+        }
+
       }
     }
   }
@@ -121,12 +134,11 @@ class MainActivity : AppCompatActivity() {
     menuInflater.inflate(R.menu.menu_main, menu)
     // get the SearchView and set the searchable configuration
     val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-    val searchView = menu.findItem(R.id.action_search).actionView as SearchView
 
-    searchView.run {
-      // assumes current activity is the searchable activity, as specified in manifest.
-      setSearchableInfo(searchManager.getSearchableInfo(componentName))
-      setIconifiedByDefault(false)
+    (menu.findItem(R.id.action_search).actionView as? SearchView)?.let {
+      // assumes current activity is the searchable activity, as specified in manifest
+      it.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+      it.setIconifiedByDefault(false)
     }
 
     return true
