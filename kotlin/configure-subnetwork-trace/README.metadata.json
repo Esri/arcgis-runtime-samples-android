@@ -16,7 +16,7 @@
         "validate consistency",
         "subnetwork trace"
     ],
-    "redirect_from": "/android/latest/sample-code/change-basemaps.htm",
+    "redirect_from": "",
     "relevant_apis": [
         "CodedValueDomain",
         "UtilityAssetType",

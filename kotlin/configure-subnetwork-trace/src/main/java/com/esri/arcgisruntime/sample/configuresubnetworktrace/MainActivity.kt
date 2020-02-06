@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.text.InputType
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -34,17 +35,18 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var initialExpression: UtilityTraceConditionalExpression
+  private val TAG: String = MainActivity::class.java.simpleName
 
-  private lateinit var sourceTier: UtilityTier
+  private val utilityNetwork by lazy {
+    UtilityNetwork(getString(R.string.naperville_electric_url))
+  }
 
-  private lateinit var sources: List<UtilityNetworkAttribute>
-
-  private lateinit var operators: Array<UtilityAttributeComparisonOperator>
-
-  private lateinit var startingLocation: UtilityElement
-  private val utilityNetwork by lazy { UtilityNetwork("https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer") }
-  private lateinit var values: List<CodedValue>
+  private var initialExpression: UtilityTraceConditionalExpression? = null
+  private var sourceTier: UtilityTier? = null
+  private var sources: List<UtilityNetworkAttribute>? = null
+  private var operators: Array<UtilityAttributeComparisonOperator>? = null
+  private var startingLocation: UtilityElement? = null
+  private var values: List<CodedValue>? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -57,57 +59,75 @@ class MainActivity : AppCompatActivity() {
     // create a utility network and wait for it to finish to load
     utilityNetwork.loadAsync()
     utilityNetwork.addDoneLoadingListener {
+      if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
+        // populate spinners for network attribute comparison
+        sources =
+          utilityNetwork.definition.networkAttributes.filter { !it.isSystemDefined }
+            .also { sources ->
+              // assign source spinner an adapter and an on item selected listener
+              sourceSpinner.apply {
+                adapter = ArrayAdapter<String>(
+                  applicationContext,
+                  android.R.layout.simple_spinner_item,
+                  sources.map { it.name })
+                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                  override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                  ) {
+                    (sources[sourceSpinner.selectedItemPosition])
+                    onComparisonSourceChanged(sources[sourceSpinner.selectedItemPosition])
+                  }
 
-      // populate spinners for network attribute comparison
-      sources =
-        utilityNetwork.definition.networkAttributes.filter { !it.isSystemDefined }
-      sourceSpinner.adapter = ArrayAdapter<String>(
-        applicationContext,
-        android.R.layout.simple_spinner_item,
-        sources.map { it.name })
-      sourceSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                  override fun onNothingSelected(parent: AdapterView<*>?) {}
+                }
+              }
+            }
 
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-          onComparisonSourceChanged(sources[sourceSpinner.selectedItemPosition])
-
-
+        operators = UtilityAttributeComparisonOperator.values().also { operators ->
+          operatorSpinner.adapter = ArrayAdapter<String>(
+            applicationContext,
+            android.R.layout.simple_spinner_item,
+            operators.map { it.name })
         }
 
-        override fun onNothingSelected(parent: AdapterView<*>?) {}
+        // create a default starting location
+        val networkSource =
+          utilityNetwork.definition.getNetworkSource("Electric Distribution Device")
+        val assetGroup = networkSource.getAssetGroup("Circuit Breaker")
+        val assetType = assetGroup.getAssetType("Three Phase")
+        val globalId = java.util.UUID.fromString("1CAF7740-0BF4-4113-8DB2-654E18800028")
+
+        // utility element to start the trace from
+        startingLocation = utilityNetwork.createElement(assetType, globalId).apply {
+          terminal = assetType.terminalConfiguration.terminals.first { it.name == "Load" }
+        }
+
+        // get a default trace configuration from a tier to update the UI
+        val domainNetwork = utilityNetwork.definition.getDomainNetwork("ElectricDistribution")
+        sourceTier = domainNetwork.getTier("Medium Voltage Radial")?.apply {
+          (traceConfiguration.traversability.barriers as? UtilityTraceConditionalExpression)?.let {
+            expressionTextView.text = expressionToString(it)
+            initialExpression = it
+          }
+          // set the traversability scope
+          traceConfiguration.traversability.scope = UtilityTraversabilityScope.JUNCTIONS
+        }
+      } else {
+        ("Utility network failed to load!").also {
+          Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+          Log.e(TAG, it)
+        }
       }
-
-      operators = UtilityAttributeComparisonOperator.values()
-      operatorSpinner.adapter = ArrayAdapter<String>(
-        applicationContext,
-        android.R.layout.simple_spinner_item,
-        operators.map { it.name })
-
-      // create a default starting location
-      val networkSource = utilityNetwork.definition.getNetworkSource("Electric Distribution Device")
-      val assetGroup = networkSource.getAssetGroup("Circuit Breaker")
-      val assetType = assetGroup.getAssetType("Three Phase")
-      val globalId = java.util.UUID.fromString("1CAF7740-0BF4-4113-8DB2-654E18800028")
-      // utility element to start the trace from
-      startingLocation = utilityNetwork.createElement(assetType, globalId)
-      startingLocation.terminal =
-        startingLocation.assetType.terminalConfiguration.terminals.first { it.name == "Load" }
-
-      // get a default trace configuration from a tier to update the UI
-      val domainNetwork = utilityNetwork.definition.getDomainNetwork("ElectricDistribution")
-      sourceTier = domainNetwork.getTier("Medium Voltage Radial")
-
-      (sourceTier.traceConfiguration.traversability.barriers as? UtilityTraceConditionalExpression)?.let {
-        expressionTextView.text = expressionToString(it)
-        initialExpression = it
-      }
-
-      // set the traversability scope
-      sourceTier.traceConfiguration.traversability.scope = UtilityTraversabilityScope.JUNCTIONS
     }
   }
 
   /**
-   * When a comparison source is chosen which doesn
+   * When a comparison source attribute is chosen check if it's a coded value domain and, if it is,
+   * present a spinner of coded value domains. If not, show the correct UI view for the utility
+   * network attribute data type.
    */
   private fun onComparisonSourceChanged(attribute: UtilityNetworkAttribute) {
     // if the domain is a coded value domain
@@ -124,27 +144,31 @@ class MainActivity : AppCompatActivity() {
         codedValueDomain.codedValues.map { it.name }
       )
       // if the domain is not a coded value domain
-    } ?: kotlin.run {
-      when (attribute.dataType) {
-        UtilityNetworkAttribute.DataType.BOOLEAN -> {
-          setVisible(valueBooleanButton.id)
-        }
-        UtilityNetworkAttribute.DataType.DOUBLE, UtilityNetworkAttribute.DataType.FLOAT -> {
-          // show the edit text and only allow numbers (decimals allowed)
-          valuesEditText.inputType =
-            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-          setVisible(valuesEditText.id)
-        }
-        UtilityNetworkAttribute.DataType.INTEGER -> {
-          // show the edit text only allowing for integer input
-          valuesEditText.inputType = InputType.TYPE_CLASS_NUMBER
-          setVisible(valuesEditText.id)
-        }
-
+    } ?: when (attribute.dataType) {
+      UtilityNetworkAttribute.DataType.BOOLEAN -> {
+        setVisible(valueBooleanButton.id)
       }
+      UtilityNetworkAttribute.DataType.DOUBLE, UtilityNetworkAttribute.DataType.FLOAT -> {
+        // show the edit text and only allow numbers (decimals allowed)
+        valuesEditText.inputType =
+          InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+        setVisible(valuesEditText.id)
+      }
+      UtilityNetworkAttribute.DataType.INTEGER -> {
+        // show the edit text only allowing for integer input
+        valuesEditText.inputType = InputType.TYPE_CLASS_NUMBER
+        setVisible(valuesEditText.id)
+      }
+      else -> {
+        Log.e(TAG, "Unexpected utility network attribute data type.")
+      }
+
     }
   }
 
+  /**
+   * Show the given UI view and hide the others which share the same space.
+   */
   private fun setVisible(id: Int) {
     when (id) {
       valuesBackgroundView.id -> {
@@ -165,20 +189,25 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Add a new barrier condition to the trace options.
+   */
   fun addCondition(view: View) {
     // if source tier doesn't contain a trace configuration, create one
-    val traceConfiguration = sourceTier.traceConfiguration ?: UtilityTraceConfiguration().apply {
+    val traceConfiguration = sourceTier?.traceConfiguration ?: UtilityTraceConfiguration().apply {
       // if the trace configuration doesn't contain traversability, create one
       traversability ?: UtilityTraversability()
     }
 
     // NOTE: You may also create a UtilityCategoryComparison with UtilityNetworkDefinition.Categories and UtilityCategoryComparisonOperator
-    (sources[sourceSpinner.selectedItemPosition] as? UtilityNetworkAttribute)?.let { attribute ->
-      (operators[operatorSpinner.selectedItemPosition] as? UtilityAttributeComparisonOperator)?.let { attributeOperator ->
+    sources?.get(sourceSpinner.selectedItemPosition)?.let { attribute ->
+      operators?.get(operatorSpinner.selectedItemPosition)?.let { attributeOperator ->
         // NOTE: You may also create a UtilityCategoryComparison with UtilityNetworkDefinition.Categories and UtilityCategoryComparisonOperator
         val otherValue =
           if (attribute.domain is CodedValueDomain) {
-            convertToDataType(values[valuesSpinner.selectedItemPosition].code, attribute.dataType)
+            values?.get(valuesSpinner.selectedItemPosition)?.code?.let {
+              convertToDataType(it, attribute.dataType)
+            }
           } else {
             convertToDataType(valuesEditText.text, attribute.dataType)
           }
@@ -199,6 +228,9 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Run the network trace with the parameters and display the result in an alert dialog.
+   */
   fun trace(view: View) {
     // don't attempt a trace on an unloaded utility network
     if (utilityNetwork.loadStatus != LoadStatus.LOADED) {
@@ -207,8 +239,8 @@ class MainActivity : AppCompatActivity() {
     try {
       val parameters =
         UtilityTraceParameters(UtilityTraceType.SUBNETWORK, listOf(startingLocation)).apply {
-          if (sourceTier.traceConfiguration is UtilityTraceConfiguration) {
-            traceConfiguration = sourceTier.traceConfiguration
+          sourceTier?.traceConfiguration?.let {
+            traceConfiguration = it
           }
         }
       val traceFuture = utilityNetwork.traceAsync(parameters)
@@ -225,19 +257,23 @@ class MainActivity : AppCompatActivity() {
             }.show()
           }
         } catch (e: Exception) {
-          Toast.makeText(
-            this,
-            e.cause?.message + "\nFor a working barrier condition, try \"Transformer Load\" Equal \"15\".",
-            Toast.LENGTH_LONG
-          ).show()
+          (e.cause?.message + "\nFor a working barrier condition, try \"Transformer Load\" Equal \"15\".").also {
+            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+            Log.e(TAG, it)
+          }
         }
       }
     } catch (exception: Exception) {
-      Toast.makeText(this, "Error during trace operation: " + exception.message, Toast.LENGTH_LONG)
-        .show()
+      ("Error during trace operation: " + exception.message).also {
+        Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+        Log.e(TAG, it)
+      }
     }
   }
 
+  /**
+   * Convert the given UtilityTraceConditionalExpression into a string.
+   */
   private fun expressionToString(expression: UtilityTraceConditionalExpression): String? {
     when (expression) {
       // when the expression is a category comparison expression
@@ -249,10 +285,8 @@ class MainActivity : AppCompatActivity() {
         (expression.networkAttribute.domain as? CodedValueDomain)?.let { codedValueDomain ->
           // if there's a coded value domain name
           val codedValueDomainName = codedValueDomain.codedValues.first {
-            convertToDataType(it.code, expression.networkAttribute.dataType) == convertToDataType(
-              expression.value,
-              expression.networkAttribute.dataType
-            )
+            convertToDataType(it.code, expression.networkAttribute.dataType) ==
+                convertToDataType(expression.value, expression.networkAttribute.dataType)
           }.name
           return expression.networkAttribute.name + " " + expression.comparisonOperator + " " + codedValueDomainName
         }
@@ -277,12 +311,20 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Reset the current barrier condition to the initial expression "Operational Device Status EQUAL Open"
+   */
   fun reset(view: View) {
-    val traceConfiguration = sourceTier.traceConfiguration as UtilityTraceConfiguration
-    traceConfiguration.traversability.barriers = initialExpression
-    expressionTextView.text = expressionToString(initialExpression)
+    initialExpression?.let {
+      val traceConfiguration = sourceTier?.traceConfiguration as UtilityTraceConfiguration
+      traceConfiguration.traversability.barriers = it
+      expressionTextView.text = expressionToString(it)
+    }
   }
 
+  /**
+   * Convert the given value into the correct Kotlin data type by using the attribute's data type.
+   */
   private fun convertToDataType(otherValue: Any, dataType: UtilityNetworkAttribute.DataType): Any {
     return try {
       when (dataType) {
