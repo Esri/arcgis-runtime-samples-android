@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     val camera = Camera(48.378, -4.494, 200.0, 345.0, 65.0, 0.0)
 
     // create a scene
-    val brestBuildings = ArcGISScene().apply {
+    val brestBuildingScene = ArcGISScene().apply {
       // add a base map
       basemap = Basemap.createImagery()
       // add a scene service to the scene for viewing buildings
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     // create a scene view
     sceneView.apply {
       // add the scene to the scene view
-      scene = brestBuildings
+      scene = brestBuildingScene
       // set initial camera position
       setViewpointCamera(camera)
     }
