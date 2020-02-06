@@ -13,8 +13,6 @@
     android:layout_marginBottom="0dp"
     android:layout_marginEnd="0dp"
     android:layout_marginTop="0dp"
-    tools:layout_constraintTop_creator="1"
-    tools:layout_constraintLeft_creator="1"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintRight_toRightOf="parent"
@@ -26,12 +24,8 @@
       android:layout_height="match_parent"
       android:background="@color/dimBackground"
       app:layout_constraintRight_toLeftOf="@+id/closeButton"
-      tools:layout_constraintTop_creator="1"
-      tools:layout_constraintRight_creator="1"
-      tools:layout_constraintBottom_creator="1"
       app:layout_constraintBottom_toBottomOf="@+id/previewMapView"
       app:layout_constraintTop_toBottomOf="@+id/previewMapView"
-      tools:layout_constraintLeft_creator="1"
       app:layout_constraintLeft_toLeftOf="@+id/closeButton" />
 
     <TextView
@@ -50,9 +44,7 @@
       app:layout_constraintHorizontal_bias="0.494"
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      tools:layout_constraintLeft_creator="1"
-      tools:layout_constraintRight_creator="1" />
+      app:layout_constraintTop_toTopOf="parent" />
 
     <com.esri.arcgisruntime.mapping.view.MapView
       android:id="@+id/previewMapView"
@@ -68,11 +60,7 @@
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="0.0"
-      tools:layout_constraintBottom_creator="1"
-      tools:layout_constraintLeft_creator="1"
-      tools:layout_constraintRight_creator="1"
-      tools:layout_constraintTop_creator="1" />
+      app:layout_constraintVertical_bias="0.0" />
 
     <Button
       android:id="@+id/closeButton"
@@ -95,12 +83,8 @@
     android:id="@+id/mapView"
     android:layout_width="0dp"
     android:layout_height="0dp"
-    tools:layout_constraintTop_creator="1"
-    tools:layout_constraintRight_creator="1"
-    tools:layout_constraintBottom_creator="1"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    tools:layout_constraintLeft_creator="1"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
@@ -118,11 +102,7 @@
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.0"
-    tools:layout_constraintBottom_creator="1"
-    tools:layout_constraintLeft_creator="1"
-    tools:layout_constraintRight_creator="1"
-    tools:layout_constraintTop_creator="1" />
+    app:layout_constraintVertical_bias="0.0" />
 
   <Button
     android:id="@+id/exportTilesButton"
@@ -135,10 +115,7 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/previewMask"
-    tools:layout_constraintBottom_creator="1"
-    tools:layout_constraintLeft_creator="1"
-    tools:layout_constraintRight_creator="1" />
+    app:layout_constraintTop_toBottomOf="@+id/previewMask" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

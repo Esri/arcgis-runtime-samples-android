@@ -19,20 +19,17 @@ package com.example.exporttiles
 
 import android.content.DialogInterface
 import android.graphics.Color
-import android.graphics.Point
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.TileCache
 import com.esri.arcgisruntime.geometry.Envelope
+import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -62,8 +59,13 @@ class MainActivity : AppCompatActivity() {
       basemap = Basemap(tiledLayer)
       minScale = 10000000.0
     }
-    // create a graphics overlay
+
+    // create a graphic and graphics overlay to show a red box around the tiles to be downloaded
+    val downloadArea = Graphic()
+    downloadArea.symbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2f)
     val graphicsOverlay = GraphicsOverlay()
+    graphicsOverlay.graphics.add(downloadArea)
+
     mapView.apply {
       // set the map to the map view
       this.map = map
@@ -72,30 +74,21 @@ class MainActivity : AppCompatActivity() {
       graphicsOverlays.add(graphicsOverlay)
     }
 
-    // create a graphic to show a red box around the tiles we want to download
-    val downloadArea = Graphic()
-    graphicsOverlay.graphics.add(downloadArea)
-    val simpleLineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2f)
-    downloadArea.symbol = simpleLineSymbol
-
     // update the box whenever the viewpoint changes
     mapView.addViewpointChangedListener {
       if (mapView.map.loadStatus == LoadStatus.LOADED) {
         // upper left corner of the downloaded tile cache area
-        val minScreenPoint = Point(150, 175)
+        val minScreenPoint: android.graphics.Point = android.graphics.Point(150, 175)
         // lower right corner of the downloaded tile cache area
-        val maxScreenPoint = Point(
+        val maxScreenPoint: android.graphics.Point = android.graphics.Point(
           mapView.getWidth() - 150,
           mapView.getHeight() - 250
         )
         // convert screen points to map points
-        val minPoint: com.esri.arcgisruntime.geometry.Point? =
-          mapView?.screenToLocation(minScreenPoint)
-        val maxPoint: com.esri.arcgisruntime.geometry.Point? =
-          mapView?.screenToLocation(maxScreenPoint)
+        val minPoint: Point? = mapView?.screenToLocation(minScreenPoint)
+        val maxPoint: Point? = mapView?.screenToLocation(maxScreenPoint)
         // use the points to define and return an envelope
-        val envelope = Envelope(minPoint, maxPoint)
-        downloadArea.geometry = envelope
+        downloadArea.geometry = Envelope(minPoint, maxPoint)
       }
     }
 
@@ -118,12 +111,9 @@ class MainActivity : AppCompatActivity() {
         val exportTileCacheJob =
           exportTileCacheTask.exportTileCache(parameters, exportTilesDirectory.path + "file.tpk")
         exportTileCacheJob.start()
-        // create a progress dialog to show export tile progress
-        val dialog = createProgressDialog(exportTileCacheJob).apply {
-          getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(R.style.progressBarBlue)
-          // show the dialog
-          show()
-        }
+        // create and show a progress dialog to show export tile progress
+        val dialog = createProgressDialog(exportTileCacheJob)
+        dialog.show()
 
         // show progress of the export tile cache job on the progress bar
         exportTileCacheJob.addProgressChangedListener {
@@ -138,9 +128,7 @@ class MainActivity : AppCompatActivity() {
           } else {
             Log.e(TAG, exportTileCacheJob.error.additionalMessage)
             Toast.makeText(
-              this,
-              exportTileCacheJob.error.additionalMessage,
-              Toast.LENGTH_LONG
+              this, exportTileCacheJob.error.additionalMessage, Toast.LENGTH_LONG
             ).show()
           }
         }
@@ -229,6 +217,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onPause() {
     mapView.pause()
+    // delete app cache when the app loses focus
     deleteDirectory(getCacheDir())
     super.onPause()
   }
