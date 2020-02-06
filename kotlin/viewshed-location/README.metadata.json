@@ -6,12 +6,13 @@
         "viewshed-location.png"
     ],
     "keywords": [
-        "Analysis",
-        "AnalysisOverlay",
-        "ArcGISTiledElevationSource",
-        "ArcGISSceneLayer",
+        "visibility analysis",
+        "viewshed",
         "LocationViewshed",
-        "Viewshed"
+        "AnalysisOverlay",
+        "Scene",
+        "3D",
+        "frustum"
     ],
     "redirect_from": "",
     "relevant_apis": [

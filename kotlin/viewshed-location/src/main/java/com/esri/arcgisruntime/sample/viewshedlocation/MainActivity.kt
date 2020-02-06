@@ -45,8 +45,9 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-  private val TAG: String = MainActivity::class.java.simpleName
-
+  companion object {
+    private val TAG: String = MainActivity::class.java.simpleName
+  }
   private val initLocation = Point(-4.50, 48.4, 1000.0)
 
   private val initHeading = 0
@@ -120,7 +121,6 @@ class MainActivity : AppCompatActivity() {
     sceneView.analysisOverlays.add(analysisOverlay)
 
     handleUiElements()
-
 
   }
 
@@ -352,7 +352,6 @@ class MainActivity : AppCompatActivity() {
     currMaxDistance.text = maxDistance.toString()
     viewShed.maxDistance = maxDistance.toDouble()
   }
-
 
   override fun onPause() {
     sceneView.pause()

@@ -1,22 +1,34 @@
-# Viewshed Location
-A viewshed shows the visible and obstructed areas from an observer's vantage point. This sample demonstrates all of the configurable properties of a viewshed.
+# Viewshed for location
 
-![Viewshed Location](viewshed-location.png)
+Perform a viewshed analysis from a defined vantage point.
+
+![Viewshed Location](ViewshedLocation.jpg)
+
+## Use case
+
+A 3D viewshed analysis is a type of visual analysis you can perform on a scene. The viewshed shows what can be seen from a given location. The output is an overlay with two different colors - one representing the visible areas (green) and the other representing the obstructed areas (red). Viewshed analysis is a form of "exploratory analysis", which means the results are calculated on the current scale of the data, and the results are generated very quickly. If more "conclusive" results are required, consider using a `GeoprocessingTask` to perform a viewshed instead.
 
 ## How to use the sample
-Use the seek bars on the bottom of the screen to change the properties of the viewshed and see them updated in real time. To move the viewshed, double touch and drag your finger across the screen. Lift your finger to stop moving the viewshed.
+
+Use the sliders to change the properties (heading, pitch, etc.), of the viewshed and see them updated in real time. To move the viewshed, double touch and drag your finger across the screen. Lift your finger to stop moving the viewshed.
 
 ## How it works
+
 1. Create a `LocationViewshed` passing in the observer location, heading, pitch, horizontal/vertical angles, and min/max distances.
-1. Set the property values on the viewshed instance for location, direction, range, and visibility properties. 
-1. Properties like `.setFrustumOutlineColor(<color>)` are set statically on `Viewshed`.
+2. Set the property values on the viewshed instance for location, direction, range, and visibility properties.
 
 ## Relevant API
+
 * AnalysisOverlay
 * ArcGISTiledElevationSource
 * ArcGISSceneLayer
 * LocationViewshed
 * Viewshed
 
-#### Tags
-Analysis
+## About the data
+
+The scene in this sample shows a [buildings layer](https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0) in Brest, France.
+
+## Tags
+
+visibility analysis, viewshed, LocationViewshed, AnalysisOverlay, Scene, 3D, frustum
