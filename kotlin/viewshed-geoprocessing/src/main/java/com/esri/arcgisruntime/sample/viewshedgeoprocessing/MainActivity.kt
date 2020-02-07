@@ -16,14 +16,11 @@
 
 package com.esri.arcgisruntime.sample.viewshedgeoprocessing
 
-import java.util.concurrent.ExecutionException
-
 import android.graphics.Color
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.MotionEvent
 import android.widget.Toast
-
+import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.FeatureCollectionTable
@@ -44,12 +41,12 @@ import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingJob
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingParameters
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingTask
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.Exception
+import java.util.concurrent.ExecutionException
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-  private val  geoprocessingTask: GeoprocessingTask by lazy { GeoprocessingTask (getString(R.string.viewshed_service)) }
+  private val geoprocessingTask: GeoprocessingTask by lazy { GeoprocessingTask(getString(R.string.viewshed_service)) }
   private var geoprocessingJob: GeoprocessingJob? = null
 
   private val inputGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
@@ -59,22 +56,22 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a map with the BasemapType topographic
+    // create a map with the Basemap type topographic
     val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 45.3790902612337, 6.84905317262762, 12)
     // set the map to be displayed in this view
     mapView.map = map
 
     // renderer for graphics overlays
+    val fillColor = Color.argb(120, 226, 119, 40)
+    val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, fillColor, null)
+    resultGraphicsOverlay.renderer = SimpleRenderer(fillSymbol)
+
     val pointSymbol = SimpleMarkerSymbol(
       SimpleMarkerSymbol.Style.CIRCLE,
       Color.RED,
       10F
     )
     inputGraphicsOverlay.renderer = SimpleRenderer(pointSymbol)
-
-    val fillColor = Color.argb(120, 226, 119, 40)
-    val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, fillColor, null)
-    resultGraphicsOverlay.renderer = SimpleRenderer(fillSymbol)
 
     // add graphics overlays to the map view
     mapView.graphicsOverlays.apply {
@@ -124,14 +121,12 @@ class MainActivity : AppCompatActivity() {
     // cancel any previous job
     geoprocessingJob?.cancel()
 
-    // TODO: Double check this is okay.
     // create field with same alias as name
     val field = Field.createString("observer", "", 8)
-    val fields = listOf(field)
 
     // create feature collection table for point geometry
     val featureCollectionTable =
-      FeatureCollectionTable(fields, GeometryType.POINT, point.spatialReference)
+      FeatureCollectionTable(listOf(field), GeometryType.POINT, point.spatialReference)
     featureCollectionTable.loadAsync()
 
     // create a new feature and assign the geometry
@@ -146,8 +141,6 @@ class MainActivity : AppCompatActivity() {
         performGeoprocessing(featureCollectionTable)
       }
     }
-
-
   }
 
   /**
@@ -158,7 +151,8 @@ class MainActivity : AppCompatActivity() {
   private fun performGeoprocessing(featureCollectionTable: FeatureCollectionTable) {
 
     // geoprocessing parameters
-    val parameterFuture: ListenableFuture<GeoprocessingParameters> = geoprocessingTask.createDefaultParametersAsync()
+    val parameterFuture: ListenableFuture<GeoprocessingParameters> =
+      geoprocessingTask.createDefaultParametersAsync()
     parameterFuture.addDoneListener {
       try {
         val parameters = parameterFuture.get().apply {
@@ -180,8 +174,8 @@ class MainActivity : AppCompatActivity() {
           if (geoprocessingJob?.status == Job.Status.SUCCEEDED) {
             val geoprocessingResult = geoprocessingJob?.result
             // get the viewshed from geoprocessingResult
-            // UNSURE: geoprocessingJob is nullable, so all of this has to be nullable as well. But I don't like all the question marks, it feels unnecessary.
-            val resultFeatures = geoprocessingResult?.outputs?.get("Viewshed_Result") as GeoprocessingFeatures
+            val resultFeatures =
+              geoprocessingResult?.outputs?.get("Viewshed_Result") as GeoprocessingFeatures
             val featureSet = resultFeatures.features
             for (feature in featureSet) {
               val graphic = Graphic(feature.geometry)
@@ -196,7 +190,6 @@ class MainActivity : AppCompatActivity() {
           }
         }
       }
-      // NOTE: https://stackoverflow.com/questions/36760489/how-to-catch-many-exceptions-at-the-same-time-in-kotlin
       catch (e: Exception) {
         when (e) {
           is InterruptedException, is ExecutionException -> e.printStackTrace()
