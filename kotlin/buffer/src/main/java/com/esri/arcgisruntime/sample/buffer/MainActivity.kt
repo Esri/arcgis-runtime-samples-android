@@ -20,7 +20,11 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.esri.arcgisruntime.geometry.*
+import com.esri.arcgisruntime.geometry.GeodeticCurveType
+import com.esri.arcgisruntime.geometry.GeometryEngine
+import com.esri.arcgisruntime.geometry.LinearUnit
+import com.esri.arcgisruntime.geometry.LinearUnitId
+import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
@@ -34,7 +38,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
-
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -52,8 +55,7 @@ class MainActivity : AppCompatActivity() {
       geodesicOutlineSymbol
     )
 
-    // create a graphics overlay to display geodesic polygons and set its renderer.
-    //todo move this back
+    // create a graphics overlay to display geodesic polygons and set its renderer
     val geodesicGraphicsOverlay = GraphicsOverlay().apply {
       renderer = SimpleRenderer(geodesicBufferFillSymbol)
       opacity = 0.5f
@@ -66,7 +68,7 @@ class MainActivity : AppCompatActivity() {
       planarOutlineSymbol
     )
 
-    // create a graphics overlay to display planar polygons and set its renderer.
+    // create a graphics overlay to display planar polygons and set its renderer
     val planarGraphicsOverlay = GraphicsOverlay().apply {
       renderer = SimpleRenderer(planarBufferFillSymbol)
       opacity = 0.5f
@@ -75,12 +77,12 @@ class MainActivity : AppCompatActivity() {
     // create a marker symbol for tap locations
     val tapSymbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, Color.WHITE, 14F)
 
-    // create a graphics overlay to display tap locations for buffers and set its renderer.
+    // create a graphics overlay to display tap locations for buffers and set its renderer
     val tapLocationsOverlay = GraphicsOverlay().apply {
       renderer = SimpleRenderer(tapSymbol)
     }
 
-    // add overlays to the mapView.
+    // add overlays to the mapView
     mapView.graphicsOverlays.apply {
       add(geodesicGraphicsOverlay)
       add(planarGraphicsOverlay)
@@ -101,7 +103,7 @@ class MainActivity : AppCompatActivity() {
 
         // only draw a buffer if a value was entered
         if (bufferInput.text.toString().isNotEmpty()) {
-          // get the buffer distance (miles) entered in the text box.
+          // get the buffer distance (miles) entered in the text box
           val bufferInMiles = bufferInput.text.toString().toDouble()
 
           // convert the input distance to meters, 1609.34 meters in one mile
@@ -121,7 +123,7 @@ class MainActivity : AppCompatActivity() {
           // create a graphic for the user tap location
           val locationGraphic = Graphic(mapPoint)
 
-          // add the buffer polygons and tap location graphics to the appropriate graphic overlays.
+          // add the buffer polygons and tap location graphics to the appropriate graphic overlays
           planarGraphicsOverlay.graphics.add(planarBufferGraphic)
           geodesicGraphicsOverlay.graphics.add(geodesicBufferGraphic)
           tapLocationsOverlay.graphics.add(locationGraphic)
@@ -149,12 +151,12 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onPause() {
-    super.onPause()
     mapView.pause()
+    super.onPause()
   }
 
   override fun onDestroy() {
-    super.onDestroy()
     mapView.dispose()
+    super.onDestroy()
   }
 }
