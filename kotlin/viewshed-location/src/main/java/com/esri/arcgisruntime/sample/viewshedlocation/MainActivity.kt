@@ -124,6 +124,8 @@ class MainActivity : AppCompatActivity() {
    */
   private fun handleUiElements() {
     sceneView.setOnTouchListener(object : DefaultSceneViewOnTouchListener(sceneView) {
+
+      // double tap and hold second tap to drag viewshed to a new location
       override fun onDoubleTouchDrag(motionEvent: MotionEvent): Boolean {
         // convert from screen point to location point
         val screenPoint = android.graphics.Point(
