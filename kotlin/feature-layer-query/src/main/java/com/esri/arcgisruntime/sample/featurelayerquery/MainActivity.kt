@@ -21,6 +21,7 @@ import com.esri.arcgisruntime.data.ServiceFeatureTable
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -36,6 +37,9 @@ import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.symbology.SimpleFillSymbol
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol
+import com.esri.arcgisruntime.symbology.SimpleRenderer
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Exception
 import java.util.Locale
@@ -46,10 +50,12 @@ class MainActivity : AppCompatActivity() {
     private val TAG: String = MainActivity::class.java.simpleName
   }
 
+  // create a service feature table and a feature layer from it
   private val serviceFeatureTable: ServiceFeatureTable by lazy {
     ServiceFeatureTable(getString(R.string.us_daytime_population_url))
   }
 
+  // create the feature layer using the service feature table
   private val featureLayer: FeatureLayer by lazy {
     FeatureLayer(serviceFeatureTable)
   }
@@ -58,13 +64,21 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1.0f)
+    val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.YELLOW, lineSymbol)
+
     featureLayer.apply {
+      // override the renderer
+      renderer = SimpleRenderer(fillSymbol)
       opacity = 0.8f
       maxScale = 10000.0
     }
 
+    // create a map with the topographic basemap and add it to the basemap
     mapView.map = ArcGISMap(Basemap.createTopographic()).apply {
+      // add the layer to the map
       operationalLayers.add(featureLayer)
+      // zoom to a view point of the USA
       initialViewpoint =
         Viewpoint(Point(-11000000.0, 5000000.0, SpatialReferences.getWebMercator()), 100000000.0)
     }
