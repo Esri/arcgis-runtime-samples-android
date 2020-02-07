@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Handles double touch drag for movement of viewshed location point, inflation of UI elements, and listeners for
+   * Handles double touch drag for movement of viewshed location point and listeners for
    * changes in seek bar progress.
    */
   private fun handleUiElements() {
