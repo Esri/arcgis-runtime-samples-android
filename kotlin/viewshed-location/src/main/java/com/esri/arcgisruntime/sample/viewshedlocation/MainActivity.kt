@@ -259,7 +259,7 @@ class MainActivity : AppCompatActivity() {
    */
   private fun setHeading(heading: Int) {
     headingSeekBar.progress = heading
-    currHeading?.text ?: heading.toString()
+    currHeading.text = heading.toString()
     viewShed.heading = heading.toDouble()
   }
 
