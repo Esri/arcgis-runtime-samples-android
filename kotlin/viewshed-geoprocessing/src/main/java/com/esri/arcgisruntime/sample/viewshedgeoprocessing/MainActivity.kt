@@ -49,10 +49,8 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-  //UNSURE: Should these also be by lazy?
-  private var geoprocessingTask: GeoprocessingTask =
-    GeoprocessingTask(getString(R.string.viewshed_service)) //NOTE: holds a job
-  private var geoprocessingJob: GeoprocessingJob? = null //NOTE: goes away to process
+  private val  geoprocessingTask: GeoprocessingTask by lazy { GeoprocessingTask (getString(R.string.viewshed_service)) }
+  private var geoprocessingJob: GeoprocessingJob? = null
 
   private val inputGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
   private val resultGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
@@ -61,25 +59,18 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    //TODO: Don't forget to make sure this is handled.
-//    mInputGraphicsOverlay = new GraphicsOverlay ()
-//    mResultGraphicsOverlay = new GraphicsOverlay ()
-
-    // UNSURE: collate this?
     // create a map with the BasemapType topographic
     val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 45.3790902612337, 6.84905317262762, 12)
     // set the map to be displayed in this view
     mapView.map = map
 
-    //scoping functions here?
     // renderer for graphics overlays
     val pointSymbol = SimpleMarkerSymbol(
       SimpleMarkerSymbol.Style.CIRCLE,
       Color.RED,
       10F
     )
-    val renderer = SimpleRenderer(pointSymbol)
-    inputGraphicsOverlay.renderer = renderer
+    inputGraphicsOverlay.renderer = SimpleRenderer(pointSymbol)
 
     val fillColor = Color.argb(120, 226, 119, 40)
     val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, fillColor, null)
@@ -90,8 +81,6 @@ class MainActivity : AppCompatActivity() {
       add(resultGraphicsOverlay)
       add(inputGraphicsOverlay)
     }
-// tODO: check this and make sure that we're okay to set at top.
-//    geoprocessingTask = GeoprocessingTask (getString(R.string.viewshed_service))
 
     mapView.onTouchListener = object : DefaultMapViewOnTouchListener(
       applicationContext,
@@ -119,12 +108,8 @@ class MainActivity : AppCompatActivity() {
     // remove existing graphics
     inputGraphicsOverlay.graphics.clear()
 
-    //unsure: will this be a val or var? I assume it doesn't chate.
-    // new graphic
-    val graphic = Graphic(point)
-
     // add new graphic to the graphics overlay
-    inputGraphicsOverlay.graphics.add(graphic)
+    inputGraphicsOverlay.graphics.add(Graphic(point))
   }
 
   /**
@@ -136,7 +121,6 @@ class MainActivity : AppCompatActivity() {
     // remove previous graphics
     resultGraphicsOverlay.graphics.clear()
 
-    // todo: yay kotlin
     // cancel any previous job
     geoprocessingJob?.cancel()
 
@@ -155,7 +139,6 @@ class MainActivity : AppCompatActivity() {
       geometry = point
     }
 
-    // NOTE: I removed the type runnable but that sounds crazy to me. It was like this in trace utility network.
     // add newFeature and call perform Geoprocessing on done loading
     featureCollectionTable.addFeatureAsync(newFeature)
     featureCollectionTable.addDoneLoadingListener {
@@ -173,38 +156,32 @@ class MainActivity : AppCompatActivity() {
    * @param featureCollectionTable containing the observation point.
    */
   private fun performGeoprocessing(featureCollectionTable: FeatureCollectionTable) {
-    //unsure: review runnable stuff
+
     // geoprocessing parameters
-    val parameterFuture: ListenableFuture<GeoprocessingParameters> =
-      geoprocessingTask.createDefaultParametersAsync()
+    val parameterFuture: ListenableFuture<GeoprocessingParameters> = geoprocessingTask.createDefaultParametersAsync()
     parameterFuture.addDoneListener {
       try {
-        val parameters = parameterFuture.get()
+        val parameters = parameterFuture.get().apply {
+          processSpatialReference = featureCollectionTable.spatialReference
+          outputSpatialReference = featureCollectionTable.spatialReference
 
-        // TODO: Check for scoping function compat
-        parameters.processSpatialReference = featureCollectionTable.spatialReference
-        parameters.outputSpatialReference = featureCollectionTable.spatialReference
+          // use the feature collection table to create the required GeoprocessingFeatures input
+          inputs["Input_Observation_Point"] = GeoprocessingFeatures(featureCollectionTable)
+        }
 
-        // use the feature collection table to create the required GeoprocessingFeatures input
-        parameters.inputs["Input_Observation_Point"] = GeoprocessingFeatures(featureCollectionTable)
-
-        // initialize job from mGeoprocessingTask
+        // initialize job from geoprocessingTask
         geoprocessingJob = geoprocessingTask.createJob(parameters)
 
         // start the job
         geoprocessingJob?.start()
-
-        //TODO: is geoprocessingjob supposed to be nullable like this?
 
         // listen for job success
         geoprocessingJob?.addJobDoneListener {
           if (geoprocessingJob?.status == Job.Status.SUCCEEDED) {
             val geoprocessingResult = geoprocessingJob?.result
             // get the viewshed from geoprocessingResult
-            //UNSURE: There was a cast here (GeoprocessingFeatures)  but I think kotlin should do it automatically.
-            // TODO: This should definitely not have !!
-            val resultFeatures =
-              geoprocessingResult!!.outputs["Viewshed_Result"] as GeoprocessingFeatures
+            // UNSURE: geoprocessingJob is nullable, so all of this has to be nullable as well. But I don't like all the question marks, it feels unnecessary.
+            val resultFeatures = geoprocessingResult?.outputs?.get("Viewshed_Result") as GeoprocessingFeatures
             val featureSet = resultFeatures.features
             for (feature in featureSet) {
               val graphic = Graphic(feature.geometry)
@@ -229,18 +206,18 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  override fun onPause() {
-    super.onPause()
-    mapView.pause()
-  }
-
   override fun onResume() {
     super.onResume()
     mapView.resume()
   }
 
+  override fun onPause() {
+    mapView.pause()
+    super.onPause()
+  }
+
   override fun onDestroy() {
-    super.onDestroy()
     mapView.dispose()
+    super.onDestroy()
   }
 }
