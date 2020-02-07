@@ -21,9 +21,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
-import android.view.View
 import android.widget.SeekBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.geoanalysis.LocationViewshed
@@ -39,8 +37,9 @@ import com.esri.arcgisruntime.mapping.view.Camera
 import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.OrbitLocationCameraController
 import java.util.concurrent.ExecutionException
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.roundToInt
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.viewshed_seek_bars.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -48,7 +47,6 @@ class MainActivity : AppCompatActivity() {
   companion object {
     private val TAG: String = MainActivity::class.java.simpleName
   }
-  private val initLocation = Point(-4.50, 48.4, 1000.0)
 
   private val initHeading = 0
   private val initPitch = 60
@@ -57,25 +55,40 @@ class MainActivity : AppCompatActivity() {
   private val initMinDistance = 0
   private val initMaxDistance = 1500
 
-  private lateinit var currHeading: TextView
-  private lateinit var currPitch: TextView
-  private lateinit var currHorizontalAngle: TextView
-  private lateinit var currVerticalAngle: TextView
-  private lateinit var currMinDistance: TextView
-  private lateinit var currMaxDistance: TextView
+  private var minDistance: Int = 0
+  private var maxDistance: Int = 0
 
-  private lateinit var headingSeekBar: SeekBar
-  private lateinit var pitchSeekBar: SeekBar
-  private lateinit var horizontalAngleSeekBar: SeekBar
-  private lateinit var verticalAngleSeekBar: SeekBar
-  private lateinit var minDistanceSeekBar: SeekBar
-  private lateinit var maxDistanceSeekBar: SeekBar
+  private lateinit var viewShed: LocationViewshed
 
-  private var minDistance: Int = initMinDistance
-  private var maxDistance: Int = initMaxDistance
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
 
-  private val viewShed: LocationViewshed by lazy {
-    LocationViewshed(
+    // set initial values
+    minDistance = initMinDistance
+    maxDistance = initMaxDistance
+
+    // create a surface for elevation data
+    val localElevationImageService = getString(R.string.elevation_service)
+    val surface = Surface().apply {
+      elevationSources.add(ArcGISTiledElevationSource(localElevationImageService))
+    }
+
+    // create a layer of buildings
+    val sceneLayer = ArcGISSceneLayer(getString(R.string.buildings_layer))
+
+    // create a scene and add imagery basemap, elevation surface, and buildings layer to it
+    val scene = ArcGISScene().apply {
+      basemap = Basemap.createImagery()
+      baseSurface = surface
+      operationalLayers.add(sceneLayer)
+    }
+
+    val initLocation = Point(-4.50, 48.4, 1000.0)
+    Viewshed.setFrustumOutlineColor(Color.BLUE)
+
+    // create viewshed from the initial location
+    viewShed = LocationViewshed(
       initLocation,
       initHeading.toDouble(),
       initPitch.toDouble(),
@@ -83,31 +96,11 @@ class MainActivity : AppCompatActivity() {
       initVerticalAngle.toDouble(),
       initMinDistance.toDouble(),
       initMaxDistance.toDouble()
-    )
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-
-    val localElevationImageService = getString(R.string.elevation_service)
-    val surface = Surface().apply {
-      elevationSources.add(ArcGISTiledElevationSource(localElevationImageService))
-    }
-
-    val sceneLayer = ArcGISSceneLayer(getString(R.string.buildings_layer))
-    val scene = ArcGISScene().apply {
-      basemap = Basemap.createImagery()
-      baseSurface = surface
-      operationalLayers.add(sceneLayer)
-    }
-
-    Viewshed.setFrustumOutlineColor(Color.BLUE)
-
-    viewShed.apply {
+    ).apply {
       setFrustumOutlineVisible(true)
     }
 
+    // add a camera and set it to orbit the location point
     val camera = Camera(initLocation, 20000000.0, 0.0, 55.0, 0.0)
     val orbitCamera = OrbitLocationCameraController(initLocation, 5000.0)
     sceneView.apply {
@@ -116,6 +109,7 @@ class MainActivity : AppCompatActivity() {
       this.setViewpointCamera(camera)
     }
 
+    // create an analysis overlay to add the viewshed to the scene view
     val analysisOverlay = AnalysisOverlay()
     analysisOverlay.analyses.add(viewShed)
     sceneView.analysisOverlays.add(analysisOverlay)
@@ -123,7 +117,6 @@ class MainActivity : AppCompatActivity() {
     handleUiElements()
 
   }
-
 
   /**
    * Handles double touch drag for movement of viewshed location point, inflation of UI elements, and listeners for
@@ -146,7 +139,7 @@ class MainActivity : AppCompatActivity() {
             viewShed.location = Point(locationPoint.x, locationPoint.y, locationPoint.z + 50)
           } catch (e: InterruptedException) {
             val error = "Error converting screen point to location point: " + e.message
-             Log.e(TAG, error)
+            Log.e(TAG, error)
             Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
           } catch (e: ExecutionException) {
             val error = "Error converting screen point to location point: " + e.message
@@ -160,16 +153,7 @@ class MainActivity : AppCompatActivity() {
       }
     })
 
-    // get views from layout
-    currHeading = findViewById<View>(R.id.curr_heading) as TextView
-    currPitch = findViewById<View>(R.id.curr_pitch) as TextView
-    currHorizontalAngle = findViewById<View>(R.id.curr_horizontal_angle) as TextView
-    currVerticalAngle = findViewById<View>(R.id.curr_vertical_angle) as TextView
-    currMinDistance = findViewById<View>(R.id.curr_minimum_distance) as TextView
-    currMaxDistance = findViewById<View>(R.id.curr_maximum_distance) as TextView
-
     // heading range 0 - 360
-    headingSeekBar = findViewById<View>(R.id.heading_seek_bar) as SeekBar
     headingSeekBar.max = 360
     setHeading(initHeading)
     headingSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -183,7 +167,6 @@ class MainActivity : AppCompatActivity() {
     })
 
     // set arbitrary max to 180 to avoid nonsensical pitch values
-    pitchSeekBar = findViewById<View>(R.id.pitch_seek_bar) as SeekBar
     pitchSeekBar.max = 180
     setPitch(initPitch)
     pitchSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -197,7 +180,6 @@ class MainActivity : AppCompatActivity() {
     })
 
     // horizontal angle range 1 - 120
-    horizontalAngleSeekBar = findViewById<View>(R.id.horizontal_angle_seekbar) as SeekBar
     horizontalAngleSeekBar.max = 120
     setHorizontalAngle(initHorizontalAngle)
     horizontalAngleSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -214,7 +196,6 @@ class MainActivity : AppCompatActivity() {
     })
 
     // vertical angle range 1 - 120
-    verticalAngleSeekBar = findViewById<View>(R.id.vertical_angle_seekbar) as SeekBar
     verticalAngleSeekBar.max = 120
     setVerticalAngle(initVerticalAngle)
     verticalAngleSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -231,7 +212,6 @@ class MainActivity : AppCompatActivity() {
     })
 
     // set to 1000 below the arbitrary max
-    minDistanceSeekBar = findViewById<View>(R.id.min_distance_seekbar) as SeekBar
     minDistanceSeekBar.max = 8999
     setMinDistance(initMinDistance)
     minDistanceSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -250,7 +230,6 @@ class MainActivity : AppCompatActivity() {
     })
 
     // set arbitrary max to 9999 to allow a maximum of 4 digits
-    maxDistanceSeekBar = findViewById<View>(R.id.max_distance_seekbar) as SeekBar
     maxDistanceSeekBar.max = 9999
     setMaxDistance(initMaxDistance)
     maxDistanceSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -280,7 +259,7 @@ class MainActivity : AppCompatActivity() {
    */
   private fun setHeading(heading: Int) {
     headingSeekBar.progress = heading
-    currHeading.text = heading.toString()
+    currHeading?.text ?: heading.toString()
     viewShed.heading = heading.toDouble()
   }
 
@@ -338,7 +317,7 @@ class MainActivity : AppCompatActivity() {
    */
   private fun setMinDistance(minDistance: Int) {
     minDistanceSeekBar.progress = minDistance
-    currMinDistance.text = minDistance.toString()
+    currMinimumDistance.text = minDistance.toString()
     viewShed.minDistance = minDistance.toDouble()
   }
 
@@ -349,7 +328,7 @@ class MainActivity : AppCompatActivity() {
    */
   private fun setMaxDistance(maxDistance: Int) {
     maxDistanceSeekBar.progress = maxDistance
-    currMaxDistance.text = maxDistance.toString()
+    currMaximumDistance.text = maxDistance.toString()
     viewShed.maxDistance = maxDistance.toDouble()
   }
 
