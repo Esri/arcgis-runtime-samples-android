@@ -14,7 +14,7 @@
         "3D",
         "frustum"
     ],
-    "redirect_from": "",
+    "redirect_from": "/android/latest/sample-code/viewshed-location.htm",
     "relevant_apis": [
         "AnalysisOverlay",
         "ArcGISTiledElevationSource",
