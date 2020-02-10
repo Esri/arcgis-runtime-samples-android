@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity() {
             }
           }
 
+        // create a list of utility attribute comparison operators
         operators = UtilityAttributeComparisonOperator.values().also { operators ->
           // assign operator spinner an adapter of operator names
           operatorSpinner.adapter = ArrayAdapter<String>(
@@ -203,11 +204,14 @@ class MainActivity : AppCompatActivity() {
       // if the trace configuration doesn't contain traversability, create one
       traversability ?: UtilityTraversability()
     }
-
-    // NOTE: You may also create a UtilityCategoryComparison with 
-    // UtilityNetworkDefinition.Categories and UtilityCategoryComparisonOperator
-    sources?.get(sourceSpinner.selectedItemPosition)?.let { attribute ->
-      operators?.get(operatorSpinner.selectedItemPosition)?.let { attributeOperator ->
+    
+    // get the currently selected attribute
+    val attribute = sources?.get(sourceSpinner.selectedItemPosition)
+    attribute?.let {
+      // get the currently selected attribute operator
+      val attributeOperator = operators?.get(operatorSpinner.selectedItemPosition)
+      attributeOperator?.let {
+        // if the other value is a coded value domain
         val otherValue = if (attribute.domain is CodedValueDomain) {
           values?.get(valuesSpinner.selectedItemPosition)?.code?.let {
             convertToDataType(it, attribute.dataType)
