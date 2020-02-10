@@ -6,4 +6,5 @@
     <string name="damage_assessment">
         https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0
     </string>
+    <string name="ok">Ok</string>
 </resources>
