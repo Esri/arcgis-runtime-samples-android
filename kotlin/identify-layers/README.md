@@ -2,7 +2,7 @@
 
 Identify features in all layers in a map. 
 
-![](identify-layers.jpg)
+![](identify-layers.png)
 
 ## Use case
 
