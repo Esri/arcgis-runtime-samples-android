@@ -64,10 +64,6 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // set initial values
-    minDistance = initMinDistance
-    maxDistance = initMaxDistance
-
     // create a surface for elevation data
     val localElevationImageService = getString(R.string.elevation_service)
     val surface = Surface().apply {
@@ -100,7 +96,7 @@ class MainActivity : AppCompatActivity() {
       setFrustumOutlineVisible(true)
     }
 
-    // add a camera and set it to orbit the location point
+    // add a camera and set it to orbit the location point of the frustum
     val camera = Camera(initLocation, 20000000.0, 0.0, 55.0, 0.0)
     val orbitCamera = OrbitLocationCameraController(initLocation, 5000.0)
     sceneView.apply {
@@ -114,8 +110,8 @@ class MainActivity : AppCompatActivity() {
     analysisOverlay.analyses.add(viewShed)
     sceneView.analysisOverlays.add(analysisOverlay)
 
+    // initialize the UI controls
     handleUiElements()
-
   }
 
   /**
@@ -123,6 +119,7 @@ class MainActivity : AppCompatActivity() {
    * changes in seek bar progress.
    */
   private fun handleUiElements() {
+
     sceneView.setOnTouchListener(object : DefaultSceneViewOnTouchListener(sceneView) {
 
       // double tap and hold second tap to drag viewshed to a new location
@@ -213,6 +210,9 @@ class MainActivity : AppCompatActivity() {
       override fun onStopTrackingTouch(seekBar: SeekBar) {}
     })
 
+    // initialize the minimum distance
+    minDistance = initMinDistance
+
     // set to 1000 below the arbitrary max
     minDistanceSeekBar.max = 8999
     setMinDistance(initMinDistance)
@@ -230,6 +230,9 @@ class MainActivity : AppCompatActivity() {
 
       override fun onStopTrackingTouch(seekBar: SeekBar) {}
     })
+
+    // initialize the maximum distance
+    maxDistance = initMaxDistance
 
     // set arbitrary max to 9999 to allow a maximum of 4 digits
     maxDistanceSeekBar.max = 9999
