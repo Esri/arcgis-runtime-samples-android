@@ -17,7 +17,6 @@
 
 package com.esri.arcgisruntime.sample.featurelayerquery
 
-import com.esri.arcgisruntime.data.ServiceFeatureTable
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -28,6 +27,7 @@ import android.view.Menu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.FeatureQueryResult
 import com.esri.arcgisruntime.data.QueryParameters
@@ -40,9 +40,9 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
-import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Exception
 import java.util.Locale
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -64,11 +64,12 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // use symbols to show U.S. states with a black outline and yellow fill
     val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1.0f)
     val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.YELLOW, lineSymbol)
 
     featureLayer.apply {
-      // override the renderer
+      // set renderer for the feature layer
       renderer = SimpleRenderer(fillSymbol)
       opacity = 0.8f
       maxScale = 10000.0
@@ -76,17 +77,16 @@ class MainActivity : AppCompatActivity() {
 
     // create a map with the topographic basemap and add it to the basemap
     mapView.map = ArcGISMap(Basemap.createTopographic()).apply {
-      // add the layer to the map
+      // add the feature layer to the map's operational layers
       operationalLayers.add(featureLayer)
       // zoom to a view point of the USA
       initialViewpoint =
         Viewpoint(Point(-11000000.0, 5000000.0, SpatialReferences.getWebMercator()), 100000000.0)
     }
-
   }
 
   /**
-   * Handle the search intent from the search widget
+   * Handle the search intent from the search widget.
    */
   override fun onNewIntent(intent: Intent) {
     this.intent = intent
@@ -100,10 +100,14 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Search for a U.S. state like @param searchString in the feature table, and if found add it
+   * to the featureLayer, zoom to it, and select it.
+   */
   private fun searchForState(searchString: String) {
     // clear any previous selections
     featureLayer.clearSelection()
-    // create objects required to do a selection with a query
+    // create a query for the state that was entered
     val query = QueryParameters()
     // make search case insensitive
     query.whereClause =
@@ -142,7 +146,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    // inflate the menu; this adds items to the action bar if it is present.
+    // inflate the menu; this adds items to the action bar if it is present
     menuInflater.inflate(R.menu.menu_main, menu)
     // get the SearchView and set the searchable configuration
     val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
@@ -170,5 +174,4 @@ class MainActivity : AppCompatActivity() {
     mapView.dispose()
     super.onDestroy()
   }
-
 }
