@@ -1,6 +1,5 @@
 package com.esri.arcgisruntime.sample.configuresubnetworktrace
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.text.InputType
 import android.text.method.ScrollingMovementMethod
@@ -52,41 +51,39 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-
     exampleTextView.movementMethod = ScrollingMovementMethod()
 
     // create a utility network and wait for it to finish to load
     utilityNetwork.loadAsync()
     utilityNetwork.addDoneLoadingListener {
       if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
-        // populate spinners for network attribute comparison
-        sources =
-          utilityNetwork.definition.networkAttributes.filter { !it.isSystemDefined }
-            .also { sources ->
-              // assign source spinner an adapter and an on item selected listener
-              sourceSpinner.apply {
-                adapter = ArrayAdapter<String>(
-                  applicationContext,
-                  android.R.layout.simple_spinner_item,
-                  sources.map { it.name })
-                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                  override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                  ) {
-                    (sources[sourceSpinner.selectedItemPosition])
-                    onComparisonSourceChanged(sources[sourceSpinner.selectedItemPosition])
-                  }
-
-                  override fun onNothingSelected(parent: AdapterView<*>?) {}
+        // create a list of utility network attributes whose system is not defined
+        sources = utilityNetwork.definition.networkAttributes.filter { !it.isSystemDefined }
+          .also { sources ->
+            // assign source spinner an adapter of source names and an on item selected listener
+            sourceSpinner.apply {
+              adapter = ArrayAdapter<String>(
+                applicationContext,
+                android.R.layout.simple_spinner_item,
+                sources.map { it.name })
+              onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                  parent: AdapterView<*>?,
+                  view: View?,
+                  position: Int,
+                  id: Long
+                ) {
+                  (sources[sourceSpinner.selectedItemPosition])
+                  onComparisonSourceChanged(sources[sourceSpinner.selectedItemPosition])
                 }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
               }
             }
+          }
 
         operators = UtilityAttributeComparisonOperator.values().also { operators ->
+          // assign operator spinner an adapter of operator names
           operatorSpinner.adapter = ArrayAdapter<String>(
             applicationContext,
             android.R.layout.simple_spinner_item,
@@ -128,6 +125,8 @@ class MainActivity : AppCompatActivity() {
    * When a comparison source attribute is chosen check if it's a coded value domain and, if it is,
    * present a spinner of coded value domains. If not, show the correct UI view for the utility
    * network attribute data type.
+   *
+   * @param attribute being compared
    */
   private fun onComparisonSourceChanged(attribute: UtilityNetworkAttribute) {
     // if the domain is a coded value domain
@@ -140,7 +139,7 @@ class MainActivity : AppCompatActivity() {
       valuesSpinner.adapter = ArrayAdapter<String>(
         applicationContext,
         android.R.layout.simple_spinner_item,
-        // add the the coded values from the coded value domain to the values spinner
+        // add the coded values from the coded value domain to the values spinner
         codedValueDomain.codedValues.map { it.name }
       )
       // if the domain is not a coded value domain
@@ -160,14 +159,18 @@ class MainActivity : AppCompatActivity() {
         setVisible(valuesEditText.id)
       }
       else -> {
-        Log.e(TAG, "Unexpected utility network attribute data type.")
+        ("Unexpected utility network attribute data type.").also {
+          Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+          Log.e(TAG, it)
+        }
       }
-
     }
   }
 
   /**
    * Show the given UI view and hide the others which share the same space.
+   *
+   * @param id of the view to make visible
    */
   private fun setVisible(id: Int) {
     when (id) {
@@ -191,6 +194,8 @@ class MainActivity : AppCompatActivity() {
 
   /**
    * Add a new barrier condition to the trace options.
+   *
+   * @param view of the add button
    */
   fun addCondition(view: View) {
     // if source tier doesn't contain a trace configuration, create one
@@ -199,20 +204,20 @@ class MainActivity : AppCompatActivity() {
       traversability ?: UtilityTraversability()
     }
 
-    // NOTE: You may also create a UtilityCategoryComparison with UtilityNetworkDefinition.Categories and UtilityCategoryComparisonOperator
+    // NOTE: You may also create a UtilityCategoryComparison with 
+    // UtilityNetworkDefinition.Categories and UtilityCategoryComparisonOperator
     sources?.get(sourceSpinner.selectedItemPosition)?.let { attribute ->
       operators?.get(operatorSpinner.selectedItemPosition)?.let { attributeOperator ->
-        // NOTE: You may also create a UtilityCategoryComparison with UtilityNetworkDefinition.Categories and UtilityCategoryComparisonOperator
-        val otherValue =
-          if (attribute.domain is CodedValueDomain) {
-            values?.get(valuesSpinner.selectedItemPosition)?.code?.let {
-              convertToDataType(it, attribute.dataType)
-            }
-          } else {
-            convertToDataType(valuesEditText.text, attribute.dataType)
+        val otherValue = if (attribute.domain is CodedValueDomain) {
+          values?.get(valuesSpinner.selectedItemPosition)?.code?.let {
+            convertToDataType(it, attribute.dataType)
           }
+        } else {
+          convertToDataType(valuesEditText.text, attribute.dataType)
+        }
 
-        // NOTE: You may also create a UtilityNetworkAttributeComparison with another NetworkAttribute
+        // NOTE: You may also create a UtilityNetworkAttributeComparison with another
+        // NetworkAttribute
         var expression: UtilityTraceConditionalExpression = UtilityNetworkAttributeComparison(
           attribute,
           attributeOperator,
@@ -230,6 +235,8 @@ class MainActivity : AppCompatActivity() {
 
   /**
    * Run the network trace with the parameters and display the result in an alert dialog.
+   *
+   * @param view of the trace button
    */
   fun trace(view: View) {
     // don't attempt a trace on an unloaded utility network
@@ -312,7 +319,10 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Reset the current barrier condition to the initial expression "Operational Device Status EQUAL Open"
+   * Reset the current barrier condition to the initial expression
+   * "Operational Device Status EQUAL Open".
+   *
+   * @param view of the rest button
    */
   fun reset(view: View) {
     initialExpression?.let {
@@ -324,6 +334,9 @@ class MainActivity : AppCompatActivity() {
 
   /**
    * Convert the given value into the correct Kotlin data type by using the attribute's data type.
+   *
+   * @param otherValue which will be converted
+   * @param dataType to be converted to
    */
   private fun convertToDataType(otherValue: Any, dataType: UtilityNetworkAttribute.DataType): Any {
     return try {
@@ -334,7 +347,10 @@ class MainActivity : AppCompatActivity() {
         UtilityNetworkAttribute.DataType.INTEGER -> otherValue.toString().toInt()
       }
     } catch (e: Exception) {
-      Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
+      ("Error converting data type: " + e.message).also {
+        Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+        Log.e(TAG, it)
+      }
     }
   }
 }
