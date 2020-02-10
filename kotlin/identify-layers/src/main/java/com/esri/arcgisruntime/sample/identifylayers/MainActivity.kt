@@ -172,7 +172,7 @@ class MainActivity : AppCompatActivity() {
       val identifyResult = tempResults.get(index)
 
       // update count with geoElements from the result
-      count += identifyResult.getElements().size
+      count += identifyResult.elements.size
 
       // if sublayer has any results, add result objects in the tempResults array after the current result
       if (identifyResult.sublayerResults.size > 0) {
@@ -207,6 +207,21 @@ class MainActivity : AppCompatActivity() {
 
     // show the alert dialog
     alertDialog.show()
+  }
+
+  override fun onResume() {
+    super.onResume()
+    mapView.resume()
+  }
+
+  override fun onPause() {
+    mapView.pause()
+    super.onPause()
+  }
+
+  override fun onDestroy() {
+    mapView.dispose()
+    super.onDestroy()
   }
 
 }
