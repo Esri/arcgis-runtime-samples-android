@@ -92,14 +92,14 @@ class MainActivity : AppCompatActivity() {
 
   private fun createPolygons() {
     // create input polygon 1
-    PointCollection(SpatialReferences.getWebMercator()).run {
+    inputPolygon1 = Polygon(PointCollection(SpatialReferences.getWebMercator()).apply {
       add(Point(-13160.0, 6710100.0))
       add(Point(-13300.0, 6710500.0))
       add(Point(-13760.0, 6710730.0))
       add(Point(-14660.0, 6710000.0))
       add(Point(-13960.0, 6709400.0))
-      inputPolygon1 = Polygon(this)
-    }
+
+    })
 
     // create and add a blue graphic to show input polygon 1
     val blueFill = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLUE, lineSymbol)
