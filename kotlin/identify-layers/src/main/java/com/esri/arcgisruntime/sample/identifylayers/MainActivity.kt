@@ -57,8 +57,8 @@ class MainActivity : AppCompatActivity() {
     val mapImageLayer = ArcGISMapImageLayer(getString(R.string.world_cities)).apply {
       addDoneLoadingListener {
         // hide continent and world layers
-        subLayerContents.get(1).isVisible = false
-        subLayerContents.get(2).isVisible = false
+        subLayerContents[1].isVisible = false
+        subLayerContents[2].isVisible = false
       }
     }
 
