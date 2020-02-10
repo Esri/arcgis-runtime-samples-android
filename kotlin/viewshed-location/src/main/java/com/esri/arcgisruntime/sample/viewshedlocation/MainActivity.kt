@@ -58,9 +58,6 @@ class MainActivity : AppCompatActivity() {
   private var minDistance: Int = 0
   private var maxDistance: Int = 0
 
-  //the distance (in meters) behind the frustum from which to view it
-  private var cameraDistance = 20000000.0
-
   private lateinit var viewShed: LocationViewshed
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,7 +101,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // add a camera and set it to orbit the location point
-    val camera = Camera(initLocation, cameraDistance, 0.0, 55.0, 0.0)
+    val camera = Camera(initLocation, 20000000.0, 0.0, 55.0, 0.0)
     val orbitCamera = OrbitLocationCameraController(initLocation, 5000.0)
     sceneView.apply {
       this.scene = scene
@@ -128,11 +125,8 @@ class MainActivity : AppCompatActivity() {
   private fun handleUiElements() {
     sceneView.setOnTouchListener(object : DefaultSceneViewOnTouchListener(sceneView) {
 
-      var doubleTouching = false
       // double tap and hold second tap to drag viewshed to a new location
       override fun onDoubleTouchDrag(motionEvent: MotionEvent): Boolean {
-
-        doubleTouching = true
         // convert from screen point to location point
         val screenPoint = android.graphics.Point(
           motionEvent.x.roundToInt(),
@@ -142,9 +136,9 @@ class MainActivity : AppCompatActivity() {
         locationPointFuture.addDoneListener {
           try {
             val locationPoint = locationPointFuture.get()
+
             // add 50 meters to location point and set to viewshed
             viewShed.location = Point(locationPoint.x, locationPoint.y, locationPoint.z + 50)
-
           } catch (e: InterruptedException) {
             val error = "Error converting screen point to location point: " + e.message
             Log.e(TAG, error)
@@ -159,149 +153,105 @@ class MainActivity : AppCompatActivity() {
         // ignore default double touch drag gesture
         return true
       }
-
-      override fun onSinglePointerUp(motionEvent: MotionEvent?): Boolean {
-        if (doubleTouching && motionEvent != null) {
-          doubleTouching = false
-          val screenPoint = android.graphics.Point(
-            motionEvent.x.roundToInt(),
-            motionEvent.y.roundToInt()
-          )
-
-          screenPoint.let {
-            val locationPointFuture = sceneView.screenToLocationAsync(it)
-            locationPointFuture.addDoneListener {
-              try {
-                val locationPoint = locationPointFuture.get()
-                val point = Point(locationPoint.x, locationPoint.y, locationPoint.z + 50)
-
-                // reset the camera to the same relative offset from the frustum as
-                val camera = Camera(point, cameraDistance, 0.0, 55.0, 0.0)
-                val orbitCamera = OrbitLocationCameraController(point, 5000.0)
-
-                sceneView.apply {
-                  cameraController = orbitCamera
-                  setViewpointCamera(camera)
-                }
-
-              } catch (e: ExecutionException) {
-                val error = "Error converting screen point to location point: " + e.message
-                Log.e(TAG, error)
-                Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
-              }
-            }
-
-            return true
-          }
-        }
-
-        return super.onSinglePointerUp(motionEvent)
-      }
     })
 
     // heading range 0 - 360
     headingSeekBar.max = 360
     setHeading(initHeading)
-    headingSeekBar.setOnSeekBarChangeListener(
-      object : SeekBar.OnSeekBarChangeListener {
-        override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-          setHeading(seekBar.progress)
-        }
+    headingSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+      override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
+        setHeading(seekBar.progress)
+      }
 
-        override fun onStartTrackingTouch(seekBar: SeekBar) {}
+      override fun onStartTrackingTouch(seekBar: SeekBar) {}
 
-        override fun onStopTrackingTouch(seekBar: SeekBar) {}
-      })
+      override fun onStopTrackingTouch(seekBar: SeekBar) {}
+    })
 
     // set arbitrary max to 180 to avoid nonsensical pitch values
     pitchSeekBar.max = 180
     setPitch(initPitch)
-    pitchSeekBar.setOnSeekBarChangeListener(
-      object : SeekBar.OnSeekBarChangeListener {
-        override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-          setPitch(seekBar.progress)
-        }
+    pitchSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+      override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
+        setPitch(seekBar.progress)
+      }
 
-        override fun onStartTrackingTouch(seekBar: SeekBar) {}
+      override fun onStartTrackingTouch(seekBar: SeekBar) {}
 
-        override fun onStopTrackingTouch(seekBar: SeekBar) {}
-      })
+      override fun onStopTrackingTouch(seekBar: SeekBar) {}
+    })
 
     // horizontal angle range 1 - 120
     horizontalAngleSeekBar.max = 120
     setHorizontalAngle(initHorizontalAngle)
-    horizontalAngleSeekBar.setOnSeekBarChangeListener(
-      object : SeekBar.OnSeekBarChangeListener {
-        override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-          val horizontalAngle = horizontalAngleSeekBar.progress
-          if (horizontalAngle > 0) { // horizontal angle must be > 0
-            setHorizontalAngle(horizontalAngle)
-          }
+    horizontalAngleSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+      override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
+        val horizontalAngle = horizontalAngleSeekBar.progress
+        if (horizontalAngle > 0) { // horizontal angle must be > 0
+          setHorizontalAngle(horizontalAngle)
         }
+      }
 
-        override fun onStartTrackingTouch(seekBar: SeekBar) {}
+      override fun onStartTrackingTouch(seekBar: SeekBar) {}
 
-        override fun onStopTrackingTouch(seekBar: SeekBar) {}
-      })
+      override fun onStopTrackingTouch(seekBar: SeekBar) {}
+    })
 
     // vertical angle range 1 - 120
     verticalAngleSeekBar.max = 120
     setVerticalAngle(initVerticalAngle)
-    verticalAngleSeekBar.setOnSeekBarChangeListener(
-      object : SeekBar.OnSeekBarChangeListener {
-        override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-          val verticalAngle = verticalAngleSeekBar.progress
-          if (verticalAngle > 0) { // vertical angle must be > 0
-            setVerticalAngle(verticalAngle)
-          }
+    verticalAngleSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+      override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
+        val verticalAngle = verticalAngleSeekBar.progress
+        if (verticalAngle > 0) { // vertical angle must be > 0
+          setVerticalAngle(verticalAngle)
         }
+      }
 
-        override fun onStartTrackingTouch(seekBar: SeekBar) {}
+      override fun onStartTrackingTouch(seekBar: SeekBar) {}
 
-        override fun onStopTrackingTouch(seekBar: SeekBar) {}
-      })
+      override fun onStopTrackingTouch(seekBar: SeekBar) {}
+    })
 
     // set to 1000 below the arbitrary max
     minDistanceSeekBar.max = 8999
     setMinDistance(initMinDistance)
-    minDistanceSeekBar.setOnSeekBarChangeListener(
-      object : SeekBar.OnSeekBarChangeListener {
-        override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-          minDistance = seekBar.progress
-          if (maxDistance - minDistance < 1000) {
-            maxDistance = minDistance + 1000
-            setMaxDistance(maxDistance)
-          }
-          setMinDistance(minDistance)
+    minDistanceSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+      override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
+        minDistance = seekBar.progress
+        if (maxDistance - minDistance < 1000) {
+          maxDistance = minDistance + 1000
+          setMaxDistance(maxDistance)
         }
+        setMinDistance(minDistance)
+      }
 
-        override fun onStartTrackingTouch(seekBar: SeekBar) {}
+      override fun onStartTrackingTouch(seekBar: SeekBar) {}
 
-        override fun onStopTrackingTouch(seekBar: SeekBar) {}
-      })
+      override fun onStopTrackingTouch(seekBar: SeekBar) {}
+    })
 
     // set arbitrary max to 9999 to allow a maximum of 4 digits
     maxDistanceSeekBar.max = 9999
     setMaxDistance(initMaxDistance)
-    maxDistanceSeekBar.setOnSeekBarChangeListener(
-      object : SeekBar.OnSeekBarChangeListener {
-        override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-          maxDistance = seekBar.progress
-          if (maxDistance - minDistance < 1000) {
-            minDistance = if (maxDistance > 1000) {
-              maxDistance - 1000
-            } else {
-              0
-            }
-            setMinDistance(minDistance)
+    maxDistanceSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+      override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
+        maxDistance = seekBar.progress
+        if (maxDistance - minDistance < 1000) {
+          minDistance = if (maxDistance > 1000) {
+            maxDistance - 1000
+          } else {
+            0
           }
-          setMaxDistance(maxDistance)
+          setMinDistance(minDistance)
         }
+        setMaxDistance(maxDistance)
+      }
 
-        override fun onStartTrackingTouch(seekBar: SeekBar) {}
+      override fun onStartTrackingTouch(seekBar: SeekBar) {}
 
-        override fun onStopTrackingTouch(seekBar: SeekBar) {}
-      })
+      override fun onStopTrackingTouch(seekBar: SeekBar) {}
+    })
   }
 
   /**
