@@ -78,13 +78,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create a layer of buildings
-    val buildingsLayer = ArcGISSceneLayer(getString(R.string.buildings_layer))
+    val sceneLayer = ArcGISSceneLayer(getString(R.string.buildings_layer))
 
     // create a scene and add imagery basemap, elevation surface, and buildings layer to it
     val scene = ArcGISScene().apply {
       basemap = Basemap.createImagery()
       baseSurface = surface
-      operationalLayers.add(buildingsLayer)
+      operationalLayers.add(sceneLayer)
     }
 
     val initLocation = Point(-4.50, 48.4, 1000.0)
