@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a map with the Basemap
+    // create a map with a topographic basemap
     mapView.map = ArcGISMap(SpatialReferences.getWebMercator()).apply {
       basemap = Basemap.createTopographic()
     }
@@ -83,14 +83,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     // add overlays to the mapView
-    mapView.graphicsOverlays.apply {
-      add(geodesicGraphicsOverlay)
-      add(planarGraphicsOverlay)
-      add(tapLocationsOverlay)
-    }
+    mapView.graphicsOverlays.addAll(listOf(
+      geodesicGraphicsOverlay,
+      planarGraphicsOverlay,
+      tapLocationsOverlay
+    ))
 
     // create a buffer around the clicked location
-
     mapView.onTouchListener = object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
       override fun onSingleTapConfirmed(motionEvent: MotionEvent): Boolean {
 
@@ -138,6 +137,7 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
+    // clear the graphics from the graphics overlays
     clearButton.setOnClickListener {
       planarGraphicsOverlay.graphics.clear()
       geodesicGraphicsOverlay.graphics.clear()
