@@ -47,7 +47,17 @@ import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
 
-  private var textToSpeech: TextToSpeech? = null
+  // create text-to-speech to replay navigation voice guidance
+  private val textToSpeech: TextToSpeech by lazy {
+    TextToSpeech(this) { status ->
+      if (status != TextToSpeech.ERROR) {
+        textToSpeech.language = Resources.getSystem()
+          .configuration.locale //NOTE: This is deprecated but the fix requires api 24 Maybe do a check as in texttospeech.speak
+        isTextToSpeechInitialized = true
+      }
+    }
+  }
+
   private var isTextToSpeechInitialized = false
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,39 +65,25 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // create a map and set it to the map view
-    val map = ArcGISMap(Basemap.createStreetsVector())
-    mapView.map = map
+    mapView.map = ArcGISMap(Basemap.createStreetsVector())
 
-    // create a graphics overlay to hold our route graphics
+    // create a graphics overlay to hold our route graphics and clear any graphics
     val graphicsOverlay = GraphicsOverlay()
-    mapView.graphicsOverlays.add(graphicsOverlay)
-
-    // TODO: initialize by lazy?
-    // NOTE: Tried to initialize by lazy but it references itself inside the callback.
-    // initialize text-to-speech to replay navigation voice guidance
-    textToSpeech = TextToSpeech(this){ status ->
-      if (status != TextToSpeech.ERROR) {
-        textToSpeech?.language = Resources.getSystem().configuration.locale //NOTE: This is deprecated but the fix requires api 24 Maybe do a check as in texttospeech.speak
-        isTextToSpeechInitialized = true
-      }
-    }
-
-    // clear any graphics from the current graphics overlay
-    mapView.graphicsOverlays[0].graphics.clear()
+    mapView.graphicsOverlays.add(graphicsOverlay).also { graphicsOverlay.graphics.clear() }
 
     // generate a route with directions and stops for navigation
     val routeTask = RouteTask(this, getString(R.string.routing_service_url))
     val routeParametersFuture = routeTask.createDefaultParametersAsync()
     routeParametersFuture.addDoneListener {
-
       try {
         // define the route parameters
-        val routeParameters = routeParametersFuture.get()
-        //TODO: What is getStops()?
-        routeParameters.setStops(getStops())
-        routeParameters.isReturnDirections = true
-        routeParameters.isReturnStops = true
-        routeParameters.isReturnRoutes = true
+        val routeParameters = routeParametersFuture.get().also {
+          it.setStops(getStops())
+          it.isReturnDirections = true
+          it.isReturnStops = true
+          it.isReturnRoutes = true
+        }
+
         val routeResultFuture = routeTask.solveRouteAsync(routeParameters)
         routeParametersFuture.addDoneListener {
           try {
@@ -95,51 +91,64 @@ class MainActivity : AppCompatActivity() {
             val routeResult = routeResultFuture.get()
             val routeGeometry = routeResult.routes[0].routeGeometry
             // create a graphic for the route geometry
-            val routeGraphic = Graphic(routeGeometry,
-                SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f))
+            val routeGraphic = Graphic(
+              routeGeometry,
+              SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f)
+            )
             // add it to the graphics overlay
             mapView.graphicsOverlays[0].graphics.add(routeGraphic)
             // set the map view view point to show the whole route
             mapView.setViewpointAsync(Viewpoint(routeGeometry.extent))
 
-            //TODO: Change this comment
-            // create a button to start navigation with the given route
-            navigateRouteButton.setOnClickListener{startNavigation(routeTask, routeParameters, routeResult)}
+            // set button to start navigation with the given route
+            navigateRouteButton.setOnClickListener {
+              startNavigation(
+                routeTask,
+                routeParameters,
+                routeResult
+              )
+            }
 
             // start navigating
             startNavigation(routeTask, routeParameters, routeResult)
-          }
-          catch (e: Exception) {
+          } catch (e: Exception) {
             when (e) {
               is InterruptedException, is ExecutionException -> {
                 val error = "Error creating default route parameters: " + e.message
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show()
                 Log.e(TAG, error)
               }
+              else -> throw e
             }
           }
         }
-      }
-      catch (e: Exception) {
+      } catch (e: Exception) {
         when (e) {
           is InterruptedException, is ExecutionException -> {
             val error = "Error getting the route result " + e.message
             Toast.makeText(this, error, Toast.LENGTH_LONG).show()
             Log.e(TAG, error)
           }
+          else -> throw e
         }
       }
     }
 
     // wire up recenter button
-    recenterButton.isEnabled = false
-    recenterButton.setOnClickListener {
-      mapView.locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.NAVIGATION
-      recenterButton.isEnabled = false
+    recenterButton.apply {
+      isEnabled = false
+      setOnClickListener {
+        mapView.locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.NAVIGATION
+        recenterButton.isEnabled = false
+      }
     }
   }
 
-  private fun startNavigation(routeTask: RouteTask, routeParameters: RouteParameters, routeResult: RouteResult) {
+  private fun startNavigation(
+    routeTask: RouteTask,
+    routeParameters: RouteParameters,
+    routeResult: RouteResult
+  ) {
 
     // clear any graphics from the current graphics overlay
     mapView.graphicsOverlays[0].graphics.clear()
@@ -147,29 +156,35 @@ class MainActivity : AppCompatActivity() {
     // get the route's geometry from the route result
     val routeGeometry = routeResult.routes[0].routeGeometry
     // create a graphic (with a dashed line symbol) to represent the route
-    val routeAheadGraphic = Graphic(routeGeometry,
-        SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.MAGENTA, 5f))
-    mapView.graphicsOverlays[0].graphics.add(routeAheadGraphic)
+    val routeAheadGraphic = Graphic(
+      routeGeometry,
+      SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.MAGENTA, 5f)
+    )
     // create a graphic (solid) to represent the route that's been traveled (initially empty)
-    val routeTraveledGraphic = Graphic(routeGeometry,
-        SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f))
-    mapView.graphicsOverlays[0].graphics.add(routeTraveledGraphic)
+    val routeTraveledGraphic = Graphic(
+      routeGeometry,
+      SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f)
+    )
+    // add the graphics to the mapView's graphics overlays
+    mapView.graphicsOverlays[0].graphics.addAll(listOf(routeAheadGraphic,routeTraveledGraphic))
 
-    // get the map view's location display
-    val locationDisplay = mapView.locationDisplay
     // set up a simulated location data source which simulates movement along the route
     val simulatedLocationDataSource = SimulatedLocationDataSource(routeGeometry)
-    // set the simulated location data source as the location data source for this app
-    locationDisplay.locationDataSource = simulatedLocationDataSource
-    locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.NAVIGATION
-    // if the user navigates the map view away from the location display, activate the recenter button
-    //TODO: Deleted a thing here, double check it's okay
-    locationDisplay.addAutoPanModeChangedListener { recenterButton.isEnabled = true }
+    // get the map view's location display and set it up
+    val locationDisplay = mapView.locationDisplay.apply {
+      // set the simulated location data source as the location data source for this app
+      locationDataSource = simulatedLocationDataSource
+      autoPanMode = LocationDisplay.AutoPanMode.NAVIGATION
+      // if the user navigates the map view away from the location display, activate the recenter button
+      addAutoPanModeChangedListener { recenterButton.isEnabled = true }
+    }
     // set up a RouteTracker for navigation along the calculated route
-    val routeTracker = RouteTracker(applicationContext, routeResult, 0)
-    routeTracker.enableReroutingAsync(routeTask, routeParameters,
-        RouteTracker.ReroutingStrategy.TO_NEXT_WAYPOINT, true)
-
+    val routeTracker = RouteTracker(applicationContext, routeResult, 0).also {routeTracker ->
+      routeTracker.enableReroutingAsync(
+        routeTask, routeParameters,
+        RouteTracker.ReroutingStrategy.TO_NEXT_WAYPOINT, true
+      )
+    }
     // listen for changes in location
     locationDisplay.addLocationChangedListener { locationChangedEvent ->
       // track the location and update route tracking status
@@ -177,8 +192,6 @@ class MainActivity : AppCompatActivity() {
       trackLocationFuture.addDoneListener {
         // listen for new voice guidance events
         routeTracker.addNewVoiceGuidanceListener { newVoiceGuidanceEvent ->
-
-          //TODO: What are these functions?
           // use Android's text to speech to speak the voice guidance
           speakVoiceGuidance(newVoiceGuidanceEvent.voiceGuidance.text)
           nextDirectionTextView.text = getString(
@@ -220,43 +233,43 @@ class MainActivity : AppCompatActivity() {
             ).show()
           } else {
             // the final destination has been reached, stop the simulated location data source
-            //TODO: onStop is protected? Why are we directly calling onStop anyway?
-            simulatedLocationDataSource.onStop()
+            simulatedLocationDataSource.stop()
             Toast.makeText(this, "Arrived at the final destination.", Toast.LENGTH_LONG).show()
           }
         }
       }
     }
-
-
     // start the LocationDisplay, which starts the SimulatedLocationDataSource
     locationDisplay.startAsync()
-    Toast.makeText(this, "Navigating to the first stop, the USS San Diego Memorial.", Toast.LENGTH_LONG).show()
+    Toast.makeText(
+      this,
+      "Navigating to the first stop, the USS San Diego Memorial.",
+      Toast.LENGTH_LONG
+    ).show()
   }
 
   /**
    * Uses Android's text to speak to say the latest voice guidance from the RouteTracker out loud.
    */
+  // UNSURE: I just removed the isTextToSpechInitialized check and it seems to work fine? NO Not okay.
   private fun speakVoiceGuidance(voiceGuidanceText: String) {
-    //TODO: Get rid of that bang bang
-    if (isTextToSpeechInitialized && !textToSpeech?.isSpeaking!!) {
+    if (isTextToSpeechInitialized && !textToSpeech.isSpeaking) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        textToSpeech?.speak(voiceGuidanceText, TextToSpeech.QUEUE_FLUSH, null, null)
+        textToSpeech.speak(voiceGuidanceText, TextToSpeech.QUEUE_FLUSH, null, null)
       } else {
-        textToSpeech?.speak(voiceGuidanceText, TextToSpeech.QUEUE_FLUSH, null)
+        textToSpeech.speak(voiceGuidanceText, TextToSpeech.QUEUE_FLUSH, null)
       }
     }
-  }
-
-  //ToDO: Lifecycle arrangement
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
   }
 
   override fun onResume() {
     super.onResume()
     mapView.resume()
+  }
+
+  override fun onPause() {
+    mapView.pause()
+    super.onPause()
   }
 
   override fun onDestroy() {
@@ -270,19 +283,15 @@ class MainActivity : AppCompatActivity() {
     /**
      * Creates a list of stops along a route.
      */
-    private fun getStops() : List<Stop> {
-      //TODO: Shoudl I just throw this down to the bottom
-      val stops = mutableListOf<Stop>()
+    private fun getStops(): List<Stop> {
       // San Diego Convention Center
       val conventionCenter = Stop(Point(-117.160386, 32.706608, SpatialReferences.getWgs84()))
-      stops.add(conventionCenter)
       // USS San Diego Memorial
       val memorial = Stop(Point(-117.173034, 32.712327, SpatialReferences.getWgs84()))
-      stops.add(memorial)
       // RH Fleet Aerospace Museum
       val aerospaceMuseum = Stop(Point(-117.147230, 32.730467, SpatialReferences.getWgs84()))
-      stops.add(aerospaceMuseum)
-      return stops
+
+      return listOf(conventionCenter, memorial, aerospaceMuseum)
     }
   }
 }

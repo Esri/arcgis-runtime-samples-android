@@ -39,44 +39,44 @@ internal class SimulatedLocationDataSource(private val route: Polyline) :
   private var currentLocation: Point? = null
   private var timer: Timer? = null
   private var distance = 0.0
-  //TODO: This had to be made public for the mainactivity to work but I feel that it should not be.
-  public override fun onStop() {
+  override fun onStop() {
     timer?.cancel()
   }
 
   override fun onStart() { // start at the beginning of the route
     currentLocation = route.parts[0].startPoint
     updateLocation(Location(currentLocation))
-    timer = Timer("SimulatedLocationDataSource Timer", false)
-    timer?.scheduleAtFixedRate(object : TimerTask() {
-      override fun run() { // get a reference to the previous point
-        val previousPoint = currentLocation
-        // update current location by moving [distanceInterval] meters along the route
-        currentLocation = GeometryEngine.createPointAlong(route, distance)
-        // get the geodetic distance result between the two points
-        val distanceResult = GeometryEngine.distanceGeodetic(
-          previousPoint,
-          currentLocation,
-          LinearUnit(LinearUnitId.METERS),
-          AngularUnit(AngularUnitId.DEGREES),
-          GeodeticCurveType.GEODESIC
-        )
-        // update the location with the current location and use the geodetic distance result to get the azimuth
-        updateLocation(
-          Location(
+    timer = Timer("SimulatedLocationDataSource Timer", false).apply {
+      scheduleAtFixedRate(object : TimerTask() {
+        override fun run() { // get a reference to the previous point
+          val previousPoint = currentLocation
+          // update current location by moving [distanceInterval] meters along the route
+          currentLocation = GeometryEngine.createPointAlong(route, distance)
+          // get the geodetic distance result between the two points
+          val distanceResult = GeometryEngine.distanceGeodetic(
+            previousPoint,
             currentLocation,
-            1.0,
-            1.0,
-            distanceResult.azimuth1,
-            false
+            LinearUnit(LinearUnitId.METERS),
+            AngularUnit(AngularUnitId.DEGREES),
+            GeodeticCurveType.GEODESIC
           )
-        )
-        // increment the distance
-        distance += distanceInterval
-      }
-    }, 0, 1000)
-    // this method must be called by the subclass once the location data source has finished its starting process
-    onStartCompleted(null)
+          // update the location with the current location and use the geodetic distance result to get the azimuth
+          updateLocation(
+            Location(
+              currentLocation,
+              1.0,
+              1.0,
+              distanceResult.azimuth1,
+              false
+            )
+          )
+          // increment the distance
+          distance += distanceInterval
+        }
+      }, 0, 1000)
+      // this method must be called by the subclass once the location data source has finished its starting process
+      onStartCompleted(null)
+    }
   }
 
   companion object {
