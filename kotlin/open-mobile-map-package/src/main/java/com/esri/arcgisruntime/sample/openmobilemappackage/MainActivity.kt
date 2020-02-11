@@ -17,10 +17,15 @@
 
 package com.esri.arcgisruntime.sample.openmobilemappackage
 
+import android.Manifest
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import java.lang.IllegalStateException
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.MobileMapPackage
@@ -36,20 +41,28 @@ class MainActivity : AppCompatActivity() {
 
   private val mobileMapPackageFileExtension = "mmpk"
   private lateinit var mapPackage: MobileMapPackage
+  val permsList = listOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    try {
-      val mobileMapFilePath = createMobileMapPackageFilePath()
-      loadMobileMapPackage(mobileMapFilePath)
+    requestReadPermissionAndLoadPackage()
 
-    } catch (exception: IllegalStateException) {
-      "got error $exception".also {
-        Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG).show()
-        Log.e(TAG, it)
-      }
+  }
+
+  private fun requestReadPermissionAndLoadPackage() {
+    val mobileMapFilePath = createMobileMapPackageFilePath()
+
+    // For API level 23+ request permission at runtime
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+      == PackageManager.PERMISSION_GRANTED
+    ) {
+      // load the offline mobile map package
+      loadMobileMapPackage(mobileMapFilePath);
+    } else {
+      // request permission
+      ActivityCompat.requestPermissions(this, permsList.toTypedArray(), 2);
     }
   }
 
@@ -58,22 +71,21 @@ class MainActivity : AppCompatActivity() {
    */
   private fun createMobileMapPackageFilePath(): String {
 
-    // get the scoped storage location for this app
-    val filesDir = getExternalFilesDir(null)?.path
+    val extStoreDir = Environment.getExternalStorageDirectory()
+    val sdCarDir = getString(R.string.config_data_sdcard_offline_dir)
     val fileName = getString(R.string.yellowstone_mmpk)
 
-    // build the filename and return it
-    filesDir?.let {
+    extStoreDir.absolutePath.also {
       val builder = StringBuilder(it)
-        .append(File.pathSeparator)
+        .append(File.separator)
+        .append(sdCarDir)
+        .append(File.separator)
         .append(fileName)
         .append(".")
         .append(mobileMapPackageFileExtension)
 
       return builder.toString()
     }
-
-    throw IllegalStateException("could not open external files dir")
   }
 
   /**
@@ -99,10 +111,24 @@ class MainActivity : AppCompatActivity() {
           // log an issue if the mobile map package fails to load
           mapPackage.loadError.message?.let {
             Log.e(TAG, it)
-            Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG).show()
+            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
           }
           null
         }
+    }
+  }
+
+  override fun onRequestPermissionsResult(
+    requestCode: Int,
+    permissions: Array<out String>,
+    grantResults: IntArray
+  ) {
+    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      // load the offline mobile map package
+      loadMobileMapPackage(createMobileMapPackageFilePath());
+    } else {
+      // request permission
+      ActivityCompat.requestPermissions(this, permsList.toTypedArray(), 2);
     }
   }
 
