@@ -1,6 +1,6 @@
 # Buffer
 
-Create a buffer around a map point and display the results as a `Graphic`
+Create a buffer around a map point and display the results as a `Graphic`.
 
 ![Image](buffer.png)
 
@@ -36,4 +36,4 @@ For more information about using buffer analysis, see [How buffer analysis works
 
 ## Tags
 
-Analysis, Planar, GeometryEngine, BufferGeodetic, Geodesic, Euclidean
+analysis, planar, geodesic, euclidean
