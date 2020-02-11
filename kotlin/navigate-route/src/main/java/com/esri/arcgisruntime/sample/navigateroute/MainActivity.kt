@@ -50,31 +50,30 @@ class MainActivity : AppCompatActivity() {
   private var textToSpeech: TextToSpeech? = null
   private var isTextToSpeechInitialized = false
 
-  private val simulatedLocationDataSource : SimulatedLocationDataSource? = null
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
     // create a map and set it to the map view
     val map = ArcGISMap(Basemap.createStreetsVector())
-    mapView.setMap(map)
+    mapView.map = map
 
     // create a graphics overlay to hold our route graphics
     val graphicsOverlay = GraphicsOverlay()
-    mapView.getGraphicsOverlays().add(graphicsOverlay)
+    mapView.graphicsOverlays.add(graphicsOverlay)
 
     // TODO: initialize by lazy?
+    // NOTE: Tried to initialize by lazy but it references itself inside the callback.
     // initialize text-to-speech to replay navigation voice guidance
     textToSpeech = TextToSpeech(this){ status ->
       if (status != TextToSpeech.ERROR) {
-        textToSpeech?.setLanguage(Resources.getSystem().getConfiguration().locale)
+        textToSpeech?.language = Resources.getSystem().configuration.locale //NOTE: This is deprecated but the fix requires api 24 Maybe do a check as in texttospeech.speak
         isTextToSpeechInitialized = true
       }
     }
 
     // clear any graphics from the current graphics overlay
-    mapView.getGraphicsOverlays().get(0).getGraphics().clear()
+    mapView.graphicsOverlays[0].graphics.clear()
 
     // generate a route with directions and stops for navigation
     val routeTask = RouteTask(this, getString(R.string.routing_service_url))
@@ -86,25 +85,24 @@ class MainActivity : AppCompatActivity() {
         val routeParameters = routeParametersFuture.get()
         //TODO: What is getStops()?
         routeParameters.setStops(getStops())
-        routeParameters.setReturnDirections(true)
-        routeParameters.setReturnStops(true)
-        routeParameters.setReturnRoutes(true)
+        routeParameters.isReturnDirections = true
+        routeParameters.isReturnStops = true
+        routeParameters.isReturnRoutes = true
         val routeResultFuture = routeTask.solveRouteAsync(routeParameters)
         routeParametersFuture.addDoneListener {
           try {
             // get the route geometry from the route result
             val routeResult = routeResultFuture.get()
-            val routeGeometry = routeResult.getRoutes().get(0).getRouteGeometry()
+            val routeGeometry = routeResult.routes[0].routeGeometry
             // create a graphic for the route geometry
             val routeGraphic = Graphic(routeGeometry,
                 SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f))
             // add it to the graphics overlay
-            mapView.getGraphicsOverlays().get(0).getGraphics().add(routeGraphic)
+            mapView.graphicsOverlays[0].graphics.add(routeGraphic)
             // set the map view view point to show the whole route
-            mapView.setViewpointAsync(Viewpoint(routeGeometry.getExtent()))
+            mapView.setViewpointAsync(Viewpoint(routeGeometry.extent))
 
             //TODO: Change this comment
-            //TODO: Check that v can be deleted once the views are fixed.
             // create a button to start navigation with the given route
             navigateRouteButton.setOnClickListener{startNavigation(routeTask, routeParameters, routeResult)}
 
@@ -134,90 +132,85 @@ class MainActivity : AppCompatActivity() {
     }
 
     // wire up recenter button
-    recenterButton.setEnabled(false)
+    recenterButton.isEnabled = false
     recenterButton.setOnClickListener {
-      mapView.getLocationDisplay().setAutoPanMode(LocationDisplay.AutoPanMode.NAVIGATION)
-      recenterButton.setEnabled(false)
+      mapView.locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.NAVIGATION
+      recenterButton.isEnabled = false
     }
   }
 
   private fun startNavigation(routeTask: RouteTask, routeParameters: RouteParameters, routeResult: RouteResult) {
 
     // clear any graphics from the current graphics overlay
-    mapView.getGraphicsOverlays().get(0).getGraphics().clear()
+    mapView.graphicsOverlays[0].graphics.clear()
 
     // get the route's geometry from the route result
-    val routeGeometry = routeResult.getRoutes().get(0).getRouteGeometry()
+    val routeGeometry = routeResult.routes[0].routeGeometry
     // create a graphic (with a dashed line symbol) to represent the route
     val routeAheadGraphic = Graphic(routeGeometry,
         SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.MAGENTA, 5f))
-    mapView.getGraphicsOverlays().get(0).getGraphics().add(routeAheadGraphic)
+    mapView.graphicsOverlays[0].graphics.add(routeAheadGraphic)
     // create a graphic (solid) to represent the route that's been traveled (initially empty)
     val routeTraveledGraphic = Graphic(routeGeometry,
         SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f))
-    mapView.getGraphicsOverlays().get(0).getGraphics().add(routeTraveledGraphic)
+    mapView.graphicsOverlays[0].graphics.add(routeTraveledGraphic)
 
     // get the map view's location display
-    val locationDisplay = mapView.getLocationDisplay()
+    val locationDisplay = mapView.locationDisplay
     // set up a simulated location data source which simulates movement along the route
     val simulatedLocationDataSource = SimulatedLocationDataSource(routeGeometry)
     // set the simulated location data source as the location data source for this app
-    locationDisplay.setLocationDataSource(simulatedLocationDataSource)
-    locationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.NAVIGATION)
+    locationDisplay.locationDataSource = simulatedLocationDataSource
+    locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.NAVIGATION
     // if the user navigates the map view away from the location display, activate the recenter button
     //TODO: Deleted a thing here, double check it's okay
-    locationDisplay.addAutoPanModeChangedListener {recenterButton.setEnabled(true)}
+    locationDisplay.addAutoPanModeChangedListener { recenterButton.isEnabled = true }
     // set up a RouteTracker for navigation along the calculated route
-    val routeTracker = RouteTracker(getApplicationContext(), routeResult, 0)
+    val routeTracker = RouteTracker(applicationContext, routeResult, 0)
     routeTracker.enableReroutingAsync(routeTask, routeParameters,
         RouteTracker.ReroutingStrategy.TO_NEXT_WAYPOINT, true)
 
     // listen for changes in location
     locationDisplay.addLocationChangedListener { locationChangedEvent ->
       // track the location and update route tracking status
-      val trackLocationFuture = routeTracker.trackLocationAsync(locationChangedEvent.getLocation())
+      val trackLocationFuture = routeTracker.trackLocationAsync(locationChangedEvent.location)
       trackLocationFuture.addDoneListener {
         // listen for new voice guidance events
         routeTracker.addNewVoiceGuidanceListener { newVoiceGuidanceEvent ->
 
           //TODO: What are these functions?
           // use Android's text to speech to speak the voice guidance
-          speakVoiceGuidance(newVoiceGuidanceEvent.getVoiceGuidance().getText())
-          nextDirectionTextView
-            .setText(
-              getString(
-                R.string.next_direction,
-                newVoiceGuidanceEvent.getVoiceGuidance().getText()
-              )
-            )
+          speakVoiceGuidance(newVoiceGuidanceEvent.voiceGuidance.text)
+          nextDirectionTextView.text = getString(
+            R.string.next_direction,
+            newVoiceGuidanceEvent.voiceGuidance.text
+          )
         }
 
         // get the route's tracking status
-        val trackingStatus = routeTracker.getTrackingStatus()
+        val trackingStatus = routeTracker.trackingStatus
         // set geometries for the route ahead and the remaining route
-        routeAheadGraphic.setGeometry(trackingStatus.getRouteProgress().getRemainingGeometry())
-        routeTraveledGraphic.setGeometry(trackingStatus.getRouteProgress().getTraversedGeometry())
+        routeAheadGraphic.geometry = trackingStatus.routeProgress.remainingGeometry
+        routeTraveledGraphic.geometry = trackingStatus.routeProgress.traversedGeometry
 
         // get remaining distance information
         val remainingDistance: TrackingStatus.Distance =
-          trackingStatus.getDestinationProgress().getRemainingDistance()
+          trackingStatus.destinationProgress.remainingDistance
         // covert remaining minutes to hours:minutes:seconds
         val remainingTimeString = DateUtils
-          .formatElapsedTime((trackingStatus.getDestinationProgress().getRemainingTime() * 60).toLong())
+          .formatElapsedTime((trackingStatus.destinationProgress.remainingTime * 60).toLong())
 
         // update text views
-        distanceRemainingTextView.setText(
-          getString(
-            R.string.distance_remaining, remainingDistance.getDisplayText(),
-            remainingDistance.getDisplayTextUnits().getPluralDisplayName()
-          )
+        distanceRemainingTextView.text = getString(
+          R.string.distance_remaining, remainingDistance.displayText,
+          remainingDistance.displayTextUnits.pluralDisplayName
         )
-        timeRemainingTextView.setText(getString(R.string.time_remaining, remainingTimeString))
+        timeRemainingTextView.text = getString(R.string.time_remaining, remainingTimeString)
 
         // if a destination has been reached
-        if (trackingStatus.getDestinationStatus() == DestinationStatus.REACHED) {
+        if (trackingStatus.destinationStatus == DestinationStatus.REACHED) {
           // if there are more destinations to visit. Greater than 1 because the start point is considered a "stop"
-          if (routeTracker.getTrackingStatus().getRemainingDestinationCount() > 1) {
+          if (routeTracker.trackingStatus.remainingDestinationCount > 1) {
             // switch to the next destination
             routeTracker.switchToNextDestinationAsync()
             Toast.makeText(
@@ -246,7 +239,7 @@ class MainActivity : AppCompatActivity() {
    */
   private fun speakVoiceGuidance(voiceGuidanceText: String) {
     //TODO: Get rid of that bang bang
-    if (isTextToSpeechInitialized && !textToSpeech?.isSpeaking()!!) {
+    if (isTextToSpeechInitialized && !textToSpeech?.isSpeaking!!) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         textToSpeech?.speak(voiceGuidanceText, TextToSpeech.QUEUE_FLUSH, null, null)
       } else {
