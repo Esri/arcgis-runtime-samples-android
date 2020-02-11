@@ -19,7 +19,7 @@
     "IdentifyLayerResult.SublayerResults"
   ],
   "snippets": [
-    "src/main/java/com/esri/arcgisruntime/sample/identifylayers/MainActivity.java"
+    "src/main/java/com/esri/arcgisruntime/sample/identifylayers/MainActivity.kt"
   ],
   "title": "Identify layers"
 }
