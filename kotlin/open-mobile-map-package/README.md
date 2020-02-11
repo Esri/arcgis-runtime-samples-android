@@ -30,6 +30,18 @@ When the sample opens, it will automatically display the map in the mobile map p
 
 This mobile map package shows points of interest within Yellowstone National Park. It is available for download [here on ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=e1f3a7254cb845b09450f54937c16061).
 
+## Offline data
+
+1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=e1f3a7254cb845b09450f54937c16061).
+1. Open your command prompt and navigate to the folder where you downloaded the data from step 1.
+1. Execute the following command:
+
+`adb push Yellowstone.mmpk /sdcard/Android/data/com.esri.arcgisruntime.sample.openmobilemappackage/files/Yellowstone.mmpk`
+
+Link | Local Location
+---------|-------|
+|[Yellowstone Mobile Map Package](https://www.arcgis.com/home/item.html?id=e1f3a7254cb845b09450f54937c16061)| `<sdcard>`/Android/data/com.esri.arcgisruntime.sample.openmobilemappackage/files/Yellowstone.mmpk |
+
 ## Tags
 
 mobile map package, mmpk, offline
