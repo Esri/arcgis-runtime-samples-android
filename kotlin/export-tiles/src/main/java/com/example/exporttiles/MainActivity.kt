@@ -17,7 +17,6 @@
 
 package com.example.exporttiles
 
-import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -44,10 +43,12 @@ import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheTask
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_layout.*
 import java.io.File
+import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
 
   private val TAG: String = MainActivity::class.java.simpleName
+  private lateinit var exportTileCacheJob: ExportTileCacheJob
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -70,25 +71,26 @@ class MainActivity : AppCompatActivity() {
       // set the map to the map view
       this.map = map
       setViewpoint(Viewpoint(51.5, 0.0, 10000000.0))
+
       // add the graphics overlay to the map view
       graphicsOverlays.add(graphicsOverlay)
-    }
 
-    // update the box whenever the viewpoint changes
-    mapView.addViewpointChangedListener {
-      if (mapView.map.loadStatus == LoadStatus.LOADED) {
-        // upper left corner of the downloaded tile cache area
-        val minScreenPoint: android.graphics.Point = android.graphics.Point(150, 175)
-        // lower right corner of the downloaded tile cache area
-        val maxScreenPoint: android.graphics.Point = android.graphics.Point(
-          mapView.getWidth() - 150,
-          mapView.getHeight() - 250
-        )
-        // convert screen points to map points
-        val minPoint: Point? = mapView?.screenToLocation(minScreenPoint)
-        val maxPoint: Point? = mapView?.screenToLocation(maxScreenPoint)
-        // use the points to define and return an envelope
-        downloadArea.geometry = Envelope(minPoint, maxPoint)
+      // update the box whenever the viewpoint changes
+      addViewpointChangedListener {
+        if (mapView.map.loadStatus == LoadStatus.LOADED) {
+          // upper left corner of the downloaded tile cache area
+          val minScreenPoint: android.graphics.Point = android.graphics.Point(150, 175)
+          // lower right corner of the downloaded tile cache area
+          val maxScreenPoint: android.graphics.Point = android.graphics.Point(
+            mapView.width - 150,
+            mapView.height - 250
+          )
+          // convert screen points to map points
+          val minPoint: Point = mapView.screenToLocation(minScreenPoint)
+          val maxPoint: Point = mapView.screenToLocation(maxScreenPoint)
+          // use the points to define and return an envelope
+          downloadArea.geometry = Envelope(minPoint, maxPoint)
+        }
       }
     }
 
@@ -106,42 +108,52 @@ class MainActivity : AppCompatActivity() {
         )
 
       parametersFuture.addDoneListener {
-        val parameters: ExportTileCacheParameters = parametersFuture.get()
-        // export tiles to temporary cache on device
-        val exportTileCacheJob =
-          exportTileCacheTask.exportTileCache(parameters, exportTilesDirectory.path + "file.tpk")
-        exportTileCacheJob.start()
-        // create and show a progress dialog to show export tile progress
-        val dialog = createProgressDialog(exportTileCacheJob)
-        dialog.show()
 
-        // show progress of the export tile cache job on the progress bar
-        exportTileCacheJob.addProgressChangedListener {
-          dialog.progressBar.progress = exportTileCacheJob.progress
-        }
+        try {
+          val parameters: ExportTileCacheParameters = parametersFuture.get()
+          // export tiles to temporary cache on device
+          exportTileCacheJob =
+            exportTileCacheTask.exportTileCache(
+              parameters,
+              exportTilesDirectory.path + "file.tpk"
+            ).apply {
+              // create and show a progress dialog to show export tile progress
+              val dialog = createProgressDialog(exportTileCacheJob)
+              dialog.show()
+              // show progress of the export tile cache job on the progress bar
+              addProgressChangedListener {
+                dialog.progressBar.progress = progress
+              }
 
-        exportTileCacheJob.addJobDoneListener {
-          dialog.dismiss()
-          if (exportTileCacheJob.status == Job.Status.SUCCEEDED) {
-            val exportedTileCacheResult: TileCache = exportTileCacheJob.result
-            showMapPreview(exportedTileCacheResult)
-          } else {
-            Log.e(TAG, exportTileCacheJob.error.additionalMessage)
-            Toast.makeText(
-              this, exportTileCacheJob.error.additionalMessage, Toast.LENGTH_LONG
-            ).show()
-          }
+              addJobDoneListener {
+                dialog.dismiss()
+                if (status == Job.Status.SUCCEEDED) {
+                  val exportedTileCacheResult: TileCache = result
+                  showMapPreview(exportedTileCacheResult)
+                } else {
+                  ("Job did not succeed: " + error.additionalMessage).also {
+                    Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG).show()
+                    Log.e(TAG, error.additionalMessage)
+                  }
+                }
+              }
+            }
+        } catch (e: InterruptedException) {
+          Toast.makeText(this, "TileCacheParameters interrupted: " + e.message, Toast.LENGTH_LONG).show()
+          Log.e(TAG, "TileCacheParameters interrupted: " + e.message)
+        } catch (e: ExecutionException) {
+          Toast.makeText(this, "Error generating parameters: " + e.message, Toast.LENGTH_LONG).show()
+          Log.e(TAG, "Error generating parameters: " + e.message)
         }
       }
     }
 
     // close the preview window
-    closeButton.setOnClickListener { clearPreview() }
-    clearPreview()
+//    clearPreview() //todo check this on the device
   }
 
   /**
-   * Show tile cache preview window including containing the exported tils.
+   * Show tile cache preview window including containing the exported tiles.
    *
    * @param result takes the TileCache from the ExportTileCacheJob
    */
@@ -166,8 +178,7 @@ class MainActivity : AppCompatActivity() {
    * @return an AlertDialog set with the dialog layout view
    */
   private fun createProgressDialog(exportTileCacheJob: ExportTileCacheJob): AlertDialog {
-    val builder = AlertDialog.Builder(this@MainActivity)
-    with(builder) {
+    val builder = AlertDialog.Builder(this@MainActivity).apply {
       setTitle("Exporting tiles...")
       // provide a cancel button on the dialog
       setNeutralButton("Cancel") { _, _ ->
@@ -182,7 +193,7 @@ class MainActivity : AppCompatActivity() {
   /**
    * Clear the preview window.
    */
-  private fun clearPreview() {
+  fun clearPreview(view: View) {
     previewMapView.getChildAt(0).visibility = View.INVISIBLE
     mapView.bringToFront()
     exportTilesButton.visibility = View.VISIBLE
@@ -213,17 +224,20 @@ class MainActivity : AppCompatActivity() {
   override fun onResume() {
     super.onResume()
     mapView.resume()
+    previewMapView.resume()
   }
 
   override fun onPause() {
     mapView.pause()
+    previewMapView.pause()
     // delete app cache when the app loses focus
-    deleteDirectory(getCacheDir())
+    deleteDirectory(cacheDir)
     super.onPause()
   }
 
   override fun onDestroy() {
     mapView.dispose()
+    previewMapView.dispose()
     super.onDestroy()
   }
 }
