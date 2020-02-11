@@ -60,12 +60,15 @@ class MainActivity : AppCompatActivity() {
         // create a list of utility network attributes whose system is not defined
         sources = utilityNetwork.definition.networkAttributes.filter { !it.isSystemDefined }
           .also { sources ->
-            // assign source spinner an adapter of source names and an on item selected listener
+
             sourceSpinner.apply {
+              // assign an adapter to the spinner with source names
               adapter = ArrayAdapter<String>(
                 applicationContext,
                 android.R.layout.simple_spinner_item,
                 sources.map { it.name })
+
+              // add an on item selected listener which calls on comparison source changed
               onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                   parent: AdapterView<*>?,
@@ -204,7 +207,7 @@ class MainActivity : AppCompatActivity() {
       // if the trace configuration doesn't contain traversability, create one
       traversability ?: UtilityTraversability()
     }
-    
+
     // get the currently selected attribute
     val attribute = sources?.get(sourceSpinner.selectedItemPosition)
     attribute?.let {
@@ -274,8 +277,8 @@ class MainActivity : AppCompatActivity() {
           }
         }
       }
-    } catch (exception: Exception) {
-      ("Error during trace operation: " + exception.message).also {
+    } catch (e: Exception) {
+      ("Error during trace operation: " + e.message).also {
         Toast.makeText(this, it, Toast.LENGTH_LONG).show()
         Log.e(TAG, it)
       }
@@ -293,15 +296,20 @@ class MainActivity : AppCompatActivity() {
       }
       // when the expression is an attribute comparison expression
       is UtilityNetworkAttributeComparison -> {
+        // the name and comparison operator of the expression
+        val networkAttributeNameAndOperator =
+          expression.networkAttribute.name + " " + expression.comparisonOperator + " "
+        // the
         (expression.networkAttribute.domain as? CodedValueDomain)?.let { codedValueDomain ->
           // if there's a coded value domain name
           val codedValueDomainName = codedValueDomain.codedValues.first {
             convertToDataType(it.code, expression.networkAttribute.dataType) ==
                 convertToDataType(expression.value, expression.networkAttribute.dataType)
           }.name
-          return expression.networkAttribute.name + " " + expression.comparisonOperator + " " + codedValueDomainName
+          return networkAttributeNameAndOperator + codedValueDomainName
         }
-          ?: return expression.networkAttribute.name + " " + expression.comparisonOperator + " " + (expression.otherNetworkAttribute?.name
+        // if there's no coded value domain name
+          ?: return networkAttributeNameAndOperator + (expression.otherNetworkAttribute?.name
             ?: expression.value)
       }
       // when the expression is an utility trace AND condition
@@ -330,8 +338,8 @@ class MainActivity : AppCompatActivity() {
    */
   fun reset(view: View) {
     initialExpression?.let {
-      val traceConfiguration = sourceTier?.traceConfiguration as UtilityTraceConfiguration
-      traceConfiguration.traversability.barriers = it
+      val traceConfiguration = sourceTier?.traceConfiguration
+      traceConfiguration?.traversability?.barriers = it
       expressionTextView.text = expressionToString(it)
     }
   }
