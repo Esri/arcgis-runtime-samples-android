@@ -65,16 +65,15 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // create a surface for elevation data
-    val localElevationImageService = getString(R.string.elevation_service)
     val surface = Surface().apply {
-      elevationSources.add(ArcGISTiledElevationSource(localElevationImageService))
+      elevationSources.add(ArcGISTiledElevationSource(getString(R.string.elevation_service)))
     }
 
     // create a layer of buildings
     val buildingsLayer = ArcGISSceneLayer(getString(R.string.buildings_layer))
 
     // create a scene and add imagery basemap, elevation surface, and buildings layer to it
-    val scene = ArcGISScene().apply {
+    val buildingsScene = ArcGISScene().apply {
       basemap = Basemap.createImagery()
       baseSurface = surface
       operationalLayers.add(buildingsLayer)
@@ -96,18 +95,19 @@ class MainActivity : AppCompatActivity() {
       setFrustumOutlineVisible(true)
     }
 
-    // add a camera and set it to orbit the location point of the frustum
-    val camera = Camera(initLocation, 20000000.0, 0.0, 55.0, 0.0)
-    val orbitCamera = OrbitLocationCameraController(initLocation, 5000.0)
     sceneView.apply {
-      this.scene = scene
-      this.cameraController = orbitCamera
-      this.setViewpointCamera(camera)
+      //add the buildings scene to the sceneView
+      scene = buildingsScene
+      // add a camera and set it to orbit the location point of the frustum
+      cameraController = OrbitLocationCameraController(initLocation, 5000.0)
+      setViewpointCamera(Camera(initLocation, 20000000.0, 0.0, 55.0, 0.0))
     }
 
     // create an analysis overlay to add the viewshed to the scene view
-    val analysisOverlay = AnalysisOverlay()
-    analysisOverlay.analyses.add(viewShed)
+    val analysisOverlay = AnalysisOverlay().apply {
+      analyses.add(viewShed)
+    }
+
     sceneView.analysisOverlays.add(analysisOverlay)
 
     // initialize the UI controls
@@ -137,13 +137,9 @@ class MainActivity : AppCompatActivity() {
             // add 50 meters to location point and set to viewshed
             viewShed.location = Point(locationPoint.x, locationPoint.y, locationPoint.z + 50)
           } catch (e: InterruptedException) {
-            val error = "Error converting screen point to location point: " + e.message
-            Log.e(TAG, error)
-            Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
+            logError("Error converting screen point to location point: " + e.message)
           } catch (e: ExecutionException) {
-            val error = "Error converting screen point to location point: " + e.message
-            Log.e(TAG, error)
-            Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
+            logError("Error converting screen point to location point: " + e.message)
           }
         }
 
@@ -290,10 +286,7 @@ class MainActivity : AppCompatActivity() {
       currHorizontalAngle.text = horizontalAngle.toString()
       viewShed.horizontalAngle = horizontalAngle.toDouble()
     } else {
-      Log.e(
-        TAG,
-        "Horizontal angle must be greater than 0 and less than or equal to 120."
-      )
+      logError("Horizontal angle must be greater than 0 and less than or equal to 120.")
     }
   }
 
@@ -308,10 +301,7 @@ class MainActivity : AppCompatActivity() {
       currVerticalAngle.text = verticalAngle.toString()
       viewShed.verticalAngle = verticalAngle.toDouble()
     } else {
-      Log.e(
-        TAG,
-        "Vertical angle must be greater than 0 and less than or equal to 120."
-      )
+      logError("Vertical angle must be greater than 0 and less than or equal to 120.")
     }
   }
 
@@ -350,5 +340,16 @@ class MainActivity : AppCompatActivity() {
   override fun onDestroy() {
     sceneView.dispose()
     super.onDestroy()
+  }
+
+  /**
+   * Log an error to logcat and to the screen via Toast
+   * @param message the text to log
+   */
+  private fun logError(message: String?) {
+    message?.let {
+      Log.e(TAG, message)
+      Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
   }
 }
