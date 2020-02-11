@@ -111,15 +111,9 @@ class MainActivity : AppCompatActivity() {
         val identifyLayerResults = identifyLayerResultsFuture.get()
         handleIdentifyResults(identifyLayerResults)
       } catch (e: InterruptedException) {
-        "Error identifying results: ${e.message}".also {
-          Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-          Log.e(TAG, it)
-        }
+        logError("Error identifying results ${e.message}")
       } catch (e: ExecutionException) {
-        "Error identifying results: ${e.message}".also {
-          Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-          Log.e(TAG, it)
-        }
+        logError("Error identifying results ${e.message}")
       }
     }
   }
@@ -148,8 +142,7 @@ class MainActivity : AppCompatActivity() {
     if (totalCount > 0) {
       showAlertDialog(message)
     } else {
-      Toast.makeText(this, "No element found", Toast.LENGTH_SHORT).show()
-      Log.i(TAG, "No element found.")
+      logError("No element found")
     }
   }
 
@@ -200,7 +193,7 @@ class MainActivity : AppCompatActivity() {
     alertDialogBuilder
       .setMessage(message)
       .setCancelable(false)
-      .setPositiveButton(getString(R.string.ok)){ dialog, which -> }
+      .setPositiveButton(getString(R.string.ok)) { dialog, which -> }
 
     // create alert dialog
     val alertDialog = alertDialogBuilder.create()
@@ -222,6 +215,20 @@ class MainActivity : AppCompatActivity() {
   override fun onDestroy() {
     mapView.dispose()
     super.onDestroy()
+  }
+
+  /**
+   * Log an error to logcat and to the screen via Toast.
+   * @param message the text to log
+   */
+  private fun logError(message: String?) {
+    message?.let {
+      Log.e(
+        TAG,
+        message
+      )
+      Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
   }
 
 }
