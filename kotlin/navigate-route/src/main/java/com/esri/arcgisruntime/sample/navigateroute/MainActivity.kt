@@ -27,7 +27,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
-import com.esri.arcgisruntime.location.LocationDataSource
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
@@ -69,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     // initialize text-to-speech to replay navigation voice guidance
     textToSpeech = TextToSpeech(this){ status ->
       if (status != TextToSpeech.ERROR) {
-        textToSpeech.setLanguage(Resources.getSystem().getConfiguration().locale)
+        textToSpeech?.setLanguage(Resources.getSystem().getConfiguration().locale)
         isTextToSpeechInitialized = true
       }
     }
@@ -107,7 +106,7 @@ class MainActivity : AppCompatActivity() {
             //TODO: Change this comment
             //TODO: Check that v can be deleted once the views are fixed.
             // create a button to start navigation with the given route
-            navigateRouteButton.setOnClickListener{v -> v.startNavigation(routeTask, routeParameters, routeResult)}
+            navigateRouteButton.setOnClickListener{startNavigation(routeTask, routeParameters, routeResult)}
 
             // start navigating
             startNavigation(routeTask, routeParameters, routeResult)
@@ -174,18 +173,23 @@ class MainActivity : AppCompatActivity() {
         RouteTracker.ReroutingStrategy.TO_NEXT_WAYPOINT, true)
 
     // listen for changes in location
-    locationDisplay.addLocationChangedListener {locationChangedEvent: LocationDataSource.LocationChangedEvent ->
+    locationDisplay.addLocationChangedListener { locationChangedEvent ->
       // track the location and update route tracking status
       val trackLocationFuture = routeTracker.trackLocationAsync(locationChangedEvent.getLocation())
       trackLocationFuture.addDoneListener {
         // listen for new voice guidance events
-        routeTracker.addNewVoiceGuidanceListener  {newVoiceGuidanceEvent ->
+        routeTracker.addNewVoiceGuidanceListener { newVoiceGuidanceEvent ->
 
           //TODO: What are these functions?
           // use Android's text to speech to speak the voice guidance
           speakVoiceGuidance(newVoiceGuidanceEvent.getVoiceGuidance().getText())
           nextDirectionTextView
-              .setText(getString(R.string.next_direction, newVoiceGuidanceEvent.getVoiceGuidance().getText()))
+            .setText(
+              getString(
+                R.string.next_direction,
+                newVoiceGuidanceEvent.getVoiceGuidance().getText()
+              )
+            )
         }
 
         // get the route's tracking status
@@ -195,14 +199,19 @@ class MainActivity : AppCompatActivity() {
         routeTraveledGraphic.setGeometry(trackingStatus.getRouteProgress().getTraversedGeometry())
 
         // get remaining distance information
-        val remainingDistance: TrackingStatus.Distance = trackingStatus.getDestinationProgress().getRemainingDistance()
+        val remainingDistance: TrackingStatus.Distance =
+          trackingStatus.getDestinationProgress().getRemainingDistance()
         // covert remaining minutes to hours:minutes:seconds
         val remainingTimeString = DateUtils
-            .formatElapsedTime( (trackingStatus.getDestinationProgress().getRemainingTime() * 60).toLong())
+          .formatElapsedTime((trackingStatus.getDestinationProgress().getRemainingTime() * 60).toLong())
 
         // update text views
-        distanceRemainingTextView.setText(getString(R.string.distance_remaining, remainingDistance.getDisplayText(),
-            remainingDistance.getDisplayTextUnits().getPluralDisplayName()))
+        distanceRemainingTextView.setText(
+          getString(
+            R.string.distance_remaining, remainingDistance.getDisplayText(),
+            remainingDistance.getDisplayTextUnits().getPluralDisplayName()
+          )
+        )
         timeRemainingTextView.setText(getString(R.string.time_remaining, remainingTimeString))
 
         // if a destination has been reached
@@ -211,16 +220,21 @@ class MainActivity : AppCompatActivity() {
           if (routeTracker.getTrackingStatus().getRemainingDestinationCount() > 1) {
             // switch to the next destination
             routeTracker.switchToNextDestinationAsync()
-            Toast.makeText(this, "Navigating to the second stop, the Fleet Science Center.", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+              this,
+              "Navigating to the second stop, the Fleet Science Center.",
+              Toast.LENGTH_LONG
+            ).show()
           } else {
             // the final destination has been reached, stop the simulated location data source
-            //TODO: onStop is protected?
+            //TODO: onStop is protected? Why are we directly calling onStop anyway?
             simulatedLocationDataSource.onStop()
             Toast.makeText(this, "Arrived at the final destination.", Toast.LENGTH_LONG).show()
           }
         }
-      })
-    })
+      }
+    }
+
 
     // start the LocationDisplay, which starts the SimulatedLocationDataSource
     locationDisplay.startAsync()

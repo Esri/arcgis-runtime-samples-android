@@ -39,7 +39,8 @@ internal class SimulatedLocationDataSource(private val route: Polyline) :
   private var currentLocation: Point? = null
   private var timer: Timer? = null
   private var distance = 0.0
-  override fun onStop() {
+  //TODO: This had to be made public for the mainactivity to work but I feel that it should not be.
+  public override fun onStop() {
     timer?.cancel()
   }
 
