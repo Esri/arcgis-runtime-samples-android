@@ -19,6 +19,9 @@ package com.esri.arcgisruntime.sample.findaddress
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.esri.arcgisruntime.mapping.ArcGISMap
+import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.Viewpoint
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +29,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // create a map with a topographic basemap
+        val topographicBasemap = ArcGISMap(Basemap.createTopographic())
+
+        mapView.apply {
+            // set the map to be displayed in the mapview
+            map = topographicBasemap
+            // set the map viewpoint to start over North America
+            setViewpoint(Viewpoint(40.0, -100.0, 10000000.0))
+        }
     }
 
     override fun onResume() {
