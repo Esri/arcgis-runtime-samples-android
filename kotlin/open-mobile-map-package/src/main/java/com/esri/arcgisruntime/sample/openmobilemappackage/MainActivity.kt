@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
 
   /**
    * Log an error to logcat and to the screen via Toast.
-   * @param message the text to log
+   * @param message the text to log.
    */
   private fun logError(message: String?) {
     message?.let {
@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
 
   /**
    * Log a debug message to logcat for debuggable builds only.
-   * @param message the text to log
+   * @param message the text to log.
    */
   private fun logDebug(message: String?) {
     if (BuildConfig.DEBUG) {
