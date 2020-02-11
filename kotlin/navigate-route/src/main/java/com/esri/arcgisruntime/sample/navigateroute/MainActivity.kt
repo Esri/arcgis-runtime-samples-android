@@ -25,7 +25,6 @@ import android.text.format.DateUtils
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.location.LocationDataSource
@@ -43,8 +42,9 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
-import java.util.ArrayList
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.layout_navigation_controls.*
+import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
 
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
   private val simulatedLocationDataSource : SimulatedLocationDataSource? = null
 
-  override protected fun onCreate(savedInstanceState: Bundle?) {
+  override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
@@ -111,19 +111,28 @@ class MainActivity : AppCompatActivity() {
 
             // start navigating
             startNavigation(routeTask, routeParameters, routeResult)
-            //TODO: Fix errors
-          } catch (ExecutionException | InterruptedException e) {
-            String error = "Error creating default route parameters: " + e.getMessage()
+          }
+          catch (e: Exception) {
+            when (e) {
+              is InterruptedException, is ExecutionException -> {
+                val error = "Error creating default route parameters: " + e.message
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                Log.e(TAG, error)
+              }
+            }
+          }
+        }
+      }
+      catch (e: Exception) {
+        when (e) {
+          is InterruptedException, is ExecutionException -> {
+            val error = "Error getting the route result " + e.message
             Toast.makeText(this, error, Toast.LENGTH_LONG).show()
             Log.e(TAG, error)
           }
-        })
-      } catch (InterruptedException | ExecutionException e) {
-        String error = "Error getting the route result " + e.getMessage()
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-        Log.e(TAG, error)
+        }
       }
-    })
+    }
 
     // wire up recenter button
     recenterButton.setEnabled(false)
@@ -233,17 +242,17 @@ class MainActivity : AppCompatActivity() {
   }
 
   //ToDO: Lifecycle arrangement
-  override protected fun onPause() {
+  override fun onPause() {
     mapView.pause()
     super.onPause()
   }
 
-  override protected fun onResume() {
+  override fun onResume() {
     super.onResume()
     mapView.resume()
   }
 
-  override protected fun onDestroy() {
+  override fun onDestroy() {
     mapView.dispose()
     super.onDestroy()
   }
