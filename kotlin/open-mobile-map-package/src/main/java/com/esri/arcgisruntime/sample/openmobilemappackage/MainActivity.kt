@@ -17,53 +17,34 @@
 
 package com.esri.arcgisruntime.sample.openmobilemappackage
 
-import android.Manifest
-import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import java.lang.IllegalStateException
+import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.MobileMapPackage
-import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
 
-  companion object {
-    private val TAG: String = MainActivity::class.java.simpleName
-  }
+  val TAG: String = MainActivity::class.java.simpleName
 
   private val mobileMapPackageFileExtension = "mmpk"
   private lateinit var mapPackage: MobileMapPackage
-  val permsList = listOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    requestReadPermissionAndLoadPackage()
-
-  }
-
-  private fun requestReadPermissionAndLoadPackage() {
     val mobileMapFilePath = createMobileMapPackageFilePath()
-
-    // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-      == PackageManager.PERMISSION_GRANTED
-    ) {
-      // load the offline mobile map package
-      loadMobileMapPackage(mobileMapFilePath);
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, permsList.toTypedArray(), 2);
+    try {
+      loadMobileMapPackage(mobileMapFilePath)
+    } catch (illegalStateException: IllegalStateException) {
+      logError(illegalStateException.message)
     }
+
   }
 
   /**
@@ -71,21 +52,20 @@ class MainActivity : AppCompatActivity() {
    */
   private fun createMobileMapPackageFilePath(): String {
 
-    val extStoreDir = Environment.getExternalStorageDirectory()
-    val sdCarDir = getString(R.string.config_data_sdcard_offline_dir)
     val fileName = getString(R.string.yellowstone_mmpk)
-
-    extStoreDir.absolutePath.also {
+    getExternalFilesDir(null)?.path?.let {
       val builder = StringBuilder(it)
-        .append(File.separator)
-        .append(sdCarDir)
         .append(File.separator)
         .append(fileName)
         .append(".")
         .append(mobileMapPackageFileExtension)
 
+      logDebug("full path to file $builder")
       return builder.toString()
     }
+
+
+    throw IllegalStateException("couldn't access files dir")
   }
 
   /**
@@ -103,32 +83,13 @@ class MainActivity : AppCompatActivity() {
     // add done listener which will invoke when mobile map package has loaded
     mapPackage.addDoneLoadingListener() {
       // check load status and that the mobile map package has maps
-      mapView.map =
-        if (mapPackage.getLoadStatus() === LoadStatus.LOADED && mapPackage.maps.isNotEmpty()) {
-          // add the map from the mobile map package to the MapView
-          mapPackage.maps[0]
-        } else {
-          // log an issue if the mobile map package fails to load
-          mapPackage.loadError.message?.let {
-            Log.e(TAG, it)
-            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-          }
-          null
-        }
-    }
-  }
-
-  override fun onRequestPermissionsResult(
-    requestCode: Int,
-    permissions: Array<out String>,
-    grantResults: IntArray
-  ) {
-    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      // load the offline mobile map package
-      loadMobileMapPackage(createMobileMapPackageFilePath());
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, permsList.toTypedArray(), 2);
+      if (mapPackage.getLoadStatus() === LoadStatus.LOADED && mapPackage.maps.isNotEmpty()) {
+        // add the map from the mobile map package to the MapView
+        mapView.map = mapPackage.maps[0]
+      } else {
+        // log an issue if the mobile map package fails to load
+        logError(mapPackage.loadError.message)
+      }
     }
   }
 
@@ -146,4 +107,26 @@ class MainActivity : AppCompatActivity() {
     mapView.dispose()
     super.onDestroy()
   }
+
+  private fun logError(message: String?) {
+    message?.let {
+      Log.e(
+        TAG,
+        message
+      )
+      Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
+  }
+
+  private fun logDebug(message: String?) {
+    if (BuildConfig.DEBUG) {
+      message?.let {
+        Log.d(
+          TAG,
+          message
+        )
+      }
+    }
+  }
 }
+
