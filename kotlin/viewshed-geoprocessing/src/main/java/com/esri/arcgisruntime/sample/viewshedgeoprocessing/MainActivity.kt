@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.viewshedgeoprocessing
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -56,12 +57,7 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a map with the Basemap type topographic
-    val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 45.3790902612337, 6.84905317262762, 12)
-    // set the map to be displayed in this view
-    mapView.map = map
-
-    // renderer for graphics overlays
+    // create renderers for graphics overlays
     val fillColor = Color.argb(120, 226, 119, 40)
     val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, fillColor, null)
     resultGraphicsOverlay.renderer = SimpleRenderer(fillSymbol)
@@ -73,25 +69,26 @@ class MainActivity : AppCompatActivity() {
     )
     inputGraphicsOverlay.renderer = SimpleRenderer(pointSymbol)
 
-    // add graphics overlays to the map view
-    mapView.graphicsOverlays.apply {
-      add(resultGraphicsOverlay)
-      add(inputGraphicsOverlay)
-    }
-
-    mapView.onTouchListener = object : DefaultMapViewOnTouchListener(
-      applicationContext,
-      mapView
-    ) {
-      override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-        val screenPoint = android.graphics.Point(
-          e.x.roundToInt(),
-          e.y.roundToInt()
-        )
-        val mapPoint = mMapView.screenToLocation(screenPoint)
-        addGraphicForPoint(mapPoint)
-        calculateViewshedAt(mapPoint)
-        return super.onSingleTapConfirmed(e)
+    mapView.apply {
+      // create a map with the Basemap type topographic
+      map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 45.3790902612337, 6.84905317262762, 12)
+      // add graphics overlays to the map view
+      graphicsOverlays.addAll(listOf(resultGraphicsOverlay,inputGraphicsOverlay))
+      // add onTouchListener for calculating the new viewshed
+      onTouchListener = object : DefaultMapViewOnTouchListener(
+        applicationContext,
+        mapView
+      ) {
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+          val screenPoint = android.graphics.Point(
+            e.x.roundToInt(),
+            e.y.roundToInt()
+          )
+          val mapPoint = mMapView.screenToLocation(screenPoint)
+          addGraphicForPoint(mapPoint)
+          calculateViewshedFrom(mapPoint)
+          return super.onSingleTapConfirmed(e)
+        }
       }
     }
   }
@@ -114,7 +111,7 @@ class MainActivity : AppCompatActivity() {
    *
    * @param point in MapView coordinates.
    */
-  private fun calculateViewshedAt(point: Point) {
+  private fun calculateViewshedFrom(point: Point) {
     // remove previous graphics
     resultGraphicsOverlay.graphics.clear()
 
@@ -174,12 +171,12 @@ class MainActivity : AppCompatActivity() {
           if (geoprocessingJob?.status == Job.Status.SUCCEEDED) {
             val geoprocessingResult = geoprocessingJob?.result
             // get the viewshed from geoprocessingResult
-            val resultFeatures =
-              geoprocessingResult?.outputs?.get("Viewshed_Result") as GeoprocessingFeatures
-            val featureSet = resultFeatures.features
-            for (feature in featureSet) {
-              val graphic = Graphic(feature.geometry)
-              resultGraphicsOverlay.graphics.add(graphic)
+            (geoprocessingJob?.result?.outputs?.get("Viewshed_Result") as? GeoprocessingFeatures)?.let { viewshedResult ->
+              // for each feature in the result
+              for (feature in viewshedResult.features) {
+                // add the feature as a graphic
+                resultGraphicsOverlay.graphics.add(Graphic(feature.geometry))
+              }
             }
           } else {
             Toast.makeText(
@@ -192,7 +189,10 @@ class MainActivity : AppCompatActivity() {
       }
       catch (e: Exception) {
         when (e) {
-          is InterruptedException, is ExecutionException -> e.printStackTrace()
+          is InterruptedException, is ExecutionException -> ("Error getting geoprocessing result: " + e.message).also {
+            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+            Log.e(TAG, it)
+          }
           else -> throw e
         }
       }
@@ -212,5 +212,9 @@ class MainActivity : AppCompatActivity() {
   override fun onDestroy() {
     mapView.dispose()
     super.onDestroy()
+  }
+
+  companion object {
+    private val TAG: String = this::class.java.simpleName
   }
 }
