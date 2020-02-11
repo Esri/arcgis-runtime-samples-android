@@ -27,43 +27,47 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
 
-        // create a map with the BasemapType topographic
-        val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 47.495052, -121.786863, 12)
-        // set the map to be displayed in this view
-        mapView.map = map
+    // create a map with the BasemapType topographic
+    val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 47.495052, -121.786863, 12)
+    // set the map to be displayed in this view
+    mapView.map = map
 
-        // create a FAB to respond to attribution bar
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, resources.getString(R.string.message), Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
-
-        // set attribution bar listener
-        val params = fab.layoutParams as CoordinatorLayout.LayoutParams
-        mapView.addAttributionViewLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            val heightDelta = bottom - oldBottom
-            params.bottomMargin += heightDelta
-            Toast.makeText(this, "new bounds [" + left + "," + top + "," + right + "," + bottom + "]" +
-                    " old bounds [" + oldLeft + "," + oldTop + "," + oldRight + "," + oldBottom + "]", Toast.LENGTH_SHORT).show()
-        }
+    // create a FAB to respond to attribution bar
+    fab.setOnClickListener { view ->
+      Snackbar.make(view, resources.getString(R.string.message), Snackbar.LENGTH_LONG)
+        .setAction("Action", null).show()
     }
 
-    override fun onPause() {
-        super.onPause()
-        mapView.pause()
+    // set attribution bar listener
+    val params = fab.layoutParams as CoordinatorLayout.LayoutParams
+    mapView.addAttributionViewLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+      val heightDelta = bottom - oldBottom
+      params.bottomMargin += heightDelta
+      Toast.makeText(
+        this,
+        "new bounds [" + left + "," + top + "," + right + "," + bottom + "]" +
+            " old bounds [" + oldLeft + "," + oldTop + "," + oldRight + "," + oldBottom + "]",
+        Toast.LENGTH_SHORT
+      ).show()
     }
+  }
 
-    override fun onResume() {
-        super.onResume()
-        mapView.resume()
-    }
+  override fun onPause() {
+    super.onPause()
+    mapView.pause()
+  }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView.dispose()
-    }
+  override fun onResume() {
+    super.onResume()
+    mapView.resume()
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    mapView.dispose()
+  }
 }

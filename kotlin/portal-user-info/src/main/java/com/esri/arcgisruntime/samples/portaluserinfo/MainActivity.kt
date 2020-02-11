@@ -31,68 +31,69 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
 
-        // Set the DefaultAuthenticationChallengeHandler to allow authentication with the portal.
-        val handler = DefaultAuthenticationChallengeHandler(this)
-        AuthenticationManager.setAuthenticationChallengeHandler(handler)
-        // Set loginRequired to true always prompt for credential,
-        // When set to false to only login if required by the portal
-        val portal = Portal("http://www.arcgis.com", true)
+    // Set the DefaultAuthenticationChallengeHandler to allow authentication with the portal.
+    val handler = DefaultAuthenticationChallengeHandler(this)
+    AuthenticationManager.setAuthenticationChallengeHandler(handler)
+    // Set loginRequired to true always prompt for credential,
+    // When set to false to only login if required by the portal
+    val portal = Portal("http://www.arcgis.com", true)
 
-        portal.addDoneLoadingListener {
+    portal.addDoneLoadingListener {
 
-            when (portal.loadStatus) {
+      when (portal.loadStatus) {
 
-                LoadStatus.LOADED -> {
-                    val portalInformation = portal.portalInfo
-                    val portalInfoName = portalInformation.portalName
-                    portalName.text = portalInfoName
-                    // this portal does not require authentication, if null send toast message
-                    if(portal.user != null){
-                        // Get the authenticated portal user
-                        val user = portal.user
-                        // get the users full name
-                        val fullname = user.fullName
-                        userName.text = fullname
-                        // get the users email
-                        val userEmail = user.email
-                        email.text = userEmail
-                        // get the created date
-                        val startDate = user.created
-                        val simpleDateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.US)
-                        val formatDate = simpleDateFormat.format(startDate.time)
-                        createDate.text = formatDate
-                        // check if user profile thumbnail exists
-                        if(user.thumbnailFileName != null){
-                            // fetch the thumbnail
-                            val thumbnailFuture = user.fetchThumbnailAsync()
-                            thumbnailFuture.addDoneListener {
-                                val itemThumbnailData = thumbnailFuture.get()
-                                if(itemThumbnailData != null && itemThumbnailData.isNotEmpty()){
-                                    // create Bitmap to use as required
-                                    val itemThumbnail = BitmapFactory.decodeByteArray(itemThumbnailData, 0, itemThumbnailData.size)
-                                    // set the Bitmap to the ImageView
-                                    userImage.setImageBitmap(itemThumbnail)
-                                }
-                            }
-                        } else {
-                            toast("No thumbnail associated with $fullname")
-                        }
-                    } else {
-                        toast("User did not authenticate against $portalInfoName")
-                    }
+        LoadStatus.LOADED -> {
+          val portalInformation = portal.portalInfo
+          val portalInfoName = portalInformation.portalName
+          portalName.text = portalInfoName
+          // this portal does not require authentication, if null send toast message
+          if (portal.user != null) {
+            // Get the authenticated portal user
+            val user = portal.user
+            // get the users full name
+            val fullname = user.fullName
+            userName.text = fullname
+            // get the users email
+            val userEmail = user.email
+            email.text = userEmail
+            // get the created date
+            val startDate = user.created
+            val simpleDateFormat = SimpleDateFormat("dd-MMM-yyyy", Locale.US)
+            val formatDate = simpleDateFormat.format(startDate.time)
+            createDate.text = formatDate
+            // check if user profile thumbnail exists
+            if (user.thumbnailFileName != null) {
+              // fetch the thumbnail
+              val thumbnailFuture = user.fetchThumbnailAsync()
+              thumbnailFuture.addDoneListener {
+                val itemThumbnailData = thumbnailFuture.get()
+                if (itemThumbnailData != null && itemThumbnailData.isNotEmpty()) {
+                  // create Bitmap to use as required
+                  val itemThumbnail =
+                    BitmapFactory.decodeByteArray(itemThumbnailData, 0, itemThumbnailData.size)
+                  // set the Bitmap to the ImageView
+                  userImage.setImageBitmap(itemThumbnail)
                 }
-
-                LoadStatus.FAILED_TO_LOAD -> {
-                    toast("Portal failed to load")
-                }
+              }
+            } else {
+              toast("No thumbnail associated with $fullname")
             }
-
+          } else {
+            toast("User did not authenticate against $portalInfoName")
+          }
         }
-        portal.loadAsync()
+
+        LoadStatus.FAILED_TO_LOAD -> {
+          toast("Portal failed to load")
+        }
+      }
+
     }
+    portal.loadAsync()
+  }
 
 }
