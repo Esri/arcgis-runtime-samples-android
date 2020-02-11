@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
       // create a map with the Basemap type topographic
       map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 45.3790902612337, 6.84905317262762, 12)
       // add graphics overlays to the map view
-      graphicsOverlays.addAll(listOf(resultGraphicsOverlay,inputGraphicsOverlay))
+      graphicsOverlays.addAll(listOf(resultGraphicsOverlay, inputGraphicsOverlay))
       // add onTouchListener for calculating the new viewshed
       onTouchListener = object : DefaultMapViewOnTouchListener(
         applicationContext,
@@ -169,7 +169,6 @@ class MainActivity : AppCompatActivity() {
         // listen for job success
         geoprocessingJob?.addJobDoneListener {
           if (geoprocessingJob?.status == Job.Status.SUCCEEDED) {
-            val geoprocessingResult = geoprocessingJob?.result
             // get the viewshed from geoprocessingResult
             (geoprocessingJob?.result?.outputs?.get("Viewshed_Result") as? GeoprocessingFeatures)?.let { viewshedResult ->
               // for each feature in the result
@@ -186,8 +185,7 @@ class MainActivity : AppCompatActivity() {
             ).show()
           }
         }
-      }
-      catch (e: Exception) {
+      } catch (e: Exception) {
         when (e) {
           is InterruptedException, is ExecutionException -> ("Error getting geoprocessing result: " + e.message).also {
             Toast.makeText(this, it, Toast.LENGTH_LONG).show()
