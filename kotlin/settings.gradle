@@ -1,4 +1,4 @@
-include ':add-features-feature-service', ':navigate-route',
+include ':add-features-feature-service',
         ':analyze-hotspots',
         ':attribution-view-change',
         ':change-atmosphere-effect',

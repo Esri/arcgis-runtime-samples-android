@@ -47,16 +47,8 @@ import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
 
-  // create text-to-speech to replay navigation voice guidance
-  private val textToSpeech: TextToSpeech by lazy {
-    TextToSpeech(this) { status ->
-      if (status != TextToSpeech.ERROR) {
-        textToSpeech.language = Resources.getSystem()
-          .configuration.locale //NOTE: This is deprecated but the fix requires api 24 Maybe do a check as in texttospeech.speak
-        isTextToSpeechInitialized = true
-      }
-    }
-  }
+
+  private var textToSpeech: TextToSpeech? = null
 
   private var isTextToSpeechInitialized = false
 
@@ -140,6 +132,14 @@ class MainActivity : AppCompatActivity() {
       setOnClickListener {
         mapView.locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.NAVIGATION
         recenterButton.isEnabled = false
+      }
+    }
+    // create text-to-speech to replay navigation voice guidance
+    TextToSpeech(this) { status ->
+      if (status != TextToSpeech.ERROR) {
+        textToSpeech.language = Resources.getSystem()
+          .configuration.locale //NOTE: This is deprecated but the fix requires api 24 Maybe do a check as in texttospeech.speak
+        isTextToSpeechInitialized = true
       }
     }
   }
