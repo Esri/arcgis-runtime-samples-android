@@ -94,13 +94,14 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    // create up a temporary directory in the app's cache for saving exported tiles
+    // create a temporary directory in the app's cache for saving exported tiles
     val exportTilesDirectory = File(cacheDir, getString(R.string.tile_cache_folder))
 
-    // when the button is clicked, export the tiles to a temporary file
+    // when the button is clicked, export the tiles to th temporary directory
     exportTilesButton.setOnClickListener {
       val exportTileCacheTask = ExportTileCacheTask(tiledLayer.uri)
       val parametersFuture: ListenableFuture<ExportTileCacheParameters> =
+        // set up the export tile cache parameters
         exportTileCacheTask.createDefaultExportTileCacheParametersAsync(
           downloadArea.geometry,
           mapView.mapScale,
@@ -108,7 +109,6 @@ class MainActivity : AppCompatActivity() {
         )
 
       parametersFuture.addDoneListener {
-
         try {
           val parameters: ExportTileCacheParameters = parametersFuture.get()
           // export tiles to temporary cache on device
@@ -119,10 +119,12 @@ class MainActivity : AppCompatActivity() {
             ).apply {
               // start the export tile cache job
               start()
+
+              // show progress of the export tile cache job on the progress bar
               val dialog = createProgressDialog(this)
               dialog.show()
-              // show progress of the export tile cache job on the progress bar
               addProgressChangedListener{dialog.progressBar.progress = progress}
+
               // when the job has completed, close the dialog and show the job result in the map preview
               addJobDoneListener {
                 dialog.dismiss()
@@ -136,7 +138,6 @@ class MainActivity : AppCompatActivity() {
                 }
               }
             }
-
         } catch (e: InterruptedException) {
           Toast.makeText(this, "TileCacheParameters interrupted: " + e.message, Toast.LENGTH_LONG).show()
           Log.e(TAG, "TileCacheParameters interrupted: " + e.message)
@@ -161,12 +162,9 @@ class MainActivity : AppCompatActivity() {
     previewMapView.apply {
       map = previewMap
       setViewpoint(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE))
-      visibility = View.VISIBLE
     }
     // control UI visibility
-    closeButton.visibility = View.VISIBLE
-    dimBackground.visibility = View.VISIBLE
-    preview_text_view.visibility = View.VISIBLE
+    makeVisible(closeButton, dimBackground, preview_text_view, previewMapView)
     exportTilesButton.visibility = View.GONE
   }
 
@@ -185,7 +183,6 @@ class MainActivity : AppCompatActivity() {
       }
       setView(R.layout.dialog_layout)
     }
-
     return builder.create()
   }
 
@@ -195,9 +192,19 @@ class MainActivity : AppCompatActivity() {
   fun clearPreview(view: View) {
     previewMapView.getChildAt(0).visibility = View.INVISIBLE
     mapView.bringToFront()
+    // control UI visibility
+    makeVisible(exportTilesButton, mapView)
+  }
 
-    exportTilesButton.visibility = View.VISIBLE
-    mapView.visibility = View.VISIBLE
+  /**
+   * Makes the given views in the UI visible.
+   *
+   * @param views the views to be made visible
+   */
+  private fun makeVisible(vararg views: View) {
+    for (view in views) {
+      view.visibility = View.VISIBLE
+    }
   }
 
   /**
