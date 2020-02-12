@@ -2,7 +2,7 @@
 
 Display a map from a mobile map package.
 
-![Open mobile map package Sample](open-mobile-map-package.png)
+![Image of open mobile map package](open-mobile-map-package.png)
 
 ## Use case
 
@@ -18,8 +18,7 @@ When the sample opens, it will automatically display the map in the mobile map p
 1. Create a `MobileMapPackage` specifying the path to the .mmpk file.
 2. Use `MobileMapPackage.isDirectReadSupportedAsync()` to check whether the package can be read in the archived form (.mmpk) or whether it needs to be unpacked.
 3. If the mobile map package requires unpacking, call `MobileMapPackage.unpackAsync()` and wait for this to complete.
-4. Load the mobile map package with `mmpk.loadAsync()`.
-5. After it successfully loads, get the map from the .mmpk and add it to the map view: `mapView.setMap(mmpk.getMaps().get(0))`.
+4. After it successfully loads, get the map from the .mmpk and add it to the map view: `mapView.setMap(mmpk.getMaps().get(0))`.
 
 ## Relevant API
 
