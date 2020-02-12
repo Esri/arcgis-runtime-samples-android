@@ -74,7 +74,6 @@ class MainActivity : AppCompatActivity() {
    * which call showCalendar(...) or analyzeHotspots(...).
    */
   private fun showDateRangeDialog() {
-
     val geoprocessingTask = GeoprocessingTask(getString(R.string.hotspot_911_calls))
 
     // create custom dialog
@@ -103,7 +102,6 @@ class MainActivity : AppCompatActivity() {
    * @param inputCalendar enum which specifies which editable text the chosen date should be written to
    */
   private fun showCalendar(dialog: Dialog, inputCalendar: InputCalendar) {
-
 
     // define the date picker dialog
     val calendar = Calendar.getInstance()
