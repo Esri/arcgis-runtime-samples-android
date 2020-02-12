@@ -48,7 +48,7 @@ import java.util.concurrent.ExecutionException
 class MainActivity : AppCompatActivity() {
 
   private val TAG: String = MainActivity::class.java.simpleName
-  private lateinit var exportTileCacheJob: ExportTileCacheJob
+  private var exportTileCacheJob: ExportTileCacheJob? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -117,19 +117,17 @@ class MainActivity : AppCompatActivity() {
               parameters,
               exportTilesDirectory.path + "file.tpk"
             ).apply {
-              // create and show a progress dialog to show export tile progress
-              val dialog = createProgressDialog(exportTileCacheJob)
+              // start the export tile cache job
+              start()
+              val dialog = createProgressDialog(this)
               dialog.show()
               // show progress of the export tile cache job on the progress bar
-              addProgressChangedListener {
-                dialog.progressBar.progress = progress
-              }
-
+              addProgressChangedListener{dialog.progressBar.progress = progress}
+              // when the job has completed, close the dialog and show the job result in the map preview
               addJobDoneListener {
                 dialog.dismiss()
                 if (status == Job.Status.SUCCEEDED) {
-                  val exportedTileCacheResult: TileCache = result
-                  showMapPreview(exportedTileCacheResult)
+                  showMapPreview(result)
                 } else {
                   ("Job did not succeed: " + error.additionalMessage).also {
                     Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG).show()
@@ -138,6 +136,7 @@ class MainActivity : AppCompatActivity() {
                 }
               }
             }
+
         } catch (e: InterruptedException) {
           Toast.makeText(this, "TileCacheParameters interrupted: " + e.message, Toast.LENGTH_LONG).show()
           Log.e(TAG, "TileCacheParameters interrupted: " + e.message)
@@ -147,9 +146,6 @@ class MainActivity : AppCompatActivity() {
         }
       }
     }
-
-    // close the preview window
-//    clearPreview() //todo check this on the device
   }
 
   /**
@@ -161,13 +157,16 @@ class MainActivity : AppCompatActivity() {
     val newTiledLayer = ArcGISTiledLayer(result)
     val previewMap = ArcGISMap(Basemap(newTiledLayer))
 
+    // set up the preview map view
     previewMapView.apply {
       map = previewMap
       setViewpoint(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE))
       visibility = View.VISIBLE
-      getChildAt(0).visibility = View.VISIBLE
     }
-    mapPreviewLayout.bringToFront()
+    // control UI visibility
+    closeButton.visibility = View.VISIBLE
+    dimBackground.visibility = View.VISIBLE
+    preview_text_view.visibility = View.VISIBLE
     exportTilesButton.visibility = View.GONE
   }
 
@@ -196,7 +195,9 @@ class MainActivity : AppCompatActivity() {
   fun clearPreview(view: View) {
     previewMapView.getChildAt(0).visibility = View.INVISIBLE
     mapView.bringToFront()
+
     exportTilesButton.visibility = View.VISIBLE
+    mapView.visibility = View.VISIBLE
   }
 
   /**
