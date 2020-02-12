@@ -32,4 +32,4 @@ Click the map to see all areas visible from that point within a 15km radius. Cli
 
 ## Tags
 
-Geoprocessing, GeoprocessingJob, GeoprocessingParameters, GeoprocessingResult, heat map
+analysis, geoprocessing, heat map, viewshed
