@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
 
   val TAG: String = MainActivity::class.java.simpleName
 
-  private val mobileMapPackageFileExtension = "mmpk"
   private lateinit var mapPackage: MobileMapPackage
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,19 +50,13 @@ class MainActivity : AppCompatActivity() {
    * Create the mobile map package file location and name structure.
    */
   private fun createMobileMapPackageFilePath(): String {
-
-    val fileName = getString(R.string.yellowstone_mmpk)
     getExternalFilesDir(null)?.path?.let {
       val builder = StringBuilder(it)
         .append(File.separator)
-        .append(fileName)
-        .append(".")
-        .append(mobileMapPackageFileExtension)
+        .append(getString(R.string.yellowstone_mmpk))
 
-      logDebug("full path to file $builder")
       return builder.toString()
     }
-
 
     throw IllegalStateException("couldn't access files dir")
   }
@@ -83,7 +76,7 @@ class MainActivity : AppCompatActivity() {
     // add done listener which will invoke when mobile map package has loaded
     mapPackage.addDoneLoadingListener() {
       // check load status and that the mobile map package has maps
-      if (mapPackage.getLoadStatus() === LoadStatus.LOADED && mapPackage.maps.isNotEmpty()) {
+      if (mapPackage.loadStatus === LoadStatus.LOADED && mapPackage.maps.isNotEmpty()) {
         // add the map from the mobile map package to the MapView
         mapView.map = mapPackage.maps[0]
       } else {
@@ -119,21 +112,6 @@ class MainActivity : AppCompatActivity() {
         message
       )
       Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    }
-  }
-
-  /**
-   * Log a debug message to logcat for debuggable builds only.
-   * @param message the text to log.
-   */
-  private fun logDebug(message: String?) {
-    if (BuildConfig.DEBUG) {
-      message?.let {
-        Log.d(
-          TAG,
-          message
-        )
-      }
     }
   }
 }
