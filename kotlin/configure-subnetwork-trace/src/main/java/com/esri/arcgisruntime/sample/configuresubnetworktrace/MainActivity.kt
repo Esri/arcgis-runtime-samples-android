@@ -287,6 +287,8 @@ class MainActivity : AppCompatActivity() {
 
   /**
    * Convert the given UtilityTraceConditionalExpression into a string.
+   *
+   * @param expression to convert to a string
    */
   private fun expressionToString(expression: UtilityTraceConditionalExpression): String? {
     when (expression) {
