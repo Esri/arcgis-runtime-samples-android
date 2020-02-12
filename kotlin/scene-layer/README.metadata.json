@@ -12,11 +12,11 @@
     ],
     "redirect_from": "/android/latest/sample-code/scene-layer.htm",
     "relevant_apis": [
-        "AnalysisOverlay",
-        "ArcGISTiledElevationSource",
+        "ArcGISScene",
         "ArcGISSceneLayer",
-        "LocationViewshed",
-        "Viewshed"
+        "ArcGISTileElevationSource",
+        "SceneView",
+        "Surface"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/scenelayer/MainActivity.kt"
