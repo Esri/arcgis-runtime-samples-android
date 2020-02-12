@@ -17,7 +17,6 @@
 
 package com.esri.arcgisruntime.sample.identifylayers
 
-
 import java.util.concurrent.ExecutionException
 import android.widget.Toast
 import android.os.Bundle
@@ -127,7 +126,7 @@ class MainActivity : AppCompatActivity() {
     val message = StringBuilder()
     var totalCount = 0
     for (identifyLayerResult in identifyLayerResults) {
-      val count = geoElementsCountFromResult(identifyLayerResult)
+      val count = recursivelyCountIdentifyResultsForSublayers(identifyLayerResult)
       val layerName = identifyLayerResult.layerContent.name
       message.append(layerName).append(": ").append(count)
 
@@ -148,34 +147,19 @@ class MainActivity : AppCompatActivity() {
 
   /**
    * Gets a count of the GeoElements in the passed result layer.
-   *
+   * This method recursively calls itself to descend into sublayers and count their results.
    * @param result from a single layer.
    * @return the total count of GeoElements.
    */
-  private fun geoElementsCountFromResult(result: IdentifyLayerResult): Int {
-    // create temp array
-    val tempResults = mutableListOf<IdentifyLayerResult>(result)
+  private fun recursivelyCountIdentifyResultsForSublayers(result: IdentifyLayerResult): Int {
+    var subLayerGeoElementCount = 0
 
-    // using Depth First Search approach to handle recursion
-    var count = 0
-    var index = 0
-
-    while (index < tempResults.size) {
-      // get the result object from the array
-      val identifyResult = tempResults.get(index)
-
-      // update count with geoElements from the result
-      count += identifyResult.elements.size
-
-      // if sublayer has any results, add result objects in the tempResults array after the current result
-      if (identifyResult.sublayerResults.size > 0) {
-        tempResults.add(identifyResult.sublayerResults.get(index))
-      }
-
-      // update the count and repeat
-      index += 1
+    for (sublayerResult in result.sublayerResults) {
+      // recursively call this function to accumulate elements from all sublayers
+      subLayerGeoElementCount += recursivelyCountIdentifyResultsForSublayers(sublayerResult)
     }
-    return count
+
+    return subLayerGeoElementCount + result.elements.size
   }
 
   /**
