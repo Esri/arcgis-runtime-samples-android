@@ -299,7 +299,7 @@ class MainActivity : AppCompatActivity() {
         // the name and comparison operator of the expression
         val networkAttributeNameAndOperator =
           expression.networkAttribute.name + " " + expression.comparisonOperator + " "
-        // the
+        // check whether the network attribute has a coded value domain
         (expression.networkAttribute.domain as? CodedValueDomain)?.let { codedValueDomain ->
           // if there's a coded value domain name
           val codedValueDomainName = codedValueDomain.codedValues.first {
