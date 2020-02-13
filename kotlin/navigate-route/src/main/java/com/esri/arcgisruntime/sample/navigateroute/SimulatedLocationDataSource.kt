@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019 Esri
+ *  Copyright 2020 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,6 @@ import com.esri.arcgisruntime.location.LocationDataSource
 import java.util.Timer
 import java.util.TimerTask
 
-// TODO: Refactor this
-
 /**
  * A LocationDataSource that simulates movement along the specified route. Upon start of the
  * SimulatedLocationDataSource, a timer is started, which updates the location along the route at fixed
@@ -43,12 +41,18 @@ internal class SimulatedLocationDataSource(private val route: Polyline) :
     timer?.cancel()
   }
 
-  override fun onStart() { // start at the beginning of the route
+  companion object {
+    private const val distanceInterval = .00025
+  }
+
+  override fun onStart() {
+    // start at the beginning of the route
     currentLocation = route.parts[0].startPoint
     updateLocation(Location(currentLocation))
     timer = Timer("SimulatedLocationDataSource Timer", false).apply {
       scheduleAtFixedRate(object : TimerTask() {
-        override fun run() { // get a reference to the previous point
+        override fun run() {
+          // get a reference to the previous point
           val previousPoint = currentLocation
           // update current location by moving [distanceInterval] meters along the route
           currentLocation = GeometryEngine.createPointAlong(route, distance)
@@ -78,9 +82,4 @@ internal class SimulatedLocationDataSource(private val route: Polyline) :
       onStartCompleted(null)
     }
   }
-
-  companion object {
-    private const val distanceInterval = .00025
-  }
-
 }

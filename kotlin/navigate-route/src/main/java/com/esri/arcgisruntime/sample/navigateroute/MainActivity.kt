@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
     textToSpeech = TextToSpeech(this) { status ->
       if (status != TextToSpeech.ERROR) {
         textToSpeech?.language = Resources.getSystem()
-          .configuration.locale //NOTE: This is deprecated but the fix requires api 24 Maybe do a check as in texttospeech.speak
+          .configuration.locale
         isTextToSpeechInitialized = true
       }
     }
@@ -162,6 +162,13 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Start the navigation along the provided route.
+   *
+   * @param routeTask used to generate the route.
+   * @param routeParameters to describe the route.
+   * @param routeResult solved from the routeTask.
+   * */
   private fun startNavigation(
     routeTask: RouteTask,
     routeParameters: RouteParameters,
@@ -184,7 +191,7 @@ class MainActivity : AppCompatActivity() {
       SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f)
     )
     // add the graphics to the mapView's graphics overlays
-    mapView.graphicsOverlays[0].graphics.addAll(listOf(routeAheadGraphic,routeTraveledGraphic))
+    mapView.graphicsOverlays[0].graphics.addAll(listOf(routeAheadGraphic, routeTraveledGraphic))
 
     // set up a simulated location data source which simulates movement along the route
     val simulatedLocationDataSource = SimulatedLocationDataSource(routeGeometry)
@@ -197,7 +204,7 @@ class MainActivity : AppCompatActivity() {
       addAutoPanModeChangedListener { recenterButton.isEnabled = true }
     }
     // set up a RouteTracker for navigation along the calculated route
-    val routeTracker = RouteTracker(applicationContext, routeResult, 0).also {routeTracker ->
+    val routeTracker = RouteTracker(applicationContext, routeResult, 0).also { routeTracker ->
       routeTracker.enableReroutingAsync(
         routeTask, routeParameters,
         RouteTracker.ReroutingStrategy.TO_NEXT_WAYPOINT, true
@@ -268,8 +275,9 @@ class MainActivity : AppCompatActivity() {
 
   /**
    * Uses Android's text to speak to say the latest voice guidance from the RouteTracker out loud.
+   *
+   * @param voiceGuidanceText to be converted to speech
    */
-  // UNSURE: I just removed the isTextToSpechInitialized check and it seems to work fine? NO Not okay.
   private fun speakVoiceGuidance(voiceGuidanceText: String) {
     if (isTextToSpeechInitialized && textToSpeech?.isSpeaking == false) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
