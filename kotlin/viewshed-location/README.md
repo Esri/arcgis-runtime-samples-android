@@ -31,4 +31,4 @@ The scene in this sample shows a [buildings layer](https://tiles.arcgis.com/tile
 
 ## Tags
 
-visibility analysis, viewshed, LocationViewshed, AnalysisOverlay, Scene, 3D, frustum
+visibility analysis, viewshed, Scene, 3D, frustum

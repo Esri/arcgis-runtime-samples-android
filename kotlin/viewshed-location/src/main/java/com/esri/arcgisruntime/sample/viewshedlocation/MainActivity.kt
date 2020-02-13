@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     private val TAG: String = MainActivity::class.java.simpleName
   }
 
+  // initialize location viewshed parameters
   private val initHeading = 0
   private val initPitch = 60
   private val initHorizontalAngle = 75
@@ -70,17 +71,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create a layer of buildings
-    val buildingsLayer = ArcGISSceneLayer(getString(R.string.buildings_layer))
+    val buildingsSceneLayer = ArcGISSceneLayer(getString(R.string.buildings_layer))
 
     // create a scene and add imagery basemap, elevation surface, and buildings layer to it
     val buildingsScene = ArcGISScene().apply {
       basemap = Basemap.createImagery()
       baseSurface = surface
-      operationalLayers.add(buildingsLayer)
+      operationalLayers.add(buildingsSceneLayer)
     }
 
     val initLocation = Point(-4.50, 48.4, 1000.0)
-    Viewshed.setFrustumOutlineColor(Color.BLUE)
 
     // create viewshed from the initial location
     viewShed = LocationViewshed(
@@ -95,10 +95,12 @@ class MainActivity : AppCompatActivity() {
       setFrustumOutlineVisible(true)
     }
 
+    Viewshed.setFrustumOutlineColor(Color.BLUE)
+
     sceneView.apply {
-      //add the buildings scene to the sceneView
+      // add the buildings scene to the sceneView
       scene = buildingsScene
-      // add a camera and set it to orbit the location point of the frustum
+      // add a camera and set it to orbit the starting location point of the frustum
       cameraController = OrbitLocationCameraController(initLocation, 5000.0)
       setViewpointCamera(Camera(initLocation, 20000000.0, 0.0, 55.0, 0.0))
     }

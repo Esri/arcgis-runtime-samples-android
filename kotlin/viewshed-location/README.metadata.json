@@ -1,6 +1,6 @@
 {
     "category": "Analysis",
-    "description": "A viewshed shows the visible and obstructed areas from an observer's vantage point. This sample demonstrates all of the configurable properties of a viewshed.",
+    "description": "Perform a viewshed analysis from a defined vantage point.",
     "ignore": false,
     "images": [
         "viewshed-location.png"
@@ -8,8 +8,6 @@
     "keywords": [
         "visibility analysis",
         "viewshed",
-        "LocationViewshed",
-        "AnalysisOverlay",
         "Scene",
         "3D",
         "frustum"
