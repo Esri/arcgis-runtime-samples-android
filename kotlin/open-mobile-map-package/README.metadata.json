@@ -1,6 +1,6 @@
 {
   "category": "Edit and Manage Data",
-  "description": "Open and display a map from a Mobile Map Package.",
+  "description": "Display a map from a mobile map package.",
   "ignore": false,
   "images": [
     "open-mobile-mappackage.png"
