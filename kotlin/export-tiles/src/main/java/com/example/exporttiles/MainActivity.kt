@@ -122,7 +122,13 @@ class MainActivity : AppCompatActivity() {
               // show progress of the export tile cache job on the progress bar
               val dialog = createProgressDialog(this)
               dialog.show()
-              addProgressChangedListener{dialog.progressBar.progress = progress}
+
+              // on progress change
+              addProgressChangedListener {
+                  dialog.progressBar.progress = progress
+                dialog.progressTextView.text = "$progress%"
+
+              }
 
               // when the job has completed, close the dialog and show the job result in the map preview
               addJobDoneListener {
