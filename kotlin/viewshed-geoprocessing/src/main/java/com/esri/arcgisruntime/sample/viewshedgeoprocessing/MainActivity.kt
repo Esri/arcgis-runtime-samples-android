@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity() {
   /**
    * Creates a GeoprocessingJob from the GeoprocessingTask. Displays the resulting viewshed on the map.
    *
-   * @param featureCollectionTable containing the observation point.
+   * @param featureCollectionTable the feature collection table containing the observation point.
    */
   private fun performGeoprocessing(featureCollectionTable: FeatureCollectionTable) {
 
