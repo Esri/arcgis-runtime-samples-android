@@ -47,10 +47,27 @@ import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
 
-
   private var textToSpeech: TextToSpeech? = null
 
   private var isTextToSpeechInitialized = false
+
+  companion object {
+    private val TAG: String = this::class.java.simpleName
+
+    /**
+     * Creates a list of stops along a route.
+     */
+    private fun getStops(): List<Stop> {
+      // San Diego Convention Center
+      val conventionCenter = Stop(Point(-117.160386, 32.706608, SpatialReferences.getWgs84()))
+      // USS San Diego Memorial
+      val memorial = Stop(Point(-117.173034, 32.712327, SpatialReferences.getWgs84()))
+      // RH Fleet Aerospace Museum
+      val aerospaceMuseum = Stop(Point(-117.147230, 32.730467, SpatialReferences.getWgs84()))
+
+      return listOf(conventionCenter, memorial, aerospaceMuseum)
+    }
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -191,16 +208,6 @@ class MainActivity : AppCompatActivity() {
       // track the location and update route tracking status
       val trackLocationFuture = routeTracker.trackLocationAsync(locationChangedEvent.location)
       trackLocationFuture.addDoneListener {
-        // listen for new voice guidance events
-        routeTracker.addNewVoiceGuidanceListener { newVoiceGuidanceEvent ->
-          // use Android's text to speech to speak the voice guidance
-          speakVoiceGuidance(newVoiceGuidanceEvent.voiceGuidance.text)
-          nextDirectionTextView.text = getString(
-            R.string.next_direction,
-            newVoiceGuidanceEvent.voiceGuidance.text
-          )
-        }
-
         // get the route's tracking status
         val trackingStatus = routeTracker.trackingStatus
         // set geometries for the route ahead and the remaining route
@@ -220,6 +227,16 @@ class MainActivity : AppCompatActivity() {
           remainingDistance.displayTextUnits.pluralDisplayName
         )
         timeRemainingTextView.text = getString(R.string.time_remaining, remainingTimeString)
+
+        // listen for new voice guidance events
+        routeTracker.addNewVoiceGuidanceListener { newVoiceGuidanceEvent ->
+          // use Android's text to speech to speak the voice guidance
+          speakVoiceGuidance(newVoiceGuidanceEvent.voiceGuidance.text)
+          nextDirectionTextView.text = getString(
+            R.string.next_direction,
+            newVoiceGuidanceEvent.voiceGuidance.text
+          )
+        }
 
         // if a destination has been reached
         if (trackingStatus.destinationStatus == DestinationStatus.REACHED) {
@@ -276,23 +293,5 @@ class MainActivity : AppCompatActivity() {
   override fun onDestroy() {
     mapView.dispose()
     super.onDestroy()
-  }
-
-  companion object {
-    private val TAG: String = this::class.java.simpleName
-
-    /**
-     * Creates a list of stops along a route.
-     */
-    private fun getStops(): List<Stop> {
-      // San Diego Convention Center
-      val conventionCenter = Stop(Point(-117.160386, 32.706608, SpatialReferences.getWgs84()))
-      // USS San Diego Memorial
-      val memorial = Stop(Point(-117.173034, 32.712327, SpatialReferences.getWgs84()))
-      // RH Fleet Aerospace Museum
-      val aerospaceMuseum = Stop(Point(-117.147230, 32.730467, SpatialReferences.getWgs84()))
-
-      return listOf(conventionCenter, memorial, aerospaceMuseum)
-    }
   }
 }
