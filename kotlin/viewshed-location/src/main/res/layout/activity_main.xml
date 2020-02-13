@@ -19,7 +19,7 @@
 
     <include
         android:id="@+id/include"
-        layout="@layout/viewshed_seek_bars"
+        layout="@layout/viewshed_controls"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -39,7 +39,7 @@ import com.esri.arcgisruntime.mapping.view.OrbitLocationCameraController
 import java.util.concurrent.ExecutionException
 import kotlin.math.roundToInt
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.viewshed_seek_bars.*
+import kotlinx.android.synthetic.main.viewshed_controls.*
 
 
 class MainActivity : AppCompatActivity() {
