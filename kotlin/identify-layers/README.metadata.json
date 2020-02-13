@@ -1,6 +1,6 @@
 {
   "category": "Search and Query",
-  "description": "Identify features on a map across different layers.",
+  "description": "Identify features in all layers in a map.",
   "ignore": false,
   "images": [
     "identify-layers.png"
