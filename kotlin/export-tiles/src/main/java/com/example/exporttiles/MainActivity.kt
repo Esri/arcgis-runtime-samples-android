@@ -94,9 +94,6 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    // create a temporary directory in the app's cache for saving exported tiles
-    val exportTilesDirectory = File(cacheDir, getString(R.string.tile_cache_folder))
-
     // when the button is clicked, export the tiles to th temporary directory
     exportTilesButton.setOnClickListener {
       val exportTileCacheTask = ExportTileCacheTask(tiledLayer.uri)
@@ -111,6 +108,8 @@ class MainActivity : AppCompatActivity() {
       parametersFuture.addDoneListener {
         try {
           val parameters: ExportTileCacheParameters = parametersFuture.get()
+          // create a temporary directory in the app's cache for saving exported tiles
+          val exportTilesDirectory = File(cacheDir, getString(R.string.tile_cache_folder))
           // export tiles to temporary cache on device
           exportTileCacheJob =
             exportTileCacheTask.exportTileCache(
@@ -206,29 +205,7 @@ class MainActivity : AppCompatActivity() {
       view.visibility = View.VISIBLE
     }
   }
-
-  /**
-   * Recursively deletes all files in the given directory.
-   *
-   * @param dir to delete
-   */
-  private fun deleteDirectory(dir: File?): Boolean {
-    return if (dir != null && dir.isDirectory) {
-      val children = dir.list()
-      for (child in children) {
-        val success = deleteDirectory(File(dir, child))
-        if (!success) {
-          return false
-        }
-      }
-      dir.delete()
-    } else if (dir != null && dir.isFile) {
-      dir.delete()
-    } else {
-      false
-    }
-  }
-
+  
   override fun onResume() {
     super.onResume()
     mapView.resume()
@@ -239,7 +216,7 @@ class MainActivity : AppCompatActivity() {
     mapView.pause()
     previewMapView.pause()
     // delete app cache when the app loses focus
-    deleteDirectory(cacheDir)
+    cacheDir.deleteRecursively()
     super.onPause()
   }
 
