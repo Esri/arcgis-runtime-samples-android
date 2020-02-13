@@ -197,27 +197,26 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:checked="true"
-        app:layout_constraintBottom_toTopOf="@+id/analysisVisibilityCheckBox"
-        app:layout_constraintStart_toStartOf="@+id/maxDistanceSeekBar"
+        app:layout_constraintStart_toEndOf="@+id/frustumVisibilityTextView"
         app:layout_constraintTop_toBottomOf="@+id/maximumDistanceTextView" />
 
     <!-- analysis visibility -->
     <TextView
-        android:id="@+id/analysisVisibilityTextView"
+        android:id="@+id/viewshedVisibilityTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:text="@string/analysis_visibility"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frustumVisibilityTextView"/>
+        app:layout_constraintStart_toEndOf="@+id/frustumVisibilityCheckBox"
+        app:layout_constraintTop_toBottomOf="@+id/maximumDistanceTextView"/>
 
     <CheckBox
-        android:id="@+id/analysisVisibilityCheckBox"
+        android:id="@+id/viewshedVisibilityCheckBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:checked="true"
-        app:layout_constraintStart_toStartOf="@+id/maxDistanceSeekBar"
-        app:layout_constraintTop_toBottomOf="@+id/frustumVisibilityTextView" />
+        app:layout_constraintStart_toEndOf="@+id/viewshedVisibilityTextView"
+        app:layout_constraintTop_toBottomOf="@+id/maximumDistanceTextView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
