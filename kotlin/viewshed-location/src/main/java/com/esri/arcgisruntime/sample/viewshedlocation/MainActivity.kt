@@ -150,6 +150,16 @@ class MainActivity : AppCompatActivity() {
       }
     })
 
+    // toggle visibility of the viewshed
+    viewshedVisibilityCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+      viewShed.isVisible = isChecked
+    }
+
+    // toggle visibility of the frustum outline
+    frustumVisibilityCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+      viewShed.setFrustumOutlineVisible(isChecked)
+    }
+
     // heading range 0 - 360
     headingSeekBar.max = 360
     setHeading(initHeading)
