@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
     } catch (illegalStateException: IllegalStateException) {
       logError(illegalStateException.message)
     }
-
   }
 
   /**
