@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Buffer</string>
+    <string name="Enter_miles_string">Specify the buffer in miles then tap on map</string>
+    <string name="geodesic_buffer">Geodesic Buffer</string>
+    <string name="planar_buffer">Planar Buffer</string>
+    <string name="default_buffer_distance">2000</string>
+    <string name="clear">Clear</string>
+</resources>
