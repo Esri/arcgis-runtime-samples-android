@@ -63,6 +63,15 @@ class MainActivity : AppCompatActivity() {
     val graphicsOverlay = GraphicsOverlay()
     mapView.graphicsOverlays.add(graphicsOverlay).also { graphicsOverlay.graphics.clear() }
 
+    // create text-to-speech to replay navigation voice guidance
+    textToSpeech = TextToSpeech(this) { status ->
+      if (status != TextToSpeech.ERROR) {
+        textToSpeech?.language = Resources.getSystem()
+          .configuration.locale //NOTE: This is deprecated but the fix requires api 24 Maybe do a check as in texttospeech.speak
+        isTextToSpeechInitialized = true
+      }
+    }
+
     // generate a route with directions and stops for navigation
     val routeTask = RouteTask(this, getString(R.string.routing_service_url))
     val routeParametersFuture = routeTask.createDefaultParametersAsync()
@@ -132,14 +141,6 @@ class MainActivity : AppCompatActivity() {
       setOnClickListener {
         mapView.locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.NAVIGATION
         recenterButton.isEnabled = false
-      }
-    }
-    // create text-to-speech to replay navigation voice guidance
-    TextToSpeech(this) { status ->
-      if (status != TextToSpeech.ERROR) {
-        textToSpeech.language = Resources.getSystem()
-          .configuration.locale //NOTE: This is deprecated but the fix requires api 24 Maybe do a check as in texttospeech.speak
-        isTextToSpeechInitialized = true
       }
     }
   }
@@ -253,11 +254,11 @@ class MainActivity : AppCompatActivity() {
    */
   // UNSURE: I just removed the isTextToSpechInitialized check and it seems to work fine? NO Not okay.
   private fun speakVoiceGuidance(voiceGuidanceText: String) {
-    if (isTextToSpeechInitialized && !textToSpeech.isSpeaking) {
+    if (isTextToSpeechInitialized && textToSpeech?.isSpeaking == false) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        textToSpeech.speak(voiceGuidanceText, TextToSpeech.QUEUE_FLUSH, null, null)
+        textToSpeech?.speak(voiceGuidanceText, TextToSpeech.QUEUE_FLUSH, null, null)
       } else {
-        textToSpeech.speak(voiceGuidanceText, TextToSpeech.QUEUE_FLUSH, null)
+        textToSpeech?.speak(voiceGuidanceText, TextToSpeech.QUEUE_FLUSH, null)
       }
     }
   }
