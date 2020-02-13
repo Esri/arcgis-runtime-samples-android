@@ -47,6 +47,8 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
+  private val TAG: String = this::class.java.simpleName
+
   private val geoprocessingTask: GeoprocessingTask by lazy { GeoprocessingTask(getString(R.string.viewshed_service)) }
   private var geoprocessingJob: GeoprocessingJob? = null
 
@@ -210,9 +212,5 @@ class MainActivity : AppCompatActivity() {
   override fun onDestroy() {
     mapView.dispose()
     super.onDestroy()
-  }
-
-  companion object {
-    private val TAG: String = this::class.java.simpleName
   }
 }
