@@ -185,6 +185,7 @@ class MainActivity : AppCompatActivity() {
               "Geoprocessing result failed!",
               Toast.LENGTH_LONG
             ).show()
+            Log.e(TAG, geoprocessingJob?.error?.cause.toString())
           }
         }
       } catch (e: Exception) {
