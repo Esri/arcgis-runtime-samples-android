@@ -11,5 +11,5 @@
     <string name="minimum_distance">Minimum Distance</string>
     <string name="maximum_distance">Maximum Distance</string>
     <string name="frustum_visibiity">Frustum visibility</string>
-    <string name="analysis_visibility">Analysis visibility</string>
+    <string name="viewshed_visibility">Analysis visibility</string>
 </resources>

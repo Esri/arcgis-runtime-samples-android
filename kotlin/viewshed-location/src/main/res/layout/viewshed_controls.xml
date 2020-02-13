@@ -207,7 +207,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
-        android:text="@string/analysis_visibility"
+        android:text="@string/viewshed_visibility"
         app:layout_constraintStart_toEndOf="@+id/frustumVisibilityCheckBox"
         app:layout_constraintTop_toBottomOf="@+id/maximumDistanceTextView"/>
 
