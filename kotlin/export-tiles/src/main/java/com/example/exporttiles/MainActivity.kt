@@ -94,11 +94,11 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    // when the button is clicked, export the tiles to th temporary directory
+    // when the button is clicked, export the tiles to the temporary directory
     exportTilesButton.setOnClickListener {
       val exportTileCacheTask = ExportTileCacheTask(tiledLayer.uri)
+      // set up the export tile cache parameters
       val parametersFuture: ListenableFuture<ExportTileCacheParameters> =
-        // set up the export tile cache parameters
         exportTileCacheTask.createDefaultExportTileCacheParametersAsync(
           downloadArea.geometry,
           mapView.mapScale,
@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity() {
       setViewpoint(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE))
     }
     // control UI visibility
-    makeVisible(closeButton, dimBackground, preview_text_view, previewMapView)
+    show(closeButton, dimBackground, preview_text_view, previewMapView)
     exportTilesButton.visibility = View.GONE
   }
 
@@ -189,10 +189,9 @@ class MainActivity : AppCompatActivity() {
    * Clear the preview window.
    */
   fun clearPreview(view: View) {
-    previewMapView.getChildAt(0).visibility = View.INVISIBLE
-    mapView.bringToFront()
+    hide(closeButton, dimBackground, preview_text_view, previewMapView)
     // control UI visibility
-    makeVisible(exportTilesButton, mapView)
+    show(exportTilesButton, mapView)
   }
 
   /**
@@ -200,9 +199,20 @@ class MainActivity : AppCompatActivity() {
    *
    * @param views the views to be made visible
    */
-  private fun makeVisible(vararg views: View) {
+  private fun show(vararg views: View) {
     for (view in views) {
       view.visibility = View.VISIBLE
+    }
+  }
+
+  /**
+   * Makes the given views in the UI visible.
+   *
+   * @param views the views to be made visible
+   */
+  private fun hide(vararg views: View) {
+    for (view in views) {
+      view.visibility = View.INVISIBLE
     }
   }
   
