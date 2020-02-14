@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:layout_editor_absoluteY="81dp"
+    android:background="@android:color/white">
+
+    <View
+        android:id="@+id/geodesicSwatch2"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/geodesic_swatch"
+        app:layout_constraintBottom_toBottomOf="@+id/planarSwatch"
+        app:layout_constraintEnd_toEndOf="@+id/planarSwatch"
+        app:layout_constraintStart_toStartOf="@+id/planarSwatch"
+        app:layout_constraintTop_toTopOf="@+id/planarSwatch" />
+
+    <View
+        android:id="@+id/geodesicSwatch"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/geodesic_swatch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/geodesicBufferTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/geodesic_buffer"
+        app:layout_constraintStart_toEndOf="@+id/geodesicSwatch"
+        app:layout_constraintTop_toTopOf="@+id/geodesicSwatch"
+        app:layout_constraintBottom_toBottomOf="@+id/geodesicSwatch" />
+
+    <View
+        android:id="@+id/planarSwatch"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/planar_swatch"
+        app:layout_constraintStart_toEndOf="@+id/geodesicBufferTextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/planarBufferTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/planar_buffer"
+        app:layout_constraintStart_toEndOf="@+id/planarSwatch"
+        app:layout_constraintTop_toTopOf="@+id/planarSwatch"
+        app:layout_constraintBottom_toBottomOf="@+id/planarSwatch"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

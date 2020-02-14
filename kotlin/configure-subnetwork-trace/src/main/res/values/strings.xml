@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Configure subnetwork trace</string>
+    <string name="trace_options">Trace options:</string>
+    <string name="include_barriers">Include barriers</string>
+    <string name="include_containers">Include containers</string>
+    <string name="define_new_condition">Define new condition:</string>
+    <string name="example_barrier_condition_for_this_data_transformer_load_equal_15">Example barrier condition for this data: \'Transformer Load\' EQUAL \'15\'</string>
+    <string name="falseText">False</string>
+    <string name="trueText">True</string>
+    <string name="add">Add</string>
+    <string name="barrier_conditions">Barrier conditions:</string>
+    <string name="trace">Trace</string>
+    <string name="reset">Reset</string>
+    <string name="naperville_electric_url">https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer</string>
+</resources>
