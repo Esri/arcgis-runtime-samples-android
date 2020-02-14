@@ -1,4 +1,4 @@
-/* Copyright 2018 Esri
+/* Copyright 2020 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -33,74 +30,65 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.LatitudeLongitudeGrid
-import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.mapping.view.MgrsGrid
 import com.esri.arcgisruntime.mapping.view.UsngGrid
 import com.esri.arcgisruntime.mapping.view.UtmGrid
 import com.esri.arcgisruntime.symbology.LineSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.TextSymbol
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.popup_menu.view.*
 
 class MainActivity : AppCompatActivity() {
-  private var mMapView: MapView? = null
-  private var mLabelsCheckBox: CheckBox? = null
-  private var mLineColor = 0
-  private var mLabelColor = 0
+  private var lineColor = 0
+  private var labelColor = 0
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    // inflate views from activity_main
-    mMapView = findViewById(R.id.mapView)
-    val mMenuButton = findViewById<Button>(R.id.menu_button)
     // set up a popup menu to manage grid settings
     val builder =
       AlertDialog.Builder(this@MainActivity)
-    val view = layoutInflater.inflate(R.layout.popup_menu, null)
-    builder.setView(view)
+    val popupView = layoutInflater.inflate(R.layout.popup_menu, null)
+    builder.setView(popupView)
     val dialog = builder.create()
-    // inflate views from popup_menu
-    val mGridSpinner = view.findViewById<Spinner>(R.id.layer_spinner)
-    mLabelsCheckBox = view.findViewById(R.id.labels_checkBox)
-    val mColorsSpinner = view.findViewById<Spinner>(R.id.line_color_spinner)
-    val mLabelColorSpinner = view.findViewById<Spinner>(R.id.label_color_spinner)
     // create drop-down list of different grids
     val adapter = ArrayAdapter(
       this@MainActivity, android.R.layout.simple_spinner_item,
       resources.getStringArray(R.array.layers_array)
     )
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-    mGridSpinner.adapter = adapter
+    popupView.layer_spinner.adapter = adapter
     // create drop-down list of different colors
     val colorAdapter = ArrayAdapter(
       this@MainActivity, android.R.layout.simple_spinner_item,
       resources.getStringArray(R.array.colors_array)
     )
     colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-    mColorsSpinner.adapter = colorAdapter
+    popupView.line_color_spinner.adapter = colorAdapter
     // create drop-down list of different label colors
     val labelColorAdapter = ArrayAdapter(
       this@MainActivity, android.R.layout.simple_spinner_item,
       resources.getStringArray(R.array.colors_array)
     )
     labelColorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-    mLabelColorSpinner.adapter = labelColorAdapter
+    popupView.label_color_spinner.adapter = labelColorAdapter
     // create a map with imagery basemap
     val map = ArcGISMap(Basemap.createImagery())
     // set viewpoint
     val center = Point(
       -7702852.905619,
       6217972.345771,
-      23227,
+      23227.0,
       SpatialReference.create(3857)
     )
-    map.initialViewpoint = Viewpoint(center, 23227)
+    map.initialViewpoint = Viewpoint(center, 23227.0)
     // set the map to be displayed in this view
-    mMapView.setMap(map)
+    mapView.setMap(map)
     // set defaults on grid
-    mMapView.setGrid(LatitudeLongitudeGrid())
-    mLabelsCheckBox.setChecked(true)
+    mapView.setGrid(LatitudeLongitudeGrid())
+    popupView.labels_checkBox.setChecked(true)
     // change different grids on the Map View
-    mGridSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+    popupView.layer_spinner.onItemSelectedListener = object : OnItemSelectedListener {
       override fun onItemSelected(
         parent: AdapterView<*>?,
         view: View,
@@ -109,33 +97,33 @@ class MainActivity : AppCompatActivity() {
       ) { // set the grid type
         when (position) {
           0 -> {
-            mMapView.setGrid(LatitudeLongitudeGrid())
-            mMapView.setViewpointScaleAsync(23227.0)
+            mapView.setGrid(LatitudeLongitudeGrid())
+            mapView.setViewpointScaleAsync(23227.0)
           }
           1 -> {
-            mMapView.setGrid(MgrsGrid())
-            mMapView.setViewpointScaleAsync(23227.0)
+            mapView.setGrid(MgrsGrid())
+            mapView.setViewpointScaleAsync(23227.0)
           }
           2 -> {
-            mMapView.setGrid(UtmGrid())
-            mMapView.setViewpointScaleAsync(10000000.0)
+            mapView.setGrid(UtmGrid())
+            mapView.setViewpointScaleAsync(10000000.0)
           }
           3 -> {
-            mMapView.setGrid(UsngGrid())
-            mMapView.setViewpointScaleAsync(23227.0)
+            mapView.setGrid(UsngGrid())
+            mapView.setViewpointScaleAsync(23227.0)
           }
           else -> Toast.makeText(this@MainActivity, "Unsupported option", Toast.LENGTH_SHORT).show()
         }
         // make sure settings persist on grid type change
-        setLabelVisibility()
-        changeGridColor(mLineColor)
-        changeLabelColor(mLabelColor)
+        setLabelVisibility(popupView.labels_checkBox.isChecked)
+        changeGridColor(lineColor)
+        changeLabelColor(labelColor)
       }
 
       override fun onNothingSelected(parent: AdapterView<*>?) {}
     }
     // change grid lines color
-    mColorsSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+    popupView.line_color_spinner.onItemSelectedListener = object : OnItemSelectedListener {
       override fun onItemSelected(
         parent: AdapterView<*>?,
         view: View,
@@ -143,18 +131,18 @@ class MainActivity : AppCompatActivity() {
         id: Long
       ) { //set the color
         when (position) {
-          0 -> mLineColor = Color.RED
-          1 -> mLineColor = Color.WHITE
-          2 -> mLineColor = Color.BLUE
+          0 -> lineColor = Color.RED
+          1 -> lineColor = Color.WHITE
+          2 -> lineColor = Color.BLUE
           else -> Toast.makeText(this@MainActivity, "Unsupported option", Toast.LENGTH_SHORT).show()
         }
-        changeGridColor(mLineColor)
+        changeGridColor(lineColor)
       }
 
       override fun onNothingSelected(parent: AdapterView<*>?) {}
     }
     // change grid labels color
-    mLabelColorSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+    popupView.label_color_spinner.onItemSelectedListener = object : OnItemSelectedListener {
       override fun onItemSelected(
         parent: AdapterView<*>?,
         view: View,
@@ -162,34 +150,34 @@ class MainActivity : AppCompatActivity() {
         id: Long
       ) { // set the color
         when (position) {
-          0 -> mLabelColor = Color.RED
-          1 -> mLabelColor = Color.WHITE
-          2 -> mLabelColor = Color.BLUE
+          0 -> labelColor = Color.RED
+          1 -> labelColor = Color.WHITE
+          2 -> labelColor = Color.BLUE
           else -> Toast.makeText(this@MainActivity, "Unsupported option", Toast.LENGTH_SHORT).show()
         }
-        changeLabelColor(mLabelColor)
+        changeLabelColor(labelColor)
       }
 
       override fun onNothingSelected(parent: AdapterView<*>?) {}
     }
     // hide and show label visibility when the checkbox is clicked
-    mLabelsCheckBox.setOnClickListener(View.OnClickListener { v: View? -> setLabelVisibility() })
+    popupView.labels_checkBox.setOnClickListener(View.OnClickListener { v: View? ->
+      setLabelVisibility(
+        popupView.labels_checkBox.isChecked
+      )
+    })
     // display pop-up box when button is clicked
-    mMenuButton.setOnClickListener { v: View? -> dialog.show() }
+    menu_button.setOnClickListener { v: View? -> dialog.show() }
   }
 
-  private fun setLabelVisibility() {
-    if (mLabelsCheckBox!!.isChecked) {
-      mMapView!!.grid.isLabelVisible = true
-    } else {
-      mMapView!!.grid.isLabelVisible = false
-    }
+  private fun setLabelVisibility(visible: Boolean) {
+    mapView.grid.isLabelVisible = visible
   }
 
   private fun changeGridColor(color: Int) {
-    val grid = mMapView!!.grid
+    val grid = mapView.grid
     val gridLevels = grid.levelCount
-    for (gridLevel in 0..gridLevels - 1) {
+    for (gridLevel in 0 until gridLevels) {
       val lineSymbol: LineSymbol =
         SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, color, (gridLevel + 1).toFloat())
       grid.setLineSymbol(gridLevel, lineSymbol)
@@ -197,9 +185,9 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun changeLabelColor(color: Int) {
-    val grid = mMapView!!.grid
+    val grid = mapView.grid
     val gridLevels = grid.levelCount
-    for (gridLevel in 0..gridLevels - 1) {
+    for (gridLevel in 0 until gridLevels) {
       val textSymbol = TextSymbol()
       textSymbol.color = color
       textSymbol.size = 14f
@@ -212,17 +200,17 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onPause() {
+    mapView.pause()
     super.onPause()
-    mMapView!!.pause()
   }
 
   override fun onResume() {
     super.onResume()
-    mMapView!!.resume()
+    mapView.resume()
   }
 
   override fun onDestroy() {
+    mapView.dispose()
     super.onDestroy()
-    mMapView!!.dispose()
   }
 }
