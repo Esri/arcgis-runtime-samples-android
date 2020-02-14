@@ -20,6 +20,7 @@ package com.example.exporttiles
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -49,10 +50,13 @@ class MainActivity : AppCompatActivity() {
 
   private val TAG: String = MainActivity::class.java.simpleName
   private var exportTileCacheJob: ExportTileCacheJob? = null
+  private var downloadArea: Graphic? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+//    previewMapView.bringToFront()
 
     // create an ArcGISTiledLayer to use as the basemap
     val tiledLayer = ArcGISTiledLayer(getString(R.string.world_street_map))
@@ -62,8 +66,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create a graphic and graphics overlay to show a red box around the tiles to be downloaded
-    val downloadArea = Graphic()
-    downloadArea.symbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2f)
+    downloadArea = Graphic()
+    downloadArea?.symbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2f)
     val graphicsOverlay = GraphicsOverlay()
     graphicsOverlay.graphics.add(downloadArea)
 
@@ -89,7 +93,7 @@ class MainActivity : AppCompatActivity() {
           val minPoint: Point = mapView.screenToLocation(minScreenPoint)
           val maxPoint: Point = mapView.screenToLocation(maxScreenPoint)
           // use the points to define and return an envelope
-          downloadArea.geometry = Envelope(minPoint, maxPoint)
+          downloadArea?.geometry = Envelope(minPoint, maxPoint)
         }
       }
     }
@@ -100,7 +104,7 @@ class MainActivity : AppCompatActivity() {
       // set up the export tile cache parameters
       val parametersFuture: ListenableFuture<ExportTileCacheParameters> =
         exportTileCacheTask.createDefaultExportTileCacheParametersAsync(
-          downloadArea.geometry,
+          downloadArea?.geometry,
           mapView.mapScale,
           tiledLayer.maxScale
         )
@@ -135,6 +139,13 @@ class MainActivity : AppCompatActivity() {
                 dialog.dismiss()
                 if (status == Job.Status.SUCCEEDED) {
                   showMapPreview(result)
+                  downloadArea?.isVisible = false
+
+                  // disable touch on the map view
+//                  mapView.setOnTouchListener {v: View, m: MotionEvent ->
+//                    false
+//                  }
+
                 } else {
                   ("Job did not succeed: " + error.additionalMessage).also {
                     Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG).show()
@@ -169,6 +180,7 @@ class MainActivity : AppCompatActivity() {
       setViewpoint(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE))
     }
     // control UI visibility
+    previewMapView.getChildAt(0).setVisibility(View.VISIBLE);
     show(closeButton, dimBackground, preview_text_view, previewMapView)
     exportTilesButton.visibility = View.GONE
   }
@@ -195,9 +207,18 @@ class MainActivity : AppCompatActivity() {
    * Clear the preview window.
    */
   fun clearPreview(view: View) {
+
+    previewMapView.getChildAt(0).setVisibility(View.INVISIBLE);
     hide(closeButton, dimBackground, preview_text_view, previewMapView)
     // control UI visibility
     show(exportTilesButton, mapView)
+    downloadArea?.isVisible = true
+
+    // disable touch on the map view
+//    mapView.setOnTouchListener {v: View, m: MotionEvent ->
+//      true
+//    }
+
   }
 
   /**
