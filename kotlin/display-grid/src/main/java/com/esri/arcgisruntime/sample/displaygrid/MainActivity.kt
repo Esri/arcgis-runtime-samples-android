@@ -49,16 +49,15 @@ class MainActivity : AppCompatActivity() {
     mapView.apply {
 
       // create a map with imagery basemap
-      map = ArcGISMap(Basemap.createImagery()).also {
+      map = ArcGISMap(Basemap.createImagery()).also {map ->
         // set viewpoint
         val center = Point(
           -7702852.905619,
           6217972.345771,
-          23227.0,
+//          23227.0,
           SpatialReference.create(3857)
         )
-        setViewpoint(Viewpoint(center, 23227.0))
-//        initialViewpoint = Viewpoint(center, 23227.0)
+        map.initialViewpoint = Viewpoint(center, 23227.0)
       }
 
       // set defaults on grid
@@ -92,22 +91,23 @@ class MainActivity : AppCompatActivity() {
             id: Long
           ) { // set the grid type
             when (position) {
-              //TODO: Why does this move the scale around??? commented out
+              //TODO: you can specify the time the async stuff takes
+              // NOTE will make it smoother
               0 -> {
                 mapView.grid = LatitudeLongitudeGrid()
-//                mapView.setViewpointScaleAsync(23227.0)
+                mapView.setViewpointScaleAsync(23227.0)
               }
               1 -> {
                 mapView.grid = MgrsGrid()
-//                mapView.setViewpointScaleAsync(23227.0)
+                mapView.setViewpointScaleAsync(23227.0)
               }
               2 -> {
                 mapView.grid = UtmGrid()
-//                mapView.setViewpointScaleAsync(10000000.0)
+                mapView.setViewpointScaleAsync(10000000.0)
               }
               3 -> {
                 mapView.grid = UsngGrid()
-//                mapView.setViewpointScaleAsync(23227.0)
+                mapView.setViewpointScaleAsync(23227.0)
               }
               else -> Toast.makeText(
                 this@MainActivity,
@@ -220,18 +220,19 @@ class MainActivity : AppCompatActivity() {
       grid.setLineSymbol(gridLevel, lineSymbol)
     }
   }
-//todo
-  private fun changeLabelColor(color: Int) {
+//todo: decide if grid should be a val or just access directly
+  private fun changeLabelColor(labelColor: Int) {
     val grid = mapView.grid
     val gridLevels = grid.levelCount
     for (gridLevel in 0 until gridLevels) {
-      val textSymbol = TextSymbol()
-      textSymbol.color = color
-      textSymbol.size = 14f
-      textSymbol.horizontalAlignment = TextSymbol.HorizontalAlignment.LEFT
-      textSymbol.verticalAlignment = TextSymbol.VerticalAlignment.BOTTOM
-      textSymbol.haloColor = Color.WHITE
-      textSymbol.haloWidth = gridLevel + 1.toFloat()
+      val textSymbol = TextSymbol().apply {
+        color = labelColor
+        size = 14f
+        horizontalAlignment = TextSymbol.HorizontalAlignment.LEFT
+        verticalAlignment = TextSymbol.VerticalAlignment.BOTTOM
+        haloColor = Color.WHITE
+        haloWidth = gridLevel + 1.toFloat()
+      }
       grid.setTextSymbol(gridLevel, textSymbol)
     }
   }
