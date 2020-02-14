@@ -27,4 +27,5 @@ include ':add-features-feature-service',
         ':token-authentication',
         ':view-point-cloud-data-offline',
         ':viewshed-geoprocessing',
+        ':viewshed-location',
         ':wmts-layer'
