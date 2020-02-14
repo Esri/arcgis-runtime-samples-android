@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Viewshed Location</string>
+    <string name="elevation_service">https://scene.arcgis.com/arcgis/rest/services/BREST_DTM_1M/ImageServer</string>
+    <string name="buildings_layer">
+        https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0
+    </string>
+    <string name="heading">Heading</string>
+    <string name="pitch">Pitch</string>
+    <string name="horizontal_angle">Horizontal Angle</string>
+    <string name="vertical_angle">Vertical Angle</string>
+    <string name="minimum_distance">Minimum Distance</string>
+    <string name="maximum_distance">Maximum Distance</string>
+    <string name="frustum_visibiity">Frustum visibility</string>
+    <string name="viewshed_visibility">Analysis visibility</string>
+</resources>
