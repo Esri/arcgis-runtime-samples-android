@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.esri.arcgisandroid.sample.performspatialoperations.MainActivity">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_no_operation"
+            app:showAsAction="never"
+            android:title="@string/caption_no_operation" />
+        <item
+            android:id="@+id/action_intersection"
+            app:showAsAction="never"
+            android:title="@string/caption_intersection" />
+        <item
+            android:id="@+id/action_union"
+            app:showAsAction="never"
+            android:title="@string/caption_union" />
+        <item
+            android:id="@+id/action_difference"
+            app:showAsAction="never"
+            android:title="@string/caption_difference" />
+        <item
+            android:id="@+id/action_symmetric_difference"
+            app:showAsAction="never"
+            android:title="@string/caption_symmetric_difference" />
+    </group>
+</menu>

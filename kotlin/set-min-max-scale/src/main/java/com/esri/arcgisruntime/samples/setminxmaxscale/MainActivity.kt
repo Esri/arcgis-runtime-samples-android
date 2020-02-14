@@ -28,37 +28,38 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
+    setContentView(R.layout.activity_main)
 
-        // create a ArcGISMap with basemap streets
-        with(ArcGISMap(Basemap.createStreets())) {
-            // set the scale at which this layer can be viewed
-            this.minScale = 8000.0
-            this.maxScale = 2000.0
+    // create a ArcGISMap with basemap streets
+    with(ArcGISMap(Basemap.createStreets())) {
+      // set the scale at which this layer can be viewed
+      this.minScale = 8000.0
+      this.maxScale = 2000.0
 
-            // set point where the map view will focus and zoom to
-            this.initialViewpoint = Viewpoint(Point(-355453.0, 7548720.0, SpatialReferences.getWebMercator()), 3000.0)
+      // set point where the map view will focus and zoom to
+      this.initialViewpoint =
+        Viewpoint(Point(-355453.0, 7548720.0, SpatialReferences.getWebMercator()), 3000.0)
 
-            // set the ArcGISMap instance to display in the MapView
-            mapView.map = this
-        }
+      // set the ArcGISMap instance to display in the MapView
+      mapView.map = this
     }
+  }
 
-    override fun onResume() {
-        super.onResume()
-        mapView.resume()
-    }
+  override fun onResume() {
+    super.onResume()
+    mapView.resume()
+  }
 
-    override fun onPause() {
-        mapView.pause()
-        super.onPause()
-    }
+  override fun onPause() {
+    mapView.pause()
+    super.onPause()
+  }
 
-    override fun onDestroy() {
-        mapView.dispose()
-        super.onDestroy()
-    }
+  override fun onDestroy() {
+    mapView.dispose()
+    super.onDestroy()
+  }
 }
