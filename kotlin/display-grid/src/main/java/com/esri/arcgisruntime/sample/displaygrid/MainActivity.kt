@@ -45,135 +45,172 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+    mapView.apply {
+
+      // create a map with imagery basemap
+      map = ArcGISMap(Basemap.createImagery()).also {
+        // set viewpoint
+        val center = Point(
+          -7702852.905619,
+          6217972.345771,
+          23227.0,
+          SpatialReference.create(3857)
+        )
+        setViewpoint(Viewpoint(center, 23227.0))
+//        initialViewpoint = Viewpoint(center, 23227.0)
+      }
+
+      // set defaults on grid
+      mapView.grid = LatitudeLongitudeGrid()
+    }
+
+    // TODO: Should this go inside the other thing?
     // set up a popup menu to manage grid settings
     val builder =
       AlertDialog.Builder(this@MainActivity)
     val popupView = layoutInflater.inflate(R.layout.popup_menu, null)
     builder.setView(popupView)
     val dialog = builder.create()
-    // create drop-down list of different grids
-    val adapter = ArrayAdapter(
-      this@MainActivity, android.R.layout.simple_spinner_item,
-      resources.getStringArray(R.array.layers_array)
-    )
-    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-    popupView.layer_spinner.adapter = adapter
-    // create drop-down list of different colors
-    val colorAdapter = ArrayAdapter(
-      this@MainActivity, android.R.layout.simple_spinner_item,
-      resources.getStringArray(R.array.colors_array)
-    )
-    colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-    popupView.line_color_spinner.adapter = colorAdapter
-    // create drop-down list of different label colors
-    val labelColorAdapter = ArrayAdapter(
-      this@MainActivity, android.R.layout.simple_spinner_item,
-      resources.getStringArray(R.array.colors_array)
-    )
-    labelColorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-    popupView.label_color_spinner.adapter = labelColorAdapter
-    // create a map with imagery basemap
-    val map = ArcGISMap(Basemap.createImagery())
-    // set viewpoint
-    val center = Point(
-      -7702852.905619,
-      6217972.345771,
-      23227.0,
-      SpatialReference.create(3857)
-    )
-    map.initialViewpoint = Viewpoint(center, 23227.0)
-    // set the map to be displayed in this view
-    mapView.setMap(map)
-    // set defaults on grid
-    mapView.setGrid(LatitudeLongitudeGrid())
-    popupView.labels_checkBox.setChecked(true)
-    // change different grids on the Map View
-    popupView.layer_spinner.onItemSelectedListener = object : OnItemSelectedListener {
-      override fun onItemSelected(
-        parent: AdapterView<*>?,
-        view: View,
-        position: Int,
-        id: Long
-      ) { // set the grid type
-        when (position) {
-          0 -> {
-            mapView.setGrid(LatitudeLongitudeGrid())
-            mapView.setViewpointScaleAsync(23227.0)
-          }
-          1 -> {
-            mapView.setGrid(MgrsGrid())
-            mapView.setViewpointScaleAsync(23227.0)
-          }
-          2 -> {
-            mapView.setGrid(UtmGrid())
-            mapView.setViewpointScaleAsync(10000000.0)
-          }
-          3 -> {
-            mapView.setGrid(UsngGrid())
-            mapView.setViewpointScaleAsync(23227.0)
-          }
-          else -> Toast.makeText(this@MainActivity, "Unsupported option", Toast.LENGTH_SHORT).show()
+
+    // set up the popup menu
+    popupView.apply {
+      layer_spinner.apply {
+        // create drop-down list of different grids
+        adapter = ArrayAdapter(
+          this@MainActivity, android.R.layout.simple_spinner_item,
+          resources.getStringArray(R.array.layers_array)
+        ).also { gridAdapter ->
+          gridAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
-        // make sure settings persist on grid type change
-        setLabelVisibility(popupView.labels_checkBox.isChecked)
-        changeGridColor(lineColor)
-        changeLabelColor(labelColor)
+        // change different grids on the Map View
+        onItemSelectedListener = object : OnItemSelectedListener {
+          override fun onItemSelected(
+            parent: AdapterView<*>?,
+            view: View,
+            position: Int,
+            id: Long
+          ) { // set the grid type
+            when (position) {
+              //TODO: Why does this move the scale around??? commented out
+              0 -> {
+                mapView.grid = LatitudeLongitudeGrid()
+//                mapView.setViewpointScaleAsync(23227.0)
+              }
+              1 -> {
+                mapView.grid = MgrsGrid()
+//                mapView.setViewpointScaleAsync(23227.0)
+              }
+              2 -> {
+                mapView.grid = UtmGrid()
+//                mapView.setViewpointScaleAsync(10000000.0)
+              }
+              3 -> {
+                mapView.grid = UsngGrid()
+//                mapView.setViewpointScaleAsync(23227.0)
+              }
+              else -> Toast.makeText(
+                this@MainActivity,
+                "Unsupported option",
+                Toast.LENGTH_SHORT
+              ).show()
+            }
+            // make sure settings persist on grid type change
+            mapView.grid.isLabelVisible = popupView.labels_checkBox.isChecked
+            changeGridColor(lineColor)
+            changeLabelColor(labelColor)
+          }
+
+          override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
       }
 
-      override fun onNothingSelected(parent: AdapterView<*>?) {}
-    }
-    // change grid lines color
-    popupView.line_color_spinner.onItemSelectedListener = object : OnItemSelectedListener {
-      override fun onItemSelected(
-        parent: AdapterView<*>?,
-        view: View,
-        position: Int,
-        id: Long
-      ) { //set the color
-        when (position) {
-          0 -> lineColor = Color.RED
-          1 -> lineColor = Color.WHITE
-          2 -> lineColor = Color.BLUE
-          else -> Toast.makeText(this@MainActivity, "Unsupported option", Toast.LENGTH_SHORT).show()
+      line_color_spinner.apply {
+        // create drop-down list of different line colors
+        adapter = ArrayAdapter(
+          this@MainActivity, android.R.layout.simple_spinner_item,
+          resources.getStringArray(R.array.colors_array)
+        ).also { colorAdapter ->
+          colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
-        changeGridColor(lineColor)
+
+        // change grid lines color
+        onItemSelectedListener = object : OnItemSelectedListener {
+          override fun onItemSelected(
+            parent: AdapterView<*>?,
+            view: View,
+            position: Int,
+            id: Long
+          ) { //set the color
+            when (position) {
+              0 -> lineColor = Color.RED
+              1 -> lineColor = Color.WHITE
+              2 -> lineColor = Color.BLUE
+              else -> Toast.makeText(
+                this@MainActivity,
+                "Unsupported option",
+                Toast.LENGTH_SHORT
+              ).show()
+            }
+            changeGridColor(lineColor)
+          }
+
+          override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
       }
 
-      override fun onNothingSelected(parent: AdapterView<*>?) {}
-    }
-    // change grid labels color
-    popupView.label_color_spinner.onItemSelectedListener = object : OnItemSelectedListener {
-      override fun onItemSelected(
-        parent: AdapterView<*>?,
-        view: View,
-        position: Int,
-        id: Long
-      ) { // set the color
-        when (position) {
-          0 -> labelColor = Color.RED
-          1 -> labelColor = Color.WHITE
-          2 -> labelColor = Color.BLUE
-          else -> Toast.makeText(this@MainActivity, "Unsupported option", Toast.LENGTH_SHORT).show()
+      // create drop-down list of different label colors
+      label_color_spinner.apply {
+        adapter = ArrayAdapter(
+          this@MainActivity, android.R.layout.simple_spinner_item,
+          resources.getStringArray(R.array.colors_array)
+        ).also { labelColorAdapter ->
+          labelColorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
-        changeLabelColor(labelColor)
+
+        // change grid labels color
+        onItemSelectedListener = object : OnItemSelectedListener {
+          override fun onItemSelected(
+            parent: AdapterView<*>?,
+            view: View,
+            position: Int,
+            id: Long
+          ) { // set the color
+            when (position) {
+              0 -> labelColor = Color.RED
+              1 -> labelColor = Color.WHITE
+              2 -> labelColor = Color.BLUE
+              else -> Toast.makeText(
+                this@MainActivity,
+                "Unsupported option",
+                Toast.LENGTH_SHORT
+              ).show()
+            }
+            changeLabelColor(labelColor)
+          }
+
+          override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
       }
 
-      override fun onNothingSelected(parent: AdapterView<*>?) {}
+      labels_checkBox.apply {
+        isChecked = true
+        // hide and show label visibility when the checkbox is clicked
+        setOnClickListener {
+          mapView.grid.isLabelVisible = this.isChecked
+        }
+      }
     }
-    // hide and show label visibility when the checkbox is clicked
-    popupView.labels_checkBox.setOnClickListener(View.OnClickListener { v: View? ->
-      setLabelVisibility(
-        popupView.labels_checkBox.isChecked
-      )
-    })
+
     // display pop-up box when button is clicked
-    menu_button.setOnClickListener { v: View? -> dialog.show() }
+    menu_button.setOnClickListener { dialog.show() }
   }
 
-  private fun setLabelVisibility(visible: Boolean) {
-    mapView.grid.isLabelVisible = visible
-  }
-
+//  //UNSURE: Should this just be used directly?
+//  private fun setLabelVisibility(visible: Boolean) {
+//    mapView.grid.isLabelVisible = visible
+//  }
+//todo
   private fun changeGridColor(color: Int) {
     val grid = mapView.grid
     val gridLevels = grid.levelCount
@@ -183,7 +220,7 @@ class MainActivity : AppCompatActivity() {
       grid.setLineSymbol(gridLevel, lineSymbol)
     }
   }
-
+//todo
   private fun changeLabelColor(color: Int) {
     val grid = mapView.grid
     val gridLevels = grid.levelCount
