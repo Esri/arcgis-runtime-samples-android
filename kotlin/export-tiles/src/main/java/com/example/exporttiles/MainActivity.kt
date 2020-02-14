@@ -56,8 +56,6 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-//    previewMapView.bringToFront()
-
     // create an ArcGISTiledLayer to use as the basemap
     val tiledLayer = ArcGISTiledLayer(getString(R.string.world_street_map))
     val map = ArcGISMap().apply {
@@ -129,9 +127,8 @@ class MainActivity : AppCompatActivity() {
 
               // on progress change
               addProgressChangedListener {
-                  dialog.progressBar.progress = progress
+                dialog.progressBar.progress = progress
                 dialog.progressTextView.text = "$progress%"
-
               }
 
               // when the job has completed, close the dialog and show the job result in the map preview
@@ -140,11 +137,6 @@ class MainActivity : AppCompatActivity() {
                 if (status == Job.Status.SUCCEEDED) {
                   showMapPreview(result)
                   downloadArea?.isVisible = false
-
-                  // disable touch on the map view
-//                  mapView.setOnTouchListener {v: View, m: MotionEvent ->
-//                    false
-//                  }
 
                 } else {
                   ("Job did not succeed: " + error.additionalMessage).also {
@@ -155,14 +147,19 @@ class MainActivity : AppCompatActivity() {
               }
             }
         } catch (e: InterruptedException) {
-          Toast.makeText(this, "TileCacheParameters interrupted: " + e.message, Toast.LENGTH_LONG).show()
+          Toast.makeText(this, "TileCacheParameters interrupted: " + e.message, Toast.LENGTH_LONG)
+            .show()
           Log.e(TAG, "TileCacheParameters interrupted: " + e.message)
         } catch (e: ExecutionException) {
-          Toast.makeText(this, "Error generating parameters: " + e.message, Toast.LENGTH_LONG).show()
+          Toast.makeText(this, "Error generating parameters: " + e.message, Toast.LENGTH_LONG)
+            .show()
           Log.e(TAG, "Error generating parameters: " + e.message)
         }
       }
     }
+
+    // get correct view order set up on start
+    clearPreview(mapView)
   }
 
   /**
@@ -180,9 +177,27 @@ class MainActivity : AppCompatActivity() {
       setViewpoint(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE))
     }
     // control UI visibility
-    previewMapView.getChildAt(0).setVisibility(View.VISIBLE);
+    previewMapView.getChildAt(0).visibility = View.VISIBLE
     show(closeButton, dimBackground, preview_text_view, previewMapView)
     exportTilesButton.visibility = View.GONE
+
+    // // required for some Android devices running older OS (combats Z-ordering bug in Android API)
+    mapPreviewLayout.bringToFront()
+  }
+
+  /**
+   * Clear the preview window.
+   */
+  fun clearPreview(view: View) {
+
+    previewMapView.getChildAt(0).visibility = View.INVISIBLE
+    hide(closeButton, dimBackground, preview_text_view, previewMapView)
+    // control UI visibility
+    show(exportTilesButton, mapView)
+    downloadArea?.isVisible = true
+
+    // required for some Android devices running older OS (combats Z-ordering bug in Android API)
+    mapView.bringToFront()
   }
 
   /**
@@ -203,23 +218,6 @@ class MainActivity : AppCompatActivity() {
     return builder.create()
   }
 
-  /**
-   * Clear the preview window.
-   */
-  fun clearPreview(view: View) {
-
-    previewMapView.getChildAt(0).setVisibility(View.INVISIBLE);
-    hide(closeButton, dimBackground, preview_text_view, previewMapView)
-    // control UI visibility
-    show(exportTilesButton, mapView)
-    downloadArea?.isVisible = true
-
-    // disable touch on the map view
-//    mapView.setOnTouchListener {v: View, m: MotionEvent ->
-//      true
-//    }
-
-  }
 
   /**
    * Makes the given views in the UI visible.
@@ -242,7 +240,7 @@ class MainActivity : AppCompatActivity() {
       view.visibility = View.INVISIBLE
     }
   }
-  
+
   override fun onResume() {
     super.onResume()
     mapView.resume()
