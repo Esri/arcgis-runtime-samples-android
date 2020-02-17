@@ -17,4 +17,14 @@
         <item>Blue</item>
 
     </string-array>
+
+    <string-array name="positions_array">
+        <item>ALL_SIDES</item>
+        <item>BOTTOM_LEFT</item>
+        <item>BOTTOM_RIGHT</item>
+        <item>CENTER</item>
+        <item>GEOGRAPHIC</item>
+        <item>TOP_LEFT</item>
+        <item>TOP_RIGHT</item>
+    </string-array>
 </resources>
