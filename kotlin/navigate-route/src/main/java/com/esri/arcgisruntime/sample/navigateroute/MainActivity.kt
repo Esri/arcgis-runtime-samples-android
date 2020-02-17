@@ -47,27 +47,11 @@ import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
 
+  private val TAG: String = this::class.java.simpleName
+
   private var textToSpeech: TextToSpeech? = null
 
   private var isTextToSpeechInitialized = false
-
-  companion object {
-    private val TAG: String = this::class.java.simpleName
-
-    /**
-     * Creates a list of stops along a route.
-     */
-    private fun getStops(): List<Stop> {
-      // San Diego Convention Center
-      val conventionCenter = Stop(Point(-117.160386, 32.706608, SpatialReferences.getWgs84()))
-      // USS San Diego Memorial
-      val memorial = Stop(Point(-117.173034, 32.712327, SpatialReferences.getWgs84()))
-      // RH Fleet Aerospace Museum
-      val aerospaceMuseum = Stop(Point(-117.147230, 32.730467, SpatialReferences.getWgs84()))
-
-      return listOf(conventionCenter, memorial, aerospaceMuseum)
-    }
-  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -95,11 +79,11 @@ class MainActivity : AppCompatActivity() {
     routeParametersFuture.addDoneListener {
       try {
         // define the route parameters
-        val routeParameters = routeParametersFuture.get().also {
-          it.setStops(getStops())
-          it.isReturnDirections = true
-          it.isReturnStops = true
-          it.isReturnRoutes = true
+        val routeParameters = routeParametersFuture.get().apply {
+          setStops(routeStops)
+          isReturnDirections = true
+          isReturnStops = true
+          isReturnRoutes = true
         }
 
         val routeResultFuture = routeTask.solveRouteAsync(routeParameters)
@@ -302,4 +286,15 @@ class MainActivity : AppCompatActivity() {
     mapView.dispose()
     super.onDestroy()
   }
+}
+
+private val routeStops by lazy {
+  listOf(
+    // San Diego Convention Center
+    Stop(Point(-117.160386, 32.706608, SpatialReferences.getWgs84())),
+    // USS San Diego Memorial
+    Stop(Point(-117.173034, 32.712327, SpatialReferences.getWgs84())),
+    // RH Fleet Aerospace Museum
+    Stop(Point(-117.147230, 32.730467, SpatialReferences.getWgs84()))
+  )
 }
