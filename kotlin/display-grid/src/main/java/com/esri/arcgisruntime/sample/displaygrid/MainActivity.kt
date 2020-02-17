@@ -42,24 +42,25 @@ import kotlinx.android.synthetic.main.popup_menu.view.*
 class MainActivity : AppCompatActivity() {
   private var lineColor = 0
   private var labelColor = 0
+
+  private val center: Point by lazy {
+    Point(
+      -7702852.905619,
+      6217972.345771,
+//          23227.0,
+      SpatialReference.create(3857)
+    )
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
     mapView.apply {
-
       // create a map with imagery basemap
       map = ArcGISMap(Basemap.createImagery()).also {map ->
-        // set viewpoint
-        val center = Point(
-          -7702852.905619,
-          6217972.345771,
-//          23227.0,
-          SpatialReference.create(3857)
-        )
         map.initialViewpoint = Viewpoint(center, 23227.0)
       }
-
       // set defaults on grid
       mapView.grid = LatitudeLongitudeGrid()
     }
@@ -89,25 +90,24 @@ class MainActivity : AppCompatActivity() {
             view: View,
             position: Int,
             id: Long
-          ) { // set the grid type
+          ) {
+            // set the grid type and move to the starting point over 1 second.
             when (position) {
-              //TODO: you can specify the time the async stuff takes
-              // NOTE will make it smoother
               0 -> {
                 mapView.grid = LatitudeLongitudeGrid()
-                mapView.setViewpointScaleAsync(23227.0)
+                mapView.setViewpointAsync(Viewpoint(center, 23227.0), 1f)
               }
               1 -> {
                 mapView.grid = MgrsGrid()
-                mapView.setViewpointScaleAsync(23227.0)
+                mapView.setViewpointAsync(Viewpoint(center, 23227.0), 1f)
               }
               2 -> {
                 mapView.grid = UtmGrid()
-                mapView.setViewpointScaleAsync(10000000.0)
+                mapView.setViewpointAsync(Viewpoint(center, 10000000.0), 1f)
               }
               3 -> {
                 mapView.grid = UsngGrid()
-                mapView.setViewpointScaleAsync(23227.0)
+                mapView.setViewpointAsync(Viewpoint(center, 23227.0), 1f)
               }
               else -> Toast.makeText(
                 this@MainActivity,
