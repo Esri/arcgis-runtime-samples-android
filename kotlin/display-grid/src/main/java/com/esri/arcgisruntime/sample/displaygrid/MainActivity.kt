@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
     builder.setView(popupView)
     val dialog = builder.create()
 
-    // set up the popup menu
+    // set up options in popup menu
     popupView.apply {
       layer_spinner.apply {
         // create drop-down list of different grids
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         ).also { gridAdapter ->
           gridAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
-        // change different grids on the Map View
+        // change between different grids on the mapView
         onItemSelectedListener = object : OnItemSelectedListener {
           override fun onItemSelected(
             parent: AdapterView<*>?,
@@ -95,7 +95,9 @@ class MainActivity : AppCompatActivity() {
             when (position) {
               0 -> {
                 // LatitudeLongitudeGrid can have a label format of DECIMAL_DEGREES or DEGREES_MINUTES_SECONDS
-                mapView.grid = LatitudeLongitudeGrid().apply { labelFormat = LatitudeLongitudeGrid.LabelFormat.DECIMAL_DEGREES }
+                mapView.grid = LatitudeLongitudeGrid().apply {
+                  labelFormat = LatitudeLongitudeGrid.LabelFormat.DECIMAL_DEGREES
+                }
                 mapView.setViewpointAsync(Viewpoint(center, 23227.0), 1f)
               }
               1 -> {
@@ -176,7 +178,8 @@ class MainActivity : AppCompatActivity() {
             view: View,
             position: Int,
             id: Long
-          ) { // set the color
+          ) {
+            // set the color
             when (position) {
               0 -> labelColor = Color.RED
               1 -> labelColor = Color.WHITE
@@ -203,13 +206,14 @@ class MainActivity : AppCompatActivity() {
           positionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
 
-        onItemSelectedListener = object: OnItemSelectedListener {
+        onItemSelectedListener = object : OnItemSelectedListener {
           override fun onItemSelected(
             parent: AdapterView<*>?,
             view: View,
             position: Int,
             id: Long
-          ) { // set the color
+          ) {
+            // set the label position
             when (position) {
               0 -> labelPosition = Grid.LabelPosition.ALL_SIDES
               1 -> labelPosition = Grid.LabelPosition.BOTTOM_LEFT
@@ -243,7 +247,7 @@ class MainActivity : AppCompatActivity() {
     // display pop-up box when button is clicked
     menu_button.setOnClickListener { dialog.show() }
   }
-//TODO a@params
+  
   private fun setLabelVisibility(visible: Boolean) {
     mapView.grid.isLabelVisible = visible
   }
