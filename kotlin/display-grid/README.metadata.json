@@ -1,0 +1,30 @@
+{
+    "category": "MapViews, SceneViews and UI",
+    "description": "Display coordinate system grids including Latitude/Longitude, MGRS, UTM and USNG on a map view. Also, toggle label visibility and change the color of grid lines and grid labels.",
+    "ignore": false,
+    "images": [
+        "display-grid.png"
+    ],
+    "keywords": [
+        "map",
+        "mapview",
+        "sceneview",
+        "ui",
+        "graticule"
+    ],
+    "redirect_from": "/android/latest/sample-code/display-grid.htm",
+    "relevant_apis": [
+      "ArcGISGrid",
+      "LatitudeLongitudeGrid",
+      "UTMGrid",
+      "USNGGrid",
+      "MapView",
+      "MGRSGrid",
+      "TextSymbol",
+      "SimpleLineSymbol"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/displaygrid/MainActivity.kt"
+    ],
+    "title": "Display grid"
+}
