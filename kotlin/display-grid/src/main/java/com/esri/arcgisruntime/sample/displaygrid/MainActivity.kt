@@ -29,6 +29,7 @@ import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.view.Grid
 import com.esri.arcgisruntime.mapping.view.LatitudeLongitudeGrid
 import com.esri.arcgisruntime.mapping.view.MgrsGrid
 import com.esri.arcgisruntime.mapping.view.UsngGrid
@@ -42,6 +43,7 @@ import kotlinx.android.synthetic.main.popup_menu.view.*
 class MainActivity : AppCompatActivity() {
   private var lineColor = 0
   private var labelColor = 0
+  private var labelPosition = Grid.LabelPosition.ALL_SIDES
 
   private val center: Point by lazy {
     Point(
@@ -191,6 +193,43 @@ class MainActivity : AppCompatActivity() {
         }
       }
 
+      // create drop-down list of different label positions
+      label_position_spinner.apply {
+        adapter = ArrayAdapter(
+          this@MainActivity, android.R.layout.simple_spinner_item,
+          resources.getStringArray(R.array.positions_array)
+        ).also { positionAdapter ->
+          positionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
+        onItemSelectedListener = object: OnItemSelectedListener {
+          override fun onItemSelected(
+            parent: AdapterView<*>?,
+            view: View,
+            position: Int,
+            id: Long
+          ) { // set the color
+            when (position) {
+              0 -> labelPosition = Grid.LabelPosition.ALL_SIDES
+              1 -> labelPosition = Grid.LabelPosition.BOTTOM_LEFT
+              2 -> labelPosition = Grid.LabelPosition.BOTTOM_RIGHT
+              3 -> labelPosition = Grid.LabelPosition.CENTER
+              4 -> labelPosition = Grid.LabelPosition.GEOGRAPHIC
+              5 -> labelPosition = Grid.LabelPosition.TOP_LEFT
+              6 -> labelPosition = Grid.LabelPosition.TOP_RIGHT
+              else -> Toast.makeText(
+                this@MainActivity,
+                "Unsupported option",
+                Toast.LENGTH_SHORT
+              ).show()
+            }
+            changeLabelPosition(labelPosition)
+          }
+
+          override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+      }
+
       labels_checkBox.apply {
         isChecked = true
         // hide and show label visibility when the checkbox is clicked
@@ -232,6 +271,10 @@ class MainActivity : AppCompatActivity() {
       }
       grid.setTextSymbol(gridLevel, textSymbol)
     }
+  }
+
+  private fun changeLabelPosition(labelPosition: Grid.LabelPosition) {
+    mapView.grid.labelPosition = labelPosition
   }
 
   override fun onPause() {
