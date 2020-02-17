@@ -94,7 +94,8 @@ class MainActivity : AppCompatActivity() {
             // set the grid type and move to the starting point over 1 second.
             when (position) {
               0 -> {
-                mapView.grid = LatitudeLongitudeGrid()
+                // LatitudeLongitudeGrid can have a label format of DECIMAL_DEGREES or DEGREES_MINUTES_SECONDS
+                mapView.grid = LatitudeLongitudeGrid().apply { labelFormat = LatitudeLongitudeGrid.LabelFormat.DECIMAL_DEGREES }
                 mapView.setViewpointAsync(Viewpoint(center, 23227.0), 1f)
               }
               1 -> {
