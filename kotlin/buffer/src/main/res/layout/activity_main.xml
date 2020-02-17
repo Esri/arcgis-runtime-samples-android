@@ -34,7 +34,7 @@
         android:layout_width="="
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="@string/Units"
+        android:text="@string/units"
         android:textColor="@android:color/darker_gray"
         app:layout_constraintBaseline_toBaselineOf="@+id/bufferInput"
         app:layout_constraintEnd_toEndOf="parent" />
