@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity() {
     Point(
       -7702852.905619,
       6217972.345771,
-//          23227.0,
       SpatialReference.create(3857)
     )
   }
@@ -58,14 +57,13 @@ class MainActivity : AppCompatActivity() {
 
     mapView.apply {
       // create a map with imagery basemap
-      map = ArcGISMap(Basemap.createImagery()).also {map ->
+      map = ArcGISMap(Basemap.createImagery()).also { map ->
         map.initialViewpoint = Viewpoint(center, 23227.0)
       }
       // set defaults on grid
       mapView.grid = LatitudeLongitudeGrid()
     }
 
-    // TODO: Should this go inside the other thing?
     // set up a popup menu to manage grid settings
     val builder =
       AlertDialog.Builder(this@MainActivity)
@@ -116,7 +114,7 @@ class MainActivity : AppCompatActivity() {
               ).show()
             }
             // make sure settings persist on grid type change
-            mapView.grid.isLabelVisible = popupView.labels_checkBox.isChecked
+            setLabelVisibility(popupView.labels_checkBox.isChecked)
             changeGridColor(lineColor)
             changeLabelColor(labelColor)
           }
@@ -197,7 +195,7 @@ class MainActivity : AppCompatActivity() {
         isChecked = true
         // hide and show label visibility when the checkbox is clicked
         setOnClickListener {
-          mapView.grid.isLabelVisible = this.isChecked
+          setLabelVisibility(this.isChecked)
         }
       }
     }
@@ -205,12 +203,11 @@ class MainActivity : AppCompatActivity() {
     // display pop-up box when button is clicked
     menu_button.setOnClickListener { dialog.show() }
   }
+//TODO a@params
+  private fun setLabelVisibility(visible: Boolean) {
+    mapView.grid.isLabelVisible = visible
+  }
 
-//  //UNSURE: Should this just be used directly?
-//  private fun setLabelVisibility(visible: Boolean) {
-//    mapView.grid.isLabelVisible = visible
-//  }
-//todo
   private fun changeGridColor(color: Int) {
     val grid = mapView.grid
     val gridLevels = grid.levelCount
@@ -220,7 +217,7 @@ class MainActivity : AppCompatActivity() {
       grid.setLineSymbol(gridLevel, lineSymbol)
     }
   }
-//todo: decide if grid should be a val or just access directly
+
   private fun changeLabelColor(labelColor: Int) {
     val grid = mapView.grid
     val gridLevels = grid.levelCount
