@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
@@ -21,6 +22,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:queryHint="@string/address_search_hint"
+        android:focusable="false"
+        app:iconifiedByDefault="false"
+
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"

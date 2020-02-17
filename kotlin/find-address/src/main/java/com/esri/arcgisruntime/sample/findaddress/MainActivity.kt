@@ -17,16 +17,20 @@
 
 package com.esri.arcgisruntime.sample.findaddress
 
+import android.database.MatrixCursor
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.BaseColumns
 import android.util.Log
 import android.view.MotionEvent
+import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.concurrent.ListenableFuture
+import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
@@ -36,6 +40,8 @@ import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol
+import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters
+import com.esri.arcgisruntime.tasks.geocode.GeocodeResult
 import com.esri.arcgisruntime.tasks.geocode.LocatorTask
 import kotlinx.android.synthetic.main.activity_main.*
 import org.w3c.dom.Text
@@ -46,9 +52,10 @@ class MainActivity : AppCompatActivity() {
 
   private var pinSourceSymbol: PictureMarkerSymbol? = null
   private val TAG: String = MainActivity::class.java.simpleName
-  private var locatorTask: LocatorTask? = null
+  private lateinit var locatorTask: LocatorTask
   private var graphicsOverlay: GraphicsOverlay? = null
   private var callout: Callout? = null
+  private var addressGeocodeParameters: GeocodeParameters? = null
 
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +86,126 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
+    setupAddressSearchView()
+  }
+
+  /**
+   * Sets up the address SearchView. Uses MatrixCursor to show suggestions to the user as text is input.
+   */
+  private fun setupAddressSearchView() {
+    addressGeocodeParameters = GeocodeParameters().apply {
+      // get place name and street address attributes
+      resultAttributeNames.addAll(listOf("PlaceName", "StAddr"))
+      // return only the closest result
+      maxResults = 1
+
+      addressSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+        androidx.appcompat.widget.SearchView.OnQueryTextListener { // todo this doesn't look right
+
+        override fun onQueryTextSubmit(address: String): Boolean {
+          // geocode typed address
+          geoCodeTypedAddress(address)
+          // clear focus from search views
+          addressSearchView.clearFocus()
+          return true
+        }
+
+        override fun onQueryTextChange(newText: String?): Boolean {
+         // if the newText string isn't empty, get suggestions from the locator task
+          if (!newText.equals("")) {
+            val suggestionsFuture = locatorTask.suggestAsync(newText)
+            suggestionsFuture.addDoneListener{
+              try {
+                // get the results of the async operation
+                val suggestResults = suggestionsFuture.get()
+
+                val COLUMN_NAME_ADDRESS = "address"
+                val columnNames = arrayOf(BaseColumns._ID, COLUMN_NAME_ADDRESS)
+                val suggestionsCursor = MatrixCursor(columnNames)
+
+                var key = 0
+                // add each address suggestion to a new row
+                for (result in suggestResults) {
+                  suggestionsCursor.addRow(arrayOf<Any>(key++, result.getLabel()))
+                }
+                // define SimpleCursorAdapter
+
+
+
+
+              } catch (e: Exception) {
+                Log.e(TAG, "Geocode suggestion error: " + e.message)
+              }
+            }
+          }
+          return true
+        }
+
+      })
+
+    }
+
+  }
+
+  /**
+   * Geocode an address passed in by the user.
+   *
+   * @param address the address read in from searchViews
+   */
+  private fun geoCodeTypedAddress(address: String) {
+    // check that the address isn't null TODO find a kotlin way of doing this
+    locatorTask.addDoneLoadingListener {
+      if (locatorTask.loadStatus == LoadStatus.LOADED) {
+        // run the locatorTask geocode task, passing in the address
+        val geocodeResultListenableFuture =
+          locatorTask.geocodeAsync(address, addressGeocodeParameters)
+        geocodeResultListenableFuture.addDoneListener {
+          try {
+            // get the results of the async operation
+            val geocodeResults = geocodeResultListenableFuture.get()
+            if (geocodeResults.size > 0) {
+              displaySearchResultOnMap(geocodeResults[0])
+            } else {
+              Toast.makeText(
+                applicationContext, "No location with that name: " + address, Toast.LENGTH_LONG).show()
+            }
+          } catch (e: Exception) {
+            when (e) {
+              is ExecutionException, is InterruptedException -> {
+                Log.e(TAG, "Geocode error: " + e.message)
+                Toast.makeText(applicationContext, "Geocode failed on address.", Toast.LENGTH_LONG)
+                  .show()
+              }
+              else -> throw e
+            }
+          }
+        }
+      } else {
+        Log.i(TAG, "Trying to reload locator task")
+        locatorTask.retryLoadAsync()
+      }
+    }
+    locatorTask.loadAsync()
+  }
+
+  /**
+   * Turns a GeocodeResult into a Point and adds it to a graphic overlay on the map.
+   *
+   * @param geocodeResult a single geocode result
+   */
+  private fun displaySearchResultOnMap(geocodeResult: GeocodeResult) {
+    // dismiss existing callout if present and showing
+    if (mapView.getCallout() != null && mapView.getCallout().isShowing()) {
+      mapView.getCallout().dismiss()
+    }
+    // clear graphics overlay of existing graphics TODO check that not also clearing the graphics overlay is ok, as per Java implementation (line 304 in java)
+    graphicsOverlay?.graphics?.clear()
+    // create graphic object for resulting location
+    val resultPoint = geocodeResult.displayLocation
+    val resultLocationGraphic = Graphic(resultPoint, geocodeResult.attributes, pinSourceSymbol)
+    // add graphic to location layer
+    graphicsOverlay?.graphics?.add(resultLocationGraphic)
+    showCallout(resultLocationGraphic)
   }
 
   /**
@@ -127,7 +254,7 @@ class MainActivity : AppCompatActivity() {
           graphic.attributes.get("StAddr").toString()
       text = calloutText
     }
-
+    // configure the callout
     callout = mapView.callout.apply {
       showOptions = Callout.ShowOptions(true, false, false)
       content = calloutContent
@@ -138,12 +265,7 @@ class MainActivity : AppCompatActivity() {
       // show the callout
       show()
     }
-
-
-
-
   }
-
 
 
   /**
