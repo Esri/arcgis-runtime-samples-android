@@ -21,9 +21,9 @@ Tap to identify features. An alert will show all layers with features under the 
 ## Relevant API
 
 * `IdentifyLayerResult`
-* `MapView.IdentifyLayersAsync`
 * `IdentifyLayerResult.LayerContent.Name`
 * `IdentifyLayerResult.SublayerResults`
+* `MapView.IdentifyLayersAsync`
 
 ## Additional information
 
