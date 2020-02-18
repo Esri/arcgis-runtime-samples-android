@@ -14,9 +14,9 @@
   "redirect_from": "/android/latest/sample-code/identify-layers.htm",
   "relevant_apis": [
     "IdentifyLayerResult",
-    "MapView.IdentifyLayersAsync",
     "IdentifyLayerResult.LayerContent.Name",
-    "IdentifyLayerResult.SublayerResults"
+    "IdentifyLayerResult.SublayerResults",
+    "MapView.IdentifyLayersAsync"
   ],
   "snippets": [
     "src/main/java/com/esri/arcgisruntime/sample/identifylayers/MainActivity.kt"

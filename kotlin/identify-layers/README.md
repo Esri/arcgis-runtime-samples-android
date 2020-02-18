@@ -6,7 +6,7 @@ Identify features in all layers in a map.
 
 ## Use case
 
-IdentifyLayers allows users to tap on a map, returning features at that location across multiple layers. Because some layer types have sublayers, the sample recursively counts results for sublayers within each layer.
+Identify layers allows users to tap on a map, returning features at that location across multiple layers. Because some layer types have sublayers, the sample recursively counts results for sublayers within each layer.
 
 ## How to use the sample
 
