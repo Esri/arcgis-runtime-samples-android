@@ -109,9 +109,7 @@ class MainActivity : AppCompatActivity() {
       try {
         val identifyLayerResults = identifyLayerResultsFuture.get()
         handleIdentifyResults(identifyLayerResults)
-      } catch (e: InterruptedException) {
-        logError("Error identifying results ${e.message}")
-      } catch (e: ExecutionException) {
+      } catch (e: Exception) {
         logError("Error identifying results ${e.message}")
       }
     }
