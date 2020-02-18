@@ -16,9 +16,8 @@ When the sample opens, it will automatically display the map in the mobile map p
 ## How it works
 
 1. Create a `MobileMapPackage` specifying the path to the .mmpk file.
-2. Use `MobileMapPackage.isDirectReadSupportedAsync()` to check whether the package can be read in the archived form (.mmpk) or whether it needs to be unpacked.
-3. If the mobile map package requires unpacking, call `MobileMapPackage.unpackAsync()` and wait for this to complete.
-4. After it successfully loads, get the map from the .mmpk and add it to the map view: `mapView.setMap(mmpk.getMaps().get(0))`.
+2. Load the mobile map package with mmpk.loadAsync().
+3. After it successfully loads, get the map from the .mmpk and add it to the map view: `mapView.setMap(mmpk.getMaps().get(0))`.
 
 ## Relevant API
 
@@ -35,7 +34,7 @@ This mobile map package shows points of interest within Yellowstone National Par
 1. Open your command prompt and navigate to the folder where you downloaded the data from step 1.
 1. Execute the following command:
 
-    `adb push Yellowstone.mmpk /sdcard/Android/data/com.esri.arcgisruntime.sample.openmobilemappackage/files/Yellowstone.mmpk`
+    `adb push Yellowstone.mmpk /Android/data/com.esri.arcgisruntime.sample.openmobilemappackage/files/Yellowstone.mmpk`
 
 Link | Local Location
 ---------|-------|

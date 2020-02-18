@@ -37,31 +37,12 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    val mobileMapFilePath = createMobileMapPackageFilePath()
-    try {
-      loadMobileMapPackage(mobileMapFilePath)
-    } catch (illegalStateException: IllegalStateException) {
-      logError(illegalStateException.message)
-    }
+    // access the mobile map package from the filesystem and load it into a MapView
+    loadMobileMapPackage(getExternalFilesDir(null)?.path + getString(R.string.yellowstone_mmpk))
   }
 
   /**
-   * Create the mobile map package file location and name structure.
-   */
-  private fun createMobileMapPackageFilePath(): String {
-    getExternalFilesDir(null)?.path?.let {
-      val builder = StringBuilder(it)
-        .append(File.separator)
-        .append(getString(R.string.yellowstone_mmpk))
-
-      return builder.toString()
-    }
-
-    throw IllegalStateException("couldn't access files dir")
-  }
-
-  /**
-   * Load a mobile map package into a MapView
+   * Load a mobile map package into a MapView.
    *
    * @param mmpkFile Full path to mmpk file
    */

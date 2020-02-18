@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">Open mobile map package</string>
-    <string name="config_data_sdcard_offline_dir">ArcGIS/samples/MapPackage</string>
-    <string name="yellowstone_mmpk">Yellowstone.mmpk</string>
-    <string name="location_permission_denied">Open Mobile Map Package could not open because WRITE permission was denied.</string>
+    <string name="yellowstone_mmpk">/Yellowstone.mmpk</string>
 </resources>
