@@ -25,7 +25,6 @@ import android.provider.BaseColumns
 import android.util.Log
 import android.view.MotionEvent
 import androidx.appcompat.widget.SearchView
-//import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -58,7 +57,6 @@ class MainActivity : AppCompatActivity() {
   private var callout: Callout? = null
   private var addressGeocodeParameters: GeocodeParameters? = null
 
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
@@ -79,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     // create a locator task from an online service
     locatorTask = LocatorTask(getString(R.string.locator_task_uri))
 
-    // create the picture market symbol to show address location
+    // create the picture marker symbol to show address location
     createPinSymbol()
 
     // add listener to handle screen taps
@@ -94,7 +92,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Sets up the address SearchView. Uses MatrixCursor to show suggestions to the user as text is input.
+   * Sets up the address SearchView and uses MatrixCursor to show suggestions to the user as text is input.
    */
   private fun setupAddressSearchView() {
     addressGeocodeParameters = GeocodeParameters().apply {
@@ -104,7 +102,6 @@ class MainActivity : AppCompatActivity() {
       maxResults = 1
 
       addressSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
         override fun onQueryTextSubmit(address: String): Boolean {
           // geocode typed address
           geoCodeTypedAddress(address)
@@ -121,21 +118,21 @@ class MainActivity : AppCompatActivity() {
               try {
                 // get the results of the async operation
                 val suggestResults = suggestionsFuture.get()
-
-                val COLUMN_NAME_ADDRESS = "address"
-                val columnNames = arrayOf(BaseColumns._ID, COLUMN_NAME_ADDRESS)
+                // set up parameters for searching with MatrixCursor
+                val address = "address"
+                val columnNames = arrayOf(BaseColumns._ID, address)
                 val suggestionsCursor = MatrixCursor(columnNames)
-
                 var key = 0
+
                 // add each address suggestion to a new row
                 for (result in suggestResults) {
                   suggestionsCursor.addRow(arrayOf<Any>(key++, result.getLabel()))
                 }
-                // define SimpleCursorAdapter
                 // column names for the adapter to look at when mapping data
-                val cols = arrayOf(COLUMN_NAME_ADDRESS)
+                val cols = arrayOf(address)
                 // ids that show where data should be assigned in the layout
                 val to = intArrayOf(R.id.suggestion_address)
+                // define SimpleCursorAdapter
                 val suggestionAdapter = SimpleCursorAdapter(this@MainActivity, R.layout.suggestion,
                     suggestionsCursor, cols, to, 0)
 
@@ -143,13 +140,12 @@ class MainActivity : AppCompatActivity() {
                 // handle an address suggestion being chosen
                 addressSearchView.setOnSuggestionListener(object: SearchView.OnSuggestionListener{
                   override fun onSuggestionSelect(position: Int): Boolean { return false }
-
                   override fun onSuggestionClick(position: Int): Boolean {
                     // get the selected row
                     val selectedRow = suggestionAdapter.getItem(position) as MatrixCursor
                     // get the row's index
-                    val selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS)
-                    // get the  string from the tow at index
+                    val selectedCursorIndex = selectedRow.getColumnIndex(address)
+                    // get the  string from the row at index
                     val address = selectedRow.getString(selectedCursorIndex)
                     // use clicked suggestion as query
                     addressSearchView.setQuery(address, true)
@@ -158,16 +154,15 @@ class MainActivity : AppCompatActivity() {
                 })
               } catch (e: Exception) {
                 Log.e(TAG, "Geocode suggestion error: " + e.message)
+                Toast.makeText(applicationContext, "Geocode suggestion error", Toast.LENGTH_LONG)
+                  .show()
               }
             }
           }
           return true
         }
-
       })
-
     }
-
   }
 
   /**
@@ -176,7 +171,6 @@ class MainActivity : AppCompatActivity() {
    * @param address the address read in from searchViews
    */
   private fun geoCodeTypedAddress(address: String) {
-    // check that the address isn't null TODO find a kotlin way of doing this
     locatorTask.addDoneLoadingListener {
       if (locatorTask.loadStatus == LoadStatus.LOADED) {
         // run the locatorTask geocode task, passing in the address
@@ -217,18 +211,14 @@ class MainActivity : AppCompatActivity() {
    * @param geocodeResult a single geocode result
    */
   private fun displaySearchResultOnMap(geocodeResult: GeocodeResult) {
-    // dismiss existing callout if present and showing
-    if (mapView.getCallout() != null && mapView.getCallout().isShowing()) {
-      mapView.getCallout().dismiss()
-    }
-    // clear graphics overlay of existing graphics TODO check that not also clearing the graphics overlay is ok, as per Java implementation (line 304 in java)
+    // clear graphics overlay of existing graphics
     graphicsOverlay?.graphics?.clear()
     // create graphic object for resulting location
     val resultPoint = geocodeResult.displayLocation
     val resultLocationGraphic = Graphic(resultPoint, geocodeResult.attributes, pinSourceSymbol)
     // add graphic to location layer
     graphicsOverlay?.graphics?.add(resultLocationGraphic)
-    mapView.setViewpointAsync(Viewpoint(geocodeResult.extent, 3.0))
+    mapView.setViewpointAsync(Viewpoint(geocodeResult.extent), 1f)
     showCallout(resultLocationGraphic)
   }
 
@@ -288,16 +278,13 @@ class MainActivity : AppCompatActivity() {
       setGeoElement(graphic, calloutLocation)
       // show the callout
       show()
-//      Toast.makeText(applicationContext, calloutLocation.x.toString(), Toast.LENGTH_LONG).show()
     }
   }
 
-
   /**
-   *  Creates a picture marker symbol from the pin icon, and sets it to half of its original size
+   *  Creates a picture marker symbol from the pin icon, and sets it to half of its original size.
    */
   private fun createPinSymbol() {
-
     val pinDrawable = ContextCompat.getDrawable(this, R.drawable.pin) as BitmapDrawable?
     try {
       pinSourceSymbol = PictureMarkerSymbol.createAsync(pinDrawable).get()
