@@ -32,7 +32,7 @@ Pan and zoom around the map. View the data loaded from the geodatabase.
 1. Open your command prompt and navigate to the folder where you downloaded the data from step 1.
 1. Execute the following commands:
 
-    `adb push LA_Trails.geodatabase Android/data/com.esri.arcgisruntime.sample.featurelayergeodatabase/files/LA_Trails.geodatabase`
+    `adb push LA_Trails.geodatabase /Android/data/com.esri.arcgisruntime.sample.featurelayergeodatabase/files/LA_Trails.geodatabase`
 
 Link | Local Location
 ---------|-------|
