@@ -32,11 +32,11 @@ Pan and zoom around the map. View the data loaded from the geodatabase.
 1. Open your command prompt and navigate to the folder where you downloaded the data from step 1.
 1. Execute the following commands:
 
-    `adb push LA_Trails.geodatabase /sdcard/Android/data/com.esri.arcgisruntime.sample.featurelayergeodatabase/files/LA_Trails.geodatabase`
+    `adb push LA_Trails.geodatabase Android/data/com.esri.arcgisruntime.sample.featurelayergeodatabase/files/LA_Trails.geodatabase`
 
 Link | Local Location
 ---------|-------|
-|[Los Angeles Trailheads](https://www.arcgis.com/home/item.html?id=2b0f9e17105847809dfeb04e3cad69e0)| `<sdcard>/Android/data/com.esri.arcgisruntime.sample.featurelayergeodatabase/files/geodatabase/LA_Trails.geodatabase |
+|[Los Angeles Trailheads](https://www.arcgis.com/home/item.html?id=2b0f9e17105847809dfeb04e3cad69e0)| `/Android/data/com.esri.arcgisruntime.sample.featurelayergeodatabase/files/geodatabase/LA_Trails.geodatabase |
 
 ## About the data
 
