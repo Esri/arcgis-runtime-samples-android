@@ -38,7 +38,7 @@ Link | Local Location
 
 ## About the data
 
-The sample shows trailheads in the greater Los Angeles area displayed on top of a vector tile basemap.
+The sample shows trailheads in the greater Los Angeles area displayed on top of a basemap of streets.
 
 ## Additional information
 
