@@ -2,7 +2,7 @@
 
 Find features in a feature table which match an SQL query.
 
-![](feature-layer-query.png)
+![Image of feature layer query](feature-layer-query.png)
 
 ## Use case
 
