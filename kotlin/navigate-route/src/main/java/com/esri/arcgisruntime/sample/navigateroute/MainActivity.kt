@@ -77,61 +77,62 @@ class MainActivity : AppCompatActivity() {
     val routeTask = RouteTask(this, getString(R.string.routing_service_url))
     val routeParametersFuture = routeTask.createDefaultParametersAsync()
     routeParametersFuture.addDoneListener {
-      try {
-        // define the route parameters
-        val routeParameters = routeParametersFuture.get().apply {
+
+      // define the route parameters
+      val routeParameters = routeParametersFuture.get().apply {
+        try {
           setStops(routeStops)
           isReturnDirections = true
           isReturnStops = true
           isReturnRoutes = true
+        } catch (e: Exception) {
+          when (e) {
+            is InterruptedException, is ExecutionException -> {
+              val error = "Error getting the route result " + e.message
+              Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
+              Log.e(TAG, error)
+            }
+            else -> throw e
+          }
         }
+      }
 
-        val routeResultFuture = routeTask.solveRouteAsync(routeParameters)
-        routeParametersFuture.addDoneListener {
-          try {
-            // get the route geometry from the route result
-            val routeResult = routeResultFuture.get()
-            val routeGeometry = routeResult.routes[0].routeGeometry
-            // create a graphic for the route geometry
-            val routeGraphic = Graphic(
-              routeGeometry,
-              SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f)
+      val routeResultFuture = routeTask.solveRouteAsync(routeParameters)
+      routeParametersFuture.addDoneListener {
+        try {
+          // get the route geometry from the route result
+          val routeResult = routeResultFuture.get()
+          val routeGeometry = routeResult.routes[0].routeGeometry
+          // create a graphic for the route geometry
+          val routeGraphic = Graphic(
+            routeGeometry,
+            SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f)
+          )
+          // add it to the graphics overlay
+          mapView.graphicsOverlays[0].graphics.add(routeGraphic)
+          // set the map view view point to show the whole route
+          mapView.setViewpointAsync(Viewpoint(routeGeometry.extent))
+
+          // set button to start navigation with the given route
+          navigateRouteButton.setOnClickListener {
+            startNavigation(
+              routeTask,
+              routeParameters,
+              routeResult
             )
-            // add it to the graphics overlay
-            mapView.graphicsOverlays[0].graphics.add(routeGraphic)
-            // set the map view view point to show the whole route
-            mapView.setViewpointAsync(Viewpoint(routeGeometry.extent))
-
-            // set button to start navigation with the given route
-            navigateRouteButton.setOnClickListener {
-              startNavigation(
-                routeTask,
-                routeParameters,
-                routeResult
-              )
-            }
-
-            // start navigating
-            startNavigation(routeTask, routeParameters, routeResult)
-          } catch (e: Exception) {
-            when (e) {
-              is InterruptedException, is ExecutionException -> {
-                val error = "Error creating default route parameters: " + e.message
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-                Log.e(TAG, error)
-              }
-              else -> throw e
-            }
           }
-        }
-      } catch (e: Exception) {
-        when (e) {
-          is InterruptedException, is ExecutionException -> {
-            val error = "Error getting the route result " + e.message
-            Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-            Log.e(TAG, error)
+
+          // start navigating
+          startNavigation(routeTask, routeParameters, routeResult)
+        } catch (e: Exception) {
+          when (e) {
+            is InterruptedException, is ExecutionException -> {
+              val error = "Error creating default route parameters: " + e.message
+              Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+              Log.e(TAG, error)
+            }
+            else -> throw e
           }
-          else -> throw e
         }
       }
     }
