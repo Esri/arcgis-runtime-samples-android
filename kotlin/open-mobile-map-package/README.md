@@ -38,7 +38,7 @@ This mobile map package shows points of interest within Yellowstone National Par
 
 Link | Local Location
 ---------|-------|
-|[Yellowstone Mobile Map Package](https://www.arcgis.com/home/item.html?id=e1f3a7254cb845b09450f54937c16061)| `<sdcard>`/Android/data/com.esri.arcgisruntime.sample.openmobilemappackage/files/Yellowstone.mmpk |
+|[Yellowstone Mobile Map Package](https://www.arcgis.com/home/item.html?id=e1f3a7254cb845b09450f54937c16061)| /Android/data/com.esri.arcgisruntime.sample.openmobilemappackage/files/Yellowstone.mmpk |
 
 ## Tags
 
