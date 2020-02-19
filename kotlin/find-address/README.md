@@ -1,8 +1,8 @@
-# Find Address
+# Find address
 
 Find the location for an address.
 
-![Find Address App](find-address.png)
+![Image of find address](find-address.png)
 
 ## Use case
 
@@ -24,4 +24,4 @@ Type in an address in the search view at the top of the screen. Suggestions will
 * LocatorTask
 
 #### Tags
-search, geocode, address, locator
+address, geocode, locator, search
