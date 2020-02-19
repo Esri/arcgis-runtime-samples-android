@@ -20,15 +20,17 @@ package com.esri.arcgisruntime.sample.findaddress
 import android.database.MatrixCursor
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.BaseColumns
 import android.util.Log
 import android.view.MotionEvent
-import android.widget.SearchView
+import androidx.appcompat.widget.SearchView
+//import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.cursoradapter.widget.SimpleCursorAdapter
 import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -44,7 +46,6 @@ import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters
 import com.esri.arcgisruntime.tasks.geocode.GeocodeResult
 import com.esri.arcgisruntime.tasks.geocode.LocatorTask
 import kotlinx.android.synthetic.main.activity_main.*
-import org.w3c.dom.Text
 import java.util.concurrent.ExecutionException
 import kotlin.math.roundToInt
 
@@ -69,7 +70,10 @@ class MainActivity : AppCompatActivity() {
       // set the map to be displayed in the mapview
       map = topographicBasemap
       // set the map viewpoint to start over North America
-      setViewpoint(Viewpoint(40.0, -100.0, 10000000.0))
+      setViewpoint(Viewpoint(40.0, -100.0, 100000000.0))
+      // define the graphics overlay and add it to the map view
+      graphicsOverlay = GraphicsOverlay()
+      graphicsOverlays.add(graphicsOverlay)
     }
 
     // create a locator task from an online service
@@ -99,8 +103,7 @@ class MainActivity : AppCompatActivity() {
       // return only the closest result
       maxResults = 1
 
-      addressSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-        androidx.appcompat.widget.SearchView.OnQueryTextListener { // todo this doesn't look right
+      addressSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
         override fun onQueryTextSubmit(address: String): Boolean {
           // geocode typed address
@@ -129,10 +132,30 @@ class MainActivity : AppCompatActivity() {
                   suggestionsCursor.addRow(arrayOf<Any>(key++, result.getLabel()))
                 }
                 // define SimpleCursorAdapter
+                // column names for the adapter to look at when mapping data
+                val cols = arrayOf(COLUMN_NAME_ADDRESS)
+                // ids that show where data should be assigned in the layout
+                val to = intArrayOf(R.id.suggestion_address)
+                val suggestionAdapter = SimpleCursorAdapter(this@MainActivity, R.layout.suggestion,
+                    suggestionsCursor, cols, to, 0)
 
+                addressSearchView.suggestionsAdapter = suggestionAdapter
+                // handle an address suggestion being chosen
+                addressSearchView.setOnSuggestionListener(object: SearchView.OnSuggestionListener{
+                  override fun onSuggestionSelect(position: Int): Boolean { return false }
 
-
-
+                  override fun onSuggestionClick(position: Int): Boolean {
+                    // get the selected row
+                    val selectedRow = suggestionAdapter.getItem(position) as MatrixCursor
+                    // get the row's index
+                    val selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS)
+                    // get the  string from the tow at index
+                    val address = selectedRow.getString(selectedCursorIndex)
+                    // use clicked suggestion as query
+                    addressSearchView.setQuery(address, true)
+                    return true
+                  }
+                })
               } catch (e: Exception) {
                 Log.e(TAG, "Geocode suggestion error: " + e.message)
               }
@@ -205,6 +228,7 @@ class MainActivity : AppCompatActivity() {
     val resultLocationGraphic = Graphic(resultPoint, geocodeResult.attributes, pinSourceSymbol)
     // add graphic to location layer
     graphicsOverlay?.graphics?.add(resultLocationGraphic)
+    mapView.setViewpointAsync(Viewpoint(geocodeResult.extent, 3.0))
     showCallout(resultLocationGraphic)
   }
 
@@ -264,6 +288,7 @@ class MainActivity : AppCompatActivity() {
       setGeoElement(graphic, calloutLocation)
       // show the callout
       show()
+//      Toast.makeText(applicationContext, calloutLocation.x.toString(), Toast.LENGTH_LONG).show()
     }
   }
 
