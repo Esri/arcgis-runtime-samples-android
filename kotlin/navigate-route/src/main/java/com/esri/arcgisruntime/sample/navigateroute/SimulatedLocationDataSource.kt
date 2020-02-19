@@ -35,10 +35,12 @@ import java.util.TimerTask
 internal class SimulatedLocationDataSource(private val route: Polyline) :
   LocationDataSource() {
   private var currentLocation: Point? = null
-  private var timer: Timer? = null
+  private val timer: Timer by lazy {
+    Timer("SimulatedLocationDataSource Timer", false)
+  }
   private var distance = 0.0
   override fun onStop() {
-    timer?.cancel()
+    timer.cancel()
   }
 
   companion object {
@@ -49,7 +51,7 @@ internal class SimulatedLocationDataSource(private val route: Polyline) :
     // start at the beginning of the route
     currentLocation = route.parts[0].startPoint
     updateLocation(Location(currentLocation))
-    timer = Timer("SimulatedLocationDataSource Timer", false).apply {
+    timer.apply {
       scheduleAtFixedRate(object : TimerTask() {
         override fun run() {
           // get a reference to the previous point
