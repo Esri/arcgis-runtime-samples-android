@@ -1,4 +1,4 @@
-# Feature layer query
+# Feature Layer Query
 
 Find features in a feature table which match an SQL query.
 
