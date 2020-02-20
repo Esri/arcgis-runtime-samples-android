@@ -1,4 +1,4 @@
-# Feature Layer (GeoPackage)
+# Feature layer (GeoPackage)
 
 Display features from a local GeoPackage.
 

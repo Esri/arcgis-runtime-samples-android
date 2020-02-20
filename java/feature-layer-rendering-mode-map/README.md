@@ -1,4 +1,4 @@
-# Feature Layer Rendering Mode (Map)
+# Feature layer rendering mode (map)
 
 Render features statically or dynamically by setting the feature layer rendering mode.
 
