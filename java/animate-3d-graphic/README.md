@@ -21,10 +21,6 @@ Speed Slider (Top Right Corner):
 
 * Plus and Minus -- controls distance of 2D view from ground level.
 
-Moving the Camera:
-
-* Simply use regular zoom and pan interactions with the mouse. When in follow mode, the `OrbitGeoElementCameraController` will keep the camera locked to the plane.
-
 ## How it works
 
 1. Create a `GraphicsOverlay` and attach it to the `SceneView`.
