@@ -10,7 +10,7 @@ ArcGIS Online basemaps, Esri data services, or Esri API technology used in an ap
 
 ## How to use the sample
 
-Select the attribution bar to expand it, and observe how the floating action button moves up. Select the attribution bar again to minimize it and see how the floating action button moves down.
+Tap the attribution bar to expand it, and observe how the floating action button moves up. Tap the attribution bar again to minimize it and see how the floating action button moves down.
 
 ## How it works
 
