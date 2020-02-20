@@ -47,6 +47,6 @@ Choose and adjust the altitude, azimuth, slope type and color ramp type settings
 	|[shasta-elevation.zip](https://arcgisruntime.maps.arcgis.com/home/item.html?id=caeef9aa78534760b07158bb8e068462)| `<sdcard>`/ArcGIS/samples/raster/Shasta.tif 		  |
 	|			   | `<sdcard>`/ArcGIS/samples/raster/Shasta_Elevation.tif |
 
-#### Tags
+## Tags
 
 color ramp, elevation, hillshade, image, raster, raster layer, visualization
