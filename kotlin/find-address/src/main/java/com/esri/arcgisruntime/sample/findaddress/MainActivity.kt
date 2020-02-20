@@ -50,12 +50,15 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-  private var pinSourceSymbol: PictureMarkerSymbol? = null
   private val TAG: String = MainActivity::class.java.simpleName
-  private lateinit var locatorTask: LocatorTask
-  private var graphicsOverlay: GraphicsOverlay? = null
   private var callout: Callout? = null
   private var addressGeocodeParameters: GeocodeParameters? = null
+  // create a picture marker symbol
+  private val pinSourceSymbol: PictureMarkerSymbol? by lazy { createPinSymbol() }
+  // create a locator task from an online service
+  private val locatorTask: LocatorTask by lazy {LocatorTask(getString(R.string.locator_task_uri))}
+  // create a new Graphics Overlay
+  private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -70,12 +73,8 @@ class MainActivity : AppCompatActivity() {
       // set the map viewpoint to start over North America
       setViewpoint(Viewpoint(40.0, -100.0, 100000000.0))
       // define the graphics overlay and add it to the map view
-      graphicsOverlay = GraphicsOverlay()
       graphicsOverlays.add(graphicsOverlay)
     }
-
-    // create a locator task from an online service
-    locatorTask = LocatorTask(getString(R.string.locator_task_uri))
 
     // create the picture marker symbol to show address location
     createPinSymbol()
@@ -92,7 +91,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Sets up the address SearchView and uses MatrixCursor to show suggestions to the user as text is input.
+   * Sets up the address SearchView and uses MatrixCursor to show suggestions to the user as text is entered.
    */
   private fun setupAddressSearchView() {
     addressGeocodeParameters = GeocodeParameters().apply {
@@ -110,9 +109,9 @@ class MainActivity : AppCompatActivity() {
           return true
         }
 
-        override fun onQueryTextChange(newText: String?): Boolean {
+        override fun onQueryTextChange(newText: String): Boolean {
          // if the newText string isn't empty, get suggestions from the locator task
-          if (!newText.equals("")) {
+          if (newText.isNotEmpty()){
             val suggestionsFuture = locatorTask.suggestAsync(newText)
             suggestionsFuture.addDoneListener{
               try {
@@ -122,19 +121,18 @@ class MainActivity : AppCompatActivity() {
                 val address = "address"
                 val columnNames = arrayOf(BaseColumns._ID, address)
                 val suggestionsCursor = MatrixCursor(columnNames)
-                var key = 0
 
                 // add each address suggestion to a new row
-                for (result in suggestResults) {
-                  suggestionsCursor.addRow(arrayOf<Any>(key++, result.getLabel()))
+                for ((key, result) in suggestResults.withIndex()) {
+                  suggestionsCursor.addRow(arrayOf<Any>(key, result.label))
                 }
                 // column names for the adapter to look at when mapping data
                 val cols = arrayOf(address)
                 // ids that show where data should be assigned in the layout
                 val to = intArrayOf(R.id.suggestion_address)
                 // define SimpleCursorAdapter
-                val suggestionAdapter = SimpleCursorAdapter(this@MainActivity, R.layout.suggestion,
-                    suggestionsCursor, cols, to, 0)
+                val suggestionAdapter = SimpleCursorAdapter(this@MainActivity,
+                  R.layout.suggestion, suggestionsCursor, cols, to, 0)
 
                 addressSearchView.suggestionsAdapter = suggestionAdapter
                 // handle an address suggestion being chosen
@@ -145,10 +143,10 @@ class MainActivity : AppCompatActivity() {
                     val selectedRow = suggestionAdapter.getItem(position) as MatrixCursor
                     // get the row's index
                     val selectedCursorIndex = selectedRow.getColumnIndex(address)
-                    // get the  string from the row at index
-                    val address = selectedRow.getString(selectedCursorIndex)
+                    // get the string from the row at index
+                    val selectedAddress = selectedRow.getString(selectedCursorIndex)
                     // use clicked suggestion as query
-                    addressSearchView.setQuery(address, true)
+                    addressSearchView.setQuery(selectedAddress, true)
                     return true
                   }
                 })
@@ -174,23 +172,23 @@ class MainActivity : AppCompatActivity() {
     locatorTask.addDoneLoadingListener {
       if (locatorTask.loadStatus == LoadStatus.LOADED) {
         // run the locatorTask geocode task, passing in the address
-        val geocodeResultListenableFuture =
+        val geocodeResultFuture =
           locatorTask.geocodeAsync(address, addressGeocodeParameters)
-        geocodeResultListenableFuture.addDoneListener {
+        geocodeResultFuture.addDoneListener {
           try {
             // get the results of the async operation
-            val geocodeResults = geocodeResultListenableFuture.get()
+            val geocodeResults = geocodeResultFuture.get()
             if (geocodeResults.size > 0) {
               displaySearchResultOnMap(geocodeResults[0])
             } else {
               Toast.makeText(
-                applicationContext, "No location with that name: " + address, Toast.LENGTH_LONG).show()
+                applicationContext, getString(R.string.location_not_found) + address, Toast.LENGTH_LONG).show()
             }
           } catch (e: Exception) {
             when (e) {
               is ExecutionException, is InterruptedException -> {
                 Log.e(TAG, "Geocode error: " + e.message)
-                Toast.makeText(applicationContext, "Geocode failed on address.", Toast.LENGTH_LONG)
+                Toast.makeText(applicationContext, getString(R.string.geo_locate_error), Toast.LENGTH_LONG)
                   .show()
               }
               else -> throw e
@@ -212,12 +210,12 @@ class MainActivity : AppCompatActivity() {
    */
   private fun displaySearchResultOnMap(geocodeResult: GeocodeResult) {
     // clear graphics overlay of existing graphics
-    graphicsOverlay?.graphics?.clear()
+    graphicsOverlay.graphics?.clear()
     // create graphic object for resulting location
     val resultPoint = geocodeResult.displayLocation
     val resultLocationGraphic = Graphic(resultPoint, geocodeResult.attributes, pinSourceSymbol)
     // add graphic to location layer
-    graphicsOverlay?.graphics?.add(resultLocationGraphic)
+    graphicsOverlay.graphics?.add(resultLocationGraphic)
     mapView.setViewpointAsync(Viewpoint(geocodeResult.extent), 1f)
     showCallout(resultLocationGraphic)
   }
@@ -264,9 +262,8 @@ class MainActivity : AppCompatActivity() {
     val calloutContent = TextView(applicationContext).apply {
       setTextColor(Color.BLACK)
       // get the graphic attributes for place name and street address, and display them as text in the callout
-      val calloutText = graphic.attributes.get("PlaceName").toString() + "\n" +
-          graphic.attributes.get("StAddr").toString()
-      text = calloutText
+      this.text = graphic.attributes["PlaceName"].toString() + "\n" +
+          graphic.attributes["StAddr"].toString()
     }
     // configure the callout
     callout = mapView.callout.apply {
@@ -284,10 +281,14 @@ class MainActivity : AppCompatActivity() {
   /**
    *  Creates a picture marker symbol from the pin icon, and sets it to half of its original size.
    */
-  private fun createPinSymbol() {
+  private fun createPinSymbol(): PictureMarkerSymbol? {
     val pinDrawable = ContextCompat.getDrawable(this, R.drawable.pin) as BitmapDrawable?
+    val pinSymbol: PictureMarkerSymbol
     try {
-      pinSourceSymbol = PictureMarkerSymbol.createAsync(pinDrawable).get()
+      pinSymbol = PictureMarkerSymbol.createAsync(pinDrawable).get()
+      pinSymbol.width = 19f
+      pinSymbol.height = 72f
+      return pinSymbol
     } catch (e: Exception) {
       when (e) {
         is ExecutionException, is InterruptedException -> {
@@ -298,8 +299,7 @@ class MainActivity : AppCompatActivity() {
         else -> throw e
       }
     }
-    pinSourceSymbol?.width = 19f
-    pinSourceSymbol?.height = 72f
+    return null
   }
 
   override fun onResume() {

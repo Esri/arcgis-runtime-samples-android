@@ -9,7 +9,6 @@
     android:paddingBottom="0dp"
     tools:context=".MainActivity">
 
-    <!-- MapView -->
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
