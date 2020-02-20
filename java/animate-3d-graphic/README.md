@@ -10,7 +10,7 @@ Animation Controls (Top Left Corner):
 
 * Select a mission -- selects a location with a route for plane to fly.
 * Mission progress -- shows how far along the route the plane is. Slide to change keyframe in animation.
-* Play -- toggles playing and stopping the animation.
+* Play/Stop -- toggles playing and stopping the animation.
 * Follow -- toggles camera following plane.
 
 Speed Slider (Top Right Corner):
