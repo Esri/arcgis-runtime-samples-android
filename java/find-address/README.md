@@ -10,7 +10,7 @@ A user can input a raw address into your app's search bar and zoom to the addres
 
 ## How to use the sample
 
-For simplicity, the sample comes loaded with a set of suggested addresses. Choose an address from the suggestions or submit your own address to show its location on the map in a callout.
+Type in an address in the search view at the top of the screen. Suggestions will appear as text is entered. Tap a suggestion or enter your own text to see the address marked with a pin. Tapping on the pin will show the address in a callout.
 
 ## How it works
 
