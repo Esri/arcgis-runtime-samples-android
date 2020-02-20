@@ -1,8 +1,8 @@
-# Add a point scene layer
+# Add point scene layer
 
 View a point scene layer from a scene service.
 
-![Image of a point scene layer](AddAPointSceneLayer.png)
+![Image of a point scene layer](add-point-scene-layer.png)
 
 ## Use case
 
