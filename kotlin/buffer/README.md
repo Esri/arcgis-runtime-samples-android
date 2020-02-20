@@ -2,7 +2,7 @@
 
 Create a buffer around a map point and display the results as a `Graphic`.
 
-![Image](buffer.png)
+![Image of Buffer](buffer.png)
 
 ## Use case
 
@@ -32,8 +32,8 @@ Creating buffers is a core concept in GIS proximity analysis that allows you to 
 
 Buffers can be generated as either `planar` (flat - coordinate space of the map's spatial reference) or `geodesic` (technique that considers the curved shape of the Earth's surface, which is generally a more accurate representation). In general, distortion in the map increases as you move away from the standard parallels of the spatial reference's projection. This map is in Web Mercator so areas near the equator are the most accurate. As you move the buffer location north or south from that line, you'll see a greater difference in the polygon size and shape. Planar operations are generally faster, but performance improvement may only be noticeable for large operations (buffering a great number or complex geometry).
 
-For more information about using buffer analysis, see [How buffer analysis works](https://pro.arcgis.com/en/pro-app/tool-reference/analysis/how-buffer-analysis-works.htm) in the ArcGIS Pro documentation.  
+For more information about using buffer analysis, see the topic [How Buffer (Analysis) works](https://pro.arcgis.com/en/pro-app/tool-reference/analysis/how-buffer-analysis-works.htm) in the *ArcGIS Pro* documentation.  
 
 ## Tags
 
-analysis, planar, geodesic, euclidean
+analysis, buffer, euclidean, geodesic, geometry, planar
