@@ -15,7 +15,7 @@ Tap the attribution bar to expand it, and observe how the floating action button
 ## How it works
 
 1. Add a layout change listener to the Map View with `addAttributionViewLayoutChangeListener`.
-2. Get the difference in pixels by using `hightDelta = oldBottom - bottom`.
+2. Get the difference in pixels by using `heightDelta = oldBottom - bottom`.
 3. Change the floating action button's bottom margin using its `layoutParams`.
 
 ## Relevant API
