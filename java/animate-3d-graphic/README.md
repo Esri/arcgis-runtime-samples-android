@@ -34,8 +34,9 @@ Moving the Camera:
 1. Add heading, pitch, and roll attributes to the graphic. Get the attributes from the graphic with `Graphic.attributes`.
 1. Create a `SimpleRenderer` object and set its expression properties.
 1. Add graphic and a renderer to the graphics overlay.
-1. Update the `Graphic` object's location, `Graphic.setGeometry(Point)`.
-1. Update `Graphic` object's heading, pitch, and roll, `attributes.replace("[HEADING]", heading)`.
+1. Create a `OrbitGeoElementCameraController` which is set to target the graphic.
+1. Assign the camera controller to the `SceneView`.
+1. Update the graphic's location, heading, pitch, and roll.
 
 ## Relevant API
 
