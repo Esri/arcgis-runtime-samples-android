@@ -1,4 +1,4 @@
-# Feature Layer Selection
+# Feature layer selection
 
 Select features in a feature layer.
 

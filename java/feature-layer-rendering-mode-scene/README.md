@@ -1,4 +1,4 @@
-# Feature Layer Rendering Mode (Scene)
+# Feature layer rendering mode (scene)
 
 Render features in a scene statically or dynamically by setting the feature layer rendering mode.
 

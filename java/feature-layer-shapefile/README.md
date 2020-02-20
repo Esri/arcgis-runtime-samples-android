@@ -1,4 +1,4 @@
-# Feature Layer Shapefile
+# Feature layer shapefile
 
 Open a shapefile stored on the device and display it as a feature layer with default symbology.
 
