@@ -2,7 +2,7 @@
 
 Clip a geometry with another geometry.
 
-![Clip geometry App](clip-geometry.png)
+![Image of clip geometry](clip-geometry.png)
 
 ## Use case
 
@@ -10,7 +10,7 @@ Create a new set of geometries for analysis (e.g. displaying buffer zones around
 
 ## How to use the sample
 
-Click the "Clip" button to clip the blue graphic with the red dashed envelopes.
+Tap the "Clip" button to clip the blue graphic with the red dashed envelopes.
 
 ## How it works
 
@@ -30,8 +30,5 @@ Click the "Clip" button to clip the blue graphic with the red dashed envelopes.
 Note: the resulting geometry may be null if the envelope does not intersect the geometry being clipped.
 
 ## Tags
-Edit & Manage Data
-clip
-geometry
-analysis
 
+analysis, clip, geometry
