@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/traceOptionsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/trace_options"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/barriersCheckBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/barriersCheckBox" />
+
+    <CheckBox
+        android:id="@+id/barriersCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/include_barriers"
+        app:layout_constraintStart_toEndOf="@+id/traceOptionsTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/containersCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/include_containers"
+        app:layout_constraintBottom_toBottomOf="@+id/barriersCheckBox"
+        app:layout_constraintStart_toEndOf="@+id/barriersCheckBox"
+        app:layout_constraintTop_toTopOf="@+id/barriersCheckBox" />
+
+    <TextView
+        android:id="@+id/defineConditionTextBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/define_new_condition"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barriersCheckBox" />
+
+    <TextView
+        android:id="@+id/exampleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/example_barrier_condition_for_this_data_transformer_load_equal_15"
+        app:layout_constraintBottom_toBottomOf="@+id/defineConditionTextBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/defineConditionTextBox"
+        app:layout_constraintTop_toTopOf="@+id/defineConditionTextBox" />
+
+    <RelativeLayout
+        android:id="@+id/sourceBackgroundView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/border"
+        android:padding="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/operatorBackgroundView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/defineConditionTextBox">
+
+        <Spinner
+            android:id="@+id/sourceSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/operatorBackgroundView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/border"
+        android:padding="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/valuesBackgroundView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/sourceBackgroundView"
+        app:layout_constraintTop_toTopOf="@+id/sourceBackgroundView">
+
+        <Spinner
+            android:id="@+id/operatorSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/valuesBackgroundView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/border"
+        android:padding="4dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/addButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/operatorBackgroundView"
+        app:layout_constraintTop_toTopOf="@+id/operatorBackgroundView">
+
+        <Spinner
+            android:id="@+id/valuesSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/valuesEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:padding="4dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/valuesBackgroundView"
+        app:layout_constraintStart_toStartOf="@+id/valuesBackgroundView"
+        app:layout_constraintTop_toTopOf="@+id/operatorBackgroundView" />
+
+    <ToggleButton
+        android:id="@+id/valueBooleanButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOff="@string/falseText"
+        android:textOn="@string/trueText"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/valuesBackgroundView"
+        app:layout_constraintStart_toStartOf="@+id/valuesBackgroundView"
+        app:layout_constraintTop_toTopOf="@+id/operatorBackgroundView" />
+
+    <Button
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:onClick="addCondition"
+        android:text="@string/add"
+        app:layout_constraintBottom_toBottomOf="@+id/sourceBackgroundView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/valuesBackgroundView"
+        app:layout_constraintTop_toTopOf="@+id/sourceBackgroundView" />
+
+    <TextView
+        android:id="@+id/barrierConditionsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/barrier_conditions"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sourceBackgroundView" />
+
+    <TextView
+        android:id="@+id/expressionTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/border"
+        android:padding="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/traceButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barrierConditionsTextView" />
+
+    <Button
+        android:id="@+id/traceButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="trace"
+        android:text="@string/trace"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/resetButton"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="reset"
+        android:text="@string/reset"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
