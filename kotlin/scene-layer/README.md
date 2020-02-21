@@ -2,7 +2,7 @@
 
 Add a scene layer to a scene.
 
-![](scene-layer.png)
+![Image of scene layer](scene-layer.png)
 
 ## Use case
 
