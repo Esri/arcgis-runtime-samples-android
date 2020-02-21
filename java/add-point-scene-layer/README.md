@@ -2,7 +2,7 @@
 
 View a point scene layer from a scene service.
 
-![Add point scene layer App](add-point-scene-layer.png)
+![Image of a point scene layer](add-point-scene-layer.png)
 
 ## Use case
 
@@ -31,6 +31,5 @@ This dataset contains more than 40,000 points representing world airports. Point
 Point scene layers can also be retrieved from scene layer packages (.slpk) and mobile scene packages (.mspk).
 
 ## Tags
-Layers
-3D
-point scene layer
+
+3D, layers, point scene layer
