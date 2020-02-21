@@ -2,7 +2,7 @@
 
 Find routes from several locations to the respective closest facility.
 
-![Find closest facility to multiple incidents service App](find-closest-facility-to-multiple-incidents-service.png)
+![Image of find closest facility to multiple incidents service](find-closest-facility-to-multiple-incidents-service.png)
 
 ## Use case
 
@@ -10,7 +10,7 @@ Quickly and accurately determining the most efficient route between a location a
 
 ## How to use the sample
 
-Click the 'Solve Routes' button to solve and display the route from each incident (fire) to the nearest facility (fire station).
+Tap the 'Solve Routes' button to solve and display the route from each incident (fire) to the nearest facility (fire station).
 
 ## How it works
 
@@ -28,18 +28,15 @@ Click the 'Solve Routes' button to solve and display the route from each inciden
 
 ## Relevant API
 
-*  ClosestFacilityParameters
-*  ClosestFacilityResult
-*  ClosestFacilityRoute
-*  ClosestFacilityTask
-*  Facility
-*  Graphic
-*  GraphicsOverlay
-*  Incident
+*   ClosestFacilityParameters
+*   ClosestFacilityResult
+*   ClosestFacilityRoute
+*   ClosestFacilityTask
+*   Facility
+*   Graphic
+*   GraphicsOverlay
+*   Incident
 
-#### Tags
-Routing & Logistics
-incident
-network analysis
-route
-search
+## Tags
+
+incident, network analysis, route, search
