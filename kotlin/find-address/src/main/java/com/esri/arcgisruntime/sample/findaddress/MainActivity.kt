@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
   // create a picture marker symbol
   private val pinSourceSymbol: PictureMarkerSymbol? by lazy { createPinSymbol() }
   // create a locator task from an online service
-  private val locatorTask: LocatorTask by lazy {LocatorTask(getString(R.string.locator_task_uri))}
+  private val locatorTask: LocatorTask by lazy { LocatorTask(getString(R.string.locator_task_uri)) }
   // create a new Graphics Overlay
   private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
 
@@ -210,12 +210,12 @@ class MainActivity : AppCompatActivity() {
    */
   private fun displaySearchResultOnMap(geocodeResult: GeocodeResult) {
     // clear graphics overlay of existing graphics
-    graphicsOverlay.graphics?.clear()
+    graphicsOverlay.graphics.clear()
     // create graphic object for resulting location
     val resultPoint = geocodeResult.displayLocation
     val resultLocationGraphic = Graphic(resultPoint, geocodeResult.attributes, pinSourceSymbol)
     // add graphic to location layer
-    graphicsOverlay.graphics?.add(resultLocationGraphic)
+    graphicsOverlay.graphics.add(resultLocationGraphic)
     mapView.setViewpointAsync(Viewpoint(geocodeResult.extent), 1f)
     showCallout(resultLocationGraphic)
   }
