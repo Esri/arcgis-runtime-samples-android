@@ -2,7 +2,7 @@
 
 Load a raster from a service, then apply a function to it.
 
-![Raster Function App](raster-function-service.png)
+![Image of apply raster function to raster from service](raster-function-service.png)
 
 ## Use case
 
