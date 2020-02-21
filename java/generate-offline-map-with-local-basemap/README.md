@@ -29,15 +29,13 @@ The author of a web map can support the use of basemaps which are already on a d
 
 ## How it works
 
-The sample creates a `PortalItem` object using a web map's ID. This portal item is used to initialize an `OfflineMapTask` object. When the button is tapped, the sample requests the default parameters for the task, with the selected extent, by calling `OfflineMapTask.createDefaultGenerateOfflineMapParameters`. 
-
-Once the parameters are created, the application checks the `GenerateOfflineMapParameters.referenceBasemapFilename` property. The author of an online web map can configure this setting to indicate the name of a suitable basemap. In this example, the application checks the local file-system for the suggested "naperville_imagery.tpk" file - and if found, asks the user whether they wish to use this instead of downloading.
-
-If the user chooses to use the basemap on the device, the `GenerateOfflineMapParameters.referenceBasemapDirectory` is set to the absolute path of the directory which contains the .tpk file.
-
-A `GenerateOfflineMapJob` is created by calling `OfflineMapTask.generateOfflineMap` passing the parameters and the download location for the offline map.
-
-When the `GenerateOfflineMapJob` is started it will check whether `GenerateOfflineMapParameters.referenceBasemapDirectory` has been set. If this property is set, no online basemap will be downloaded and instead, the mobile map will be created with a reference to the .tpk on the device.
+1. Create a `PortalItem` object using a web map's ID. 
+2. Initialize an `OfflineMapTask` object using the portal item. 
+3. Request the default parameters for the task with `OfflineMapTask.createDefaultGenerateOfflineMapParameters`.
+4. A `GenerateOfflineMapJob` is created by calling `OfflineMapTask.generateOfflineMap`.  
+    * If desired, set the `GenerateOfflineMapParameters.referenceBasemapDirectory` to the absolute path of the directory which contains the .tpk file.
+    * Otherwise a basemap will be downloaded.
+5. Run the `GenerateOfflineMapJob` with basemap settings from step 4.
 
 ## Relevant API
 
