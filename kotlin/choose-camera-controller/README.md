@@ -1,8 +1,8 @@
 # Choose camera controller
 
-Control the behaviour of the camera in a scene.
+Control the behavior of the camera in a scene.
 
-![Choose camera controller](choose-camera-controller.png)
+![Image of choose camera controller](choose-camera-controller.png)
 
 ## Use case
 
@@ -26,9 +26,6 @@ The application loads with the default globe camera controller. To rotate and fi
 *   OrbitLocationCameraController
 *   SceneView
 
-#### Tags
+## Tags
 
-MapViews, SceneViews & UI
-Camera
-SceneView
-3D
+3D, camera, camera controller
