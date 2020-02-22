@@ -10,7 +10,7 @@ Find routes with driving directions between any number of locations. You might u
 
 ## How to use the sample
 
-For simplicity, the sample comes loaded with a start and end stop. You can tap on the Find Route button to display a route between these stops. Once the route is generated, turn-by-turn directions are shown in a list.
+For simplicity, the sample comes loaded with a start and end stop. You can tap on the Find Route button to display a route between these stops. Once the route is generated, turn-by-turn directions are shown in a list in the navigation drawer.
 
 ## How it works
 
