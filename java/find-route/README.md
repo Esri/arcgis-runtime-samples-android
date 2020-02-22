@@ -1,20 +1,35 @@
-# Find Route
-Get a route between two locations.
+# Find route
 
-![Find Route App](find-route.png)
+Display directions for a route between two points.
 
-# How to use the sample
-For simplicity the sample comes with Source and Destination stops. You can click on the Navigation ![navigation](https://cloud.githubusercontent.com/assets/12448081/16168046/d37aaea2-34b2-11e6-888a-0cbf22f5455f.png) Floating Action Button to get a route between the stops. Once a route is generated, the `DrawerLayout` is unlocked and you can view the direction maneuver as a list.
+![Image of find route](find-route.png)
 
-# How it works
-The sample creates a `RouteTask` from a URL and uses default `RouteParameters` from the `RouteTask` service to set up the 'stops'. In order to get detailed driving directions, `setReturnDirections` is set true in the parameters. `RouteTask.solveAsync` is used to solve for route. The `RouteResult` is then used to create the route graphics and `getDirectionManeuvers()` on route result returns step-by-step direction list which is populated in the `ListView`.
+## Use case
 
-# Relevant API
-* DirectionManeuver
-* Route
-* RouteParameters
-* RouteResult
-* RouteTask
+Find routes with driving directions between any number of locations. You might use the ArcGIS platform to create a custom network for routing on a private roads.
 
-#### Tags
-Routing and Logistics
+## How to use the sample
+
+For simplicity, the sample comes loaded with a start and end stop. You can tap on the Find Route button to display a route between these stops. Once the route is generated, turn-by-turn directions are shown in a list in the navigation drawer.
+
+## How it works
+
+1. Create a `RouteTask` using a URL to an online route service.
+2. Generate default `RouteParameters` using `routeTask.createDefaultParametersAsync()`.
+3. Set `returnStops` and `returnDirections` on the parameters to true.
+4. Add `Stop`s to the parameters `stops` collection for each destination.
+5. Solve the route using `routeTask.solveAsync(routeParameters)` to get a `RouteResult`.
+6. Iterate through the result's `Route`s. To display the route, create a graphic using the geometry from `route.getRouteGeometry()`. To display directions, use `route.getDirectionManeuvers()`, and for each `DirectionManeuver`, display `DirectionManeuver.getDirectionText()`.
+
+## Relevant API
+
+*   DirectionManeuver
+*   Route
+*   RouteParameters
+*   RouteResult
+*   RouteTask
+*   Stop
+
+## Tags
+
+directions, driving, navigation, network, network analysis, route, routing, shortest path, turn-by-turn

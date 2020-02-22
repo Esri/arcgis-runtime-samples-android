@@ -1,24 +1,29 @@
-# Format Coordinates
-Convert a map location `Point` in WGS 1984 spatial reference to a number of different coordinate notations (decimal degrees; degrees, minutes, seconds; Universal Transverse Mercator (UTM), and United States National Grid (USNG)), by using `CoordinateFormatter`.
+# Format coordinates
 
-![Format Coordinates App](format-coordinates.png)
+Format coordinates in a variety of common notations.
+
+## Use case
+
+The coordinate formatter can format a map location in WGS84 in a number of common coordinate notations. Parsing one of these formats to a location is also supported. Formats include decimal degrees; degrees, minutes, seconds; Universal Transverse Mercator (UTM), and United States National Grid (USNG).
+
+![Images of format coordinates](format-coordinates.png)
 
 ## How to use the sample
-* Tap on the map to see the formatted coordinates at the tapped location.
-* Tap on a coordinate and enter a new coordinate string in the dialog; the graphic in the map, and also the other coordinates, will be updated from this new value.
 
-Coordinates can be written and formatted in different ways, for example latitude, longitude coordinates can be formatted as decimal degrees, or degrees, minutes, and seconds.  Additionally, coodinate notation strings can be converted to a `Point` and shown in the map by tapping on the notation values shown and entering a coordinate in the appropriate notation. 
+Tap on the map to see a callout with the tapped location's coordinate formatted in 4 different ways. You can also put a coordinate string in any of these formats in the text field. Hit Enter and the coordinate string will be parsed to a map location which the callout will move to.
 
-The `CoordinateFormatter` also supports Military Grid Reference System (MGRS), Global Area Reference System (GARS), and World Geographic Reference System (GEOREF) notations, using similar methods to those shown in this sample app.
+## How it works
 
-## How it works 
-An inital default map location is shown in the `MapView` as a `Graphic`. The `CoordinateFormatter` methods `toLatitudeLongitude`, `toUtm`, and `toUSNG` are used to convert the `Point` representing the tapped map location to different coordinate notation formats. Note that the `toLatitudeLongitude` method can be used to format the coordinates in different ways, by passing in different `LatitudeLongitudeFormat` values.
+1.  Get or create a map `Point` with a spatial reference.
+2.  Use one of the static "to" methods on `CoordinateFormatter` such as `CoordinateFormatter.toLatitudeLongitude(point, CoordinateFormatter.LatitudeLongitudeFormat.DECIMAL_DEGREES, 4)` to get the formatted string.
+3.  To go from a formatted string to a `Point`, use one of the "from" static methods like `CoordinateFormatter.fromUtm(coordinateString, map.getSpatialReference(), CoordinateFormatter.UtmConversionMode.LATITUDE_BAND_INDICATORS)`.
 
 ## Relevant API
-* CoordinateFormatter
-* Point
-* Graphic
-* DefaultMapViewOnTouchListener
 
-#### Tags
-Edit and Manage Data
+* CoordinateFormatter
+* CoordinateFormatter.LatitudeLongitudeFormat
+* CoordinateFormatter.UtmConversionMode
+
+## Tags
+
+convert, coordinate, decimal degrees, degree minutes seconds, format, latitude, longitude, USNG, UTM
