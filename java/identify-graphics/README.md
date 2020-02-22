@@ -1,25 +1,30 @@
-# Identify Graphics
-Create a `Graphic` and add it to a `GraphicOverlay` where it can be identified from the `MapView`.
+# Identify graphics
 
-![Identify Graphics App](identify-graphics.png)
+Display an alert message when a graphic is tapped.
+
+![Image of identify graphics](identify-graphics.png)
+
+## Use case
+
+A user may wish to select a graphic on a map to view relevant information about it.
 
 ## How to use the sample
-Tap on a graphic to identify it.
+
+Select a graphic to identify it. You will see an alert message displayed.
 
 ## How it works
-### Graphics
-Graphics represent graphic elements used in graphic overlays on the `MapView`. Graphics are contained in a modifiable `List` for graphics on a `GraphicsOverlay`.  The `ListenableList` interface defines a listenable `List` of graphics that can be notified when items are being added or removed from the `List`.
 
-### Identify Graphics Overlay
-You can identify on a graphics overlay from the `MapView.identifyOnGraphicsOverlay()` method which returns a `ListenableFuture<List<Graphic>>`.  Futures are an abstraction for asynchronous event driven systems that the Android platform provides.  The method returns immediately as a wrapper around the `List<Graphic>`, once the asynchronous event is completed you can access it with `ListenableFuture.get()`.
-
+1. Create a `GraphicsOverlay` and add it to the `MapView`.
+2. Add a `Graphic` along with a `SimpleFillSymbol` to the graphics overlay.
+3. Create a `Point` from the location tapped on the map view by the user with a `DefaultMapViewOnTouchListener.onSingleTapConfirmed` method.
+4. Identify the graphic on the map view with `identifyGraphicsOverlayAsync(graphicsOverlay, screenPoint, tolerance, max results)`.
 
 ## Relevant API
-* ArcGISMap
-* DefaultMapViewOnTouchListener
+
 * Graphic
 * GraphicsOverlay
 * MapView
 
-#### Tags
-Search and Query
+## Tags
+
+graphics, identify
