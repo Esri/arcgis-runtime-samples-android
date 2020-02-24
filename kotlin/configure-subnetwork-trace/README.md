@@ -24,7 +24,7 @@ Example barrier conditions for the default dataset:
 4. Create a `UtilityElement` from this asset type to use as the starting location for the trace.
 5. Update the selected barrier expression and the checked options in the UI using this tier's `TraceConfiguration`.
 6. When 'Network Attribute' is selected, if its `Domain` is a `CodedValueDomain`, populate the choice list for the comparison value with its `CodedValues`.  Otherwise, display a free-form textbox for entering an attribute value.
-7. When 'Add' is clicked, create a new `UtilityNetworkAttributeComparison` using the selected comparison source, operator, and selected or typed value. Use the selected source's `NetworkAttribute.DataType` to convert the comparison value to the correct data type.
+7. When 'Add' is clicked, create a new `UtilityNetworkAttributeComparison` using the selected comparison source, operator, and selected or typed value. Use the selected source's `UtilityNetworkAttribute.DataType` to convert the comparison value to the correct data type.
 8. If `Traversability.barriers` is not empty, create a `UtilityTraceOrCondition` with the existing `Barriers` and the new comparison from step 8.
 9. When 'Trace' is clicked, create `UtilityTraceParameters` passing in `UtilityTraceType.SUBNETWORK` and the default starting location.  Set its `TraceConfiguration` with the modified options, selections, and expression; then run a `UtilityNetwork.traceAsync(...)`.
 10. When `Reset` is clicked, set the trace configurations expression back to its original value.
