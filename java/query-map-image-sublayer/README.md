@@ -17,7 +17,7 @@ Specify a minimum population in the input field (values under 1810000 will produ
 1. Create an `ArcGISMapImageLayer` object using the URL of an image service.
 2. After loading the layer, get the sublayer you want to query with `(ArcGISMapImageSublayer) layer.getSubLayers().get(index)`.
 3. Load the sublayer, and then get its `ServiceFeatureTable` with `sublayer.getTable()`.
-4. Create `QueryParameters`. You can use `queryParameters.setWhereClause(sqlQueryString)` to query against a table attribute and/or set `queryParameters.setGeometry(extent)` to limit the results to an area of the map.
+4. Create a `QueryParameters` object. You can use `queryParameters.setWhereClause(sqlQueryString)` to query against a table attribute and/or set `queryParameters.setGeometry(extent)` to limit the results to an area of the map.
 5. Call `sublayerTable.queryFeaturesAsync(queryParameters)` to get a `FeatureQueryResult` with features matching the query. The result is an iterable of features.
 
 ## About the data
