@@ -10,7 +10,7 @@ The OGC GeoPackage specification defines an open standard for sharing raster and
 
 ## How to use the sample
 
-When the sample loads, the feature tables and rasters from the GeoPackage will be shown on the map.
+When the sample loads, the layers in the GeoPackage are shown in a drawer on the left side of the screen. Tap on one of these layers to add or remove it from the map.
 
 ## How it works
 
@@ -23,10 +23,8 @@ When the sample loads, the feature tables and rasters from the GeoPackage will b
 ## Relevant API
 
 * GeoPackage
-* GeoPackage.GeoPackageFeatureTables
-* GeoPackage.GeoPackageRasters
 * GeoPackageFeatureTable
-* GeoPackageRaster
+* GeoPackageRasters
 
 ## Offline data
 1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=68ec42517cdd439e81b036210483e8e7).
