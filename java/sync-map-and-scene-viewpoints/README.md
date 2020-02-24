@@ -1,8 +1,8 @@
-# GeoView viewpoint synchronization
+# Sync map and scene viewpoints
 
 Keep the view points of two views (e.g. MapView and SceneView) synchronized with each other.
 
-![Image of geo view viewpoint synchronization](sync-map-and-scene-viewpoints.png)
+![Image of sync map and scene viewpoints](sync-map-and-scene-viewpoints.png)
 
 ## Use case
 
@@ -14,17 +14,14 @@ Interact with the MapView or SceneView by zooming or panning. The other MapView 
 
 ## How it works
 
-1. Wire up the `ViewpointChanged` event handler for both geo views.
+1. Wire up the viewpoint change event handler for both geo views.
 2. In each event handler, get the current viewpoint from the geo view that is being interacted with and then set the viewpoint of the other geo view to the same value.
 
 ## Relevant API
 
 * GeoView
-* GetCurrentViewPoint
 * MapView
-* AddViewpointChangedListener
 * SceneView
-* SetViewPoint
 
 ## About the data
 
