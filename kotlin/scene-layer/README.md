@@ -14,7 +14,7 @@ When launched, this sample displays a scene service with an `ArcGISSceneLayer`. 
 
 ## How it works
 
-1. Create an `ArcGISScene` and set its `Basemap` with `ArcGISScene.basemap()`.
+1. Create an `ArcGISScene` and set its `Basemap` with `ArcGISScene.basemap`.
 1. Create a `SceneView` and set the scene to the view with `SceneView.setArcGISScene(scene)`.
 1. Create an `ArcGISSceneLayer` using a data source URI: `ArcGISSceneLayer(Uri)`.
 1. Add the new scene layer to the scene as an operational layer with `ArcGISScene.operationalLayers().add(sceneLayer)`.
