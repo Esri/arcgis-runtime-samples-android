@@ -14,7 +14,7 @@ Interact with the MapView or SceneView by zooming or panning. The other MapView 
 
 ## How it works
 
-1. Wire up the viewpoint change event handler for both geo views.
+1. Wire up the `ViewpointChanged` event handler for both geo views.
 2. In each event handler, get the current viewpoint from the geo view that is being interacted with and then set the viewpoint of the other geo view to the same value.
 
 ## Relevant API
