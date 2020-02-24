@@ -6,7 +6,7 @@ Set the map view to a new viewpoint.
 
 ## Use case
 
-Programatically navigate to a specified location in the map or scene. Use this to focus on a particular point or area of interest.
+Programmatically navigate to a specified location in the map or scene. Use this to focus on a particular point or area of interest.
 
 ## How to use the sample
 
