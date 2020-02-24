@@ -27,7 +27,6 @@ The scene launches with a northward view of the city of Brest, France. A 3D scen
 
 * ArcGISScene
 * ArcGISSceneLayer
-* ArcGISTiledElevationSource
 * SceneView
 
 ## Tags
