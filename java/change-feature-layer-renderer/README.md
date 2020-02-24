@@ -20,7 +20,7 @@ Tap the 'Override Renderer' button to change the `FeatureLayer`'s renderer.
 
 ## Relevant API
 
-* FeatureLayer.setRenderer
+* FeatureLayer
 * ServiceFeatureTable
 * SimpleRenderer
 
