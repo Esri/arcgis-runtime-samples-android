@@ -10,13 +10,14 @@ Raster functions allow processing operations that can be applied to one or more 
 
 ## How to use the sample
 
-The raster function is applied automatically when the sample starts and the result is displayed.
+Tap the "Apply Layer" button to apply the raster function and display the result.
 
 ## How it works
 
 1. Create the `ImageServiceRaster` referring to the image server URL.
 2. Create the `RasterFunction` from a JSON string.
-3. Get the name of the raster argument to the function with `rasterFunction.arguments.rasterNames[0]`.
+3. Get the arguments of the raster function with `rasterFunction.arguments`.
+4. Get the names of the raster arguments with `rasterFunctionArguments.rasterNames`.
 4. Set the raster argument with `rasterFunction.setRaster(rasterName, imageServiceRaster)`.
 5. Create a new `Raster` referring to the raster function.
 6. Create a `RasterLayer` to visualize the computed raster.
