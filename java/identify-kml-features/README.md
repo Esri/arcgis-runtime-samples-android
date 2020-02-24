@@ -28,10 +28,11 @@ Note: There are several types of KML features. This sample only identifies featu
 
 ## Relevant API
 
-* GeoView
+* GeoView.identifyLayerAsync(...)
 * IdentifyLayerResult
 * KmlLayer
 * KmlPlacemark
+* KmlPlacemark.getBalloonContent()
 
 ## About the data
 
