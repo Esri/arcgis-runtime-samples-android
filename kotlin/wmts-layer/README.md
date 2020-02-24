@@ -10,7 +10,7 @@ WMTS services can have several layers. You can use Runtime to explore the layers
 
 ## How to use the sample
 
-The layer will be displayed automatically. Use the buttons to choose a different method of loading the layer.
+The layer will be displayed automatically. Pan and zoom to explore the layer.
 
 ## How it works
 
