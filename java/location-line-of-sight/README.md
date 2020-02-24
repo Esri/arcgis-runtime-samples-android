@@ -10,7 +10,7 @@ A line of sight analysis can be used to assess whether a view is obstructed betw
 
 ## How to use the sample
 
-Tap to turn on the touch event listener and lock in the observer location. Tap again to a new target location. A magenta segment on the line means the view between observer and target is obstructed, whereas cyan means the view is unobstructed. 
+Tap to turn on the touch event listener and lock in the observer location. Tap again to create a new target location. A magenta segment on the line means the view between observer and target is obstructed, whereas cyan means the view is unobstructed. 
 
 ## How it works
 
