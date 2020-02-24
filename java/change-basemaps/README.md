@@ -6,7 +6,7 @@ Change a map's basemap. A basemap is beneath all layers on an `ArcGISMap` and is
 
 ## Use case
 
-Basemaps should selected contextually, for example, in maritime applications, it would be more appropriate to use a basemap of the world's oceans as opposed to a basemap of the world's streets.
+Basemaps should be selected contextually. For example in maritime applications it would be more appropriate to use a basemap of the world's oceans, as opposed to a basemap of the world's streets.
 
 ## How to use the sample
 
