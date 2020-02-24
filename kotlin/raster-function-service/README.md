@@ -16,7 +16,7 @@ The raster function is applied automatically when the sample starts and the resu
 
 1. Create the `ImageServiceRaster` referring to the image server URL.
 2. Create the `RasterFunction` from a JSON string.
-3. Get the name of the raster argument to the function with `rasterFunction.arguments.rasterNames[0]`
+3. Get the name of the raster argument to the function with `rasterFunction.arguments.rasterNames[0]`.
 4. Set the raster argument with `rasterFunction.setRaster(rasterName, imageServiceRaster)`.
 5. Create a new `Raster` referring to the raster function.
 6. Create a `RasterLayer` to visualize the computed raster.
