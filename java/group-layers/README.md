@@ -16,7 +16,7 @@ The layers in the map will be displayed in a table of contents. Toggle the check
 
 ## How it works
 
-1. Add the `GroupLayer` and additional `Layers` as operational layers in the `SceneView`.
+1. Add the `GroupLayer` and additional `Layer`s as operational layers in the `SceneView`.
 3. To build the table of contents:
   - Add each layer to the table of contents.
   - For each `Layer` in the `SceneView`, if `canShowInLegend()` returns true, add it to the table of contents.
