@@ -8,6 +8,10 @@ Display a raster on a map and apply different rendering rules to that raster.
 
 Raster images whose individual pixels represent elevation values can be rendered in a number of different ways, including representation of slope, aspect, hillshade, and shaded relief. Applying these different rendering rules to the same raster allows for a powerful visual analysis of the data. For example, a geologist could interrogate the raster image to map subtle geological features on a landscape, which may become apparent only through comparing the raster when rendered using several different rules.
 
+## How to use the sample
+
+Run the sample and use the drop-down menu at the top to select a rendering rule.
+
 ## How it works
 
 1.  Create an `ImageServiceRaster` using a URL to an online image service.
