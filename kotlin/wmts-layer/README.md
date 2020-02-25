@@ -1,34 +1,42 @@
-# WMTS Layer
+# WMTS layer
 
-This sample created a WMTS layer from the given url and the first layer id, which is retrieved by loading the associated WMTS service and obtaining the layer info list. Then the WMTS layer will be added to the map as a basemap layer.
+Display a layer from a Web Map Tile Service.
 
-![WMTS Layer App](wmts-layer.png)
+![Image of WMTS layer](wmts-layer.png)
 
-## Features
+## Use case
 
-* Basemap
-* ArcGISMap
-* WmtsService
+WMTS services can have several layers. You can use Runtime to explore the layers available from a service. This would commonly be used to enable a browsing experience where users can choose which layers they want to display at run time.
+
+## How to use the sample
+
+The layer will be displayed automatically. Pan and zoom to explore the layer.
+
+## How it works
+
+To display a WMTS layer directly from a URL:
+
+1. Create a `WmtsService` object using the URL of the WMTS service.
+2. Create a `WmtsLayer` object with the ID of the layer to display.
+
+To explore layers from a WMTS service:
+
+1. Create a `WmtsService` object using the URL of the WMTS service.
+2. After loading the WMTS service, get the list of `WmtsLayerInfo` objects from the service info of the WMTS service with `wmtsServiceInfo.layerInfos`.
+3. Use one of the layer infos to create the WMTS layer with `WmtsLayer(layerInfos[0])`.
+4. Create a basemap with the WMTS layer and set it to the map with `map.basemap = Basemap(wmtsLayer)`.
+
+## Relevant API
+
 * WmtsLayer
+* WmtsLayerInfo
+* WmtsService
+* WmtsServiceInfo
 
-## Developer Pattern
+## About the data
 
-Create a `WmtsService` from a `String` url and load the service.  Once loaded use the service info to get the LayerInfo and use to create the `WmtsLayer`.  Add the layer to the map as a `Basemap`. 
+The map visualizes world time zones.
 
-```kotlin
- // create wmts service from url string
- val wmtsService = WmtsService(getString(R.string.wmts_url))
- wmtsService.addDoneLoadingListener({
-     if(wmtsService.loadStatus == LoadStatus.LOADED){
-         // get service info
-         val wmtsServiceInfo = wmtsService.serviceInfo
-         // get the first layers id
-         val layerInfos = wmtsServiceInfo.layerInfos
-         // create WMTS layer from layer info
-         val wmtsLayer = WmtsLayer(layerInfos[0])
-         // set the basemap of the map with WMTS layer
-         map.basemap = Basemap(wmtsLayer)
-     }
- })
- wmtsService.loadAsync()
-```
+## Tags
+
+layer, OGC, raster, tiled, web map tile service
