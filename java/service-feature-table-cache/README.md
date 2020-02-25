@@ -20,7 +20,7 @@ Run the sample and pan and zoom around the map. With each interaction, features 
 ## Relevant API
 
 * FeatureLayer
-* FeatureRequestMode.OnInteractionCache
+* FeatureRequestMode.ON_INTERACTION_CACHE
 * ServiceFeatureTable
 * ServiceFeatureTable.setFeatureRequestMode
 

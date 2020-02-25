@@ -15,21 +15,20 @@ Adjust the heading and pitch sliders to rotate the cone.
 ## How it works
 
 1. Create a new `GraphicsOverlay`. 
-2. Create a new `SimpleRenderer` and set its scene properties.
-3. Set the heading expression to `[HEADING]` and the pitch expression to `[PITCH]` with `renderer.getSceneProperties().setHeadingExpression`.
-4. Apply the renderer to the graphics overlay with `graphicsOverlay.setRenderer(renderer)`.
+2. Create a new `SimpleRenderer`.
+3. Set the heading expression to `[HEADING]` and the pitch expression to `[PITCH]` with `simpleRenderer.getSceneProperties().setHeadingExpression`.
+4. Apply the renderer to the graphics overlay with `graphicsOverlay.setRenderer(simpleRenderer)`.
 5. Create a new `Point` and a new `Graphic` and add it to the overlay with e.g. `graphicsOverlay.getGraphics().add(graphic)`.
 6. To update the graphic's rotation, update the `HEADING` or `PITCH` property in the graphic's attributes with `graphic.getAttributes().put(key, value)`.
        
 ## Relevant API
 
-* Graphic.Attributes
+* Graphic
 * GraphicsOverlay
 * SceneProperties
-* SceneProperties.HeadingExpression
-* SceneProperties.PitchExpression
+* SceneProperties.setHeadingExpression
+* SceneProperties.setPitchExpression
 * SimpleRenderer
-* SimpleRenderer.SceneProperties
 
 ## Tags
 
