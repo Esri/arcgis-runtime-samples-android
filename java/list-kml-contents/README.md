@@ -17,7 +17,7 @@ The contents of the KML file are shown in a tree. Select a node to zoom to that 
 1. Add the KML file to the scene as a layer.
 2. Explore the root nodes of the `KmlDataset` recursively explored to create a view model.
   * Each node is enabled for display at this step. KML files may include nodes that are turned off by default.
-3. When a node is selected, use the node's `Extent` to determine a viewpoint and set the `SceneView` object's viewpoint do it.
+3. When a node is selected, use the node's `Extent` to determine a viewpoint and set the `SceneView` object's viewpoint to it.
 
 ## Relevant API
 
