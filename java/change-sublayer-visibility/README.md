@@ -1,4 +1,4 @@
-# Map image layer sublayer visibility
+# Change sublayer visibility
 
 Change the visibility of sublayers.
 

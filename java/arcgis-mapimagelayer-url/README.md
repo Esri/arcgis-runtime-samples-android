@@ -1,4 +1,4 @@
-# Map image layer
+# ArcGIS map image layer URL
 
 Display a layer from an ArcGIS map image layer service.
 
