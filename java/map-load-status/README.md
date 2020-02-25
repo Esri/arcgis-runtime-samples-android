@@ -6,7 +6,7 @@ Determine the map's load status which can be: `NOT_LOADED`, `FAILED_TO_LOAD`, `L
 
 ## How to use the sample
 
-Click on the button to reload the ArcGISMap. The load status of the ArcGISMap will be displayed on screen.
+Tap on the refresh button in the top right of the screen to reload the ArcGISMap. The load status of the ArcGISMap will be displayed on screen.
 
 ## How it works
 
