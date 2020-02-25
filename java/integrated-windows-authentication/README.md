@@ -44,4 +44,4 @@ More information about IWA and its use with ArcGIS can be found at the following
 
 ## Tags
 
-authentication, Portal, security, Windows
+authentication, portal, security, Windows
