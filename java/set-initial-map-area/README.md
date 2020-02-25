@@ -30,4 +30,4 @@ As application is loading, initial view point is set and map view opens at the g
 
 ## Tags
 
-InitialViewpoint, extent, zoom, Envelope
+extent, zoom
