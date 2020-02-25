@@ -26,7 +26,7 @@ Your organization might use Integrated Windows Authentication (IWA) to secure Ar
 
 ## Relevant API
 
-* ArcGISNetworkCredential
+* UserCredential
 * ArcGISPortal
 * AuthenticationManager
 
