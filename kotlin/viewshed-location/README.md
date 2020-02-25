@@ -27,8 +27,8 @@ Use the sliders to change the properties (heading, pitch, etc.), of the viewshed
 
 ## About the data
 
-The scene in this sample shows a [buildings layer](https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0) in Brest, France.
+The scene shows a [buildings layer in Brest, France](https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0) hosted on ArcGIS Online.
 
 ## Tags
 
-visibility analysis, viewshed, Scene, 3D, frustum
+3D, frustum, LocationViewshed, scene, viewshed, visibility analysis
