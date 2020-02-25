@@ -10,7 +10,7 @@ IdentifyLayers allows users to tap on a map, returning features at that location
 
 ## How to use the sample
 
-Tap to identify features. An alert will show all layers with features under the cursor, as well as a layer count.
+Tap to identify features. An alert will show all layers with features under the tapped location, as well as the number of features.
 
 ## How it works
 
