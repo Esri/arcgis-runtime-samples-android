@@ -15,7 +15,8 @@ A `GeoElementLineOfSight` is therefore useful in cases where visibility between 
 
 A line of sight will display between a point on the Empire State Building (observer) and a taxi (target).
 The taxi will drive around a block and the line of sight should automatically update.
-The taxi will be highlighted when it is visible. You can change the observer height with the slider to see how it affects the target's visibility.
+The taxi will be highlighted and blinking when it is visible. Any portion of the line of sight that is blocked will be red. 
+You can change the observer height with the slider to see how it affects the target's visibility.
 
 ## How it works
 
