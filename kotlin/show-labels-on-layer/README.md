@@ -34,7 +34,7 @@ To show custom labels on a feature layer:
 
 ## About the data
 
-This sample uses the [USA 116th Congressional Districts](https://www.arcgis.com/home/item.html?id=cc6a869374434bee9fefad45e291b779) feature layer hosted on ArcGIS Online.
+This sample uses the [US Highways](http://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer/1) feature service hosted on ArcGIS Online.
 
 ## Additional information
 
