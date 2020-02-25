@@ -23,4 +23,5 @@ The `LoadStatus` is `LOADED` when any of the following criteria are met:
 * MapView
 
 ## Tags
+
 LoadStatus, Map, Loadable pattern
