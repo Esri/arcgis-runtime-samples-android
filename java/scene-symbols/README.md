@@ -30,7 +30,7 @@ When the scene loads, note the different types of 3D symbols that you can create
 
 ## About the data
 
-This sample shows arbitrary symbols in an empty scene with an  imagery basemap.
+This sample shows arbitrary symbols in an empty scene with an imagery basemap.
 
 ## Tags
 
