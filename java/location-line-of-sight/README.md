@@ -1,4 +1,4 @@
-# Line of sight location
+# Location line of sight
 
 Perform a line of sight analysis between two points in real time.
 
