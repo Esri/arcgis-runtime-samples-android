@@ -1,8 +1,8 @@
-# Display scene in tabletop in AR
+# Display scene in tabletop AR
 
 Use augmented reality (AR) to pin a scene to a table or desk for easy exploration.
 
-![Display scene in tabletop AR App](display-scene-in-tabletop-ar.png)
+![Image of display scene in tabletop AR](display-scene-in-tabletop-ar.png)
 
 ## Use case
 
@@ -17,7 +17,7 @@ NOTE: [Google Play Services for AR](https://play.google.com/store/apps/details?i
 ## How it works
 
 1. Create an `ArcGISARView`.
-2. Listen for a tap from the user, then use `mArView.setInitialTransformationMatrix(screenPoint)` to set the initial transformation, which allows you to place the scene. This method uses ARKit's built-in plane detection.
+2. Listen for a tap from the user, then use `mArView.setInitialTransformationMatrix(screenPoint)` to set the initial transformation, which allows you to place the scene. This method uses ARCore's built-in plane detection.
 3. Create and display the scene. To allow you to look at the content from below, set the base surface navigation constraint to `NONE`.
 4. To create a realistic tabletop scene experience, set the scene's base surface opacity to 0. This will ensure that only the target scene content is visible.
 5. For tabletop scenes, the `arView`'s `originCamera` must be set such that the altitude of the camera matches the altitude of the lowest point in the scene. Otherwise, scene content will float above or below the targeted anchor position identified by the user. For this sample, the origin camera's latitude and longitude are set to the center of the scene for best results. This will give the impression that the scene is centered on the location the user tapped.
@@ -27,10 +27,6 @@ NOTE: [Google Play Services for AR](https://play.google.com/store/apps/details?i
 ## Relevant API
 
 * ArcGISARView
-* ArcGISARView.setOriginCamera(...)
-* ArcGISARView.setInitialTransformation(...)
-* ArcGISARView.setTranslationFactor(...)
-* Surface.setNavigationConstraint(...)
 * Surface.setOpacity(...)
 
 ## Offline Data
@@ -46,7 +42,7 @@ Link | Local Location
 
 ## About the data
 
-This sample uses a mobile scene package which was chosen because it is a compact scene ideal for tabletop use. Note that tabletop mapping experiences work best with small, focused scenes.
+This sample uses the [Philadelphia Mobile Scene Package](https://www.arcgis.com/home/item.html?id=7dd2f97bb007466ea939160d0de96a9d). It was chosen because it is a compact scene ideal for tabletop use. Note that tabletop mapping experiences work best with small, focused scenes. The small, focused area with basemap tiles defines a clear boundary for the scene.
 
 ## Additional information
 
@@ -57,12 +53,5 @@ This sample requires a device that is compatible with ARCore 1.8 on Android.
 This sample uses the ArcGIS Runtime Toolkit. See [Augmented reality](https://developers.arcgis.com/android/latest/guide/display-scenes-in-augmented-reality.htm) in the guide to learn about the toolkit and how to add it to your app.
 
 ## Tags
-Augmented Reality
-drop
-pin
-place
-mixed reality
-model
-tabletop
-table-top
 
+augmented reality, drop, mixed reality, model, pin, place, table-top, tabletop
