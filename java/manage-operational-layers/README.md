@@ -1,4 +1,5 @@
 # Manage operational layers
+
 Add, remove, and reorder operational layers in a map.
 
 ![Image of manage operational layers](manage-operational-layers.png)
