@@ -15,7 +15,7 @@ Tap to turn on the touch event listener and lock in the observer location. Tap a
 ## How it works
 
 1. Create an `AnalysisOverlay` and add it to the scene view.
-1. Make a `DefaultSceneViewOnTouchHandler` to capture single taps.
+1. Make a `DefaultSceneViewOnTouchListener` to capture single taps.
 1. For each target created, create a `LocationLineOfSight` between the observer and target locations and add it to the analysis overlay.
 
 ## Relevant API
