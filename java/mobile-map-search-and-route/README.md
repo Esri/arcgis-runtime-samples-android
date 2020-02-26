@@ -16,10 +16,10 @@ A list of maps from a mobile map package will be displayed. If the map contains 
 
 ## How it works
 
-1.  Create a `MobileMapPackage` using `MobileMapPackage.OpenAsync(path)`.
-2.  Get a list of maps inside the package using the `Maps` property.
-3.  If the package has a locator, access it using the `LocatorTask` property.
-4.  To see if a map contains transportation networks, check each map's `TransportationNetworks` property.
+1.  Create a `MobileMapPackage` using `MobileMapPackage(path).loadAsync()`.
+2.  Get a list of maps inside the package using the `MobileMapPackage.getMaps()`.
+3.  If the package has a locator, access it using `MobileMapPackage.getLocatorTask()`.
+4.  To see if a map contains transportation networks, check `map.getTransportationNetworks()`.
 
 ## Relevant API
 
