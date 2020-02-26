@@ -2,7 +2,7 @@
 
 Position graphics relative to a surface using different surface placement modes.
 
-![Surface placement app](surface-placement.png)
+![Image of surface placement](surface-placement.png)
 
 ## Use case
 
@@ -39,14 +39,5 @@ The scene launches with a view of northern Snowdonia National Park. Three points
 This sample uses an elevation service to add elevation/terrain to the scene. Graphics are positioned relative to that surface for the `DRAPED_BILLBOARDED`, `DRAPED_FLAT`, `ABSOLUTE` and `RELATIVE` surface placement modes. 
 
 ## Tags
-Maps and Scenes
-3D
-absolute
-altitude
-draped
-elevation
-floating
-relative
-scenes
-sea level
-surface placement
+
+3D, absolute, altitude, draped, elevation, floating, relative, scenes, sea level, surface placement
