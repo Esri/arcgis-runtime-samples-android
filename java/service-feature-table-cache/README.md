@@ -26,7 +26,7 @@ Run the sample and pan and zoom around the map. With each interaction, features 
 
 ## About the data
 
-The sample opens with an initial visible extent centred over pool permit statuses in California.
+The sample opens with an initial visible extent centered over pool permit statuses in California.
 
 ## Additional information
 
