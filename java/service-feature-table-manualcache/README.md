@@ -28,7 +28,7 @@ Run the sample and pan and zoom around the map. Features will be requested and d
 
 ## About the data
 
-The sample opens with an initial visible extent centered over pool permit statuses in California.
+The sample opens with a tree maintenance feature layer centered over San Francisco.
 
 ## Additional information
 

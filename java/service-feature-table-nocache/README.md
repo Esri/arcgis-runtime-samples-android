@@ -1,4 +1,4 @@
-# Service feature table (no Cache)
+# Service feature table (no cache)
 
 Display a feature layer from a service using the **no cache** feature request mode.
 
@@ -22,7 +22,6 @@ Run the sample and pan and zoom around the map. With each interaction, new featu
 * FeatureLayer
 * FeatureRequestMode.ON_INTERACTION_NO_CACHE
 * ServiceFeatureTable
-* ServiceFeatureTable.populateFromServiceAsync
 * ServiceFeatureTable.setFeatureRequestMode
 
 ## About the data
