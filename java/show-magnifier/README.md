@@ -1,4 +1,4 @@
-# Show Magnifier
+# Show magnifier
 Tap and hold on a map to get a magnifier.
 
 ![Show Magnifier App](show-magnifier.png)
