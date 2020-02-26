@@ -16,7 +16,7 @@ Run the sample and view the military symbols on the map.
 
 1. Create a new `DictionarySymbolStyle` with `DictionarySymbolStyle.createFromFile()`.
 1. Create a new `DictionaryRenderer`, passing in the `symbolDictionary`.
-1. Create a new `GraphicsOverlay`
+1. Create a new `GraphicsOverlay`.
 1. Set the  dictionary renderer to the graphics overlay.
 1. Parse through the local XML file creating a map of key/value pairs for each block of attributes.
 1. Create a `Graphic` for each attribute.
