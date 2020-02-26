@@ -29,9 +29,9 @@ The author of a web map can support the use of basemaps which are already on a d
 
 ## How it works
 
-1. Create a `PortalItem` object using a web map's ID. 
-2. Initialize an `OfflineMapTask` object using the portal item. 
-3. Request the default parameters for the task with `OfflineMapTask.createDefaultGenerateOfflineMapParameters`.
+1. Create a `PortalItem` object using a web map's ID and create an `ArcGISMap` from it. 
+2. Initialize an `OfflineMapTask` object using the map. 
+3. Request the default parameters for the task with `OfflineMapTask.createDefaultGenerateOfflineMapParametersAsync()`.
 4. A `GenerateOfflineMapJob` is created by calling `OfflineMapTask.generateOfflineMap`.  
     * If desired, set the `GenerateOfflineMapParameters.referenceBasemapDirectory` to the absolute path of the directory which contains the .tpk file.
     * Otherwise a basemap will be downloaded.
