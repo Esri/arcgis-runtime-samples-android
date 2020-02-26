@@ -1,21 +1,33 @@
-# Identify Layers
-Identify features on a map across different layers.
+# Identify layers
 
-![Identify Layers App](identify-layers.png)
+Identify features in all layers in a map. 
+
+![Image of identify layers](identify-layers.png)
+
+## Use case
+
+IdentifyLayers allows users to tap on a map, returning features at that location across multiple layers. Because some layer types have sublayers, the sample recursively counts results for sublayers within each layer.
 
 ## How to use the sample
-Tap on map to get features at that location. The features are returned from different layers in the map.
+
+Tap to identify features. An alert will show all layers with features under the tapped location, as well as the number of features.
 
 ## How it works
-`MapView` has a `identifyLayersAsync(screenLocation, tolerance, returnPopupsOnly, maximumResults)` method that is used in the sample. The method takes a screen location, tolerance, boolean for returning (a pop-up/pop-up and geo-element), and maximum results per layer, which results in a `ListenableFuture<List<IdentifyLayerResult>>`.
-	
-Layer name and a count of identified features held by each `IdentifyLayerResult` in the `ListenableFuture<List<...>>` is then taken and written out to a String. Finally, the resulting String is displayed in an Android AlertDialog.
+
+1. The tapped position is passed to `MapView.identifyLayersAsync`
+2. For each `IdentifyLayerResult` in the results, features are counted. 
+    * Note: there is one identify result per layer with matching features; if the feature count is 0, that means a sublayer contains the matching features.
 
 ## Relevant API
-* ArcGISMapImageLayer
-* FeatureLayer
-* FeatureTable
-* MapView
 
-#### Tags
-Search and Query
+* IdentifyLayerResult
+* IdentifyLayerResult.getSublayerResults
+* MapView.identifyLayersAsync
+
+## Additional information
+
+The GeoView supports two methods of identify: `identifyLayerAsync()`, which identifies features within a specific layer and `identifyLayersAsync()`, which identifies features for all layers in the current view.
+
+## Tags
+
+identify, recursion, recursive, sublayers
