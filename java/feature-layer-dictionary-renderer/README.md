@@ -1,19 +1,36 @@
 # Feature Layer Dictionary Renderer
 
-Displays a FeatureLayer with military symbology, using ArcGIS Runtime's DictionaryRenderer.
+Convert features into graphics to show them with mil2525d symbols.
 
-![Feature Layer Dictionary Renderer App](feature-layer-dictionary-renderer.png)
+![Image of feature layer dictionary renderer](feature-layer-dictionary-renderer.png)
+
+## Use case
+
+A dictionary renderer uses a style file along with a rule engine to display advanced symbology. This is useful for displaying features using precise military symbology.
+
+## How to use the sample
+
+Pan and zoom around the map. Observe the displayed military symbology on the map.
 
 ## How it works
 
-This sample loads a number of point, line, and polygon feature tables from a Runtime geodatabase. For each feature table, a FeatureLayer is created, and a DictionaryRenderer object is created and applied to the layer. Note that each layer needs its own renderer, though all renderers can share the DictionarySymbolStyle, in which case all layers will use the same symbology specification (MIL-STD-2525D in the case of this sample). Each layer is added to the map, and when all layers are loaded, the map's viewpoint is set to zoom to the full extent of all feature layers.
+1. Create a `Geodatabase` using `Geodatabase(geodatabasePath)`.
+1. Load the geodatabase asynchronously using `Geodatabase.loadAsync()`.
+1. Instantiate a `SymbolDictionary`  using `DictionarySymbolStyle(dictionaryPath)`.
+1. Load the symbol dictionary asynchronously using `DictionarySymbol.loadAsync()`.
+1. Wait for geodatabase to completely load by connecting to `Geodatabase.addDoneLoadingListener()`.
+1. Cycle through each `GeodatabaseFeatureTable` from the geodatabase using `Geodatabase.getGeodatabaseFeatureTables()`.
+1. Create a `FeatureLayer` from each table within the geodatabase using `FeatureLayer(GeodatabaseFeatureTable)`.
+1. Load the feature layer asynchronously with `FeatureLayer.loadAsync()`.
+1. Add the feature layer to map using `Map.getOperationalLayers().add(FeatureLayer)`.
+1. Create `DictionaryRenderer(SymbolDictionary)` and attach to the feature layer using `FeatureLayer.setRenderer(DictionaryRenderer)`.
+1. Wait for each layer to load using `FeatureLayer.addDoneLoadingListener`.
+1. Set the viewpoint of the map view to the extent of the feature layer using `MapView.setViewpointGeometryAsync(featureLayer.getFullExtent())`.
 
 ## Relevant API
 
 * DictionaryRenderer
-* DictionarySymbolStyle
-* FeatureLayer
-* Geodatabase
+* SymbolDictionary
 
 ## Offline data
 1. Download the data from the table below.
@@ -24,7 +41,7 @@ This sample loads a number of point, line, and polygon feature tables from a Run
 6. Create the ArcGIS/samples/Dictionary directory, `mkdir ArcGIS/samples/Dictionary`.
 7. You should now have the following directory on your target device, `/sdcard/ArcGIS/samples/Dictionary`. We will copy the contents of the downloaded data into this directory. Note:  Directory may be slightly different on your device.
 8. Exit the shell with the, `exit` command.
-9. While still in your command prompt, navigate to the folder where you extracted the contents of the data from step 1 and execute the following command: 
+9. While still in your command prompt, navigate to the folder where you extracted the contents of the data from step 1 and execute the following command:
 	* `adb push mil2525d.stylx /sdcard/ArcGIS/samples/Dictionary`
 	* `adb push militaryoverlay.geodatabase /sdcard/ArcGIS/samples/Dictionary`
 
@@ -33,5 +50,6 @@ Link | Local Location
 |[Mil2525d Stylx File](https://www.arcgis.com/home/item.html?id=c78b149a1d52414682c86a5feeb13d30)| `<sdcard>`/ArcGIS/samples/Dictionary/mil2525d.stylx |
 |[Military Overlay geodatabase](https://www.arcgis.com/home/item.html?id=e0d41b4b409a49a5a7ba11939d8535dc)| `<sdcard>`/ArcGIS/samples/Dictionary/militaryoverlay.geodatabase |
 
-### Tags
-Visualization
+## Tags
+
+DictionaryRenderer, DictionarySymbolStyle, military, symbol
