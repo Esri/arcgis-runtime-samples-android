@@ -27,7 +27,7 @@ The sample will start with some default options selected. You can immediately cl
 5. To have the results grouped by fields, add the field names to the query parameters' `groupByFieldNames` collection.
 6. To have the results ordered by fields, create `OrderBy`s, specifying the field name and `SortOrder`. Pass these `OrderBy`s to the parameters' `orderByFields` collection.
 7. To execute the query, call `featureTable.queryStatisticsAsync(queryParameters)`.
-8. Get the `StatisticQueryResult`. From this, you can get an iterator of `StatisticRecord`s to loop through and display.
+8. Get the `StatisticsQueryResult`. From this, you can get an iterator of `StatisticRecord`s to loop through and display.
 
 ## About the data
 

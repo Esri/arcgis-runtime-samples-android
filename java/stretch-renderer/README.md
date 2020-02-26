@@ -21,10 +21,10 @@ Then configure the parameters and tap 'Render'.
 ## How it works
 
 1. Create a `Raster` from a raster file.
-2. Create a `RasterLayer` from the `Raster`.
-3. Add the layer to the map.
+2. Create a `RasterLayer` from the raster.
+3. Create a `Basemap` from the raster layer with `Basemap(RasterLayer)` and set it to the map with `ArcGISMap(basemap)`.
 4. Create a `StretchRenderer`, specifying the stretch parameters and other properties.
-5. Set the `Renderer` on the `RasterLayer` with `rasterLayer.setRenderer(renderer)`.
+5. Set the stretch renderer on the raster layer with `rasterLayer.setRenderer(stretchRenderer)`.
 
 ## Relevant API
 
