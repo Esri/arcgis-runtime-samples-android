@@ -22,6 +22,7 @@ Press the 'Apply Expression' button to limit the features requested from the fea
 
 * DefinitionExpression
 * FeatureLayer
+* FeatureLayer.setDefinitionExpression
 * ServiceFeatureTable
 
 ## About the data
