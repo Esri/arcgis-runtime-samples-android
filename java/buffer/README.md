@@ -24,7 +24,7 @@ Creating buffers is a core concept in GIS proximity analysis that allows you to 
 
 ## Relevant API
 
-* GeometryEngine.Buffer
+* GeometryEngine.buffer
 * GeometryEngine.BufferGeodetic
 * GraphicsOverlay
 
