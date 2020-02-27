@@ -1,4 +1,4 @@
-# Open map URL
+# Open existing map
 
 Display a web map.
 
@@ -10,7 +10,7 @@ For displaying web maps stored on ArcGISOnline (e.g. soil survey results, as dem
 
 ## How to use the sample
 
-A web map can be selected from the drop-down list. On selection the web map displays in the map view.
+A web map can be selected from the navigation menu. On selection the web map displays in the map view.
 
 ## How it works
 
