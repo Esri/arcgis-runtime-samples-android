@@ -16,7 +16,7 @@ Use the buttons at the top of the screen to: undo or redo change made to the ske
 
 ## How it works
 
-1.  Create a `SketchEditor` and set it to the MapView with `mapView.setSketchEditor(sketchEditor)`.
+1.  Create a `SketchEditor` and pass it to the MapView with `mapView.setSketchEditor(sketchEditor)`.
 2.  Use `SketchEditor.start(SketchCreationMode)` to start sketching. If editing an existing graphic's geometry, use `SketchEditor.start(graphic.getGeometry)`.
 3.  Check to see if undo and redo are possible during a sketch session using `sketchEditor.canUndo()` and `sketchEditor.canRedo()`. If it's possible, use `sketchEditor.undo()` and `sketchEditor.redo()`.
 4.  Check if sketch is valid using `sketchEditor.isSketchValid()`, then allow the sketch to be saved to a `GraphicsOverlay`.
