@@ -10,7 +10,7 @@ Online feature services can be updated with new data. This is useful for updatin
 
 ## How to use the sample
 
-To change the feature's damage property, tap the feature to select it, and update the damage type using the drop down.
+Features in the map represent properties and are symbolized based on the type of damage to the property. Tapping on a feature displays the callout. The callout contains information about the type of damage on that property. In order to change the type of damage, tap on the info icon in the callout. Doing so, would display a list of damage types values to choose from. Selecting one of the damage types will dismiss the list and update the feature with the new value.
 
 ## How it works
 
