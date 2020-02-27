@@ -1,4 +1,4 @@
-# Openstreetmap layer
+# OpenStreetMap layer
 
 Add OpenStreetMap as a basemap layer.
 

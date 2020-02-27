@@ -12,7 +12,7 @@ An .mspk file is an archive containing the data (specifically, basemaps and feat
 
 When the sample opens, it will automatically display the Scene in the Mobile Map Package.
 
-Since this sample works with a local .mspk, you may need to download the file to your device.
+Since this sample works with a local .mspk, you will need to download the file to your device.
 
 ## How it works
 
