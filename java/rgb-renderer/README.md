@@ -18,7 +18,7 @@ Choose one of the stretch parameter types. The other options will adjust based o
 2. Create a `RasterLayer` from the raster.
 3. Create a `Basemap` from the raster layer and set it to the map.
 4. Create a `RGBRenderer`, specifying the `StretchParameters` and other properties.
-5. Set the `Renderer` on the raster layer with `rasterLayer.setRenderer(renderer)`.
+5. Set the `Renderer` on the raster layer with `rasterLayer.setRasterRenderer(renderer)`.
 
 ## Relevant API
 
