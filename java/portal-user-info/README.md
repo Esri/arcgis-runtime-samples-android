@@ -17,7 +17,7 @@ When prompted, enter your ArcGIS Online credentials.
 1. A `Portal` is created, and supplied a `Credential` which uses OAuth in user mode. 
 2. When the app launches, the portal is loaded, which triggers an authentication challenge.
 3. An `AuthenticationView` listens to the challenge and displays a login screen to allow user credentials to be entered.
-4. Upon success, instantiate `PortalUser` to get user attributes with:  
+4. Upon success, get a `PortalUser` using `portal.getUser()`. Get user attributes using:
     - `portalUser.getFullName()`
     - `portalUser.getEmail()`
     - `portalUser.getStartDate()`
