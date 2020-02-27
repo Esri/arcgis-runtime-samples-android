@@ -16,7 +16,7 @@ Run the sample and view the map image layer. As you navigate the map, the layer 
 
 1. Create an instance of `ArcGISMap`.
 1. Create an `ArcGISMapImageLayer` with the URL to a map image service.
-3. Add it to the map's operational layers collection using MapView.getOperationalLayers().add(mapImageLayer)`.
+3. Add it to the map's operational layers collection using `map.getOperationalLayers().add(mapImageLayer)`.
 
 ## Relevant API
 
