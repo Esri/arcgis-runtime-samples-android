@@ -10,7 +10,7 @@ A map image layer may contain many sublayers such as different types of roads in
 
 ## How to use the sample
 
-Each sublayer has a check box which can be used to toggle the visibility of the sublayer.
+Use the overflow menu at top right to access sublayer visibility controls. Each sublayer has a check box which can be used to toggle the visibility of the sublayer.
 
 ## How it works
 
