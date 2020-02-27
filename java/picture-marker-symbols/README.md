@@ -14,7 +14,7 @@ When launched, this sample displays a map with three picture marker symbols. Pan
 
 ## How it works
 
-1. Create a `PictureMarkerSymbol` using the URI to an online or local image
+1. Create a `PictureMarkerSymbol` using the URI to an online or local image.
 2. Create a `Graphic` and set its symbol to the `PictureMarkerSymbol`.
 
 ## Relevant API

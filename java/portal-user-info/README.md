@@ -27,8 +27,7 @@ When prompted, enter your ArcGIS Online credentials.
 ## Relevant API
 
 * AuthenticationManager
-* AuthenticationView
-* Credential
+* AuthenticationManager.CredentialCache
 * DefaultAuthenticationChallengeHandler
 * PortalInfo
 * PortalUser
