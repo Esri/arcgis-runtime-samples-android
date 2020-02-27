@@ -15,14 +15,14 @@ Run the sample and view the feature service as an operational layer on top of th
 ## How it works
 
 1. Create a `ServiceFeatureTable` from a URL.
-1. Create a feature layer from the service feature table.
+1. Create a feature layer from the service feature table with `new FeatureLayer(serviceFeatureTable)`.
 1. Add the feature layer to your ArcGISMap using `ArcGISMap.getOperationalLayers().add(FeatureLayer)`.
 
 ## Relevant API
 
 * Basemap
 * FeatureLayer
-* Map
+* ArcGISMap
 * MapView
 * ServiceFeatureTable
 
