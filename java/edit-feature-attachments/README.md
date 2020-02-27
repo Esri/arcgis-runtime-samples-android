@@ -28,13 +28,13 @@ Attachments can only be added to and accessed on service feature tables when the
 
 ## Relevant API
 
-* ApplyEditsAsync
-* DeleteAttachmentAsync
+* ArcGISFeature.deleteAttachmentAsync
+* ArcGISFeature.fetchAttachmentsAsync
+* Attachment.fetchDataAsync
 * FeatureLayer
-* FetchAttachmentsAsync
-* FetchDataAsync
 * ServiceFeatureTable
-* UpdateFeatureAsync
+* ServiceFeatureTable.applyEditsAsync
+* ServiceFeatureTable.updateFeatureAsync
 
 ## Tags
 
