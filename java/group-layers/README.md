@@ -12,7 +12,7 @@ In a land development project, you might group layers according to the phase of 
 
 ## How to use the sample
 
-The layers in the map will be displayed in a table of contents. Toggle the checkbox next to a layer's name to change its visibility. Turning a group layer's visibility off will override the visibility of its child layers.
+Display the layers in the map in a table of contents by clicking the map icon at the top right. Toggle the checkbox next to a layer's name to change its visibility. Turning a group layer's visibility off will override the visibility of its child layers.
 
 ## How it works
 

@@ -10,7 +10,7 @@ An environmental agency may track coastal erosion by comparing images of an area
 
 ## How to use the sample
 
-Choose and adjust the settings to update the hillshade renderer on the raster layer. The sample allows you to change the Altitude, Azimuth, and Slope Type.
+Choose and adjust the settings to update the hillshade renderer on the raster layer. The sample allows you to change the Altitude, Azimuth, and Slope Type with controls found by tapping the wrench icon at top right.
 
 ## How it works
 
