@@ -19,12 +19,8 @@ Pan and zoom around the map. Observe the displayed military symbology on the map
 1. Instantiate a `SymbolDictionary`  using `DictionarySymbolStyle(dictionaryPath)`.
 1. Load the symbol dictionary asynchronously using `DictionarySymbol.loadAsync()`.
 1. Wait for geodatabase to completely load by connecting to `Geodatabase.addDoneLoadingListener()`.
-1. Cycle through each `GeodatabaseFeatureTable` from the geodatabase using `Geodatabase.getGeodatabaseFeatureTables()`.
-1. Create a `FeatureLayer` from each table within the geodatabase using `FeatureLayer(GeodatabaseFeatureTable)`.
-1. Load the feature layer asynchronously with `FeatureLayer.loadAsync()`.
-1. Add the feature layer to map using `Map.getOperationalLayers().add(FeatureLayer)`.
+1. For each `GeoDatabaseFeatureTable` in the `GeoDatabase`, create a feature layer with it, then add it to the map using `Map.getOperationalLayers().add(FeatureLayer)`.
 1. Create `DictionaryRenderer(SymbolDictionary)` and attach to the feature layer using `FeatureLayer.setRenderer(DictionaryRenderer)`.
-1. Wait for each layer to load using `FeatureLayer.addDoneLoadingListener`.
 1. Set the viewpoint of the map view to the extent of the feature layer using `MapView.setViewpointGeometryAsync(featureLayer.getFullExtent())`.
 
 ## Relevant API
@@ -52,4 +48,4 @@ Link | Local Location
 
 ## Tags
 
-DictionaryRenderer, DictionarySymbolStyle, military, symbol
+military, symbol
