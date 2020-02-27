@@ -1,8 +1,8 @@
-# Read symbols from a mobile style
+# Read symbols from a mobile style file
 
 Combine multiple symbols from a mobile style file into a single symbol.
 
-![Image of read symbols from mobile style](read-symbols-mobile-style-file.png)
+![Image of read symbols from mobile style file](read-symbols-mobile-style-file.png)
 
 ## Use case
 

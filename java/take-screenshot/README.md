@@ -18,7 +18,6 @@ Pan and zoom to find an interesting location, then tap the camera icon to take a
 
 * MapView
 * MapView.exportImageAsync
-* ListenableFuture<Bitmap>
 
 ## Tags
 
