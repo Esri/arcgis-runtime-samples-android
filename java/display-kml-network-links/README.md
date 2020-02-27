@@ -15,7 +15,7 @@ The sample will load the KML file automatically. The data shown should refresh a
 ## How it works
 
 1. Create a `KmlDataset` from a KML source which has network links.
-2. Construct a `KmlLayer` with the dataset and add the layer as an operational layer.
+2. Construct a `KmlLayer` with the dataset and add the layer as an operational layer with `MapView.getMap().getOperationalLayers().add(kmlLayer)`.
 3. To listen for network messages, add a `KmlNetworkLinkMessageReceivedListener` on the dataset.
 
 ## Relevant API
@@ -23,7 +23,6 @@ The sample will load the KML file automatically. The data shown should refresh a
 * KmlDataset
 * KmlDataset.NetworkLinkControlMessage
 * KmlLayer
-* KmlNetworkLinkControlMessageEventArgs
 
 ## About the data
 
@@ -31,4 +30,4 @@ This map shows the current air traffic in parts of Europe with heading, altitude
 
 ## Tags
 
-Keyhole, KML, KMZ, Network Link, Network Link Control, OGC
+keyhole, KML, KMZ, network link, network link control, OGC
