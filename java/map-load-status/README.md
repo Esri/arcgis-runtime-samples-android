@@ -19,7 +19,7 @@ The `LoadStatus` is `LOADED` when any of the following criteria are met:
 ## Relevant API
 
 * ArcGISMap
-* LoadStatusChangedListener/LoadStatusChanged signal
+* LoadStatusChangedListener
 * MapView
 
 ## Tags
