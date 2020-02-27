@@ -2,7 +2,7 @@
 
 Update a feature's location in an online feature service.
 
-![Image of update geometries feature service](feature-layer-update-geometry.png)
+![Image of feature layer update geometries](feature-layer-update-geometry.png)
 
 ## Use case
 

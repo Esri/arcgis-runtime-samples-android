@@ -2,7 +2,7 @@
 
 Update feature attributes in an online feature service.    
 
-![Image of update attributes feature service](feature-layer-update-attributes.png)
+![Image of feature layer update attributes](feature-layer-update-attributes.png)
 
 ## Use case
 
