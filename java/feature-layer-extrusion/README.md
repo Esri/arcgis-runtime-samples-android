@@ -19,7 +19,7 @@ Tap the toggle to switch between using population density and total population f
    * Make sure to set the rendering mode to dynamic, `statesFeatureLayer.setRenderingMode(RenderingMode.DYNAMIC)`.
 3. Apply a `SimpleRenderer` to the feature layer.
 4. Set the `ExtrusionMode` of the renderer with `renderer.getSceneProperties().setExtrusionMode(SceneProperties.ExtrusionMode.ABSOLUTE_HEIGHT)`.
-5. Set extrusion expression of renderer, `renderer.getSceneProperties().setExtrusionExpression("[POP2007]/ 10")`.
+5. Set the extrusion expression of the renderer with `renderer.getSceneProperties().setExtrusionExpression("[POP2007]/ 10")`.
 
 ## Relevant API
 
