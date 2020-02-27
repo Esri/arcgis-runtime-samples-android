@@ -15,7 +15,7 @@ Run the sample to view the map. Pan and zoom to navigate the map.
 ## How it works
 
 1. Create an `ArcGISMap` with a topographic basemap and an initial viewpoint.
-3. Set the map to the map view.
+2. Set the map to the map view with `mapView.map = map`.
 
 ## Relevant API
 
