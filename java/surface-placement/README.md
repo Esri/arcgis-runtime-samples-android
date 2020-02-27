@@ -10,7 +10,7 @@ Depending on the use case, data might be displayed at a consistent, absolute hei
 
 ## How to use the sample
 
-The application loads a scene showing three points that use the individual surface placement rules (Absolute, Relative, and either Draped Billboarded or Draped Flat). Use the toggle to change the draped mode, then explore the scene by zooming in/out and by panning around to observe the effects of the surface placement rules.
+The application loads a scene showing three points that use the individual surface placement rules (Absolute, Relative, and either Draped Billboarded or Draped Flat). Use the button to change the draped mode, then explore the scene by zooming in/out and by panning around to observe the effects of the surface placement rules.
 
 ## How it works
 

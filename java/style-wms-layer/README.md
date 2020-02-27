@@ -10,7 +10,7 @@ Layers hosted on WMS may have different pre-set styles available to apply to the
 
 ## How to use the sample
 
-Once the layer loads, the toggle button will be enabled. Tap it to toggle between the first and second styles of the WMS layer.
+Once the layer loads, the style button will be enabled. Tap it to toggle between the first and second styles of the WMS layer.
 
 ## How it works
 
