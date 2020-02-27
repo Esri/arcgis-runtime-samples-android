@@ -10,7 +10,7 @@ You might cut a polygon representing a large parcel to subdivide it into smaller
 
 ## How to use the sample
 
-Click the "Cut" button to cut the polygon with the polyline and see the resulting parts (shaded in different colors).
+Tap the "Cut" button to cut the polygon with the polyline and see the resulting parts (shaded in different colors).
 
 ## How it works
 
