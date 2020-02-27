@@ -15,7 +15,7 @@ The contents of the KML file are shown in a tree. Select a node to zoom to that 
 ## How it works
 
 1. Create a `KmlLayer` from the `KmlDataset` which represents the KML file.
-1. Add the `kmlLayer` to the `SceneView`'s operational layers.
+1. Add the KML layer to the `SceneView`'s operational layers.
 2. Recursively explore each node of the `KmlDataSet` starting from the root nodes.
   * Each node is enabled for display at this step. KML files may include nodes that are turned off by default.
 3. When a node is selected, use the node's `Extent` to determine a viewpoint and set the `SceneView` object's viewpoint to it.
