@@ -16,7 +16,7 @@ Choose one of the stretch parameter types. The other options will adjust based o
 
 1. Create a `Raster` from a multispectral raster file.
 2. Create a `RasterLayer` from the raster.
-3. Create a `Basemap` from the raster layer and set it to the map.
+3. Create a `Basemap` from the raster layer and instantiate an ArcGISMap with it.
 4. Create a `RGBRenderer`, specifying the `StretchParameters` and other properties.
 5. Set the `Renderer` on the raster layer with `rasterLayer.setRasterRenderer(renderer)`.
 
