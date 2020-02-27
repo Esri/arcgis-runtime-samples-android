@@ -22,14 +22,14 @@ Tap on the `Change Grid` button to open a settings view. You can select type of 
 
 ## Relevant API
 
-* ArcGISGrid
+* Grid
 * LatitudeLongitudeGrid
 * MapView
-* MGRSGrid
+* MgrsGrid
 * SimpleLineSymbol
 * TextSymbol
-* USNGGrid
-* UTMGrid
+* UsngGrid
+* UtmGrid
 
 ## Tags
 
