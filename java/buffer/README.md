@@ -18,7 +18,7 @@ Creating buffers is a core concept in GIS proximity analysis that allows you to 
 ## How it works
 
 1. The map `Point` for a tap on the display is captured.
-2. The static method `GeometryEngine.Buffer` is called to create a planar buffer polygon from the map location and distance.
+2. The static method `GeometryEngine.buffer(Point, double)` is called to create a planar buffer polygon from the map location and distance.
 3. Another static method, `GeometryEngine.BufferGeodetic` is called to create a geodesic buffer polygon using the same inputs.
 4. The polygon results (and tap location) are displayed in the map view with different symbols in order to highlight the difference between the buffer techniques due to the spatial reference used in the planar calculation.
 
