@@ -15,8 +15,8 @@ Updating related features is a helpful workflow when you have two features with 
 2. Create two `FeatureLayer`s using the previously created service feature tables.
 3. Add these feature layers to the map.
 4. When a `Feature` is selected, identify and highlight the selected feature.
-5. Retrieve related features by calling `ServiceFeatureTable.queryRelatedFeaturesAsync` and passing in the selected feature.
-6. Updates can be applied to the server using `ServiceFeatureTable.updateFeatureAsync(...)` and `ServiceFeatureTable.applyEditsAsync()`.
+5. Retrieve related features by calling `serviceFeatureTable.queryRelatedFeaturesAsync` and passing in the selected feature.
+6. Update feature in the feature table with `serviceFeatureTable.updateFeatureAsync(selectedFeature)` and apply updates to the server using  `serviceFeatureTable.applyEditsAsync()`.
 
 ## Relevant API
 
