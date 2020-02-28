@@ -18,8 +18,6 @@ Use the navigation drawer to select the basemap and layers you'd like to add to 
 2. A `Portal` object is created and loaded. This will issue an authentication challenge, prompting the user to provide credentials.
 1. Use `ArcGISMap.saveAsAsync` passing in the `Portal`, and information about the map, to save the map to the portal.
 
-NOTE: The app uses OAuth2 protocol to authenticate the named users.  In order to do that the app must declare an Activity and intent filter to redirect the URI. This will parse the authorization code from the response URI and use it to fetch the `OAuthTokenCredential`.
-
 ## Relevant API
 
 * ArcGISMap
