@@ -25,7 +25,6 @@ The sample starts looking at a plane. Zoom out from the plane to see it turn int
 * DistanceCompositeSceneSymbol
 * DistanceCompositeSceneSymbol.Range
 * DistanceCompositeSceneSymbol.getRangeCollection
-* RangeCollection
 
 ## Tags
 
