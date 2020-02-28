@@ -1,17 +1,26 @@
-# Offline Geocode
-Geocode addresses to locations and reverse geocode locations to addresses when the device does not have network connectivity.
+# Offline geocode
 
-![Offline Geocode App](offline-geocode.png)
+Geocode addresses to locations and reverse geocode locations to addresses offline.
+
+![Image of offline geocode](offline-geocode.png)
+
+## Use case
+
+You can use an address locator file to geocode addresses and locations. For example, you could provide offline geocoding capabilities to field workers repairing critical infrastructure in a disaster when network availability is limited.
 
 ## How to use the sample
-Type the address in the Search menu option or select from the list to `Geocode` the address and view the result on the map. Long-press on the location you want to Reverse Geocode. Selecting the output pin enables real-time reverse geocoding. Select the pin to highlight the `PictureMarkerSymbol` (i.e. single tap on the pin) and then tap-hold and drag on the map to get real-time geocoding.
+
+Select an address from the drop-down list to `Geocode` the address and view the result on the map. Tap the location you want to reverse geocode. Select the pin to highlight the `PictureMarkerSymbol` (i.e. single tap on the pin) and then tap-hold and drag on the map to get real-time geocoding.
 
 ## How it works
-Use the path of SanFrancisco.loc to create an object of `LocatorTask`. Set up `GeocodeParameters` and run asynchronous method geoCodeAsync to get GeocodeResults. Methods `getDisplayLocation()` and `getLabel()` on geocode results is then used to fetch location and address.
+
+1. Use the path of a .loc file to create a `LocatorTask` object. 
+2. Set up `GeocodeParameters` and call `GeocodeAsync` to get geocode results.
 
 ## Relevant API
-* GeocodeResult
+
 * GeocodeParameters
+* GeocodeResult
 * LocatorTask
 * ReverseGeocodeParameters
 
@@ -32,11 +41,12 @@ The sample depends on basemap data to be located on the device. This includes in
 	* `adb push san-diego-locator.locb /sdcard/ArcGIS/samples/OfflineGeocoding`
 	* `adb push san-diego-locator.lox /sdcard/ArcGIS/samples/OfflineGeocoding`
 	* `adb push san-diego-locator.loc.x /sdcard/ArcGIS/samples/OfflineGeocoding`
-	
-Link     | Local Location
----------|-------|
-|[San Diego Streets Tile Package](http://www.arcgis.com/home/item.html?id=1330ab96ac9c40a49e59650557f2cd63)| `<sdcard>`/ArcGIS/samples/OfflineGeocoding/streetmap_SD.tpk |
-|[San Diego Offline Locator](http://www.arcgis.com/home/item.html?id=344e3b12368543ef84045ef9aa3c32ba)| `<sdcard>`/ArcGIS/samples/OfflineGeocoding/san-diego-locator.loc |
-	
-#### Tags
-Search and Query
+
+Link     |
+---------|
+|[San Diego Streets Tile Package](http://www.arcgis.com/home/item.html?id=1330ab96ac9c40a49e59650557f2cd63)|
+|[San Diego Offline Locator](http://www.arcgis.com/home/item.html?id=344e3b12368543ef84045ef9aa3c32ba)|
+
+## Tags
+
+geocode, geocoder, locator, offline, package, query, search
