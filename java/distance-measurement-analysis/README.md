@@ -9,7 +9,7 @@ Measure distances between two points in 3D.
 The distance measurement analysis allows you to add to your app the same interactive measuring experience found in ArcGIS Pro, City Engine, and the ArcGIS API for JavaScript. You can set the unit system of measurement (metric or imperial). The units automatically switch to one appropriate for the current scale.
 
 ## How To Use The Sample
-Choose an unit system for the measurement in the UI dropdown. Single tap any location on the screen to set the start point of measurement. Double tap and drag to set the end point of measurement. Single Tapping any new location will start a new measurement.
+Choose a unit system for the measurement in the UI dropdown. Single tap any location on the screen to set the start point of measurement. Double tap and drag to set the end point of measurement. Single tapping any new location will start a new measurement.
 
 ## How it works
 
