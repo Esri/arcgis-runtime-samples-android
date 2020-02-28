@@ -16,13 +16,12 @@ Choose a unit system for the measurement in the UI dropdown. Single tap any loca
 1. Create an `AnalysisOverlay` object and add it to the analysis overlay collection of the `SceneView` object.
 2. Specify the start location and end location to create a `LocationDistanceMeasurement` object. Initially, the start and end locations can be the same point.
 3. Add the location distance measurement analysis to the analysis overlay.
-4. The `measurementChanged` callback will trigger if the distances change. You can get the new values for the `directDistance`, `horizontalDistance`, and `verticalDistance` from the `MeasurementChangedEvent` object returned by the callback.
+4. The `measurementChanged` callback will trigger if the distances change. You can get the new values for the `directDistance`, `horizontalDistance`, and `verticalDistance` from the `measurementChangedEvent` object returned by the callback.
 
 ## Relevant API  
 
 * AnalysisOverlay
 * LocationDistanceMeasurement
-* MeasurementChangedEvent
 
 ## Additional information
 
