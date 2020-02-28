@@ -21,7 +21,6 @@ The sample will load the KML file automatically. The data shown should refresh a
 ## Relevant API
 
 * KmlDataset
-* KmlDataset.NetworkLinkControlMessage
 * KmlLayer
 
 ## About the data
