@@ -10,7 +10,7 @@ Vector tile basemaps can be created in ArcGIS Pro and published as offline packa
 
 ## How to use the sample
 
-Use the drop down menu to load different vector tile basemaps.
+Use the navigation menu to load different vector tile basemaps.
 
 ## How it works
 
