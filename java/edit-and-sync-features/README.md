@@ -20,7 +20,7 @@ Pan and zoom into the desired area, making sure the area you want to take offlin
 1. Load the geodatabase and get its feature tables. Create feature layers from the feature tables and add them to the map's operational layers collection.
 1. Create `SyncGeodatabaseParameters` and set the sync direction.
 1. Create a `SyncGeodatabaseJob` from `GeodatabaseSyncTask` using `.syncGeodatabaseAsync(...)` passing in the parameters and geodatabase as arguments.
-1. Start the sync job to synchronize the edits with `.start()`.
+1. Start the sync job to synchronize the edits with `syncGeodatabase.start()`.
 
 ## Relevant API
 
