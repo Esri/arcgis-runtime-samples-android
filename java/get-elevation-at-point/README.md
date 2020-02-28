@@ -1,4 +1,4 @@
-# Get elevation at a point
+# Get elevation at point
 
 Get the elevation for a given point on a surface in a scene.
 
