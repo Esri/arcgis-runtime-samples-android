@@ -1,22 +1,30 @@
-# Display a Scene
-Display a scene with elevation data.
+# Display scene
 
-![Display a Scene App](display-scene.png)
+Display a scene with a terrain surface and some imagery.
+
+![Image of display scene](display-scene.png)
+
+## Use case
+
+Scene views are 3D representations of real-world areas and objects. Scene views are helpful for visualizing complex datasets where 3D relationships, topography, and elevation of elements are important factors.
 
 ## How to use the sample
-Simply run the app.
+
+When loaded, the sample will display a scene. Pan and zoom to explore the scene.
 
 ## How it works
-1. Create an `ArcGISScene` and set a `Basemap`.
-1. Set the `ArcGISScene` to a `SceneView`.
-1. Create an `ArcGISTiledElevationSource` and add it to the `ArcGISScene` with `getBaseSurface().getElevationSources().add(...)`.
-1. Create a `Camera` and set the `SceneView` viewpoint to it with `setViewpointCamera(...)`.
+
+1. Create an `ArcGISScene` object with the `Basemap.createImagery()` basemap.
+2. Create an `ArcGISTiledElevationSource` object and add it to the scene's base surface.
+3. Create a `SceneView` object to display the map.
+4. Set the scene to the scene view.
 
 ## Relevant API
+
 * ArcGISScene
 * ArcGISTiledElevationSource
-* Camera
 * SceneView
 
-#### Tags
-Maps and Scenes
+## Tags
+
+3D, basemap, elevation, scene, surface
