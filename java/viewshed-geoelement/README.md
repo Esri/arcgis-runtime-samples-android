@@ -1,4 +1,4 @@
-# Viewshed geoElement
+# Viewshed GeoElement
 
 Analyze the viewshed for an object (GeoElement) in a scene.
 
@@ -30,7 +30,7 @@ This sample shows a [Johannesburg, South Africa Scene](https://www.arcgis.com/ho
 * AnalysisOverlay
 * GeodeticDistanceResult 
 * GeoElementViewshed
-* GeometryEngine.DistanceGeodetic (used to animate the vehicle)
+* GeometryEngine.distanceGeodetic (used to animate the vehicle)
 * ModelSceneSymbol
 * OrbitGeoElementCameraController
 
