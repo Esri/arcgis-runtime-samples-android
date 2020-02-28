@@ -15,7 +15,7 @@ Run the sample, and a subset of records will be displayed on the map.
 ## How it works
 
 1. An instance of `ServiceFeatureTable` is created by passing a URL to the REST endpoint of a time-enabled service. Time-enabled services will have TimeInfo defined in the service description. This information is specified in ArcMap or ArcGIS Pro prior to publishing the service.
-2. Create an instance of `ServiceFeatureTable` in manual cache mode, so that the developer can control how and when the feature table is populated with data.
+2. Create an instance of `ServiceFeatureTable` in manual cache mode, so you can control how and when the feature table is populated with data.
 3. Create a `FeatureLayer` from the table and add it to the map's operational layers.
 4. Create a `TimeExtent` object by specifying start and end date/time objects. Then create an instance of `QueryParameters` and set its time extent with `queryParameters.setTimeExtent(timeExtent)`.
 5. Finally, use `populateFromServiceAsync` on the service feature table, passing in the query parameters.
