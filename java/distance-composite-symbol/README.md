@@ -23,7 +23,8 @@ The sample starts looking at a plane. Zoom out from the plane to see it turn int
 ## Relevant API
 
 * DistanceCompositeSceneSymbol
-* Range
+* DistanceCompositeSceneSymbol.Range
+* DistanceCompositeSceneSymbol.getRangeCollection
 * RangeCollection
 
 ## Tags
