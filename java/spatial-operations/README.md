@@ -1,4 +1,4 @@
-# Perform spatial operations
+# Spatial operations
 
 Find the union, intersection, or difference of two geometries.
 
@@ -15,26 +15,26 @@ The sample provides an option to select a spatial operation. When an operation i
 
 ## How it works
 
-1.  Create a `GraphicsOverlay` and add it to the `MapView`.
+1.  Create two `GraphicsOverlay`s, one to show polygons and another to show the relationships between them.
 2.  Define a `PointCollection` of each `Geometry`.
-3.  Add the overlapping polygons to the graphics overlay.
+3.  Add the overlapping polygons to a graphics overlay.
 4.  Perform spatial relationships between the polygons by using the appropriate operation:
     * `GeometryEngine.union(geometry1, geometry2)` - This method returns the two geometries united together as one geometry.
     * `GeometryEngine.difference(geometry1, geometry2)` - This method returns any part of Geometry2 that does not intersect Geometry1.
     * `GeometryEngine.symmetricDifference(geometry1, geometry2)` - This method returns any part of Geometry1 or Geometry2 which do not intersect.
     * `GeometryEngine.intersection(geometry1, geometry2)` - This method returns the intersection of Geometry1 and Geometry2.
-5. Use the geometry that is returned from the method call to create a new `Graphic` and add it to the graphics overlay for it to be displayed.
+5. Add the resultant geometry to a new `Graphic` and display it by adding it to the second `GraphicsOverlay`.
 
 ## Relevant API
 
-* Geometry
-* GeometryEngine
-* GeometryEngine.difference
-* GeometryEngine.intersection
-* GeometryEngine.symmetricDifference
-* GeometryEngine.union
-* Graphic
-* GraphicsOverlay
+- Geometry
+- GeometryEngine
+- GeometryEngine.difference
+- GeometryEngine.intersection
+- GeometryEngine.symmetricDifference
+- GeometryEngine.union
+- Graphic
+- GraphicsOverlay
 
 ## Tags
 
