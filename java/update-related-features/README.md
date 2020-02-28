@@ -9,6 +9,10 @@ Update related features in an online feature service.
 
 Updating related features is a helpful workflow when you have two features with shared or dependent attributes. In a data collection scenario where origin tree features are related to destination inspection records, trees might undergo inspection on some regular interval to assess their size, health, and other characteristics. When logging a new inspection record that captures the latest trunk diameter and condition of a tree, updating these attributes on the origin tree feature would permit the tree point to be symbolized most accurately according to these latest observations.
 
+## How to use the sample
+
+Once you launch the app, select a national park feature. The app will then identify it, perform a related table query, and will show you the annual visitors amount for the preserve. You can then update the visitor amount by tapping the drop-down in the `Callout` and selecting a different amount.
+
 ## How it works
 
 1. Create two `ServiceFeatureTable`s from the Feature Service URLs.
@@ -22,7 +26,6 @@ Updating related features is a helpful workflow when you have two features with 
 
 * ArcGISFeature
 * RelatedFeatureQueryResult
-* RelatedQueryParameters
 * ServiceFeatureTable
 
 ## About the data
