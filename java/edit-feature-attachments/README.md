@@ -3,7 +3,7 @@
 Add, delete, and download attachments for features from a service.
 
 ![Image of edit feature attachments](edit-feature-attachments.png)
-*****************
+
 ## Use case
 
 Attachments provide a flexible way to manage additional information that is related to your features. Attachments allow you to add files to individual features, including: PDFs, text documents, or any other type of file. For example, if you have a feature representing a building, you could use attachments to add multiple photographs of the building taken from several angles, along with PDF files containing the building's deed and tax information.
