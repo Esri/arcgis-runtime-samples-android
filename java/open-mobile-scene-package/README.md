@@ -10,16 +10,14 @@ An .mspk file is an archive containing the data (specifically, basemaps and feat
 
 ## How to use the sample
 
-When the sample opens, it will automatically display the Scene in the Mobile Map Package.
+When the sample opens, it will automatically display the Scene in the Mobile Scene Package.
 
 Since this sample works with a local .mspk, you will need to download the file to your device.
 
 ## How it works
 
-This sample takes a Mobile Scene Package that was created in ArcGIS Pro, and displays a `Scene` from within the package in a `SceneView`.
-
 1. Create a `MobileScenePackage` using the path to the local .mspk file.
-2. Call `MobileScenePackage.load` and check for any errors.
+2. Call `MobileScenePackage.loadAsync` and check for any errors.
 3. When the `MobileScenePackage` is loaded, obtain the first `Scene` using `mobileScenePackage.getScenes().get(0)`
 4. Create a `SceneView` and call `sceneView.setView` to display the scene from the package.
 
