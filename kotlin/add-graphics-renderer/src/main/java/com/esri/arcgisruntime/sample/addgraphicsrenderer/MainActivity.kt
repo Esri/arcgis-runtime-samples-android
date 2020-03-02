@@ -115,8 +115,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onPause() {
-    super.onPause()
     mapView.pause()
+    super.onPause()
   }
 
   override fun onResume() {
@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onDestroy() {
-    super.onDestroy()
     mapView.dispose()
+    super.onDestroy()
   }
 }
