@@ -104,7 +104,6 @@ class MainActivity : AppCompatActivity() {
       override fun onNothingSelected(parent: AdapterView<*>) {}
     }
 
-
     setupAddressSearchView()
   }
 
@@ -283,14 +282,20 @@ class MainActivity : AppCompatActivity() {
       this.text = graphic.attributes["PlaceName"].toString() + "\n" +
           graphic.attributes["StAddr"].toString()
     }
+
     // configure the callout
+    val calloutStyle = Callout.Style(this, R.xml.callout_style)
+
+
     callout = mapView.callout.apply {
-      showOptions = Callout.ShowOptions(true, false, false)
+      showOptions = Callout.ShowOptions(true, true, true)
       content = calloutContent
       // set the leader position using the center of the graphic
       val centerOfGraphic = graphic.geometry.extent.center
       val calloutLocation = graphic.computeCalloutLocation(centerOfGraphic, mapView)
       setGeoElement(graphic, calloutLocation)
+      // show callout beneath graphic
+      style.leaderPosition = Callout.Style.LeaderPosition.UPPER_MIDDLE
       // show the callout
       show()
     }

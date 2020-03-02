@@ -24,7 +24,7 @@
             android:id="@+id/suggestionSpinner"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/listPreferredItemHeight"
-            android:background="@color/colorPrimary">
+            android:background="@color/colorWhiteSemiTransparent">
         </Spinner>
 
         <androidx.appcompat.widget.SearchView
@@ -39,7 +39,6 @@
             android:layout_marginRight="5dp">
         </androidx.appcompat.widget.SearchView>
     </LinearLayout>
-
 
 </RelativeLayout>
 
