@@ -32,7 +32,7 @@ This mobile map package shows points of interest within Yellowstone National Par
 
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=e1f3a7254cb845b09450f54937c16061).
 1. Open your command prompt and navigate to the folder where you downloaded the data from step 1.
-1. Execute the following command:
+1. Execute the following command (the actual path on your device may vary):
 
     `adb push Yellowstone.mmpk /Android/data/com.esri.arcgisruntime.sample.openmobilemappackage/files/Yellowstone.mmpk`
 
