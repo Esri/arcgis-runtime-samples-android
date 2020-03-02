@@ -15,7 +15,7 @@ Use the sliders to change the properties (heading, pitch, etc.), of the viewshed
 ## How it works
 
 1. Create a `LocationViewshed` passing in the observer location, heading, pitch, horizontal/vertical angles, and min/max distances.
-2. Set the property values on the viewshed instance for location, direction, range, and visibility properties. 
+2. Set the location, direction, range, and visibility properties of the viewshed instance.
 3. Create an `AnalysisOverlay` and add the viewshed to it with `analysisOverlay.getAnalyses().add(viewshed)`.
 4. Add the analysis overlay to the `SceneView` with `sceneView.getAnalysisOverlays().add(analysisOverlay)`.
 
