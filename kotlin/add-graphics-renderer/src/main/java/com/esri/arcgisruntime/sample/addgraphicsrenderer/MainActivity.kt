@@ -17,7 +17,6 @@ package com.esri.arcgisruntime.sample.addgraphicsrenderer
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.PolygonBuilder
@@ -27,26 +26,24 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
-import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-  private var mMapView: MapView? = null
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    // create MapView from layout
-    mMapView =
-      findViewById<View>(R.id.mapView) as MapView
+
     // create a map with the Basemap Type topographic
-    val mMap = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 15.169193, 16.333479, 2)
+    val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 15.169193, 16.333479, 2)
     // add graphics overlay
     addGraphicsOverlay()
     // set the map to be displayed in this view
-    mMapView!!.map = mMap
+    mapView.map = map
   }
 
   private fun addGraphicsOverlay() { // point graphic
@@ -54,7 +51,7 @@ class MainActivity : AppCompatActivity() {
       Point(40e5, 40e5, SpatialReferences.getWebMercator())
     // red diamond point symbol
     val pointSymbol =
-      SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 10)
+      SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 10f)
     // create graphic for point
     val pointGraphic = Graphic(pointGeometry)
     // create a graphic overlay for the point
@@ -65,14 +62,14 @@ class MainActivity : AppCompatActivity() {
     // add graphic to overlay
     pointGraphicOverlay.graphics.add(pointGraphic)
     // add graphics overlay to the MapView
-    mMapView!!.graphicsOverlays.add(pointGraphicOverlay)
+    mapView.graphicsOverlays.add(pointGraphicOverlay)
     // line graphic
     val lineGeometry = PolylineBuilder(SpatialReferences.getWebMercator())
     lineGeometry.addPoint(-10e5, 40e5)
     lineGeometry.addPoint(20e5, 50e5)
     // solid blue line symbol
     val lineSymbol =
-      SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5)
+      SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f)
     // create graphic for polyline
     val lineGraphic = Graphic(lineGeometry.toGeometry())
     // create graphic overlay for polyline
@@ -84,7 +81,7 @@ class MainActivity : AppCompatActivity() {
     // add graphic to overlay
     lineGraphicOverlay.graphics.add(lineGraphic)
     // add graphics overlay to the MapView
-    mMapView!!.graphicsOverlays.add(lineGraphicOverlay)
+    mapView.graphicsOverlays.add(lineGraphicOverlay)
     //polygon graphic
     val polygonGeometry = PolygonBuilder(SpatialReferences.getWebMercator())
     polygonGeometry.addPoint(-20e5, 20e5)
@@ -105,21 +102,21 @@ class MainActivity : AppCompatActivity() {
     // add graphic to overlay
     polygonGraphicOverlay.graphics.add(polygonGraphic)
     // add graphics overlay to MapView
-    mMapView!!.graphicsOverlays.add(polygonGraphicOverlay)
+    mapView.graphicsOverlays.add(polygonGraphicOverlay)
   }
 
   override fun onPause() {
     super.onPause()
-    mMapView!!.pause()
+    mapView.pause()
   }
 
   override fun onResume() {
     super.onResume()
-    mMapView!!.resume()
+    mapView.resume()
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    mMapView!!.dispose()
+    mapView.dispose()
   }
 }
