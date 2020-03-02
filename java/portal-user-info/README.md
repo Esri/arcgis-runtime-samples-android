@@ -14,16 +14,15 @@ When prompted, enter your ArcGIS Online credentials.
 
 ## How it works
 
-1. A `Portal` is created, and supplied a `Credential` which uses OAuth in user mode. 
+1. Create a `Portal`, requesting an URL and requiring login.
 2. When the app launches, the portal is loaded, which triggers an authentication challenge.
-3. An `AuthenticationView` listens to the challenge and displays a login screen to allow user credentials to be entered.
-4. Upon success, get a `PortalUser` using `portal.getUser()`. Get user attributes using:
+3. Display a login screen with `AuthenticationView`.
+4. Upon successful login, get a `PortalUser` using `portal.getUser()`. Get user attributes using:
     - `portalUser.getFullName()`
     - `portalUser.getEmail()`
-    - `portalUser.getStartDate()`
+    - `portalUser.getCreated()`
 5.  Load a thumbnail image using `portalUser.fetchThumbnailAsync()`
   
-
 ## Relevant API
 
 * AuthenticationManager
