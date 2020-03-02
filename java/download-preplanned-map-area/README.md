@@ -2,15 +2,17 @@
 
 Take a map offline using a preplanned map area.
 
-![Download preplanned map area app](download-preplanned-map-area.png)
+![Image of download preplanned map area](download-preplanned-map-area.png)
 
 ## Use case
 
 Generating offline maps on demand for a specific area can be time consuming for users and a processing load on the server. If areas of interest are known ahead of time, a web map author can pre-create packages for these areas. This way, the generation only needs to happen once, making the workflow more efficient for users and servers.
 
-An team of archaeologists could define preplanned map areas for dig sites which can be taken offline for field use.
+An archaeology team could define preplanned map areas for dig sites which can be taken offline for field use.
 
 ## How to use the sample
+
+Downloading tiles for offline use requires authentication with the web map's server. An [ArcGIS Online](www.arcgis.com) account is required to use this sample.
 
 Select a map area from the Preplanned Map Areas list. Click the Download button to download the selected area. The download progress will be shown in the Downloads list. When a download is complete, select it to display the offline map in the map view.
 
@@ -48,8 +50,5 @@ The [Naperville stormwater network map](https://arcgisruntime.maps.arcgis.com/ho
 See [Take a map offline - preplanned](https://developers.arcgis.com/android/latest/guide/take-map-offline-preplanned.htm) to learn about preplanned workflows, including how to define preplanned areas in ArcGIS Online. Alternatively, visit [Take a map offline - on demand](https://developers.arcgis.com/android/latest/guide/take-map-offline-on-demand.htm) or refer to the sample 'Generate Offline Map' to learn about the on-demand workflow and see how the workflows differ.
 
 ## Tags
-Edit and Manage Data
-map area
-offline
-preplanned
-pre-planned
+
+map area, offline, pre-planned, preplanned
