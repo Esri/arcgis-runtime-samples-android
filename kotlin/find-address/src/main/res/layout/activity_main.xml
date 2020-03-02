@@ -15,20 +15,29 @@
         android:layout_height="match_parent">
     </com.esri.arcgisruntime.mapping.view.MapView>
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/addressSearchView"
-        android:background="@color/colorWhiteSemiTransparent"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="false"
-        app:queryHint="@string/address_search_hint"
-        app:iconifiedByDefault="false"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
-    </androidx.appcompat.widget.SearchView>
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/addressSearchView"
+            android:background="@color/colorWhiteSemiTransparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:queryHint="@string/address_search_hint"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp">
+        </androidx.appcompat.widget.SearchView>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/suggestion" />
+    </LinearLayout>
+
 
 </RelativeLayout>
 
