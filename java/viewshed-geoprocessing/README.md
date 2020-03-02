@@ -6,7 +6,7 @@ Calculate a viewshed using a geoprocessing service, in this case showing what pa
 
 ## Use case
 
-A viewshed is used to highlight what is visible from a given point. A viewshed could be created to show what a hiker might be able to see from a given point at the top of a mountain. Equally, a viewshed could also be created from a point representing the maximum height of a proposed wind turbine to see from what areas the turbine would be visible. 
+A viewshed is used to highlight what is visible from a given point. A viewshed could be created to show what a hiker might be able to see from a given point at the top of a mountain. Equally, a viewshed could also be created from a point representing the maximum height of a proposed wind turbine to see from what areas the turbine would be visible.
 
 ## How to use the sample
 
@@ -20,7 +20,7 @@ Tap on the map to see all areas visible from that point within a 15km radius. Ta
 1. Use the geoprocessing task to create a `GeoprocessingJob` object with the parameters.
 1. Start the job and wait for it to complete and return a `GeoprocessingResult` object.
 1. Get the resulting `GeoprocessingFeatures` object.
-1. Iterate through the viewshed features to use their geometry or display the geometry in a new `Graphic` object.
+1. Iterate through the viewshed features to display the geometry in a new `Graphic` object.
 
 ## Relevant API
 
