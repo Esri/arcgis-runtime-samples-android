@@ -10,11 +10,11 @@ Vector tile basemaps can be created in ArcGIS Pro and published as offline packa
 
 ## How to use the sample
 
-Use the navigation menu to load different vector tile basemaps.
+Tap the menu icon at the top left of the screen and select different vector tile basemaps.
 
 ## How it works
 
-1. Construct an `ArcGISVectorTiledLayer` with an ArcGIS Online service URL. 
+1. Construct an `ArcGISVectorTiledLayer` with an ArcGIS Online service URL.
 2. Instantiate a new `Basemap` passing in the vector tiled layer as a parameter.
 3. Create a new `ArcGISMap` object by passing in the basemap as a parameter.
 

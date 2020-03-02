@@ -1,6 +1,6 @@
 # Viewshed camera
 
-Analyze the viewshed for a camera. A viewshed shows the visible and obstructed areas from an observer's vantage point. 
+Analyze the viewshed for a camera. A viewshed shows the visible and obstructed areas from an observer's vantage point.
 
 ![Image of viewshed camera](viewshed-camera.png)
 
@@ -21,12 +21,10 @@ The sample will start with a viewshed created from the initial camera location, 
 ## Relevant API
 
 * AnalysisOverlay
-* ArcGISScene
 * ArcGISSceneLayer
 * ArcGISTiledElevationSource
 * Camera
 * LocationViewshed
-* SceneView
 
 ## About the data
 

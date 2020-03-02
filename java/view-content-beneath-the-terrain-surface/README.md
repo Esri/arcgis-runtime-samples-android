@@ -25,7 +25,7 @@ The sample loads a scene with underground features. Pan and zoom to explore the 
 
 ## About the data
 
-This data is a point scene layer showing underground wellbore paths (green polylines) and seismic events (brown points).
+This data is a point scene layer showing underground wellbore paths (green polylines) and seismic events (light brown points).
 
 ## Tags
 
