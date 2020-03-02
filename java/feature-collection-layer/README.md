@@ -21,7 +21,7 @@ When launched, this sample displays a `FeatureCollectionLayer` with a `Point`, `
 4. Assign a `SimpleRenderer` to each table to render any `Feature`s from that table using the `Symbol` that was set.
 5. Add the feature collection table to the feature collection, `FeatureCollection.getTables().add(featureCollectionTable)`.
 6. Use the `createFeature` method to create a feature from the feature collection table, passing an attribute and geometry for that feature, `FeatureCollectionTable.createFeature(attributes, geometry)`.
-7. Add new features to the table, `FeatureCollectionTable.addFeatureAsync(feature)`.
+7. Add new features to the table, `featureCollectionTable.addFeatureAsync(feature)`.
 
 ## Relevant API
 
