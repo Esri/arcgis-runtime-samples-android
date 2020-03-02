@@ -1,22 +1,44 @@
-# Web Tiled Layer
-Display map tiles from Stamen terrain as an online resource using the `WebTiledLayer`. `WebTiledLayer` provides a simple way to integrate non-ArcGIS Services as a layer in a map.
+# Web tiled layer
 
-![Web Tiled Layer App](web-tiledlayer.png)
+Display a tiled web layer.
+
+![Image of web tiled layer](web-tiledlayer.png)
+
+## Use case
+
+Tiled map services are a set of pre-generated images (e.g. "tiles") arranged in folders for each row, column, and zoom level. As you navigate the map, map tiles are requested for the current extent. `ArcGISTiledLayer` and `WmtsLayer` are types of tiled map services used for specific data types. `WebTiledLayer` is useful for displaying other data sources that contain tiles arranged in a row/column/level directory structure, such as OpenStreetMap.
 
 ## How to use the sample
-Simply run the app.
+
+Run the sample and a map will appear. As you navigate the map, map tiles will be fetched automatically and displayed on the map.
 
 ## How it works
-In this case, map tiles from Stamen are added to the map. The template URL is specified by setting the subDomains, level, col, and row attributes. Additionally, copyright information is added to the layer so that the layer can be properly attributed. The layer is added to a `Basemap`, and a `Basemap` is added to a `ArcGISMap`. Finally, the Map is set on the `MapView`, and the tiled layer is displayed.
+
+1. Create a `WebTiledLayer` from a URL and a list of subdomains.
+2. Create a new `Basemap` from the layer.
+3. Update the attribution on the layer with `webTiledLayer.setAttribution(attributionString)`. Note: this is a necessary step because web tiled services don't have associated service metadata.
 
 ## Relevant API
-* ArcGISMap
+
 * Basemap
-* MapView
 * WebTiledLayer
 
-## License
-Map tile sets are provided For Terrain: Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.
+## About the data
 
-#### Tags
-Layers
+The basemap in this sample is provided by [Stamen Design](maps.stamen.com). Stamen publishes tiled services based on OpenStreetMap data with several unique styles applied.
+
+## Additional information
+
+Web tiled services use a uniform addressing scheme with pre-rendered tiles. Image tiles are accessed via a URL template string, with parameters for subdomain, level, column, and row.
+
+- Subdomain is optional and allows Runtime to balance requests among multiple servers for enhanced performance.
+- Level, row, and column select the tiles to load based on the visible extent of the map.
+
+For more information about web tiled layers, see the following resources:
+
+- [Wikipedia: tiled web maps](https://en.wikipedia.org/wiki/Tiled_web_map)
+- [ArcGIS Pro: Share a web tile layer](http://pro.arcgis.com/en/pro-app/help/sharing/overview/web-tile-layer.htm)
+
+## Tags
+
+layer, OGC, Open Street Map, OpenStreetMap, stamen.com, tiled, tiles
