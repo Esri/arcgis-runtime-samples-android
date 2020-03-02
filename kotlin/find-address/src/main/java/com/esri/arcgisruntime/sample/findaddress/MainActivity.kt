@@ -24,6 +24,9 @@ import android.os.Bundle
 import android.provider.BaseColumns
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
@@ -86,6 +89,21 @@ class MainActivity : AppCompatActivity() {
         return true
       }
     }
+
+    // populate the spinner list of address suggestions
+    val examples = arrayOf("277 N Avenida Caballeros, Palm Springs, CA", "380 New York St, Redlands, CA 92373", "Београд", "Москва", "北京")
+    // initialize an adapter for the suggestions spinner
+    val suggestionAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, examples)
+    suggestionSpinner.adapter = suggestionAdapter
+
+    // when an item is selected in the spinner set, go to that address
+    suggestionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+      override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+        geoCodeTypedAddress(suggestionSpinner.selectedItem.toString())
+      }
+      override fun onNothingSelected(parent: AdapterView<*>) {}
+    }
+
 
     setupAddressSearchView()
   }
