@@ -11,7 +11,7 @@ When these operations are chained together, they become even more powerful. An a
 
 ## How to use the sample
 
-The sample provides an option to select a spatial operation. When an operation is selected, the resulting geometry is shown in red. The 'reset operation' button undoes the action and allow selecting a different operation.
+Select a spatial operation from the overflow menu. When an operation is selected, the resulting geometry is shown in red. 
 
 ## How it works
 
