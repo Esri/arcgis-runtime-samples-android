@@ -23,10 +23,8 @@ Tap the toggle to switch between using population density and total population f
 
 ## Relevant API
 
-* ExtrusionExpression
-* ExtrusionMode
 * FeatureLayer
-* SceneProperties
+* Renderer.SceneProperties
 * ServiceFeatureTable
 * SimpleRenderer
 
