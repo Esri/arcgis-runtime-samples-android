@@ -16,7 +16,7 @@ When launched, this sample displays a feature collection layer with a point, pol
 
 1. Create a `FeatureCollectionLayer` using a new feature collection, `FeatureCollectionLayer(featureCollection)`
 2. Add the feature collection layer to the map, `ArcGISMap.getOperationalLayers().add(featureCollectionLayer)`.
-3. Create a `FeatureCollectionTable` for the `GeometryType`s `Point`, `Polyline`, and `Polygon`, `FeatureCollectionTable(fields, geometryType, spatialReference)`
+3. Create a `FeatureCollectionTable` with `new FeatureCollectionTable(fields, geometryType, spatialReference)`, specifying `GeometryType.POINT`, `GeometryType.POLYLINE`, and `GeometryType.POLYGON` for geometry type.
     *  Additionally, pass in a list of `Field` objects to represent the table's schema.
 4. Assign a `SimpleRenderer` to each table to render any `Feature`s from that table using the `Symbol` that was set.
 5. Add the feature collection table to the feature collection, `FeatureCollection.getTables().add(featureCollectionTable)`.
