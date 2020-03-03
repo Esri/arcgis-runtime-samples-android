@@ -17,7 +17,6 @@ package com.esri.arcgisruntime.sample.spinner
  *
  */
 
-import android.R
 import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
@@ -34,7 +33,7 @@ class SpinnerAdapter(
   context: Activity,
   groupid: Int,
   id: Int,
-  list: ArrayList<ItemData>
+  list: List<ItemData>
 ) :
   ArrayAdapter<ItemData?>(context, id, list) {
   private val groupid: Int
@@ -48,9 +47,9 @@ class SpinnerAdapter(
     val itemView = inflater.inflate(groupid, parent, false)
     val imageView =
       itemView.findViewById<View>(R.id.img) as ImageView
-    imageView.setImageResource(list[position].getImageId())
+    imageView.setImageResource(list[position].imageId)
     val textView = itemView.findViewById<View>(R.id.txt) as TextView
-    textView.setText(list[position].getText())
+    textView.setText(list[position].text)
     return itemView
   }
 
@@ -63,7 +62,7 @@ class SpinnerAdapter(
   }
 
   init {
-    this.list = list
+    this.list = list as ArrayList<ItemData>
     inflater =
       context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     this.groupid = groupid
