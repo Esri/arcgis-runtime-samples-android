@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Display device location</string>
+    <string name="location_permission_denied">LocationDisplayManager cannot run because location permission was denied</string>
+</resources>
