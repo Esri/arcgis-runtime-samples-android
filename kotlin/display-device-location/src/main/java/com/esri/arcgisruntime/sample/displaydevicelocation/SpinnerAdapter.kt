@@ -1,7 +1,6 @@
 package com.esri.arcgisruntime.sample.displaydevicelocation
 
-
-/* Copyright 2016 Esri
+/* Copyright 2020 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +34,9 @@ class SpinnerAdapter(
   private val list: ArrayList<ItemData>
 ) :
   ArrayAdapter<ItemData?>(context, id, list as List<ItemData?>) {
-  private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+  private val inflater: LayoutInflater =
+    context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
   override fun getView(
     position: Int,
     convertView: View?,
