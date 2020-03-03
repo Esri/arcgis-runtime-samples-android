@@ -28,7 +28,6 @@ import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.LocationDisplay
-import com.esri.arcgisruntime.mapping.view.LocationDisplay.DataSourceStatusChangedListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -44,32 +43,7 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
     mapView.map = ArcGISMap(Basemap.createImagery())
     // Listen to changes in the status of the location data source.
-    locationDisplay.addDataSourceStatusChangedListener(DataSourceStatusChangedListener { dataSourceStatusChangedEvent ->
-      // If LocationDisplay started OK, then continue.
-      if (dataSourceStatusChangedEvent.isStarted) return@DataSourceStatusChangedListener
-      // No error is reported, then continue.
-      if (dataSourceStatusChangedEvent.error == null) return@DataSourceStatusChangedListener
-      // If an error is found, handle the failure to start.
-      // Check permissions to see if failure may be due to lack of permissions.
-      val permissionCheck1 =
-        ContextCompat.checkSelfPermission(this@MainActivity, reqPermissions[0]) ==
-            PackageManager.PERMISSION_GRANTED
-      val permissionCheck2 =
-        ContextCompat.checkSelfPermission(this@MainActivity, reqPermissions[1]) ==
-            PackageManager.PERMISSION_GRANTED
-      if (!(permissionCheck1 && permissionCheck2)) { // If permissions are not already granted, request permission from the user.
-        ActivityCompat.requestPermissions(this@MainActivity, reqPermissions, requestCode)
-      } else { // Report other unknown failure types to the user - for example, location services may not
-        // be enabled on the device.
-        val message = String.format(
-          "Error in DataSourceStatusChangedListener: %s", dataSourceStatusChangedEvent
-            .source.locationDataSource.error.message
-        )
-        Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
-        // Update UI to reflect that the location display did not actually start
-        spinner.setSelection(0, true)
-      }
-    })
+    locationDisplay.addDataSourceStatusChangedListener { checkDataSource(it) }
     // Populate the list for the Location display options for the spinner's Adapter
     val list = arrayListOf(
       ItemData("Stop", R.drawable.locationdisplaydisabled),
@@ -117,6 +91,33 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onNothingSelected(parent: AdapterView<*>?) {}
+    }
+  }
+
+  private fun checkDataSource(dataSourceStatusChangedEvent: LocationDisplay.DataSourceStatusChangedEvent){
+    // If LocationDisplay started OK, then continue.
+    if (dataSourceStatusChangedEvent.isStarted) return
+    // No error is reported, then continue.
+    if (dataSourceStatusChangedEvent.error == null) return
+    // If an error is found, handle the failure to start.
+    // Check permissions to see if failure may be due to lack of permissions.
+    val permissionCheck1 =
+      ContextCompat.checkSelfPermission(this@MainActivity, reqPermissions[0]) ==
+          PackageManager.PERMISSION_GRANTED
+    val permissionCheck2 =
+      ContextCompat.checkSelfPermission(this@MainActivity, reqPermissions[1]) ==
+          PackageManager.PERMISSION_GRANTED
+    if (!(permissionCheck1 && permissionCheck2)) { // If permissions are not already granted, request permission from the user.
+      ActivityCompat.requestPermissions(this@MainActivity, reqPermissions, requestCode)
+    } else { // Report other unknown failure types to the user - for example, location services may not
+      // be enabled on the device.
+      val message = String.format(
+        "Error in DataSourceStatusChangedListener: %s", dataSourceStatusChangedEvent
+          .source.locationDataSource.error.message
+      )
+      Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+      // Update UI to reflect that the location display did not actually start
+      spinner.setSelection(0, true)
     }
   }
 
