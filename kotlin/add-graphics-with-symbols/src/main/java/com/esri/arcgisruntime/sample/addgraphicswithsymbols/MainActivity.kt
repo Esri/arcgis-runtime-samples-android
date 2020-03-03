@@ -35,6 +35,7 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.TextSymbol
 import kotlinx.android.synthetic.main.activity_main.*
 
+
 class MainActivity : AppCompatActivity() {
 
   private val wgs84 = SpatialReference.create(4236)
@@ -283,6 +284,5 @@ class MainActivity : AppCompatActivity() {
     mapView.dispose()
     super.onDestroy()
   }
-
 }
 
