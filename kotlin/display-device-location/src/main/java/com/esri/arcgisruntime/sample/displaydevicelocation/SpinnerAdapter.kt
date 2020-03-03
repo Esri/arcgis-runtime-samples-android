@@ -1,4 +1,4 @@
-package com.esri.arcgisruntime.sample.spinner
+package com.esri.arcgisruntime.sample.displaydevicelocation
 
 
 /* Copyright 2016 Esri
@@ -25,7 +25,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import com.esri.arcgisruntime.sample.displaydevicelocation.R
 import java.util.ArrayList
 
 
@@ -58,7 +57,6 @@ class SpinnerAdapter(
   ): View {
     return getView(position, convertView, parent)
   }
-
 }
 
-class ItemData(val text: String, val imageId: Int)
+data class ItemData(val text: String, val imageId: Int)

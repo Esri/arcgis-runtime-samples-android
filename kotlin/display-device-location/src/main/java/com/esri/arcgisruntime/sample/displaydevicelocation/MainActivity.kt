@@ -29,15 +29,12 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.LocationDisplay
 import com.esri.arcgisruntime.mapping.view.LocationDisplay.DataSourceStatusChangedListener
-import com.esri.arcgisruntime.sample.spinner.ItemData
-import com.esri.arcgisruntime.sample.spinner.SpinnerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
   private val requestCode = 2
   private val locationDisplay: LocationDisplay by lazy { mapView.locationDisplay }
-  var reqPermissions = arrayOf(
+  private val reqPermissions = arrayOf(
     Manifest.permission.ACCESS_FINE_LOCATION,
     Manifest.permission.ACCESS_COARSE_LOCATION
   )
@@ -45,8 +42,7 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    val map = ArcGISMap(Basemap.createImagery())
-    mapView.map = map
+    mapView.map = ArcGISMap(Basemap.createImagery())
     // Listen to changes in the status of the location data source.
     locationDisplay.addDataSourceStatusChangedListener(DataSourceStatusChangedListener { dataSourceStatusChangedEvent ->
       // If LocationDisplay started OK, then continue.
@@ -75,14 +71,15 @@ class MainActivity : AppCompatActivity() {
       }
     })
     // Populate the list for the Location display options for the spinner's Adapter
-    val list: ArrayList<ItemData> = ArrayList<ItemData>()
-    list.add(ItemData("Stop", R.drawable.locationdisplaydisabled))
-    list.add(ItemData("On", R.drawable.locationdisplayon))
-    list.add(ItemData("Re-Center", R.drawable.locationdisplayrecenter))
-    list.add(ItemData("Navigation", R.drawable.locationdisplaynavigation))
-    list.add(ItemData("Compass", R.drawable.locationdisplayheading))
-    val adapter = SpinnerAdapter(this, R.layout.spinner_layout, R.id.txt, list)
-    spinner.adapter = adapter
+    val list = arrayListOf(
+      ItemData("Stop", R.drawable.locationdisplaydisabled),
+      ItemData("On", R.drawable.locationdisplayon),
+      ItemData("Re-Center", R.drawable.locationdisplayrecenter),
+      ItemData("Navigation", R.drawable.locationdisplaynavigation),
+      ItemData("Compass", R.drawable.locationdisplayheading)
+    )
+
+    spinner.adapter = SpinnerAdapter(this, R.layout.spinner_layout, R.id.txt, list)
     spinner.onItemSelectedListener = object : OnItemSelectedListener {
       override fun onItemSelected(
         parent: AdapterView<*>?,
@@ -92,29 +89,29 @@ class MainActivity : AppCompatActivity() {
       ) {
         when (position) {
           0 ->  // Stop Location Display
-            if (locationDisplay.isStarted()) locationDisplay.stop()
+            if (locationDisplay.isStarted) locationDisplay.stop()
           1 ->  // Start Location Display
-            if (!locationDisplay.isStarted()) locationDisplay.startAsync()
+            if (!locationDisplay.isStarted) locationDisplay.startAsync()
           2 -> {
             // Re-Center MapView on Location
-            // AutoPanMode - Default: In this mode, the MapView attempts to keep the location symbol on-screen by
+            // AutoPanMode - Recenter: In this mode, the MapView attempts to keep the location symbol on-screen by
             // re-centering the location symbol when the symbol moves outside a "wander extent". The location symbol
             // may move freely within the wander extent, but as soon as the symbol exits the wander extent, the MapView
             // re-centers the map on the symbol.
-            locationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.RECENTER)
-            if (!locationDisplay.isStarted()) locationDisplay.startAsync()
+            locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.RECENTER
+            if (!locationDisplay.isStarted) locationDisplay.startAsync()
           }
           3 -> {
             // Start Navigation Mode
             // This mode is best suited for in-vehicle navigation.
-            locationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.NAVIGATION)
-            if (!locationDisplay.isStarted()) locationDisplay.startAsync()
+            locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.NAVIGATION
+            if (!locationDisplay.isStarted) locationDisplay.startAsync()
           }
           4 -> {
             // Start Compass Mode
             // This mode is better suited for waypoint navigation when the user is walking.
-            locationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.COMPASS_NAVIGATION)
-            if (!locationDisplay.isStarted()) locationDisplay.startAsync()
+            locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.COMPASS_NAVIGATION
+            if (!locationDisplay.isStarted) locationDisplay.startAsync()
           }
         }
       }
@@ -128,7 +125,7 @@ class MainActivity : AppCompatActivity() {
     permissions: Array<String>,
     grantResults: IntArray
   ) { // If request is cancelled, the result arrays are empty.
-    if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) { // Location permission was granted. This would have been triggered in response to failing to start the
+    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) { // Location permission was granted. This would have been triggered in response to failing to start the
 // LocationDisplay, so try starting this again.
       locationDisplay.startAsync()
     } else { // If permission was denied, show toast to inform user what was chosen. If LocationDisplay is started again,
