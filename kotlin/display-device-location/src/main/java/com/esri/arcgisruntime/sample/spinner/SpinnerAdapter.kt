@@ -31,42 +31,34 @@ import java.util.ArrayList
 
 class SpinnerAdapter(
   context: Activity,
-  groupid: Int,
+  private val groupId: Int,
   id: Int,
-  list: List<ItemData>
-) :
-  ArrayAdapter<ItemData?>(context, id, list) {
-  private val groupid: Int
   private val list: ArrayList<ItemData>
-  private val inflater: LayoutInflater
+) :
+  ArrayAdapter<ItemData?>(context, id, list as List<ItemData?>) {
+  private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
   override fun getView(
     position: Int,
     convertView: View?,
     parent: ViewGroup
   ): View {
-    val itemView = inflater.inflate(groupid, parent, false)
+    val itemView = this.inflater.inflate(groupId, parent, false)
     val imageView =
       itemView.findViewById<View>(R.id.img) as ImageView
     imageView.setImageResource(list[position].imageId)
     val textView = itemView.findViewById<View>(R.id.txt) as TextView
-    textView.setText(list[position].text)
+    textView.text = list[position].text
     return itemView
   }
 
   override fun getDropDownView(
     position: Int,
-    convertView: View,
+    convertView: View?,
     parent: ViewGroup
   ): View {
     return getView(position, convertView, parent)
   }
 
-  init {
-    this.list = list as ArrayList<ItemData>
-    inflater =
-      context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    this.groupid = groupid
-  }
 }
 
 class ItemData(val text: String, val imageId: Int)
