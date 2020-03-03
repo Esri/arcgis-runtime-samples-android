@@ -6,9 +6,14 @@
         "show-callout.png"
     ],
     "keywords": [
-        "Callout",
-        "MapView",
-        "Point"
+        "balloon",
+        "bubble",
+        "callout",
+        "flyout",
+        "flyover",
+        "info window",
+        "popup",
+        "tap"
     ],
     "redirect_from": "/android/latest/sample-code/show-callout.htm",
     "relevant_apis": [
