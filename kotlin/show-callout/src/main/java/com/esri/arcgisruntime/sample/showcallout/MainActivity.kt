@@ -15,7 +15,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.show_callout
+package com.esri.arcgisruntime.sample.showcallout
 
 import android.graphics.Color
 import android.os.Bundle
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         val screenPoint = android.graphics.Point(motionEvent.x.roundToInt(), motionEvent.y.roundToInt())
         // create a map point from that screen point
         val mapPoint = mapView.screenToLocation(screenPoint)
-        // convert the point to WGS84 for obtaining lat/long format
+        // convert the point to WGS84 for obtaining lat/lon format
         val wgs84Point = GeometryEngine.project(mapPoint, SpatialReferences.getWgs84()) as Point
         // create a textview for the callout
         val calloutContent = TextView(applicationContext).apply {
