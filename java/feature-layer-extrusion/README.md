@@ -1,22 +1,33 @@
-# Feature Layer Extrusion
-Apply extrusion to a renderer on a feature layer.
+# Feature layer extrusion
 
-![Feature Layer Extrusion App](feature-layer-extrusion.png)
+Extrude features based on their attributes.
+
+![Image of feature layer extrusion](feature-layer-extrusion.png)
+
+## Use case
+
+Extrusion is the process of stretching a flat, 2D shape vertically to create a 3D object in a scene. For example, you can extrude building polygons by a height value to create three-dimensional building shapes.
 
 ## How to use the sample
-Use the button at the bottom of the screen to toggle between extrusion by 'total population' and 'population density'.
+
+Tap the toggle to switch between using population density and total population for extrusion. Higher extrusion directly corresponds to higher attribute values.
 
 ## How it works
-1. Create a `ServiceFeatureTable` from a web service and load all fields with `.queryFeaturesAsync(...)`.
-1. Set the `ServiceFeatureTable` to a `FeatureLayer` and `.setFeatureRenderingMode(FeatureLayer.RenderingMode.DYNAMIC)`.
-1. When defining the `FeatureLayer`'s `Renderer`, remember to `.setExtrusionMode(...)` on the `SceneProperties`.
-1. Finally, also on `SceneProperties`, use `setExtrusionExpression("[SOME_FIELD]")` to a `Field` from the `ServiceFeatureTable`.
+
+1. Create a `ServiceFeatureTable` from a URL.
+2. Create a feature layer from the service feature table.
+   * Make sure to set the rendering mode to dynamic, `statesFeatureLayer.setRenderingMode(RenderingMode.DYNAMIC)`.
+3. Apply a `SimpleRenderer` to the feature layer.
+4. Set the `ExtrusionMode` of the renderer with `renderer.getSceneProperties().setExtrusionMode(SceneProperties.ExtrusionMode.ABSOLUTE_HEIGHT)`.
+5. Set the extrusion expression of the renderer with `renderer.getSceneProperties().setExtrusionExpression("[POP2007]/ 10")`.
 
 ## Relevant API
-* FeatureLayer
-* ExtrusionMode
-* Renderer
-* SceneProperties
 
-#### Tags
-Visualization
+* FeatureLayer
+* Renderer.SceneProperties
+* ServiceFeatureTable
+* SimpleRenderer
+
+## Tags
+
+3D, extrude, extrusion, extrusion expression, height, renderer, scene
