@@ -37,10 +37,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a map with the BasemapType topographic
+    // create a map with a topographic basemap
     val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16)
 
-    // set the map to be displayed in the layout's MapView
+    // set the map to be displayed in the layout's map view
     mapView.map = map
 
     mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
