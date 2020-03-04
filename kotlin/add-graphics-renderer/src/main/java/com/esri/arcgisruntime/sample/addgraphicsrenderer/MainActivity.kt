@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a map with the Basemap Type topographic
+    // create a map with a topographic basemap
     val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 15.169193, 16.333479, 2)
     // add graphics overlay
     addGraphicsOverlay()
