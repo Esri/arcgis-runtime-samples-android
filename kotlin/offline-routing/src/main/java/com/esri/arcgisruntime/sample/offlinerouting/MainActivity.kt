@@ -37,6 +37,8 @@ class MainActivity : AppCompatActivity() {
     "Streets_ND"
   ) }
 
+  val filePath = getExternalFilesDir(null)?.path + getString(R.string.tpk_path)
+
   private val TAG: String = MainActivity::class.java.simpleName
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,14 +47,12 @@ class MainActivity : AppCompatActivity() {
 
     // create a tile cache from the tpk
     //TODO: condense
-    val tileCache = TileCache(
-      getExternalFilesDir(null)?.path + getString(R.string.tpk_path)
-    )
+    val tileCache = TileCache(filePath)
     val tiledLayer = ArcGISTiledLayer(tileCache)
     // make a basemap with the tile cache
     val basemap = Basemap(tiledLayer)
+//    mapView.map = ArcGISMap(Basemap(ArcGISTiledLayer(TileCache(filePath))))
     mapView.map = ArcGISMap(basemap)
-
     //TODO: is this needlessly complicated
     mapView.graphicsOverlays.addAll(listOf(stopsOverlay, routeOverlay))
 
