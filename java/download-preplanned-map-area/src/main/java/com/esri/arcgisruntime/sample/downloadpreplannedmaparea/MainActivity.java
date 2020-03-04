@@ -83,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    
+    // delete any previous instances of downloaded maps
+    deleteDirectory(getCacheDir());
 
     // create up a temporary directory in the app's cache for saving downloaded preplanned maps
     mOfflineMapDirectory = new File(getCacheDir() + getString(R.string.preplanned_offline_map_dir));
@@ -374,7 +377,6 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
   @Override
   protected void onPause() {
     mMapView.pause();
-    deleteDirectory(getCacheDir());
     super.onPause();
   }
 
