@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
   /**
    * Add Graphics for 4 Points to the map's graphics overlay.
    *
-   * @param graphicOverlay the GraphicsOverlay which retains the Graphics.
+   * @param graphicOverlay the GraphicsOverlay which retains the Graphics
    */
   private fun addBuoyPoints(graphicOverlay: GraphicsOverlay) {
     //define the buoy locations
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
   /**
    * Create Graphics which display Text at specific locations.
    *
-   * @param graphicOverlay the GraphicsOverlay which retains the Graphics.
+   * @param graphicOverlay the GraphicsOverlay which retains the Graphics
    */
   private fun addText(graphicOverlay: GraphicsOverlay) {
     //create a point geometry
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
   /**
    * Create a Graphic which displays a Polyline and PointSymbol.
    *
-   * @param graphicOverlay the GraphicsOverlay that retains the Graphic.
+   * @param graphicOverlay the GraphicsOverlay that retains the Graphic
    */
   private fun addBoatTrip(graphicOverlay: GraphicsOverlay) {
     //define a polyline for the boat trip
@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity() {
   /**
    * Create a Graphic which displays a Polygon.
    *
-   * @param graphicOverlay the GraphicOverlay that retains the Graphic.
+   * @param graphicOverlay the GraphicOverlay that retains the Graphic
    */
   private fun addNestingGround(graphicOverlay: GraphicsOverlay) {
     //define the polygon for the nesting ground
@@ -166,7 +166,7 @@ class MainActivity : AppCompatActivity() {
   /**
    * Create a Polyline representing the route of the boat trip.
    *
-   * @return a new Polyline.
+   * @return a new Polyline
    */
   private fun getBoatTripGeometry(): Polyline { //a new point collection to make up the polyline
     val boatPositions = PointCollection(wgs84)
@@ -236,7 +236,7 @@ class MainActivity : AppCompatActivity() {
   /**
    * Create a Polygon from a PointCollection.
    *
-   * @return a new Polygon.
+   * @return a new Polygon
    */
   private fun getNestingGroundGeometry(): Polygon { //a new point collection to make up the polygon
     val points = PointCollection(wgs84)
