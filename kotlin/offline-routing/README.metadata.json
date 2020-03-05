@@ -1,0 +1,33 @@
+{
+    "category": "Routing and Logistics",
+    "description": "Solve a route on-the-fly using offline data.",
+    "ignore": false,
+    "images": [
+        "offline-routing.png"
+    ],
+    "keywords": [
+        "connectivity",
+        "disconnected",
+        "fastest",
+        "locator",
+        "navigation",
+        "network analysis",
+        "offline",
+        "routing",
+        "routing",
+        "shortest",
+        "turn-by-turn"
+    ],
+    "redirect_from": "/android/latest/sample-code/offline-routing-.htm",
+    "relevant_apis": [
+      "RouteParameters",
+      "RouteResult",
+      "RouteTask",
+      "Stop",
+      "TravelMode"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/addfeaturesfeatureservice/MainActivity.kt"
+    ],
+    "title": "Offline routing"
+}
