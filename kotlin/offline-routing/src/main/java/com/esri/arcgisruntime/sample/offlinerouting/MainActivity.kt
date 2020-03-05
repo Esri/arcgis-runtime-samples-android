@@ -1,5 +1,3 @@
-package com.esri.arcgisruntime.sample.offlinerouting
-
 /*
  * Copyright 2020 Esri
  *
@@ -16,6 +14,8 @@ package com.esri.arcgisruntime.sample.offlinerouting
  * limitations under the License.
  *
  */
+
+package com.esri.arcgisruntime.sample.offlinerouting
 
 import android.os.Bundle
 import android.util.Log
