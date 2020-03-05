@@ -1,5 +1,22 @@
 package com.esri.arcgisruntime.sample.offlinerouting
 
+/*
+ * Copyright 2020 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -44,7 +61,6 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // create a tile cache from the tpk
-    //TODO: condense
     val tileCache = TileCache(getExternalFilesDir(null)?.path + getString(R.string.tpk_path))
     val tiledLayer = ArcGISTiledLayer(tileCache)
     // make a basemap with the tiled layer
@@ -76,7 +92,6 @@ class MainActivity : AppCompatActivity() {
 
     // set up travel mode switch
     modeSwitch.setOnCheckedChangeListener { _, isChecked ->
-      //TODO: remove toast
       routeParameters?.travelMode = when (isChecked) {
         true -> routeTask.routeTaskInfo.travelModes[0]
         false -> routeTask.routeTaskInfo.travelModes[1]
@@ -111,10 +126,10 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-  * Sets up the onTouchListener for the mapView.
-  * For single taps, graphics will be selected.
-  * For double touch drags, graphics will be moved.
-  * */
+   * Sets up the onTouchListener for the mapView.
+   * For single taps, graphics will be selected.
+   * For double touch drags, graphics will be moved.
+   * */
   private fun createMapGestures() {
     mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
       override fun onSingleTapConfirmed(motionEvent: MotionEvent): Boolean {
@@ -153,12 +168,12 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-  * Updates the calculated route by calling routeTask.solveRouteAsync().
-  * Creates a graphic to display the route.
-  * */
-  private fun updateRoute(){
+   * Updates the calculated route by calling routeTask.solveRouteAsync().
+   * Creates a graphic to display the route.
+   * */
+  private fun updateRoute() {
     // get a list of stops from the graphics currently on the graphics overlay.
-    val stops = stopsOverlay.graphics.map{
+    val stops = stopsOverlay.graphics.map {
       Stop(it.geometry as Point)
     }
 
@@ -172,15 +187,21 @@ class MainActivity : AppCompatActivity() {
         val route = result.routes[0]
 
         // create graphic for route
-        val graphic = Graphic(route.routeGeometry, SimpleLineSymbol(SimpleLineSymbol.Style.SOLID,
-          0xFF0000FF.toInt(), 3F
-        ))
+        val graphic = Graphic(
+          route.routeGeometry, SimpleLineSymbol(
+            SimpleLineSymbol.Style.SOLID,
+            0xFF0000FF.toInt(), 3F
+          )
+        )
 
         routeOverlay.graphics.clear()
         routeOverlay.graphics.add(graphic)
       } catch (e: Exception) {
         when (e) {
-          is InterruptedException, is ExecutionException -> Log.e(TAG, "No route solution. ${e.stackTrace}")
+          is InterruptedException, is ExecutionException -> Log.e(
+            TAG,
+            "No route solution. ${e.stackTrace}"
+          )
         }
         routeOverlay.graphics.clear()
       }
@@ -188,10 +209,10 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-  * Selects a graphic if there is one at the provided tapped location or, if there is none, creates a new graphic.
-  *
-  * @param screenPoint a point in screen space where the user tapped.
-  * */
+   * Selects a graphic if there is one at the provided tapped location or, if there is none, creates a new graphic.
+   *
+   * @param screenPoint a point in screen space where the user tapped.
+   * */
   private fun addOrSelectGraphic(screenPoint: android.graphics.Point) {
     // identify the selected graphic
     val results = mapView.identifyGraphicsOverlayAsync(stopsOverlay, screenPoint, 10.0, false)
@@ -206,8 +227,7 @@ class MainActivity : AppCompatActivity() {
         if (graphics.size > 0) {
           val firstGraphic = graphics[0]
           firstGraphic.isSelected = true
-        }
-        else  { // there is no graphic at this location
+        } else { // there is no graphic at this location
           // make a new graphic at the tapped location
           val locationPoint = mapView.screenToLocation(screenPoint)
           val stopLabel = TextSymbol(
@@ -223,7 +243,10 @@ class MainActivity : AppCompatActivity() {
         }
       } catch (e: Exception) {
         when (e) {
-          is InterruptedException, is ExecutionException -> Log.e(TAG, "Error identifying graphic: ${e.stackTrace}")
+          is InterruptedException, is ExecutionException -> Log.e(
+            TAG,
+            "Error identifying graphic: ${e.stackTrace}"
+          )
         }
       }
     }
