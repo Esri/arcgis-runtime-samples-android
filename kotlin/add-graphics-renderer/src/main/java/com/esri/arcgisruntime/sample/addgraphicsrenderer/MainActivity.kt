@@ -46,6 +46,9 @@ class MainActivity : AppCompatActivity() {
     mapView.map = map
   }
 
+  /*
+  * Creates each graphic and a graphics overlay for it, then adds the overlay to the map.
+  * */
   private fun addGraphicsOverlay() {
     // point graphic
     // create a graphic overlay for the point
