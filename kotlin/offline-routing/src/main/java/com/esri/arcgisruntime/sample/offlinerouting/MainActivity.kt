@@ -31,13 +31,7 @@ class MainActivity : AppCompatActivity() {
   val stopsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
   val routeOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
   var routeParameters: RouteParameters? = null
-  val routeTask: RouteTask by lazy { RouteTask(
-    this,
-    getExternalFilesDir(null)?.path + getString(R.string.geodatabase_path),
-    "Streets_ND"
-  ) }
-
-  val filePath = getExternalFilesDir(null)?.path + getString(R.string.tpk_path)
+  lateinit var routeTask: RouteTask
 
   private val TAG: String = MainActivity::class.java.simpleName
 
@@ -47,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     // create a tile cache from the tpk
     //TODO: condense
-    val tileCache = TileCache(filePath)
+    val tileCache = TileCache(getExternalFilesDir(null)?.path + getString(R.string.tpk_path))
     val tiledLayer = ArcGISTiledLayer(tileCache)
     // make a basemap with the tile cache
     val basemap = Basemap(tiledLayer)
@@ -56,16 +50,11 @@ class MainActivity : AppCompatActivity() {
     //TODO: is this needlessly complicated
     mapView.graphicsOverlays.addAll(listOf(stopsOverlay, routeOverlay))
 
-    // setup switch.
-    modeSwitch.setOnCheckedChangeListener { _, isChecked ->
-      //TODO: remove toast
-      routeParameters?.travelMode = when (isChecked) {
-        true -> TravelMode().apply { type = "Fastest" }
-        false -> TravelMode().apply { type = "Slowest" }
-      }
-      Toast.makeText(this, routeParameters?.travelMode?.type, Toast.LENGTH_SHORT).show()
-    }
-
+    routeTask = RouteTask(
+      this,
+      getExternalFilesDir(null)?.path + getString(R.string.geodatabase_path),
+      "Streets_ND"
+    )
     routeTask.loadAsync()
     routeTask.addDoneLoadingListener {
       if (routeTask.loadStatus == LoadStatus.LOADED) {
@@ -84,6 +73,17 @@ class MainActivity : AppCompatActivity() {
       } else {
         Log.e(TAG, "Error loading route task. ${routeTask.loadError.message}")
       }
+    }
+
+    // setup switch.
+    modeSwitch.setOnCheckedChangeListener { _, isChecked ->
+      //TODO: remove toast
+      routeParameters?.travelMode = when (isChecked) {
+        true -> routeTask.routeTaskInfo.travelModes[0]
+        false -> routeTask.routeTaskInfo.travelModes[1]
+      }
+      Toast.makeText(this, routeParameters?.travelMode?.name, Toast.LENGTH_SHORT).show()
+      updateRoute()
     }
 
     // add a graphics overlay to show the boundary.
