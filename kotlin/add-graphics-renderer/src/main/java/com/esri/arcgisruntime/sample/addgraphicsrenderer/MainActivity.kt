@@ -40,41 +40,46 @@ class MainActivity : AppCompatActivity() {
 
     // create a map with a topographic basemap
     val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 15.169193, 16.333479, 2)
-    // add graphics overlay
-    addGraphicsOverlay()
+
     // set the map to be displayed in this view
     mapView.map = map
+
+    // add graphics overlays
+    addPointGraphicsOverlay()
+    addLineGraphicsOverlay()
+    addPolygonGraphicsOverlay()
   }
 
-  /*
-  * Creates each graphic and a graphics overlay for it, then adds the overlay to the map.
-  * */
-  private fun addGraphicsOverlay() {
-    // point graphic
-    // create a graphic overlay for the point
-    val pointGraphicOverlay = GraphicsOverlay()
-    // add graphics overlay to the MapView
-    mapView.graphicsOverlays.add(pointGraphicOverlay)
+  /**
+   * Create a point, its graphic, a graphics overlay for it, and add it to the map view.
+   * */
+  private fun addPointGraphicsOverlay() {
     // create point
     val pointGeometry =
       Point(40e5, 40e5, SpatialReferences.getWebMercator())
     // create graphic for point
     val pointGraphic = Graphic(pointGeometry)
-    // add graphic to overlay
-    pointGraphicOverlay.graphics.add(pointGraphic)
     // red diamond point symbol
     val pointSymbol =
       SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 10f)
     // create simple renderer
     val pointRenderer = SimpleRenderer(pointSymbol)
-    // set the renderer on the graphics overlay to the new renderer
-    pointGraphicOverlay.renderer = pointRenderer
 
-    // line graphic
-    // create graphic overlay for polyline
-    val lineGraphicOverlay = GraphicsOverlay()
-    // add graphics overlay to the MapView
-    mapView.graphicsOverlays.add(lineGraphicOverlay)
+    // create a new graphics overlay with these settings and add it to the map view
+    GraphicsOverlay().let { pointGraphicsOverlay ->
+      // add graphic to overlay
+      pointGraphicsOverlay.graphics.add(pointGraphic)
+      // set the renderer on the graphics overlay to the new renderer
+      pointGraphicsOverlay.renderer = pointRenderer
+      // add graphics overlay to the MapView
+      mapView.graphicsOverlays.add(pointGraphicsOverlay)
+    }
+  }
+
+  /**
+   * Create a polyline, its graphic, a graphics overlay for it, and add it to the map view.
+   * */
+  private fun addLineGraphicsOverlay() {
     // create line
     val lineGeometry = PolylineBuilder(SpatialReferences.getWebMercator()).apply {
       addPoint(-10e5, 40e5)
@@ -82,21 +87,27 @@ class MainActivity : AppCompatActivity() {
     }
     // create graphic for polyline
     val lineGraphic = Graphic(lineGeometry.toGeometry())
-    // add graphic to overlay
-    lineGraphicOverlay.graphics.add(lineGraphic)
     // solid blue line symbol
     val lineSymbol =
       SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f)
     // create simple renderer
     val lineRenderer = SimpleRenderer(lineSymbol)
-    // set the renderer on the graphics overlay to the new renderer
-    lineGraphicOverlay.renderer = lineRenderer
 
-    // polygon graphic
-    // create graphic overlay for polygon
-    val polygonGraphicOverlay = GraphicsOverlay()
-    // add graphics overlay to MapView
-    mapView.graphicsOverlays.add(polygonGraphicOverlay)
+    // create graphic overlay for polyline and add it to the map view
+    GraphicsOverlay().let {lineGraphicsOverlay ->
+      // add graphic to overlay
+      lineGraphicsOverlay.graphics.add(lineGraphic)
+      // set the renderer on the graphics overlay to the new renderer
+      lineGraphicsOverlay.renderer = lineRenderer
+      // add graphics overlay to the MapView
+      mapView.graphicsOverlays.add(lineGraphicsOverlay)
+    }
+  }
+
+  /**
+   * Create a polygon, its graphic, a graphics overlay for it, and add it to the map view.
+   * */
+  private fun addPolygonGraphicsOverlay() {
     // create polygon
     val polygonGeometry = PolygonBuilder(SpatialReferences.getWebMercator()).apply {
       addPoint(-20e5, 20e5)
@@ -106,15 +117,21 @@ class MainActivity : AppCompatActivity() {
     }
     // create graphic for polygon
     val polygonGraphic = Graphic(polygonGeometry.toGeometry())
-    // add graphic to overlay
-    polygonGraphicOverlay.graphics.add(polygonGraphic)
     // solid yellow polygon symbol
     val polygonSymbol =
       SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.YELLOW, null)
     // create simple renderer
     val polygonRenderer = SimpleRenderer(polygonSymbol)
-    // set the renderer on the graphics overlay to the new renderer
-    polygonGraphicOverlay.renderer = polygonRenderer
+
+    // create graphic overlay for polygon and add it to the map view
+    GraphicsOverlay().let {polygonGraphicOverlay ->
+      // add graphic to overlay
+      polygonGraphicOverlay.graphics.add(polygonGraphic)
+      // set the renderer on the graphics overlay to the new renderer
+      polygonGraphicOverlay.renderer = polygonRenderer
+      // add graphics overlay to MapView
+      mapView.graphicsOverlays.add(polygonGraphicOverlay)
+    }
   }
 
   override fun onPause() {
