@@ -29,6 +29,7 @@ Tap once near a road to add a stop to the map. A number graphic will show its or
 1. Execute the following commands:
 
 `adb push streetmap_SD.tpk /sdcard/Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/san_diego/streetmap_SD.tpk`
+
 `adb push sandiego.geodatabase /sdcard/Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/san_diego/sandiego.geodatabase`
 
 Link | Local Location
