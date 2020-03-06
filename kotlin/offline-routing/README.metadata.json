@@ -18,7 +18,7 @@
         "shortest",
         "turn-by-turn"
     ],
-    "redirect_from": "/android/latest/sample-code/offline-routing-.htm",
+    "redirect_from": "/android/latest/sample-code/offline-routing.htm",
     "relevant_apis": [
       "RouteParameters",
       "RouteResult",
@@ -27,7 +27,7 @@
       "TravelMode"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/addfeaturesfeatureservice/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/offlinerouting/MainActivity.kt"
     ],
     "title": "Offline routing"
 }

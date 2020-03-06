@@ -147,9 +147,7 @@ class MainActivity : AppCompatActivity() {
         val screenPoint = android.graphics.Point(
           motionEvent.x.roundToInt(),
           motionEvent.y.roundToInt()
-        )
-        // UNSURE: should you be able to select a graphic with double touch drag?
-        // selectGraphic(screenPoint, false)
+        )§§§§§
 
         // move the selected graphic to the new location
         if (stopsOverlay.selectedGraphics.isNotEmpty()) {
@@ -211,7 +209,7 @@ class MainActivity : AppCompatActivity() {
   /**
    * Selects a graphic if there is one at the provided tapped location or, if there is none, creates a new graphic.
    *
-   * @param screenPoint a point in screen space where the user tapped.
+   * @param screenPoint a point in screen space where the user tapped
    * */
   private fun addOrSelectGraphic(screenPoint: android.graphics.Point) {
     // identify the selected graphic
