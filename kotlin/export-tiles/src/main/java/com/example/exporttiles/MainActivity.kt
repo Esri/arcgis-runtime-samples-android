@@ -20,7 +20,6 @@ package com.example.exporttiles
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -44,7 +43,6 @@ import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheTask
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_layout.*
 import java.io.File
-import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
 
@@ -146,14 +144,10 @@ class MainActivity : AppCompatActivity() {
                 }
               }
             }
-        } catch (e: InterruptedException) {
-          Toast.makeText(this, "TileCacheParameters interrupted: " + e.message, Toast.LENGTH_LONG)
-            .show()
-          Log.e(TAG, "TileCacheParameters interrupted: " + e.message)
-        } catch (e: ExecutionException) {
-          Toast.makeText(this, "Error generating parameters: " + e.message, Toast.LENGTH_LONG)
-            .show()
-          Log.e(TAG, "Error generating parameters: " + e.message)
+        } catch (e: Exception) {
+          val error = "Error generating tile cache parameters: ${e.message}"
+          Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+          Log.e(TAG, error)
         }
       }
     }
@@ -168,20 +162,18 @@ class MainActivity : AppCompatActivity() {
    * @param result takes the TileCache from the ExportTileCacheJob
    */
   private fun showMapPreview(result: TileCache) {
-    val newTiledLayer = ArcGISTiledLayer(result)
-    val previewMap = ArcGISMap(Basemap(newTiledLayer))
 
     // set up the preview map view
     previewMapView.apply {
-      map = previewMap
+      map = ArcGISMap(Basemap(ArcGISTiledLayer(result)))
       setViewpoint(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE))
     }
     // control UI visibility
     previewMapView.getChildAt(0).visibility = View.VISIBLE
-    show(closeButton, dimBackground, preview_text_view, previewMapView)
+    show(closeButton, dimBackground, previewTextView, previewMapView)
     exportTilesButton.visibility = View.GONE
 
-    // // required for some Android devices running older OS (combats Z-ordering bug in Android API)
+    // required for some Android devices running older OS (combats Z-ordering bug in Android API)
     mapPreviewLayout.bringToFront()
   }
 
@@ -191,7 +183,7 @@ class MainActivity : AppCompatActivity() {
   fun clearPreview(view: View) {
 
     previewMapView.getChildAt(0).visibility = View.INVISIBLE
-    hide(closeButton, dimBackground, preview_text_view, previewMapView)
+    hide(closeButton, dimBackground, previewTextView, previewMapView)
     // control UI visibility
     show(exportTilesButton, mapView)
     downloadArea?.isVisible = true
@@ -213,11 +205,11 @@ class MainActivity : AppCompatActivity() {
       setNeutralButton("Cancel") { _, _ ->
         exportTileCacheJob.cancel()
       }
+      setCancelable(false)
       setView(R.layout.dialog_layout)
     }
     return builder.create()
   }
-
 
   /**
    * Makes the given views in the UI visible.
