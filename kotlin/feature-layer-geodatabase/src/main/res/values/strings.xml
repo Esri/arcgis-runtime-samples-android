@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Feature layer (geodatabase)</string>
+    <string name="write_permission_denied">Data could not open because WRITE permission was denied.</string>
+</resources>
