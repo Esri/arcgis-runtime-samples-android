@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Heading -->
+    <TextView
+        android:id="@+id/headingTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/heading"
+        app:layout_constraintEnd_toEndOf="@+id/pitchTextview"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/currHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toEndOf="@+id/headingSeekBar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/headingSeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/pitchSeekBar"
+        app:layout_constraintEnd_toEndOf="@+id/maxDistanceSeekBar"
+        app:layout_constraintStart_toEndOf="@+id/headingTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Pitch -->
+    <TextView
+        android:id="@+id/pitchTextview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/pitch"
+        app:layout_constraintEnd_toEndOf="@+id/horizontalAngleTextview"
+        app:layout_constraintTop_toBottomOf="@+id/headingTextView" />
+
+    <TextView
+        android:id="@+id/currPitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toEndOf="@+id/pitchSeekBar"
+        app:layout_constraintTop_toBottomOf="@+id/currHeading" />
+
+    <SeekBar
+        android:id="@+id/pitchSeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/horizontalAngleSeekBar"
+        app:layout_constraintEnd_toEndOf="@+id/maxDistanceSeekBar"
+        app:layout_constraintStart_toEndOf="@+id/pitchTextview"
+        app:layout_constraintTop_toBottomOf="@+id/headingSeekBar" />
+
+    <!-- Horizontal Angle -->
+    <TextView
+        android:id="@+id/horizontalAngleTextview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/horizontal_angle"
+        app:layout_constraintEnd_toEndOf="@+id/verticalAngleTextview"
+        app:layout_constraintTop_toBottomOf="@+id/pitchTextview" />
+
+    <TextView
+        android:id="@+id/currHorizontalAngle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toEndOf="@+id/horizontalAngleSeekBar"
+        app:layout_constraintTop_toBottomOf="@+id/currPitch" />
+
+    <SeekBar
+        android:id="@+id/horizontalAngleSeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/verticalAngleSeekBar"
+        app:layout_constraintEnd_toEndOf="@+id/maxDistanceSeekBar"
+        app:layout_constraintStart_toEndOf="@+id/horizontalAngleTextview"
+        app:layout_constraintTop_toBottomOf="@+id/pitchSeekBar" />
+
+    <!-- Vertical Angle -->
+    <TextView
+        android:id="@+id/verticalAngleTextview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/vertical_angle"
+        app:layout_constraintEnd_toEndOf="@+id/minimumDistanceTextview"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalAngleTextview" />
+
+    <TextView
+        android:id="@+id/currVerticalAngle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toEndOf="@+id/verticalAngleSeekBar"
+        app:layout_constraintTop_toBottomOf="@+id/currHorizontalAngle" />
+
+    <SeekBar
+        android:id="@+id/verticalAngleSeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/minDistanceSeekBar"
+        app:layout_constraintEnd_toEndOf="@+id/maxDistanceSeekBar"
+        app:layout_constraintStart_toEndOf="@+id/verticalAngleTextview"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalAngleSeekBar" />
+
+    <!-- Minimum Distance -->
+    <TextView
+        android:id="@+id/minimumDistanceTextview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/minimum_distance"
+        app:layout_constraintEnd_toEndOf="@+id/maximumDistanceTextView"
+        app:layout_constraintTop_toBottomOf="@+id/verticalAngleTextview" />
+
+    <TextView
+        android:id="@+id/currMinimumDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toEndOf="@+id/minDistanceSeekBar"
+        app:layout_constraintTop_toBottomOf="@+id/currVerticalAngle" />
+
+    <SeekBar
+        android:id="@+id/minDistanceSeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/maxDistanceSeekBar"
+        app:layout_constraintEnd_toEndOf="@+id/maxDistanceSeekBar"
+        app:layout_constraintStart_toEndOf="@+id/minimumDistanceTextview"
+        app:layout_constraintTop_toBottomOf="@+id/verticalAngleSeekBar" />
+
+    <!-- Maximum Distance -->
+    <TextView
+        android:id="@+id/maximumDistanceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/maximum_distance"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/minimumDistanceTextview" />
+
+    <TextView
+        android:id="@+id/currMaximumDistance"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currMinimumDistance" />
+
+    <SeekBar
+        android:id="@+id/maxDistanceSeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="1dp"
+        android:minEms="6"
+        app:layout_constraintBottom_toTopOf="@+id/frustumVisibilityCheckBox"
+        app:layout_constraintEnd_toStartOf="@+id/currMaximumDistance"
+        app:layout_constraintStart_toEndOf="@+id/maximumDistanceTextView"
+        app:layout_constraintTop_toBottomOf="@+id/minDistanceSeekBar" />
+
+    <!-- frustum visibility -->
+    <TextView
+        android:id="@+id/frustumVisibilityTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/frustum_visibiity"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/maximumDistanceTextView" />
+
+    <CheckBox
+        android:id="@+id/frustumVisibilityCheckBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        app:layout_constraintStart_toEndOf="@+id/frustumVisibilityTextView"
+        app:layout_constraintTop_toBottomOf="@+id/maximumDistanceTextView" />
+
+    <!-- analysis visibility -->
+    <TextView
+        android:id="@+id/viewshedVisibilityTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/viewshed_visibility"
+        app:layout_constraintStart_toEndOf="@+id/frustumVisibilityCheckBox"
+        app:layout_constraintTop_toBottomOf="@+id/maximumDistanceTextView"/>
+
+    <CheckBox
+        android:id="@+id/viewshedVisibilityCheckBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        app:layout_constraintStart_toEndOf="@+id/viewshedVisibilityTextView"
+        app:layout_constraintTop_toBottomOf="@+id/maximumDistanceTextView"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
