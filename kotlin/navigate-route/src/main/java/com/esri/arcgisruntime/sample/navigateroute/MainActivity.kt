@@ -61,8 +61,7 @@ class MainActivity : AppCompatActivity() {
     mapView.map = ArcGISMap(Basemap.createStreetsVector())
 
     // create a graphics overlay to hold our route graphics and clear any graphics
-    val graphicsOverlay = GraphicsOverlay()
-    mapView.graphicsOverlays.add(graphicsOverlay).also { graphicsOverlay.graphics.clear() }
+    mapView.graphicsOverlays.add(GraphicsOverlay)
 
     // create text-to-speech to replay navigation voice guidance
     textToSpeech = TextToSpeech(this) { status ->
