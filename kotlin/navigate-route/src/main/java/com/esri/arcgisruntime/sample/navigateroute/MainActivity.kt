@@ -188,11 +188,14 @@ class MainActivity : AppCompatActivity() {
       addAutoPanModeChangedListener { recenterButton.isEnabled = true }
     }
     // set up a RouteTracker for navigation along the calculated route
-    val routeTracker = RouteTracker(applicationContext, routeResult, 0).also { routeTracker ->
-      routeTracker.enableReroutingAsync(
-        routeTask, routeParameters,
-        RouteTracker.ReroutingStrategy.TO_NEXT_WAYPOINT, true
+    val routeTracker = RouteTracker(applicationContext, routeResult, 0).apply {
+      enableReroutingAsync(
+        routeTask,
+        routeParameters,
+        RouteTracker.ReroutingStrategy.TO_NEXT_WAYPOINT,
+        true
       )
+    }
     }
     // listen for changes in location
     locationDisplay.addLocationChangedListener { locationChangedEvent ->
