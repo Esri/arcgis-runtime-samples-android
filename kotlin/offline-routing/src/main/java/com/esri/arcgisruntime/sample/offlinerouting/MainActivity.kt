@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
         val screenPoint = android.graphics.Point(
           motionEvent.x.roundToInt(),
           motionEvent.y.roundToInt()
-        )§§§§§
+        )
 
         // move the selected graphic to the new location
         if (stopsOverlay.selectedGraphics.isNotEmpty()) {
