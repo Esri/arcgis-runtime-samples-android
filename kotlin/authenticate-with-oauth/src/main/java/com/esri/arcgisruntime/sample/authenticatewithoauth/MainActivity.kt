@@ -42,11 +42,6 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // normally, you won't want to clear credentials once a device has been verified. These calls are made to keep this
-    // sample from interfering with other authentication samples
-    AuthenticationManager.CredentialCache.clear()
-    AuthenticationManager.clearOAuthConfigurations()
-
     try {
       // set up an oauth config with url to portal, a client id and a re-direct url
       // a custom client id for your app can be set on the ArcGIS for Developers dashboard under
@@ -86,6 +81,11 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onPause() {
+    // normally, you won't want to clear credentials once a device has been verified. These calls are made to keep this
+    // sample from interfering with other authentication samples
+    AuthenticationManager.CredentialCache.clear()
+    AuthenticationManager.clearOAuthConfigurations()
+
     mapView.pause()
     super.onPause()
   }
