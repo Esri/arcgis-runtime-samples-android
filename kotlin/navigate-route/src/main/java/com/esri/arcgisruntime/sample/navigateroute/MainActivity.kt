@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
     mapView.map = ArcGISMap(Basemap.createStreetsVector())
 
     // create a graphics overlay to hold our route graphics and clear any graphics
-    mapView.graphicsOverlays.add(GraphicsOverlay)
+    mapView.graphicsOverlays.add(GraphicsOverlay())
 
     // create text-to-speech to replay navigation voice guidance
     textToSpeech = TextToSpeech(this) { status ->
@@ -196,9 +196,10 @@ class MainActivity : AppCompatActivity() {
         true
       )
     }
-    }
+
     // listen for changes in location
-    locationDisplay.addLocationChangedListener { locationChangedEvent ->
+    locationDisplay.addLocationChangedListener()
+    { locationChangedEvent ->
       // track the location and update route tracking status
       val trackLocationFuture = routeTracker.trackLocationAsync(locationChangedEvent.location)
       trackLocationFuture.addDoneListener {
