@@ -83,11 +83,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     // add overlays to the mapView
-    mapView.graphicsOverlays.addAll(listOf(
-      geodesicGraphicsOverlay,
-      planarGraphicsOverlay,
-      tapLocationsOverlay
-    ))
+    mapView.graphicsOverlays.addAll(
+      listOf(
+        geodesicGraphicsOverlay,
+        planarGraphicsOverlay,
+        tapLocationsOverlay
+      )
+    )
 
     // create a buffer around the clicked location
     mapView.onTouchListener = object : DefaultMapViewOnTouchListener(applicationContext, mapView) {

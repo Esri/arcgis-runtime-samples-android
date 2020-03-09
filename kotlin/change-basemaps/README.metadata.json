@@ -1,26 +1,26 @@
 {
-    "category": "Maps and Scenes",
-    "description": "Change basemaps from an Android Navigation Drawer.",
-    "ignore": false,
-    "images": [
-        "change-basemaps.png"
-    ],
-    "keywords": [
-        "Maps and Scenes",
-        "ArcGISMap",
-        "Basemap",
-        "MapView",
-        "ViewPoint"
-    ],
-    "redirect_from": "/android/latest/sample-code/change-basemaps.htm",
-    "relevant_apis": [
-        "ArcGISMap",
-        "Basemap",
-        "MapView",
-        "ViewPoint"
-    ],
-    "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/changebasemaps/MainActivity.kt"
-    ],
-    "title": "Change Basemaps"
+  "category": "Maps and Scenes",
+  "description": "Change basemaps from an Android Navigation Drawer.",
+  "ignore": false,
+  "images": [
+    "change-basemaps.png"
+  ],
+  "keywords": [
+    "Maps and Scenes",
+    "ArcGISMap",
+    "Basemap",
+    "MapView",
+    "ViewPoint"
+  ],
+  "redirect_from": "/android/latest/sample-code/change-basemaps.htm",
+  "relevant_apis": [
+    "ArcGISMap",
+    "Basemap",
+    "MapView",
+    "ViewPoint"
+  ],
+  "snippets": [
+    "src/main/java/com/esri/arcgisruntime/sample/changebasemaps/MainActivity.kt"
+  ],
+  "title": "Change Basemaps"
 }
