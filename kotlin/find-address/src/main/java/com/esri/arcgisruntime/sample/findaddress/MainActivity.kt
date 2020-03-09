@@ -68,11 +68,11 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // create a map with the streets vector basemap type
-    val topographicBasemap = ArcGISMap(Basemap.createStreetsVector())
+    val topographicMap = ArcGISMap(Basemap.createStreetsVector())
 
     mapView.apply {
       // set the map to be displayed in the mapview
-      map = topographicBasemap
+      map = topographicMap
       // set the map viewpoint to start over North America
       setViewpoint(Viewpoint(40.0, -100.0, 100000000.0))
       // define the graphics overlay and add it to the map view
@@ -91,7 +91,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     // populate the spinner list of address suggestions
-    val examples = arrayOf("277 N Avenida Caballeros, Palm Springs, CA", "380 New York St, Redlands, CA 92373", "Београд", "Москва", "北京")
+    val examples = arrayOf("277 N Avenida Caballeros, Palm Springs, " +
+        "CA", "380 New York St, Redlands, CA 92373", "Београд", "Москва", "北京")
     // initialize an adapter for the suggestions spinner
     val suggestionAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, examples)
     suggestionSpinner.adapter = suggestionAdapter
@@ -157,13 +158,14 @@ class MainActivity : AppCompatActivity() {
                   override fun onSuggestionSelect(position: Int): Boolean { return false }
                   override fun onSuggestionClick(position: Int): Boolean {
                     // get the selected row
-                    val selectedRow = suggestionAdapter.getItem(position) as MatrixCursor
-                    // get the row's index
-                    val selectedCursorIndex = selectedRow.getColumnIndex(address)
-                    // get the string from the row at index
-                    val selectedAddress = selectedRow.getString(selectedCursorIndex)
-                    // use clicked suggestion as query
-                    addressSearchView.setQuery(selectedAddress, true)
+                    (suggestionAdapter.getItem(position) as? MatrixCursor)?.let { selectedRow ->
+                      // get the row's index
+                      val selectedCursorIndex = selectedRow.getColumnIndex(address)
+                      // get the string from the row at index
+                      val selectedAddress = selectedRow.getString(selectedCursorIndex)
+                      // use clicked suggestion as query
+                      addressSearchView.setQuery(selectedAddress, true)
+                    }
                     return true
                   }
                 })
@@ -195,7 +197,7 @@ class MainActivity : AppCompatActivity() {
           try {
             // get the results of the async operation
             val geocodeResults = geocodeResultFuture.get()
-            if (geocodeResults.size > 0) {
+            if (geocodeResults.isNotEmpty()) {
               displaySearchResultOnMap(geocodeResults[0])
             } else {
               Toast.makeText(
@@ -213,7 +215,6 @@ class MainActivity : AppCompatActivity() {
           }
         }
       } else {
-        Log.i(TAG, "Trying to reload locator task")
         locatorTask.retryLoadAsync()
       }
     }
@@ -255,7 +256,7 @@ class MainActivity : AppCompatActivity() {
         val identifyGraphicsOverlayResult: IdentifyGraphicsOverlayResult = identifyResultsFuture.get()
         val graphics = identifyGraphicsOverlayResult.graphics
         // get the first graphic identified
-        if (graphics.size > 0) {
+        if (graphics.isNotEmpty()) {
           val identifiedGraphic: Graphic = graphics[0]
           // show the callout of the identified graphic
           showCallout(identifiedGraphic)
@@ -282,17 +283,14 @@ class MainActivity : AppCompatActivity() {
       this.text = graphic.attributes["PlaceName"].toString() + "\n" +
           graphic.attributes["StAddr"].toString()
     }
-
-    // configure the callout
-    val calloutStyle = Callout.Style(this, R.xml.callout_style)
-
+    // get the center of the graphic to set the callout location
+    val centerOfGraphic = graphic.geometry.extent.center
+    val calloutLocation = graphic.computeCalloutLocation(centerOfGraphic, mapView)
 
     callout = mapView.callout.apply {
       showOptions = Callout.ShowOptions(true, true, true)
       content = calloutContent
-      // set the leader position using the center of the graphic
-      val centerOfGraphic = graphic.geometry.extent.center
-      val calloutLocation = graphic.computeCalloutLocation(centerOfGraphic, mapView)
+      // set the leader position using the callout location
       setGeoElement(graphic, calloutLocation)
       // show callout beneath graphic
       style.leaderPosition = Callout.Style.LeaderPosition.UPPER_MIDDLE
