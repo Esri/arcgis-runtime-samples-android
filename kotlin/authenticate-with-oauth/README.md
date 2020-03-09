@@ -34,4 +34,4 @@ For additional information on using OAuth in your app, see the topic [Authentica
 
 ## Tags
 
-cloud & portal, authentication, security, oauth, credential
+authentication, cloud, credential, OAuth, portal, security

@@ -6,11 +6,12 @@
     "authenticate-with-oauth.png"
   ],
   "keywords": [
-    "cloud & portal",
     "authentication",
-    "security",
-    "oauth",
-    "credential"
+    "cloud",
+    "credential",
+    "OAuth",
+    "portal",
+    "security"
   ],
   "redirect_from": "",
   "relevant_apis": [
