@@ -21,6 +21,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -115,7 +116,11 @@ class MainActivity : AppCompatActivity() {
       stopsOverlay.graphics.clear()
       routeOverlay.graphics.clear()
     }
-
+// move the clear button above the attribution bar
+    mapView.addAttributionViewLayoutChangeListener { v, _, _, _, _, _, oldTop, _, oldBottom ->
+      val heightChanged = v.height - (oldBottom - oldTop)
+      clearButton.y += -heightChanged
+    }
     // add a graphics overlay to show the boundary
     GraphicsOverlay().let {
       val envelope = Envelope(
