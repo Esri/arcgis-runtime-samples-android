@@ -41,10 +41,12 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:button="@null"
         android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
         android:text="@string/labels_visible"
         android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/label_position_text" />
 
