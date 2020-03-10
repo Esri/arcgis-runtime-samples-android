@@ -1,26 +1,26 @@
 {
-    "category": "Maps and Scenes",
-    "description": "Set the terrain surface with elevation described by a raster file.",
-    "ignore": false,
-    "images": [
-        "create-terrain-from-a-local-raster.png"
-    ],
-    "keywords": [
-        "Maps and Scenes",
-        "3D",
-        "Raster",
-        "Elevation",
-        "Surface",
-        "RasterElevationSource",
-        "Surface"
-    ],
-    "redirect_from": "/android/latest/sample-code/create-terrain-from-a-local-raster.htm",
-    "relevant_apis": [
-        "RasterElevationSource",
-        "Surface"
-    ],
-    "snippets": [
-        "src/main/java/com/esri/arcgisruntime/samples/createterrainfromalocalraster/MainActivity.kt"
-    ],
-    "title": "Create terrain from a local raster"
+  "category": "Maps and Scenes",
+  "description": "Set the terrain surface with elevation described by a raster file.",
+  "ignore": false,
+  "images": [
+    "create-terrain-from-a-local-raster.png"
+  ],
+  "keywords": [
+    "Maps and Scenes",
+    "3D",
+    "Raster",
+    "Elevation",
+    "Surface",
+    "RasterElevationSource",
+    "Surface"
+  ],
+  "redirect_from": "/android/latest/sample-code/create-terrain-from-a-local-raster.htm",
+  "relevant_apis": [
+    "RasterElevationSource",
+    "Surface"
+  ],
+  "snippets": [
+    "src/main/java/com/esri/arcgisruntime/samples/createterrainfromalocalraster/MainActivity.kt"
+  ],
+  "title": "Create terrain from a local raster"
 }

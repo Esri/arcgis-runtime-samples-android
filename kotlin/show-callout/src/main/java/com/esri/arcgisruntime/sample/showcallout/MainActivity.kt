@@ -47,7 +47,8 @@ class MainActivity : AppCompatActivity() {
 
       override fun onSingleTapConfirmed(motionEvent: MotionEvent): Boolean {
         // get the point that was tapped on the screen
-        val screenPoint = android.graphics.Point(motionEvent.x.roundToInt(), motionEvent.y.roundToInt())
+        val screenPoint =
+          android.graphics.Point(motionEvent.x.roundToInt(), motionEvent.y.roundToInt())
         // create a map point from that screen point
         val mapPoint = mapView.screenToLocation(screenPoint)
         // convert the point to WGS84 for obtaining lat/lon format
