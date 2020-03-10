@@ -247,11 +247,21 @@ class MainActivity : AppCompatActivity() {
     // display pop-up box when button is clicked
     menu_button.setOnClickListener { dialog.show() }
   }
-  
+
+  /**
+   * Sets the labels as visible or invisible.
+   *
+   * @param visible whether the labels should be visible
+   */
   private fun setLabelVisibility(visible: Boolean) {
     mapView.grid.isLabelVisible = visible
   }
 
+  /**
+   * Sets the color of the grid lines.
+   *
+   * @param color the integer color to use
+   */
   private fun changeGridColor(color: Int) {
     val grid = mapView.grid
     val gridLevels = grid.levelCount
@@ -262,6 +272,11 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Sets the color of the labels on the grid.
+   *
+   * @param labelColor the integer color to use
+   */
   private fun changeLabelColor(labelColor: Int) {
     val grid = mapView.grid
     val gridLevels = grid.levelCount
@@ -278,6 +293,11 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Sets the position of the labels on the grid.
+   *
+   * @param labelPosition the LabelPosition to use
+   */
   private fun changeLabelPosition(labelPosition: Grid.LabelPosition) {
     mapView.grid.labelPosition = labelPosition
   }
