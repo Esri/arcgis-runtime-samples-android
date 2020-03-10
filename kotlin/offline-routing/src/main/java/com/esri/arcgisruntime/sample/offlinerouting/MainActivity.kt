@@ -98,8 +98,9 @@ class MainActivity : AppCompatActivity() {
     // set up travel mode switch
     modeSwitch.setOnCheckedChangeListener { _, isChecked ->
       routeParameters?.travelMode = when (isChecked) {
-        true -> routeTask.routeTaskInfo.travelModes[0]
-        false -> routeTask.routeTaskInfo.travelModes[1]
+        R.id.fastest_button -> routeTask.routeTaskInfo.travelModes[0]
+        R.id.shortest_button -> routeTask.routeTaskInfo.travelModes[1]
+        else -> routeTask.routeTaskInfo.travelModes[0]
       }
       Toast.makeText(
         this,

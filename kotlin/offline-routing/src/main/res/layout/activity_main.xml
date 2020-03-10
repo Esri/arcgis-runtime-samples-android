@@ -11,7 +11,7 @@
         android:id="@+id/clearButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Clear"
+        android:text="@string/clear_button_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
@@ -23,34 +23,28 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/shortestText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="Shortest"
-        app:layout_constraintBaseline_toBaselineOf="@id/modeSwitch"
-        app:layout_constraintEnd_toStartOf="@id/modeSwitch"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Switch
+    <RadioGroup
         android:id="@+id/modeSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:checked="true"
-        app:layout_constraintStart_toEndOf="@id/shortestText"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:checkedButton="@id/fastest_button"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/fastestText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="Fastest"
-        app:layout_constraintBaseline_toBaselineOf="@id/modeSwitch"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/modeSwitch" />
+        <RadioButton
+            android:id="@+id/shortest_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/shortest_button_text" />
+
+        <RadioButton
+            android:id="@+id/fastest_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fastest_button_text" />
+    </RadioGroup>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.esri.arcgisruntime.mapping.view.MapView
