@@ -17,11 +17,13 @@
 
 package com.esri.arcgisruntime.sample.offlinerouting
 
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.data.TileCache
 import com.esri.arcgisruntime.geometry.Envelope
 import com.esri.arcgisruntime.geometry.Point
@@ -33,6 +35,8 @@ import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.symbology.CompositeSymbol
+import com.esri.arcgisruntime.symbology.PictureMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.TextSymbol
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters
@@ -54,6 +58,7 @@ class MainActivity : AppCompatActivity() {
       "Streets_ND"
     )
   }
+
   private val TAG: String = MainActivity::class.java.simpleName
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -228,16 +233,7 @@ class MainActivity : AppCompatActivity() {
         } else { // there is no graphic at this location
           // make a new graphic at the tapped location
           val locationPoint = mapView.screenToLocation(screenPoint)
-          val stopLabel = TextSymbol(
-            20f,
-            (stopsOverlay.graphics.size + 1).toString(),
-            0xFFFF0000.toInt(),
-            TextSymbol.HorizontalAlignment.RIGHT,
-            TextSymbol.VerticalAlignment.TOP
-          )
-          val graphic = Graphic(locationPoint, stopLabel)
-          stopsOverlay.graphics.add(graphic)
-          updateRoute()
+          createStopSymbol(stopsOverlay.graphics.size + 1, locationPoint)
         }
       } catch (e: Exception) {
         when (e) {
@@ -247,6 +243,43 @@ class MainActivity : AppCompatActivity() {
           )
         }
       }
+    }
+  }
+
+  /**
+   * Creates a composite symbol to represent a numbered stop.
+   *
+   * @param stopNumber the ordinal number of this stop
+   * @param locationPoint the point in map space where the symbol should be placed
+   */
+  private fun createStopSymbol(stopNumber: Int, locationPoint: Point) {
+    try {
+      // create a new picture marker symbol and load it
+      val pictureMarkerSymbol = PictureMarkerSymbol.createAsync(
+        ContextCompat.getDrawable(
+          this,
+          R.drawable.pin_symbol
+        ) as BitmapDrawable
+      ).get()
+      // create a text symbol with the stop number
+      val textSymbol = TextSymbol(
+        12f,
+        stopNumber.toString(),
+        0xFFFFFFFF.toInt(),
+        TextSymbol.HorizontalAlignment.CENTER,
+        TextSymbol.VerticalAlignment.BOTTOM
+      )
+      textSymbol.offsetY = -4f
+      // create a composite symbol and add the picture marker symbol and text symbol
+      val compositeSymbol = CompositeSymbol()
+      compositeSymbol.symbols.addAll(listOf(pictureMarkerSymbol, textSymbol))
+      // create a graphic to add to the overlay and update the route
+      val graphic = Graphic(locationPoint, compositeSymbol)
+      stopsOverlay.graphics.add(graphic)
+      updateRoute()
+
+    } catch (e: Exception) {
+      Log.e(TAG, "Failed to create composite symbol: ${e.stackTrace}")
     }
   }
 
