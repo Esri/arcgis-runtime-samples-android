@@ -14,11 +14,11 @@ Run the sample and view graphics for points, lines, and polygons, which are styl
 
 ## How it works
 
-* Create a `GraphicsOverlay` and add it to the `MapView`.
-* Create a `Graphic`, specifying only a `Geometry`.
-* Create a single `Symbol` such as a `SimpleMarkerSymbol`.
-* Create a renderer with the `Symbol` such as a `SimpleRenderer(symbol)`.
-* Set the renderer on the `GraphicsOverlay` with `graphicsOverlay.renderer = renderer`.
+1 Create a `GraphicsOverlay` and add it to the `MapView`.
+2 Create a `Graphic`, specifying only a `Geometry`.
+3 Create a single `Symbol` such as a `SimpleMarkerSymbol`.
+4 Create a renderer with the `Symbol` such as a `SimpleRenderer(symbol)`.
+5 Set the renderer on the `GraphicsOverlay` with `graphicsOverlay.renderer = renderer`.
 
 ## Relevant API
 
