@@ -92,6 +92,11 @@ class MainActivity : AppCompatActivity() {
 
       override fun onNothingSelected(parent: AdapterView<*>?) {}
     }
+
+    // move the spinner above the attribution bar
+    mapView.addAttributionViewLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+      spinner.y -= v.height - (oldBottom - oldTop)
+    }
   }
 
   private fun checkDataSource(dataSourceStatusChangedEvent: LocationDisplay.DataSourceStatusChangedEvent){
