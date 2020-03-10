@@ -18,7 +18,7 @@
         "GeoPackage"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/samples/featurelayerquery/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayerquery/MainActivity.java"
     ],
     "title": "Feature Layer Query"
 }
