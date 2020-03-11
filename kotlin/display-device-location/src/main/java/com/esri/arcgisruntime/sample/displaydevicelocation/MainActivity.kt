@@ -53,44 +53,40 @@ class MainActivity : AppCompatActivity() {
       ItemData("Compass", R.drawable.locationdisplayheading)
     )
 
-    spinner.adapter = SpinnerAdapter(this, R.layout.spinner_layout, R.id.txt, list)
-    spinner.onItemSelectedListener = object : OnItemSelectedListener {
-      override fun onItemSelected(
-        parent: AdapterView<*>?,
-        view: View,
-        position: Int,
-        id: Long
-      ) {
-        when (position) {
-          0 ->  // Stop Location Display
-            if (locationDisplay.isStarted) locationDisplay.stop()
-          1 ->  // Start Location Display
-            if (!locationDisplay.isStarted) locationDisplay.startAsync()
-          2 -> {
-            // Re-Center MapView on Location
-            // AutoPanMode - Recenter: In this mode, the MapView attempts to keep the location symbol on-screen by
-            // re-centering the location symbol when the symbol moves outside a "wander extent". The location symbol
-            // may move freely within the wander extent, but as soon as the symbol exits the wander extent, the MapView
-            // re-centers the map on the symbol.
-            locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.RECENTER
-            if (!locationDisplay.isStarted) locationDisplay.startAsync()
-          }
-          3 -> {
-            // Start Navigation Mode
-            // This mode is best suited for in-vehicle navigation.
-            locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.NAVIGATION
-            if (!locationDisplay.isStarted) locationDisplay.startAsync()
-          }
-          4 -> {
-            // Start Compass Mode
-            // This mode is better suited for waypoint navigation when the user is walking.
-            locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.COMPASS_NAVIGATION
-            if (!locationDisplay.isStarted) locationDisplay.startAsync()
+    spinner.apply {
+      adapter = SpinnerAdapter(this@MainActivity, R.layout.spinner_layout, R.id.txt, list)
+      onItemSelectedListener = object : OnItemSelectedListener {
+        override fun onItemSelected(
+          parent: AdapterView<*>?,
+          view: View,
+          position: Int,
+          id: Long
+        ) {
+          when (position) {
+            0 ->  // Stop Location Display
+              if (locationDisplay.isStarted) locationDisplay.stop()
+            1 ->  // Start Location Display
+              if (!locationDisplay.isStarted) locationDisplay.startAsync()
+            2 -> {
+              // Re-Center MapView on Location
+              locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.RECENTER
+              if (!locationDisplay.isStarted) locationDisplay.startAsync()
+            }
+            3 -> {
+              // Start navigation mode
+              locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.NAVIGATION
+              if (!locationDisplay.isStarted) locationDisplay.startAsync()
+            }
+            4 -> {
+              // Start compass navigation ,ode
+              locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.COMPASS_NAVIGATION
+              if (!locationDisplay.isStarted) locationDisplay.startAsync()
+            }
           }
         }
-      }
 
-      override fun onNothingSelected(parent: AdapterView<*>?) {}
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
+      }
     }
 
     // move the spinner above the attribution bar
@@ -148,8 +144,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onPause() {
-    super.onPause()
     mapView.pause()
+    super.onPause()
   }
 
   override fun onResume() {
@@ -158,7 +154,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onDestroy() {
-    super.onDestroy()
     mapView.dispose()
+    super.onDestroy()
   }
 }
