@@ -16,10 +16,10 @@
 
 package com.esri.arcgisruntime.sample.changeatmosphereeffect
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
 import com.esri.arcgisruntime.mapping.Basemap

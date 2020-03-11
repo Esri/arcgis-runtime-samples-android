@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_profile.*
 import org.jetbrains.anko.toast
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 

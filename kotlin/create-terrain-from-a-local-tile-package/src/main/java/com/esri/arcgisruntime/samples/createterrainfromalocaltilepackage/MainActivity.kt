@@ -20,11 +20,11 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
@@ -58,7 +58,8 @@ class MainActivity : AppCompatActivity() {
     // add a ArcGISTiledElevationSource to the scene by passing the URI of the local tile package to the constructor
     with(
       ArcGISTiledElevationSource(
-        Environment.getExternalStorageDirectory().toString() + getString(R.string.local_tile_package_location)
+        Environment.getExternalStorageDirectory()
+          .toString() + getString(R.string.local_tile_package_location)
       )
     ) {
       // add a listener to perform operations when the load status of the ArcGISTiledElevationSource changes
@@ -82,7 +83,11 @@ class MainActivity : AppCompatActivity() {
    * Request read external storage for API level 23+.
    */
   private fun requestReadPermission() {
-    if (ContextCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
+    if (ContextCompat.checkSelfPermission(
+        this,
+        permissions[0]
+      ) == PackageManager.PERMISSION_GRANTED
+    ) {
       createTiledElevationSource()
     } else {
       // request permission
@@ -93,7 +98,11 @@ class MainActivity : AppCompatActivity() {
   /**
    * Handle the permissions request response
    */
-  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+  override fun onRequestPermissionsResult(
+    requestCode: Int,
+    permissions: Array<String>,
+    grantResults: IntArray
+  ) {
     if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       createTiledElevationSource()
     } else {
