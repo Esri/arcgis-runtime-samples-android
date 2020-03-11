@@ -31,12 +31,7 @@ import com.esri.arcgisruntime.mapping.view.LocationDisplay
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-  private val requestCode = 2
   private val locationDisplay: LocationDisplay by lazy { mapView.locationDisplay }
-  private val reqPermissions = arrayOf(
-    Manifest.permission.ACCESS_FINE_LOCATION,
-    Manifest.permission.ACCESS_COARSE_LOCATION
-  )
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -102,13 +97,27 @@ class MainActivity : AppCompatActivity() {
     if (dataSourceStatusChangedEvent.error == null) return
     // If an error is found, handle the failure to start.
     // Check permissions to see if failure may be due to lack of permissions.
-    val permissionCheck1 =
+    requestPermissions(dataSourceStatusChangedEvent)
+  }
+
+  /**
+   * Request fine and coarse location permissions for API level 23+.
+   */
+  private fun requestPermissions(dataSourceStatusChangedEvent: LocationDisplay.DataSourceStatusChangedEvent) {
+    val requestCode = 2
+    val reqPermissions = arrayOf(
+      Manifest.permission.ACCESS_FINE_LOCATION,
+      Manifest.permission.ACCESS_COARSE_LOCATION
+    )
+    // fine location permission
+    val permissionCheckFineLocation =
       ContextCompat.checkSelfPermission(this@MainActivity, reqPermissions[0]) ==
           PackageManager.PERMISSION_GRANTED
-    val permissionCheck2 =
+    // coarse location permission
+    val permissionCheckCoarseLocation =
       ContextCompat.checkSelfPermission(this@MainActivity, reqPermissions[1]) ==
           PackageManager.PERMISSION_GRANTED
-    if (!(permissionCheck1 && permissionCheck2)) { // If permissions are not already granted, request permission from the user.
+    if (!(permissionCheckFineLocation && permissionCheckCoarseLocation)) { // If permissions are not already granted, request permission from the user.
       ActivityCompat.requestPermissions(this@MainActivity, reqPermissions, requestCode)
     } else { // Report other unknown failure types to the user - for example, location services may not
       // be enabled on the device.
@@ -122,6 +131,9 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Handle the permissions request response.
+   */
   override fun onRequestPermissionsResult(
     requestCode: Int,
     permissions: Array<String>,
