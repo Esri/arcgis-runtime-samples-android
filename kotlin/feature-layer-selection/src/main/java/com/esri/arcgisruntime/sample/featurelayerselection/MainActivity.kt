@@ -63,10 +63,8 @@ class MainActivity : AppCompatActivity() {
       it.map = streetsMap
       // give any item selected on the map view a red selection halo
       it.selectionProperties.color = Color.RED
-
       // set an on touch listener on the map view
       it.onTouchListener = object : DefaultMapViewOnTouchListener(this, it) {
-
         override fun onSingleTapConfirmed(motionEvent: MotionEvent): Boolean {
           // get the point that was tapped and convert it to a point in map coordinates
           val tappedPoint = it.screenToLocation(android.graphics.Point(motionEvent.x.roundToInt(),
@@ -98,9 +96,9 @@ class MainActivity : AppCompatActivity() {
               }
               Toast.makeText(applicationContext, "$counter features selected", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
-              val errorMessage = "Select feature failed: "
-              Log.e(TAG, errorMessage + e.message)
-              Toast.makeText(applicationContext, errorMessage + e.message, Toast.LENGTH_SHORT).show()
+              val errorMessage = "Select feature failed: " + e.message
+              Log.e(TAG, errorMessage)
+              Toast.makeText(applicationContext, errorMessage, Toast.LENGTH_LONG).show()
             }
           }
           return super.onSingleTapConfirmed(motionEvent)
