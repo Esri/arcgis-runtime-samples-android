@@ -22,7 +22,7 @@
         "Point"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/samples/showcallout/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/showcallout/MainActivity.kt"
     ],
     "title": "Show callout"
 }
