@@ -22,15 +22,15 @@ Tap on the `Change Grid` button in the toolbar to open a settings view. You can 
 
 ## Relevant API
 
-* ArcGISGrid
+* Grid
 * LatitudeLongitudeGrid
-* UTMGrid
-* USNGGrid
 * MapView
 * MGRSGrid
-* TextSymbol
 * SimpleLineSymbol
+* TextSymbol
+* UtmGrid
+* UsngGrid
 
 ## Tags
 
-map, mapview, sceneview, ui, graticule
+coordinates, degrees, graticule, grid, latitude, longitude, MGRS, minutes, seconds, USNG, UTM
