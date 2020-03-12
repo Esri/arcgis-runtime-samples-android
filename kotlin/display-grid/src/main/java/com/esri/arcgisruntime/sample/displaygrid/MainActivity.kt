@@ -61,12 +61,11 @@ class MainActivity : AppCompatActivity() {
 
     mapView.apply {
       // create a map with imagery basemap
-      map = ArcGISMap(Basemap.createImagery()).also { map ->
-        // set the initial viewpoint of the map
-        map.initialViewpoint = Viewpoint(center, 23227.0)
-      }
+      map = ArcGISMap(Basemap.createImagery())
+      // set the initial viewpoint of the map
+      map.initialViewpoint = Viewpoint(center, 23227.0)
       // set defaults on grid
-      mapView.grid = LatitudeLongitudeGrid()
+      grid = LatitudeLongitudeGrid()
     }
 
     // set up a popup menu to manage grid settings
@@ -97,7 +96,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Sets up the spinner for selecting a grid type and handles behavior for when a new grid type is selected.
+   * Sets up the spinner for selecting a grid type
+   * and handles behavior for when a new grid type is selected.
    *
    * @param popupView the popup view inflated in onCreate()
    */
@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity() {
    */
   private fun setupLineColorSpinner(popupView: View) {
     popupView.line_color_spinner.apply {
-      // create drop-down list of different line colorså
+      // create drop-down list of different line colors
       adapter = ArrayAdapter(
         this@MainActivity, android.R.layout.simple_spinner_item,
         resources.getStringArray(R.array.colors_array)
@@ -178,7 +178,7 @@ class MainActivity : AppCompatActivity() {
           view: View,
           position: Int,
           id: Long
-        ) { //set the color
+        ) { // set the color
           when (position) {
             0 -> lineColor = Color.RED
             1 -> lineColor = Color.WHITE
@@ -198,7 +198,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Sets up the spinner for selecting a label color and handles behavior for when a new label color is selected.
+   * Sets up the spinner for selecting a label color
+   * and handles behavior for when a new label color is selected.
    *
    * @param popupView the popup view inflated in onCreate()
    */
@@ -239,7 +240,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Sets up the spinner for selecting a label position relative to the grid and handles behavior for when a label position is selected.
+   * Sets up the spinner for selecting a label position relative to the grid
+   * and handles behavior for when a label position is selected.
    *
    * @param popupView the popup view inflated in onCreate()
    */
