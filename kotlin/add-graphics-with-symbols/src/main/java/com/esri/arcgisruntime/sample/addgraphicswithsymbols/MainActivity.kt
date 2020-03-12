@@ -35,7 +35,6 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.TextSymbol
 import kotlinx.android.synthetic.main.activity_main.*
 
-
 class MainActivity : AppCompatActivity() {
 
   private val wgs84 = SpatialReference.create(4236)
@@ -44,63 +43,61 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // create the graphics overlay
+    val graphicsOverlay = GraphicsOverlay()
+
     mapView.apply {
-      // create a map with the BasemapType topographic and
-      // displayed it in this view
+      // create a map with the BasemapType Oceans and display it in this view
       map = ArcGISMap(Basemap.Type.OCEANS, 56.075844, -2.681572, 11)
+      //add the overlay to the map view
+      graphicsOverlays.add(graphicsOverlay)
     }
 
-    //create the graphics overlay
-    GraphicsOverlay().let {
-      //add the overlay to the map view
-      mapView.graphicsOverlays.add(it)
-      //add some buoy positions to the graphics overlay
-      addBuoyPoints(it)
-      //add boat trip polyline to graphics overlay
-      addBoatTrip(it)
-      //add nesting ground polygon to graphics overlay
-      addNestingGround(it)
-      //add text symbols and points to graphics overlay
-      addText(it)
-    }
+    // add some buoy positions to the graphics overlay
+    val buoyPoints = createBuoyGraphics()
+    graphicsOverlay.graphics.addAll(buoyPoints)
+
+    // add boat trip polyline to graphics overlay
+    val tripRouteGraphic = createRoute()
+    graphicsOverlay.graphics.add(tripRouteGraphic)
+
+    // add nesting ground polygon to graphics overlay
+    val nestingGround = createNestingGround()
+    graphicsOverlay.graphics.add(nestingGround)
+
+    // add text symbols and points to graphics overlay
+    val textGraphics = createTextGraphics()
+    graphicsOverlay.graphics.addAll(textGraphics)
   }
 
   /**
-   * Add Graphics for 4 Points to the map's graphics overlay.
-   *
-   * @param graphicOverlay the GraphicsOverlay which retains the Graphics
+   * Create Graphics for some points.
    */
-  private fun addBuoyPoints(graphicOverlay: GraphicsOverlay) {
-    //define the buoy locations
-    val buoy1Loc = Point(-2.712642647560347, 56.062812566811544, wgs84)
-    val buoy2Loc = Point(-2.6908416959572303, 56.06444173689877, wgs84)
+  private fun createBuoyGraphics(): Array<Graphic> {
+    // define the buoy locations
+    val buoy1Loc = Point(-2.7126426475603470, 56.062812566811544, wgs84)
+    val buoy2Loc = Point(-2.6908416959572303, 56.064441736898770, wgs84)
     val buoy3Loc = Point(-2.6697273884990937, 56.064250073402874, wgs84)
-    val buoy4Loc = Point(-2.6395150461199726, 56.06127916736989, wgs84)
+    val buoy4Loc = Point(-2.6395150461199726, 56.061279167369890, wgs84)
 
-    //create a marker symbol
+    // create a marker symbol
     val buoyMarker =
       SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10.0f)
 
-    //create graphics
-    val buoyGraphic1 = Graphic(buoy1Loc, buoyMarker)
-    val buoyGraphic2 = Graphic(buoy2Loc, buoyMarker)
-    val buoyGraphic3 = Graphic(buoy3Loc, buoyMarker)
-    val buoyGraphic4 = Graphic(buoy4Loc, buoyMarker)
-
-    //add the graphics to the graphics overlay
-    graphicOverlay.graphics.add(buoyGraphic1)
-    graphicOverlay.graphics.add(buoyGraphic2)
-    graphicOverlay.graphics.add(buoyGraphic3)
-    graphicOverlay.graphics.add(buoyGraphic4)
+    // create graphics
+    return arrayOf(
+      Graphic(buoy1Loc, buoyMarker),
+      Graphic(buoy2Loc, buoyMarker),
+      Graphic(buoy3Loc, buoyMarker),
+      Graphic(buoy4Loc, buoyMarker)
+    )
   }
 
   /**
-   * Create Graphics which display Text at specific locations.
-   *
-   * @param graphicOverlay the GraphicsOverlay which retains the Graphics
+   * Create graphics which display text at specific locations.
    */
-  private fun addText(graphicOverlay: GraphicsOverlay) {
-    //create a point geometry
+  private fun createTextGraphics(): Array<Graphic> {
+    // create a point geometry
     val bassLocation =
       Point(-2.640631, 56.078083, wgs84)
     val craigleithLocation =
@@ -116,38 +113,31 @@ class MainActivity : AppCompatActivity() {
       TextSymbol.HorizontalAlignment.RIGHT, TextSymbol.VerticalAlignment.TOP
     )
 
-    //define a graphic from the geometry and symbol
+    //define graphics from each geometry and symbol
     val bassRockGraphic = Graphic(bassLocation, bassRockSymbol)
     val craigleithGraphic = Graphic(craigleithLocation, craigleithSymbol)
 
-    //add the text to the graphics overlay
-    graphicOverlay.graphics.add(bassRockGraphic)
-    graphicOverlay.graphics.add(craigleithGraphic)
+    return arrayOf(bassRockGraphic, craigleithGraphic)
   }
 
   /**
-   * Create a Graphic which displays a Polyline and PointSymbol.
-   *
-   * @param graphicOverlay the GraphicsOverlay that retains the Graphic
+   * Create a graphic which displays a polyline.
    */
-  private fun addBoatTrip(graphicOverlay: GraphicsOverlay) {
+  private fun createRoute(): Graphic {
     //define a polyline for the boat trip
     val boatRoute: Polyline = getBoatTripGeometry()
     //define a line symbol
     val lineSymbol =
       SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.rgb(128, 0, 128), 4.0f)
-    //create the graphic
-    val boatTripGraphic = Graphic(boatRoute, lineSymbol)
-    //add to the graphic overlay
-    graphicOverlay.graphics.add(boatTripGraphic)
+
+    //create and return a new graphic
+    return Graphic(boatRoute, lineSymbol)
   }
 
   /**
-   * Create a Graphic which displays a Polygon.
-   *
-   * @param graphicOverlay the GraphicOverlay that retains the Graphic
+   * Create a graphic which displays a polygon.
    */
-  private fun addNestingGround(graphicOverlay: GraphicsOverlay) {
+  private fun createNestingGround(): Graphic {
     //define the polygon for the nesting ground
     val nestingGround = getNestingGroundGeometry()
     //define the fill symbol and outline
@@ -157,115 +147,119 @@ class MainActivity : AppCompatActivity() {
       SimpleFillSymbol.Style.DIAGONAL_CROSS, Color.rgb(0, 80, 0),
       outlineSymbol
     )
-    //define graphic
-    val nestingGraphic = Graphic(nestingGround, fillSymbol)
-    //add to graphics overlay
-    graphicOverlay.graphics.add(nestingGraphic)
+
+    //create and return a new graphic
+    return Graphic(nestingGround, fillSymbol)
   }
 
   /**
-   * Create a Polyline representing the route of the boat trip.
+   * Create a polyline representing the route of the boat trip.
    *
-   * @return a new Polyline
+   * @return a new polyline
    */
-  private fun getBoatTripGeometry(): Polyline { //a new point collection to make up the polyline
-    val boatPositions = PointCollection(wgs84)
-    //add positions to the point collection
-    boatPositions.add(Point(-2.7184791227926772, 56.06147084563517))
-    boatPositions.add(Point(-2.7196807500463924, 56.06147084563517))
-    boatPositions.add(Point(-2.722084004553823, 56.062141712059706))
-    boatPositions.add(Point(-2.726375530459948, 56.06386674355254))
-    boatPositions.add(Point(-2.726890513568683, 56.0660708381432))
-    boatPositions.add(Point(-2.7270621746049275, 56.06779569383808))
-    boatPositions.add(Point(-2.7255172252787228, 56.068753913653914))
-    boatPositions.add(Point(-2.723113970771293, 56.069424653352335))
-    boatPositions.add(Point(-2.719165766937657, 56.07028701581465))
-    boatPositions.add(Point(-2.713672613777817, 56.070574465681325))
-    boatPositions.add(Point(-2.7093810878716917, 56.07095772883556))
-    boatPositions.add(Point(-2.7044029178205866, 56.07153261642126))
-    boatPositions.add(Point(-2.698223120515766, 56.072394931722265))
-    boatPositions.add(Point(-2.6923866452834355, 56.07325722773041))
-    boatPositions.add(Point(-2.68672183108735, 56.07335303720707))
-    boatPositions.add(Point(-2.6812286779275096, 56.07354465544585))
-    boatPositions.add(Point(-2.6764221689126497, 56.074215311778964))
-    boatPositions.add(Point(-2.6698990495353394, 56.07488595644139))
-    boatPositions.add(Point(-2.6647492184479886, 56.075748196715914))
-    boatPositions.add(Point(-2.659427726324393, 56.076131408423215))
-    boatPositions.add(Point(-2.654792878345778, 56.07622721075461))
-    boatPositions.add(Point(-2.651359657620878, 56.076514616319784))
-    boatPositions.add(Point(-2.6477547758597324, 56.07708942101955))
-    boatPositions.add(Point(-2.6450081992798125, 56.07814320736718))
-    boatPositions.add(Point(-2.6432915889173625, 56.08025069360931))
-    boatPositions.add(Point(-2.638656740938747, 56.08044227755186))
-    boatPositions.add(Point(-2.636940130576297, 56.078813783674946))
-    boatPositions.add(Point(-2.636425147467562, 56.07728102068079))
-    boatPositions.add(Point(-2.637798435757522, 56.076610417698504))
-    boatPositions.add(Point(-2.638656740938747, 56.07507756705851))
-    boatPositions.add(Point(-2.641231656482422, 56.07479015077557))
-    boatPositions.add(Point(-2.6427766058086277, 56.075748196715914))
-    boatPositions.add(Point(-2.6456948434247924, 56.07546078543464))
-    boatPositions.add(Point(-2.647239792750997, 56.074598538729404))
-    boatPositions.add(Point(-2.6492997251859376, 56.072682365868616))
-    boatPositions.add(Point(-2.6530762679833284, 56.0718200569986))
-    boatPositions.add(Point(-2.655479522490758, 56.070861913404286))
-    boatPositions.add(Point(-2.6587410821794135, 56.07047864929729))
-    boatPositions.add(Point(-2.6633759301580286, 56.07028701581465))
-    boatPositions.add(Point(-2.666637489846684, 56.07009538137926))
-    boatPositions.add(Point(-2.670070710571584, 56.06990374599109))
-    boatPositions.add(Point(-2.6741905754414645, 56.069137194910745))
-    boatPositions.add(Point(-2.678310440311345, 56.06808316228391))
-    boatPositions.add(Point(-2.682086983108735, 56.06789151689155))
-    boatPositions.add(Point(-2.6868934921235956, 56.06760404701653))
-    boatPositions.add(Point(-2.6911850180297208, 56.06722075051504))
-    boatPositions.add(Point(-2.695133221863356, 56.06702910083509))
-    boatPositions.add(Point(-2.698223120515766, 56.066837450202335))
-    boatPositions.add(Point(-2.7016563412406667, 56.06645414607839))
-    boatPositions.add(Point(-2.7061195281830366, 56.0660708381432))
-    boatPositions.add(Point(-2.7100677320166717, 56.065591697864576))
-    boatPositions.add(Point(-2.713329291705327, 56.06520838135397))
-    boatPositions.add(Point(-2.7167625124302273, 56.06453756828941))
-    boatPositions.add(Point(-2.718307461756433, 56.06348340989081))
-    boatPositions.add(Point(-2.719165766937657, 56.062812566811544))
-    boatPositions.add(Point(-2.7198524110826376, 56.06204587471371))
-    boatPositions.add(Point(-2.719165766937657, 56.06166252294756))
-    boatPositions.add(Point(-2.718307461756433, 56.06147084563517))
+  private fun getBoatTripGeometry(): Polyline {
+    //a new point collection to make up the polyline
+    val boatPositions = PointCollection(wgs84).apply {
+      //add positions to the point collection
+      add(Point(-2.7184791227926772, 56.061470845635170))
+      add(Point(-2.7196807500463924, 56.061470845635170))
+      add(Point(-2.7220840045538230, 56.062141712059706))
+      add(Point(-2.7263755304599480, 56.063866743552540))
+      add(Point(-2.7268905135686830, 56.066070838143200))
+      add(Point(-2.7270621746049275, 56.067795693838080))
+      add(Point(-2.7255172252787228, 56.068753913653914))
+      add(Point(-2.7231139707712930, 56.069424653352335))
+      add(Point(-2.7191657669376570, 56.070287015814650))
+      add(Point(-2.7136726137778170, 56.070574465681325))
+      add(Point(-2.7093810878716917, 56.070957728835560))
+      add(Point(-2.7044029178205866, 56.071532616421260))
+      add(Point(-2.6982231205157660, 56.072394931722265))
+      add(Point(-2.6923866452834355, 56.073257227730410))
+      add(Point(-2.6867218310873500, 56.073353037207070))
+      add(Point(-2.6812286779275096, 56.073544655445850))
+      add(Point(-2.6764221689126497, 56.074215311778964))
+      add(Point(-2.6698990495353394, 56.074885956441390))
+      add(Point(-2.6647492184479886, 56.075748196715914))
+      add(Point(-2.6594277263243930, 56.076131408423215))
+      add(Point(-2.6547928783457780, 56.076227210754610))
+      add(Point(-2.6513596576208780, 56.076514616319784))
+      add(Point(-2.6477547758597324, 56.077089421019550))
+      add(Point(-2.6450081992798125, 56.078143207367180))
+      add(Point(-2.6432915889173625, 56.080250693609310))
+      add(Point(-2.6386567409387470, 56.080442277551860))
+      add(Point(-2.6369401305762970, 56.078813783674946))
+      add(Point(-2.6364251474675620, 56.077281020680790))
+      add(Point(-2.6377984357575220, 56.076610417698504))
+      add(Point(-2.6386567409387470, 56.075077567058510))
+      add(Point(-2.6412316564824220, 56.074790150775570))
+      add(Point(-2.6427766058086277, 56.075748196715914))
+      add(Point(-2.6456948434247924, 56.075460785434640))
+      add(Point(-2.6472397927509970, 56.074598538729404))
+      add(Point(-2.6492997251859376, 56.072682365868616))
+      add(Point(-2.6530762679833284, 56.071820056998600))
+      add(Point(-2.6554795224907580, 56.070861913404286))
+      add(Point(-2.6587410821794135, 56.070478649297290))
+      add(Point(-2.6633759301580286, 56.070287015814650))
+      add(Point(-2.6666374898466840, 56.070095381379260))
+      add(Point(-2.6700707105715840, 56.069903745991090))
+      add(Point(-2.6741905754414645, 56.069137194910745))
+      add(Point(-2.6783104403113450, 56.068083162283910))
+      add(Point(-2.6820869831087350, 56.067891516891550))
+      add(Point(-2.6868934921235956, 56.067604047016530))
+      add(Point(-2.6911850180297208, 56.067220750515040))
+      add(Point(-2.6951332218633560, 56.067029100835090))
+      add(Point(-2.6982231205157660, 56.066837450202335))
+      add(Point(-2.7016563412406667, 56.066454146078390))
+      add(Point(-2.7061195281830366, 56.066070838143200))
+      add(Point(-2.7100677320166717, 56.065591697864576))
+      add(Point(-2.7133292917053270, 56.065208381353970))
+      add(Point(-2.7167625124302273, 56.064537568289410))
+      add(Point(-2.7183074617564330, 56.063483409890810))
+      add(Point(-2.7191657669376570, 56.062812566811544))
+      add(Point(-2.7198524110826376, 56.062045874713710))
+      add(Point(-2.7191657669376570, 56.061662522947560))
+      add(Point(-2.7183074617564330, 56.061470845635170))
+    }
+
     //create the polyline from the point collection
     return Polyline(boatPositions)
   }
 
   /**
-   * Create a Polygon from a PointCollection.
+   * Create a polygon from a point collection.
    *
-   * @return a new Polygon
+   * @return a new polygon
    */
   private fun getNestingGroundGeometry(): Polygon { //a new point collection to make up the polygon
-    val points = PointCollection(wgs84)
-    //add points to the point collection
-    points.add(Point(-2.643077012566659, 56.077125346044475))
-    points.add(Point(-2.6428195210159444, 56.07717324600376))
-    points.add(Point(-2.6425405718360033, 56.07774804087097))
-    points.add(Point(-2.6427122328698127, 56.077927662508635))
-    points.add(Point(-2.642454741319098, 56.07829887790651))
-    points.add(Point(-2.641853927700763, 56.078526395253725))
-    points.add(Point(-2.6409741649024867, 56.078801809192434))
-    points.add(Point(-2.6399871139580795, 56.07881378366685))
-    points.add(Point(-2.6394077579689705, 56.07908919555142))
-    points.add(Point(-2.638764029092183, 56.07917301616904))
-    points.add(Point(-2.638485079912242, 56.07896945149566))
-    points.add(Point(-2.638570910429147, 56.078203080726844))
-    points.add(Point(-2.63878548672141, 56.077568418396))
-    points.add(Point(-2.6391931816767085, 56.077197195961084))
-    points.add(Point(-2.6399441986996273, 56.07675411934114))
-    points.add(Point(-2.6406523004640934, 56.076730169108444))
-    points.add(Point(-2.6406737580933193, 56.07632301287509))
-    points.add(Point(-2.6401802326211157, 56.075999679860494))
-    points.add(Point(-2.6402446055087943, 56.075844000034046))
-    points.add(Point(-2.640416266542604, 56.07578412301025))
-    points.add(Point(-2.6408883343855822, 56.075808073830935))
-    points.add(Point(-2.6417680971838577, 56.076239186057734))
-    points.add(Point(-2.642197249768383, 56.076251161328514))
-    points.add(Point(-2.6428409786451708, 56.07661041772168))
-    points.add(Point(-2.643077012566659, 56.077125346044475))
+    val points = PointCollection(wgs84).apply {
+      //add points to the point collection
+      add(Point(-2.643077012566659, 56.077125346044475))
+      add(Point(-2.6428195210159444, 56.07717324600376))
+      add(Point(-2.6425405718360033, 56.07774804087097))
+      add(Point(-2.6427122328698127, 56.077927662508635))
+      add(Point(-2.642454741319098, 56.07829887790651))
+      add(Point(-2.641853927700763, 56.078526395253725))
+      add(Point(-2.6409741649024867, 56.078801809192434))
+      add(Point(-2.6399871139580795, 56.07881378366685))
+      add(Point(-2.6394077579689705, 56.07908919555142))
+      add(Point(-2.638764029092183, 56.07917301616904))
+      add(Point(-2.638485079912242, 56.07896945149566))
+      add(Point(-2.638570910429147, 56.078203080726844))
+      add(Point(-2.63878548672141, 56.077568418396))
+      add(Point(-2.6391931816767085, 56.077197195961084))
+      add(Point(-2.6399441986996273, 56.07675411934114))
+      add(Point(-2.6406523004640934, 56.076730169108444))
+      add(Point(-2.6406737580933193, 56.07632301287509))
+      add(Point(-2.6401802326211157, 56.075999679860494))
+      add(Point(-2.6402446055087943, 56.075844000034046))
+      add(Point(-2.640416266542604, 56.07578412301025))
+      add(Point(-2.6408883343855822, 56.075808073830935))
+      add(Point(-2.6417680971838577, 56.076239186057734))
+      add(Point(-2.642197249768383, 56.076251161328514))
+      add(Point(-2.6428409786451708, 56.07661041772168))
+      add(Point(-2.643077012566659, 56.077125346044475))
+    }
+
     //create a polygon from the point collection
     return Polygon(points)
   }
