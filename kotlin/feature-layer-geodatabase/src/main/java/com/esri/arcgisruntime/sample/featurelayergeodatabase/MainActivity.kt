@@ -34,9 +34,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
   private val TAG =
     MainActivity::class.java.simpleName
-  // permission to read external storage
-  private val reqPermission =
-    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -44,14 +41,7 @@ class MainActivity : AppCompatActivity() {
     // create map and add to map view
     mapView.map = ArcGISMap(Basemap.createStreets())
     // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(
-        this@MainActivity,
-        reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      loadGeodatabase()
-    } else { // request permission
-      val requestCode = 2
-      ActivityCompat.requestPermissions(this@MainActivity, reqPermission, requestCode)
-    }
+    if (getPermissionStatus()) loadGeodatabase()
   }
 
   /**
@@ -87,6 +77,30 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this@MainActivity, "Geodatabase failed to load!", Toast.LENGTH_LONG).show()
         Log.e(TAG, "Geodatabase failed to load!" + geodatabase.loadError)
       }
+    }
+  }
+
+  /**
+   * Gets the status of permissions for API level 23+.
+   * If the permissions are not granted, requests the permissions.
+   *
+   * @return whether the permissions are granted
+   */
+  private fun getPermissionStatus(): Boolean {
+    // permission to read external storage
+    val reqPermission =
+      arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+    // For API level 23+ request permission at runtime
+    return if (ContextCompat.checkSelfPermission(
+        this@MainActivity,
+        reqPermission[0]
+      ) == PackageManager.PERMISSION_GRANTED
+    ) {
+      true
+    } else { // request permission
+      val requestCode = 2
+      ActivityCompat.requestPermissions(this@MainActivity, reqPermission, requestCode)
+      false
     }
   }
 

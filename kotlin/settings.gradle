@@ -13,6 +13,7 @@ include ':add-features-feature-service',
         ':display-kml',
         ':display-map',
         ':feature-layer-extrusion',
+        ':feature-layer-geodatabase',
         ':feature-layer-query',
         ':geodesic-operations',
         ':identify-layers',
@@ -32,4 +33,3 @@ include ':add-features-feature-service',
         ':viewshed-geoprocessing',
         ':viewshed-location',
         ':wmts-layer'
-include ':feature-layer-geodatabase'
