@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
       TextSymbol.HorizontalAlignment.RIGHT, TextSymbol.VerticalAlignment.TOP
     )
 
-    //define graphics from each geometry and symbol
+    // define graphics from each geometry and symbol
     val bassRockGraphic = Graphic(bassLocation, bassRockSymbol)
     val craigleithGraphic = Graphic(craigleithLocation, craigleithSymbol)
 
@@ -126,11 +126,11 @@ class MainActivity : AppCompatActivity() {
   private fun createRoute(): Graphic {
     // define a polyline for the boat trip
     val boatRoute: Polyline = getBoatTripGeometry()
-    //define a line symbol
+    // define a line symbol
     val lineSymbol =
       SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.rgb(128, 0, 128), 4.0f)
 
-    //create and return a new graphic
+    // create and return a new graphic
     return Graphic(boatRoute, lineSymbol)
   }
 
@@ -140,7 +140,7 @@ class MainActivity : AppCompatActivity() {
   private fun createNestingGround(): Graphic {
     // define the polygon for the nesting ground
     val nestingGround = getNestingGroundGeometry()
-    //define the fill symbol and outline
+    // define the fill symbol and outline
     val outlineSymbol =
       SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.rgb(0, 0, 128), 1.0f)
     val fillSymbol = SimpleFillSymbol(
@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity() {
       outlineSymbol
     )
 
-    //create and return a new graphic
+    // create and return a new graphic
     return Graphic(nestingGround, fillSymbol)
   }
 
@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity() {
   private fun getBoatTripGeometry(): Polyline {
     // a new point collection to make up the polyline
     val boatPositions = PointCollection(wgs84).apply {
-      //add positions to the point collection
+      // add positions to the point collection
       add(Point(-2.718479122792677, 56.06147084563517))
       add(Point(-2.719680750046392, 56.06147084563517))
       add(Point(-2.722084004553823, 56.06214171205971))
