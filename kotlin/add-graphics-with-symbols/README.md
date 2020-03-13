@@ -2,7 +2,7 @@
 
 Use a symbol style to display a graphic on a graphics overlay.
 
-![Add Graphics with Symbols App](add-graphics-with-symbols.png)
+![Image of Add graphics with symbols](add-graphics-with-symbols.png)
 
 ## Use case
 
@@ -15,9 +15,9 @@ Pan and zoom around the map. Observe the graphics on the map.
 ## How it works
 
 1. Create a `GraphicsOverlay` and add it to the `MapView`.
-1. Create a `Symbol` such as `SimpleMarkerSymbol`, `SimpleLineSymbol` or `SimpleFillSymbol`.
-1. Create a `Graphic`, specifying a `Geometry` and a `Symbol`.
-1. Add the `Graphic` to the `GraphicsOverlay`.
+2. Create a `Symbol` such as `SimpleMarkerSymbol`, `SimpleLineSymbol` or `SimpleFillSymbol`.
+3. Create a `Graphic`, specifying a `Geometry` and a `Symbol`.
+4. Add the `Graphic` to the `GraphicsOverlay`.
 
 ## Relevant API
 

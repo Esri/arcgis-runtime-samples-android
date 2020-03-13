@@ -72,6 +72,8 @@ class MainActivity : AppCompatActivity() {
 
   /**
    * Create Graphics for some points.
+   *
+   * @return a new graphic
    */
   private fun createBuoyGraphics(): Array<Graphic> {
     // define the buoy locations
@@ -95,6 +97,8 @@ class MainActivity : AppCompatActivity() {
 
   /**
    * Create graphics which display text at specific locations.
+   *
+   * @return a new graphic
    */
   private fun createTextGraphics(): Array<Graphic> {
     // create a point geometry
@@ -122,6 +126,8 @@ class MainActivity : AppCompatActivity() {
 
   /**
    * Create a graphic which displays a polyline.
+   *
+   * @return a new graphic
    */
   private fun createRoute(): Graphic {
     // define a polyline for the boat trip
@@ -136,6 +142,8 @@ class MainActivity : AppCompatActivity() {
 
   /**
    * Create a graphic which displays a polygon.
+   *
+   * @return a new graphic
    */
   private fun createNestingGround(): Graphic {
     // define the polygon for the nesting ground
