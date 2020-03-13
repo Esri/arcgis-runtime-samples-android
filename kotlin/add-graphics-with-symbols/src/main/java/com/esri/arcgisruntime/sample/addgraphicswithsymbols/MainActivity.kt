@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     mapView.apply {
       // create a map with the BasemapType Oceans and display it in this view
       map = ArcGISMap(Basemap.Type.OCEANS, 56.075844, -2.681572, 11)
-      //add the overlay to the map view
+      // add the overlay to the map view
       graphicsOverlays.add(graphicsOverlay)
     }
 
