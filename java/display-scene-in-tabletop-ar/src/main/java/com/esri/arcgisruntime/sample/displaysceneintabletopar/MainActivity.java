@@ -22,14 +22,14 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.GeodeticCurveType;
@@ -131,6 +131,8 @@ public class MainActivity extends AppCompatActivity {
           .isEmpty()) {
         // get a reference to the first scene in the mobile scene package, which is of a section of philadelphia
         ArcGISScene philadelphiaScene = mobileScenePackage.getScenes().get(0);
+        // set the clipping distance for the scene
+        mArView.setClippingDistance(300);
         // add the scene to the AR view's scene view
         mArView.getSceneView().setScene(philadelphiaScene);
         // set the base surface to fully opaque
@@ -167,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
       double width = GeometryEngine
           .lengthGeodetic(layerExtent, new LinearUnit(LinearUnitId.METERS), GeodeticCurveType.GEODESIC);
       // set the translation factor based on scene content width and desired physical size
-      mArView.setTranslationFactor(width / plane.getExtentX());
+      mArView.setTranslationFactor(width *.25 / plane.getExtentX());
       // find the center point of the scene content
       Point centerPoint = layerExtent.getCenter();
       // find the altitude of the surface at the center
