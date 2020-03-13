@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
     val craigleithLocation =
       Point(-2.720324, 56.073569, wgs84)
 
-    //create text symbols
+    // create text symbols
     val bassRockSymbol = TextSymbol(
       10.0f, getString(R.string.bassrock), Color.rgb(0, 0, 230),
       TextSymbol.HorizontalAlignment.LEFT, TextSymbol.VerticalAlignment.BOTTOM
@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
    * Create a graphic which displays a polyline.
    */
   private fun createRoute(): Graphic {
-    //define a polyline for the boat trip
+    // define a polyline for the boat trip
     val boatRoute: Polyline = getBoatTripGeometry()
     //define a line symbol
     val lineSymbol =
@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity() {
    * Create a graphic which displays a polygon.
    */
   private fun createNestingGround(): Graphic {
-    //define the polygon for the nesting ground
+    // define the polygon for the nesting ground
     val nestingGround = getNestingGroundGeometry()
     //define the fill symbol and outline
     val outlineSymbol =
@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
    * @return a new polyline
    */
   private fun getBoatTripGeometry(): Polyline {
-    //a new point collection to make up the polyline
+    // a new point collection to make up the polyline
     val boatPositions = PointCollection(wgs84).apply {
       //add positions to the point collection
       add(Point(-2.718479122792677, 56.06147084563517))
@@ -221,7 +221,7 @@ class MainActivity : AppCompatActivity() {
       add(Point(-2.718307461756433, 56.06147084563517))
     }
 
-    //create the polyline from the point collection
+    // create the polyline from the point collection
     return Polyline(boatPositions)
   }
 
@@ -232,7 +232,7 @@ class MainActivity : AppCompatActivity() {
    */
   private fun getNestingGroundGeometry(): Polygon { //a new point collection to make up the polygon
     val points = PointCollection(wgs84).apply {
-      //add points to the point collection
+      // add points to the point collection
       add(Point(-2.643077012566659, 56.07712534604447))
       add(Point(-2.642819521015944, 56.07717324600376))
       add(Point(-2.642540571836003, 56.07774804087097))
@@ -260,7 +260,7 @@ class MainActivity : AppCompatActivity() {
       add(Point(-2.643077012566659, 56.07712534604447))
     }
 
-    //create a polygon from the point collection
+    // create a polygon from the point collection
     return Polygon(points)
   }
 
