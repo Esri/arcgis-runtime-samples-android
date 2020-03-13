@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
     // create a map with a web mercator basemap
-    ArcGISMap map = new ArcGISMap(SpatialReference.create(3857));
+    ArcGISMap map = new ArcGISMap(SpatialReferences.getWebMercator());
     map.setBasemap(Basemap.createNationalGeographic());
 
     // set the map to be displayed in this view
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         Point originalPoint = mMapView.screenToLocation(clickedLocation);
         inputPointGraphic.setGeometry(originalPoint);
         // project the web mercator point to WGS84 (WKID 4236)
-        Point projectedPoint = (Point) GeometryEngine.project(originalPoint, SpatialReference.create(4236));
+        Point projectedPoint = (Point) GeometryEngine.project(originalPoint, SpatialReferences.getWgs84());
 
         // show the original and projected point coordinates in a callout from the graphic
         String ox = decimalFormat.format(originalPoint.getX());
