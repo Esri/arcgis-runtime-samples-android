@@ -24,6 +24,7 @@ include ':add-features-feature-service',
         ':perform-spatial-operations',
         ':portal-user-info',
         ':raster-function-service',
+        ':raster-layer-file',
         ':raster-rendering-rule',
         ':scene-layer',
         ':set-min-max-scale',
@@ -34,4 +35,3 @@ include ':add-features-feature-service',
         ':viewshed-geoprocessing',
         ':viewshed-location',
         ':wmts-layer'
-include ':raster-layer-file'

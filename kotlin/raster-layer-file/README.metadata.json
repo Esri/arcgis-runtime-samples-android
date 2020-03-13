@@ -1,0 +1,25 @@
+{
+    "category": "Layers",
+    "description": "Create and use a raster layer made from a local raster file.",
+    "ignore": false,
+    "images": [
+        "raster-layer-file.png"
+    ],
+    "keywords": [
+        "data",
+        "image",
+        "import",
+        "layer",
+        "raster",
+        "visualization"
+    ],
+    "redirect_from": "/android/latest/sample-code/raster-layer-file.htm",
+    "relevant_apis": [
+        "Raster",
+        "RasterLayer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/rasterlayerfile/MainActivity.kt"
+    ],
+    "title": "Raster layer (file)"
+}
