@@ -230,7 +230,8 @@ class MainActivity : AppCompatActivity() {
    *
    * @return a new polygon
    */
-  private fun getNestingGroundGeometry(): Polygon { //a new point collection to make up the polygon
+  private fun getNestingGroundGeometry(): Polygon {
+    // a new point collection to make up the polygon
     val points = PointCollection(wgs84).apply {
       // add points to the point collection
       add(Point(-2.643077012566659, 56.07712534604447))
