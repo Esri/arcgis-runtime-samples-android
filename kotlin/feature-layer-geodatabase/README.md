@@ -34,7 +34,7 @@ Pan and zoom around the map. View the data loaded from the geodatabase.
 
 Link | Local Location
 ---------|-------|
-|[Los Angeles Trailheads](https://www.arcgis.com/home/item.html?id=2b0f9e17105847809dfeb04e3cad69e0)| `<sdcard>`/Android/data/com.esri.arcgisruntime.sample.featurelayergeodatabase/files/LA_Trails.geodatabase|
+|[Los Angeles Trailheads](https://www.arcgis.com/home/item.html?id=2b0f9e17105847809dfeb04e3cad69e0)| `/Android/data/com.esri.arcgisruntime.sample.featurelayergeodatabase/files/LA_Trails.geodatabase|
 
 ## About the data
 
