@@ -25,17 +25,16 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.ArcGISRuntimeException;
 import com.esri.arcgisruntime.geometry.DatumTransformation;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
@@ -50,6 +49,7 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
     if (mArcGISMap.getLoadStatus() != LoadStatus.LOADED)
       return;
 
-    File rootDirectory = getExternalFilesDir(null);
+    File rootDirectory = Environment.getExternalStorageDirectory();
 
     // NOTE: You must update this resource value if files are stored in a different location on your device.
     //[DocRef: Name=Set projection engine directory, Category=Fundamentals, Topic=Spatial references, RemoveChars=getResources().getString(R.string.projection_engine_location), ReplaceChars="/ArcGIS/samples/PEData"]
