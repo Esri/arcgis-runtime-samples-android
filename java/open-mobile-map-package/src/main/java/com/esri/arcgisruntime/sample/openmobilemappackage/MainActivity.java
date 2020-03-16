@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     // get sdcard resource name
-    extStorDir = Environment.getExternalStorageDirectory();
+    extStorDir = getExternalFilesDir(null);
     // get the directory
     extSDCardDirName = this.getResources().getString(R.string.config_data_sdcard_offline_dir);
     // get mobile map package filename

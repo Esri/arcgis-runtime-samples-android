@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create path to local geodatabase
     String path =
-        Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir)
+        getExternalFilesDir(null) + getString(R.string.config_data_sdcard_offline_dir)
             + getString(R.string.config_geodb_name);
 
     // create a new geodatabase from local path

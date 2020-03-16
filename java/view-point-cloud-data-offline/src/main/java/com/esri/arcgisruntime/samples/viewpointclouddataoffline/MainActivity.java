@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
   private void createPointCloudLayer() {
     // Add a PointCloudLayer to the scene by passing the URI of the scene layer package to the constructor
     PointCloudLayer pointCloudLayer = new PointCloudLayer(
-        Environment.getExternalStorageDirectory() + getString(R.string.scene_layer_package_location));
+        getExternalFilesDir(null) + getString(R.string.scene_layer_package_location));
 
     // Add a listener to perform operations when the load status of the PointCloudLayer changes
     pointCloudLayer.addLoadStatusChangedListener(loadStatusChangedEvent -> {

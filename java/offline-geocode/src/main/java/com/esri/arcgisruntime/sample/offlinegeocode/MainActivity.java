@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void setupOfflineMapGeocode() {
     // load the tile cache from local storage
-    TileCache tileCache = new TileCache(Environment.getExternalStorageDirectory() + getString(R.string.san_diego_tpk));
+    TileCache tileCache = new TileCache(getExternalFilesDir(null) + getString(R.string.san_diego_tpk));
     // use the tile cache extent to set the view point
     tileCache.addDoneLoadingListener(() -> mMapView.setViewpoint(new Viewpoint(tileCache.getFullExtent())));
     // create a tiled layer and add it to as the base map
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     mReverseGeocodeParameters.setMaxResults(1);
     // load the locator task from external storage
     mLocatorTask = new LocatorTask(
-        Environment.getExternalStorageDirectory() + getResources().getString(R.string.san_diego_loc));
+        getExternalFilesDir(null) + getResources().getString(R.string.san_diego_loc));
     mLocatorTask.loadAsync();
   }
 

@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
    */
   private String buildRasterPath(String filename) {
     // get sdcard resource name
-    File extStorDir = Environment.getExternalStorageDirectory();
+    File extStorDir = getExternalFilesDir(null);
     // get the directory
     String extSDCardDirName = this.getResources().getString(R.string.raster_folder);
     // create the full path to the raster file

@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
     if (mArcGISMap.getLoadStatus() != LoadStatus.LOADED)
       return;
 
-    File rootDirectory = Environment.getExternalStorageDirectory();
+    File rootDirectory = getExternalFilesDir(null);
 
     // NOTE: You must update this resource value if files are stored in a different location on your device.
     //[DocRef: Name=Set projection engine directory, Category=Fundamentals, Topic=Spatial references, RemoveChars=getResources().getString(R.string.projection_engine_location), ReplaceChars="/ArcGIS/samples/PEData"]

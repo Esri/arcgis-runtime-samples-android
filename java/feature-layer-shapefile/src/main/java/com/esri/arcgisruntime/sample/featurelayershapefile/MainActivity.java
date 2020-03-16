@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
   private void featureLayerShapefile() {
     // load the shapefile with a local path
     ShapefileFeatureTable shapefileFeatureTable = new ShapefileFeatureTable(
-        Environment.getExternalStorageDirectory() + getString(R.string.shapefile_path));
+        getExternalFilesDir(null) + getString(R.string.shapefile_path));
 
     shapefileFeatureTable.loadAsync();
     shapefileFeatureTable.addDoneLoadingListener(() -> {

@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Get the full path to the local GeoPackage
     String geoPackagePath =
-        Environment.getExternalStorageDirectory() + getString(R.string.geopackage_folder) + getString(R.string.aurora_co_gpkg);
+        getExternalFilesDir(null) + getString(R.string.geopackage_folder) + getString(R.string.aurora_co_gpkg);
     Log.d(TAG, geoPackagePath);
 
     // Open the GeoPackage

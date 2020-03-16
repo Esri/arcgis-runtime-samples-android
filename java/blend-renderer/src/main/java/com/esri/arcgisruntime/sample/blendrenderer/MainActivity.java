@@ -22,7 +22,6 @@ import java.util.Collections;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -105,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
    */
   private String buildRasterPath(String filename) {
     // get sdcard resource name
-    File extStorDir = Environment.getExternalStorageDirectory();
+    File extStorDir = getExternalFilesDir(null);
     // get the directory
     String extSDCardDirName =
         this.getResources().getString(R.string.data_sdcard_offline_dir);

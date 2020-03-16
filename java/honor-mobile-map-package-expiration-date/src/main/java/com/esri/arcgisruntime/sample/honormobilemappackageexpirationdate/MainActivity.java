@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void loadMobileMapPackage() {
     MobileMapPackage mobileMapPackage = new MobileMapPackage(
-        Environment.getExternalStorageDirectory() + getString(R.string.path_to_expired_mmpk));
+        getExternalFilesDir(null) + getString(R.string.path_to_expired_mmpk));
 
     // wait for the map package to load
     mobileMapPackage.addDoneLoadingListener(() -> {

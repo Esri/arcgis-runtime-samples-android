@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     File root;
     File file = null;
     String fileName = "map-export-image" + System.currentTimeMillis() + ".png";
-    root = Environment.getExternalStorageDirectory();
+    root = getExternalFilesDir(null);
     File fileDir = new File(root.getAbsolutePath() + "/ArcGIS Export/");
     boolean isDirectoryCreated = fileDir.exists();
     if (!isDirectoryCreated) {

@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
     // add a ArcGISTiledElevationSource to the scene by passing the URI of the local tile package to the constructor
     with(
       ArcGISTiledElevationSource(
-        Environment.getExternalStorageDirectory().toString() + getString(R.string.local_tile_package_location)
+        getExternalFilesDir(null) + getString(R.string.local_tile_package_location)
       )
     ) {
       // add a listener to perform operations when the load status of the ArcGISTiledElevationSource changes

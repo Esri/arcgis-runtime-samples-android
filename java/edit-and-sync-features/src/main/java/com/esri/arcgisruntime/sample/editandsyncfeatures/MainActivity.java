@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
   private void loadTileCache() {
     // use local tile package for the base map
     TileCache sanFranciscoTileCache = new TileCache(
-        Environment.getExternalStorageDirectory() + getString(R.string.san_francisco_tpk));
+        getExternalFilesDir(null) + getString(R.string.san_francisco_tpk));
     ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(sanFranciscoTileCache);
     final ArcGISMap map = new ArcGISMap(new Basemap(tiledLayer));
     mMapView.setMap(map);

@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
   private boolean saveFileToExternalStorage() {
 
     //build paths
-    mArcGISTempFolderPath = Environment.getExternalStorageDirectory() + File.separator + this.getResources()
+    mArcGISTempFolderPath = getExternalFilesDir(null) + File.separator + this.getResources()
         .getString(R.string.pin_blank_orange_folder_name);
     mPinBlankOrangeFilePath =
         mArcGISTempFolderPath + File.separator + this.getResources().getString(R.string.pin_blank_orange_file_name);

@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     // add a KML layer from a KML dataset with a KML tour
     KmlDataset kmlDataset = new KmlDataset(
-        Environment.getExternalStorageDirectory() + getString(R.string.kml_tour_path));
+        getExternalFilesDir(null) + getString(R.string.kml_tour_path));
     KmlLayer kmlLayer = new KmlLayer(kmlDataset);
     mSceneView.getScene().getOperationalLayers().add(kmlLayer);
 

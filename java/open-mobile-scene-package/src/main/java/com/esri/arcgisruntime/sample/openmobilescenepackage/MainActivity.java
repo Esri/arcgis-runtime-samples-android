@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void loadMobileScenePackage() {
 
-    MobileScenePackage mobileScenePackage = new MobileScenePackage(Environment.getExternalStorageDirectory() + getString(R.string.mspk_path));
+    MobileScenePackage mobileScenePackage = new MobileScenePackage(getExternalFilesDir(null) + getString(R.string.mspk_path));
     mobileScenePackage.addDoneLoadingListener(() -> {
       if (mobileScenePackage.getLoadStatus() == LoadStatus.LOADED && !mobileScenePackage.getScenes().isEmpty()) {
         mSceneView.setScene(mobileScenePackage.getScenes().get(0));

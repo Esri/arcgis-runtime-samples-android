@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create a shapefile feature table from the local data
     ShapefileFeatureTable shapefileFeatureTable = new ShapefileFeatureTable(
-        Environment.getExternalStorageDirectory() + getString(R.string.shapefile_folder) + getString(R.string.subdivisions_shp));
+        getExternalFilesDir(null) + getString(R.string.shapefile_folder) + getString(R.string.subdivisions_shp));
 
     // use the shapefile feature table to create a feature layer
     FeatureLayer featureLayer = new FeatureLayer(shapefileFeatureTable);

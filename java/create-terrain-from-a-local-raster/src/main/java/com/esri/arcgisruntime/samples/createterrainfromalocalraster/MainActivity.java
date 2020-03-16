@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
   private void createRasterElevationSource() {
     // raster package file paths
     ArrayList<String> filePaths = new ArrayList<>();
-    filePaths.add(Environment.getExternalStorageDirectory() + getString(R.string.raster_package_location));
+    filePaths.add(getExternalFilesDir(null) + getString(R.string.raster_package_location));
 
     try {
       // add an elevation source to the scene by passing the URI of the raster package to the constructor

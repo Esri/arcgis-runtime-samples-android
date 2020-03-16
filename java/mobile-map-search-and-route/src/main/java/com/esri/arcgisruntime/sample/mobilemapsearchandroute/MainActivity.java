@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private String buildMMPkPath() {
     // get sdcard resource name
-    File extStorDir = Environment.getExternalStorageDirectory();
+    File extStorDir = getExternalFilesDir(null);
     // get the directory
     String extSDCardDirName =
         this.getResources().getString(R.string.config_data_sdcard_offline_dir);

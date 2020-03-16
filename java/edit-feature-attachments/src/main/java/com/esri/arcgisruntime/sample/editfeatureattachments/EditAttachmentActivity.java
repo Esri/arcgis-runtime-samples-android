@@ -192,7 +192,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
                     Drawable d = Drawable.createFromStream(listenableFuture.get(), fileName);
                     // create a bitmap from drawable
                     Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
-                    File root = Environment.getExternalStorageDirectory();
+                    File root = getExternalFilesDir(null);
                     File fileDir = new File(root.getAbsolutePath() + "/ArcGIS/Attachments");
                     // create folder /ArcGIS/Attachments in external storage
                     boolean isDirectoryCreated = fileDir.exists();

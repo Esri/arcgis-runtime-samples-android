@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
   private void applyScheduledUpdate() {
 
     // this is the original mmpk, not updated by the scheduled update
-    File originalMmpk = new File(Environment.getExternalStorageDirectory() + getString(R.string.canyonlands_mmpk_path));
+    File originalMmpk = new File(getExternalFilesDir(null) + getString(R.string.canyonlands_mmpk_path));
     // copy of the mmpk file which will have the update applied to it
     mCopyOfMmpk = new File(getCacheDir() + getString(R.string.canyonlands_folder));
 
