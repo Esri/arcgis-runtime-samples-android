@@ -1,10 +1,12 @@
 package com.esri.arcgisruntime.sample.generateofflinemap
 
+import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.concurrent.Job
@@ -22,7 +24,9 @@ import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapJob
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapParameters
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.dialog_layout.*
 import java.io.File
+import java.util.zip.Inflater
 
 
 class MainActivity : AppCompatActivity() {
@@ -109,15 +113,6 @@ class MainActivity : AppCompatActivity() {
    * Use the generate offline map job to generate an offline map.
    */
   private fun generateOfflineMap() {
-    // create a progress dialog to show download progress
-    val progressDialog = ProgressDialog(this)
-    progressDialog.setTitle("Generate Offline Map Job")
-    progressDialog.setMessage("Taking map offline...")
-    progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
-    progressDialog.isIndeterminate = false
-    progressDialog.progress = 0
-      progressDialog.show()
-
       // delete any offline map already in the cache
       val tempDirectoryPath: String =
         cacheDir.toString() + File.separator.toString() + "offlineMap"
@@ -141,6 +136,13 @@ class MainActivity : AppCompatActivity() {
       val job: GenerateOfflineMapJob =
         offlineMapTask.generateOfflineMap(generateOfflineMapParameters, tempDirectoryPath)
 
+      val dialog = createProgressDialog(job)
+      dialog.show()
+      job.addProgressChangedListener {
+        dialog.progressBar.progress = job.progress
+        dialog.progressTextView.text = "${job.progress}%"
+      }
+
       // replace the current map with the result offline map when the job finishes
       job.addJobDoneListener {
         if (job.status == Job.Status.SUCCEEDED) {
@@ -155,15 +157,35 @@ class MainActivity : AppCompatActivity() {
           Toast.makeText(this, error, Toast.LENGTH_LONG).show()
           Log.e(TAG, error)
         }
-        progressDialog.dismiss()
+        dialog.dismiss()
       }
       // show the job's progress with the progress dialog
-      job.addProgressChangedListener{ progressDialog.progress = job.progress }
+      job.addProgressChangedListener{ dialog.progressBar.progress = job.progress }
 
       // start the job
       job.start()
+  }
 
-
+  /**
+   * Create a progress dialog box for tracking the generate offline map job.
+   *
+   * @param job the generate offline map job progress to be tracked
+   * @return an AlertDialog set with the dialog layout view
+   */
+  private fun createProgressDialog(job: GenerateOfflineMapJob): AlertDialog {
+    val builder = AlertDialog.Builder(this@MainActivity).apply {
+      setTitle("Exporting tiles...")
+      // provide a cancel button on the dialog
+      setNeutralButton("Cancel") { _, _ ->
+        job.cancel()
+      }
+      setCancelable(false)
+      setView(
+        LayoutInflater.from(this@MainActivity)
+        .inflate(R.layout.dialog_layout, null)
+      )
+    }
+    return builder.create()
   }
 
   /**
