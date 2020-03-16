@@ -16,6 +16,7 @@ include ':add-features-feature-service',
         ':export-tiles',
         ':feature-layer-extrusion',
         ':feature-layer-query',
+        ':generate-offline-map',
         ':geodesic-operations',
         ':identify-layers',
         ':integrated-mesh-layer',
@@ -34,4 +35,3 @@ include ':add-features-feature-service',
         ':viewshed-geoprocessing',
         ':viewshed-location',
         ':wmts-layer'
-include ':generate-offline-map'
