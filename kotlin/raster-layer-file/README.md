@@ -34,11 +34,11 @@ See the topic [What is raster data?](http://desktop.arcgis.com/en/arcmap/10.3/ma
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1 & 2.
 4. Execute the following command:
 
-  `adb push Shasta.tif /sdcard/Android/data/com.esri.arcgisruntime.sample.rasterlayerfile/files/raster-file/Shasta.tif`
+  `adb push Shasta.tif /Android/data/com.esri.arcgisruntime.sample.rasterlayerfile/files/raster-file/Shasta.tif`
 
 Link | Local Location
 ---------|-------|
-|[raster-file.zip](https://arcgisruntime.maps.arcgis.com/home/item.html?id=7c4c679ab06a4df19dc497f577f111bd)| `<sdcard>`/Android/data/com.esri.arcgisruntime.sample.rasterlayerfile/files/raster-file/Shasta.tif |
+|[raster-file.zip](https://arcgisruntime.maps.arcgis.com/home/item.html?id=7c4c679ab06a4df19dc497f577f111bd)| /Android/data/com.esri.arcgisruntime.sample.rasterlayerfile/files/raster-file/Shasta.tif |
 
 ## Tags
 

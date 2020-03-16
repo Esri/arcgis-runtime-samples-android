@@ -17,6 +17,7 @@ package com.esri.arcgisruntime.sample.rasterlayerfile
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.layers.RasterLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
@@ -26,7 +27,9 @@ import com.esri.arcgisruntime.raster.Raster
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
   private val TAG = MainActivity::class.java.simpleName
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
@@ -35,8 +38,7 @@ class MainActivity : AppCompatActivity() {
     // add the map to a map view
     mapView.map = map
     // create a raster from a local raster filepath
-    val raster =
-      Raster(getExternalFilesDir(null)?.path + getString(R.string.raster_file_path))
+    val raster = Raster(getExternalFilesDir(null)?.path + getString(R.string.raster_file_path))
     // create a raster layer
     val rasterLayer = RasterLayer(raster)
     // add the raster as an operational layer
@@ -50,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         )
       } else {
         Log.e(TAG, "Error loading raster layer: ${rasterLayer.loadError.message}")
+        Toast.makeText(this, "Failed to load raster file from storage", Toast.LENGTH_LONG).show()
       }
     }
   }
