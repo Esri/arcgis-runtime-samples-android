@@ -26,17 +26,16 @@ import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
@@ -133,8 +132,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void loadTileCache() {
     // use local tile package for the base map
-    TileCache sanFranciscoTileCache = new TileCache(
-        Environment.getExternalStorageDirectory() + getString(R.string.san_francisco_tpk));
+    TileCache sanFranciscoTileCache = new TileCache(getExternalFilesDir(null) + getString(R.string.san_francisco_tpk));
     ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(sanFranciscoTileCache);
     final ArcGISMap map = new ArcGISMap(new Basemap(tiledLayer));
     mMapView.setMap(map);

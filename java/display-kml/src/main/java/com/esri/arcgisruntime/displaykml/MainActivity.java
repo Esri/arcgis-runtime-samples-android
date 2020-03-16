@@ -19,17 +19,16 @@ package com.esri.arcgisruntime.displaykml;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.layers.KmlLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -125,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void changeSourceToFileExternalStorage() {
     // a data set made from data in external storage
-    KmlDataset kmlDataset = new KmlDataset(Environment.getExternalStorageDirectory() + getString(R.string.kml_path));
+    KmlDataset kmlDataset = new KmlDataset(getExternalFilesDir(null) + getString(R.string.kml_path));
 
     // a KML layer created from a local KML file
     KmlLayer kmlLayer = new KmlLayer(kmlDataset);

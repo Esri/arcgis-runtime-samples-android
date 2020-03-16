@@ -22,15 +22,14 @@ import java.util.Locale;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.mapping.ExpirationType;
 import com.esri.arcgisruntime.mapping.MobileMapPackage;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void loadMobileMapPackage() {
     MobileMapPackage mobileMapPackage = new MobileMapPackage(
-        Environment.getExternalStorageDirectory() + getString(R.string.path_to_expired_mmpk));
+        getExternalFilesDir(null) + getString(R.string.path_to_expired_mmpk));
 
     // wait for the map package to load
     mobileMapPackage.addDoneLoadingListener(() -> {

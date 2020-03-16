@@ -25,17 +25,16 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.layers.KmlLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -104,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
    */
   private void listKmlContents() {
     // load a KML dataset from a local KMZ file and show it as an operational layer
-    KmlDataset kmlDataset = new KmlDataset(Environment.getExternalStorageDirectory() + getString(R.string.kmz_data_path));
+    KmlDataset kmlDataset = new KmlDataset(getExternalFilesDir(null) + getString(R.string.kmz_data_path));
     KmlLayer kmlLayer = new KmlLayer(kmlDataset);
     mSceneView.getScene().getOperationalLayers().add(kmlLayer);
 

@@ -27,10 +27,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,8 +34,9 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
-import static com.esri.arcgisruntime.sample.mobilemapsearchandroute.R.layout.callout;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -64,6 +61,8 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters;
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult;
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask;
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop;
+
+import static com.esri.arcgisruntime.sample.mobilemapsearchandroute.R.layout.callout;
 
 /**
  * This class demonstrates offline functionality through the use of a mobile map package (mmpk).
@@ -190,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private String buildMMPkPath() {
     // get sdcard resource name
-    File extStorDir = Environment.getExternalStorageDirectory();
+    File extStorDir = getExternalFilesDir(null);
     // get the directory
     String extSDCardDirName =
         this.getResources().getString(R.string.config_data_sdcard_offline_dir);

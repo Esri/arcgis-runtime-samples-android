@@ -21,13 +21,12 @@ import java.io.File;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.layers.RasterLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private String buildRasterPath() {
     // get sdcard resource name
-    File extStorDir = Environment.getExternalStorageDirectory();
+    File extStorDir = getExternalFilesDir(null);
     // get the directory
     String extSDCardDirName =
         this.getResources().getString(R.string.raster_folder);

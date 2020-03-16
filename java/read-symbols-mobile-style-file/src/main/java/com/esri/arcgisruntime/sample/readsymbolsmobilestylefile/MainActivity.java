@@ -29,15 +29,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,6 +40,13 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
@@ -185,8 +184,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
     createMapViewOnTouchListener();
 
     // create a SymbolStyle by passing the location of the .stylx file in the constructor
-    mEmojiStyle = new SymbolStyle(
-        Environment.getExternalStorageDirectory() + getString(R.string.mobile_style_file_path));
+    mEmojiStyle = new SymbolStyle(getExternalFilesDir(null) + getString(R.string.mobile_style_file_path));
     // add a listener to run when the SymbolStyle has loaded
     mEmojiStyle.addDoneLoadingListener(() -> {
       if (mEmojiStyle.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {

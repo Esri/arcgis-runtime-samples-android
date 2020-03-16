@@ -20,16 +20,15 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.layers.AnnotationLayer;
 import com.esri.arcgisruntime.layers.AnnotationSublayer;
 import com.esri.arcgisruntime.layers.Layer;
@@ -70,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     // load the mobile map package
     MobileMapPackage mobileMapPackage = new MobileMapPackage(
-        Environment.getExternalStorageDirectory() + getString(R.string.gas_device_anno_mmpk_path));
+        getExternalFilesDir(null) + getString(R.string.gas_device_anno_mmpk_path));
     mobileMapPackage.loadAsync();
     mobileMapPackage.addDoneLoadingListener(() -> {
       if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED) {

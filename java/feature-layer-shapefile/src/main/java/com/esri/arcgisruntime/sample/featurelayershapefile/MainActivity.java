@@ -19,14 +19,13 @@ package com.esri.arcgisruntime.sample.featurelayershapefile;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.data.ShapefileFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
   private void featureLayerShapefile() {
     // load the shapefile with a local path
     ShapefileFeatureTable shapefileFeatureTable = new ShapefileFeatureTable(
-        Environment.getExternalStorageDirectory() + getString(R.string.shapefile_path));
+        getExternalFilesDir(null) + getString(R.string.shapefile_path));
 
     shapefileFeatureTable.loadAsync();
     shapefileFeatureTable.addDoneLoadingListener(() -> {

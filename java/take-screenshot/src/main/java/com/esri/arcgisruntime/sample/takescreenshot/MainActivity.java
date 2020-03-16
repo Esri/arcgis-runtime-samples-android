@@ -27,16 +27,16 @@ import android.graphics.Bitmap;
 import android.media.MediaActionSound;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     File root;
     File file = null;
     String fileName = "map-export-image" + System.currentTimeMillis() + ".png";
-    root = Environment.getExternalStorageDirectory();
+    root = getExternalFilesDir(null);
     File fileDir = new File(root.getAbsolutePath() + "/ArcGIS Export/");
     boolean isDirectoryCreated = fileDir.exists();
     if (!isDirectoryCreated) {

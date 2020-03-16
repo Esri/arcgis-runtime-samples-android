@@ -21,15 +21,14 @@ import java.util.List;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.GeodeticCurveType;
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
   private void loadSceneFromPackage(Plane plane) {
     // create a mobile scene package from a path a local .mspk
     MobileScenePackage mobileScenePackage = new MobileScenePackage(
-        Environment.getExternalStorageDirectory() + getString(
+        getExternalFilesDir(null) + getString(
             R.string.philadelphia_mobile_scene_package_path));
     // load the mobile scene package
     mobileScenePackage.loadAsync();

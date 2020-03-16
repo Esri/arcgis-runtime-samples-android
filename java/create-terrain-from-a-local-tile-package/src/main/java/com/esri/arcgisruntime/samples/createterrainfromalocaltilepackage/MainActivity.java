@@ -19,15 +19,14 @@ package com.esri.arcgisruntime.samples.createterrainfromalocaltilepackage;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
   private void createTiledElevationSource() {
     // add a ArcGISTiledElevationSource to the scene by passing the URI of the local tile package to the constructor
     ArcGISTiledElevationSource tiledElevationSource = new ArcGISTiledElevationSource(
-        Environment.getExternalStorageDirectory() + getString(R.string.local_tile_package_location));
+        getExternalFilesDir(null) + getString(R.string.local_tile_package_location));
 
     // add a listener to perform operations when the load status of the ArcGISTiledElevationSource changes
     tiledElevationSource.addLoadStatusChangedListener(loadStatusChangedEvent -> {
