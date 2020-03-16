@@ -30,14 +30,13 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.geometry.Multipoint;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
@@ -82,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create symbol dictionary from specification
     DictionarySymbolStyle symbolDictionary = DictionarySymbolStyle
-        .createFromFile(Environment.getExternalStorageDirectory() + getString(R.string.mil2525d_stylx));
+        .createFromFile(getExternalFilesDir(null) + getString(R.string.mil2525d_stylx));
 
     // tells graphics overlay how to render graphics with symbol dictionary attributes set
     DictionaryRenderer renderer = new DictionaryRenderer(symbolDictionary);

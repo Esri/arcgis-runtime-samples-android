@@ -24,16 +24,15 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.TileCache;
 import com.esri.arcgisruntime.geometry.Envelope;
@@ -161,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         .createDefaultExportTileCacheParametersAsync(viewToExtent(), minScale, maxScale);
     parametersFuture.addDoneListener(() -> {
       // create directory for file
-      File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.tile_cache_folder));
+      File file = new File(getExternalFilesDir(null), getString(R.string.tile_cache_folder));
       if (!file.exists()) {
         boolean dirCreated = file.mkdirs();
         if (dirCreated) {
@@ -176,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         // export tile cache to directory
         ExportTileCacheParameters parameters = parametersFuture.get();
         mExportTileCacheJob = mExportTileCacheTask.exportTileCache(parameters,
-            Environment.getExternalStorageDirectory() + getString(R.string.tile_cache_folder)
+            getExternalFilesDir(null) + getString(R.string.tile_cache_folder)
                 + getString(R.string.world_street_map_tpk));
       } catch (InterruptedException e) {
         Log.e(TAG, "TileCacheParameters interrupted: " + e.getMessage());

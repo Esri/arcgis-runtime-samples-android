@@ -19,14 +19,13 @@ package com.esri.arcgisruntime.sample.featurelayerdictionaryrenderer;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.data.Geodatabase;
 import com.esri.arcgisruntime.data.GeodatabaseFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -65,12 +64,12 @@ public class MainActivity extends AppCompatActivity {
   private void loadGeodatabaseSymbolDictionary() {
     // load geo-database from local location
     Geodatabase geodatabase = new Geodatabase(
-        Environment.getExternalStorageDirectory() + getString(R.string.militaryoverlay_geodatabase));
+        getExternalFilesDir(null) + getString(R.string.militaryoverlay_geodatabase));
     geodatabase.loadAsync();
 
     // render tells layer what symbols to apply to what features
     DictionarySymbolStyle symbolDictionary = DictionarySymbolStyle
-        .createFromFile(Environment.getExternalStorageDirectory() + getString(R.string.mil2525d_stylx));
+        .createFromFile(getExternalFilesDir(null) + getString(R.string.mil2525d_stylx));
     symbolDictionary.loadAsync();
 
     geodatabase.addDoneLoadingListener(() -> {

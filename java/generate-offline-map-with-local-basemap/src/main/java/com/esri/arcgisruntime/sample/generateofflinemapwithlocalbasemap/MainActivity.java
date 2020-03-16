@@ -23,15 +23,14 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Envelope;
@@ -158,8 +157,7 @@ public class MainActivity extends AppCompatActivity
         try {
           mGenerateOfflineMapParameters = generateOfflineMapParametersFuture.get();
           // define the samples directory file
-          File samplesDirectory = new File(
-              Environment.getExternalStorageDirectory() + getString(R.string.samples_directory));
+          File samplesDirectory = new File(getExternalFilesDir(null) + getString(R.string.samples_directory));
           // name of local basemap file as supplied by the map's author
           String localBasemapFileName = mGenerateOfflineMapParameters.getReferenceBasemapFilename();
           // check if the offline map parameters include reference to a basemap file
