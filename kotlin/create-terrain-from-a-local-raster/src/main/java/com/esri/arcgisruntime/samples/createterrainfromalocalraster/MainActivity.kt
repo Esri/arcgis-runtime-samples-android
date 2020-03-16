@@ -20,18 +20,18 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.RasterElevationSource
 import com.esri.arcgisruntime.mapping.view.Camera
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
+import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -58,7 +58,10 @@ class MainActivity : AppCompatActivity() {
   private fun createRasterElevationSource() {
     // raster package file paths
     val filePaths = ArrayList<String>()
-    filePaths.add(Environment.getExternalStorageDirectory().toString() + getString(R.string.raster_package_location))
+    filePaths.add(
+      Environment.getExternalStorageDirectory()
+        .toString() + getString(R.string.raster_package_location)
+    )
 
     try {
       // add an elevation source to the scene by passing the URI of the raster package to the constructor
@@ -71,7 +74,12 @@ class MainActivity : AppCompatActivity() {
             sceneView.scene.baseSurface.elevationSources.add(this)
           } else if (loadStatusChangedEvent.newLoadStatus == LoadStatus.FAILED_TO_LOAD) {
             // notify user that the elevation source has failed to load
-            logErrorToUser(getString(R.string.error_raster_elevation_source_load_failure_message, this.loadError))
+            logErrorToUser(
+              getString(
+                R.string.error_raster_elevation_source_load_failure_message,
+                this.loadError
+              )
+            )
           }
         }
 
@@ -80,7 +88,12 @@ class MainActivity : AppCompatActivity() {
       }
     } catch (e: IllegalArgumentException) {
       // catch exception thrown by RasterElevationSource when a file is invalid/not found
-      logErrorToUser(getString(R.string.error_raster_elevation_source_load_failure_message, e.message))
+      logErrorToUser(
+        getString(
+          R.string.error_raster_elevation_source_load_failure_message,
+          e.message
+        )
+      )
     }
   }
 
@@ -88,7 +101,11 @@ class MainActivity : AppCompatActivity() {
    * Request read external storage for API level 23+.
    */
   private fun requestReadPermission() {
-    if (ContextCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
+    if (ContextCompat.checkSelfPermission(
+        this,
+        permissions[0]
+      ) == PackageManager.PERMISSION_GRANTED
+    ) {
       createRasterElevationSource()
     } else {
       // request permission
@@ -99,7 +116,11 @@ class MainActivity : AppCompatActivity() {
   /**
    * Handle the permissions request response
    */
-  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+  override fun onRequestPermissionsResult(
+    requestCode: Int,
+    permissions: Array<String>,
+    grantResults: IntArray
+  ) {
     if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       createRasterElevationSource()
     } else {

@@ -1,27 +1,27 @@
 {
-    "category": "Analysis",
-    "description": "Perform a viewshed analysis from a defined vantage point.",
-    "ignore": false,
-    "images": [
-        "viewshed-location.png"
-    ],
-    "keywords": [
-        "visibility analysis",
-        "viewshed",
-        "Scene",
-        "3D",
-        "frustum"
-    ],
-    "redirect_from": "/android/latest/sample-code/viewshed-location.htm",
-    "relevant_apis": [
-        "AnalysisOverlay",
-        "ArcGISTiledElevationSource",
-        "ArcGISSceneLayer",
-        "LocationViewshed",
-        "Viewshed"
-    ],
-    "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/viewshedlocation/MainActivity.kt"
-    ],
-    "title": "Viewshed Location"
+  "category": "Analysis",
+  "description": "Perform a viewshed analysis from a defined vantage point.",
+  "ignore": false,
+  "images": [
+    "viewshed-location.png"
+  ],
+  "keywords": [
+    "visibility analysis",
+    "viewshed",
+    "Scene",
+    "3D",
+    "frustum"
+  ],
+  "redirect_from": "/android/latest/sample-code/viewshed-location.htm",
+  "relevant_apis": [
+    "AnalysisOverlay",
+    "ArcGISTiledElevationSource",
+    "ArcGISSceneLayer",
+    "LocationViewshed",
+    "Viewshed"
+  ],
+  "snippets": [
+    "src/main/java/com/esri/arcgisruntime/sample/viewshedlocation/MainActivity.kt"
+  ],
+  "title": "Viewshed Location"
 }
