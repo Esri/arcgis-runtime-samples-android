@@ -77,18 +77,17 @@ class MainActivity : AppCompatActivity() {
       setViewpoint(Viewpoint(40.0, -100.0, 100000000.0))
       // define the graphics overlay and add it to the map view
       graphicsOverlays.add(graphicsOverlay)
+      // add listener to handle screen taps
+      onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
+        override fun onSingleTapConfirmed(motionEvent: MotionEvent): Boolean {
+          identifyGraphic(motionEvent)
+          return true
+        }
+      }
     }
 
     // create the picture marker symbol to show address location
     createPinSymbol()
-
-    // add listener to handle screen taps
-    mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
-      override fun onSingleTapConfirmed(motionEvent: MotionEvent): Boolean {
-        identifyGraphic(motionEvent)
-        return true
-      }
-    }
 
     // populate the spinner list of address suggestions
     val examples = arrayOf("277 N Avenida Caballeros, Palm Springs, " +
