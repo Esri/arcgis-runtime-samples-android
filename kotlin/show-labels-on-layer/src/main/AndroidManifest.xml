@@ -11,9 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+<<<<<<< HEAD
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
+=======
+        <activity android:name=".MainActivity">
+>>>>>>> edee7cd257996c41f7a32176b3051e2cbb9f4a7e
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

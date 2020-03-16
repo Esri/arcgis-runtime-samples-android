@@ -23,7 +23,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.MobileMapPackage
-import java.io.File
 import kotlinx.android.synthetic.main.activity_main.*
 
 
