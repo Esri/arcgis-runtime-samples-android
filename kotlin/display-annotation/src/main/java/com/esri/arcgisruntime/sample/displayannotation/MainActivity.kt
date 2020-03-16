@@ -36,10 +36,12 @@ class MainActivity : AppCompatActivity() {
     mapView.map = ArcGISMap(Basemap.Type.LIGHT_GRAY_CANVAS, 55.882436, -2.725610, 13).apply {
       // add a feature layer from a feature service
       operationalLayers.add(
-          FeatureLayer(ServiceFeatureTable(getString(R.string.river_feature_service_url))))
+        FeatureLayer(ServiceFeatureTable(getString(R.string.river_feature_service_url)))
+      )
       // add an annotation layer from a feature service
       operationalLayers.add(
-          AnnotationLayer(getString(R.string.river_annotation_feature_service_url)))
+        AnnotationLayer(getString(R.string.river_annotation_feature_service_url))
+      )
     }
   }
 
