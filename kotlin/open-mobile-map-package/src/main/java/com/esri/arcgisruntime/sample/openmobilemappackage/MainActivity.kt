@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // access the mobile map package from the filesystem and load it into a MapView
-    loadMobileMapPackage(getExternalFilesDir(null)?.path + getString(R.string.yellowstone_mmpk))
+    loadMobileMapPackage(getExternalFilesDir(null)?.path?.path + getString(R.string.yellowstone_mmpk))
   }
 
   /**

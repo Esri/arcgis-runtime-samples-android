@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     // load the mobile map package
     MobileMapPackage mobileMapPackage = new MobileMapPackage(
-        getExternalFilesDir(null) + getString(R.string.gas_device_anno_mmpk_path));
+        getExternalFilesDir(null)?.path + getString(R.string.gas_device_anno_mmpk_path));
     mobileMapPackage.loadAsync();
     mobileMapPackage.addDoneLoadingListener(() -> {
       if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED) {

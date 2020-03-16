@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
   private void loadSceneFromPackage(Plane plane) {
     // create a mobile scene package from a path a local .mspk
     MobileScenePackage mobileScenePackage = new MobileScenePackage(
-        getExternalFilesDir(null) + getString(
+        getExternalFilesDir(null)?.path + getString(
             R.string.philadelphia_mobile_scene_package_path));
     // load the mobile scene package
     mobileScenePackage.loadAsync();

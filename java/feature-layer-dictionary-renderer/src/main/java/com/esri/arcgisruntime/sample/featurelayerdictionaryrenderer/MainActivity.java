@@ -65,12 +65,12 @@ public class MainActivity extends AppCompatActivity {
   private void loadGeodatabaseSymbolDictionary() {
     // load geo-database from local location
     Geodatabase geodatabase = new Geodatabase(
-        getExternalFilesDir(null) + getString(R.string.militaryoverlay_geodatabase));
+        getExternalFilesDir(null)?.path + getString(R.string.militaryoverlay_geodatabase));
     geodatabase.loadAsync();
 
     // render tells layer what symbols to apply to what features
     DictionarySymbolStyle symbolDictionary = DictionarySymbolStyle
-        .createFromFile(getExternalFilesDir(null) + getString(R.string.mil2525d_stylx));
+        .createFromFile(getExternalFilesDir(null)?.path + getString(R.string.mil2525d_stylx));
     symbolDictionary.loadAsync();
 
     geodatabase.addDoneLoadingListener(() -> {

@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         .createDefaultExportTileCacheParametersAsync(viewToExtent(), minScale, maxScale);
     parametersFuture.addDoneListener(() -> {
       // create directory for file
-      File file = new File(getExternalFilesDir(null), getString(R.string.tile_cache_folder));
+      File file = new File(getExternalFilesDir(null)?.path, getString(R.string.tile_cache_folder));
       if (!file.exists()) {
         boolean dirCreated = file.mkdirs();
         if (dirCreated) {
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         // export tile cache to directory
         ExportTileCacheParameters parameters = parametersFuture.get();
         mExportTileCacheJob = mExportTileCacheTask.exportTileCache(parameters,
-            getExternalFilesDir(null) + getString(R.string.tile_cache_folder)
+            getExternalFilesDir(null)?.path + getString(R.string.tile_cache_folder)
                 + getString(R.string.world_street_map_tpk));
       } catch (InterruptedException e) {
         Log.e(TAG, "TileCacheParameters interrupted: " + e.getMessage());

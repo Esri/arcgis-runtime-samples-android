@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
    */
   private fun changeSourceToFileExternalStorage() {
     // get the data set stored locally in device external storage
-    val file = getExternalFilesDir(null)?.path + getString(R.string.kml_path)
+    val file = getExternalFilesDir(null)?.path?.path + getString(R.string.kml_path)
     val kmlDataset = KmlDataset(file)
     // create a KML layer from the locally stored data set
     val kmlLayer = KmlLayer(kmlDataset)

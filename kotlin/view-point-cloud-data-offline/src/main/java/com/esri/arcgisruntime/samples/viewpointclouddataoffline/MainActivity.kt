@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
   private fun createPointCloudLayer() {
     // Add a PointCloudLayer to the scene by passing the URI of the scene layer package to the constructor
     val pointCloudLayer = PointCloudLayer(
-      getExternalFilesDir(null).toString() + getString(R.string.scene_layer_package_location)
+      getExternalFilesDir(null)?.path.toString() + getString(R.string.scene_layer_package_location)
     )
 
     // Add a listener to perform operations when the load status of the PointCloudLayer changes

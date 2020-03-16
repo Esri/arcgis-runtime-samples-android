@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create symbol dictionary from specification
     DictionarySymbolStyle symbolDictionary = DictionarySymbolStyle
-        .createFromFile(getExternalFilesDir(null) + getString(R.string.mil2525d_stylx));
+        .createFromFile(getExternalFilesDir(null)?.path + getString(R.string.mil2525d_stylx));
 
     // tells graphics overlay how to render graphics with symbol dictionary attributes set
     DictionaryRenderer renderer = new DictionaryRenderer(symbolDictionary);

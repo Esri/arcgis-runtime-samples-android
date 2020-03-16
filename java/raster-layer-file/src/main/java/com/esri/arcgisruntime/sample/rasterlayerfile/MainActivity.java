@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private String buildRasterPath() {
     // get sdcard resource name
-    File extStorDir = getExternalFilesDir(null);
+    File extStorDir = getExternalFilesDir(null)?.path;
     // get the directory
     String extSDCardDirName =
         this.getResources().getString(R.string.raster_folder);

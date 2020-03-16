@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
    */
   private void listKmlContents() {
     // load a KML dataset from a local KMZ file and show it as an operational layer
-    KmlDataset kmlDataset = new KmlDataset(getExternalFilesDir(null) + getString(R.string.kmz_data_path));
+    KmlDataset kmlDataset = new KmlDataset(getExternalFilesDir(null)?.path + getString(R.string.kmz_data_path));
     KmlLayer kmlLayer = new KmlLayer(kmlDataset);
     mSceneView.getScene().getOperationalLayers().add(kmlLayer);
 

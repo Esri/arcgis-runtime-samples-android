@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity
           mGenerateOfflineMapParameters = generateOfflineMapParametersFuture.get();
           // define the samples directory file
           File samplesDirectory = new File(
-              getExternalFilesDir(null) + getString(R.string.samples_directory));
+              getExternalFilesDir(null)?.path + getString(R.string.samples_directory));
           // name of local basemap file as supplied by the map's author
           String localBasemapFileName = mGenerateOfflineMapParameters.getReferenceBasemapFilename();
           // check if the offline map parameters include reference to a basemap file

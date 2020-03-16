@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
   private fun createRasterElevationSource() {
     // raster package file paths
     val filePaths = ArrayList<String>()
-    filePaths.add(getExternalFilesDir(null) + getString(R.string.raster_package_location))
+    filePaths.add(getExternalFilesDir(null)?.path + getString(R.string.raster_package_location))
 
     try {
       // add an elevation source to the scene by passing the URI of the raster package to the constructor

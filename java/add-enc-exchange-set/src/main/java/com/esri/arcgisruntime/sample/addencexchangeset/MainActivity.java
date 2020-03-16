@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create the Exchange Set passing an array of paths. Update sets can be loaded alongside base data
     EncExchangeSet encExchangeSet = new EncExchangeSet(
-        Collections.singleton(getExternalFilesDir(null) + getString(R.string.enc_path)));
+        Collections.singleton(getExternalFilesDir(null)?.path + getString(R.string.enc_path)));
     encExchangeSet.loadAsync();
     encExchangeSet.addDoneLoadingListener(() -> {
       if (encExchangeSet.getLoadStatus() == LoadStatus.LOADED) {

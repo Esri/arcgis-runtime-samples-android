@@ -177,7 +177,7 @@ class MainActivity : AppCompatActivity() {
       setPositiveButton("Save") { _: DialogInterface, _: Int ->
         // save the KML document to the device with the file name from the edit text box
         val saveFuture =
-          kmlDocument.saveAsAsync(getExternalFilesDir(null)?.path + fileNameEditText.text.toString())
+          kmlDocument.saveAsAsync(getExternalFilesDir(null)?.path?.path + fileNameEditText.text.toString())
         saveFuture.addDoneListener {
           try {
             // call get on the save future to check if it saved correctly

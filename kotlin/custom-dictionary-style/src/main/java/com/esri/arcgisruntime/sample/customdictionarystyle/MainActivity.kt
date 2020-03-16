@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
       // use a custom style to create a dictionary renderer and set it to the feature layer renderer
       renderer = DictionaryRenderer(
         DictionarySymbolStyle.createFromFile(
-          getExternalFilesDir(null)?.path + getString(R.string.restaurant_stylx_path)
+          getExternalFilesDir(null)?.path?.path + getString(R.string.restaurant_stylx_path)
         )
       )
     }

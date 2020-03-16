@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void changeSourceToFileExternalStorage() {
     // a data set made from data in external storage
-    KmlDataset kmlDataset = new KmlDataset(getExternalFilesDir(null) + getString(R.string.kml_path));
+    KmlDataset kmlDataset = new KmlDataset(getExternalFilesDir(null)?.path + getString(R.string.kml_path));
 
     // a KML layer created from a local KML file
     KmlLayer kmlLayer = new KmlLayer(kmlDataset);

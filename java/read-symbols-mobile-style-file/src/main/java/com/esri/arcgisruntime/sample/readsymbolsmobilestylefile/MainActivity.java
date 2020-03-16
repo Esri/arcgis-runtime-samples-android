@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
 
     // create a SymbolStyle by passing the location of the .stylx file in the constructor
     mEmojiStyle = new SymbolStyle(
-        getExternalFilesDir(null) + getString(R.string.mobile_style_file_path));
+        getExternalFilesDir(null)?.path + getString(R.string.mobile_style_file_path));
     // add a listener to run when the SymbolStyle has loaded
     mEmojiStyle.addDoneLoadingListener(() -> {
       if (mEmojiStyle.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {

@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
   private void rasterLayerGeoPackage() {
     // open the GeoPackage
     GeoPackage geoPackage = new GeoPackage(
-        getExternalFilesDir(null) + getString(R.string.geopackage_path));
+        getExternalFilesDir(null)?.path + getString(R.string.geopackage_path));
     geoPackage.loadAsync();
     geoPackage.addDoneLoadingListener(() -> {
       if (geoPackage.getLoadStatus() == LoadStatus.LOADED) {
