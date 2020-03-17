@@ -59,8 +59,7 @@ class MainActivity : AppCompatActivity() {
    * */
   private fun renderedPointGraphicsOverlay(): GraphicsOverlay {
     // create point
-    val pointGeometry =
-      Point(40e5, 40e5, SpatialReferences.getWebMercator())
+    val pointGeometry = Point(40e5, 40e5, SpatialReferences.getWebMercator())
     // create graphic for point
     val pointGraphic = Graphic(pointGeometry)
     // red diamond point symbol
