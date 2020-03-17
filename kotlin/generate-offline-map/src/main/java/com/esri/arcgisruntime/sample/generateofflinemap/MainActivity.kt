@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     Graphic().also {
       // create a symbol to show a box around the extent we want to download
       it.symbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2F)
-      // add the graphic to the map view when it is created
+      // add the graphic to the graphics overlay when it is created
       graphicsOverlay.graphics.add(it)
     }
   }
@@ -71,18 +71,18 @@ class MainActivity : AppCompatActivity() {
 
     // handle authentication with the portal
     AuthenticationManager.setAuthenticationChallengeHandler(
-      DefaultAuthenticationChallengeHandler(
-        this
-      )
+      DefaultAuthenticationChallengeHandler(this)
     )
+
+    // disable the button until the map is loaded
+    takeMapOfflineButton.isEnabled = false
+
     // create a portal item with the itemId of the web map
     val portal = Portal(getString(R.string.portal_url), false)
     val portalItem = PortalItem(portal, getString(R.string.item_id))
     // create a map with the portal item
     val map = ArcGISMap(portalItem)
 
-    // disable the button until the map is loaded
-    takeMapOfflineButton.isEnabled = false
     map.addDoneLoadingListener {
       if (map.loadStatus == LoadStatus.LOADED) {
         // limit the map scale to the largest layer scale
