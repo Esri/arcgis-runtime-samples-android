@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <item
-    android:id="@+id/kmlFromUrl"
-    android:title="@string/kml_from_url" />
+    <item
+        android:id="@+id/kmlFromUrl"
+        android:title="@string/kml_from_url" />
 
-  <item
-    android:id="@+id/kmlFromPortal"
-    android:title="@string/kml_from_portal" />
+    <item
+        android:id="@+id/kmlFromPortal"
+        android:title="@string/kml_from_portal" />
 
-  <item
-    android:id="@+id/kmlFromExternalStorage"
-    android:title="@string/kml_from_local_storage" />
+    <item
+        android:id="@+id/kmlFromExternalStorage"
+        android:title="@string/kml_from_local_storage" />
 
 </menu>

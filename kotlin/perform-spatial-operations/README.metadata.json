@@ -27,7 +27,7 @@
         "GraphicsOverlay"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisandroid/sample/performspatialoperations/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/performspatialoperations/MainActivity.kt"
     ],
     "title": "Perform spatial operations"
 }

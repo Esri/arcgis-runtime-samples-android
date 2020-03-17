@@ -19,14 +19,13 @@ package com.esri.arcgisruntime.sample.rasterlayergeopackage;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.data.GeoPackage;
 import com.esri.arcgisruntime.layers.RasterLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
   private void rasterLayerGeoPackage() {
     // open the GeoPackage
     GeoPackage geoPackage = new GeoPackage(
-        Environment.getExternalStorageDirectory() + getString(R.string.geopackage_path));
+        getExternalFilesDir(null) + getString(R.string.geopackage_path));
     geoPackage.loadAsync();
     geoPackage.addDoneLoadingListener(() -> {
       if (geoPackage.getLoadStatus() == LoadStatus.LOADED) {

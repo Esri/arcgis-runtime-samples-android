@@ -19,14 +19,13 @@ package com.esri.arcgisruntime.sample.featurelayergeodatabase;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.data.Geodatabase;
 import com.esri.arcgisruntime.data.GeodatabaseFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -71,9 +70,8 @@ public class MainActivity extends AppCompatActivity {
   private void loadGeodatabase() {
 
     // create path to local geodatabase
-    String path =
-        Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir)
-            + getString(R.string.config_geodb_name);
+    String path = getExternalFilesDir(null) +
+        getString(R.string.config_data_sdcard_offline_dir) + getString(R.string.config_geodb_name);
 
     // create a new geodatabase from local path
     final Geodatabase geodatabase = new Geodatabase(path);

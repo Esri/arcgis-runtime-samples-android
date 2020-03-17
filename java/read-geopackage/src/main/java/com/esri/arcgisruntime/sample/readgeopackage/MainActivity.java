@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
     // open and load the GeoPackage
     GeoPackage geoPackage = new GeoPackage(
-        Environment.getExternalStorageDirectory() + getString(R.string.geopackage_path));
+        getExternalFilesDir(null) + getString(R.string.geopackage_path));
     geoPackage.loadAsync();
     geoPackage.addDoneLoadingListener(() -> {
       if (geoPackage.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {

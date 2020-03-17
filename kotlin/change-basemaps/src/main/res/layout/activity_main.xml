@@ -1,5 +1,4 @@
-<androidx.drawerlayout.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -17,8 +16,7 @@
         <com.esri.arcgisruntime.mapping.view.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </com.esri.arcgisruntime.mapping.view.MapView>
+            android:layout_height="match_parent"/>
     </FrameLayout>
 
     <!-- The navigation drawer -->
@@ -30,5 +28,5 @@
         android:choiceMode="singleChoice"
         android:background="@android:color/background_light"
         android:divider="@color/colorDivider"
-        android:dividerHeight="1dp"/>
+        android:dividerHeight="1dp" />
 </androidx.drawerlayout.widget.DrawerLayout>

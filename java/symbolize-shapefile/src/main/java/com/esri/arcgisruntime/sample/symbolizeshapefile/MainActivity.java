@@ -20,13 +20,12 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.data.ShapefileFeatureTable;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create a shapefile feature table from the local data
     ShapefileFeatureTable shapefileFeatureTable = new ShapefileFeatureTable(
-        Environment.getExternalStorageDirectory() + getString(R.string.shapefile_folder) + getString(R.string.subdivisions_shp));
+        getExternalFilesDir(null) + getString(R.string.shapefile_folder) + getString(R.string.subdivisions_shp));
 
     // use the shapefile feature table to create a feature layer
     FeatureLayer featureLayer = new FeatureLayer(shapefileFeatureTable);

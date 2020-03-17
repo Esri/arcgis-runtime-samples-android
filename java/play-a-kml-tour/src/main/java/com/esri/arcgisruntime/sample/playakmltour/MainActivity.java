@@ -21,15 +21,14 @@ import java.util.List;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageButton;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.layers.KmlLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
@@ -75,8 +74,7 @@ public class MainActivity extends AppCompatActivity {
   private void createKmlTour() {
 
     // add a KML layer from a KML dataset with a KML tour
-    KmlDataset kmlDataset = new KmlDataset(
-        Environment.getExternalStorageDirectory() + getString(R.string.kml_tour_path));
+    KmlDataset kmlDataset = new KmlDataset(getExternalFilesDir(null) + getString(R.string.kml_tour_path));
     KmlLayer kmlLayer = new KmlLayer(kmlDataset);
     mSceneView.getScene().getOperationalLayers().add(kmlLayer);
 

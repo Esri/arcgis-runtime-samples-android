@@ -19,14 +19,13 @@ package com.esri.arcgisruntime.sample.featurelayergeopackage;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.data.GeoPackage;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Get the full path to the local GeoPackage
     String geoPackagePath =
-        Environment.getExternalStorageDirectory() + getString(R.string.geopackage_folder) + getString(R.string.aurora_co_gpkg);
+        getExternalFilesDir(null) + getString(R.string.geopackage_folder) + getString(R.string.aurora_co_gpkg);
     Log.d(TAG, geoPackagePath);
 
     // Open the GeoPackage

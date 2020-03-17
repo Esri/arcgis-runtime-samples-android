@@ -20,14 +20,13 @@ package com.esri.arcgisruntime.sample.openmobilescenepackage;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void loadMobileScenePackage() {
 
-    MobileScenePackage mobileScenePackage = new MobileScenePackage(Environment.getExternalStorageDirectory() + getString(R.string.mspk_path));
+    MobileScenePackage mobileScenePackage = new MobileScenePackage(getExternalFilesDir(null) + getString(R.string.mspk_path));
     mobileScenePackage.addDoneLoadingListener(() -> {
       if (mobileScenePackage.getLoadStatus() == LoadStatus.LOADED && !mobileScenePackage.getScenes().isEmpty()) {
         mSceneView.setScene(mobileScenePackage.getScenes().get(0));

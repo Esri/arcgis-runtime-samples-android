@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Feature layer selection</string>
+    <string name="gdp_per_capita_url">https://services1.arcgis.com/4yjifSiIG17X0gW4/arcgis/rest/services/GDP_per_capita_1960_2016/FeatureServer/0</string>
+</resources>
