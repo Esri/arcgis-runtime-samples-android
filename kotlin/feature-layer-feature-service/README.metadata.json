@@ -17,7 +17,7 @@
         "FeatureLayer",
         "ArcGISMap",
         "MapView",
-        "ServiceFeatureTable",
+        "ServiceFeatureTable"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/samples/featurelayerfeatureservice/MainActivity.kt"
