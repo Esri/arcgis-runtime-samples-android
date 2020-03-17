@@ -28,26 +28,29 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    // create a map with the terrain with labels basemap
-    val map = ArcGISMap(Basemap.createTerrainWithLabels())
-    // set an initial viewpoint
-    map.initialViewpoint = Viewpoint(
-      Point(
-        -13176752.0,
-        4090404.0,
-        SpatialReferences.getWebMercator()
-      ), 500000.0
-    )
+
     // create the service feature table
-    val serviceFeatureTable = ServiceFeatureTable(
-      resources.getString(R.string.sample_service_url)
-    )
+    val serviceFeatureTable = ServiceFeatureTable(resources.getString(R.string.sample_service_url))
     // create the feature layer using the service feature table
     val featureLayer = FeatureLayer(serviceFeatureTable)
-    // add the layer to the map
-    map.operationalLayers.add(featureLayer)
-    // set the map to be displayed in the mapview
-    mapView.map = map
+
+    // create a map with the terrain with labels basemap
+    ArcGISMap(Basemap.createTerrainWithLabels()).let { map ->
+      // set an initial viewpoint
+      map.initialViewpoint = Viewpoint(
+        Point(
+          -13176752.0,
+          4090404.0,
+          SpatialReferences.getWebMercator()
+        ), 500000.0
+      )
+
+      // add the feature layer to the map
+      map.operationalLayers.add(featureLayer)
+
+      // set the map to be displayed in the mapview
+      mapView.map = map
+    }
   }
 
   override fun onPause() {
