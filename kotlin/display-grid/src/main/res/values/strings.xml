@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Display Grid</string>
+    <string name="labels_visible">Labels Visible</string>
+    <string name="grid_color">Grid Color</string>
+    <string name="label_color">Label Color</string>
+    <string name="grid_type">Grid Type</string>
+    <string name="change_grid_button">Change Grid</string>
+    <string-array name="layers_array">
+        <item>Lat and Long</item>
+        <item>MGRS Grid</item>
+        <item>UTM Grid</item>
+        <item>USNG Grid</item>
+    </string-array>
+    <string-array name="colors_array">
+        <item>Red</item>
+        <item>White</item>
+        <item>Blue</item>
+
+    </string-array>
+
+    <string-array name="positions_array">
+        <item>ALL_SIDES</item>
+        <item>BOTTOM_LEFT</item>
+        <item>BOTTOM_RIGHT</item>
+        <item>CENTER</item>
+        <item>GEOGRAPHIC</item>
+        <item>TOP_LEFT</item>
+        <item>TOP_RIGHT</item>
+    </string-array>
+</resources>
