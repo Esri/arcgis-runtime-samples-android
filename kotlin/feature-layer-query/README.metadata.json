@@ -1,24 +1,24 @@
 {
-    "category": "Search and Query",
-    "description": "Query a feature layer via feature table.",
-    "ignore": false,
-    "images": [
-        "feature-layer-query.png"
-    ],
-    "keywords": [
-        "Search and Query",
-        "FeatureLayer",
-        "FeatureQueryResult",
-        "ServiceFeatureTable"
-    ],
-    "redirect_from": "/android/latest/sample-code/feature-layer-query.htm",
-    "relevant_apis": [
-        "FeatureLayer",
-        "FeatureQueryResult",
-        "ServiceFeatureTable"
-    ],
-    "snippets": [
-        "src/main/java/com/esri/arcgisruntime/samples/featurelayerquery/MainActivity.kt"
-    ],
-    "title": "Feature Layer Query"
+  "category": "Search and Query",
+  "description": "Query a feature layer via feature table.",
+  "ignore": false,
+  "images": [
+    "feature-layer-query.png"
+  ],
+  "keywords": [
+    "Search and Query",
+    "FeatureLayer",
+    "FeatureQueryResult",
+    "ServiceFeatureTable"
+  ],
+  "redirect_from": "/android/latest/sample-code/feature-layer-query.htm",
+  "relevant_apis": [
+    "FeatureLayer",
+    "FeatureQueryResult",
+    "ServiceFeatureTable"
+  ],
+  "snippets": [
+    "src/main/java/com/esri/arcgisruntime/samples/featurelayerquery/MainActivity.kt"
+  ],
+  "title": "Feature Layer Query"
 }

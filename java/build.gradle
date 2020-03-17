@@ -26,8 +26,8 @@ subprojects{
     afterEvaluate {project ->
         if(project.hasProperty("dependencies")){
             dependencies {
-                implementation "com.android.support:appcompat-v7:$andSupportLibVersion"
-                implementation "com.android.support:design:$andSupportLibVersion"
+                implementation "androidx.appcompat:appcompat:$andSupportLibVersion"
+                implementation "com.google.android.material:material:$andSupportLibVersion"
                 implementation "com.esri.arcgisruntime:arcgis-android:$arcgisVersion"
                 implementation "androidx.multidex:multidex:$multidexVersion"
             }
