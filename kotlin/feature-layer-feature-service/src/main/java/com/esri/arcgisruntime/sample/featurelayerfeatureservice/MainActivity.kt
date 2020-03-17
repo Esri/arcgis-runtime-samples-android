@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
     // create a map with the terrain with labels basemap
     val map = ArcGISMap(Basemap.createTerrainWithLabels())
-    //set an initial viewpoint
+    // set an initial viewpoint
     map.initialViewpoint = Viewpoint(
       Point(
         -13176752.0,
