@@ -37,9 +37,15 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
     mapView.map = ArcGISMap(Basemap.createImagery())
-    // Listen to changes in the status of the location data source.
-    locationDisplay.addDataSourceStatusChangedListener { checkDataSource(it) }
-    // Populate the list for the Location display options for the spinner's Adapter
+    // listen to changes in the status of the location data source
+    locationDisplay.addDataSourceStatusChangedListener {
+      // if LocationDisplay isn't started or has an error
+      if (!it.isStarted && it.error != null) {
+        // check permissions to see if failure may be due to lack of permissions.
+        requestPermissions(it)
+      }
+    }
+    // populate the list for the location display options for the spinner's adapter
     val list = arrayListOf(
       ItemData("Stop", R.drawable.locationdisplaydisabled),
       ItemData("On", R.drawable.locationdisplayon),
@@ -49,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     )
 
     spinner.apply {
-      adapter = SpinnerAdapter(this@MainActivity, R.layout.spinner_layout, R.id.txt, list)
+      adapter = SpinnerAdapter(this@MainActivity, R.layout.spinner_layout, R.id.locationTextView, list)
       onItemSelectedListener = object : OnItemSelectedListener {
         override fun onItemSelected(
           parent: AdapterView<*>?,
@@ -58,22 +64,22 @@ class MainActivity : AppCompatActivity() {
           id: Long
         ) {
           when (position) {
-            0 ->  // Stop Location Display
+            0 ->  // stop location display
               if (locationDisplay.isStarted) locationDisplay.stop()
-            1 ->  // Start Location Display
+            1 ->  // start location display
               if (!locationDisplay.isStarted) locationDisplay.startAsync()
             2 -> {
-              // Re-Center MapView on Location
+              // re-center MapView on location
               locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.RECENTER
               if (!locationDisplay.isStarted) locationDisplay.startAsync()
             }
             3 -> {
-              // Start navigation mode
+              // start navigation mode
               locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.NAVIGATION
               if (!locationDisplay.isStarted) locationDisplay.startAsync()
             }
             4 -> {
-              // Start compass navigation mode
+              // start compass navigation mode
               locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.COMPASS_NAVIGATION
               if (!locationDisplay.isStarted) locationDisplay.startAsync()
             }
@@ -88,16 +94,6 @@ class MainActivity : AppCompatActivity() {
     mapView.addAttributionViewLayoutChangeListener { view, _, _, _, _, _, oldTop, _, oldBottom ->
       spinner.y -= view.height - (oldBottom - oldTop)
     }
-  }
-
-  private fun checkDataSource(dataSourceStatusChangedEvent: LocationDisplay.DataSourceStatusChangedEvent){
-    // If LocationDisplay started OK, then continue.
-    if (dataSourceStatusChangedEvent.isStarted) return
-    // No error is reported, then continue.
-    if (dataSourceStatusChangedEvent.error == null) return
-    // If an error is found, handle the failure to start.
-    // Check permissions to see if failure may be due to lack of permissions.
-    requestPermissions(dataSourceStatusChangedEvent)
   }
 
   /**
@@ -117,16 +113,17 @@ class MainActivity : AppCompatActivity() {
     val permissionCheckCoarseLocation =
       ContextCompat.checkSelfPermission(this@MainActivity, reqPermissions[1]) ==
           PackageManager.PERMISSION_GRANTED
-    if (!(permissionCheckFineLocation && permissionCheckCoarseLocation)) { // If permissions are not already granted, request permission from the user.
+    if (!(permissionCheckFineLocation && permissionCheckCoarseLocation)) { // if permissions are not already granted, request permission from the user
       ActivityCompat.requestPermissions(this@MainActivity, reqPermissions, requestCode)
-    } else { // Report other unknown failure types to the user - for example, location services may not
+    } else {
+      // report other unknown failure types to the user - for example, location services may not
       // be enabled on the device.
       val message = String.format(
         "Error in DataSourceStatusChangedListener: %s", dataSourceStatusChangedEvent
           .source.locationDataSource.error.message
       )
       Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
-      // Update UI to reflect that the location display did not actually start
+      // update UI to reflect that the location display did not actually start
       spinner.setSelection(0, true)
     }
   }
@@ -138,19 +135,23 @@ class MainActivity : AppCompatActivity() {
     requestCode: Int,
     permissions: Array<String>,
     grantResults: IntArray
-  ) { // If request is cancelled, the result arrays are empty.
-    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) { // Location permission was granted. This would have been triggered in response to failing to start the
-// LocationDisplay, so try starting this again.
+  ) {
+    // if request is cancelled, the result arrays are empty.
+    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      // location permission was granted; this would have been triggered in response to failing to start the
+      // LocationDisplay, so try starting this again
       locationDisplay.startAsync()
-    } else { // If permission was denied, show toast to inform user what was chosen. If LocationDisplay is started again,
-// request permission UX will be shown again, option should be shown to allow never showing the UX again.
-// Alternative would be to disable functionality so request is not shown again.
+    } else {
+      // if permission was denied, show toast to inform user what was chosen
+      // if LocationDisplay is started again, request permission UI will be shown again,
+      // option should be shown to allow never showing the UX again
+      // alternative would be to disable functionality so request is not shown again
       Toast.makeText(
         this@MainActivity,
         resources.getString(R.string.location_permission_denied),
         Toast.LENGTH_SHORT
       ).show()
-      // Update UI to reflect that the location display did not actually start
+      // update UI to reflect that the location display did not actually start
       spinner.setSelection(0, true)
     }
   }

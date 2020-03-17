@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import kotlinx.android.synthetic.main.spinner_layout.view.*
 import java.util.ArrayList
 
 
@@ -43,10 +44,9 @@ class SpinnerAdapter(
     parent: ViewGroup
   ): View {
     val itemView = this.inflater.inflate(groupId, parent, false)
-    val imageView =
-      itemView.findViewById<View>(R.id.img) as ImageView
+    val imageView = itemView.locationPointImageView
     imageView.setImageResource(list[position].imageId)
-    val textView = itemView.findViewById<View>(R.id.txt) as TextView
+    val textView = itemView.locationTextView
     textView.text = list[position].text
     return itemView
   }
