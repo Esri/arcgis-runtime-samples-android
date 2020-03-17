@@ -19,8 +19,8 @@ package com.esri.arcgisruntime.sample.scenelayer
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer
+import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.Camera
 import kotlinx.android.synthetic.main.activity_main.*

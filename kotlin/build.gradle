@@ -2,7 +2,6 @@
 apply from: '../version.gradle'
 
 buildscript {
-
     apply from: '../version.gradle'
     repositories {
         google()
@@ -10,7 +9,8 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradleVersion"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"}
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
 }
 
 allprojects {
@@ -26,7 +26,7 @@ subprojects {
     afterEvaluate { project ->
         if (project.hasProperty("dependencies")) {
             dependencies {
-                implementation "com.android.support:appcompat-v7:$andSupportLibVersion"
+                implementation "androidx.appcompat:appcompat:$andSupportLibVersion"
                 implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
                 implementation "com.esri.arcgisruntime:arcgis-android:$arcgisVersion"
                 implementation "androidx.multidex:multidex:$multidexVersion"

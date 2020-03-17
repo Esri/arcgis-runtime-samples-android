@@ -1,24 +1,24 @@
 {
-    "category": "Maps and Scenes",
-    "description": "Inflate a map view and add an ArcGIS map to it.",
-    "ignore": false,
-    "images": [
-        "display-map.png"
-    ],
-    "keywords": [
-        "Maps and Scenes",
-        "ArcGISMap",
-        "MapView",
-        "Basemap"
-    ],
-    "redirect_from": "",
-    "relevant_apis": [
-        "ArcGISMap",
-        "MapView",
-        "Basemap"
-    ],
-    "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/displaymap/MainActivity.kt"
-    ],
-    "title": "Display a Map"
+  "category": "Maps and Scenes",
+  "description": "Inflate a map view and add an ArcGIS map to it.",
+  "ignore": false,
+  "images": [
+    "display-map.png"
+  ],
+  "keywords": [
+    "Maps and Scenes",
+    "ArcGISMap",
+    "MapView",
+    "Basemap"
+  ],
+  "redirect_from": "",
+  "relevant_apis": [
+    "ArcGISMap",
+    "MapView",
+    "Basemap"
+  ],
+  "snippets": [
+    "src/main/java/com/esri/arcgisruntime/sample/displaymap/MainActivity.kt"
+  ],
+  "title": "Display a Map"
 }

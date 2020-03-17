@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_no_atmosphere_effect"
-        android:title="@string/no_atmosphere"/>
+        android:title="@string/no_atmosphere" />
     <item
         android:id="@+id/action_realistic_atmosphere_effect"
         android:title="@string/realistic_atmosphere" />

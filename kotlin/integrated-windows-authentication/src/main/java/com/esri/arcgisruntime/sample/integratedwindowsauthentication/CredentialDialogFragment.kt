@@ -21,10 +21,10 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.credential_dialog.*
 import kotlinx.android.synthetic.main.credential_dialog.view.*
 import java.net.URI

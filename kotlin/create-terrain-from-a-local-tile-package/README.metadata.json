@@ -1,27 +1,27 @@
 {
-    "category": "Maps and Scenes",
-    "description": "Set the terrain surface with elevation described by a local tile package.",
-    "ignore": false,
-    "images": [
-        "create-terrain-from-a-local-tile-package.png"
-    ],
-    "keywords": [
-        "Maps and Scenes",
-        "3D",
-        "Tile",
-        "Cache",
-        "Elevation",
-        "Surface",
-        "ArcGISTiledElevationSource",
-        "Surface"
-    ],
-    "redirect_from": "/android/latest/sample-code/create-terrain-from-a-local-tile-package.htm",
-    "relevant_apis": [
-        "ArcGISTiledElevationSource",
-        "Surface"
-    ],
-    "snippets": [
-        "src/main/java/com/esri/arcgisruntime/samples/createterrainfromalocaltilepackage/MainActivity.kt"
-    ],
-    "title": "Create terrain from a local tile package"
+  "category": "Maps and Scenes",
+  "description": "Set the terrain surface with elevation described by a local tile package.",
+  "ignore": false,
+  "images": [
+    "create-terrain-from-a-local-tile-package.png"
+  ],
+  "keywords": [
+    "Maps and Scenes",
+    "3D",
+    "Tile",
+    "Cache",
+    "Elevation",
+    "Surface",
+    "ArcGISTiledElevationSource",
+    "Surface"
+  ],
+  "redirect_from": "/android/latest/sample-code/create-terrain-from-a-local-tile-package.htm",
+  "relevant_apis": [
+    "ArcGISTiledElevationSource",
+    "Surface"
+  ],
+  "snippets": [
+    "src/main/java/com/esri/arcgisruntime/samples/createterrainfromalocaltilepackage/MainActivity.kt"
+  ],
+  "title": "Create terrain from a local tile package"
 }

@@ -1,0 +1,30 @@
+{
+    "category": "Visualization",
+    "description": "A renderer allows you to change the style of all graphics in a graphics overlay by referencing a single symbol style. A renderer will only effect graphics that do not specify their own symbol style.",
+    "ignore": false,
+    "images": [
+        "add-graphics-renderer.png"
+    ],
+    "keywords": [
+        "display",
+        "graphics",
+        "marker",
+        "overlay",
+        "renderer",
+        "symbol"
+    ],
+    "redirect_from": "/android/latest/sample-code/add-graphics-renderer.htm",
+    "relevant_apis": [
+      "Geometry",
+      "Graphic",
+      "GraphicsOverlay",
+      "SimpleFillSymbol",
+      "SimpleLineSymbol",
+      "SimpleMarkerSymbol",
+      "SimpleRenderer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/addgraphicsrenderer/MainActivity.kt"
+    ],
+    "title": "Add graphics renderer"
+}

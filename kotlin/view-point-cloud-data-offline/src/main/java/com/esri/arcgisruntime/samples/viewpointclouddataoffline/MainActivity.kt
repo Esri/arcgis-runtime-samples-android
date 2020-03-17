@@ -21,11 +21,11 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.layers.PointCloudLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISScene
@@ -114,7 +114,8 @@ class MainActivity : AppCompatActivity() {
   private fun createPointCloudLayer() {
     // Add a PointCloudLayer to the scene by passing the URI of the scene layer package to the constructor
     val pointCloudLayer = PointCloudLayer(
-      Environment.getExternalStorageDirectory().toString() + getString(R.string.scene_layer_package_location)
+      Environment.getExternalStorageDirectory()
+        .toString() + getString(R.string.scene_layer_package_location)
     )
 
     // Add a listener to perform operations when the load status of the PointCloudLayer changes
