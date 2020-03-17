@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
               if (!locationDisplay.isStarted) locationDisplay.startAsync()
             }
             4 -> {
-              // Start compass navigation ,ode
+              // Start compass navigation mode
               locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.COMPASS_NAVIGATION
               if (!locationDisplay.isStarted) locationDisplay.startAsync()
             }
