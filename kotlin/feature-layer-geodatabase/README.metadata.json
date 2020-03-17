@@ -1,0 +1,23 @@
+{
+    "category": "Layers",
+    "description": "Display features from a local geodatabase.",
+    "ignore": false,
+    "images": [
+        "feature-layer-geodatabase.png"
+    ],
+    "keywords": [
+        "geodatabase",
+        "mobile",
+        "offline"
+    ],
+    "redirect_from": "/android/latest/sample-code/feature-layer-geodatabase.htm",
+    "relevant_apis": [
+        "FeatureLayer",
+        "Geodatabase",
+        "GeodatabaseFeatureTable"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayergeodatabase/MainActivity.kt"
+    ],
+    "title": "Feature layer (geodatabase)"
+}
