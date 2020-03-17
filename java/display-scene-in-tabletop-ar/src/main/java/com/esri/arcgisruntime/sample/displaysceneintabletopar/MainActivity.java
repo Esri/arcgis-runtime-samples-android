@@ -18,18 +18,12 @@ package com.esri.arcgisruntime.sample.displaysceneintabletopar;
 
 import java.util.List;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.GeodeticCurveType;
@@ -60,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    requestPermissions();
+    setupArView();
   }
 
   /**
@@ -121,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
   private void loadSceneFromPackage(Plane plane) {
     // create a mobile scene package from a path a local .mspk
     MobileScenePackage mobileScenePackage = new MobileScenePackage(
-        Environment.getExternalStorageDirectory() + getString(
+        getExternalFilesDir(null) + getString(
             R.string.philadelphia_mobile_scene_package_path));
     // load the mobile scene package
     mobileScenePackage.loadAsync();
@@ -132,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         // get a reference to the first scene in the mobile scene package, which is of a section of philadelphia
         ArcGISScene philadelphiaScene = mobileScenePackage.getScenes().get(0);
         // set the clipping distance for the scene
-        mArView.setClippingDistance(300);
+        mArView.setClippingDistance(400);
         // add the scene to the AR view's scene view
         mArView.getSceneView().setScene(philadelphiaScene);
         // set the base surface to fully opaque
@@ -169,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
       double width = GeometryEngine
           .lengthGeodetic(layerExtent, new LinearUnit(LinearUnitId.METERS), GeodeticCurveType.GEODESIC);
       // set the translation factor based on scene content width and desired physical size
-      mArView.setTranslationFactor(width *.25 / plane.getExtentX());
+      mArView.setTranslationFactor(width / plane.getExtentX());
       // find the center point of the scene content
       Point centerPoint = layerExtent.getCenter();
       // find the altitude of the surface at the center
@@ -186,36 +180,6 @@ public class MainActivity extends AppCompatActivity {
         }
       });
     });
-  }
-
-  /**
-   * Request read external storage for API level 23+.
-   */
-  private void requestPermissions() {
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA };
-    int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      setupArView();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-      @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      setupArView();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.tabletop_map_permission_denied), Toast.LENGTH_SHORT).show();
-    }
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
   @Override

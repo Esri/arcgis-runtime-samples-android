@@ -19,7 +19,7 @@
         "https://www.arcgis.com/home/item.html?id=7dd2f97bb007466ea939160d0de96a9d"
     ],
     "provision_to": [
-        "/ArcGIS/Samples/ScenePackage/philadelphia.mspk"
+        "/philadelphia.mspk"
     ],
     "redirect_from": "",
     "relevant_apis": [
