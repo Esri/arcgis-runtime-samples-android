@@ -68,9 +68,8 @@ class MainActivity : AppCompatActivity() {
     // create a tile cache from the tpk
     val tileCache = TileCache(getExternalFilesDir(null)?.path + getString(R.string.tpk_path))
     val tiledLayer = ArcGISTiledLayer(tileCache)
-    // make a basemap with the tiled layer
-    val basemap = Basemap(tiledLayer)
-    mapView.map = ArcGISMap(basemap)
+    // make a basemap with the tiled layer and add it to the mapview as an ArcGISMap
+    mapView.map = ArcGISMap(Basemap(tiledLayer))
 
     // add the graphics overlays to the map view
     mapView.graphicsOverlays.addAll(listOf(stopsOverlay, routeOverlay))
@@ -92,6 +91,7 @@ class MainActivity : AppCompatActivity() {
         }
       } else {
         Log.e(TAG, "Error loading route task. ${routeTask.loadError.message}")
+        Toast.makeText(this, "Failed to load route task.", Toast.LENGTH_LONG).show()
       }
     }
 
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
       stopsOverlay.graphics.clear()
       routeOverlay.graphics.clear()
     }
-// move the clear button above the attribution bar
+    // move the clear button above the attribution bar
     mapView.addAttributionViewLayoutChangeListener { v, _, _, _, _, _, oldTop, _, oldBottom ->
       val heightChanged = v.height - (oldBottom - oldTop)
       clearButton.y += -heightChanged
