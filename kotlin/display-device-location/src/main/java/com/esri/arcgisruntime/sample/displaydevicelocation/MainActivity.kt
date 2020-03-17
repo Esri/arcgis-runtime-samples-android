@@ -85,8 +85,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     // move the spinner above the attribution bar
-    mapView.addAttributionViewLayoutChangeListener { v, _, _, _, _, _, oldTop, _, oldBottom ->
-      spinner.y -= v.height - (oldBottom - oldTop)
+    mapView.addAttributionViewLayoutChangeListener { view, _, _, _, _, _, oldTop, _, oldBottom ->
+      spinner.y -= view.height - (oldBottom - oldTop)
     }
   }
 
