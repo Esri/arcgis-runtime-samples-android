@@ -27,10 +27,10 @@ import android.view.Menu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.FeatureQueryResult
 import com.esri.arcgisruntime.data.QueryParameters
+import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.FeatureLayer
@@ -40,9 +40,8 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
-import java.lang.Exception
-import java.util.Locale
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 

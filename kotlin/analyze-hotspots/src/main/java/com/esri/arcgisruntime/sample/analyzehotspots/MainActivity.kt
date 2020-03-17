@@ -34,7 +34,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.progressDialog
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 // enum to flag whether the date picker calendar shown should be for the 'from' or 'to' date
 enum class InputCalendar {
