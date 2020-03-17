@@ -14,7 +14,7 @@ Run the sample and view graphics for points, lines, and polygons, which are styl
 
 ## How it works
 
-1 Create a `GraphicsOverlay` and add it to the `MapView`.
+1. Create a `GraphicsOverlay` and add it to the `MapView`.
 2 Create a `Graphic`, specifying only a `Geometry`.
 3 Create a single `Symbol` such as a `SimpleMarkerSymbol`.
 4 Create a renderer with the `Symbol` such as a `SimpleRenderer(symbol)`.
