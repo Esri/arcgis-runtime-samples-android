@@ -1,5 +1,6 @@
 include ':add-features-feature-service',
         ':add-graphics-renderer',
+        ':add-graphics-with-symbols',
         ':analyze-hotspots',
         ':attribution-view-change',
         ':authenticate-with-oauth',

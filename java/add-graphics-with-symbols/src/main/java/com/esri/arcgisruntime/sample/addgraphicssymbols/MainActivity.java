@@ -25,6 +25,7 @@ import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polygon;
 import com.esri.arcgisruntime.geometry.Polyline;
 import com.esri.arcgisruntime.geometry.SpatialReference;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.Graphic;
@@ -37,7 +38,7 @@ import com.esri.arcgisruntime.symbology.TextSymbol;
 
 public class MainActivity extends AppCompatActivity {
 
-  private final SpatialReference wgs84 = SpatialReference.create(4236);
+  private final SpatialReference wgs84 = SpatialReferences.getWgs84();
   private MapView mMapView;
 
   @Override
