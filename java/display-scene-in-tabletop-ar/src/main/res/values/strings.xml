@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">Display scene in tabletop AR</string>
-    <string name="philadelphia_mobile_scene_package_path">/ArcGIS/Samples/ScenePackage/philadelphia.mspk</string>
-    <string name="tabletop_map_permission_denied">Camera and read external storage permissions are both required for this app to run!</string>
+    <string name="philadelphia_mobile_scene_package_path">/philadelphia.mspk</string>
 </resources>
