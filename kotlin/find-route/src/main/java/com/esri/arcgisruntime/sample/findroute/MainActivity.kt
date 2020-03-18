@@ -48,6 +48,7 @@ import com.esri.arcgisruntime.tasks.networkanalysis.Route
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.ArrayList
 import java.util.concurrent.ExecutionException
 
@@ -66,7 +67,7 @@ class MainActivity : AppCompatActivity() {
   private var mDrawerToggle: ActionBarDrawerToggle? = null
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.directions_drawer)
+    setContentView(R.layout.activity_main)
     // inflate MapView from layout
     mMapView =
       findViewById<View>(R.id.mapView) as MapView
@@ -79,7 +80,7 @@ class MainActivity : AppCompatActivity() {
     // create a map with the basemap
     val mMap = ArcGISMap(basemap)
     // create a viewpoint from lat, long, scale
-    val sanDiegoPoint = Viewpoint(32.7157, -117.1611, 200000)
+    val sanDiegoPoint = Viewpoint(32.7157, -117.1611, 200000.0)
     // set initial map extent
     mMap.initialViewpoint = sanDiegoPoint
     // set the map to be displayed in this view
@@ -140,10 +141,10 @@ class MainActivity : AppCompatActivity() {
             // add stops
             routeStops.add(stop1)
             routeStops.add(stop2)
-            mRouteParams.setStops(routeStops)
+            mRouteParams?.setStops(routeStops)
             // set return directions as true to return turn-by-turn directions in the result of
 // getDirectionManeuvers().
-            mRouteParams.setReturnDirections(true)
+            mRouteParams?.setReturnDirections(true)
             // solve
             val result = mRouteTask!!.solveRouteAsync(mRouteParams).get()
             val routes: List<*> = result.routes
@@ -186,11 +187,11 @@ class MainActivity : AppCompatActivity() {
                 mDrawerLayout!!.closeDrawers()
                 val dm = directions[position]
                 val gm = dm.geometry
-                val vp = Viewpoint(gm.extent, 20)
+                val vp = Viewpoint(gm.extent, 20.0)
                 mMapView!!.setViewpointAsync(vp, 3f)
                 val selectedRouteSymbol = SimpleLineSymbol(
                   SimpleLineSymbol.Style.SOLID,
-                  Color.GREEN, 5
+                  Color.GREEN, 5f
                 )
                 val selectedRouteGraphic = Graphic(
                   directions[position].geometry,
@@ -264,7 +265,7 @@ class MainActivity : AppCompatActivity() {
       e.printStackTrace()
     }
     //[DocRef: END]
-    mRouteSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5)
+    mRouteSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f)
   }
 
   override fun onPause() {
@@ -304,8 +305,8 @@ class MainActivity : AppCompatActivity() {
         invalidateOptionsMenu() // creates call to onPrepareOptionsMenu()
       }
     }
-    mDrawerToggle.setDrawerIndicatorEnabled(true)
-    mDrawerLayout!!.addDrawerListener(mDrawerToggle)
+    mDrawerToggle?.setDrawerIndicatorEnabled(true)
+    mDrawerLayout!!.addDrawerListener(mDrawerToggle as ActionBarDrawerToggle)
     mDrawerLayout!!.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
   }
 
