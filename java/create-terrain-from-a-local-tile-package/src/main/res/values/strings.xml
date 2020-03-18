@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">Create terrain from a local tile package</string>
-
-    <string name="local_tile_package_location">/ArcGIS/Samples/TileCache/MontereyElevation.tpk</string>
-
-    <string name="error_read_permission_denied_message">Could not create Tiled Elevation Source as the read permission has been denied.</string>
+    <string name="local_tile_package_location">/MontereyElevation.tpk</string>
     <string name="error_tiled_elevation_source_load_failure_message">The ArcGISTiledElevationSource has failed to load. Please ensure that the .tpk has been pushed to the device\'s storage.</string>
 </resources>

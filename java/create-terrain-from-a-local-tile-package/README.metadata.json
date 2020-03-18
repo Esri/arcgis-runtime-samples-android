@@ -19,7 +19,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=cce37043eb0440c7a5c109cf8aad5500"
     ],
     "provision_to": [
-        "/ArcGIS/Samples/TileCache/MontereyElevation.tpk"
+        "/MontereyElevation.tpk"
     ],
     "redirect_from": "/android/latest/sample-code/create-terrain-from-a-local-tile-package.htm",
     "relevant_apis": [

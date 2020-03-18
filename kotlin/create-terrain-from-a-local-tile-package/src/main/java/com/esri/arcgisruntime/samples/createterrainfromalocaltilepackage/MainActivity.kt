@@ -34,9 +34,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-  private val permissionsRequestCode = 1
-  private val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
@@ -51,15 +48,9 @@ class MainActivity : AppCompatActivity() {
     // specify the initial camera position
     sceneView.setViewpointCamera(Camera(36.525, -121.80, 300.0, 180.0, 80.0, 0.0))
 
-    requestReadPermission()
-  }
-
-  private fun createTiledElevationSource() {
     // add a ArcGISTiledElevationSource to the scene by passing the URI of the local tile package to the constructor
     with(
-      ArcGISTiledElevationSource(
-        Environment.getExternalStorageDirectory()
-          .toString() + getString(R.string.local_tile_package_location)
+      ArcGISTiledElevationSource(getExternalFilesDir(null)?.path + getString(R.string.local_tile_package_location)
       )
     ) {
       // add a listener to perform operations when the load status of the ArcGISTiledElevationSource changes
@@ -76,38 +67,6 @@ class MainActivity : AppCompatActivity() {
 
       // load the ArcGISTiledElevationSource asynchronously
       this.loadAsync()
-    }
-  }
-
-  /**
-   * Request read external storage for API level 23+.
-   */
-  private fun requestReadPermission() {
-    if (ContextCompat.checkSelfPermission(
-        this,
-        permissions[0]
-      ) == PackageManager.PERMISSION_GRANTED
-    ) {
-      createTiledElevationSource()
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, permissions, permissionsRequestCode)
-    }
-  }
-
-  /**
-   * Handle the permissions request response
-   */
-  override fun onRequestPermissionsResult(
-    requestCode: Int,
-    permissions: Array<String>,
-    grantResults: IntArray
-  ) {
-    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      createTiledElevationSource()
-    } else {
-      // report to user that permission was denied
-      logErrorToUser(getString(R.string.error_read_permission_denied_message))
     }
   }
 
