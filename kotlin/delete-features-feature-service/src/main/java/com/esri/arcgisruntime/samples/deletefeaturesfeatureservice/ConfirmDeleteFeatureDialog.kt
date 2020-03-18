@@ -19,8 +19,8 @@ package com.esri.arcgisruntime.samples.deletefeaturesfeatureservice
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 
 class ConfirmDeleteFeatureDialog : DialogFragment() {
 

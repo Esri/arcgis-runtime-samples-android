@@ -209,7 +209,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/viewshed_visibility"
         app:layout_constraintStart_toEndOf="@+id/frustumVisibilityCheckBox"
-        app:layout_constraintTop_toBottomOf="@+id/maximumDistanceTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/maximumDistanceTextView" />
 
     <CheckBox
         android:id="@+id/viewshedVisibilityCheckBox"
@@ -217,6 +217,6 @@
         android:layout_height="wrap_content"
         android:checked="true"
         app:layout_constraintStart_toEndOf="@+id/viewshedVisibilityTextView"
-        app:layout_constraintTop_toBottomOf="@+id/maximumDistanceTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/maximumDistanceTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

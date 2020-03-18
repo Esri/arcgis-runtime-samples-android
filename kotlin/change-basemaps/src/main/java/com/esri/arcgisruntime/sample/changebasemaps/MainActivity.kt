@@ -18,12 +18,12 @@ package com.esri.arcgisruntime.sample.changebasemaps
 
 import android.content.res.Configuration
 import android.os.Bundle
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import kotlinx.android.synthetic.main.activity_main.*
@@ -40,7 +40,8 @@ class MainActivity : AppCompatActivity() {
 
     // inflate navigation drawer with all basemap types in a human readable format
     mNavigationDrawerItemTitles =
-        Basemap.Type.values().map { it.name.replace("_", " ").toLowerCase().capitalize() }.toTypedArray()
+      Basemap.Type.values().map { it.name.replace("_", " ").toLowerCase().capitalize() }
+        .toTypedArray()
 
     addDrawerItems()
     drawerLayout.addDrawerListener(mDrawerToggle)
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     ArrayAdapter(this, android.R.layout.simple_list_item_1, mNavigationDrawerItemTitles).apply {
       drawerList.adapter = this
       drawerList.onItemClickListener =
-          AdapterView.OnItemClickListener { adapterView, view, position, id -> selectBasemap(position) }
+        AdapterView.OnItemClickListener { adapterView, view, position, id -> selectBasemap(position) }
     }
   }
 
@@ -71,23 +72,24 @@ class MainActivity : AppCompatActivity() {
    * Set up the navigation drawer
    */
   private fun setupDrawer() =
-      object : ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
+    object :
+      ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
 
-        override fun isDrawerIndicatorEnabled() = true
+      override fun isDrawerIndicatorEnabled() = true
 
-        /** Called when a drawer has settled in a completely open state.  */
-        override fun onDrawerOpened(drawerView: View) {
-          super.onDrawerOpened(drawerView)
-          supportActionBar?.title = title
-          invalidateOptionsMenu() // creates call to onPrepareOptionsMenu()
-        }
-
-        /** Called when a drawer has settled in a completely closed state.  */
-        override fun onDrawerClosed(view: View) {
-          super.onDrawerClosed(view)
-          invalidateOptionsMenu() // creates call to onPrepareOptionsMenu()
-        }
+      /** Called when a drawer has settled in a completely open state.  */
+      override fun onDrawerOpened(drawerView: View) {
+        super.onDrawerOpened(drawerView)
+        supportActionBar?.title = title
+        invalidateOptionsMenu() // creates call to onPrepareOptionsMenu()
       }
+
+      /** Called when a drawer has settled in a completely closed state.  */
+      override fun onDrawerClosed(view: View) {
+        super.onDrawerClosed(view)
+        invalidateOptionsMenu() // creates call to onPrepareOptionsMenu()
+      }
+    }
 
   /**
    * Select the Basemap item based on position in the navigation drawer
@@ -104,26 +106,27 @@ class MainActivity : AppCompatActivity() {
     supportActionBar?.title = baseMapTitle
 
     // select basemap by title
-    mapView.map.basemap = when (Basemap.Type.valueOf(baseMapTitle.replace(" ", "_").toUpperCase())) {
-      Basemap.Type.DARK_GRAY_CANVAS_VECTOR -> Basemap.createDarkGrayCanvasVector()
-      Basemap.Type.IMAGERY -> Basemap.createImagery()
-      Basemap.Type.IMAGERY_WITH_LABELS -> Basemap.createImageryWithLabels()
-      Basemap.Type.IMAGERY_WITH_LABELS_VECTOR -> Basemap.createImageryWithLabelsVector()
-      Basemap.Type.LIGHT_GRAY_CANVAS -> Basemap.createLightGrayCanvas()
-      Basemap.Type.LIGHT_GRAY_CANVAS_VECTOR -> Basemap.createDarkGrayCanvasVector()
-      Basemap.Type.NATIONAL_GEOGRAPHIC -> Basemap.createNationalGeographic()
-      Basemap.Type.NAVIGATION_VECTOR -> Basemap.createNavigationVector()
-      Basemap.Type.OCEANS -> Basemap.createOceans()
-      Basemap.Type.OPEN_STREET_MAP -> Basemap.createOceans()
-      Basemap.Type.STREETS -> Basemap.createStreets()
-      Basemap.Type.STREETS_NIGHT_VECTOR -> Basemap.createStreetsNightVector()
-      Basemap.Type.STREETS_WITH_RELIEF_VECTOR -> Basemap.createStreetsWithReliefVector()
-      Basemap.Type.STREETS_VECTOR -> Basemap.createStreetsVector()
-      Basemap.Type.TOPOGRAPHIC -> Basemap.createTopographic()
-      Basemap.Type.TERRAIN_WITH_LABELS -> Basemap.createTerrainWithLabels()
-      Basemap.Type.TERRAIN_WITH_LABELS_VECTOR -> Basemap.createTerrainWithLabelsVector()
-      Basemap.Type.TOPOGRAPHIC_VECTOR -> Basemap.createTopographicVector()
-    }
+    mapView.map.basemap =
+      when (Basemap.Type.valueOf(baseMapTitle.replace(" ", "_").toUpperCase())) {
+        Basemap.Type.DARK_GRAY_CANVAS_VECTOR -> Basemap.createDarkGrayCanvasVector()
+        Basemap.Type.IMAGERY -> Basemap.createImagery()
+        Basemap.Type.IMAGERY_WITH_LABELS -> Basemap.createImageryWithLabels()
+        Basemap.Type.IMAGERY_WITH_LABELS_VECTOR -> Basemap.createImageryWithLabelsVector()
+        Basemap.Type.LIGHT_GRAY_CANVAS -> Basemap.createLightGrayCanvas()
+        Basemap.Type.LIGHT_GRAY_CANVAS_VECTOR -> Basemap.createDarkGrayCanvasVector()
+        Basemap.Type.NATIONAL_GEOGRAPHIC -> Basemap.createNationalGeographic()
+        Basemap.Type.NAVIGATION_VECTOR -> Basemap.createNavigationVector()
+        Basemap.Type.OCEANS -> Basemap.createOceans()
+        Basemap.Type.OPEN_STREET_MAP -> Basemap.createOceans()
+        Basemap.Type.STREETS -> Basemap.createStreets()
+        Basemap.Type.STREETS_NIGHT_VECTOR -> Basemap.createStreetsNightVector()
+        Basemap.Type.STREETS_WITH_RELIEF_VECTOR -> Basemap.createStreetsWithReliefVector()
+        Basemap.Type.STREETS_VECTOR -> Basemap.createStreetsVector()
+        Basemap.Type.TOPOGRAPHIC -> Basemap.createTopographic()
+        Basemap.Type.TERRAIN_WITH_LABELS -> Basemap.createTerrainWithLabels()
+        Basemap.Type.TERRAIN_WITH_LABELS_VECTOR -> Basemap.createTerrainWithLabelsVector()
+        Basemap.Type.TOPOGRAPHIC_VECTOR -> Basemap.createTopographicVector()
+      }
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {

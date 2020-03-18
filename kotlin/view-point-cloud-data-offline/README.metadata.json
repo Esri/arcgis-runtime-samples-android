@@ -1,20 +1,20 @@
 {
-    "category": "Visualization",
-    "description": "Display local 3D point cloud data.",
-    "ignore": false,
-    "images": [
-        "view-point-cloud-data-offline.png"
-    ],
-    "keywords": [
-        "Visualization",
-        "PointCloudLayer"
-    ],
-    "redirect_from": "/android/latest/sample-code/view-point-cloud-data-offline.htm",
-    "relevant_apis": [
-        "PointCloudLayer"
-    ],
-    "snippets": [
-        "src/main/java/com/esri/arcgisruntime/samples/viewpointclouddataoffline/MainActivity.kt"
-    ],
-    "title": "View point cloud data offline"
+  "category": "Visualization",
+  "description": "Display local 3D point cloud data.",
+  "ignore": false,
+  "images": [
+    "view-point-cloud-data-offline.png"
+  ],
+  "keywords": [
+    "Visualization",
+    "PointCloudLayer"
+  ],
+  "redirect_from": "/android/latest/sample-code/view-point-cloud-data-offline.htm",
+  "relevant_apis": [
+    "PointCloudLayer"
+  ],
+  "snippets": [
+    "src/main/java/com/esri/arcgisruntime/samples/viewpointclouddataoffline/MainActivity.kt"
+  ],
+  "title": "View point cloud data offline"
 }
