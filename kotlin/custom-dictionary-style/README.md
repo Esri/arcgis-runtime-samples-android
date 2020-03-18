@@ -38,11 +38,11 @@ To learn more about how styles in dictionary renderers work, visit [Display symb
 1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 1. Execute the following command:
 
-`adb push Restaurant.stylx /sdcard/Android/data/com.esri.arcgisruntime.sample.customdictionarystyle/files/Restaurant.stylx`
+`adb push Restaurant.stylx /Android/data/com.esri.arcgisruntime.sample.customdictionarystyle/files/Restaurant.stylx`
 
 Link | Local Location
 ---------|-------|
-|[Restaurant stylx](https://arcgisruntime.maps.arcgis.com/home/item.html?id=751138a2e0844e06853522d54103222a)| `<sdcard>`/Android/data/com.esri.arcgisruntime.sample.customdictionarystyle/files/Restaurant.stylx |
+|[Restaurant stylx](https://arcgisruntime.maps.arcgis.com/home/item.html?id=751138a2e0844e06853522d54103222a)| /Android/data/com.esri.arcgisruntime.sample.customdictionarystyle/files/Restaurant.stylx |
 
 ## Tags
 Visualization

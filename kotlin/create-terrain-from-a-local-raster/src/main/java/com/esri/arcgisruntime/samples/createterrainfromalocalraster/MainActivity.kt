@@ -16,15 +16,10 @@
 
 package com.esri.arcgisruntime.samples.createterrainfromalocalraster
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.Basemap
@@ -35,8 +30,7 @@ import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
-  private val permissionsRequestCode = 1
-  private val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+  private val TAG = this::class.java.simpleName
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -52,16 +46,9 @@ class MainActivity : AppCompatActivity() {
     // specify the initial camera position
     sceneView.setViewpointCamera(Camera(36.525, -121.80, 300.0, 180.0, 80.0, 0.0))
 
-    requestReadPermission()
-  }
-
-  private fun createRasterElevationSource() {
     // raster package file paths
     val filePaths = ArrayList<String>()
-    filePaths.add(
-      Environment.getExternalStorageDirectory()
-        .toString() + getString(R.string.raster_package_location)
-    )
+    filePaths.add(getExternalFilesDir(null)?.path + getString(R.string.raster_package_location))
 
     try {
       // add an elevation source to the scene by passing the URI of the raster package to the constructor
@@ -82,7 +69,6 @@ class MainActivity : AppCompatActivity() {
             )
           }
         }
-
         // load the elevation source asynchronously
         this.loadAsync()
       }
@@ -97,46 +83,8 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  /**
-   * Request read external storage for API level 23+.
-   */
-  private fun requestReadPermission() {
-    if (ContextCompat.checkSelfPermission(
-        this,
-        permissions[0]
-      ) == PackageManager.PERMISSION_GRANTED
-    ) {
-      createRasterElevationSource()
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, permissions, permissionsRequestCode)
-    }
-  }
-
-  /**
-   * Handle the permissions request response
-   */
-  override fun onRequestPermissionsResult(
-    requestCode: Int,
-    permissions: Array<String>,
-    grantResults: IntArray
-  ) {
-    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      createRasterElevationSource()
-    } else {
-      // report to user that permission was denied
-      logErrorToUser(getString(R.string.error_read_permission_denied_message))
-    }
-  }
-
-  /**
-   * AppCompatActivity Extensions
-   **/
-  private val AppCompatActivity.logTag get() = this::class.java.simpleName
-
   private fun AppCompatActivity.logErrorToUser(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    Log.e(logTag, message)
+    Log.e(TAG, message)
   }
-
 }

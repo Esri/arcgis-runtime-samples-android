@@ -18,7 +18,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=98092369c4ae4d549bbbd45dba993ebc"
     ],
     "provision_to": [
-        "/ArcGIS/Samples/Raster/MontereyElevation.dt2"
+        "/MontereyElevation.dt2"
     ],
     "redirect_from": "/android/latest/sample-code/create-terrain-from-a-local-raster.htm",
     "relevant_apis": [
