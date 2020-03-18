@@ -15,7 +15,7 @@
  *
  */
 
-package com.example.exporttiles
+package com.esri.arcgisruntime.sample.exporttiles
 
 import android.graphics.Color
 import android.os.Bundle
