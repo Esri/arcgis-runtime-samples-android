@@ -54,11 +54,12 @@ class MainActivity : AppCompatActivity() {
   private var routeSymbol: SimpleLineSymbol? = null
   private val graphicsOverlay: GraphicsOverlay by lazy {
     GraphicsOverlay().also {
-      //add the overlay to the map view
+      // add the overlay to the map view
       mapView.graphicsOverlays.add(it)
     }
   }
   private var drawerToggle: ActionBarDrawerToggle? = null
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
