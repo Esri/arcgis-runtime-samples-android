@@ -15,7 +15,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=da301cb122874d5497f8a8f6c81eb36e"
     ],
     "provision_to": [
-        "/ArcGIS/Samples/KML/esri_test_data.kmz"
+        "/esri_test_data.kmz"
     ],
     "redirect_from": "/android/latest/sample-code/integrated-windows-authentication.htm",
     "relevant_apis": [

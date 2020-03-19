@@ -2,5 +2,5 @@
     <string name="app_name">KML tour</string>
     <string name="world_terrain_service">http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
     <string name="kml_tour_read_permission_denied">Read permission required to load KML tour!</string>
-    <string name="kml_tour_path">/ArcGIS/Samples/KML/Esri_tour.kmz</string>
+    <string name="kml_tour_path">/Esri_tour.kmz</string>
 </resources>

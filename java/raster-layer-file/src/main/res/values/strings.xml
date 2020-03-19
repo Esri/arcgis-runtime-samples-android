@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Raster Layer File</string>
     <string name="raster_write_permission_denied">Raster Layer File could not open the raster because WRITE permission was denied.</string>
-    <string name="raster_folder">/ArcGIS/samples/raster</string>
     <string name="shasta">Shasta</string>
 </resources>

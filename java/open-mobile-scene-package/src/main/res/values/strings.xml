@@ -2,7 +2,7 @@
     <string name="app_name">Open mobile scene package</string>
     <string name="elevation_image_service_url">
         http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
-    <string name="mspk_path">/ArcGIS/Samples/ScenePackage/philadelphia.mspk</string>
+    <string name="mspk_path">/philadelphia.mspk</string>
     <string name="location_permission_denied">
         Open Mobile Scene Package could not open because READ permission was denied.</string>
 </resources>

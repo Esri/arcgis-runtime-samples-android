@@ -28,7 +28,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=f10b1d37fdd645c9bc9b189fb546307c"
     ],
     "provision_to": [
-        "/ArcGIS/Samples/KML/Esri_tour.kmz"
+        "/Esri_tour.kmz"
     ],
     "redirect_from": "/android/latest/sample-code/play-a-kml-tour.htm",
     "relevant_apis": [

@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- data paths -->
-    <string name="config_data_sdcard_offline_dir">/ArcGIS/samples/FLGdb/</string>
-    <!-- geodatabase tpk file name -->
     <string name="config_geodb_name">LA_Trails.geodatabase</string>
 </resources>

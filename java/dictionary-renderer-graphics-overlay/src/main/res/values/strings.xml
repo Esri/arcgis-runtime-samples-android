@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Dictionary Renderer with Graphics Overlay</string>
-    <string name="mil2525d_stylx">/ArcGIS/samples/Dictionary/mil2525d.stylx</string>
+    <string name="mil2525d_stylx">/mil2525d.stylx</string>
     <string name="mil2525dmessages_xml_file">mil2525dmessages.xml</string>
     <string name="read_permission_denied">Data could not open because READ permission was denied.</string>
 </resources>

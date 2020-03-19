@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Read GeoPackage</string>
-    <string name="geopackage_path">/ArcGIS/Samples/GeoPackage/AuroraCO.gpkg</string>
+    <string name="geopackage_path">/AuroraCO.gpkg</string>
     <string name="permission_denied">GeoPackage could not be opened because READ permission was denied.
     </string>
 </resources>
