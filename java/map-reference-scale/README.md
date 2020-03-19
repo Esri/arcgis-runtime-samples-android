@@ -19,7 +19,7 @@ Map annotations are typically only relevant at certain scales. For instance, ann
 ## How it works
 
 1. Get and set the reference scale property on the `ArcGISMap` object.
-1. If checked, get and set the scale symbols property on each individual `FeatureLayer` object.
+2. If checked, get and set the scale symbols property on each individual `FeatureLayer` object.
 
 ## Relevant API
 

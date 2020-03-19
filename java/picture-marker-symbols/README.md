@@ -24,9 +24,9 @@ When launched, this sample displays a map with three picture marker symbols. Pan
 ## About the data
 
 The picture marker symbols in this sample are all constructed from different types of resources:
- - [Campsite symbol constructed from a URL](http://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0/images/e82f744ebb069bb35b234b3fea46deae)
- - Blue pin with a star stored in the resource folder that comes with the application
- - Orange pin created from a file path on disk (which is written to disk when the app starts and cleaned up when the app closes).
+ * [Campsite symbol constructed from a URL](http://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0/images/e82f744ebb069bb35b234b3fea46deae)
+ * Blue pin with a star stored in the resource folder that comes with the application
+ * Orange pin created from a file path on disk (which is written to disk when the app starts and cleaned up when the app closes).
 
 ## Tags
 

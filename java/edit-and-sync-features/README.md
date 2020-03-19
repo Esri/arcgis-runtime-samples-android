@@ -13,14 +13,15 @@ A survey worker who works in an area without an internet connection could take a
 Pan and zoom into the desired area, making sure the area you want to take offline is within the current extent of the map view. Tap on the "Generate Geodatabase" button to take the area offline. When complete, the map will update with a red outline around the offline area. To edit features, tap to select a feature, and tap again anywhere else on the map to move the selected feature to the tapped location. To sync the edits with the feature service, click the "Sync geodatabase" button.
 
 ## How it works
+
 1. Create a `GeodatabaseSyncTask` from a URL to a feature service.
-1. Use `createDefaultGenerateGeodatabaseParametersAsync()` on the geodatabase sync task to create `GenerateGeodatabaseParameters`, passing in an `Envelope` extent as the parameter.
-1. Create a `GenerateGeodatabaseJob` from the `GeodatabaseSyncTask` using `generateGeodatabaseAsync(...)` passing in parameters and a path to the local geodatabase.
-1. Start the job and get the result `Geodatabase`.
-1. Load the geodatabase and get its feature tables. Create feature layers from the feature tables and add them to the map's operational layers collection.
-1. Create `SyncGeodatabaseParameters` and set the sync direction.
-1. Create a `SyncGeodatabaseJob` from `GeodatabaseSyncTask` using `.syncGeodatabaseAsync(...)` passing in the parameters and geodatabase as arguments.
-1. Start the sync job to synchronize the edits with `syncGeodatabase.start()`.
+2. Use `createDefaultGenerateGeodatabaseParametersAsync()` on the geodatabase sync task to create `GenerateGeodatabaseParameters`, passing in an `Envelope` extent as the parameter.
+3. Create a `GenerateGeodatabaseJob` from the `GeodatabaseSyncTask` using `generateGeodatabaseAsync(...)` passing in parameters and a path to the local geodatabase.
+4. Start the job and get the result `Geodatabase`.
+5. Load the geodatabase and get its feature tables. Create feature layers from the feature tables and add them to the map's operational layers collection.
+6. Create `SyncGeodatabaseParameters` and set the sync direction.
+7. Create a `SyncGeodatabaseJob` from `GeodatabaseSyncTask` using `.syncGeodatabaseAsync(...)` passing in the parameters and geodatabase as arguments.
+8. Start the sync job to synchronize the edits with `syncGeodatabase.start()`.
 
 ## Relevant API
 

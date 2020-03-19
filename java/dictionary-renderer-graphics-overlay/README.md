@@ -15,14 +15,14 @@ Run the sample and view the military symbols on the map.
 ## How it works
 
 1. Create a new `DictionarySymbolStyle` with `DictionarySymbolStyle.createFromFile()`.
-1. Create a new `DictionaryRenderer`, passing in the `symbolDictionary`.
-1. Create a new `GraphicsOverlay`.
-1. Set the  dictionary renderer to the graphics overlay.
-1. Parse through the local XML file creating a map of key/value pairs for each block of attributes.
-1. Create a `Graphic` for each attribute.
-1. Use the `_wkid` key to get the geometry's spatial reference.
-1. Use the `_control_points` key to get the geometry's shape.
-1. Add the graphic to the graphics overlay.
+2. Create a new `DictionaryRenderer`, passing in the `symbolDictionary`.
+3. Create a new `GraphicsOverlay`.
+4. Set the  dictionary renderer to the graphics overlay.
+5. Parse through the local XML file creating a map of key/value pairs for each block of attributes.
+6. Create a `Graphic` for each attribute.
+7. Use the `_wkid` key to get the geometry's spatial reference.
+8. Use the `_control_points` key to get the geometry's shape.
+9. Add the graphic to the graphics overlay.
 
 ## Relevant API
 

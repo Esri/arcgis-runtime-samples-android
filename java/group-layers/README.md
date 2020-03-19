@@ -17,10 +17,10 @@ Display the layers in the map in a table of contents by clicking the map icon at
 ## How it works
 
 1. Add the `GroupLayer` and additional `Layer`s as operational layers in the `SceneView`.
-3. To build the table of contents:
+2. To build the table of contents:
   - Add each layer to the table of contents.
   - For each `Layer` in the `SceneView`, if `canShowInLegend()` returns true, add it to the table of contents.
-4. To toggle the visibility of the group, simply change the group layer's visibility property.
+3. To toggle the visibility of the group, simply change the group layer's visibility property.
 
 ## Relevant API
 

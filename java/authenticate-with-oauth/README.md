@@ -15,9 +15,9 @@ When you run the sample, the app will load a web map which contains premium cont
 ## How it works
 
 1. Create an `OAuthConfiguration` specifying the portal URL, client ID, and redirect URL.
-1. Set the `AuthenticationManager`'s `AuthenticationChallengeHandler` to a `DefaultAuthenticationChallengeHandler`.
-1. Add the OAuth configuration to the authentication manager.
-1. Load a map with premium content requiring authentication to automatically invoke the default authentication handler.
+2. Set the `AuthenticationManager`'s `AuthenticationChallengeHandler` to a `DefaultAuthenticationChallengeHandler`.
+3. Add the OAuth configuration to the authentication manager.
+4. Load a map with premium content requiring authentication to automatically invoke the default authentication handler.
 
 ## Relevant API
 
