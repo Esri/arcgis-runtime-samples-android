@@ -17,7 +17,7 @@ Tap the "Apply Layer" button to apply the raster function and display the result
 1. Create the `ImageServiceRaster` referring to the image server URL.
 2. Create the `RasterFunction` from a JSON string.
 3. Get the arguments of the raster function with `rasterFunction.getArguments()`.
-4. Get the names of the raster arguments with `rasterFunctionArguments.rasterNames`.
+4. Get the names of the raster arguments with `rasterFunctionArguments.getRasterNames()`.
 5. Set the raster argument with `rasterFunction.setRaster(rasterName, imageServiceRaster)`.
 6. Create a new `Raster` referring to the raster function.
 7. Create a `RasterLayer` to visualize the computed raster.
