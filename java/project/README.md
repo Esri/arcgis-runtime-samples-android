@@ -14,7 +14,7 @@ Tap anywhere on the map. A callout will display the tapped location's coordinate
 
 ## How it works
 
-1. Call the static method, `GeometryEngine.project`, passing in the original `Geometry` and a `SpatialReference` to which it should be projected.
+1. Call the static method, `GeometryEngine.project(...)`, passing in the original `Geometry` and a `SpatialReference` to which it should be projected.
 
 ## Relevant API
 
