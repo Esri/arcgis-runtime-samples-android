@@ -11,17 +11,17 @@
  *
  */
 
-package com.esri.arcgisruntime.samples.featurelayerselection;
+package com.esri.arcgisruntime.sample.featurelayerselection;
 
 import java.util.Iterator;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureQueryResult;

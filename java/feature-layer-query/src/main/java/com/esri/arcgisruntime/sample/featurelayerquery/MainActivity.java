@@ -11,7 +11,7 @@
  *
  */
 
-package com.esri.arcgisruntime.samples.featurelayerquery;
+package com.esri.arcgisruntime.sample.featurelayerquery;
 
 import java.util.Iterator;
 
@@ -20,12 +20,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureQueryResult;

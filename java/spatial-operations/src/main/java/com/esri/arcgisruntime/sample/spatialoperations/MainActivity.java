@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.esri.arcgisandroid.sample.spatialoperations;
+package com.esri.arcgisruntime.sample.spatialoperations;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Part;
