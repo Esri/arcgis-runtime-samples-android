@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     mapView.map = map
 
     // create a feature layer from an online feature service of US Highways and add it to the map
-    val serviceFeatureTable = ServiceFeatureTable(getString(R.string.us_highways_1))
+    val serviceFeatureTable = ServiceFeatureTable(getString(R.string.congressional_districts_url))
     val featureLayer = FeatureLayer(serviceFeatureTable)
     map.operationalLayers.add(featureLayer)
 
@@ -58,9 +58,7 @@ class MainActivity : AppCompatActivity() {
         // set viewpoint to the center of the US
         mapView.setViewpointAsync(
           Viewpoint(
-            Point(-10974490.0, 4814376.0, 0.0, SpatialReferences.getWebMercator()),
-            20000000.0
-          )
+            featureLayer.fullExtent)
         )
       } else {
         Toast.makeText(

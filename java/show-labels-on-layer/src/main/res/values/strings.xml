@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Show Labels on Layer</string>
-    <string name="congressional_districts_url">https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_115th_Congressional_Districts/FeatureServer/0</string>
+    <string name="congressional_districts_url">https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_116th_Congressional_Districts/FeatureServer/0</string>
 </resources>
