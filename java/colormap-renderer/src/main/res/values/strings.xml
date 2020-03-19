@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">Colormap Renderer</string>
-    <string name="colormap_write_permission_denied">Colormap Renderer could not open the raster because WRITE permission was denied.</string>
-    <string name="raster_folder">ArcGIS/samples/raster</string>
-    <string name="shasta_b_w">ShastaBW</string>
+    <string name="app_name">Colormap renderer</string>
+    <string name="shasta_b_w">/ShastaBW.tif</string>
 </resources>
