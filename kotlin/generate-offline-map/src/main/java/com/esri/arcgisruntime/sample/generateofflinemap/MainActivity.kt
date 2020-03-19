@@ -200,7 +200,7 @@ class MainActivity : AppCompatActivity() {
    */
   private fun createProgressDialog(job: GenerateOfflineMapJob): AlertDialog {
     val builder = AlertDialog.Builder(this@MainActivity).apply {
-      setTitle("Exporting tiles...")
+      setTitle("Generating offline map...")
       // provide a cancel button on the dialog
       setNeutralButton("Cancel") { _, _ ->
         job.cancel()
