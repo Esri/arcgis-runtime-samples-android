@@ -1,4 +1,4 @@
-# Feature Layer Show Attributes
+# Feature layer show attributes
 
 Return all loaded features from a query to show all attributes.
 
