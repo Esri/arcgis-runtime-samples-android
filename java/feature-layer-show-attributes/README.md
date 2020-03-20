@@ -6,7 +6,7 @@ Return all loaded features from a query to show all attributes.
 
 ## Use case
 
-Attributes can be used to help describe the objects represented by a feature.
+Attributes can be used to help describe the objects represented by a feature. A geologist might use an attribute to describe the rock type of polygons representing surface geology. Archaeologists might use attributes to record the stratigraphic layer of finds represented as point features.
 
 ## How to use the sample
 
