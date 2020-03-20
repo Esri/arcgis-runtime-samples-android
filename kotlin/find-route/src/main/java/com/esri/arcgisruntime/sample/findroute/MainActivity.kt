@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
       // set the map to be displayed in this view
       mapView.map = map
     }
-    // update UI when attribution view changes
+    // ensure the floating action button moves to be above the attribution view
     val params = directionFab.layoutParams as ConstraintLayout.LayoutParams
     mapView.addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
       val heightDelta = bottom - oldBottom
@@ -95,6 +95,10 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Solves the route using a Route Task, populates the navigation drawer with the directions,
+   * and displays a graphic of the route on the map.
+   */
   private fun solveRoute() {
     // create a route task instance
     val routeTask = RouteTask(this, getString(R.string.routing_service))
@@ -116,10 +120,11 @@ class MainActivity : AppCompatActivity() {
             setStops(stops)
             // set return directions as true to return turn-by-turn directions in the result of
             // getDirectionManeuvers().
+            // UNSURE: what's going on with this comment
             isReturnDirections = true
           }
 
-          // solve
+          // solve the route
           val result = routeTask.solveRouteAsync(routeParams).get()
           val route = result.routes[0] as Route
           // create a simple line symbol for the route
@@ -141,7 +146,7 @@ class MainActivity : AppCompatActivity() {
             progressDialog.dismiss()
           }
 
-          left_drawer.apply {
+          leftDrawer.apply {
           // Set the adapter for the list view
           adapter = ArrayAdapter(
             applicationContext,
@@ -155,7 +160,7 @@ class MainActivity : AppCompatActivity() {
                 graphicsOverlay.graphics.removeAt(graphicsOverlay.graphics.size - 1)
               }
 
-              drawer_layout.closeDrawers()
+              drawerLayout.closeDrawers()
 
               val geometry = directions[position].geometry
               mapView.setViewpointAsync(
@@ -240,7 +245,7 @@ class MainActivity : AppCompatActivity() {
   private fun setupDrawer() =
     object : ActionBarDrawerToggle(
       this,
-      drawer_layout,
+      drawerLayout,
       R.string.drawer_open,
       R.string.drawer_close
     ) {
@@ -257,8 +262,8 @@ class MainActivity : AppCompatActivity() {
       }
     }.apply {
       isDrawerIndicatorEnabled = true
-      drawer_layout.addDrawerListener(this)
-      drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+      drawerLayout.addDrawerListener(this)
+      drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
     }
 
 
