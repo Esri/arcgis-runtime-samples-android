@@ -16,7 +16,7 @@ Use the navigation drawer to select the basemap and layers you'd like to add to 
 
 1. An `ArcGISMap` is created with a `Basemap` and a few operational layers.
 2. A `Portal` object is created and loaded. This will issue an authentication challenge, prompting the user to provide credentials.
-1. Use `ArcGISMap.saveAsAsync` passing in the `Portal`, and information about the map, to save the map to the portal.
+3. Use `ArcGISMap.saveAsAsync(...)` passing in the `Portal`, and information about the map, to save the map to the portal.
 
 ## Relevant API
 

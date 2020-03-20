@@ -23,16 +23,15 @@ Speed Slider (Top Right Corner):
 
 ## How it works
 
-1. Create a `GraphicsOverlay` and attach it to the `SceneView`.
 1. Create a `ModelSceneSymbol` object.
-1. Create a `Graphic` object and set its geometry to a `Point`.
-1. Set the `ModelSceneSymbol` object to the graphic.
-1. Add heading, pitch, and roll attributes to the graphic. Get the attributes from the graphic with `Graphic.attributes`.
-1. Create a `SimpleRenderer` object and set its expression properties.
-1. Add graphic and a renderer to the graphics overlay.
-1. Create a `OrbitGeoElementCameraController` which is set to target the graphic.
-1. Assign the camera controller to the `SceneView`.
-1. Update the graphic's location, heading, pitch, and roll.
+2. Create a `Graphic` object and set its geometry to a `Point`.
+3. Set the `ModelSceneSymbol` object to the graphic.
+4. Add heading, pitch, and roll attributes to the graphic. Get the attributes from the graphic with `Graphic.attributes`.
+5. Create a `SimpleRenderer` object and set its expression properties.
+6. Add graphic and a renderer to the graphics overlay.
+7. Create a `OrbitGeoElementCameraController` which is set to target the graphic.
+8. Assign the camera controller to the `SceneView`.
+9. Update the graphic's location, heading, pitch, and roll.
 
 ## Relevant API
 

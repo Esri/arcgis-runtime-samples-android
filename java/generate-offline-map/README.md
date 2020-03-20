@@ -15,10 +15,10 @@ When the app starts, you will be prompted to sign in using a free ArcGIS Online 
 ## How it works
 
 1. Create an `ArcGISMap` with a `Portal` item pointing to the web map.
-1. Create `GenerateOfflineMapParameters` specifying the download area geometry, minimum scale, and maximum scale.
-1. Create an `OfflineMapTask` with the map.
-1. Create the `OfflineMapJob` with `OfflineMapTask.generateOfflineMap(params, downloadDirectoryPath)` and start it with `OfflineMapJob.start()`.
-1. When the job is done, get the offline map with `OfflineMapJob.getResult().getOfflineMap()`.
+2. Create `GenerateOfflineMapParameters` specifying the download area geometry, minimum scale, and maximum scale.
+3. Create an `OfflineMapTask` with the map.
+4. Create the `OfflineMapJob` with `OfflineMapTask.generateOfflineMap(params, downloadDirectoryPath)` and start it with `OfflineMapJob.start()`.
+5. When the job is done, get the offline map with `OfflineMapJob.getResult().getOfflineMap()`.
 
 ## Relevant API
 

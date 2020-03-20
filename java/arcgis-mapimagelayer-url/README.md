@@ -2,7 +2,7 @@
 
 Display a layer from an ArcGIS map image layer service.
 
-![Image of map image layer](arcgis-mapimagelayer-url.png)
+![Image of an ArcGIS map image layer](arcgis-mapimagelayer-url.png)
 
 ## Use case
 
@@ -15,7 +15,7 @@ Run the sample and view the map image layer. As you navigate the map, the layer 
 ## How it works
 
 1. Create an instance of `ArcGISMap`.
-1. Create an `ArcGISMapImageLayer` with the URL to a map image service.
+2. Create an `ArcGISMapImageLayer` with the URL to a map image service.
 3. Add it to the map's operational layers collection using `map.getOperationalLayers().add(mapImageLayer)`.
 
 ## Relevant API

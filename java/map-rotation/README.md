@@ -16,7 +16,7 @@ Use the progress bar to rotate the map. If the map is not pointed north, the pro
 
 1. Instantiate an `ArcGISMap` object.
 2. Set the map to a `MapView` object.
-3. Use `setViewpointRotationAsync` to set the rotation angle.
+3. Use `setViewpointRotationAsync(...)` to set the rotation angle.
 
 ## Relevant API
 

@@ -15,11 +15,11 @@ Select a date range (between 1998-01-01 and 1998-05-31) from the dialog and tap 
 ## How it works
 
 1. Create a `GeoprocessingTask` with the URL set to the endpoint of a geoprocessing service.
-1. Create a query string with the date range as an input of `GeoprocessingParameters`.
-1. Use the `GeoprocessingTask` to create a `GeoprocessingJob` with the `GeoprocessingParameters` instance.
-1. Start the `GeoprocessingJob` and wait for it to complete and return a `GeoprocessingResult`.
-1. Get the resulting `ArcGISMapImageLayer` using `GeoprocessingResult.getMapImageLayer`.
-1. Add the layer to the map's operational layers.
+2. Create a query string with the date range as an input of `GeoprocessingParameters`.
+3. Use the `GeoprocessingTask` to create a `GeoprocessingJob` with the `GeoprocessingParameters` instance.
+4. Start the `GeoprocessingJob` and wait for it to complete and return a `GeoprocessingResult`.
+5. Get the resulting `ArcGISMapImageLayer` using `geoprocessingResult.getMapImageLayer()`.
+6. Add the layer to the map's operational layers.
 
 ## Relevant API
 

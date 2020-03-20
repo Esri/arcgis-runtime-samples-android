@@ -15,13 +15,13 @@ Pan and zoom around the map. Observe the displayed military symbology on the map
 ## How it works
 
 1. Create a `Geodatabase` using `new Geodatabase(geodatabasePath)`.
-1. Load the geodatabase asynchronously using `Geodatabase.loadAsync()`.
-1. Instantiate a `SymbolDictionary`  using `DictionarySymbolStyle(dictionaryPath)`.
-1. Load the symbol dictionary asynchronously using `DictionarySymbol.loadAsync()`.
-1. Wait for geodatabase to completely load by connecting to `Geodatabase.addDoneLoadingListener()`.
-1. For each `GeoDatabaseFeatureTable` in the `GeoDatabase`, create a feature layer with it, then add it to the map using `Map.getOperationalLayers().add(FeatureLayer)`.
-1. Create `DictionaryRenderer(SymbolDictionary)` and attach to the feature layer using `FeatureLayer.setRenderer(DictionaryRenderer)`.
-1. Set the viewpoint of the map view to the extent of the feature layer using `MapView.setViewpointGeometryAsync(featureLayer.getFullExtent())`.
+2. Load the geodatabase asynchronously using `Geodatabase.loadAsync()`.
+3. Instantiate a `SymbolDictionary`  using `DictionarySymbolStyle(dictionaryPath)`.
+4. Load the symbol dictionary asynchronously using `DictionarySymbol.loadAsync()`.
+5. Wait for geodatabase to completely load by connecting to `Geodatabase.addDoneLoadingListener()`.
+6. For each `GeoDatabaseFeatureTable` in the `GeoDatabase`, create a feature layer with it, then add it to the map using `Map.getOperationalLayers().add(FeatureLayer)`.
+7. Create `DictionaryRenderer(SymbolDictionary)` and attach to the feature layer using `FeatureLayer.setRenderer(DictionaryRenderer)`.
+8. Set the viewpoint of the map view to the extent of the feature layer using `MapView.setViewpointGeometryAsync(featureLayer.getFullExtent())`.
 
 ## Relevant API
 

@@ -17,9 +17,8 @@ Some WFS services return coordinates in X,Y order, while others return coordinat
 ## How it works
 
 1. Create a `WfsService` object with a URL to a WFS feature service.
-2. Obtain a list of `WfsLayerInfo` from `WfsService.getServiceInfo`.
+2. Obtain a list of `WfsLayerInfo` from `WfsService.getServiceInfo()`.
 3. When a layer is selected, create a `WfsFeatureTable` from the `WfsLayerInfo`.
-    * Set the axis order if necessary.
 4. Create a feature layer from the feature table.
 5. Add the feature layer to the map.
 
