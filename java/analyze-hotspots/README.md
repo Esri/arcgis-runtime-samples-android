@@ -19,6 +19,7 @@ Select a date range (between 1998-01-01 and 1998-05-31) from the dialog and tap 
 3. Use the `GeoprocessingTask` to create a `GeoprocessingJob` with the `GeoprocessingParameters` instance.
 4. Start the `GeoprocessingJob` and wait for it to complete and return a `GeoprocessingResult`.
 5. Get the resulting `ArcGISMapImageLayer` using `geoprocessingResult.getMapImageLayer()`.
+6. Add the layer to the map's operational layers.
 
 ## Relevant API
 
