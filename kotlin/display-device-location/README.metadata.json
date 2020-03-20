@@ -21,7 +21,7 @@
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/displaydevicelocation/MainActivity.kt",
-            "src/main/java/com/esri/arcgisruntime/sample/displaydevicelocation/SpinnerAdapter.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/displaydevicelocation/SpinnerAdapter.kt"
     ],
     "title": "Display device location"
 }
