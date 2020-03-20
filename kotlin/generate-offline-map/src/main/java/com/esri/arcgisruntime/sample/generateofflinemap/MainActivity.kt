@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity() {
     // delete any offline map already in the cache
     val tempDirectoryPath: String =
       cacheDir.toString() + File.separator.toString() + "offlineMap"
-    deleteDirectory(File(tempDirectoryPath))
+    File(tempDirectoryPath).deleteRecursively()
 
     // specify the extent, min scale, and max scale as parameters
     var minScale: Double = mapView.mapScale
@@ -212,21 +212,6 @@ class MainActivity : AppCompatActivity() {
       )
     }
     return builder.create()
-  }
-
-  /**
-   * Recursively deletes all files in the given directory.
-   *
-   * @param file to delete
-   */
-  private fun deleteDirectory(file: File) {
-    if (file.isDirectory)
-      for (subFile in file.listFiles()) {
-        deleteDirectory(subFile)
-      }
-    if (!file.delete()) {
-      Log.e(TAG, "Failed to delete file: " + file.path)
-    }
   }
 
   override fun onResume() {
