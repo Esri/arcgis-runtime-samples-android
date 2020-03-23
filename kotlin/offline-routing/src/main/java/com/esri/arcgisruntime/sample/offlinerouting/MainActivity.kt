@@ -232,7 +232,7 @@ class MainActivity : AppCompatActivity() {
           stopsOverlay.unselectGraphics(stopsOverlay.selectedGraphics)
         }
         // if the user tapped on something, select it
-        if (graphics.size > 0) {
+        if (graphics.isNotEmpty()) {
           val firstGraphic = graphics[0]
           firstGraphic.isSelected = true
         } else { // there is no graphic at this location
