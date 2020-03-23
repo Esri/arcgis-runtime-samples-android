@@ -82,16 +82,14 @@ class MainActivity : AppCompatActivity() {
           // create route parameters
           routeParameters = routeTask.createDefaultParametersAsync().get()
         } catch (e: Exception) {
-          when (e) {
-            is InterruptedException, is ExecutionException -> Log.e(
-              TAG,
-              "Error getting default route parameters. ${e.stackTrace}"
-            )
-          }
+          val error = "Error getting default route parameters. ${e.message}"
+          Log.e(TAG, error)
+          Toast.makeText(this, error, Toast.LENGTH_LONG).show()
         }
       } else {
-        Log.e(TAG, "Error loading route task. ${routeTask.loadError.message}")
-        Toast.makeText(this, "Failed to load route task.", Toast.LENGTH_LONG).show()
+        val error = "Error loading route task: ${routeTask.loadError.message}"
+        Log.e(TAG, error)
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
       }
     }
 
