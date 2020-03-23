@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.esri.arcgisruntime.sample.offlinerouting.MainActivity">
@@ -12,40 +11,41 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/clear_button_text"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/modeGroup"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <RadioGroup
-        android:id="@+id/modeSwitch"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/modeGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checkedButton="@id/fastest_button"
-        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <RadioButton
-            android:id="@+id/shortest_button"
-            android:layout_width="match_parent"
+        <RadioGroup
+            android:id="@+id/modeSwitch"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/shortest_button_text" />
+            android:checkedButton="@id/fastest_button"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <RadioButton
-            android:id="@+id/fastest_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/fastest_button_text" />
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/shortest_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/shortest_button_text" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <RadioButton
+                android:id="@+id/fastest_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fastest_button_text" />
+        </RadioGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
@@ -54,8 +54,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/modeGroup">
-
-    </com.esri.arcgisruntime.mapping.view.MapView>
+        app:layout_constraintTop_toBottomOf="@id/modeGroup" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

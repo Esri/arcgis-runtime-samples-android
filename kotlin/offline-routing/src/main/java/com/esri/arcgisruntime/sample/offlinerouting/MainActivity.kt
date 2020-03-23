@@ -203,12 +203,9 @@ class MainActivity : AppCompatActivity() {
         routeOverlay.graphics.clear()
         routeOverlay.graphics.add(graphic)
       } catch (e: Exception) {
-        when (e) {
-          is InterruptedException, is ExecutionException -> Log.e(
-            TAG,
-            "No route solution. ${e.stackTrace}"
-          )
-        }
+        val error = "No route solution. ${e.message}"
+        Log.e(TAG, error)
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
         routeOverlay.graphics.clear()
       }
     }
@@ -226,7 +223,7 @@ class MainActivity : AppCompatActivity() {
       try {
         val graphics = results.get().graphics
         // unselect everything
-        if (stopsOverlay.selectedGraphics.size > 0) {
+        if (stopsOverlay.selectedGraphics.isNotEmpty()) {
           stopsOverlay.unselectGraphics(stopsOverlay.selectedGraphics)
         }
         // if the user tapped on something, select it
@@ -239,12 +236,9 @@ class MainActivity : AppCompatActivity() {
           createStopSymbol(stopsOverlay.graphics.size + 1, locationPoint)
         }
       } catch (e: Exception) {
-        when (e) {
-          is InterruptedException, is ExecutionException -> Log.e(
-            TAG,
-            "Error identifying graphic: ${e.stackTrace}"
-          )
-        }
+        val error = "Error identifying graphic: ${e.stackTrace}"
+        Log.e(TAG, error)
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
       }
     }
   }
