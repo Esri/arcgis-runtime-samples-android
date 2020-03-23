@@ -17,7 +17,7 @@ Enter the URL to your IWA-secured portal. Tap the button to search for web maps 
 
 1. The `AuthenticationManager` object is configured with a challenge handler that will prompt for a Windows login (username, password, and domain) if a secure resource is encountered.
 2. When a search for portal items is performed against an IWA-secured portal, the challenge handler creates an `UserCredential` object from the information entered by the user.
-3. If the user authenticates, the search returns a list of web maps (`PortalItem`) and the user can select one to display as a `ArcGISMap`.
+3. If the user authenticates, the search returns a list of web map `PortalItem`s and the user can select one to display as an `ArcGISMap`.
 
 ## Relevant API
 
