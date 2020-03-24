@@ -1,7 +1,7 @@
 include ':add-enc-exchange-set',
         ':add-features-feature-service',
         ':add-graphics-renderer',
-        ':add-graphics-symbols',
+        ':add-graphics-with-symbols',
         ':add-point-scene-layer',
         ':analyze-hotspots',
         ':animate-3d-graphic',

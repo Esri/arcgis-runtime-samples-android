@@ -1,48 +1,48 @@
 {
-    "category": "Utility Networks",
-    "description": "Get a server-defined trace configuration for a given tier and modify its traversability scope, add new condition barriers and control what is included in the subnetwork trace result.",
-    "ignore": false,
-    "images": [
-        "configure-subnetwork-trace.png"
-    ],
-    "keywords": [
-        "category comparison",
-        "condition barriers",
-        "network analysis",
-        "network attribute comparison",
-        "trace configuration",
-        "traversability",
-        "utility network",
-        "validate consistency",
-        "subnetwork trace"
-    ],
-    "redirect_from": "",
-    "relevant_apis": [
-        "CodedValueDomain",
-        "UtilityAssetType",
-        "UtilityAttributeComparisonOperator",
-        "UtilityCategory",
-        "UtilityCategoryComparison",
-        "UtilityCategoryComparisonOperator",
-        "UtilityDomainNetwork",
-        "UtilityElement",
-        "UtilityElementTraceResult",
-        "UtilityNetwork",
-        "UtilityNetworkAttribute",
-        "UtilityNetworkAttributeComparison",
-        "UtilityNetworkDefinition",
-        "UtilityTerminal",
-        "UtilityTier",
-        "UtilityTraceAndCondition",
-        "UtilityTraceConfiguration",
-        "UtilityTraceOrCondition",
-        "UtilityTraceParameters",
-        "UtilityTraceResult",
-        "UtilityTraceType",
-        "UtilityTraversability"
-    ],
-    "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/configuresubnetworktrace/MainActivity.kt"
-    ],
-    "title": "Configure subnetwork trace"
+  "category": "Utility Networks",
+  "description": "Get a server-defined trace configuration for a given tier and modify its traversability scope, add new condition barriers and control what is included in the subnetwork trace result.",
+  "ignore": false,
+  "images": [
+    "configure-subnetwork-trace.png"
+  ],
+  "keywords": [
+    "category comparison",
+    "condition barriers",
+    "network analysis",
+    "network attribute comparison",
+    "trace configuration",
+    "traversability",
+    "utility network",
+    "validate consistency",
+    "subnetwork trace"
+  ],
+  "redirect_from": "",
+  "relevant_apis": [
+    "CodedValueDomain",
+    "UtilityAssetType",
+    "UtilityAttributeComparisonOperator",
+    "UtilityCategory",
+    "UtilityCategoryComparison",
+    "UtilityCategoryComparisonOperator",
+    "UtilityDomainNetwork",
+    "UtilityElement",
+    "UtilityElementTraceResult",
+    "UtilityNetwork",
+    "UtilityNetworkAttribute",
+    "UtilityNetworkAttributeComparison",
+    "UtilityNetworkDefinition",
+    "UtilityTerminal",
+    "UtilityTier",
+    "UtilityTraceAndCondition",
+    "UtilityTraceConfiguration",
+    "UtilityTraceOrCondition",
+    "UtilityTraceParameters",
+    "UtilityTraceResult",
+    "UtilityTraceType",
+    "UtilityTraversability"
+  ],
+  "snippets": [
+    "src/main/java/com/esri/arcgisruntime/sample/configuresubnetworktrace/MainActivity.kt"
+  ],
+  "title": "Configure subnetwork trace"
 }

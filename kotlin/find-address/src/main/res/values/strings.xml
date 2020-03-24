@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Find address</string>
+    <string name="address_search_hint">Enter address</string>
+    <string name="geo_locate_error">Geocode failed on address.</string>
+    <string name="location_not_found">No location with that name: </string>
+    <string name="locator_task_uri">http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer</string>
+    <string name="suggestion">Suggestion</string>
+</resources>
