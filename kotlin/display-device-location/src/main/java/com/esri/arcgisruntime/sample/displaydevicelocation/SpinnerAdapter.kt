@@ -27,7 +27,10 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.spinner_layout.view.*
 import java.util.ArrayList
 
-
+/**
+ * Adapter to display both a string and icon beside each other in a spinner.
+ * Used here to populate the options for LocationDisplay.AutoPanMode.
+ */
 class SpinnerAdapter(
   context: Activity,
   private val groupId: Int,

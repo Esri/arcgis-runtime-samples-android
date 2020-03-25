@@ -36,12 +36,14 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+    // create a new map with an imagery basemap and set it to the map view
     mapView.map = ArcGISMap(Basemap.createImagery())
     // listen to changes in the status of the location data source
     locationDisplay.addDataSourceStatusChangedListener {
       // if LocationDisplay isn't started or has an error
       if (!it.isStarted && it.error != null) {
-        // check permissions to see if failure may be due to lack of permissions.
+        // check permissions to see if failure may be due to lack of permissions
         requestPermissions(it)
       }
     }
@@ -97,7 +99,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Request fine and coarse location permissions for API level 23+.
+   * Request fine and coarse location permissions for API level 23+
    */
   private fun requestPermissions(dataSourceStatusChangedEvent: LocationDisplay.DataSourceStatusChangedEvent) {
     val requestCode = 2
@@ -129,14 +131,14 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Handle the permissions request response.
+   * Handle the permissions request response
    */
   override fun onRequestPermissionsResult(
     requestCode: Int,
     permissions: Array<String>,
     grantResults: IntArray
   ) {
-    // if request is cancelled, the result arrays are empty.
+    // if request is cancelled, the result arrays are empty
     if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       // location permission was granted; this would have been triggered in response to failing to start the
       // LocationDisplay, so try starting this again
