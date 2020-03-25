@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Request fine and coarse location permissions for API level 23+
+   * Request fine and coarse location permissions for API level 23+.
    */
   private fun requestPermissions(dataSourceStatusChangedEvent: LocationDisplay.DataSourceStatusChangedEvent) {
     val requestCode = 2
@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Handle the permissions request response
+   * Handle the permissions request response.
    */
   override fun onRequestPermissionsResult(
     requestCode: Int,
