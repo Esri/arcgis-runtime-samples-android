@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Offline routing</string>
-    <string name="tpk_path">/san_diego/streetmap_SD.tpk</string>
-    <string name="geodatabase_path">/san_diego/sandiego.geodatabase</string>
+    <string name="tpk_path">/streetmap_SD.tpk</string>
+    <string name="geodatabase_path">/sandiego.geodatabase</string>
     <string name="clear_button_text">Clear</string>
     <string name="shortest_button_text">Shortest</string>
     <string name="fastest_button_text">Fastest</string>
