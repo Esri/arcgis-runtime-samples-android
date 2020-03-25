@@ -10,7 +10,7 @@ Navigation is often used by field workers while traveling between two points to 
 
 ## How to use the sample
 
-Click 'Navigate' to simulate travelling and to receive directions from a preset starting point to a preset destination. Click 'Reset' to start the simulation from the beginning.
+Tap 'Navigate Route' to simulate travelling and to receive directions from a preset starting point to a preset destination. Click 'Recenter' to center the camera on the data source, or 'Navigate Route' to start the navigation over again.
 
 ## How it works
 
