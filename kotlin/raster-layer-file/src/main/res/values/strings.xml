@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Raster layer file</string>
-    <string name="raster_file_path">/raster-file/Shasta.tif</string>
+    <string name="raster_file_path">/Shasta.tif</string>
 </resources>
