@@ -29,7 +29,7 @@ See the topic [What is raster data?](http://desktop.arcgis.com/en/arcmap/10.3/ma
 
 ## Offline data
 
-1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=34da965ca51d4c68aa9b3a38edb29e00).
+1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=7c4c679ab06a4df19dc497f577f111bd).
 2. Extract the contents of the downloaded zip files to disk.
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1 & 2.
 4. Execute the following command:
