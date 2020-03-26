@@ -65,11 +65,9 @@ class MainActivity : AppCompatActivity() {
     bottomToolbar.inflateMenu(R.menu.menu_main)
     // handle action bar item clicks
     bottomToolbar.setOnMenuItemClickListener { item ->
-      val itemId = item.itemId
-      // if statement is used because this sample is used elsewhere as a Library module
-      if (itemId == R.id.action_def_exp) {
+      when (item.itemId) {
         // check the state of the menu item
-        if (!applyActive) {
+        R.id.action_def_exp -> if (!applyActive) {
           // apply a definition expression on the feature layer
           // if this is called before the layer is loaded, it will be applied to the loaded layer
           featureLayer.definitionExpression = "req_Type = 'Tree Maintenance or Damage'"
