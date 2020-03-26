@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Feature layer (geodatabase)</string>
+    <string name="geodb_name">/LA_Trails.geodatabase</string>
+</resources>

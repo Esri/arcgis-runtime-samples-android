@@ -20,15 +20,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.portal.Portal;
@@ -130,14 +131,6 @@ public class MainActivity extends AppCompatActivity {
       }
     });
     portal.loadAsync();
-  }
-  
-  @Override 
-  protected void onPause() {
-    // normally, you won't want to clear credentials once a device has been verified. These calls are made to keep this
-    // sample from interfering with other authentication samples
-    AuthenticationManager.CredentialCache.clear();
-    super.onPause();
   }
 }
 

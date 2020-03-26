@@ -1,0 +1,26 @@
+{
+    "category": "Layers",
+    "description": "Show features from an online feature service.",
+    "ignore": false,
+    "images": [
+        "feature-layer-feature-service.png"
+    ],
+    "keywords": [
+        "feature table",
+        "layer",
+        "layers",
+        "service"
+    ],
+    "redirect_from": "/android/latest/sample-code/feature-layer-feature-service.htm",
+    "relevant_apis": [
+        "Basemap",
+        "FeatureLayer",
+        "ArcGISMap",
+        "MapView",
+        "ServiceFeatureTable"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayerfeatureservice/MainActivity.kt"
+    ],
+    "title": "Feature layer feature service"
+}

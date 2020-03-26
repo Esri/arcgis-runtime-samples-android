@@ -1,0 +1,34 @@
+{
+    "category": "Routing and Logistics",
+    "description": "Use a routing service to navigate between two points.",
+    "ignore": false,
+    "images": [
+        "navigate-route.png"
+    ],
+    "keywords": [
+        "directions",
+        "maneuver",
+        "navigation",
+        "route",
+        "turn-by-turn",
+        "voice"
+    ],
+    "redirect_from": "",
+    "relevant_apis": [
+      "DestinationStatus",
+      "Location",
+      "LocationDataSource",
+	    "ReroutingStrategy",
+	    "Route",
+	    "RouteParameters",
+	    "RouteTask",
+	    "RouteTracker",
+	    "Stop",
+	    "VoiceGuidance"
+    ],
+    "snippets": [
+	    "src/main/java/com/esri/arcgisruntime/sample/navigateroute/MainActivity.kt",
+	    "src/main/java/com/esri/arcgisruntime/sample/navigateroute/SimulatedLocationDataSource.kt"
+    ],
+    "title": "Navigate route"
+}
