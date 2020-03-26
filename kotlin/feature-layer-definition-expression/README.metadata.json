@@ -1,0 +1,22 @@
+{
+    "category": "Search and Query",
+    "description": "Limit which features to display on the map.",
+    "ignore": false,
+    "images": [
+        "feature-layer-definition-expression.png"
+    ],
+    "keywords": [
+        "Search and Query",
+        "FeatureLayer",
+        "ServiceFeatureTable"
+    ],
+    "redirect_from": "/android/latest/sample-code/feature-layer-definition-expression.htm",
+    "relevant_apis": [
+        "FeatureLayer",
+        "ServiceFeatureTable"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/samples/featurelayerdefinitionexpression/MainActivity.java"
+    ],
+    "title": "Feature Layer Definition Expression"
+}
