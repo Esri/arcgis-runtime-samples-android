@@ -14,11 +14,11 @@ When the sample loads, the layers in the GeoPackage are shown in a drawer on the
 
 ## How it works
 
-1. Open the `GeoPackage` with a path and load it using `GeoPackage.loadAsync`.
-2. Iterate through available rasters, exposed by `geopackage.getGeoPackageRasters`.
-    * For each raster, create a raster layer using `new Rasterlayer(geopackageRaster)`, then add it to the map.
-3. Iterate through available feature tables, exposed by `geopackage.getGeoPackageFeatureTables`.
-    * For each feature table, create a feature layer using `new FeatureLayer(geopackageFeatureTable)`, then add it to the map.
+1. Open the `GeoPackage` with a path and load it using `geoPackage.loadAsync()`.
+2. Iterate through available rasters, exposed by `geopackage.getGeoPackageRasters()`.
+    * For each raster, create a new `Rasterlayer(geopackageRaster)`, then add it to the map.
+3. Iterate through available feature tables, exposed by `geopackage.getGeoPackageFeatureTables()`.
+    * For each feature table, create a new `FeatureLayer(geopackageFeatureTable)`, then add it to the map.
 
 ## Relevant API
 
