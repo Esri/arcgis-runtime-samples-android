@@ -15,12 +15,12 @@ Tap on the map to see all areas visible from that point within a 15km radius. Ta
 ## How it works
 
 1. Create a `GeoprocessingTask` object with the URL set to a geoprocessing service endpoint.
-1. Create a `FeatureCollectionTable` object and add a new `Feature` object whose geometry is the viewshed's observer `Point`.
-1. Make a `GeoprocessingParameters` object passing in the observer point.
-1. Use the geoprocessing task to create a `GeoprocessingJob` object with the parameters.
-1. Start the job and wait for it to complete and return a `GeoprocessingResult` object.
-1. Get the resulting `GeoprocessingFeatures` object.
-1. Iterate through the viewshed features to display the geometry in a new `Graphic` object.
+2. Create a `FeatureCollectionTable` object and add a new `Feature` object whose geometry is the viewshed's observer `Point`.
+3. Make a `GeoprocessingParameters` object passing in the observer point.
+4. Use the geoprocessing task to create a `GeoprocessingJob` object with the parameters.
+5. Start the job and wait for it to complete and return a `GeoprocessingResult` object.
+6. Get the resulting `GeoprocessingFeatures` object.
+7. Iterate through the viewshed features to display the geometry in a new `Graphic` object.
 
 ## Relevant API
 

@@ -6,9 +6,9 @@ Show a line of sight between two moving objects.
 
 ## Use case
 
-A line of sight between `GeoElement`s (i.e. observer and target) will not remain constant whilst one or both are on the move.
+A line of sight between geoelements (i.e. observer and target) will not remain constant whilst one or both are on the move.
 
-A `GeoElementLineOfSight` is therefore useful in cases where visibility between two `GeoElement`s requires monitoring over a period of time in a partially obstructed field of view
+A line of sight is therefore useful in cases where visibility between two geoelements requires monitoring over a period of time in a partially obstructed field of view
 (such as buildings in a city).
 
 ## How to use the sample

@@ -6,7 +6,7 @@ Opens and displays a scene from a Mobile Scene Package (.mspk).
 
 ## Use case
 
-An .mspk file is an archive containing the data (specifically, basemaps and features), used to display an offline 3D scene.
+A mobile scene package is an archive containing the data (specifically, basemaps and features), used to display an offline 3D scene.
 
 ## How to use the sample
 

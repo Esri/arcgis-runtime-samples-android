@@ -14,18 +14,18 @@ Select one of the three graphics. The relationships activity will show the spati
 
 ## How it works
 
-1.  Get the geometry from two different graphics. In this example the geometry of the selected graphic is compared to the geometry of each unselected graphic.
-2.  Use the methods in `GeometryEngine` to check the relationship between the geometries, e.g. `contains`, `disjoint`, `intersects`, etc. If the method returns `true`, the relationship exists.
+1. Get the geometry from two different graphics. In this example the geometry of the selected graphic is compared to the geometry of each unselected graphic.
+2. Use the methods in `GeometryEngine` to check the relationship between the geometries, e.g. `contains`, `disjoint`, `intersects`, etc. If the method returns `true`, the relationship exists.
 
 ## Relevant API
 
-*   Geometry
-*   GeometryEngine
-*   GeometryType
-*   Graphic
-*   Point
-*   Polygon
-*   Polyline
+* Geometry
+* GeometryEngine
+* GeometryType
+* Graphic
+* Point
+* Polygon
+* Polyline
 
 ## Tags
 

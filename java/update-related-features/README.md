@@ -19,7 +19,7 @@ Once you launch the app, select a national park feature. The app will then ident
 2. Create two `FeatureLayer`s using the previously created service feature tables.
 3. Add these feature layers to the map.
 4. When a `Feature` is selected, identify and highlight the selected feature.
-5. Retrieve related features by calling `serviceFeatureTable.queryRelatedFeaturesAsync` and passing in the selected feature.
+5. Retrieve related features by calling `serviceFeatureTable.queryRelatedFeaturesAsync()` and passing in the selected feature.
 6. Update feature in the feature table with `serviceFeatureTable.updateFeatureAsync(selectedFeature)` and apply updates to the server using  `serviceFeatureTable.applyEditsAsync()`.
 
 ## Relevant API

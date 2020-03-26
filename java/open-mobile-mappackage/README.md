@@ -6,7 +6,7 @@ Display a map from a mobile map package.
 
 ## Use case
 
-An .mmpk file is an archive containing the data (specifically, basemaps and features) used to display an offline map.
+A mobile map package is an archive containing the data (specifically, basemaps and features) used to display an offline map.
 
 ## How to use the sample
 
@@ -48,4 +48,3 @@ This sample shows points of interest within a [Yellowstone Mobile Map Package](h
 ## Tags
 
 mmpk, mobile map package, offline
-

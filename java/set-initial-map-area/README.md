@@ -21,11 +21,11 @@ As the application is loading, the initial view point is set and the map view op
  
 ## Relevant API
 
-- ArcGISMap
-- Envelope
-- MapView
-- Point
-- Viewpoint
+* ArcGISMap
+* Envelope
+* MapView
+* Point
+* Viewpoint
 
 
 ## Tags

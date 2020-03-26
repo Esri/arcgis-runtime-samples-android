@@ -21,8 +21,8 @@ Tap on a feature to select it. The related features will be displayed in a list.
 
 * ArcGISFeature
 * ArcGISFeatureTable
-* FeatureQueryResult
 * ArcGISFeatureTable.QueryRelatedFeatures
+* FeatureQueryResult
 * RelatedFeatureQueryResult
 
 ## Tags

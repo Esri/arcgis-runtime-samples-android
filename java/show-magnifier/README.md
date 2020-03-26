@@ -16,14 +16,14 @@ Tap and hold on the map to show a magnifier, then drag across the map to move th
 
 1. Create a new `MapView`, and add an `ArcGISMap` to it using `mapView.setMap(map)`.
 2. Enable the magnifier using `mapView.setMagnifierEnabled(true)`. This will set the magnifier to be shown on the map when the user performs a long press gesture. Note: The default value is `false`.
-3. Optionally, use `mapView.setCanMagnifierPanMap()` with `true` to allow the map to be panned automatically when the magnifier gets near the edge of the map.
+3. Optionally, use `mapView.setCanMagnifierPanMap(true)` to allow the map to be panned automatically when the magnifier gets near the edge of the map.
 
 ## Relevant API
 
 * ArcGISMap
 * MapView
-* MapView.setCanMagnifierPanMap
-* MapView.setMagnifierEnabled
+* MapView.setCanMagnifierPanMap(...)
+* MapView.setMagnifierEnabled(...)
 
 ## Additional information
 

@@ -21,7 +21,7 @@ The sample starts with a point cloud layer loaded and draped on top of a scene. 
 
 ## Relevant API
 
-- PointCloudLayer
+* PointCloudLayer
 
 ## About the data
 

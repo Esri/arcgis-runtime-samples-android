@@ -6,7 +6,7 @@ Display a feature layer from a service using the **manual cache** feature reques
 
 ## Use case
 
-`ServiceFeatureTable` supports three request modes, which define how features are requested from the service and stored in the local table. The feature request modes have different performance characteristics. Use **manual cache** in scenarios where you want to explicitly control requests for features. See [Table performance concepts](https://developers.arcgis.com/android/latest/guide/layers.htm#ESRI_SECTION1_40F10593308A4718971C9A8F5FB9EC7D) in the *ArcGIS Runtime SDK for Android* guide to learn more.
+Service feature tables support three request modes, which define how features are requested from the service and stored in the local table. The feature request modes have different performance characteristics. Use **manual cache** in scenarios where you want to explicitly control requests for features. See [Table performance concepts](https://developers.arcgis.com/android/latest/guide/layers.htm#ESRI_SECTION1_40F10593308A4718971C9A8F5FB9EC7D) in the *ArcGIS Runtime SDK for Android* guide to learn more.
 
 ## How to use the sample
 
@@ -14,9 +14,9 @@ Run the sample and pan and zoom around the map. Features will be requested and d
 
 ## How it works
 
-1. Set the `ServiceFeatureTable.FeatureRequestMode` property of the service feature table to `MANUAL_CACHE` before the table is loaded.
-2. Load the table with `serviceFeatureTable.loadAsync`.
-3. Call `populateFromServiceAsync` on the table to request features.
+1. Set the `ServiceFeatureTable.setFeatureRequestMode(...)` property of the service feature table to `MANUAL_CACHE` before the table is loaded.
+2. Load the table with `serviceFeatureTable.loadAsync()`.
+3. Call `populateFromServiceAsync()` on the table to request features.
 
 ## Relevant API
 

@@ -14,7 +14,7 @@ The sample will load the KMZ file from ArcGIS Online. When a tour is found, the 
 
 ## How it works
 
-1. Create `KmlDataSet` from the local kmz file and instantiate a layer from it with `new KmlLayer(kmlDataSet)`.  
+1. Create a `KmlDataSet` from the local kmz file and instantiate a layer from it with `new KmlLayer(kmlDataSet)`.  
 2. Create the KML tour controller. Wire up the buttons to the `kmlController.play()`, `kmlController.pause()`, and `kmlController.reset()` methods.
 3. Explore the tree of KML content to find the first KML tour. Once a tour is found, provide it to the KML tour controller.
 

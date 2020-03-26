@@ -16,7 +16,7 @@ Run the sample and view the data loaded from the the WFS feature table.
 
 1. Create a `WfsFeatureTable` and a `FeatureLayer` to visualize the table.
 2. Set the feature request mode to `ManualCache`. 
-3. Call `populateFromServiceAsync` to populate the table with only those features returned by the XML query.
+3. Call `populateFromServiceAsync()` to populate the table with only those features returned by the XML query.
 
 ## Relevant API
 

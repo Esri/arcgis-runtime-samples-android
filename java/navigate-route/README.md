@@ -17,7 +17,7 @@ Tap 'Navigate Route' to simulate traveling and to receive directions from a pres
 1. Create a `RouteTask` using a URL to an online route service.
 2. Generate default `RouteParameters` using `routeTask.createDefaultParametersAsync()`.
 3. Set `returnStops`, `returnDirections`, and `returnRoutes` on the parameters to true.
-4. Add `Stop`s to the parameters `stops` collection for each destination.
+4. Add `Stop`s to the parameters' `stops` collection for each destination.
 5. Solve the route using `routeTask.solveAsync(routeParameters)` to get a `RouteResult`.
 6. Create a `RouteTracker` using the route result, and the index of the desired route to take.
 7. Use `routeTracker.trackLocationAsync(LocationDataSource.Location)` to track the location of the device.

@@ -16,9 +16,9 @@ When the scene loads, note the different types of 3D symbols that you can create
 
 1. Create a `GraphicsOverlay`.
 1. Create various simple marker scene symbols by specifying different styles and colors, and a height, width, depth, and anchor position of each.
-1. Create a new `Graphic` object for each symbol.
-1. Add the graphics to the graphics overlay with `graphicsOverlay.getGraphics().add(graphic)`.
-1. Add the graphics overlay to the scene view with `sceneView.getGraphicsOverlays().add(graphicsOverlay)`.
+2. Create a new `Graphic` object for each symbol.
+3. Add the graphics to the graphics overlay with `graphicsOverlay.getGraphics().add(graphic)`.
+4. Add the graphics overlay to the scene view with `sceneView.getGraphicsOverlays().add(graphicsOverlay)`.
 
 ## Relevant API
 

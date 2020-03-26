@@ -16,7 +16,7 @@ Pan and zoom to define the extent for the query. Use the 'Only cities in current
 
 1. Create a `ServiceFeatureTable` with a URL to the feature service.
 2. Create `StatisticsQueryParameters`, and `StatisticDefinition` objects, and add to the parameters.
-3. Execute `queryStatisticsAsync` on the `ServiceFeatureTable`. Depending on the state of the two checkboxes, additional parameters are set.
+3. Execute `queryStatisticsAsync()` on the `ServiceFeatureTable`. Depending on the state of the two checkboxes, additional parameters are set.
 4. Display each `StatisticRecord` in the first returned `StatisticsQueryResult`.
 
 ## Relevant API

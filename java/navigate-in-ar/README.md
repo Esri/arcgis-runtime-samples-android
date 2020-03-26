@@ -10,7 +10,7 @@ It can be hard to navigate using 2D maps in unfamiliar environments. You can use
 
 ## How to use the sample
 
-The sample opens with a map centered on the current location. Tap the map to add an origin and a destination; the route will be shown as a line. When ready, tap 'Start AR' to start the AR navigation. Calibrate the heading before starting to navigate. When you start, route instructions will be displayed and spoken. As you proceed through the route, new directions will be provided until you arrive.
+The sample opens with a map centered on the current location. Tap the map to add an origin and a destination; the route will be shown as a line. Calibrate the heading before starting to navigate. When ready, tap 'Start AR' to start the AR navigation. When you start, route instructions will be displayed and spoken. As you proceed through the route, new directions will be provided until you arrive.
 
 ## How it works
 

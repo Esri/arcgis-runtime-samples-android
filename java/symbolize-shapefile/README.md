@@ -15,7 +15,7 @@ Pan and zoom around the map to view the symbology renderer set to the feature la
 ## How it works
 
 1. Create a `ShapefileFeatureTable`, providing the path to a shapefile.
-2. Create a `FeatureLayer` and using a `ShapeFileFeatureTable`.
+2. Create a `FeatureLayer` from a `ShapeFileFeatureTable`.
 3. Create a `SimpleRenderer` to override the default symbology. The simple renderer takes a symbol and applies that to all features in a layer.
 4. Apply the renderer to the `FeatureLayer` by setting the renderer.
 
