@@ -15,8 +15,8 @@ When the sample starts, a raster will be loaded from a file and displayed in the
 ## How it works
 
 1. Create a `Raster` from a raster file.
-1. Create a `RasterLayer` from the raster.
-1. Add it as an operational layer with `map.getOperationalLayers().add(rasterLayer)`.
+2. Create a `RasterLayer` from the raster.
+3. Add it as an operational layer with `map.getOperationalLayers().add(rasterLayer)`.
 
 ## Relevant API
 
