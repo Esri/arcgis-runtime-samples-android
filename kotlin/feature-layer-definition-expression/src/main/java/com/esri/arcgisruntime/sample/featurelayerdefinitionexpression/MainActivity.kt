@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
   private lateinit var featureLayer: FeatureLayer
-  var applyActive: Boolean = false
+  private var applyActive: Boolean = false
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
