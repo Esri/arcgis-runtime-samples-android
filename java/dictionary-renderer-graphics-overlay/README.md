@@ -49,4 +49,4 @@ Link | Local Location
 
 ### Tags
 
-visualization
+defense, military, situational awareness, tactical, visualization

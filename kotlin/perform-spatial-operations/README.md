@@ -11,7 +11,7 @@ When these operations are chained together, they become even more powerful. An a
 
 ## How to use the sample
 
-Select a spatial operation from the overflow menu. When an operation is selected, the resulting geometry is shown in red. 
+Select a spatial operation from the overflow menu. When an operation is selected, the resulting geometry is shown in red.
 
 ## How it works
 
@@ -27,14 +27,14 @@ Select a spatial operation from the overflow menu. When an operation is selected
 
 ## Relevant API
 
-- Geometry
-- GeometryEngine
-- GeometryEngine.difference
-- GeometryEngine.intersection
-- GeometryEngine.symmetricDifference
-- GeometryEngine.union
-- Graphic
-- GraphicsOverlay
+* Geometry
+* GeometryEngine
+* GeometryEngine.difference
+* GeometryEngine.intersection
+* GeometryEngine.symmetricDifference
+* GeometryEngine.union
+* Graphic
+* GraphicsOverlay
 
 ## Tags
 
