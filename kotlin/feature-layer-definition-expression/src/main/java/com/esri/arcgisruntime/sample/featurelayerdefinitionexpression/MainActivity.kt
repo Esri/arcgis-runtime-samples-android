@@ -41,11 +41,11 @@ class MainActivity : AppCompatActivity() {
     val featureLayer = FeatureLayer(serviceFeatureTable)
 
     // create a map with a topographic base map
-    ArcGISMap(Basemap.createTopographic()).let {
+    ArcGISMap(Basemap.createTopographic()).let { map ->
       // add the feature layer to the map
-      it.operationalLayers.add(featureLayer)
+      map.operationalLayers.add(featureLayer)
       // set the map to be displayed in the layout's map view
-      mapView.map = it
+      mapView.map = map
     }
 
     // set a viewpoint on the map view to center on San Francisco
