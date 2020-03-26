@@ -28,6 +28,8 @@ Tap once near a road to add a stop to the map. A number graphic will show its or
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 4. Execute the following commands:
 
+`adb PUSH sandiego.tn /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/san_diego/sandiego.tn/`
+
 `adb push streetmap_SD.tpk /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/san_diego/streetmap_SD.tpk`
 
 `adb push sandiego.geodatabase /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/san_diego/sandiego.geodatabase`
