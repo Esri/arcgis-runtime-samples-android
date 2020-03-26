@@ -15,7 +15,7 @@ The application loads with the default globe camera controller. To rotate and fi
 ## How it works
 
 1.  Create an instance of a class extending `CameraController`: `GlobeCameraController`, `OrbitLocationCameraController`, `OrbitGeoElementCameraController`.
-1.  Set the scene view's camera controller with `sceneView.setCameraController(cameraController)`.
+2.  Set the scene view's camera controller with `sceneView.setCameraController(cameraController)`.
 
 ## Relevant API
 
