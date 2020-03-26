@@ -20,25 +20,25 @@ The map view has several methods for setting its current viewpoint. Select a vie
   * Use `MapView.setViewpointCenterAsync()` to center the viewpoint on a `Point` and set a distance from the ground using a scale.
   * Use `MapView.setViewpointGeometryAsync()` to set the viewpoint to a given `Geometry`.
 
-  ## Relevant API
+## Relevant API
 
-  * ArcGISMap
-  * Geometry
-  * MapView
-  * Point
-  * Viewpoint
+* ArcGISMap
+* Geometry
+* MapView
+* Point
+* Viewpoint
 
-  ## Additional information
+## Additional information
 
-  Below are some other ways to set a viewpoint:
+Below are some other ways to set a viewpoint:
 
-  * setViewpoint
-  * setViewpointAsync
-  * setViewpointCenterAsync
-  * setViewpointGeometryAsync
-  * setViewpointRotationAsync
-  * setViewpointScaleAsync
+* setViewpoint
+* setViewpointAsync
+* setViewpointCenterAsync
+* setViewpointGeometryAsync
+* setViewpointRotationAsync
+* setViewpointScaleAsync
 
-  ## Tags
+## Tags
 
-  animate, extent, pan, rotate, scale, view, zoom
+animate, extent, pan, rotate, scale, view, zoom

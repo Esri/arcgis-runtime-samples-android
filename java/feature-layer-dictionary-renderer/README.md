@@ -1,4 +1,4 @@
-# Feature Layer Dictionary Renderer
+# Feature layer dictionary renderer
 
 Convert features into graphics to show them with mil2525d symbols.
 
@@ -29,6 +29,7 @@ Pan and zoom around the map. Observe the displayed military symbology on the map
 * SymbolDictionary
 
 ## Offline data
+
 1. Download the data from the table below.
 2. Extract the contents of the downloaded zip file to disk.  
 3. Create an ArcGIS/samples/Dictionary folder on your device. You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.

@@ -16,7 +16,7 @@ Run the sample and accept read permissions.
 
 1. Create a `ShapefileFeatureTable` passing in the URL of a shapefile.
 2. Create a `FeatureLayer` using the shapefile feature table.
-3. Add the layer to the map's operation layers.
+3. Add the layer to the map's operational layers.
 
 ## Relevant API
 

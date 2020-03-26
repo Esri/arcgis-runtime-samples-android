@@ -18,7 +18,7 @@ Run the sample and view graphics for points, lines, and polygons, which are styl
 * Create a `GraphicsOverlay` and add it to the `MapView`.
 * Create a `Graphic`, specifying only a `Geometry`.
 * Create a single `Symbol` such as a `SimpleMarkerSymbol`.
-* Create a renderer with the `Symbol` such as new `SimpleRenderer(symbol)`.
+* Create a renderer with the `Symbol` such as a `SimpleRenderer(symbol)`.
 * Set the renderer on the `GraphicsOverlay` with `graphicsOverlay.setRenderer(renderer)`.
 
 ## Relevant API
@@ -33,7 +33,7 @@ Run the sample and view graphics for points, lines, and polygons, which are styl
 
 ## Additional information
 
-To set unique symbols across a number of graphics (e.g. showing graphics of individual landmarks) see "Add graphics with symbols" sample.
+To set unique symbols across a number of graphics (e.g. showing graphics of individual landmarks) see the "Add graphics with symbols" sample.
 
 ## Tags
 

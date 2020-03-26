@@ -15,7 +15,7 @@ Pan and zoom around the map. Observe how the status bar changes from a loading a
 ## How it works
 
 1. Create a `MapView` and add a `DrawStatusChangedListener` to it.
-1. Use `getDrawStatus` on the `DrawStatusChangedEvent` to determine draw status.
+2. Use `getDrawStatus` on the `DrawStatusChangedEvent` to determine draw status.
 
 ## Relevant API
 

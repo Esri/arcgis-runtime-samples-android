@@ -20,8 +20,8 @@ When loaded, the sample will show a scene with a terrain surface applied. Pan an
 
 ## Relevant API
 
-- RasterElevationSource
-- Surface
+* RasterElevationSource
+* Surface
 
 ## Additional information
 
