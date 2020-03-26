@@ -18,9 +18,9 @@ When prompted, enter your ArcGIS Online credentials.
 2. When the app launches, the portal is loaded, which triggers an authentication challenge.
 3. Display a login screen with `AuthenticationView`.
 4. Upon successful login, get a `PortalUser` using `portal.user`. Get user attributes using:
-    - `portalUser.fullName`
-    - `portalUser.email`
-    - `portalUser.created`
+    * `portalUser.fullName`
+    * `portalUser.email`
+    * `portalUser.created`
 5.  Load a thumbnail image using `portalUser.fetchThumbnailAsync()`
   
 ## Relevant API

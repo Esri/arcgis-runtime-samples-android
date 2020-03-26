@@ -13,6 +13,7 @@ A viewshed is used to highlight what is visible from a given point. A viewshed c
 Tap the map to see all areas visible from that point within a 15km radius. Tapping on an elevated area will highlight a larger part of the surrounding landscape. It may take a few seconds for the task to run and send back the results.
 
 ## How it works
+
 1. Create a `GeoprocessingTask` object with the URL set to a geoprocessing service endpoint.
 1. Create a `FeatureCollectionTable` object and add a new `Feature` object whose geometry is the viewshed's observer `Point`.
 1. Make a `GeoprocessingParameters` object passing in the observer point.

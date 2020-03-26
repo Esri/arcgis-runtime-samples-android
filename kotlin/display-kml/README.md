@@ -27,9 +27,9 @@ Use the overflow menu to select a source. A KML file from that source will be lo
 ## Offline Data
 
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=324e4742820e46cfbe5029ff2c32cb1f).
-1. Extract the contents of the downloaded zip file to disk.
-1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
-1. Execute the following command:
+2. Extract the contents of the downloaded zip file to disk.
+3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+4. Execute the following command:
 `adb push US_State_Capitals.kml
 /Android/data/com.esri.arcgisruntime.sample.displaykml/files/US_State_Capitals.kml`
 

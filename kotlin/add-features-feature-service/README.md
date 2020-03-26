@@ -10,7 +10,7 @@ An end-user performing a survey may want to add features to the map during the c
 
 ## How to use the sample
 
-Click on a location on the map to add a feature at that location.
+Tap on a location on the map to add a feature at that location.
 
 ## How it works
 

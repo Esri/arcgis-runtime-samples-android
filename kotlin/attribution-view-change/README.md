@@ -16,7 +16,7 @@ Tap the attribution bar to expand it, and observe how the floating action button
 
 1. Add a layout change listener to the `MapView` with `addAttributionViewLayoutChangeListener`.
 2. Get the difference in pixels by using `heightDelta = oldBottom - bottom`.
-3. Move the floating action button along the MapView by using Android's `CoordinateLayout.LayoutParams` and setting it to `heightDelta`.
+3. Move the floating action button along the MapView by using Android's `CoordinateLayout.layoutParams` and setting it to `heightDelta`.
 
 ## Relevant API
 

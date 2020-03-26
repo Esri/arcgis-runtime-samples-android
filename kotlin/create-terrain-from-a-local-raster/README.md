@@ -11,13 +11,13 @@ In a scene view, the terrain surface is what the basemap, operational layers, an
 ## How it works
 
 1. Create an `ArcGISScene` and add it to a `SceneView`.
-1. Create a `RasterElevationSource` with a list of raster file paths.
-1. Add this source to the scene's base surface: `ArcGISScene.baseSurface.elevationSources.add(RasterElevationSource)`.
+2. Create a `RasterElevationSource` with a list of raster file paths.
+3. Add this source to the scene's base surface: `ArcGISScene.baseSurface.elevationSources.add(RasterElevationSource)`.
 
 ## Relevant API
 
-- RasterElevationSource
-- Surface
+* RasterElevationSource
+* Surface
 
 ## Additional information
 

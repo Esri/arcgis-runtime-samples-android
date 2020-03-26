@@ -14,19 +14,19 @@ Tap to identify features. An alert will show all layers with features under the 
 
 ## How it works
 
-1. The tapped position is passed to `MapView.identifyLayersAsync`
+1. The tapped position is passed to `MapView.identifyLayersAsync(...)`
 2. For each `IdentifyLayerResult` in the results, features are counted. 
     * Note: there is one identify result per layer with matching features; if the feature count is 0, that means a sublayer contains the matching features.
 
 ## Relevant API
 
 * IdentifyLayerResult
-* IdentifyLayerResult.getSublayerResults
-* MapView.identifyLayersAsync
+* IdentifyLayerResult.sublayerResults
+* MapView.identifyLayersAsync(...)
 
 ## Additional information
 
-The GeoView supports two methods of identify: `identifyLayerAsync()`, which identifies features within a specific layer and `identifyLayersAsync()`, which identifies features for all layers in the current view.
+The GeoView supports two methods of identify: `identifyLayerAsync(...)`, which identifies features within a specific layer and `identifyLayersAsync(...)`, which identifies features for all layers in the current view.
 
 ## Tags
 

@@ -17,8 +17,8 @@ Tap anywhere on the map. A line graphic will display the geodesic line between t
 1. Create a `Point` and display it as a `Graphic`.
 2. Obtain a new point when a tap occurs on the `MapView` and add this point as a graphic.
 3. Create a `Polyline` from the two points.
-4. Execute `GeometryEngine.densifyGeodetic` by passing in the created polyine then create a graphic from the returned `Geometry`.
-5. Execute `GeometryEngine.lengthGeodetic` by passing in the two points and display the returned length on the screen.
+4. Execute `GeometryEngine.densifyGeodetic(...)` by passing in the created polyine then create a graphic from the returned `Geometry`.
+5. Execute `GeometryEngine.lengthGeodetic(...)` by passing in the two points and display the returned length on the screen.
 
 ## Relevant API
 
