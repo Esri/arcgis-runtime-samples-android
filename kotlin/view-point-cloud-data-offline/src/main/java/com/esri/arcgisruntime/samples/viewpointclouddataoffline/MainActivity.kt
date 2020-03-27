@@ -60,7 +60,8 @@ class MainActivity : AppCompatActivity() {
     val pointCloudLayer =
       PointCloudLayer(getExternalFilesDir(null)?.path + getString(R.string.scene_layer_package_location))
 
-    // add a listener to perform operations when the load status of the PointCloudLayer changes
+    // load the layer
+    pointCloudLayer.loadAsync()
     pointCloudLayer.addDoneLoadingListener {
       // when PointCloudLayer loads
       if (pointCloudLayer.loadStatus == LoadStatus.LOADED) {
@@ -72,9 +73,6 @@ class MainActivity : AppCompatActivity() {
         Log.e(TAG, error)
       }
     }
-
-    // load the PointCloudLayer asynchronously
-    pointCloudLayer.loadAsync()
   }
 
   override fun onResume() {
