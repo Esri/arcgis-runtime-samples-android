@@ -29,6 +29,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.esri.arcgisruntime.geometry.Point
@@ -44,6 +45,7 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.networkanalysis.Route
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.activity_main_new.bottomSheet
 import kotlinx.android.synthetic.main.activity_main_new.mapView
@@ -51,10 +53,13 @@ import kotlinx.android.synthetic.main.activity_main_new.view.*
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import java.util.concurrent.ExecutionException
+import java.util.zip.Inflater
 
 class MainActivity : AppCompatActivity() {
 
   private val TAG = MainActivity::class.java.simpleName
+
+  private val bottomSheetBehavior: BottomSheetBehavior<View> by lazy { BottomSheetBehavior.from(bottomSheet) }
 
   private val graphicsOverlay: GraphicsOverlay by lazy {
     // create a graphics overlay and add it to the map view
@@ -87,6 +92,9 @@ class MainActivity : AppCompatActivity() {
 
     // hide the bottom sheet before we've solved the route
 //    bottomSheet.visibility = View.GONE
+
+    bottomSheetBehavior.peekHeight = bottomSheet.header.height
+
 
     setupSymbols()
 
@@ -156,7 +164,10 @@ class MainActivity : AppCompatActivity() {
 
 //          bottomSheet.visibility = View.VISIBLE
 
-          directionsListView.apply {
+          val bottomSheetViewHolder = bottomSheet.bottomSheetLayout
+          if (bottomSheetViewHolder == null) Log.e(TAG, "Bottom sheet view holder is null!!!!!!!!")
+
+          bottomSheetViewHolder.directionsListView.apply {
             // Set the adapter for the list view
             adapter = ArrayAdapter(
               applicationContext,
@@ -185,7 +196,8 @@ class MainActivity : AppCompatActivity() {
                 }
               }
           }
-        } //TODO: should there be an else here?
+        }
+         //TODO: should there be an else here?
       } catch (e: Exception) {
         Log.e(TAG, "${e.message}")
       }
