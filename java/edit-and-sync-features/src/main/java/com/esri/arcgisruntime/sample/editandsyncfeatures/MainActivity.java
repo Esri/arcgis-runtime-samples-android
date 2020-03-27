@@ -23,7 +23,6 @@ import java.util.concurrent.ExecutionException;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,10 +31,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
@@ -117,20 +113,6 @@ public class MainActivity extends AppCompatActivity {
           }
         });
 
-    // request write permission to access local TileCache
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) != PackageManager.PERMISSION_GRANTED) {
-      // request permission
-      int requestCode = 2;
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    } else {
-      loadTileCache();
-    }
-  }
-
-  /**
-   * Load local tile cache.
-   */
-  private void loadTileCache() {
     // use local tile package for the base map
     TileCache sanFranciscoTileCache = new TileCache(getExternalFilesDir(null) + getString(R.string.san_francisco_tpk));
     ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(sanFranciscoTileCache);
@@ -345,20 +327,6 @@ public class MainActivity extends AppCompatActivity {
   @Override protected void onDestroy() {
     mMapView.dispose();
     super.onDestroy();
-  }
-
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      // write permission was granted, so load TileCache
-      loadTileCache();
-    } else {
-      // if permission was denied, show toast to inform user write permission is required and remove Generate
-      // Geodatabase button
-      Toast.makeText(this, getResources().getString(R.string.edit_and_sync_write_permission), Toast
-          .LENGTH_SHORT).show();
-      mGeodatabaseButton.setVisibility(View.GONE);
-    }
   }
 
   // enumeration to track editing of points

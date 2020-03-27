@@ -18,17 +18,12 @@ package com.esri.arcgisruntime.sample.playakmltour;
 
 import java.util.List;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.layers.KmlLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
@@ -67,11 +62,6 @@ public class MainActivity extends AppCompatActivity {
     Surface surface = new Surface();
     surface.getElevationSources().add(new ArcGISTiledElevationSource(getString(R.string.world_terrain_service)));
     scene.setBaseSurface(surface);
-
-    requestReadPermission();
-  }
-
-  private void createKmlTour() {
 
     // add a KML layer from a KML dataset with a KML tour
     KmlDataset kmlDataset = new KmlDataset(getExternalFilesDir(null) + getString(R.string.kml_tour_path));
@@ -129,37 +119,6 @@ public class MainActivity extends AppCompatActivity {
       }
     }
     return null;
-  }
-
-  /**
-   * Request read external storage for API level 23+.
-   */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      // do something
-      createKmlTour();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      // do something
-      createKmlTour();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.kml_tour_read_permission_denied), Toast.LENGTH_SHORT).show();
-    }
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
   @Override

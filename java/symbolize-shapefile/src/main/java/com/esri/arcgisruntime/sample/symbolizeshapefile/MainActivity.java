@@ -16,16 +16,10 @@
 
 package com.esri.arcgisruntime.sample.symbolizeshapefile;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.data.ShapefileFeatureTable;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
@@ -41,7 +35,6 @@ import com.esri.arcgisruntime.symbology.SimpleRenderer;
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-  private ArcGISMap mMap;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -51,24 +44,18 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
     // create a map with the BasemapType topographic
-    mMap = new ArcGISMap(Basemap.createTopographic());
+    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
     // set the map to be displayed in this view
-    mMapView.setMap(mMap);
+    mMapView.setMap(map);
 
     // set an initial viewpoint
     Point point = new Point(-11662054, 4818336, SpatialReference.create(3857));
     Viewpoint viewpoint = new Viewpoint(point, 200000);
-    mMap.setInitialViewpoint(viewpoint);
-
-    requestWritePermission();
-
-  }
-
-  private void symbolizeShapefile() {
+    map.setInitialViewpoint(viewpoint);
 
     // create a shapefile feature table from the local data
     ShapefileFeatureTable shapefileFeatureTable = new ShapefileFeatureTable(
-        getExternalFilesDir(null) + getString(R.string.shapefile_folder) + getString(R.string.subdivisions_shp));
+        getExternalFilesDir(null) + getString(R.string.subdivisions_shp));
 
     // use the shapefile feature table to create a feature layer
     FeatureLayer featureLayer = new FeatureLayer(shapefileFeatureTable);
@@ -84,43 +71,13 @@ public class MainActivity extends AppCompatActivity {
     featureLayer.setRenderer(renderer);
 
     // add the feature layer to the map
-    mMap.getOperationalLayers().add(featureLayer);
-  }
-
-  /**
-   * Request read permission on the device.
-   */
-  private void requestWritePermission() {
-    // define permission to request
-    String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(MainActivity.this,
-        reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      symbolizeShapefile();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      symbolizeShapefile();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(MainActivity.this, getResources().getString(R.string.shapefile_read_permission_denied),
-          Toast.LENGTH_SHORT).show();
-    }
+    map.getOperationalLayers().add(featureLayer);
   }
 
   @Override
   protected void onPause() {
-    super.onPause();
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
@@ -131,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     mMapView.dispose();
+    super.onDestroy();
   }
 }

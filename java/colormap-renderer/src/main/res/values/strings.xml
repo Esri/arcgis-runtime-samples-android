@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Colormap renderer</string>
-    <string name="shasta_b_w">/ShastaBW.tif</string>
+    <string name="shasta_b_w">/shasta/ShastaBW.tif</string>
 </resources>
