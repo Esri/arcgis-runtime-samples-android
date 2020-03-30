@@ -1,6 +1,6 @@
 # Animate 3D graphic
 
-An `OrbitGeoElementCameraController` follows a graphic while the graphic's position and rotation are animated.
+A camera follows a graphic while the graphic's position and rotation are animated.
 
 ![Image of animate 3D graphic](animate-3d-graphic.png)
 
