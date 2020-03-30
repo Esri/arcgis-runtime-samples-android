@@ -20,7 +20,6 @@ package com.esri.arcgisruntime.sample.generateofflinemap
 import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.Point
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -186,7 +185,6 @@ class MainActivity : AppCompatActivity() {
         // close the progress dialog
         progressDialog.dismiss()
       }
-
       // start the job
       start()
     }

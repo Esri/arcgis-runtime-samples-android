@@ -3,5 +3,4 @@
     <string name="take_map_offline">Take Map Offline</string>
     <string name="portal_url">https://www.arcgis.com</string>
     <string name="item_id">acc027394bc84c2fb04d1ed317aac674</string>
-    <string name="offline_map_write_permission_denied">Write permission required to generate offline map</string>
 </resources>

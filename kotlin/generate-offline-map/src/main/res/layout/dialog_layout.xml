@@ -14,7 +14,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:indeterminate="false"
-        android:progressBackgroundTint="@color/colorPrimary"
+        android:theme="@style/progressBarBlue"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/progressTextView"
@@ -32,6 +32,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
