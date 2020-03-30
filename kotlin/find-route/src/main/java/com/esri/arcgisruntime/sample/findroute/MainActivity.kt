@@ -107,6 +107,7 @@ class MainActivity : AppCompatActivity() {
       bottomSheetBehavior.peekHeight = bottomSheetView.header.height
       mainContainerParams.setMargins(0,0,0,64)
       solveRoute()
+      it.visibility = View.GONE
     }
   }
 
