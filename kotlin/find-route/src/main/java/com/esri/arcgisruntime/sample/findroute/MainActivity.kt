@@ -46,6 +46,7 @@ import com.esri.arcgisruntime.tasks.networkanalysis.Route
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import java.util.concurrent.ExecutionException
@@ -89,25 +90,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     bottomSheetBehavior.peekHeight = 0
+    bottomSheetBehavior.addBottomSheetCallback(object: BottomSheetCallback() {
+      override fun onSlide(bottomSheet: View, slideOffset: Float) {
+        bottomSheetView.header.imageView.rotation = slideOffset * 180f
+      }
+      override fun onStateChanged(bottomSheet: View, newState: Int) {
+        bottomSheetView.header.imageView.rotation = when (newState) {
+          BottomSheetBehavior.STATE_EXPANDED -> 180f
+          else -> 0f
+        }
+      }
+    })
+
     val mainContainerParams = mainContainer.layoutParams as CoordinatorLayout.LayoutParams
-    mainContainerParams.setMargins(0,0,0,0)
+    mainContainerParams.bottomMargin = 0
 
     setupSymbols()
 
     directionFab.setOnClickListener {
-
-//      //TODO: figure out what this does
-//      supportActionBar?.apply {
-//        setDisplayHomeAsUpEnabled(true)
-//        setHomeButtonEnabled(true)
-//        title = getString(R.string.app_name)
-//      }
-
       bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
       bottomSheetBehavior.peekHeight = bottomSheetView.header.height
-      mainContainerParams.setMargins(0,0,0,64)
+      mainContainerParams.bottomMargin = bottomSheetView.header.height
       solveRoute()
-      it.visibility = View.GONE
     }
   }
 
@@ -202,6 +206,8 @@ class MainActivity : AppCompatActivity() {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
               }
           }
+
+          directionFab.visibility = View.GONE
         }
          //TODO: should there be an else here?
       } catch (e: Exception) {
