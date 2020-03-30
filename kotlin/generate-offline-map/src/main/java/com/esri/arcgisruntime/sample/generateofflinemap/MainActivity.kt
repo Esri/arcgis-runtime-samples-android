@@ -150,14 +150,14 @@ class MainActivity : AppCompatActivity() {
     val offlineMapTask = OfflineMapTask(mapView.map)
 
     // create an offline map job with the download directory path and parameters and start the job
-    val job: GenerateOfflineMapJob =
+    val offlineMapJob =
       offlineMapTask.generateOfflineMap(generateOfflineMapParameters, tempDirectoryPath)
 
     // create an alert dialog to show the download progress
-    val progressDialog = createProgressDialog(job)
+    val progressDialog = createProgressDialog(offlineMapJob)
     progressDialog.show()
 
-    job.apply {
+    offlineMapJob.apply {
       // link the progress bar to the job's progress
       addProgressChangedListener {
         progressDialog.progressBar.progress = progress
@@ -178,7 +178,7 @@ class MainActivity : AppCompatActivity() {
           Toast.makeText(this@MainActivity, "Now displaying offline map.", Toast.LENGTH_LONG).show()
         } else {
           val error =
-            "Error in generate offline map job: " + job.error.additionalMessage
+            "Error in generate offline map job: " + offlineMapJob.error.additionalMessage
           Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
           Log.e(TAG, error)
         }
