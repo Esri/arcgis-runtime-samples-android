@@ -1,4 +1,4 @@
-# Open scene portal item
+# Open scene (portal item)
 
 Open a web scene from a portal item.
 
