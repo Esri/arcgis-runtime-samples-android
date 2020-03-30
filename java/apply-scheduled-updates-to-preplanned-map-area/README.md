@@ -2,7 +2,7 @@
 
 Apply scheduled updates to a downloaded preplanned map area.
 
-![Apply scheduled updates to preplanned map area app](apply-scheduled-updates-to-preplanned-map-area.png)
+![Image of apply scheduled updates to preplanned map area](apply-scheduled-updates-to-preplanned-map-area.png)
 
 ## Use case
 
