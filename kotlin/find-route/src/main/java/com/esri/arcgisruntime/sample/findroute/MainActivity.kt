@@ -15,23 +15,19 @@
  */
 package com.esri.arcgisruntime.sample.findroute
 
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.appcompat.app.ActionBarDrawerToggle
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer
@@ -50,15 +46,15 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCa
 import kotlinx.android.synthetic.main.activity_main_new.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import java.util.concurrent.ExecutionException
-import java.util.zip.Inflater
 
 class MainActivity : AppCompatActivity() {
 
   private val TAG = MainActivity::class.java.simpleName
 
-  private val bottomSheetView: View by lazy { this.bottomSheet }
-
-  private val bottomSheetBehavior: BottomSheetBehavior<View> by lazy { BottomSheetBehavior.from(bottomSheetView) }
+  private val bottomSheetBehavior: BottomSheetBehavior<View> by lazy {
+    // create a bottom sheet behavior from the view included in the main layout
+    BottomSheetBehavior.from(bottomSheet)
+  }
 
   private val graphicsOverlay: GraphicsOverlay by lazy {
     // create a graphics overlay and add it to the map view
@@ -66,11 +62,11 @@ class MainActivity : AppCompatActivity() {
       mapView.graphicsOverlays.add(it)
     }
   }
-//  private val drawerToggle: ActionBarDrawerToggle by lazy { setupDrawer() }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main_new)
+
     // create new basemap with the vector tiled layer from a service url
     val basemap = Basemap(
       ArcGISVectorTiledLayer(resources.getString(R.string.navigation_vector))
@@ -82,6 +78,7 @@ class MainActivity : AppCompatActivity() {
       // set the map to be displayed in this view
       mapView.map = map
     }
+
     // ensure the floating action button moves to be above the attribution view
     val params = directionFab.layoutParams as ConstraintLayout.LayoutParams
     mapView.addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
@@ -89,28 +86,33 @@ class MainActivity : AppCompatActivity() {
       params.bottomMargin += heightDelta
     }
 
+    // hide the bottom sheet
     bottomSheetBehavior.peekHeight = 0
-    bottomSheetBehavior.addBottomSheetCallback(object: BottomSheetCallback() {
+    // animate the arrow when the bottom sheet slides
+    bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetCallback() {
       override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        bottomSheetView.header.imageView.rotation = slideOffset * 180f
+        bottomSheet.header.imageView.rotation = slideOffset * 180f
       }
+
       override fun onStateChanged(bottomSheet: View, newState: Int) {
-        bottomSheetView.header.imageView.rotation = when (newState) {
+        bottomSheet.header.imageView.rotation = when (newState) {
           BottomSheetBehavior.STATE_EXPANDED -> 180f
           else -> 0f
         }
       }
     })
-
+    // while the bottom sheet is hidden, make the map view span the whole screen
     val mainContainerParams = mainContainer.layoutParams as CoordinatorLayout.LayoutParams
     mainContainerParams.bottomMargin = 0
 
+    // create the symbols for the route
     setupSymbols()
 
+    // solve the route and display the bottom sheet when the FAB is clicked
     directionFab.setOnClickListener {
       bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-      bottomSheetBehavior.peekHeight = bottomSheetView.header.height
-      mainContainerParams.bottomMargin = bottomSheetView.header.height
+      bottomSheetBehavior.peekHeight = bottomSheet.header.height
+      mainContainerParams.bottomMargin = bottomSheet.header.height
       solveRoute()
     }
   }
@@ -138,9 +140,7 @@ class MainActivity : AppCompatActivity() {
           )
           routeParams.apply {
             setStops(stops)
-            // set return directions as true to return turn-by-turn directions in the result of
-            // getDirectionManeuvers().
-            // UNSURE: what's going on with this comment
+            // set return directions as true to return turn-by-turn directions in the route's directionManeuvers
             isReturnDirections = true
           }
 
@@ -156,7 +156,8 @@ class MainActivity : AppCompatActivity() {
           }
 
           // get directions
-          // NOTE: to get turn-by-turn directions Route Parameters should set returnDirection flag as true
+          // NOTE: to get turn-by-turn directions the route parameters
+          //  must have the isReturnDirections parameter set to true.
           val directions = route.directionManeuvers
           val directionsArray = Array<String>(directions.size) { i ->
             directions[i].directionText
@@ -166,16 +167,15 @@ class MainActivity : AppCompatActivity() {
             progressDialog.dismiss()
           }
 
-//          bottomSheet.visibility = View.VISIBLE
-
-          bottomSheetView.setOnClickListener {
-            bottomSheetBehavior.state = when (bottomSheetBehavior.state){
-                BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_EXPANDED
-                else -> BottomSheetBehavior.STATE_COLLAPSED
-              }
+          // expand or collapse the bottom sheet when the header is clicked
+          bottomSheet.header.setOnClickListener {
+            bottomSheetBehavior.state = when (bottomSheetBehavior.state) {
+              BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_EXPANDED
+              else -> BottomSheetBehavior.STATE_COLLAPSED
+            }
           }
 
-          bottomSheetView.directionsListView.apply {
+          bottomSheet.directionsListView.apply {
             // Set the adapter for the list view
             adapter = ArrayAdapter(
               this@MainActivity,
@@ -183,18 +183,22 @@ class MainActivity : AppCompatActivity() {
               directionsArray
             )
 
+            // when the user taps a maneuver, set the viewpoint to that portion of the route
             onItemClickListener =
               AdapterView.OnItemClickListener { _, _, position, _ ->
+                // remove any graphics that are not the two stops and the route graphic
                 if (graphicsOverlay.graphics.size > 3) {
                   graphicsOverlay.graphics.removeAt(graphicsOverlay.graphics.size - 1)
                 }
 
+                // set the viewpoint to the selected maneuver
                 val geometry = directions[position].geometry
                 mapView.setViewpointAsync(
                   Viewpoint(geometry.extent, 20.0),
                   1f
                 )
-                // create a graphic with a symbol for the route and add it to the graphics overlay
+
+                // create a graphic with a symbol for the maneuver and add it to the graphics overlay
                 val selectedRouteSymbol = SimpleLineSymbol(
                   SimpleLineSymbol.Style.SOLID,
                   Color.GREEN, 5f
@@ -203,70 +207,86 @@ class MainActivity : AppCompatActivity() {
                   graphicsOverlay.graphics.add(it)
                 }
 
+                // collapse the bottom sheet
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
               }
           }
 
+          // when the route is solved, hide the FAB
           directionFab.visibility = View.GONE
         }
-         //TODO: should there be an else here?
+        else {
+          val message = "Error loading route parameters."
+          Log.e(TAG, message)
+          Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        }
       } catch (e: Exception) {
-        Log.e(TAG, "${e.message}")
+        val message = "Error creating route parameters: ${e.message}"
+        Log.e(TAG, message)
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
       }
     }
   }
 
 
   /**
-   * Set up the Source, Destination and routeSymbol graphics symbol
+   * Set up the source, destination and route symbols
    */
   private fun setupSymbols() {
     //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
     // Create a picture marker symbol from an app resource
     try {
+
       val startDrawable =
         ContextCompat.getDrawable(this, R.drawable.ic_source) as BitmapDrawable?
+
       val pinSourceSymbol = PictureMarkerSymbol.createAsync(startDrawable).get()
-      pinSourceSymbol.loadAsync()
-      pinSourceSymbol.addDoneLoadingListener {
-        // add a new graphic as start point
-        val sourcePoint = Point(
-          -117.15083257944445,
-          32.741123367963446,
-          SpatialReferences.getWgs84()
-        )
-        Graphic(sourcePoint, pinSourceSymbol).also {
-          graphicsOverlay.graphics.add(it)
+      pinSourceSymbol.apply {
+        loadAsync()
+        addDoneLoadingListener {
+          // add a new graphic as start point
+          val sourcePoint = Point(
+            -117.15083257944445,
+            32.741123367963446,
+            SpatialReferences.getWgs84()
+          )
+          Graphic(sourcePoint, this).also {pinSourceGraphic ->
+            graphicsOverlay.graphics.add(pinSourceGraphic)
+          }
         }
+        offsetY = 20f
       }
-      pinSourceSymbol.offsetY = 20f
-    } catch (e: InterruptedException) {
-      e.printStackTrace()
-    } catch (e: ExecutionException) {
-      e.printStackTrace()
+    } catch (e: Exception) {
+      val message = "Error loading picture marker symbol: ${e.message}"
+      Log.e(TAG, message)
+      Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
     //[DocRef: END]
     try {
+
       val endDrawable =
         ContextCompat.getDrawable(this, R.drawable.ic_destination) as BitmapDrawable?
+
       val pinDestinationSymbol = PictureMarkerSymbol.createAsync(endDrawable).get()
-      pinDestinationSymbol.loadAsync()
-      pinDestinationSymbol.addDoneLoadingListener {
-        // add a new graphic as end point
-        val destinationPoint = Point(
-          -117.15557279683529,
-          32.703360305883045,
-          SpatialReferences.getWgs84()
-        )
-        Graphic(destinationPoint, pinDestinationSymbol).also {
-          graphicsOverlay.graphics.add(it)
+      pinDestinationSymbol.apply {
+        loadAsync()
+        addDoneLoadingListener {
+          // add a new graphic as end point
+          val destinationPoint = Point(
+            -117.15557279683529,
+            32.703360305883045,
+            SpatialReferences.getWgs84()
+          )
+          Graphic(destinationPoint, this).also {pinDestinationGraphic ->
+            graphicsOverlay.graphics.add(pinDestinationGraphic)
+          }
         }
+        offsetY = 20f
       }
-      pinDestinationSymbol.offsetY = 20f
-    } catch (e: InterruptedException) {
-      e.printStackTrace()
-    } catch (e: ExecutionException) {
-      e.printStackTrace()
+    } catch (e: Exception) {
+      val message = "Error loading picture marker symbol: ${e.message}"
+      Log.e(TAG, message)
+      Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
     //[DocRef: END]
   }
@@ -276,18 +296,16 @@ class MainActivity : AppCompatActivity() {
    * @param routeTask the route task progress to be tracked
    * @return an AlertDialog set with the dialog layout view
    */
-  private fun createProgressDialog(routeTask: RouteTask): AlertDialog {
-    val builder = AlertDialog.Builder(this@MainActivity).apply {
-      setTitle("Solving route...")
+  private fun createProgressDialog(routeTask: RouteTask) =
+    AlertDialog.Builder(this@MainActivity)
+      .setTitle("Solving route...")
       // provide a cancel button on the dialog
-      setNeutralButton("Cancel") { _, _ ->
+      .setNegativeButton("Cancel") { _, _ ->
         routeTask.cancelLoad()
       }
-      setCancelable(false)
-      setView(R.layout.dialog_layout)
-    }
-    return builder.create()
-  }
+      .setCancelable(false)
+      .setView(R.layout.dialog_layout)
+      .create()
 
   override fun onPause() {
     mapView.pause()
