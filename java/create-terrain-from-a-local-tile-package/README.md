@@ -15,8 +15,8 @@ When loaded, the sample will show a scene with a terrain surface applied. Pan an
 ## How it works
 
 1. Create an `ArcGISScene` and add it to a `SceneView`.
-1. Create an `ArcGISTiledElevationSource` with the path to the local tile package.
-1. Add this source to the scene's base surface: `ArcGISScene.getBaseSurface().getElevationSources().add(ArcGISTiledElevationSource)`.
+2. Create an `ArcGISTiledElevationSource` with the path to the local tile package.
+3. Add this source to the scene's base surface: `ArcGISScene.getBaseSurface().getElevationSources().add(ArcGISTiledElevationSource)`.
 
 ## Relevant API
 

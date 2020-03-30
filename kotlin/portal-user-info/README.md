@@ -22,11 +22,10 @@ When prompted, enter your ArcGIS Online credentials.
     * `portalUser.email`
     * `portalUser.created`
 5.  Load a thumbnail image using `portalUser.fetchThumbnailAsync()`
-  
+
 ## Relevant API
 
 * AuthenticationManager
-* AuthenticationManager.CredentialCache
 * DefaultAuthenticationChallengeHandler
 * PortalInfo
 * PortalUser

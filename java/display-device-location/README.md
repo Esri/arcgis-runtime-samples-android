@@ -21,8 +21,8 @@ Tap the button in the lower right (which starts in Stop mode). A menu will appea
 ## How it works
 
 1. Create a `MapView`.
-1. Get the `LocationDisplay` by calling `.getLocationDisplay()` on the `MapView`.
-1. Use `startAsync()` and `stop()` on the `LocationDisplay` as necessary.
+2. Get the `LocationDisplay` by calling `.getLocationDisplay()` on the `MapView`.
+3. Use `startAsync()` and `stop()` on the `LocationDisplay` as necessary.
 
 ## Relevant API
 

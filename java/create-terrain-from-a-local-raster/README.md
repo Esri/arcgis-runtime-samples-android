@@ -15,8 +15,8 @@ When loaded, the sample will show a scene with a terrain surface applied. Pan an
 ## How it works
 
 1. Create an `ArcGISScene` and add it to a `SceneView`.
-1. Create a `RasterElevationSource` with a list of raster file paths.
-1. Add this source to the scene's base surface: `ArcGISScene.getBaseSurface().getElevationSources().add(RasterElevationSource)`.
+2. Create a `RasterElevationSource` with a list of raster file paths.
+3. Add this source to the scene's base surface: `ArcGISScene.getBaseSurface().getElevationSources().add(RasterElevationSource)`.
 
 ## Relevant API
 
