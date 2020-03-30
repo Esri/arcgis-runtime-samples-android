@@ -88,11 +88,9 @@ class MainActivity : AppCompatActivity() {
       params.bottomMargin += heightDelta
     }
 
-    // hide the bottom sheet before we've solved the route
-//    bottomSheet.visibility = View.GONE
-
-
-
+    bottomSheetBehavior.peekHeight = 0
+    val mainContainerParams = mainContainer.layoutParams as CoordinatorLayout.LayoutParams
+    mainContainerParams.setMargins(0,0,0,0)
 
     setupSymbols()
 
@@ -106,6 +104,8 @@ class MainActivity : AppCompatActivity() {
 //      }
 
       bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+      bottomSheetBehavior.peekHeight = bottomSheetView.header.height
+      mainContainerParams.setMargins(0,0,0,64)
       solveRoute()
     }
   }
@@ -163,6 +163,13 @@ class MainActivity : AppCompatActivity() {
 
 //          bottomSheet.visibility = View.VISIBLE
 
+          bottomSheetView.setOnClickListener {
+            bottomSheetBehavior.state = when (bottomSheetBehavior.state){
+                BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_EXPANDED
+                else -> BottomSheetBehavior.STATE_COLLAPSED
+              }
+          }
+
           bottomSheetView.directionsListView.apply {
             // Set the adapter for the list view
             adapter = ArrayAdapter(
@@ -171,26 +178,28 @@ class MainActivity : AppCompatActivity() {
               directionsArray
             )
 
-//            onItemClickListener =
-//              AdapterView.OnItemClickListener { _, _, position, _ ->
-//                if (graphicsOverlay.graphics.size > 3) {
-//                  graphicsOverlay.graphics.removeAt(graphicsOverlay.graphics.size - 1)
-//                }
-//
-//                val geometry = directions[position].geometry
-//                mapView.setViewpointAsync(
-//                  Viewpoint(geometry.extent, 20.0),
-//                  3f
-//                )
-//                // create a graphic with a symbol for the route and add it to the graphics overlay
-//                val selectedRouteSymbol = SimpleLineSymbol(
-//                  SimpleLineSymbol.Style.SOLID,
-//                  Color.GREEN, 5f
-//                )
-//                Graphic(geometry, selectedRouteSymbol).also {
-//                  graphicsOverlay.graphics.add(it)
-//                }
-//              }
+            onItemClickListener =
+              AdapterView.OnItemClickListener { _, _, position, _ ->
+                if (graphicsOverlay.graphics.size > 3) {
+                  graphicsOverlay.graphics.removeAt(graphicsOverlay.graphics.size - 1)
+                }
+
+                val geometry = directions[position].geometry
+                mapView.setViewpointAsync(
+                  Viewpoint(geometry.extent, 20.0),
+                  1f
+                )
+                // create a graphic with a symbol for the route and add it to the graphics overlay
+                val selectedRouteSymbol = SimpleLineSymbol(
+                  SimpleLineSymbol.Style.SOLID,
+                  Color.GREEN, 5f
+                )
+                Graphic(geometry, selectedRouteSymbol).also {
+                  graphicsOverlay.graphics.add(it)
+                }
+
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+              }
           }
         }
          //TODO: should there be an else here?
@@ -255,34 +264,6 @@ class MainActivity : AppCompatActivity() {
     //[DocRef: END]
   }
 
-//  /**
-//   * set up the drawer
-//   */
-//  private fun setupDrawer() =
-//    object : ActionBarDrawerToggle(
-//      this,
-//      drawerLayout,
-//      R.string.drawer_open,
-//      R.string.drawer_close
-//    ) {
-//      /** Called when a drawer has settled in a completely open state.  */
-//      override fun onDrawerOpened(drawerView: View) {
-//        super.onDrawerOpened(drawerView)
-//        invalidateOptionsMenu() // creates call to onPrepareOptionsMenu()
-//      }
-//
-//      /** Called when a drawer has settled in a completely closed state.  */
-//      override fun onDrawerClosed(view: View) {
-//        super.onDrawerClosed(view)
-//        invalidateOptionsMenu() // creates call to onPrepareOptionsMenu()
-//      }
-//    }.apply {
-//      isDrawerIndicatorEnabled = true
-//      drawerLayout.addDrawerListener(this)
-//      drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-//    }
-
-
   /** Create a progress dialog box for tracking the route task.
    *
    * @param routeTask the route task progress to be tracked
@@ -300,30 +281,6 @@ class MainActivity : AppCompatActivity() {
     }
     return builder.create()
   }
-
-//  override fun onPostCreate(savedInstanceState: Bundle?) {
-//    super.onPostCreate(savedInstanceState)
-//    // Sync the toggle state after onRestoreInstanceState has occurred.
-//    drawerToggle.syncState()
-//  }
-//
-//  override fun onConfigurationChanged(newConfig: Configuration) {
-////    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-//    super.onConfigurationChanged(newConfig)
-//    drawerToggle.onConfigurationChanged(newConfig)
-//  }
-//
-//  override fun onCreateOptionsMenu(menu: Menu): Boolean { // Inflate the menu; this adds items to the action bar if it is present.
-//    menuInflater.inflate(R.menu.menu_main, menu)
-//    return true
-//  }
-//
-//  override fun onOptionsItemSelected(item: MenuItem): Boolean { // Handle action bar item clicks here. The action bar will
-//// automatically handle clicks on the Home/Up button, so long
-//// as you specify a parent activity in AndroidManifest.xml.
-//// Activate the navigation drawer toggle
-//    return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
-//  }
 
   override fun onPause() {
     mapView.pause()
