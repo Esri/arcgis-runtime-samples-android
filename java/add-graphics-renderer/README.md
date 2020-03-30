@@ -1,39 +1,40 @@
-# Add Graphics Renderer
-Add graphics to a List, create a SimpleRenderer to represent a symbol and style, and add the renderer to the MapView.
+# Add graphics with renderer
 
-![Add Graphics Renderer App](add-graphics-renderer.png)
+A renderer allows you to change the style of all graphics in a graphics overlay by referencing a single symbol style.
+A renderer will only effect graphics that do not specify their own symbol style.
+
+![Image of adding graphics with renderer](add-graphics-renderer.png)
+
+## Use case
+
+A renderer allows you to change the style of all graphics in an overlay by only changing one copy of the symbol. For example, a user may wish to display a number of graphics on a map of parkland which represent trees, all sharing a common symbol.
 
 ## How to use the sample
-Simply run the sample.
+
+Run the sample and view graphics for points, lines, and polygons, which are stylized using renderers.
 
 ## How it works
-Graphics are added to a `GraphicsOverlay` without any symbols or styles. You create a `Renderer` to add to the `GraphicsOverlay` which defines the symbol as `SimpleMarkerSymbol` which sets the style to be rendered.
 
-```java
-// point graphic
-Point pointGeometry = new Point(40e5, 40e5, SpatialReferences.getWebMercator());
-// red diamond point symbol
-SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 10);
-// create graphic for point
-Graphic pointGraphic = new Graphic(pointGeometry);
-// create a graphic overlay for the point
-GraphicsOverlay pointGraphicOverlay = new GraphicsOverlay();
-// create simple renderer
-SimpleRenderer pointRenderer = new SimpleRenderer(pointSymbol);
-pointGraphicOverlay.setRenderer(pointRenderer);
-// add graphic to overlay
-pointGraphicOverlay.getGraphics().add(pointGraphic);
-// add graphics overlay to the MapView
-mMapView.getGraphicsOverlays().add(pointGraphicOverlay);
-```
+* Create a `GraphicsOverlay` and add it to the `MapView`.
+* Create a `Graphic`, specifying only a `Geometry`.
+* Create a single `Symbol` such as a `SimpleMarkerSymbol`.
+* Create a renderer with the `Symbol` such as a `SimpleRenderer(symbol)`.
+* Set the renderer on the `GraphicsOverlay` with `graphicsOverlay.setRenderer(renderer)`.
 
 ## Relevant API
+
+* Geometry
 * Graphic
 * GraphicsOverlay
-* ListenableList
-* MapView
-* SimpleRenderer
+* SimpleFillSymbol
+* SimpleLineSymbol
 * SimpleMarkerSymbol
+* SimpleRenderer
 
-#### Tags
-Visualization
+## Additional information
+
+To set unique symbols across a number of graphics (e.g. showing graphics of individual landmarks) see the "Add graphics with symbols" sample.
+
+## Tags
+
+display, graphics, marker, overlay, renderer, symbol

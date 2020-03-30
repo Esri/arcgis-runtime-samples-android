@@ -2,7 +2,7 @@
 
 Apply scheduled updates to a downloaded preplanned map area.
 
-![Apply scheduled updates to preplanned map area app](apply-scheduled-updates-to-preplanned-map-area.png)
+![Image of apply scheduled updates to preplanned map area](apply-scheduled-updates-to-preplanned-map-area.png)
 
 ## Use case
 
@@ -54,8 +54,5 @@ The data in this sample shows the roads and trails in the Canyonlands National P
 **Note:** preplanned areas using the Scheduled Updates workflow are read-only. For preplanned areas that can be edited on the end-user device, see [Take a map offline - preplanned](https://developers.arcgis.com/java/latest/guide/take-map-offline-preplanned.htm).
 
 #### Tags
-Edit and Manage Data
-offline, preplanned
-pre-planned
-synchronize
-update
+
+offline, pre-planned, preplanned, synchronize, update

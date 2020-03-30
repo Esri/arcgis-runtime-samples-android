@@ -2,7 +2,7 @@
 
 List the contents of a KML file.
 
-![List KML contents App](list-kml-contents.png)
+![Image of list KML contents](list-kml-contents.png)
 
 ## Use case
 
@@ -14,10 +14,11 @@ The contents of the KML file are shown in a tree. Select a node to zoom to that 
 
 ## How it works
 
-1. The KML file is added to the scene as a layer.
-2. Root nodes from `KmlDataset.RootNodes` is recursively explored to create a drill down menu.
+1. Create a `KmlLayer` from the `KmlDataset` which represents the KML file.
+1. Add the KML layer to the `SceneView`'s operational layers.
+2. Recursively explore each node of the `KmlDataSet` starting from the root nodes.
   * Each node is enabled for display at this step. KML files may include nodes that are turned off by default.
-3. When a node is selected, use the node's `Extent` to determine a viewpoint and set the `SceneView`s viewpoint do it.
+3. When a node is selected, use the node's `Extent` to determine a viewpoint and set the `SceneView` object's viewpoint to it.
 
 ## Relevant API
 
@@ -43,9 +44,7 @@ Link | Local Location
 ---------|-------|
 |[Esri Test Data KMZ](https://arcgisruntime.maps.arcgis.com/home/item.html?id=da301cb122874d5497f8a8f6c81eb36e)| `<sdcard>`/ArcGIS/Samples/KML/esri_test_data.kmz|
 
-#### Tags
-Layers
-KML
-KMZ
-OGC
-Keyhole
+
+## Tags
+
+Keyhole, KML, KMZ, layers, OGC

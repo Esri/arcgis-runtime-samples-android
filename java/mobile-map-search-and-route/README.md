@@ -1,21 +1,35 @@
-## Mobile Map (Search and Route)
-Search and route using data in a map package.
+# Mobile map (search and route)
 
-![Mobile Map Search and Route App](mobile-map-search-and-route.png)
+Display maps and use locators to enable search and routing offline using a Mobile Map Package.
+
+![Image of mobile map search and route](mobile-map-search-and-route.png)
+
+## Use case
+
+Mobile map packages make it easy to transmit and store the necessary components for an offline map experience including: transportation networks (for routing/navigation), locators (address search, forward and reverse geocoding), and maps. 
+
+A field worker might download a mobile map package to support their operations while working offline.
 
 ## How to use the sample
-The sample loads maps from a `MobileMapPackage` and displays the first map in the map package (index 0) on the starting activity (MobileMapViewActivity). All maps contained within the map package are shown as a recycler view list in a seperate activity (MapChooserActivity). You can tap on a single map to load its contents to the main `MapView` on MobileMapViewActivity. The map chooser menu indicates if the map has `transportationNetworks` datasets (for routing) or a `LocatorTask` (for geocoding). If the mobile map supports routing or geocoding, you can tap on the map for results.
+
+A list of maps from a mobile map package will be displayed. If the map contains transportation networks, the list item will have a navigation icon. Tap on a map in the list to open it. If a locator task is available, tap on the map to reverse geocode the location's address. If transportation networks are available, a route will be calculated between geocode locations.
 
 ## How it works
-The sample loads a map from a `MobileMapPackage` to instantiate a map package object. It uses the `LocatorTask` property on `MobileMapPackage` to check if the package supports geocoding. It uses the `transportationNetworks` property on each mobile map to see if routing is supported. The logic for routing and geocoding is similar to the one used in the individual routing and geocoding samples.
+
+1.  Create a `MobileMapPackage` using `MobileMapPackage(path).loadAsync()`.
+2.  Get a list of maps inside the package using the `mobileMapPackage.getMaps()`.
+3.  If the package has a locator, access it using `mobileMapPackage.getLocatorTask()`.
+4.  To see if a map contains transportation networks, check `map.getTransportationNetworks()`.
 
 ## Relevant API
+
+* GeocodeResult
 * MobileMapPackage
-* LocatorTask
-* GeoCode
+* ReverseGeocodeParameters
 * Route
-* NetworkAnalysis
-* Callout
+* RouteParameters
+* RouteResult
+* RouteTask
 
 ## Offline data
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=260eb6535c824209964cf281766ebe43).  
@@ -34,6 +48,6 @@ Link | Local Location
 ---------|-------|
 |[San Francisco Mobile Map Package](https://arcgisruntime.maps.arcgis.com/home/item.html?id=260eb6535c824209964cf281766ebe43)| `<sdcard>`/ArcGIS/samples/MapPackage/SanFrancisco.mmpk |
 
+## Tags
 
-#### Tags
-Routing and Logistics
+disconnected, field mobility, geocode, network, network analysis, offline, routing, search, transportation

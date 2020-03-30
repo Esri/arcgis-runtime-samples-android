@@ -1,22 +1,46 @@
-# Update Related Features
-A `MapView` loaded with two related `FeatureLayer`'s, national parks and preserves.  The relationships between the layers is defined in the service. When you tap on a national park `Feature` the app identifies the feature and performs a related table query then shows the annual visitors amount for the preserve. You can update the visitor amount by tapping the drop-down in the `Callout` and selecting a different amount. The app will apply the update on the server.  The color coding of the Preserves features are outlined in the Legend below. The color will change to correlate with the updated values from the app.
+# Update related features
 
-![Update Related Features App](update-related-features.png)
-![Map Legend](legend.png)
+Update related features in an online feature service.
+
+![Image of update related features](update-related-features.png)
+![Image of map legend](legend.png)
+
+## Use case
+
+Updating related features is a helpful workflow when you have two features with shared or dependent attributes. In a data collection scenario where origin tree features are related to destination inspection records, trees might undergo inspection on some regular interval to assess their size, health, and other characteristics. When logging a new inspection record that captures the latest trunk diameter and condition of a tree, updating these attributes on the origin tree feature would permit the tree point to be symbolized most accurately according to these latest observations.
 
 ## How to use the sample
-Tap on a feature to select it. A callout will appear with a spinner which can be used to select new data. Selecting new data will also update the server.
+
+Once you launch the app, select a national park feature. The app will then identify it, perform a related table query, and will show you the annual visitors amount for the preserve. You can then update the visitor amount by tapping the drop-down in the `Callout` and selecting a different amount.
 
 ## How it works
-When you tap on the map the app identifies if a feature is selected and queries for related features on its `FeatureTable`.  Results are shown in an editable `Callout` where you can update the visitor amount by selecting a new value from the drop-down list.  
 
-Updates can be applied to the server using `ServiceFeatureTable.updateFeatureAsync(...)` and `ServiceFeatureTable.applyEditsAsync()`
+1. Create two `ServiceFeatureTable`s from the Feature Service URLs.
+2. Create two `FeatureLayer`s using the previously created service feature tables.
+3. Add these feature layers to the map.
+4. When a `Feature` is selected, identify and highlight the selected feature.
+5. Retrieve related features by calling `serviceFeatureTable.queryRelatedFeaturesAsync()` and passing in the selected feature.
+6. Update feature in the feature table with `serviceFeatureTable.updateFeatureAsync(selectedFeature)` and apply updates to the server using  `serviceFeatureTable.applyEditsAsync()`.
 
 ## Relevant API
-* ArcGISFeature
-* ServiceFeatureTable
-* RelatedQueryParameters
-* RelatedFeatureQueryResult
 
-#### Tags
-Edit and Manage Data
+* ArcGISFeature
+* RelatedFeatureQueryResult
+* ServiceFeatureTable
+
+## About the data
+
+The map opens to a view of the State of Alaska. Two related feature layers are loaded to the map and display the Alaska National Parks and Preserves.
+
+## Additional information
+
+All the tables participating in a relationship must be present in the data source. ArcGIS Runtime supports related tables in the following data sources:
+
+* ArcGIS feature service
+* ArcGIS map service
+* Geodatabase downloaded from a feature service
+* Geodatabase in a mobile map package
+
+## Tags
+
+editing, features, service, updating

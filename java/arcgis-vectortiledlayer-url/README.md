@@ -1,39 +1,28 @@
-# ArcGIS Vector Tiled Layer URL
-Load an ArcGIS Vector Tiled Layer from a URL.
+# ArcGIS vector tiled layer URL
 
-![ArcGIS VectorTiledLayer](arcgis-vectortiledlayer-url.png)
+Load an ArcGIS vector tiled layer from a URL.
+
+![Image of ArcGIS vector tiled layer url](arcgis-vectortiledlayer-url.png)
+
+## Use case
+
+Vector tile basemaps can be created in ArcGIS Pro and published as offline packages or online services. An ArcGIS vector tiled layer has many advantages over traditional raster based basemaps (ArcGIS tiled layer), including smooth scaling between different screen DPIs, smaller package sizes, and the ability to rotate symbols and labels dynamically.
 
 ## How to use the sample
-Simply run the app.
+
+Tap the menu icon at the top left of the screen and select different vector tile basemaps.
 
 ## How it works
-An `ArcGISVectorTiledLayer` from an ArcGIS Online service URL is added to the `ArcGISMap` as an operational layer.
 
-```java
-// inflate MapView from layout
-mMapView = (MapView) findViewById(R.id.mapView);
-
-// create new Vector Tiled Layer from service url
-mVectorTiledLayer = new ArcGISVectorTiledLayer(
-    getResources().getString(R.string.navigation_url));
-
-// set tiled layer as basemap
-Basemap basemap = new Basemap(mVectorTiledLayer);
-// create a map with the basemap
-ArcGISMap map = new ArcGISMap(basemap);
-// create a viewpoint from lat, long, scale
-Viewpoint vp = new Viewpoint(47.606726, -122.335564, 72223.819286);
-// set initial map extent
-map.setInitialViewpoint(vp);
-// set the map to be displayed in this view
-mMapView.setMap(map);
-```
+1. Construct an `ArcGISVectorTiledLayer` with an ArcGIS Online service URL.
+2. Instantiate a new `Basemap` passing in the vector tiled layer as a parameter.
+3. Create a new `ArcGISMap` object by passing in the basemap as a parameter.
 
 ## Relevant API
-* ArcGISMap
+
 * ArcGISVectorTiledLayer
 * Basemap
-* MapView
 
-#### Tags
-Layers
+## Tags
+
+tiles, vector, vector basemap, vector tiled layer, vector tiles

@@ -1,19 +1,31 @@
-# Raster Layer File
+# Raster layer (file)
+
 Create and use a raster layer made from a local raster file.
 
-![Raster Layer File App](raster-layer-file.png)
+![Image of apply raster layer file](raster-layer-file.png)
+
+## Use case
+
+Rasters can be digital aerial photographs, imagery from satellites, digital pictures, or even scanned maps. An end-user will frequently need to import raster files acquired through various data-collection methods into their map to view and analyze the data.
 
 ## How to use the sample
-Run the app and allow read permission.
+
+When the sample starts, a raster will be loaded from a file and displayed in the map view.
 
 ## How it works
-1. Create a `Raster` from a raster file stored locally on the device.
-1. Create a `RasterLayer` from the `Raster`.
-1. Add it as an operational layer with `ArcGISMap.getOperationalLayers().add(...)`.
+
+1. Create a `Raster` from a raster file.
+2. Create a `RasterLayer` from the raster.
+3. Add it as an operational layer with `map.getOperationalLayers().add(rasterLayer)`.
 
 ## Relevant API
+
 * Raster
 * RasterLayer
+
+## Additional information
+
+See the topic [What is raster data?](http://desktop.arcgis.com/en/arcmap/10.3/manage-data/raster-and-images/what-is-raster-data.htm) in the *ArcMap* documentation for more information about raster images.
 
 ## Offline data
 1. Download the **raster-file.zip** data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=7c4c679ab06a4df19dc497f577f111bd).  
@@ -31,5 +43,6 @@ Link | Local Location
 ---------|-------|
 |[raster-file.zip](https://arcgisruntime.maps.arcgis.com/home/item.html?id=7c4c679ab06a4df19dc497f577f111bd)| `<sdcard>`/ArcGIS/samples/raster/Shasta.tif |
 
-#### Tags
-Layers
+## Tags
+
+data, image, import, layer, raster, visualization

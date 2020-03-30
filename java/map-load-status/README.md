@@ -1,23 +1,27 @@
-# Map Load Status
-Tell what the map's load status is--obtained from the enum value from a `LoadStatus` class. 
+# Map load status
 
-![Map Load Status App](map-load-status.png)
+Determine the map's load status which can be: `NOT_LOADED`, `FAILED_TO_LOAD`, `LOADING`, `LOADED`.
+
+![Image of Map load status](map-load-status.png)
 
 ## How to use the sample
-The `LoadStatus` is considered loaded when any of the following are true:
-* The map has a valid spatial reference
-* The map has an an initial viewpoint
-* One of the map's predefined layers has been created.
 
-A listener is set up on the map to handle the `LoadStatusChangedEvent`, and the status text is updated when the status changes.
+Tap on the refresh button in the top right of the screen to reload the ArcGISMap. The load status of the ArcGISMap will be displayed on screen.
 
 ## How it works
-The `addLoadStatusChangedListener` method of class `ArcGISMap` listens for `LoadStatusChangedEvent`. To get the load status use method `getNewLoadStatus().name()` on the changed event.
+
+The `LoadStatus` is `LOADED` when any of the following criteria are met:
+
+* The map has a valid spatial reference.
+* The map has an an initial viewpoint.
+* One of the map's predefined layers has been created.
 
 ## Relevant API
+
 * ArcGISMap
 * LoadStatusChangedListener
 * MapView
 
-#### Tags
-Maps and Scenes
+## Tags
+
+map

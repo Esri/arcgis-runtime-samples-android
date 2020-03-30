@@ -1,22 +1,31 @@
-# Feature Layer Update Geometry
-Update geometry in a feature layer.
+# Feature layer update geometry
 
-![Feature Layer Update Geometry App](feature-layer-update-geometry.png)
+Update a feature's location in an online feature service.
+
+![Image of feature layer update geometry](feature-layer-update-geometry.png)
+
+## Use case
+
+Sometimes users may want to edit features in an online feature service by moving them.
 
 ## How to use the sample
-Tap on a feature on the map to select a feature. Once the feature is selected, tap on map to update its geometry
+
+Tap a feature to select it. Tap again to set the updated location for that feature. An alert will be shown confirming success or failure.
 
 ## How it works
-The map view  provides a way to add a listener to screen taps using the `setOnTouchListener` method. The app uses the `MotionEvent` passed in to the `onSingleTapConfirmed` method to perform identify/update geometry on mapview  based on the tolerance. Updates the geometry of the identified feature using `setGeometry` method and the updated feature is passed to the `updateFeatureAsync` method on FeatureTable. Finally the edits are applied to the service using `applyEditsAsync` method on FeatureTable.
+
+1. Create a `ServiceFeatureTable` object from a URL.
+2. Create a `FeatureLayer` object from the `ServiceFeatureTable`.
+3. Identify layers from the feature layer to find features, and select a feature with `selectFeatures(identifiedFeature)`.
+4. Change the selected feature's location using `identifiedFeature.setGeometry(...)`.
+5. After the change, update the table on the server using `applyEditsAsync()`.
 
 ## Relevant API
-* ArcGISFeature
-* FeatureEditResult
+
+* Feature
 * FeatureLayer
-* GeoElement
-* GeometryEngine
-* IdentifyLayerResult
 * ServiceFeatureTable
 
-#### Tags
-Edit and Manage Data
+## Tags
+
+editing, feature layer, feature table, moving, service, updating

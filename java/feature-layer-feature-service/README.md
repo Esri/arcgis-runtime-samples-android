@@ -1,18 +1,31 @@
-# Feature Layer Feature Service
-Use a layer from an ArcGIS feature service as a feature layer.
+# Feature layer (feature service)
 
-![Feature Layer Feature Service](feature-layer-feature-service.png)
+Show features from an online feature service.
+
+![Image of feature layer feature service](feature-layer-feature-service.png)
+
+## Use case
+
+Feature services are useful for sharing vector GIS data with clients so that individual features can be queried, displayed, and edited.
 
 ## How to use the sample
-Simply run the app.
+
+Run the sample and view the feature service as an operational layer on top of the basemap. Zoom and pan around the map to see the features in greater detail.
 
 ## How it works
-There are two classes you need to utilize. First, create a service feature table using the URL to the layer in the feature service you want to use. This is the datasource. Then, create a feature layer and pass in the service feature table you have created. Add the feature layer to a map, then set the map on a  map view and the layer will be displayed using  default modes and properties as defined on the service.
+
+1. Create a `ServiceFeatureTable` from a URL.
+2. Create a feature layer from the service feature table with `new FeatureLayer(serviceFeatureTable)`.
+3. Add the feature layer to your ArcGISMap using `ArcGISMap.getOperationalLayers().add(FeatureLayer)`.
 
 ## Relevant API
-* ArcGISMap
+
+* Basemap
 * FeatureLayer
+* ArcGISMap
+* MapView
 * ServiceFeatureTable
 
-#### Tags
-Layers
+## Tags
+
+feature table, layer, layers, service

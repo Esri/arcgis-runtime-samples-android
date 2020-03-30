@@ -1,24 +1,44 @@
-# Raster Function Service
-Raster functions are operations performed on a raster to apply on-the-fly processing. This sample demonstrates how to create an image service raster and apply a hillshade raster function to it.
+# Raster function service
 
-![Raster Function Service App](raster-function-service.png)
+Load a raster from a service, then apply a function to it.
+
+![Image of apply raster function to raster from service](raster-function-service.png)
+
+## Use case
+
+Raster functions allow processing operations that can be applied to one or more rasters on the fly. Functions can be applied to rasters that come from a service. A land survey agency may apply hillshade and aspect functions to rasters with elevation data in order to better determine the topography of a landscape and to make further planning decisions.
 
 ## How to use the sample
-Click on the button to apply the Raster service.
+
+Tap the "Apply Layer" button to apply the raster function and display the result.
 
 ## How it works
-* Create `ImageServiceRaster` using a `URL` and load it.
-* Create `RasterFunction` using a `JSON` string.
-* Get raster function's arguments with `RasterFunctionArguments`.
-* Set image service raster in the raster function arguments using `setRaster(rasterName, raster)`.
-* Create `Raster` using the `RasterFunction`.
-* Create `RasterLayer` using `Raster`.
-* Add `RasterLayer`  to the map operational layers with `map.getOperationalLayers()`.
+
+1. Create the `ImageServiceRaster` referring to the image server URL.
+2. Create the `RasterFunction` from a JSON string.
+3. Get the arguments of the raster function with `rasterFunction.getArguments()`.
+4. Get the names of the raster arguments with `rasterFunctionArguments.getRasterNames()`.
+5. Set the raster argument with `rasterFunction.setRaster(rasterName, imageServiceRaster)`.
+6. Create a new `Raster` referring to the raster function.
+7. Create a `RasterLayer` to visualize the computed raster.
+8. Display the raster.
 
 ## Relevant API
+
 * ImageServiceRaster
+* Raster
 * RasterFunction
+* RasterFunctionArguments
 * RasterLayer
 
-#### Tags
-Layers
+## About the data
+
+The sample applies a hillshade function to a raster produced from the National Land Cover Database, [NLCDLandCover2001](https://sampleserver6.arcgisonline.com/arcgis/rest/services/NLCDLandCover2001/ImageServer). You can learn more about the [hillshade function](http://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/hillshade-function.htm) in the *ArcMap* documentation.
+
+## Additional information
+
+The raster function computation happens locally on the client device.
+
+## Tags
+
+function, layer, raster, raster function, service
