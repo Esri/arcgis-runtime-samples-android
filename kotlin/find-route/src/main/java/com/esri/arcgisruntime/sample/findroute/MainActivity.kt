@@ -47,10 +47,6 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main_new.*
-import kotlinx.android.synthetic.main.activity_main_new.bottomSheet
-import kotlinx.android.synthetic.main.activity_main_new.mapView
-import kotlinx.android.synthetic.main.activity_main_new.view.*
-import kotlinx.android.synthetic.main.bottom_sheet.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import java.util.concurrent.ExecutionException
 import java.util.zip.Inflater
@@ -59,7 +55,9 @@ class MainActivity : AppCompatActivity() {
 
   private val TAG = MainActivity::class.java.simpleName
 
-  private val bottomSheetBehavior: BottomSheetBehavior<View> by lazy { BottomSheetBehavior.from(bottomSheet) }
+  private val bottomSheetView: View by lazy { this.bottomSheet }
+
+  private val bottomSheetBehavior: BottomSheetBehavior<View> by lazy { BottomSheetBehavior.from(bottomSheetView) }
 
   private val graphicsOverlay: GraphicsOverlay by lazy {
     // create a graphics overlay and add it to the map view
@@ -93,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     // hide the bottom sheet before we've solved the route
 //    bottomSheet.visibility = View.GONE
 
-    bottomSheetBehavior.peekHeight = bottomSheet.header.height
+
 
 
     setupSymbols()
@@ -107,6 +105,7 @@ class MainActivity : AppCompatActivity() {
 //        title = getString(R.string.app_name)
 //      }
 
+      bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
       solveRoute()
     }
   }
@@ -164,37 +163,34 @@ class MainActivity : AppCompatActivity() {
 
 //          bottomSheet.visibility = View.VISIBLE
 
-          val bottomSheetViewHolder = bottomSheet.bottomSheetLayout
-          if (bottomSheetViewHolder == null) Log.e(TAG, "Bottom sheet view holder is null!!!!!!!!")
-
-          bottomSheetViewHolder.directionsListView.apply {
+          bottomSheetView.directionsListView.apply {
             // Set the adapter for the list view
             adapter = ArrayAdapter(
-              applicationContext,
-              bottomSheet.directionsListView.id,
+              this@MainActivity,
+              android.R.layout.simple_list_item_1,
               directionsArray
             )
 
-            onItemClickListener =
-              AdapterView.OnItemClickListener { _, _, position, _ ->
-                if (graphicsOverlay.graphics.size > 3) {
-                  graphicsOverlay.graphics.removeAt(graphicsOverlay.graphics.size - 1)
-                }
-
-                val geometry = directions[position].geometry
-                mapView.setViewpointAsync(
-                  Viewpoint(geometry.extent, 20.0),
-                  3f
-                )
-                // create a graphic with a symbol for the route and add it to the graphics overlay
-                val selectedRouteSymbol = SimpleLineSymbol(
-                  SimpleLineSymbol.Style.SOLID,
-                  Color.GREEN, 5f
-                )
-                Graphic(geometry, selectedRouteSymbol).also {
-                  graphicsOverlay.graphics.add(it)
-                }
-              }
+//            onItemClickListener =
+//              AdapterView.OnItemClickListener { _, _, position, _ ->
+//                if (graphicsOverlay.graphics.size > 3) {
+//                  graphicsOverlay.graphics.removeAt(graphicsOverlay.graphics.size - 1)
+//                }
+//
+//                val geometry = directions[position].geometry
+//                mapView.setViewpointAsync(
+//                  Viewpoint(geometry.extent, 20.0),
+//                  3f
+//                )
+//                // create a graphic with a symbol for the route and add it to the graphics overlay
+//                val selectedRouteSymbol = SimpleLineSymbol(
+//                  SimpleLineSymbol.Style.SOLID,
+//                  Color.GREEN, 5f
+//                )
+//                Graphic(geometry, selectedRouteSymbol).also {
+//                  graphicsOverlay.graphics.add(it)
+//                }
+//              }
           }
         }
          //TODO: should there be an else here?

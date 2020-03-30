@@ -6,7 +6,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="64dp">
 
 
         <com.esri.arcgisruntime.mapping.view.MapView
@@ -35,7 +36,6 @@
         layout="@layout/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
         app:layout_behavior="@string/bottom_sheet_behavior"
         app:behavior_hideable="false"
         app:behavior_peekHeight="64dp"/>
