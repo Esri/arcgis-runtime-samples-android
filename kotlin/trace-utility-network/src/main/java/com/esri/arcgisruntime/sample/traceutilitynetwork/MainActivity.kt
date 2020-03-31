@@ -177,7 +177,7 @@ class MainActivity : AppCompatActivity() {
     traceTypeSpinner.adapter = ArrayAdapter<String>(
       applicationContext,
       android.R.layout.simple_spinner_item,
-      UtilityTraceType.values().map { it.toString() }
+      arrayOf("CONNECTED","SUBNETWORK","UPSTREAM","DOWNSTREAM")
     )
 
 
