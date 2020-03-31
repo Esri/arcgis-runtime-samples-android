@@ -1,0 +1,32 @@
+{
+    "category": "Routing and Logistics",
+    "description": "Display directions for a route between two points.",
+    "ignore": false,
+    "images": [
+        "find-route.png"
+    ],
+    "keywords": [
+        "directions",
+        "driving",
+        "navigation",
+        "network",
+        "network analysis",
+        "route",
+        "routing",
+        "shortest path",
+        "turn-by-turn"
+    ],
+    "redirect_from": "/android/latest/sample-code/find-route.htm",
+    "relevant_apis": [
+      "DirectionManeuver",
+      "Route",
+      "RouteParameters",
+      "RouteResult",
+      "RouteTask",
+      "Stop"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/findroute/MainActivity.kt"
+    ],
+    "title": "Find Route"
+}
