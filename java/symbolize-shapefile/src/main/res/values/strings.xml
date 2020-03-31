@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Symbolize shapefile</string>
-    <string name="subdivisions_shp">/Subdivisions.shp</string>
+    <string name="subdivisions_shp">/Aurora_CO_shp/Subdivisions.shp</string>
 </resources>

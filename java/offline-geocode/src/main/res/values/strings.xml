@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Offline Geocode</string>
     <string name="san_diego_tpk">/streetmap_SD.tpk</string>
-    <string name="san_diego_loc">/san-diego-locator.loc</string>
+    <string name="san_diego_loc">/san-diego-locator/san-diego-locator.loc</string>
     <string name="search_hint">Enter address</string>
     <string name="reverse_geocode_message">Drag the pin to reverse-geocode</string>
     <string name="offline_geocode_read_permission_denied">Read permission required for offline geocoding</string>

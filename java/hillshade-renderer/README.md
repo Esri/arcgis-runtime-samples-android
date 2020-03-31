@@ -26,6 +26,14 @@ Choose and adjust the settings to update the hillshade renderer on the raster la
 * HillshadeRenderer
 * Raster
 * RasterLayer
+* 
+## Offline Data
+
+1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=134d60f50e184e8fa56365f44e5ce3fb).
+2. Extract the contents of the downloaded zip file to disk.
+3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+4. Push the data into the scoped storage of the sample app:
+`adb push srtm-hillshade /Android/data/com.esri.arcgisruntime.sample.hillshaderenderer/files/srtm-hillshade`
 
 ## Tags
 

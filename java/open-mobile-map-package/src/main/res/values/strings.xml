@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">Open Mobile Map Package</string>
-    <string name="location_permission_denied">Open Mobile Map Package could not open because WRITE permission was denied.</string>
     <string name="yellowstone_mmpk">/Yellowstone.mmpk</string>
 </resources>

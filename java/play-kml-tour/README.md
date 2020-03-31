@@ -1,8 +1,8 @@
-# Play a KML tour
+# Play KML tour
 
 Play tours in KML files.
 
-![Image of play KML tour](play-a-kml-tour.png)
+![Image of play KML tour](play-kml-tour.png)
 
 ## Use case
 
@@ -26,11 +26,12 @@ The sample will load the KMZ file from ArcGIS Online. When a tour is found, the 
 * KmlTourController.play()
 * KmlTourController.reset()
 
-## Offline data
+## Offline Data
 
-Data will be downloaded by the sample viewer automatically.
-
-* [Esri_tour.kmz](https://arcgisruntime.maps.arcgis.com/home/item.html?id=f10b1d37fdd645c9bc9b189fb546307c)
+1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=f10b1d37fdd645c9bc9b189fb546307c).
+2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+3. Push the data into the scoped storage of the sample app:
+`adb push Esri_tour.kmz /Android/data/com.esri.arcgisruntime.sample.playkmltour/files/Esri_tour.kmz`
 
 ## About the data
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.esri.arcgisruntime.samples.viewpointclouddataoffline;
+package com.esri.arcgisruntime.sample.viewpointclouddataoffline;
 
 import android.os.Bundle;
 import android.util.Log;

@@ -2,5 +2,5 @@
     <string name="app_name">Add ENC exchange set</string>
     <string name="enc_read_permission_denied">Read permission required to load ENC dataset.</string>
     <string name="enc_path">/ExchangeSetwithoutUpdates/ENC_ROOT/CATALOG.031</string>
-    <string name="hydrography_directory">/ArcGIS/hydrography</string>
+    <string name="hydrography_directory">/hydrography</string>
 </resources>

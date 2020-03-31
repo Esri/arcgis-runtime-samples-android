@@ -26,15 +26,13 @@ Pan and zoom around the map. View the data loaded from the geodatabase.
 * Geodatabase
 * GeodatabaseFeatureTable
 
-## Offline data
-1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=2b0f9e17105847809dfeb04e3cad69e0).
-1. Extract the contents of the downloaded zip file to disk.
-1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
-1. Execute the following command: `adb push LA_Trails.geodatabase /sdcard/ArcGIS/samples/FLGdb/LA_Trails.geodatabase`
+## Offline Data
 
-Link | Local Location
----------|-------|
-|[Los Angeles Trailheads](https://www.arcgis.com/home/item.html?id=2b0f9e17105847809dfeb04e3cad69e0)| `<sdcard>`/ArcGIS/samples/FLGdb/LA_Trails.geodatabase|
+1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=2b0f9e17105847809dfeb04e3cad69e0).
+2. Extract the contents of the downloaded zip file to disk.
+3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+4. Push the data into the scoped storage of the sample app:
+`adb push LA_Trails.geodatabase /Android/data/com.esri.arcgisruntime.sample.featurelayergeodatabase/files/LA_Trails.geodatabase`
 
 ## About the data
 

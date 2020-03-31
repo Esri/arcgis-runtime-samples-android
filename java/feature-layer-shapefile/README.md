@@ -23,17 +23,13 @@ Run the sample and accept read permissions.
 * FeatureLayer
 * ShapefileFeatureTable
 
-## Offline data
+## Offline Data
 
 1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=d98b3e5293834c5f852f13c569930caa).
-1. Extract the contents of the downloaded zip file to disk.
-1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
-1. Execute the following command:
-`adb push . /sdcard/ArcGIS/Samples/ShapeFile/Aurora_CO_shp/`
-
-Link | Local Location
----------|-------|
-|[Public Art Shapefile](https://www.arcgis.com/home/item.html?id=d98b3e5293834c5f852f13c569930caa)| `<sdcard>`/ArcGIS/Samples/ShapeFile/Aurora_CO_shp/Public_Art.shp|
+2. Extract the contents of the downloaded zip file to disk.
+3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+4. Push the data into the scoped storage of the sample app:
+`adb push Aurora_CO_shp /Android/data/com.esri.arcgisruntime.sample.featurelayershapefile/files/Aurora_CO_shp`
 
 ## Tags
 

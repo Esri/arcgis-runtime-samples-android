@@ -42,6 +42,13 @@ You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide
 
 You should now have the following directory containing projection engine data files on your target device:
   * `/sdcard/ArcGIS/samples/PEData`
+## Offline Data
+
+1. To use the Projection Engine in ArcGIS Runtime, extra resources are required. Download the data [Projection Engine Data](https://developers.arcgis.com/downloads/data) from ArcGIS for Developers.
+2. Extract the contents of the downloaded zip file to disk.
+3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 2.
+4. Push the data into the scoped storage of the sample app:
+`adb push PEDataRuntime /Android/data/com.esri.arcgisruntime.sample.transformsbysuitability/files/PEDataRuntime`
 
 ## Additional information
 

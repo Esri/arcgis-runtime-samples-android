@@ -12,5 +12,5 @@
     <string name="min_value">Min value</string>
     <string name="stretch_type">Stretch type</string>
     <string name="standard_deviation">Std Dev</string>
-    <string name="rgb_renderer_shasta_tif">/Shasta.tif</string>
+    <string name="rgb_renderer_shasta_tif">/raster-file/Shasta.tif</string>
 </resources>

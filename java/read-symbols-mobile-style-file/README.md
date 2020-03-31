@@ -40,6 +40,13 @@ Link | Local Location
 ---------|-------|
 |[Emoji mobile style](https://arcgisruntime.maps.arcgis.com/home/item.html?id=1bd036f221f54a99abc9e46ff3511cbf)| `<sdcard>`/ArcGIS/Samples/Style/emoji-mobile.stylx |
 
+## Offline Data
+
+1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=1bd036f221f54a99abc9e46ff3511cbf).
+2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+3. Push the data into the scoped storage of the sample app:
+`adb push emoji-mobile.stylx /Android/data/com.esri.arcgisruntime.sample.readsymbolsmobilestylefile/files/emoji-mobile.stylx`
+
 ## About the data
 
 The mobile style file used in this sample was created using ArcGIS Pro, and is hosted on [ArcGIS Online](https://www.arcgis.com/home/item.html?id=1bd036f221f54a99abc9e46ff3511cbf). It contains symbol layers that can be combined to create emojis.

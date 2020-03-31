@@ -26,16 +26,12 @@ Since this sample works with a local .mspk, you will need to download the file t
 * MobileScenePackage
 * SceneView
 
-## Offline data
-1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=7dd2f97bb007466ea939160d0de96a9d).
-1. Extract the contents of the downloaded zip file to disk.
-1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
-1. Execute the following command:
-`adb push philadelphia.mspk /sdcard/ArcGIS/Samples/ScenePackage/philadelphia.mspk`
+## Offline Data
 
-Link | Local Location
----------|-------|
-|[Philadelphia mobile scene package](https://www.arcgis.com/home/item.html?id=7dd2f97bb007466ea939160d0de96a9d)| `<sdcard>`/ArcGIS/Samples/ScenePackage/philadelphia.mspk|
+1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=7dd2f97bb007466ea939160d0de96a9d).
+2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+3. Push the data into the scoped storage of the sample app:
+`adb push philadelphia.mspk /Android/data/com.esri.arcgisruntime.sample.openmobilescenepackage/files/philadelphia.mspk`
 
 
 ## Tags

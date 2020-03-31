@@ -23,7 +23,6 @@ import java.util.Collections;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -71,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
     // set paths using ENC environment settings
     // point to the folder containing hydrography resources
     EncEnvironmentSettings
-        .setResourcePath(Environment.getExternalStorageDirectory() + getString(R.string.hydrography_directory));
+        .setResourcePath(getExternalFilesDir(null) + getString(R.string.hydrography_directory));
     // use the app's cache to store processed System Electronic Navigational Chart (SENC) data
-    EncEnvironmentSettings.setSencDataPath(getApplicationContext().getCacheDir().getPath());
+    EncEnvironmentSettings.setSencDataPath(getExternalCacheDir().getPath());
 
     // create the Exchange Set passing an array of paths. Update sets can be loaded alongside base data
     EncExchangeSet encExchangeSet = new EncExchangeSet(

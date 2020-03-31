@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.esri.arcgisruntime.sample.playakmltour;
+package com.esri.arcgisruntime.sample.playkmltour;
 
 import java.util.List;
 
