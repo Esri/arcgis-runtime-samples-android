@@ -3,11 +3,7 @@
     <!-- Navigation vector URL-->
     <string name="navigation_vector">https://www.arcgis.com/sharing/rest/content/items/dcbbba0edf094eaa81af19298b9c6247/resources/styles/root.json</string>
     <string name="routing_service">https://sampleserver6.arcgisonline.com/arcgis/rest/services/NetworkAnalysis/SanDiego/NAServer/Route</string>
-    <!-- Drawer strings-->
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
 
-    <string name="progress_title">Finding Route</string>
-    <string name="progress_message">Please wait&#8230;</string>
+    <string name="progress_title">Finding route</string>
 
 </resources>

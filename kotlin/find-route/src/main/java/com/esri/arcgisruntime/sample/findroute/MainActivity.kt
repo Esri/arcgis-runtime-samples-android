@@ -1,4 +1,4 @@
-/* Copyright 2017 Esri
+/* Copyright 2020 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,9 +43,8 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
-import kotlinx.android.synthetic.main.activity_main_new.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
-import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
 
@@ -65,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main_new)
+    setContentView(R.layout.activity_main)
 
     // create new basemap with the vector tiled layer from a service url
     val basemap = Basemap(
@@ -214,8 +213,7 @@ class MainActivity : AppCompatActivity() {
 
           // when the route is solved, hide the FAB
           directionFab.visibility = View.GONE
-        }
-        else {
+        } else {
           val message = "Error loading route parameters."
           Log.e(TAG, message)
           Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -227,7 +225,6 @@ class MainActivity : AppCompatActivity() {
       }
     }
   }
-
 
   /**
    * Set up the source, destination and route symbols
@@ -250,7 +247,7 @@ class MainActivity : AppCompatActivity() {
             32.741123367963446,
             SpatialReferences.getWgs84()
           )
-          Graphic(sourcePoint, this).also {pinSourceGraphic ->
+          Graphic(sourcePoint, this).also { pinSourceGraphic ->
             graphicsOverlay.graphics.add(pinSourceGraphic)
           }
         }
@@ -277,7 +274,7 @@ class MainActivity : AppCompatActivity() {
             32.703360305883045,
             SpatialReferences.getWgs84()
           )
-          Graphic(destinationPoint, this).also {pinDestinationGraphic ->
+          Graphic(destinationPoint, this).also { pinDestinationGraphic ->
             graphicsOverlay.graphics.add(pinDestinationGraphic)
           }
         }

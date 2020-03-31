@@ -6,7 +6,6 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
         android:layout_width="0dp"
         android:layout_height="24dp"
         android:layout_marginStart="16dp"
@@ -14,6 +13,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:indeterminate="false"
+        android:theme="@style/progressBarBlue"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/progressTextView"

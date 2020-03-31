@@ -4,8 +4,7 @@
     android:id="@+id/bottomSheetLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,5 +41,5 @@
         android:id="@+id/directionsListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"/>
+        android:background="@android:color/white" />
 </LinearLayout>
