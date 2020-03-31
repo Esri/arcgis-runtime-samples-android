@@ -16,7 +16,7 @@ For simplicity, the sample comes loaded with a start and end stop. You can tap o
 
 1. Create a `RouteTask` using a URL to an online route service.
 2. Generate default `RouteParameters` using `routeTask.createDefaultParametersAsync()`.
-3. Set `returnStops` and `returnDirections` on the parameters to true.
+3. Set `returnDirections` on the parameters to true.
 4. Add `Stop`s to the parameters `stops` collection for each destination.
 5. Solve the route using `routeTask.solveAsync(routeParameters)` to get a `RouteResult`.
 6. Iterate through the result's `Route`s. To display the route, create a graphic using the geometry from `route.getRouteGeometry()`. To display directions, use `route.getDirectionManeuvers()`, and for each `DirectionManeuver`, display `DirectionManeuver.getDirectionText()`.
