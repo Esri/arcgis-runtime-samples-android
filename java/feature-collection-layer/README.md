@@ -1,6 +1,6 @@
 # Feature collection layer
 
-Create a Feature Collection Layer from a Feature Collection Table, and add it to a map.
+Create a feature collection layer from a feature collection table, and add it to a map.
 
 ![Image of feature collection layer](feature-collection-layer.png)
 
