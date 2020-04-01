@@ -19,19 +19,23 @@ package com.esri.arcgisruntime.sample.integratedwindowsauthentication
 
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.portal.PortalQueryParameters
-import com.esri.arcgisruntime.security.*
+import com.esri.arcgisruntime.security.AuthenticationChallenge
+import com.esri.arcgisruntime.security.AuthenticationChallengeHandler
+import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
+import com.esri.arcgisruntime.security.AuthenticationManager
+import com.esri.arcgisruntime.security.UserCredential
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.portal_info.*
 import kotlinx.android.synthetic.main.portal_load_state.*

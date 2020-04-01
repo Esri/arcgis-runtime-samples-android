@@ -17,9 +17,9 @@
 package com.esri.arcgisruntime.showlabelsonlayer
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.arcgisservices.LabelDefinition
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Point
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     mapView.map = map
 
     // create a feature layer from an online feature service of US Highways and add it to the map
-    val serviceFeatureTable = ServiceFeatureTable(getString(R.string.us_highways_1))
+    val serviceFeatureTable = ServiceFeatureTable(getString(R.string.congressional_districts_url))
     val featureLayer = FeatureLayer(serviceFeatureTable)
     map.operationalLayers.add(featureLayer)
 
@@ -57,10 +57,16 @@ class MainActivity : AppCompatActivity() {
       if (featureLayer.loadStatus == LoadStatus.LOADED) {
         // set viewpoint to the center of the US
         mapView.setViewpointAsync(
-            Viewpoint(Point(-10974490.0, 4814376.0, 0.0, SpatialReferences.getWebMercator()), 20000000.0))
+          Viewpoint(
+            featureLayer.fullExtent)
+        )
       } else {
-        Toast.makeText(this, getString(R.string.error_message) + featureLayer.loadError.message, Toast.LENGTH_LONG)
-            .show()
+        Toast.makeText(
+            this,
+            getString(R.string.error_message) + featureLayer.loadError.message,
+            Toast.LENGTH_LONG
+          )
+          .show()
         Log.e(TAG, getString(R.string.error_message) + featureLayer.loadError.message)
       }
     }

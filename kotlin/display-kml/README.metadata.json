@@ -1,23 +1,23 @@
 {
-    "category": "Layers",
-    "description": "Display KML from a URL, portal item, or local KML file.",
-    "ignore": false,
-    "images": [
-        "display-kml.png"
-    ],
-    "keywords": [
-        "keyhole",
-        "KML",
-        "KMZ",
-        "OGC"
-    ],
-    "redirect_from": "/android/latest/sample-code/display-kml.htm",
-    "relevant_apis": [
-        "KmlDataset",
-        "KmlLayer"
-    ],
-    "snippets": [
-        "src/main/java/com/esri/arcgisruntime/displaykml/MainActivity.kt"
-    ],
-    "title": "Display KML"
+  "category": "Layers",
+  "description": "Display KML from a URL, portal item, or local KML file.",
+  "ignore": false,
+  "images": [
+    "display-kml.png"
+  ],
+  "keywords": [
+    "keyhole",
+    "KML",
+    "KMZ",
+    "OGC"
+  ],
+  "redirect_from": "/android/latest/sample-code/display-kml.htm",
+  "relevant_apis": [
+    "KmlDataset",
+    "KmlLayer"
+  ],
+  "snippets": [
+    "src/main/java/com/esri/arcgisruntime/displaykml/MainActivity.kt"
+  ],
+  "title": "Display KML"
 }

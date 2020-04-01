@@ -17,12 +17,12 @@
 package com.esri.arcgisruntime.sample.choosecameracontroller
 
 import android.os.Bundle
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.mapping.ArcGISScene
@@ -124,7 +124,8 @@ class MainActivity : AppCompatActivity() {
     val plane3DSymbol = ModelSceneSymbol(pathToModel, 1.0)
     plane3DSymbol.loadAsync()
     plane3DSymbol.heading = 45.0
-    plane3d = Graphic(Point(-109.937516, 38.456714, 5000.0, SpatialReferences.getWgs84()), plane3DSymbol)
+    plane3d =
+      Graphic(Point(-109.937516, 38.456714, 5000.0, SpatialReferences.getWgs84()), plane3DSymbol)
     sceneOverlay.graphics.add(plane3d)
     return plane3DSymbol
   }

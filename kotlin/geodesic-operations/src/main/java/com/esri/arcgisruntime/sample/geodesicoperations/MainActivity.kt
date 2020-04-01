@@ -16,15 +16,19 @@
 
 package com.esri.arcgisruntime.sample.geodesicoperations
 
-import java.util.Arrays
-
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.TextView
-import android.graphics.Color
-import kotlinx.android.synthetic.main.activity_main.mapView
-
+import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.geometry.GeodeticCurveType
+import com.esri.arcgisruntime.geometry.GeometryEngine
+import com.esri.arcgisruntime.geometry.LinearUnit
+import com.esri.arcgisruntime.geometry.LinearUnitId
+import com.esri.arcgisruntime.geometry.Point
+import com.esri.arcgisruntime.geometry.PointCollection
+import com.esri.arcgisruntime.geometry.Polyline
+import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
@@ -32,14 +36,8 @@ import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
-import com.esri.arcgisruntime.geometry.GeodeticCurveType
-import com.esri.arcgisruntime.geometry.GeometryEngine
-import com.esri.arcgisruntime.geometry.Polyline
-import com.esri.arcgisruntime.geometry.PointCollection
-import com.esri.arcgisruntime.geometry.SpatialReferences
-import com.esri.arcgisruntime.geometry.LinearUnit
-import com.esri.arcgisruntime.geometry.LinearUnitId
-import com.esri.arcgisruntime.geometry.Point
+import kotlinx.android.synthetic.main.activity_main.*
+import java.util.Arrays
 
 class MainActivity : AppCompatActivity() {
 
@@ -63,7 +61,8 @@ class MainActivity : AppCompatActivity() {
 
     // add a graphic at JFK to represent the flight start location
     val start = Point(-73.7781, 40.6413, srWgs84)
-    val locationMarker = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF0000FF.toInt(), 10f)
+    val locationMarker =
+      SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF0000FF.toInt(), 10f)
     val startLocation = Graphic(start, locationMarker)
 
     // create a graphic for the destination
@@ -96,11 +95,17 @@ class MainActivity : AppCompatActivity() {
         val polyLine = Polyline(points)
 
         // densify the path as a geodesic curve with the path graphic
-        val pathGeometry = GeometryEngine.densifyGeodetic(polyLine, 1.0, unitOfMeasurement, GeodeticCurveType.GEODESIC)
+        val pathGeometry = GeometryEngine.densifyGeodetic(
+          polyLine,
+          1.0,
+          unitOfMeasurement,
+          GeodeticCurveType.GEODESIC
+        )
         path.geometry = pathGeometry
 
         // calculate path distance
-        val distance = GeometryEngine.lengthGeodetic(pathGeometry, unitOfMeasurement, GeodeticCurveType.GEODESIC)
+        val distance =
+          GeometryEngine.lengthGeodetic(pathGeometry, unitOfMeasurement, GeodeticCurveType.GEODESIC)
 
         // create a textView for the callout
         val calloutContent = TextView(applicationContext)

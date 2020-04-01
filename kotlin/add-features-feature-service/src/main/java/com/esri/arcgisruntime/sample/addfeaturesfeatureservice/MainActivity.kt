@@ -18,10 +18,10 @@
 package com.esri.arcgisruntime.sample.addfeaturesfeatureservice
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeException
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Point
@@ -85,7 +85,10 @@ class MainActivity : AppCompatActivity() {
   private fun addFeature(mapPoint: Point, featureTable: ServiceFeatureTable) {
 
     // create default attributes for the feature
-    hashMapOf<String, Any>("typdamage" to "Destroyed", "primcause" to "Earthquake").let { attributes ->
+    hashMapOf<String, Any>(
+      "typdamage" to "Destroyed",
+      "primcause" to "Earthquake"
+    ).let { attributes ->
       // creates a new feature using default attributes and point
       featureTable.createFeature(attributes, mapPoint)
     }.let { feature ->

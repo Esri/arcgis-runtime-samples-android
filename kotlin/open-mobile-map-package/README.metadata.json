@@ -1,0 +1,22 @@
+{
+  "category": "Edit and Manage Data",
+  "description": "Display a map from a mobile map package.",
+  "ignore": false,
+  "images": [
+    "open-mobile-map-package.png"
+  ],
+  "keywords": [
+    "mobile map package",
+    "mmpk",
+    "offline"
+  ],
+  "redirect_from": "/android/latest/sample-code/open-mobile-map-package.htm",
+  "relevant_apis": [
+    "MapView",
+    "MobileMapPackage"
+  ],
+  "snippets": [
+    "src/main/java/com/esri/arcgisruntime/sample/openmobilemappackage/MainActivity.kt"
+  ],
+  "title": "Open mobile map package"
+}

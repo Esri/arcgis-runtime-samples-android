@@ -17,12 +17,12 @@
 package com.esri.arcgisruntime.samples.deletefeaturesfeatureservice
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeException
 import com.esri.arcgisruntime.data.Feature
 import com.esri.arcgisruntime.data.QueryParameters
@@ -81,9 +81,15 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
                     }
                   }
                 } catch (e: InterruptedException) {
-                  logToUser(true, getString(R.string.error_getting_identify_result, e.cause?.message))
+                  logToUser(
+                    true,
+                    getString(R.string.error_getting_identify_result, e.cause?.message)
+                  )
                 } catch (e: ExecutionException) {
-                  logToUser(true, getString(R.string.error_getting_identify_result, e.cause?.message))
+                  logToUser(
+                    true,
+                    getString(R.string.error_getting_identify_result, e.cause?.message)
+                  )
                 }
               }
             }
