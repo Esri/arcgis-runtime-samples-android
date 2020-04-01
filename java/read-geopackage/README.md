@@ -24,7 +24,7 @@ When the sample loads, the layers in the GeoPackage are shown in a drawer on the
 
 * GeoPackage
 * GeoPackageFeatureTable
-* GeoPackageRasters
+* GeoPackageRaster
 
 ## Offline data
 1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=68ec42517cdd439e81b036210483e8e7).
