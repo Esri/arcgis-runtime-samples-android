@@ -48,3 +48,4 @@ include ':add-features-feature-service',
         ':viewshed-geoprocessing',
         ':viewshed-location',
         ':wmts-layer'
+include ':perform-valve-isolation-trace'
