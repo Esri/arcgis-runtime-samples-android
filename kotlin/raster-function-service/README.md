@@ -10,7 +10,7 @@ Raster functions allow processing operations that can be applied to one or more 
 
 ## How to use the sample
 
-Tap the "Apply Layer" button to apply the raster function and display the result.
+Pan and zoom the map to explore the raster function applied to the image service raster.
 
 ## How it works
 
