@@ -1,4 +1,4 @@
-# Integrated Windows authentication
+# Integrated Windows Authentication
 
 Connect to an IWA secured Portal and search for maps.
 
