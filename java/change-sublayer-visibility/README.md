@@ -1,18 +1,28 @@
-# Change Sublayer Visibility
-Toggle visibility of the map's sublayers.
+# Change sublayer visibility
 
-![Change Sub Layer Visibility App](change-sublayer-visibility.png)
+Change the visibility of sublayers.
+
+![Image of change sublayer visibility](change-sublayer-visibility.png)
+
+## Use case
+
+A map image layer may contain many sublayers such as different types of roads in a road network or city, county, and state borders in a US map. The user may only be interested in a subset of these sublayers. Or, perhaps showing all of the sublayers would show too much detail. In these cases, you can hide certain sublayers by changing their visibility.
 
 ## How to use the sample
-Use the options menu in the upper right to toggle visibility of the Cities, Continents and World sublayers on and off.
+
+Use the overflow menu at top right to access sublayer visibility controls. Each sublayer has a check box which can be used to toggle the visibility of the sublayer.
 
 ## How it works
-Add multiple layers to an `ArcGISMap` including a `Basemap.Type` and an `ArcGISMapImageLayer` which has multiple sub-layers.  The app allows you to turn the sub-layers from the `ArcGISMapImageLayer` on or off.  You gain access to the sub-layers from the `ArcGISMapImageLayer.getSubLayers()` method which returns a `SubLayerList`.  The `SubLayerList` is a modifiable list of `ArcGISSubLayers` which gives you access to determine if the layer is visible or not and to turn on or off the layers visibility.
+
+1.  Create an `ArcGISMapImageLayer` object with the URL to a map image service.
+2.  Get the `SubLayerList` with `mapImageLayer.getSubLayers()`.
+3.  For each layer in the sublayer list, set its visible property to true or false.
 
 ## Relevant API
-* ArcGISMap
-* ArcGISMapImageLayer
-* SublayerList
 
-#### Tags
-Visualization
+*   ArcGISMapImageLayer
+*   SubLayerList
+
+## Tags
+
+layer, sublayer, visibility

@@ -2,7 +2,7 @@
 
 Display local 3D point cloud data.
 
-![View point cloud data offline](view-point-cloud-data-offline.png)
+![Image of view point cloud data offline](view-point-cloud-data-offline.png)
 
 ## Use case
 
@@ -10,15 +10,21 @@ Point clouds are often used to visualize massive sets of sensor data such as lid
 
 Point clouds can be loaded offline from scene layer packages (.slpk).
 
+## How to use the sample
+
+The sample starts with a point cloud layer loaded and draped on top of a scene. Pan and zoom to explore the scene and see the detail of the point cloud layer.
+
 ## How it works
 
 1. Create a `PointCloudLayer` with the path to a local `.slpk` file containing a point cloud layer.
-2. Add the layer to a scene's operational layers collection.
+2. Add the layer to a scene's operational layers collection with `getOperationalLayers().add(pointCloudLayer)`.
 
 ## Relevant API
-- PointCloudLayer
+
+* PointCloudLayer
 
 ## About the data
+
 This point cloud data comes from Balboa Park in San Diego, California. Created and provided by USGS.
 
 ## Offline data
@@ -35,5 +41,6 @@ Link | Local Location
 ---------|-------|
 |[San Diego Point Cloud SLPK](https://www.arcgis.com/home/item.html?id=34da965ca51d4c68aa9b3a38edb29e00)| `<sdcard>`/ArcGIS/Samples/slpk/sandiego-north-balboa-pointcloud.slpk |
 
-#### Tags
-Visualization
+## Tags
+
+3D, lidar, point cloud

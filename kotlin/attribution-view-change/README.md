@@ -1,25 +1,31 @@
-# Attribution View Change
+# Attribution view change
 
-This sample demonstrates showing UI components responding to attribution view.
+Make UI elements respond to changes in the attribution view.
 
-![Attribution View Change App](attribution-view-change.png)
+![Image of attribution view change](attribution-view-change.png)
 
-## Features
+## Use case
 
-* ArcGISMap
-* Basemap
+ArcGIS Online basemaps, Esri data services, or Esri API technology used in an application require inclusion of an Esri attribution. Depending on its content, the attribution bar may be expandible and collapsible. In this case, expanding the attribution bar may obstruct some of the user interface in the application. To avoid this, the developer may want to make some of the UI elements reposition when the attribution bar is interacted with.
 
-## Developer Pattern
+## How to use the sample
 
-Set the bottom margin of FAB to respect the height of the attribution bar.
+Tap the attribution bar to expand it, and observe how the floating action button moves up. Tap the attribution bar again to minimize it and see how the floating action button moves down.
 
-```kotlin
- // set attribution bar listener
- val params = fab.layoutParams as CoordinatorLayout.LayoutParams
- mapView.addAttributionViewLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-     val heightDelta = bottom - oldBottom
-     params.bottomMargin += heightDelta
-     Toast.makeText(this, "new bounds [" + left + "," + top + "," + right + "," + bottom + "]" +
-             " old bounds [" + oldLeft + "," + oldTop + "," + oldRight + "," + oldBottom + "]", Toast.LENGTH_SHORT).show()
-        }
-```
+## How it works
+
+1. Add a layout change listener to the `MapView` with `addAttributionViewLayoutChangeListener`.
+2. Get the difference in pixels by using `heightDelta = oldBottom - bottom`.
+3. Move the floating action button along the MapView by using Android's `CoordinateLayout.layoutParams` and setting it to `heightDelta`.
+
+## Relevant API
+
+* MapView
+
+## Additional information
+
+For more information, see [Attribution in your app](https://developers.arcgis.com/terms/attribution/).
+
+## Tags
+
+translation, UI, user interface

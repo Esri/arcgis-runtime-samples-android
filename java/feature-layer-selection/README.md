@@ -1,21 +1,34 @@
-# Feature Layer Selection
+# Feature layer selection
+
 Select features in a feature layer.
 
-![Feature Layer Selection App](feature-layer-selection.png)
+![Image of feature layer selection](feature-layer-selection.png)
+
+## Use case
+
+Selecting features, whether by query or identify, can be an important step both in editing data and visualizing results. One possible use case would be to query a feature layer containing street furniture. A query might look for type "bench" and return a list of bench features contained in the features with an attribute of type bench. These might be selected for further editing (see FeatureQueryResult) or may just be highlighted visually.
 
 ## How to use the sample
-Tap on a feature on the map to select it.
+
+Tap on a feature in the map. All features within a given tolerance (in pixels) of the tap will be selected.
 
 ## How it works
-The map view  provides a way to add a listener to screen taps using the `setOnTouchListener` method. The app uses the `MotionEvent` passed in to the `onSingleTapConfirmed` method and creates an envelope around that point based on the tolerance. It then creates an query parameter object and sets it geometry property to the envelope it just created (which will be used to find features within it). It then calls the select features method which takes a query parameters object, this selects the features and also returns the result from which you can inspect the selected features.
+
+1. Create a `ServiceFeatureTable` from a feature service URL.
+2. Create a `FeatureLayer` from the service feature table.
+3. Set the region to the tolerance around the tapped point using an `Envelope`.
+4. Select all identified features in the feature layer with `selectFeaturesAsync(query, FeatureLayer.SelectionMode.NEW)`.
+
+## About the data
+
+This sample uses the [Gross Domestic Product, 1960-2016](https://www.arcgis.com/home/item.html?id=0c4b6b70a56b40b08c5b0420c570a6ac) feature service. Only the 2016 GDP values are shown.
 
 ## Relevant API
-* DefaultMapViewOnTouchListener
+
 * Feature
-* FeatureQueryResult
-* MapView
-* QueryParameters
+* FeatureLayer
 * ServiceFeatureTable
 
-#### Tags
-Search and Query
+## Tags
+
+features, layers, select, selection, tolerance

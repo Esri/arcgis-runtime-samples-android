@@ -1,36 +1,32 @@
-# Change Feature Layer Renderer
-Override and reset a renderer of a feature layer. Use the buttons in the bottom toolbar to override or reset the renderer.
+# Change feature layer renderer
 
-![Change Feature Layer Renderer](change-feature-layer-renderer.png)
+Change the appearance of a feature layer with a renderer.
+
+![Image of change feature layer renderer](change-feature-layer-renderer.png)
+
+## Use case
+
+A feature layer hosted on ArcGIS Online has a preset renderer and will display in an ArcGIS Runtime application with that renderer. However, for example, the color associated with the original renderer may be unsuitable for a company with staff or clients who are color blind, or for presentation with a different set of basemap and operational layers. In these cases, the renderer on the feature layer's data can be set to a more suitable color.
 
 ## How to use the sample
-Click the 'Override Renderer' button to change the `FeatureLayer`'s renderer.
+Tap the 'Override Renderer' button to change the `FeatureLayer`'s renderer.
 
 ## How it works
-`FeatureLayer `has a property called `renderer` you can set to override the renderer. `FeatureLayer` also provides a method called reset renderer to reset the renderer back to the original one that is defined in its service definition.
 
-```java
-private void overrideRenderer() {
-    // create a new simple renderer for the line feature layer
-    SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.rgb(0, 0, 255), 2);
-    SimpleRenderer simpleRenderer = new SimpleRenderer(lineSymbol);
-
-    // override the current renderer with the new renderer defined above
-    mFeatureLayer.setRenderer(simpleRenderer);
-}
-
-private void resetRenderer() {
-    // reset the renderer back to the definition from the source (feature service) using the reset renderer method
-    mFeatureLayer.resetRenderer();
-
-    }
-```
+1. Create a `ServiceFeatureTable` from a URL.
+2. Create a `FeatureLayer` from the service feature table.
+3. Create a new renderer (in this case, a `SimpleRenderer`).
+4. Change the feature layer's renderer using `FeatureLayer.setRenderer(SimpleRenderer)`.
 
 ## Relevant API
-* FeatureLayer
-* MapView
-* SimpleRenderer
-* ServiceFeatureTable
 
-#### Tags
-Visualization
+* FeatureLayer
+* ServiceFeatureTable
+* SimpleRenderer
+
+## About the data
+This sample displays a feature layer showing pool permit statuses in California.
+
+## Tags
+
+feature layer, renderer, visualization

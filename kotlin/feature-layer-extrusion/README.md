@@ -1,19 +1,33 @@
-# Feature Layer Extrusion
+# Feature layer extrusion
 
-This sample demonstrates how to apply extrusion to a renderer on a feature layer.
+Extrude features based on their attributes.
 
-![Feature Layer Extrusion App](feature-layer-extrusion.png)
+![Image of feature layer extrusion](feature-layer-extrusion.png)
 
-## Features
+## Use case
 
-* ExtrusionMode
+Extrusion is the process of stretching a flat, 2D shape vertically to create a 3D object in a scene. For example, you can extrude building polygons by a height value to create three-dimensional building shapes.
+
+## How to use the sample
+
+Tap the toggle to switch between using population density and total population for extrusion. Higher extrusion directly corresponds to higher attribute values.
+
+## How it works
+
+1. Create a `ServiceFeatureTable` from a URL.
+2. Create a feature layer from the service feature table.
+   * Make sure to set the rendering mode to dynamic, `statesFeatureLayer.renderingMode = RenderingMode.DYNAMIC`.
+3. Apply a `SimpleRenderer` to the feature layer.
+4. Set the `ExtrusionMode` of the renderer with `renderer.sceneProperties.extrusionMode = SceneProperties.ExtrusionMode.BASE_HEIGHT`.
+5. Set the extrusion expression of the renderer with `renderer.sceneProperties.extrusionExpression = "[POP2007]/ 10"`.
+
+## Relevant API
+
 * FeatureLayer
-* Renderer
-* SceneProperties
+* Renderer.SceneProperties
+* ServiceFeatureTable
+* SimpleRenderer
 
-## Developer Pattern
+## Tags
 
-1. Create a `ServiceFeatureTable` from a web service.
-1. Set the `ServiceFeatureTable` to a `FeatureLayer` and set the `renderingMode` to `FeatureLayer.RenderingMode.DYNAMIC`.
-1. When definining the `FeatureLayer`'s `Renderer`, remember to set `.ExtrusionMode` on the `Renderer.sceneProperties`.
-1. Finally, also on `SceneProperties`, set `.extrusionExpression = "[SOME_FIELD]"` to a `Field` from the `ServiceFeatureTable`.
+3D, extrude, extrusion, extrusion expression, height, renderer, scene

@@ -1,23 +1,39 @@
 # Viewshed GeoElement
-A viewshed shows the visible and obstructed areas from an observer's vantage point. This sample demonstrates how to attach a viewshed to a moving GeoElement.
 
-![Viewshed GeoElement App](viewshed-geoelement.png)
+Analyze the viewshed for an object (GeoElement) in a scene.
 
-# How to use the sample
-Once the scene is done loading, click on a location for the tank to drive to. It will automatically turn and drive straight towards the tapped point. The viewshed will automatically move and rotate with the tank.
+![Image of viewshed geoelement](viewshed-geoelement.png)
 
-# How it works
-1. Create a `Graphic` and add it to a `GraphicsOverlay`.
-1. Use a `SimpleRenderer` in the `GraphicsOverlay` which has a heading expression set. This way you can relate the viewshed's heading to the `GeoElement`'s heading.
-1. Create a `GeoElementViewshed` with the graphic, heading/pitch offsets, and min/max distance.
-1. To offset the viewshed's observer location from the center of the graphic, use `viewshed.setOffsetX()`, etc.
+## Use case
 
-# Relevant API
+A viewshed analysis is a type of visual analysis you can perform on a scene. The viewshed aims to answer the question 'What can I see from a given location?'. The output is an overlay with two different colors - one representing the visible areas (green) and the other representing the obstructed areas (red).
+
+## How to use the sample
+
+Tap to set a destination for the vehicle (a GeoElement). The vehicle will 'drive' towards the tapped location. The viewshed analysis will update as the vehicle moves.
+
+## How it works
+
+1. Create and show the scene, with an elevation source and a buildings layer.
+2. Add a model (the `GeoElement`) to represent the observer (in this case, a tank).
+    * Use a `SimpleRenderer` which has a heading expression set in the `GraphicsOverlay`. This way you can relate the viewshed's heading to the `GeoElement` object's heading.
+3. Create a `GeoElementViewshed` with configuration for the viewshed analysis.
+4. Add the viewshed to an `AnalysisOverlay` and add the overlay to the scene.
+5. Configure the SceneView `CameraController` to orbit the vehicle.
+
+## About the data
+
+This sample shows a [Johannesburg, South Africa Scene](https://www.arcgis.com/home/item.html?id=eb4dab9e61b24fe2919a0e6f7905321e) from ArcGIS Online. The sample uses a [Tank model scene symbol](http://www.arcgis.com/home/item.html?id=07d62a792ab6496d9b772a24efea45d0) hosted as an item on ArcGIS Online.
+
+## Relevant API
+
 * AnalysisOverlay
-* ArcGISTiledElevationSource
-* ArcGISSceneLayer
+* GeodeticDistanceResult 
 * GeoElementViewshed
-* SceneView
+* GeometryEngine.distanceGeodetic
+* ModelSceneSymbol
+* OrbitGeoElementCameraController
 
-#### Tags
-Analysis
+## Tags
+
+3D, analysis, buildings, model, scene, viewshed, visibility analysis

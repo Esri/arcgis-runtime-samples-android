@@ -1,24 +1,33 @@
-# Analyze Hotspots
-Execute a geoprocessing task to calculate a hotspot analysis based on the frequency of 911 calls. It calculates the frequency of these calls within a given study area during a specified constrained time period set between 1998-01-01 and 1998-05-31.
+# Analyze hotspots
 
-![Analyze Hotspots App](analyze-hotspots.png)
+Use a geoprocessing service and a set of features to identify statistically significant hot spots and cold spots.
+
+![Image of analyze hotspots](analyze-hotspots.png)
+
+## Use case
+
+This tool identifies statistically significant spatial clusters of high values (hot spots) and low values (cold spots). For example, a hotspot analysis based on the frequency of 911 calls within a set region.
 
 ## How to use the sample
-Select a From: and To: date from the dialog and tap on the `Analyze`. The results will be shown on the map on successful completion of the `GeoprocessingJob`.
+
+Select a date range (between 1998-01-01 and 1998-05-31) from the dialog and tap on Analyze. The results will be shown on the map upon successful completion of the geoprocessing job.
 
 ## How it works
-A `GeoprocessingTask` is created by setting the URL to the REST endpoint of a geoprocessing service.
-`GeoprocessingParameters` are created asynchronously from the `GeoprocessingTask`.
 
-Once the date ranges are selected, a query string is created with the 'to' and 'from' dates. The query string is then added as a key/value parameter input to the `GeoprocessingParameters`.
-
-A `GeoprocessingJob` is then obtained by calling  `.createJob(geoprocessingParameters)` method of the `GeoprocessingTask`. The job is started, and once complete, the `ArcGISMapImageLayer` is obtained from the result, and added to the `ArcGISMap`.
+1. Create a `GeoprocessingTask` with the URL set to the endpoint of a geoprocessing service.
+2. Create a query string with the date range as an input of `GeoprocessingParameters`.
+3. Use the `GeoprocessingTask` to create a `GeoprocessingJob` with the `GeoprocessingParameters` instance.
+4. Start the `GeoprocessingJob` and wait for it to complete and return a `GeoprocessingResult`.
+5. Get the resulting `ArcGISMapImageLayer` using `geoprocessingResult.getMapImageLayer()`.
+6. Add the layer to the map's operational layers.
 
 ## Relevant API
+
 * GeoprocessingJob
 * GeoprocessingParameters
 * GeoprocessingResult
 * GeoprocessingTask
 
-#### Tags
-Analysis
+## Tags
+
+analysis, density, geoprocessing, hot spots, hotspots

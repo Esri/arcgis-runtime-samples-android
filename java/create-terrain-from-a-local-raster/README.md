@@ -2,11 +2,30 @@
 
 Set the terrain surface with elevation described by a raster file.
 
-![Create terrain from a local raster](create-terrain-from-a-local-raster.png)
+![Image of create terrain from a local raster](create-terrain-from-a-local-raster.png)
 
 ## Use case
 
-The terrain surface is what the basemap, operational layers, and graphics are draped on. Supported raster formats include:
+In a scene view, the terrain surface is what the basemap, operational layers, and graphics are draped onto. For example, when viewing a scene in a mountainous region, applying a terrain surface to the scene will help in recognizing the slopes, valleys, and elevated areas.
+
+## How to use the sample
+
+When loaded, the sample will show a scene with a terrain surface applied. Pan and zoom to explore the scene and observe how the terrain surface allows visualizing elevation differences.     
+
+## How it works
+
+1. Create an `ArcGISScene` and add it to a `SceneView`.
+2. Create a `RasterElevationSource` with a list of raster file paths.
+3. Add this source to the scene's base surface: `ArcGISScene.getBaseSurface().getElevationSources().add(RasterElevationSource)`.
+
+## Relevant API
+
+* RasterElevationSource
+* Surface
+
+## Additional information
+
+ Supported raster formats include:
 
 * ASRP/USRP
 * CIB1, 5, 10
@@ -22,21 +41,6 @@ The terrain surface is what the basemap, operational layers, and graphics are dr
 * RPF
 * SRTM1, 2
 
-## How it works
-
-1. Create an `ArcGISScene` and add it to a `SceneView`.
-1. Create a `RasterElevationSource` with a list of raster file paths.
-1. Add this source to the scene's base surface: `ArcGISScene.getBaseSurface().getElevationSources().add(RasterElevationSource)`.
-
-## Relevant API
-
-- RasterElevationSource
-- Surface
-
-## About the data
-
-This raster data comes from Monterey, California.
-
 ## Offline data
 
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=98092369c4ae4d549bbbd45dba993ebc).
@@ -50,9 +54,6 @@ Link | Local Location
 ---------|-------|
 |[Monterey Elevation Raster File](https://arcgisruntime.maps.arcgis.com/home/item.html?id=98092369c4ae4d549bbbd45dba993ebc)| `<sdcard>`/ArcGIS/Samples/Raster/MontereyElevation.dt2 |
 
-#### Tags
-Maps & Scenes
-3D
-Raster
-Elevation
-Surface
+## Tags
+
+3D, elevation, raster, surface, terrain

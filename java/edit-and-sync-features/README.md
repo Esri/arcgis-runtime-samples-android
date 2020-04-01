@@ -1,39 +1,41 @@
 # Edit and sync features
+
 Synchronize offline edits with a feature service.
 
-![Edit and sync features App](edit-and-sync-features.png)
+![Image of edit and sync features](edit-and-sync-features.png)
+
+## Use case
+
+A survey worker who works in an area without an internet connection could take a geodatabase of survey features offline at their office, make edits and add new features to the offline geodatabase in the field, and sync the updates with the online feature service after returning to the office.
 
 ## How to use the sample
-1. Pan and zoom into the desired area, making sure the area you want to take offline is within the current extent of the `MapView`. 
-1. Tap on the Generate Geodatabase button. This will call `generateGeodatabase()`, which will return a `GenerateGeodatabaseJob`. 
-1. Once the job completes successfully, a `GeodatabaseFeatureTable` and a `FeatureLayer` are created from the resulting `Geodatabase`. The `FeatureLayer` is then added to the `ArcGISMap`. 
-1. Once the `FeatureLayer` generated from the local `Geodatabase` is displayed, a `Feature` can be selected by tapping on it. The selected `Feature` can be moved to a new location by tapping anywhere on the map. 
-1. Once a successful edit has been made to the `FeatureLayer`, the Sync Geodatabase button is enabled. This button synchronizes local edits made to the local `GeoDatabase` with the remote feature service using `syncGeodatabase()` which generates `SyncGeodatbaseParameters` and passes them to a `SyncGeodatabaseJob`.
-1. Once the job successfully completes, the local edits are synchronized with the feature service.
+
+Pan and zoom into the desired area, making sure the area you want to take offline is within the current extent of the map view. Tap on the "Generate Geodatabase" button to take the area offline. When complete, the map will update with a red outline around the offline area. To edit features, tap to select a feature, and tap again anywhere else on the map to move the selected feature to the tapped location. To sync the edits with the feature service, click the "Sync geodatabase" button.
 
 ## How it works
-1. Create a `GeodatabaseSyncTask` from a URL.
-1. Use `createDefaultGenerateGeodatabaseParametersAsync(...)` to create `GenerateGeodatabaseParameters` from the `GeodatabaseSyncTask`, passing in an `Envelope` argument.
-1. Create a `GenerateGeodatabaseJob` from the `GeodatabaseSyncTask` using `generateGeodatabaseAsync(...)` passing in parameters and a path to the local geodatabase.
-1. Start the `GenerateGeodatabaseJob` and, on success, load the `Geodatabase`.
-1. On successful loading, call `getGeodatabaseFeatureTables()` on the `Geodatabase` and add it to the `ArcGISMap`'s operational layers.
-1. To sync changes between the local and web geodatabases:
-  1. Define `SyncGeodatabaseParameters` including setting the `SyncGeodatabaseParameters.SyncDirection`.
-  1. Create a `SyncGeodatabaseJob` from `GeodatabaseSyncTask` using `.syncGeodatabaseAsync(...)` passing the `SyncGeodatabaseParameters` and `Geodatabase` as arguments.
-  1. Start the `SyncGeodatabaseJob`.
 
+1. Create a `GeodatabaseSyncTask` from a URL to a feature service.
+2. Use `createDefaultGenerateGeodatabaseParametersAsync()` on the geodatabase sync task to create `GenerateGeodatabaseParameters`, passing in an `Envelope` extent as the parameter.
+3. Create a `GenerateGeodatabaseJob` from the `GeodatabaseSyncTask` using `generateGeodatabaseAsync(...)` passing in parameters and a path to the local geodatabase.
+4. Start the job and get the result `Geodatabase`.
+5. Load the geodatabase and get its feature tables. Create feature layers from the feature tables and add them to the map's operational layers collection.
+6. Create `SyncGeodatabaseParameters` and set the sync direction.
+7. Create a `SyncGeodatabaseJob` from `GeodatabaseSyncTask` using `.syncGeodatabaseAsync(...)` passing in the parameters and geodatabase as arguments.
+8. Start the sync job to synchronize the edits with `syncGeodatabase.start()`.
 
 ## Relevant API
+
 * FeatureLayer
 * FeatureTable
-* GeodatabaseSyncTask
 * GenerateGeodatabaseJob
 * GenerateGeodatabaseParameters
+* GeodatabaseSyncTask
 * SyncGeodatabaseJob
 * SyncGeodatabaseParameters
 * SyncLayerOption
 
 ## Offline data
+
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=72e703cd01654e7796eb1ae75af1cb53).  
 2. Extract the contents of the downloaded zip file to disk.  
 3. Create an ArcGIS/samples/TileCache folder on your device. You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
@@ -42,7 +44,7 @@ Synchronize offline edits with a feature service.
 6. Create the ArcGIS/samples/TileCache directory, ```mkdir ArcGIS/samples/TileCache```.
 7. You should now have the following directory on your target device, ```/sdcard/ArcGIS/samples/TileCache```. We will copy the contents of the downloaded data into this directory. Note:  Directory may be slightly different on your device.
 8. Exit the shell with the, ```exit``` command.
-9. While still in your command prompt, navigate to the folder where you extracted the contents of the data from step 1 and execute the following command: 
+9. While still in your command prompt, navigate to the folder where you extracted the contents of the data from step 1 and execute the following command:
 	* ```adb push SanFrancisco.tpk /sdcard/ArcGIS/samples/TileCache```
 
 
@@ -50,5 +52,6 @@ Link | Local Location
 ---------|-------|
 |[San Francisco Tile Cache](https://arcgisruntime.maps.arcgis.com/home/item.html?id=72e703cd01654e7796eb1ae75af1cb53)| `<sdcard>`/ArcGIS/samples/TileCache/SanFrancisco.tpk |
 
-#### Tags
-Edit and Manage Data
+## Tags
+
+feature service, geodatabase, offline, synchronize

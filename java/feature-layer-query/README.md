@@ -1,18 +1,35 @@
-# Feature Layer Query
-Query a feature layer via feature table.
+# Feature layer query
 
-![Feature Layer Query App](feature-layer-query.png)
+Find features in a feature table which match an SQL query.
 
-## How to use this sample
-The sample provides a search bar on the top, where you can input the name of a US State. When you search the app performs a query on the feature table and based on the result either highlights the state geometry or provides an error.
+![Image of feature layer query](feature-layer-query.png)
+
+## Use case
+
+Query expressions can be used in ArcGIS to select a subset of features from a feature table. This is most useful in large or complicated data sets. A possible use case might be on a feature table marking the location of street furniture through a city. A user may wish to query by a TYPE column to return "benches". In this sample, we query a U.S. state by STATE_NAME from a feature table containing all U.S. states.
+
+## How to use the sample
+
+Input the name of a U.S. state into the text field. When you tap enter, a query is performed and the matching features are highlighted or an error is returned.
 
 ## How it works
-When you hit the search button, the sample creates an query parameter object and specifies the where clause on it, using the text you provided. It then fires the query on the feature table using the query features method. In the completion block it gets back an feature query result. It iterates through the results and finds the first  feature which it then highlights using select features method on the feature layer.
+
+1. Create a `ServiceFeatureTable` using the URL of a feature service.
+2. Create a `QueryParameters` with a where clause specified using `setWhereClause()`.
+3. Perform the query using `queryFeaturesAsync(query)` on the service feature table.
+4. When complete, the query will return a `FeatureQueryResult` which can be iterated over to get the matching features.
+
+## About the data
+
+This sample uses U.S. State polygon features from the [USA 2016 Daytime Population](https://www.arcgis.com/home/item.html?id=f01f0eda766344e29f42031e7bfb7d04) feature service.
 
 ## Relevant API
-* FeatureLayer
-* FeatureTable
-* GeoPackage
 
-#### Tags
+* FeatureLayer
+* FeatureQueryResult
+* QueryParameters
+* ServiceFeatureTable
+
+## Tags
+
 Search and Query

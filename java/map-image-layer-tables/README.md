@@ -1,24 +1,44 @@
-# Map Image Layer Tables
-Get a non-spatial table from an ArcGIS map image layer and query it to get related features in another table.
+# Map image layer tables
+
+Find features in a spatial table related to features in a non-spatial table.
+
+![Image of map image layer tables](map-image-layer-tables.png)
+
+## Use case
 
 The non-spatial tables contained by a map service may contain additional information about sublayer features. Such information can be accessed by traversing table relationships defined in the service.
 
-![Map Image Layer Tables App](map-image-layer-tables.png)
-
 ## How to use the sample
-1. Launch the sample, the map displays at the extent of the "Service Request" layer.
-1. The `ListView` is populated with service request comment records that have a valid (non-null) comment.
-1. Select one of the service request comments in the list box to see the related service request feature selected in the map.
+
+Once the map image layer loads, a list view will be populated with comment data from non-spatial features. Tap on one of the comments to query related spatial features and display the first result on the map.
 
 ## How it works
-The `ArcGISMapImageLayer` in the map uses the `ServiceRequests` map service as its data source. This service is hosted by ArcGIS Server, and is composed of one sublayer (`ServiceRequests`) and one non-spatial table (`ServiceRequestComments`). The non-spatial table is accessed using the Tables property of `ArcGISMapImageLayer`. The table can be queried like any other `FeatureTable`, including queries for related features. The comments table is queried for records where the `[comments]` field is not `null` and the result is used to populate the list box (should be four records or so). When a selection is made in the list box, the service request layer is queried for features related to the selected comment. The feature(s) selected by the query are then selected in the service request layer.
+
+1. Create an `ArcGISMapImageLayer` with the URL of a map image service.
+2. Load the layer and get one of its tables with `imageLayer.getTables().get(index)`.
+3. To query the table, create a `QueryParameters` object. You can use `queryParameters.setWhereClause(sqlQueryString)` to filter the requested features.
+4. Use `table.queryFeaturesAsync(parameters)` to get a `FeatureQueryResult` object.
+5. The `FeatureQueryResult` is an iterable, so simply loop through it to get each result `Feature`.
+6. To query for related features, get the table's relationship info with `table.getLayerInfo().getRelationshipInfos()`. This returns a list of `RelationshipInfo` objects. Choose which one to base your query on.
+7. Now create `RelatedQueryParameters` passing in the `RelationshipInfo`. To query related features, use `table.queryRelatedFeaturesAsync(feature, relatedQueryParameters)`.
+8. This returns a list of `RelatedFeatureQueryResult` objects, each containing a set of related features.
 
 ## Relevant API
-* ServiceFeatureTable
-* ArcGISMapImageLayer
-* LoadTablesAndLayersAsync
-* Tables
-* ArcGISMapImageSublayer
 
-#### Tags
-Search and Query
+* ArcGISFeature
+* ArcGISMapImageLayer
+* Feature
+* FeatureQueryResult
+* QueryParameters
+* RelatedFeatureQueryResult
+* RelatedQueryParameters
+* RelationshipInfo
+* ServiceFeatureTable
+
+## Additional information
+
+You can use `arcGISMapImageLayer.loadTablesAndLayersAsync()` to recursively load all sublayers and tables associated with a map image layer.
+
+## Tags
+
+features, query, related features, search

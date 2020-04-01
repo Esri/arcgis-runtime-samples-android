@@ -1,22 +1,28 @@
-# Display a Map
+# Display map
 
-The **Display Map** app is the most basic Map app for the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/en/android/).
-It shows how to inflate a `MapView` in the layout XML of the activity, create a `ArcGISMap` with a static `Basemap.Type` and bind the `ArcGISMap` to the `MapView`.  By default, this map supports basic zooming and panning operations.
+Display a map with an imagery basemap.
 
-![Display a Map App](display-map.png)
+![Image of display map](display-map.png)
 
-## Features
+## Use case
+
+The map is the fundamental building block of any GIS application and is used to specify how geographic data is organized and communicated to your users.
+
+## How to use the sample
+
+Run the sample to view the map. Pan and zoom to navigate the map.
+
+## How it works
+
+1. Create an `ArcGISMap` with a topographic basemap and an initial viewpoint.
+2. Set the map to the map view with `mapView.map = map`.
+
+## Relevant API
 
 * ArcGISMap
-* MapView
 * Basemap
+* MapView
 
-## Developer Pattern
+## Tags
 
-Create a `ArcGISMap` with a `Basemap.Type` and an initial viewpoint. 
-
-```kotlin
-    val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16)
-    // set the map to be displayed in the layout's MapView
-    mapView.map = map
-```
+basemap, map

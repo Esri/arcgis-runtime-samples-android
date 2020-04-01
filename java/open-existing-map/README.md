@@ -1,19 +1,35 @@
-# Open Existing Map
-Open an existing map as a `PortalItem` from a `Portal`.
+# Open existing map
 
-![Open Existing Map App](open-existing-map.png)
+Display a web map.
+
+![Image of open map URL](open-existing-map.png)
+
+## Use case
+
+For displaying web maps stored on ArcGIS Online (e.g. soil survey results, as demonstrated in this sample).
 
 ## How to use the sample
-The app opens with a web map from a portal displayed.  Tap on the navigation drawer icon to see a list of pre-defined web maps. Select any of the web maps to close the drawer and open it up in the `MapView`.
+
+A web map can be selected from the navigation menu. On selection the web map displays in the map view.
 
 ## How it works
-`Portal` objects represent information from a portal such as ArcGIS Online.  `PortalItem` represents an item stored in a portal.  We create a `Map` from a `Portal` & `PortalItem` objects then pass the `Map` to the `MapView`.
+
+1. Create a `Portal`.
+2. Create a `PortalItem` using the Portal and the web map ID: `new PortalItem(portal, ID)`.
+3. Create a `ArcGISMap` using the portal item.
+4. Set the map to the `MapView`.
 
 ## Relevant API
+
 * ArcGISMap
 * MapView
 * Portal
 * PortalItem
 
-#### Tags
-Cloud and Portal
+## Additional information
+
+Mobile map packages can also include address locators and geometric networks. For an example of this, see the "Mobile Map Search and Route Sample".
+
+## Tags
+
+portal item, web map
