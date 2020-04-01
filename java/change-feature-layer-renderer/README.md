@@ -24,6 +24,9 @@ Tap the 'Override Renderer' button to change the `FeatureLayer`'s renderer.
 * ServiceFeatureTable
 * SimpleRenderer
 
+## About the data
+This sample displays a feature layer showing pool permit statuses in California.
+
 ## Tags
 
 feature layer, renderer, visualization
