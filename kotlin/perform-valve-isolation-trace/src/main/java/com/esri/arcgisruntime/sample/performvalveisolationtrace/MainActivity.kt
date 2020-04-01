@@ -51,7 +51,6 @@ class MainActivity : AppCompatActivity() {
     // load the utility network data from the feature service and create feature layers
     val distributionLineFeatureTable = ServiceFeatureTable("${R.string.featureServiceURL}/3")
     val distributionLineLayer = FeatureLayer(distributionLineFeatureTable)
-
     val deviceFeatureTable = ServiceFeatureTable("${R.string.featureServiceURL}/0")
     val deviceLayer = FeatureLayer(deviceFeatureTable)
 
@@ -77,10 +76,12 @@ class MainActivity : AppCompatActivity() {
       layoutParams.bottomMargin += bottom - oldBottom
     }
 
+    // show the options sheet when the floating action button is clicked
     fab.setOnClickListener {
       fab.isExpanded = !fab.isExpanded
     }
 
+    // close the options sheet when the map is tapped
     mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
       override fun onTouch(view: View?, event: MotionEvent?): Boolean {
         if (fab.isExpanded) {
@@ -92,84 +93,91 @@ class MainActivity : AppCompatActivity() {
 
     // create and load the utility network
     map.addDoneLoadingListener {
-      val utilityNetwork = UtilityNetwork(getString(R.string.featureServiceURL), map)
-      utilityNetwork.loadAsync()
-      utilityNetwork.addDoneLoadingListener {
-        if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
-          // get a trace configuration from a tier
-          val networkDefinition = utilityNetwork.definition
-          val domainNetwork = networkDefinition.getDomainNetwork("Pipeline")
-          val tier = domainNetwork.getTier("Pipe Distribution System")
-          val traceConfiguration = tier.traceConfiguration
+      createUtilityNetwork(startingPointSymbol, startingLocationGraphicsOverlay)
+    }
+  }
 
-          // create a trace filter
-          traceConfiguration.filter = UtilityTraceFilter()
+  private fun createUtilityNetwork(
+    startingPointSymbol: SimpleMarkerSymbol,
+    startingLocationGraphicsOverlay: GraphicsOverlay
+  ) {
+    val utilityNetwork = UtilityNetwork(getString(R.string.featureServiceURL), mapView.map)
+    utilityNetwork.loadAsync()
+    utilityNetwork.addDoneLoadingListener {
+      if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
+        // get a trace configuration from a tier
+        val networkDefinition = utilityNetwork.definition
+        val domainNetwork = networkDefinition.getDomainNetwork("Pipeline")
+        val tier = domainNetwork.getTier("Pipe Distribution System")
+        val traceConfiguration = tier.traceConfiguration
 
-          // get a default starting location
-          val networkSource = networkDefinition.getNetworkSource("Gas Device")
-          val assetGroup = networkSource.getAssetGroup("Meter")
-          val assetType = assetGroup.getAssetType("Customer")
-          val startingLocation = utilityNetwork.createElement(
-            assetType,
-            UUID.fromString("98A06E95-70BE-43E7-91B7-E34C9D3CB9FF")
-          )
+        // create a trace filter
+        traceConfiguration.filter = UtilityTraceFilter()
 
-          // get the first feature for the starting location, and get its geometry
-          val elementFeaturesFuture =
-            utilityNetwork.fetchFeaturesForElementsAsync(listOf(startingLocation))
+        // get a default starting location
+        val networkSource = networkDefinition.getNetworkSource("Gas Device")
+        val assetGroup = networkSource.getAssetGroup("Meter")
+        val assetType = assetGroup.getAssetType("Customer")
+        val startingLocation = utilityNetwork.createElement(
+          assetType,
+          UUID.fromString("98A06E95-70BE-43E7-91B7-E34C9D3CB9FF")
+        )
 
-          elementFeaturesFuture.addDoneListener {
-            try {
+        // get the first feature for the starting location, and get its geometry
+        val elementFeaturesFuture =
+          utilityNetwork.fetchFeaturesForElementsAsync(listOf(startingLocation))
 
-              val startingLocationFeatures = elementFeaturesFuture.get()
+        elementFeaturesFuture.addDoneListener {
+          try {
 
-              if (startingLocationFeatures.isNotEmpty()) {
-                val startingLocationGeometry = startingLocationFeatures[0].geometry
+            val startingLocationFeatures = elementFeaturesFuture.get()
 
-                if (startingLocationGeometry is Point) {
-                  val startingLocationGeometryPoint = startingLocationFeatures[0].geometry as Point
+            if (startingLocationFeatures.isNotEmpty()) {
+              val startingLocationGeometry = startingLocationFeatures[0].geometry
 
-                  // create a graphic for the starting location and add it to the graphics overlay
-                  val startingLocationGraphic =
-                    Graphic(startingLocationGeometry, startingPointSymbol)
-                  startingLocationGraphicsOverlay.graphics.add(startingLocationGraphic)
+              if (startingLocationGeometry is Point) {
+                val startingLocationGeometryPoint = startingLocationFeatures[0].geometry as Point
 
-                  // set the map's viewpoint to the starting location
-                  mapView.setViewpointAsync(Viewpoint(startingLocationGeometryPoint, 3000.0))
+                // create a graphic for the starting location and add it to the graphics overlay
+                val startingLocationGraphic =
+                  Graphic(startingLocationGeometry, startingPointSymbol)
+                startingLocationGraphicsOverlay.graphics.add(startingLocationGraphic)
 
-                  spinner.adapter = ArrayAdapter<UtilityCategory>(
-                    this,
-                    android.R.layout.simple_spinner_item,
-                    networkDefinition.categories
-                  )
+                // set the map's viewpoint to the starting location
+                mapView.setViewpointAsync(Viewpoint(startingLocationGeometryPoint, 3000.0))
 
-                  trace_button.setOnClickListener {
-                    fab.isExpanded = false
-                    handleTraceClick(utilityNetwork, traceConfiguration, startingLocation)
-                  }
-                } else {
-                  Toast.makeText(
-                    this,
-                    "Error: Starting location geometry must be point.",
-                    Toast.LENGTH_LONG
-                  ).show()
+                spinner.adapter = ArrayAdapter<UtilityCategory>(
+                  this,
+                  android.R.layout.simple_spinner_item,
+                  networkDefinition.categories
+                )
+
+                trace_button.setOnClickListener {
+                  fab.isExpanded = false
+                  handleTraceClick(utilityNetwork, traceConfiguration, startingLocation)
                 }
               } else {
                 Toast.makeText(
                   this,
-                  "Error: Starting location features not found.",
+                  "Error: Starting location geometry must be point.",
                   Toast.LENGTH_LONG
                 ).show()
               }
-            } catch (e: Exception) {
-              val message = "Error loading starting location feature: ${e.message}"
-              Log.e(TAG, message)
-              Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            } else {
+              Toast.makeText(
+                this,
+                "Error: Starting location features not found.",
+                Toast.LENGTH_LONG
+              ).show()
             }
+          } catch (e: Exception) {
+            val message = "Error loading starting location feature: ${e.message}"
+            Log.e(TAG, message)
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
           }
-        } else {
-          Toast.makeText(this, "Error loading utility network.", Toast.LENGTH_LONG).show()
         }
+      } else {
+        Toast.makeText(this, "Error loading utility network.", Toast.LENGTH_LONG).show()
       }
     }
   }
