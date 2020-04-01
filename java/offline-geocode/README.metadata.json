@@ -18,7 +18,7 @@
     ],
     "provision_to": [
         "/streetmap_SD.tpk",
-        "/san-diego-locator.loc"
+        "/san-diego-locator/san-diego-locator.loc"
     ],
     "redirect_from": "/android/latest/sample-code/offline-geocode.htm",
     "relevant_apis": [
