@@ -6,7 +6,7 @@ Display a web map.
 
 ## Use case
 
-For displaying web maps stored on ArcGISOnline (e.g. soil survey results, as demonstrated in this sample).
+For displaying web maps stored on ArcGIS Online (e.g. soil survey results, as demonstrated in this sample).
 
 ## How to use the sample
 
