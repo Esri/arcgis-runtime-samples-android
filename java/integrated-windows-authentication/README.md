@@ -21,9 +21,9 @@ Enter the URL to your IWA-secured portal. Tap the button to search for web maps 
 
 ## Relevant API
 
-* UserCredential
-* Portal
 * AuthenticationManager
+* Portal
+* UserCredential
 
 ## About the data
 
