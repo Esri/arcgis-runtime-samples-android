@@ -34,7 +34,7 @@ The map used in this sample shows the [stormwater network](https://arcgisruntime
 
 ## Additional information
 
-The creation of the offline map can be fine-tuned using [parameter overrides for feature layers](https://github.com/Esri/arcgis-runtime-samples-java/tree/master/src/main/java/com/esri/samples/map/generate_offline_map_overrides), or by using [local basemaps](https://github.com/Esri/arcgis-runtime-samples-java/tree/master/src/main/java/com/esri/samples/map/generate_offline_map_with_local_basemap)
+The creation of the offline map can be fine-tuned using [parameter overrides for feature layers](https://github.com/Esri/arcgis-runtime-samples-android/tree/master/java/generate-offline-map-overrides), or by using [local basemaps](https://github.com/Esri/arcgis-runtime-samples-android/tree/master/java/generate-offline-map-with-local-basemap)
  to achieve more customised results.
 
 ## Tags
