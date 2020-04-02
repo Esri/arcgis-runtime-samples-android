@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // create a basemap and set it to the map view
-    val map = ArcGISMap(Basemap.createStreetsNightVector()).also { mapView.map = it }
+    val map = ArcGISMap(Basemap.createStreetsNightVector())
 
     // load the utility network data from the feature service and create feature layers
     val distributionLineFeatureTable = ServiceFeatureTable("${R.string.featureServiceURL}/3")
@@ -55,6 +55,8 @@ class MainActivity : AppCompatActivity() {
 
     // add the feature layers to the map
     map.operationalLayers.addAll(arrayOf(distributionLineLayer, deviceLayer))
+
+    mapView.map = map
 
     // create a graphics overlay for the starting location and add it to the map view
     val startingLocationGraphicsOverlay = GraphicsOverlay().also {
