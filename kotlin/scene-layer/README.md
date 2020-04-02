@@ -2,7 +2,7 @@
 
 Add a scene layer to a scene.
 
-![](scene-layer.png)
+![Image of scene layer](scene-layer.png)
 
 ## Use case
 
@@ -14,12 +14,10 @@ When launched, this sample displays a scene service with an `ArcGISSceneLayer`. 
 
 ## How it works
 
-1. Create an `ArcGISScene` and set its `Basemap` with `ArcGISScene.setBasemap()`.
-1. Create a `Surface` and add an elevation source to it: `surface.getElevationSources()add.(arcGISTiledElevationSource)`.
-1. Add the created surface to the scene: `ArcGISScene.setBaseSurface(surface)`.
-1. Create a `SceneView` and set the scene to the view with `SceneView.setArcGISScene(scene)`.
-1. Create an `ArcGISSceneLayer` using a data source URI: `new ArcGISSceneLayer(Uri)`.
-1. Add the new scene layer to the scene as an operational layer with `ArcGISScene.getOperationalLayers().add(sceneLayer)`.
+1. Create an `ArcGISScene` and set its `Basemap` with `ArcGISScene.basemap`.
+2. Create a `SceneView` and set the scene to the view with `SceneView.scene`.
+3. Create an `ArcGISSceneLayer` using a data source URI: `ArcGISSceneLayer(Uri)`.
+4. Add the new scene layer to the scene as an operational layer with `ArcGISScene.operationalLayers.add(sceneLayer)`.
 
 ## About the data
 
@@ -29,10 +27,8 @@ The scene launches with a northward view of the city of Brest, France. A 3D scen
 
 * ArcGISScene
 * ArcGISSceneLayer
-* ArcGISTiledElevationSource
 * SceneView
-* Surface
 
 ## Tags
 
-layer, scene, 3D
+3D, layer, scene

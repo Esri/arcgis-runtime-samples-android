@@ -16,7 +16,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=740b663bff5e4198b9b6674af93f638a"
     ],
     "provision_to": [
-        "/ArcGIS/Samples/MapPackage/canyonlands/"
+        "/canyonlands/"
     ],
     "redirect_from": "",
     "relevant_apis": [

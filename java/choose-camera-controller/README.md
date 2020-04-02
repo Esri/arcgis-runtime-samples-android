@@ -1,8 +1,8 @@
 # Choose camera controller
 
-Control the behaviour of the camera in a scene.
+Control the behavior of the camera in a scene.
 
-![Choose camera controller](choose-camera-controller.png)
+![Image of choose camera controller](choose-camera-controller.png)
 
 ## Use case
 
@@ -10,12 +10,12 @@ The globe camera controller (the default camera controller in all new scenes) al
 
 ## How to use the sample
 
-The application loads with the default globe camera controller. To rotate and fix the scene around the plane, exit globe mode by choosing the "Orbit camera around plane" option (i.e. camera will now be fixed to the plane). Choose the "Orbit camera around location" option to rotate and centre the scene around the location of the Upheaval Dome crater structure, or choose the "Free pan round the globe" option to return to default free navigation.
+The application loads with the default globe camera controller. To rotate and fix the scene around the plane, exit globe mode by choosing the "Orbit camera around plane" option (i.e. camera will now be fixed to the plane). Choose the "Orbit camera around location" option to rotate and center the scene around the location of the Upheaval Dome crater structure, or choose the "Free pan round the globe" option to return to default free navigation.
 
 ## How it works
 
 1.  Create an instance of a class extending `CameraController`: `GlobeCameraController`, `OrbitLocationCameraController`, `OrbitGeoElementCameraController`.
-1.  Set the scene view's camera controller with `sceneView.setCameraController(cameraController)`.
+2.  Set the scene view's camera controller with `sceneView.setCameraController(cameraController)`.
 
 ## Relevant API
 
@@ -26,8 +26,6 @@ The application loads with the default globe camera controller. To rotate and fi
 *   OrbitLocationCameraController
 *   SceneView
 
-#### Tags
-MapViews, SceneViews and UI
-Camera
-SceneView
-3D
+## Tags
+
+3D, camera, camera controller

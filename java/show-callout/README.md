@@ -1,18 +1,31 @@
-# Show Callout
-Draw a callout on a map view and manage its behavior. A callout displays an Android View that contains text and/or other content. It has a leader that points to the location the callout refers to. 
+# Show callout
 
-![Show Callout App](show-callout.png)
+Show a callout with the latitude and longitude of user-tapped points.
+
+![Image of show callout](show-callout.png)
+
+## Use case
+
+Callouts are used to display temporary detail content on a map. You can display text and arbitrary UI controls in callouts.
 
 ## How to use the sample
-Tap on the screen to show a callout.
+
+Tap anywhere on the map. A callout showing the WGS84 coordinates for the tapped point will appear.
 
 ## How it works
-Converts screen coordinates to location coordinates to show the lat and long of the callout.  The content of the callout is created programmatically by an Android `TextView`.
+
+2. When the user taps, get the tapped location and create a map `Point` from it using `MapView.screenToLocation(tappedLocation)`.
+3. Project the point's geometry to WGS84 using `GeometryEngine.project(mapPoint, SpatialReferences.getWgs84())`.
+4. Create a new Android TextView object and set its text to the coordinate string from the point. 
+4. Create a new `Callout` with `MapView.getCallout()` and set its location on the map with `callout.setLocation(mapPoint)`.
+5. Set the callout's content with `callout.setContent(TextView)`and display it on the map view with `callout.show()`.
 
 ## Relevant API
-* ArcGISMap
+
 * Callout
 * MapView
+* Point
 
-#### Tags
-MapViews, SceneViews and UI
+## Tags
+
+balloon, bubble, callout, flyout, flyover, info window, popup, tap

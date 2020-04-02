@@ -1,20 +1,32 @@
-# Sync Map and Scene Viewpoints
-This sample demonstrates how to keep the viewpoints of multiple map or scene views in sync, so that navigating one view immediately updates the others.
+# Sync map and scene viewpoints
 
-![Sync Map and Scene Viewpoints App](sync-map-and-scene-viewpoints.png)
+Keep the view points of two views (e.g. MapView and SceneView) synchronized with each other.
+
+![Image of sync map and scene viewpoints](sync-map-and-scene-viewpoints.png)
+
+## Use case
+
+You might need to synchronize GeoView viewpoints if you had two map views in one application - a main map and an inset. An inset map view could display all the layers at their full extent and contain a hollow rectangular graphic that represents the visible extent of the main map view. As you zoom or pan in the main map view, the extent graphic in the inset map would adjust accordingly.
 
 ## How to use the sample
-Pan, zoom, and rotate the map or scene view. The other view will update automatically to match your navigation. Note that maps are 2D while scenes are 3D, so the results may not look identical, but the centers and scales will be kept the same.
+
+Interact with the MapView or SceneView by zooming or panning. The other MapView or SceneView will automatically focus on the same viewpoint.
 
 ## How it works
-`GeoView`, the parent class of both `MapView` and `SceneView`, has a property `ViewpointChangeListener` which is called each time the viewpoint updates. Inside this listener we get the viewpoint of the `GeoView` by calling `.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE)`. We then pass that viewpoint into `setViewpoint(...)` on the other `GeoView`, thus synchronizing both views.
+
+1. Wire up the `ViewpointChanged` event handler for both geo views.
+2. In each event handler, get the current viewpoint from the geo view that is being interacted with and then set the viewpoint of the other geo view to the same value.
 
 ## Relevant API
-* `GeoView`
-* `GeoView.addViewpointChangedListener(...)`
-* `GeoView.isNavigating()`
-* `GeoView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE)`
-* `GeoView.setViewpoint(...)`
 
-#### Tags
-MapViews, SceneViews and UI
+* GeoView
+* MapView
+* SceneView
+
+## About the data
+
+This application provides two different perspectives of the Imagery basemap. A 2D MapView as well as a 3D SceneView, displayed side by side.
+
+## Tags
+
+3D, automatic refresh, event, event handler, events, extent, interaction, interactions, pan, sync, synchronize, zoom

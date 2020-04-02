@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     EncEnvironmentSettings
         .setResourcePath(getExternalFilesDir(null) + getString(R.string.hydrography_directory));
     // use the app's cache to store processed System Electronic Navigational Chart (SENC) data
-    EncEnvironmentSettings.setSencDataPath(getApplicationContext().getCacheDir().getPath());
+    EncEnvironmentSettings.setSencDataPath(getExternalCacheDir().getPath());
 
     // create the Exchange Set passing an array of paths. Update sets can be loaded alongside base data
     EncExchangeSet encExchangeSet = new EncExchangeSet(

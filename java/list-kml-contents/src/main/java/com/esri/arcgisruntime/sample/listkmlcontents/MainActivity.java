@@ -20,8 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -29,10 +27,7 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.esri.arcgisruntime.geometry.Envelope;
@@ -94,14 +89,6 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(linearLayoutManager);
 
-    requestReadPermission();
-  }
-
-  /**
-   * Load a KML dataset and for each KML node, convert its children to a flattened list. On tapping a KML node in the
-   * list, set the scene view to a viewpoint around the tapped KML node.
-   */
-  private void listKmlContents() {
     // load a KML dataset from a local KMZ file and show it as an operational layer
     KmlDataset kmlDataset = new KmlDataset(getExternalFilesDir(null) + getString(R.string.kmz_data_path));
     KmlLayer kmlLayer = new KmlLayer(kmlDataset);
@@ -258,34 +245,6 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
       type = "KmlPlacemark";
     }
     return " - " + type;
-  }
-
-  /**
-   * Request read external storage for API level 23+.
-   */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      listKmlContents();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      listKmlContents();
-    } else {
-      Toast.makeText(this, getString(R.string.kmz_read_permission_denied), Toast.LENGTH_SHORT).show();
-    }
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
   @Override

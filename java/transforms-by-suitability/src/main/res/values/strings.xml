@@ -1,8 +1,7 @@
 <resources>
-  <string name="app_name">Transforms by Suitability</string>
+  <string name="app_name">Transforms by suitability</string>
   <!-- TODO: Copy the PEData projection engine files to this location on your local device - see Readme for more info -->
-  <string name="projection_engine_location">/ArcGIS/samples/PEData</string>
-  <string name="file_permission_denied">Cannot use grid-based transforms because file permission was denied</string>
+  <string name="projection_engine_location">/PEDataRuntime</string>
   <string name="directory_set">Projection engine directory set</string>
   <string name="directory_not_set">Error setting projection engine directory</string>
   <string name="transform_missing_files">This transformation has missing grid files</string>

@@ -2,7 +2,7 @@
 
 Display local 3D point cloud data.
 
-![View point cloud data offline](view-point-cloud-data-offline.png)
+![Image of view point cloud data offline](view-point-cloud-data-offline.png)
 
 ## Use case
 
@@ -10,30 +10,30 @@ Point clouds are often used to visualize massive sets of sensor data such as lid
 
 Point clouds can be loaded offline from scene layer packages (.slpk).
 
+## How to use the sample
+
+The sample starts with a point cloud layer loaded and draped on top of a scene. Pan and zoom to explore the scene and see the detail of the point cloud layer.
+
 ## How it works
 
-1. Create a `PointCloudLayer` with the path to a local `.slpk` file containing a point cloud layer.
-2. Add the layer to a scene's operational layers collection.
+1. Create a `PointCloudLayer` with the path to a local .slpk file containing a point cloud layer.
+2. Add the layer to a scene's operational layers collection with `operationalLayers.add(pointCloudLayer)`.
 
 ## Relevant API
-- PointCloudLayer
+
+* PointCloudLayer
 
 ## About the data
+
 This point cloud data comes from Balboa Park in San Diego, California. Created and provided by USGS.
 
-## Offline data
+## Offline Data
 
-1. To use Point Cloud Layer in ArcGIS Runtime, extra resources are required [San Diego Point Cloud SLPK](https://www.arcgis.com/home/item.html?id=34da965ca51d4c68aa9b3a38edb29e00).
 1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=34da965ca51d4c68aa9b3a38edb29e00).
-1. Extract the contents of the downloaded zip files to disk.
-1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1 & 2.
-1. Execute the following command:
+2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+3. Push the data into the scoped storage of the sample app:
+`adb push sandiego-north-balboa-pointcloud.slpk /Android/data/com.esri.arcgisruntime.sample.viewpointclouddataoffline/files/sandiego-north-balboa-pointcloud.slpk`
 
-`adb push sandiego-north-balboa-pointcloud.slpk /sdcard/ArcGIS/Samples/slpk/sandiego-north-balboa-pointcloud.slpk`
+## Tags
 
-Link | Local Location
----------|-------|
-|[San Diego Point Cloud SLPK](https://www.arcgis.com/home/item.html?id=34da965ca51d4c68aa9b3a38edb29e00)| `<sdcard>`/ArcGIS/Samples/slpk/sandiego-north-balboa-pointcloud.slpk |
-
-#### Tags
-Visualization
+3D, lidar, point cloud

@@ -19,18 +19,12 @@ package com.esri.arcgisruntime.sample.blendrenderer;
 import java.io.File;
 import java.util.Collections;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import com.esri.arcgisruntime.layers.RasterLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -84,47 +78,10 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
     // retrieve the MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
     mFragmentManager = getSupportFragmentManager();
-    // define permission to request
-    String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(MainActivity.this,
-        reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      blendRenderer();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
-    }
-  }
 
-  /**
-   * Using values stored in strings.xml, builds path to rasters.
-   *
-   * @return the path to raster file
-   */
-  private String buildRasterPath(String filename) {
-    // get sdcard resource name
-    File extStorDir = getExternalFilesDir(null);
-    // get the directory
-    String extSDCardDirName =
-        this.getResources().getString(R.string.data_sdcard_offline_dir);
-    // create the full path to the raster file
-    return extStorDir.getAbsolutePath()
-        + File.separator
-        + extSDCardDirName
-        + File.separator
-        + filename
-        + ".tif";
-  }
-
-  /**
-   * Creates new imagery and elevation files based on a given path, creates an ArcGISMap, sets it to a MapView and
-   * calls updateRenderer().
-   */
-  private void blendRenderer() {
     // create raster files
-    mImageFile = new File(buildRasterPath(this.getString(R.string.imagery_raster_name)));
-    mElevationFile = new File(buildRasterPath(this.getString(R.string.elevation_raster_name)));
+    mImageFile = new File(getExternalFilesDir(null) + getString(R.string.imagery_raster_name));
+    mElevationFile = new File(getExternalFilesDir(null) + getString(R.string.elevation_raster_name));
     // create a map
     ArcGISMap map = new ArcGISMap();
     // add the map to a map view
@@ -162,22 +119,6 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
         mPixelSizePower,
         mOutputBitDepth);
     rasterLayer.setRasterRenderer(blendRenderer);
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  public void onRequestPermissionsResult(int requestCode,
-      @NonNull String[] permissions,
-      @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      blendRenderer();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(MainActivity.this,
-          getResources().getString(R.string.location_permission_denied),
-          Toast.LENGTH_SHORT).show();
-    }
   }
 
   @Override

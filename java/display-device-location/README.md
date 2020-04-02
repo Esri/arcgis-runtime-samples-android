@@ -1,29 +1,39 @@
-# Display Device Location       
-Enable Location Display and switch between different types of AutoPan Modes. It also demonstrates how to use the Android Support Library to check for, and request, location permissions.
+# Display device location
 
-![Display Device Location](display-device-location.png)
+Display your current position on the map, as well as switch between different types of auto pan Modes.
+
+![Image of display device location](display-device-location.png)
+
+## Use case
+
+When using a map within a GIS, it may be helpful for a user to know their own location within a map, whether that's to aid the user's navigation or to provide an easy means of identifying/collecting geospatial information at their location.
 
 ## How to use the sample
-This sample starts with a Map with an imagery basemap loaded in the MapView and Location display turned off. When you tap on the spinner it gives you the list of possible AutoPan Mode options along with turning the Location display on or off.
 
-* Stop - Stops the Location Display
-* On - Starts the Location Display with AutoPan Mode set to Off
-* Re-Center - Starts location display with auto pan mode set to Default
-* Navigation - Starts location display with auto pan mode set to Navigation
-* Compass - Starts location display with auto pan mode set to Compass
+Tap the button in the lower right (which starts in Stop mode). A menu will appear with the following options:
+
+* Stop - Stops the location display.
+* On - Starts the location display with no `AutoPanMode` mode set.
+* Re-Center - Starts the location display with `AutoPanMode` set to `RECENTER`.
+* Navigation - Starts the location display with `AutoPanMode` set to `NAVIGATION`.
+* Compass - Starts the location display with `AutoPanMode` set to `COMPASS_NAVIGATION`.
 
 ## How it works
-1. Create a `MapView`.
-1. Get the `LocationDisplay` by calling `.getLocationDisplay()` on the `MapView`.
-1. Use `start()` and `stop()` on the `LocationDisplay` as necessary.
 
-Note: Location permissions are required for this sample.
+1. Create a `MapView`.
+2. Get the `LocationDisplay` by calling `.getLocationDisplay()` on the `MapView`.
+3. Use `startAsync()` and `stop()` on the `LocationDisplay` as necessary.
 
 ## Relevant API
-* ArcGISMap
-* MapView
-* LocationDisplay
-* LocationDisplay.AutoPanMode
 
-#### Tags
-MapViews, SceneViews and UI
+* ArcGISMap
+* LocationDisplay
+* MapView
+
+## Additional information
+
+Location permissions are required for this sample.
+
+## Tags
+
+compass, GPS, location, map, mobile, navigation

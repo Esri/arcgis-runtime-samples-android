@@ -1,24 +1,33 @@
-# Set Initial Map Area
-Start a `Map` app with a defined initial area using a `Viewpoint` created with an `Envelope` which defines the initial area.
+# Set initial map area
 
-![Set Initial Map Area App](set-initial-map-area.png)
+Display the map at an initial viewpoint representing a bounding geometry.
+
+![Image of map initial extent](set-initial-map-area.png)
+
+## Use case
+
+Setting the initial viewpoint is useful when a user wishes to first load the map at a particular area of interest. 
 
 ## How to use the sample
-Simply run the app.
+
+As the application is loading, the initial view point is set and the map view opens at the given location.
 
 ## How it works
-1. Create a `MapView`.
-1. Create an `ArcGISMap`.
-1. Create a `Viewpoint` from an `Envelope`.
-1. Use `ArcGISMap.setInitialViewpoint(...)` and pass the `Viewpoint` as an argument.
-1. Set the `ArcGISMap` to the `MapView`.
 
+1. Instantiate an `ArcGISMap` object.
+2. Instantiate a `Viewpoint` object using an `Envelope` object.
+3. Set the starting location of the map with `setInitialViewpoint(Viewpoint)`.
+4. Set the map to a `MapView` object.
+ 
 ## Relevant API
+
 * ArcGISMap
-* MapView
-* SpatialReference
 * Envelope
+* MapView
+* Point
 * Viewpoint
 
-#### Tags
-Maps and Scenes
+
+## Tags
+
+extent, zoom

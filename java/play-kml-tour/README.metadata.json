@@ -3,7 +3,7 @@
     "description": "Play tours in KML files.",
     "ignore": false,
     "images": [
-        "play-a-kml-tour.png"
+        "play-kml-tour.png"
     ],
     "keywords": [
         "Visualization",
@@ -28,7 +28,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=f10b1d37fdd645c9bc9b189fb546307c"
     ],
     "provision_to": [
-        "/ArcGIS/Samples/KML/Esri_tour.kmz"
+        "/Esri_tour.kmz"
     ],
     "redirect_from": "/android/latest/sample-code/play-a-kml-tour.htm",
     "relevant_apis": [
@@ -42,7 +42,7 @@
         "KmlTour.PropertyChanged"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/playakmltour/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/playkmltour/MainActivity.java"
     ],
-    "title": "Play a KML tour"
+    "title": "Play KML tour"
 }

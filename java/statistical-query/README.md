@@ -1,31 +1,34 @@
-# Statistical Query
+# Statistical query
+
 Query a table to get aggregated statistics back for a specific field.
 
-![Statistical Query App](statistical-query.png)
+![Image of statistical query](statistical-query.png)
+
+## Use case
+
+A county boundaries table with population information can be queried to return aggregated results for total, average, maximum, and minimum population, rather than downloading the values for every county and calculating statistics manually.
 
 ## How to use the sample
-Change the `MapView` extent and use the two checkboxes to influence statistical queries. Trigger a query by hitting the 'Get Statistics' button.
+
+Pan and zoom to define the extent for the query. Use the 'Only cities in current extent' checkbox to control whether the query only includes features in the visible extent. Use the 'Only cities greater than 5M' checkbox to filter the results to only those cities with a population greater than 5 million people. Click 'Get statistics' to perform the query. The query will return population-based statistics from the combined results of all features matching the query criteria.
 
 ## How it works
-1. Create a `ServiceFeatureTable` with a URL to the REST endpoint of a feature service. 
-1. Create `StatisticsQueryParameters`, and `StatisticDefinition` objects, and add to the parameters. These definitions define the various statistics that we would like to compute from a given field, including:
-    * average
-    * count
-    * minimum
-    * maximum 
-    * sum
-    * standard deviation
-    * variance
-1. Execute `queryStatistics` on the `ServiceFeatureTable`. Depending on the state of the two checkboxes, additional parameters are set. The query runs asynchronously, and once complete, this gives access to the `QueryStatisticsResult`, which contains key/value pairs.
+
+1. Create a `ServiceFeatureTable` with a URL to the feature service.
+2. Create `StatisticsQueryParameters`, and `StatisticDefinition` objects, and add to the parameters.
+3. Execute `queryStatisticsAsync()` on the `ServiceFeatureTable`. Depending on the state of the two checkboxes, additional parameters are set.
+4. Display each `StatisticRecord` in the first returned `StatisticsQueryResult`.
 
 ## Relevant API
+
 * QueryParameters
 * ServiceFeatureTable
 * StatisticDefinition
 * StatisticRecord
-* StatisticType
 * StatisticsQueryParameters
 * StatisticsQueryResult
+* StatisticType
 
-#### Tags
-Search and Query
+## Tags
+
+analysis, average, bounding geometry, filter, intersect, maximum, mean, minimum, query, spatial query, standard deviation, statistics, sum, variance

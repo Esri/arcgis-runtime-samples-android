@@ -1,26 +1,37 @@
-# Feature Collection Layer
-Creates a new Feature Collection with a Point, Polyline, and Polygon Feature Collection Table. The Collection is then displayed on the ArcGISMap as a Feature Collection Layer.
+# Feature collection layer
 
-![Feature Collection Layer App](feature-collection-layer.png)
+Create a Feature Collection Layer from a Feature Collection Table, and add it to a map.
+
+![Image of feature collection layer](feature-collection-layer.png)
+
+## Use case
+
+A Feature Collection allows easily importing external data (such as CSV files), as well as creating custom schema for data that is in non-standardized format. This data can then be used to populate a Feature Collection Table, and displayed in a Feature Collection Layer using the attributes and geometries provided in the external data source. For example, an electricity supplier could use this functionality to visualize existing location data of coverage areas (polygons), power stations (points), transmission lines (polylines), and others.
+
+## How to use the sample
+
+When launched, this sample displays a feature collection layer with a point, polyline and polygon geometry. Pan and zoom to explore the scene.
 
 ## How it works
-A `FeatureCollectionLayer` is created from a `FeatureCollection` and is added to the map's operational layers. 
-Then, a point `FeatureCollectionTable`, a polyline `FeatureCollectionTable`, and a polygon `FeatureCollectionTable` are created, and their schemas and renderers are defined. 
-Next, features are added to each table, and each table is added to the `FeatureCollection`. 
-In this case, hardcoded features are added to the tables for display on the map. 
-However, a common use case is to read a CSV or some other data source, and to populate the table with the attributes and geometry provided in the external data source.
+
+1. Create a `FeatureCollectionLayer` using a new feature collection, `FeatureCollectionLayer(featureCollection)`
+2. Add the feature collection layer to the map, `ArcGISMap.getOperationalLayers().add(featureCollectionLayer)`.
+3. Create a `FeatureCollectionTable` with `new FeatureCollectionTable(fields, geometryType, spatialReference)`, specifying `GeometryType.POINT`, `GeometryType.POLYLINE`, or `GeometryType.POLYGON` for geometry type.
+    *  Additionally, pass in a list of `Field` objects to represent the table's schema.
+4. Assign a `SimpleRenderer` to each table to render any `Feature`s from that table using the `Symbol` that was set.
+5. Add the feature collection table to the feature collection, `FeatureCollection.getTables().add(featureCollectionTable)`.
+6. Create a feature from the feature collection table passing an attribute and geometry for that feature with `featureCollectionTable.createFeature(attributes, geometry)`.
+7. Add new features to the table, `featureCollectionTable.addFeatureAsync(feature)`.
 
 ## Relevant API
+
+* Feature
 * FeatureCollection
 * FeatureCollectionLayer
 * FeatureCollectionTable
-* Feature
 * Field
-* SimpleFillSymbol
-* SimpleLineSymbol
-* SimpleMarkerSymbol
 * SimpleRenderer
 
-### Tags
-Layers         
+## Tags
 
+collection, feature, layers, table

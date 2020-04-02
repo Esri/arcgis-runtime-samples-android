@@ -9,6 +9,12 @@
     "Visualization",
     "PointCloudLayer"
   ],
+  "provision_from": [
+    "https://www.arcgis.com/home/item.html?id=34da965ca51d4c68aa9b3a38edb29e00"
+  ],
+  "provision_to": [
+    "/sandiego-north-balboa-pointcloud.slpk"
+  ],
   "redirect_from": "/android/latest/sample-code/view-point-cloud-data-offline.htm",
   "relevant_apis": [
     "PointCloudLayer"

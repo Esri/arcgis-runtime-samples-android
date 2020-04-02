@@ -1,30 +1,38 @@
-# Sketch Editor
-The Sketch Editor can be used to draw on a map.
+# Sketch editor
 
-![Sketch Editor App](sketch-editor.png)
+Use the Sketch Editor to edit or sketch a new point, line, or polygon geometry on to a map.
 
-# How to use the sample
-Use the buttons along the bottom of the screen to sketch: points, multipoints, polylines, polygons, freehand lines, and freehand polylines.
+![Image of sketch editor App](sketch-editor.png)
 
-Use the buttons at the top of the screen to: undo, redo, and stop (finish) the sketch.
+## Use case
 
-# How it works
-1. Create a `SketchEditor` and add it to a `MapView`.
-1. Use `SketchEditor.start(<SketchCreationMode>)` to start sketching. Modes (as enum) include:
-	* `SketchCreationMode.POINT`
-	* `SketchCreationMode.MULTIPOINT`
-	* `SketchCreationMode.POLYLINE`
-	* `SketchCreationMode.POLYGON`
-	* `SketchCreationMode.FREEHAND_LINE`
-	* `SketchCreationMode.FREEHAND_POLYGON`
-1. Use `.undo()` and `.redo()` on your instance of sketch editor to undo and redo sketch events.
-1. Use `.getGeometry()` on your instance of sketch editor to get the geometry and, for instance, use to to define a new `Graphic`.
-1. Finally, use `.stop()` on your instance of sketch editor to stop sketching.
+A field worker could annotate features of interest on a map (via the GUI) such as location of dwellings (marked as points), geological features (polylines), or areas of glaciation (polygons). 
 
-# Relevant API
+## How to use the sample
+
+Choose which geometry type to sketch from one of the available buttons along the bottom of the screen. Choose from points, multipoints, polylines, polygons, freehand polylines, and freehand polygons.
+
+Use the buttons at the top of the screen to: undo or redo change made to the sketch whilst in sketch mode, and to save the sketch to the graphics overlay.
+
+## How it works
+
+1.  Create a `SketchEditor` and pass it to the MapView with `mapView.setSketchEditor(sketchEditor)`.
+2.  Use `SketchEditor.start(SketchCreationMode)` to start sketching.
+ * If editing an existing graphic's geometry, use `SketchEditor.start(graphic.getGeometry)`.
+3.  Check to see if undo and redo are possible during a sketch session using `sketchEditor.canUndo()` and `sketchEditor.canRedo()`. If it's possible, use `sketchEditor.undo()` and `sketchEditor.redo()`.
+4.  Check if sketch is valid using `sketchEditor.isSketchValid()`, then allow the sketch to be saved to a `GraphicsOverlay`.
+5.  Get the geometry of the sketch using `sketchEditor.getGeometry()`, and create a new `Graphic` from that geometry. Add the graphic to the graphics overlay.
+6.  To exit the sketch editor, use `sketchEditor.stop()`.
+
+## Relevant API
+
+* Geometry
+* Graphic
+* GraphicsOverlay
 * MapView
 * SketchCreationMode
 * SketchEditor
 
-#### Tags
-Maps and Scenes
+## Tags
+
+draw, edit, sketch

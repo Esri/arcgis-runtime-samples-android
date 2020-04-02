@@ -1,33 +1,37 @@
-# Add Graphics with Symbols
-Add points, polylines, and polygons as graphics, set a symbol renderer to the graphics and add to a graphics overlay. The sample also adds text symbols to represent text as symbols on the graphics overlay.
+# Add graphics with symbols
 
-![Add Graphics with Symbols App](add-graphics-with-symbols.png)
+Use a symbol style to display a graphic on a graphics overlay.
+
+![Image of add graphics with symbols](add-graphics-symbols.png)
+
+## Use case
+
+Allows you to customize a graphic by assigning a unique symbol. For example, you may wish to display individual graphics for different landmarks across a region, and to style each one with a unique symbol.  
 
 ## How to use the sample
-Simply run the sample.
+
+Pan and zoom around the map. Observe the graphics on the map.
 
 ## How it works
-Graphics are added to a `GraphicsOverlay` without any symbols or styles. To include a symbol with a graphic, create a `Graphic` with a `Symbol` and `Geometry` and add it to the `GraphicsOverlay`. 
 
-```java
-//define a polyline for the boat trip
-Polyline boatRoute = getBoatTripGeometry();
-//define a line symbol
-SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.rgb(128, 0, 128), 4);
-//create the graphic
-Graphic boatTripGraphic = new Graphic(boatRoute, lineSymbol);
-//add to the graphic overlay
-graphicOverlay.getGraphics().add(boatTripGraphic);
-```
+1. Create a `GraphicsOverlay` and add it to the `MapView`.
+1. Create a `Symbol` such as `SimpleMarkerSymbol`, `SimpleLineSymbol` or `SimpleFillSymbol`.
+1. Create a `Graphic`, specifying a `Geometry` and a `Symbol`.
+1. Add the `Graphic` to the `GraphicsOverlay`.
 
 ## Relevant API
+
+* Geometry
 * Graphic
 * GraphicsOverlay
-* MapView
-* Point
-* PointCollection
-* Polygon
-* Polyline
+* SimpleFillSymbol
+* SimpleLineSymbol
+* SimpleMarkerSymbol
 
-#### Tags
-Visualization
+## Additional information
+
+To set a symbol style across a number of graphics (e.g. showing trees as graphics sharing a symbol in a park), see the "Add graphics with renderer" sample.
+
+## Tags
+
+display, fill, graphics, line, marker, overlay, point, symbol

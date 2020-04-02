@@ -16,16 +16,11 @@
 
 package com.esri.arcgisruntime.sample.featurelayershapefile;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.data.ShapefileFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -50,13 +45,6 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.createStreetsVector());
     mMapView.setMap(map);
 
-    requestReadPermission();
-  }
-
-  /**
-   * Creates a ShapefileFeatureTable from a service and, on loading, creates a FeatureLayer and add it to the map.
-   */
-  private void featureLayerShapefile() {
     // load the shapefile with a local path
     ShapefileFeatureTable shapefileFeatureTable = new ShapefileFeatureTable(
         getExternalFilesDir(null) + getString(R.string.shapefile_path));
@@ -79,36 +67,6 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, error);
       }
     });
-  }
-
-  /**
-   * Request read permission on the device.
-   */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(MainActivity.this,
-        reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      featureLayerShapefile();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      featureLayerShapefile();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(MainActivity.this, getResources().getString(R.string.read_permission_denied),
-          Toast.LENGTH_SHORT).show();
-    }
   }
 
   @Override

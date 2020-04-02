@@ -17,7 +17,7 @@
         "https://www.arcgis.com/home/item.html?id=d98b3e5293834c5f852f13c569930caa"
     ],
     "provision_to": [
-        "/ArcGIS/Samples/Shapefile/Aurora_CO_shp/Subdivisions.shp"
+        "/Aurora_CO_shp/Subdivisions.shp"
     ],
     "redirect_from": "",
     "relevant_apis": [

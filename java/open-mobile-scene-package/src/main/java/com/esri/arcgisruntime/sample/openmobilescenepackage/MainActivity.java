@@ -17,16 +17,11 @@
 
 package com.esri.arcgisruntime.sample.openmobilescenepackage;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
@@ -56,16 +51,9 @@ public class MainActivity extends AppCompatActivity {
     surface.getElevationSources().add(elevationSource);
     scene.setBaseSurface(surface);
 
-    requestReadPermission();
-  }
-
-  /**
-   * Loads the mobile scene package asynchronously, and once it has loaded, sets the first scene within the package to
-   * the scene view.
-   */
-  private void loadMobileScenePackage() {
-
-    MobileScenePackage mobileScenePackage = new MobileScenePackage(getExternalFilesDir(null) + getString(R.string.mspk_path));
+    // create a mobile scene package from a path to the mspk
+    MobileScenePackage mobileScenePackage = new MobileScenePackage(
+        getExternalFilesDir(null) + getString(R.string.philadelphia_mspk));
     mobileScenePackage.addDoneLoadingListener(() -> {
       if (mobileScenePackage.getLoadStatus() == LoadStatus.LOADED && !mobileScenePackage.getScenes().isEmpty()) {
         mSceneView.setScene(mobileScenePackage.getScenes().get(0));
@@ -94,34 +82,5 @@ public class MainActivity extends AppCompatActivity {
   protected void onDestroy() {
     mSceneView.dispose();
     super.onDestroy();
-  }
-
-  /**
-   * Request read external storage for API level 23+.
-   */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      loadMobileScenePackage();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      loadMobileScenePackage();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.location_permission_denied), Toast.LENGTH_SHORT).show();
-    }
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 }

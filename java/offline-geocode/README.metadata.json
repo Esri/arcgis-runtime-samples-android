@@ -17,8 +17,8 @@
         "http://www.arcgis.com/home/item.html?id=344e3b12368543ef84045ef9aa3c32ba"
     ],
     "provision_to": [
-        "/ArcGIS/samples/OfflineGeocoding/streetmap_SD.tpk",
-        "/ArcGIS/samples/OfflineGeocoding/san-diego-locator.loc"
+        "/streetmap_SD.tpk",
+        "/san-diego-locator/san-diego-locator.loc"
     ],
     "redirect_from": "/android/latest/sample-code/offline-geocode.htm",
     "relevant_apis": [
