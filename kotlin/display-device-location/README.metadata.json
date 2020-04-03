@@ -1,0 +1,27 @@
+{
+    "category": "MapViews, SceneViews and UI",
+    "description": "Display your current position on the map, as well as switch between different types of auto pan modes.",
+    "ignore": false,
+    "images": [
+        "display-device-location.png"
+    ],
+    "keywords": [
+        "compass",
+        "GPS",
+        "location",
+        "map",
+        "mobile",
+        "navigation"
+    ],
+    "redirect_from": "/android/latest/sample-code/display-device-location.htm",
+    "relevant_apis": [
+      "ArcGISMap",
+      "LocationDisplay",
+      "MapView"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/displaydevicelocation/MainActivity.kt",
+        "src/main/java/com/esri/arcgisruntime/sample/displaydevicelocation/SpinnerAdapter.kt"
+    ],
+    "title": "Display device location"
+}
