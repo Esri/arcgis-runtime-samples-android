@@ -34,6 +34,7 @@ include ':add-features-feature-service',
         ':offline-routing',
         ':open-mobile-map-package',
         ':perform-spatial-operations',
+        ':perform-valve-isolation-trace',
         ':portal-user-info',
         ':raster-function-service',
         ':raster-layer-file',
@@ -48,4 +49,3 @@ include ':add-features-feature-service',
         ':viewshed-geoprocessing',
         ':viewshed-location',
         ':wmts-layer'
-include ':perform-valve-isolation-trace'

@@ -1,3 +1,20 @@
+/*
+ * Copyright 2020 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.esri.arcgisruntime.sample.performvalveisolationtrace
 
 import android.graphics.Color
@@ -36,7 +53,6 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceType
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.UUID
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -89,6 +105,10 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Creates a utility network from the string resource url and loads it.
+   * Initializes the starting point and UI.
+   */
   private fun createUtilityNetwork(
   ) {
     // create a graphics overlay for the starting location and add it to the map view
@@ -198,6 +218,14 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Performs a valve isolation trace according to the defined trace configuration and starting location.
+   * Selects the resulting features on the map.
+   *
+   * @param utilityNetwork the utility network to perform the trace on
+   * @param traceConfiguration the trace configuration to apply to the trace
+   * @param startingLocation the utility element to begin the trace from
+   */
   private fun performTrace(
     utilityNetwork: UtilityNetwork,
     traceConfiguration: UtilityTraceConfiguration,
