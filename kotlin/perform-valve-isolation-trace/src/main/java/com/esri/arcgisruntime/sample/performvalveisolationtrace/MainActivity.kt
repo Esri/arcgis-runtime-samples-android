@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -48,28 +50,17 @@ class MainActivity : AppCompatActivity() {
     val map = ArcGISMap(Basemap.createStreetsNightVector())
 
     // load the utility network data from the feature service and create feature layers
-    val distributionLineFeatureTable = ServiceFeatureTable("${R.string.featureServiceURL}/3")
+    val distributionLineFeatureTable =
+      ServiceFeatureTable(getString(R.string.distribution_line_url))
     val distributionLineLayer = FeatureLayer(distributionLineFeatureTable)
-    val deviceFeatureTable = ServiceFeatureTable("${R.string.featureServiceURL}/0")
+    val deviceFeatureTable =
+      ServiceFeatureTable(getString(R.string.device_url))
     val deviceLayer = FeatureLayer(deviceFeatureTable)
 
     // add the feature layers to the map
     map.operationalLayers.addAll(arrayOf(distributionLineLayer, deviceLayer))
 
     mapView.map = map
-
-    // create a graphics overlay for the starting location and add it to the map view
-    val startingLocationGraphicsOverlay = GraphicsOverlay().also {
-      mapView.graphicsOverlays.add(it)
-    }
-
-    // create and apply renderers for the starting point graphics overlay
-    val startingPointSymbol = SimpleMarkerSymbol(
-      SimpleMarkerSymbol.Style.CROSS,
-      Color.GREEN,
-      25f
-    )
-    startingLocationGraphicsOverlay.renderer = SimpleRenderer(startingPointSymbol)
 
     // make sure the fab doesn't obscure the attribution bar
     mapView.addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
@@ -94,15 +85,27 @@ class MainActivity : AppCompatActivity() {
 
     // create and load the utility network
     map.addDoneLoadingListener {
-      createUtilityNetwork(startingPointSymbol, startingLocationGraphicsOverlay)
+      createUtilityNetwork()
     }
   }
 
   private fun createUtilityNetwork(
-    startingPointSymbol: SimpleMarkerSymbol,
-    startingLocationGraphicsOverlay: GraphicsOverlay
   ) {
-    val utilityNetwork = UtilityNetwork(getString(R.string.featureServiceURL), mapView.map)
+    // create a graphics overlay for the starting location and add it to the map view
+    val startingLocationGraphicsOverlay = GraphicsOverlay().also {
+      mapView.graphicsOverlays.add(it)
+    }
+
+    // create and apply renderers for the starting point graphics overlay
+    val startingPointSymbol = SimpleMarkerSymbol(
+      SimpleMarkerSymbol.Style.CROSS,
+      Color.GREEN,
+      25f
+    )
+    startingLocationGraphicsOverlay.renderer = SimpleRenderer(startingPointSymbol)
+
+    // create a utility network from the url and load it
+    val utilityNetwork = UtilityNetwork(getString(R.string.utility_network_url), mapView.map)
     utilityNetwork.loadAsync()
     utilityNetwork.addDoneLoadingListener {
       if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
@@ -130,7 +133,6 @@ class MainActivity : AppCompatActivity() {
 
         elementFeaturesFuture.addDoneListener {
           try {
-
             val startingLocationFeatures = elementFeaturesFuture.get()
 
             if (startingLocationFeatures.isNotEmpty()) {
@@ -147,15 +149,28 @@ class MainActivity : AppCompatActivity() {
                 // set the map's viewpoint to the starting location
                 mapView.setViewpointAsync(Viewpoint(startingLocationGeometryPoint, 3000.0))
 
-                spinner.adapter = ArrayAdapter<UtilityCategory>(
+                // populate the spinner with utility categories as the data and their names as the text
+                spinner.adapter = object : ArrayAdapter<UtilityCategory>(
                   this,
                   android.R.layout.simple_spinner_item,
                   networkDefinition.categories
-                )
+                ) {
+                  override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val textView = TextView(this@MainActivity)
+                    textView.text = (getItem(position) as UtilityCategory).name
+                    return textView
+                  }
+
+                  override fun getDropDownView(
+                    position: Int,
+                    convertView: View?,
+                    parent: ViewGroup
+                  ): View = getView(position, convertView, parent)
+                }
 
                 trace_button.setOnClickListener {
                   fab.isExpanded = false
-                  handleTraceClick(utilityNetwork, traceConfiguration, startingLocation)
+                  performTrace(utilityNetwork, traceConfiguration, startingLocation)
                 }
               } else {
                 Toast.makeText(
@@ -183,72 +198,71 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  private fun handleTraceClick(utilityNetwork: UtilityNetwork, traceConfiguration: UtilityTraceConfiguration, startingLocation: UtilityElement) {
-    try {
-      // clear previous selections from the layers
-      mapView.map.operationalLayers.forEach { layer ->
-        // TODO: in the java they cast the layer to featurelayer before clearing selection
-        if (layer is FeatureLayer) layer.clearSelection()
-      }
+  private fun performTrace(
+    utilityNetwork: UtilityNetwork,
+    traceConfiguration: UtilityTraceConfiguration,
+    startingLocation: UtilityElement
+  ) {
+    progressBar.visibility = View.VISIBLE
+    // create a category comparison for the trace
+    // NOTE: UtilityNetworkAttributeComparison or UtilityCategoryComparison with Operator.DoesNotExists
+    // can also be used. These conditions can be joined with either UtilityTraceOrCondition or UtilityTraceAndCondition.
+    val categoryComparison = UtilityCategoryComparison(
+      spinner.selectedItem as UtilityCategory,
+      UtilityCategoryComparisonOperator.EXISTS
+    )
+    // set the category comparison to the barriers of the configuration's trace filter
+    traceConfiguration.filter.barriers = categoryComparison
 
-      progressBar.visibility = View.VISIBLE
-      // create a category comparison for the trace
-      // NOTE: UtilityNetworkAttributeComparison or UtilityCategoryComparison with Operator.DoesNotExists
-      // can also be used. These conditions can be joined with either UtilityTraceOrCondition or UtilityTraceAndCondition.
-      val categoryComparison = UtilityCategoryComparison(
-        spinner.selectedItem as UtilityCategory,
-        UtilityCategoryComparisonOperator.EXISTS
-      )
-      // set the category comparison to the barriers of the configuration's trace filter
-      traceConfiguration.filter.barriers = categoryComparison
+    // set the configuration to include or leave out isolated features
+    traceConfiguration.isIncludeIsolatedFeatures = include_isolated_switch.isChecked
 
-      // set the configuration to include or leave out isolated features
-      traceConfiguration.isIncludeIsolatedFeatures = include_isolated_switch.isSelected
+    // build parameters for the isolation trace
+    val traceParameters =
+      UtilityTraceParameters(UtilityTraceType.ISOLATION, listOf(startingLocation))
+    traceParameters.traceConfiguration = traceConfiguration
 
-      // build parameters for the isolation trace
-      val traceParameters = UtilityTraceParameters(UtilityTraceType.ISOLATION, listOf(startingLocation))
-      traceParameters.traceConfiguration = traceConfiguration
+    // run the trace and get the result
+    val utilityTraceResultsFuture = utilityNetwork.traceAsync(traceParameters);
+    utilityTraceResultsFuture.addDoneListener {
+      try {
+        (utilityTraceResultsFuture.get()[0] as? UtilityElementTraceResult)?.let { utilityElementTraceResult ->
+          if (utilityElementTraceResult.elements.isNotEmpty()) {
+            Log.i(
+              TAG,
+              "I think the trace was successful ${utilityElementTraceResult.elements.size}"
+            )
+            // clear any selections from a previous trace
+            mapView.map.operationalLayers.filterIsInstance<FeatureLayer>()
+              .forEach { featureLayer ->
+                featureLayer.clearSelection()
 
-      // run the trace and get the result
-      val utilityTraceResultsFuture = utilityNetwork.traceAsync(traceParameters);
-      utilityTraceResultsFuture.addDoneListener{
-        try {
-          val utilityTraceResults = utilityTraceResultsFuture.get()
-
-          if (utilityTraceResults[0] is UtilityElementTraceResult) {
-            val utilityElementTraceResult = utilityTraceResults[0] as UtilityElementTraceResult
-
-            if (utilityElementTraceResult.elements.isNotEmpty()) {
-              Log.i(TAG, "I think the trace was successful ${utilityElementTraceResult.elements.size}")
-
-              mapView.map.operationalLayers.forEach {layer ->
-                if (layer is FeatureLayer) {
-                  val queryParameters = QueryParameters()
-                  utilityElementTraceResult.elements.forEach{utilityElement ->
-                    val networkSourceName = utilityElement.networkSource.name
-                    val featureTableName = (layer as FeatureLayer).featureTable.tableName
-
-                    if (networkSourceName == featureTableName) {
-                      queryParameters.objectIds.add(utilityElement.objectId)
+                with(QueryParameters()) {
+                  utilityElementTraceResult.elements.filter { it.networkSource.name == featureLayer.featureTable.tableName }
+                    .forEach { utilityElement ->
+                      this.objectIds.add(utilityElement.objectId)
                     }
-                  }
-                  val featureQueryResultListenableFuture = (layer as FeatureLayer).selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW)
 
-                  featureQueryResultListenableFuture.addDoneListener {
-
-                    progressBar.visibility = View.GONE
-                  }
+                  // select features that match the query
+                  featureLayer.selectFeaturesAsync(this, FeatureLayer.SelectionMode.NEW)
                 }
               }
-            }
+          } else {
+            // trace result is empty
+            Toast.makeText(
+              this,
+              "Utility Element Trace Result had no elements!",
+              Toast.LENGTH_LONG
+            ).show()
           }
-        }catch (e: Exception) {
-          //TODO
         }
+        // hide the progress bar when the trace is completed or failed
+        progressBar.visibility = View.GONE
+      } catch (e: Exception) {
+        val message = "Error loading utility trace results: ${e.message}"
+        Log.e(TAG, message)
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
       }
-
-    } catch (e: Exception) {
-      //TODO
     }
   }
 }
