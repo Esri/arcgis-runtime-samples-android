@@ -16,16 +16,11 @@
 
 package com.esri.arcgisruntime.sample.rasterlayergeopackage;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.data.GeoPackage;
 import com.esri.arcgisruntime.layers.RasterLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -52,13 +47,8 @@ public class MainActivity extends AppCompatActivity {
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
-    requestReadPermission();
-  }
-
-  private void rasterLayerGeoPackage() {
     // open the GeoPackage
-    GeoPackage geoPackage = new GeoPackage(
-        getExternalFilesDir(null) + getString(R.string.geopackage_path));
+    GeoPackage geoPackage = new GeoPackage(getExternalFilesDir(null) + getString(R.string.geopackage_path));
     geoPackage.loadAsync();
     geoPackage.addDoneLoadingListener(() -> {
       if (geoPackage.getLoadStatus() == LoadStatus.LOADED) {
@@ -80,36 +70,6 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, error);
       }
     });
-  }
-
-  /**
-   * Request read permission on the device.
-   */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(MainActivity.this,
-        reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      rasterLayerGeoPackage();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      rasterLayerGeoPackage();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getResources().getString(R.string.read_permission_denied),
-          Toast.LENGTH_SHORT).show();
-    }
   }
 
   @Override

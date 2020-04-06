@@ -24,7 +24,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=1bd036f221f54a99abc9e46ff3511cbf"
     ],
     "provision_to": [
-        "/ArcGIS/Samples/Style/emoji-mobile.stylx"
+        "/emoji-mobile.stylx"
     ],
     "redirect_from": "",
     "relevant_apis": [

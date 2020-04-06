@@ -13,7 +13,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=174150279af74a2ba6f8b87a567f480b"
     ],
     "provision_to": [
-        "/ArcGIS/Samples/MapPackage/LothianRiversAnno.mmpk"
+        "/LothianRiversAnno.mmpk"
     ],
     "redirect_from": "",
     "relevant_apis": [

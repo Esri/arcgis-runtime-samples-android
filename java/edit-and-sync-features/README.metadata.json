@@ -20,7 +20,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=72e703cd01654e7796eb1ae75af1cb53"
     ],
     "provision_to": [
-        "/ArcGIS/samples/TileCache/SanFrancisco.tpk"
+        "/SanFrancisco.tpk"
     ],
     "redirect_from": "/android/latest/sample-code/edit-and-sync-features.htm",
     "relevant_apis": [

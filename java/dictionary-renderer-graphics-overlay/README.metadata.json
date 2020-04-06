@@ -15,7 +15,7 @@
         "https://www.arcgis.com/home/item.html?id=c78b149a1d52414682c86a5feeb13d30"
     ],
     "provision_to": [
-        "/ArcGIS/samples/Dictionary/mil2525d.stylx"
+        "/mil2525d.stylx"
     ],
     "redirect_from": "/android/latest/sample-code/dictionary-renderer-with-graphics-overlay.htm",
     "relevant_apis": [

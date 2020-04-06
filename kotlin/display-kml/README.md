@@ -2,7 +2,7 @@
 
 Display KML from a URL, portal item, or local KML file.
 
-![Display KML App](display-kml.png)
+![Image of display KML](display-kml.png)
 
 ## Use case
 
@@ -10,15 +10,14 @@ Keyhole Markup Language (KML) is a data format used by Google Earth. KML is popu
 
 ## How to use the sample
 
-Use the drop-down menu to select a source. A KML file from that source will be loaded and displayed in the map.
-
-Before attempting to load a KML file from local storage, the file will have to be sideloaded onto the device. See [Offline Data](#offline-data).
+Use the overflow menu to select a source. A KML file from that source will be loaded and displayed in the map.
 
 ## How it works
+
 1. To create a KML layer from a URL, create a `KmlDataset` using the URL to the KML file. Then pass the data set to the `KmlLayer` constructor.
-1. To create a KML layer from a portal item, construct a `PortalItem` with a portal and the KML portal item. Pass the portal item to the `KmlLayer` constructor.
-1. To create a KML layer from a local file, create a `KmlDataset` using a path to the local KML file in external storage. Then pass the data set to the `KmlLayer` constructor.
-1. Add the layer as an operational layer to the map with `map.operationalLayers.add(kmlLayer)`.
+2. To create a KML layer from a portal item, construct a `PortalItem` with a portal and the KML portal item. Pass the portal item to the `KmlLayer` constructor.
+3. To create a KML layer from a local file, create a `KmlDataset` using a path to the local KML file in external storage. Then pass the data set to the `KmlLayer` constructor.
+4. Add the layer as an operational layer to the map with `map.operationalLayers.add(kmlLayer)`.
 
 ## Relevant API
 
@@ -26,17 +25,11 @@ Before attempting to load a KML file from local storage, the file will have to b
 * KmlLayer
 
 ## Offline Data
+
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=324e4742820e46cfbe5029ff2c32cb1f).
-1. Extract the contents of the downloaded zip file to disk.
-1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
-1. Execute the following command:
-`adb push US_State_Capitals.kml 
-/Android/data/com.esri.arcgisruntime.sample.displaykml/files/US_State_Capitals.kml`
-
-
-Link | Local Location
----------|-------|
-|[US State Capitals KML](https://arcgisruntime.maps.arcgis.com/home/item.html?id=324e4742820e46cfbe5029ff2c32cb1f)| /Android/data/com.esri.arcgisruntime.sample.displaykml/files/US_State_Capitals.kml |
+2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+3. Push the data into the scoped storage of the sample app:
+`adb push US_State_Capitals.kml /Android/data/com.esri.arcgisruntime.sample.displaykml/files/US_State_Capitals.kml`
 
 ## About the data
 
@@ -47,4 +40,5 @@ This sample displays three different KML files:
 * From PORTAL_ITEM - this is a map of U.S. states.
 
 ## Tags
+
 keyhole, KML, KMZ, OGC

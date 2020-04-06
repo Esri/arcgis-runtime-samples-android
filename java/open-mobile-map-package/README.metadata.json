@@ -14,7 +14,7 @@
         "https://www.arcgis.com/home/item.html?id=e1f3a7254cb845b09450f54937c16061"
     ],
     "provision_to": [
-        "/ArcGIS/samples/MapPackage/Yellowstone.mmpk"
+        "/Yellowstone.mmpk"
     ],
     "redirect_from": "/android/latest/sample-code/open-mobile-map-package.htm",
     "relevant_apis": [

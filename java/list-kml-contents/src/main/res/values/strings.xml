@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">List KML contents</string>
-    <string name="kmz_read_permission_denied">Read permission required to read KMZ file!</string>
-    <string name="kmz_data_path">/ArcGIS/Samples/KML/esri_test_data.kmz</string>
+    <string name="kmz_data_path">/esri_test_data.kmz</string>
     <string name="breadcrumb_initial_text">Click on a KML node below to explore it\'s child nodes…</string>
 </resources>

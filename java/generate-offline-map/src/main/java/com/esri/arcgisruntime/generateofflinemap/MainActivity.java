@@ -18,19 +18,14 @@ package com.esri.arcgisruntime.generateofflinemap;
 
 import java.io.File;
 
-import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
@@ -69,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
     // access button to take the map offline and disable it until map is loaded
     mTakeMapOfflineButton = findViewById(R.id.takeMapOfflineButton);
     mTakeMapOfflineButton.setEnabled(false);
-
-    requestWritePermission();
 
     // handle authentication with the portal
     AuthenticationManager.setAuthenticationChallengeHandler(new DefaultAuthenticationChallengeHandler(this));
@@ -128,16 +121,10 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     });
-  }
-
-  /**
-   * Use the generate offline map job to generate an offline map.
-   */
-  private void generateOfflineMap() {
 
     // create a progress dialog to show download progress
     ProgressDialog progressDialog = new ProgressDialog(this);
-    progressDialog.setTitle("Generate Offline Map Job");
+    progressDialog.setTitle("Generate offline map job");
     progressDialog.setMessage("Taking map offline...");
     progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     progressDialog.setIndeterminate(false);
@@ -148,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
       progressDialog.show();
 
       // delete any offline map already in the cache
-      String tempDirectoryPath = getCacheDir() + File.separator + "offlineMap";
+      String tempDirectoryPath = getExternalCacheDir() + File.separator + "offlineMap";
       deleteDirectory(new File(tempDirectoryPath));
 
       // specify the extent, min scale, and max scale as parameters
@@ -190,36 +177,6 @@ public class MainActivity extends AppCompatActivity {
       job.start();
     });
 
-  }
-
-  /**
-   *
-   */
-  private void requestWritePermission() {
-    // request write permission
-    String[] reqPermission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    // for API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      generateOfflineMap();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      generateOfflineMap();
-      Log.d(TAG, "permission granted");
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.offline_map_write_permission_denied), Toast.LENGTH_SHORT).show();
-    }
   }
 
   @Override

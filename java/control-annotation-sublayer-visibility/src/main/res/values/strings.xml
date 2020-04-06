@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Set annotation sublayer visibility</string>
     <string name="map_scale">Current map scale: 1:%1$d</string>
-    <string name="gas_device_anno_mmpk_path">/ArcGIS/Samples/MapPackage/GasDeviceAnno.mmpk</string>
+    <string name="gas_device_anno_mmpk_path">/GasDeviceAnno.mmpk</string>
     <string name="read_local_mmpk_denied_message">Read permissions is required to read the mobile map package</string>
 </resources>

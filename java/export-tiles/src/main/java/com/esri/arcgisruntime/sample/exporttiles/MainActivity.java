@@ -16,13 +16,10 @@
 
 package com.esri.arcgisruntime.sample.exporttiles;
 
-import java.io.File;
 import java.util.concurrent.ExecutionException;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,8 +28,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.TileCache;
 import com.esri.arcgisruntime.geometry.Envelope;
@@ -64,15 +59,6 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) != PackageManager.PERMISSION_GRANTED) {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
 
     // get references to ui elements
     mTileCachePreviewLayout = findViewById(R.id.mapPreviewLayout);
@@ -159,24 +145,11 @@ public class MainActivity extends AppCompatActivity {
     final ListenableFuture<ExportTileCacheParameters> parametersFuture = mExportTileCacheTask
         .createDefaultExportTileCacheParametersAsync(viewToExtent(), minScale, maxScale);
     parametersFuture.addDoneListener(() -> {
-      // create directory for file
-      File file = new File(getExternalFilesDir(null), getString(R.string.tile_cache_folder));
-      if (!file.exists()) {
-        boolean dirCreated = file.mkdirs();
-        if (dirCreated) {
-          Log.i(TAG, "Local TileCache directory created.");
-        } else {
-          Log.e(TAG, "Error creating local TileCache directory.");
-        }
-      } else {
-        Log.i(TAG, "No local TileCache directory created, one already exists.");
-      }
       try {
         // export tile cache to directory
         ExportTileCacheParameters parameters = parametersFuture.get();
-        mExportTileCacheJob = mExportTileCacheTask.exportTileCache(parameters,
-            getExternalFilesDir(null) + getString(R.string.tile_cache_folder)
-                + getString(R.string.world_street_map_tpk));
+        mExportTileCacheJob = mExportTileCacheTask
+            .exportTileCache(parameters, getCacheDir() + getString(R.string.world_street_map_tpk));
       } catch (InterruptedException e) {
         Log.e(TAG, "TileCacheParameters interrupted: " + e.getMessage());
       } catch (ExecutionException e) {

@@ -1,4 +1,5 @@
-/* Copyright 2018 Esri
+/*
+ * Copyright 2018 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +17,19 @@
 
 package com.esri.arcgisruntime.sample.readgeopackage;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
+import java.util.HashMap;
+import java.util.List;
+
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import com.esri.arcgisruntime.data.GeoPackage;
 import com.esri.arcgisruntime.data.GeoPackageFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -43,12 +42,7 @@ import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.raster.GeoPackageRaster;
 
-import java.util.HashMap;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
-
-  private static final String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
 
   private final static String TAG = MainActivity.class.getSimpleName();
 
@@ -89,17 +83,10 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.Type.STREETS, 39.7294, -104.8319, 11);
     mMapView.setMap(map);
 
-    requestPermissions();
-
-  }
-
-  private void readGeoPackage() {
-
     mLayersHashMap = new HashMap<>();
 
     // open and load the GeoPackage
-    GeoPackage geoPackage = new GeoPackage(
-        getExternalFilesDir(null) + getString(R.string.geopackage_path));
+    GeoPackage geoPackage = new GeoPackage(getExternalFilesDir(null) + getString(R.string.geopackage_path));
     geoPackage.loadAsync();
     geoPackage.addDoneLoadingListener(() -> {
       if (geoPackage.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
@@ -168,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         });
       }
       // open the drawer
-      mDrawerLayout.openDrawer(Gravity.START);
+      mDrawerLayout.openDrawer(GravityCompat.START);
     });
   }
 
@@ -189,38 +176,10 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  /**
-   * Request permissions on the device.
-   */
-  private void requestPermissions() {
-    int requestCode = 1;
-    // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      readGeoPackage();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      readGeoPackage();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getResources().getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
-    }
-  }
-
   @Override
   protected void onPause() {
-    super.onPause();
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
@@ -231,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     mMapView.dispose();
+    super.onDestroy();
   }
 }

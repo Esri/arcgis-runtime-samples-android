@@ -19,9 +19,7 @@ package com.esri.arcgisruntime.sample.offlinegeocode;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,10 +33,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.TileCache;
 import com.esri.arcgisruntime.geometry.Point;
@@ -90,13 +85,6 @@ public class MainActivity extends AppCompatActivity {
     // add a touch listener to the map view
     mMapView.setOnTouchListener(new CustomMapViewOnTouchListener(this, mMapView));
 
-    requestReadPermission();
-  }
-
-  /**
-   * Initialize variables.
-   */
-  private void setupOfflineMapGeocode() {
     // load the tile cache from local storage
     TileCache tileCache = new TileCache(getExternalFilesDir(null) + getString(R.string.san_diego_tpk));
     // use the tile cache extent to set the view point
@@ -117,12 +105,7 @@ public class MainActivity extends AppCompatActivity {
     mLocatorTask = new LocatorTask(
         getExternalFilesDir(null) + getResources().getString(R.string.san_diego_loc));
     mLocatorTask.loadAsync();
-  }
 
-  /**
-   * Define behavior of the app's search view.
-   */
-  private void setupSearchView() {
     mSearchView = findViewById(R.id.searchView);
     mSearchView.setIconifiedByDefault(true);
     mSearchView.setQueryHint(getString(R.string.search_hint));
@@ -280,55 +263,6 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Request read external storage for API level 23+.
-   */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      setupOfflineMapGeocode();
-      setupSearchView();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      setupOfflineMapGeocode();
-      setupSearchView();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.offline_geocode_read_permission_denied), Toast.LENGTH_SHORT).show();
-    }
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-  }
-
-  @Override
-  protected void onPause() {
-    mMapView.pause();
-    super.onPause();
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    mMapView.resume();
-  }
-
-  @Override
-  protected void onDestroy() {
-    mMapView.dispose();
-    super.onDestroy();
-  }
-
-  /**
    * Define a listener to handle drag events.
    */
   private class DragTouchListener extends DefaultMapViewOnTouchListener {
@@ -409,5 +343,23 @@ public class MainActivity extends AppCompatActivity {
       });
       return super.onSingleTapConfirmed(event);
     }
+  }
+
+  @Override
+  protected void onPause() {
+    mMapView.pause();
+    super.onPause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    mMapView.dispose();
+    super.onDestroy();
   }
 }

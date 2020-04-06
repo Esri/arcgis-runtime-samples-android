@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
         try {
           val parameters: ExportTileCacheParameters = parametersFuture.get()
           // create a temporary directory in the app's cache for saving exported tiles
-          val exportTilesDirectory = File(cacheDir, getString(R.string.tile_cache_folder))
+          val exportTilesDirectory = File(externalCacheDir, getString(R.string.tile_cache_folder))
           // export tiles to temporary cache on device
           exportTileCacheJob =
             exportTileCacheTask.exportTileCache(

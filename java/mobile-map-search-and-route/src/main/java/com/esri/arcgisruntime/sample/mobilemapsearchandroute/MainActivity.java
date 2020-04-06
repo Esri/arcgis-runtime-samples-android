@@ -1,4 +1,5 @@
-/* Copyright 2017 Esri
+/*
+ * Copyright 2017 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +17,12 @@
 
 package com.esri.arcgisruntime.sample.mobilemapsearchandroute;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,10 +31,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -62,8 +59,6 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult;
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask;
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop;
 
-import static com.esri.arcgisruntime.sample.mobilemapsearchandroute.R.layout.callout;
-
 /**
  * This class demonstrates offline functionality through the use of a mobile map package (mmpk).
  * <p>
@@ -75,14 +70,11 @@ import static com.esri.arcgisruntime.sample.mobilemapsearchandroute.R.layout.cal
  */
 public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
-  private static GraphicsOverlay mMarkerGraphicsOverlay;
-  private static GraphicsOverlay mRouteGraphicsOverlay;
-  private static RouteTask mRouteTask;
-  private static RouteParameters mRouteParameters;
-  private final ArrayList<MapPreview> mMapPreviews = new ArrayList<>();
-  private final String[] reqPermission = new String[] {
-      Manifest.permission.WRITE_EXTERNAL_STORAGE
-  };
+  private GraphicsOverlay mMarkerGraphicsOverlay;
+  private GraphicsOverlay mRouteGraphicsOverlay;
+  private RouteTask mRouteTask;
+  private RouteParameters mRouteParameters;
+  private ArrayList<MapPreview> mMapPreviews = new ArrayList<>();
   private MobileMapPackage mMobileMapPackage;
   private MapView mMapView;
   private String mMMPkTitle;
@@ -94,30 +86,25 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    //initialize reverse geocode params
+    // initialize reverse geocode params
     mReverseGeocodeParameters = new ReverseGeocodeParameters();
     mReverseGeocodeParameters.setMaxResults(1);
     mReverseGeocodeParameters.getResultAttributeNames().add("*");
-    //retrieve the MapView from layout
+    // retrieve the MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
-    //add route and marker overlays to map view
+    // add route and marker overlays to map view
     mMarkerGraphicsOverlay = new GraphicsOverlay();
     mRouteGraphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(mRouteGraphicsOverlay);
     mMapView.getGraphicsOverlays().add(mMarkerGraphicsOverlay);
-    // build the file path to access the mobile map package
-    String filePathMMPk = buildMMPkPath();
     // add the map from the mobile map package to the MapView
-    loadMobileMapPackage(filePathMMPk);
+    loadMobileMapPackage(getExternalFilesDir(null) + getString(R.string.san_francisco_mmpk));
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
 
       @Override
       public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-        Log.d(TAG, "onSingleTapConfirmed: " + motionEvent.toString());
         // get the point that was clicked and convert it to a point in map coordinates
-        android.graphics.Point screenPoint = new android.graphics.Point(
-            Math.round(motionEvent.getX()),
-            Math.round(motionEvent.getY()));
+        android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY()));
         // create a map point from screen point
         Point mapPoint = mMapView.screenToLocation(screenPoint);
         geoView(screenPoint, mapPoint);
@@ -128,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    //create button in action bar to allow user to access MapChooserActivity
+    // create button in action bar to allow user to access MapChooserActivity
     MenuInflater inflater = getMenuInflater();
     inflater.inflate(R.menu.map_preview_list, menu);
     return super.onCreateOptionsMenu(menu);
@@ -138,11 +125,11 @@ public class MainActivity extends AppCompatActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     final int MAP_CHOSEN_RESULT = 1;
     Intent mapChooserIntent = new Intent(getApplicationContext(), MapChooserActivity.class);
-    //pass the list of mapPreviews
+    // pass the list of mapPreviews
     mapChooserIntent.putExtra("map_previews", mMapPreviews);
-    //pass the mobile map package title
+    // pass the mobile map package title
     mapChooserIntent.putExtra("MMPk_title", mMMPkTitle);
-    //start MapChooserActivity to determine user's chosen map number
+    // start MapChooserActivity to determine user's chosen map number
     startActivityForResult(mapChooserIntent, MAP_CHOSEN_RESULT);
     return super.onOptionsItemSelected(item);
   }
@@ -150,163 +137,118 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (data != null) {
-      //get the map number chosen in MapChooserActivity and load that map
+      // get the map number chosen in MapChooserActivity and load that map
       int mapNum = data.getIntExtra("map_num", -1);
       loadMap(mapNum);
-      //dismiss any callout boxes
+      // dismiss any callout boxes
       if (mCallout != null) {
         mCallout.dismiss();
       }
-      //clear any existing graphics
+      // clear any existing graphics
       mMarkerGraphicsOverlay.getGraphics().clear();
       mRouteGraphicsOverlay.getGraphics().clear();
     }
     super.onActivityResult(requestCode, resultCode, data);
   }
 
-  @Override
-  protected void onPause() {
-    super.onPause();
-    mMapView.pause();
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    mMapView.resume();
-  }
-
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    mMapView.dispose();
-  }
-
   /**
-   * Builds the path to the mobile map package on the device
-   *
-   * @return the assembled path
-   */
-  private String buildMMPkPath() {
-    // get sdcard resource name
-    File extStorDir = getExternalFilesDir(null);
-    // get the directory
-    String extSDCardDirName =
-        this.getResources().getString(R.string.config_data_sdcard_offline_dir);
-    // get mobile map package filename
-    String filename = this.getString(R.string.config_mmpk_name);
-    // create the full path to the mobile map package file
-    return extStorDir.getAbsolutePath()
-        + File.separator
-        + extSDCardDirName
-        + File.separator
-        + filename
-        + ".mmpk";
-  }
-
-  /**
-   * Handles read/write external storage permissions (for API 23+) and loads mobile map package
+   * Loads a mobile map package and map previews.
    *
    * @param path to location of mobile map package on device
    */
   private void loadMobileMapPackage(String path) {
-    //for API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(getApplicationContext(),
-        reqPermission[0]) != PackageManager.PERMISSION_GRANTED) {
-      //request permission
-      int requestCode = 2;
-      ActivityCompat.requestPermissions(
-          MainActivity.this, reqPermission, requestCode);
-    }
-    //create the mobile map package
+    // create the mobile map package
     mMobileMapPackage = new MobileMapPackage(path);
-    //load the mobile map package asynchronously
+    // load the mobile map package asynchronously
     mMobileMapPackage.loadAsync();
-    //add done listener which will load when package has maps
-    mMobileMapPackage.addDoneLoadingListener(new Runnable() {
-      @Override
-      public void run() {
-        //check load status and that the mobile map package has maps
-        if (mMobileMapPackage.getLoadStatus() == LoadStatus.LOADED &&
-            mMobileMapPackage.getMaps().size() > 0) {
-          mLocatorTask = mMobileMapPackage.getLocatorTask();
-          //default to display of first map in package
-          loadMap(0);
-          loadMapPreviews();
-        } else {
-          //log an issue if the mobile map package fails to load
-          Log.e(TAG, mMobileMapPackage.getLoadError().getMessage());
-        }
+    // add done listener which will load when package has maps
+    mMobileMapPackage.addDoneLoadingListener(() -> {
+      // check load status and that the mobile map package has maps
+      if (mMobileMapPackage.getLoadStatus() == LoadStatus.LOADED && !mMobileMapPackage.getMaps().isEmpty()) {
+        mLocatorTask = mMobileMapPackage.getLocatorTask();
+        // default to display of first map in package
+        loadMap(0);
+        loadMapPreviews();
+      } else {
+        String error = "Mobile map package failed to load: " + mMobileMapPackage.getLoadError().getMessage();
+        Log.e(TAG, error);
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
       }
     });
   }
 
   /**
-   * Loads map from the mobile map package for a given index
+   * Loads map from the mobile map package for a given index.
    *
    * @param mapNum index of map in mobile map package
    */
   private void loadMap(int mapNum) {
     ArcGISMap map = mMobileMapPackage.getMaps().get(mapNum);
-    //if map contains transport network setup route task
-    if (map.getTransportationNetworks().size() > 0) {
-      setupRouteTask(map);
-    } else {
-      //only allow routing on map with transport networks
+    // check if the map contains transport networks
+    if (map.getTransportationNetworks().isEmpty()) {
+      // only allow routing on map with transport networks
       mRouteTask = null;
+    } else {
+      mRouteTask = new RouteTask(this, map.getTransportationNetworks().get(0));
+      try {
+        mRouteParameters = mRouteTask.createDefaultParametersAsync().get();
+      } catch (ExecutionException | InterruptedException e) {
+        String error = "Error creating route task default parameters: " + e.getMessage();
+        Log.e(TAG, error);
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+      }
     }
     mMapView.setMap(map);
   }
 
   /**
-   * generates and populates the mapPreview models from information in the mobile map package
+   * Generates and populates the map preview models from information in the mobile map package.
    */
   private void loadMapPreviews() {
-    //set mobile map package title
+    // set mobile map package title
     mMMPkTitle = mMobileMapPackage.getItem().getTitle();
-    //for each map in the mobile map package, pull out relevant thumbnail information
+    // for each map in the mobile map package, pull out relevant thumbnail information
     for (int i = 0; i < mMobileMapPackage.getMaps().size(); i++) {
       ArcGISMap currMap = mMobileMapPackage.getMaps().get(i);
       final MapPreview mapPreview = new MapPreview();
-      //set map number
+      // set map number
       mapPreview.setMapNum(i);
-      //set map title. If null use the index of the list of maps to name each map Map #
+      // set map title. If null use the index of the list of maps to name each map Map #
       if (currMap.getItem() != null && currMap.getItem().getTitle() != null) {
         mapPreview.setTitle(currMap.getItem().getTitle());
       } else {
         mapPreview.setTitle("Map " + i);
       }
-      //set map description. If null use package description instead
+      // set map description. If null use package description instead
       if (currMap.getItem() != null && currMap.getItem().getDescription() != null) {
         mapPreview.setDesc(currMap.getItem().getDescription());
       } else {
         mapPreview.setDesc(mMobileMapPackage.getItem().getDescription());
       }
-      //check if map has transport data
-      if (currMap.getTransportationNetworks().size() > 0) {
+      // check if map has transport data
+      if (!currMap.getTransportationNetworks().isEmpty()) {
         mapPreview.setTransportNetwork(true);
       }
-      //check if map has geocoding data
+      // check if map has geocoding data
       if (mMobileMapPackage.getLocatorTask() != null) {
         mapPreview.setGeocoding(true);
       }
-      //set map preview thumbnail
+      // set map preview thumbnail
       final ListenableFuture<byte[]> thumbnailAsync;
       if (currMap.getItem() != null && currMap.getItem().fetchThumbnailAsync() != null) {
         thumbnailAsync = currMap.getItem().fetchThumbnailAsync();
       } else {
         thumbnailAsync = mMobileMapPackage.getItem().fetchThumbnailAsync();
       }
-      thumbnailAsync.addDoneListener(new Runnable() {
-        @Override
-        public void run() {
-          if (thumbnailAsync.isDone()) {
-            try {
-              mapPreview.setThumbnailByteStream(thumbnailAsync.get());
-              mMapPreviews.add(mapPreview);
-            } catch (InterruptedException | ExecutionException e) {
-              e.printStackTrace();
-            }
+      thumbnailAsync.addDoneListener(() -> {
+        if (thumbnailAsync.isDone()) {
+          try {
+            mapPreview.setThumbnailByteStream(thumbnailAsync.get());
+            mMapPreviews.add(mapPreview);
+          } catch (InterruptedException | ExecutionException e) {
+            String error = "Error getting thumbnail: " + e.getMessage();
+            Log.e(TAG, error);
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
           }
         }
       });
@@ -314,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Defines a graphic symbol which represents geocoded locations
+   * Defines a graphic symbol which represents geocoded locations.
    *
    * @return the stop graphic
    */
@@ -327,15 +269,14 @@ public class MainActivity extends AppCompatActivity {
 
   /**
    * Defines a composite symbol consisting of the SimpleMarkerSymbol and a text symbol
-   * representing the index of a stop in a route
+   * representing the index of a stop in a route.
    *
    * @param simpleMarkerSymbol a SimpleMarkerSymbol which represents the background of the
    *                           composite symbol
    * @param index              number which corresponds to the stop number in a route
    * @return the composite symbol
    */
-  private CompositeSymbol compositeSymbolForStopGraphic(
-      SimpleMarkerSymbol simpleMarkerSymbol, Integer index) {
+  private CompositeSymbol compositeSymbolForStopGraphic(SimpleMarkerSymbol simpleMarkerSymbol, Integer index) {
     TextSymbol textSymbol = new TextSymbol(12, index.toString(), Color.BLACK,
         TextSymbol.HorizontalAlignment.CENTER, TextSymbol.VerticalAlignment.MIDDLE);
     List<Symbol> compositeSymbolList = new ArrayList<>();
@@ -344,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * For a given point, returns a graphic
+   * For a given point, returns a graphic.
    *
    * @param point           map point
    * @param isIndexRequired true if used in a route
@@ -352,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
    * @return a Graphic at point with either a simple or composite symbol
    */
   private Graphic graphicForPoint(Point point, boolean isIndexRequired, Integer index) {
-    //make symbol composite if an index is required
+    // make symbol composite if an index is required
     Symbol symbol;
     if (isIndexRequired && index != null) {
       symbol = compositeSymbolForStopGraphic(simpleSymbolForStopGraphic(), index);
@@ -363,13 +304,13 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Shows the callout for a given graphic
+   * Shows the callout for a given graphic.
    *
    * @param graphic     the graphic selected by the user
    * @param tapLocation the location selected at a Point
    */
   private void showCalloutForGraphic(Graphic graphic, Point tapLocation) {
-    TextView calloutTextView = (TextView) getLayoutInflater().inflate(callout, null);
+    TextView calloutTextView = (TextView) getLayoutInflater().inflate(R.layout.callout, null);
     calloutTextView.setText(graphic.getAttributes().get("Match_addr").toString());
     mCallout = mMapView.getCallout();
     mCallout.setLocation(tapLocation);
@@ -390,31 +331,29 @@ public class MainActivity extends AppCompatActivity {
       if (mRouteTask == null) {
         mMarkerGraphicsOverlay.getGraphics().clear();
       }
-      final ListenableFuture<IdentifyGraphicsOverlayResult> result =
-          mMapView.identifyGraphicsOverlayAsync(
-              mMarkerGraphicsOverlay, screenPoint, 12, false);
-      result.addDoneListener(new Runnable() {
-        public void run() {
-          try {
-            Graphic graphic;
-            if (result.isDone() && result.get().getGraphics().size() == 0) {
-              if (mRouteTask != null) {
-                int index = mMarkerGraphicsOverlay.getGraphics().size() + 1;
-                graphic = graphicForPoint(mapPoint, true, index);
-              } else {
-                graphic = graphicForPoint(mapPoint, false, null);
-              }
-              mMarkerGraphicsOverlay.getGraphics().add(graphic);
-              reverseGeocode(mapPoint, graphic);
-              route();
-            } else if (result.isDone()) {
-              //if graphic exists within screenPoint tolerance, show callout
-              //information of clicked graphic
-              reverseGeocode(mapPoint, result.get().getGraphics().get(0));
+      final ListenableFuture<IdentifyGraphicsOverlayResult> identifyGraphicsResult =
+          mMapView.identifyGraphicsOverlayAsync(mMarkerGraphicsOverlay, screenPoint, 12, false);
+      identifyGraphicsResult.addDoneListener(() -> {
+        try {
+          Graphic graphic;
+          if (identifyGraphicsResult.isDone() && identifyGraphicsResult.get().getGraphics().isEmpty()) {
+            if (mRouteTask != null) {
+              int index = mMarkerGraphicsOverlay.getGraphics().size() + 1;
+              graphic = graphicForPoint(mapPoint, true, index);
+            } else {
+              graphic = graphicForPoint(mapPoint, false, null);
             }
-          } catch (Exception e) {
-            e.printStackTrace();
+            mMarkerGraphicsOverlay.getGraphics().add(graphic);
+            reverseGeocode(mapPoint, graphic);
+            route();
+          } else if (identifyGraphicsResult.isDone()) {
+            // if graphic exists within screenPoint tolerance, show callout information of clicked graphic
+            reverseGeocode(mapPoint, identifyGraphicsResult.get().getGraphics().get(0));
           }
+        } catch (Exception e) {
+          String error = "Error getting identify graphics result: " + e.getMessage();
+          Log.e(TAG, error);
+          Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         }
       });
     }
@@ -422,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
 
   /**
    * Calls reverseGeocode on a Locator Task and, if there is a result, passes the result to a
-   * Callout method
+   * method which shows callouts.
    *
    * @param point   user generated map point
    * @param graphic used for marking the point on which the user touched
@@ -431,102 +370,88 @@ public class MainActivity extends AppCompatActivity {
     if (mLocatorTask != null) {
       final ListenableFuture<List<GeocodeResult>> results =
           mLocatorTask.reverseGeocodeAsync(point, mReverseGeocodeParameters);
-      results.addDoneListener(new Runnable() {
-        public void run() {
-          try {
-            List<GeocodeResult> geocodeResult = results.get();
-            if (geocodeResult.size() > 0) {
-              graphic.getAttributes().put(
-                  "Match_addr", geocodeResult.get(0).getLabel());
-              showCalloutForGraphic(graphic, point);
-            } else {
-              //no result was found
-              mMapView.getCallout().dismiss();
-            }
-          } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+      results.addDoneListener(() -> {
+        try {
+          List<GeocodeResult> geocodeResult = results.get();
+          if (geocodeResult.isEmpty()) {
+            // no result was found
+            mMapView.getCallout().dismiss();
+          } else {
+            graphic.getAttributes().put("Match_addr", geocodeResult.get(0).getLabel());
+            showCalloutForGraphic(graphic, point);
           }
+        } catch (InterruptedException | ExecutionException e) {
+          String error = "Error getting geocode result: " + e.getMessage();
+          Log.e(TAG, error);
+          Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         }
       });
     }
   }
 
   /**
-   * Given an ArcGISMap with a transport network, create a new RouteTask
-   *
-   * @param map a map with a transport network
-   */
-  private void setupRouteTask(ArcGISMap map) {
-    mRouteTask = new RouteTask(this, map.getTransportationNetworks().get(0));
-    try {
-      getDefaultParameters();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * Get default RouteTask parameters
-   */
-  private void getDefaultParameters() {
-    try {
-      mRouteParameters = mRouteTask.createDefaultParametersAsync().get();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * Uses the last two markers drawn to calculate a route between them
+   * Uses the last two markers drawn to calculate a route between them.
    */
   private void route() {
     if (mMarkerGraphicsOverlay.getGraphics().size() > 1 && mRouteParameters != null) {
-      //create stops for last and second to last graphic
+      // create stops for last and second to last graphic
       int size = mMarkerGraphicsOverlay.getGraphics().size();
       List<Graphic> graphics = new ArrayList<>();
       Graphic lastGraphic = mMarkerGraphicsOverlay.getGraphics().get(size - 1);
       graphics.add(lastGraphic);
       Graphic secondLastGraphic = mMarkerGraphicsOverlay.getGraphics().get(size - 2);
       graphics.add(secondLastGraphic);
-      List stops = stopsForGraphics(graphics);
-      //add stops to the parameters
-      mRouteParameters.getStops().clear();
-      mRouteParameters.getStops().addAll(stops);
-      //route
-      final ListenableFuture<RouteResult> routeResult =
-          mRouteTask.solveRouteAsync(mRouteParameters);
-      routeResult.addDoneListener(new Runnable() {
-        public void run() {
-          try {
-            Route route = routeResult.get().getRoutes().get(0);
-            Graphic routeGraphic = new Graphic(route.getRouteGeometry(),
-                new SimpleLineSymbol(
-                    SimpleLineSymbol.Style.SOLID, Color.BLUE, 5.0f));
-            mRouteGraphicsOverlay.getGraphics().add(routeGraphic);
-          } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            //if routing is interrupted, remove last graphic
-            Log.e(TAG, "Routing interrupted. Removing last graphic");
-            mMarkerGraphicsOverlay.getGraphics().remove(
-                mMarkerGraphicsOverlay.getGraphics().size() - 1);
-          }
+      // add stops to the parameters
+      mRouteParameters.setStops(stopsForGraphics(graphics));
+      final ListenableFuture<RouteResult> routeResult = mRouteTask.solveRouteAsync(mRouteParameters);
+      routeResult.addDoneListener(() -> {
+        try {
+          Route route = routeResult.get().getRoutes().get(0);
+          Graphic routeGraphic = new Graphic(route.getRouteGeometry(),
+              new SimpleLineSymbol(
+                  SimpleLineSymbol.Style.SOLID, Color.BLUE, 5.0f));
+          mRouteGraphicsOverlay.getGraphics().add(routeGraphic);
+        } catch (InterruptedException | ExecutionException e) {
+          String error = "Error getting route result: " + e.getMessage();
+          Log.e(TAG, error);
+          Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+          // if routing is interrupted, remove last graphic
+          mMarkerGraphicsOverlay.getGraphics().remove(mMarkerGraphicsOverlay.getGraphics().size() - 1);
         }
       });
     }
   }
 
   /**
-   * Converts a given list of graphics into a list of stops
+   * Converts a given list of graphics into a list of stops.
    *
-   * @param graphics
+   * @param graphics to be converted to stops
    * @return a list of stops
    */
-  private List stopsForGraphics(List<Graphic> graphics) {
+  private List<Stop> stopsForGraphics(List<Graphic> graphics) {
     List<Stop> stops = new ArrayList<>();
     for (Graphic graphic : graphics) {
       Stop stop = new Stop((Point) graphic.getGeometry());
       stops.add(stop);
     }
     return stops;
+  }
+
+  @Override
+  protected void onPause() {
+    mMapView.pause();
+    super.onPause();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    mMapView.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    mMapView.dispose();
+    super.onDestroy();
   }
 }

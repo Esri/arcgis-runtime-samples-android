@@ -23,9 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -40,11 +38,8 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -67,8 +62,6 @@ import com.esri.arcgisruntime.symbology.SymbolStyleSearchResult;
 public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTapListener {
 
   private static final String TAG = MainActivity.class.getSimpleName();
-  private static final int PERM_REQUEST_CODE = 1;
-  private static final String[] PERMISSIONS = { Manifest.permission.READ_EXTERNAL_STORAGE };
 
   private RecyclerView mEyesRecyclerView;
   private RecyclerView mMouthRecyclerView;
@@ -152,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
 
     setupRecyclerViews();
 
-    requestPermissions();
+    loadSymbolsFromStyleFile();
   }
 
   /**
@@ -409,33 +402,6 @@ public class MainActivity extends AppCompatActivity implements OnSymbolPreviewTa
     };
 
     runOnUiThread(() -> handler.postDelayed(startScrollRunnable, 2000));
-  }
-
-  /**
-   * Request permissions on the device.
-   */
-  private void requestPermissions() {
-    // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(this, PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED) {
-      loadSymbolsFromStyleFile();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, PERMISSIONS, PERM_REQUEST_CODE);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      loadSymbolsFromStyleFile();
-    } else {
-      // report to user that permission was denied
-      logErrorToUser(this, getResources().getString(R.string.error_read_permission_denied));
-    }
   }
 
   @Override

@@ -2,7 +2,7 @@
 
 Use annotation sublayers to gain finer control of annotation layer subtypes.
 
-![Control annotation sublayer visibility App](control-annotation-sublayer-visibility.png)
+![Image of control annotation sublayer visibility](control-annotation-sublayer-visibility.png)
 
 ## Use case
 
@@ -12,10 +12,7 @@ An annotation dataset which marks valves as "Opened" or "Closed", might be set t
 
 ## How to use the sample
 
-Start the sample and take note of the visibility of the annotation. Zoom in and out to see the annotation turn on and off based on scale ranges set on the data. The scale ranges were set by the map's author using ArcGIS Pro:
-
-* The "Open" annotation sublayer has its maximum scale set to 1:500 and its minimum scale set to 1:2000.
-* The "Closed" annotation sublayer has no minimum or maximum scales set, so will be drawn at all scales.
+Start the sample and take note of the visibility of the annotation. Zoom in and out to see the annotation turn on and off based on scale ranges set on the data.
 
 Use the checkboxes to manually set "Open" and "Closed" annotation sublayers visibility to on or off.
 
@@ -29,7 +26,7 @@ Use the checkboxes to manually set "Open" and "Closed" annotation sublayers visi
   * Set the "Open" annotation sublayer checkbox text to:
      * Black, when the layer is drawn at the current map scale
      * Light gray, when the layer is not drawn at the current map scale
- 
+
 ## Relevant API
 
 * AnnotationLayer
@@ -39,19 +36,16 @@ Use the checkboxes to manually set "Open" and "Closed" annotation sublayers visi
 ## Offline Data
 
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=b87307dcfb26411eb2e92e1627cb615b).
-2. Extract the contents of the downloaded zip file to disk.
-3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
-4. Execute the following command:
-`adb push GasDeviceAnno.mmpk /sdcard/ArcGIS/Samples/MapPackage/GasDeviceAnno.mmpk`
+2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+3. Push the data into the scoped storage of the sample app:
+`adb push GasDeviceAnno.mmpk /Android/data/com.esri.arcgisruntime.sample.controlannotationsublayervisibility/files/GasDeviceAnno.mmpk`
 
+## About the data
 
-Link | Local Location
----------|-------|
-|[Gas Device Anno Mobile Map Package](https://arcgisruntime.maps.arcgis.com/home/item.html?id=b87307dcfb26411eb2e92e1627cb615b)| `<sdcard>`/ArcGIS/Samples/MapPackage/GasDeviceAnno.mmpk|
+ The scale ranges were set by the map's author using ArcGIS Pro:
+* The "Open" annotation sublayer has its maximum scale set to 1:500 and its minimum scale set to 1:2000.
+* The "Closed" annotation sublayer has no minimum or maximum scales set, so will be drawn at all scales.
 
-#### Tags
-Visualization
-Annotation
-utilities
-text
-scale
+## Tags
+
+annotation, scale, text, utilities, visualization

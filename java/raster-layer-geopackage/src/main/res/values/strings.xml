@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">Raster Layer GeoPackage</string>
-    <string name="geopackage_path">/ArcGIS/Samples/GeoPackage/AuroraCO.gpkg</string>
-    <string name="read_permission_denied">GeoPackage could not be opened because READ permission was denied.
-    </string>
+    <string name="app_name">Raster layer GeoPackage</string>
+    <string name="geopackage_path">/AuroraCO.gpkg</string>
 </resources>

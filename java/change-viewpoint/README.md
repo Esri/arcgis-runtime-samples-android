@@ -1,25 +1,44 @@
-# Change Viewpoint
-Set the ViewPoint of a map. 
+# Change viewpoint
 
-![Change Viewpoint](change-viewpoint.png)
+Set the map view to a new viewpoint.
+
+![Image of change viewpoint](change-viewpoint.png)
+
+## Use case
+
+Programmatically navigate to a specified location in the map or scene. Use this to focus on a particular point or area of interest.
 
 ## How to use the sample
-Three methods are demonstrated to change the view point namely:
-* Geometry: Zoom to a real-world feature - Griffith Park by creating geometry from JSON file.
-* Center and Scale: Zoom to Waterloo.
-* Animation: Set the map views's viewpoint to London with a ten second duration  .
+
+The map view has several methods for setting its current viewpoint. Select a viewpoint from the UI to see the viewpoint changed using that method.
 
 ## How it works
-1. Create a `Point` and use it to create a `Viewpoint`.
-1. Set the `MapView`'s viewpoint with `setViewPointWithDurationAsync` or `setViewpointCenterWithScaleAsync`.
+
+1. Create a new `ArcGISMap` object and set it to the `MapView` object.
+2. Change the map's `Viewpoint` using one of the available methods:
+  * Use `MapView.setViewpointAsync()` to pan to a viewpoint over the specified length of time.
+  * Use `MapView.setViewpointCenterAsync()` to center the viewpoint on a `Point` and set a distance from the ground using a scale.
+  * Use `MapView.setViewpointGeometryAsync()` to set the viewpoint to a given `Geometry`.
 
 ## Relevant API
-* MapView
-* setViewpointCenterWithScaleAsync
-* setViewpointGeometryAsync
-* setViewpointWithDurationAsync
-* setViewpointCenterWithScaleAsync
-* SpatialReference
 
-#### Tags
-MapViews, SceneViews and UI
+* ArcGISMap
+* Geometry
+* MapView
+* Point
+* Viewpoint
+
+## Additional information
+
+Below are some other ways to set a viewpoint:
+
+* setViewpoint
+* setViewpointAsync
+* setViewpointCenterAsync
+* setViewpointGeometryAsync
+* setViewpointRotationAsync
+* setViewpointScaleAsync
+
+## Tags
+
+animate, extent, pan, rotate, scale, view, zoom

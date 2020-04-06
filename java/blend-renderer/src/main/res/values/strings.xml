@@ -1,13 +1,11 @@
 <resources>
     <string name="app_name">Blend Renderer</string>
-    <string name="location_permission_denied">Blend Renderer could not open the raster because WRITE permission was denied.</string>
     <string name="chooseParam">Edit renderer</string>
     <string name="dialog_title">Blend rendering parameters</string>
     <string name="altitude_text">Altitude</string>
     <string name="azimuth_text">Azimuth</string>
     <string name="slope_type_text">Slope type</string>
     <string name="color_ramp_text">Color ramp type</string>
-    <string name="data_sdcard_offline_dir">ArcGIS/samples/raster</string>
-    <string name="imagery_raster_name">Shasta</string>
-    <string name="elevation_raster_name">Shasta_Elevation</string>
+    <string name="imagery_raster_name">/Shasta.tif</string>
+    <string name="elevation_raster_name">/Shasta_Elevation.tif</string>
 </resources>

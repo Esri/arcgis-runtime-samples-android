@@ -24,18 +24,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.ExecutionException;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -73,13 +68,8 @@ public class MainActivity extends AppCompatActivity {
     mUpdateSizeTextView = findViewById(R.id.updateSizeTextView);
     mApplyScheduledUpdatesButton = findViewById(R.id.applyScheduledUpdatesButton);
 
-    requestReadPermission();
-  }
-
-  private void applyScheduledUpdate() {
-
     // this is the original mmpk, not updated by the scheduled update
-    File originalMmpk = new File(getExternalFilesDir(null) + getString(R.string.canyonlands_mmpk_path));
+    File originalMmpk = new File(getExternalFilesDir(null) + getString(R.string.canyonlands_folder));
     // copy of the mmpk file which will have the update applied to it
     mCopyOfMmpk = new File(getCacheDir() + getString(R.string.canyonlands_folder));
 
@@ -227,34 +217,6 @@ public class MainActivity extends AppCompatActivity {
       mUpdateSizeTextView.setText(getString(R.string.update_size_na));
       mApplyScheduledUpdatesButton.setEnabled(false);
     }
-  }
-
-  /**
-   * Request read external storage for API level 23+.
-   */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      applyScheduledUpdate();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      applyScheduledUpdate();
-    } else {
-      Toast.makeText(this, getString(R.string.canyonlands_mmpk_read_permission_denied), Toast.LENGTH_SHORT).show();
-    }
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
   @Override

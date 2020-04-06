@@ -15,7 +15,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=b87307dcfb26411eb2e92e1627cb615b"
     ],
     "provision_to": [
-        "/ArcGIS/Samples/MapPackage/GasDeviceAnno.mmpk"
+        "/GasDeviceAnno.mmpk"
     ],
     "redirect_from": "",
     "relevant_apis": [

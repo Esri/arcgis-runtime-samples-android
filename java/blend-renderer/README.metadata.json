@@ -19,8 +19,8 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=caeef9aa78534760b07158bb8e068462"
     ],
     "provision_to": [
-        "/ArcGIS/samples/raster/Shasta.tif",
-        "/ArcGIS/samples/raster/Shasta_Elevation.tif"
+        "/Shasta.tif",
+        "/Shasta_Elevation.tif"
     ],
     "redirect_from": "/android/latest/sample-code/blend-renderer.htm",
     "relevant_apis": [

@@ -16,7 +16,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=324e4742820e46cfbe5029ff2c32cb1f"
     ],
     "provision_to": [
-        "/ArcGIS/Samples/KML/US_State_Capitals.kml"
+        "/US_State_Capitals.kml"
     ],
     "redirect_from": "/android/latest/sample-code/display-kml.htm",
     "relevant_apis": [

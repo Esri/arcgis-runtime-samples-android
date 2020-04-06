@@ -1,19 +1,32 @@
-# Raster Layer Service
-Create an `ImageServiceRaster` and add it to a `RasterLayer`. An `ImageServiceRaster` allows you to work with an image map service exposed by the ArcGIS Server Rest API.
+# Raster layer (service)
 
-![Raster Layer Service App](raster-layer-service.png)
+Create a raster layer from a raster image service.
+
+![Image of raster layer service](raster-layer-service.png)
+
+## Use case
+
+Accessing a raster image from an online service can be useful for analysing the most up-to-date data available for an area. For example, retrieving recent results of bathymetry surveys within a shipping channel monitored for its sediment build-up would allow planners to assess dredging needs.
 
 ## How to use the sample
-Simply run the app.
+
+Simply launch the sample to see a raster from an image service being used on a map.
 
 ## How it works
-1. Create an `ImageServiceRaster` from a service url as `String`.
-1. Create a `RasterLayer` from the `ImageServiceRaster`.
-1. Add it as an operational layer with `map.getOperationalLayers().add(rasterLayer)`.
+
+1. Create an `ImageServiceRaster` using the service's URL.
+2. Create a `RasterLayer` from the image service raster.
+3. Add the raster layer to the map with `map.getOperationalLayers().add(rasterLayer)`.
+
+## About the data
+
+This sample uses a [NOAA raster image service](https://gis.ngdc.noaa.gov/arcgis/rest/services/bag_hillshades/ImageServer). The service computes a hillshade image from the depth (in meters) of U.S. coastal waters.
 
 ## Relevant API
-* Raster
-* RasterLayer
 
-#### Tags
-Layers
+*  ImageServiceRaster
+*  RasterLayer
+
+## Tags
+
+image service, raster

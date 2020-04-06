@@ -1,18 +1,30 @@
-# Simple Marker Symbol
-Add a graphic to a graphics overlay with a symbol of a red point specified via a simple marker symbol.
+# Simple marker symbol
 
-![Simple Marker Symbol App](simple-marker-symbol.png)
+Show a simple marker symbol on a map.
+
+![Image of simple marker symbol](simple-marker-symbol.png)
+
+## Use case
+
+Customize the appearance of a point suitable for the data. For example, a point on the map styled with a circle could represent a drilled borehole location, whereas a cross could represent the location of an old coal mine shaft.
 
 ## How to use the sample
-Simply run the app.
+
+The sample loads with a predefined simple marker symbol, set as a red circle.
 
 ## How it works
-A point geometry is created from some known coordinates, a simple marker symbol is constructed and both are set on a graphic. The graphic is added to a graphics overlay in the map view so that it is visible.
+
+1.  Create a `SimpleMarkerSymbol`.
+2.  Create a `Graphic` passing in a `Point` and the simple marker symbol as parameters. 
+3.  Add the graphic to the graphics overlay with `graphicsOverlay.getGraphics().add(graphic)`.
 
 ## Relevant API
-* Graphic
-* GraphicsOverlay
-* SimpleMarkerSymbol
 
-#### Tags
-Visualization
+*   Graphic
+*   GraphicsOverlay
+*   Point
+*   SimpleMarkerSymbol
+
+## Tags
+
+symbol, visualization

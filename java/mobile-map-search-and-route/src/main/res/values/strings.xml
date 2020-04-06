@@ -5,4 +5,5 @@
     <string name="no_transport">No transport network</string>
     <string name="has_geotag">Has geotagging</string>
     <string name="no_geotag">No geotagging</string>
+    <string name="san_francisco_mmpk">/SanFrancisco.mmpk</string>
 </resources>
