@@ -22,9 +22,12 @@ import android.widget.ToggleButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReference;
+import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -56,12 +59,21 @@ public class MainActivity extends AppCompatActivity {
         getString(R.string.elevation_image_service));
     scene.getBaseSurface().getElevationSources().add(elevationSource);
 
-    // add a camera and initial camera position
-    Camera camera = new Camera(53.05, -4.01, 1115, 299, 88, 0);
-    mSceneView.setViewpointCamera(camera);
+    // create a scene layer from the Brest, France scene server
+    ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(getString(R.string.scene_layer_service));
+    scene.getOperationalLayers().add(sceneLayer);
 
-    // create point for graphic location
-    Point point = new Point(-4.04, 53.06, 1000, camera.getLocation().getSpatialReference());
+    // set an initial viewpoint
+    Point initialViewPoint = new Point(-4.45968, 48.3889, 37.9922);
+    Camera camera = new Camera(initialViewPoint, 329.91, 96.6632, 0);
+    Viewpoint viewpoint = new Viewpoint(initialViewPoint,7000, camera);
+    scene.setInitialViewpoint(viewpoint);
+
+    // create point for the scene related graphic with a z value of 0
+    Point sceneRelatedPoint = new Point(-4.4610562, 48.3902727, 0, camera.getLocation().getSpatialReference());
+
+    // create point for the surface related graphics with z value of 70
+    Point surfaceRelatedPoint = new Point(-4.4609257, 48.3903965 , 70, camera.getLocation().getSpatialReference());
 
     // create a red triangle symbol
     SimpleMarkerSymbol triangleSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.TRIANGLE, Color.RED, 10);
@@ -69,47 +81,57 @@ public class MainActivity extends AppCompatActivity {
     // create the draped flat overlay
     GraphicsOverlay drapedFlatOverlay = new GraphicsOverlay();
     drapedFlatOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.DRAPED_FLAT);
-    drapedFlatOverlay.getGraphics().add(new Graphic(point, triangleSymbol));
+    drapedFlatOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, triangleSymbol));
     // create a text symbol for elevation mode
-    TextSymbol drapedFlatText = new TextSymbol(10, "DRAPED FLAT", Color.WHITE, HorizontalAlignment.LEFT,
-        VerticalAlignment.MIDDLE);
+    TextSymbol drapedFlatText = new TextSymbol(15, "DRAPED FLAT", Color.BLUE, HorizontalAlignment.LEFT,
+        VerticalAlignment.TOP);
     drapedFlatText.setOffsetY(20);
-    drapedFlatOverlay.getGraphics().add(new Graphic(point, drapedFlatText));
+    drapedFlatOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, drapedFlatText));
     mSceneView.getGraphicsOverlays().add(drapedFlatOverlay);
 
     // create the draped billboarded overlay
     GraphicsOverlay drapedBillboardedOverlay = new GraphicsOverlay();
     drapedBillboardedOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.DRAPED_BILLBOARDED);
-    drapedBillboardedOverlay.getGraphics().add(new Graphic(point, triangleSymbol));
+    drapedBillboardedOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, triangleSymbol));
     // create a text symbol for elevation mode
-    TextSymbol drapedBillboardedText = new TextSymbol(10, "DRAPED BILLBOARDED", Color.WHITE, HorizontalAlignment.LEFT,
-        VerticalAlignment.MIDDLE);
+    TextSymbol drapedBillboardedText = new TextSymbol(15, "DRAPED BILLBOARDED", Color.BLUE, HorizontalAlignment.LEFT,
+        VerticalAlignment.TOP);
     drapedBillboardedText.setOffsetY(20);
-    drapedBillboardedOverlay.getGraphics().add(new Graphic(point, drapedBillboardedText));
+    drapedBillboardedOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, drapedBillboardedText));
     mSceneView.getGraphicsOverlays().add(drapedBillboardedOverlay);
     drapedBillboardedOverlay.setVisible(false);
 
     // create the relative overlay
     GraphicsOverlay relativeOverlay = new GraphicsOverlay();
     relativeOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.RELATIVE);
-    relativeOverlay.getGraphics().add(new Graphic(point, triangleSymbol));
+    relativeOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, triangleSymbol));
     // create a text symbol for elevation mode
-    TextSymbol relativeText = new TextSymbol(10, "RELATIVE", Color.WHITE, HorizontalAlignment.LEFT,
-        VerticalAlignment.MIDDLE);
+    TextSymbol relativeText = new TextSymbol(15, "RELATIVE", Color.BLUE, HorizontalAlignment.LEFT,
+        VerticalAlignment.TOP);
     relativeText.setOffsetY(20);
-    relativeOverlay.getGraphics().add(new Graphic(point, relativeText));
+    relativeOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, relativeText));
     mSceneView.getGraphicsOverlays().add(relativeOverlay);
 
     // create the absolute overlay
     GraphicsOverlay absoluteOverlay = new GraphicsOverlay();
     absoluteOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.ABSOLUTE);
-    absoluteOverlay.getGraphics().add(new Graphic(point, triangleSymbol));
+    absoluteOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, triangleSymbol));
     // create a text symbol for elevation mode
-    TextSymbol absoluteText = new TextSymbol(10, "ABSOLUTE", Color.WHITE, HorizontalAlignment.LEFT,
-        VerticalAlignment.MIDDLE);
+    TextSymbol absoluteText = new TextSymbol(15, "ABSOLUTE", Color.BLUE, HorizontalAlignment.LEFT,
+        VerticalAlignment.TOP);
     absoluteText.setOffsetY(20);
-    absoluteOverlay.getGraphics().add(new Graphic(point, absoluteText));
+    absoluteOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, absoluteText));
     mSceneView.getGraphicsOverlays().add(absoluteOverlay);
+
+    // create the relative to scene overlay
+    GraphicsOverlay relativeToSceneOverlay = new GraphicsOverlay();
+    relativeToSceneOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.RELATIVE_TO_SCENE);
+    relativeToSceneOverlay.getGraphics().add(new Graphic(sceneRelatedPoint, triangleSymbol));
+    // create a text symbol for elevation mode
+    TextSymbol relativeToSceneText = new TextSymbol(15, "RELATIVE TO SCENE", Color.BLUE, HorizontalAlignment.RIGHT, VerticalAlignment.TOP);
+    relativeToSceneText.setOffsetY(20);
+    relativeToSceneOverlay.getGraphics().add(new Graphic(sceneRelatedPoint, relativeToSceneText));
+    mSceneView.getGraphicsOverlays().add(relativeToSceneOverlay);
 
     // toggle visibility of the draped and billboarded graphics overlays
     ToggleButton drapedToggle = findViewById(R.id.drapedToggle);
