@@ -3,9 +3,6 @@ apply from: '../version.gradle'
 
 buildscript {
     apply from: '../version.gradle'
-    ext {
-        kotlin_version = '1.3.70'
-    }
     repositories {
         google()
         jcenter()
