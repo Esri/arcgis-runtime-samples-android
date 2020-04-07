@@ -64,10 +64,9 @@ public class MainActivity extends AppCompatActivity {
     scene.getOperationalLayers().add(sceneLayer);
 
     // set an initial viewpoint
-    Point initialViewPoint = new Point(-4.45968, 48.3889, 37.9922);
-    Camera camera = new Camera(initialViewPoint, 329.91, 96.6632, 0);
-    Viewpoint viewpoint = new Viewpoint(initialViewPoint,7000, camera);
-    scene.setInitialViewpoint(viewpoint);
+    Point initialViewPoint = new Point(-4.45968, 48.3889, 100.0);
+    Camera camera = new Camera(initialViewPoint, 329.91, 80, 0);
+    mSceneView.setViewpointCamera(camera);
 
     // create point for the scene related graphic with a z value of 0
     Point sceneRelatedPoint = new Point(-4.4610562, 48.3902727, 0, camera.getLocation().getSpatialReference());

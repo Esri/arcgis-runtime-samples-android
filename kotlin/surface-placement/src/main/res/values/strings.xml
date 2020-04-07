@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Surface placement</string>
+    <string name="elevation_image_service">
+        https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
+    <string name="scene_layer_service">https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer</string>
+</resources>
