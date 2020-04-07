@@ -251,7 +251,7 @@ class MainActivity : AppCompatActivity() {
     traceParameters.traceConfiguration = traceConfiguration
 
     // run the trace and get the result
-    val utilityTraceResultsFuture = utilityNetwork.traceAsync(traceParameters);
+    val utilityTraceResultsFuture = utilityNetwork.traceAsync(traceParameters)
     utilityTraceResultsFuture.addDoneListener {
       try {
         (utilityTraceResultsFuture.get()[0] as? UtilityElementTraceResult)?.let { utilityElementTraceResult ->
