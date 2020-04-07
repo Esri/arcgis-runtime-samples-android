@@ -22,11 +22,11 @@ Create and set the configuration's filter barriers by selecting a category. Chec
 6.  Populate the choice list for the 'Filter Barrier: Category exists' from `UtilityNetworkDefinition.Categories`.
 7.  Get a default `UtilityTraceConfiguration` from a given tier in a domain network. Set it's `Filter` with a new `UtilityTraceFilter`.
 8.  When 'Trace' is clicked,
-    - Create a new `UtilityCategoryComparison` with the selected category and `UtilityCategoryComparisonOperator.Exists`.
-    - Assign this condition to `TraceFilter.Barriers` from the default configuration from step 7. Update this configuration's `IncludeIsolatedFeatures` property.
-    - Create a `UtilityTraceParameters` with `UtilityTraceType.Isolation` and default starting location from step 4.
-    - Set its `TraceConfiguration` with this configuration and then, run a `UtilityNetwork.TraceAsync`.
-11. For every `FeatureLayer` in the map, select the features returned by `GetFeaturesForElementsAsync` from the elements matching their `NetworkSource.Name` with the layer's `FeatureTable.Name`.
+    * Create a new `UtilityCategoryComparison` with the selected category and `UtilityCategoryComparisonOperator.Exists`.
+    * Assign this condition to `TraceFilter.Barriers` from the default configuration from step 7. Update this configuration's `IncludeIsolatedFeatures` property.
+    * Create a `UtilityTraceParameters` with `UtilityTraceType.Isolation` and default starting location from step 4.
+    * Set its `TraceConfiguration` with this configuration and then, run a `UtilityNetwork.TraceAsync`.
+9. For every `FeatureLayer` in the map, select the features returned by `GetFeaturesForElementsAsync` from the elements matching their `NetworkSource.Name` with the layer's `FeatureTable.Name`.
 
 ## Relevant API
 
