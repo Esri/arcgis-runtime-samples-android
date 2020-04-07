@@ -233,7 +233,7 @@ class MainActivity : AppCompatActivity() {
   ) {
     progressBar.visibility = View.VISIBLE
     // create a category comparison for the trace
-    // NOTE: UtilityNetworkAttributeComparison or UtilityCategoryComparison with Operator.DoesNotExists
+    // NOTE: UtilityNetworkAttributeComparison or UtilityCategoryComparisonOperator.DOES_NOT_EXIST
     // can also be used. These conditions can be joined with either UtilityTraceOrCondition or UtilityTraceAndCondition.
     val categoryComparison = UtilityCategoryComparison(
       spinner.selectedItem as UtilityCategory,
