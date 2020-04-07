@@ -15,7 +15,6 @@
     "trace filter",
     "utility network"
   ],
-  "redirect_from": "/android/latest/sample-code/perform-valve-isolation-trace.htm",
   "relevant_apis": [
     "UtilityCategory",
     "UtilityCategoryComparison",
