@@ -287,9 +287,9 @@ class MainActivity : AppCompatActivity() {
         // hide the progress bar when the trace is completed or failed
         progressBar.visibility = View.GONE
       } catch (e: Exception) {
-        val message = "Error loading utility trace results: ${e.message}"
-        Log.e(TAG, message)
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        val error = "Error loading utility trace results: ${e.message}"
+        Log.e(TAG, error)
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
       }
     }
   }
