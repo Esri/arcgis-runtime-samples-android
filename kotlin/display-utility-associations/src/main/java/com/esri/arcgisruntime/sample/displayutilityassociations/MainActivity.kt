@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.esri.arcgisruntime.sample.displayutilityassociation
+package com.esri.arcgisruntime.sample.displayutilityassociations
 
 import android.graphics.Color
 import android.os.Bundle
@@ -35,72 +35,92 @@ import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
 
-  // Max scale at which to create graphics for the associations.
-  val maxScale = 2000
+  // max scale at which to create graphics for the associations
+  private val maxScale = 2000
 
+  // create the utility network
   private val utilityNetwork =
     UtilityNetwork("https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer")
 
-  // Overlay to hold graphics for all of the associations.
-  private val associationsOverlay = GraphicsOverlay()
+  // overlay to hold graphics for all of the associations
+  private val associationsOverlay by lazy { GraphicsOverlay() }
 
-  // Symbols for the associations.
-  private val attachmentSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.DOT, Color.GREEN, 5.0f)
-  private val connectivitySymbol = SimpleLineSymbol(SimpleLineSymbol.Style.DOT, Color.RED, 5.0f)
+  // create a green dotted line symbol for attachment
+  private val attachmentSymbol by lazy {
+    SimpleLineSymbol(
+      SimpleLineSymbol.Style.DOT,
+      Color.GREEN,
+      5.0f
+    )
+  }
+  // create a red dotted line symbol for connectivity
+  private val connectivitySymbol by lazy {
+    SimpleLineSymbol(
+      SimpleLineSymbol.Style.DOT,
+      Color.RED,
+      5.0f
+    )
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
     mapView.apply {
-      map = ArcGISMap(Basemap.Type.TOPOGRAPHIC_VECTOR, 41.7852, -88.1665, 18)
+      // add a topographic vector map with a viewpoint at several utility network associations
+      map = ArcGISMap(Basemap.Type.TOPOGRAPHIC_VECTOR, 41.8057655, -88.1489692, 23)
+
+      // add the a graphics overlay to hold association graphics
+      graphicsOverlays.add(associationsOverlay)
     }
 
+    // load the utility network
     utilityNetwork.loadAsync()
     utilityNetwork.addDoneLoadingListener {
 
-      // Get all of the edges and junctions in the network.
+      // get all of the edges and junctions in the network
       val edges =
         utilityNetwork.definition.networkSources.filter { it.sourceType == UtilityNetworkSource.Type.EDGE }
       val junctions =
         utilityNetwork.definition.networkSources.filter { it.sourceType == UtilityNetworkSource.Type.JUNCTION }
-      // Add all edges that are not subnet lines to the map.
-      for (source in edges) {
-        if (source.sourceUsageType != UtilityNetworkSource.UsageType.SUBNET_LINE && source.featureTable != null) {
+
+      // add all edges that are not subnet lines to the map
+      edges.filter { it.sourceUsageType != UtilityNetworkSource.UsageType.SUBNET_LINE }
+        .forEach { source ->
           mapView.map.operationalLayers.add(FeatureLayer(source.featureTable))
         }
-      }
-      // Add all junctions to the map.
-      for (source in junctions) {
-        if (source.featureTable != null) {
-          mapView.map.operationalLayers.add(FeatureLayer(source.featureTable))
-        }
+      // add all junctions to the map
+      junctions.forEach { source ->
+        mapView.map.operationalLayers.add(FeatureLayer(source?.featureTable))
       }
 
-      mapView.graphicsOverlays.add(associationsOverlay)
-      // Populate the legend in the UI.
-
+      // populate the legend in the UI
       val attachmentSwatchFuture = attachmentSymbol.createSwatchAsync(this, Color.TRANSPARENT)
-      attachmentSwatchFuture.addDoneListener {
-        attachmentSwatch.setImageBitmap(attachmentSwatchFuture.get())
-      }
-
+      attachmentSwatch.setImageBitmap(attachmentSwatchFuture.get())
       val connectSwatchFuture = connectivitySymbol.createSwatchAsync(this, Color.TRANSPARENT)
-      connectSwatchFuture.addDoneListener {
-        connectivitySwatch.setImageBitmap(connectSwatchFuture.get())
-      }
+      connectivitySwatch.setImageBitmap(connectSwatchFuture.get())
 
+      // add association graphics at the initial view point
       addAssociationGraphicsAsync()
 
+      // listen for navigation changes
       mapView.addNavigationChangedListener {
+        // add association graphics for viewpoint after navigation change
         addAssociationGraphicsAsync()
       }
-
     }
-
   }
 
+  /**
+   * If greater than the maxScale, add association graphics for the map view's current extent.
+   *
+   */
   private fun addAssociationGraphicsAsync() {
+
+    // check if the current viewpoint is outside of the max scale
+    if (mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).targetScale >= maxScale) {
+      return
+    }
 
     // check if the current viewpoint has an extent
     (mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).targetGeometry.extent)?.let { extent ->
@@ -109,27 +129,27 @@ class MainActivity : AppCompatActivity() {
       associationsFuture.addDoneListener {
         val associations = associationsFuture.get()
 
-        for (association in associations) {
-          // check if the graphics overlay already contains the association
-          if (associationsOverlay.graphics.any {
+        associations.forEach { association ->
+          // if the graphics overlay doesn't already contain the association
+          if (!associationsOverlay.graphics.any {
               it.attributes.containsKey("GlobalId") && UUID.fromString(
                 it.attributes["GlobalId"].toString()
               ) == association.globalId
             }) {
-            continue
-          }
-          // Add a graphic for the association.
-          var symbol: SimpleLineSymbol? = null
-          if (association.associationType == UtilityAssociationType.ATTACHMENT) {
-            symbol = attachmentSymbol
-          } else if (association.associationType == UtilityAssociationType.CONNECTIVITY) {
-            symbol = connectivitySymbol
-          }
-          if (symbol != null) {
-            val graphic = Graphic(association.geometry, symbol).apply {
-              attributes["GlobalId"] = association.globalId
+
+            // add a graphic for the association
+            var symbol: SimpleLineSymbol? = null
+            if (association.associationType == UtilityAssociationType.ATTACHMENT) {
+              symbol = attachmentSymbol
+            } else if (association.associationType == UtilityAssociationType.CONNECTIVITY) {
+              symbol = connectivitySymbol
             }
-            associationsOverlay.graphics.add(graphic)
+            if (symbol != null) {
+              val graphic = Graphic(association.geometry, symbol).apply {
+                attributes["GlobalId"] = association.globalId
+              }
+              associationsOverlay.graphics.add(graphic)
+            }
           }
         }
       }
