@@ -265,14 +265,15 @@ class MainActivity : AppCompatActivity() {
               .forEach { featureLayer ->
                 featureLayer.clearSelection()
 
-                with(QueryParameters()) {
-                  utilityElementTraceResult.elements.filter { it.networkSource.name == featureLayer.featureTable.tableName }
-                    .forEach { utilityElement ->
-                      this.objectIds.add(utilityElement.objectId)
-                    }
+                val queryParameters = QueryParameters()
 
-                  // select features that match the query
-                  featureLayer.selectFeaturesAsync(this, FeatureLayer.SelectionMode.NEW)
+                utilityElementTraceResult.elements.filter { it.networkSource.name == featureLayer.featureTable.tableName }
+                  .forEach { utilityElement ->
+                    queryParameters.objectIds.add(utilityElement.objectId)
+                  }
+
+                // select features that match the query
+                featureLayer.selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW)
                 }
               }
           } else {
