@@ -67,8 +67,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   // create lists for starting locations and barriers
-  private val startingLocations: MutableList<UtilityElement> by lazy { ArrayList<UtilityElement>() }
-  private val barriers: MutableList<UtilityElement> by lazy { ArrayList<UtilityElement>() }
+  private val utilityElementStartingLocations: MutableList<UtilityElement> by lazy { ArrayList<UtilityElement>() }
+  private val utilityElementBarriers: MutableList<UtilityElement> by lazy { ArrayList<UtilityElement>() }
 
   // create symbols for the starting point and barriers
   private val startingPointSymbol: SimpleMarkerSymbol by lazy {
@@ -257,10 +257,10 @@ class MainActivity : AppCompatActivity() {
         // add the element to the appropriate list (starting locations or barriers), and add the
         // appropriate symbol to the graphic
         symbol = if (startingLocationsRadioButton.isChecked) {
-          startingLocations.add(utilityElement)
+          utilityElementStartingLocations.add(utilityElement)
           startingPointSymbol
         } else {
-          barriers.add(utilityElement)
+          utilityElementBarriers.add(utilityElement)
           barrierPointSymbol
         }
       })
@@ -341,7 +341,7 @@ class MainActivity : AppCompatActivity() {
    */
   fun traceUtilityNetwork(view: View) {
     // check that the utility trace parameters are valid
-    if (startingLocations.isEmpty()) {
+    if (utilityElementStartingLocations.isEmpty()) {
       reportError("No starting locations provided for trace.")
       return
     }
@@ -354,9 +354,9 @@ class MainActivity : AppCompatActivity() {
     // create utility trace parameters for the given trace type
     val traceType = UtilityTraceType.valueOf(traceTypeSpinner.selectedItem.toString())
     // create trace parameters
-    val traceParameters = UtilityTraceParameters(traceType, startingLocations).apply {
+    val traceParameters = UtilityTraceParameters(traceType, utilityElementStartingLocations).apply {
       // if any barriers have been created, add them to the parameters
-      barriers.addAll(barriers)
+      barriers.addAll(utilityElementBarriers)
       // set the trace configuration using the tier from the utility domain network
       traceConfiguration = mediumVoltageTier?.traceConfiguration
     }
@@ -430,8 +430,8 @@ class MainActivity : AppCompatActivity() {
     progressIndicator.visibility = View.GONE
 
     // clear the utility trace parameters
-    startingLocations.clear()
-    barriers.clear()
+    utilityElementStartingLocations.clear()
+    utilityElementBarriers.clear()
     // clear any selected features in the map's feature layers
     mapView.map.operationalLayers.filterIsInstance<FeatureLayer>().forEach {
       it.clearSelection()
