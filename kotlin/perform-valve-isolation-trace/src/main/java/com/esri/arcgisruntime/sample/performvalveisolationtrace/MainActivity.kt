@@ -20,6 +20,7 @@ package com.esri.arcgisruntime.sample.performvalveisolationtrace
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -52,6 +53,7 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityTraceFilter
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceType
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.spinner_text_item.view.*
 import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
@@ -62,9 +64,6 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a basemap and set it to the map view
-    val map = ArcGISMap(Basemap.createStreetsNightVector())
-
     // load the utility network data from the feature service and create feature layers
     val distributionLineFeatureTable =
       ServiceFeatureTable(getString(R.string.distribution_line_url))
@@ -73,35 +72,36 @@ class MainActivity : AppCompatActivity() {
       ServiceFeatureTable(getString(R.string.device_url))
     val deviceLayer = FeatureLayer(deviceFeatureTable)
 
-    // add the feature layers to the map
-    map.operationalLayers.addAll(arrayOf(distributionLineLayer, deviceLayer))
+    mapView.apply {
 
-    mapView.map = map
+      // create a basemap and set it to the map view
+      map = ArcGISMap(Basemap.createStreetsNightVector()).apply {
+        // add the feature layers to the map
+        operationalLayers.addAll(listOf(distributionLineLayer, deviceLayer))
+        // create and load the utility network
+        addDoneLoadingListener {
+          createUtilityNetwork()
+        }
+      }
 
-    // make sure the fab doesn't obscure the attribution bar
-    mapView.addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-      val layoutParams = fab.layoutParams as CoordinatorLayout.LayoutParams
-      layoutParams.bottomMargin += bottom - oldBottom
+      // make sure the fab doesn't obscure the attribution bar
+      addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+        val layoutParams = fab.layoutParams as CoordinatorLayout.LayoutParams
+        layoutParams.bottomMargin += bottom - oldBottom
+      }
+      // close the options sheet when the map is tapped
+      onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
+        override fun onTouch(view: View?, event: MotionEvent?): Boolean {
+          if (fab.isExpanded) {
+            fab.isExpanded = false
+          }
+          return super.onTouch(view, event)
+        }
+      }
     }
-
     // show the options sheet when the floating action button is clicked
     fab.setOnClickListener {
       fab.isExpanded = !fab.isExpanded
-    }
-
-    // close the options sheet when the map is tapped
-    mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
-      override fun onTouch(view: View?, event: MotionEvent?): Boolean {
-        if (fab.isExpanded) {
-          fab.isExpanded = false
-        }
-        return super.onTouch(view, event)
-      }
-    }
-
-    // create and load the utility network
-    map.addDoneLoadingListener {
-      createUtilityNetwork()
     }
   }
 
@@ -147,23 +147,19 @@ class MainActivity : AppCompatActivity() {
           UUID.fromString("98A06E95-70BE-43E7-91B7-E34C9D3CB9FF")
         )
 
-        // get the first feature for the starting location, and get its geometry
+        // get a list of features for the starting location element
         val elementFeaturesFuture =
           utilityNetwork.fetchFeaturesForElementsAsync(listOf(startingLocation))
-
         elementFeaturesFuture.addDoneListener {
           try {
             val startingLocationFeatures = elementFeaturesFuture.get()
-
             if (startingLocationFeatures.isNotEmpty()) {
-              val startingLocationGeometry = startingLocationFeatures[0].geometry
-
-              if (startingLocationGeometry is Point) {
-                val startingLocationGeometryPoint = startingLocationFeatures[0].geometry as Point
+              // get the geometry of the first feature for the starting location as a point
+              (startingLocationFeatures[0].geometry as? Point)?.let { startingLocationGeometryPoint ->
 
                 // create a graphic for the starting location and add it to the graphics overlay
                 val startingLocationGraphic =
-                  Graphic(startingLocationGeometry, startingPointSymbol)
+                  Graphic(startingLocationGeometryPoint, startingPointSymbol)
                 startingLocationGraphicsOverlay.graphics.add(startingLocationGraphic)
 
                 // set the map's viewpoint to the starting location
@@ -172,13 +168,13 @@ class MainActivity : AppCompatActivity() {
                 // populate the spinner with utility categories as the data and their names as the text
                 spinner.adapter = object : ArrayAdapter<UtilityCategory>(
                   this,
-                  android.R.layout.simple_spinner_item,
+                  R.layout.spinner_text_item,
                   networkDefinition.categories
                 ) {
                   override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                    val textView = TextView(this@MainActivity)
-                    textView.text = (getItem(position) as UtilityCategory).name
-                    return textView
+                    val spinnerItem = LayoutInflater.from(this@MainActivity).inflate(R.layout.spinner_text_item, parent, false)
+                    spinnerItem.textView.text = (getItem(position) as UtilityCategory).name
+                    return spinnerItem
                   }
 
                   override fun getDropDownView(
@@ -192,28 +188,26 @@ class MainActivity : AppCompatActivity() {
                   fab.isExpanded = false
                   performTrace(utilityNetwork, traceConfiguration, startingLocation)
                 }
-              } else {
-                Toast.makeText(
-                  this,
-                  "Error: Starting location geometry must be point.",
-                  Toast.LENGTH_LONG
-                ).show()
               }
             } else {
+              val message = "Starting location features not found."
+              Log.i(TAG, message)
               Toast.makeText(
                 this,
-                "Error: Starting location features not found.",
+                message,
                 Toast.LENGTH_LONG
               ).show()
             }
           } catch (e: Exception) {
-            val message = "Error loading starting location feature: ${e.message}"
-            Log.e(TAG, message)
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            val error = "Error loading starting location feature: ${e.message}"
+            Log.e(TAG, error)
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show()
           }
         }
       } else {
-        Toast.makeText(this, "Error loading utility network.", Toast.LENGTH_LONG).show()
+        val error = "Error loading utility network: ${utilityNetwork.loadError}"
+        Log.e(TAG, error)
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
       }
     }
   }
@@ -254,19 +248,19 @@ class MainActivity : AppCompatActivity() {
     val utilityTraceResultsFuture = utilityNetwork.traceAsync(traceParameters)
     utilityTraceResultsFuture.addDoneListener {
       try {
+        // get the first element of the trace result if it is not null
         (utilityTraceResultsFuture.get()[0] as? UtilityElementTraceResult)?.let { utilityElementTraceResult ->
           if (utilityElementTraceResult.elements.isNotEmpty()) {
-            Log.i(
-              TAG,
-              "I think the trace was successful ${utilityElementTraceResult.elements.size}"
-            )
-            // clear any selections from a previous trace
+            // iterate over the map's feature layers
             mapView.map.operationalLayers.filterIsInstance<FeatureLayer>()
               .forEach { featureLayer ->
+                // clear any selections from a previous trace
                 featureLayer.clearSelection()
 
                 val queryParameters = QueryParameters()
 
+                // for each utility element in teh trace, check if its network source is the same as
+                // the feature table, and if it is, add it to the query parameters to be selected
                 utilityElementTraceResult.elements.filter { it.networkSource.name == featureLayer.featureTable.tableName }
                   .forEach { utilityElement ->
                     queryParameters.objectIds.add(utilityElement.objectId)
@@ -274,13 +268,14 @@ class MainActivity : AppCompatActivity() {
 
                 // select features that match the query
                 featureLayer.selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW)
-                }
               }
           } else {
             // trace result is empty
+            val message = "Utility Element Trace Result had no elements!"
+            Log.i(TAG, message)
             Toast.makeText(
               this,
-              "Utility Element Trace Result had no elements!",
+              message,
               Toast.LENGTH_LONG
             ).show()
           }
