@@ -182,6 +182,8 @@ class MainActivity : AppCompatActivity() {
     val stops = stopsOverlay.graphics.map {
       Stop(it.geometry as Point)
     }
+    // do not calculate a route if there is only one stop
+    if (stops.size <= 1) return
 
     routeParameters?.setStops(stops)
 
