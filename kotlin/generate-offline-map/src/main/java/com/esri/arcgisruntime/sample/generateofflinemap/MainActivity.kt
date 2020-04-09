@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
       // set the map to the map view
       this.map = map
       // add the graphics overlay to the map view when it is created
-      mapView.graphicsOverlays.add(graphicsOverlay)
+      graphicsOverlays.add(graphicsOverlay)
       // update the download area box whenever the viewpoint changes
       addViewpointChangedListener {
         if (map.loadStatus == LoadStatus.LOADED) {
