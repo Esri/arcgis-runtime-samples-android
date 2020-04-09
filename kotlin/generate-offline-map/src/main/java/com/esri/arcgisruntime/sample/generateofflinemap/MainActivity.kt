@@ -48,21 +48,13 @@ class MainActivity : AppCompatActivity() {
 
   private val TAG = MainActivity::class.java.simpleName
 
-  private val graphicsOverlay: GraphicsOverlay by lazy {
-    GraphicsOverlay().also {
-      // add the graphics overlay to the map view when it is created
-      mapView.graphicsOverlays.add(it)
-    }
+  private val tempDirectoryPath: String by lazy {
+    cacheDir.toString() + File.separator.toString() + "/offlineMap"
   }
 
-  private val downloadArea: Graphic by lazy {
-    Graphic().also {
-      // create a symbol to show a box around the extent we want to download
-      it.symbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2F)
-      // add the graphic to the graphics overlay when it is created
-      graphicsOverlay.graphics.add(it)
-    }
-  }
+  private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
+
+  private val downloadArea: Graphic by lazy { Graphic() }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -79,60 +71,64 @@ class MainActivity : AppCompatActivity() {
     // create a portal item with the itemId of the web map
     val portal = Portal(getString(R.string.portal_url), false)
     val portalItem = PortalItem(portal, getString(R.string.item_id))
-    // create a map with the portal item
-    val map = ArcGISMap(portalItem)
 
-    map.addDoneLoadingListener {
-      if (map.loadStatus == LoadStatus.LOADED) {
-        // limit the map scale to the largest layer scale
-        map.apply {
+    // create a map with the portal item
+    val map = ArcGISMap(portalItem).apply {
+      addDoneLoadingListener {
+        if (loadStatus == LoadStatus.LOADED) {
+          // limit the map scale to the largest layer scale
           maxScale = operationalLayers[6].maxScale
           minScale = operationalLayers[6].minScale
-        }
-      } else {
-        val error = "Map failed to load: " + map.loadError.message
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-        Log.e(TAG, error)
-      }
-    }
-
-    // set the map to the map view
-    mapView.map = map
-
-    // update the download area box whenever the viewpoint changes
-    mapView.addViewpointChangedListener {
-      if (map.loadStatus == LoadStatus.LOADED) {
-        // enable the map offline button only after the map is loaded
-        if (!takeMapOfflineButton.isEnabled) takeMapOfflineButton.isEnabled = true
-        // upper left corner of the area to take offline
-        val minScreenPoint = Point(200, 200)
-        // lower right corner of the downloaded area
-        val maxScreenPoint = Point(
-          mapView.width - 200,
-          mapView.height - 200
-        )
-        // convert screen points to map points
-        val minPoint = mapView.screenToLocation(minScreenPoint)
-        val maxPoint = mapView.screenToLocation(maxScreenPoint)
-        // use the points to define and return an envelope
-        if (minPoint != null && maxPoint != null) {
-          val envelope = Envelope(minPoint, maxPoint)
-          downloadArea.geometry = envelope
+        } else {
+          val error = "Map failed to load: " + loadError.message
+          Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
+          Log.e(TAG, error)
         }
       }
     }
 
-    // when the button is clicked, start the offline map task job
-    takeMapOfflineButton.setOnClickListener { generateOfflineMap() }
+    // create a symbol to show a box around the extent we want to download
+    downloadArea.symbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2F)
+    // add the graphic to the graphics overlay when it is created
+    graphicsOverlay.graphics.add(downloadArea)
+
+    mapView.apply {
+      // set the map to the map view
+      this.map = map
+      // add the graphics overlay to the map view when it is created
+      mapView.graphicsOverlays.add(graphicsOverlay)
+      // update the download area box whenever the viewpoint changes
+      addViewpointChangedListener {
+        if (map.loadStatus == LoadStatus.LOADED) {
+          // enable the map offline button only after the map is loaded
+          if (!takeMapOfflineButton.isEnabled) takeMapOfflineButton.isEnabled = true
+          // upper left corner of the area to take offline
+          val minScreenPoint = Point(200, 200)
+          // lower right corner of the downloaded area
+          val maxScreenPoint = Point(
+            mapView.width - 200,
+            mapView.height - 200
+          )
+          // convert screen points to map points
+          val minPoint = mapView.screenToLocation(minScreenPoint)
+          val maxPoint = mapView.screenToLocation(maxScreenPoint)
+          // use the points to define and return an envelope
+          if (minPoint != null && maxPoint != null) {
+            val envelope = Envelope(minPoint, maxPoint)
+            downloadArea.geometry = envelope
+          }
+        }
+      }
+    }
   }
 
   /**
    * Use the generate offline map job to generate an offline map.
+   *
+   * @param view: the button which calls this function
    */
-  private fun generateOfflineMap() {
+  public fun generateOfflineMap(view: View) {
     // delete any offline map already in the cache
-    val tempDirectoryPath: String =
-      cacheDir.toString() + File.separator.toString() + "offlineMap"
     File(tempDirectoryPath).deleteRecursively()
 
     // specify the extent, min scale, and max scale as parameters
@@ -219,8 +215,8 @@ class MainActivity : AppCompatActivity() {
 
   override fun onPause() {
     mapView.pause()
-    // delete app cache when the app loses focus
-    cacheDir.deleteRecursively()
+    // delete the temporary cache when the app loses focus
+    File(tempDirectoryPath).deleteRecursively()
     super.onPause()
   }
 
