@@ -25,7 +25,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -60,6 +59,18 @@ class MainActivity : AppCompatActivity() {
 
   private val TAG = MainActivity::class.java.simpleName
 
+  // create a graphics overlay for the starting location and add it to the map view
+  private val startingLocationGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
+
+  // create and apply renderers for the starting point graphics overlay
+  private val startingPointSymbol: SimpleMarkerSymbol by lazy {
+    SimpleMarkerSymbol(
+      SimpleMarkerSymbol.Style.CROSS,
+      Color.GREEN,
+      25f
+    ).also { startingLocationGraphicsOverlay.renderer = SimpleRenderer(startingPointSymbol) }
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
@@ -73,7 +84,6 @@ class MainActivity : AppCompatActivity() {
     val deviceLayer = FeatureLayer(deviceFeatureTable)
 
     mapView.apply {
-
       // create a basemap and set it to the map view
       map = ArcGISMap(Basemap.createStreetsNightVector()).apply {
         // add the feature layers to the map
@@ -83,6 +93,9 @@ class MainActivity : AppCompatActivity() {
           createUtilityNetwork()
         }
       }
+
+      // add the starting location overlay to the map view
+      graphicsOverlays.add(startingLocationGraphicsOverlay)
 
       // make sure the fab doesn't obscure the attribution bar
       addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
@@ -111,19 +124,6 @@ class MainActivity : AppCompatActivity() {
    */
   private fun createUtilityNetwork(
   ) {
-    // create a graphics overlay for the starting location and add it to the map view
-    val startingLocationGraphicsOverlay = GraphicsOverlay().also {
-      mapView.graphicsOverlays.add(it)
-    }
-
-    // create and apply renderers for the starting point graphics overlay
-    val startingPointSymbol = SimpleMarkerSymbol(
-      SimpleMarkerSymbol.Style.CROSS,
-      Color.GREEN,
-      25f
-    )
-    startingLocationGraphicsOverlay.renderer = SimpleRenderer(startingPointSymbol)
-
     // create a utility network from the url and load it
     val utilityNetwork = UtilityNetwork(getString(R.string.utility_network_url), mapView.map)
     utilityNetwork.loadAsync()
@@ -172,7 +172,8 @@ class MainActivity : AppCompatActivity() {
                   networkDefinition.categories
                 ) {
                   override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                    val spinnerItem = LayoutInflater.from(this@MainActivity).inflate(R.layout.spinner_text_item, parent, false)
+                    val spinnerItem = LayoutInflater.from(this@MainActivity)
+                      .inflate(R.layout.spinner_text_item, parent, false)
                     spinnerItem.textView.text = (getItem(position) as UtilityCategory).name
                     return spinnerItem
                   }
