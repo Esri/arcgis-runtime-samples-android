@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
       5.0f
     )
   }
+
   // create a red dotted line symbol for connectivity
   private val connectivitySymbol by lazy {
     SimpleLineSymbol(
@@ -113,11 +114,10 @@ class MainActivity : AppCompatActivity() {
 
   /**
    * If greater than the maxScale, add association graphics for the map view's current extent.
-   *
    */
   private fun addAssociationGraphicsAsync() {
 
-    // check if the current viewpoint is outside of the max scale
+    // if the current viewpoint is outside of max scale, return and don't add association graphics
     if (mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE).targetScale >= maxScale) {
       return
     }
@@ -130,26 +130,20 @@ class MainActivity : AppCompatActivity() {
         val associations = associationsFuture.get()
 
         associations.forEach { association ->
+          
           // if the graphics overlay doesn't already contain the association
-          if (!associationsOverlay.graphics.any {
-              it.attributes.containsKey("GlobalId") && UUID.fromString(
-                it.attributes["GlobalId"].toString()
-              ) == association.globalId
-            }) {
+          if (!associationsOverlay.graphics.any { UUID.fromString(it.attributes["GlobalId"]?.toString()) == association.globalId }) {
 
             // add a graphic for the association
-            var symbol: SimpleLineSymbol? = null
-            if (association.associationType == UtilityAssociationType.ATTACHMENT) {
-              symbol = attachmentSymbol
-            } else if (association.associationType == UtilityAssociationType.CONNECTIVITY) {
-              symbol = connectivitySymbol
+            val symbol = when (association.associationType) {
+              UtilityAssociationType.ATTACHMENT -> attachmentSymbol
+              UtilityAssociationType.CONNECTIVITY -> connectivitySymbol
+              else -> null
             }
-            if (symbol != null) {
-              val graphic = Graphic(association.geometry, symbol).apply {
-                attributes["GlobalId"] = association.globalId
-              }
-              associationsOverlay.graphics.add(graphic)
+            val graphic = Graphic(association.geometry, symbol).apply {
+              attributes["GlobalId"] = association.globalId
             }
+            associationsOverlay.graphics.add(graphic)
           }
         }
       }
