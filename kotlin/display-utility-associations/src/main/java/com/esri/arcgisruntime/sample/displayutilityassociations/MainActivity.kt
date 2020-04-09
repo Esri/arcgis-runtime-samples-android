@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * If greater than the maxScale, add association graphics for the map view's current extent.
+   * Add association graphics for the map view's current extent.
    */
   private fun addAssociationGraphicsAsync() {
 
