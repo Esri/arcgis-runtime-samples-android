@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         // if this is called before the layer is loaded, it will be applied to the loaded layer
         featureLayer.definitionExpression = "req_Type = 'Tree Maintenance or Damage'"
         // change the text to reset
-        applyExpressionButton.text = resources.getString(R.string.action_reset)
+        applyExpressionButton.text = getString(R.string.action_reset)
         applyExpression = true
       }
     }
