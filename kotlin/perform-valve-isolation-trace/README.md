@@ -19,14 +19,14 @@ Create and set the configuration's filter barriers by selecting a category. Chec
 3.  Create a `Map` that contains `FeatureLayer`(s) that are part of this utility network.
 4.  Create a default starting location from a given asset type and global id.
 5.  Add a `GraphicsOverlay` with a `Graphic` that represents this starting location.
-6.  Populate the choice list for the 'Filter Barrier: Category exists' from `UtilityNetworkDefinition.Categories`.
+6.  Populate the choice list for the 'Filter Barrier: Category exists' from `UtilityNetworkDefinition.categories`.
 7.  Get a default `UtilityTraceConfiguration` from a given tier in a domain network. Set it's `Filter` with a new `UtilityTraceFilter`.
 8.  When 'Trace' is clicked,
-    * Create a new `UtilityCategoryComparison` with the selected category and `UtilityCategoryComparisonOperator.Exists`.
-    * Assign this condition to `TraceFilter.Barriers` from the default configuration from step 7. Update this configuration's `IncludeIsolatedFeatures` property.
-    * Create a `UtilityTraceParameters` with `UtilityTraceType.Isolation` and default starting location from step 4.
-    * Set its `TraceConfiguration` with this configuration and then, run a `UtilityNetwork.TraceAsync`.
-9. For every `FeatureLayer` in the map, select the features returned by `GetFeaturesForElementsAsync` from the elements matching their `NetworkSource.Name` with the layer's `FeatureTable.Name`.
+    * Create a new `UtilityCategoryComparison` with the selected category and `UtilityCategoryComparisonOperator.EXISTS`.
+    * Assign this condition to `traceConfiguration.filter.barriers` from the default configuration from step 7. Update this configuration's `isIncludeIsolatedFeatures` property.
+    * Create a `UtilityTraceParameters` with `UtilityTraceType.ISOLATION` and the default starting location from step 4.
+    * Set its `TraceConfiguration` with this configuration and then, run a `UtilityNetwork.traceAsync(traceParameters)`.
+9. For every `FeatureLayer` in the map, create `QueryParameters` and add any of the `UtilityElementTraceResult.elements` whose `NetworkSource.name` matches the feature layer's `FeatureTable.tableName`. Use the query parameters to select the features with `featureLayer.selectFeaturesAsync(...)`
 
 ## Relevant API
 

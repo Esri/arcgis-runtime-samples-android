@@ -259,7 +259,7 @@ class MainActivity : AppCompatActivity() {
 
                 val queryParameters = QueryParameters()
 
-                // for each utility element in teh trace, check if its network source is the same as
+                // for each utility element in the trace, check if its network source is the same as
                 // the feature table, and if it is, add it to the query parameters to be selected
                 utilityElementTraceResult.elements.filter { it.networkSource.name == featureLayer.featureTable.tableName }
                   .forEach { utilityElement ->
