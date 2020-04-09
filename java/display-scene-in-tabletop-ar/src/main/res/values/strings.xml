@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Display scene in tabletop AR</string>
     <string name="philadelphia_mobile_scene_package_path">/philadelphia.mspk</string>
+    <string name="camera_instruction_message">Move the camera back and forth over a plane. When a plane is detected, tap on the plane to place a scene</string>
+    <string name="not_plane_error">ArCore doesn\'t recognize this point as a plane.</string>
 </resources>
