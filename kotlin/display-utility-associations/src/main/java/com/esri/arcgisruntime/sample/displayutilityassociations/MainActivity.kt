@@ -128,12 +128,11 @@ class MainActivity : AppCompatActivity() {
       val associationsFuture = utilityNetwork.getAssociationsAsync(extent)
       associationsFuture.addDoneListener {
         val associations = associationsFuture.get()
-
         associations.forEach { association ->
-          
           // if the graphics overlay doesn't already contain the association
-          if (!associationsOverlay.graphics.any { UUID.fromString(it.attributes["GlobalId"]?.toString()) == association.globalId }) {
-
+          if (!associationsOverlay.graphics.any {
+              UUID.fromString(it.attributes["GlobalId"]?.toString()) == association.globalId
+            }) {
             // add a graphic for the association
             val symbol = when (association.associationType) {
               UtilityAssociationType.ATTACHMENT -> attachmentSymbol
