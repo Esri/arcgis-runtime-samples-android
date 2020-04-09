@@ -14,7 +14,7 @@ Tap the 'Apply Expression' button to limit the features requested from the featu
 
 ## How it works
 
-1. Create a service feature table from a URL with `new ServiceFeatureTable(url)`.
+1. Create a `ServiceFeatureTable` from a URL.
 2. Create a feature layer from the service feature table with `new FeatureLayer(serviceFeatureTable)`.
 3. Set the limit of the features on your feature layer using the `setDefinitionExpression()`.
 
