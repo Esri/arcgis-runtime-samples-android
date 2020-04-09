@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         // set the definition expression to nothing (empty string, null also works)
         featureLayer.definitionExpression = ""
         // change the text to apply
-        applyExpressionButton.setText(R.string.action_def_exp)
+        applyExpressionButton.text = getString(R.string.action_def_exp)
         applyExpression = false
       } else {
         // apply a definition expression on the feature layer
