@@ -185,6 +185,8 @@ public class MainActivity extends AppCompatActivity
       mGenerateOfflineMapJob.cancel();
     }
 
+    mTakeMapOfflineButton.setEnabled(false);
+
     // delete any offline map already in the cache
     String tempDirectoryPath = getCacheDir() + File.separator + "offlineMap";
     deleteDirectory(new File(tempDirectoryPath));
@@ -198,7 +200,6 @@ public class MainActivity extends AppCompatActivity
         GenerateOfflineMapResult result = mGenerateOfflineMapJob.getResult();
         mMapView.setMap(result.getOfflineMap());
         mGraphicsOverlay.getGraphics().clear();
-        mTakeMapOfflineButton.setEnabled(false);
         findProgressDialogFragment().dismiss();
         Toast.makeText(this, "Now displaying offline map.", Toast.LENGTH_LONG).show();
       } else {
