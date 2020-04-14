@@ -17,7 +17,6 @@ package com.esri.arcgisruntime.sample.surfaceplacement
 
 import android.graphics.Color
 import android.os.Bundle
-import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer
@@ -171,13 +170,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     // add the graphics overlays to the scene view
-    sceneView.graphicsOverlays.addAll(arrayOf(
-      drapedFlatOverlay,
-      drapedBillboardedOverlay,
-      relativeOverlay,
-      absoluteOverlay,
-      relativeToSceneOverlay
-    ))
+    sceneView.graphicsOverlays.addAll(
+      arrayOf(
+        drapedFlatOverlay,
+        drapedBillboardedOverlay,
+        relativeOverlay,
+        absoluteOverlay,
+        relativeToSceneOverlay
+      )
+    )
 
     // toggle visibility of the draped and billboarded graphics overlays
     drapedToggle.setOnClickListener {

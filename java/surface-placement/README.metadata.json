@@ -6,18 +6,17 @@
         "surface-placement.png"
     ],
     "keywords": [
-        "3D",
-        "Absolute",
-        "Altitude",
-        "Draped",
-        "Elevation",
-        "Floating",
-        "Relative",
-        "Scenes",
-        "Sea level",
-        "Surface placement"
+      "3D",
+      "absolute",
+      "altitude",
+      "draped",
+      "elevation",
+      "floating",
+      "relative",
+      "scenes",
+      "sea level",
+      "surface placement"
     ],
-    "redirect_from": "/android/latest/sample-code/surface-placement.htm",
     "relevant_apis": [
         "Graphic",
         "GraphicsOverlay",
