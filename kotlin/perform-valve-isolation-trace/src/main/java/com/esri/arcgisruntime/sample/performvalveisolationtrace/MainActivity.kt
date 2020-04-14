@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
       SimpleMarkerSymbol.Style.CROSS,
       Color.GREEN,
       25f
-    ).also { startingLocationGraphicsOverlay.renderer = SimpleRenderer(startingPointSymbol) }
+    )
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,18 +83,20 @@ class MainActivity : AppCompatActivity() {
       ServiceFeatureTable(getString(R.string.device_url))
     val deviceLayer = FeatureLayer(deviceFeatureTable)
 
-    mapView.apply {
-      // create a basemap and set it to the map view
-      map = ArcGISMap(Basemap.createStreetsNightVector()).apply {
-        // add the feature layers to the map
-        operationalLayers.addAll(listOf(distributionLineLayer, deviceLayer))
-        // create and load the utility network
-        addDoneLoadingListener {
-          createUtilityNetwork()
-        }
+    // create a map with the utility network distribution line and device layers
+    val map = ArcGISMap(Basemap.createStreetsNightVector()).apply {
+      // add the feature layers to the map
+      operationalLayers.addAll(listOf(distributionLineLayer, deviceLayer))
+      // create and load the utility network
+      addDoneLoadingListener {
+        createUtilityNetwork()
       }
+    }
 
-      // add the starting location overlay to the map view
+    mapView.apply {
+      this.map = map
+      // set the starting location graphic overlay's renderer and add it to the map view
+      startingLocationGraphicsOverlay.renderer = SimpleRenderer(startingPointSymbol)
       graphicsOverlays.add(startingLocationGraphicsOverlay)
 
       // make sure the fab doesn't obscure the attribution bar
