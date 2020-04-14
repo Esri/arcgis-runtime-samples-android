@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // create a FAB to respond to attribution bar
-    FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
+    FloatingActionButton floatingActionButton = findViewById(R.id.attributionFloatingActionButton);
     floatingActionButton
         .setOnClickListener(v -> Toast.makeText(this, "Tap the attribution bar below", Toast.LENGTH_LONG).show());
 
