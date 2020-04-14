@@ -16,14 +16,15 @@
 
 package com.esri.arcgisruntime.sample.attributionviewchange;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,17 +43,25 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // create a FAB to respond to attribution bar
-    FloatingActionButton floatingActionButton = findViewById(R.id.attributionFloatingActionButton);
-    floatingActionButton
-        .setOnClickListener(v -> Toast.makeText(this, "Tap the attribution bar below", Toast.LENGTH_LONG).show());
+    FloatingActionButton mFab = findViewById(R.id.floatingActionButton);
+    mFab.setOnClickListener(v -> Snackbar.make(v, "Button responds to attribution bar", Snackbar.LENGTH_LONG)
+        .setAction("Action", null).show());
 
     // set attribution bar listener
     mMapView.addAttributionViewLayoutChangeListener(
         (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
           int heightDelta = oldBottom - bottom;
-          floatingActionButton.animate().setDuration(1);
-          floatingActionButton.animate().translationYBy(heightDelta);
+          mFab.animate().translationYBy(heightDelta);
+          Toast.makeText(MainActivity.this, "new bounds [" + left + ',' + top + ',' + right + ',' + bottom + ']' +
+              " old bounds [" + oldLeft + ',' + oldTop + ',' + oldRight + ',' + oldBottom + ']', Toast.LENGTH_SHORT)
+              .show();
         });
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    mMapView.pause();
   }
 
   @Override
@@ -62,14 +71,8 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
-  protected void onPause() {
-    mMapView.pause();
-    super.onPause();
-  }
-
-  @Override
   protected void onDestroy() {
-    mMapView.dispose();
     super.onDestroy();
+    mMapView.dispose();
   }
 }
