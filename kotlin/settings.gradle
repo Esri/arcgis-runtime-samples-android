@@ -61,11 +61,10 @@ include ':add-features-feature-service',
         ':set-min-max-scale',
         ':show-callout',
         ':show-labels-on-layer',
-        ':show-location-history',
+        ':surface-placement',
         ':token-authentication',
         ':trace-utility-network',
         ':view-point-cloud-data-offline',
         ':viewshed-geoprocessing',
         ':viewshed-location',
         ':wmts-layer'
-include ':surface-placement'

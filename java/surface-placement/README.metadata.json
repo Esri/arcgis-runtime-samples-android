@@ -7,6 +7,7 @@
         "surface-placement.png"
     ],
     "keywords": [
+<<<<<<< HEAD
         "3D",
         "absolute",
         "altitude",
@@ -21,6 +22,18 @@
     "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/surface-placement.htm"
+=======
+      "3D",
+      "absolute",
+      "altitude",
+      "draped",
+      "elevation",
+      "floating",
+      "relative",
+      "scenes",
+      "sea level",
+      "surface placement"
+>>>>>>> add readme and metadata details
     ],
     "relevant_apis": [
         "Graphic",
