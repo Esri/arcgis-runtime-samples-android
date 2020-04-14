@@ -1,0 +1,31 @@
+{
+    "category": "Maps and Scenes",
+    "description": "Position graphics relative to a surface using different surface placement modes.",
+    "ignore": false,
+    "images": [
+        "surface-placement.png"
+    ],
+    "keywords": [
+        "3D",
+        "absolute",
+        "altitude",
+        "draped",
+        "elevation",
+        "floating",
+        "relative",
+        "scenes",
+        "sea level",
+        "surface placement"
+    ],
+    "relevant_apis": [
+        "Graphic",
+        "GraphicsOverlay",
+        "LayerSceneProperties.SurfacePlacement",
+        "SceneProperties",
+        "Surface"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/surfaceplacement/MainActivity.kt"
+    ],
+    "title": "Surface placement"
+}
