@@ -14,7 +14,7 @@ ext {
     arcgisVersion = '100.8.0-2754'
     arcgisToolkitVersion = '100.7.0'
     // plugin versions
-    gradleVersion = '3.6.0'
+    gradleVersion = '3.5.3'
     // java version
     javaVersion = 1.8
 }
