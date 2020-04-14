@@ -39,10 +39,9 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // create a scene
-    ArcGISScene().apply {
+    val scene = ArcGISScene().apply {
       // add a basemap to it
       basemap = Basemap.createImagery()
-      sceneView.scene = this
       // add base surface for elevation data
       baseSurface.elevationSources.add(
         ArcGISTiledElevationSource(getString(R.string.elevation_image_service))
@@ -58,7 +57,11 @@ class MainActivity : AppCompatActivity() {
       Point(-4.45968, 48.3889, 100.9922)
     val camera =
       Camera(initialViewPoint, 329.91, 80.0, 0.0)
-    sceneView.setViewpointCamera(camera)
+
+    sceneView.apply {
+      this.scene = scene
+      setViewpointCamera(camera)
+    }
 
     // create point for the scene related graphic with a z value of 0
     val sceneRelatedPoint =
@@ -85,7 +88,7 @@ class MainActivity : AppCompatActivity() {
     val drapedFlatText = TextSymbol(
       15F, "DRAPED FLAT", Color.BLUE, TextSymbol.HorizontalAlignment.LEFT,
       VerticalAlignment.TOP
-    ).also { it.offsetY = 20f }
+    ).apply { offsetY = 20f }
     // create the draped flat overlay
     val drapedFlatOverlay = GraphicsOverlay().apply {
       sceneProperties.surfacePlacement = SurfacePlacement.DRAPED_FLAT
@@ -95,15 +98,13 @@ class MainActivity : AppCompatActivity() {
           Graphic(surfaceRelatedPoint, drapedFlatText)
         )
       )
-      sceneView.graphicsOverlays.add(this)
     }
-
 
     // create a text symbol for elevation mode
     val drapedBillboardedText = TextSymbol(
       15F, "DRAPED BILLBOARDED", Color.BLUE, TextSymbol.HorizontalAlignment.LEFT,
       VerticalAlignment.TOP
-    ).also { it.offsetY = 20f }
+    ).apply { offsetY = 20f }
     // create the draped billboarded overlay
     val drapedBillboardedOverlay = GraphicsOverlay().apply {
       sceneProperties.surfacePlacement =
@@ -114,7 +115,6 @@ class MainActivity : AppCompatActivity() {
           Graphic(surfaceRelatedPoint, drapedBillboardedText)
         )
       )
-      sceneView.graphicsOverlays.add(this)
       // hide the draped billboarded overlay because the toggle default option is draped flat
       isVisible = false
     }
@@ -123,9 +123,9 @@ class MainActivity : AppCompatActivity() {
     val relativeText = TextSymbol(
       15f, "RELATIVE", Color.BLUE, TextSymbol.HorizontalAlignment.LEFT,
       VerticalAlignment.TOP
-    ).also { it.offsetY = 20f }
+    ).apply { offsetY = 20f }
     // create the relative overlay
-    GraphicsOverlay().apply {
+    val relativeOverlay = GraphicsOverlay().apply {
       sceneProperties.surfacePlacement = SurfacePlacement.RELATIVE
       graphics.addAll(
         arrayOf(
@@ -133,16 +133,15 @@ class MainActivity : AppCompatActivity() {
           Graphic(surfaceRelatedPoint, relativeText)
         )
       )
-      sceneView.graphicsOverlays.add(this)
     }
 
     // create a text symbol for elevation mode
     val absoluteText = TextSymbol(
       15f, "ABSOLUTE", Color.BLUE, TextSymbol.HorizontalAlignment.LEFT,
       VerticalAlignment.TOP
-    ).also { it.offsetY = 20f }
+    ).apply { offsetY = 20f }
     // create the absolute overlay
-    GraphicsOverlay().apply {
+    val absoluteOverlay = GraphicsOverlay().apply {
       sceneProperties.surfacePlacement = SurfacePlacement.ABSOLUTE
       graphics.addAll(
         arrayOf(
@@ -150,7 +149,6 @@ class MainActivity : AppCompatActivity() {
           Graphic(surfaceRelatedPoint, absoluteText)
         )
       )
-      sceneView.graphicsOverlays.add(this)
     }
 
     // create a text symbol for elevation mode
@@ -160,9 +158,9 @@ class MainActivity : AppCompatActivity() {
       Color.BLUE,
       TextSymbol.HorizontalAlignment.RIGHT,
       VerticalAlignment.TOP
-    ).also { it.offsetY = 20f }
+    ).apply { offsetY = 20f }
     // create the relative to scene overlay
-    GraphicsOverlay().apply {
+    val relativeToSceneOverlay = GraphicsOverlay().apply {
       sceneProperties.surfacePlacement = SurfacePlacement.RELATIVE_TO_SCENE
       graphics.addAll(
         arrayOf(
@@ -170,8 +168,16 @@ class MainActivity : AppCompatActivity() {
           Graphic(sceneRelatedPoint, relativeToSceneText)
         )
       )
-      sceneView.graphicsOverlays.add(this)
     }
+
+    // add the graphics overlays to the scene view
+    sceneView.graphicsOverlays.addAll(arrayOf(
+      drapedFlatOverlay,
+      drapedBillboardedOverlay,
+      relativeOverlay,
+      absoluteOverlay,
+      relativeToSceneOverlay
+    ))
 
     // toggle visibility of the draped and billboarded graphics overlays
     drapedToggle.setOnClickListener {
