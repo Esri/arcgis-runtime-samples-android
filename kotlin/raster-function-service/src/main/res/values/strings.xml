@@ -1,11 +1,6 @@
 <resources>
-    <string name="app_name">Raster Function Service</string>
+    <string name="app_name">Raster function service</string>
     <string name="image_service_raster_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/NLCDLandCover2001/ImageServer</string>
-
-    <string name="hillshade_json">hillshade_simplified.json</string>
-
-    <string name="location_permission_denied">Raster Function Service could not open because WRITE permission was denied.</string>
-
     <string name="hillshade_simplified">
         {
           \"raster_function_arguments\":
