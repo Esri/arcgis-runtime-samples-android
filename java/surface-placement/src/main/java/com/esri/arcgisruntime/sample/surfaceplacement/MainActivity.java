@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     scene.getOperationalLayers().add(sceneLayer);
 
     // set an initial viewpoint
-    Point initialViewPoint = new Point(-4.45968, 48.3889, 100.0);
+    Point initialViewPoint = new Point(-4.45968, 48.3889, 100.9922);
     Camera camera = new Camera(initialViewPoint, 329.91, 80, 0);
     mSceneView.setViewpointCamera(camera);
 
