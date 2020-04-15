@@ -20,10 +20,12 @@ package com.example.exporttiles
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.TileCache
@@ -206,7 +208,10 @@ class MainActivity : AppCompatActivity() {
         exportTileCacheJob.cancel()
       }
       setCancelable(false)
-      setView(R.layout.dialog_layout)
+      setView(
+        LayoutInflater.from(this@MainActivity)
+          .inflate(R.layout.dialog_layout, null)
+      )
     }
     return builder.create()
   }
