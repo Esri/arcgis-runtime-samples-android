@@ -1,4 +1,5 @@
-/* Copyright 2017 Esri
+/*
+ * Copyright 2020 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a Dark Gray Vectory BaseMap
+    // create a Dark Gray Vector BaseMap
     val map = ArcGISMap(Basemap.createDarkGrayCanvasVector())
     // set the map to be displayed in this view
     mapView.map = map

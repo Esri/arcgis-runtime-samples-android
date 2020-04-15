@@ -21,6 +21,7 @@ import java.util.List;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,13 +68,11 @@ public class MainActivity extends AppCompatActivity {
     mArView.registerLifecycle(getLifecycle());
 
     // show simple instructions to the user. Refer to the README for more details
-    Toast.makeText(this,
-        "Move the camera back and forth over a plane. When a plane is detected, tap on the plane to place a scene",
-        Toast.LENGTH_LONG).show();
+    Toast.makeText(this, R.string.camera_instruction_message, Toast.LENGTH_LONG).show();
 
-    // on tap
     mArView.getSceneView().setOnTouchListener(new DefaultSceneViewOnTouchListener(mArView.getSceneView()) {
-      @Override public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+      @Override
+      public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
         // get the hit results for the tap
         List<HitResult> hitResults = mArView.getArSceneView().getArFrame().hitTest(motionEvent);
         // check if the tapped point is recognized as a plane by ArCore
@@ -96,11 +95,15 @@ public class MainActivity extends AppCompatActivity {
             }
           }
         } else {
-          String error = "ArCore doesn't recognize this point as a plane.";
-          Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
-          Log.e(TAG, error);
+          Toast.makeText(MainActivity.this, getString(R.string.not_plane_error), Toast.LENGTH_SHORT).show();
+          Log.e(TAG, getString(R.string.not_plane_error));
         }
         return super.onSingleTapConfirmed(motionEvent);
+      }
+
+      // disable pinch zooming
+      @Override public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
+        return true;
       }
     });
   }
@@ -115,8 +118,7 @@ public class MainActivity extends AppCompatActivity {
   private void loadSceneFromPackage(Plane plane) {
     // create a mobile scene package from a path a local .mspk
     MobileScenePackage mobileScenePackage = new MobileScenePackage(
-        getExternalFilesDir(null) + getString(
-            R.string.philadelphia_mobile_scene_package_path));
+        getExternalFilesDir(null) + getString(R.string.philadelphia_mobile_scene_package_path));
     // load the mobile scene package
     mobileScenePackage.loadAsync();
     mobileScenePackage.addDoneLoadingListener(() -> {

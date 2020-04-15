@@ -11,10 +11,10 @@ ext {
     andSupportLibVersion = '1.0.0'
     constraintLayoutVersion = '1.1.3'
     multidexVersion = '2.0.1'
-    arcgisVersion = '100.8.0-2747'
+    arcgisVersion = '100.8.0-2754'
     arcgisToolkitVersion = '100.7.0'
     // plugin versions
-    gradleVersion = '3.6.0'
+    gradleVersion = '3.5.3'
     // java version
     javaVersion = 1.8
 }

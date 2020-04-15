@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Spatial Operations</string>
+    <string name="app_name">Perform spatial operations</string>
 
     <!-- spatial operation menu items -->
     <string name="caption_no_operation">No operation</string>

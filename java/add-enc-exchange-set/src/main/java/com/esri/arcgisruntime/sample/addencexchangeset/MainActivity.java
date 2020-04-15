@@ -20,16 +20,11 @@ package com.esri.arcgisruntime.sample.addencexchangeset;
 import java.util.Arrays;
 import java.util.Collections;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.hydrography.EncCell;
@@ -61,11 +56,6 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(Basemap.createOceans());
     // set the map to be displayed in this view
     mMapView.setMap(map);
-
-    requestReadPermission();
-  }
-
-  private void addEncExchangeSet() {
 
     // set paths using ENC environment settings
     // point to the folder containing hydrography resources
@@ -110,37 +100,6 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, error);
       }
     });
-  }
-
-  /**
-   * Request read external storage permissions for API level 23+.
-   */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      // do something
-      addEncExchangeSet();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      // do something
-      addEncExchangeSet();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.enc_read_permission_denied), Toast.LENGTH_SHORT).show();
-    }
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
   @Override

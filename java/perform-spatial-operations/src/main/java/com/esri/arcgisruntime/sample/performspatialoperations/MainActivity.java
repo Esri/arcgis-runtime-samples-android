@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.esri.arcgisruntime.sample.spatialoperations;
+package com.esri.arcgisruntime.sample.performspatialoperations;
 
 import android.os.Bundle;
 import android.view.Menu;
