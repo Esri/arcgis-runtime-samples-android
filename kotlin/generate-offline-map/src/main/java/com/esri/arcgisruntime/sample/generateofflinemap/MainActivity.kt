@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
   private val TAG = MainActivity::class.java.simpleName
 
   private val tempDirectoryPath: String by lazy {
-    cacheDir.toString() + File.separator.toString() + "/offlineMap"
+    cacheDir.toString() + "/offlineMap"
   }
 
   private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
