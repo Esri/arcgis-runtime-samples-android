@@ -41,18 +41,20 @@ class MainActivity : AppCompatActivity() {
     val featureLayer = FeatureLayer(serviceFeatureTable)
 
     // create a map with a topographic base map
-    ArcGISMap(Basemap.createTopographic()).let { map ->
+    val map = ArcGISMap(Basemap.createTopographic()).apply {
       // add the feature layer to the map
-      map.operationalLayers.add(featureLayer)
-      // set the map to be displayed in the layout's map view
-      mapView.map = map
+      operationalLayers.add(featureLayer)
     }
 
-    // set a viewpoint on the map view to center on San Francisco
-    mapView.setViewpointCenterAsync(
-      Point(-13630845.0, 4544861.0, SpatialReferences.getWebMercator()), 200000.0
-    )
-
+    mapView.apply {
+      // set the map to be displayed in the layout's map view
+      this.map = map
+      // set a viewpoint on the map view to center on San Francisco
+      setViewpointCenterAsync(
+        Point(-13630845.0, 4544861.0, SpatialReferences.getWebMercator()), 200000.0
+      )
+    }
+    
     // set button listener
     applyExpressionButton.setOnClickListener {
       if (applyExpression) {
