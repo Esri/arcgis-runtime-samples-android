@@ -21,7 +21,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/samples/featurelayerdefinitionexpression/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayerdefinitionexpression/MainActivity.kt"
     ],
     "title": "Feature layer definition expression"
 }
