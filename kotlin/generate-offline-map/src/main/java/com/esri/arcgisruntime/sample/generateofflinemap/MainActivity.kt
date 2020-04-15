@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity() {
    *
    * @param view: the button which calls this function
    */
-  public fun generateOfflineMap(view: View) {
+  fun generateOfflineMap(view: View) {
     // delete any offline map already in the cache
     File(tempDirectoryPath).deleteRecursively()
 
