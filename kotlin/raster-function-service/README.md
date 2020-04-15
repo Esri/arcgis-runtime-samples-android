@@ -10,7 +10,7 @@ Raster functions allow processing operations that can be applied to one or more 
 
 ## How to use the sample
 
-Tap the "Apply Layer" button to apply the raster function and display the result.
+Load the sample to see a raster function applied to a raster.
 
 ## How it works
 
@@ -18,10 +18,10 @@ Tap the "Apply Layer" button to apply the raster function and display the result
 2. Create the `RasterFunction` from a JSON string.
 3. Get the arguments of the raster function with `rasterFunction.arguments`.
 4. Get the names of the raster arguments with `rasterFunctionArguments.rasterNames`.
-5. Set the raster argument with `rasterFunction.setRaster(rasterName, imageServiceRaster)`.
+5. Set the raster argument with `rasterFunction.setRaster(rasterName, raster)`.
 6. Create a new `Raster` referring to the raster function.
 7. Create a `RasterLayer` to visualize the computed raster.
-8. Display the raster.
+8. Add the raster layer to the map.
 
 ## Relevant API
 

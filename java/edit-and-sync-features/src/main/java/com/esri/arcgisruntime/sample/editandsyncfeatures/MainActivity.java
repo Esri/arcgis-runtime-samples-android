@@ -16,12 +16,10 @@
 
 package com.esri.arcgisruntime.sample.editandsyncfeatures;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -64,7 +62,6 @@ import com.esri.arcgisruntime.tasks.geodatabase.SyncLayerOption;
 public class MainActivity extends AppCompatActivity {
 
   private final String TAG = MainActivity.class.getSimpleName();
-  private final String[] reqPermission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
 
   private Button mGeodatabaseButton;
 
@@ -114,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     // use local tile package for the base map
-    TileCache sanFranciscoTileCache = new TileCache(getExternalFilesDir(null) + getString(R.string.san_francisco_tpk));
+    TileCache sanFranciscoTileCache = new TileCache(getExternalFilesDir(null) + "/SanFrancisco.tpk");
     ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(sanFranciscoTileCache);
     final ArcGISMap map = new ArcGISMap(new Basemap(tiledLayer));
     mMapView.setMap(map);
@@ -125,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void generateGeodatabase() {
     // define geodatabase sync task
-    mGeodatabaseSyncTask = new GeodatabaseSyncTask(getString(R.string.wildfire_sync));
+    mGeodatabaseSyncTask = new GeodatabaseSyncTask("https://sampleserver6.arcgisonline.com/arcgis/rest/services/Sync/WildfireSync/FeatureServer");
     mGeodatabaseSyncTask.loadAsync();
     mGeodatabaseSyncTask.addDoneLoadingListener(() -> {
       final SimpleLineSymbol boundarySymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5);
@@ -142,8 +139,7 @@ public class MainActivity extends AppCompatActivity {
           GenerateGeodatabaseParameters parameters = defaultParameters.get();
           parameters.setReturnAttachments(false);
           // define the local path where the geodatabase will be stored
-          final String localGeodatabasePath =
-              getCacheDir() + File.separator + getString(R.string.wildfire_geodatabase);
+          final String localGeodatabasePath = getCacheDir() + "/wildfire.geodatabase";
           // create and start the job
           final GenerateGeodatabaseJob generateGeodatabaseJob = mGeodatabaseSyncTask
               .generateGeodatabase(parameters, localGeodatabasePath);
@@ -229,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
   private void createProgressDialog(Job job) {
 
     ProgressDialog syncProgressDialog = new ProgressDialog(this);
-    syncProgressDialog.setTitle("Sync Geodatabase Job");
+    syncProgressDialog.setTitle("Sync geodatabase job");
     syncProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     syncProgressDialog.setCanceledOnTouchOutside(false);
     syncProgressDialog.show();

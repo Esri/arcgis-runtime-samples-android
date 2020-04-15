@@ -87,6 +87,8 @@ public class MainActivity extends AppCompatActivity
         // limit the map scale to the largest layer scale
         map.setMaxScale(map.getOperationalLayers().get(6).getMaxScale());
         map.setMinScale(map.getOperationalLayers().get(6).getMinScale());
+        // enable the take map offline button only after the map is loaded
+        mTakeMapOfflineButton.setEnabled(true);
       } else {
         String error = "Map failed to load: " + map.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
@@ -119,8 +121,6 @@ public class MainActivity extends AppCompatActivity
       if (minPoint != null && maxPoint != null) {
         Envelope envelope = new Envelope(minPoint, maxPoint);
         mDownloadArea.setGeometry(envelope);
-        // enable the map offline button only after the map is loaded
-        mTakeMapOfflineButton.setEnabled(true);
       }
     });
 
@@ -185,6 +185,8 @@ public class MainActivity extends AppCompatActivity
       mGenerateOfflineMapJob.cancel();
     }
 
+    mTakeMapOfflineButton.setEnabled(false);
+
     // delete any offline map already in the cache
     String tempDirectoryPath = getCacheDir() + File.separator + "offlineMap";
     deleteDirectory(new File(tempDirectoryPath));
@@ -198,7 +200,6 @@ public class MainActivity extends AppCompatActivity
         GenerateOfflineMapResult result = mGenerateOfflineMapJob.getResult();
         mMapView.setMap(result.getOfflineMap());
         mGraphicsOverlay.getGraphics().clear();
-        mTakeMapOfflineButton.setEnabled(false);
         findProgressDialogFragment().dismiss();
         Toast.makeText(this, "Now displaying offline map.", Toast.LENGTH_LONG).show();
       } else {
