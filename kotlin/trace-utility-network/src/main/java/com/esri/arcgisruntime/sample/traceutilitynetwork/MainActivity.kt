@@ -177,7 +177,7 @@ class MainActivity : AppCompatActivity() {
     traceTypeSpinner.adapter = ArrayAdapter<String>(
       applicationContext,
       android.R.layout.simple_spinner_item,
-      arrayOf("CONNECTED","SUBNETWORK","UPSTREAM","DOWNSTREAM")
+      arrayOf("CONNECTED", "SUBNETWORK", "UPSTREAM", "DOWNSTREAM")
     )
 
 
@@ -287,41 +287,35 @@ class MainActivity : AppCompatActivity() {
       .let { utilityAssetType ->
         // get the list of terminals for the feature
         val terminals = utilityAssetType.terminalConfiguration.terminals
-        
+
         // if there is only one terminal, use it to create a utility element
-        val utilityElement = when (terminals.size) {
+        when (terminals.size) {
           1 -> {
-            utilityNetwork.createElement(identifiedFeature, terminals[0])
+            // create a utility element
+            utilityNetwork.createElement(identifiedFeature, terminals[0]).also {
+              // add the utility element to the map
+              addUtilityElementToMap(identifiedFeature, identifiedFeature.geometry as Point, it)
+            }
           }
           // if there is more than one terminal, prompt the user to select one
           else -> {
             // get a list of terminal names from the terminals
             val terminalNames = utilityAssetType.terminalConfiguration.terminals.map { it.name }
-
-            var utilityElement: UtilityElement? = null
-
-            // when a terminal is selected, create a utility element with it, add it to the map, and
-            // show the element name in the UI
             AlertDialog.Builder(this).apply {
               setTitle("Select utility terminal:")
               setItems(terminalNames.toTypedArray()) { _, which ->
-                utilityElement = utilityNetwork.createElement(identifiedFeature, terminals[which]).also {
+                // create a utility element
+                utilityNetwork.createElement(identifiedFeature, terminals[which]).also {
+                  // add the utility element to the map
+                  addUtilityElementToMap(identifiedFeature, identifiedFeature.geometry as Point, it)
                   // show the utility element name in the UI
                   showTerminalNameInStatusLabel(it.terminal)
                 }
               }
             }.show()
-            utilityElement
           }
         }
-        // add the utility element to the map
-        utilityElement?.let {
-          addUtilityElementToMap(
-            identifiedFeature,
-            identifiedFeature.geometry as Point,
-            it
-          )
-        }
+
       }
   }
 
