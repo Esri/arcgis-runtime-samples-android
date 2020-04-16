@@ -17,6 +17,7 @@
 package com.esri.arcgisruntime.sample.navigateroute;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -25,17 +26,19 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.Polyline;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.location.SimulatedLocationDataSource;
+import com.esri.arcgisruntime.location.SimulationParameters;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
@@ -166,7 +169,10 @@ public class MainActivity extends AppCompatActivity {
     // get the map view's location display
     LocationDisplay locationDisplay = mMapView.getLocationDisplay();
     // set up a simulated location data source which simulates movement along the route
-    mSimulatedLocationDataSource = new SimulatedLocationDataSource(routeGeometry);
+    mSimulatedLocationDataSource = new SimulatedLocationDataSource();
+    SimulationParameters simulationParameters = new SimulationParameters(Calendar.getInstance(), 35, 5, 5);
+    mSimulatedLocationDataSource.setLocations(routeGeometry, simulationParameters);
+
     // set the simulated location data source as the location data source for this app
     locationDisplay.setLocationDataSource(mSimulatedLocationDataSource);
     locationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.NAVIGATION);
@@ -219,8 +225,6 @@ public class MainActivity extends AppCompatActivity {
             mRouteTracker.switchToNextDestinationAsync();
             Toast.makeText(this, "Navigating to the second stop, the Fleet Science Center.", Toast.LENGTH_LONG).show();
           } else {
-            // the final destination has been reached, stop the simulated location data source
-            mSimulatedLocationDataSource.onStop();
             Toast.makeText(this, "Arrived at the final destination.", Toast.LENGTH_LONG).show();
           }
         }
