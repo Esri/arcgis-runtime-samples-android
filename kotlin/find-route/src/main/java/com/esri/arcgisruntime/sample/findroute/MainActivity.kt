@@ -161,10 +161,7 @@ class MainActivity : AppCompatActivity() {
    * Set up the source, destination and route symbols.
    */
   private fun setupSymbols() {
-    //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
-    // create a picture marker symbol from an app resource
     try {
-
       val startDrawable =
         ContextCompat.getDrawable(this, R.drawable.ic_source) as BitmapDrawable?
 
@@ -178,10 +175,12 @@ class MainActivity : AppCompatActivity() {
             32.741123367963446,
             SpatialReferences.getWgs84()
           )
-          Graphic(sourcePoint, this).also { pinSourceGraphic ->
-            graphicsOverlay.graphics.add(pinSourceGraphic)
-          }
+          // add it to the graphics overlay
+          graphicsOverlay.graphics.add(Graphic(sourcePoint, this))
         }
+        // make the graphic smaller
+        width = 30f
+        height = 30f
         offsetY = 20f
       }
     } catch (e: Exception) {
@@ -189,9 +188,7 @@ class MainActivity : AppCompatActivity() {
       Log.e(TAG, message)
       Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
-    //[DocRef: END]
     try {
-
       val endDrawable =
         ContextCompat.getDrawable(this, R.drawable.ic_destination) as BitmapDrawable?
 
@@ -205,10 +202,12 @@ class MainActivity : AppCompatActivity() {
             32.703360305883045,
             SpatialReferences.getWgs84()
           )
-          Graphic(destinationPoint, this).also { pinDestinationGraphic ->
-            graphicsOverlay.graphics.add(pinDestinationGraphic)
-          }
+          // add it to the graphics overlay
+          graphicsOverlay.graphics.add(Graphic(destinationPoint, this))
         }
+        // make the graphic smaller
+        width = 30f
+        height = 30f
         offsetY = 20f
       }
     } catch (e: Exception) {
@@ -216,7 +215,6 @@ class MainActivity : AppCompatActivity() {
       Log.e(TAG, message)
       Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
-    //[DocRef: END]
   }
 
   /** Creates a bottom sheet to display a list of direction maneuvers.
