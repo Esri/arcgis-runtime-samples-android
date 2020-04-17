@@ -34,17 +34,11 @@ class MainActivity : AppCompatActivity() {
     mapView.map = map
 
     rotationSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-      override fun onProgressChanged(
-        seekBar: SeekBar,
-        angle: Int,
-        b: Boolean
-      ) {
-        // convert progress to double
-        val dAngle = angle.toDouble()
+      override fun onProgressChanged(seekBar: SeekBar, angle: Int, b: Boolean) {
         // set the text to the value
         rotationValueText.text = angle.toString()
         // rotate map view to the progress angle
-        mapView.setViewpointRotationAsync(dAngle)
+        mapView.setViewpointRotationAsync(angle.toDouble())
       }
 
       override fun onStartTrackingTouch(seekBar: SeekBar?) {}

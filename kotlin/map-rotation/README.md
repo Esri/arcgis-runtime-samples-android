@@ -10,7 +10,7 @@ A user may wish to view the map in an orientation other than north-facing.
 
 ## How to use the sample
 
-Use the progress bar to rotate the map. If the map is not pointed north, the progress bar will show the heading relative to north in degrees. Slide the progress bar to zero to set the maps's heading back to north.
+Use the slider to rotate the map. If the map is not pointed north, the slider will show the heading relative to north in degrees. Slide the slider to zero to set the map's heading back to north.
 
 ## How it works
 

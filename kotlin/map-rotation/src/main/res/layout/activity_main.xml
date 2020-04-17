@@ -32,8 +32,7 @@
         android:max="360"
         app:layout_constraintBottom_toBottomOf="@+id/mapView"
         app:layout_constraintLeft_toLeftOf="@+id/mapView"
-        app:layout_constraintRight_toLeftOf="@+id/rotationValueText"
-        android:layout_toLeftOf="@+id/rotationValueText" />
+        app:layout_constraintRight_toLeftOf="@+id/rotationValueText" />
 
     <TextView
         android:id="@+id/rotationValueText"
@@ -47,8 +46,6 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/rotationSeekBar"
         app:layout_constraintRight_toRightOf="parent"
-        tools:text="180"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="16dp" />
+        tools:text="180" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
