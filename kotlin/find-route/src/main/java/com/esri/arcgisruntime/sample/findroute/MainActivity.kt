@@ -19,6 +19,7 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -38,6 +39,7 @@ import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
+import com.esri.arcgisruntime.tasks.networkanalysis.DirectionManeuver
 import com.esri.arcgisruntime.tasks.networkanalysis.Route
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
@@ -50,11 +52,6 @@ class MainActivity : AppCompatActivity() {
 
   private val TAG = MainActivity::class.java.simpleName
 
-  private val bottomSheetBehavior: BottomSheetBehavior<View> by lazy {
-    // create a bottom sheet behavior from the view included in the main layout
-    BottomSheetBehavior.from(bottomSheet)
-  }
-
   private val graphicsOverlay: GraphicsOverlay by lazy {
     // create a graphics overlay and add it to the map view
     GraphicsOverlay().also {
@@ -66,64 +63,35 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create new basemap with the vector tiled layer from a service url
-    val basemap = Basemap(
-      ArcGISVectorTiledLayer(resources.getString(R.string.navigation_vector))
-    )
     // create a map with the basemap
-    // create a map 
     val map = ArcGISMap().apply {
       // set the basemap with the vector tiled layer from a service URL
-      basemap = Basemap(ArcGISVectorTiledLayer(resources.getString(R.string.navigation_vector)))
-
+      basemap = Basemap(
+        ArcGISVectorTiledLayer(resources.getString(R.string.navigation_vector))
+      )
       // set initial viewpoint to San Diego
       initialViewpoint = Viewpoint(32.7157, -117.1611, 200000.0)
     }
 
-    // set the map to be displayed in this view
-    mapView.map = map
-      // set initial viewpoint to San Diego
-      map.initialViewpoint = Viewpoint(32.7157, -117.1611, 200000.0)
+    mapView.apply {
       // set the map to be displayed in this view
-      mapView.map = map
-    }
-
-    // ensure the floating action button moves to be above the attribution view
-    val params = directionFab.layoutParams as ConstraintLayout.LayoutParams
-    mapView.addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-      val heightDelta = bottom - oldBottom
-      params.bottomMargin += heightDelta
-    }
-
-    // hide the bottom sheet
-    bottomSheetBehavior.peekHeight = 0
-    // animate the arrow when the bottom sheet slides
-    bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetCallback() {
-      override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        bottomSheet.header.imageView.rotation = slideOffset * 180f
+      this.map = map
+      // ensure the floating action button moves to be above the attribution view
+      addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+        val heightDelta = bottom - oldBottom
+        (directionFab.layoutParams as ConstraintLayout.LayoutParams).bottomMargin += heightDelta
       }
-
-      override fun onStateChanged(bottomSheet: View, newState: Int) {
-        bottomSheet.header.imageView.rotation = when (newState) {
-          BottomSheetBehavior.STATE_EXPANDED -> 180f
-          else -> 0f
-        }
-      }
-    })
-    // while the bottom sheet is hidden, make the map view span the whole screen
-    val mainContainerParams = mainContainer.layoutParams as CoordinatorLayout.LayoutParams
-    mainContainerParams.bottomMargin = 0
+    }
 
     // create the symbols for the route
     setupSymbols()
 
+    // hide the bottom sheet and make the map view span the whole screen
+    bottomSheet.visibility = View.INVISIBLE
+    (mainContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin = 0
+
     // solve the route and display the bottom sheet when the FAB is clicked
-    directionFab.setOnClickListener {
-      bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-      bottomSheetBehavior.peekHeight = bottomSheet.header.height
-      mainContainerParams.bottomMargin = bottomSheet.header.height
-      solveRoute()
-    }
+    directionFab.setOnClickListener { solveRoute() }
   }
 
   /**
@@ -164,62 +132,15 @@ class MainActivity : AppCompatActivity() {
             graphicsOverlay.graphics.add(it)
           }
 
-          // get directions
-          // NOTE: to get turn-by-turn directions the route parameters
-          //  must have the isReturnDirections parameter set to true.
-          val directions = route.directionManeuvers
-          val directionsArray = Array<String>(directions.size) { i ->
-            directions[i].directionText
-          }
-
           if (progressDialog.isShowing) {
             progressDialog.dismiss()
           }
 
-          // expand or collapse the bottom sheet when the header is clicked
-          bottomSheet.header.setOnClickListener {
-            bottomSheetBehavior.state = when (bottomSheetBehavior.state) {
-              BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_EXPANDED
-              else -> BottomSheetBehavior.STATE_COLLAPSED
-            }
-          }
-
-          bottomSheet.directionsListView.apply {
-            // Set the adapter for the list view
-            adapter = ArrayAdapter(
-              this@MainActivity,
-              android.R.layout.simple_list_item_1,
-              directionsArray
-            )
-
-            // when the user taps a maneuver, set the viewpoint to that portion of the route
-            onItemClickListener =
-              AdapterView.OnItemClickListener { _, _, position, _ ->
-                // remove any graphics that are not the two stops and the route graphic
-                if (graphicsOverlay.graphics.size > 3) {
-                  graphicsOverlay.graphics.removeAt(graphicsOverlay.graphics.size - 1)
-                }
-
-                // set the viewpoint to the selected maneuver
-                val geometry = directions[position].geometry
-                mapView.setViewpointAsync(
-                  Viewpoint(geometry.extent, 20.0),
-                  1f
-                )
-
-                // create a graphic with a symbol for the maneuver and add it to the graphics overlay
-                val selectedRouteSymbol = SimpleLineSymbol(
-                  SimpleLineSymbol.Style.SOLID,
-                  Color.GREEN, 5f
-                )
-                Graphic(geometry, selectedRouteSymbol).also {
-                  graphicsOverlay.graphics.add(it)
-                }
-
-                // collapse the bottom sheet
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-              }
-          }
+          // get the list of direction maneuvers and display it
+          // NOTE: to get turn-by-turn directions the route parameters
+          //  must have the isReturnDirections parameter set to true.
+          val directions = route.directionManeuvers
+          setupBottomSheet(directions)
 
           // when the route is solved, hide the FAB
           directionFab.visibility = View.GONE
@@ -296,6 +217,81 @@ class MainActivity : AppCompatActivity() {
       Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
     //[DocRef: END]
+  }
+
+  /** Creates a bottom sheet to display a list of direction maneuvers.
+   *
+   * @param directions a list of DirectionManeuver which represents the route
+   */
+  private fun setupBottomSheet(directions: List<DirectionManeuver>) {
+    // create a bottom sheet behavior from the bottom sheet view in the main layout
+    val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+
+    // expand the bottom sheet, and ensure it is displayed on the screen when collapsed
+    bottomSheet.visibility = View.VISIBLE
+    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    bottomSheetBehavior.peekHeight = bottomSheet.header.height
+    (mainContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin =
+      bottomSheet.header.height
+
+    // animate the arrow when the bottom sheet slides
+    bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetCallback() {
+      override fun onSlide(bottomSheet: View, slideOffset: Float) {
+        bottomSheet.header.imageView.rotation = slideOffset * 180f
+      }
+
+      override fun onStateChanged(bottomSheet: View, newState: Int) {
+        bottomSheet.header.imageView.rotation = when (newState) {
+          BottomSheetBehavior.STATE_EXPANDED -> 180f
+          else -> 0f
+        }
+      }
+    })
+
+    // expand or collapse the bottom sheet when the header is clicked
+    bottomSheet.header.setOnClickListener {
+      bottomSheetBehavior.state = when (bottomSheetBehavior.state) {
+        BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_EXPANDED
+        else -> BottomSheetBehavior.STATE_COLLAPSED
+      }
+    }
+
+    bottomSheet.directionsListView.apply {
+      // Set the adapter for the list view
+      adapter = ArrayAdapter(
+        this@MainActivity,
+        android.R.layout.simple_list_item_1,
+        directions.map { it.directionText }
+      )
+
+      // when the user taps a maneuver, set the viewpoint to that portion of the route
+      onItemClickListener =
+        AdapterView.OnItemClickListener { _, _, position, _ ->
+          // remove any graphics that are not the two stops and the route graphic
+          if (graphicsOverlay.graphics.size > 3) {
+            graphicsOverlay.graphics.removeAt(graphicsOverlay.graphics.size - 1)
+          }
+
+          // set the viewpoint to the selected maneuver
+          val geometry = directions[position].geometry
+          mapView.setViewpointAsync(
+            Viewpoint(geometry.extent, 20.0),
+            1f
+          )
+
+          // create a graphic with a symbol for the maneuver and add it to the graphics overlay
+          val selectedRouteSymbol = SimpleLineSymbol(
+            SimpleLineSymbol.Style.SOLID,
+            Color.GREEN, 5f
+          )
+          Graphic(geometry, selectedRouteSymbol).also {
+            graphicsOverlay.graphics.add(it)
+          }
+
+          // collapse the bottom sheet
+          bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
   }
 
   /** Create a progress dialog box for tracking the route task.
