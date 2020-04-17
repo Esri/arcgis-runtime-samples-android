@@ -237,7 +237,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Set up the source, destination and route symbols
+   * Set up the source, destination and route symbols.
    */
   private fun setupSymbols() {
     //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
