@@ -19,7 +19,7 @@ The application loads a scene showing four points that use the individual surfac
     * `RELATIVE`, position graphic using its Z value plus the elevation of the surface.
     * `DRAPED_BILLBOARDED`, position graphic upright on the surface and always facing the camera, not using its z value.
     * `DRAPED_FLAT`, position graphic flat on the surface, not using its z value.
-    * `RELATIVE_TO_SCENE`, position graphic using the Z value of the scene layer.`
+    * `RELATIVE_TO_SCENE`, position graphic using the Z value of the scene layer.
 2. Add graphics to the graphics overlay, `GraphicsOverlay.getGraphics().add(graphic)`.
 3. Add each graphics overlay to the scene view by calling `SceneView.getGraphicsOverlays().add(overlay)`.
 
