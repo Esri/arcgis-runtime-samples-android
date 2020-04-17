@@ -241,7 +241,7 @@ class MainActivity : AppCompatActivity() {
    */
   private fun setupSymbols() {
     //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
-    // Create a picture marker symbol from an app resource
+    // create a picture marker symbol from an app resource
     try {
 
       val startDrawable =
