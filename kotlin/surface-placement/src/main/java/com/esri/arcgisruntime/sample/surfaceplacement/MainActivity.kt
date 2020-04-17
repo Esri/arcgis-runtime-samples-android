@@ -87,7 +87,9 @@ class MainActivity : AppCompatActivity() {
     val drapedFlatText = TextSymbol(
       15F, "DRAPED FLAT", Color.BLUE, TextSymbol.HorizontalAlignment.LEFT,
       VerticalAlignment.TOP
-    ).apply { offsetY = 20f }
+    ).apply {
+      offsetY = 20f
+    }
     // create the draped flat overlay
     val drapedFlatOverlay = GraphicsOverlay().apply {
       sceneProperties.surfacePlacement = SurfacePlacement.DRAPED_FLAT
@@ -103,7 +105,9 @@ class MainActivity : AppCompatActivity() {
     val drapedBillboardedText = TextSymbol(
       15F, "DRAPED BILLBOARDED", Color.BLUE, TextSymbol.HorizontalAlignment.LEFT,
       VerticalAlignment.TOP
-    ).apply { offsetY = 20f }
+    ).apply {
+      offsetY = 20f
+    }
     // create the draped billboarded overlay
     val drapedBillboardedOverlay = GraphicsOverlay().apply {
       sceneProperties.surfacePlacement =
@@ -122,7 +126,9 @@ class MainActivity : AppCompatActivity() {
     val relativeText = TextSymbol(
       15f, "RELATIVE", Color.BLUE, TextSymbol.HorizontalAlignment.LEFT,
       VerticalAlignment.TOP
-    ).apply { offsetY = 20f }
+    ).apply {
+      offsetY = 20f
+    }
     // create the relative overlay
     val relativeOverlay = GraphicsOverlay().apply {
       sceneProperties.surfacePlacement = SurfacePlacement.RELATIVE
@@ -138,7 +144,9 @@ class MainActivity : AppCompatActivity() {
     val absoluteText = TextSymbol(
       15f, "ABSOLUTE", Color.BLUE, TextSymbol.HorizontalAlignment.LEFT,
       VerticalAlignment.TOP
-    ).apply { offsetY = 20f }
+    ).apply {
+      offsetY = 20f
+    }
     // create the absolute overlay
     val absoluteOverlay = GraphicsOverlay().apply {
       sceneProperties.surfacePlacement = SurfacePlacement.ABSOLUTE
@@ -157,7 +165,9 @@ class MainActivity : AppCompatActivity() {
       Color.BLUE,
       TextSymbol.HorizontalAlignment.RIGHT,
       VerticalAlignment.TOP
-    ).apply { offsetY = 20f }
+    ).apply {
+      offsetY = 20f
+    }
     // create the relative to scene overlay
     val relativeToSceneOverlay = GraphicsOverlay().apply {
       sceneProperties.surfacePlacement = SurfacePlacement.RELATIVE_TO_SCENE
