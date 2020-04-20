@@ -216,8 +216,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Performs a valve isolation trace according to the defined trace configuration and starting location.
-   * Selects the resulting features on the map.
+   * Performs a valve isolation trace according to the defined trace configuration and starting location, and selects the resulting features on the map.
    *
    * @param utilityNetwork the utility network to perform the trace on
    * @param traceConfiguration the trace configuration to apply to the trace
