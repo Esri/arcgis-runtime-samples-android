@@ -13,7 +13,7 @@ ext {
     multidexVersion = '2.0.1'
     arcgisVersion = '100.8.0-2747'
     arcgisToolkitVersion = '100.7.0'
-    materialVersion = "1.1.0"
+    materialVersion = '1.1.0'
     // plugin versions
     gradleVersion = '3.6.0'
     // java version
