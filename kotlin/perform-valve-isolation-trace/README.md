@@ -25,7 +25,7 @@ Create and set the configuration's filter barriers by selecting a category. Togg
     * Create a new `UtilityCategoryComparison` with the selected category and `UtilityCategoryComparisonOperator.EXISTS`.
     * Assign this condition to `traceConfiguration.filter.barriers` from the default configuration from step 7. Update this configuration's `isIncludeIsolatedFeatures` property.
     * Create a `UtilityTraceParameters` with `UtilityTraceType.ISOLATION` and the default starting location from step 4.
-    * Set its `TraceConfiguration` with this configuration and then, run a `UtilityNetwork.traceAsync(traceParameters)`.
+    * Set its `UtilityTraceConfiguration` with this configuration and then, run a `UtilityNetwork.traceAsync(traceParameters)`.
 9. For every `FeatureLayer` in the map, create `QueryParameters` and add any of the `UtilityElementTraceResult.elements` whose `NetworkSource.name` matches the feature layer's `FeatureTable.tableName`. Use the query parameters to select the features with `featureLayer.selectFeaturesAsync(...)`
 
 ## Relevant API
