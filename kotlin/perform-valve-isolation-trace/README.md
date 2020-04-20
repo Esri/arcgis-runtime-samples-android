@@ -16,7 +16,7 @@ Create and set the configuration's filter barriers by selecting a category. Togg
 
 1.  Create a `MapView`.
 2.  Create and load a `UtilityNetwork` with a feature service URL.
-3.  Create a `Map` that contains `FeatureLayer`(s) that are part of this utility network.
+3.  Add `FeatureLayer`(s) that are part of this utility network to a new `Map`.
 4.  Create a default starting location from a given asset type and global id.
 5.  Add a `GraphicsOverlay` with a `Graphic` that represents this starting location.
 6.  Populate the choice list for the 'Filter Barrier: Category exists' from `UtilityNetworkDefinition.categories`.
