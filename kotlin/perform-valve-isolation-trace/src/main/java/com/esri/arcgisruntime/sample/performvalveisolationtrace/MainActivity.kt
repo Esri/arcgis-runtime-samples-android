@@ -76,11 +76,9 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // load the utility network data from the feature service and create feature layers
-    val distributionLineFeatureTable =
-      ServiceFeatureTable(getString(R.string.distribution_line_url))
+    val distributionLineFeatureTable = ServiceFeatureTable(getString(R.string.distribution_line_url))
     val distributionLineLayer = FeatureLayer(distributionLineFeatureTable)
-    val deviceFeatureTable =
-      ServiceFeatureTable(getString(R.string.device_url))
+    val deviceFeatureTable = ServiceFeatureTable(getString(R.string.device_url))
     val deviceLayer = FeatureLayer(deviceFeatureTable)
 
     // create a map with the utility network distribution line and device layers
