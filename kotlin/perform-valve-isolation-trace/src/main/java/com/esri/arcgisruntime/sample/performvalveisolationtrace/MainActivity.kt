@@ -276,11 +276,7 @@ class MainActivity : AppCompatActivity() {
             // trace result is empty
             val message = "Utility Element Trace Result had no elements!"
             Log.i(TAG, message)
-            Toast.makeText(
-              this,
-              message,
-              Toast.LENGTH_LONG
-            ).show()
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
           }
         }
         // hide the progress bar when the trace is completed or failed
@@ -291,5 +287,20 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, error, Toast.LENGTH_LONG).show()
       }
     }
+  }
+
+  override fun onResume() {
+    super.onResume()
+    mapView.resume()
+  }
+
+  override fun onPause() {
+    mapView.pause()
+    super.onPause()
+  }
+
+  override fun onDestroy() {
+    mapView.dispose()
+    super.onDestroy()
   }
 }
