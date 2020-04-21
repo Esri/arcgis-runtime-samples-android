@@ -47,6 +47,7 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityCategoryComparisonOperator
 import com.esri.arcgisruntime.utilitynetworks.UtilityElement
 import com.esri.arcgisruntime.utilitynetworks.UtilityElementTraceResult
 import com.esri.arcgisruntime.utilitynetworks.UtilityNetwork
+import com.esri.arcgisruntime.utilitynetworks.UtilityNetworkDefinition
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceConfiguration
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceFilter
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters
@@ -165,25 +166,7 @@ class MainActivity : AppCompatActivity() {
                   Graphic(startingLocationGeometryPoint, startingPointSymbol)
                 startingLocationGraphicsOverlay.graphics.add(startingLocationGraphic)
 
-                // populate the spinner with utility categories as the data and their names as the text
-                spinner.adapter = object : ArrayAdapter<UtilityCategory>(
-                  this,
-                  R.layout.spinner_text_item,
-                  networkDefinition.categories
-                ) {
-                  override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                    val spinnerItem = LayoutInflater.from(this@MainActivity)
-                      .inflate(R.layout.spinner_text_item, parent, false)
-                    spinnerItem.textView.text = (getItem(position) as UtilityCategory).name
-                    return spinnerItem
-                  }
-
-                  override fun getDropDownView(
-                    position: Int,
-                    convertView: View?,
-                    parent: ViewGroup
-                  ): View = getView(position, convertView, parent)
-                }
+                populateCategorySpinner(networkDefinition)
 
                 trace_button.setOnClickListener {
                   fab.isExpanded = false
@@ -289,6 +272,36 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, error, Toast.LENGTH_LONG).show()
       }
     }
+  }
+
+  /**
+   * Initialize the category selection spinner using a utility network definition.
+   *
+   * @param networkDefinition the utility network definition to populate the spinner
+   */
+  private fun populateCategorySpinner(
+    networkDefinition: UtilityNetworkDefinition
+  ) {
+    // populate the spinner with utility categories as the data and their names as the text
+    spinner.adapter =
+      object : ArrayAdapter<UtilityCategory>(
+        this,
+        R.layout.spinner_text_item,
+        networkDefinition.categories
+      ) {
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+          val spinnerItem = LayoutInflater.from(this@MainActivity)
+            .inflate(R.layout.spinner_text_item, parent, false)
+          spinnerItem.textView.text = (getItem(position) as UtilityCategory).name
+          return spinnerItem
+        }
+
+        override fun getDropDownView(
+          position: Int,
+          convertView: View?,
+          parent: ViewGroup
+        ): View = getView(position, convertView, parent)
+      }
   }
 
   override fun onResume() {
