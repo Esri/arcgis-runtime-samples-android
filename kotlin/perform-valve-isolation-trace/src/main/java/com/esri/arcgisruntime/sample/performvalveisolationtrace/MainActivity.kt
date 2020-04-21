@@ -97,6 +97,9 @@ class MainActivity : AppCompatActivity() {
       startingLocationGraphicsOverlay.renderer = SimpleRenderer(startingPointSymbol)
       graphicsOverlays.add(startingLocationGraphicsOverlay)
 
+      // set the viewpoint to a specific location in Naperville, Illinois
+      setViewpointAsync(Viewpoint(Point(-9812712.321100, 5124260.390000, 0.000100), 5000.0))
+
       // make sure the fab doesn't obscure the attribution bar
       addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
         val layoutParams = fab.layoutParams as CoordinatorLayout.LayoutParams
@@ -161,9 +164,6 @@ class MainActivity : AppCompatActivity() {
                 val startingLocationGraphic =
                   Graphic(startingLocationGeometryPoint, startingPointSymbol)
                 startingLocationGraphicsOverlay.graphics.add(startingLocationGraphic)
-
-                // set the map's viewpoint to the starting location
-                mapView.setViewpointAsync(Viewpoint(startingLocationGeometryPoint, 3000.0))
 
                 // populate the spinner with utility categories as the data and their names as the text
                 spinner.adapter = object : ArrayAdapter<UtilityCategory>(
@@ -256,7 +256,7 @@ class MainActivity : AppCompatActivity() {
               .forEach { featureLayer ->
                 // clear any selections from a previous trace
                 featureLayer.clearSelection()
-                
+
                 val queryParameters = QueryParameters()
                 // for each utility element in the trace, check if its network source is the same as
                 // the feature table, and if it is, add it to the query parameters to be selected
