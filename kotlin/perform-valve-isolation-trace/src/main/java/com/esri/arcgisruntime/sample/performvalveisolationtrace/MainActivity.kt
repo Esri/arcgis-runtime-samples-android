@@ -248,18 +248,15 @@ class MainActivity : AppCompatActivity() {
     val utilityTraceResultsFuture = utilityNetwork.traceAsync(traceParameters)
     utilityTraceResultsFuture.addDoneListener {
       try {
-        // iterate over the map's feature layers
-        mapView.map.operationalLayers.filterIsInstance<FeatureLayer>()
-          .forEach { featureLayer ->
-            // clear any selections from a previous trace
-            featureLayer.clearSelection()
-          }
         // get the first element of the trace result if it is not null
         (utilityTraceResultsFuture.get()[0] as? UtilityElementTraceResult)?.let { utilityElementTraceResult ->
           if (utilityElementTraceResult.elements.isNotEmpty()) {
             // iterate over the map's feature layers
             mapView.map.operationalLayers.filterIsInstance<FeatureLayer>()
               .forEach { featureLayer ->
+                // clear any selections from a previous trace
+                featureLayer.clearSelection()
+                
                 val queryParameters = QueryParameters()
                 // for each utility element in the trace, check if its network source is the same as
                 // the feature table, and if it is, add it to the query parameters to be selected
@@ -272,6 +269,12 @@ class MainActivity : AppCompatActivity() {
                 featureLayer.selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW)
               }
           } else {
+            // iterate over the map's feature layers
+            mapView.map.operationalLayers.filterIsInstance<FeatureLayer>()
+              .forEach { featureLayer ->
+                // clear any selections from a previous trace
+                featureLayer.clearSelection()
+              }
             // trace result is empty
             val message = "Utility Element Trace Result had no elements!"
             Log.i(TAG, message)
