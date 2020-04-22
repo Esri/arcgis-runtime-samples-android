@@ -14,6 +14,7 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"
+        android:src="@android:drawable/ic_menu_manage"
         app:elevation="16dp" />
 
     <com.esri.arcgisruntime.mapping.view.SceneView
@@ -35,60 +36,60 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/startButton"
+                android:id="@+id/startStopButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="Start"
+                android:onClick="toggleStartStopButton"
+                android:text="@string/stop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/fpsSpinner"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/opacityTextView" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <SeekBar
-                android:id="@+id/seekBar"
+                android:id="@+id/opacitySeekBar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/opacityTextView"
+                android:layout_marginBottom="16dp"
+                android:progress="100"
+                app:layout_constraintBottom_toTopOf="@+id/fpsSpinner"
                 app:layout_constraintEnd_toStartOf="@+id/currOpacityTextView"
                 app:layout_constraintStart_toEndOf="@+id/opacityTextView"
-                app:layout_constraintTop_toTopOf="@+id/opacityTextView" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Spinner
                 android:id="@+id/fpsSpinner"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/startButton"
+                app:layout_constraintBottom_toBottomOf="@+id/startStopButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/startButton"
-                app:layout_constraintTop_toTopOf="@+id/startButton" />
+                app:layout_constraintStart_toEndOf="@+id/startStopButton"
+                app:layout_constraintTop_toTopOf="@+id/startStopButton" />
 
             <TextView
                 android:id="@+id/opacityTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Opacity:"
+                android:text="@string/opacity"
+                app:layout_constraintBottom_toBottomOf="@+id/opacitySeekBar"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/opacitySeekBar" />
 
             <TextView
                 android:id="@+id/currOpacityTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="##"
-                app:layout_constraintBottom_toBottomOf="@+id/seekBar"
+                android:text="@string/starting_opacity"
+                app:layout_constraintBottom_toBottomOf="@+id/opacitySeekBar"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/seekBar" />
+                app:layout_constraintTop_toTopOf="@+id/opacitySeekBar" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.circularreveal.CircularRevealFrameLayout>

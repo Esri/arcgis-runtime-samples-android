@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Animate images with image overlay</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="opacity">Opacity:</string>
+    <string name="starting_opacity">1.0</string>
 </resources>
