@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Perform valve isolation trace</string>
+    <string name="utility_network_url">https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleGas/FeatureServer/</string>
+    <string name="distribution_line_url">https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleGas/FeatureServer/3</string>
+    <string name="device_url">https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleGas/FeatureServer/0</string>
+    <string name="choose_category_for_filter_barrier">Choose category for filter barrier:</string>
+    <string name="include_isolated_features">Include isolated features:</string>
+    <string name="trace">Trace</string>
+</resources>
