@@ -123,8 +123,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Creates a utility network from the string resource url and loads it.
-   * Initializes the starting point and UI.
+   * Create and load a utility network from the string resource url and initialize a starting point
+   * from it.
    */
   private fun createUtilityNetwork(
   ) {
