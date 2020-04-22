@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
       // add the scene to the scene view
       scene = darkGrayScene
       // create and append an image overlay to the scene view
-      sceneView.imageOverlays.add(ImageOverlay())
+      imageOverlays.add(ImageOverlay())
       // create a touch listener
       setOnTouchListener(object : DefaultSceneViewOnTouchListener(sceneView) {
         // close the options sheet when the map is tapped
