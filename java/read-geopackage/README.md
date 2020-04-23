@@ -10,7 +10,7 @@ The OGC GeoPackage specification defines an open standard for sharing raster and
 
 ## How to use the sample
 
-When the sample loads, the layers in the GeoPackage are shown in a drawer on the left side of the screen. Tap on one of these layers to add or remove it from the map.
+When the sample loads, the feature tables and rasters from the GeoPackage are shown on the map.
 
 ## How it works
 

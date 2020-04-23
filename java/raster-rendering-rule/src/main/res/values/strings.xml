@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">Raster Rendering Rule</string>
+    <string name="app_name">Raster rendering rule</string>
     <string name="image_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/CharlotteLAS/ImageServer</string>
 </resources>

@@ -14,13 +14,14 @@
  *
  */
 
-package com.esri.arcgisruntime.samples.renderingrule
+package com.esri.arcgisruntime.sample.rasterrenderingrule
 
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.layers.RasterLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
@@ -32,25 +33,26 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var map: ArcGISMap
+  private val TAG = this::class.java.simpleName
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // create image service raster as raster layer and add to map
+    val imageServiceRaster = ImageServiceRaster(getString(R.string.image_service_url))
+    val imageRasterLayer = RasterLayer(imageServiceRaster)
+
     // create a Streets BaseMap
-    map = ArcGISMap(Basemap.createStreets())
+    val map = ArcGISMap(Basemap.createStreets()).apply {
+      operationalLayers.add(imageRasterLayer)
+    }
+
     // set the map to be displayed in this view
     mapView.map = map
 
-    // create image service raster as raster layer and add to map
-    val imageServiceRaster = ImageServiceRaster(resources.getString(R.string.image_service_url))
-    val imageRasterLayer = RasterLayer(imageServiceRaster)
-    map.operationalLayers.add(imageRasterLayer)
-
     val renderRulesList = mutableListOf<String>()
-    val spinnerAdapter =
-      ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, renderRulesList)
+    val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, renderRulesList)
     spinner.adapter = spinnerAdapter
     // zoom to the extent of the raster service
     imageRasterLayer.addDoneLoadingListener {
@@ -65,19 +67,20 @@ class MainActivity : AppCompatActivity() {
           // update array adapter with list update
           spinnerAdapter.notifyDataSetChanged()
         }
+      } else {
+        val error = "Error loading raster: " + imageRasterLayer.loadError.message
+        Log.e(TAG, error)
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
       }
     }
 
     // listen to the spinner
     spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-      override fun onNothingSelected(parent: AdapterView<*>?) {
-        Log.d("MainActivity", "Spinner nothing selected")
-      }
+      override fun onNothingSelected(parent: AdapterView<*>?) {  }
 
       override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) =
         applyRenderingRule(imageServiceRaster, position)
     }
-
   }
 
   /**
@@ -87,26 +90,29 @@ class MainActivity : AppCompatActivity() {
    * @param index spinner selected position representing the rule to apply
    */
   fun applyRenderingRule(imageServiceRaster: ImageServiceRaster, index: Int) {
-    // clear all rasters
-    map.operationalLayers.clear()
+
     // get the rendering rule info at the selected index
     val renderRuleInfo = imageServiceRaster.serviceInfo.renderingRuleInfos[index]
     // create a rendering rule object using the rendering rule info
     val renderingRule = RenderingRule(renderRuleInfo)
     // create a new image service raster
-    val appliedImageServiceRaster =
-      ImageServiceRaster(resources.getString(R.string.image_service_url))
+    val appliedImageServiceRaster = ImageServiceRaster(getString(R.string.image_service_url))
     // apply the rendering rule
     appliedImageServiceRaster.renderingRule = renderingRule
     // create a raster layer using the image service raster
     val rasterLayer = RasterLayer(appliedImageServiceRaster)
-    // add the raster layer to the map
-    map.operationalLayers.add(rasterLayer)
+
+    mapView.map.operationalLayers.let {
+      // clear all rasters
+      it.clear()
+      // add the raster layer to the map
+      it.add(rasterLayer)
+    }
   }
 
   override fun onPause() {
-    super.onPause()
     mapView.pause()
+    super.onPause()
   }
 
   override fun onResume() {
@@ -115,7 +121,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onDestroy() {
-    super.onDestroy()
     mapView.dispose()
+    super.onDestroy()
   }
 }
