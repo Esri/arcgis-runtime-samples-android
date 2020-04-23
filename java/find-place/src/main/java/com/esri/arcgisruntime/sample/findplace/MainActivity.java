@@ -27,19 +27,18 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.cursoradapter.widget.SimpleCursorAdapter;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.cursoradapter.widget.SimpleCursorAdapter;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Geometry;
@@ -68,45 +67,31 @@ import com.esri.arcgisruntime.tasks.geocode.SuggestResult;
 
 public class MainActivity extends AppCompatActivity {
 
-  private final String[] reqPermissions =
-      new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION };
-
   private final String TAG = MainActivity.class.getSimpleName();
 
-  private final String COLUMN_NAME_ADDRESS = "address";
+  private final String[] reqPermissions = { Manifest.permission.ACCESS_FINE_LOCATION,
+      Manifest.permission.ACCESS_COARSE_LOCATION };
 
+  private static final String COLUMN_NAME_ADDRESS = "address";
   private final String[] mColumnNames = { BaseColumns._ID, COLUMN_NAME_ADDRESS };
 
   private SearchView mPoiSearchView;
-
   private SearchView mProximitySearchView;
 
   private boolean mProximitySearchViewEmpty;
-
   private String mPoiAddress;
 
   private Point mPreferredSearchProximity;
-
   private MapView mMapView;
-
   private LocationDisplay mLocationDisplay;
-
   private LocatorTask mLocatorTask;
-
   private GraphicsOverlay mGraphicsOverlay;
-
   private SuggestParameters mPoiSuggestParameters;
-
   private GeocodeParameters mPoiGeocodeParameters;
-
   private SuggestParameters mProximitySuggestParameters;
-
   private GeocodeParameters mProximityGeocodeParameters;
-
   private PictureMarkerSymbol mPinSourceSymbol;
-
   private Geometry mCurrentExtentGeometry;
-
   private Callout mCallout;
 
   @Override
@@ -115,30 +100,26 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     // if permissions are not already granted, request permission from the user
-    if (!(ContextCompat.checkSelfPermission(MainActivity.this, reqPermissions[0]) == PackageManager.PERMISSION_GRANTED
-        && ContextCompat.checkSelfPermission(MainActivity.this, reqPermissions[1])
+    if (!(ContextCompat.checkSelfPermission(this, reqPermissions[0]) == PackageManager.PERMISSION_GRANTED
+        && ContextCompat.checkSelfPermission(this, reqPermissions[1])
         == PackageManager.PERMISSION_GRANTED)) {
       int requestCode = 2;
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermissions, requestCode);
+      ActivityCompat.requestPermissions(this, reqPermissions, requestCode);
     }
 
     // setup the two SearchViews and show text hint
-    mPoiSearchView = (SearchView) findViewById(R.id.poi_searchView);
+    mPoiSearchView = findViewById(R.id.poi_searchView);
     mPoiSearchView.setIconified(false);
     mPoiSearchView.setFocusable(false);
     mPoiSearchView.setQueryHint(getResources().getString(R.string.search_hint));
-    mProximitySearchView = (SearchView) findViewById(R.id.proximity_searchView);
+    mProximitySearchView = findViewById(R.id.proximity_searchView);
     mProximitySearchView.setIconified(false);
     mProximitySearchView.setFocusable(false);
     mProximitySearchView.setQueryHint(getResources().getString(R.string.proximity_search_hint));
     // setup redo search button
-    Button redoSearchButton = (Button) findViewById(R.id.redo_search_button);
+    Button redoSearchButton = findViewById(R.id.redo_search_button);
     // on redo button click call redoSearchInThisArea
-    redoSearchButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        redoSearchInThisArea();
-      }
-    });
+    redoSearchButton.setOnClickListener(v -> redoSearchInThisArea());
 
     // define pin drawable
     BitmapDrawable pinDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin);
@@ -147,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     } catch (InterruptedException | ExecutionException e) {
       String error = "Error creating PictureMarkerSymbol: " + e.getMessage();
       Log.e(TAG, error);
-      Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+      Toast.makeText(this, error, Toast.LENGTH_LONG).show();
     }
     // set pin to half of native size
     mPinSourceSymbol.setWidth(19f);
@@ -160,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
     mLocatorTask = new LocatorTask(getString(R.string.world_geocode_service));
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     // disable map wraparound
     mMapView.setWrapAroundMode(WrapAroundMode.DISABLED);
     // create a map with the BasemapType topographic
@@ -188,13 +169,11 @@ public class MainActivity extends AppCompatActivity {
     mLocationDisplay.startAsync();
     // initially use device location to focus POI search
     final Point[] currentLocation = new Point[1];
-    mLocationDisplay.addLocationChangedListener(new LocationDisplay.LocationChangedListener() {
-      @Override public void onLocationChanged(LocationDisplay.LocationChangedEvent locationChangedEvent) {
-        currentLocation[0] = mLocationDisplay.getMapLocation();
-        // only update preferredSearchLocation if device has moved
-        if (!currentLocation[0].equals(mLocationDisplay.getMapLocation(), 100) || mPreferredSearchProximity == null) {
-          mPreferredSearchProximity = mLocationDisplay.getMapLocation();
-        }
+    mLocationDisplay.addLocationChangedListener(locationChangedEvent -> {
+      currentLocation[0] = mLocationDisplay.getMapLocation();
+      // only update preferredSearchLocation if device has moved
+      if (!currentLocation[0].equals(mLocationDisplay.getMapLocation(), 100) || mPreferredSearchProximity == null) {
+        mPreferredSearchProximity = mLocationDisplay.getMapLocation();
       }
     });
     // define the graphics overlay
@@ -256,8 +235,8 @@ public class MainActivity extends AppCompatActivity {
                     suggestionsCursor.addRow(new Object[] { key++, result.getLabel() });
                   }
                   // define SimpleCursorAdapter
-                  String[] cols = new String[] { COLUMN_NAME_ADDRESS };
-                  int[] to = new int[] { R.id.suggestion_address };
+                  String[] cols = { COLUMN_NAME_ADDRESS };
+                  int[] to = { R.id.suggestion_address };
                   final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
                       R.layout.suggestion, suggestionsCursor, cols, to, 0);
                   mPoiSearchView.setSuggestionsAdapter(suggestionAdapter);
@@ -330,8 +309,8 @@ public class MainActivity extends AppCompatActivity {
                   suggestionsCursor.addRow(new Object[] { key++, result.getLabel() });
                 }
                 // define SimpleCursorAdapter
-                String[] cols = new String[] { COLUMN_NAME_ADDRESS };
-                int[] to = new int[] { R.id.suggestion_address };
+                String[] cols = { COLUMN_NAME_ADDRESS };
+                int[] to = { R.id.suggestion_address };
                 final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
                     R.layout.suggestion, suggestionsCursor, cols, to, 0);
                 mProximitySearchView.setSuggestionsAdapter(suggestionAdapter);
@@ -360,7 +339,7 @@ public class MainActivity extends AppCompatActivity {
                               try {
                                 // Get the results of the async operation
                                 List<GeocodeResult> geocodeResults = geocodeFuture.get();
-                                if (geocodeResults.size() > 0) {
+                                if (!geocodeResults.isEmpty()) {
                                   // use geocodeResult to focus search area
                                   GeocodeResult geocodeResult = geocodeResults.get(0);
                                   // update preferred search area to the geocode result
@@ -444,8 +423,8 @@ public class MainActivity extends AppCompatActivity {
             TextView calloutContent = new TextView(getApplicationContext());
             calloutContent.setTextColor(Color.BLACK);
             // set the text of the Callout to graphic's attributes
-            calloutContent.setText(identifiedGraphic.getAttributes().get("PlaceName").toString() + "\n"
-                + identifiedGraphic.getAttributes().get("StAddr").toString());
+            calloutContent.setText(identifiedGraphic.getAttributes().get("PlaceName") + "\n"
+                + identifiedGraphic.getAttributes().get("StAddr"));
             // get Callout and set its options: animateCallout: true, recenterMap: false, animateRecenter: false
             mCallout = mMapView.getCallout();
             mCallout.setShowOptions(new Callout.ShowOptions(true, false, false));
@@ -488,7 +467,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                   // Get the results of the async operation
                   List<GeocodeResult> geocodeResults = geocodeResultListenableFuture.get();
-                  if (geocodeResults.size() > 0) {
+                  if (!geocodeResults.isEmpty()) {
                     displaySearchResult(geocodeResults);
                   } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.location_not_found) + address,
@@ -554,7 +533,7 @@ public class MainActivity extends AppCompatActivity {
       mLocationDisplay.startAsync();
     } else {
       // if permission was denied, show toast to inform user what was chosen
-      Toast.makeText(MainActivity.this, getResources().getString(R.string.location_permission_denied),
+      Toast.makeText(this, getResources().getString(R.string.location_permission_denied),
           Toast.LENGTH_SHORT).show();
     }
   }
