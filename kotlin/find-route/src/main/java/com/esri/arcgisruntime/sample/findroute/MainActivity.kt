@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     val map = ArcGISMap().apply {
       // set the basemap with the vector tiled layer from a service URL
       basemap = Basemap(
-        ArcGISVectorTiledLayer(resources.getString(R.string.navigation_vector))
+        ArcGISVectorTiledLayer(getString(R.string.navigation_vector))
       )
       // set initial viewpoint to San Diego
       initialViewpoint = Viewpoint(32.7157, -117.1611, 200000.0)
