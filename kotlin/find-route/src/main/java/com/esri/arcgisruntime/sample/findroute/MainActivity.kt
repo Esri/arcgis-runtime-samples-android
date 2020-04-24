@@ -52,12 +52,7 @@ class MainActivity : AppCompatActivity() {
 
   private val TAG = MainActivity::class.java.simpleName
 
-  private val graphicsOverlay: GraphicsOverlay by lazy {
-    // create a graphics overlay and add it to the map view
-    GraphicsOverlay().also {
-      mapView.graphicsOverlays.add(it)
-    }
-  }
+  private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -81,6 +76,7 @@ class MainActivity : AppCompatActivity() {
         val heightDelta = bottom - oldBottom
         (directionFab.layoutParams as ConstraintLayout.LayoutParams).bottomMargin += heightDelta
       }
+      mapView.graphicsOverlays.add(graphicsOverlay)
     }
 
     // create the symbols for the route
@@ -126,11 +122,8 @@ class MainActivity : AppCompatActivity() {
           val route = result.routes[0] as Route
           // create a simple line symbol for the route
           val routeSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5f)
-          // create a graphic for the route
-          Graphic(route.routeGeometry, routeSymbol).also {
-            // add the graphic to the map
-            graphicsOverlay.graphics.add(it)
-          }
+          // create a graphic for the route and add it to the graphics overlay
+          graphicsOverlay.graphics.add(Graphic(route.routeGeometry, routeSymbol))
 
           if (progressDialog.isShowing) {
             progressDialog.dismiss()
