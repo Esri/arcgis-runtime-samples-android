@@ -211,9 +211,9 @@ class MainActivity : AppCompatActivity() {
         offsetY = 20f
       }
     } catch (e: Exception) {
-      val message = "Error loading picture marker symbol: ${e.message}"
-      Log.e(TAG, message)
-      Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+      val error = "Error loading picture marker symbol: ${e.message}"
+      Log.e(TAG, error)
+      Toast.makeText(this, error, Toast.LENGTH_LONG).show()
     }
   }
 
