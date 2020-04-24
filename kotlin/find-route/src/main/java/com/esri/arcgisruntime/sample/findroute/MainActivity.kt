@@ -150,9 +150,9 @@ class MainActivity : AppCompatActivity() {
           Toast.makeText(this, error, Toast.LENGTH_LONG).show()
         }
       } catch (e: Exception) {
-        val message = "Error creating route parameters: ${e.message}"
-        Log.e(TAG, message)
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        val error = "Error creating route parameters: ${e.message}"
+        Log.e(TAG, error)
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
       }
     }
   }
