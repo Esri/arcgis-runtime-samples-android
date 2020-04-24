@@ -145,9 +145,9 @@ class MainActivity : AppCompatActivity() {
           // when the route is solved, hide the FAB
           directionFab.visibility = View.GONE
         } else {
-          val message = "Error loading route parameters."
-          Log.e(TAG, message)
-          Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+          val error = "Error loading route parameters."
+          Log.e(TAG, error)
+          Toast.makeText(this, error, Toast.LENGTH_LONG).show()
         }
       } catch (e: Exception) {
         val message = "Error creating route parameters: ${e.message}"
