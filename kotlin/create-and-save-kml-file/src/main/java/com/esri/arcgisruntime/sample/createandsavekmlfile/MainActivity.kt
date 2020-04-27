@@ -48,6 +48,7 @@ import com.esri.arcgisruntime.ogc.kml.KmlPolygonStyle
 import com.esri.arcgisruntime.ogc.kml.KmlStyle
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.kml_geometry_controls_layout.*
+import java.io.File
 
 val kmlDocument by lazy { KmlDocument() }
 
@@ -177,7 +178,7 @@ class MainActivity : AppCompatActivity() {
       setPositiveButton("Save") { _: DialogInterface, _: Int ->
         // save the KML document to the device with the file name from the edit text box
         val saveFuture =
-          kmlDocument.saveAsAsync(getExternalFilesDir(null)?.path + fileNameEditText.text.toString())
+          kmlDocument.saveAsAsync(getExternalFilesDir(null)?.path + File.separator + fileNameEditText.text.toString())
         saveFuture.addDoneListener {
           try {
             // call get on the save future to check if it saved correctly
