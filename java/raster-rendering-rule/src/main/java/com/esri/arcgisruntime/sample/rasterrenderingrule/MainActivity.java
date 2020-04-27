@@ -14,19 +14,19 @@
  *
  */
 
-package com.esri.arcgisruntime.samples.renderingrule;
+package com.esri.arcgisruntime.sample.rasterrenderingrule;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.arcgisservices.RenderingRuleInfo;
 import com.esri.arcgisruntime.layers.RasterLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -39,7 +39,6 @@ import com.esri.arcgisruntime.raster.RenderingRule;
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-  private ArcGISMap map;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
 
     // create a Streets BaseMap
-    map = new ArcGISMap(Basemap.createStreets());
+    ArcGISMap map = new ArcGISMap(Basemap.createStreets());
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void applyRenderingRule(ImageServiceRaster imageServiceRaster, int index) {
     // clear all rasters
-    map.getOperationalLayers().clear();
+    mMapView.getMap().getOperationalLayers().clear();
     // get the rendering rule info at the selected index
     RenderingRuleInfo renderRuleInfo = imageServiceRaster.getServiceInfo().getRenderingRuleInfos().get(index);
     // create a rendering rule object using the rendering rule info
@@ -120,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     // create a raster layer using the image service raster
     RasterLayer rasterLayer = new RasterLayer(appliedImageServiceRaster);
     // add the raster layer to the map
-    map.getOperationalLayers().add(rasterLayer);
+    mMapView.getMap().getOperationalLayers().add(rasterLayer);
   }
 
   @Override

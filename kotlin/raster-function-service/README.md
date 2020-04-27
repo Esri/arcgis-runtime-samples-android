@@ -10,7 +10,7 @@ Raster functions allow processing operations that can be applied to one or more 
 
 ## How to use the sample
 
-Load the sample to see a raster function applied to a raster.
+The raster function is applied automatically when the sample starts and the result is displayed.
 
 ## How it works
 
