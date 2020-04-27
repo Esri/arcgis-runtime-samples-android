@@ -44,10 +44,8 @@ class MainActivity : AppCompatActivity() {
     // load the raster file
     val rasterFile = Raster(getExternalFilesDir(null)?.path + "/raster-file/Shasta.tif")
 
-    val imageServiceRaster = ImageServiceRaster("https://gis.ngdc.noaa.gov/arcgis/rest/services/bag_hillshades/ImageServer")
-
     // create the layer
-    rasterLayer = RasterLayer(imageServiceRaster)
+    rasterLayer = RasterLayer(rasterFile)
 
     // define a new map
     val rasterMap = ArcGISMap(Basemap.createTopographicVector()).apply {
@@ -62,7 +60,7 @@ class MainActivity : AppCompatActivity() {
       // once the raster layer has loaded
       rasterLayer.addDoneLoadingListener {
         // set the map view's view point to the raster layer extent
-        //setViewpointGeometryAsync(rasterLayer.fullExtent)
+        setViewpointGeometryAsync(rasterLayer.fullExtent)
       }
 
       // on single tap
