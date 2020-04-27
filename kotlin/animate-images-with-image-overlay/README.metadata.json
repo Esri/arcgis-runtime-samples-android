@@ -21,7 +21,6 @@
   "provision_to": [
     "/ImageOverlay/"
   ],
-  "redirect_from": "",
   "relevant_apis": [
     "ImageFrame",
     "ImageOverlay",

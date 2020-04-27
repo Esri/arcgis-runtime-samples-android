@@ -46,31 +46,29 @@ import kotlin.concurrent.fixedRateTimer
 
 class MainActivity : AppCompatActivity() {
 
-  private var images: Array<File>? = null
+  private val imageFrames: MutableList<ImageFrame> by lazy { mutableListOf<ImageFrame>() }
   private var imageIndex: Int = 0
 
   private var timer: Timer? = null
   private var isTimerRunning = true
   private var period: Long = 67
 
-  private lateinit var pacificSouthwestEnvelope: Envelope
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a new tiled layer from World Dark Gray Base REST service
+    // create a new tiled layer from the World Dark Gray Base REST service
     val worldDarkGrayBasemap =
       ArcGISTiledLayer("https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer")
 
-    // create a new elevation source from Terrain3D REST service
+    // create a new elevation source from the Terrain3D REST service
     val elevationSource =
       ArcGISTiledElevationSource("https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer")
 
     // create an envelope of the pacific southwest sector for displaying the image frame
     val pointForImageFrame =
       Point(-120.0724273439448, 35.131016955536694, SpatialReferences.getWgs84())
-    pacificSouthwestEnvelope = Envelope(pointForImageFrame, 15.09589635986124, -14.3770441522488)
+    val pacificSouthwestEnvelope = Envelope(pointForImageFrame, 15.09589635986124, -14.3770441522488)
 
     // create a camera, looking at the pacific southwest sector
     val observationPoint = Point(-116.621, 24.7773, 856977.0)
@@ -107,11 +105,15 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    // get the image files and store the names
-    File(getExternalFilesDir(null).toString() + "/ImageFrames/PacificSouthWest").let {imageOverlayDirectory ->
-      images = imageOverlayDirectory.listFiles()
-      // sort the files
-      Arrays.sort(images)
+    // get the image files from local storage as an unordered list
+    (File(getExternalFilesDir(null).toString() + "/ImageFrames/PacificSouthWest").listFiles())?.let { imageFiles ->
+      // sort the list of image files
+      Arrays.sort(imageFiles)
+      imageFiles.forEach { file ->
+        // create an image with the given path and use it to create an image frame
+        val imageFrame = ImageFrame(file.path, pacificSouthwestEnvelope)
+        imageFrames.add(imageFrame)
+      }
     }
 
     // show the options sheet when the floating action button is clicked
@@ -142,7 +144,12 @@ class MainActivity : AppCompatActivity() {
       )
       // set period based on the fps option selected
       onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        override fun onItemSelected(
+          parent: AdapterView<*>?,
+          view: View?,
+          position: Int,
+          id: Long
+        ) {
           // get the period for the chosen fps
           period = when (position) {
             0 -> 17 // 1000ms/17 = 60 fps
@@ -167,33 +174,35 @@ class MainActivity : AppCompatActivity() {
   /**
    * Create a new image frame from the image at the current index and add it to the image overlay.
    */
-  private fun animateImagesWithImageOverlay() {
-    // create an image with the given path and use it to create an image frame
-    ImageFrame(images?.get(imageIndex)?.path, pacificSouthwestEnvelope).let { imageFrame ->
-      // set image frame to image overlay
-      sceneView.imageOverlays[0].imageFrame = imageFrame
-      // increment the index to keep track of which image to load next
-      imageIndex++
-      // reset index once all files have been loaded
-      if (imageIndex == images?.size)
-        imageIndex = 0
-    }
+  private fun addNextImageFrameToImageOverlay() {
+    // set image frame to image overlay
+    sceneView.imageOverlays[0].imageFrame = imageFrames[imageIndex]
+    // increment the index to keep track of which image to load next
+    imageIndex++
+    // reset index once all files have been loaded
+    if (imageIndex == imageFrames.size)
+      imageIndex = 0
   }
 
   /**
    * Toggle's starting and stopping the timer on button tap.
    */
-  fun toggleStartStopButton(view: View) {
+  fun toggleAnimationTimer(view: View) {
     isTimerRunning = when {
       isTimerRunning -> {
+        // cancel any running timer
         timer?.cancel()
+        // change the start/stop button to "start"
         startStopButton.text = getString(R.string.start)
-        !isTimerRunning
+        // set the isTimerRunning flag to false
+        false
       }
       else -> {
         createNewTimer()
+        // change the start/stop button to "stop"
         startStopButton.text = getString(R.string.stop)
-        !isTimerRunning
+        // set the isTimerRunning flag to true
+        true
       }
     }
   }
@@ -203,14 +212,14 @@ class MainActivity : AppCompatActivity() {
    */
   private fun createNewTimer() {
     timer = fixedRateTimer("Image overlay timer", period = period) {
-      animateImagesWithImageOverlay()
+      addNextImageFrameToImageOverlay()
     }
   }
 
   override fun onPause() {
     // cancel timer if it's running
     if (isTimerRunning) {
-      toggleStartStopButton(startStopButton)
+      toggleAnimationTimer(startStopButton)
     }
     sceneView.pause()
     super.onPause()

@@ -10,7 +10,7 @@ An image overlay is useful for displaying fast and dynamic images; for example, 
 
 ## How to use the sample
 
-The application loads a map of the Southwestern United States. Click the "Start" or "Stop" buttons to start or stop the radar animation. Use the drop down menu to select how quickly the animation plays. Move the slider to change the opacity of the image overlay.
+The application loads a map of the Southwestern United States. Tap the "Start" or "Stop" button to toggle the radar animation. Use the drop down menu to select how quickly the animation plays. Move the slider to change the opacity of the image overlay.
 
 ## How it works
 
