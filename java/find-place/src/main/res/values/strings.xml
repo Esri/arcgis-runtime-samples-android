@@ -1,12 +1,11 @@
 <resources>
-    <string name="app_name">Find Place</string>
+    <string name="app_name">Find place</string>
     <string name="location_permission_denied">LocationDisplayManager cannot run because location permission was denied.</string>
     <string name="search_hint">Enter POI</string>
-    <string name="proximity_search_hint">In Proximity of...</string>
+    <string name="proximity_search_hint">In proximity of...</string>
     <string name="geo_locate_error">Geocode failed on address.</string>
     <string name="location_not_found">No location with that name: </string>
     <string name="searching_by_area">Searching by area...</string>
     <string name="redo_search_text">Redo search in this area</string>
     <string name="world_geocode_service">https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer</string>
-
 </resources>

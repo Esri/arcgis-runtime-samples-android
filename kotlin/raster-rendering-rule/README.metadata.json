@@ -18,7 +18,7 @@
     "RasterLayer"
   ],
   "snippets": [
-    "src/main/java/com/esri/arcgisruntime/samples/renderingrule/MainActivity.kt"
+    "src/main/java/com/esri/arcgisruntime/sample/rasterrenderingrule/MainActivity.kt"
   ],
-  "title": "Raster Rendering Rule"
+  "title": "Raster rendering rule"
 }

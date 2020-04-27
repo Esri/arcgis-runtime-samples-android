@@ -3,7 +3,7 @@
     "description": "Perform geometry-on-geometry spatial operations by using GeometryEngine. Two input Polygons are added as Graphics to a GraphicsOverlay and displayed in a MapView.",
     "ignore": false,
     "images": [
-        "spatial-operations.png"
+        "perform-spatial-operations.png"
     ],
     "keywords": [
         "Edit and Manage Data",
@@ -28,5 +28,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/spatialoperations/MainActivity.java"
     ],
-    "title": "Spatial Operations"
+    "title": "Perform spatial operations"
 }
