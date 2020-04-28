@@ -155,23 +155,19 @@ class MainActivity : AppCompatActivity() {
       val startDrawable =
         ContextCompat.getDrawable(this, R.drawable.ic_source) as BitmapDrawable?
 
-      val pinSourceSymbol = PictureMarkerSymbol.createAsync(startDrawable).get()
-      pinSourceSymbol.apply {
-        loadAsync()
-        addDoneLoadingListener {
-          // add a new graphic as start point
-          val sourcePoint = Point(
-            -117.15083257944445,
-            32.741123367963446,
-            SpatialReferences.getWgs84()
-          )
-          // add it to the graphics overlay
-          graphicsOverlay.graphics.add(Graphic(sourcePoint, this))
+      startDrawable?.let {
+        val pinSourceSymbol = PictureMarkerSymbol.createAsync(it).get().apply {
+          // make the graphic smaller
+          width = 30f
+          height = 30f
+          offsetY = 20f
         }
-        // make the graphic smaller
-        width = 30f
-        height = 30f
-        offsetY = 20f
+        // create a point for the new graphic
+        val sourcePoint = Point(
+          -117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84()
+        )
+        // create a graphic anddd it to the graphics overlay
+        graphicsOverlay.graphics.add(Graphic(sourcePoint, pinSourceSymbol))
       }
     } catch (e: Exception) {
       val error = "Error loading picture marker symbol: ${e.message}"
@@ -182,23 +178,21 @@ class MainActivity : AppCompatActivity() {
       val endDrawable =
         ContextCompat.getDrawable(this, R.drawable.ic_destination) as BitmapDrawable?
 
-      val pinDestinationSymbol = PictureMarkerSymbol.createAsync(endDrawable).get()
-      pinDestinationSymbol.apply {
-        loadAsync()
-        addDoneLoadingListener {
-          // add a new graphic as end point
-          val destinationPoint = Point(
-            -117.15557279683529,
-            32.703360305883045,
-            SpatialReferences.getWgs84()
-          )
-          // add it to the graphics overlay
-          graphicsOverlay.graphics.add(Graphic(destinationPoint, this))
+      endDrawable?.let {
+        val pinDestinationSymbol = PictureMarkerSymbol.createAsync(endDrawable).get().apply {
+          // make the graphic smaller
+          width = 30f
+          height = 30f
+          offsetY = 20f
         }
-        // make the graphic smaller
-        width = 30f
-        height = 30f
-        offsetY = 20f
+        // create a point for the new graphic
+        val destinationPoint = Point(
+          -117.15557279683529,
+          32.703360305883045,
+          SpatialReferences.getWgs84()
+        )
+        // create a graphic and add it to the graphics overlay
+        graphicsOverlay.graphics.add(Graphic(destinationPoint, pinDestinationSymbol))
       }
     } catch (e: Exception) {
       val error = "Error loading picture marker symbol: ${e.message}"
