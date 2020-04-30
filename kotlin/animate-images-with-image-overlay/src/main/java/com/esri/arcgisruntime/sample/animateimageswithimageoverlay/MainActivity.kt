@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
       fab.isExpanded = !fab.isExpanded
     }
 
-    // seek bar controls opacity
+    // seek bar controls image overlay opacity
     opacitySeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
       override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         // convert the seekbar progress (0 - 100) to a float 0.0 - 1.0
