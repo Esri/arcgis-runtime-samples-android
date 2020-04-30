@@ -185,7 +185,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Toggle's starting and stopping the timer on button tap.
+   * Toggles starting and stopping the timer on button tap.
    */
   fun toggleAnimationTimer(view: View) {
     isTimerRunning = when {
