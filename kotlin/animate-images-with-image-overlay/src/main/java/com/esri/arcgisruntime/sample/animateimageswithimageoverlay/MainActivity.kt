@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Toggle's starting and stopping the timer on button tap.
+   * Toggles starting and stopping the timer on button tap.
    */
   fun toggleAnimationTimer(view: View) {
     isTimerRunning = when {
@@ -152,10 +152,10 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Setup UI behaviour. Close expandable floating action button on touching the scene view. Move
-   * floating action button on attribution view expanded. Expand floating action button on click.
-   * Define seek bar to change image overlay opacity. Populate and define behaviour of the FPS
-   * (frames per second) spinner.
+   * Sets up UI behaviour. Closes expandable floating action button on touching the scene view.
+   * Moves floating action button on attribution view expanded. Expands floating action button on
+   * tap. Defines seek bar to control image overlay opacity. Populates and defines behaviour of the
+   * FPS (frames per second) spinner.
    */
   private fun setupUI() {
     sceneView.apply {
@@ -181,7 +181,7 @@ class MainActivity : AppCompatActivity() {
       fab.isExpanded = !fab.isExpanded
     }
 
-    // seek bar controls opacity
+    // seek bar controls image overlay opacity
     opacitySeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
       override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         // convert the seekbar progress (0 - 100) to a float 0.0 - 1.0
