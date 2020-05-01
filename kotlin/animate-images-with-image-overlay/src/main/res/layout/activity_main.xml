@@ -51,11 +51,10 @@
             <SeekBar
                 android:id="@+id/opacitySeekBar"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="16dp"
                 android:progress="100"
                 app:layout_constraintBottom_toTopOf="@+id/fpsSpinner"
                 app:layout_constraintEnd_toStartOf="@+id/currOpacityTextView"
