@@ -68,7 +68,8 @@ class MainActivity : AppCompatActivity() {
     // create an envelope of the pacific southwest sector for displaying the image frame
     val pointForImageFrame =
       Point(-120.0724273439448, 35.131016955536694, SpatialReferences.getWgs84())
-    val pacificSouthwestEnvelope = Envelope(pointForImageFrame, 15.09589635986124, -14.3770441522488)
+    val pacificSouthwestEnvelope =
+      Envelope(pointForImageFrame, 15.09589635986124, -14.3770441522488)
 
     // create a camera, looking at the pacific southwest sector
     val observationPoint = Point(-116.621, 24.7773, 856977.0)
@@ -88,6 +89,76 @@ class MainActivity : AppCompatActivity() {
       scene = darkGrayScene
       // create and append an image overlay to the scene view
       imageOverlays.add(ImageOverlay())
+    }
+
+    // get the image files from local storage as an unordered list
+    (File(getExternalFilesDir(null).toString() + "/ImageFrames/PacificSouthWest").listFiles())?.let { imageFiles ->
+      // sort the list of image files
+      Arrays.sort(imageFiles)
+      imageFiles.forEach { file ->
+        // create an image with the given path and use it to create an image frame
+        val imageFrame = ImageFrame(file.path, pacificSouthwestEnvelope)
+        imageFrames.add(imageFrame)
+      }
+    }
+
+    // setup touch and ui element behaviours
+    setupUI()
+  }
+
+  /**
+   * Create a new image frame from the image at the current index and add it to the image overlay.
+   */
+  private fun addNextImageFrameToImageOverlay() {
+    // set image frame to image overlay
+    sceneView.imageOverlays[0].imageFrame = imageFrames[imageIndex]
+    // increment the index to keep track of which image to load next
+    imageIndex++
+    // reset index once all files have been loaded
+    if (imageIndex == imageFrames.size)
+      imageIndex = 0
+  }
+
+  /**
+   * Toggle's starting and stopping the timer on button tap.
+   */
+  fun toggleAnimationTimer(view: View) {
+    isTimerRunning = when {
+      isTimerRunning -> {
+        // cancel any running timer
+        timer?.cancel()
+        // change the start/stop button to "start"
+        startStopButton.text = getString(R.string.start)
+        // set the isTimerRunning flag to false
+        false
+      }
+      else -> {
+        createNewTimer()
+        // change the start/stop button to "stop"
+        startStopButton.text = getString(R.string.stop)
+        // set the isTimerRunning flag to true
+        true
+      }
+    }
+  }
+
+  /**
+   * Create a new timer for the given period which repeatedly calls animateImagesWithImageOverlay.
+   */
+  private fun createNewTimer() {
+    timer = fixedRateTimer("Image overlay timer", period = period) {
+      addNextImageFrameToImageOverlay()
+    }
+  }
+
+  /**
+   * Setup UI behaviour. Close expandable floating action button on touching the scene view. Move
+   * floating action button on attribution view expanded. Expand floating action button on click.
+   * Define seek bar to change image overlay opacity. Populate and define behaviour of the FPS
+   * (frames per second) spinner.
+   */
+  private fun setupUI() {
+    sceneView.apply {
       // create a touch listener
       setOnTouchListener(object : DefaultSceneViewOnTouchListener(sceneView) {
         // close the options sheet when the map is tapped
@@ -102,17 +173,6 @@ class MainActivity : AppCompatActivity() {
       addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
         val heightDelta = bottom - oldBottom
         (fab.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin += heightDelta
-      }
-    }
-
-    // get the image files from local storage as an unordered list
-    (File(getExternalFilesDir(null).toString() + "/ImageFrames/PacificSouthWest").listFiles())?.let { imageFiles ->
-      // sort the list of image files
-      Arrays.sort(imageFiles)
-      imageFiles.forEach { file ->
-        // create an image with the given path and use it to create an image frame
-        val imageFrame = ImageFrame(file.path, pacificSouthwestEnvelope)
-        imageFrames.add(imageFrame)
       }
     }
 
@@ -168,51 +228,6 @@ class MainActivity : AppCompatActivity() {
       }
       // start at 15 fps
       setSelection(2)
-    }
-  }
-
-  /**
-   * Create a new image frame from the image at the current index and add it to the image overlay.
-   */
-  private fun addNextImageFrameToImageOverlay() {
-    // set image frame to image overlay
-    sceneView.imageOverlays[0].imageFrame = imageFrames[imageIndex]
-    // increment the index to keep track of which image to load next
-    imageIndex++
-    // reset index once all files have been loaded
-    if (imageIndex == imageFrames.size)
-      imageIndex = 0
-  }
-
-  /**
-   * Toggle's starting and stopping the timer on button tap.
-   */
-  fun toggleAnimationTimer(view: View) {
-    isTimerRunning = when {
-      isTimerRunning -> {
-        // cancel any running timer
-        timer?.cancel()
-        // change the start/stop button to "start"
-        startStopButton.text = getString(R.string.start)
-        // set the isTimerRunning flag to false
-        false
-      }
-      else -> {
-        createNewTimer()
-        // change the start/stop button to "stop"
-        startStopButton.text = getString(R.string.stop)
-        // set the isTimerRunning flag to true
-        true
-      }
-    }
-  }
-
-  /**
-   * Create a new timer for the given period which repeatedly calls animateImagesWithImageOverlay.
-   */
-  private fun createNewTimer() {
-    timer = fixedRateTimer("Image overlay timer", period = period) {
-      addNextImageFrameToImageOverlay()
     }
   }
 
