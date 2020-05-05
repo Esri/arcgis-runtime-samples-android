@@ -27,9 +27,13 @@ import com.esri.arcgisruntime.layers.RasterLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
-import com.esri.arcgisruntime.raster.ImageServiceRaster
+import com.esri.arcgisruntime.raster.ColorRamp
+import com.esri.arcgisruntime.raster.Colormap
+import com.esri.arcgisruntime.raster.ColormapRenderer
+import com.esri.arcgisruntime.raster.PercentClipStretchParameters
 import com.esri.arcgisruntime.raster.Raster
 import com.esri.arcgisruntime.raster.RasterCell
+import com.esri.arcgisruntime.raster.StretchRenderer
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -42,13 +46,16 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // load the raster file
-    val rasterFile = Raster(getExternalFilesDir(null)?.path + "/raster-file/Shasta.tif")
+    val rasterFile =
+      Raster(getExternalFilesDir(null)?.path + "/raster-file/SA_EVI_8Day_03May20.tif")
 
     // create the layer
-    rasterLayer = RasterLayer(rasterFile)
+    rasterLayer = RasterLayer(rasterFile).apply {
+      rasterRenderer = ColorRamp(ColorRamp())
+    }
 
     // define a new map
-    val rasterMap = ArcGISMap(Basemap.createTopographicVector()).apply {
+    val rasterMap = ArcGISMap(Basemap.Type.OCEANS, -33.9, 18.6, 9).apply {
       // add the raster layer
       operationalLayers.add(rasterLayer)
     }
@@ -57,17 +64,22 @@ class MainActivity : AppCompatActivity() {
       // add the map to the map view
       map = rasterMap
 
-      // once the raster layer has loaded
-      rasterLayer.addDoneLoadingListener {
-        // set the map view's view point to the raster layer extent
-        setViewpointGeometryAsync(rasterLayer.fullExtent)
-      }
-
       // on single tap
       onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
-        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-          // identify the pixel at the given screen point
-          identifyPixel(Point(e.x.toInt(), e.y.toInt()), rasterLayer)
+        override fun onDoubleTouchDrag(motionEvent: MotionEvent?): Boolean {
+          motionEvent?.let {
+            val offset = 200
+            // identify the pixel at a vertical offset from the motion event
+            identifyPixel(Point(it.x.toInt(), it.y.toInt() - offset), rasterLayer)
+          }
+          return true
+        }
+
+        override fun onUp(motionEvent: MotionEvent?): Boolean {
+          motionEvent?.let {
+            // identify the pixel at the given screen point
+            identifyPixel(Point(it.x.toInt(), it.y.toInt()), rasterLayer)
+          }
           return true
         }
       }

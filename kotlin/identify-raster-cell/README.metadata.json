@@ -1,0 +1,30 @@
+{
+  "category": "Search and Query",
+  "description": "Get the cell value of a local raster at the tapped location and display the result in a callout.",
+  "ignore": false,
+  "images": [
+    "identify-raster-cell.png"
+  ],
+  "keywords": [
+    "band",
+    "cell",
+    "cell value",
+    "continuous",
+    "discrete",
+    "identify",
+    "pixel",
+    "pixel value",
+    "raster"
+  ],
+  "relevant_apis": [
+    "GeoView.identifyLayerAsync(...)",
+    "IdentifyLayerResult",
+    "RasterCell",
+    "RasterCell.attributes",
+    "RasterLayer"
+  ],
+  "snippets": [
+    "src/main/java/com/esri/arcgisruntime/sample/identifyrastercell/MainActivity.kt"
+  ],
+  "title": "Identify raster cell"
+}
