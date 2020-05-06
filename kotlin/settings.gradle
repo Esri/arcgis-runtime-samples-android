@@ -8,6 +8,7 @@ include ':add-features-feature-service',
         ':buffer',
         ':change-atmosphere-effect',
         ':change-basemaps',
+        ':change-viewpoint',
         ':choose-camera-controller',
         ':configure-subnetwork-trace',
         ':create-and-save-kml-file',
@@ -52,4 +53,3 @@ include ':add-features-feature-service',
         ':viewshed-geoprocessing',
         ':viewshed-location',
         ':wmts-layer'
-include ':change-viewpoint'
