@@ -69,20 +69,20 @@ class CredentialDialogFragment : DialogFragment() {
     DialogInterface.OnClickListener { _: DialogInterface, which: Int ->
       (context as? OnCredentialDialogButtonClickListener)?.let { listener ->
         hostname?.let { hostname ->
-          dialog?.let { dialog ->
             if (which == DialogInterface.BUTTON_POSITIVE) {
-              if (dialog.credentialUsernameEditText.text.isNotEmpty() && dialog.credentialPasswordEditText.text.isNotEmpty()) {
-                listener.onSignInClicked(
-                  hostname,
-                  dialog.credentialUsernameEditText.text.toString(),
-                  dialog.credentialPasswordEditText.text.toString()
-                )
-              } else {
-                getString(R.string.credential_dialog_error_username_or_password_are_blank).let { error ->
-                  Toast.makeText(context, error, Toast.LENGTH_LONG).show()
-                  Log.e(TAG, error)
+              dialog?.let { dialog ->
+                if (dialog.credentialUsernameEditText.text.isNotEmpty() && dialog.credentialPasswordEditText.text.isNotEmpty()) {
+                  listener.onSignInClicked(
+                    hostname,
+                    dialog.credentialUsernameEditText.text.toString(),
+                    dialog.credentialPasswordEditText.text.toString()
+                  )
+                } else {
+                  getString(R.string.credential_dialog_error_username_or_password_are_blank).let { error ->
+                    Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+                    Log.e(TAG, error)
+                  }
                 }
-              }
             } else {
               listener.onCancelClicked(hostname)
             }
