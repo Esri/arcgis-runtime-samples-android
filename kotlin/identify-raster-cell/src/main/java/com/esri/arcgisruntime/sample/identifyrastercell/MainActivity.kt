@@ -27,19 +27,14 @@ import com.esri.arcgisruntime.layers.RasterLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
-import com.esri.arcgisruntime.raster.ColorRamp
-import com.esri.arcgisruntime.raster.Colormap
-import com.esri.arcgisruntime.raster.ColormapRenderer
-import com.esri.arcgisruntime.raster.PercentClipStretchParameters
 import com.esri.arcgisruntime.raster.Raster
 import com.esri.arcgisruntime.raster.RasterCell
-import com.esri.arcgisruntime.raster.StretchRenderer
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var rasterLayer: RasterLayer
+  private var rasterLayer: RasterLayer? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -47,12 +42,10 @@ class MainActivity : AppCompatActivity() {
 
     // load the raster file
     val rasterFile =
-      Raster(getExternalFilesDir(null)?.path + "/raster-file/SA_EVI_8Day_03May20.tif")
+      Raster(getExternalFilesDir(null)?.path + "/SA_EVI_8Day_03May20/SA_EVI_8Day_03May20.tif")
 
     // create the layer
-    rasterLayer = RasterLayer(rasterFile).apply {
-      rasterRenderer = ColorRamp(ColorRamp())
-    }
+    rasterLayer = RasterLayer(rasterFile)
 
     // define a new map
     val rasterMap = ArcGISMap(Basemap.Type.OCEANS, -33.9, 18.6, 9).apply {
@@ -64,69 +57,70 @@ class MainActivity : AppCompatActivity() {
       // add the map to the map view
       map = rasterMap
 
-      // on single tap
+      // set behavior for double touch drag and on up gestures
       onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
-        override fun onDoubleTouchDrag(motionEvent: MotionEvent?): Boolean {
-          motionEvent?.let {
-            val offset = 200
-            // identify the pixel at a vertical offset from the motion event
-            identifyPixel(Point(it.x.toInt(), it.y.toInt() - offset), rasterLayer)
-          }
+        override fun onDoubleTouchDrag(e: MotionEvent): Boolean {
+          val offset = 200
+          // identify the pixel at a vertical offset from the motion event
+          identifyPixel(Point(e.x.toInt(), e.y.toInt() - offset))
           return true
         }
 
-        override fun onUp(motionEvent: MotionEvent?): Boolean {
-          motionEvent?.let {
-            // identify the pixel at the given screen point
-            identifyPixel(Point(it.x.toInt(), it.y.toInt()), rasterLayer)
-          }
+        override fun onUp(e: MotionEvent): Boolean {
+          // identify the pixel at the given screen point
+          identifyPixel(Point(e.x.toInt(), e.y.toInt()))
           return true
         }
       }
     }
   }
 
-  private fun identifyPixel(screenPoint: Point, rasterLayer: RasterLayer) {
-    // identify at the tapped screen point
-    val identifyResultFuture = mapView.identifyLayerAsync(rasterLayer, screenPoint, 1.0, false, 10)
-    identifyResultFuture.addDoneListener {
-      // get the identify result
-      val identifyResult = identifyResultFuture.get()
+  /**
+   * Identify the pixel at the given screen point and report raster cell attributes in a callout.
+   *
+   * @param screenPoint from motion event, for use in identify
+   */
+  private fun identifyPixel(screenPoint: Point) {
+    rasterLayer?.let { rasterLayer ->
+      // identify at the tapped screen point
+      val identifyResultFuture =
+        mapView.identifyLayerAsync(rasterLayer, screenPoint, 1.0, false, 10)
 
-      // create a string builder
-      val stringBuilder = StringBuilder()
+      identifyResultFuture.addDoneListener {
+        // get the identify result
+        val identifyResult = identifyResultFuture.get()
 
-      // get the a list of geoelements as raster cells from the identify result
-      identifyResult.elements.filterIsInstance<RasterCell>().forEach { cell ->
-        // get each attribute for the cell
-        cell.attributes.forEach {
-          // add the key/value pair to the string builder
-          stringBuilder.append(it.key + ": " + it.value)
-          stringBuilder.append("\n")
+        // create a string builder
+        val stringBuilder = StringBuilder()
+
+        // get the a list of geoelements as raster cells from the identify result
+        identifyResult.elements.filterIsInstance<RasterCell>().forEach { cell ->
+          // get each attribute for the cell
+          cell.attributes.forEach {
+            // add the key/value pair to the string builder
+            stringBuilder.append(it.key + ": " + it.value)
+            stringBuilder.append("\n")
+          }
+
+          // format the X & Y coordinate values of the raster cell to a human readable string
+          val xyString =
+            "X: ${String.format("%.4f", cell.geometry.extent.xMin)} " +
+                "Y: ${String.format("%.4f", cell.geometry.extent.yMin)}"
+          // add the coordinate string to the string builder
+          stringBuilder.append(xyString)
+
+          // create a textview for the callout
+          val calloutContent = TextView(applicationContext).apply {
+            setTextColor(Color.BLACK)
+            // format coordinates to 4 decimal places and display lat long read out
+            text = stringBuilder.toString()
+          }
+          // display the callout in the map view
+          mapView.callout.apply {
+            location = mapView.screenToLocation(screenPoint)
+            content = calloutContent
+          }.show()
         }
-
-        // Shorten the X & Y values a little to show better in the callout
-        val theX: Double = cell.geometry.extent.xMin
-        val theY: Double = cell.geometry.extent.yMin
-
-        // Format the X & Y values as a human readable string
-        val theString = "X: " + String.format("%.4f", theX) + " Y: " + String.format("%.4f", theY)
-
-        // Add the X & Y coordinates where the user clicked raster cell to the string builder
-        stringBuilder.append(theString)
-
-        // create a textview for the callout
-        val calloutContent = TextView(applicationContext).apply {
-          setTextColor(Color.BLACK)
-          // format coordinates to 4 decimal places and display lat long read out
-          text = stringBuilder.toString()
-        }
-        // Display the callout in the map view
-        mapView.callout.apply {
-          location = mapView.screenToLocation(screenPoint)
-          content = calloutContent
-        }.show()
-
       }
     }
   }

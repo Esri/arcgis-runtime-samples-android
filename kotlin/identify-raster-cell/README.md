@@ -10,17 +10,17 @@ You may want to identify a raster layer to get its exact cell value in the case 
 
 ## How to use the sample
 
-Tap an area of the raster to identify it. See the raw raster cell information displayed in a callout.
+Tap or double tap drag an area of the raster to identify it and see the raster cell attributes information displayed in a callout.
 
 ## How it works
 
-1. Create a `GeoViewTapped` event on the `MapView`.
-2. On tap:
-  * Dismiss the `Callout`, if one is showing.
-  * Call `identifyLayersAsync(...)` passing in the screen point, tolerance, and maximum number of results per layer.
-  * Await the result of the identify and then get the `GeoElement` from the layer result.
-  * Create a callout at the calculated map point and populate the callout content with text from the `RasterCell` attributes.
-  * Show the callout.
+1. Create an `DefaultMapViewOnTouchListener` on the `MapView`.
+2. On tap or double tap drag:
+   * Dismiss the `Callout`, if one is showing.
+   * Call `identifyLayerAsync(...)` passing in the raster layer, screen point, tolerance, and maximum number of results per layer.
+   * Add a done loading listener for the result of the identify and then get the `GeoElement` from the layer result.
+   * Create a callout at the calculated map point and populate the callout content with text from the `RasterCell` attributes.
+   * Show the callout.
 
 ## Relevant API
 
@@ -32,7 +32,7 @@ Tap an area of the raster to identify it. See the raw raster cell information di
 
 ## About the data
 
-[TODO: Appropriate data that is approved for use in the sample should be used. The initial provided screen shot should be replaced when actual approved sample data is used.]
+The data shown is an NDVI classification derived from MODIS imagery between 27 Apr 2020 and 4 May 2020. It comes from the [NASA Worldview application](https://worldview.earthdata.nasa.gov/). In a normalized difference vegetation index, or [NDVI](https://en.wikipedia.org/wiki/Normalized_difference_vegetation_index), values range between -1 and +1 with the positive end of the spectrum showing green vegetation.
 
 ## Tags
 
