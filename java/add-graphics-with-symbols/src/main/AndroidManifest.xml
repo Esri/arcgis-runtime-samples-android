@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.esri.arcgisruntime.sample.addgraphicssymbols">
+    package="com.esri.arcgisruntime.sample.addgraphicswithsymbols">
 
     <uses-permission android:name="android.permission.INTERNET" />
 

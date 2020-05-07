@@ -18,7 +18,6 @@ Run the sample to view the map. Pan and zoom to navigate the map.
 2. Set the map to the map view with `mapView.map = map`.
 
 ## Relevant API
-
 * ArcGISMap
 * Basemap
 * MapView

@@ -34,11 +34,11 @@ The tile package must be a LERC (limited error raster compression) encoded TPK. 
 1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 1. Execute the following command:
 
-`adb push MontereyElevation.tpk /sdcard/ArcGIS/Samples/TileCache/MontereyElevation.tpk`
+`adb push MontereyElevation.tpk  /Android/data/com.esri.arcgisruntime.sample.createterrainfromalocaltilepackage/files/MontereyElevation.tpk`
 
 Link | Local Location
 ---------|-------|
-|[Monterey Elevation TPK](https://arcgisruntime.maps.arcgis.com/home/item.html?id=cce37043eb0440c7a5c109cf8aad5500)| `<sdcard>`/ArcGIS/Samples/TileCache/MontereyElevation.tpk |
+|[Monterey Elevation TPK](https://arcgisruntime.maps.arcgis.com/home/item.html?id=cce37043eb0440c7a5c109cf8aad5500)|  /Android/data/com.esri.arcgisruntime.sample.createterrainfromalocaltilepackage/files/MontereyElevation.tpk |
 
 ## Tags
 

@@ -25,6 +25,6 @@ Tap on a feature to see its attributes in a callout.
 * FeatureQueryResult
 * ServiceFeatureTable
 
-## Tags
+#### Tags
 
 features, layers, query, attributes

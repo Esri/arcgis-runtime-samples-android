@@ -16,6 +16,12 @@
         "SyncGeodatabaseParameters",
         "SyncLayerOption"
     ],
+    "provision_from": [
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=72e703cd01654e7796eb1ae75af1cb53"
+    ],
+    "provision_to": [
+        "/SanFrancisco.tpk"
+    ],
     "redirect_from": "/android/latest/sample-code/edit-and-sync-features.htm",
     "relevant_apis": [
         "FeatureLayer",

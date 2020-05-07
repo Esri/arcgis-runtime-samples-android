@@ -16,17 +16,11 @@
 
 package com.esri.arcgisruntime.sample.featurelayergeodatabase;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.data.Geodatabase;
 import com.esri.arcgisruntime.data.GeodatabaseFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -40,9 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
-  // permission to read external storage
-  private final String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
-
   private MapView mMapView;
 
   @Override
@@ -55,25 +46,8 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
     mMapView.setMap(map);
 
-    // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      loadGeodatabase();
-    } else {
-      // request permission
-      int requestCode = 2;
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Load a local geodatabase file and add it to the map
-   */
-  private void loadGeodatabase() {
-
     // create path to local geodatabase
-    String path =
-        Environment.getExternalStorageDirectory() + getString(R.string.config_data_sdcard_offline_dir)
-            + getString(R.string.config_geodb_name);
+    String path = getExternalFilesDir(null) + getString(R.string.config_geodb_name);
 
     // create a new geodatabase from local path
     final Geodatabase geodatabase = new Geodatabase(path);
@@ -105,19 +79,6 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "Geodatabase failed to load!");
       }
     });
-  }
-
-  /**
-   * Handle the permissions request response
-   */
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      loadGeodatabase();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(MainActivity.this, getResources().getString(R.string.write_permission_denied),
-          Toast.LENGTH_SHORT).show();
-    }
   }
 
   @Override

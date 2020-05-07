@@ -20,5 +20,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/samples/servicefeaturetablemanualcache/MainActivity.java"
     ],
-    "title": "Service Feature Table (Manual Cache)"
+    "title": "Service Feature Table (ManualCache)"
 }

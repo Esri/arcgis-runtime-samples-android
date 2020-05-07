@@ -5,7 +5,6 @@
     <string name="item_id">acc027394bc84c2fb04d1ed317aac674</string>
     <string name="local_basemap_found">Local basemap found on the device</string>
     <string name="offline_map_write_permission_denied">Write permission required to generate offline map</string>
-    <string name="samples_directory">/ArcGIS/Samples/</string>
     <string name="local_basemap_found_message">The local basemap file %1$s was found on the device. Would you like to use the local file instead of an online basemap?</string>
     <string name="generate_offline_map_job_title">Generate offline map job</string>
     <string name="taking_map_offline_message">Taking map offline…</string>

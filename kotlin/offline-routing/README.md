@@ -34,8 +34,8 @@ Tap once near a road to add a stop to the map. A number graphic will show its or
 
 Link | Local Location
 ---------|-------|
-|[San Diego streetmap TPK](https://arcgisruntime.maps.arcgis.com/home/item.html?id=567e14f3420d40c5a206e5c0284cf8fc)| /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/san_diego/streetmap_SD.tpk |
-|[San Diego Geodatabase](https://arcgisruntime.maps.arcgis.com/home/item.html?id=567e14f3420d40c5a206e5c0284cf8fc)| /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/san_diego/sandiego.geodatabase |
+|[San Diego streetmap TPK](https://arcgisruntime.maps.arcgis.com/home/item.html?id=567e14f3420d40c5a206e5c0284cf8fc)| /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/streetmap_SD.tpk |
+|[San Diego Geodatabase](https://arcgisruntime.maps.arcgis.com/home/item.html?id=567e14f3420d40c5a206e5c0284cf8fc)| /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/sandiego.geodatabase |
 
 ## About the data
 

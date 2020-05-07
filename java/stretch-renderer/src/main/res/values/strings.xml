@@ -1,12 +1,10 @@
 <resources>
-    <string name="app_name">Stretch Renderer</string>
-    <string name="stretch_renderer_write_permission_denied">Stretch Renderer could not open the raster because WRITE permission was denied.</string>
+    <string name="app_name">Stretch renderer</string>
     <string name="edit_renderer">Edit renderer</string>
     <string name="stretch_rendering_parameters">Stretch rendering parameters</string>
-    <string name="raster_folder">ArcGIS/samples/raster</string>
-    <string name="shasta_file">Shasta</string>
     <string name="max_value">Max value</string>
     <string name="min_value">Min value</string>
     <string name="stretch_type">Stretch type</string>
     <string name="standard_deviation">Std Dev</string>
+    <string name="stretch_renderer_shasta_tif">/raster-file/Shasta.tif</string>
 </resources>

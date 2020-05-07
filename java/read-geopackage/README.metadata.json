@@ -14,6 +14,12 @@
         "Layer",
         "RasterLayer"
     ],
+    "provision_from": [
+        "https://www.arcgis.com/home/item.html?id=68ec42517cdd439e81b036210483e8e7"
+    ],
+    "provision_to": [
+        "/AuroraCO.gpkg"
+    ],
     "redirect_from": "/android/latest/sample-code/read-geopackage.htm",
     "relevant_apis": [
         "FeatureLayer",

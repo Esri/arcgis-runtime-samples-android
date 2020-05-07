@@ -16,27 +16,20 @@
 
 package com.esri.arcgisruntime.sample.editandsyncfeatures;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
@@ -69,7 +62,6 @@ import com.esri.arcgisruntime.tasks.geodatabase.SyncLayerOption;
 public class MainActivity extends AppCompatActivity {
 
   private final String TAG = MainActivity.class.getSimpleName();
-  private final String[] reqPermission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
 
   private Button mGeodatabaseButton;
 
@@ -118,23 +110,8 @@ public class MainActivity extends AppCompatActivity {
           }
         });
 
-    // request write permission to access local TileCache
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) != PackageManager.PERMISSION_GRANTED) {
-      // request permission
-      int requestCode = 2;
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    } else {
-      loadTileCache();
-    }
-  }
-
-  /**
-   * Load local tile cache.
-   */
-  private void loadTileCache() {
     // use local tile package for the base map
-    TileCache sanFranciscoTileCache = new TileCache(
-        Environment.getExternalStorageDirectory() + getString(R.string.san_francisco_tpk));
+    TileCache sanFranciscoTileCache = new TileCache(getExternalFilesDir(null) + "/SanFrancisco.tpk");
     ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(sanFranciscoTileCache);
     final ArcGISMap map = new ArcGISMap(new Basemap(tiledLayer));
     mMapView.setMap(map);
@@ -145,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void generateGeodatabase() {
     // define geodatabase sync task
-    mGeodatabaseSyncTask = new GeodatabaseSyncTask(getString(R.string.wildfire_sync));
+    mGeodatabaseSyncTask = new GeodatabaseSyncTask("https://sampleserver6.arcgisonline.com/arcgis/rest/services/Sync/WildfireSync/FeatureServer");
     mGeodatabaseSyncTask.loadAsync();
     mGeodatabaseSyncTask.addDoneLoadingListener(() -> {
       final SimpleLineSymbol boundarySymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5);
@@ -162,8 +139,7 @@ public class MainActivity extends AppCompatActivity {
           GenerateGeodatabaseParameters parameters = defaultParameters.get();
           parameters.setReturnAttachments(false);
           // define the local path where the geodatabase will be stored
-          final String localGeodatabasePath =
-              getCacheDir() + File.separator + getString(R.string.wildfire_geodatabase);
+          final String localGeodatabasePath = getCacheDir() + "/wildfire.geodatabase";
           // create and start the job
           final GenerateGeodatabaseJob generateGeodatabaseJob = mGeodatabaseSyncTask
               .generateGeodatabase(parameters, localGeodatabasePath);
@@ -249,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
   private void createProgressDialog(Job job) {
 
     ProgressDialog syncProgressDialog = new ProgressDialog(this);
-    syncProgressDialog.setTitle("Sync Geodatabase Job");
+    syncProgressDialog.setTitle("Sync geodatabase job");
     syncProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     syncProgressDialog.setCanceledOnTouchOutside(false);
     syncProgressDialog.show();
@@ -347,20 +323,6 @@ public class MainActivity extends AppCompatActivity {
   @Override protected void onDestroy() {
     mMapView.dispose();
     super.onDestroy();
-  }
-
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      // write permission was granted, so load TileCache
-      loadTileCache();
-    } else {
-      // if permission was denied, show toast to inform user write permission is required and remove Generate
-      // Geodatabase button
-      Toast.makeText(this, getResources().getString(R.string.edit_and_sync_write_permission), Toast
-          .LENGTH_SHORT).show();
-      mGeodatabaseButton.setVisibility(View.GONE);
-    }
   }
 
   // enumeration to track editing of points

@@ -22,5 +22,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/tiledlayerfromurl/MainActivity.java"
     ],
-    "title": "ArcGIS Tiled Layer URL"
+    "title": "ArcGIS TiledLayer URL"
 }

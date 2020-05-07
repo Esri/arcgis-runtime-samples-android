@@ -3,26 +3,26 @@
   "description": "Show a callout with the latitude and longitude of user-tapped points.",
   "ignore": false,
   "images": [
-    "show-callout.png"
+      "show-callout.png"
   ],
   "keywords": [
-    "balloon",
-    "bubble",
-    "callout",
-    "flyout",
-    "flyover",
-    "info window",
-    "popup",
-    "tap"
+      "balloon",
+      "bubble",
+      "callout",
+      "flyout",
+      "flyover",
+      "info window",
+      "popup",
+      "tap"
   ],
   "redirect_from": "/android/latest/sample-code/show-callout.htm",
   "relevant_apis": [
-    "Callout",
-    "MapView",
-    "Point"
+      "Callout",
+      "MapView",
+      "Point"
   ],
   "snippets": [
-    "src/main/java/com/esri/arcgisruntime/samples/showcallout/MainActivity.kt"
+      "src/main/java/com/esri/arcgisruntime/sample/showcallout/MainActivity.kt"
   ],
   "title": "Show callout"
 }

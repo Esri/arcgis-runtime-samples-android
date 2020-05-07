@@ -7,22 +7,28 @@
     ],
     "keywords": [
         "KML",
-	"KMZ",
-	"OGC",
-	"Keyhole"
+	   "KMZ",
+	   "OGC",
+	   "Keyhole"
+    ],
+    "provision_from": [
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=da301cb122874d5497f8a8f6c81eb36e"
+    ],
+    "provision_to": [
+        "/esri_test_data.kmz"
     ],
     "redirect_from": "/android/latest/sample-code/integrated-windows-authentication.htm",
     "relevant_apis": [
         "KmlContainer",
-	"KmlDataset",
-	"KmlDocument",
-	"KmlFolder",
-	"KmlGroundOverlay",
-	"KmlLayer",
-	"KmlNetworkLink",
-	"KmlNode",
-	"KmlPlacemark",
-	"KmlScreenOverlay"
+	   "KmlDataset",
+	   "KmlDocument",
+	   "KmlFolder",
+	   "KmlGroundOverlay",
+    	"KmlLayer",
+	   "KmlNetworkLink",
+	   "KmlNode",
+    	"KmlPlacemark",
+    	"KmlScreenOverlay"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/listkmlcontents/MainActivity.java",

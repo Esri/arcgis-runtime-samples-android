@@ -61,9 +61,6 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override protected void onPause() {
-    // normally, you won't want to clear credentials once a device has been verified. These calls are made to keep this
-    // sample from interfering with other authentication samples
-    AuthenticationManager.CredentialCache.clear();
     mMapView.pause();
     super.onPause();
   }

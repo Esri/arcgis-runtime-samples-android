@@ -13,6 +13,12 @@
         "Raster",
         "RasterLayer"
     ],
+    "provision_from": [
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=95392f99970d4a71bd25951beb34a508"
+    ],
+    "provision_to": [
+        "/ShastaBW.tif"
+    ],
     "redirect_from": "/android/latest/sample-code/colormap-renderer.htm",
     "relevant_apis": [
         "ArcGISMap",

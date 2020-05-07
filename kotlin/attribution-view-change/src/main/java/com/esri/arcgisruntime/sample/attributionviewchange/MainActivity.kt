@@ -1,4 +1,5 @@
-/* Copyright 2017 Esri
+/*
+ * Copyright 2020 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +14,7 @@
  * limitations under the License.
  *
  */
-package com.esri.arcgisruntime.sample.attributionchange
+package com.esri.arcgisruntime.sample.attributionviewchange
 
 import android.os.Bundle
 import android.widget.Toast
@@ -43,14 +44,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     // set attribution bar listener
-    val params = fab.layoutParams as CoordinatorLayout.LayoutParams
-    mapView.addAttributionViewLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-      val heightDelta = bottom - oldBottom
-      params.bottomMargin += heightDelta
+    mapView.addAttributionViewLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+      val heightDelta = oldBottom - bottom
+      fab.animate().translationYBy(heightDelta.toFloat())
       Toast.makeText(
-        this,
-        "new bounds [" + left + "," + top + "," + right + "," + bottom + "]" +
-            " old bounds [" + oldLeft + "," + oldTop + "," + oldRight + "," + oldBottom + "]",
+        this@MainActivity,
+        "new bounds [$left,$top,$right,$bottom] old bounds [$oldLeft,$oldTop,$oldRight,$oldBottom]",
         Toast.LENGTH_SHORT
       ).show()
     }

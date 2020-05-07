@@ -1,4 +1,5 @@
-/* Copyright 2018 Esri
+/*
+ * Copyright 2018 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,19 +20,13 @@ package com.esri.arcgisruntime.sample.generateofflinemapwithlocalbasemap;
 import java.io.File;
 import java.util.concurrent.ExecutionException;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Envelope;
@@ -78,8 +73,6 @@ public class MainActivity extends AppCompatActivity
     mTakeMapOfflineButton = findViewById(R.id.takeMapOfflineButton);
     mTakeMapOfflineButton.setEnabled(false);
 
-    requestWritePermission();
-
     // handle authentication with the portal
     AuthenticationManager.setAuthenticationChallengeHandler(new DefaultAuthenticationChallengeHandler(this));
 
@@ -94,6 +87,8 @@ public class MainActivity extends AppCompatActivity
         // limit the map scale to the largest layer scale
         map.setMaxScale(map.getOperationalLayers().get(6).getMaxScale());
         map.setMinScale(map.getOperationalLayers().get(6).getMinScale());
+        // enable the take map offline button only after the map is loaded
+        mTakeMapOfflineButton.setEnabled(true);
       } else {
         String error = "Map failed to load: " + map.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
@@ -126,16 +121,8 @@ public class MainActivity extends AppCompatActivity
       if (minPoint != null && maxPoint != null) {
         Envelope envelope = new Envelope(minPoint, maxPoint);
         mDownloadArea.setGeometry(envelope);
-        // enable the map offline button only after the map is loaded
-        mTakeMapOfflineButton.setEnabled(true);
       }
     });
-  }
-
-  /**
-   * Sets up the offline map task and creates default generate offline map parameters for use in a GenerateOfflineMapJob.
-   */
-  private void setupOfflineMapTaskAndGenerateOfflineMapParameters() {
 
     // when the button is clicked, start the offline map task job
     mTakeMapOfflineButton.setOnClickListener(v -> {
@@ -157,15 +144,12 @@ public class MainActivity extends AppCompatActivity
       generateOfflineMapParametersFuture.addDoneListener(() -> {
         try {
           mGenerateOfflineMapParameters = generateOfflineMapParametersFuture.get();
-          // define the samples directory file
-          File samplesDirectory = new File(
-              Environment.getExternalStorageDirectory() + getString(R.string.samples_directory));
           // name of local basemap file as supplied by the map's author
           String localBasemapFileName = mGenerateOfflineMapParameters.getReferenceBasemapFilename();
           // check if the offline map parameters include reference to a basemap file
           if (!localBasemapFileName.isEmpty()) {
-            // search for the given file name (in this case, in the ArcGIS/Samples directory)
-            File localBasemapFile = searchForFile(samplesDirectory, localBasemapFileName);
+            // search for the given file name in the app's scoped storage
+            File localBasemapFile = searchForFile(getExternalFilesDir(null), localBasemapFileName);
             // if a file of the given name was found
             if (localBasemapFile != null) {
               // get the file's directory
@@ -201,6 +185,8 @@ public class MainActivity extends AppCompatActivity
       mGenerateOfflineMapJob.cancel();
     }
 
+    mTakeMapOfflineButton.setEnabled(false);
+
     // delete any offline map already in the cache
     String tempDirectoryPath = getCacheDir() + File.separator + "offlineMap";
     deleteDirectory(new File(tempDirectoryPath));
@@ -214,7 +200,6 @@ public class MainActivity extends AppCompatActivity
         GenerateOfflineMapResult result = mGenerateOfflineMapJob.getResult();
         mMapView.setMap(result.getOfflineMap());
         mGraphicsOverlay.getGraphics().clear();
-        mTakeMapOfflineButton.setEnabled(false);
         findProgressDialogFragment().dismiss();
         Toast.makeText(this, "Now displaying offline map.", Toast.LENGTH_LONG).show();
       } else {
@@ -292,36 +277,6 @@ public class MainActivity extends AppCompatActivity
   @Override public void onProgressDialogDismiss() {
     if (mGenerateOfflineMapJob != null) {
       mGenerateOfflineMapJob.cancel();
-    }
-  }
-
-  /**
-   * Request write permission for API level 23+
-   */
-  private void requestWritePermission() {
-    // request write permission
-    String[] reqPermission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      setupOfflineMapTaskAndGenerateOfflineMapParameters();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      setupOfflineMapTaskAndGenerateOfflineMapParameters();
-      Log.d(TAG, "permission granted");
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.offline_map_write_permission_denied), Toast.LENGTH_SHORT).show();
     }
   }
 

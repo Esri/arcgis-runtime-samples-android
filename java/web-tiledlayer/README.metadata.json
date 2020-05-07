@@ -22,5 +22,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/webtiledlayer/MainActivity.java"
     ],
-    "title": "Web Tiled Layer"
+    "title": "Web TiledLayer"
 }

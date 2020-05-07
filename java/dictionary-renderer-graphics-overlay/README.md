@@ -30,22 +30,12 @@ Run the sample and view the military symbols on the map.
 * DictionarySymbolStyle
 * GraphicsOverlay
 
-## Offline data
+## Offline Data
 
-1. Download the data from the table below.
-2. Extract the contents of the downloaded zip file to disk.  
-3. Create an ArcGIS/samples/Dictionary folder on your device. You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
-4. Open up a command prompt and execute the `adb shell` command to start a remote shell on your target device.
-5. Navigate to your sdcard directory, e.g. `cd /sdcard/`.  
-6. Create the ArcGIS/samples/Dictionary directory, `mkdir ArcGIS/samples/Dictionary`.
-7. You should now have the following directory on your target device, `/sdcard/ArcGIS/samples/Dictionary`. We will copy the contents of the downloaded data into this directory. Note:  Directory may be slightly different on your device.
-8. Exit the shell with the, `exit` command.
-9. While still in your command prompt, navigate to the folder where you extracted the contents of the data from step 1 and execute the following command:
-	* `adb push mil2525d.stylx /sdcard/ArcGIS/samples/Dictionary`
-
-Link | Local Location
----------|-------|
-|[Mil2525d Stylx File](https://www.arcgis.com/home/item.html?id=c78b149a1d52414682c86a5feeb13d30)| `<sdcard>`/ArcGIS/samples/Dictionary/mil2525d.stylx |
+1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=c78b149a1d52414682c86a5feeb13d30).
+2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+3. Push the data into the scoped storage of the sample app:
+`adb push mil2525d.stylx /Android/data/com.esri.arcgisruntime.sample.dictionaryrenderergraphicsoverlay/files/mil2525d.stylx`
 
 ### Tags
 

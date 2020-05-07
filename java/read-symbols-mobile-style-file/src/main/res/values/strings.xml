@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Read symbols from a mobile style file</string>
-    <string name="mobile_style_file_path">/ArcGIS/Samples/Style/emoji-mobile.stylx</string>
+    <string name="mobile_style_file_path">/emoji-mobile.stylx</string>
     <string name="preview_view_title">Preview</string>
     <string name="content_desc_adapter_image_view">Symbol adapter image view</string>
     <string name="color">Color</string>

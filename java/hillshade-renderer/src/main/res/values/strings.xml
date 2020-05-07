@@ -1,11 +1,9 @@
 <resources>
-    <string name="app_name">Hillshade Renderer</string>
-    <string name="location_permission_denied">Hillshade Renderer could not open the raster because WRITE permission was denied.</string>
+    <string name="app_name">Hillshade renderer</string>
     <string name="chooseParam">Hillshade parameters</string>
     <string name="dialog_title">Hillshade rendering parameters</string>
     <string name="altitude_text">Altitude</string>
     <string name="azimuth_text">Azimuth</string>
     <string name="slope_type_text">Slope type</string>
-    <string name="data_sdcard_offline_dir">ArcGIS/samples/raster</string>
-    <string name="raster_name">srtm</string>
+    <string name="hillshade_raster_name">/srtm-hillshade/srtm.tiff</string>
 </resources>

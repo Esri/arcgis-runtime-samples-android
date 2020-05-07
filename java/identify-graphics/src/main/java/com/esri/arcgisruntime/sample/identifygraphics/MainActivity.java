@@ -14,17 +14,18 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.identifygraphicoverlay;
+package com.esri.arcgisruntime.sample.identifygraphics;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.PolygonBuilder;
 import com.esri.arcgisruntime.geometry.SpatialReferences;

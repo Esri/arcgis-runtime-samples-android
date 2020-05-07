@@ -30,17 +30,12 @@ Run the sample and view the ENC data. Pan and zoom around the map. Take note of 
 
 ## Offline Data
 
-1. To use ENC in ArcGIS Runtime, extra resources are required [Hydrography Data](https://developers.arcgis.com/downloads/data). For this sample, please place the Hydrography data in `<sdcard>/ArcGIS/hydrography`.
-1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=9d2987a825c646468b3ce7512fb76e2d).
-1. Extract the contents of the downloaded zip files to disk.
-1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1 & 2.
-1. Execute the following command:
+1. To use ENC in ArcGIS Runtime, extra resources are required. Download the data [Hydrography Data supplement](https://developers.arcgis.com/downloads/data) from ArcGIS for Developers and [ENC Exchange Set without updates](https://arcgisruntime.maps.arcgis.com/home/item.html?id=9d2987a825c646468b3ce7512fb76e2d) from ArcGIS Online.
+2. Extract the contents of the downloaded zip file to disk.
+3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 2.
+4. Push the data into the scoped storage of the sample app:
+ 	* `adb push hydrography /Android/data/com.esri.arcgisruntime.sample.addencexchangeset/files/hydrography`
+	* `adb push ExchangeSetwithoutUpdates /Android/data/com.esri.arcgisruntime.sample.addencexchangeset/files/ExchangeSetwithoutUpdates`
 
-`adb push ExchangeSetwithoutUpdates /sdcard/ArcGIS/Samples/ENC/ExchangeSetwithoutUpdates/ENC_ROOT/`
-
-Link | Local Location
----------|-------|
-|[ENC Exchange Set](https://arcgisruntime.maps.arcgis.com/home/item.html?id=9d2987a825c646468b3ce7512fb76e2d)| `<sdcard>`/ArcGIS/Samples/ENC/ExchangeSetwithoutUpdates/ENC_ROOT/|
-
-## Tags
+#### Tags
 data, ENC, hydrographic, layers, maritime, nautical chart

@@ -22,5 +22,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/mapimagelayer/MainActivity.java"
     ],
-    "title": "ArcGIS Map Image Layer URL"
+    "title": "ArcGIS MapImageLayer URL"
 }

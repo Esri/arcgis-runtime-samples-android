@@ -1,0 +1,31 @@
+{
+    "category": "Visualization",
+    "description": "Set the terrain surface with elevation described by a local tile package.",
+    "ignore": false,
+    "images": [
+        "custom-dictionary-style.png"
+    ],
+    "keywords": [
+        "Dictionary",
+        "Military",
+        "Renderer",
+        "Style",
+        "Style",
+        "Unique value"
+    ],
+    "provision_from": [
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=751138a2e0844e06853522d54103222a"
+    ],
+    "provision_to": [
+        "/Restaurant.stylx"
+    ],
+    "redirect_from": "",
+    "relevant_apis": [
+        "DictionaryRenderer",
+        "DictionarySymbolStyle"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/customdictionarystyle/MainActivity.kt"
+    ],
+    "title": "Custom dictionary style"
+}

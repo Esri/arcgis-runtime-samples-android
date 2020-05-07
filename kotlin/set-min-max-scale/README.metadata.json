@@ -3,24 +3,24 @@
   "description": "Restrict zooming to a specific scale range.",
   "ignore": false,
   "images": [
-    "set-min-max-scale.png"
+      "set-min-max-scale.png"
   ],
   "keywords": [
-    "Maps and Scenes",
-    "ArcGISMap",
-    "Basemap",
-    "MapView",
-    "Viewpoint"
+      "Maps and Scenes",
+      "ArcGISMap",
+      "Basemap",
+      "MapView",
+      "Viewpoint"
   ],
   "redirect_from": "",
   "relevant_apis": [
-    "ArcGISMap",
-    "Basemap",
-    "MapView",
-    "Viewpoint"
+      "ArcGISMap",
+      "Basemap",
+      "MapView",
+      "Viewpoint"
   ],
   "snippets": [
-    "src/main/java/com/esri/arcgisruntime/samples/setminxmaxscale/MainActivity.kt"
+      "src/main/java/com/esri/arcgisruntime/samples/setminxmaxscale/MainActivity.kt"
   ],
-  "title": "Min max scale"
+  "title": "Set min max scale"
 }

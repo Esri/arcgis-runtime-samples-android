@@ -15,6 +15,12 @@
         "StretchParameters",
         "RGBRenderer"
     ],
+    "provision_from": [
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=7c4c679ab06a4df19dc497f577f111bd"
+    ],
+    "provision_to": [
+        "/Shasta.tif"
+    ],
     "redirect_from": "/android/latest/sample-code/rgb-renderer.htm",
     "relevant_apis": [
         "ArcGISMap",

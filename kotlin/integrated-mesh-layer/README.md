@@ -1,4 +1,4 @@
-# Add an integrated mesh layer
+# Integrated mesh layer
 
 View an integrated mesh layer from a scene service.
 
@@ -24,9 +24,9 @@ Run the sample and watch the integrated mesh layer load in place of the extruded
 
 ## About the data
 
-This data is derived from point cloud data from a lidar survey. Lidar data is often of a high enough resolution to capture 3D features as small as walls and trees, but also the irregular surfaces of geological features like cliffs. An integrated mesh made from a point cloud of lidar data will include realistic textures and elevation information.
+This data is derived from  point cloud data from a lidar survey. Lidar data is often of a high enough resolution to capture 3D features as small as walls and trees, but also the irregular surfaces of geological features like cliffs. An integrated mesh made from a point cloud of lidar data will include realistic textures and elevation information.
 
-This integrated mesh depicts Little Yosemite Valley in California's Yosemite National Park, including the 3000ft granite face of El Capitan.
+This integrated mesh depicts Little Yosemite Valley in California's Yosemite National Park, including the 3,000ft granite face of El Capitan.
 
 ## Additional information
 

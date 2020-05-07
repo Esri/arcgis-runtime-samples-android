@@ -27,17 +27,10 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.geometry.Multipoint;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
@@ -70,11 +63,6 @@ public class MainActivity extends AppCompatActivity {
     mMapView.addSpatialReferenceChangedListener(spatialReferenceChangedEvent -> mMapView
         .setViewpointGeometryAsync(mMapView.getGraphicsOverlays().get(0).getExtent()));
 
-    // for API level 23+ request permission at runtime
-    requestReadPermission();
-  }
-
-  private void applyDictionaryRendererToGraphics() {
     GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
     // graphics no longer show after zooming passed this scale
     graphicsOverlay.setMinScale(1000000);
@@ -82,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create symbol dictionary from specification
     DictionarySymbolStyle symbolDictionary = DictionarySymbolStyle
-        .createFromFile(Environment.getExternalStorageDirectory() + getString(R.string.mil2525d_stylx));
+        .createFromFile(getExternalFilesDir(null) + getString(R.string.mil2525d_stylx));
 
     // tells graphics overlay how to render graphics with symbol dictionary attributes set
     DictionaryRenderer renderer = new DictionaryRenderer(symbolDictionary);
@@ -156,34 +144,6 @@ public class MainActivity extends AppCompatActivity {
     }
     // return a graphic with multipoint geometry
     return new Graphic(new Multipoint(points), attributes);
-  }
-
-  /**
-   * Request read external storage for API level 23+.
-   */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      applyDictionaryRendererToGraphics();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      applyDictionaryRendererToGraphics();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.read_permission_denied), Toast.LENGTH_SHORT).show();
-    }
   }
 
   @Override

@@ -48,11 +48,11 @@ When loaded, the sample will show a scene with a terrain surface applied. Pan an
 1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 1. Execute the following command:
 
-`adb push MontereyElevation.dt2 /sdcard/ArcGIS/Samples/Raster/MontereyElevation.dt2`
+`adb push MontereyElevation.dt2 /Android/data/com.esri.arcgisruntime.sample.createterrainfromalocalraster/files/MontereyElevation.dt2`
 
 Link | Local Location
 ---------|-------|
-|[Monterey Elevation Raster File](https://arcgisruntime.maps.arcgis.com/home/item.html?id=98092369c4ae4d549bbbd45dba993ebc)| `<sdcard>`/ArcGIS/Samples/Raster/MontereyElevation.dt2 |
+|[Monterey Elevation Raster File](https://arcgisruntime.maps.arcgis.com/home/item.html?id=98092369c4ae4d549bbbd45dba993ebc)| /Android/data/com.esri.arcgisruntime.sample.createterrainfromalocalraster/files/MontereyElevation.dt2 |
 
 ## Tags
 

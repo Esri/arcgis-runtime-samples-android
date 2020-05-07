@@ -20,6 +20,12 @@
         "SymbolStyle.getSymbolAsync(...)",
         "SymbolStyleSearchParameters"
     ],
+    "provision_from": [
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=1bd036f221f54a99abc9e46ff3511cbf"
+    ],
+    "provision_to": [
+        "/emoji-mobile.stylx"
+    ],
     "redirect_from": "",
     "relevant_apis": [
         "MultilayerPointSymbol",
@@ -33,5 +39,5 @@
         "src/main/java/com/esri/arcgisruntime/sample/readsymbolsmobilestylefile/MainActivity.java",
         "src/main/java/com/esri/arcgisruntime/sample/readsymbolsmobilestylefile/SymbolAdapter.java"
     ],
-    "title": "Read symbols from a mobile style"
+    "title": "Read symbols mobile style file"
 }

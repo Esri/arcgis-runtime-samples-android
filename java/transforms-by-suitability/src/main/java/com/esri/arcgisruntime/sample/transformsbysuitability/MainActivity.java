@@ -20,22 +20,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.ArcGISRuntimeException;
 import com.esri.arcgisruntime.geometry.DatumTransformation;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
@@ -50,27 +43,18 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-
   private ArcGISMap mArcGISMap;
-
   private Point mOriginalGeometry;
-
   private Graphic mProjectedGraphic;
 
   private DatumTransformationAdapter mTransformAdapter;
-
   private final ArrayList<DatumTransformation> mTransformValues = new ArrayList<>();
-
   private boolean mUseExtentForSuitability = false;
-
-  // define permission to request
-  private String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
-
-  private int requestCode = 2;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -138,15 +122,12 @@ public class MainActivity extends AppCompatActivity {
 
     mArcGISMap.addDoneLoadingListener(() -> {
       if (mArcGISMap.getLoadStatus() == LoadStatus.LOADED) {
-        if (mTransformValues.size() == 0) {
+        if (mTransformValues.isEmpty()) {
           // Zoom to the initial default geometry at a suitable scale
           Viewpoint vp = new Viewpoint(mOriginalGeometry, 5000);
           mMapView.setViewpointAsync(vp, 2);
 
-          // Once the map has loaded (which means the 'from' spatial reference is set), trigger populating the list
-          // of transformations. Start by checking app has permissions to access local file storage, where projection
-          // engine files for grid-based transformations are stored.
-          checkPermissions();
+          setPeData();
         }
       }
     });
@@ -164,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
     if (mArcGISMap.getLoadStatus() != LoadStatus.LOADED)
       return;
 
-    File rootDirectory = Environment.getExternalStorageDirectory();
+    File rootDirectory = getExternalFilesDir(null);
 
     // NOTE: You must update this resource value if files are stored in a different location on your device.
     //[DocRef: Name=Set projection engine directory, Category=Fundamentals, Topic=Spatial references, RemoveChars=getResources().getString(R.string.projection_engine_location), ReplaceChars="/ArcGIS/samples/PEData"]
@@ -283,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void removeProjectedGeometryGraphic() {
     // Remove graphic showing the projected geometry, as the selected transformation is not usable.
-    if ((mMapView.getGraphicsOverlays().size() > 0) && (mProjectedGraphic != null)) {
+    if (!mMapView.getGraphicsOverlays().isEmpty() && mProjectedGraphic != null) {
       if (mMapView.getGraphicsOverlays().get(0).getGraphics().size() == 2) {
         mMapView.getGraphicsOverlays().get(0).getGraphics().remove(mProjectedGraphic);
         mProjectedGraphic = null;
@@ -291,58 +272,21 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  /**
-   * Check if permissions for local storage access have been granted. If so, set the projection engine data
-   * directory and populate the list of transformations. If not, request permissions from user.
-   */
-  private void checkPermissions() {
-    // For API level 23+ request permission at runtime
-    int permission = ContextCompat.checkSelfPermission(MainActivity.this, reqPermission[0]);
-    if (permission == PackageManager.PERMISSION_GRANTED) {
-      setPeData();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response. If permissions for local storage access were granted, set the projection
-   * engine data directory and populate the list of transformations.
-   */
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      // Permission to read local storage has been granted.
-      setPeData();
-    } else {
-      // report to user that permission was denied
-      Snackbar.make(mMapView, getResources().getString(R.string.file_permission_denied), Snackbar.LENGTH_LONG)
-          .show();
-
-      // Fill the ListView of transformations - as ProjectionEngineDirectory location has not been set, the list
-      // will not contain any usable grid-based transformations.
-      setupTransformsList();
-    }
-  }
-
   @Override
   protected void onPause() {
-    super.onPause();
-    // pause MapView
     mMapView.pause();
+    super.onPause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    // resume MapView
     mMapView.resume();
   }
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
-    // dispose MapView
     mMapView.dispose();
+    super.onDestroy();
   }
 }

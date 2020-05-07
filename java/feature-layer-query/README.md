@@ -10,7 +10,7 @@ Query expressions can be used in ArcGIS to select a subset of features from a fe
 
 ## How to use the sample
 
-Input the name of a U.S. state into the text field. When you tap enter, a query is performed and the matching features are highlighted or an error is returned.
+Input the name of a U.S. state into the text field. When you tap "GO", a query is performed and the matching features are highlighted or an error is returned.
 
 ## How it works
 

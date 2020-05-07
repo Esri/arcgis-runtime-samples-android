@@ -20,17 +20,11 @@ package com.esri.arcgisruntime.sample.addencexchangeset;
 import java.util.Arrays;
 import java.util.Collections;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.hydrography.EncCell;
@@ -63,21 +57,16 @@ public class MainActivity extends AppCompatActivity {
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
-    requestReadPermission();
-  }
-
-  private void addEncExchangeSet() {
-
     // set paths using ENC environment settings
     // point to the folder containing hydrography resources
     EncEnvironmentSettings
-        .setResourcePath(Environment.getExternalStorageDirectory() + getString(R.string.hydrography_directory));
+        .setResourcePath(getExternalFilesDir(null) + getString(R.string.hydrography_directory));
     // use the app's cache to store processed System Electronic Navigational Chart (SENC) data
-    EncEnvironmentSettings.setSencDataPath(getApplicationContext().getCacheDir().getPath());
+    EncEnvironmentSettings.setSencDataPath(getExternalCacheDir().getPath());
 
     // create the Exchange Set passing an array of paths. Update sets can be loaded alongside base data
     EncExchangeSet encExchangeSet = new EncExchangeSet(
-        Collections.singleton(Environment.getExternalStorageDirectory() + getString(R.string.enc_path)));
+        Collections.singleton(getExternalFilesDir(null) + getString(R.string.enc_path)));
     encExchangeSet.loadAsync();
     encExchangeSet.addDoneLoadingListener(() -> {
       if (encExchangeSet.getLoadStatus() == LoadStatus.LOADED) {
@@ -111,37 +100,6 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, error);
       }
     });
-  }
-
-  /**
-   * Request read external storage permissions for API level 23+.
-   */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      // do something
-      addEncExchangeSet();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      // do something
-      addEncExchangeSet();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.enc_read_permission_denied), Toast.LENGTH_SHORT).show();
-    }
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
   @Override

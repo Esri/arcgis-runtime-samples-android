@@ -1,4 +1,4 @@
-# Integrated Windows Authentication
+# Integrated Windows authentication
 
 Connect to an IWA secured Portal and search for maps.
 
@@ -21,9 +21,9 @@ Enter the URL to your IWA-secured portal. Tap the button to search for web maps 
 
 ## Relevant API
 
-* AuthenticationManager
-* Portal
 * UserCredential
+* Portal
+* AuthenticationManager
 
 ## About the data
 

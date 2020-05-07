@@ -16,17 +16,11 @@
 
 package com.esri.arcgisruntime.sample.featurelayergeopackage;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.data.GeoPackage;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -47,25 +41,15 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    requestWritePermission();
-
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
     // create a map with the BasemapType topographic
     mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 39.7294, -104.8319, 12);
     // set the map to be displayed in this view
     mMapView.setMap(mMap);
-  }
-
-  /**
-   * Opens a GeoPackage from local storage and adds it to a map.
-   */
-  private void openGeoPackage() {
 
     // Get the full path to the local GeoPackage
-    String geoPackagePath =
-        Environment.getExternalStorageDirectory() + getString(R.string.geopackage_folder) + getString(R.string.aurora_co_gpkg);
-    Log.d(TAG, geoPackagePath);
+    String geoPackagePath = getExternalFilesDir(null) + getString(R.string.aurora_co_gpkg);
 
     // Open the GeoPackage
     GeoPackage geoPackage = new GeoPackage(geoPackagePath);
@@ -92,38 +76,6 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "GeoPackage failed to load!" + geoPackage.getLoadError());
       }
     });
-  }
-
-  /**
-   * Request write permission on the device.
-   */
-  private void requestWritePermission() {
-    // define permission to request
-    String[] reqPermission = new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(MainActivity.this,
-        reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      openGeoPackage();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  public void onRequestPermissionsResult(int requestCode,
-      @NonNull String[] permissions,
-      @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      openGeoPackage();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(MainActivity.this,
-          getResources().getString(R.string.geopackage_read_permission_denied), Toast.LENGTH_SHORT).show();
-    }
   }
 
   @Override

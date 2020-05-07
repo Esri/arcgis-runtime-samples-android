@@ -20,5 +20,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/displaymap/MainActivity.java"
     ],
-    "title": "Display a Map"
+    "title": "Display map"
 }

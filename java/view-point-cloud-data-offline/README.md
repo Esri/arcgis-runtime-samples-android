@@ -27,19 +27,12 @@ The sample starts with a point cloud layer loaded and draped on top of a scene. 
 
 This point cloud data comes from Balboa Park in San Diego, California. Created and provided by USGS.
 
-## Offline data
+## Offline Data
 
-1. To use Point Cloud Layer in ArcGIS Runtime, extra resources are required [San Diego Point Cloud SLPK](https://www.arcgis.com/home/item.html?id=34da965ca51d4c68aa9b3a38edb29e00).
 1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=34da965ca51d4c68aa9b3a38edb29e00).
-1. Extract the contents of the downloaded zip files to disk.
-1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1 & 2.
-1. Execute the following command:
-
-`adb push sandiego-north-balboa-pointcloud.slpk /sdcard/ArcGIS/Samples/slpk/sandiego-north-balboa-pointcloud.slpk`
-
-Link | Local Location
----------|-------|
-|[San Diego Point Cloud SLPK](https://www.arcgis.com/home/item.html?id=34da965ca51d4c68aa9b3a38edb29e00)| `<sdcard>`/ArcGIS/Samples/slpk/sandiego-north-balboa-pointcloud.slpk |
+2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+3. Push the data into the scoped storage of the sample app:
+`adb push sandiego-north-balboa-pointcloud.slpk /Android/data/com.esri.arcgisruntime.sample.viewpointclouddataoffline/files/sandiego-north-balboa-pointcloud.slpk`
 
 ## Tags
 

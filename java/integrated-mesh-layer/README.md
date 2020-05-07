@@ -1,4 +1,4 @@
-# Add an integrated mesh layer
+# Integrated mesh layer
 
 View an integrated mesh layer from a scene service.
 

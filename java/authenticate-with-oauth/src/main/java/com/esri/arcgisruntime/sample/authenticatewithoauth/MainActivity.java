@@ -19,10 +19,10 @@ package com.esri.arcgisruntime.sample.authenticatewithoauth;
 import java.net.MalformedURLException;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
@@ -85,10 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    // normally, you won't want to clear credentials once a device has been verified. These calls are made to keep this
-    // sample from interfering with other authentication samples
-    AuthenticationManager.CredentialCache.clear();
-    AuthenticationManager.clearOAuthConfigurations();
     mMapView.pause();
     super.onPause();
   }

@@ -1,10 +1,7 @@
 <resources>
-    <string name="app_name">RGB Renderer</string>
-    <string name="rgb_rendererer_writer_permission_denied">RGB Renderer could not open the raster because WRITE permission was denied.</string>
+    <string name="app_name">RGB renderer</string>
     <string name="edit_renderer">Edit renderer</string>
     <string name="rgb_rendering_parameters">RGB rendering parameters</string>
-    <string name="raster_folder">ArcGIS/samples/raster</string>
-    <string name="shasta_file">Shasta</string>
     <string name="min_red_value">Min red value</string>
     <string name="max_red_value">Max red value</string>
     <string name="min_green_value">Min green value</string>
@@ -15,4 +12,5 @@
     <string name="min_value">Min value</string>
     <string name="stretch_type">Stretch type</string>
     <string name="standard_deviation">Std Dev</string>
+    <string name="rgb_renderer_shasta_tif">/raster-file/Shasta.tif</string>
 </resources>

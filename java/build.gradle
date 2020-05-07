@@ -22,9 +22,9 @@ allprojects {
     var
 }
 
-subprojects{
-    afterEvaluate {project ->
-        if(project.hasProperty("dependencies")){
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty("dependencies")) {
             dependencies {
                 implementation "androidx.appcompat:appcompat:$andSupportLibVersion"
                 implementation "com.google.android.material:material:$andSupportLibVersion"

@@ -18,18 +18,12 @@ package com.esri.arcgisruntime.samples.createterrainfromalocalraster;
 
 import java.util.ArrayList;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -40,10 +34,6 @@ import com.esri.arcgisruntime.mapping.view.SceneView;
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
-
-  private static final int PERMISSIONS_REQUEST_CODE = 1;
-
-  private static final String[] PERMISSIONS = { Manifest.permission.READ_EXTERNAL_STORAGE };
 
   private SceneView mSceneView;
 
@@ -64,13 +54,9 @@ public class MainActivity extends AppCompatActivity {
     Camera camera = new Camera(36.525, -121.80, 300.0, 180, 80.0, 0.0);
     mSceneView.setViewpointCamera(camera);
 
-    requestReadPermission();
-  }
-
-  private void createRasterElevationSource() {
     // raster package file paths
     ArrayList<String> filePaths = new ArrayList<>();
-    filePaths.add(Environment.getExternalStorageDirectory() + getString(R.string.raster_package_location));
+    filePaths.add(getExternalFilesDir(null) + getString(R.string.raster_package_location));
 
     try {
       // add an elevation source to the scene by passing the URI of the raster package to the constructor
@@ -94,30 +80,6 @@ public class MainActivity extends AppCompatActivity {
     } catch (IllegalArgumentException e) {
       // catch exception thrown by RasterElevationSource when a file is invalid/not found
       logErrorToUser(getString(R.string.error_raster_elevation_source_load_failure_message, e.getMessage()));
-    }
-  }
-
-  /**
-   * Request read external storage for API level 23+.
-   */
-  private void requestReadPermission() {
-    if (ContextCompat.checkSelfPermission(this, PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED) {
-      createRasterElevationSource();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSIONS_REQUEST_CODE);
-    }
-  }
-
-  /**
-   * Handle the permissions request response
-   */
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      createRasterElevationSource();
-    } else {
-      // report to user that permission was denied
-      logErrorToUser(getString(R.string.error_read_permission_denied_message));
     }
   }
 

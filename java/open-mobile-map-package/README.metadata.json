@@ -1,0 +1,28 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "Open and display a map from a Mobile Map Package.",
+    "ignore": false,
+    "images": [
+        "open-mobile-mappackage.png"
+    ],
+    "keywords": [
+        "Edit and Manage Data",
+        "MapView",
+        "MobileMapPackage"
+    ],
+    "provision_from": [
+        "https://www.arcgis.com/home/item.html?id=e1f3a7254cb845b09450f54937c16061"
+    ],
+    "provision_to": [
+        "/Yellowstone.mmpk"
+    ],
+    "redirect_from": "/android/latest/sample-code/open-mobile-map-package.htm",
+    "relevant_apis": [
+        "MapView",
+        "MobileMapPackage"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/openmobilemappackage/MainActivity.java"
+    ],
+    "title": "Open mobile MapPackage"
+}

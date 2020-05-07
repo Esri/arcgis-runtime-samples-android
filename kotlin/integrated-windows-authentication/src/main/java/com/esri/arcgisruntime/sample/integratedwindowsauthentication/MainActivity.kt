@@ -24,7 +24,6 @@ import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
@@ -72,7 +71,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler,
     AuthenticationManager.setAuthenticationChallengeHandler(this)
 
     // Set up recycler view for listing portal items
-    recyclerView.layoutManager = LinearLayoutManager(this)
+    recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
     PortalItemAdapter(this).let {
       this.portalItemAdapter = it
       recyclerView.adapter = it

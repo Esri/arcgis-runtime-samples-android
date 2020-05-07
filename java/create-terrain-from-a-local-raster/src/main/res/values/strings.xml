@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">Create Terrain From a Local Raster</string>
-
-    <string name="raster_package_location">/ArcGIS/Samples/Raster/MontereyElevation.dt2</string>
-
-    <string name="error_read_permission_denied_message">Could not create elevation source as the read permission has been denied.</string>
+    <string name="raster_package_location">/MontereyElevation.dt2</string>
     <string name="error_raster_elevation_source_load_failure_message">The elevation source has failed to load. Please ensure that the .dt2 has been pushed to the device\'s storage. %s</string>
 </resources>

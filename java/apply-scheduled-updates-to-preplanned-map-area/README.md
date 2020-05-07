@@ -35,15 +35,12 @@ Start the app. It will display an offline map, check for available updates, and 
 * OfflineMapUpdatesInfo
 
 ## Offline Data
+
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=740b663bff5e4198b9b6674af93f638a).
 2. Extract the contents of the downloaded zip file to disk.
-2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
-3. Execute the following command:
-`adb push canyonlands/. /sdcard/ArcGIS/Samples/MapPackage/canyonlands`
-
-Link | Local Location
----------|-------|
-|[Canyonlands MMPK](https://arcgisruntime.maps.arcgis.com/home/item.html?id=740b663bff5e4198b9b6674af93f638a)| `<sdcard>`/ArcGIS/Samples/MapPackage/canyonlands/|
+3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+4. Push the data into the scoped storage of the sample app:
+`adb push canyonlands /Android/data/com.esri.arcgisruntime.sample.applyscheduledupdatestopreplannedmaparea/files/canyonlands`
 
 ## About the data
 

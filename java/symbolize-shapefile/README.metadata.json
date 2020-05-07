@@ -13,6 +13,12 @@
         "SimpleFillSymbol",
         "SimpleLineSymbol"
     ],
+    "provision_from": [
+        "https://www.arcgis.com/home/item.html?id=d98b3e5293834c5f852f13c569930caa"
+    ],
+    "provision_to": [
+        "/Aurora_CO_shp/Subdivisions.shp"
+    ],
     "redirect_from": "",
     "relevant_apis": [
         "FeatureLayer",
@@ -24,5 +30,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/symbolizeshapefile/MainActivity.java"
     ],
-    "title": "Symbolize a Shapefile"
+    "title": "Symbolize shapefile"
 }

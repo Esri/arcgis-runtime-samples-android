@@ -19,18 +19,12 @@ package com.esri.arcgisruntime.sample.honormobilemappackageexpirationdate;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.mapping.ExpirationType;
 import com.esri.arcgisruntime.mapping.MobileMapPackage;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -51,16 +45,9 @@ public class MainActivity extends AppCompatActivity {
     // get a reference to the expiration text view
     mExpirationMessageTextView = findViewById(R.id.expirationMessageTextView);
 
-    requestReadPermission();
-  }
-
-  /**
-   * Load the mobile map package and set it's first map to the map view. If the mobile map package has expired, call a
-   * method to pass expiration information on to the user.
-   */
-  private void loadMobileMapPackage() {
+    // create a mobile map package from a local mmpk
     MobileMapPackage mobileMapPackage = new MobileMapPackage(
-        Environment.getExternalStorageDirectory() + getString(R.string.path_to_expired_mmpk));
+        getExternalFilesDir(null) + getString(R.string.path_to_expired_mmpk));
 
     // wait for the map package to load
     mobileMapPackage.addDoneLoadingListener(() -> {
@@ -102,34 +89,5 @@ public class MainActivity extends AppCompatActivity {
   protected void onDestroy() {
     mMapView.dispose();
     super.onDestroy();
-  }
-
-  /**
-   * Request read external storage for API level 23+.
-   */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      loadMobileMapPackage();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      loadMobileMapPackage();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.read_local_storage_denied_mmpk), Toast.LENGTH_SHORT).show();
-    }
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 }

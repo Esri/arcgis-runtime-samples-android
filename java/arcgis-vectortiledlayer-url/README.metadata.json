@@ -22,5 +22,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/arcgisvectortiledlayerurl/MainActivity.java"
     ],
-    "title": "ArcGIS Vector Tiled Layer URL"
+    "title": "ArcGIS VectorTiledLayer URL"
 }

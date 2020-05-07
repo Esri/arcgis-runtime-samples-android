@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -34,22 +36,18 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import org.apache.commons.io.FileUtils;
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
 import com.esri.arcgisruntime.data.Attachment;
@@ -59,6 +57,7 @@ import com.esri.arcgisruntime.data.FeatureQueryResult;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.sample.arrayadapter.CustomList;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class EditAttachmentActivity extends AppCompatActivity {
 
@@ -192,7 +191,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
                     Drawable d = Drawable.createFromStream(listenableFuture.get(), fileName);
                     // create a bitmap from drawable
                     Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
-                    File root = Environment.getExternalStorageDirectory();
+                    File root = getExternalFilesDir(null);
                     File fileDir = new File(root.getAbsolutePath() + "/ArcGIS/Attachments");
                     // create folder /ArcGIS/Attachments in external storage
                     boolean isDirectoryCreated = fileDir.exists();

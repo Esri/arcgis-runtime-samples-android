@@ -13,6 +13,12 @@
         "GenerateOfflineMapJob",
         "GenerateOfflineMapResult"
     ],
+    "provision_from": [
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=628e8e3521cf45e9a28a12fe10c02c4d"
+    ],
+    "provision_to": [
+        "/naperville_imagery.tpk"
+    ],
     "redirect_from": "/android/latest/sample-code/generate-offline-map-with-local-basemap.htm",
     "relevant_apis": [
         "OfflineMapTask",

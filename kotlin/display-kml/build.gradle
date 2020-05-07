@@ -6,13 +6,14 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.esri.arcgisruntime.samples.displaykml"
+        applicationId "com.esri.arcgisruntime.sample.displaykml"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
 
     }
+
     buildTypes {
         release {
             minifyEnabled false

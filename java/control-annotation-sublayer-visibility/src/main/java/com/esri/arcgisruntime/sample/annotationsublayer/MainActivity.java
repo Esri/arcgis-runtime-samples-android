@@ -16,20 +16,14 @@
 
 package com.esri.arcgisruntime.sample.annotationsublayer;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.layers.AnnotationLayer;
 import com.esri.arcgisruntime.layers.AnnotationSublayer;
 import com.esri.arcgisruntime.layers.Layer;
@@ -56,21 +50,13 @@ public class MainActivity extends AppCompatActivity {
     mMapView.addMapScaleChangedListener(mapScaleChangedEvent -> currentMapScaleTextView
         .setText(getString(R.string.map_scale, Math.round(mMapView.getMapScale()))));
 
-    requestReadPermission();
-  }
-
-  /**
-   * Load the mobile map package and get layer names for both annotation sublayers. Use those names to populate
-   * checkboxes which are used to set the visibility of the associated annotation sublayers to a boolean value.
-   */
-  private void addSublayersWithAnnotation() {
     // get a reference to checkboxes
     CheckBox closedCheckBox = findViewById(R.id.closedCheckBox);
     CheckBox openCheckBox = findViewById(R.id.openCheckBox);
 
     // load the mobile map package
     MobileMapPackage mobileMapPackage = new MobileMapPackage(
-        Environment.getExternalStorageDirectory() + getString(R.string.gas_device_anno_mmpk_path));
+        getExternalFilesDir(null) + getString(R.string.gas_device_anno_mmpk_path));
     mobileMapPackage.loadAsync();
     mobileMapPackage.addDoneLoadingListener(() -> {
       if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED) {
@@ -130,34 +116,6 @@ public class MainActivity extends AppCompatActivity {
           .append((int) annotationSublayer.getMinScale()).append(")");
     }
     return layerNameBuilder.toString();
-  }
-
-  /**
-   * Request read external storage for API level 23+.
-   */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      addSublayersWithAnnotation();
-    } else {
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      addSublayersWithAnnotation();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.read_local_mmpk_denied_message), Toast.LENGTH_SHORT).show();
-    }
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
   @Override

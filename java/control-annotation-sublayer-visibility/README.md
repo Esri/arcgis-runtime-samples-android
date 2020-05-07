@@ -36,15 +36,9 @@ Use the checkboxes to manually set "Open" and "Closed" annotation sublayers visi
 ## Offline Data
 
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=b87307dcfb26411eb2e92e1627cb615b).
-2. Extract the contents of the downloaded zip file to disk.
-3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
-4. Execute the following command:
-`adb push GasDeviceAnno.mmpk /sdcard/ArcGIS/Samples/MapPackage/GasDeviceAnno.mmpk`
-
-
-Link | Local Location
----------|-------|
-|[Gas Device Anno Mobile Map Package](https://arcgisruntime.maps.arcgis.com/home/item.html?id=b87307dcfb26411eb2e92e1627cb615b)| `<sdcard>`/ArcGIS/Samples/MapPackage/GasDeviceAnno.mmpk|
+2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+3. Push the data into the scoped storage of the sample app:
+`adb push GasDeviceAnno.mmpk /Android/data/com.esri.arcgisruntime.sample.controlannotationsublayervisibility/files/GasDeviceAnno.mmpk`
 
 ## About the data
 

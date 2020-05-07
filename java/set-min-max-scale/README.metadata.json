@@ -22,5 +22,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/samples/setminxmaxscale/MainActivity.java"
     ],
-    "title": "Min max scale"
+    "title": "Set min max scale"
 }

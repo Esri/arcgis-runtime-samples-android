@@ -30,7 +30,7 @@ This sample shows a [Johannesburg, South Africa Scene](https://www.arcgis.com/ho
 * AnalysisOverlay
 * GeodeticDistanceResult 
 * GeoElementViewshed
-* GeometryEngine.distanceGeodetic
+* GeometryEngine.distanceGeodetic (used to animate the vehicle)
 * ModelSceneSymbol
 * OrbitGeoElementCameraController
 

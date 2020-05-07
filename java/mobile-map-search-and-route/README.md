@@ -31,22 +31,12 @@ A list of maps from a mobile map package will be displayed. If the map contains 
 * RouteResult
 * RouteTask
 
-## Offline data
-1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=260eb6535c824209964cf281766ebe43).  
-2. Extract the contents of the downloaded zip file to disk.  
-3. Create an ArcGIS/samples/MapPackage folder on your device. You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools**.
-4. Open up a command prompt and execute the ```adb shell``` command to start a remote shell on your target device.
-5. Navigate to your sdcard directory, e.g. ```cd /sdcard/```.  
-6. Create the ArcGIS/samples/MapPackage directory, ```mkdir ArcGIS/samples/MapPackage```.
-7. You should now have the following directory on your target device, ```/sdcard/ArcGIS/samples/MapPackage```. We will copy the contents of the downloaded data into this directory. Note:  Directory may be slightly different on your device.
-8. Exit the shell with the, ```exit``` command.
-9. While still in your command prompt, navigate to the folder where you extracted the contents of the data from step 1 and execute the following command: 
-	* ```adb push SanFrancisco.mmpk /sdcard/ArcGIS/samples/MapPackage```
+## Offline Data
 
-
-Link | Local Location
----------|-------|
-|[San Francisco Mobile Map Package](https://arcgisruntime.maps.arcgis.com/home/item.html?id=260eb6535c824209964cf281766ebe43)| `<sdcard>`/ArcGIS/samples/MapPackage/SanFrancisco.mmpk |
+1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=260eb6535c824209964cf281766ebe43).
+2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+3. Push the data into the scoped storage of the sample app:
+`adb push SanFrancisco.mmpk /Android/data/com.esri.arcgisruntime.sample.mobilemapsearchandroute/files/SanFrancisco.mmpk`
 
 ## Tags
 

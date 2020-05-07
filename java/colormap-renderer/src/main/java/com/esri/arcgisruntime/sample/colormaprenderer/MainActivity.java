@@ -16,22 +16,15 @@
 
 package com.esri.arcgisruntime.sample.colormaprenderer;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.layers.RasterLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -54,50 +47,10 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     // retrieve the MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
-    // define permission to request
-    String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(MainActivity.this,
-        reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      loadRaster();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
-    }
-  }
+    mMapView = findViewById(R.id.mapView);
 
-  /**
-   * Using values stored in strings.xml, builds path to ShastaBW.tif.
-   *
-   * @return the path to raster file
-   */
-  private String buildRasterPath() {
-    // get sdcard resource name
-    File extStorDir = Environment.getExternalStorageDirectory();
-    // get the directory
-    String extSDCardDirName = this.getResources().getString(R.string.raster_folder);
-    // get raster filename
-    String filename = this.getString(R.string.shasta_b_w);
-    // create the full path to the raster file
-    return extStorDir.getAbsolutePath()
-        + File.separator
-        + extSDCardDirName
-        + File.separator
-        + filename
-        + ".tif";
-  }
-
-  /**
-   * Loads ShastaBW.tif as a Raster and adds it to a new RasterLayer. RasterLayer is then added to the map as an
-   * operational layer. A List of color values is created (0-149: red) (150-250: yellow). The List is passed to a new
-   * ColorMapRenderer, which is then set to the RasterLayer Rendererer. Map viewpoint is then set based on Raster
-   * geometry.
-   */
-  private void loadRaster() {
     // create a raster from a local raster file
-    Raster raster = new Raster(buildRasterPath());
+    Raster raster = new Raster(getExternalFilesDir(null) + getString(R.string.shasta_b_w));
     // create a raster layer
     final RasterLayer rasterLayer = new RasterLayer(raster);
     // create a Map with imagery basemap
@@ -132,22 +85,6 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     });
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  public void onRequestPermissionsResult(int requestCode,
-      @NonNull String[] permissions,
-      @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      loadRaster();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(MainActivity.this,
-          getResources().getString(R.string.colormap_write_permission_denied),
-          Toast.LENGTH_SHORT).show();
-    }
   }
 
   @Override

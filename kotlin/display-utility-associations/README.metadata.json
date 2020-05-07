@@ -1,0 +1,27 @@
+{
+    "category": "Utility Networks",
+    "description": "Create graphics for utility associations in a utility network.",
+    "ignore": false,
+    "images": [
+        "display-utility-associations.png"
+    ],
+    "keywords": [
+        "associating",
+        "association",
+        "attachment",
+        "connectivity",
+        "containment",
+        "relationships"
+    ],
+    "redirect_from": "",
+    "relevant_apis": [
+        "GraphicsOverlay",
+        "UtilityAssociation",
+        "UtilityAssociationType",
+        "UtilityNetwork"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/displayutilityassociations/MainActivity.kt"
+    ],
+    "title": "Display utility associations"
+}

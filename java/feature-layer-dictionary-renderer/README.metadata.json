@@ -12,6 +12,14 @@
         "FeatureLayer",
         "Geodatabase"
     ],
+    "provision_from": [
+        "https://www.arcgis.com/home/item.html?id=c78b149a1d52414682c86a5feeb13d30",
+        "https://www.arcgis.com/home/item.html?id=e0d41b4b409a49a5a7ba11939d8535dc"
+    ],
+    "provision_to": [
+        "/mil2525d.stylx",
+        "/militaryoverlay.geodatabase"
+    ],
     "redirect_from": "/android/latest/sample-code/feature-layer-dictionary-renderer.htm",
     "relevant_apis": [
         "DictionaryRenderer",

@@ -16,23 +16,15 @@
 
 package com.esri.arcgisruntime.sample.stretchrenderer;
 
-import java.io.File;
 import java.util.Collections;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import com.esri.arcgisruntime.layers.RasterLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
@@ -83,48 +75,11 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
     mStdDevFactor = 1;
     mStretchType = StretchType.MIN_MAX;
     // retrieve the MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     mFragmentManager = getSupportFragmentManager();
-    // define permission to request
-    String[] reqPermission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    // For API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(MainActivity.this,
-        reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      initialize();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(MainActivity.this, reqPermission, requestCode);
-    }
-  }
 
-  /**
-   * Using values stored in strings.xml, builds path to raster.
-   *
-   * @return the path to raster file
-   */
-  private String buildRasterPath(String filename) {
-    // get sdcard resource name
-    File extStorDir = Environment.getExternalStorageDirectory();
-    // get the directory
-    String extSDCardDirName = this.getResources().getString(R.string.raster_folder);
-    // create the full path to the raster file
-    return extStorDir.getAbsolutePath()
-        + File.separator
-        + extSDCardDirName
-        + File.separator
-        + filename
-        + ".tif";
-  }
-
-  /**
-   * Creates new imagery raster based on a given path, creates an ArcGISMap, sets it to a MapView and
-   * calls updateRenderer().
-   */
-  private void initialize() {
     // create raster
-    Raster raster = new Raster(
-        new File(buildRasterPath(this.getString(R.string.shasta_file))).getAbsolutePath());
+    Raster raster = new Raster(getExternalFilesDir(null) + getString(R.string.stretch_renderer_shasta_tif));
     mRasterLayer = new RasterLayer(raster);
     // create a basemap from the raster layer
     Basemap basemap = new Basemap(mRasterLayer);
@@ -141,8 +96,7 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
     StretchParameters stretchParameters;
     switch (mStretchType) {
       default:
-        stretchParameters = new MinMaxStretchParameters(
-            Collections.singletonList((double) mMin),
+        stretchParameters = new MinMaxStretchParameters(Collections.singletonList((double) mMin),
             Collections.singletonList((double) mMax));
         break;
       case PERCENT_CLIP:
@@ -153,22 +107,6 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
     }
     StretchRenderer stretchRenderer = new StretchRenderer(stretchParameters, null, true, null);
     mRasterLayer.setRasterRenderer(stretchRenderer);
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  public void onRequestPermissionsResult(int requestCode,
-      @NonNull String[] permissions,
-      @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      initialize();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(MainActivity.this,
-          getResources().getString(R.string.stretch_renderer_write_permission_denied),
-          Toast.LENGTH_SHORT).show();
-    }
   }
 
   @Override

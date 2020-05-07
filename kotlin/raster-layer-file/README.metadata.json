@@ -14,10 +14,10 @@
         "visualization"
     ],
     "provision_from": [
-        "https://www.arcgis.com/home/item.html?id=34da965ca51d4c68aa9b3a38edb29e00"
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=7c4c679ab06a4df19dc497f577f111bd"
     ],
     "provision_to": [
-        "/raster-file/Shasta.tif"
+        "/Shasta.tif"
     ],
     "redirect_from": "/android/latest/sample-code/raster-layer-file.htm",
     "relevant_apis": [

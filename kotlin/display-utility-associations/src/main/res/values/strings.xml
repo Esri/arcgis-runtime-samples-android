@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Display utility association</string>
+    <string name="attachment">Attachment</string>
+    <string name="connectivity">Connectivity</string>
+    <string name="utility_association_types">Utility association types</string>
+</resources>

@@ -1,7 +1,6 @@
 <resources>
-    <string name="app_name">Analyze Hotspots</string>
+    <string name="app_name">Analyze hotspots</string>
     <string name="dialog_text">Running geoprocessing Job</string>
-    <string name="job_canceled">Job Canceled</string>
     <string name="job_failed">Job Failed!</string>
     <string name="hotspot_911_calls" formatted="false">
         http://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/GPServer/911%20Calls%20Hotspot

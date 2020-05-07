@@ -14,6 +14,12 @@
         "NetworkAnalysis",
         "Callout"
     ],
+    "provision_from": [
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=260eb6535c824209964cf281766ebe43"
+    ],
+    "provision_to": [
+        "/SanFrancisco.mmpk"
+    ],
     "redirect_from": "/android/latest/sample-code/mobile-map-search-and-route.htm",
     "relevant_apis": [
         "MobileMapPackage",

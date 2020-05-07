@@ -28,13 +28,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
   private boolean saveFileToExternalStorage() {
 
     //build paths
-    mArcGISTempFolderPath = Environment.getExternalStorageDirectory() + File.separator + this.getResources()
+    mArcGISTempFolderPath = getExternalFilesDir(null) + File.separator + getResources()
         .getString(R.string.pin_blank_orange_folder_name);
     mPinBlankOrangeFilePath =
         mArcGISTempFolderPath + File.separator + this.getResources().getString(R.string.pin_blank_orange_file_name);

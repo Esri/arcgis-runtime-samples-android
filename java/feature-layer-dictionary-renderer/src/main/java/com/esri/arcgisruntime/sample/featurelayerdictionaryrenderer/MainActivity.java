@@ -16,17 +16,11 @@
 
 package com.esri.arcgisruntime.sample.featurelayerdictionaryrenderer;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.data.Geodatabase;
 import com.esri.arcgisruntime.data.GeodatabaseFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -55,22 +49,14 @@ public class MainActivity extends AppCompatActivity {
     // set the map to the map view
     mMapView.setMap(map);
 
-    // for API level 23+ request permission at runtime
-    requestReadPermission();
-  }
-
-  /**
-   * Load Geo-Database and display features from layer using mil2525d symbols.
-   */
-  private void loadGeodatabaseSymbolDictionary() {
     // load geo-database from local location
     Geodatabase geodatabase = new Geodatabase(
-        Environment.getExternalStorageDirectory() + getString(R.string.militaryoverlay_geodatabase));
+        getExternalFilesDir(null) + getString(R.string.militaryoverlay_geodatabase));
     geodatabase.loadAsync();
 
     // render tells layer what symbols to apply to what features
     DictionarySymbolStyle symbolDictionary = DictionarySymbolStyle
-        .createFromFile(Environment.getExternalStorageDirectory() + getString(R.string.mil2525d_stylx));
+        .createFromFile(getExternalFilesDir(null) + getString(R.string.mil2525d_stylx));
     symbolDictionary.loadAsync();
 
     geodatabase.addDoneLoadingListener(() -> {
@@ -113,35 +99,6 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, error);
       }
     });
-  }
-
-  /**
-   * Request read external storage for API level 23+.
-   */
-  private void requestReadPermission() {
-    // define permission to request
-    String[] reqPermission = { Manifest.permission.READ_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      loadGeodatabaseSymbolDictionary();
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
-  }
-
-  /**
-   * Handle the permissions request response
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      loadGeodatabaseSymbolDictionary();
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getResources().getString(R.string.write_permission_denied),
-          Toast.LENGTH_SHORT).show();
-    }
   }
 
   @Override

@@ -1,4 +1,4 @@
-# Service feature table (cache)
+# Service feature table (Cache)
 
 Display a feature layer from a service using the **on interaction cache** feature request mode.
 

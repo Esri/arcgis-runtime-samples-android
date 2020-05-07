@@ -26,5 +26,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/createsavemap/MainActivity.java"
     ],
-    "title": "Create and Save a Map"
+    "title": "Create save map"
 }

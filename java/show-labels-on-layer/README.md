@@ -18,7 +18,7 @@ Pan and zoom around the United States. Labels for congressional districts will b
 2. Create a `FeatureLayer` from the service feature table.
 3. Create a `TextSymbol` to use for displaying the label text.
 4. Create a JSON string for the label definition.
-    * Set the `LabelExpressionInfo.expression` key to express what the text the label should display. You can use fields of the feature by using `$feature.field_name` in the expression.
+    * Set the "LabelExpressionInfo.expression" key to express what the text the label should display. You can use fields of the feature by using `$feature.field_name` in the expression.
     * To use the text symbol, set the "symbol" key to the symbol's JSON representation using `textSymbol.toJson()`.
 5. Create a label definition from the JSON using `LabelDefinition.fromJson(jsonString)`.
 6. Add the definition to the feature layer with `featureLayer.getLabelDefinitions().add(labelDefinition)`.
