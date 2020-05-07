@@ -34,7 +34,7 @@ See the topic [What is raster data?](http://desktop.arcgis.com/en/arcmap/10.3/ma
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 4. Push the data into the scoped storage of the sample app:
 `adb push raster-file /Android/data/com.esri.arcgisruntime.sample.rasterlayerfile/files/raster-file`
-5. 
+ 
 ## Tags
 
 data, image, import, layer, raster, visualization
