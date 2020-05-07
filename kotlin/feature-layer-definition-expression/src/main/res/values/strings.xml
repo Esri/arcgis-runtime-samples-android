@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Feature layer definition expression</string>
+    <string name="action_def_exp">Apply expression</string>
+    <string name="action_reset">Reset</string>
+    <string name="sample_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/SF311/FeatureServer/0</string>
+</resources>
