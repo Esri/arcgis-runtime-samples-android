@@ -19,10 +19,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.ProgressBar
-import android.widget.RelativeLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.concurrent.Job
@@ -35,18 +32,15 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
-import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.geodatabase.GeodatabaseSyncTask
+import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
   private val TAG =
     MainActivity::class.java.simpleName
-  private var mMapView: MapView? = null
-  private var mProgressTextView: TextView? = null
-  private var mProgressLayout: RelativeLayout? = null
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
@@ -55,22 +49,13 @@ class MainActivity : AppCompatActivity() {
       TileCache(getExternalFilesDir(null).toString() + getString(R.string.san_francisco_tpk))
     val tiledLayer = ArcGISTiledLayer(sanFrancisco)
     // create a map view and add a map
-    mMapView =
-      findViewById<View>(R.id.mapView) as MapView
     val map = ArcGISMap(Basemap(tiledLayer))
-    mMapView!!.map = map
+    mapView.map = map
     // create a graphics overlay and symbol to mark the extent
     val graphicsOverlay = GraphicsOverlay()
-    mMapView!!.graphicsOverlays.add(graphicsOverlay)
+    mapView.graphicsOverlays.add(graphicsOverlay)
     val boundarySymbol =
-      SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5)
-    // inflate button and progress layout
-    val genGeodatabaseButton =
-      findViewById<View>(R.id.genGeodatabaseButton) as Button
-    mProgressLayout = findViewById<View>(R.id.progressLayout) as RelativeLayout
-    val progressBar =
-      findViewById<View>(R.id.taskProgressBar) as ProgressBar
-    mProgressTextView = findViewById<View>(R.id.progressTextView) as TextView
+      SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5f)
     // create a geodatabase sync task
     val geodatabaseSyncTask =
       GeodatabaseSyncTask(getString(R.string.wildfire_sync))
@@ -79,14 +64,14 @@ class MainActivity : AppCompatActivity() {
       // generate the geodatabase sync task
       genGeodatabaseButton.setOnClickListener {
         // show the progress layout
-        progressBar.progress = 0
-        mProgressLayout!!.visibility = View.VISIBLE
+        taskProgressBar.progress = 0
+        progressLayout.visibility = View.VISIBLE
         // clear any previous operational layers and graphics if button clicked more than once
         map.operationalLayers.clear()
         graphicsOverlay.graphics.clear()
         // show the extent used as a graphic
         val extent =
-          mMapView!!.visibleArea.extent
+          mapView.visibleArea.extent
         val boundary = Graphic(extent, boundarySymbol)
         graphicsOverlay.graphics.add(boundary)
         // create generate geodatabase parameters for the current extent
@@ -104,21 +89,21 @@ class MainActivity : AppCompatActivity() {
             val generateGeodatabaseJob = geodatabaseSyncTask
               .generateGeodatabase(parameters, localGeodatabasePath)
             generateGeodatabaseJob.start()
-            mProgressTextView!!.text = getString(R.string.progress_started)
+            progressTextView.text = getString(R.string.progress_started)
             // update progress
             generateGeodatabaseJob.addProgressChangedListener {
-              progressBar.progress = generateGeodatabaseJob.progress
-              mProgressTextView!!.text = getString(R.string.progress_fetching)
+              taskProgressBar.progress = generateGeodatabaseJob.progress
+              progressTextView.text = getString(R.string.progress_fetching)
             }
             // get geodatabase when done
             generateGeodatabaseJob.addJobDoneListener {
-              mProgressLayout!!.visibility = View.INVISIBLE
+              progressLayout.visibility = View.INVISIBLE
               if (generateGeodatabaseJob.status == Job.Status.SUCCEEDED) {
                 val geodatabase = generateGeodatabaseJob.result
                 geodatabase.loadAsync()
                 geodatabase.addDoneLoadingListener {
                   if (geodatabase.loadStatus == LoadStatus.LOADED) {
-                    mProgressTextView!!.text = getString(R.string.progress_done)
+                    progressTextView.text = getString(R.string.progress_done)
                     for (geodatabaseFeatureTable in geodatabase
                       .geodatabaseFeatureTables) {
                       geodatabaseFeatureTable.loadAsync()
@@ -171,16 +156,16 @@ class MainActivity : AppCompatActivity() {
 
   override fun onPause() {
     super.onPause()
-    mMapView!!.pause()
+    mapView.pause()
   }
 
   override fun onResume() {
     super.onResume()
-    mMapView!!.resume()
+    mapView.resume()
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    mMapView!!.dispose()
+    mapView.dispose()
   }
 }
