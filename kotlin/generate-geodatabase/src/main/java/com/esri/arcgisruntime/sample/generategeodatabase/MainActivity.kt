@@ -76,70 +76,56 @@ class MainActivity : AppCompatActivity() {
           mapView.visibleArea.extent
         val boundary = Graphic(extent, boundarySymbol)
         graphicsOverlay.graphics.add(boundary)
-        // create generate geodatabase parameters for the current extent
-        val defaultParameters =
-          geodatabaseSyncTask.createDefaultGenerateGeodatabaseParametersAsync(extent)
-        defaultParameters.addDoneListener {
-          try {
-            // set parameters and don't include attachments
-            val parameters = defaultParameters.get().apply {
-              isReturnAttachments = false
-            }
-            // define the local path where the geodatabase will be stored
-            val localGeodatabasePath =
-              cacheDir.toString() + File.separator + getString(R.string.wildfire_geodatabase)
-            // create and start the job
-            val generateGeodatabaseJob = geodatabaseSyncTask
-              .generateGeodatabase(parameters, localGeodatabasePath)
-            generateGeodatabaseJob.apply {
-              start().also { progressTextView.text = getString(R.string.progress_started) }
-              // update progress
-              addProgressChangedListener {
-                taskProgressBar.progress = progress
-                progressTextView.text = getString(R.string.progress_fetching)
-              }
-              // get geodatabase when done
-              addJobDoneListener {
-                progressLayout.visibility = View.INVISIBLE
-                if (status == Job.Status.SUCCEEDED) {
-                  val geodatabase = result
-                  geodatabase.loadAsync()
-                  geodatabase.addDoneLoadingListener {
-                    if (geodatabase.loadStatus == LoadStatus.LOADED) {
-                      progressTextView.text = getString(R.string.progress_done)
-                      for (geodatabaseFeatureTable in geodatabase.geodatabaseFeatureTables) {
-                        geodatabaseFeatureTable.loadAsync()
-                        map.operationalLayers.add(FeatureLayer(geodatabaseFeatureTable))
-                      }
-                      genGeodatabaseButton.visibility = View.GONE
-                      Log.i(TAG, "Local geodatabase stored at: $localGeodatabasePath")
-                    } else {
-                      val error = "Error loading geodatabase: " + geodatabase.loadError.message
-                      Log.e(TAG, error)
-                      Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
-                    }
+        val parameters =
+          geodatabaseSyncTask.createDefaultGenerateGeodatabaseParametersAsync(extent).get()
+        parameters.isReturnAttachments = false
+        // define the local path where the geodatabase will be stored
+        val localGeodatabasePath =
+          cacheDir.toString() + File.separator + getString(R.string.wildfire_geodatabase)
+        // create and start the job
+        val generateGeodatabaseJob = geodatabaseSyncTask
+          .generateGeodatabase(parameters, localGeodatabasePath)
+        generateGeodatabaseJob.apply {
+          start().also { progressTextView.text = getString(R.string.progress_started) }
+          // update progress
+          addProgressChangedListener {
+            taskProgressBar.progress = progress
+            progressTextView.text = getString(R.string.progress_fetching)
+          }
+          // get geodatabase when done
+          addJobDoneListener {
+            progressLayout.visibility = View.INVISIBLE
+            if (status == Job.Status.SUCCEEDED) {
+              val geodatabase = result.apply { loadAsync() }
+              geodatabase.addDoneLoadingListener {
+                if (geodatabase.loadStatus == LoadStatus.LOADED) {
+                  progressTextView.text = getString(R.string.progress_done)
+                  for (geodatabaseFeatureTable in geodatabase.geodatabaseFeatureTables) {
+                    map.operationalLayers.add(FeatureLayer(geodatabaseFeatureTable))
                   }
-                  // unregister since we're not syncing
-                  val unregisterGeodatabase: ListenableFuture<*> =
-                    geodatabaseSyncTask.unregisterGeodatabaseAsync(geodatabase)
-                  unregisterGeodatabase.addDoneListener {
-                    val message =
-                      "Geodatabase unregistered since we wont be editing it in this sample."
-                    Log.i(TAG, message)
-                    Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
-                  }
+                  genGeodatabaseButton.visibility = View.GONE
+                  Log.i(TAG, "Local geodatabase stored at: $localGeodatabasePath")
                 } else {
-                  val error =
-                    generateGeodatabaseJob.error?.message ?: "Unknown error generating geodatabase"
+                  val error = "Error loading geodatabase: " + geodatabase.loadError.message
                   Log.e(TAG, error)
                   Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
                 }
               }
+              // unregister since we're not syncing
+              val unregisterGeodatabase: ListenableFuture<*> =
+                geodatabaseSyncTask.unregisterGeodatabaseAsync(geodatabase)
+              unregisterGeodatabase.addDoneListener {
+                val message =
+                  "Geodatabase unregistered since we wont be editing it in this sample."
+                Log.i(TAG, message)
+                Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+              }
+            } else {
+              val error =
+                generateGeodatabaseJob.error?.message ?: "Unknown error generating geodatabase"
+              Log.e(TAG, error)
+              Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
             }
-          } catch (e: Exception) {
-            val error = "Error generating geodatabase parameters : " + e.message
-            Log.e(TAG, error)
-            Toast.makeText(this, error, Toast.LENGTH_LONG).show()
           }
         }
       }
