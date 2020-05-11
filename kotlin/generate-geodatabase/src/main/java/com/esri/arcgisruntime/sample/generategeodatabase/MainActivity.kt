@@ -19,7 +19,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.concurrent.Job
@@ -36,11 +35,11 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.geodatabase.GeodatabaseSyncTask
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
-import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
   private val TAG =
     MainActivity::class.java.simpleName
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
@@ -92,60 +91,55 @@ class MainActivity : AppCompatActivity() {
             // create and start the job
             val generateGeodatabaseJob = geodatabaseSyncTask
               .generateGeodatabase(parameters, localGeodatabasePath)
-            generateGeodatabaseJob.start()
-            progressTextView.text = getString(R.string.progress_started)
-            // update progress
-            generateGeodatabaseJob.addProgressChangedListener {
-              taskProgressBar.progress = generateGeodatabaseJob.progress
-              progressTextView.text = getString(R.string.progress_fetching)
-            }
-            // get geodatabase when done
-            generateGeodatabaseJob.addJobDoneListener {
-              progressLayout.visibility = View.INVISIBLE
-              if (generateGeodatabaseJob.status == Job.Status.SUCCEEDED) {
-                val geodatabase = generateGeodatabaseJob.result
-                geodatabase.loadAsync()
-                geodatabase.addDoneLoadingListener {
-                  if (geodatabase.loadStatus == LoadStatus.LOADED) {
-                    progressTextView.text = getString(R.string.progress_done)
-                    for (geodatabaseFeatureTable in geodatabase
-                      .geodatabaseFeatureTables) {
-                      geodatabaseFeatureTable.loadAsync()
-                      map.operationalLayers.add(FeatureLayer(geodatabaseFeatureTable))
+            generateGeodatabaseJob.apply {
+              start().also { progressTextView.text = getString(R.string.progress_started) }
+              // update progress
+              addProgressChangedListener {
+                taskProgressBar.progress = progress
+                progressTextView.text = getString(R.string.progress_fetching)
+              }
+              // get geodatabase when done
+              addJobDoneListener {
+                progressLayout.visibility = View.INVISIBLE
+                if (status == Job.Status.SUCCEEDED) {
+                  val geodatabase = result
+                  geodatabase.loadAsync()
+                  geodatabase.addDoneLoadingListener {
+                    if (geodatabase.loadStatus == LoadStatus.LOADED) {
+                      progressTextView.text = getString(R.string.progress_done)
+                      for (geodatabaseFeatureTable in geodatabase.geodatabaseFeatureTables) {
+                        geodatabaseFeatureTable.loadAsync()
+                        map.operationalLayers.add(FeatureLayer(geodatabaseFeatureTable))
+                      }
+                      genGeodatabaseButton.visibility = View.GONE
+                      Log.i(TAG, "Local geodatabase stored at: $localGeodatabasePath")
+                    } else {
+                      val error = "Error loading geodatabase: " + geodatabase.loadError.message
+                      Log.e(TAG, error)
+                      Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
                     }
-                    genGeodatabaseButton.visibility = View.GONE
-                    Log.i(
-                      TAG,
-                      "Local geodatabase stored at: $localGeodatabasePath"
-                    )
-                  } else {
-                    val error = "Error loading geodatabase: " + geodatabase.loadError.message
-                    Log.e(TAG, error)
-                    Toast.makeText(this, error, Toast.LENGTH_LONG).show()
                   }
+                  // unregister since we're not syncing
+                  val unregisterGeodatabase: ListenableFuture<*> =
+                    geodatabaseSyncTask.unregisterGeodatabaseAsync(geodatabase)
+                  unregisterGeodatabase.addDoneListener {
+                    val message =
+                      "Geodatabase unregistered since we wont be editing it in this sample."
+                    Log.i(TAG, message)
+                    Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+                  }
+                } else {
+                  val error =
+                    generateGeodatabaseJob.error?.message ?: "Unknown error generating geodatabase"
+                  Log.e(TAG, error)
+                  Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
                 }
-                // unregister since we're not syncing
-                val unregisterGeodatabase: ListenableFuture<*> = geodatabaseSyncTask
-                  .unregisterGeodatabaseAsync(geodatabase)
-                unregisterGeodatabase.addDoneListener {
-                  val message = "Geodatabase unregistered since we wont be editing it in this sample."
-                  Log.i(TAG, message)
-                  Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
-                }
-              } else if (generateGeodatabaseJob.error != null) {
-                val error = "Error generating geodatabase: " + generateGeodatabaseJob.error.message
-                Log.e(TAG, error)
-                Toast.makeText(this,error,Toast.LENGTH_LONG).show()
-              } else {
-                val error = "Unknown error generating geodatabase"
-                Log.e(TAG, error)
-                Toast.makeText(this,error,Toast.LENGTH_LONG).show()
               }
             }
           } catch (e: Exception) {
             val error = "Error generating geodatabase parameters : " + e.message
             Log.e(TAG, error)
-            Toast.makeText(this,error,Toast.LENGTH_LONG).show()
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show()
           }
         }
       }
