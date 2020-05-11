@@ -48,14 +48,17 @@ class MainActivity : AppCompatActivity() {
     val sanFrancisco =
       TileCache(getExternalFilesDir(null).toString() + getString(R.string.san_francisco_tpk))
     val tiledLayer = ArcGISTiledLayer(sanFrancisco)
-    // create a map view and add a map
+    // create a map with the tile package basemap
     val map = ArcGISMap(Basemap(tiledLayer))
-    mapView.map = map
     // create a graphics overlay and symbol to mark the extent
     val graphicsOverlay = GraphicsOverlay()
-    mapView.graphicsOverlays.add(graphicsOverlay)
     val boundarySymbol =
       SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5f)
+    // add the map and graphics overlay to the map view
+    mapView.apply {
+      this.map = map
+      graphicsOverlays.add(graphicsOverlay)
+    }
     // create a geodatabase sync task
     val geodatabaseSyncTask =
       GeodatabaseSyncTask(getString(R.string.wildfire_sync))
@@ -76,12 +79,13 @@ class MainActivity : AppCompatActivity() {
         graphicsOverlay.graphics.add(boundary)
         // create generate geodatabase parameters for the current extent
         val defaultParameters =
-          geodatabaseSyncTask
-            .createDefaultGenerateGeodatabaseParametersAsync(extent)
+          geodatabaseSyncTask.createDefaultGenerateGeodatabaseParametersAsync(extent)
         defaultParameters.addDoneListener {
-          try { // set parameters and don't include attachments
-            val parameters = defaultParameters.get()
-            parameters.isReturnAttachments = false
+          try {
+            // set parameters and don't include attachments
+            val parameters = defaultParameters.get().apply {
+              isReturnAttachments = false
+            }
             // define the local path where the geodatabase will be stored
             val localGeodatabasePath =
               cacheDir.toString() + File.separator + getString(R.string.wildfire_geodatabase)
@@ -115,39 +119,33 @@ class MainActivity : AppCompatActivity() {
                       "Local geodatabase stored at: $localGeodatabasePath"
                     )
                   } else {
-                    Log.e(
-                      TAG,
-                      "Error loading geodatabase: " + geodatabase.loadError.message
-                    )
+                    val error = "Error loading geodatabase: " + geodatabase.loadError.message
+                    Log.e(TAG, error)
+                    Toast.makeText(this, error, Toast.LENGTH_LONG).show()
                   }
                 }
                 // unregister since we're not syncing
                 val unregisterGeodatabase: ListenableFuture<*> = geodatabaseSyncTask
                   .unregisterGeodatabaseAsync(geodatabase)
                 unregisterGeodatabase.addDoneListener {
-                  Log.i(
-                    TAG,
-                    "Geodatabase unregistered since we wont be editing it in this sample."
-                  )
-                  Toast.makeText(
-                    this@MainActivity,
-                    "Geodatabase unregistered since we wont be editing it in this sample.",
-                    Toast.LENGTH_LONG
-                  ).show()
+                  val message = "Geodatabase unregistered since we wont be editing it in this sample."
+                  Log.i(TAG, message)
+                  Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
                 }
               } else if (generateGeodatabaseJob.error != null) {
-                Log.e(
-                  TAG,
-                  "Error generating geodatabase: " + generateGeodatabaseJob.error.message
-                )
+                val error = "Error generating geodatabase: " + generateGeodatabaseJob.error.message
+                Log.e(TAG, error)
+                Toast.makeText(this,error,Toast.LENGTH_LONG).show()
               } else {
-                Log.e(TAG, "Unknown Error generating geodatabase")
+                val error = "Unknown error generating geodatabase"
+                Log.e(TAG, error)
+                Toast.makeText(this,error,Toast.LENGTH_LONG).show()
               }
             }
-          } catch (e: InterruptedException) {
-            Log.e(TAG, "Error generating geodatabase parameters : " + e.message)
-          } catch (e: ExecutionException) {
-            Log.e(TAG, "Error generating geodatabase parameters : " + e.message)
+          } catch (e: Exception) {
+            val error = "Error generating geodatabase parameters : " + e.message
+            Log.e(TAG, error)
+            Toast.makeText(this,error,Toast.LENGTH_LONG).show()
           }
         }
       }
