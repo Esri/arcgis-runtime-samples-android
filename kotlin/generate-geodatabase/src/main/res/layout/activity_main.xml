@@ -1,0 +1,49 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <!-- MapView -->
+    <com.esri.arcgisruntime.mapping.view.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.esri.arcgisruntime.mapping.view.MapView>
+    <Button
+        android:id="@+id/genGeodatabaseButton"
+        android:text="@string/gen_geodatabase_button_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+    <RelativeLayout
+        android:id="@+id/progressLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@drawable/preview_background"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" android:visibility="invisible">
+        <ProgressBar
+            android:id="@+id/taskProgressBar"
+            style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
+            android:paddingBottom="10dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            android:text="@string/progress_starting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressTextView"
+            android:layout_below="@+id/taskProgressBar"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+</RelativeLayout>
