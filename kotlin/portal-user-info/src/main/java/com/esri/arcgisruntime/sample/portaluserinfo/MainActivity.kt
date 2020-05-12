@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.portaluserinfo
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.portal.Portal
@@ -25,7 +26,6 @@ import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_profile.*
-import org.jetbrains.anko.toast
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -43,9 +43,7 @@ class MainActivity : AppCompatActivity() {
     val portal = Portal("http://www.arcgis.com", true)
 
     portal.addDoneLoadingListener {
-
       when (portal.loadStatus) {
-
         LoadStatus.LOADED -> {
           val portalInformation = portal.portalInfo
           val portalInfoName = portalInformation.portalName
@@ -80,20 +78,22 @@ class MainActivity : AppCompatActivity() {
                 }
               }
             } else {
-              toast("No thumbnail associated with $fullname")
+              Toast.makeText(this, "No thumbnail associated with $fullname", Toast.LENGTH_LONG)
+                .show()
             }
           } else {
-            toast("User did not authenticate against $portalInfoName")
+            Toast.makeText(
+              this,
+              "User did not authenticate against $portalInfoName",
+              Toast.LENGTH_LONG
+            ).show()
           }
         }
-
         LoadStatus.FAILED_TO_LOAD -> {
-          toast("Portal failed to load")
+          Toast.makeText(this, "Portal failed to load", Toast.LENGTH_LONG).show()
         }
       }
-
     }
     portal.loadAsync()
   }
-
 }
