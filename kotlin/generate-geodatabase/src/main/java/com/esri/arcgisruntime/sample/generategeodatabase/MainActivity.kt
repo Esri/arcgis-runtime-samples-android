@@ -47,85 +47,99 @@ class MainActivity : AppCompatActivity() {
     val sanFrancisco =
       TileCache(getExternalFilesDir(null).toString() + getString(R.string.san_francisco_tpk))
     val tiledLayer = ArcGISTiledLayer(sanFrancisco)
-    // create a map with the tile package basemap
-    val map = ArcGISMap(Basemap(tiledLayer))
-    // create a graphics overlay and symbol to mark the extent
-    val graphicsOverlay = GraphicsOverlay()
-    val boundarySymbol =
-      SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5f)
+
     // add the map and graphics overlay to the map view
     mapView.apply {
-      this.map = map
-      graphicsOverlays.add(graphicsOverlay)
+      // create a map with the tile package basemap
+      this.map = ArcGISMap(Basemap(tiledLayer))
+      // create a graphics overlay to display the boundaries
+      graphicsOverlays.add(GraphicsOverlay())
     }
-    // create a geodatabase sync task
+
+    // generate geodatabase when the button is clicked
+    genGeodatabaseButton.setOnClickListener {
+      generateAndDisplayGeodatabase()
+    }
+  }
+
+  private fun generateAndDisplayGeodatabase() {
+    // create a geodatabase sync task and load it
     val geodatabaseSyncTask =
-      GeodatabaseSyncTask(getString(R.string.wildfire_sync))
-    geodatabaseSyncTask.loadAsync()
-    geodatabaseSyncTask.addDoneLoadingListener {
-      // generate the geodatabase sync task
-      genGeodatabaseButton.setOnClickListener {
-        // show the progress layout
-        taskProgressBar.progress = 0
-        progressLayout.visibility = View.VISIBLE
+      GeodatabaseSyncTask(getString(R.string.wildfire_sync)).apply { loadAsync() }
+
+    geodatabaseSyncTask.addDoneLoadingListener onTaskLoaded@{
+      // show the progress layout
+      taskProgressBar.progress = 0
+      progressLayout.visibility = View.VISIBLE
+
+      mapView.apply {
         // clear any previous operational layers and graphics if button clicked more than once
         map.operationalLayers.clear()
-        graphicsOverlay.graphics.clear()
+        graphicsOverlays[0].graphics.clear()
         // show the extent used as a graphic
-        val extent =
-          mapView.visibleArea.extent
-        val boundary = Graphic(extent, boundarySymbol)
-        graphicsOverlay.graphics.add(boundary)
-        val parameters =
-          geodatabaseSyncTask.createDefaultGenerateGeodatabaseParametersAsync(extent).get()
-        parameters.isReturnAttachments = false
-        // define the local path where the geodatabase will be stored
-        val localGeodatabasePath =
-          cacheDir.toString() + File.separator + getString(R.string.wildfire_geodatabase)
-        // create and start the job
-        val generateGeodatabaseJob = geodatabaseSyncTask
-          .generateGeodatabase(parameters, localGeodatabasePath)
-        generateGeodatabaseJob.apply {
-          start().also { progressTextView.text = getString(R.string.progress_started) }
-          // update progress
-          addProgressChangedListener {
-            taskProgressBar.progress = progress
-            progressTextView.text = getString(R.string.progress_fetching)
+        mapView.graphicsOverlays[0].graphics.add(
+          Graphic(
+            visibleArea.extent,
+            SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5f)
+          )
+        )
+      }
+
+      val parameters = geodatabaseSyncTask
+        .createDefaultGenerateGeodatabaseParametersAsync(mapView.visibleArea.extent).get()
+      parameters.isReturnAttachments = false
+      // define the local path where the geodatabase will be stored
+      val localGeodatabasePath =
+        cacheDir.toString() + File.separator + getString(R.string.wildfire_geodatabase)
+
+      // notify the user the the job's progress has started
+      progressTextView.text = getString(R.string.progress_started)
+      // create the generate geodatabase job
+      geodatabaseSyncTask.generateGeodatabase(parameters, localGeodatabasePath).apply {
+        // start the job
+        start()
+        // update progress
+        addProgressChangedListener {
+          taskProgressBar.progress = progress
+          progressTextView.text = getString(R.string.progress_fetching)
+        }
+        // get geodatabase when done
+        addJobDoneListener {
+          // hide the progress dialog
+          progressLayout.visibility = View.INVISIBLE
+          // return if the job failed
+          if (status != Job.Status.SUCCEEDED) {
+            val errorMessage = error?.message ?: "Unknown error generating geodatabase"
+            Log.e(TAG, errorMessage)
+            Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_LONG).show()
+            return@addJobDoneListener
           }
-          // get geodatabase when done
-          addJobDoneListener {
-            progressLayout.visibility = View.INVISIBLE
-            if (status == Job.Status.SUCCEEDED) {
-              val geodatabase = result.apply { loadAsync() }
-              geodatabase.addDoneLoadingListener {
-                if (geodatabase.loadStatus == LoadStatus.LOADED) {
-                  progressTextView.text = getString(R.string.progress_done)
-                  for (geodatabaseFeatureTable in geodatabase.geodatabaseFeatureTables) {
-                    map.operationalLayers.add(FeatureLayer(geodatabaseFeatureTable))
-                  }
-                  genGeodatabaseButton.visibility = View.GONE
-                  Log.i(TAG, "Local geodatabase stored at: $localGeodatabasePath")
-                } else {
-                  val error = "Error loading geodatabase: " + geodatabase.loadError.message
-                  Log.e(TAG, error)
-                  Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
-                }
-              }
-              // unregister since we're not syncing
-              val unregisterGeodatabase: ListenableFuture<*> =
-                geodatabaseSyncTask.unregisterGeodatabaseAsync(geodatabase)
-              unregisterGeodatabase.addDoneListener {
-                val message =
-                  "Geodatabase unregistered since we wont be editing it in this sample."
-                Log.i(TAG, message)
-                Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
-              }
-            } else {
-              val error =
-                generateGeodatabaseJob.error?.message ?: "Unknown error generating geodatabase"
-              Log.e(TAG, error)
-              Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
+          // if the job succeeded, load the resulting geodatabase
+          val geodatabase = result.apply { loadAsync() }
+          geodatabase.addDoneLoadingListener {
+            if (geodatabase.loadStatus != LoadStatus.LOADED) {
+              val errorMessage = "Error loading geodatabase: " + geodatabase.loadError.message
+              Log.e(TAG, errorMessage)
+              Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_LONG).show()
+              return@addDoneLoadingListener
             }
+            // if the geodatabase loaded, set the progress text to done
+            progressTextView.text = getString(R.string.progress_done)
+            // for each feature table in teh geodatabase, create a feature layer and add it to the map
+            for (geodatabaseFeatureTable in geodatabase.geodatabaseFeatureTables) {
+              mapView.map.operationalLayers.add(FeatureLayer(geodatabaseFeatureTable))
+            }
+            genGeodatabaseButton.visibility = View.GONE
+            Log.i(TAG, "Local geodatabase stored at: $localGeodatabasePath")
+          }
+          // unregister since we're not syncing
+          val unregisterGeodatabase: ListenableFuture<*> =
+            geodatabaseSyncTask.unregisterGeodatabaseAsync(geodatabase)
+          unregisterGeodatabase.addDoneListener {
+            val message =
+              "Geodatabase unregistered since we wont be editing it in this sample."
+            Log.i(TAG, message)
+            Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
           }
         }
       }
