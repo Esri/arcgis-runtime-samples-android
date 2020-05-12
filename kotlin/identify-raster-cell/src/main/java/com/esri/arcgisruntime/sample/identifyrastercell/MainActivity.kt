@@ -31,7 +31,6 @@ import com.esri.arcgisruntime.raster.Raster
 import com.esri.arcgisruntime.raster.RasterCell
 import kotlinx.android.synthetic.main.activity_main.*
 
-
 class MainActivity : AppCompatActivity() {
 
   private var rasterLayer: RasterLayer? = null
@@ -57,16 +56,15 @@ class MainActivity : AppCompatActivity() {
       // add the map to the map view
       map = rasterMap
 
-      // set behavior for double touch drag and on up gestures
+      // set behavior for double touch drag and on single tap gestures
       onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
         override fun onDoubleTouchDrag(e: MotionEvent): Boolean {
-          val offset = 200
-          // identify the pixel at a vertical offset from the motion event
-          identifyPixel(Point(e.x.toInt(), e.y.toInt() - offset))
+          // identify the pixel at the given screen point
+          identifyPixel(Point(e.x.toInt(), e.y.toInt()))
           return true
         }
 
-        override fun onUp(e: MotionEvent): Boolean {
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
           // identify the pixel at the given screen point
           identifyPixel(Point(e.x.toInt(), e.y.toInt()))
           return true
@@ -119,6 +117,7 @@ class MainActivity : AppCompatActivity() {
           mapView.callout.apply {
             location = mapView.screenToLocation(screenPoint)
             content = calloutContent
+            style.leaderLength = 64
           }.show()
         }
       }
