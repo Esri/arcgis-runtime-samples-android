@@ -123,21 +123,21 @@ class MainActivity : AppCompatActivity() {
               Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_LONG).show()
               return@addDoneLoadingListener
             }
-            // if the geodatabase loaded, set the progress text to done
+            // if the geodatabase loaded, set the progress text to done and hide the generate button
             progressTextView.text = getString(R.string.progress_done)
-            // for each feature table in teh geodatabase, create a feature layer and add it to the map
-            for (geodatabaseFeatureTable in geodatabase.geodatabaseFeatureTables) {
-              mapView.map.operationalLayers.add(FeatureLayer(geodatabaseFeatureTable))
-            }
             genGeodatabaseButton.visibility = View.GONE
+            // add all of the geodatabase feature tables to the map as feature layers
+            val featureLayers =
+              geodatabase.geodatabaseFeatureTables.map { featureTable -> FeatureLayer(featureTable) }
+            mapView.map.operationalLayers.addAll(featureLayers)
+
             Log.i(TAG, "Local geodatabase stored at: $localGeodatabasePath")
           }
           // unregister since we're not syncing
           val unregisterGeodatabase: ListenableFuture<*> =
             geodatabaseSyncTask.unregisterGeodatabaseAsync(geodatabase)
           unregisterGeodatabase.addDoneListener {
-            val message =
-              "Geodatabase unregistered since we wont be editing it in this sample."
+            val message = "Geodatabase unregistered since we wont be editing it in this sample."
             Log.i(TAG, message)
             Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
           }
