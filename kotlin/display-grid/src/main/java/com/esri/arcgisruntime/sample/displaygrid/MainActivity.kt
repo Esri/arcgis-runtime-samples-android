@@ -13,6 +13,7 @@
  * limitations under the License.
  *
  */
+
 package com.esri.arcgisruntime.sample.displaygrid
 
 import android.graphics.Color
