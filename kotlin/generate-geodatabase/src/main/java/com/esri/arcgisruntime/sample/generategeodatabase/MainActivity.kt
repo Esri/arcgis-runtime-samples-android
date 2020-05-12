@@ -1,4 +1,4 @@
-/* Copyright 2017 Esri
+/* Copyright 2020 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.concurrent.Job
-import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.TileCache
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer
 import com.esri.arcgisruntime.layers.FeatureLayer
@@ -37,8 +36,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
-  private val TAG =
-    MainActivity::class.java.simpleName
+
+  private val TAG = MainActivity::class.java.simpleName
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -62,6 +61,9 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Creates a GenerateGeodatabaseJob and displays its results on the map.
+   */
   private fun generateAndDisplayGeodatabase() {
     // create a geodatabase sync task and load it
     val geodatabaseSyncTask =
@@ -73,7 +75,7 @@ class MainActivity : AppCompatActivity() {
       progressLayout.visibility = View.VISIBLE
 
       mapView.apply {
-        // clear any previous operational layers and graphics if button clicked more than once
+        // clear any previous operational layers and graphics
         map.operationalLayers.clear()
         graphicsOverlays[0].graphics.clear()
         // show the extent used as a graphic
@@ -87,7 +89,7 @@ class MainActivity : AppCompatActivity() {
 
       val parameters = geodatabaseSyncTask
         .createDefaultGenerateGeodatabaseParametersAsync(mapView.visibleArea.extent).get()
-      parameters.isReturnAttachments = false
+        .apply { isReturnAttachments = false }
       // define the local path where the geodatabase will be stored
       val localGeodatabasePath =
         cacheDir.toString() + File.separator + getString(R.string.wildfire_geodatabase)
@@ -117,6 +119,7 @@ class MainActivity : AppCompatActivity() {
           // if the job succeeded, load the resulting geodatabase
           val geodatabase = result.apply { loadAsync() }
           geodatabase.addDoneLoadingListener {
+            // return if the geodatabase failed to load
             if (geodatabase.loadStatus != LoadStatus.LOADED) {
               val errorMessage = "Error loading geodatabase: " + geodatabase.loadError.message
               Log.e(TAG, errorMessage)
@@ -134,9 +137,7 @@ class MainActivity : AppCompatActivity() {
             Log.i(TAG, "Local geodatabase stored at: $localGeodatabasePath")
           }
           // unregister since we're not syncing
-          val unregisterGeodatabase: ListenableFuture<*> =
-            geodatabaseSyncTask.unregisterGeodatabaseAsync(geodatabase)
-          unregisterGeodatabase.addDoneListener {
+          geodatabaseSyncTask.unregisterGeodatabaseAsync(geodatabase).addDoneListener {
             val message = "Geodatabase unregistered since we wont be editing it in this sample."
             Log.i(TAG, message)
             Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()

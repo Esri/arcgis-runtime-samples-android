@@ -29,6 +29,7 @@ include ':add-features-feature-service',
         ':feature-layer-selection',
         ':feature-layer-query',
         ':find-address',
+        ':generate-geodatabase',
         ':geodesic-operations',
         ':identify-layers',
         ':integrated-mesh-layer',
@@ -52,4 +53,3 @@ include ':add-features-feature-service',
         ':viewshed-geoprocessing',
         ':viewshed-location',
         ':wmts-layer'
-include ':generate-geodatabase'
