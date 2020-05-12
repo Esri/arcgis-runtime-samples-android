@@ -14,7 +14,7 @@
     "view",
     "zoom"
   ],
-  "redirect_from": "/android/latest/sample-code/change-basemaps.htm",
+  "redirect_from": "/android/latest/sample-code/change-viewpoint.htm",
   "relevant_apis": [
     "ArcGISMap",
     "Geometry",

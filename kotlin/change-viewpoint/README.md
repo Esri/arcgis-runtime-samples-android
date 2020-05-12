@@ -10,15 +10,15 @@ Programmatically navigate to a specified location in the map or scene. Use this 
 
 ## How to use the sample
 
-The map view has several methods for setting its current viewpoint. Select a viewpoint from the UI to see the viewpoint changed using that method.
+Select a viewpoint option to see the map view move to that location.
 
 ## How it works
 
 1. Create a new `ArcGISMap` object and set it to the `MapView` object.
 2. Change the map's `Viewpoint` using one of the available methods:
-   * Use `MapView.setViewpointWithDurationAsync()` to pan to a viewpoint over the specified length of time.
-   * Use `MapView.setViewpointCenterAsync()` to center the viewpoint on a `Point` and set a distance from the ground using a scale.
-   * Use `MapView.setViewpointGeometryAsync()` to set the viewpoint to a given `Geometry`.
+   * Use `MapView.setViewpointAsync(...)` to pan to a viewpoint over the specified length of time.
+   * Use `MapView.setViewpointCenterAsync(...)` to center the viewpoint on a `Point` and set a distance from the ground using a scale.
+   * Use `MapView.setViewpointGeometryAsync(...)` to set the viewpoint to a given `Geometry`.
 
 ## Relevant API
 
@@ -32,12 +32,12 @@ The map view has several methods for setting its current viewpoint. Select a vie
 
 Below are some other ways to set a viewpoint:
 
-* setViewpoint
-* setViewpointAsync
-* setViewpointCenterAsync
-* setViewpointGeometryAsync
-* setViewpointRotationAsync
-* setViewpointScaleAsync
+* setViewpoint(...)
+* setViewpointAsync(...)
+* setViewpointCenterAsync(...)
+* setViewpointGeometryAsync(...)
+* setViewpointRotationAsync(...)
+* setViewpointScaleAsync(...)
 
 ## Tags
 

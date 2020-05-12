@@ -10,11 +10,11 @@
         android:id="@+id/animateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:onClick="onAnimateClicked"
         android:text="@string/london_animate"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/centerScaledButton"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/centerScaledButton"
@@ -22,17 +22,20 @@
         android:layout_height="wrap_content"
         android:onClick="onCenterClicked"
         android:text="@string/waterloo_center_and_scaled"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/animateButton" />
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/geometryButton"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/geometryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:onClick="onGeometryClicked"
         android:text="@string/westminster_geometry"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/centerScaledButton" />
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
