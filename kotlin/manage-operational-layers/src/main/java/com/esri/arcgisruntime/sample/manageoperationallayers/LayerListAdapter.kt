@@ -29,7 +29,10 @@ class LayerListAdapter(private val dataSet: LayerList) :
   }
 }
 
-class RemovedListAdapter(private val dataSet: MutableList<Layer>, private val onItemClick: (pos: Int) -> Unit) : RecyclerView.Adapter<RemovedListAdapter.ViewHolder>() {
+class RemovedListAdapter(
+  private val dataSet: MutableList<Layer>,
+  private val onItemClick: (pos: Int) -> Unit
+) : RecyclerView.Adapter<RemovedListAdapter.ViewHolder>() {
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RemovedListAdapter.ViewHolder {
     val v = LayoutInflater.from(parent.context).inflate(R.layout.removed_layer_item, parent, false)
     return ViewHolder(v)
@@ -45,13 +48,17 @@ class RemovedListAdapter(private val dataSet: MutableList<Layer>, private val on
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val textView: TextView = itemView.findViewById(R.id.deletedLayerName)
     var onClick: ((Int) -> Unit)? = null
+
     init {
       itemView.setOnClickListener { onClick?.invoke(adapterPosition) }
     }
   }
 }
 
-class DragCallback(private val dataSet: LayerList, private val removed: MutableList<Layer>, val adapter: RecyclerView.Adapter<*>) : ItemTouchHelper.Callback() {
+class DragCallback(
+  private val onItemMove: (oldPosition: Int, targetPosition: Int) -> Unit,
+  private val onItemSwiped: (position: Int) -> Unit
+) : ItemTouchHelper.Callback() {
   override fun isLongPressDragEnabled() = true
   override fun isItemViewSwipeEnabled() = true
 
@@ -68,16 +75,11 @@ class DragCallback(private val dataSet: LayerList, private val removed: MutableL
     viewHolder: RecyclerView.ViewHolder,
     target: RecyclerView.ViewHolder
   ): Boolean {
-    val pos = viewHolder.adapterPosition
-    val layer = dataSet.removeAt(pos)
-    dataSet.add(target.adapterPosition, layer)
-    recyclerView.adapter?.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
+    onItemMove(viewHolder.adapterPosition, target.adapterPosition)
     return true
   }
 
   override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-    removed.add(dataSet[viewHolder.adapterPosition])
-    dataSet.removeAt(viewHolder.adapterPosition)
-    adapter.notifyDataSetChanged()
+    onItemSwiped(viewHolder.adapterPosition)
   }
 }

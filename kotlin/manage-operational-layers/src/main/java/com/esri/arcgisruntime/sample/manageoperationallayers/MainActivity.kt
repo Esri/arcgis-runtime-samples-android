@@ -24,7 +24,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer
@@ -47,28 +46,63 @@ class MainActivity : AppCompatActivity() {
     // create a map with the BasemapType topographic
     val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 14)
 
-    val imageLayerElevation = ArcGISMapImageLayer("https://sampleserver5.arcgisonline.com/arcgis/rest/services/Elevation/WorldElevations/MapServer")
-    val imagelayerCensus = ArcGISMapImageLayer("https://sampleserver5.arcgisonline.com/arcgis/rest/services/Census/MapServer")
+    val imageLayerElevation =
+      ArcGISMapImageLayer("https://sampleserver5.arcgisonline.com/arcgis/rest/services/Elevation/WorldElevations/MapServer")
+    val imagelayerCensus =
+      ArcGISMapImageLayer("https://sampleserver5.arcgisonline.com/arcgis/rest/services/Census/MapServer")
+    val imageLayerDamage =
+      ArcGISMapImageLayer("https://sampleserver5.arcgisonline.com/arcgis/rest/services/DamageAssessment/MapServer")
 
-    // get the LayerList from the Map
-    val operationalLayers = map.operationalLayers
-    // add operational layers to the Map
-    operationalLayers.add(imageLayerElevation)
-    operationalLayers.add(imagelayerCensus)
+    map.apply {
+      // add operational layers to the map
+      operationalLayers.addAll(listOf(imageLayerElevation, imagelayerCensus, imageLayerDamage))
+      // set the initial viewpoint on the map
+      initialViewpoint = Viewpoint(Point(-133e5, 45e5, SpatialReference.create(3857)), 2e7)
+    }
+    // set the map to the map view
+    mapView.map = map
 
-    // set the initial viewpoint on the map
-    map.initialViewpoint = Viewpoint(Point(-133e5, 45e5, SpatialReference.create(3857)), 2e7)
+    // handle the floating action button and recycler view logic for this sample
+    setupUI()
+  }
 
-    // set the map to be displayed in this view
+  private fun moveLayerFromToPosition(oldPosition: Int, targetPosition: Int) {
+    val operationalLayers = mapView.map.operationalLayers
+    // remove the layer from the map
+    val layer = operationalLayers.removeAt(oldPosition)
+    // add the layer back to the map at the target position
+    operationalLayers.add(targetPosition, layer)
+
+    // tell the recycler view that the item has moved
+    activeRecyclerView.adapter?.notifyItemMoved(oldPosition, targetPosition)
+  }
+
+  private fun removeLayerFromMap(position: Int) {
+    val operationalLayers = mapView.map.operationalLayers
+    removedLayers.add(operationalLayers[position])
+    operationalLayers.removeAt(position)
+    activeRecyclerView.adapter?.notifyDataSetChanged()
+  }
+
+  private fun addLayerToMap(position: Int) {
+    // remove the layer from the removed layers list and add it to the map
+    val layer = removedLayers[position]
+    removedLayers.removeAt(position)
+    mapView.map.operationalLayers.add(layer)
+
+    // notify the recycler views of the change
+    removedRecyclerView.adapter?.notifyDataSetChanged()
+    activeRecyclerView.adapter?.notifyDataSetChanged()
+  }
+
+  private fun setupUI() {
     mapView.apply {
-      this.map = map
-
       // make sure the fab doesn't obscure the attribution bar
       addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
         val layoutParams = fab.layoutParams as CoordinatorLayout.LayoutParams
         layoutParams.bottomMargin += bottom - oldBottom
       }
-      // close the options sheet when the map is tapped
+      // close the layer lists when the map is tapped
       onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
         override fun onTouch(view: View?, event: MotionEvent?): Boolean {
           if (fab.isExpanded) {
@@ -84,19 +118,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     activeRecyclerView.apply {
-      adapter = LayerListAdapter(operationalLayers)
-      ItemTouchHelper(DragCallback(mapView.map.operationalLayers, removedLayers, adapter as RecyclerView.Adapter<*>)).attachToRecyclerView(this)
+      adapter = LayerListAdapter(mapView.map.operationalLayers)
+      ItemTouchHelper(
+        DragCallback(
+          onItemMove = { oldPosition, newPosition -> moveLayerFromToPosition(oldPosition, newPosition) },
+          onItemSwiped = { position -> removeLayerFromMap(position) })
+      ).attachToRecyclerView(this)
       layoutManager = LinearLayoutManager(this@MainActivity)
     }
 
     removedRecyclerView.apply {
-      adapter = RemovedListAdapter(removedLayers) {position ->
-        val layer = removedLayers[position]
-        removedLayers.removeAt(position)
-        adapter?.notifyDataSetChanged()
-        mapView.map.operationalLayers.add(layer)
-        activeRecyclerView.adapter?.notifyDataSetChanged()
-      }
+      adapter = RemovedListAdapter(removedLayers) { addLayerToMap(it) }
       layoutManager = LinearLayoutManager(this@MainActivity)
     }
   }
