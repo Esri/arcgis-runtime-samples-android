@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
     // add the map image layers to the map's operational layers
     map.operationalLayers.addAll(listOf(imageLayerElevation, imageLayerCensus, imageLayerDamage))
-    
+
     // set the map to the map view
     mapView.map = map
 
@@ -109,6 +109,10 @@ class MainActivity : AppCompatActivity() {
     activeRecyclerView.adapter?.notifyDataSetChanged()
   }
 
+  /**
+   * Initializes behavior for the UI, including floating action button position and behavior
+   * and recycler view creation and setup.
+   */
   private fun setupUI() {
     mapView.apply {
       // make sure the fab doesn't obscure the attribution bar
@@ -127,26 +131,29 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
+    // open and close the layer list with the fab
     fab.setOnClickListener {
       fab.isExpanded = !fab.isExpanded
     }
 
+    // set up the recycler view for the active layer list
     activeRecyclerView.apply {
       adapter = LayerListAdapter(mapView.map.operationalLayers)
+      // create the drag and drop behavior with callbacks for moving items and removing them
+      // and attach it to the recycler view
       ItemTouchHelper(
         DragCallback(
           onItemMove = { oldPosition, newPosition ->
-            moveLayerFromToPosition(
-              oldPosition,
-              newPosition
-            )
+            moveLayerFromToPosition(oldPosition, newPosition)
           },
           onItemSwiped = { position -> removeLayerFromMap(position) })
       ).attachToRecyclerView(this)
       layoutManager = LinearLayoutManager(this@MainActivity)
     }
 
+    // set up the recycler view for the inactive layer list
     removedRecyclerView.apply {
+      // create the adapter with a callback for adding the layer back to the map
       adapter = RemovedListAdapter(removedLayers) { addLayerToMap(it) }
       layoutManager = LinearLayoutManager(this@MainActivity)
     }

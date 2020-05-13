@@ -1,3 +1,20 @@
+/*
+ * Copyright 2020 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.esri.arcgisruntime.sample.manageoperationallayers
 
 import android.view.LayoutInflater
@@ -8,7 +25,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.esri.arcgisruntime.layers.Layer
 import com.esri.arcgisruntime.mapping.LayerList
-
 
 class LayerListAdapter(private val dataSet: LayerList) :
   RecyclerView.Adapter<LayerListAdapter.ViewHolder>() {
@@ -33,6 +49,7 @@ class RemovedListAdapter(
   private val dataSet: MutableList<Layer>,
   private val onItemClick: (pos: Int) -> Unit
 ) : RecyclerView.Adapter<RemovedListAdapter.ViewHolder>() {
+
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RemovedListAdapter.ViewHolder {
     val v = LayoutInflater.from(parent.context).inflate(R.layout.removed_layer_item, parent, false)
     return ViewHolder(v)
@@ -59,6 +76,7 @@ class DragCallback(
   private val onItemMove: (oldPosition: Int, targetPosition: Int) -> Unit,
   private val onItemSwiped: (position: Int) -> Unit
 ) : ItemTouchHelper.Callback() {
+
   override fun isLongPressDragEnabled() = true
   override fun isItemViewSwipeEnabled() = true
 
