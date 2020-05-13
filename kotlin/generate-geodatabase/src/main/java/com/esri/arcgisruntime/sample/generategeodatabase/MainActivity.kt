@@ -66,8 +66,8 @@ class MainActivity : AppCompatActivity() {
    */
   private fun generateAndDisplayGeodatabase() {
     // create a geodatabase sync task and load it
-    val geodatabaseSyncTask =
-      GeodatabaseSyncTask(getString(R.string.wildfire_sync)).apply { loadAsync() }
+    val geodatabaseSyncTask = GeodatabaseSyncTask(getString(R.string.wildfire_sync))
+    geodatabaseSyncTask.loadAsync() 
 
     geodatabaseSyncTask.addDoneLoadingListener onTaskLoaded@{
       // show the progress layout
