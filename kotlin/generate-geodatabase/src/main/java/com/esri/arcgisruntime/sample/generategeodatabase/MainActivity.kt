@@ -41,6 +41,8 @@ import kotlinx.android.synthetic.main.dialog_layout.*
 class MainActivity : AppCompatActivity() {
 
   private val TAG = MainActivity::class.java.simpleName
+  // define the local path where the geodatabase will be stored
+  private val localGeodatabasePath = cacheDir.path + getString(R.string.wildfire_geodatabase)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -60,14 +62,17 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Creates a GenerateGeodatabaseJob and displays its results on the map.
+   * Creates a GenerateGeodatabaseJob and runs it.
+   *
+   * @param view the button which calls this function
    */
-  public fun generateAndDisplayGeodatabase(view: View) {
+  fun generateGeodatabase(view: View) {
     // create a geodatabase sync task and load it
     val geodatabaseSyncTask = GeodatabaseSyncTask(getString(R.string.wildfire_sync))
     geodatabaseSyncTask.loadAsync()
 
-    geodatabaseSyncTask.addDoneLoadingListener onTaskLoaded@{
+    geodatabaseSyncTask.addDoneLoadingListener {
+      // draw a box around the extent
       mapView.apply {
         // clear any previous operational layers and graphics
         map.operationalLayers.clear()
@@ -81,64 +86,78 @@ class MainActivity : AppCompatActivity() {
         )
       }
 
+      // create parameters for the job with the return attachments option set to false
       val parameters = geodatabaseSyncTask
         .createDefaultGenerateGeodatabaseParametersAsync(mapView.visibleArea.extent).get()
         .apply { isReturnAttachments = false }
-      // define the local path where the geodatabase will be stored
-      val localGeodatabasePath = cacheDir.path + getString(R.string.wildfire_geodatabase)
+
       // create the generate geodatabase job
       val generateGeodatabaseJob =
         geodatabaseSyncTask.generateGeodatabase(parameters, localGeodatabasePath)
 
+      // show the job's progress in a dialog
       val dialog = createProgressDialog(generateGeodatabaseJob)
       dialog.show()
-
-      generateGeodatabaseJob.apply {
-        // update progress
-        addProgressChangedListener {
-          dialog.progressBar.progress = progress
-          dialog.progressTextView.text = "$progress%"
-        }
-        // get geodatabase when done
-        addJobDoneListener {
-          // hide the progress dialog
-          dialog.dismiss()
-          // return if the job failed
-          if (status != Job.Status.SUCCEEDED) {
-            val errorMessage = error?.message ?: "Unknown error generating geodatabase"
-            Log.e(TAG, errorMessage)
-            Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_LONG).show()
-            return@addJobDoneListener
-          }
-          // if the job succeeded, load the resulting geodatabase
-          val geodatabase = result.apply { loadAsync() }
-          geodatabase.addDoneLoadingListener {
-            // return if the geodatabase failed to load
-            if (geodatabase.loadStatus != LoadStatus.LOADED) {
-              val errorMessage = "Error loading geodatabase: " + geodatabase.loadError.message
-              Log.e(TAG, errorMessage)
-              Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_LONG).show()
-              return@addDoneLoadingListener
-            }
-            // if the geodatabase loaded, hide the generate button
-            genGeodatabaseButton.visibility = View.GONE
-            // add all of the geodatabase feature tables to the map as feature layers
-            val featureLayers =
-              geodatabase.geodatabaseFeatureTables.map { featureTable -> FeatureLayer(featureTable) }
-            mapView.map.operationalLayers.addAll(featureLayers)
-
-            Log.i(TAG, "Local geodatabase stored at: $localGeodatabasePath")
-          }
-          // unregister since we're not syncing
-          geodatabaseSyncTask.unregisterGeodatabaseAsync(geodatabase).addDoneListener {
-            val message = "Geodatabase unregistered since we wont be editing it in this sample."
-            Log.i(TAG, message)
-            Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
-          }
-        }
-      }
       // start the job
       generateGeodatabaseJob.start()
+      // update progress
+      generateGeodatabaseJob.addProgressChangedListener {
+        dialog.progressBar.progress = generateGeodatabaseJob.progress
+        dialog.progressTextView.text = "$generateGeodatabaseJob.progress%"
+      }
+      // get geodatabase when done
+      generateGeodatabaseJob.addJobDoneListener {
+        // close the progress dialog
+        dialog.dismiss()
+        // load the geodatabase and display its feature tables on the map
+        loadGeodatabase(generateGeodatabaseJob, geodatabaseSyncTask)
+      }
+    }
+  }
+
+  /**
+   * Loads the geodatabase from a GenerateGeodatabaseJob and displays its feature tables on the map.
+   *
+   * @param generateGeodatabaseJob the job which generated this geodatabase
+   * @param geodatabaseSyncTask the GeodatabaseSyncTask which created the job
+   */
+  private fun loadGeodatabase(
+    generateGeodatabaseJob: GenerateGeodatabaseJob,
+    geodatabaseSyncTask: GeodatabaseSyncTask
+  ) {
+    // return if the job failed
+    if (generateGeodatabaseJob.status != Job.Status.SUCCEEDED) {
+      val error = generateGeodatabaseJob.error?.message ?: "Unknown error generating geodatabase"
+      Log.e(TAG, error)
+      Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+      return
+    }
+    // if the job succeeded, load the resulting geodatabase
+    val geodatabase = generateGeodatabaseJob.result.apply { loadAsync() }
+    geodatabase.addDoneLoadingListener {
+      // return if the geodatabase failed to load
+      if (geodatabase.loadStatus != LoadStatus.LOADED) {
+        val error = "Error loading geodatabase: " + geodatabase.loadError.message
+        Log.e(TAG, error)
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+        return@addDoneLoadingListener
+      }
+      // if the geodatabase loaded, hide the generate button
+      genGeodatabaseButton.visibility = View.GONE
+      // add all of the geodatabase feature tables to the map as feature layers
+      val featureLayers =
+        geodatabase.geodatabaseFeatureTables.map { featureTable -> FeatureLayer(featureTable) }
+      mapView.map.operationalLayers.addAll(featureLayers)
+
+      val message = "Local geodatabase stored at: $localGeodatabasePath"
+      Log.i(TAG, message)
+      Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
+    // unregister since we're not syncing
+    geodatabaseSyncTask.unregisterGeodatabaseAsync(geodatabase).addDoneListener {
+      val message = "Geodatabase unregistered since we wont be editing it in this sample."
+      Log.i(TAG, message)
+      Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
   }
 
