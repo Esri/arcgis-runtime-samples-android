@@ -18,8 +18,10 @@ package com.esri.arcgisruntime.sample.generategeodatabase
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.data.TileCache
@@ -31,9 +33,10 @@ import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
+import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseJob
 import com.esri.arcgisruntime.tasks.geodatabase.GeodatabaseSyncTask
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
+import kotlinx.android.synthetic.main.dialog_layout.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -62,19 +65,15 @@ class MainActivity : AppCompatActivity() {
   public fun generateAndDisplayGeodatabase(view: View) {
     // create a geodatabase sync task and load it
     val geodatabaseSyncTask = GeodatabaseSyncTask(getString(R.string.wildfire_sync))
-    geodatabaseSyncTask.loadAsync() 
+    geodatabaseSyncTask.loadAsync()
 
     geodatabaseSyncTask.addDoneLoadingListener onTaskLoaded@{
-      // show the progress layout
-      taskProgressBar.progress = 0
-      progressLayout.visibility = View.VISIBLE
-
       mapView.apply {
         // clear any previous operational layers and graphics
         map.operationalLayers.clear()
         graphicsOverlays[0].graphics.clear()
         // show the extent used as a graphic
-        mapView.graphicsOverlays[0].graphics.add(
+        graphicsOverlays[0].graphics.add(
           Graphic(
             visibleArea.extent,
             SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5f)
@@ -86,24 +85,24 @@ class MainActivity : AppCompatActivity() {
         .createDefaultGenerateGeodatabaseParametersAsync(mapView.visibleArea.extent).get()
         .apply { isReturnAttachments = false }
       // define the local path where the geodatabase will be stored
-      val localGeodatabasePath =
-        cacheDir.toString() + File.separator + getString(R.string.wildfire_geodatabase)
-
-      // notify the user the the job's progress has started
-      progressTextView.text = getString(R.string.progress_started)
+      val localGeodatabasePath = cacheDir.path + getString(R.string.wildfire_geodatabase)
       // create the generate geodatabase job
-      geodatabaseSyncTask.generateGeodatabase(parameters, localGeodatabasePath).apply {
-        // start the job
-        start()
+      val generateGeodatabaseJob =
+        geodatabaseSyncTask.generateGeodatabase(parameters, localGeodatabasePath)
+
+      val dialog = createProgressDialog(generateGeodatabaseJob)
+      dialog.show()
+
+      generateGeodatabaseJob.apply {
         // update progress
         addProgressChangedListener {
-          taskProgressBar.progress = progress
-          progressTextView.text = getString(R.string.progress_fetching)
+          dialog.progressBar.progress = progress
+          dialog.progressTextView.text = "$progress%"
         }
         // get geodatabase when done
         addJobDoneListener {
           // hide the progress dialog
-          progressLayout.visibility = View.INVISIBLE
+          dialog.dismiss()
           // return if the job failed
           if (status != Job.Status.SUCCEEDED) {
             val errorMessage = error?.message ?: "Unknown error generating geodatabase"
@@ -121,8 +120,7 @@ class MainActivity : AppCompatActivity() {
               Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_LONG).show()
               return@addDoneLoadingListener
             }
-            // if the geodatabase loaded, set the progress text to done and hide the generate button
-            progressTextView.text = getString(R.string.progress_done)
+            // if the geodatabase loaded, hide the generate button
             genGeodatabaseButton.visibility = View.GONE
             // add all of the geodatabase feature tables to the map as feature layers
             val featureLayers =
@@ -139,7 +137,31 @@ class MainActivity : AppCompatActivity() {
           }
         }
       }
+      // start the job
+      generateGeodatabaseJob.start()
     }
+  }
+
+  /**
+   * Create a progress dialog box for tracking the generate geodatabase job.
+   *
+   * @param generateGeodatabaseJob the generate geodatabase job progress to be tracked
+   * @return an AlertDialog set with the dialog layout view
+   */
+  private fun createProgressDialog(generateGeodatabaseJob: GenerateGeodatabaseJob): AlertDialog {
+    val builder = AlertDialog.Builder(this@MainActivity).apply {
+      setTitle(getString(R.string.progress_fetching))
+      // provide a cancel button on the dialog
+      setNeutralButton("Cancel") { _, _ ->
+        generateGeodatabaseJob.cancel()
+      }
+      setCancelable(false)
+      setView(
+        LayoutInflater.from(this@MainActivity)
+          .inflate(R.layout.dialog_layout, null)
+      )
+    }
+    return builder.create()
   }
 
   override fun onPause() {
