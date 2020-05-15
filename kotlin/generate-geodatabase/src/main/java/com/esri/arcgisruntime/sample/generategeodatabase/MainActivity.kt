@@ -54,17 +54,12 @@ class MainActivity : AppCompatActivity() {
       // create a graphics overlay to display the boundaries
       graphicsOverlays.add(GraphicsOverlay())
     }
-
-    // generate geodatabase when the button is clicked
-    genGeodatabaseButton.setOnClickListener {
-      generateAndDisplayGeodatabase()
-    }
   }
 
   /**
    * Creates a GenerateGeodatabaseJob and displays its results on the map.
    */
-  private fun generateAndDisplayGeodatabase() {
+  public fun generateAndDisplayGeodatabase(view: View) {
     // create a geodatabase sync task and load it
     val geodatabaseSyncTask = GeodatabaseSyncTask(getString(R.string.wildfire_sync))
     geodatabaseSyncTask.loadAsync() 
