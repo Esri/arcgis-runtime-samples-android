@@ -264,9 +264,7 @@ class MainActivity : AppCompatActivity() {
             SimpleLineSymbol.Style.SOLID,
             Color.GREEN, 5f
           )
-          Graphic(geometry, selectedRouteSymbol).also {
-            graphicsOverlay.graphics.add(it)
-          }
+          graphicsOverlay.graphics.add(Graphic(geometry, selectedRouteSymbol))
           // collapse the bottom sheet
           bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
