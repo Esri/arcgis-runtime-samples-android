@@ -220,7 +220,7 @@ class MainActivity : AppCompatActivity() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
           bottomSheet.header.imageView.rotation = when (newState) {
             BottomSheetBehavior.STATE_EXPANDED -> 180f
-            else -> 0f
+            else -> bottomSheet.header.imageView.rotation
           }
         }
       })
