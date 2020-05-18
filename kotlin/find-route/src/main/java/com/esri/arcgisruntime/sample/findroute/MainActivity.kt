@@ -237,39 +237,39 @@ class MainActivity : AppCompatActivity() {
       }
       // rotate the arrow so it starts off in the correct rotation
       header.imageView.rotation = 180f
+    }
 
-      directionsListView.apply {
-        // Set the adapter for the list view
-        adapter = ArrayAdapter(
-          this@MainActivity,
-          android.R.layout.simple_list_item_1,
-          directions.map { it.directionText }
-        )
-        // when the user taps a maneuver, set the viewpoint to that portion of the route
-        onItemClickListener =
-          AdapterView.OnItemClickListener { _, _, position, _ ->
-            // remove any graphics that are not the two stops and the route graphic
-            if (graphicsOverlay.graphics.size > 3) {
-              graphicsOverlay.graphics.removeAt(graphicsOverlay.graphics.size - 1)
-            }
-            // set the viewpoint to the selected maneuver
-            val geometry = directions[position].geometry
-            mapView.setViewpointAsync(
-              Viewpoint(geometry.extent, 20.0),
-              1f
-            )
-            // create a graphic with a symbol for the maneuver and add it to the graphics overlay
-            val selectedRouteSymbol = SimpleLineSymbol(
-              SimpleLineSymbol.Style.SOLID,
-              Color.GREEN, 5f
-            )
-            Graphic(geometry, selectedRouteSymbol).also {
-              graphicsOverlay.graphics.add(it)
-            }
-            // collapse the bottom sheet
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    bottomSheet.directionsListView.apply {
+      // Set the adapter for the list view
+      adapter = ArrayAdapter(
+        this@MainActivity,
+        android.R.layout.simple_list_item_1,
+        directions.map { it.directionText }
+      )
+      // when the user taps a maneuver, set the viewpoint to that portion of the route
+      onItemClickListener =
+        AdapterView.OnItemClickListener { _, _, position, _ ->
+          // remove any graphics that are not the two stops and the route graphic
+          if (graphicsOverlay.graphics.size > 3) {
+            graphicsOverlay.graphics.removeAt(graphicsOverlay.graphics.size - 1)
           }
-      }
+          // set the viewpoint to the selected maneuver
+          val geometry = directions[position].geometry
+          mapView.setViewpointAsync(
+            Viewpoint(geometry.extent, 20.0),
+            1f
+          )
+          // create a graphic with a symbol for the maneuver and add it to the graphics overlay
+          val selectedRouteSymbol = SimpleLineSymbol(
+            SimpleLineSymbol.Style.SOLID,
+            Color.GREEN, 5f
+          )
+          Graphic(geometry, selectedRouteSymbol).also {
+            graphicsOverlay.graphics.add(it)
+          }
+          // collapse the bottom sheet
+          bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
     }
     // shrink the map view so it is not hidden under the bottom sheet header
     (mainContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin =
