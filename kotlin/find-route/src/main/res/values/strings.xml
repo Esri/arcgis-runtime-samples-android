@@ -5,5 +5,6 @@
     <string name="routing_service">https://sampleserver6.arcgisonline.com/arcgis/rest/services/NetworkAnalysis/SanDiego/NAServer/Route</string>
 
     <string name="progress_title">Finding route</string>
+    <string name="directions">Directions</string>
 
 </resources>
