@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
 
           // format the X & Y coordinate values of the raster cell to a human readable string
           val xyString =
-            "X: ${String.format("%.4f", cell.geometry.extent.xMin)} " + "\n" + 
+            "X: ${String.format("%.4f", cell.geometry.extent.xMin)} " + "\n" +
                 "Y: ${String.format("%.4f", cell.geometry.extent.yMin)}"
           // add the coordinate string to the string builder
           stringBuilder.append(xyString)
