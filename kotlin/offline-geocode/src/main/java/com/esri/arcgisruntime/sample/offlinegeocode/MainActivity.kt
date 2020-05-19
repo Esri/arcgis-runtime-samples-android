@@ -5,6 +5,8 @@ import android.graphics.Color
 import android.os.Bundle
 import android.provider.BaseColumns
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +20,7 @@ import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
-import com.esri.arcgisruntime.mapping.view.Callout
+import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
@@ -27,37 +29,38 @@ import com.esri.arcgisruntime.tasks.geocode.GeocodeResult
 import com.esri.arcgisruntime.tasks.geocode.LocatorTask
 import com.esri.arcgisruntime.tasks.geocode.ReverseGeocodeParameters
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.math.roundToInt
 
 
 class MainActivity : AppCompatActivity() {
 
   private val TAG = MainActivity::class.java.simpleName
   private val geocodeParameters = GeocodeParameters().apply {
-    // get place name and street address attributes
-    resultAttributeNames.addAll(listOf("PlaceName", "StAddr"))
-    // return only the closest result
+    resultAttributeNames.add("*")
     maxResults = 1
   }
 
-  val locatorTask: LocatorTask by lazy {
+  private val reverseGeocodeParameters: ReverseGeocodeParameters by lazy {
+    ReverseGeocodeParameters().apply {
+      resultAttributeNames.add("*")
+      outputSpatialReference = mapView.map.spatialReference
+      maxResults = 1
+    }
+  }
+
+  private val locatorTask: LocatorTask by lazy {
     LocatorTask(
       getExternalFilesDir(null)?.path + resources.getString(R.string.san_diego_loc)
     )
   }
+
   // create a point symbol for showing the address location
-  val pointSymbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 20.0f)
+  private val pointSymbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 20.0f)
+
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-
-    // set the map to the map view
-    mapView.map = ArcGISMap()
-    // add a graphics overlay to the map view
-    val graphicsOverlay = GraphicsOverlay()
-    mapView.graphicsOverlays.add(graphicsOverlay)
-    // add a touch listener to the map view
-    //TODO
 
     // load the tile cache from local storage
     val tileCache =
@@ -66,42 +69,34 @@ class MainActivity : AppCompatActivity() {
     tileCache.addDoneLoadingListener { mapView.setViewpoint(Viewpoint(tileCache.fullExtent)) }
     // create a tiled layer and add it to as the base map
     val tiledLayer = ArcGISTiledLayer(tileCache)
-    mapView.map.basemap = Basemap(tiledLayer)
-    // create geocode parameters
-    val geocodeParameters = GeocodeParameters().apply {
-      resultAttributeNames.add("*")
-      maxResults = 1
+    // set the map to the map view
+    mapView.map = ArcGISMap().apply { basemap = Basemap(tiledLayer) }
+    // add a graphics overlay to the map view
+    mapView.graphicsOverlays.add(GraphicsOverlay())
+    // add a touch listener to the map view
+    mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
+      override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+        val screenPoint = android.graphics.Point(e.x.roundToInt(), e.y.toInt())
+        reverseGeocode(mapView.screenToLocation(screenPoint))
+        return true
+      }
+
+      override fun onDoubleTouchDrag(e: MotionEvent): Boolean {
+        return onSingleTapConfirmed(e)
+      }
     }
-    // create reverse geocode parameters
-    val reverseGeocodeParameters = ReverseGeocodeParameters().apply {
-      resultAttributeNames.add("*")
-      outputSpatialReference = mapView.map.spatialReference
-      maxResults = 1
-    }
+
+
     // load the locator task from external storage
     locatorTask.loadAsync()
     locatorTask.addDoneLoadingListener { setupAddressSearchView() }
   }
 
   /**
-   * Sets up the address SearchView and uses MatrixCursor to show suggestions to the user as text is entered.
+   * Sets up the address SearchView and uses MatrixCursor to show suggestions to the user
    */
   private fun setupAddressSearchView() {
-    searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-      override fun onQueryTextSubmit(address: String): Boolean {
-        // geocode typed address
-        geoCodeTypedAddress(address)
-        // clear focus from search views
-        searchView.clearFocus()
-        return true
-      }
-
-      override fun onQueryTextChange(newText: String?): Boolean {
-        return true
-      }
-    })
-
-
+    // get the list of pre-made suggestions
     val suggestions = resources.getStringArray(R.array.suggestion_items).toList()
 
     // set up parameters for searching with MatrixCursor
@@ -109,32 +104,40 @@ class MainActivity : AppCompatActivity() {
     val suggestionsCursor = MatrixCursor(columnNames)
 
     // add each address suggestion to a new row
-    for ((key, value) in suggestions.withIndex()) {
-      suggestionsCursor.addRow(arrayOf<Any>(key, value))
+    suggestions.forEachIndexed() { i, s -> suggestionsCursor.addRow(arrayOf(i, s)) }
+
+    // create the adapter for the search view's suggestions
+    searchView.apply {
+      suggestionsAdapter = SimpleCursorAdapter(
+        this@MainActivity,
+        R.layout.suggestion,
+        suggestionsCursor,
+        arrayOf("address"),
+        intArrayOf(R.id.suggestion_address),
+        0
+      )
+
+      // geocode the searched address on submit
+      setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(address: String): Boolean {
+          geoCodeTypedAddress(address)
+          searchView.clearFocus()
+          return true
+        }
+
+        override fun onQueryTextChange(newText: String?) = true
+      })
+
+      // geocode a suggestions when selected
+      setOnSuggestionListener(object : SearchView.OnSuggestionListener {
+        override fun onSuggestionSelect(position: Int) = true
+
+        override fun onSuggestionClick(position: Int): Boolean {
+          geoCodeTypedAddress(suggestions[position])
+          return true
+        }
+      })
     }
-    // column names for the adapter to look at when mapping data
-    val cols = arrayOf("address")
-    // ids that show where data should be assigned in the layout
-    val to = intArrayOf(R.id.suggestion_address)
-    // define SimpleCursorAdapter
-    val suggestionAdapter = SimpleCursorAdapter(
-      this@MainActivity,
-      R.layout.suggestion, suggestionsCursor, cols, to, 0
-    )
-
-    searchView.suggestionsAdapter = suggestionAdapter
-
-    searchView.setOnSuggestionListener(object: SearchView.OnSuggestionListener {
-      override fun onSuggestionSelect(position: Int): Boolean {
-        TODO("Not yet implemented")
-        return true
-      }
-
-      override fun onSuggestionClick(position: Int): Boolean {
-        geoCodeTypedAddress(suggestions[position])
-        return true
-      }
-    })
   }
 
   /**
@@ -145,39 +148,68 @@ class MainActivity : AppCompatActivity() {
   private fun geoCodeTypedAddress(address: String) {
     // Execute async task to find the address
     locatorTask.addDoneLoadingListener {
-      if (locatorTask.getLoadStatus() === LoadStatus.LOADED) {
-        // get a list of geocode results for the given address
-        val geocodeFuture: ListenableFuture<List<GeocodeResult>> =
-          locatorTask.geocodeAsync(address, geocodeParameters)
-        geocodeFuture.addDoneListener {
-          try {
-            // get the geocode results
-            val geocodeResults = geocodeFuture.get()
-            if (!geocodeResults.isEmpty()) {
-              // get the first result
-              val geocodeResult = geocodeResults[0]
-              displayGeocodeResult(geocodeResult.displayLocation, geocodeResult.label)
-            } else {
-              Toast.makeText(this, "No location found for: $address", Toast.LENGTH_LONG).show()
-            }
-          } catch (e: InterruptedException) {
-            val error = "Error getting geocode result: " + e.message
-            Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-            Log.e(TAG, error)
-          } catch (e: Exception) {
-            val error = "Error getting geocode result: " + e.message
-            Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-            Log.e(TAG, error)
-          }
-        }
-      } else {
+      if (locatorTask.loadStatus != LoadStatus.LOADED) {
         val error =
-          "Error loading locator task: " + locatorTask.getLoadError().message
+          "Error loading locator task: " + locatorTask.loadError.message
         Toast.makeText(this, error, Toast.LENGTH_LONG).show()
         Log.e(TAG, error)
+        return@addDoneLoadingListener
+      }
+      // get a list of geocode results for the given address
+      val geocodeFuture: ListenableFuture<List<GeocodeResult>> =
+        locatorTask.geocodeAsync(address, geocodeParameters)
+      geocodeFuture.addDoneListener {
+        try {
+          // get the geocode results
+          val geocodeResults = geocodeFuture.get()
+          if (geocodeResults.isEmpty()) {
+            Toast.makeText(this, "No location found for: $address", Toast.LENGTH_LONG).show()
+            return@addDoneListener
+          }
+          // get the first result
+          val geocodeResult = geocodeResults[0]
+          displayGeocodeResult(geocodeResult.displayLocation, geocodeResult.label)
+
+        } catch (e: Exception) {
+          val error = "Error getting geocode result: " + e.message
+          Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+          Log.e(TAG, error)
+        }
       }
     }
   }
+
+  /**
+   * Uses the locator task to reverse geocode for the given point.
+   *
+   * @param point on which to perform the reverse geocode
+   */
+  private fun reverseGeocode(point: Point) {
+    val results = locatorTask.reverseGeocodeAsync(point, reverseGeocodeParameters)
+    try {
+      val geocodeResults = results.get()
+      if (geocodeResults.isEmpty()) {
+        Toast.makeText(this, "No addresses found at that location!", Toast.LENGTH_LONG).show()
+        return
+      }
+      // get the top result
+      val geocode = geocodeResults[0]
+      // attributes from a click-based search
+      val street = geocode.attributes["Street"].toString()
+      val city = geocode.attributes["City"].toString()
+      val state = geocode.attributes["State"].toString()
+      val zip = geocode.attributes["ZIP"].toString()
+      val detail = "$city, $state $zip"
+      val address = "$street,$detail"
+      displayGeocodeResult(point, address)
+
+    } catch (e: Exception) {
+      val error = "Error getting geocode results: " + e.message
+      Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+      Log.e(TAG, error)
+    }
+  }
+
 
   /**
    * Draw a point and open a callout showing geocode results on map.
@@ -190,17 +222,14 @@ class MainActivity : AppCompatActivity() {
     address: CharSequence
   ) {
     // dismiss the callout if showing
-    if (mapView.getCallout().isShowing()) {
-      mapView.getCallout().dismiss()
+    if (mapView.callout.isShowing) {
+      mapView.callout.dismiss()
     }
-
     val graphicsOverlay = mapView.graphicsOverlays[0]
     // remove any previous graphics/search results
-    graphicsOverlay.getGraphics().clear()
-    // create graphic object for resulting location
-    val pointGraphic = Graphic(resultPoint, pointSymbol)
-    // add graphic to location layer
-    graphicsOverlay.getGraphics().add(pointGraphic)
+    graphicsOverlay.graphics.clear()
+    // create graphic object for resulting location and add it to the ographics overlay
+    graphicsOverlay.graphics.add(Graphic(resultPoint, pointSymbol))
     // Zoom map to geocode result location
     mapView.setViewpointAsync(Viewpoint(resultPoint, 8000.0), 3f)
     showCallout(resultPoint, address)
@@ -213,11 +242,13 @@ class MainActivity : AppCompatActivity() {
    * @param text to define callout content
    */
   private fun showCallout(point: Point, text: CharSequence) {
-    val callout: Callout = mapView.getCallout()
-    val calloutTextView = TextView(this)
-    calloutTextView.setText(text)
-    callout.setLocation(point)
-    callout.setContent(calloutTextView)
-    callout.show()
+    val calloutTextView = TextView(this).apply {
+      this.text = text
+    }
+    mapView.callout.apply {
+      location = point
+      content = calloutTextView
+    }
+    mapView.callout.show()
   }
 }
