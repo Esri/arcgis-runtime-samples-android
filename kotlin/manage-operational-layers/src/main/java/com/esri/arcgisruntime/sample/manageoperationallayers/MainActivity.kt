@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
     operationalLayers.removeAt(position)
 
     // tell the recycler view that the item has been removed
-    activeRecyclerView.adapter?.notifyDataSetChanged()
+    activeRecyclerView.adapter?.notifyItemRemoved(position)
   }
 
   /**
@@ -105,8 +105,8 @@ class MainActivity : AppCompatActivity() {
     mapView.map.operationalLayers.add(layer)
 
     // notify the recycler views of the change
-    inactiveRecyclerView.adapter?.notifyDataSetChanged()
-    activeRecyclerView.adapter?.notifyDataSetChanged()
+    inactiveRecyclerView.adapter?.notifyItemRemoved(position)
+    activeRecyclerView.adapter?.notifyItemInserted(mapView.map.operationalLayers.size)
   }
 
   /**
