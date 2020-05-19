@@ -27,6 +27,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
+import com.esri.arcgisruntime.location.SimulatedLocationDataSource
+import com.esri.arcgisruntime.location.SimulationParameters
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
@@ -43,6 +45,7 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_navigation_controls.*
+import java.util.Calendar
 import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity() {
@@ -178,7 +181,11 @@ class MainActivity : AppCompatActivity() {
     mapView.graphicsOverlays[0].graphics.addAll(listOf(routeAheadGraphic, routeTraveledGraphic))
 
     // set up a simulated location data source which simulates movement along the route
-    val simulatedLocationDataSource = SimulatedLocationDataSource(routeGeometry)
+    val simulationParameters = SimulationParameters(Calendar.getInstance(), 35.0, 5.0, 5.0)
+    val simulatedLocationDataSource = SimulatedLocationDataSource().apply {
+      setLocations(routeGeometry, simulationParameters)
+    }
+
     // get the map view's location display and set it up
     val locationDisplay = mapView.locationDisplay.apply {
       // set the simulated location data source as the location data source for this app
