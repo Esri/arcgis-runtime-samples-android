@@ -56,7 +56,7 @@
             android:layout_margin="8dp"
             android:text="Inactive layers:"/>
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/removedRecyclerView"
+            android:id="@+id/inactiveRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         </LinearLayout>

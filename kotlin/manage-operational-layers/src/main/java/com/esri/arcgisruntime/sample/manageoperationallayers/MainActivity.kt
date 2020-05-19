@@ -34,7 +34,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-  private val removedLayers = mutableListOf<Layer>()
+  private val inactiveLayers = mutableListOf<Layer>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
   private fun removeLayerFromMap(position: Int) {
     val operationalLayers = mapView.map.operationalLayers
     // store the layer in a list to keep track of which layers have been removed
-    removedLayers.add(operationalLayers[position])
+    inactiveLayers.add(operationalLayers[position])
     // remove the layer from the map
     operationalLayers.removeAt(position)
 
@@ -100,12 +100,12 @@ class MainActivity : AppCompatActivity() {
    */
   private fun addLayerToMap(position: Int) {
     // remove the layer from the removed layers
-    val layer = removedLayers.removeAt(position)
+    val layer = inactiveLayers.removeAt(position)
     // add the layer to the map
     mapView.map.operationalLayers.add(layer)
 
     // notify the recycler views of the change
-    removedRecyclerView.adapter?.notifyDataSetChanged()
+    inactiveRecyclerView.adapter?.notifyDataSetChanged()
     activeRecyclerView.adapter?.notifyDataSetChanged()
   }
 
@@ -152,9 +152,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     // set up the recycler view for the inactive layer list
-    removedRecyclerView.apply {
+    inactiveRecyclerView.apply {
       // create the adapter with a callback for adding the layer back to the map
-      adapter = RemovedListAdapter(removedLayers) { addLayerToMap(it) }
+      adapter = InactiveListAdapter(inactiveLayers) { addLayerToMap(it) }
       layoutManager = LinearLayoutManager(this@MainActivity)
     }
   }

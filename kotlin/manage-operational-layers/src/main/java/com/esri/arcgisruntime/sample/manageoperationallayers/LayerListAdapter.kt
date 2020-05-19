@@ -45,19 +45,19 @@ class LayerListAdapter(private val dataSet: LayerList) :
   }
 }
 
-class RemovedListAdapter(
+class InactiveListAdapter(
   private val dataSet: MutableList<Layer>,
   private val onItemClick: (pos: Int) -> Unit
-) : RecyclerView.Adapter<RemovedListAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<InactiveListAdapter.ViewHolder>() {
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RemovedListAdapter.ViewHolder {
-    val v = LayoutInflater.from(parent.context).inflate(R.layout.removed_layer_item, parent, false)
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InactiveListAdapter.ViewHolder {
+    val v = LayoutInflater.from(parent.context).inflate(R.layout.inactive_layer_item, parent, false)
     return ViewHolder(v)
   }
 
   override fun getItemCount() = dataSet.size
 
-  override fun onBindViewHolder(holder: RemovedListAdapter.ViewHolder, position: Int) {
+  override fun onBindViewHolder(holder: InactiveListAdapter.ViewHolder, position: Int) {
     holder.textView.text = dataSet[position].name
     holder.onClick = onItemClick
   }
