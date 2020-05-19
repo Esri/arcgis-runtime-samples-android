@@ -41,8 +41,9 @@ import kotlinx.android.synthetic.main.dialog_layout.*
 class MainActivity : AppCompatActivity() {
 
   private val TAG = MainActivity::class.java.simpleName
+
   // define the local path where the geodatabase will be stored
-  private val localGeodatabasePath = cacheDir.path + getString(R.string.wildfire_geodatabase)
+  private val localGeodatabasePath: String by lazy { externalCacheDir?.path + getString(R.string.wildfire_geodatabase) }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -103,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         // update progress
         addProgressChangedListener {
           dialog.progressBar.progress = this.progress
-          dialog.progressTextView.text = "$this.progress%"
+          dialog.progressTextView.text = "${this.progress}%"
         }
         // get geodatabase when done
         addJobDoneListener {
@@ -134,7 +135,8 @@ class MainActivity : AppCompatActivity() {
       return
     }
     // if the job succeeded, load the resulting geodatabase
-    val geodatabase = generateGeodatabaseJob.result.apply { loadAsync() }
+    val geodatabase = generateGeodatabaseJob.result
+    geodatabase.loadAsync()
     geodatabase.addDoneLoadingListener {
       // return if the geodatabase failed to load
       if (geodatabase.loadStatus != LoadStatus.LOADED) {
@@ -185,8 +187,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onPause() {
-    super.onPause()
     mapView.pause()
+    super.onPause()
   }
 
   override fun onResume() {
@@ -195,7 +197,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onDestroy() {
-    super.onDestroy()
     mapView.dispose()
+    super.onDestroy()
   }
 }

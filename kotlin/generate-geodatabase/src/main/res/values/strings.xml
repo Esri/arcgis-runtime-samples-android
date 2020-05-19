@@ -4,8 +4,5 @@
     <string name="wildfire_sync">https://sampleserver6.arcgisonline.com/arcgis/rest/services/Sync/WildfireSync/FeatureServer</string>
     <string name="wildfire_geodatabase">/wildfire.geodatabase</string>
     <string name="gen_geodatabase_button_text">Generate</string>
-    <string name="progress_starting">Starting</string>
-    <string name="progress_started">Started</string>
     <string name="progress_fetching">Fetching result</string>
-    <string name="progress_done">Done</string>
 </resources>
