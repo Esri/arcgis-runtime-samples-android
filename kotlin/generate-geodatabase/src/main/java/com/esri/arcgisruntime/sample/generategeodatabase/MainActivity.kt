@@ -98,20 +98,21 @@ class MainActivity : AppCompatActivity() {
       // show the job's progress in a dialog
       val dialog = createProgressDialog(generateGeodatabaseJob)
       dialog.show()
-      // start the job
-      generateGeodatabaseJob.start()
-      // update progress
-      generateGeodatabaseJob.addProgressChangedListener {
-        dialog.progressBar.progress = generateGeodatabaseJob.progress
-        dialog.progressTextView.text = "$generateGeodatabaseJob.progress%"
-      }
-      // get geodatabase when done
-      generateGeodatabaseJob.addJobDoneListener {
-        // close the progress dialog
-        dialog.dismiss()
-        // load the geodatabase and display its feature tables on the map
-        loadGeodatabase(generateGeodatabaseJob, geodatabaseSyncTask)
-      }
+      // define progress and done behaviours and start the job
+      generateGeodatabaseJob.apply {
+        // update progress
+        addProgressChangedListener {
+          dialog.progressBar.progress = this.progress
+          dialog.progressTextView.text = "$this.progress%"
+        }
+        // get geodatabase when done
+        addJobDoneListener {
+          // close the progress dialog
+          dialog.dismiss()
+          // load the geodatabase and display its feature tables on the map
+          loadGeodatabase(generateGeodatabaseJob, geodatabaseSyncTask)
+        }
+      }.start()
     }
   }
 
