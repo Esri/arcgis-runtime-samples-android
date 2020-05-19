@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    // create a map with the basemap
+    // create a map with a topographic basemap
     val map = ArcGISMap(Basemap.createTopographic())
     // create an envelope around Shafer Basin
     val initialExtent =
