@@ -6,8 +6,4 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    <!-- Progress bar style-->
-    <style name="progressBarBlue" parent="@style/Theme.AppCompat">
-        <item name="colorAccent">@color/colorPrimary</item>
-    </style>
 </resources>
