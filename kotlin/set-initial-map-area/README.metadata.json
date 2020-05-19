@@ -12,7 +12,7 @@
     "redirect_from": "/android/latest/sample-code/set-initial-map-area.htm",
     "relevant_apis": [
       "ArcGISMap",
-      "Envelope"
+      "Envelope",
       "MapView",
       "Point",
       "Viewpoint"
