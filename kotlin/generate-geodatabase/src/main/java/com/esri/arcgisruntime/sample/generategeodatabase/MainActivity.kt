@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     // add the map and graphics overlay to the map view
     mapView.apply {
       // create a map with the tile package basemap
-      this.map = ArcGISMap(Basemap(tiledLayer))
+      map = ArcGISMap(Basemap(tiledLayer))
       // create a graphics overlay to display the boundaries
       graphicsOverlays.add(GraphicsOverlay())
     }
