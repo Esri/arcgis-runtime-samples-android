@@ -20,7 +20,7 @@
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/MainActivity.kt",
-        "src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/LayerListAdapter.kt",
+        "src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/LayerListAdapter.kt"
     ],
     "title": "Manage operational layers"
 }

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Manage operational layers</string>
+    <string name="active_layers">Active layers:</string>
+    <string name="inactive_layers">Inactive layers:</string>
 </resources>

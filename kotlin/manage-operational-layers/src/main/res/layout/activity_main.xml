@@ -43,7 +43,7 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             android:textStyle="bold"
             android:layout_margin="8dp"
-            android:text="Active layers:"/>
+            android:text="@string/active_layers"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/activeRecyclerView"
             android:layout_width="match_parent"
@@ -54,7 +54,7 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             android:textStyle="bold"
             android:layout_margin="8dp"
-            android:text="Inactive layers:"/>
+            android:text="@string/inactive_layers"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/inactiveRecyclerView"
             android:layout_width="match_parent"
