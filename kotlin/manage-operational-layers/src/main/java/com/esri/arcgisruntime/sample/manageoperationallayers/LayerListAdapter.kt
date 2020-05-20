@@ -50,14 +50,14 @@ class InactiveListAdapter(
   private val onItemClick: (pos: Int) -> Unit
 ) : RecyclerView.Adapter<InactiveListAdapter.ViewHolder>() {
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InactiveListAdapter.ViewHolder {
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
     val v = LayoutInflater.from(parent.context).inflate(R.layout.inactive_layer_item, parent, false)
     return ViewHolder(v)
   }
 
   override fun getItemCount() = dataSet.size
 
-  override fun onBindViewHolder(holder: InactiveListAdapter.ViewHolder, position: Int) {
+  override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     holder.textView.text = dataSet[position].name
     holder.onClick = onItemClick
   }

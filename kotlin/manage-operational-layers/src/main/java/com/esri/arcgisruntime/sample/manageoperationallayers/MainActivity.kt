@@ -103,7 +103,6 @@ class MainActivity : AppCompatActivity() {
     val layer = inactiveLayers.removeAt(position)
     // add the layer to the map
     mapView.map.operationalLayers.add(layer)
-
     // notify the recycler views of the change
     inactiveRecyclerView.adapter?.notifyItemRemoved(position)
     activeRecyclerView.adapter?.notifyItemInserted(mapView.map.operationalLayers.size)
@@ -148,7 +147,7 @@ class MainActivity : AppCompatActivity() {
           },
           onItemSwiped = { position -> removeLayerFromMap(position) })
       ).attachToRecyclerView(this)
-      layoutManager = LinearLayoutManager(this@MainActivity)
+      layoutManager = LinearLayoutManager(this@MainActivity).apply { reverseLayout = true }
     }
 
     // set up the recycler view for the inactive layer list
