@@ -40,21 +40,18 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a map with a topographic basemap
-    val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 4)
-
     val imageLayerElevation =
-      ArcGISMapImageLayer("https://sampleserver5.arcgisonline.com/arcgis/rest/services/Elevation/WorldElevations/MapServer")
+    ArcGISMapImageLayer("https://sampleserver5.arcgisonline.com/arcgis/rest/services/Elevation/WorldElevations/MapServer")
     val imageLayerCensus =
       ArcGISMapImageLayer("https://sampleserver5.arcgisonline.com/arcgis/rest/services/Census/MapServer")
     val imageLayerDamage =
       ArcGISMapImageLayer("https://sampleserver5.arcgisonline.com/arcgis/rest/services/DamageAssessment/MapServer")
 
-    // add the map image layers to the map's operational layers
-    map.operationalLayers.addAll(listOf(imageLayerElevation, imageLayerCensus, imageLayerDamage))
-
-    // set the map to the map view
-    mapView.map = map
+    // create a map with a topographic basemap and set it to the map view
+    mapView.map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 4).apply {
+      // add the map image layers to the map's operational layers
+      operationalLayers.addAll(listOf(imageLayerElevation, imageLayerCensus, imageLayerDamage))
+    }
 
     // handle the floating action button and recycler view logic for this sample
     setupUI()
