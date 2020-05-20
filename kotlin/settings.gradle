@@ -39,6 +39,7 @@ include ':add-features-feature-service',
         ':integrated-windows-authentication',
         ':map-rotation',
         ':navigate-route',
+        ':offline-geocode',
         ':offline-routing',
         ':open-mobile-map-package',
         ':perform-spatial-operations',
@@ -57,4 +58,3 @@ include ':add-features-feature-service',
         ':viewshed-geoprocessing',
         ':viewshed-location',
         ':wmts-layer'
-include ':offline-geocode'

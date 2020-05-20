@@ -1,0 +1,36 @@
+{
+    "category": "Search and Query",
+    "description": "Geocode addresses to locations and reverse geocode locations to addresses offline.",
+    "ignore": false,
+    "images": [
+        "offline-geocode.png"
+    ],
+    "keywords": [
+        "geocode",
+        "geocoder",
+        "locator",
+        "offline",
+        "package",
+        "query",
+        "search"
+    ],
+    "provision_from": [
+        "http://www.arcgis.com/home/item.html?id=1330ab96ac9c40a49e59650557f2cd63",
+        "http://www.arcgis.com/home/item.html?id=344e3b12368543ef84045ef9aa3c32ba"
+    ],
+    "provision_to": [
+        "/streetmap_SD.tpk",
+        "/san-diego-locator/san-diego-locator.loc"
+    ],
+    "redirect_from": "/android/latest/sample-code/offline-geocode.htm",
+    "relevant_apis": [
+        "GeocodeParameters",
+        "GeocodeResult",
+        "LocatorTask",
+        "ReverseGeocodeParameters"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/offlinegeocode/MainActivity.kt"
+    ],
+    "title": "Offline geocode"
+}
