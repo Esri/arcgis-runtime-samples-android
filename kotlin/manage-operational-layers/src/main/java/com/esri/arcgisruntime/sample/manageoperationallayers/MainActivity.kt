@@ -147,6 +147,7 @@ class MainActivity : AppCompatActivity() {
           },
           onItemSwiped = { position -> removeLayerFromMap(position) })
       ).attachToRecyclerView(this)
+      // create a linear layout manager and reverse the list order to show top layer on top
       layoutManager = LinearLayoutManager(this@MainActivity).apply { reverseLayout = true }
     }
 
