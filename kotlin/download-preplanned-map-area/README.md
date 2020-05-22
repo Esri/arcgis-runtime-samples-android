@@ -12,7 +12,7 @@ An archaeology team could define preplanned map areas for dig sites which can be
 
 ## How to use the sample
 
-Downloading tiles for offline use requires authentication with the web map's server. An [ArcGIS Online](www.arcgis.com) account is required to use this sample.
+Downloading tiles for offline use requires authentication with the web map's server. An [ArcGIS Online](https://www.arcgis.com) account is required to use this sample.
 
 Select a map area from the Preplanned Map Areas list. Click the Download button to download the selected area. The download progress will be shown in the Downloads list. When a download is complete, select it to display the offline map in the map view.
 

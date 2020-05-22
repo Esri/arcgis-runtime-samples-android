@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.sample.downloadpreplannedmaparea
 
+import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -35,30 +36,30 @@ import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
-import com.esri.arcgisruntime.sample.downloadpreplannedmaparea.ProgressDialogFragment.OnProgressDialogDismissListener
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
-import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseJob
 import com.esri.arcgisruntime.tasks.offlinemap.DownloadPreplannedOfflineMapJob
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask
 import com.esri.arcgisruntime.tasks.offlinemap.PreplannedMapArea
 import com.esri.arcgisruntime.tasks.offlinemap.PreplannedUpdateMode
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.dialog_layout.*
 import kotlinx.android.synthetic.main.layout_offline_controls.*
 import java.io.File
 import java.util.ArrayList
 
-class MainActivity : AppCompatActivity(), OnProgressDialogDismissListener {
+class MainActivity : AppCompatActivity() {
 
-  private val offlineMapDirectory by lazy {
-    File(externalCacheDir?.path + getString(R.string.preplanned_offline_map_dir))
-  }
+  private val TAG = MainActivity::class.java.simpleName
+
+  private val offlineMapDirectory by lazy { File(externalCacheDir?.path + getString(R.string.preplanned_offline_map_dir)) }
   private var preplannedMapAreasAdapter: ArrayAdapter<String>? = null
   private val downloadedMapAreaNames by lazy { mutableListOf<String>() }
   private var downloadedMapAreasAdapter: ArrayAdapter<String>? = null
   private val downloadedMapAreas by lazy { mutableListOf<ArcGISMap>() }
+  private var dialog: Dialog? = null
 
   private var mSelectedPreplannedMapArea: PreplannedMapArea? = null
   private var downloadPreplannedOfflineMapJob: DownloadPreplannedOfflineMapJob? = null
@@ -140,17 +141,22 @@ class MainActivity : AppCompatActivity(), OnProgressDialogDismissListener {
           downloadPreplannedOfflineMapJob = offlineMapTask.downloadPreplannedOfflineMap(
             offlineMapParameters,
             offlineMapDirectory.path + File.separator + mSelectedPreplannedMapArea?.portalItem?.title
-          )
-          // start the job
-          downloadPreplannedOfflineMapJob?.start()
-
-          // show progress dialog for download, includes tracking progress
-          createProgressDialog(downloadPreplannedOfflineMapJob)
+          ).also {
+            // create and update a progress dialog for the job
+            dialog = createProgressDialog(it)
+            dialog?.show()
+            it.addProgressChangedListener {
+              dialog?.progressBar?.progress = it.progress
+              dialog?.progressTextView?.text = "${it.progress}%"
+            }
+            // start the job
+            it.start()
+          }
 
           // when the job finishes
           downloadPreplannedOfflineMapJob?.addJobDoneListener {
             // dismiss progress dialog
-            findProgressDialogFragment()?.dismiss()
+            dialog?.dismiss()
             // if there's a result from the download preplanned offline map job
             if (downloadPreplannedOfflineMapJob?.status == Job.Status.SUCCEEDED) {
               downloadPreplannedOfflineMapJob?.result?.let { downloadPreplannedOfflineMapResult ->
@@ -194,19 +200,17 @@ class MainActivity : AppCompatActivity(), OnProgressDialogDismissListener {
                 }
               }
             } else {
-              val error = "Job finished with an error: " + downloadPreplannedOfflineMapJob?.error
+              val error =
+                "Job finished with an error: " + downloadPreplannedOfflineMapJob?.error?.message
               Toast.makeText(this, error, Toast.LENGTH_LONG).show()
               Log.e(TAG, error)
             }
           }
         } catch (e: Exception) {
           val error =
-            "Failed to generate default parameters for the download job: " + e.cause!!.message
+            "Failed to generate default parameters for the download job: " + e.cause?.message
           Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-          Log.e(
-            TAG,
-            error
-          )
+          Log.e(TAG, error)
         }
       }
     }
@@ -245,7 +249,7 @@ class MainActivity : AppCompatActivity(), OnProgressDialogDismissListener {
         }
         // on list view click
         availableAreasListView.onItemClickListener =
-          AdapterView.OnItemClickListener { _: AdapterView<*>?, _: View?, i: Int, l: Long ->
+          AdapterView.OnItemClickListener { _: AdapterView<*>?, _: View?, i: Int, _: Long ->
             mSelectedPreplannedMapArea = preplannedMapAreas[i]
             if (mSelectedPreplannedMapArea != null) {
               // clear the download jobs list view selection
@@ -262,8 +266,10 @@ class MainActivity : AppCompatActivity(), OnProgressDialogDismissListener {
                 setViewpointAsync(Viewpoint(areaOfInterest), 1.5f)
               }
               // enable download button only for those map areas which have not been downloaded already
-              File(externalCacheDir?.path + getString(R.string.preplanned_offline_map_dir)
-                  + File.separator + mSelectedPreplannedMapArea?.portalItem?.title).let {
+              File(
+                externalCacheDir?.path + getString(R.string.preplanned_offline_map_dir)
+                    + File.separator + mSelectedPreplannedMapArea?.portalItem?.title
+              ).let {
                 downloadButton.isEnabled = !it.exists()
               }
             } else {
@@ -303,23 +309,20 @@ class MainActivity : AppCompatActivity(), OnProgressDialogDismissListener {
   /**
    * Create a progress dialog box for tracking the generate geodatabase job.
    *
-   * @param generateGeodatabaseJob the generate geodatabase job progress to be tracked
+   * @param downloadPreplannedOfflineMapJob  to be tracked
    * @return an AlertDialog set with the dialog layout view
    */
   private fun createProgressDialog(downloadPreplannedOfflineMapJob: DownloadPreplannedOfflineMapJob): AlertDialog {
-    val builder = AlertDialog.Builder(this@MainActivity).apply {
-      setTitle("Download preplanned offline map job")
+    val dialogBuilder = AlertDialog.Builder(this@MainActivity).apply {
+      setTitle("Download preplanned offline map")
       // provide a cancel button on the dialog
       setNegativeButton("Cancel") { _, _ ->
         downloadPreplannedOfflineMapJob.cancel()
       }
       setCancelable(false)
-      setView(
-        LayoutInflater.from(this@MainActivity)
-          .inflate(R.layout.dialog_layout, null)
-      )
+      setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_layout, null))
     }
-    return builder.create()
+    return dialogBuilder.create()
   }
 
   override fun onPause() {
@@ -335,11 +338,6 @@ class MainActivity : AppCompatActivity(), OnProgressDialogDismissListener {
   override fun onDestroy() {
     mapView.dispose()
     super.onDestroy()
-  }
-
-  companion object {
-    private val TAG =
-      MainActivity::class.java.simpleName
   }
 }
 

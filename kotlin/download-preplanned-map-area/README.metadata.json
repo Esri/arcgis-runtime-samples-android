@@ -9,18 +9,17 @@
         "map area",
         "offline",
         "preplanned",
-	"pre-planned"
+		"pre-planned"
     ],
-    "redirect_from": "",
     "relevant_apis": [
         "DownloadPreplannedOfflineMapJob",
         "DownloadPreplannedOfflineMapParameters",
-	"DownloadPreplannedOfflineMapResult",
-	"OfflineMapTask",
-	"PreplannedMapArea"
+		"DownloadPreplannedOfflineMapResult",
+		"OfflineMapTask",
+		"PreplannedMapArea"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/downloadpreplannedmaparea/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/downloadpreplannedmaparea/MainActivity.kt"
     ],
     "title": "Download preplanned map area"
 }

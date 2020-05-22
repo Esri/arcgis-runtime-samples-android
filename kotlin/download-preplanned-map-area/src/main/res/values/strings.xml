@@ -2,7 +2,6 @@
     <string name="app_name">Download preplanned map area</string>
     <string name="preplanned_map_areas">Preplanned map areas:</string>
     <string name="download_button_text">↓ Download ↓</string>
-    <string name="download_button_text_land">\u2198 Download \u2197</string>
     <string name="downloaded_areas">Downloaded areas:</string>
     <string name="arcgis_online_url">https://www.arcgis.com/</string>
     <string name="naperville_water_network_url">acc027394bc84c2fb04d1ed317aac674</string>
