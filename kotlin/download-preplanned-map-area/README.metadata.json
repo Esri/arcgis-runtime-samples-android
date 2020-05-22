@@ -1,25 +1,25 @@
 {
-    "category": "Edit and Manage Data",
-    "description": "Take a map offline using a preplanned map area.",
-    "ignore": false,
-    "images": [
-        "download-preplanned-map-area.png"
-    ],
-    "keywords": [
-        "map area",
-        "offline",
-        "preplanned",
-		"pre-planned"
-    ],
-    "relevant_apis": [
-        "DownloadPreplannedOfflineMapJob",
-        "DownloadPreplannedOfflineMapParameters",
-		"DownloadPreplannedOfflineMapResult",
-		"OfflineMapTask",
-		"PreplannedMapArea"
-    ],
-    "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/downloadpreplannedmaparea/MainActivity.kt"
-    ],
-    "title": "Download preplanned map area"
+  "category": "Edit and Manage Data",
+  "description": "Take a map offline using a preplanned map area.",
+  "ignore": false,
+  "images": [
+    "download-preplanned-map-area.png"
+  ],
+  "keywords": [
+    "map area",
+    "offline",
+    "preplanned",
+    "pre-planned"
+  ],
+  "relevant_apis": [
+    "DownloadPreplannedOfflineMapJob",
+    "DownloadPreplannedOfflineMapParameters",
+    "DownloadPreplannedOfflineMapResult",
+    "OfflineMapTask",
+    "PreplannedMapArea"
+  ],
+  "snippets": [
+    "src/main/java/com/esri/arcgisruntime/sample/downloadpreplannedmaparea/MainActivity.kt"
+  ],
+  "title": "Download preplanned map area"
 }

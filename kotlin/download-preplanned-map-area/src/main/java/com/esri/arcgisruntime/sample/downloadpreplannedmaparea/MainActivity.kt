@@ -158,52 +158,52 @@ class MainActivity : AppCompatActivity() {
             // dismiss progress dialog
             dialog?.dismiss()
             // if there's a result from the download preplanned offline map job
-            if (downloadPreplannedOfflineMapJob?.status == Job.Status.SUCCEEDED) {
-              downloadPreplannedOfflineMapJob?.result?.let { downloadPreplannedOfflineMapResult ->
-                if (downloadPreplannedOfflineMapJob != null && !downloadPreplannedOfflineMapResult.hasErrors()) {
-                  // get the offline map
-                  downloadPreplannedOfflineMapResult.offlineMap?.let { offlineMap ->
-                    mapView.apply {
-                      // add it to the map view
-                      map = offlineMap
-                      // hide the area of interest graphics
-                      graphicsOverlays[0].isVisible = false
-                    }
-                    // add the map name to the list view of downloaded map areas
-                    downloadedMapAreaNames.add(offlineMap.item.title)
-                    // select the downloaded map area
-                    downloadedMapAreasListView.setItemChecked(downloadedMapAreaNames.size - 1, true)
-                    downloadedMapAreasAdapter?.notifyDataSetChanged()
-                    // de-select the area in the preplanned areas list view
-                    availableAreasListView.clearChoices()
-                    preplannedMapAreasAdapter?.notifyDataSetChanged()
-                    // add the offline map to a list of downloaded map areas
-                    downloadedMapAreas.add(offlineMap)
-                    // disable the download button
-                    downloadButton.isEnabled = false
-                  }
-                } else {
-                  // collect the layer and table errors into a single alert message
-                  val stringBuilder = StringBuilder("Errors: ")
-                  downloadPreplannedOfflineMapResult.layerErrors?.forEach { (key, value) ->
-                    stringBuilder.append("Layer: ").append(key.name).append(". Exception: ")
-                      .append(value.message).append(". ")
-                  }
-                  downloadPreplannedOfflineMapResult.tableErrors?.forEach { (key, value) ->
-                    stringBuilder.append("Table: ").append(key.tableName).append(". Exception: ")
-                      .append(value.message).append(". ")
-                  }
-                  val error =
-                    "One or more errors occurred with the Offline Map Result: $stringBuilder"
-                  Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-                  Log.e(TAG, error)
-                }
-              }
-            } else {
+            if (downloadPreplannedOfflineMapJob?.status != Job.Status.SUCCEEDED) {
               val error =
                 "Job finished with an error: " + downloadPreplannedOfflineMapJob?.error?.message
               Toast.makeText(this, error, Toast.LENGTH_LONG).show()
               Log.e(TAG, error)
+              return@addJobDoneListener
+            }
+            downloadPreplannedOfflineMapJob?.result?.let { downloadPreplannedOfflineMapResult ->
+              if (downloadPreplannedOfflineMapResult.hasErrors()) {
+                // collect the layer and table errors into a single alert message
+                val stringBuilder = StringBuilder("Errors: ")
+                downloadPreplannedOfflineMapResult.layerErrors?.forEach { (key, value) ->
+                  stringBuilder.append("Layer: ").append(key.name).append(". Exception: ")
+                    .append(value.message).append(". ")
+                }
+                downloadPreplannedOfflineMapResult.tableErrors?.forEach { (key, value) ->
+                  stringBuilder.append("Table: ").append(key.tableName).append(". Exception: ")
+                    .append(value.message).append(". ")
+                }
+                val error =
+                  "One or more errors occurred with the Offline Map Result: $stringBuilder"
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                Log.e(TAG, error)
+                return@addJobDoneListener
+              }
+              // get the offline map
+              downloadPreplannedOfflineMapResult.offlineMap?.let { offlineMap ->
+                mapView.apply {
+                  // add it to the map view
+                  map = offlineMap
+                  // hide the area of interest graphics
+                  graphicsOverlays[0].isVisible = false
+                }
+                // add the map name to the list view of downloaded map areas
+                downloadedMapAreaNames.add(offlineMap.item.title)
+                // select the downloaded map area
+                downloadedMapAreasListView.setItemChecked(downloadedMapAreaNames.size - 1, true)
+                downloadedMapAreasAdapter?.notifyDataSetChanged()
+                // de-select the area in the preplanned areas list view
+                availableAreasListView.clearChoices()
+                preplannedMapAreasAdapter?.notifyDataSetChanged()
+                // add the offline map to a list of downloaded map areas
+                downloadedMapAreas.add(offlineMap)
+                // disable the download button
+                downloadButton.isEnabled = false
+              }
             }
           }
         } catch (e: Exception) {
