@@ -21,16 +21,10 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.esri.arcgisruntime.geometry.GeodeticCurveType
-import com.esri.arcgisruntime.geometry.Geometry
-import com.esri.arcgisruntime.geometry.GeometryEngine
-import com.esri.arcgisruntime.geometry.LinearUnit
-import com.esri.arcgisruntime.geometry.LinearUnitId
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.Polyline
 import com.esri.arcgisruntime.geometry.PolylineBuilder
 import com.esri.arcgisruntime.geometry.SpatialReference
-import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.location.SimulatedLocationDataSource
 import com.esri.arcgisruntime.location.SimulationParameters
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -55,12 +49,12 @@ class MainActivity : AppCompatActivity() {
 
     // create a graphics overlay for the points and use a red circle for the symbols
     val locationHistoryOverlay = GraphicsOverlay()
-    val locationSymbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.RED, 10f)
+    val locationSymbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10f)
     locationHistoryOverlay.renderer = SimpleRenderer(locationSymbol)
 
     // create a graphics overlay for the lines connecting the points and use a blue line for the symbol
     val locationHistoryLineOverlay = GraphicsOverlay()
-    val locationLineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 2.0f)
+    val locationLineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.GREEN, 2.0f)
     locationHistoryLineOverlay.renderer = SimpleRenderer(locationLineSymbol)
 
     mapView.apply {
@@ -75,12 +69,15 @@ class MainActivity : AppCompatActivity() {
     // create a polyline builder to connect the location points
     val polylineBuilder = PolylineBuilder(SpatialReference.create(102100))
 
-    // create a simulated location data source from json data
-    val locationDataSource = SimulatedLocationDataSource().apply {
-      setLocations(Polyline.fromJson(polylineJson) as Polyline)
+    // create a simulated location data source from json data with simulation parameters to set a consistent velocity
+    val simulatedLocationDataSource = SimulatedLocationDataSource().apply {
+      setLocations(
+        Polyline.fromJson(polylineJson) as Polyline,
+        SimulationParameters(Calendar.getInstance(), 30.0, 0.0, 0.0)
+      )
     }
 
-    locationDataSource.addLocationChangedListener { locationChangedEvent ->
+    simulatedLocationDataSource.addLocationChangedListener { locationChangedEvent ->
       // get the point from the location changed event
       val nextPoint = locationChangedEvent.location.position
       // add the new point to the polyline builder
@@ -93,21 +90,20 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    locationDataSource.addStartedListener {
-      mapView.locationDisplay.apply {
-        this.locationDataSource = locationDataSource
-        autoPanMode = LocationDisplay.AutoPanMode.RECENTER
-        initialZoomScale = 7000.0
-      }
+    // configure the map view's location display to follow the simulated location data source
+    mapView.locationDisplay.apply {
+      locationDataSource = simulatedLocationDataSource
+      autoPanMode = LocationDisplay.AutoPanMode.RECENTER
+      initialZoomScale = 7000.0
     }
 
     // start and stop the simulated location data source when the button is tapped
     button.setOnClickListener {
-      if (locationDataSource.isStarted) {
-        locationDataSource.stop()
+      if (simulatedLocationDataSource.isStarted) {
+        simulatedLocationDataSource.stop()
         button.setImageResource(R.drawable.ic_my_location_white_24dp)
       } else {
-        locationDataSource.startAsync()
+        simulatedLocationDataSource.startAsync()
         button.setImageResource(R.drawable.ic_navigation_white_24dp)
       }
     }
@@ -181,5 +177,4 @@ const val polylineJson = "{\"paths\":[[" +
     "[-13181884.976919774,4036065.949884512],[-13182159.129529245,4035861.3007534989]," +
     "[-13182174.57474668,4035668.2355355616],[-13182417.83692128,4035664.374231203]," +
     "[-13182784.660835361,4035409.5281435261],[-13182997.032575091,4035255.0759691764]," +
-    "[-13182618.624747934,4034679.7416197238]" +
-    "]],\"spatialReference\":{\"wkid\":102100,\"latestWkid\":3857}}"
+    "[-13182618.624747934,4034679.7416197238]]],\"spatialReference\":{\"wkid\":102100,\"latestWkid\":3857}}"
