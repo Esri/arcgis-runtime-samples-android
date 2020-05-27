@@ -18,4 +18,6 @@
 
 <resources>
     <string name="app_name">Edit and sync features</string>
+    <string name="generate_geodatabase">Generate geodatabase</string>
+    <string name="sync_geodatabase">Sync geodatabase</string>
 </resources>

@@ -17,23 +17,18 @@
 
 package com.esri.arcgisruntime.sample.editandsyncfeatures
 
-import android.app.ProgressDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MotionEvent
-import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.concurrent.Job
-import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.Feature
 import com.esri.arcgisruntime.data.Geodatabase
-import com.esri.arcgisruntime.data.GeodatabaseFeatureTable
-import com.esri.arcgisruntime.data.QueryParameters
 import com.esri.arcgisruntime.data.TileCache
-import com.esri.arcgisruntime.geometry.Envelope
-import com.esri.arcgisruntime.geometry.GeometryType
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer
 import com.esri.arcgisruntime.layers.FeatureLayer
@@ -45,18 +40,18 @@ import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseJob
-import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseParameters
 import com.esri.arcgisruntime.tasks.geodatabase.GeodatabaseSyncTask
 import com.esri.arcgisruntime.tasks.geodatabase.SyncGeodatabaseJob
 import com.esri.arcgisruntime.tasks.geodatabase.SyncGeodatabaseParameters
 import com.esri.arcgisruntime.tasks.geodatabase.SyncLayerOption
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
+import kotlinx.android.synthetic.main.dialog_layout.*
 import java.util.ArrayList
-import java.util.concurrent.ExecutionException
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
+
+  private val TAG: String? = MainActivity::class.simpleName
 
   private var currentEditState: EditState = EditState.NOT_READY
 
@@ -84,10 +79,13 @@ class MainActivity : AppCompatActivity() {
 
       // add listener to handle motion events, which only responds once a geodatabase is loaded
       onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
-        override fun onSingleTapConfirmed(motionEvent: MotionEvent): Boolean {
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
           when (currentEditState) {
-            EditState.READY -> selectFeaturesAt(mapPointFrom(motionEvent), 25)
-            EditState.EDITING -> moveSelectedFeatureTo(mapPointFrom(motionEvent))
+            EditState.READY -> selectFeaturesAt(
+              android.graphics.Point(e.x.toInt(), e.y.toInt()),
+              10.0
+            )
+            EditState.EDITING -> moveSelectedFeatureTo(mapPointFrom(e))
             EditState.NOT_READY -> Toast.makeText(
               this@MainActivity,
               "Can't edit yet. The geodatabase hasn't been generated!",
@@ -101,91 +99,101 @@ class MainActivity : AppCompatActivity() {
 
     // add listener to handle generate/sync geodatabase button
     syncButton.setOnClickListener {
-      if (currentEditState == EditState.NOT_READY) {
-        generateGeodatabase()
-      } else if (currentEditState == EditState.READY) {
-        syncGeodatabase()
+      when (currentEditState) {
+        EditState.NOT_READY -> generateGeodatabase()
+        EditState.READY -> syncGeodatabase()
+        EditState.EDITING -> Log.e(TAG, "Unexpected edit state!")
       }
     }
   }
 
   /**
-   * Generates a local geodatabase and sets it to the map.
+   * Creates a GenerateGeodatabaseJob and runs it.
    */
   private fun generateGeodatabase() {
+    // create a geodatabase sync task and load it
     geodatabaseSyncTask.loadAsync()
     geodatabaseSyncTask.addDoneLoadingListener {
-      val boundarySymbol =
-        SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5f)
-      // show the extent used as a graphic
-      val extent: Envelope = mapView.visibleArea.extent
-      val boundary = Graphic(extent, boundarySymbol)
-      graphicsOverlay.graphics.add(boundary)
-      // create generate geodatabase parameters for the current extent
-      val defaultParameters: ListenableFuture<GenerateGeodatabaseParameters> = geodatabaseSyncTask
-        .createDefaultGenerateGeodatabaseParametersAsync(extent)
-      defaultParameters.addDoneListener {
-        try {
-          // set parameters and don't include attachments
-          val parameters = defaultParameters.get()
-          parameters.isReturnAttachments = false
-          // define the local path where the geodatabase will be stored
-          val localGeodatabasePath = externalCacheDir?.path + "/wildfire.geodatabase"
-          // create and start the job
-          val generateGeodatabaseJob: GenerateGeodatabaseJob = geodatabaseSyncTask
-            .generateGeodatabase(parameters, localGeodatabasePath)
-          generateGeodatabaseJob.start()
-          createProgressDialog(generateGeodatabaseJob)
-          // get geodatabase when done
-          generateGeodatabaseJob.addJobDoneListener {
-            if (generateGeodatabaseJob.status == Job.Status.SUCCEEDED) {
-              val geodatabase = generateGeodatabaseJob.result
-              geodatabase?.addDoneLoadingListener {
-                if (geodatabase.loadStatus == LoadStatus.LOADED) {
-                  // get only the first table which, contains points
-                  val pointsGeodatabaseFeatureTable: GeodatabaseFeatureTable =
-                    geodatabase.geodatabaseFeatureTables[0]
-                  val geodatabaseFeatureLayer = FeatureLayer(pointsGeodatabaseFeatureTable)
-                  // add geodatabase layer to the map as a feature layer and make it selectable
-                  mapView.map.operationalLayers.add(geodatabaseFeatureLayer)
-                  syncButton.visibility = View.GONE
-                  Log.i(TAG, "Local geodatabase stored at: $localGeodatabasePath")
-                  // set edit state to ready
-                  currentEditState = EditState.READY
-                } else {
-                  Log.e(TAG, "Error loading geodatabase: " + geodatabase.loadError.message)
-                }
-              }
-              geodatabase?.loadAsync()
+      // draw a box around the extent
+      mapView.apply {
+        // clear any previous operational layers and graphics
+        map.operationalLayers.clear()
+        graphicsOverlays[0].graphics.clear()
+        // show the extent used as a graphic
+        graphicsOverlays[0].graphics.add(
+          Graphic(
+            visibleArea.extent,
+            SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5f)
+          )
+        )
+      }
 
+      // create parameters for the job with the return attachments option set to false
+      val parameters = geodatabaseSyncTask
+        .createDefaultGenerateGeodatabaseParametersAsync(mapView.visibleArea.extent).get()
+        .apply { isReturnAttachments = false }
 
-            } else if (generateGeodatabaseJob.error != null) {
-              Log.e(TAG, "Error generating geodatabase: " + generateGeodatabaseJob.error.message)
-              Toast.makeText(
-                this,
-                "Error generating geodatabase: " + generateGeodatabaseJob.error.message,
-                Toast.LENGTH_LONG
-              ).show()
-            } else {
-              Log.e(TAG, "Unknown Error generating geodatabase")
-              Toast.makeText(this, "Unknown Error generating geodatabase", Toast.LENGTH_LONG).show()
-            }
-          }
-        } catch (e: InterruptedException) {
-          Log.e(TAG, "Error generating geodatabase parameters : " + e.message)
-          Toast.makeText(
-            this,
-            "Error generating geodatabase parameters: " + e.message,
-            Toast.LENGTH_LONG
-          ).show()
-        } catch (e: ExecutionException) {
-          Log.e(TAG, "Error generating geodatabase parameters : " + e.message)
-          Toast.makeText(
-            this,
-            "Error generating geodatabase parameters: " + e.message,
-            Toast.LENGTH_LONG
-          ).show()
+      // create the generate geodatabase job
+      val generateGeodatabaseJob =
+        geodatabaseSyncTask.generateGeodatabase(
+          parameters,
+          externalCacheDir?.path + "/wildfire.geodatabase"
+        )
+
+      // show the job's progress in a dialog
+      val generateGeodatabaseDialog = createProgressDialog(generateGeodatabaseJob)
+      generateGeodatabaseDialog.show()
+      // define progress and done behaviours and start the job
+      generateGeodatabaseJob.apply {
+        // update progress
+        addProgressChangedListener {
+          generateGeodatabaseDialog.progressBar.progress = this.progress
+          generateGeodatabaseDialog.progressTextView.text = "${this.progress}%"
         }
+        // get geodatabase when done
+        addJobDoneListener {
+          // close the progress dialog
+          generateGeodatabaseDialog.dismiss()
+          // load the geodatabase and display its feature tables on the map
+          loadGeodatabase(generateGeodatabaseJob)
+          // set edit state to ready
+          currentEditState = EditState.READY
+        }
+      }.start()
+    }
+  }
+
+  /**
+   * Loads the geodatabase from a GenerateGeodatabaseJob and displays its feature layers on the map.
+   *
+   * @param generateGeodatabaseJob the job which generated this geodatabase
+   */
+  private fun loadGeodatabase(generateGeodatabaseJob: GenerateGeodatabaseJob) {
+    // return if the job failed
+    if (generateGeodatabaseJob.status != Job.Status.SUCCEEDED) {
+      val error = generateGeodatabaseJob.error?.message ?: "Unknown error generating geodatabase"
+      Log.e(TAG, error)
+      Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+      return
+    }
+    // if the job succeeded, load the resulting geodatabase
+    geodatabase = generateGeodatabaseJob.result
+    geodatabase?.let { geodatabase ->
+      geodatabase.loadAsync()
+      geodatabase.addDoneLoadingListener {
+        // return if the geodatabase failed to load
+        if (geodatabase.loadStatus != LoadStatus.LOADED) {
+          val error = "Error loading geodatabase: " + geodatabase.loadError?.message
+          Log.e(TAG, error)
+          Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+          return@addDoneLoadingListener
+        }
+
+        // add all of the geodatabase feature tables to the map as feature layers
+        val featureLayers =
+          geodatabase.geodatabaseFeatureTables.map { featureTable -> FeatureLayer(featureTable) }
+        mapView.map.operationalLayers.addAll(featureLayers)
+        syncButton.isEnabled = false
       }
     }
   }
@@ -208,30 +216,51 @@ class MainActivity : AppCompatActivity() {
       val syncGeodatabaseJob: SyncGeodatabaseJob = geodatabaseSyncTask
         .syncGeodatabase(syncGeodatabaseParameters, geodatabase)
       syncGeodatabaseJob.start()
-      createProgressDialog(syncGeodatabaseJob)
-      syncGeodatabaseJob.addJobDoneListener {
-        if (syncGeodatabaseJob.status == Job.Status.SUCCEEDED) {
-          Toast.makeText(this, "Sync complete", Toast.LENGTH_SHORT).show()
-          syncButton.visibility = View.INVISIBLE
-        } else {
-          Log.e(TAG, "Database did not sync correctly!")
-          Toast.makeText(this, "Database did not sync correctly!", Toast.LENGTH_LONG).show()
+      val syncDialog = createProgressDialog(syncGeodatabaseJob)
+      syncDialog.show()
+      syncGeodatabaseJob.apply {
+
+        addProgressChangedListener {
+          syncDialog.progressBar.progress = this.progress
+          syncDialog.progressTextView.text = "${this.progress}%"
+        }
+
+        addJobDoneListener {
+          if (syncGeodatabaseJob.status == Job.Status.SUCCEEDED) {
+            // close the progress dialog
+            syncDialog.dismiss()
+
+            currentEditState = EditState.READY
+            Toast.makeText(this@MainActivity, "Sync complete", Toast.LENGTH_SHORT).show()
+            syncButton.isEnabled = false
+          } else {
+            Log.e(TAG, "Database did not sync correctly!")
+            Toast.makeText(this@MainActivity, "Database did not sync correctly!", Toast.LENGTH_LONG)
+              .show()
+          }
         }
       }
     }
   }
 
   /**
-   * Create a progress dialog to show sync state
+   * Create a progress dialog box for tracking the generate geodatabase job.
+   *
+   * @param job to be tracked
+   * @return an AlertDialog set with the dialog layout view
    */
-  private fun createProgressDialog(job: Job) {
-    val syncProgressDialog = ProgressDialog(this)
-    syncProgressDialog.setTitle("Sync geodatabase job")
-    syncProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
-    syncProgressDialog.setCanceledOnTouchOutside(false)
-    syncProgressDialog.show()
-    job.addProgressChangedListener { syncProgressDialog.progress = job.progress }
-    job.addJobDoneListener { syncProgressDialog.dismiss() }
+  private fun createProgressDialog(job: Job): AlertDialog {
+    val builder = AlertDialog.Builder(this@MainActivity).apply {
+      when (job) {
+        is GenerateGeodatabaseJob -> setTitle("Generating geodatabase")
+        is SyncGeodatabaseJob -> setTitle("Syncing geodatabase")
+      }
+      // provide a cancel button on the dialog
+      setNegativeButton("Cancel") { _, _ -> job.cancel() }
+      setCancelable(false)
+      setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_layout, null))
+    }
+    return builder.create()
   }
 
   /**
@@ -240,44 +269,19 @@ class MainActivity : AppCompatActivity() {
    * @param point     contains an ArcGIS map point
    * @param tolerance distance from point within which features will be selected
    */
-  private fun selectFeaturesAt(
-    point: Point,
-    tolerance: Int
-  ) {
-    // define the tolerance for identifying the feature
-    val mapTolerance: Double = tolerance * mapView.unitsPerDensityIndependentPixel
-    // create objects required to do a selection with a query
-    val envelope =
-      Envelope(
-        point.x - mapTolerance, point.y - mapTolerance,
-        point.x + mapTolerance, point.y + mapTolerance, mapView.spatialReference
-      )
-    val query = QueryParameters()
-    query.geometry = envelope
-    // select features within the envelope for all features on the map
-    for (layer in mapView.map.operationalLayers) {
-      val featureLayer = layer as FeatureLayer
-      val featureQueryResultFuture = featureLayer
-        .selectFeaturesAsync(query, FeatureLayer.SelectionMode.NEW)
-      // add done loading listener to fire when the selection returns
-      featureQueryResultFuture.addDoneListener {
+  private fun selectFeaturesAt(point: android.graphics.Point, tolerance: Double) {
 
-        // Get the selected features
-        val featureQueryResultFuture1 =
-          featureLayer.selectedFeaturesAsync
-        featureQueryResultFuture1.addDoneListener {
-          try {
-            val layerFeatures = featureQueryResultFuture1.get()
-            for (feature in layerFeatures) {
-              // Only select points for editing
-              if (feature.geometry.geometryType == GeometryType.POINT) {
-                selectedFeatures.add(feature)
-              }
-            }
-          } catch (e: Exception) {
-            Log.e(TAG, "Select feature failed: " + e.message)
-          }
-        }
+    mapView.map.operationalLayers.filterIsInstance<FeatureLayer>().forEach { featureLayer ->
+      val identifyLayerResultFuture =
+        mapView.identifyLayerAsync(featureLayer, point, tolerance, false)
+      identifyLayerResultFuture.addDoneListener {
+        val identifyLayerResult = identifyLayerResultFuture.get()
+
+        val identifiedFeatures = identifyLayerResult.elements.filterIsInstance<Feature>()
+
+        featureLayer.selectFeatures(identifiedFeatures)
+        selectedFeatures.addAll(identifiedFeatures)
+
         // set current edit state to editing
         currentEditState = EditState.EDITING
       }
@@ -294,10 +298,18 @@ class MainActivity : AppCompatActivity() {
       feature.geometry = point
       feature.featureTable.updateFeatureAsync(feature)
     }
+
+    // clear the list of selected features
     selectedFeatures.clear()
+
+    // clear selection indicator on the map view
+    mapView.map.operationalLayers.filterIsInstance<FeatureLayer>().forEach {
+      it.clearSelection()
+    }
+
     currentEditState = EditState.READY
-    syncButton.text = "Sync geodatabase"
-    syncButton.visibility = View.VISIBLE
+    syncButton.text = getString(R.string.sync_geodatabase)
+    syncButton.isEnabled = true
   }
 
   /**
@@ -333,9 +345,5 @@ class MainActivity : AppCompatActivity() {
     NOT_READY,  // Geodatabase has not yet been generated
     EDITING,  // A feature is in the process of being moved
     READY // The geodatabase is ready for synchronization or further edits
-  }
-
-  companion object {
-    private val TAG: String? = MainActivity::class.simpleName
   }
 }
