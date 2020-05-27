@@ -6,11 +6,11 @@ Display the map at an initial viewpoint representing a bounding geometry.
 
 ## Use case
 
-Setting the initial viewpoint is useful when a user wishes to first load the map at a particular area of interest. 
+Setting the initial viewpoint is useful when a user wishes to first load the map at a particular area of interest.
 
 ## How to use the sample
 
-As the application is loading, the initial view point is set and the map view opens at the given location.
+When the sample loads, note the map is opened at the initial view point that is set to it.
 
 ## How it works
 
@@ -18,7 +18,7 @@ As the application is loading, the initial view point is set and the map view op
 2. Instantiate a `Viewpoint` object using an `Envelope` object.
 3. Set the starting location of the map with `setInitialViewpoint(Viewpoint)`.
 4. Set the map to a `MapView` object.
- 
+
 ## Relevant API
 
 * ArcGISMap
@@ -26,7 +26,6 @@ As the application is loading, the initial view point is set and the map view op
 * MapView
 * Point
 * Viewpoint
-
 
 ## Tags
 
