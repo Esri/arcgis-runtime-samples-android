@@ -1,0 +1,344 @@
+/*
+ * Copyright 2020 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package com.esri.arcgisruntime.sample.routingaroundbarriers
+
+import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.os.Bundle
+import android.util.Log
+import android.view.MotionEvent
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
+import com.esri.arcgisruntime.geometry.GeometryEngine
+import com.esri.arcgisruntime.geometry.Point
+import com.esri.arcgisruntime.loadable.LoadStatus
+import com.esri.arcgisruntime.mapping.ArcGISMap
+import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
+import com.esri.arcgisruntime.mapping.view.Graphic
+import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.symbology.CompositeSymbol
+import com.esri.arcgisruntime.symbology.PictureMarkerSymbol
+import com.esri.arcgisruntime.symbology.SimpleFillSymbol
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol
+import com.esri.arcgisruntime.symbology.SimpleRenderer
+import com.esri.arcgisruntime.symbology.TextSymbol
+import com.esri.arcgisruntime.tasks.networkanalysis.DirectionManeuver
+import com.esri.arcgisruntime.tasks.networkanalysis.PolygonBarrier
+import com.esri.arcgisruntime.tasks.networkanalysis.Route
+import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters
+import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult
+import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
+import com.esri.arcgisruntime.tasks.networkanalysis.Stop
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.bottom_sheet.view.*
+import kotlin.math.roundToInt
+
+
+class MainActivity : AppCompatActivity() {
+
+  private val TAG: String = MainActivity::class.java.simpleName
+
+  private var routeTask: RouteTask? = null
+  private var routeParameters: RouteParameters? = null
+  private var pinSymbol: PictureMarkerSymbol? = null
+
+  private val routeGraphicsOverlay by lazy { GraphicsOverlay() }
+  private val stopsGraphicsOverlay by lazy { GraphicsOverlay() }
+  private val barriersGraphicsOverlay by lazy { GraphicsOverlay() }
+
+  private val stopList by lazy { mutableListOf<Stop>() }
+  private val barrierList by lazy { mutableListOf<PolygonBarrier>() }
+  private val directionsList by lazy { mutableListOf<DirectionManeuver>() }
+
+  private val routeLineSymbol by lazy {
+    SimpleLineSymbol(
+      SimpleLineSymbol.Style.SOLID,
+      -0x7fffff01,
+      5.0f
+    )
+  }
+  private val barrierSymbol by lazy {
+    SimpleFillSymbol(
+      SimpleFillSymbol.Style.DIAGONAL_CROSS,
+      -0x10000,
+      null
+    )
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+
+    // create simple renderer for routes, and set it to use the line symbol
+    routeGraphicsOverlay.renderer = SimpleRenderer().apply {
+      symbol = routeLineSymbol
+    }
+
+    mapView.apply {
+      // add a map with the streets basemap to the map view, centered on San Diego
+      map = ArcGISMap(Basemap.createStreets())
+      // center on San Diego
+      setViewpoint(Viewpoint(32.7270, -117.1750, 40000.0))
+      // add the graphics overlays to the map view
+      graphicsOverlays.addAll(
+        listOf(stopsGraphicsOverlay, barriersGraphicsOverlay, routeGraphicsOverlay)
+      )
+      onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
+        override fun onSingleTapConfirmed(motionEvent: MotionEvent): Boolean {
+          val screenPoint =
+            android.graphics.Point(motionEvent.x.roundToInt(), motionEvent.y.roundToInt())
+          addStopOrBarrier(screenPoint)
+          return true
+        }
+      }
+    }
+
+    // show the options sheet when the floating action button is clicked
+    fab.setOnClickListener {
+      fab.isExpanded = !fab.isExpanded
+    }
+
+    // create a new picture marker from a pin drawable
+    pinSymbol = PictureMarkerSymbol.createAsync(
+      ContextCompat.getDrawable(this, R.drawable.pin_symbol) as BitmapDrawable
+    ).get()
+
+    // create route task from San Diego service
+    routeTask = RouteTask(
+      this,
+      "https://sampleserver6.arcgisonline.com/arcgis/rest/services/NetworkAnalysis/SanDiego/NAServer/Route"
+    ).apply {
+      addDoneLoadingListener {
+        if (loadStatus == LoadStatus.LOADED) {
+          // get default route parameters
+          val routeParametersFuture = createDefaultParametersAsync()
+          routeParametersFuture.addDoneListener {
+            try {
+              routeParameters = routeParametersFuture.get().apply {
+                // set flags to return stops and directions
+                isReturnStops = true
+                isReturnDirections = true
+              }
+            } catch (e: Exception) {
+              Log.e(TAG, "Cannot create RouteTask parameters " + e.message)
+            }
+          }
+        } else {
+          Log.e(TAG, "Unable to load RouteTask $loadStatus")
+        }
+      }
+    }
+    routeTask?.loadAsync()
+  }
+
+  private fun addStopOrBarrier(screenPoint: android.graphics.Point) {
+
+    // convert screen point to map point
+    val mapPoint = mapView.screenToLocation(screenPoint)
+
+    // normalize geometry - important for geometries that will be sent to a server for processing
+    val normalizedPoint = GeometryEngine.normalizeCentralMeridian(mapPoint) as Point
+
+    // clear the displayed route, if it exists, since it might not be up to date any more
+    routeGraphicsOverlay.graphics.clear()
+
+    if (addStopButton.isSelected) {
+      // use the clicked map point to construct a stop
+      val stopPoint = Stop(Point(normalizedPoint.x, normalizedPoint.y, mapPoint.spatialReference))
+
+      // add the new stop to the list of stops
+      stopList.add(stopPoint)
+
+      // create a marker symbol and graphics, and add the graphics to the graphics overlay
+      stopsGraphicsOverlay.graphics.add(Graphic(mapPoint, createCompositeStopSymbol(stopList.size)))
+
+    } else if (addBarrierButton.isSelected) {
+      // create a buffered polygon around the clicked point
+      val bufferedBarrierPolygon = GeometryEngine.buffer(mapPoint, 500.0)
+
+      // create a polygon barrier for the routing task, and add it to the list of barriers
+      barrierList.add(PolygonBarrier(bufferedBarrierPolygon))
+
+      // build graphics for the barrier and add it to the graphics overlay
+      barriersGraphicsOverlay.graphics.add(Graphic(bufferedBarrierPolygon, barrierSymbol))
+    }
+
+    createRouteAndDisplay()
+  }
+
+  private fun createRouteAndDisplay() {
+    if (stopList.size >= 2) {
+      // clear the previous route from the graphics overlay, if it exists
+      routeGraphicsOverlay.graphics.clear()
+      // clear the directions list from the directions list view, if they exist
+      directionsList.clear()
+
+      routeParameters?.apply {
+        // add the existing stops and barriers to the route parameters
+        setStops(stopList)
+        setPolygonBarriers(barrierList)
+
+        // apply the requested route finding parameters
+        isFindBestSequence = reorderCheckBox.isChecked
+        isPreserveFirstStop = preserveFirstStopCheckBox.isChecked
+        isPreserveLastStop = preserveLastStopCheckBox.isChecked
+      }
+
+      // solve the route task
+      val routeResultFuture = routeTask?.solveRouteAsync(routeParameters)
+      routeResultFuture?.addDoneListener {
+        try {
+          val routeResult: RouteResult = routeResultFuture.get()
+          if (routeResult.routes.isNotEmpty()) {
+            // get the first route result
+            val firstRoute: Route = routeResult.routes[0]
+
+            // create a graphic for the route and add it to the graphics overlay
+            val routeGraphic = Graphic(firstRoute.routeGeometry)
+            routeGraphicsOverlay.graphics.add(routeGraphic)
+
+            //TODO routeInformationTitledPane.setText(output)
+
+            // get the direction text for each maneuver and add them to the list to display
+            directionsList.addAll(firstRoute.directionManeuvers)
+          } else {
+            Toast.makeText(this, "No routes found.", Toast.LENGTH_LONG).show()
+          }
+        } catch (e: Exception) {
+          val error = "Solve route task failed: " + e.message
+          Log.e(TAG, error)
+          Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+        }
+
+        // enable the reset button
+        resetButton.isEnabled = true
+      }
+    } else {
+      // reset the route information title pane since no route is displayed
+      //TODO routeInformationTitledPane.setText("No route to display")
+
+      // clear the directions list since no route is displayed
+      directionsList.clear()
+    }
+  }
+
+  private fun createCompositeStopSymbol(stopNumber: Int): CompositeSymbol {
+    // determine the stop number and create a new label
+    val stopTextSymbol = TextSymbol(
+      16f,
+      stopNumber.toString(),
+      -0x1,
+      TextSymbol.HorizontalAlignment.CENTER,
+      TextSymbol.VerticalAlignment.BOTTOM
+    )
+    stopTextSymbol.offsetY = pinSymbol?.height as Float / 2
+    // construct a composite symbol out of the pin and text symbols, and return it
+    return CompositeSymbol(listOf(pinSymbol, stopTextSymbol))
+  }
+
+  /** Creates a bottom sheet to display a list of direction maneuvers.
+   *
+   */
+  private fun setupBottomSheet() {
+    // create a bottom sheet behavior from the bottom sheet view in the main layout
+    val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet).apply {
+      // expand the bottom sheet, and ensure it is displayed on the screen when collapsed
+      state = BottomSheetBehavior.STATE_EXPANDED
+      peekHeight = bottomSheet.header.height
+      // animate the arrow when the bottom sheet slides
+      addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+          bottomSheet.header.imageView.rotation = slideOffset * 180f
+        }
+
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+          bottomSheet.header.imageView.rotation = when (newState) {
+            BottomSheetBehavior.STATE_EXPANDED -> 180f
+            else -> bottomSheet.header.imageView.rotation
+          }
+        }
+      })
+    }
+
+    bottomSheet.apply {
+      visibility = View.VISIBLE
+      // expand or collapse the bottom sheet when the header is clicked
+      header.setOnClickListener {
+        bottomSheetBehavior.state = when (bottomSheetBehavior.state) {
+          BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_EXPANDED
+          else -> BottomSheetBehavior.STATE_COLLAPSED
+        }
+      }
+      // rotate the arrow so it starts off in the correct rotation
+      header.imageView.rotation = 180f
+    }
+
+    bottomSheet.directionsListView.apply {
+      // Set the adapter for the list view
+      adapter = ArrayAdapter(
+        this@MainActivity,
+        android.R.layout.simple_list_item_1,
+        directionsList.map { it.directionText })
+      // when the user taps a maneuver, set the viewpoint to that portion of the route
+      onItemClickListener =
+        AdapterView.OnItemClickListener { _, _, position, _ ->
+          // remove any graphics that are not the two stops and the route graphic
+          if (routeGraphicsOverlay.graphics.size > 3) {
+            routeGraphicsOverlay.graphics.removeAt(routeGraphicsOverlay.graphics.size - 1)
+          }
+          // set the viewpoint to the selected maneuver
+          val geometry = directionsList[position].geometry
+          mapView.setViewpointAsync(Viewpoint(geometry.extent, 20.0), 1f)
+          // create a graphic with a symbol for the maneuver and add it to the graphics overlay
+          val selectedRouteSymbol = SimpleLineSymbol(
+            SimpleLineSymbol.Style.SOLID,
+            Color.GREEN, 5f
+          )
+          routeGraphicsOverlay.graphics.add(Graphic(geometry, selectedRouteSymbol))
+          // collapse the bottom sheet
+          bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+    // shrink the map view so it is not hidden under the bottom sheet header
+    (mainContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin =
+      bottomSheet.header.height
+  }
+
+  override fun onPause() {
+    mapView.pause()
+    super.onPause()
+  }
+
+  override fun onResume() {
+    super.onResume()
+    mapView.resume()
+  }
+
+  override fun onDestroy() {
+    mapView.dispose()
+    super.onDestroy()
+  }
+}
