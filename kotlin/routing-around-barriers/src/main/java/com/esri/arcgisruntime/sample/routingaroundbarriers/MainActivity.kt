@@ -25,8 +25,10 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.geometry.GeometryEngine
@@ -113,6 +115,8 @@ class MainActivity : AppCompatActivity() {
           addStopOrBarrier(screenPoint)
           return true
         }
+
+
       }
     }
 
@@ -152,6 +156,16 @@ class MainActivity : AppCompatActivity() {
       }
     }
     routeTask?.loadAsync()
+
+    addStopButton.setOnClickListener {
+      addStopButton.isSelected = true
+      addBarrierButton.isSelected = false
+    }
+
+    addBarrierButton.setOnClickListener {
+      addBarrierButton.isSelected = true
+      addStopButton.isSelected = false
+    }
   }
 
   private fun addStopOrBarrier(screenPoint: android.graphics.Point) {
@@ -185,11 +199,9 @@ class MainActivity : AppCompatActivity() {
       // build graphics for the barrier and add it to the graphics overlay
       barriersGraphicsOverlay.graphics.add(Graphic(bufferedBarrierPolygon, barrierSymbol))
     }
-
-    createRouteAndDisplay()
   }
 
-  private fun createRouteAndDisplay() {
+  fun createAndDisplayRoute(view: View) {
     if (stopList.size >= 2) {
       // clear the previous route from the graphics overlay, if it exists
       routeGraphicsOverlay.graphics.clear()
@@ -220,10 +232,10 @@ class MainActivity : AppCompatActivity() {
             val routeGraphic = Graphic(firstRoute.routeGeometry)
             routeGraphicsOverlay.graphics.add(routeGraphic)
 
-            //TODO routeInformationTitledPane.setText(output)
-
             // get the direction text for each maneuver and add them to the list to display
             directionsList.addAll(firstRoute.directionManeuvers)
+
+            showDirectionsInBottomSheet()
           } else {
             Toast.makeText(this, "No routes found.", Toast.LENGTH_LONG).show()
           }
@@ -237,12 +249,28 @@ class MainActivity : AppCompatActivity() {
         resetButton.isEnabled = true
       }
     } else {
-      // reset the route information title pane since no route is displayed
-      //TODO routeInformationTitledPane.setText("No route to display")
-
       // clear the directions list since no route is displayed
       directionsList.clear()
     }
+  }
+
+  fun clearRouteAndGraphics(view: View) {
+    // clear stops from route parameters and stops list
+    routeParameters?.clearStops()
+    stopList.clear()
+
+    // clear barriers from route parameters and barriers list
+    routeParameters?.clearPointBarriers()
+    barrierList.clear()
+
+    // clear the directions list
+    directionsList.clear()
+
+    // clear all graphics overlays
+    mapView.graphicsOverlays.forEach { it.graphics.clear() }
+
+    // disable reset button
+    resetButton.isEnabled = false
   }
 
   private fun createCompositeStopSymbol(stopNumber: Int): CompositeSymbol {
@@ -262,7 +290,7 @@ class MainActivity : AppCompatActivity() {
   /** Creates a bottom sheet to display a list of direction maneuvers.
    *
    */
-  private fun setupBottomSheet() {
+  private fun showDirectionsInBottomSheet() {
     // create a bottom sheet behavior from the bottom sheet view in the main layout
     val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet).apply {
       // expand the bottom sheet, and ensure it is displayed on the screen when collapsed
@@ -323,7 +351,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     // shrink the map view so it is not hidden under the bottom sheet header
-    (mainContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin =
+    (mainContainer.layoutParams as FrameLayout.LayoutParams).bottomMargin =
       bottomSheet.header.height
   }
 
