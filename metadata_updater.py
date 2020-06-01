@@ -51,7 +51,7 @@ def parse_tags(tags_string: str) -> typing.List[str]:
     """
     Parse the `Tags` section and get a list of tags.
 
-    :param tags_string: A string containing all tags, with comma as delimiter.
+    :param tags_string: A string containing all tags, with comma or newline as delimiter.
     :return: A sorted list of stripped tags.
     """
     tags = re.split(r'[,\n]', tags_string)
@@ -99,8 +99,9 @@ class MetadataUpdater:
     def get_source_code_paths(self) -> typing.List[str]:
         """
         Traverse the directory and get all filenames for source code.
+        Ignores any code files in the `/build/` directory.
 
-        :return: A list of java or kotlin source code filenames.
+        :return: A list of java or kotlin source code filenames starting from `/src/`.
         """
         results = []
         for dp, dn, filenames in os.walk(self.folder_path):
@@ -117,7 +118,7 @@ class MetadataUpdater:
 
     def get_images_paths(self):
         """
-        Traverse the directory and get all filenames for images.
+        Traverse the directory and get all filenames for images in the top level directory.
 
         :return: A list of image filenames.
         """
@@ -194,15 +195,19 @@ class MetadataUpdater:
             api_section_index = readme_parts.index('Relevant API') + 1
             tags_section_index = readme_parts.index('Tags') + 1
             self.title, self.description = parse_head(readme_parts[0])
+            # create a formal name key from a pascal case version of the title
+            # with parentheses removed.
             formal_name = ''.join(x for x in self.title.title() if not x.isspace())
             self.formal_name = re.sub('[()]','', formal_name)
+
             if check_special_char(self.title + self.description):
                 print(f'Info: special char in README - {self.folder_name}')
             self.relevant_apis = parse_apis(readme_parts[api_section_index])
             keywords = parse_tags(readme_parts[tags_section_index])
-            # De-duplicate API names in README's Tags section.
+            # Do not include relevant apis in the keywords
             self.keywords = [w for w in keywords if w not in self.relevant_apis]
 
+            # This is left in from the iOS script:
             # "It combines the Tags and the Relevant APIs in the README."
             # See /runtime/common-samples/wiki/README.metadata.json#keywords
             # self.keywords += self.relevant_apis
@@ -235,22 +240,20 @@ class MetadataUpdater:
         data["ignore"] = self.ignore
         data["images"] = self.images
         data["keywords"] = self.keywords
+        # ignore provisioning keys if they don't exist
         if self.provision_from:
              data["provision_from"] = self.provision_from
              data["provision_to"] = self.provision_to
+        # ignore redirect from key if it is empty
         if self.redirect_from and self.redirect_from[0] is not '':
             data["redirect_from"] = self.redirect_from
         data["relevant_apis"] = self.relevant_apis
         data["snippets"] = self.snippets
         data["title"] = self.title
 
-        print("Metadata file: ")
-        for key in data:
-            print(key, ": ", data[key], "\n")
-
-        # with open(path_to_json, 'w+') as json_file:
-        #     json.dump(data, json_file, indent=4, sort_keys=True)
-        #     json_file.write('\n')
+        with open(path_to_json, 'w+') as json_file:
+            json.dump(data, json_file, indent=4, sort_keys=True)
+            json_file.write('\n')
 
 
 def update_1_sample():
@@ -258,8 +261,7 @@ def update_1_sample():
     A handy helper function to fix 1 sample's metadata by running the script
     without passing in arguments, and write to a separate json for comparison.
     """
-    path = '～/arcgis-runtime-samples-ios/arcgis-ios-sdk-samples/Features' \
-           '/Feature layer selection '
+    path = './kotlin/integrated-windows-authentication'
     single_updater = MetadataUpdater(path)
     try:
         single_updater.populate_from_json()
@@ -273,10 +275,10 @@ def update_1_sample():
 
 def main():
     # Initialize parser.
-    msg = 'Metadata helper script. Run it against the top level folder of a ' \
-          'category. More descriptions to add here... '
+    msg = 'Metadata helper script. Run it against the top level folder of an ' \
+          'Android platform language (ie. kotlin or java). More descriptions to add here... '
     parser = argparse.ArgumentParser(description=msg)
-    parser.add_argument('-i', '--input', help='input directory of the category')
+    parser.add_argument('-i', '--input', help='input directory of the language')
     args = parser.parse_args()
 
     if args.input:
@@ -297,6 +299,7 @@ def main():
                 continue
             updater.flush_to_json(updater.json_path)
     else:
+        update_1_sample()
         print('Invalid arguments, abort.')
 
 
