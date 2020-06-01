@@ -28,7 +28,6 @@ import android.widget.ArrayAdapter
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.geometry.GeometryEngine
@@ -55,6 +54,7 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.bottom_sheet.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import kotlin.math.roundToInt
 
@@ -118,11 +118,6 @@ class MainActivity : AppCompatActivity() {
 
 
       }
-    }
-
-    // show the options sheet when the floating action button is clicked
-    fab.setOnClickListener {
-      fab.isExpanded = !fab.isExpanded
     }
 
     // create a new picture marker from a pin drawable
@@ -350,8 +345,9 @@ class MainActivity : AppCompatActivity() {
           bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
+
     // shrink the map view so it is not hidden under the bottom sheet header
-    (mainContainer.layoutParams as FrameLayout.LayoutParams).bottomMargin =
+    (mainContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin =
       bottomSheet.header.height
   }
 

@@ -1,128 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mainContainer"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@android:drawable/ic_menu_manage"
-        app:elevation="16dp"
-        app:layout_anchor="@+id/bottomSheet"
-        app:layout_anchorGravity="top|end"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <FrameLayout
+        android:id="@+id/mainContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-
-    <com.google.android.material.circularreveal.CircularRevealFrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="32dp"
-        android:background="@android:color/white"
-        android:visibility="invisible"
-        app:layout_behavior="com.google.android.material.transformation.FabTransformationSheetBehavior">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/instructionsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/instructions"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/addStopButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add stop"
-                app:layout_constraintEnd_toStartOf="@+id/addBarrierButton"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/instructionsTextView"
-                tools:text="Add stop" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/addBarrierButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add barrier"
-                app:layout_constraintEnd_toStartOf="@+id/resetButton"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/addStopButton"
-                app:layout_constraintTop_toBottomOf="@+id/instructionsTextView" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/resetButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Reset"
-                android:onClick="clearRouteAndGraphics"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/addBarrierButton"
-                app:layout_constraintTop_toBottomOf="@+id/instructionsTextView" />
-
-            <CheckBox
-                android:id="@+id/reorderCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Allow stops to be re-ordered"
-                app:layout_constraintStart_toStartOf="@+id/addStopButton"
-                app:layout_constraintTop_toBottomOf="@+id/addStopButton" />
-
-            <CheckBox
-                android:id="@+id/preserveFirstStopCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:text="Preserve first stop"
-                app:layout_constraintStart_toStartOf="@+id/reorderCheckBox"
-                app:layout_constraintTop_toBottomOf="@+id/reorderCheckBox" />
-
-            <CheckBox
-                android:id="@+id/preserveLastStopCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Preserve last stop"
-                app:layout_constraintStart_toStartOf="@+id/preserveFirstStopCheckBox"
-                app:layout_constraintTop_toBottomOf="@+id/preserveFirstStopCheckBox"
-                tools:text="Preserve last stop" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/solveRouteButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Solve route"
-                android:onClick="createAndDisplayRoute"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/preserveFirstStopCheckBox"
-                app:layout_constraintTop_toBottomOf="@+id/reorderCheckBox" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </com.google.android.material.circularreveal.CircularRevealFrameLayout>
+    </FrameLayout>
 
     <include
         android:id="@+id/bottomSheet"

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottomSheetLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -34,6 +35,94 @@
             app:layout_constraintBottom_toBottomOf="@+id/headerTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_expand_less_black_24dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/instructionsTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/instructions"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/addStopButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add stop"
+            app:layout_constraintEnd_toStartOf="@+id/addBarrierButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/instructionsTextView"
+            tools:text="Add stop" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/addBarrierButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add barrier"
+            app:layout_constraintEnd_toStartOf="@+id/resetButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/addStopButton"
+            app:layout_constraintTop_toBottomOf="@+id/instructionsTextView" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/resetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="clearRouteAndGraphics"
+            android:text="Reset"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/addBarrierButton"
+            app:layout_constraintTop_toBottomOf="@+id/instructionsTextView" />
+
+        <CheckBox
+            android:id="@+id/reorderCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Allow stops to be re-ordered"
+            app:layout_constraintStart_toStartOf="@+id/addStopButton"
+            app:layout_constraintTop_toBottomOf="@+id/addStopButton" />
+
+        <CheckBox
+            android:id="@+id/preserveFirstStopCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="Preserve first stop"
+            app:layout_constraintStart_toStartOf="@+id/reorderCheckBox"
+            app:layout_constraintTop_toBottomOf="@+id/reorderCheckBox" />
+
+        <CheckBox
+            android:id="@+id/preserveLastStopCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Preserve last stop"
+            app:layout_constraintStart_toStartOf="@+id/preserveFirstStopCheckBox"
+            app:layout_constraintTop_toBottomOf="@+id/preserveFirstStopCheckBox"
+            tools:text="Preserve last stop" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/solveRouteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="createAndDisplayRoute"
+            android:text="Solve route"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/preserveFirstStopCheckBox"
+            app:layout_constraintTop_toBottomOf="@+id/reorderCheckBox" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ListView
