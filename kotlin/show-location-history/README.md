@@ -14,7 +14,7 @@ Tap the floating action button to start tracking your location, which will appea
 
 ## How it works
 
-1. If necessary, request location permission from the operating system.
+1. Request location permission from the Android operating system.
 2. Create a graphics overlay to show each point and another graphics overlay for displaying the route line.
 3. Create a `SimulatedLocationDataSource` and initialize it with a polyline. Start the `SimulatedLocationDataSource` to begin receiving location updates.
 4. Use `simulatedLocationDataSource.addLocationChangedListener {...}` to handle location updates.
