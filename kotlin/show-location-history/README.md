@@ -35,7 +35,7 @@ Tap the floating action button to start tracking your location, which will appea
 
 ## About the data
 
-A custom set of points is used to create a `Polyline` and initialize a `SimulatedLocationDataSource`. This simulated location data source enables easier testing and allows the sample to be used on devices without an actively updating GPS signal.
+A custom set of points is used to create a `Polyline` and initialize a `SimulatedLocationDataSource`. This simulated location data source enables easier testing and allows the sample to be used on devices without an actively updating GPS signal. You should use `SimulationParameters` to ensure that the data source moves at a constant velocity over the polyline.
 
 ## Tags
 
