@@ -1,6 +1,7 @@
 {
     "category": "Layers",
     "description": "Create and use a raster layer made from a local raster file.",
+    "formal_name": "RasterLayerFile",
     "ignore": false,
     "images": [
         "raster-layer-file.png"
@@ -19,13 +20,15 @@
     "provision_to": [
         "/Shasta.tif"
     ],
-    "redirect_from": "/android/latest/sample-code/raster-layer-file.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/raster-layer-file.htm"
+    ],
     "relevant_apis": [
         "Raster",
         "RasterLayer"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/rasterlayerfile/MainActivity.kt"
+        "/src/main/java/com/esri/arcgisruntime/sample/rasterlayerfile/MainActivity.kt"
     ],
     "title": "Raster layer (file)"
 }

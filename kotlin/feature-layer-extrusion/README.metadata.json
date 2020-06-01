@@ -1,26 +1,31 @@
 {
-  "category": "Visualization",
-  "description": "Apply extrusion to a renderer on a feature layer.",
-  "ignore": false,
-  "images": [
-    "feature-layer-extrusion.png"
-  ],
-  "keywords": [
-    "Visualization",
-    "FeatureLayer",
-    "ExtrusionMode",
-    "Renderer",
-    "SceneProperties"
-  ],
-  "redirect_from": "/android/latest/sample-code/feature-layer-extrusion.htm",
-  "relevant_apis": [
-    "FeatureLayer",
-    "ExtrusionMode",
-    "Renderer",
-    "SceneProperties"
-  ],
-  "snippets": [
-    "src/main/java/com/esri/arcgisruntime/sample/featurelayerextrusion/MainActivity.kt"
-  ],
-  "title": "Feature Layer Extrusion"
+    "category": "Visualization",
+    "description": "Extrude features based on their attributes.",
+    "formal_name": "FeatureLayerExtrusion",
+    "ignore": false,
+    "images": [
+        "feature-layer-extrusion.png"
+    ],
+    "keywords": [
+        "3D",
+        "extrude",
+        "extrusion",
+        "extrusion expression",
+        "height",
+        "renderer",
+        "scene"
+    ],
+    "redirect_from": [
+        "/android/latest/sample-code/feature-layer-extrusion.htm"
+    ],
+    "relevant_apis": [
+        "FeatureLayer",
+        "Renderer.SceneProperties",
+        "ServiceFeatureTable",
+        "SimpleRenderer"
+    ],
+    "snippets": [
+        "/src/main/java/com/esri/arcgisruntime/sample/featurelayerextrusion/MainActivity.kt"
+    ],
+    "title": "Feature layer extrusion"
 }

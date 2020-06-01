@@ -1,24 +1,26 @@
 {
     "category": "Analysis",
-    "description": "Measure 3D distances between two points in a scene.",
+    "description": "Measure distances between two points in 3D.",
+    "formal_name": "DistanceMeasurementAnalysis",
     "ignore": false,
     "images": [
         "distance-measurement-analysis.png"
     ],
     "keywords": [
-        "Analysis",
-        "AnalysisOverlay",
-        "LocationDistanceMeasurement",
-        "UnitSystem"
+        "3D",
+        "analysis",
+        "distance",
+        "measure"
     ],
-    "redirect_from": "/android/latest/sample-code/distance-measurement-analysis.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/distance-measurement-analysis.htm"
+    ],
     "relevant_apis": [
         "AnalysisOverlay",
-        "LocationDistanceMeasurement",
-        "UnitSystem"
+        "LocationDistanceMeasurement"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/distancemeasurementanalysis/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/distancemeasurementanalysis/MainActivity.java"
     ],
-    "title": "Distance Measurement Analysis"
+    "title": "Distance measurement analysis"
 }

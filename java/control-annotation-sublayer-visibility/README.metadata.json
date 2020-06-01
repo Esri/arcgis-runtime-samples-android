@@ -1,15 +1,17 @@
 {
     "category": "Visualization",
     "description": "Use annotation sublayers to gain finer control of annotation layer subtypes.",
+    "formal_name": "ControlAnnotationSublayerVisibility",
     "ignore": false,
     "images": [
         "control-annotation-sublayer-visibility.png"
     ],
     "keywords": [
-        "Annotation",
-        "utilities",
+        "annotation",
+        "scale",
         "text",
-        "scale"
+        "utilities",
+        "visualization"
     ],
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=b87307dcfb26411eb2e92e1627cb615b"
@@ -17,14 +19,13 @@
     "provision_to": [
         "/GasDeviceAnno.mmpk"
     ],
-    "redirect_from": "",
     "relevant_apis": [
         "AnnotationLayer",
         "AnnotationSublayer",
         "LayerContent"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/annotationsublayer/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/annotationsublayer/MainActivity.java"
     ],
     "title": "Control annotation sublayer visibility"
 }

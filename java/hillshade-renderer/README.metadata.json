@@ -1,18 +1,18 @@
 {
     "category": "Visualization",
-    "description": "Use a hillshade renderer on a raster.",
+    "description": "Apply a hillshade renderer to a raster.",
+    "formal_name": "HillshadeRenderer",
     "ignore": false,
     "images": [
         "hillshade-renderer.png"
     ],
     "keywords": [
-        "Visualization",
-        "ArcGISMap",
-        "Basemap",
-        "HillshadeRenderer",
-        "MapView",
-        "Raster",
-        "RasterLayer"
+        "altitude",
+        "angle",
+        "azimuth",
+        "raster",
+        "slope",
+        "visualization"
     ],
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=134d60f50e184e8fa56365f44e5ce3fb"
@@ -20,18 +20,19 @@
     "provision_to": [
         "/srtm.tiff"
     ],
-    "redirect_from": "/android/latest/sample-code/hillshade-renderer.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/hillshade-renderer.htm"
+    ],
     "relevant_apis": [
-        "ArcGISMap",
+        "",
         "Basemap",
         "HillshadeRenderer",
-        "MapView",
         "Raster",
         "RasterLayer"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/hillshaderenderer/ParametersDialogFragment.java",
-        "src/main/java/com/esri/arcgisruntime/sample/hillshaderenderer/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/hillshaderenderer/MainActivity.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/hillshaderenderer/ParametersDialogFragment.java"
     ],
-    "title": "Hillshade Renderer"
+    "title": "Hillshade renderer"
 }

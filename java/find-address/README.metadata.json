@@ -1,38 +1,27 @@
 {
     "category": "Search and Query",
-    "description": "Geocode an address and show it on a map view.",
+    "description": "Find the location for an address.",
+    "formal_name": "FindAddress",
     "ignore": false,
     "images": [
         "find-address.png"
     ],
     "keywords": [
-        "Search and Query",
-        "ArcGISMap",
-        "Callout",
-        "GeocodeParameters",
-        "GeocodeResult",
-        "Graphic",
-        "GraphicsOverlay",
-        "LocatorTask",
-        "MapView",
-        "PictureMarkerSymbol",
-        "Point"
+        "address",
+        "geocode",
+        "locator",
+        "search"
     ],
-    "redirect_from": "/android/latest/sample-code/find-address.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/find-address.htm"
+    ],
     "relevant_apis": [
-        "ArcGISMap",
-        "Callout",
         "GeocodeParameters",
         "GeocodeResult",
-        "Graphic",
-        "GraphicsOverlay",
-        "LocatorTask",
-        "MapView",
-        "PictureMarkerSymbol",
-        "Point"
+        "LocatorTask"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/findaddress/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/findaddress/MainActivity.java"
     ],
-    "title": "Find Address"
+    "title": "Find address"
 }

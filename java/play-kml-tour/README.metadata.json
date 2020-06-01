@@ -1,28 +1,20 @@
 {
     "category": "Visualization",
     "description": "Play tours in KML files.",
+    "formal_name": "PlayKmlTour",
     "ignore": false,
     "images": [
         "play-kml-tour.png"
     ],
     "keywords": [
-        "Visualization",
         "KML",
-        "tour",
-        "story",
+        "animation",
         "interactive",
         "narration",
-        "play",
         "pause",
-        "animation",
-        "KmlTourController",
-        "KmlTourController.Tour",
-        "KmlTourController.Play()",
-        "KmlTourController.Pause()",
-        "KmlTourController.Reset()",
-        "KmlTour",
-        "KmlTour.TourStatus",
-        "KmlTour.PropertyChanged"
+        "play",
+        "story",
+        "tour"
     ],
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=f10b1d37fdd645c9bc9b189fb546307c"
@@ -30,19 +22,18 @@
     "provision_to": [
         "/Esri_tour.kmz"
     ],
-    "redirect_from": "/android/latest/sample-code/play-a-kml-tour.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/play-a-kml-tour.htm"
+    ],
     "relevant_apis": [
-        "KmlTourController",
-        "KmlTourController.Tour",
-        "KmlTourController.Play()",
-        "KmlTourController.Pause()",
-        "KmlTourController.Reset()",
         "KmlTour",
-        "KmlTour.TourStatus",
-        "KmlTour.PropertyChanged"
+        "KmlTourController",
+        "KmlTourController.pause()",
+        "KmlTourController.play()",
+        "KmlTourController.reset()"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/playkmltour/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/playkmltour/MainActivity.java"
     ],
     "title": "Play KML tour"
 }

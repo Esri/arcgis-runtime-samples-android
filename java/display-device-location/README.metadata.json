@@ -1,28 +1,31 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "Enable Location Display and switch between different types of AutoPan Modes. It also demonstrates how to use the Android Support Library to check for, and request, location permiss",
+    "description": "Display your current position on the map, as well as switch between different types of auto pan Modes.",
+    "formal_name": "DisplayDeviceLocation",
     "ignore": false,
     "images": [
         "display-device-location.png"
     ],
     "keywords": [
-        "MapViews, SceneViews and UI",
-        "ArcGISMap",
-        "MapView",
-        "LocationDisplay",
-        "LocationDisplay.AutoPanMode"
+        "GPS",
+        "compass",
+        "location",
+        "map",
+        "mobile",
+        "navigation"
     ],
-    "redirect_from": "/android/latest/sample-code/display-device-location.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/display-device-location.htm"
+    ],
     "relevant_apis": [
         "ArcGISMap",
-        "MapView",
         "LocationDisplay",
-        "LocationDisplay.AutoPanMode"
+        "MapView"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/spinner/SpinnerAdapter.java",
-        "src/main/java/com/esri/arcgisruntime/sample/spinner/ItemData.java",
-        "src/main/java/com/esri/arcgisruntime/sample/displaydevicelocation/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/displaydevicelocation/MainActivity.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/spinner/ItemData.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/spinner/SpinnerAdapter.java"
     ],
-    "title": "Display Device Location"
+    "title": "Display device location"
 }

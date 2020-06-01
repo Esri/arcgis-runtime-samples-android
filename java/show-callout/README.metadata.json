@@ -1,24 +1,31 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "Draw a callout on a map view and manage its behavior. A callout displays an Android View that contains text and/or other content. It has a leader that points to the location the ca",
+    "description": "Show a callout with the latitude and longitude of user-tapped points.",
+    "formal_name": "ShowCallout",
     "ignore": false,
     "images": [
         "show-callout.png"
     ],
     "keywords": [
-        "MapViews, SceneViews and UI",
-        "ArcGISMap",
-        "Callout",
-        "MapView"
+        "balloon",
+        "bubble",
+        "callout",
+        "flyout",
+        "flyover",
+        "info window",
+        "popup",
+        "tap"
     ],
-    "redirect_from": "/android/latest/sample-code/show-callout.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/show-callout.htm"
+    ],
     "relevant_apis": [
-        "ArcGISMap",
         "Callout",
-        "MapView"
+        "MapView",
+        "Point"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/samples/showcallout/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/samples/showcallout/MainActivity.java"
     ],
-    "title": "Show Callout"
+    "title": "Show callout"
 }

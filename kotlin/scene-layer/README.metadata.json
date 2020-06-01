@@ -1,25 +1,26 @@
 {
-  "category": "Layers",
-  "description": "Add a scene layer to a scene.",
-  "ignore": false,
-  "images": [
-    "scene-layer.png"
-  ],
-  "keywords": [
-    "layer",
-    "scene",
-    "3D"
-  ],
-  "redirect_from": "/android/latest/sample-code/scene-layer.htm",
-  "relevant_apis": [
-    "ArcGISScene",
-    "ArcGISSceneLayer",
-    "ArcGISTileElevationSource",
-    "SceneView",
-    "Surface"
-  ],
-  "snippets": [
-    "src/main/java/com/esri/arcgisruntime/sample/scenelayer/MainActivity.kt"
-  ],
-  "title": "Scene layer"
+    "category": "Layers",
+    "description": "Add a scene layer to a scene.",
+    "formal_name": "SceneLayer",
+    "ignore": false,
+    "images": [
+        "scene-layer.png"
+    ],
+    "keywords": [
+        "3D",
+        "layer",
+        "scene"
+    ],
+    "redirect_from": [
+        "/android/latest/sample-code/scene-layer.htm"
+    ],
+    "relevant_apis": [
+        "ArcGISScene",
+        "ArcGISSceneLayer",
+        "SceneView"
+    ],
+    "snippets": [
+        "/src/main/java/com/esri/arcgisruntime/sample/scenelayer/MainActivity.kt"
+    ],
+    "title": "Scene layer"
 }

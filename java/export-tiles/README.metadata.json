@@ -1,26 +1,28 @@
 {
     "category": "Edit and Manage Data",
     "description": "Download tiles to a local tile cache file stored on the device.",
+    "formal_name": "ExportTiles",
     "ignore": false,
     "images": [
         "export-tiles.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "ExportTileCacheJob",
-        "ExportTileCacheParameters",
-        "ExportTileCacheTask",
-        "TileCache"
+        "cache",
+        "download",
+        "offline"
     ],
-    "redirect_from": "/android/latest/sample-code/export-tiles.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/export-tiles.htm"
+    ],
     "relevant_apis": [
+        "ArcGISTiledLayer",
         "ExportTileCacheJob",
         "ExportTileCacheParameters",
         "ExportTileCacheTask",
         "TileCache"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/exporttiles/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/exporttiles/MainActivity.java"
     ],
     "title": "Export tiles"
 }

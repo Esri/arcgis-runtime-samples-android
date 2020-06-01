@@ -1,25 +1,27 @@
 {
     "category": "Cloud and Portal",
-    "description": "Uses Windows credentials to access services hosted on a portal secured with Integrated Windows Authentication (IWA).",
+    "description": "Connect to an IWA secured Portal and search for maps.",
+    "formal_name": "IntegratedWindowsAuthentication",
     "ignore": false,
     "images": [
         "integrated-windows-authentication.png"
     ],
     "keywords": [
-        "Cloud and Portal",
-        "AuthenticationManager",
-        "Portal",
-        "UserCredential"
+        "Windows",
+        "authentication",
+        "security"
     ],
-    "redirect_from": "/android/latest/sample-code/integrated-windows-authentication.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/integrated-windows-authentication.htm"
+    ],
     "relevant_apis": [
         "AuthenticationManager",
         "Portal",
         "UserCredential"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/MainActivity.java",
-        "src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/PortalItemAdapter.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/MainActivity.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/PortalItemAdapter.java"
     ],
-    "title": "Integrated Windows Authentication"
+    "title": "Integrated Windows authentication"
 }

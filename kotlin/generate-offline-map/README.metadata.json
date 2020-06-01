@@ -1,6 +1,7 @@
 {
     "category": "Edit and Manage Data",
     "description": "Take a web map offline.",
+    "formal_name": "GenerateOfflineMap",
     "ignore": false,
     "images": [
         "generate-offline-map.png"
@@ -11,7 +12,9 @@
         "save",
         "web map"
     ],
-    "redirect_from": "/android/latest/sample-code/generate-offline-map.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/generate-offline-map.htm"
+    ],
     "relevant_apis": [
         "GenerateOfflineMapJob",
         "GenerateOfflineMapParameters",
@@ -20,7 +23,7 @@
         "Portal"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/generateofflinemap/MainActivity.kt"
+        "/src/main/java/com/esri/arcgisruntime/sample/generateofflinemap/MainActivity.kt"
     ],
     "title": "Generate offline map"
 }

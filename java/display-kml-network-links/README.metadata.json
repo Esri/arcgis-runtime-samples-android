@@ -1,30 +1,28 @@
 {
     "category": "Layers",
-    "description": "KML files can reference other KML files on the network as well as refresh intervals. This can be used to create a map that will periodically refresh itself with the latest data. Th",
+    "description": "Display a file with a KML network link, including displaying any network link control messages at launch.",
+    "formal_name": "DisplayKmlNetworkLinks",
     "ignore": false,
     "images": [
         "display-kml-network-links.png"
     ],
     "keywords": [
-        "Layers",
         "KML",
         "KMZ",
         "OGC",
-        "Keyhole",
-        "Network Link",
-        "Network Link Control.",
-        "KmlDataset",
-        "KmlLayer",
-        "KmlNetworkLinkMessageReceivedEvent"
+        "keyhole",
+        "network link",
+        "network link control"
     ],
-    "redirect_from": "/android/latest/sample-code/display-kml-network-links.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/display-kml-network-links.htm"
+    ],
     "relevant_apis": [
         "KmlDataset",
-        "KmlLayer",
-        "KmlNetworkLinkMessageReceivedEvent"
+        "KmlLayer"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/displaykmlnetworklinks/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/displaykmlnetworklinks/MainActivity.java"
     ],
-    "title": "Display KML Network Links"
+    "title": "Display KML network links"
 }

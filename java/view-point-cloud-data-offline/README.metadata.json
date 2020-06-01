@@ -1,13 +1,15 @@
 {
     "category": "Visualization",
     "description": "Display local 3D point cloud data.",
+    "formal_name": "ViewPointCloudDataOffline",
     "ignore": false,
     "images": [
         "view-point-cloud-data-offline.png"
     ],
     "keywords": [
-        "Visualization",
-        "PointCloudLayer"
+        "3D",
+        "lidar",
+        "point cloud"
     ],
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=34da965ca51d4c68aa9b3a38edb29e00"
@@ -15,12 +17,14 @@
     "provision_to": [
         "/sandiego-north-balboa-pointcloud.slpk"
     ],
-    "redirect_from": "/android/latest/sample-code/view-point-cloud-data-offline.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/view-point-cloud-data-offline.htm"
+    ],
     "relevant_apis": [
         "PointCloudLayer"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/samples/viewpointclouddataoffline/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/viewpointclouddataoffline/MainActivity.java"
     ],
     "title": "View point cloud data offline"
 }

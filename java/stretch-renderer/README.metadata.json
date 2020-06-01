@@ -1,16 +1,24 @@
 {
     "category": "Visualization",
-    "description": "A StretchRenderer can be used on a RasterLayer. A StretchRenderer can be used to stretch tightly grouped values across the available value spectrum, creating more contrast between ",
+    "description": "Use a stretch renderer to enhance the visual contrast of raster data for analysis.",
+    "formal_name": "StretchRenderer",
     "ignore": false,
     "images": [
         "stretch-renderer.png"
     ],
     "keywords": [
-        "Visualization",
-        "Raster",
-        "RasterLayer",
-        "StretchParameters",
-        "StretchRenderer"
+        "analysis",
+        "deviation",
+        "histogram",
+        "imagery",
+        "interpretation",
+        "min-max",
+        "percent clip",
+        "pixel",
+        "raster",
+        "stretch",
+        "symbology",
+        "visualization"
     ],
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=7c4c679ab06a4df19dc497f577f111bd"
@@ -18,16 +26,21 @@
     "provision_to": [
         "/Shasta.tif"
     ],
-    "redirect_from": "/android/latest/sample-code/stretch-renderer.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/stretch-renderer.htm"
+    ],
     "relevant_apis": [
+        "MinMaxStretchParameters",
+        "PercentClipStretchParameters",
         "Raster",
         "RasterLayer",
+        "StandardDeviationStretchParameters",
         "StretchParameters",
         "StretchRenderer"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/stretchrenderer/ParametersDialogFragment.java",
-        "src/main/java/com/esri/arcgisruntime/sample/stretchrenderer/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/stretchrenderer/MainActivity.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/stretchrenderer/ParametersDialogFragment.java"
     ],
-    "title": "Stretch Renderer"
+    "title": "Stretch renderer"
 }

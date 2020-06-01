@@ -1,6 +1,7 @@
 {
     "category": "Layers",
     "description": "Display features from a local geodatabase.",
+    "formal_name": "FeatureLayerGeodatabase",
     "ignore": false,
     "images": [
         "feature-layer-geodatabase.png"
@@ -16,14 +17,16 @@
     "provision_to": [
         "/LA_Trails.geodatabase"
     ],
-    "redirect_from": "/android/latest/sample-code/feature-layer-geodatabase.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/feature-layer-geodatabase.htm"
+    ],
     "relevant_apis": [
         "FeatureLayer",
         "Geodatabase",
         "GeodatabaseFeatureTable"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/featurelayergeodatabase/MainActivity.kt"
+        "/src/main/java/com/esri/arcgisruntime/sample/featurelayergeodatabase/MainActivity.kt"
     ],
     "title": "Feature layer (geodatabase)"
 }

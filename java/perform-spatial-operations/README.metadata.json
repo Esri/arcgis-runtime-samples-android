@@ -1,32 +1,36 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Perform geometry-on-geometry spatial operations by using GeometryEngine. Two input Polygons are added as Graphics to a GraphicsOverlay and displayed in a MapView.",
+    "description": "Find the union, intersection, or difference of two geometries.",
+    "formal_name": "PerformSpatialOperations",
     "ignore": false,
     "images": [
         "perform-spatial-operations.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "GeometryEngine.difference",
-        "GeometryEngine.intersection",
-        "GeometryEngine.symmetricDifference",
-        "GeometryEngine.union",
-        "Graphic",
-        "GraphicsOverlay",
-        "MapView.setViewpointGeometryWithPaddingAsync"
+        "analysis",
+        "combine",
+        "difference",
+        "geometry",
+        "intersection",
+        "merge",
+        "polygon",
+        "union"
     ],
-    "redirect_from": "/android/latest/sample-code/spatial-operations.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/spatial-operations.htm"
+    ],
     "relevant_apis": [
+        "Geometry",
+        "GeometryEngine",
         "GeometryEngine.difference",
         "GeometryEngine.intersection",
         "GeometryEngine.symmetricDifference",
         "GeometryEngine.union",
         "Graphic",
-        "GraphicsOverlay",
-        "MapView.setViewpointGeometryWithPaddingAsync"
+        "GraphicsOverlay"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/spatialoperations/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/performspatialoperations/MainActivity.java"
     ],
     "title": "Perform spatial operations"
 }

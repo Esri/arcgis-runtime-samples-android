@@ -1,18 +1,21 @@
 {
     "category": "Routing and Logistics",
-    "description": "Search and route using data in a map package.",
+    "description": "Display maps and use locators to enable search and routing offline using a Mobile Map Package.",
+    "formal_name": "MobileMapSearchAndRoute",
     "ignore": false,
     "images": [
         "mobile-map-search-and-route.png"
     ],
     "keywords": [
-        "Routing and Logistics",
-        "MobileMapPackage",
-        "LocatorTask",
-        "GeoCode",
-        "Route",
-        "NetworkAnalysis",
-        "Callout"
+        "disconnected",
+        "field mobility",
+        "geocode",
+        "network",
+        "network analysis",
+        "offline",
+        "routing",
+        "search",
+        "transportation"
     ],
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=260eb6535c824209964cf281766ebe43"
@@ -20,19 +23,22 @@
     "provision_to": [
         "/SanFrancisco.mmpk"
     ],
-    "redirect_from": "/android/latest/sample-code/mobile-map-search-and-route.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/mobile-map-search-and-route.htm"
+    ],
     "relevant_apis": [
+        "GeocodeResult",
         "MobileMapPackage",
-        "LocatorTask",
-        "GeoCode",
+        "ReverseGeocodeParameters",
         "Route",
-        "NetworkAnalysis",
-        "Callout"
+        "RouteParameters",
+        "RouteResult",
+        "RouteTask"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MapChooserActivity.java",
-        "src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MainActivity.java",
-        "src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MapPreview.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MainActivity.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MapChooserActivity.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MapPreview.java"
     ],
-    "title": "Mobile Map (Search and Route)"
+    "title": "Mobile map (search and route)"
 }

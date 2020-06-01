@@ -1,24 +1,30 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "Use load settings to set preferred rendering mode for feature layers, specifically static or dynamic rendering modes.",
+    "description": "Render features statically or dynamically by setting the feature layer rendering mode.",
+    "formal_name": "FeatureLayerRenderingModeMap",
     "ignore": false,
     "images": [
         "feature-layer-rendering-mode-map.png"
     ],
     "keywords": [
-        "MapViews, SceneViews and UI",
-        "FeatureLayer",
-        "FeatureLayer.RenderingMode",
-        "LoadSettings"
+        "dynamic",
+        "feature layer",
+        "features",
+        "rendering",
+        "static"
     ],
-    "redirect_from": "/android/latest/sample-code/feature-layer-rendering-mode-map.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/feature-layer-rendering-mode-map.htm"
+    ],
     "relevant_apis": [
+        "ArcGISMap",
         "FeatureLayer",
         "FeatureLayer.RenderingMode",
-        "LoadSettings"
+        "LoadSettings",
+        "MapView"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/featurelayerrenderingmodemap/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/featurelayerrenderingmodemap/MainActivity.java"
     ],
-    "title": "Feature Layer Rendering Mode (Map)"
+    "title": "Feature layer rendering mode (map)"
 }

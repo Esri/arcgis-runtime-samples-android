@@ -1,15 +1,17 @@
 {
     "category": "Layers",
     "description": "List the contents of a KML file.",
+    "formal_name": "ListKmlContents",
     "ignore": false,
     "images": [
         "list-kml-contents.png"
     ],
     "keywords": [
         "KML",
-	   "KMZ",
-	   "OGC",
-	   "Keyhole"
+        "KMZ",
+        "Keyhole",
+        "OGC",
+        "layers"
     ],
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=da301cb122874d5497f8a8f6c81eb36e"
@@ -17,22 +19,24 @@
     "provision_to": [
         "/esri_test_data.kmz"
     ],
-    "redirect_from": "/android/latest/sample-code/integrated-windows-authentication.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/integrated-windows-authentication.htm"
+    ],
     "relevant_apis": [
         "KmlContainer",
-	   "KmlDataset",
-	   "KmlDocument",
-	   "KmlFolder",
-	   "KmlGroundOverlay",
-    	"KmlLayer",
-	   "KmlNetworkLink",
-	   "KmlNode",
-    	"KmlPlacemark",
-    	"KmlScreenOverlay"
+        "KmlDataset",
+        "KmlDocument",
+        "KmlFolder",
+        "KmlGroundOverlay",
+        "KmlLayer",
+        "KmlNetworkLink",
+        "KmlNode",
+        "KmlPlacemark",
+        "KmlScreenOverlay"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/listkmlcontents/MainActivity.java",
-        "src/main/java/com/esri/arcgisruntime/sample/listkmlcontents/KmlNodeAdapter.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/listkmlcontents/KmlNodeAdapter.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/listkmlcontents/MainActivity.java"
     ],
     "title": "List KML contents"
 }

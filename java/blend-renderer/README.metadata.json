@@ -1,19 +1,19 @@
 {
     "category": "Visualization",
-    "description": "Use a BlendRenderer on a RasterLayer. BlendRenderer is used to blend elevation data with imagery, creating a 3D effect.",
+    "description": "Blend a hillshade with a raster by specifying the elevation data. The resulting raster looks similar to the original raster, but with some terrain shading, giving it a textured look.",
+    "formal_name": "BlendRenderer",
     "ignore": false,
     "images": [
         "blend-renderer.png"
     ],
     "keywords": [
-        "Visualization",
-        "ArcGISMap",
-        "Basemap",
-        "BlendRenderer",
-        "ColorRamp",
-        "MapView",
-        "Raster",
-        "RasterLayer"
+        "color ramp",
+        "elevation",
+        "hillshade",
+        "image",
+        "raster",
+        "raster layer",
+        "visualization"
     ],
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=caeef9aa78534760b07158bb8e068462"
@@ -22,19 +22,18 @@
         "/Shasta.tif",
         "/Shasta_Elevation.tif"
     ],
-    "redirect_from": "/android/latest/sample-code/blend-renderer.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/blend-renderer.htm"
+    ],
     "relevant_apis": [
-        "ArcGISMap",
-        "Basemap",
         "BlendRenderer",
         "ColorRamp",
-        "MapView",
         "Raster",
         "RasterLayer"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/blendrenderer/ParametersDialogFragment.java",
-        "src/main/java/com/esri/arcgisruntime/sample/blendrenderer/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/blendrenderer/MainActivity.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/blendrenderer/ParametersDialogFragment.java"
     ],
-    "title": "Blend Renderer"
+    "title": "Blend renderer"
 }

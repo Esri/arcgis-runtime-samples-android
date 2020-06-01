@@ -1,30 +1,32 @@
 {
     "category": "Search and Query",
-    "description": "Create a feature collection layer to show a query result from a service feature table. The feature collection is then displayed on a map with a feature collection layer.",
+    "description": "Create a feature collection layer to show a query result from a service feature table.",
+    "formal_name": "FeatureCollectionLayerQuery",
     "ignore": false,
     "images": [
         "feature-collection-layer-query.png"
     ],
     "keywords": [
-        "Search and Query",
-        "FeatureCollection",
-        "FeatureCollectionLayer",
-        "FeatureCollectionTable",
-        "FeatureQueryResult",
-        "QueryParameters",
-        "ServiceFeatureTable"
+        "layer",
+        "query",
+        "search",
+        "table"
     ],
-    "redirect_from": "/android/latest/sample-code/feature-collection-layer-query.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/feature-collection-layer-query.htm"
+    ],
     "relevant_apis": [
         "FeatureCollection",
         "FeatureCollectionLayer",
         "FeatureCollectionTable",
+        "FeatureLayer",
         "FeatureQueryResult",
+        "FeatureTable",
         "QueryParameters",
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/featurecollectionlayerquery/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/featurecollectionlayerquery/MainActivity.java"
     ],
-    "title": "Feature Collection Layer (Query)"
+    "title": "Feature collection layer (query)"
 }

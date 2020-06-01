@@ -1,19 +1,25 @@
 {
     "category": "Search and Query",
-    "description": "Use geocode functionality to search for points of interest, around a location or within an extent.",
+    "description": "Find places of interest near a location or within a specific area.",
+    "formal_name": "FindPlace",
     "ignore": false,
     "images": [
         "find-place.png"
     ],
     "keywords": [
-        "Search and Query",
-        "GeocodeParameters",
-        "GeocodeResult",
-        "LocatorTask",
-        "SuggestParameters",
-        "SuggestResult"
+        "POI",
+        "businesses",
+        "geocode",
+        "locations",
+        "locator",
+        "places of interest",
+        "point of interest",
+        "search",
+        "suggestions"
     ],
-    "redirect_from": "/android/latest/sample-code/find-place.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/find-place.htm"
+    ],
     "relevant_apis": [
         "GeocodeParameters",
         "GeocodeResult",
@@ -22,7 +28,7 @@
         "SuggestResult"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/findplace/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/findplace/MainActivity.java"
     ],
-    "title": "Find Place"
+    "title": "Find place"
 }

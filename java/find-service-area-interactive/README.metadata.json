@@ -1,23 +1,21 @@
 {
     "category": "Routing and Logistics",
     "description": "Find the service area within a network from a given point.",
+    "formal_name": "FindServiceArea",
     "ignore": false,
     "images": [
         "find-service-area-interactive.png"
     ],
     "keywords": [
-        "Routing and Logistics",
-        "facilities",
         "barriers",
+        "facilities",
         "impedance",
-        "PolylineBarrier",
-        "ServiceAreaFacility",
-        "ServiceAreaParameters",
-        "ServiceAreaPolygon",
-        "ServiceAreaResult",
-        "ServiceAreaTask"
+        "logistics",
+        "routing"
     ],
-    "redirect_from": "/android/latest/sample-code/find-service-area-interactive.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/find-service-area-interactive.htm"
+    ],
     "relevant_apis": [
         "PolylineBarrier",
         "ServiceAreaFacility",
@@ -27,7 +25,7 @@
         "ServiceAreaTask"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/findserviceareainteractive/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/findserviceareainteractive/MainActivity.java"
     ],
-    "title": "Find service area (interactive)"
+    "title": "Find service area"
 }

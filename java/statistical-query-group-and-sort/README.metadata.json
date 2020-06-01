@@ -1,31 +1,40 @@
 {
     "category": "Search and Query",
-    "description": "Query a ServiceFeatureTable to get statistics for one or more specified fields. The sample queries a service feature table of US states to get the selected statistics. The results ",
+    "description": "Query a feature table for statistics, grouping and sorting by different fields.",
+    "formal_name": "StatisticalQueryGroupAndSort",
     "ignore": false,
     "images": [
         "statistical-query-group-and-sort.png"
     ],
     "keywords": [
-        "Search and Query",
-        "QueryParameters",
-        "StatisticDefinition",
-        "StatisticType",
-        "StatisticsQueryParameters",
-        "StatisticsQueryResult"
+        "correlation",
+        "data",
+        "fields",
+        "filter",
+        "group",
+        "sort",
+        "statistics",
+        "table"
     ],
-    "redirect_from": "/android/latest/sample-code/statistical-query-group-and-sort.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/statistical-query-group-and-sort.htm"
+    ],
     "relevant_apis": [
+        "Field",
+        "OrderBy",
         "QueryParameters",
+        "ServiceFeatureTable",
         "StatisticDefinition",
+        "StatisticRecord",
         "StatisticType",
         "StatisticsQueryParameters",
         "StatisticsQueryResult"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/MainActivity.java",
-        "src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/RecyclerViewAdapter.java",
-        "src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/ExpandableListViewAdapter.java",
-        "src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/ResultsActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/ExpandableListViewAdapter.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/MainActivity.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/RecyclerViewAdapter.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/ResultsActivity.java"
     ],
-    "title": "Statistical Query Group and Sort"
+    "title": "Statistical query group and sort"
 }

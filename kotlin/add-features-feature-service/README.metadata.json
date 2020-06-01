@@ -1,30 +1,27 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Add new features to an online feature service.",
+    "description": "Add features to a feature layer.",
+    "formal_name": "AddFeatures",
     "ignore": false,
     "images": [
         "add-features-feature-service.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "ArcGISMap",
-        "Feature",
-        "FeatureEditResult",
-        "FeatureLayer",
-        "MapView",
-        "ServiceFeatureTable"
+        "edit",
+        "feature",
+        "online service"
     ],
-    "redirect_from": "/android/latest/sample-code/add-features-feature-service-.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/add-features-feature-service-.htm"
+    ],
     "relevant_apis": [
-        "ArcGISMap",
         "Feature",
         "FeatureEditResult",
         "FeatureLayer",
-        "MapView",
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/addfeaturesfeatureservice/MainActivity.kt"
+        "/src/main/java/com/esri/arcgisruntime/sample/addfeaturesfeatureservice/MainActivity.kt"
     ],
-    "title": "Add features (Feature Service)"
+    "title": "Add features"
 }

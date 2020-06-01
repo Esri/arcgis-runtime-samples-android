@@ -1,18 +1,20 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "View the status of the layers on the map.",
+    "description": "Determine if a layer is currently being viewed.",
+    "formal_name": "DisplayLayerViewState",
     "ignore": false,
     "images": [
         "display-layer-view-state.png"
     ],
     "keywords": [
-        "MapViews, SceneViews and UI",
-        "ArcGISMap",
-        "LayerViewStateChangedEvent",
-        "LayerViewStateChangedListener",
-        "MapView"
+        "layer",
+        "map",
+        "status",
+        "view"
     ],
-    "redirect_from": "/android/latest/sample-code/display-layer-view-state.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/display-layer-view-state.htm"
+    ],
     "relevant_apis": [
         "ArcGISMap",
         "LayerViewStateChangedEvent",
@@ -20,7 +22,7 @@
         "MapView"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/displaylayerviewstate/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/displaylayerviewstate/MainActivity.java"
     ],
-    "title": "Display Layer View State"
+    "title": "Display layer view state"
 }

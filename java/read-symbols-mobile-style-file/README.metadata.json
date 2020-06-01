@@ -1,24 +1,16 @@
 {
     "category": "Visualization",
-    "description": "Open a mobile style (.stylx) and read its contents. Combine several symbols from the style into a single multilayer point symbol, then use it to display graphics in the map view.",
+    "description": "Combine multiple symbols from a mobile style file into a single symbol.",
+    "formal_name": "ReadSymbolsFromAMobileStyleFile",
     "ignore": false,
     "images": [
         "read-symbols-mobile-style-file.png"
     ],
     "keywords": [
-        "Visualization",
-        "advanced",
-        "symbology",
+        "advanced symbology",
+        "mobile style",
         "multilayer",
-        "mobile",
-        "style",
-        "stylx",
-        "MultilayerPointSymbol",
-        "MultilayerSymbol.createSwatchAsync(...)",
-        "SymbolLayer",
-        "SymbolStyle",
-        "SymbolStyle.getSymbolAsync(...)",
-        "SymbolStyleSearchParameters"
+        "stylx"
     ],
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=1bd036f221f54a99abc9e46ff3511cbf"
@@ -26,18 +18,16 @@
     "provision_to": [
         "/emoji-mobile.stylx"
     ],
-    "redirect_from": "",
     "relevant_apis": [
         "MultilayerPointSymbol",
-        "MultilayerSymbol.createSwatchAsync(...)",
+        "MultilayerSymbol",
         "SymbolLayer",
         "SymbolStyle",
-        "SymbolStyle.getSymbolAsync(...)",
         "SymbolStyleSearchParameters"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/readsymbolsmobilestylefile/MainActivity.java",
-        "src/main/java/com/esri/arcgisruntime/sample/readsymbolsmobilestylefile/SymbolAdapter.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/readsymbolsmobilestylefile/MainActivity.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/readsymbolsmobilestylefile/SymbolAdapter.java"
     ],
-    "title": "Read symbols mobile style file"
+    "title": "Read symbols from a mobile style file"
 }

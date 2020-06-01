@@ -1,31 +1,34 @@
 {
-  "category": "Visualization",
-  "description": "Use a symbol style to display a graphic on a graphics overlay.",
-  "ignore": false,
-  "images": [
-    "add-graphics-with-symbols.png"
-  ],
-  "keywords": [
-    "display",
-    "fill",
-    "graphics",
-    "line",
-    "marker",
-    "overlay",
-    "point",
-    "symbol"
-  ],
-  "redirect_from": "/android/latest/sample-code/add-graphics-with-symbols.htm",
-  "relevant_apis": [
-    "Geometry",
-    "Graphic",
-    "GraphicsOverlay",
-    "SimpleFillSymbol",
-    "SimpleLineSymbol",
-    "SimpleMarkerSymbol"
-  ],
-  "snippets": [
-    "src/main/java/com/esri/arcgisruntime/sample/addgraphicswithsymbols/MainActivity.kt"
-  ],
-  "title": "Add graphics with symbols"
+    "category": "Visualization",
+    "description": "Use a symbol style to display a graphic on a graphics overlay.",
+    "formal_name": "AddGraphicsWithSymbols",
+    "ignore": false,
+    "images": [
+        "add-graphics-with-symbols.png"
+    ],
+    "keywords": [
+        "display",
+        "fill",
+        "graphics",
+        "line",
+        "marker",
+        "overlay",
+        "point",
+        "symbol"
+    ],
+    "redirect_from": [
+        "/android/latest/sample-code/add-graphics-with-symbols.htm"
+    ],
+    "relevant_apis": [
+        "Geometry",
+        "Graphic",
+        "GraphicsOverlay",
+        "SimpleFillSymbol",
+        "SimpleLineSymbol",
+        "SimpleMarkerSymbol"
+    ],
+    "snippets": [
+        "/src/main/java/com/esri/arcgisruntime/sample/addgraphicswithsymbols/MainActivity.kt"
+    ],
+    "title": "Add graphics with symbols"
 }

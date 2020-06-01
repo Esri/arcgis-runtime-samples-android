@@ -1,28 +1,30 @@
 {
     "category": "Analysis",
-    "description": "A viewshed shows the visible and obstructed areas from an observer's vantage point. This sample demonstrates all of the configurable properties of a viewshed.",
+    "description": "Perform a viewshed analysis from a defined vantage point.",
+    "formal_name": "ViewshedLocation",
     "ignore": false,
     "images": [
         "viewshed-location.png"
     ],
     "keywords": [
-        "Analysis",
-        "AnalysisOverlay",
-        "ArcGISTiledElevationSource",
-        "ArcGISSceneLayer",
-        "LocationViewshed",
-        "Viewshed"
+        "3D",
+        "frustum",
+        "scene",
+        "viewshed",
+        "visibility analysis"
     ],
-    "redirect_from": "/android/latest/sample-code/viewshed-location.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/viewshed-location.htm"
+    ],
     "relevant_apis": [
         "AnalysisOverlay",
-        "ArcGISTiledElevationSource",
         "ArcGISSceneLayer",
+        "ArcGISTiledElevationSource",
         "LocationViewshed",
         "Viewshed"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/viewshedlocation/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/viewshedlocation/MainActivity.java"
     ],
-    "title": "Viewshed Location"
+    "title": "Viewshed location"
 }

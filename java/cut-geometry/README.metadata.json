@@ -1,46 +1,26 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Cut a geometry with a polyline using the GeometryEngine.",
+    "description": "Cut a geometry along a polyline.",
+    "formal_name": "CutGeometry",
     "ignore": false,
     "images": [
         "cut-geometry.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "ArcGISMap",
-        "Basemap",
-        "Geometry",
-        "GeometryEngine",
-        "Graphic",
-        "GraphicsOverlay",
-        "MapView",
-        "Point",
-        "PointCollection",
-        "Polygon",
-        "Polyline",
-        "SimpleFillSymbol",
-        "SimpleLineSymbol",
-        "SpatialReferences"
+        "cut",
+        "geometry",
+        "split"
     ],
-    "redirect_from": "/android/latest/sample-code/cut-geometry.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/cut-geometry.htm"
+    ],
     "relevant_apis": [
-        "ArcGISMap",
-        "Basemap",
-        "Geometry",
         "GeometryEngine",
-        "Graphic",
-        "GraphicsOverlay",
-        "MapView",
-        "Point",
-        "PointCollection",
         "Polygon",
-        "Polyline",
-        "SimpleFillSymbol",
-        "SimpleLineSymbol",
-        "SpatialReferences"
+        "Polyline"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/cutgeometry/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/cutgeometry/MainActivity.java"
     ],
-    "title": "Cut Geometry"
+    "title": "Cut geometry"
 }

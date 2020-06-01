@@ -1,29 +1,28 @@
 {
     "category": "Search and Query",
-    "description": "Show a balloon popup with formatted content for tapped KML features. KML supports defining HTML for popups.",
+    "description": "Show a callout with formatted content for a KML feature.",
+    "formal_name": "IdentifyKmlFeatures",
     "ignore": false,
     "images": [
         "identify-kml-features.png"
     ],
     "keywords": [
-        "Weather",
-	"NOAA",
-	"NWS",
-	"KML",
-	"KMZ", 
-	"OGC",
-	"Keyhole"
+        "KML",
+        "KMZ",
+        "Keyhole",
+        "NOAA",
+        "NWS",
+        "OGC",
+        "weather"
     ],
-    "redirect_from": "",
     "relevant_apis": [
-        "KmlLayer",
-        "KmlPlacemark",
-        "KmlPlacemark.getBalloonContent()",
+        "GeoView.identifyLayerAsync",
         "IdentifyLayerResult",
-        "GeoView.identifyLayerAsync(...)"
+        "KmlLayer",
+        "KmlPlacemark"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/identifykmlfeatures/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/identifykmlfeatures/MainActivity.java"
     ],
     "title": "Identify KML features"
 }

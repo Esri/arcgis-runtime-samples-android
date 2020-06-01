@@ -1,29 +1,32 @@
 {
-  "category": "Layers",
-  "description": "Display KML from a URL, portal item, or local KML file.",
-  "ignore": false,
-  "images": [
-      "display-kml.png"
-  ],
-  "keywords": [
-      "keyhole",
-      "KML",
-      "KMZ",
-      "OGC"
-  ],
-  "provision_from": [
-      "https://arcgisruntime.maps.arcgis.com/home/item.html?id=324e4742820e46cfbe5029ff2c32cb1f"
-  ],
-  "provision_to": [
-      "/US_State_Capitals.kml"
-  ],
-  "redirect_from": "/android/latest/sample-code/display-kml.htm",
-  "relevant_apis": [
-      "KmlDataset",
-      "KmlLayer"
-  ],
-  "snippets": [
-      "src/main/java/com/esri/arcgisruntime/sample/displaykml/MainActivity.kt"
-  ],
-  "title": "Display KML"
+    "category": "Layers",
+    "description": "Display KML from a URL, portal item, or local KML file.",
+    "formal_name": "DisplayKml",
+    "ignore": false,
+    "images": [
+        "display-kml.png"
+    ],
+    "keywords": [
+        "KML",
+        "KMZ",
+        "OGC",
+        "keyhole"
+    ],
+    "provision_from": [
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=324e4742820e46cfbe5029ff2c32cb1f"
+    ],
+    "provision_to": [
+        "/US_State_Capitals.kml"
+    ],
+    "redirect_from": [
+        "/android/latest/sample-code/display-kml.htm"
+    ],
+    "relevant_apis": [
+        "KmlDataset",
+        "KmlLayer"
+    ],
+    "snippets": [
+        "/src/main/java/com/esri/arcgisruntime/sample/displaykml/MainActivity.kt"
+    ],
+    "title": "Display KML"
 }

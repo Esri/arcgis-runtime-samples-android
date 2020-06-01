@@ -1,28 +1,33 @@
 {
     "category": "Search and Query",
-    "description": "Get a non-spatial table from an ArcGIS map image layer and query it to get related features in another table.",
+    "description": "Find features in a spatial table related to features in a non-spatial table.",
+    "formal_name": "MapImageLayerTables",
     "ignore": false,
     "images": [
         "map-image-layer-tables.png"
     ],
     "keywords": [
-        "Search and Query",
-        "ServiceFeatureTable",
-        "ArcGISMapImageLayer",
-        "LoadTablesAndLayersAsync",
-        "Tables",
-        "ArcGISMapImageSublayer"
+        "features",
+        "query",
+        "related features",
+        "search"
     ],
-    "redirect_from": "/android/latest/sample-code/map-image-layer-tables.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/map-image-layer-tables.htm"
+    ],
     "relevant_apis": [
-        "ServiceFeatureTable",
+        "ArcGISFeature",
         "ArcGISMapImageLayer",
-        "LoadTablesAndLayersAsync",
-        "Tables",
-        "ArcGISMapImageSublayer"
+        "Feature",
+        "FeatureQueryResult",
+        "QueryParameters",
+        "RelatedFeatureQueryResult",
+        "RelatedQueryParameters",
+        "RelationshipInfo",
+        "ServiceFeatureTable"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/mapimagelayertables/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/mapimagelayertables/MainActivity.java"
     ],
-    "title": "Map Image Layer Tables"
+    "title": "Map image layer tables"
 }

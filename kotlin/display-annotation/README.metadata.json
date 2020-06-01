@@ -1,27 +1,26 @@
 {
-  "category": "Layers",
-  "description": "Display annotation from a feature service URL.",
-  "ignore": false,
-  "images": [
-    "display-annotation.png"
-  ],
-  "keywords": [
-    "Layers",
-    "Annotation",
-    "Cartography",
-    "Labels",
-    "Placement",
-    "Reference scale",
-    "text",
-    "utility"
-  ],
-  "redirect_from": "",
-  "relevant_apis": [
-    "Annotation",
-    "FeatureLayer"
-  ],
-  "snippets": [
-    "src/main/java/com/esri/arcgisruntime/sample/displayannotation/MainActivity.kt"
-  ],
-  "title": "Display annotation"
+    "category": "Layers",
+    "description": "Display annotation from a feature service URL.",
+    "formal_name": "DisplayAnnotation",
+    "ignore": false,
+    "images": [
+        "display-annotation.png"
+    ],
+    "keywords": [
+        "annotation",
+        "cartography",
+        "labels",
+        "placement",
+        "reference scale",
+        "text",
+        "utility"
+    ],
+    "relevant_apis": [
+        "AnnotationLayer",
+        "FeatureLayer"
+    ],
+    "snippets": [
+        "/src/main/java/com/esri/arcgisruntime/sample/displayannotation/MainActivity.kt"
+    ],
+    "title": "Display annotation"
 }

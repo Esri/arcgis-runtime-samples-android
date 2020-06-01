@@ -1,26 +1,31 @@
 {
     "category": "Visualization",
-    "description": "Create a simple renderer and add it to a graphics overlay. Renderers define the symbology for all graphics in a graphics overlay (unless they are overridden by setting the symbol d",
+    "description": "Display common symbols for all graphics in a graphics overlay with a renderer.",
+    "formal_name": "SimpleRenderer",
     "ignore": false,
     "images": [
         "simple-renderer.png"
     ],
     "keywords": [
-        "Visualization",
-        "Graphic",
-        "GraphicsOverlay",
-        "SimpleMarkerSymbol",
-        "SimpleRenderer"
+        "graphics",
+        "marker",
+        "renderer",
+        "symbol",
+        "symbolize",
+        "symbology"
     ],
-    "redirect_from": "/android/latest/sample-code/simple-renderer.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/simple-renderer.htm"
+    ],
     "relevant_apis": [
         "Graphic",
         "GraphicsOverlay",
+        "Point",
         "SimpleMarkerSymbol",
         "SimpleRenderer"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/simplerenderer/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/simplerenderer/MainActivity.java"
     ],
-    "title": "Simple Renderer"
+    "title": "Simple renderer"
 }

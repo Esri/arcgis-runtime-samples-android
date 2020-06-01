@@ -1,44 +1,31 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Demonstrates how to densify or generalize a polyline geometry. In this example, points representing a ships location are shown at irregular intervals. One can densify the polyline ",
+    "description": "A multipart geometry can be densified by adding interpolated points at regular intervals. Generalizing multipart geometry simplifies it while preserving its general shape. Densifying a multipart geometry adds more vertices at regular intervals.",
+    "formal_name": "DensifyAndGeneralize",
     "ignore": false,
     "images": [
         "densify-and-generalize.png"
     ],
     "keywords": [
         "Edit and Manage Data",
-        "ArcGISMap",
-        "Basemap",
-        "GeometryEngine",
-        "Graphic",
-        "GraphicsOverlay",
-        "MapView",
-        "Multipoint",
-        "Point",
-        "PointCollection",
-        "Polyline",
-        "SimpleLineSymbol",
-        "SimpleMarkerSymbol",
-        "SpatialReference"
+        "densify",
+        "generalize",
+        "simplify"
     ],
-    "redirect_from": "/android/latest/sample-code/densify-and-generalize.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/densify-and-generalize.htm"
+    ],
     "relevant_apis": [
-        "ArcGISMap",
-        "Basemap",
         "GeometryEngine",
-        "Graphic",
-        "GraphicsOverlay",
-        "MapView",
         "Multipoint",
         "Point",
         "PointCollection",
         "Polyline",
         "SimpleLineSymbol",
-        "SimpleMarkerSymbol",
         "SpatialReference"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/densifygeneralize/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/densifygeneralize/MainActivity.java"
     ],
-    "title": "Densify and Generalize"
+    "title": "Densify and generalize"
 }

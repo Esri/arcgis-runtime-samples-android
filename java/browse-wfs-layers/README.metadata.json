@@ -1,39 +1,36 @@
 {
     "category": "Layers",
     "description": "Browse a WFS service for layers and add them to the map.",
+    "formal_name": "BrowseWfsLayers",
     "ignore": false,
     "images": [
         "browse-wfs-layers.png"
     ],
     "keywords": [
-        "Layers",
         "OGC",
         "WFS",
-        "feature",
-        "web",
-        "service",
         "browse",
         "catalog",
-        "WfsService",
-        "WfsServiceInfo",
-        "WfsLayerInfo",
-        "WfsFeatureTable",
-        "FeatureLayer",
-        "WfsFeatureTable.AxisOrder"
+        "feature",
+        "layers",
+        "service",
+        "web"
     ],
-    "redirect_from": "/android/latest/sample-code/browse-wfs-layers.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/browse-wfs-layers.htm"
+    ],
     "relevant_apis": [
-        "WfsService",
-        "WfsServiceInfo",
-        "WfsLayerInfo",
-        "WfsFeatureTable",
         "FeatureLayer",
-        "WfsFeatureTable.AxisOrder"
+        "WfsFeatureTable",
+        "WfsFeatureTable.AxisOrder",
+        "WfsLayerInfo",
+        "WfsService",
+        "WfsServiceInfo"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/WfsLayerInfoAdapter.java",
-        "src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/BottomSheetRecyclerView.java",
-        "src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/BottomSheetRecyclerView.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/MainActivity.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/WfsLayerInfoAdapter.java"
     ],
     "title": "Browse WFS layers"
 }

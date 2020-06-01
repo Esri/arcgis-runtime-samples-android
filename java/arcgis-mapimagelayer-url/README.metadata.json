@@ -1,26 +1,25 @@
 {
     "category": "Layers",
-    "description": "Load an ArcGIS Map Image Layer from a URL.",
+    "description": "Display a layer from an ArcGIS map image layer service.",
+    "formal_name": "ArcgisMapImageLayerUrl",
     "ignore": false,
     "images": [
         "arcgis-mapimagelayer-url.png"
     ],
     "keywords": [
-        "Layers",
-        "ArcGISMap",
-        "MapView",
-        "ArcGISMapImageLayer",
-        "Basemap"
+        "display",
+        "image",
+        "layer",
+        "map"
     ],
-    "redirect_from": "/android/latest/sample-code/arcgis-map-image-layer-url.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/arcgis-map-image-layer-url.htm"
+    ],
     "relevant_apis": [
-        "ArcGISMap",
-        "MapView",
-        "ArcGISMapImageLayer",
-        "Basemap"
+        "ArcGISMapImageLayer"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/mapimagelayer/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/mapimagelayer/MainActivity.java"
     ],
-    "title": "ArcGIS MapImageLayer URL"
+    "title": "ArcGIS map image layer URL"
 }

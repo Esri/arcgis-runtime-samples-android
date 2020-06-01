@@ -1,6 +1,7 @@
 {
     "category": "MapViews, SceneViews and UI",
     "description": "Rotate a map.",
+    "formal_name": "MapRotation",
     "ignore": false,
     "images": [
         "map-rotation.png"
@@ -11,11 +12,11 @@
         "viewpoint"
     ],
     "relevant_apis": [
-      "ArcGISMap",
-      "MapView"
+        "ArcGISMap",
+        "MapView"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/maprotation/MainActivity.kt"
+        "/src/main/java/com/esri/arcgisruntime/sample/maprotation/MainActivity.kt"
     ],
     "title": "Map rotation"
 }

@@ -1,49 +1,27 @@
 {
     "category": "Analysis",
-    "description": "Use the GeometryEngine to calculate a geodesic path between two points and measure its distance.",
+    "description": "Calculate a geodesic path between two points and measure its distance.",
+    "formal_name": "GeodesicOperations",
     "ignore": false,
     "images": [
         "geodesic-operations.png"
     ],
     "keywords": [
-        "Analysis",
-        "Geometry",
-        "Polyline",
-        "GeometryEngine",
-        "ArcGISMap",
-        "GeodeticCurveType",
-        "Geometry",
-        "GeometryEngine",
-        "Graphic",
-        "GraphicsOverlay",
-        "LinearUnit",
-        "LinearUnitId",
-        "MapView",
-        "Point",
-        "PointCollection",
-        "Polyline",
-        "SimpleLineSymbol",
-        "SimpleMarkerSymbol"
+        "",
+        "densify",
+        "distance",
+        "geodesic",
+        "geodetic"
     ],
-    "redirect_from": "/android/latest/sample-code/geodesic-operations.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/geodesic-operations.htm"
+    ],
     "relevant_apis": [
-        "ArcGISMap",
-        "GeodeticCurveType",
-        "Geometry",
-        "GeometryEngine",
-        "Graphic",
-        "GraphicsOverlay",
-        "LinearUnit",
-        "LinearUnitId",
-        "MapView",
-        "Point",
-        "PointCollection",
-        "Polyline",
-        "SimpleLineSymbol",
-        "SimpleMarkerSymbol"
+        "GeometryEngine.densifyGeodetic",
+        "GeometryEngine.lengthGeodetic"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/geodesicoperations/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/geodesicoperations/MainActivity.java"
     ],
-    "title": "Geodesic Operations"
+    "title": "Geodesic operations"
 }

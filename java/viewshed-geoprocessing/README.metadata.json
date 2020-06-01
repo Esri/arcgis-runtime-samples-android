@@ -1,24 +1,30 @@
 {
     "category": "Analysis",
-    "description": "Calculate a viewshed using a geoprocessing service.",
+    "description": "Calculate a viewshed using a geoprocessing service, in this case showing what parts of a landscape are visible from points on mountainous terrain.",
+    "formal_name": "ViewshedGeoprocessing",
     "ignore": false,
     "images": [
         "viewshed-geoprocessing.png"
     ],
     "keywords": [
-        "Analysis",
-        "FeatureCollectionTable",
-        "GeoprocessingJob",
-        "GeoprocessingTask"
+        "geoprocessing",
+        "heat map",
+        "heatmap",
+        "viewshed"
     ],
-    "redirect_from": "/android/latest/sample-code/viewshed-geoprocessing.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/viewshed-geoprocessing.htm"
+    ],
     "relevant_apis": [
         "FeatureCollectionTable",
+        "GeoprocessingFeatures",
         "GeoprocessingJob",
+        "GeoprocessingParameters",
+        "GeoprocessingResult",
         "GeoprocessingTask"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/viewshedgeoprocessing/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/viewshedgeoprocessing/MainActivity.java"
     ],
-    "title": "Viewshed Geoprocessing"
+    "title": "Viewshed geoprocessing"
 }

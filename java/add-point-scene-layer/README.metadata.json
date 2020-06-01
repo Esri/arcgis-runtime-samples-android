@@ -1,24 +1,24 @@
 {
     "category": "Layers",
     "description": "View a point scene layer from a scene service.",
+    "formal_name": "AddPointSceneLayer",
     "ignore": false,
     "images": [
         "add-point-scene-layer.png"
     ],
     "keywords": [
-        "Layers",
         "3D",
-        "point",
-        "scene",
-        "layer",
-        "ArcGISSceneLayer"
+        "layers",
+        "point scene layer"
     ],
-    "redirect_from": "/android/latest/sample-code/add-point-scene-layer.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/add-point-scene-layer.htm"
+    ],
     "relevant_apis": [
         "ArcGISSceneLayer"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/addpointscenelayer/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/addpointscenelayer/MainActivity.java"
     ],
     "title": "Add point scene layer"
 }

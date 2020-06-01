@@ -1,29 +1,31 @@
 {
     "category": "Maps and Scenes",
-    "description": "Add, remove and reorder operational layers in a map.",
+    "description": "Add, remove, and reorder operational layers in a map.",
+    "formal_name": "ManageOperationalLayers",
     "ignore": false,
     "images": [
         "manage-operational-layers.png"
     ],
     "keywords": [
-        "Maps and Scenes",
-        "ArcGISMap",
-        "ArcGISMapImageLayer",
-        "MapView",
-        "LayerList"
+        "add",
+        "delete",
+        "layer",
+        "map",
+        "remove"
     ],
-    "redirect_from": "/android/latest/sample-code/manage-operational-layers.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/manage-operational-layers.htm"
+    ],
     "relevant_apis": [
         "ArcGISMap",
         "ArcGISMapImageLayer",
-        "MapView",
         "LayerList"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/MainActivity.java",
-        "src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/OperationalLayers.java",
-        "src/main/java/com/esri/arcgisruntime/sample/listviewdragginganimation/DynamicListView.java",
-        "src/main/java/com/esri/arcgisruntime/sample/listviewdragginganimation/StableArrayAdapter.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/listviewdragginganimation/DynamicListView.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/listviewdragginganimation/StableArrayAdapter.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/MainActivity.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/OperationalLayers.java"
     ],
-    "title": "Manage Operational Layers"
+    "title": "Manage operational layers"
 }

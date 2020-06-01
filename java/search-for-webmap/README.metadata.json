@@ -1,22 +1,17 @@
 {
     "category": "Edit and Manage Data",
     "description": "Find webmap portal items by using a search term.",
+    "formal_name": "SearchForWebmap",
     "ignore": false,
     "images": [
         "search-for-webmap.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "webmap",
+        "keyword",
         "query",
         "search",
-        "keyword",
-        "Portal",
-        "PortalItem",
-        "PortalQueryParameters",
-        "PortalQueryResultSet"
+        "webmap"
     ],
-    "redirect_from": "",
     "relevant_apis": [
         "Portal",
         "PortalItem",
@@ -24,8 +19,8 @@
         "PortalQueryResultSet"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/searchforwebmap/MainActivity.java",
-        "src/main/java/com/esri/arcgisruntime/sample/searchforwebmap/PortalItemAdapter.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/searchforwebmap/MainActivity.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/searchforwebmap/PortalItemAdapter.java"
     ],
     "title": "Search for webmap"
 }

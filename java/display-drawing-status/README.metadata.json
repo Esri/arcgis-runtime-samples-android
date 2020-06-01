@@ -1,30 +1,29 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "Use the DrawStatus value representing drawing state of the MapView to display an Android ProgressBar while the map is loading.",
+    "description": "Get the draw status of your map view or scene view to know when all layers in the map or scene have finished drawing.",
+    "formal_name": "DisplayDrawStatus",
     "ignore": false,
     "images": [
         "display-drawing-status.png"
     ],
     "keywords": [
-        "MapViews, SceneViews and UI",
-        "ArcGISMap",
-        "MapView",
-        "ServiceFeatureTable",
-        "DrawStatus",
-        "DrawStatusChangedEvent",
-        "DrawStatusChangedListener"
+        "draw",
+        "loading",
+        "map",
+        "render"
     ],
-    "redirect_from": "/android/latest/sample-code/display-drawing-status.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/display-drawing-status.htm"
+    ],
     "relevant_apis": [
         "ArcGISMap",
-        "MapView",
-        "ServiceFeatureTable",
         "DrawStatus",
         "DrawStatusChangedEvent",
-        "DrawStatusChangedListener"
+        "DrawStatusChangedListener",
+        "MapView"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/displaydrawingstatus/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/displaydrawingstatus/MainActivity.java"
     ],
-    "title": "Display Drawing Status"
+    "title": "Display draw status"
 }

@@ -1,28 +1,27 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "Access and add bookmarks to a map.",
+    "description": "Access and create bookmarks on a map.",
+    "formal_name": "ManageBookmarks",
     "ignore": false,
     "images": [
         "manage-bookmarks.png"
     ],
     "keywords": [
-        "MapViews, SceneViews and UI",
-        "ArcGISMap",
-        "MapView",
-        "BookmarkList",
-        "Bookmark",
-        "Viewpoint"
+        "bookmark",
+        "extent",
+        "location",
+        "zoom"
     ],
-    "redirect_from": "/android/latest/sample-code/manage-bookmarks.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/manage-bookmarks.htm"
+    ],
     "relevant_apis": [
-        "ArcGISMap",
-        "MapView",
-        "BookmarkList",
         "Bookmark",
+        "BookmarkList",
         "Viewpoint"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/managebookmarks/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/managebookmarks/MainActivity.java"
     ],
-    "title": "Manage Bookmarks"
+    "title": "Manage bookmarks"
 }

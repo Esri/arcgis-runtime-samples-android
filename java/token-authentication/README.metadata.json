@@ -1,34 +1,32 @@
 {
     "category": "Cloud and Portal",
-    "description": "This sample demonstrates how to access a web map that is secured with ArcGIS token-based authentication.",
+    "description": "Access a web map that is secured with ArcGIS token-based authentication.",
+    "formal_name": "TokenAuthentication",
     "ignore": false,
     "images": [
         "token-authentication.png"
     ],
     "keywords": [
-        "Cloud and Portal",
-        "Authentication",
-        "Security",
-        "AuthenticationManager",
-        "AuthenticationChallengeHandler",
-        "DefaultAuthenticationChallengeHandler",
-        "Portal",
-        "PortalItem",
-        "Map",
-        "MapView"
+        "authentication",
+        "cloud",
+        "portal",
+        "remember",
+        "security"
     ],
-    "redirect_from": "/android/latest/sample-code/token-authentication.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/token-authentication.htm"
+    ],
     "relevant_apis": [
-        "AuthenticationManager",
         "AuthenticationChallengeHandler",
+        "AuthenticationManager",
         "DefaultAuthenticationChallengeHandler",
-        "Portal",
-        "PortalItem",
         "Map",
-        "MapView"
+        "MapView",
+        "Portal",
+        "PortalItem"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/tokenauthentication/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/tokenauthentication/MainActivity.java"
     ],
     "title": "Token authentication"
 }

@@ -1,24 +1,31 @@
 {
     "category": "Search and Query",
-    "description": "Select geoelements in a scene layer.",
+    "description": "Identify features in a scene to select.",
+    "formal_name": "SceneLayerSelection",
     "ignore": false,
     "images": [
         "scene-layer-selection.png"
     ],
     "keywords": [
-        "Search and Query",
-        "ArcGISScene",
-        "SceneView",
-        "SceneLayer"
+        "3D",
+        "Berlin",
+        "buildings",
+        "identify",
+        "model",
+        "query",
+        "search",
+        "select"
     ],
-    "redirect_from": "/android/latest/sample-code/scene-layer-selection.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/scene-layer-selection.htm"
+    ],
     "relevant_apis": [
-        "ArcGISScene",
-        "SceneView",
-        "SceneLayer"
+        "ArcGISSceneLayer",
+        "Scene",
+        "SceneView"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/scenelayerselection/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/scenelayerselection/MainActivity.java"
     ],
-    "title": "Scene Layer Selection"
+    "title": "Scene layer selection"
 }

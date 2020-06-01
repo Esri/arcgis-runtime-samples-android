@@ -1,24 +1,39 @@
 {
     "category": "Visualization",
     "description": "Show various kinds of 3D symbols in a scene.",
+    "formal_name": "SceneSymbols",
     "ignore": false,
     "images": [
         "scene-symbols.png"
     ],
     "keywords": [
-        "Visualization",
-        "SimpleMarkerSceneSymbol",
-        "SimpleMarkerSceneSymbol.Style",
-        "SceneSymbol.AnchorPosition"
+        "3D",
+        "cone",
+        "cube",
+        "cylinder",
+        "diamond",
+        "geometry",
+        "pyramid",
+        "scene",
+        "shape",
+        "sphere",
+        "symbol",
+        "tetrahedron",
+        "tube",
+        "visualization"
     ],
-    "redirect_from": "/android/latest/sample-code/scene-symbols.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/scene-symbols.htm"
+    ],
     "relevant_apis": [
+        "Graphic",
+        "GraphicsOverlay",
+        "SceneSymbol.AnchorPosition",
         "SimpleMarkerSceneSymbol",
-        "SimpleMarkerSceneSymbol.Style",
-        "SceneSymbol.AnchorPosition"
+        "SimpleMarkerSceneSymbol.Style"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/scenesymbols/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/scenesymbols/MainActivity.java"
     ],
     "title": "Scene symbols"
 }

@@ -1,14 +1,14 @@
 {
     "category": "Edit and Manage Data",
     "description": "Opens and displays a scene from a Mobile Scene Package (.mspk).",
+    "formal_name": "OpenMobileScenePackage",
     "ignore": false,
     "images": [
         "open-mobile-scene-package.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "MobileScenePackage",
-        "SceneView"
+        "offline",
+        "scene"
     ],
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=7dd2f97bb007466ea939160d0de96a9d"
@@ -16,13 +16,15 @@
     "provision_to": [
         "/philadelphia.mspk"
     ],
-    "redirect_from": "/android/latest/sample-code/open-mobile-scene-package.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/open-mobile-scene-package.htm"
+    ],
     "relevant_apis": [
         "MobileScenePackage",
         "SceneView"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/openmobilescenepackage/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/openmobilescenepackage/MainActivity.java"
     ],
     "title": "Open mobile scene package"
 }

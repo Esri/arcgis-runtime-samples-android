@@ -1,26 +1,31 @@
 {
     "category": "Visualization",
-    "description": "Use a unique value renderer to style different features in a feature layer with different symbols. Features do not have a symbol property for you to set, renderers should be used t",
+    "description": "Render features in a layer using a distinct symbol for each unique attribute value.",
+    "formal_name": "UniqueValueRenderer",
     "ignore": false,
     "images": [
         "unique-value-renderer.png"
     ],
     "keywords": [
-        "Visualization",
-        "ServiceFeatureTable",
-        "SimpleFillSymbol",
-        "SimpleLineSymbol",
-        "UniqueValueRenderer"
+        "draw",
+        "renderer",
+        "symbol",
+        "symbology",
+        "values"
     ],
-    "redirect_from": "/android/latest/sample-code/unique-value-renderer.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/unique-value-renderer.htm"
+    ],
     "relevant_apis": [
+        "FeatureLayer",
         "ServiceFeatureTable",
         "SimpleFillSymbol",
         "SimpleLineSymbol",
+        "UniqueValue",
         "UniqueValueRenderer"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/uniquevaluerenderer/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/uniquevaluerenderer/MainActivity.java"
     ],
-    "title": "Unique Value Renderer"
+    "title": "Unique value renderer"
 }

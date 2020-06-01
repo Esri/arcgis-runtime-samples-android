@@ -1,28 +1,26 @@
 {
-  "category": "Layers",
-  "description": "Display a layer from a Web Map Tile Service.",
-  "ignore": false,
-  "images": [
-    "wmts-layer.png"
-  ],
-  "keywords": [
-    "Layers",
-    "ArcGISMap",
-    "Basemap",
-    "MapView",
-    "WmtsLayer",
-    "WmtsService"
-  ],
-  "redirect_from": "",
-  "relevant_apis": [
-    "ArcGISMap",
-    "Basemap",
-    "MapView",
-    "WmtsLayer",
-    "WmtsService"
-  ],
-  "snippets": [
-    "src/main/java/com/esri/arcgisruntime/sample/wmtslayer/MainActivity.kt"
-  ],
-  "title": "WMTS Layer"
+    "category": "Layers",
+    "description": "Display a layer from a Web Map Tile Service.",
+    "formal_name": "WmtsLayer",
+    "ignore": false,
+    "images": [
+        "wmts-layer.png"
+    ],
+    "keywords": [
+        "OGC",
+        "layer",
+        "raster",
+        "tiled",
+        "web map tile service"
+    ],
+    "relevant_apis": [
+        "WmtsLayer",
+        "WmtsLayerInfo",
+        "WmtsService",
+        "WmtsServiceInfo"
+    ],
+    "snippets": [
+        "/src/main/java/com/esri/arcgisruntime/sample/wmtslayer/MainActivity.kt"
+    ],
+    "title": "WMTS layer"
 }

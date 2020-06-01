@@ -1,28 +1,27 @@
 {
     "category": "Maps and Scenes",
-    "description": "Start a Map app with a defined initial area using a Viewpoint created with an Envelope which defines the initial area.",
+    "description": "Display the map at an initial viewpoint representing a bounding geometry.",
+    "formal_name": "SetInitialMapArea",
     "ignore": false,
     "images": [
         "set-initial-map-area.png"
     ],
     "keywords": [
-        "Maps and Scenes",
-        "ArcGISMap",
-        "MapView",
-        "SpatialReference",
-        "Envelope",
-        "Viewpoint"
+        "extent",
+        "zoom"
     ],
-    "redirect_from": "/android/latest/sample-code/set-initial-map-area.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/set-initial-map-area.htm"
+    ],
     "relevant_apis": [
         "ArcGISMap",
-        "MapView",
-        "SpatialReference",
         "Envelope",
+        "MapView",
+        "Point",
         "Viewpoint"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/setinitialmaparea/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/setinitialmaparea/MainActivity.java"
     ],
-    "title": "Set Initial Map Area"
+    "title": "Set initial map area"
 }

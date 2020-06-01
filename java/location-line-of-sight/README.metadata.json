@@ -1,28 +1,27 @@
 {
     "category": "Analysis",
-    "description": "Perform a line of sight analysis between two points in a SceneView.",
+    "description": "Perform a line of sight analysis between two points in real time.",
+    "formal_name": "LocationLineOfSight",
     "ignore": false,
     "images": [
         "location-line-of-sight.png"
     ],
     "keywords": [
-        "Analysis",
-        "AnalysisOverlay",
-        "ArcGISTiledElevationSource",
-        "LocationLineOfSight",
-        "SceneView",
-        "Surface"
+        "3D",
+        "line of sight",
+        "visibility",
+        "visibility analysis"
     ],
-    "redirect_from": "/android/latest/sample-code/location-line-of-sight.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/location-line-of-sight.htm"
+    ],
     "relevant_apis": [
         "AnalysisOverlay",
-        "ArcGISTiledElevationSource",
         "LocationLineOfSight",
-        "SceneView",
-        "Surface"
+        "SceneView"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/locationlineofsight/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/locationlineofsight/MainActivity.java"
     ],
-    "title": "Location Line of Sight"
+    "title": "Location line of sight"
 }

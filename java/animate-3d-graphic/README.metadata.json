@@ -1,38 +1,38 @@
 {
     "category": "Visualization",
-    "description": "Animate a graphic's position and orientation and follow it with the camera.",
+    "description": "A camera follows a graphic while the graphic's position and rotation are animated.",
+    "formal_name": "Animate3DGraphic",
     "ignore": false,
     "images": [
         "animate-3d-graphic.png"
     ],
     "keywords": [
-        "Visualization",
-        "Camera",
-        "GlobeCameraController",
-        "Graphic",
-        "GraphicsOverlay",
-        "LayerSceneProperties.SurfacePlacement",
-        "ModelSceneSymbol",
-        "OrbitGeoElementCameraController",
-        "Renderer",
-        "SceneView",
-        "Viewpoint"
+        "animation",
+        "camera",
+        "heading",
+        "pitch",
+        "roll",
+        "rotation",
+        "visualize"
     ],
-    "redirect_from": "/android/latest/sample-code/animate-3d-graphic.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/animate-3d-graphic.htm"
+    ],
     "relevant_apis": [
+        "ArcGISScene",
         "Camera",
         "GlobeCameraController",
         "Graphic",
         "GraphicsOverlay",
-        "LayerSceneProperties.SurfacePlacement",
         "ModelSceneSymbol",
         "OrbitGeoElementCameraController",
         "Renderer",
+        "SceneProperties",
         "SceneView",
-        "Viewpoint"
+        "SurfacePlacement"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/animate3dgraphic/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/animate3dgraphic/MainActivity.java"
     ],
-    "title": "Animate 3D Graphic"
+    "title": "Animate 3D graphic"
 }

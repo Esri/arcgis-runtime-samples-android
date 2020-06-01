@@ -1,34 +1,36 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Add, delete or fetch attachments for a specific feature in a feature layer.",
+    "description": "Add, delete, and download attachments for features from a service.",
+    "formal_name": "EditFeatureAttachments",
     "ignore": false,
     "images": [
         "edit-feature-attachments.png"
     ],
     "keywords": [
         "Edit and Manage Data",
-        "ServiceFeatureTable",
-        "FeatureLayer",
-        "FetchAttachmentsAsync",
-        "FetchDataAsync",
-        "DeleteAttachmentAsync",
-        "UpdateFeatureAsync",
-        "ApplyEditsAsync"
+        "JPEG",
+        "PDF",
+        "PNG",
+        "TXT",
+        "image",
+        "picture"
     ],
-    "redirect_from": "/android/latest/sample-code/edit-feature-attachments.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/edit-feature-attachments.htm"
+    ],
     "relevant_apis": [
-        "ServiceFeatureTable",
+        "ArcGISFeature.deleteAttachmentAsync",
+        "ArcGISFeature.fetchAttachmentsAsync",
+        "Attachment.fetchDataAsync",
         "FeatureLayer",
-        "FetchAttachmentsAsync",
-        "FetchDataAsync",
-        "DeleteAttachmentAsync",
-        "UpdateFeatureAsync",
-        "ApplyEditsAsync"
+        "ServiceFeatureTable",
+        "ServiceFeatureTable.applyEditsAsync",
+        "ServiceFeatureTable.updateFeatureAsync"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/arrayadapter/CustomList.java",
-        "src/main/java/com/esri/arcgisruntime/sample/editfeatureattachments/EditAttachmentActivity.java",
-        "src/main/java/com/esri/arcgisruntime/sample/editfeatureattachments/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/sample/arrayadapter/CustomList.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/editfeatureattachments/EditAttachmentActivity.java",
+        "/src/main/java/com/esri/arcgisruntime/sample/editfeatureattachments/MainActivity.java"
     ],
     "title": "Edit feature attachments"
 }
