@@ -17,8 +17,8 @@ Tap the floating action button to start tracking your location, which will appea
 1. Request location permission from the Android operating system.
 2. Create a graphics overlay to show each point and another graphics overlay to display the route polyline.
 3. Create a `SimulatedLocationDataSource` and initialize it with a polyline. Start the `SimulatedLocationDataSource` to begin receiving location updates.
-4. Use `simulatedLocationDataSource.addLocationChangedListener {...}` to handle location updates.
-5. Every time the location updates, store that location, display a point on the map, and recreate the route line.
+4. Use a `LocationChangedListener` on the `simulatedLocationDataSource` to get location updates. 
+5. On location updates, store that location, display the location as a point on the map, and recreate the route polyline.
 
 ## Relevant API
 
