@@ -11,7 +11,7 @@ Tap on the refresh button in the top right of the screen to reload the ArcGISMap
 ## How it works
 
 1. Create an `ArcGISMap` and add it to a `MapView`.
-2. Use `ArcGISMap.addLoadStatusChangedListener()` or `ArcGISMap.getNewLoadStatus()` to 	query the map's load status.
+2. Use `ArcGISMap.addLoadStatusChangedListener()` or `ArcGISMap.getNewLoadStatus()` to query the map's load status.
 
 The `LoadStatus` is `LOADED` when any of the following criteria are met:
 
