@@ -2,7 +2,7 @@
 
 Display your location history on the map.
 
-![Image of show location history](show-location-history.jpg)
+![Image of show location history](show-location-history.png)
 
 ## Use case
 
