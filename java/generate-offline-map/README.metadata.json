@@ -20,7 +20,7 @@
         "OfflineMapTask"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/generateofflinemap/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/generateofflinemap/MainActivity.java"
     ],
     "title": "Generate Offline Map"
 }
