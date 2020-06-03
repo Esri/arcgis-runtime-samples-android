@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
   private TextView mPortalNameText;
   private TextView mCreateDate;
   private ImageView mUserImage;
+  private Portal mPortal;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -63,19 +64,19 @@ public class MainActivity extends AppCompatActivity {
 
     // Set loginRequired to true always prompt for credential,
     // When set to false to only login if required by the portal
-    final Portal portal = new Portal(getString(R.string.portal_url), true);
-    portal.addDoneLoadingListener(() -> {
-      if (portal.getLoadStatus() == LoadStatus.LOADED) {
+    mPortal = new Portal(getString(R.string.portal_url), true);
+    mPortal.addDoneLoadingListener(() -> {
+      if (mPortal.getLoadStatus() == LoadStatus.LOADED) {
         // Get the portal information
-        PortalInfo portalInformation = portal.getPortalInfo();
+        PortalInfo portalInformation = mPortal.getPortalInfo();
         String portalName = portalInformation.getPortalName();
         mPortalNameText = (TextView) findViewById(R.id.portal);
         mPortalNameText.setText(portalName);
 
         // this portal does not require authentication, if null send toast message
-        if (portal.getUser() != null) {
+        if (mPortal.getUser() != null) {
           // Get the authenticated portal user
-          PortalUser user = portal.getUser();
+          PortalUser user = mPortal.getUser();
           // get the users full name
           String userName = user.getFullName();
           // update the textview
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     });
-    portal.loadAsync();
+    mPortal.loadAsync();
   }
 }
 
