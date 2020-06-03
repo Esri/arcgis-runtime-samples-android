@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
   private final String TAG = MainActivity.class.getSimpleName();
   private MapView mMapView;
+  private WmtsService mWmtsService;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +48,11 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap();
     mMapView.setMap(map);
     // create wmts service from url string
-    WmtsService wmtsService = new WmtsService(getString(R.string.wmts_url));
-    wmtsService.addDoneLoadingListener(() -> {
-      if (wmtsService.getLoadStatus() == LoadStatus.LOADED) {
+    mWmtsService = new WmtsService(getString(R.string.wmts_url));
+    mWmtsService.addDoneLoadingListener(() -> {
+      if (mWmtsService.getLoadStatus() == LoadStatus.LOADED) {
         // get service info
-        WmtsServiceInfo wmtsServiceInfo = wmtsService.getServiceInfo();
+        WmtsServiceInfo wmtsServiceInfo = mWmtsService.getServiceInfo();
         // get the first layer id
         List<WmtsLayerInfo> layerInfoList = wmtsServiceInfo.getLayerInfos();
         // create WMTS layer from layer info
@@ -59,12 +60,12 @@ public class MainActivity extends AppCompatActivity {
         // set the basemap of the map with WMTS layer
         map.setBasemap(new Basemap(wmtsLayer));
       } else {
-        String error = "Error loading WMTS Service: " + wmtsService.getLoadError();
+        String error = "Error loading WMTS Service: " + mWmtsService.getLoadError();
         Log.e(TAG, error);
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
       }
     });
-    wmtsService.loadAsync();
+    mWmtsService.loadAsync();
   }
 
   @Override
