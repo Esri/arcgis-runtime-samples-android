@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private ArcGISMap mMap;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private GeoPackage mGeoPackage;
 
   @Override

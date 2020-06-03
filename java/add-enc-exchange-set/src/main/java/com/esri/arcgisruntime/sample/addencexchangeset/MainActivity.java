@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private Envelope mCompleteExtent;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private EncExchangeSet mEncExchangeSet;
 
   @Override

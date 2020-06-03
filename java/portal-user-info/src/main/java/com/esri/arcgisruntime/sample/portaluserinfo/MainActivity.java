@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
   private TextView mPortalNameText;
   private TextView mCreateDate;
   private ImageView mUserImage;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private Portal mPortal;
 
   @Override

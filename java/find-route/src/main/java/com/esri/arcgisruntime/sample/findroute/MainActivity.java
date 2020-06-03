@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
   private DrawerLayout mDrawerLayout;
   private ListView mDrawerList;
   private ActionBarDrawerToggle mDrawerToggle;
+
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private PictureMarkerSymbol mPinSourceSymbol;
   private PictureMarkerSymbol mPinDestinationSymbol;
 

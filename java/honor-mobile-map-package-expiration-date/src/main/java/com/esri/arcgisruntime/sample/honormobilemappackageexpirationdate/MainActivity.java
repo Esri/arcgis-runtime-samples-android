@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private TextView mExpirationMessageTextView;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private MobileMapPackage mMobileMapPackage;
 
   @Override

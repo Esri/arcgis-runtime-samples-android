@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
   private GraphicsOverlay mInputGraphicsOverlay;
   private GraphicsOverlay mResultGraphicsOverlay;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private FeatureCollectionTable mFeatureCollectionTable;
 
   @Override

@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
   GraphicsOverlay mGraphicsOverlay;
   String mArcGISTempFolderPath;
   String mPinBlankOrangeFilePath;
+
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private PictureMarkerSymbol mCampsiteSymbol;
   private PictureMarkerSymbol mPinStarBlueSymbol;
   private PictureMarkerSymbol mPinBlankOrangeSymbol;

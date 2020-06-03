@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
   private boolean mHasConfiguredScene = false;
 
   private ArcGISArView mArView;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private MobileScenePackage mMobileScenePackage;
 
   @Override

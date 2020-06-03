@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
   private GraphicsOverlay mSceneOverlay;
   private OrbitGeoElementCameraController mOrbitPlaneCameraController;
   private OrbitLocationCameraController mOrbitLocationCameraController;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private ModelSceneSymbol mModelSceneSymbol;
 
   @Override

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
   private MapView mMapView;
 
   private UserCredential mUserCredential;
-
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private Portal mPortal;
 
   @Override

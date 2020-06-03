@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private SceneView mSceneView;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private PointCloudLayer mPointCloudLayer;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {

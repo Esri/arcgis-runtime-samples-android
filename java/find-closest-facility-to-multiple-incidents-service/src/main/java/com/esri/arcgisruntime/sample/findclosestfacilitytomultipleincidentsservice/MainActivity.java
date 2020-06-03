@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private ClosestFacilityTask mClosestFacilityTask;
 
   @Override

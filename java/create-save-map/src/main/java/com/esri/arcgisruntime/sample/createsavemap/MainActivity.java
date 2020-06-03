@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
   private ListView mLayerListView;
   private CharSequence mDrawerTitle;
   private ActionBarDrawerToggle mDrawerToggle;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private Portal mPortal;
 
   @Override

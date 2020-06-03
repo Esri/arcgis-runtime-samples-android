@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
   private BottomSheetBehavior<View> mBottomSheetBehavior;
 
   private WfsLayerInfo mSelectedWfsLayerInfo;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private WfsService mWfsService;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {

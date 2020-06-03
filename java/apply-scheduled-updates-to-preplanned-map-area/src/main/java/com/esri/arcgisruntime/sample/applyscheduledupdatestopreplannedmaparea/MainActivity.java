@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
   private TextView mUpdateAvailableTextView;
   private TextView mUpdateSizeTextView;
   private Button mApplyScheduledUpdatesButton;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private MobileMapPackage mMobileMapPackage;
   private MobileMapPackage mUpdatedMobileMapPackage;
 

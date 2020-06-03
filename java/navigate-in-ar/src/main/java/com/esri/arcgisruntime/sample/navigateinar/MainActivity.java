@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
   private Point mStartPoint;
   private Point mEndPoint;
+
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private RouteTask mRouteTask;
 
   @Override
