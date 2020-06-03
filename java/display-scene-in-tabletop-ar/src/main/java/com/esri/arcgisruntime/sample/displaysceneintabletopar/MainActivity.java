@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
   private boolean mHasConfiguredScene = false;
 
   private ArcGISArView mArView;
+  private MobileScenePackage mMobileScenePackage;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -117,16 +118,16 @@ public class MainActivity extends AppCompatActivity {
    */
   private void loadSceneFromPackage(Plane plane) {
     // create a mobile scene package from a path a local .mspk
-    MobileScenePackage mobileScenePackage = new MobileScenePackage(
+    mMobileScenePackage = new MobileScenePackage(
         getExternalFilesDir(null) + getString(R.string.philadelphia_mobile_scene_package_path));
     // load the mobile scene package
-    mobileScenePackage.loadAsync();
-    mobileScenePackage.addDoneLoadingListener(() -> {
+    mMobileScenePackage.loadAsync();
+    mMobileScenePackage.addDoneLoadingListener(() -> {
       // if it loaded successfully and the mobile scene package contains a scene
-      if (mobileScenePackage.getLoadStatus() == LoadStatus.LOADED && !mobileScenePackage.getScenes()
+      if (mMobileScenePackage.getLoadStatus() == LoadStatus.LOADED && !mMobileScenePackage.getScenes()
           .isEmpty()) {
         // get a reference to the first scene in the mobile scene package, which is of a section of philadelphia
-        ArcGISScene philadelphiaScene = mobileScenePackage.getScenes().get(0);
+        ArcGISScene philadelphiaScene = mMobileScenePackage.getScenes().get(0);
         // set the clipping distance for the scene
         mArView.setClippingDistance(400);
         // add the scene to the AR view's scene view
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         // set translation factor and origin camera for scene placement in AR
         updateTranslationFactorAndOriginCamera(philadelphiaScene, plane);
       } else {
-        String error = "Failed to load mobile scene package: " + mobileScenePackage.getLoadError()
+        String error = "Failed to load mobile scene package: " + mMobileScenePackage.getLoadError()
             .getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
