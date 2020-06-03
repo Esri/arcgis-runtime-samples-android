@@ -31,6 +31,7 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
+  private WebTiledLayer mWebTiledLayer;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +45,15 @@ public class MainActivity extends AppCompatActivity {
     List<String> subDomains = Arrays.asList("a", "b", "c", "d");
 
     // build the web tiled layer from stamen
-    final WebTiledLayer webTiledLayer = new WebTiledLayer(getString(R.string.template_uri_stamen), subDomains);
-    webTiledLayer.loadAsync();
-    webTiledLayer.addDoneLoadingListener(() -> {
-      if (webTiledLayer.getLoadStatus() == LoadStatus.LOADED) {
+    mWebTiledLayer = new WebTiledLayer(getString(R.string.template_uri_stamen), subDomains);
+    mWebTiledLayer.loadAsync();
+    mWebTiledLayer.addDoneLoadingListener(() -> {
+      if (mWebTiledLayer.getLoadStatus() == LoadStatus.LOADED) {
         // use web tiled layer as Basemap
-        ArcGISMap map = new ArcGISMap(new Basemap(webTiledLayer));
+        ArcGISMap map = new ArcGISMap(new Basemap(mWebTiledLayer));
         mMapView.setMap(map);
         // custom attributes
-        webTiledLayer.setAttribution(getString(R.string.stamen_attribution));
+        mWebTiledLayer.setAttribution(getString(R.string.stamen_attribution));
       }
     });
   }
