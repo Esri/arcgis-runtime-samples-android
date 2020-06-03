@@ -21,6 +21,7 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
@@ -151,6 +152,10 @@ class MainActivity : AppCompatActivity() {
       }
     }
     routeTask?.loadAsync()
+
+    // shrink the map view so it is not hidden under the bottom sheet header
+    (mapViewContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin =
+      TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240f, resources.displayMetrics).toInt()
 
     addStopButton.setOnClickListener {
       addStopButton.isSelected = true
@@ -288,14 +293,12 @@ class MainActivity : AppCompatActivity() {
   private fun showDirectionsInBottomSheet() {
     // create a bottom sheet behavior from the bottom sheet view in the main layout
     val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet).apply {
-      // expand the bottom sheet, and ensure it is displayed on the screen when collapsed
-      state = BottomSheetBehavior.STATE_EXPANDED
-      peekHeight = bottomSheet.header.height
+      state = BottomSheetBehavior.STATE_HALF_EXPANDED
       // animate the arrow when the bottom sheet slides
       addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
           bottomSheet.header.imageView.rotation = slideOffset * 180f
-        }
+          }
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
           bottomSheet.header.imageView.rotation = when (newState) {
@@ -307,7 +310,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     bottomSheet.apply {
-      visibility = View.VISIBLE
       // expand or collapse the bottom sheet when the header is clicked
       header.setOnClickListener {
         bottomSheetBehavior.state = when (bottomSheetBehavior.state) {
@@ -345,10 +347,6 @@ class MainActivity : AppCompatActivity() {
           bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
-
-    // shrink the map view so it is not hidden under the bottom sheet header
-    (mainContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin =
-      bottomSheet.header.height
   }
 
   override fun onPause() {

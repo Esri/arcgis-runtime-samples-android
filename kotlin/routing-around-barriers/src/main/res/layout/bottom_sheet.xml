@@ -125,6 +125,14 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/directionsTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/design_default_color_background"
+        android:padding="8dp"
+        android:text="Directions:" />
+
     <ListView
         android:id="@+id/directionsListView"
         android:layout_width="match_parent"

@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <FrameLayout
-        android:id="@+id/mainContainer"
+        android:id="@+id/mapViewContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="64dp"
+        app:behavior_peekHeight="240dp"
         app:layout_behavior="@string/bottom_sheet_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
