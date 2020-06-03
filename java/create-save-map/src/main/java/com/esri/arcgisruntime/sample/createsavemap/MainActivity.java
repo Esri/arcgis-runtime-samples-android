@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
   private ListView mLayerListView;
   private CharSequence mDrawerTitle;
   private ActionBarDrawerToggle mDrawerToggle;
+  private Portal mPortal;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -228,20 +229,20 @@ public class MainActivity extends AppCompatActivity {
    */
   private void saveMap(String title, Iterable<String> tags, String description) {
     // create a portal to arcgis
-    Portal portal = new Portal("https://www.arcgis.com", true);
-    portal.addDoneLoadingListener(() -> {
-      if (portal.getLoadStatus() == LoadStatus.LOADED) {
+    mPortal = new Portal("https://www.arcgis.com", true);
+    mPortal.addDoneLoadingListener(() -> {
+      if (mPortal.getLoadStatus() == LoadStatus.LOADED) {
         // call save as async and pass portal info, as well as details of the map including title, tags and description
         ListenableFuture<PortalItem> saveAsAsyncFuture = mMapView.getMap()
-            .saveAsAsync(portal, null, title, tags, description, null, true);
+            .saveAsAsync(mPortal, null, title, tags, description, null, true);
         saveAsAsyncFuture.addDoneListener(() -> Toast.makeText(this, "Map saved to portal!", Toast.LENGTH_LONG).show());
       } else {
-        String error = "Error loading portal: " + portal.getLoadError().getMessage();
+        String error = "Error loading portal: " + mPortal.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
     });
-    portal.loadAsync();
+    mPortal.loadAsync();
   }
 
   @Override
