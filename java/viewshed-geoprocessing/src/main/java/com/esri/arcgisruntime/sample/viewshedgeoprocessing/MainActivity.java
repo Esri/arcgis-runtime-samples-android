@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
   private GraphicsOverlay mInputGraphicsOverlay;
   private GraphicsOverlay mResultGraphicsOverlay;
+  private FeatureCollectionTable mFeatureCollectionTable;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -137,20 +138,19 @@ public class MainActivity extends AppCompatActivity {
     fields.add(field);
 
     // create feature collection table for point geometry
-    final FeatureCollectionTable featureCollectionTable = new FeatureCollectionTable(fields, GeometryType.POINT,
-        point.getSpatialReference());
-    featureCollectionTable.loadAsync();
+    mFeatureCollectionTable = new FeatureCollectionTable(fields, GeometryType.POINT, point.getSpatialReference());
+    mFeatureCollectionTable.loadAsync();
 
     // create a new feature and assign the geometry
-    Feature newFeature = featureCollectionTable.createFeature();
+    Feature newFeature = mFeatureCollectionTable.createFeature();
     newFeature.setGeometry(point);
 
     // add newFeature and call performGeoprocessing on done loading
-    featureCollectionTable.addFeatureAsync(newFeature);
-    featureCollectionTable.addDoneLoadingListener(new Runnable() {
+    mFeatureCollectionTable.addFeatureAsync(newFeature);
+    mFeatureCollectionTable.addDoneLoadingListener(new Runnable() {
       @Override public void run() {
-        if (featureCollectionTable.getLoadStatus() == LoadStatus.LOADED) {
-          performGeoprocessing(featureCollectionTable);
+        if (mFeatureCollectionTable.getLoadStatus() == LoadStatus.LOADED) {
+          performGeoprocessing(mFeatureCollectionTable);
         }
       }
     });
