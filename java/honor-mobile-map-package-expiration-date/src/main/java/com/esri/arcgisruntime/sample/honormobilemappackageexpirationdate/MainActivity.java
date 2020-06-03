@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private TextView mExpirationMessageTextView;
+  private MobileMapPackage mMobileMapPackage;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -46,31 +47,30 @@ public class MainActivity extends AppCompatActivity {
     mExpirationMessageTextView = findViewById(R.id.expirationMessageTextView);
 
     // create a mobile map package from a local mmpk
-    MobileMapPackage mobileMapPackage = new MobileMapPackage(
-        getExternalFilesDir(null) + getString(R.string.path_to_expired_mmpk));
+    mMobileMapPackage = new MobileMapPackage(getExternalFilesDir(null) + getString(R.string.path_to_expired_mmpk));
 
     // wait for the map package to load
-    mobileMapPackage.addDoneLoadingListener(() -> {
+    mMobileMapPackage.addDoneLoadingListener(() -> {
       // check if the map package has expiration information and if so, has it expired yet
-      if (mobileMapPackage.getExpiration() != null && mobileMapPackage.getExpiration().isExpired()) {
+      if (mMobileMapPackage.getExpiration() != null && mMobileMapPackage.getExpiration().isExpired()) {
         // define a format for the date
         SimpleDateFormat daysHoursFormat = new SimpleDateFormat("yyyy-MM-dd' at 'hh:mm:ss", Locale.US);
         // show the expiration text view
         mExpirationMessageTextView.setVisibility(View.VISIBLE);
         // set the expiration message and expiration date to the text view
         mExpirationMessageTextView.setText(getString(R.string.expiration_text,
-            mobileMapPackage.getExpiration().getMessage(),
-            daysHoursFormat.format(mobileMapPackage.getExpiration().getDateTime().getTime())));
-        if (mobileMapPackage.getExpiration().getType() == ExpirationType.ALLOW_EXPIRED_ACCESS) {
+            mMobileMapPackage.getExpiration().getMessage(),
+            daysHoursFormat.format(mMobileMapPackage.getExpiration().getDateTime().getTime())));
+        if (mMobileMapPackage.getExpiration().getType() == ExpirationType.ALLOW_EXPIRED_ACCESS) {
           // add the map to the map view
-          mMapView.setMap(mobileMapPackage.getMaps().get(0));
-        } else if (mobileMapPackage.getExpiration().getType() == ExpirationType.PREVENT_EXPIRED_ACCESS) {
+          mMapView.setMap(mMobileMapPackage.getMaps().get(0));
+        } else if (mMobileMapPackage.getExpiration().getType() == ExpirationType.PREVENT_EXPIRED_ACCESS) {
           Toast.makeText(this, "The author of this mobile map package has disallowed access after the expiration date.",
               Toast.LENGTH_LONG).show();
         }
       }
     });
-    mobileMapPackage.loadAsync();
+    mMobileMapPackage.loadAsync();
   }
 
   @Override
