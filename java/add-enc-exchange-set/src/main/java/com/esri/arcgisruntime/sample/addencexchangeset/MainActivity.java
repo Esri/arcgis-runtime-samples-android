@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private Envelope mCompleteExtent;
+  private EncExchangeSet mEncExchangeSet;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +66,13 @@ public class MainActivity extends AppCompatActivity {
     EncEnvironmentSettings.setSencDataPath(getExternalCacheDir().getPath());
 
     // create the Exchange Set passing an array of paths. Update sets can be loaded alongside base data
-    EncExchangeSet encExchangeSet = new EncExchangeSet(
+    mEncExchangeSet = new EncExchangeSet(
         Collections.singleton(getExternalFilesDir(null) + getString(R.string.enc_path)));
-    encExchangeSet.loadAsync();
-    encExchangeSet.addDoneLoadingListener(() -> {
-      if (encExchangeSet.getLoadStatus() == LoadStatus.LOADED) {
+    mEncExchangeSet.loadAsync();
+    mEncExchangeSet.addDoneLoadingListener(() -> {
+      if (mEncExchangeSet.getLoadStatus() == LoadStatus.LOADED) {
         // add each data set's Enc cell as an ENC layer
-        for (EncDataset encDataset : encExchangeSet.getDatasets()) {
+        for (EncDataset encDataset : mEncExchangeSet.getDatasets()) {
           // create an ENC layer with an ENC cell using the dataset
           EncLayer encLayer = new EncLayer(new EncCell(encDataset));
           // add the ENC layer to the map's operational layers
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
           });
         }
       } else {
-        String error = "Error loading ENC exchange set: " + encExchangeSet.getLoadError().getMessage();
+        String error = "Error loading ENC exchange set: " + mEncExchangeSet.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
