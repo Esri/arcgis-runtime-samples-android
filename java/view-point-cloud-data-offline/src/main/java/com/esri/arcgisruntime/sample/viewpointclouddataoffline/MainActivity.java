@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private SceneView mSceneView;
+  private PointCloudLayer mPointCloudLayer;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -59,24 +60,24 @@ public class MainActivity extends AppCompatActivity {
     scene.setBaseSurface(surface);
 
     // add a PointCloudLayer to the scene by passing the URI of the scene layer package to the constructor
-    PointCloudLayer pointCloudLayer = new PointCloudLayer(
+    mPointCloudLayer = new PointCloudLayer(
         getExternalFilesDir(null) + getString(R.string.scene_layer_package_location));
 
     // add a listener to perform operations when the load status of the PointCloudLayer changes
-    pointCloudLayer.addDoneLoadingListener(() -> {
-      if (pointCloudLayer.getLoadStatus() == LoadStatus.LOADED) {
+    mPointCloudLayer.addDoneLoadingListener(() -> {
+      if (mPointCloudLayer.getLoadStatus() == LoadStatus.LOADED) {
         // add the PointCloudLayer to the operational layers of the scene
-        mSceneView.getScene().getOperationalLayers().add(pointCloudLayer);
+        mSceneView.getScene().getOperationalLayers().add(mPointCloudLayer);
       } else {
         // notify user that the PointCloudLayer has failed to load
-        String error = "Point cloud layer failed to load: " + pointCloudLayer.getLoadError().getMessage();
+        String error = "Point cloud layer failed to load: " + mPointCloudLayer.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
     });
 
     // load the PointCloudLayer asynchronously
-    pointCloudLayer.loadAsync();
+    mPointCloudLayer.loadAsync();
   }
 
   @Override protected void onResume() {
