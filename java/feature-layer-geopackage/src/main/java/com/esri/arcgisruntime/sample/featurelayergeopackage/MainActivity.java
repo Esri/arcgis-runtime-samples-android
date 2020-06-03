@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private ArcGISMap mMap;
+  private GeoPackage mGeoPackage;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +53,12 @@ public class MainActivity extends AppCompatActivity {
     String geoPackagePath = getExternalFilesDir(null) + getString(R.string.aurora_co_gpkg);
 
     // Open the GeoPackage
-    GeoPackage geoPackage = new GeoPackage(geoPackagePath);
-    geoPackage.loadAsync();
-    geoPackage.addDoneLoadingListener(() -> {
-      if (geoPackage.getLoadStatus() == LoadStatus.LOADED) {
+    mGeoPackage = new GeoPackage(geoPackagePath);
+    mGeoPackage.loadAsync();
+    mGeoPackage.addDoneLoadingListener(() -> {
+      if (mGeoPackage.getLoadStatus() == LoadStatus.LOADED) {
         // Read the feature tables and get the first one
-        FeatureTable geoPackageTable = geoPackage.getGeoPackageFeatureTables().get(0);
+        FeatureTable geoPackageTable = mGeoPackage.getGeoPackageFeatureTables().get(0);
 
         // Make sure a feature table was found in the package
         if (geoPackageTable == null) {
@@ -72,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
         // Add the feature table as a layer to the map (with default symbology)
         mMap.getOperationalLayers().add(featureLayer);
       } else {
-        Toast.makeText(MainActivity.this, "GeoPackage failed to load! " + geoPackage.getLoadError(), Toast.LENGTH_LONG).show();
-        Log.e(TAG, "GeoPackage failed to load!" + geoPackage.getLoadError());
+        Toast.makeText(MainActivity.this, "GeoPackage failed to load! " + mGeoPackage.getLoadError(), Toast.LENGTH_LONG).show();
+        Log.e(TAG, "GeoPackage failed to load!" + mGeoPackage.getLoadError());
       }
     });
   }
