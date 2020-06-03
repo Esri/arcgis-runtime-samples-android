@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
   private DrawerLayout mDrawerLayout;
   private ListView mDrawerList;
   private ActionBarDrawerToggle mDrawerToggle;
+  private PictureMarkerSymbol mPinSourceSymbol;
+  private PictureMarkerSymbol mPinDestinationSymbol;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -233,20 +235,19 @@ public class MainActivity extends AppCompatActivity {
     //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from an app resource
     BitmapDrawable startDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_source);
-    final PictureMarkerSymbol pinSourceSymbol;
     try {
-      pinSourceSymbol = PictureMarkerSymbol.createAsync(startDrawable).get();
-      pinSourceSymbol.loadAsync();
-      pinSourceSymbol.addDoneLoadingListener(new Runnable() {
+      mPinSourceSymbol = PictureMarkerSymbol.createAsync(startDrawable).get();
+      mPinSourceSymbol.loadAsync();
+      mPinSourceSymbol.addDoneLoadingListener(new Runnable() {
         @Override
         public void run() {
           //add a new graphic as start point
           mSourcePoint = new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84());
-          Graphic pinSourceGraphic = new Graphic(mSourcePoint, pinSourceSymbol);
+          Graphic pinSourceGraphic = new Graphic(mSourcePoint, mPinSourceSymbol);
           mGraphicsOverlay.getGraphics().add(pinSourceGraphic);
         }
       });
-      pinSourceSymbol.setOffsetY(20);
+      mPinSourceSymbol.setOffsetY(20);
     } catch (InterruptedException e) {
       e.printStackTrace();
     } catch (ExecutionException e) {
@@ -254,20 +255,19 @@ public class MainActivity extends AppCompatActivity {
     }
     //[DocRef: END]
     BitmapDrawable endDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_destination);
-    final PictureMarkerSymbol pinDestinationSymbol;
     try {
-      pinDestinationSymbol = PictureMarkerSymbol.createAsync(endDrawable).get();
-      pinDestinationSymbol.loadAsync();
-      pinDestinationSymbol.addDoneLoadingListener(new Runnable() {
+      mPinDestinationSymbol = PictureMarkerSymbol.createAsync(endDrawable).get();
+      mPinDestinationSymbol.loadAsync();
+      mPinDestinationSymbol.addDoneLoadingListener(new Runnable() {
         @Override
         public void run() {
           //add a new graphic as end point
           mDestinationPoint = new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84());
-          Graphic destinationGraphic = new Graphic(mDestinationPoint, pinDestinationSymbol);
+          Graphic destinationGraphic = new Graphic(mDestinationPoint, mPinDestinationSymbol);
           mGraphicsOverlay.getGraphics().add(destinationGraphic);
         }
       });
-      pinDestinationSymbol.setOffsetY(20);
+      mPinDestinationSymbol.setOffsetY(20);
     } catch (InterruptedException e) {
       e.printStackTrace();
     } catch (ExecutionException e) {
