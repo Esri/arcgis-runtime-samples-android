@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
   private GraphicsOverlay mSceneOverlay;
   private OrbitGeoElementCameraController mOrbitPlaneCameraController;
   private OrbitLocationCameraController mOrbitLocationCameraController;
+  private ModelSceneSymbol mModelSceneSymbol;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
     mOrbitLocationCameraController.setCameraPitchOffset(3);
     mOrbitLocationCameraController.setCameraHeadingOffset(150);
 
-    loadModel().addDoneLoadingListener(() -> {
+    mModelSceneSymbol = loadModel();
+    mModelSceneSymbol.addDoneLoadingListener(() -> {
       // instantiate a new camera controller which orbits the plane at a set distance
       mOrbitPlaneCameraController = new OrbitGeoElementCameraController(mPlane3D, 100.0);
       mOrbitPlaneCameraController.setCameraPitchOffset(30);
