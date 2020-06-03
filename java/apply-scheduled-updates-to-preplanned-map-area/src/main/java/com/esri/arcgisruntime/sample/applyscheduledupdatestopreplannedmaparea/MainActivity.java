@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
   private TextView mUpdateAvailableTextView;
   private TextView mUpdateSizeTextView;
   private Button mApplyScheduledUpdatesButton;
+  private MobileMapPackage mMobileMapPackage;
+  private MobileMapPackage mUpdatedMobileMapPackage;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +83,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // load the offline map as a mobile map package
-    MobileMapPackage mobileMapPackage = new MobileMapPackage(mCopyOfMmpk.getPath());
-    mobileMapPackage.loadAsync();
-    mobileMapPackage.addDoneLoadingListener(() -> {
-      if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED && !mobileMapPackage.getMaps().isEmpty()) {
+    mMobileMapPackage = new MobileMapPackage(mCopyOfMmpk.getPath());
+    mMobileMapPackage.loadAsync();
+    mMobileMapPackage.addDoneLoadingListener(() -> {
+      if (mMobileMapPackage.getLoadStatus() == LoadStatus.LOADED && !mMobileMapPackage.getMaps().isEmpty()) {
         // add the map from the mobile map package to the map view
-        ArcGISMap offlineMap = mobileMapPackage.getMaps().get(0);
+        ArcGISMap offlineMap = mMobileMapPackage.getMaps().get(0);
         mMapView.setMap(offlineMap);
         // create an offline map sync task with the preplanned area
         OfflineMapSyncTask offlineMapSyncTask = new OfflineMapSyncTask(offlineMap);
@@ -131,19 +133,20 @@ public class MainActivity extends AppCompatActivity {
                           // release the mobile map package maps from the map view
                           mMapView.setMap(null);
                           // close the old mobile map package
-                          mobileMapPackage.close();
+                          mMobileMapPackage.close();
                           // create a new instance of the now updated mobile map package
-                          MobileMapPackage updatedMobileMapPackage = new MobileMapPackage(mCopyOfMmpk.getPath());
-                          updatedMobileMapPackage.loadAsync();
+                          mUpdatedMobileMapPackage = new MobileMapPackage(mCopyOfMmpk.getPath());
+                          mUpdatedMobileMapPackage.loadAsync();
                           // wait for the new instance of the mobile map package to load
-                          updatedMobileMapPackage.addDoneLoadingListener(() -> {
-                            if (updatedMobileMapPackage.getLoadStatus() == LoadStatus.LOADED && !updatedMobileMapPackage
+                          mUpdatedMobileMapPackage.addDoneLoadingListener(() -> {
+                            if (mUpdatedMobileMapPackage
+                                .getLoadStatus() == LoadStatus.LOADED && !mUpdatedMobileMapPackage
                                 .getMaps().isEmpty()) {
                               // add the map from the mobile map package to the map view
-                              mMapView.setMap(updatedMobileMapPackage.getMaps().get(0));
+                              mMapView.setMap(mUpdatedMobileMapPackage.getMaps().get(0));
                             } else {
                               String error =
-                                  "Failed to load mobile map package: " + mobileMapPackage.getLoadError().getMessage();
+                                  "Failed to load mobile map package: " + mMobileMapPackage.getLoadError().getMessage();
                               Toast.makeText(this, error, Toast.LENGTH_LONG).show();
                               Log.e(TAG, error);
                             }
@@ -193,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
           }
         });
       } else {
-        String error = "Failed to load the mobile map package: " + mobileMapPackage.getLoadError().getMessage();
+        String error = "Failed to load the mobile map package: " + mMobileMapPackage.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
