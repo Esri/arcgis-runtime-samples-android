@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
 
   private UserCredential mUserCredential;
 
+  private Portal mPortal;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -85,11 +87,13 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
     mRecyclerView = findViewById(R.id.recyclerView);
     mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+    mPortal = new Portal(getString(R.string.arcgis_url));
+
     // set up search public button
     Button searchPublicButton = findViewById(R.id.searchPublicButton);
     searchPublicButton.setOnClickListener(v -> {
       // search the the public ArcGIS portal
-      searchPortal(new Portal(getString(R.string.arcgis_url)));
+      searchPortal(mPortal);
     });
 
     // get reference to load state UI elements
