@@ -34,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private SceneView mSceneView;
+  private Portal mPortal;
+  private PortalItem mPortalItem;
+  private ArcGISScene mScene;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -42,36 +45,36 @@ public class MainActivity extends AppCompatActivity {
 
     mSceneView = findViewById(R.id.sceneView);
 
-    Portal portal = new Portal(getString(R.string.arcgis_online_url));
-    portal.addDoneLoadingListener(() -> {
-      if (portal.getLoadStatus() == LoadStatus.LOADED) {
-        PortalItem portalItem = new PortalItem(portal, getString(R.string.subsurface_item_id));
-        portalItem.addDoneLoadingListener(() -> {
-          if (portalItem.getLoadStatus() == LoadStatus.LOADED) {
+    mPortal = new Portal(getString(R.string.arcgis_online_url));
+    mPortal.addDoneLoadingListener(() -> {
+      if (mPortal.getLoadStatus() == LoadStatus.LOADED) {
+        mPortalItem = new PortalItem(mPortal, getString(R.string.subsurface_item_id));
+        mPortalItem.addDoneLoadingListener(() -> {
+          if (mPortalItem.getLoadStatus() == LoadStatus.LOADED) {
             // create a scene from a web scene Url and set it to the scene view
-            ArcGISScene scene = new ArcGISScene(portalItem);
+            mScene = new ArcGISScene(mPortalItem);
             // when the scene has loaded, set navigation constraint and opacity to see below the surface
-            scene.addDoneLoadingListener(() -> {
+            mScene.addDoneLoadingListener(() -> {
               // ensure the navigation constraint is set to NONE
-              scene.getBaseSurface().setNavigationConstraint(NavigationConstraint.NONE);
+              mScene.getBaseSurface().setNavigationConstraint(NavigationConstraint.NONE);
               // set opacity to view content beneath the base surface
-              scene.getBaseSurface().setOpacity(0.5f);
+              mScene.getBaseSurface().setOpacity(0.5f);
             });
-            mSceneView.setScene(scene);
+            mSceneView.setScene(mScene);
           } else {
-            String error = "Portal item failed to load: " + portalItem.getLoadError().getMessage();
+            String error = "Portal item failed to load: " + mPortalItem.getLoadError().getMessage();
             Toast.makeText(this, error, Toast.LENGTH_LONG).show();
             Log.e(TAG, error);
           }
         });
-        portalItem.loadAsync();
+        mPortalItem.loadAsync();
       } else {
-        String error = "Portal failed to load: " + portal.getLoadError().getMessage();
+        String error = "Portal failed to load: " + mPortal.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
     });
-    portal.loadAsync();
+    mPortal.loadAsync();
   }
 
   @Override
