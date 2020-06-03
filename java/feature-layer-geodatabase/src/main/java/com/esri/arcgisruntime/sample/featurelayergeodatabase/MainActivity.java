@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
+  private Geodatabase mGeodatabase;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +51,16 @@ public class MainActivity extends AppCompatActivity {
     String path = getExternalFilesDir(null) + getString(R.string.config_geodb_name);
 
     // create a new geodatabase from local path
-    final Geodatabase geodatabase = new Geodatabase(path);
+    mGeodatabase = new Geodatabase(path);
 
     // load the geodatabase
-    geodatabase.loadAsync();
+    mGeodatabase.loadAsync();
 
     // create feature layer from geodatabase and add to the map
-    geodatabase.addDoneLoadingListener(() -> {
-      if (geodatabase.getLoadStatus() == LoadStatus.LOADED) {
+    mGeodatabase.addDoneLoadingListener(() -> {
+      if (mGeodatabase.getLoadStatus() == LoadStatus.LOADED) {
         // access the geodatabase's feature table Trailheads
-        GeodatabaseFeatureTable geodatabaseFeatureTable = geodatabase.getGeodatabaseFeatureTable("Trailheads");
+        GeodatabaseFeatureTable geodatabaseFeatureTable = mGeodatabase.getGeodatabaseFeatureTable("Trailheads");
         geodatabaseFeatureTable.loadAsync();
         // create a layer from the geodatabase feature table and add to map
         final FeatureLayer featureLayer = new FeatureLayer(geodatabaseFeatureTable);
