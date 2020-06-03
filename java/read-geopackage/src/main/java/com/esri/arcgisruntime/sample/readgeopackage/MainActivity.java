@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
   private final static String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
+  private GeoPackage mGeoPackage;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +52,18 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // open and load the GeoPackage
-    GeoPackage geoPackage = new GeoPackage(getExternalFilesDir(null) + getString(R.string.geopackage_path));
-    geoPackage.loadAsync();
-    geoPackage.addDoneLoadingListener(() -> {
-      if (geoPackage.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-        String error = "Geopackage failed to load: " + geoPackage.getLoadError();
+    mGeoPackage = new GeoPackage(getExternalFilesDir(null) + getString(R.string.geopackage_path));
+    mGeoPackage.loadAsync();
+    mGeoPackage.addDoneLoadingListener(() -> {
+      if (mGeoPackage.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+        String error = "Geopackage failed to load: " + mGeoPackage.getLoadError();
         Log.e(TAG, error);
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         return;
       }
 
       // loop through each GeoPackageRaster
-      for (GeoPackageRaster geoPackageRaster : geoPackage.getGeoPackageRasters()) {
+      for (GeoPackageRaster geoPackageRaster : mGeoPackage.getGeoPackageRasters()) {
         // create a RasterLayer from the GeoPackageRaster
         RasterLayer rasterLayer = new RasterLayer(geoPackageRaster);
 
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
       }
 
       // loop through each GeoPackageFeatureTable
-      for (GeoPackageFeatureTable geoPackageFeatureTable : geoPackage.getGeoPackageFeatureTables()) {
+      for (GeoPackageFeatureTable geoPackageFeatureTable : mGeoPackage.getGeoPackageFeatureTables()) {
         // create a FeatureLayer from the GeoPackageFeatureLayer
         FeatureLayer featureLayer = new FeatureLayer(geoPackageFeatureTable);
 
