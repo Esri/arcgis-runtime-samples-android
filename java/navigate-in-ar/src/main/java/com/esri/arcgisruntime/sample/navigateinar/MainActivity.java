@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
   private Point mStartPoint;
   private Point mEndPoint;
+  private RouteTask mRouteTask;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -117,11 +118,11 @@ public class MainActivity extends AppCompatActivity {
     // set the challenge handler onto the AuthenticationManager
     AuthenticationManager.setAuthenticationChallengeHandler(authenticationChallengeHandler);
     // create and load a route task from the world routing service. This will trigger logging in to your AGOL account
-    RouteTask routeTask = new RouteTask(this, getString(R.string.world_routing_service_url));
-    routeTask.loadAsync();
+    mRouteTask = new RouteTask(this, getString(R.string.world_routing_service_url));
+    mRouteTask.loadAsync();
     // enable the user to specify a route once the service is ready
-    routeTask.addDoneLoadingListener(() -> {
-      if (routeTask.getLoadStatus() == LoadStatus.LOADED) {
+    mRouteTask.addDoneLoadingListener(() -> {
+      if (mRouteTask.getLoadStatus() == LoadStatus.LOADED) {
         // notify the user to place start point
         mHelpLabel.setText(R.string.place_start_message);
         // listen for a single tap
@@ -147,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
               // solve the route between the two points
               // update UI
               mHelpLabel.setText(R.string.solving_route_message);
-              final ListenableFuture<RouteParameters> listenableFuture = routeTask.createDefaultParametersAsync();
+              final ListenableFuture<RouteParameters> listenableFuture = mRouteTask.createDefaultParametersAsync();
               listenableFuture.addDoneListener(() -> {
                 try {
                   RouteParameters routeParameters = listenableFuture.get();
@@ -156,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                   routeParameters.setReturnDirections(true);
                   routeParameters.setReturnRoutes(true);
                   // this sample is intended for navigating while walking only
-                  List<TravelMode> travelModes = routeTask.getRouteTaskInfo().getTravelModes();
+                  List<TravelMode> travelModes = mRouteTask.getRouteTaskInfo().getTravelModes();
                   TravelMode walkingMode = travelModes.get(0);
                   routeParameters.setTravelMode(walkingMode);
                   // add stops
@@ -167,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                   // set return directions as true to return turn-by-turn directions in the result of
                   routeParameters.setReturnDirections(true);
                   // solve the route
-                  ListenableFuture<RouteResult> routeResultFuture = routeTask.solveRouteAsync(routeParameters);
+                  ListenableFuture<RouteResult> routeResultFuture = mRouteTask.solveRouteAsync(routeParameters);
                   routeResultFuture.addDoneListener(() -> {
                     try {
                       // get the route result
@@ -205,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
           }
         });
       } else {
-        String error = "Error connecting to route service: " + routeTask.getLoadError().getCause();
+        String error = "Error connecting to route service: " + mRouteTask.getLoadError().getCause();
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
         Log.e(TAG, error);
         mHelpLabel.setText(getString(R.string.route_failed_error_message));
