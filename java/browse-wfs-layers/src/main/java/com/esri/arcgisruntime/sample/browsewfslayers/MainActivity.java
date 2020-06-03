@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
   private BottomSheetBehavior<View> mBottomSheetBehavior;
 
   private WfsLayerInfo mSelectedWfsLayerInfo;
+  private WfsService mWfsService;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -101,15 +102,15 @@ public class MainActivity extends AppCompatActivity implements OnItemSelectedLis
     mMapView.setMap(map);
 
     // create WFS service
-    WfsService service = new WfsService(getString(R.string.wfs_service_url));
-    service.addDoneLoadingListener(() -> {
-      if (service.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
-        logErrorToUser(getString(R.string.error_wfs_service_load_failure, service.getLoadError().getMessage()));
+    mWfsService = new WfsService(getString(R.string.wfs_service_url));
+    mWfsService.addDoneLoadingListener(() -> {
+      if (mWfsService.getLoadStatus() == LoadStatus.FAILED_TO_LOAD) {
+        logErrorToUser(getString(R.string.error_wfs_service_load_failure, mWfsService.getLoadError().getMessage()));
       } else {
-        setupRecyclerView(service.getServiceInfo().getLayerInfos());
+        setupRecyclerView(mWfsService.getServiceInfo().getLayerInfos());
       }
     });
-    service.loadAsync();
+    mWfsService.loadAsync();
   }
 
   @Override public void onItemSelected(WfsLayerInfo wfsLayerInfo) {
