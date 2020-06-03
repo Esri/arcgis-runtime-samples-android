@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
+  private Geodatabase mGeodatabase;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,19 +51,19 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // load geo-database from local location
-    Geodatabase geodatabase = new Geodatabase(
+    mGeodatabase = new Geodatabase(
         getExternalFilesDir(null) + getString(R.string.militaryoverlay_geodatabase));
-    geodatabase.loadAsync();
+    mGeodatabase.loadAsync();
 
     // render tells layer what symbols to apply to what features
     DictionarySymbolStyle symbolDictionary = DictionarySymbolStyle
         .createFromFile(getExternalFilesDir(null) + getString(R.string.mil2525d_stylx));
     symbolDictionary.loadAsync();
 
-    geodatabase.addDoneLoadingListener(() -> {
-      if (geodatabase.getLoadStatus() == LoadStatus.LOADED) {
+    mGeodatabase.addDoneLoadingListener(() -> {
+      if (mGeodatabase.getLoadStatus() == LoadStatus.LOADED) {
 
-        for (GeodatabaseFeatureTable table : geodatabase.getGeodatabaseFeatureTables()) {
+        for (GeodatabaseFeatureTable table : mGeodatabase.getGeodatabaseFeatureTables()) {
           // add each layer to map
           FeatureLayer featureLayer = new FeatureLayer(table);
           featureLayer.loadAsync();
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
           });
         }
       } else {
-        String error = "Geodatabase Failed to Load: " + geodatabase.getLoadError().getMessage();
+        String error = "Geodatabase Failed to Load: " + mGeodatabase.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
