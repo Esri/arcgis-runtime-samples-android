@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private Geodatabase mGeodatabase;
+  private DictionarySymbolStyle mSymbolDictionary;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +57,8 @@ public class MainActivity extends AppCompatActivity {
     mGeodatabase.loadAsync();
 
     // render tells layer what symbols to apply to what features
-    DictionarySymbolStyle symbolDictionary = DictionarySymbolStyle
-        .createFromFile(getExternalFilesDir(null) + getString(R.string.mil2525d_stylx));
-    symbolDictionary.loadAsync();
+    mSymbolDictionary = DictionarySymbolStyle.createFromFile(getExternalFilesDir(null) + getString(R.string.mil2525d_stylx));
+    mSymbolDictionary.loadAsync();
 
     mGeodatabase.addDoneLoadingListener(() -> {
       if (mGeodatabase.getLoadStatus() == LoadStatus.LOADED) {
@@ -71,10 +71,10 @@ public class MainActivity extends AppCompatActivity {
           featureLayer.setMinScale(1000000);
           mMapView.getMap().getOperationalLayers().add(featureLayer);
 
-          symbolDictionary.addDoneLoadingListener(() -> {
-            if (symbolDictionary.getLoadStatus() == LoadStatus.LOADED) {
+          mSymbolDictionary.addDoneLoadingListener(() -> {
+            if (mSymbolDictionary.getLoadStatus() == LoadStatus.LOADED) {
               // displays features from layer using mil2525d symbols
-              DictionaryRenderer dictionaryRenderer = new DictionaryRenderer(symbolDictionary);
+              DictionaryRenderer dictionaryRenderer = new DictionaryRenderer(mSymbolDictionary);
               featureLayer.setRenderer(dictionaryRenderer);
 
               featureLayer.addDoneLoadingListener(() -> {
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 }
               });
             } else {
-              String error = "Dictionary Symbol Failed to Load: " + symbolDictionary.getLoadError().getMessage();
+              String error = "Dictionary Symbol Failed to Load: " + mSymbolDictionary.getLoadError().getMessage();
               Toast.makeText(this, error, Toast.LENGTH_LONG).show();
               Log.e(TAG, error);
             }
