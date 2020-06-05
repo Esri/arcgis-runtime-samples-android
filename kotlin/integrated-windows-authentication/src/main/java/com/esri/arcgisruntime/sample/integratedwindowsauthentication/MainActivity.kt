@@ -90,8 +90,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler,
       portalUrlEditText.text?.toString()?.let {
         // If the entered URL is a valid URL
         if (Patterns.WEB_URL.matcher(it).matches()) {
-          portal = Portal(portalUrlEditText.text.toString())
-          searchPortal(portal, true)
+          portal = Portal(portalUrlEditText.text.toString(), true)
+          searchPortal(portal)
         } else {
           getString(R.string.error_portal_url).let { errorString ->
             Toast.makeText(this, errorString, Toast.LENGTH_LONG).show()
