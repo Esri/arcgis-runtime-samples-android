@@ -1,7 +1,7 @@
 {
     "category": "Edit and Manage Data",
     "description": "Add features to a feature layer.",
-    "formal_name": "AddFeatures",
+    "formal_name": "AddFeaturesFeatureService",
     "ignore": false,
     "images": [
         "add-features-feature-service.png"
@@ -23,5 +23,5 @@
     "snippets": [
         "/src/main/java/com/esri/arcgisruntime/sample/addfeaturesfeatureservice/MainActivity.kt"
     ],
-    "title": "Add features"
+    "title": "Add features (feature service)"
 }
