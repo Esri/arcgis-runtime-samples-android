@@ -31,6 +31,9 @@ import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+  private lateinit var portal: Portal
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
@@ -40,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     AuthenticationManager.setAuthenticationChallengeHandler(handler)
     // Set loginRequired to true always prompt for credential,
     // When set to false to only login if required by the portal
-    val portal = Portal("http://www.arcgis.com", true)
+    portal = Portal("http://www.arcgis.com", true)
 
     portal.addDoneLoadingListener {
       when (portal.loadStatus) {

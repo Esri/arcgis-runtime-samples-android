@@ -53,6 +53,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler,
 
   // Instance of CountDownLatch used to block the thread that handles authentication
   private var authLatch: CountDownLatch? = null
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+  private lateinit var portal: Portal
 
   companion object {
     private val TAG: String = MainActivity::class.java.simpleName
@@ -78,8 +80,9 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler,
     }
 
     searchPublicButton.setOnClickListener {
+      portal = Portal(getString(R.string.arcgis_url))
       // Search the the public ArcGIS portal
-      searchPortal(Portal(getString(R.string.arcgis_url)))
+      searchPortal(portal)
     }
 
     searchSecureButton.setOnClickListener {
@@ -87,7 +90,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler,
       portalUrlEditText.text?.toString()?.let {
         // If the entered URL is a valid URL
         if (Patterns.WEB_URL.matcher(it).matches()) {
-          searchPortal(Portal(portalUrlEditText.text.toString(), true))
+          portal = Portal(portalUrlEditText.text.toString())
+          searchPortal(portal, true)
         } else {
           getString(R.string.error_portal_url).let { errorString ->
             Toast.makeText(this, errorString, Toast.LENGTH_LONG).show()

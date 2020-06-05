@@ -56,23 +56,11 @@ class MainActivity : AppCompatActivity() {
       scene = sceneWithSurface
     }
 
-    // add a PointCloudLayer to the scene by passing the URI of the scene layer package to the constructor
+    // create a PointCloudLayer by passing the URI of the scene layer package to the constructor
     val pointCloudLayer =
       PointCloudLayer(getExternalFilesDir(null)?.path + getString(R.string.scene_layer_package_location))
-
-    // load the layer
-    pointCloudLayer.loadAsync()
-    pointCloudLayer.addDoneLoadingListener {
-      // when PointCloudLayer loads
-      if (pointCloudLayer.loadStatus == LoadStatus.LOADED) {
-        // add the PointCloudLayer to the operational layers of the scene
-        sceneView.scene.operationalLayers.add(pointCloudLayer)
-      } else {
-        val error = "Error loading point cloud layer: " + pointCloudLayer.loadError
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-        Log.e(TAG, error)
-      }
-    }
+    // add the PointCloudLayer to the scene
+    sceneView.scene.operationalLayers.add(pointCloudLayer)
   }
 
   override fun onResume() {
