@@ -26,7 +26,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -58,7 +57,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import kotlin.math.roundToInt
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -116,15 +114,18 @@ class MainActivity : AppCompatActivity() {
           addStopOrBarrier(screenPoint)
           return true
         }
-
-
       }
     }
 
     // create a new picture marker from a pin drawable
     pinSymbol = PictureMarkerSymbol.createAsync(
       ContextCompat.getDrawable(this, R.drawable.pin_symbol) as BitmapDrawable
-    ).get()
+    ).get().apply {
+      // make the graphic smaller
+      width = 30f
+      height = 30f
+      offsetY = 20f
+    }
 
     // create route task from San Diego service
     routeTask = RouteTask(
@@ -158,13 +159,11 @@ class MainActivity : AppCompatActivity() {
       TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240f, resources.displayMetrics).toInt()
 
     addStopButton.setOnClickListener {
-      addStopButton.isSelected = true
-      addBarrierButton.isSelected = false
+      addBarrierButton.isChecked = false
     }
 
     addBarrierButton.setOnClickListener {
-      addBarrierButton.isSelected = true
-      addStopButton.isSelected = false
+      addStopButton.isChecked = false
     }
   }
 
@@ -179,7 +178,7 @@ class MainActivity : AppCompatActivity() {
     // clear the displayed route, if it exists, since it might not be up to date any more
     routeGraphicsOverlay.graphics.clear()
 
-    if (addStopButton.isSelected) {
+    if (addStopButton.isChecked) {
       // use the clicked map point to construct a stop
       val stopPoint = Stop(Point(normalizedPoint.x, normalizedPoint.y, mapPoint.spatialReference))
 
@@ -189,7 +188,7 @@ class MainActivity : AppCompatActivity() {
       // create a marker symbol and graphics, and add the graphics to the graphics overlay
       stopsGraphicsOverlay.graphics.add(Graphic(mapPoint, createCompositeStopSymbol(stopList.size)))
 
-    } else if (addBarrierButton.isSelected) {
+    } else if (addBarrierButton.isChecked) {
       // create a buffered polygon around the clicked point
       val bufferedBarrierPolygon = GeometryEngine.buffer(mapPoint, 500.0)
 
@@ -293,7 +292,6 @@ class MainActivity : AppCompatActivity() {
   private fun showDirectionsInBottomSheet() {
     // create a bottom sheet behavior from the bottom sheet view in the main layout
     val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet).apply {
-      state = BottomSheetBehavior.STATE_HALF_EXPANDED
       // animate the arrow when the bottom sheet slides
       addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -330,8 +328,8 @@ class MainActivity : AppCompatActivity() {
       // when the user taps a maneuver, set the viewpoint to that portion of the route
       onItemClickListener =
         AdapterView.OnItemClickListener { _, _, position, _ ->
-          // remove any graphics that are not the two stops and the route graphic
-          if (routeGraphicsOverlay.graphics.size > 3) {
+          // remove any graphics that are not the original (blue) route graphic
+          if (routeGraphicsOverlay.graphics.size > 1) {
             routeGraphicsOverlay.graphics.removeAt(routeGraphicsOverlay.graphics.size - 1)
           }
           // set the viewpoint to the selected maneuver
@@ -347,6 +345,8 @@ class MainActivity : AppCompatActivity() {
           bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
+    // set the initial state to half expanded to show user a directions list has been populated
+    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
   }
 
   override fun onPause() {

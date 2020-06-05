@@ -54,22 +54,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatToggleButton
             android:id="@+id/addStopButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add stop"
+            android:textOff="@string/add_stop"
+            android:textOn="@string/adding_stops"
             app:layout_constraintEnd_toStartOf="@+id/addBarrierButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/instructionsTextView"
             tools:text="Add stop" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatToggleButton
             android:id="@+id/addBarrierButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add barrier"
+            android:textOff="@string/add_barrier"
+            android:textOn="@string/adding_barriers"
             app:layout_constraintEnd_toStartOf="@+id/resetButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/addStopButton"
@@ -80,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="clearRouteAndGraphics"
-            android:text="Reset"
+            android:text="@string/reset"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/addBarrierButton"
@@ -90,7 +92,7 @@
             android:id="@+id/reorderCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Allow stops to be re-ordered"
+            android:text="@string/allow_stops_to_be_re_ordered"
             app:layout_constraintStart_toStartOf="@+id/addStopButton"
             app:layout_constraintTop_toBottomOf="@+id/addStopButton" />
 
@@ -99,7 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:text="Preserve first stop"
+            android:text="@string/preserve_first_stop"
             app:layout_constraintStart_toStartOf="@+id/reorderCheckBox"
             app:layout_constraintTop_toBottomOf="@+id/reorderCheckBox" />
 
@@ -107,7 +109,7 @@
             android:id="@+id/preserveLastStopCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Preserve last stop"
+            android:text="@string/preserve_last_stop"
             app:layout_constraintStart_toStartOf="@+id/preserveFirstStopCheckBox"
             app:layout_constraintTop_toBottomOf="@+id/preserveFirstStopCheckBox"
             tools:text="Preserve last stop" />
@@ -117,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="createAndDisplayRoute"
-            android:text="Solve route"
+            android:text="@string/solve_route"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/preserveFirstStopCheckBox"
