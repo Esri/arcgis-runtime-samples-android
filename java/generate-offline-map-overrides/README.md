@@ -10,7 +10,7 @@ When taking a web map offline, you may adjust the data (such as layers or tiles)
 
 ## How to use the sample
 
-Sign in with an ArcGIS Online account when prompted for credentials (taking web maps offline requires an account) and modify the overrides parameters:
+Sign in with an ArcGIS Online organizational account when prompted for credentials (taking web maps offline requires an account) and modify the overrides parameters:
 
 * Use the min/max scale input fields to adjust the level IDs to be taken offline for the streets basemap.
 * Use the extent buffer distance input field to set the buffer radius for the streets basemap.
