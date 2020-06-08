@@ -192,10 +192,7 @@ class MainActivity : AppCompatActivity() {
    * @param resultPoint geometry to show where the geocode result is
    * @param address     to display in the associated callout
    */
-  private fun displayGeocodeResult(
-    resultPoint: Point,
-    address: CharSequence
-  ) {
+  private fun displayGeocodeResult(resultPoint: Point, address: CharSequence) {
     // dismiss the callout if showing
     if (mapView.callout.isShowing) {
       mapView.callout.dismiss()
