@@ -10,7 +10,7 @@ Shapefiles store location, shape and attributes of geospatial vector data. Shape
 
 ## How to use the sample
 
-Run the sample and accept read permissions.
+Pan and zoom around the map. View the data loaded from the shapefile.
 
 ## How it works
 
