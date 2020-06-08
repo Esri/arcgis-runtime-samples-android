@@ -23,7 +23,6 @@ import android.os.Bundle
 import android.provider.BaseColumns
 import android.util.Log
 import android.view.MotionEvent
-import android.view.inputmethod.EditorInfo
 import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import android.widget.Toast
