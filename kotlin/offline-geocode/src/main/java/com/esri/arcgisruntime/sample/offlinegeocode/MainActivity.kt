@@ -225,7 +225,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Sets up the address SearchView and uses MatrixCursor to show suggestions to the user
+   * Sets up the address SearchView and uses MatrixCursor to show suggestions to the user.
    */
   private fun setupAddressSearchView() {
     // get the list of pre-made suggestions
