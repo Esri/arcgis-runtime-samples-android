@@ -37,6 +37,6 @@ Run the sample and view the military symbols on the map.
 3. Push the data into the scoped storage of the sample app:
 `adb push mil2525d.stylx /Android/data/com.esri.arcgisruntime.sample.dictionaryrenderergraphicsoverlay/files/mil2525d.stylx`
 
-### Tags
+## Tags
 
 defense, military, situational awareness, tactical, visualization
