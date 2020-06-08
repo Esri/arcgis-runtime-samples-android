@@ -210,11 +210,11 @@ class MainActivity : AppCompatActivity() {
    * Show a callout at the given point with the given text.
    *
    * @param point to define callout location
-   * @param text  to define callout content
+   * @param calloutText to define callout content
    */
-  private fun showCallout(point: Point, text: CharSequence) {
+  private fun showCallout(point: Point, calloutText: CharSequence) {
     val calloutTextView = TextView(this).apply {
-      this.text = text
+      text = calloutText
     }
     mapView.callout.apply {
       location = point
