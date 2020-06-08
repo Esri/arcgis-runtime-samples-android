@@ -6,7 +6,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.esri.arcgisruntime.sample.routingaroundbarriers"
+        applicationId "com.esri.arcgisruntime.sample.routearoundbarriers"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode

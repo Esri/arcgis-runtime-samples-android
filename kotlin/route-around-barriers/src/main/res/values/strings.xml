@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Routing around barriers</string>
+    <string name="app_name">Route around barriers</string>
     <string name="instructions">Tap ADD STOP or ADD BARRIERS, then tap on the map to add stops and barriers.</string>
     <string name="directions">Directions</string>
     <string name="add_stop">Add stop</string>

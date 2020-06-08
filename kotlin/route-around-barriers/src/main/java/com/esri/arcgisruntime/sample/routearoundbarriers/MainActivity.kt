@@ -15,7 +15,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.routingaroundbarriers
+package com.esri.arcgisruntime.sample.routearoundbarriers
 
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
@@ -24,6 +24,8 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -61,6 +63,8 @@ import kotlin.math.roundToInt
 class MainActivity : AppCompatActivity() {
 
   private val TAG: String = MainActivity::class.java.simpleName
+
+  private var bottomSheetBehavior: BottomSheetBehavior<View>? = null
 
   private var routeTask: RouteTask? = null
   private var routeParameters: RouteParameters? = null
@@ -117,11 +121,15 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
+    bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+
     // create a new picture marker from a pin drawable
     pinSymbol = PictureMarkerSymbol.createAsync(
-      ContextCompat.getDrawable(this, R.drawable.pin_symbol) as BitmapDrawable
+      ContextCompat.getDrawable(
+        this,
+        R.drawable.pin_symbol
+      ) as BitmapDrawable
     ).get().apply {
-      // make the graphic smaller
       width = 30f
       height = 30f
       offsetY = 20f
@@ -155,8 +163,21 @@ class MainActivity : AppCompatActivity() {
     routeTask?.loadAsync()
 
     // shrink the map view so it is not hidden under the bottom sheet header
-    (mapViewContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin =
-      TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240f, resources.displayMetrics).toInt()
+    val peekHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40f, resources.displayMetrics).toInt()
+    (mapViewContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin = peekHeight
+    bottomSheetBehavior?.peekHeight = peekHeight
+
+    bottomSheet.apply {
+      // expand or collapse the bottom sheet when the header is clicked
+      header.setOnClickListener {
+        bottomSheetBehavior?.state = when (bottomSheetBehavior?.state) {
+          BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_HALF_EXPANDED
+          else -> BottomSheetBehavior.STATE_COLLAPSED
+        }
+      }
+      // rotate the arrow so it starts off in the correct rotation
+      header.imageView.rotation = 180f
+    }
 
     addStopButton.setOnClickListener {
       addBarrierButton.isChecked = false
@@ -168,33 +189,24 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun addStopOrBarrier(screenPoint: android.graphics.Point) {
-
     // convert screen point to map point
     val mapPoint = mapView.screenToLocation(screenPoint)
-
     // normalize geometry - important for geometries that will be sent to a server for processing
     val normalizedPoint = GeometryEngine.normalizeCentralMeridian(mapPoint) as Point
-
     // clear the displayed route, if it exists, since it might not be up to date any more
     routeGraphicsOverlay.graphics.clear()
-
     if (addStopButton.isChecked) {
       // use the clicked map point to construct a stop
       val stopPoint = Stop(Point(normalizedPoint.x, normalizedPoint.y, mapPoint.spatialReference))
-
       // add the new stop to the list of stops
       stopList.add(stopPoint)
-
       // create a marker symbol and graphics, and add the graphics to the graphics overlay
       stopsGraphicsOverlay.graphics.add(Graphic(mapPoint, createCompositeStopSymbol(stopList.size)))
-
     } else if (addBarrierButton.isChecked) {
       // create a buffered polygon around the clicked point
       val bufferedBarrierPolygon = GeometryEngine.buffer(mapPoint, 500.0)
-
       // create a polygon barrier for the routing task, and add it to the list of barriers
       barrierList.add(PolygonBarrier(bufferedBarrierPolygon))
-
       // build graphics for the barrier and add it to the graphics overlay
       barriersGraphicsOverlay.graphics.add(Graphic(bufferedBarrierPolygon, barrierSymbol))
     }
@@ -244,8 +256,8 @@ class MainActivity : AppCompatActivity() {
           Toast.makeText(this, error, Toast.LENGTH_LONG).show()
         }
 
-        // enable the reset button
-        resetButton.isEnabled = true
+        // show the reset button
+        resetButton.visibility = VISIBLE
       }
     } else {
       // clear the directions list since no route is displayed
@@ -257,19 +269,18 @@ class MainActivity : AppCompatActivity() {
     // clear stops from route parameters and stops list
     routeParameters?.clearStops()
     stopList.clear()
-
     // clear barriers from route parameters and barriers list
-    routeParameters?.clearPointBarriers()
+    routeParameters?.clearPolygonBarriers()
     barrierList.clear()
-
     // clear the directions list
     directionsList.clear()
-
     // clear all graphics overlays
     mapView.graphicsOverlays.forEach { it.graphics.clear() }
-
-    // disable reset button
-    resetButton.isEnabled = false
+    // hide the reset button and directions list
+    resetButton.visibility = GONE
+    directionsListView.visibility = GONE
+    // show the controls
+    controlsLayout.visibility = VISIBLE
   }
 
   private fun createCompositeStopSymbol(stopNumber: Int): CompositeSymbol {
@@ -290,13 +301,14 @@ class MainActivity : AppCompatActivity() {
    *
    */
   private fun showDirectionsInBottomSheet() {
+    directionsListView.visibility = VISIBLE
     // create a bottom sheet behavior from the bottom sheet view in the main layout
-    val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet).apply {
+    bottomSheetBehavior?.apply {
       // animate the arrow when the bottom sheet slides
       addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
           bottomSheet.header.imageView.rotation = slideOffset * 180f
-          }
+        }
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
           bottomSheet.header.imageView.rotation = when (newState) {
@@ -305,18 +317,6 @@ class MainActivity : AppCompatActivity() {
           }
         }
       })
-    }
-
-    bottomSheet.apply {
-      // expand or collapse the bottom sheet when the header is clicked
-      header.setOnClickListener {
-        bottomSheetBehavior.state = when (bottomSheetBehavior.state) {
-          BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_EXPANDED
-          else -> BottomSheetBehavior.STATE_COLLAPSED
-        }
-      }
-      // rotate the arrow so it starts off in the correct rotation
-      header.imageView.rotation = 180f
     }
 
     bottomSheet.directionsListView.apply {
@@ -342,11 +342,13 @@ class MainActivity : AppCompatActivity() {
           )
           routeGraphicsOverlay.graphics.add(Graphic(geometry, selectedRouteSymbol))
           // collapse the bottom sheet
-          bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+          bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
     // set the initial state to half expanded to show user a directions list has been populated
-    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+    bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+    // hide the controls
+    controlsLayout.visibility = GONE
   }
 
   override fun onPause() {

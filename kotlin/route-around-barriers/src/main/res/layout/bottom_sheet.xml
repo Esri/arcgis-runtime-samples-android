@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:background="@color/colorAccent">
 
         <TextView
@@ -38,9 +38,11 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/controlsLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/instructionsTextView"
@@ -72,17 +74,17 @@
             android:layout_height="wrap_content"
             android:textOff="@string/add_barrier"
             android:textOn="@string/adding_barriers"
-            app:layout_constraintEnd_toStartOf="@+id/resetButton"
+            app:layout_constraintEnd_toStartOf="@+id/solveRouteButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/addStopButton"
             app:layout_constraintTop_toBottomOf="@+id/instructionsTextView" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/resetButton"
+            android:id="@+id/solveRouteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="clearRouteAndGraphics"
-            android:text="@string/reset"
+            android:onClick="createAndDisplayRoute"
+            android:text="@string/solve_route"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/addBarrierButton"
@@ -114,26 +116,7 @@
             app:layout_constraintTop_toBottomOf="@+id/preserveFirstStopCheckBox"
             tools:text="Preserve last stop" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/solveRouteButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="createAndDisplayRoute"
-            android:text="@string/solve_route"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/preserveFirstStopCheckBox"
-            app:layout_constraintTop_toBottomOf="@+id/reorderCheckBox" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/directionsTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/design_default_color_background"
-        android:padding="8dp"
-        android:text="Directions:" />
 
     <ListView
         android:id="@+id/directionsListView"
