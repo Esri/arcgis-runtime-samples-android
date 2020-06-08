@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     AuthenticationManager.setAuthenticationChallengeHandler(handler)
     // Set loginRequired to true always prompt for credential,
     // When set to false to only login if required by the portal
-    portal = Portal("http://www.arcgis.com", true)
+    portal = Portal("https://www.arcgis.com", true)
 
     portal.addDoneLoadingListener {
       when (portal.loadStatus) {
