@@ -1,0 +1,37 @@
+{
+    "category": "Maps and Scenes",
+    "description": "Display your location history on the map.",
+    "ignore": false,
+    "images": [
+        "show-location-history.png"
+    ],
+    "keywords": [
+        "bread crumb",
+        "breadcrumb",
+        "GPS",
+        "history",
+        "movement",
+        "navigation",
+        "real-time",
+        "trace",
+        "track",
+        "trail"
+    ],
+    "redirect_from": "",
+    "relevant_apis": [
+      "AndroidLocationDataSource",
+      "Location.position",
+      "LocationDataSource",
+      "LocationDataSource.Location",
+      "LocationDataSource.LocationChangedEvent",
+      "LocationDataSource.LocationChangedListener",
+      "LocationDisplay.AutoPanMode",
+      "LocationDisplay.LocationDataSource",
+      "MapView.LocationDisplay",
+      "SimulatedLocationDataSource"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/showlocationhisttory/MainActivity.kt"
+    ],
+    "title": "Show location history"
+}
