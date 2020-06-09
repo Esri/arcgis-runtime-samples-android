@@ -18,14 +18,10 @@ Use the checkboxes to manually set "Open" and "Closed" annotation sublayers visi
 
 ## How it works
 
-1. Load the `MobileMapPackage`.
-2. Populate checkbox text with the `AnnotationSublayer` names (including maximum and minimum scales, where relevant).
-3. Wire up the checkboxes to toggle the annotation sublayer's visibility.
-4. Add a listener for changes in map view navigation and add code to:
-  * Update the current scale UI element at the bottom of the screen on navigation.
-  * Set the "Open" annotation sublayer checkbox text to:
-     * Black, when the layer is drawn at the current map scale
-     * Light gray, when the layer is not drawn at the current map scale
+ 1. Load a `MobileMapPackage` that contains an `AnnotationSublayer`.
+ 2. Get the sublayers from the map package's layers by calling `sublayer.getSubLayerContents.get(i)`.
+ 3. You can toggle the visibility of each sublayer manually using `sublayer.setVisible()`.
+ 4. To determine if a sublayer is visible at the current scale of the `MapView`, use `sublayer.isVisibleAtScale()`, by passing in the map's current scale.
 
 ## Relevant API
 
