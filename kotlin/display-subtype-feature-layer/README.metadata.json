@@ -17,6 +17,7 @@
         "utility network",
         "visible scale range"
     ],
+    "language": "kotlin",
     "relevant_apis": [
         "LabelDefinition",
         "ServiceFeatureTable",
@@ -24,7 +25,7 @@
         "SubtypeSublayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/displaysubtypefeaturelayer/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/displaysubtypefeaturelayer/MainActivity.kt"
     ],
     "title": "Display subtype feature layer"
 }

@@ -11,6 +11,7 @@
         "map",
         "zoom"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/show-magnifier.htm"
     ],
@@ -21,7 +22,7 @@
         "MapView.setMagnifierEnabled(...)"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/showmagnifier/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/showmagnifier/MainActivity.java"
     ],
     "title": "Show magnifier"
 }

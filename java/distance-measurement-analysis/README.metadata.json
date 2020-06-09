@@ -12,6 +12,7 @@
         "distance",
         "measure"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/distance-measurement-analysis.htm"
     ],
@@ -20,7 +21,7 @@
         "LocationDistanceMeasurement"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/distancemeasurementanalysis/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/distancemeasurementanalysis/MainActivity.java"
     ],
     "title": "Distance measurement analysis"
 }

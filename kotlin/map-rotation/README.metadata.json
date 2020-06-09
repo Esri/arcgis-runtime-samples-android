@@ -11,12 +11,13 @@
         "rotation",
         "viewpoint"
     ],
+    "language": "kotlin",
     "relevant_apis": [
         "ArcGISMap",
         "MapView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/maprotation/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/maprotation/MainActivity.kt"
     ],
     "title": "Map rotation"
 }

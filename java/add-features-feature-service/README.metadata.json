@@ -11,6 +11,7 @@
         "feature",
         "online service"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/add-features-feature-service-.htm"
     ],
@@ -21,7 +22,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/addfeaturesfeatureservice/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/addfeaturesfeatureservice/MainActivity.java"
     ],
     "title": "Add features (Feature Service)"
 }

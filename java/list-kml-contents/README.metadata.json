@@ -13,6 +13,7 @@
         "OGC",
         "layers"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=da301cb122874d5497f8a8f6c81eb36e"
     ],
@@ -35,8 +36,8 @@
         "KmlScreenOverlay"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/listkmlcontents/KmlNodeAdapter.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/listkmlcontents/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/listkmlcontents/KmlNodeAdapter.java",
+        "src/main/java/com/esri/arcgisruntime/sample/listkmlcontents/MainActivity.java"
     ],
     "title": "List KML contents"
 }

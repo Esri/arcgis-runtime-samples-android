@@ -11,6 +11,7 @@
         "WMS",
         "web map service"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/wms-layer-url.htm"
     ],
@@ -20,7 +21,7 @@
         "WmsLayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/wmslayerurl/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/wmslayerurl/MainActivity.java"
     ],
     "title": "WMS layer URL"
 }

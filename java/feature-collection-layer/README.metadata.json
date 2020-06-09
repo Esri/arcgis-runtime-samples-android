@@ -12,6 +12,7 @@
         "layers",
         "table"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/feature-collection-layer.htm"
     ],
@@ -24,7 +25,7 @@
         "SimpleRenderer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/featurecollectionlayer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/featurecollectionlayer/MainActivity.java"
     ],
     "title": "Feature collection layer"
 }

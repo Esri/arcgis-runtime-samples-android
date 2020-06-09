@@ -10,13 +10,14 @@
         "basemap",
         "map"
     ],
+    "language": "java",
     "relevant_apis": [
         "ArcGISMap",
         "Basemap",
         "MapView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/displaymap/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/displaymap/MainActivity.java"
     ],
     "title": "Display map"
 }

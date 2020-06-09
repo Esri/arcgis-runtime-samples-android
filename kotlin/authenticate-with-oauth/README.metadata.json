@@ -14,6 +14,7 @@
         "portal",
         "security"
     ],
+    "language": "kotlin",
     "relevant_apis": [
         "AuthenticationChallengeHandler",
         "AuthenticationManager",
@@ -21,7 +22,7 @@
         "PortalItem"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/authenticatewithoauth/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/authenticatewithoauth/MainActivity.kt"
     ],
     "title": "Authenticate with OAuth"
 }

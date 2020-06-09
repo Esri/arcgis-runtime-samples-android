@@ -11,6 +11,7 @@
         "lidar",
         "point cloud"
     ],
+    "language": "kotlin",
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=34da965ca51d4c68aa9b3a38edb29e00"
     ],
@@ -24,7 +25,7 @@
         "PointCloudLayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/samples/viewpointclouddataoffline/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/samples/viewpointclouddataoffline/MainActivity.kt"
     ],
     "title": "View point cloud data offline"
 }

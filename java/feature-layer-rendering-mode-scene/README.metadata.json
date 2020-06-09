@@ -14,6 +14,7 @@
         "rendering",
         "static"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/feature-layer-rendering-mode-scene.htm"
     ],
@@ -25,7 +26,7 @@
         "SceneView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/featurelayerrenderingmodescene/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayerrenderingmodescene/MainActivity.java"
     ],
     "title": "Feature layer rendering mode (scene)"
 }

@@ -16,6 +16,7 @@
         "statistics",
         "table"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/statistical-query-group-and-sort.htm"
     ],
@@ -31,10 +32,10 @@
         "StatisticsQueryResult"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/ExpandableListViewAdapter.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/MainActivity.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/RecyclerViewAdapter.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/ResultsActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/ExpandableListViewAdapter.java",
+        "src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/RecyclerViewAdapter.java",
+        "src/main/java/com/esri/arcgisruntime/sample/statisticalquerygroupandsort/ResultsActivity.java"
     ],
     "title": "Statistical query group and sort"
 }

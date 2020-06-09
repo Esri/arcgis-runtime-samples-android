@@ -16,6 +16,7 @@
         "popup",
         "tap"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/show-callout.htm"
     ],
@@ -25,7 +26,7 @@
         "Point"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/showcallout/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/showcallout/MainActivity.kt"
     ],
     "title": "Show callout"
 }

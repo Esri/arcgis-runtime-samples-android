@@ -13,6 +13,7 @@
         "tiled",
         "web map tile service"
     ],
+    "language": "kotlin",
     "relevant_apis": [
         "WmtsLayer",
         "WmtsLayerInfo",
@@ -20,7 +21,7 @@
         "WmtsServiceInfo"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/wmtslayer/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/wmtslayer/MainActivity.kt"
     ],
     "title": "WMTS layer"
 }

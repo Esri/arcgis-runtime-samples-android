@@ -12,6 +12,7 @@
         "map",
         "render"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/display-drawing-status.htm"
     ],
@@ -23,7 +24,7 @@
         "MapView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/displaydrawingstatus/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/displaydrawingstatus/MainActivity.java"
     ],
     "title": "Display draw status"
 }

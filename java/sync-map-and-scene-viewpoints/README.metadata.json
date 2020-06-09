@@ -20,6 +20,7 @@
         "synchronize",
         "zoom"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/sync-map-and-scene-viewpoints.htm"
     ],
@@ -29,7 +30,7 @@
         "SceneView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/syncmapandsceneviewpoints/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/syncmapandsceneviewpoints/MainActivity.java"
     ],
     "title": "Sync map and scene viewpoints"
 }

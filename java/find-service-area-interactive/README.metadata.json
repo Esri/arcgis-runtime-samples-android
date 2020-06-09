@@ -13,6 +13,7 @@
         "logistics",
         "routing"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/find-service-area-interactive.htm"
     ],
@@ -25,7 +26,7 @@
         "ServiceAreaTask"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/findserviceareainteractive/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/findserviceareainteractive/MainActivity.java"
     ],
     "title": "Find service area"
 }

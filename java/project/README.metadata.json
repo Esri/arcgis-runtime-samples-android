@@ -17,6 +17,7 @@
         "projection",
         "spatial reference"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/project.htm"
     ],
@@ -26,7 +27,7 @@
         "SpatialReference"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/project/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/project/MainActivity.java"
     ],
     "title": "Project"
 }

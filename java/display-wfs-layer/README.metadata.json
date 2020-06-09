@@ -17,6 +17,7 @@
         "service",
         "web"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/display-wfs-layer.htm"
     ],
@@ -26,7 +27,7 @@
         "WfsFeatureTable.populateFromServiceAsync"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/displaywfslayer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/displaywfslayer/MainActivity.java"
     ],
     "title": "Display WFS layer"
 }

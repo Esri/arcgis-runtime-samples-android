@@ -15,6 +15,7 @@
         "tiled",
         "tiles"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/web-tiled-layer.htm"
     ],
@@ -23,7 +24,7 @@
         "WebTiledLayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/webtiledlayer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/webtiledlayer/MainActivity.java"
     ],
     "title": "Web tiled layer"
 }

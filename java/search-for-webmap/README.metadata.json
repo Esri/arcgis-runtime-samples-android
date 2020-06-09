@@ -12,6 +12,7 @@
         "search",
         "webmap"
     ],
+    "language": "java",
     "relevant_apis": [
         "Portal",
         "PortalItem",
@@ -19,8 +20,8 @@
         "PortalQueryResultSet"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/searchforwebmap/MainActivity.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/searchforwebmap/PortalItemAdapter.java"
+        "src/main/java/com/esri/arcgisruntime/sample/searchforwebmap/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/searchforwebmap/PortalItemAdapter.java"
     ],
     "title": "Search for webmap"
 }

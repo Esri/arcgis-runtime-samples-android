@@ -14,6 +14,7 @@
         "maritime",
         "nautical chart"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=9d2987a825c646468b3ce7512fb76e2d",
         "https://www.arcgis.com/home/item.html?id=af74ccbb69c846ef97085e4bebd3e76a"
@@ -32,7 +33,7 @@
         "EncLayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/addencexchangeset/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/addencexchangeset/MainActivity.java"
     ],
     "title": "Add ENC exchange set"
 }

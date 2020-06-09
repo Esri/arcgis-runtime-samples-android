@@ -12,6 +12,7 @@
         "layer",
         "map"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/arcgis-map-image-layer-url.htm"
     ],
@@ -19,7 +20,7 @@
         "ArcGISMapImageLayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/mapimagelayer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/mapimagelayer/MainActivity.java"
     ],
     "title": "ArcGIS map image layer URL"
 }

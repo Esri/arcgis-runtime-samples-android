@@ -18,6 +18,7 @@
         "shortest",
         "turn-by-turn"
     ],
+    "language": "kotlin",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=567e14f3420d40c5a206e5c0284cf8fc"
     ],
@@ -37,7 +38,7 @@
         "TravelMode"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/offlinerouting/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/offlinerouting/MainActivity.kt"
     ],
     "title": "Offline routing"
 }

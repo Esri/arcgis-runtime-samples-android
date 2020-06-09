@@ -11,6 +11,7 @@
         "geometry",
         "split"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/cut-geometry.htm"
     ],
@@ -20,7 +21,7 @@
         "Polyline"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/cutgeometry/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/cutgeometry/MainActivity.java"
     ],
     "title": "Cut geometry"
 }

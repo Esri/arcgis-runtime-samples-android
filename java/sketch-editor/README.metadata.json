@@ -11,6 +11,7 @@
         "edit",
         "sketch"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/sketch-editor.htm"
     ],
@@ -23,7 +24,7 @@
         "SketchEditor"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/sketcheditor/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/sketcheditor/MainActivity.java"
     ],
     "title": "Sketch editor"
 }

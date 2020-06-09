@@ -11,6 +11,7 @@
         "rendering rules",
         "visualization"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/raster-rendering-rule.htm"
     ],
@@ -20,7 +21,7 @@
         "RenderingRule"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/rasterrenderingrule/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/rasterrenderingrule/MainActivity.kt"
     ],
     "title": "Raster rendering rule"
 }

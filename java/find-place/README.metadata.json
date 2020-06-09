@@ -17,6 +17,7 @@
         "search",
         "suggestions"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/find-place.htm"
     ],
@@ -28,7 +29,7 @@
         "SuggestResult"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/findplace/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/findplace/MainActivity.java"
     ],
     "title": "Find place"
 }

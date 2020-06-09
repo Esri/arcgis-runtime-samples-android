@@ -11,6 +11,7 @@
         "download",
         "offline"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/export-tiles.htm"
     ],
@@ -22,7 +23,7 @@
         "TileCache"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/exporttiles/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/exporttiles/MainActivity.kt"
     ],
     "title": "Export tiles"
 }

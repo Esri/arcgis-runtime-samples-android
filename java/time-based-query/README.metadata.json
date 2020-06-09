@@ -11,6 +11,7 @@
         "time",
         "time extent"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/time-based-query.htm"
     ],
@@ -20,7 +21,7 @@
         "TimeExtent"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/timebasedquery/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/timebasedquery/MainActivity.java"
     ],
     "title": "Time based query"
 }

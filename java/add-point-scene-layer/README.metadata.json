@@ -11,6 +11,7 @@
         "layers",
         "point scene layer"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/add-point-scene-layer.htm"
     ],
@@ -18,7 +19,7 @@
         "ArcGISSceneLayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/addpointscenelayer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/addpointscenelayer/MainActivity.java"
     ],
     "title": "Add point scene layer"
 }

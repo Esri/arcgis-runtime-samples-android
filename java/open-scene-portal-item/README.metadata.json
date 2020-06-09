@@ -11,13 +11,14 @@
         "scene",
         "web scene"
     ],
+    "language": "java",
     "relevant_apis": [
         "ArcGISScene",
         "PortalItem",
         "SceneView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/opensceneportalitem/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/opensceneportalitem/MainActivity.java"
     ],
     "title": "Open scene (portal item)"
 }

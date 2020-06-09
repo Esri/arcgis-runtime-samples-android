@@ -13,6 +13,7 @@
         "tiled layer",
         "visualization"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/arcgis-tiled-layer-url.htm"
     ],
@@ -23,7 +24,7 @@
         "MapView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/tiledlayerfromurl/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/tiledlayerfromurl/MainActivity.java"
     ],
     "title": "ArcGIS tiled layer URL"
 }

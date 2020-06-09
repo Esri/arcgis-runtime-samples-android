@@ -14,6 +14,7 @@
         "editing",
         "value"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/feature-layer-update-attributes.htm"
     ],
@@ -23,8 +24,8 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/featurelayerupdateattributes/DamageTypesListActivity.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/featurelayerupdateattributes/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayerupdateattributes/DamageTypesListActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayerupdateattributes/MainActivity.java"
     ],
     "title": "Feature layer update attributes"
 }

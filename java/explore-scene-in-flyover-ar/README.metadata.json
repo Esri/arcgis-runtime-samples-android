@@ -15,12 +15,13 @@
         "mixed reality",
         "translation factor"
     ],
+    "language": "java",
     "relevant_apis": [
         "ArcGISARView",
         "SceneView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/exploresceneinflyoverar/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/exploresceneinflyoverar/MainActivity.java"
     ],
     "title": "Explore scenes in flyover AR"
 }

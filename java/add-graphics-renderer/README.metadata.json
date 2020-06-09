@@ -14,6 +14,7 @@
         "renderer",
         "symbol"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/add-graphics-renderer.htm"
     ],
@@ -27,7 +28,7 @@
         "SimpleRenderer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/addgraphicsrenderer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/addgraphicsrenderer/MainActivity.java"
     ],
     "title": "Add graphics with renderer"
 }

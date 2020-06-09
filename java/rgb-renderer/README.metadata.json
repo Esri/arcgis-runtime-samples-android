@@ -20,6 +20,7 @@
         "stretch",
         "visualization"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=7c4c679ab06a4df19dc497f577f111bd"
     ],
@@ -37,8 +38,8 @@
         "StretchParameters"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/rgbrenderer/MainActivity.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/rgbrenderer/ParametersDialogFragment.java"
+        "src/main/java/com/esri/arcgisruntime/sample/rgbrenderer/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/rgbrenderer/ParametersDialogFragment.java"
     ],
     "title": "RGB renderer"
 }

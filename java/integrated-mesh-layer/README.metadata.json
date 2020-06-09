@@ -11,6 +11,7 @@
         "integrated mesh",
         "layers"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/add-an-integrated-mesh-layer.htm"
     ],
@@ -18,7 +19,7 @@
         "IntegratedMeshLayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/integratedmeshlayer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/integratedmeshlayer/MainActivity.java"
     ],
     "title": "Integrated mesh layer"
 }

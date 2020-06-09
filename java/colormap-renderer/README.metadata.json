@@ -13,6 +13,7 @@
         "renderer",
         "visualization"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=95392f99970d4a71bd25951beb34a508"
     ],
@@ -28,7 +29,7 @@
         "RasterLayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/colormaprenderer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/colormaprenderer/MainActivity.java"
     ],
     "title": "Colormap renderer"
 }

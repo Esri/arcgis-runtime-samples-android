@@ -10,6 +10,7 @@
         "extent",
         "zoom"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/set-initial-map-area.htm"
     ],
@@ -21,7 +22,7 @@
         "Viewpoint"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/setinitialmaparea/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/setinitialmaparea/MainActivity.java"
     ],
     "title": "Set initial map area"
 }

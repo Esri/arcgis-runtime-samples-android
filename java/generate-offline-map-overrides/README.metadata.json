@@ -19,6 +19,7 @@
         "scale range",
         "setting"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/generate-offline-map-overrides.htm"
     ],
@@ -34,7 +35,7 @@
         "OfflineMapTask"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/generateofflinemapoverrides/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/generateofflinemapoverrides/MainActivity.java"
     ],
     "title": "Generate offline map (overrides)"
 }

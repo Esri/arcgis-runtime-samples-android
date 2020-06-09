@@ -14,6 +14,7 @@
         "relationship",
         "search"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/list-related-features.htm"
     ],
@@ -25,7 +26,7 @@
         "RelatedFeatureQueryResult"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/listrelatedfeatures/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/listrelatedfeatures/MainActivity.java"
     ],
     "title": "List related features"
 }

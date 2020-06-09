@@ -13,6 +13,7 @@
         "spatial reference",
         "transformation"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/transforms-by-suitability.htm"
     ],
@@ -25,8 +26,8 @@
         "TransformationCatalog"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/transformsbysuitability/DatumTransformationAdapter.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/transformsbysuitability/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/transformsbysuitability/DatumTransformationAdapter.java",
+        "src/main/java/com/esri/arcgisruntime/sample/transformsbysuitability/MainActivity.java"
     ],
     "title": "Transforms by suitability"
 }

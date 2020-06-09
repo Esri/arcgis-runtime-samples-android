@@ -16,6 +16,7 @@
         "scene",
         "symbology"
     ],
+    "language": "java",
     "relevant_apis": [
         "Graphic",
         "GraphicsOverlay",
@@ -25,7 +26,7 @@
         "SimpleRenderer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/scenepropertyexpressions/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/scenepropertyexpressions/MainActivity.java"
     ],
     "title": "Scene property expressions"
 }

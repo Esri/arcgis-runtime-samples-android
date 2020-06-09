@@ -12,6 +12,7 @@
         "heat map",
         "viewshed"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/viewshed-geoprocessing.htm"
     ],
@@ -24,7 +25,7 @@
         "GeoprocessingTask"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/viewshedgeoprocessing/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/viewshedgeoprocessing/MainActivity.kt"
     ],
     "title": "Viewshed geoprocessing"
 }

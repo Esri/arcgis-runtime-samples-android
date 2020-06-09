@@ -17,6 +17,7 @@
         "utility network",
         "validate consistency"
     ],
+    "language": "kotlin",
     "relevant_apis": [
         "FractionAlong",
         "UtilityAssetType",
@@ -35,7 +36,7 @@
         "UtilityTraversability"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/traceutilitynetwork/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/traceutilitynetwork/MainActivity.kt"
     ],
     "title": "Trace utility network"
 }

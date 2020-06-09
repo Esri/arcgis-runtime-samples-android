@@ -11,6 +11,7 @@
         "sublayer",
         "visibility"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/change-sublayer-visibility.htm"
     ],
@@ -19,7 +20,7 @@
         "SubLayerList"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/mapimagelayersublayervisibility/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/mapimagelayersublayervisibility/MainActivity.java"
     ],
     "title": "Change sublayer visibility"
 }

@@ -13,6 +13,7 @@
         "utilities",
         "visualization"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=b87307dcfb26411eb2e92e1627cb615b"
     ],
@@ -25,7 +26,7 @@
         "LayerContent"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/annotationsublayer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/annotationsublayer/MainActivity.java"
     ],
     "title": "Control annotation sublayer visibility"
 }

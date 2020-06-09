@@ -11,6 +11,7 @@
         "clip",
         "geometry"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/clip-geometry.htm"
     ],
@@ -22,7 +23,7 @@
         "GraphicsOverlay"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/clipgeometry/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/clipgeometry/MainActivity.java"
     ],
     "title": "Clip geometry"
 }

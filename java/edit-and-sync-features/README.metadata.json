@@ -12,6 +12,7 @@
         "offline",
         "synchronize"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=72e703cd01654e7796eb1ae75af1cb53"
     ],
@@ -32,7 +33,7 @@
         "SyncLayerOption"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/editandsyncfeatures/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/editandsyncfeatures/MainActivity.java"
     ],
     "title": "Edit and sync features"
 }

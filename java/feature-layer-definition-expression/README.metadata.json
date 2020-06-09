@@ -15,6 +15,7 @@
         "restrict data",
         "where clause"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/feature-layer-definition-expression.htm"
     ],
@@ -24,7 +25,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/samples/featurelayerdefinitionexpression/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/samples/featurelayerdefinitionexpression/MainActivity.java"
     ],
     "title": "Feature layer definition expression"
 }

@@ -11,6 +11,7 @@
         "relationship",
         "spatial analysis"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/spatial-relationships.htm"
     ],
@@ -24,9 +25,9 @@
         "Polyline"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/spatialrelationships/ExpandableListAdapter.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/spatialrelationships/MainActivity.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/spatialrelationships/ResultsActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/spatialrelationships/ExpandableListAdapter.java",
+        "src/main/java/com/esri/arcgisruntime/sample/spatialrelationships/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/spatialrelationships/ResultsActivity.java"
     ],
     "title": "Spatial relationships"
 }

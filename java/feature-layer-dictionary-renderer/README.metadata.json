@@ -10,6 +10,7 @@
         "military",
         "symbol"
     ],
+    "language": "java",
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=c78b149a1d52414682c86a5feeb13d30",
         "https://www.arcgis.com/home/item.html?id=e0d41b4b409a49a5a7ba11939d8535dc"
@@ -26,7 +27,7 @@
         "DictionarySymbolStyle"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/featurelayerdictionaryrenderer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayerdictionaryrenderer/MainActivity.java"
     ],
     "title": "Feature layer dictionary renderer"
 }

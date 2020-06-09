@@ -13,6 +13,7 @@
         "vector tiled layer",
         "vector tiles"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/arcgis-vector-tiled-layer-url.htm"
     ],
@@ -21,7 +22,7 @@
         "Basemap"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/arcgisvectortiledlayerurl/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/arcgisvectortiledlayerurl/MainActivity.java"
     ],
     "title": "ArcGIS vector tiled layer URL"
 }

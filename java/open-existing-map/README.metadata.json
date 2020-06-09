@@ -10,6 +10,7 @@
         "portal item",
         "web map"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/open-existing-map.htm"
     ],
@@ -20,7 +21,7 @@
         "PortalItem"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/openexistingmap/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/openexistingmap/MainActivity.java"
     ],
     "title": "Open existing map"
 }

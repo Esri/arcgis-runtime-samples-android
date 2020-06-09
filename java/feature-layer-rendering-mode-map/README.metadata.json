@@ -13,6 +13,7 @@
         "rendering",
         "static"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/feature-layer-rendering-mode-map.htm"
     ],
@@ -24,7 +25,7 @@
         "MapView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/featurelayerrenderingmodemap/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayerrenderingmodemap/MainActivity.java"
     ],
     "title": "Feature layer rendering mode (map)"
 }

@@ -13,6 +13,7 @@
         "Keyhole",
         "OGC"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/create-terrain-from-a-local-raster.htm"
     ],
@@ -28,8 +29,8 @@
         "SketchEditor"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/createandsavekmlfile/MainActivity.kt",
-        "/src/main/java/com/esri/arcgisruntime/sample/createandsavekmlfile/PointSymbolAdapter.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/createandsavekmlfile/MainActivity.kt",
+        "src/main/java/com/esri/arcgisruntime/sample/createandsavekmlfile/PointSymbolAdapter.kt"
     ],
     "title": "Create and save KML file"
 }

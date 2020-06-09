@@ -14,6 +14,7 @@
         "containment",
         "relationships"
     ],
+    "language": "kotlin",
     "relevant_apis": [
         "GraphicsOverlay",
         "UtilityAssociation",
@@ -21,7 +22,7 @@
         "UtilityNetwork"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/displayutilityassociations/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/displayutilityassociations/MainActivity.kt"
     ],
     "title": "Display utility associations"
 }

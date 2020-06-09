@@ -17,6 +17,7 @@
         "search",
         "transportation"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=260eb6535c824209964cf281766ebe43"
     ],
@@ -36,9 +37,9 @@
         "RouteTask"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MainActivity.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MapChooserActivity.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MapPreview.java"
+        "src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MapChooserActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/mobilemapsearchandroute/MapPreview.java"
     ],
     "title": "Mobile map (search and route)"
 }

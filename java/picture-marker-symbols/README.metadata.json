@@ -13,6 +13,7 @@
         "symbol",
         "visualization"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/picture-marker-symbols.htm"
     ],
@@ -20,7 +21,7 @@
         "PictureMarkerSymbol"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/picturemarkersymbols/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/picturemarkersymbols/MainActivity.java"
     ],
     "title": "Picture marker symbols"
 }

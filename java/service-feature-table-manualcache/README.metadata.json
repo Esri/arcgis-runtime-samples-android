@@ -11,6 +11,7 @@
         "feature request mode",
         "performance"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/service-feature-table-manual-cache.htm"
     ],
@@ -22,7 +23,7 @@
         "ServiceFeatureTable.setFeatureRequestMode"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/samples/servicefeaturetablemanualcache/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/samples/servicefeaturetablemanualcache/MainActivity.java"
     ],
     "title": "Service feature table (manual cache)"
 }

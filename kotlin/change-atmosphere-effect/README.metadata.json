@@ -11,6 +11,7 @@
         "horizon",
         "sky"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/change-atmosphere-effect.htm"
     ],
@@ -20,7 +21,7 @@
         "SceneView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/changeatmosphereeffect/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/changeatmosphereeffect/MainActivity.kt"
     ],
     "title": "Change atmosphere effect"
 }

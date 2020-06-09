@@ -10,6 +10,7 @@
         "extent",
         "zoom"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/set-initial-map-area.htm"
     ],
@@ -21,7 +22,7 @@
         "Viewpoint"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/setinitialmaparea/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/setinitialmaparea/MainActivity.kt"
     ],
     "title": "Set initial map area"
 }

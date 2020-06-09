@@ -12,6 +12,7 @@
         "status",
         "view"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/display-layer-view-state.htm"
     ],
@@ -22,7 +23,7 @@
         "MapView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/displaylayerviewstate/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/displaylayerviewstate/MainActivity.java"
     ],
     "title": "Display layer view state"
 }

@@ -10,6 +10,7 @@
         "group layer",
         "layers"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/group-layers.htm"
     ],
@@ -17,9 +18,9 @@
         "GroupLayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/grouplayers/BottomSheetRecyclerView.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/grouplayers/LayersAdapter.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/grouplayers/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/grouplayers/BottomSheetRecyclerView.java",
+        "src/main/java/com/esri/arcgisruntime/sample/grouplayers/LayersAdapter.java",
+        "src/main/java/com/esri/arcgisruntime/sample/grouplayers/MainActivity.java"
     ],
     "title": "Group layers"
 }

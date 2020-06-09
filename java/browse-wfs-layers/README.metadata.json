@@ -16,6 +16,7 @@
         "service",
         "web"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/browse-wfs-layers.htm"
     ],
@@ -28,9 +29,9 @@
         "WfsServiceInfo"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/BottomSheetRecyclerView.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/MainActivity.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/WfsLayerInfoAdapter.java"
+        "src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/BottomSheetRecyclerView.java",
+        "src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/browsewfslayers/WfsLayerInfoAdapter.java"
     ],
     "title": "Browse WFS layers"
 }

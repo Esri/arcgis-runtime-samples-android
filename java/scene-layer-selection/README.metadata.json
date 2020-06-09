@@ -16,6 +16,7 @@
         "search",
         "select"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/scene-layer-selection.htm"
     ],
@@ -25,7 +26,7 @@
         "SceneView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/scenelayerselection/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/scenelayerselection/MainActivity.java"
     ],
     "title": "Scene layer selection"
 }

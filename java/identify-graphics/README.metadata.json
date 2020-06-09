@@ -10,6 +10,7 @@
         "graphics",
         "identify"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/identify-graphics.htm"
     ],
@@ -19,7 +20,7 @@
         "MapView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/identifygraphics/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/identifygraphics/MainActivity.java"
     ],
     "title": "Identify graphics"
 }

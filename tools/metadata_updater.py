@@ -279,7 +279,8 @@ def update_1_sample(path: str):
 def main():
     # Initialize parser.
     msg = 'Metadata helper script. Run it against the top level folder of an ' \
-          'Android platform language (ie. kotlin or java). More descriptions to add here... '
+          'Android platform language (ie. kotlin or java) with the -m flag ' \
+          'or against a single sample using the -s flag and passing in eg. kotlin/my-sample-dir'
     parser = argparse.ArgumentParser(description=msg)
     parser.add_argument('-m', '--multiple', help='input directory of the language')
     parser.add_argument('-s', '--single', help='input directory of the sample')

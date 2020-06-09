@@ -13,6 +13,7 @@
         "online",
         "table"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/delete-features-feature-service-.htm"
     ],
@@ -22,8 +23,8 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/samples/deletefeaturesfeatureservice/ConfirmDeleteFeatureDialog.kt",
-        "/src/main/java/com/esri/arcgisruntime/samples/deletefeaturesfeatureservice/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/samples/deletefeaturesfeatureservice/ConfirmDeleteFeatureDialog.kt",
+        "src/main/java/com/esri/arcgisruntime/samples/deletefeaturesfeatureservice/MainActivity.kt"
     ],
     "title": "Delete features (feature service)"
 }

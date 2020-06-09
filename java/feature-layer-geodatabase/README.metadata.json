@@ -11,6 +11,7 @@
         "mobile",
         "offline"
     ],
+    "language": "java",
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=2b0f9e17105847809dfeb04e3cad69e0"
     ],
@@ -26,7 +27,7 @@
         "GeodatabaseFeatureTable"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/featurelayergeodatabase/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayergeodatabase/MainActivity.java"
     ],
     "title": "Feature layer (geodatabase)"
 }

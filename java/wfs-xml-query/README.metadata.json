@@ -15,6 +15,7 @@
         "service",
         "web"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/load-wfs-with-xml-query.htm"
     ],
@@ -25,7 +26,7 @@
         "WfsFeatureTable.setAxisOrder()"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/wfsxmlquery/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/wfsxmlquery/MainActivity.java"
     ],
     "title": "Load WFS with XML query"
 }

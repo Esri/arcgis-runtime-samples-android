@@ -14,6 +14,7 @@
         "scale",
         "viewpoint"
     ],
+    "language": "kotlin",
     "relevant_apis": [
         "ArcGISMap",
         "Basemap",
@@ -21,7 +22,7 @@
         "ViewPoint"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/samples/setminxmaxscale/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/samples/setminxmaxscale/MainActivity.kt"
     ],
     "title": "Set min max scale"
 }

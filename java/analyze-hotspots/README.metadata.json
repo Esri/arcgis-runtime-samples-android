@@ -13,6 +13,7 @@
         "hot spots",
         "hotspots"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/analyze-hotspots.htm"
     ],
@@ -23,7 +24,7 @@
         "GeoprocessingTask"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/analyzehotspots/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/analyzehotspots/MainActivity.java"
     ],
     "title": "Analyze hotspots"
 }

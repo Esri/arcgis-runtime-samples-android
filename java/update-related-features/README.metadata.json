@@ -13,6 +13,7 @@
         "service",
         "updating"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/update-related-features.htm"
     ],
@@ -22,7 +23,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/updaterelatedfeatures/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/updaterelatedfeatures/MainActivity.java"
     ],
     "title": "Update related features"
 }

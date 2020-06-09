@@ -12,6 +12,7 @@
         "locator",
         "search"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/find-address.htm"
     ],
@@ -21,7 +22,7 @@
         "LocatorTask"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/findaddress/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/findaddress/MainActivity.kt"
     ],
     "title": "Find address"
 }

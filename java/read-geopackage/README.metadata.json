@@ -15,6 +15,7 @@
         "raster",
         "table"
     ],
+    "language": "java",
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=68ec42517cdd439e81b036210483e8e7"
     ],
@@ -30,7 +31,7 @@
         "GeoPackageRasters"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/readgeopackage/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/readgeopackage/MainActivity.java"
     ],
     "title": "Read GeoPackage"
 }

@@ -13,6 +13,7 @@
         "map",
         "remove"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/manage-operational-layers.htm"
     ],
@@ -22,8 +23,8 @@
         "LayerList"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/LayerListAdapter.kt",
-        "/src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/LayerListAdapter.kt",
+        "src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/MainActivity.kt"
     ],
     "title": "Manage operational layers"
 }

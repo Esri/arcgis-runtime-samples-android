@@ -13,6 +13,7 @@
         "selection",
         "tolerance"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/feature-layer-selection.htm"
     ],
@@ -22,7 +23,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/featurelayerselection/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayerselection/MainActivity.kt"
     ],
     "title": "Feature layer selection"
 }

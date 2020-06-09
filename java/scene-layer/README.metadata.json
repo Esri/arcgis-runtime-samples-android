@@ -11,6 +11,7 @@
         "layer",
         "scene"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/scene-layer.htm"
     ],
@@ -20,7 +21,7 @@
         "SceneView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/scenelayer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/scenelayer/MainActivity.java"
     ],
     "title": "Scene layer"
 }

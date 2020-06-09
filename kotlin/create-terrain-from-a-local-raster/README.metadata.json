@@ -13,6 +13,7 @@
         "surface",
         "terrain"
     ],
+    "language": "kotlin",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=98092369c4ae4d549bbbd45dba993ebc"
     ],
@@ -27,7 +28,7 @@
         "Surface"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/samples/createterrainfromalocalraster/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/samples/createterrainfromalocalraster/MainActivity.kt"
     ],
     "title": "Create terrain from a local raster"
 }

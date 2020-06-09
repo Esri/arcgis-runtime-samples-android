@@ -10,6 +10,7 @@
         "WKID",
         "project"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/set-map-spatial-reference.htm"
     ],
@@ -21,7 +22,7 @@
         "SpatialReference"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/mapspatialreference/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/mapspatialreference/MainActivity.java"
     ],
     "title": "Set map spatial reference"
 }

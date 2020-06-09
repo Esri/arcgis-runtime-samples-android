@@ -17,6 +17,7 @@
         "latitude",
         "longitude"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/format-coordinates.htm"
     ],
@@ -26,7 +27,7 @@
         "CoordinateFormatter.UtmConversionMode"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/formatcoordinates/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/formatcoordinates/MainActivity.java"
     ],
     "title": "Format coordinates"
 }

@@ -13,13 +13,14 @@
         "scene",
         "surface"
     ],
+    "language": "java",
     "relevant_apis": [
         "ArcGISScene",
         "ArcGISTiledElevationSource",
         "SceneView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/displayscene/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/displayscene/MainActivity.java"
     ],
     "title": "Display scene"
 }

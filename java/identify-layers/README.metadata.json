@@ -12,6 +12,7 @@
         "recursive",
         "sublayers"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/identify-layers.htm"
     ],
@@ -21,7 +22,7 @@
         "MapView.identifyLayersAsync"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/identifylayers/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/identifylayers/MainActivity.java"
     ],
     "title": "Identify layers"
 }

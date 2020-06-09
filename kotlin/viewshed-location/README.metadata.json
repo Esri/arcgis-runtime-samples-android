@@ -13,6 +13,7 @@
         "viewshed",
         "visibility analysis"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/viewshed-location.htm"
     ],
@@ -24,7 +25,7 @@
         "Viewshed"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/viewshedlocation/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/viewshedlocation/MainActivity.kt"
     ],
     "title": "Viewshed location"
 }

@@ -17,6 +17,7 @@
         "shortest path",
         "turn-by-turn"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/find-route.htm"
     ],
@@ -29,7 +30,7 @@
         "Stop"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/findroute/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/findroute/MainActivity.java"
     ],
     "title": "Find route"
 }

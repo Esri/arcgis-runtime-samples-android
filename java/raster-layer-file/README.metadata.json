@@ -14,6 +14,7 @@
         "raster",
         "visualization"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=7c4c679ab06a4df19dc497f577f111bd"
     ],
@@ -28,7 +29,7 @@
         "RasterLayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/rasterlayerfile/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/rasterlayerfile/MainActivity.java"
     ],
     "title": "Raster layer (file)"
 }

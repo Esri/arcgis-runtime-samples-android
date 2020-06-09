@@ -12,6 +12,7 @@
         "visibility",
         "visibility analysis"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/line-of-sight-geoelement.htm"
     ],
@@ -21,7 +22,7 @@
         "LineOfSight.TargetVisibility"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/lineofsightgeoelement/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/lineofsightgeoelement/MainActivity.java"
     ],
     "title": "Line of sight geoelement"
 }

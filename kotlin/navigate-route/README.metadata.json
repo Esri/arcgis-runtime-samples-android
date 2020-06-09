@@ -14,6 +14,7 @@
         "turn-by-turn",
         "voice"
     ],
+    "language": "kotlin",
     "relevant_apis": [
         "DestinationStatus",
         "Location",
@@ -27,7 +28,7 @@
         "VoiceGuidance"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/navigateroute/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/navigateroute/MainActivity.kt"
     ],
     "title": "Navigate route"
 }

@@ -11,6 +11,7 @@
         "data",
         "graphic"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/distance-composite-symbol.htm"
     ],
@@ -20,7 +21,7 @@
         "DistanceCompositeSceneSymbol.getRangeCollection"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/distancecompositesymbol/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/distancecompositesymbol/MainActivity.java"
     ],
     "title": "Distance composite symbol"
 }

@@ -19,6 +19,7 @@
         "routing",
         "world-scale"
     ],
+    "language": "java",
     "relevant_apis": [
         "ArcGISArView",
         "LocationDataSource",
@@ -28,8 +29,8 @@
         "Surface"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/navigateinar/ARNavigateActivity.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/navigateinar/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/navigateinar/ARNavigateActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/navigateinar/MainActivity.java"
     ],
     "title": "Navigate in AR"
 }

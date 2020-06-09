@@ -15,6 +15,7 @@
         "view",
         "zoom"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/change-viewpoint.htm"
     ],
@@ -26,7 +27,7 @@
         "Viewpoint"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/changeviewpoint/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/changeviewpoint/MainActivity.java"
     ],
     "title": "Change viewpoint"
 }

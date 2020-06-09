@@ -13,6 +13,7 @@
         "remember",
         "security"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/token-authentication.htm"
     ],
@@ -26,7 +27,7 @@
         "PortalItem"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/tokenauthentication/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/tokenauthentication/MainActivity.java"
     ],
     "title": "Token authentication"
 }

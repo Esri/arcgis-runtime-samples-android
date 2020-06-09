@@ -15,6 +15,7 @@
         "OGC",
         "weather"
     ],
+    "language": "java",
     "relevant_apis": [
         "GeoView.identifyLayerAsync",
         "IdentifyLayerResult",
@@ -22,7 +23,7 @@
         "KmlPlacemark"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/identifykmlfeatures/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/identifykmlfeatures/MainActivity.java"
     ],
     "title": "Identify KML features"
 }

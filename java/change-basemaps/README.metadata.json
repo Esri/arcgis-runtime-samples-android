@@ -10,6 +10,7 @@
         "basemap",
         "map"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/change-basemaps.htm"
     ],
@@ -19,7 +20,7 @@
         "MapView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/switchbasemaps/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/switchbasemaps/MainActivity.java"
     ],
     "title": "Change basemaps"
 }

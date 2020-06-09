@@ -14,6 +14,7 @@
         "terrain",
         "tile cache"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=cce37043eb0440c7a5c109cf8aad5500"
     ],
@@ -28,7 +29,7 @@
         "Surface"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/samples/createterrainfromalocaltilepackage/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/samples/createterrainfromalocaltilepackage/MainActivity.java"
     ],
     "title": "Create terrain from a local tile package"
 }

@@ -13,6 +13,7 @@
         "map",
         "remove"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/manage-operational-layers.htm"
     ],
@@ -22,10 +23,10 @@
         "LayerList"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/listviewdragginganimation/DynamicListView.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/listviewdragginganimation/StableArrayAdapter.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/MainActivity.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/OperationalLayers.java"
+        "src/main/java/com/esri/arcgisruntime/sample/listviewdragginganimation/DynamicListView.java",
+        "src/main/java/com/esri/arcgisruntime/sample/listviewdragginganimation/StableArrayAdapter.java",
+        "src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/manageoperationallayers/OperationalLayers.java"
     ],
     "title": "Manage operational layers"
 }

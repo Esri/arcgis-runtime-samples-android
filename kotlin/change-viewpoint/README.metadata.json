@@ -15,6 +15,7 @@
         "view",
         "zoom"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/change-viewpoint.htm"
     ],
@@ -26,7 +27,7 @@
         "Viewpoint"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/changeviewpoint/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/changeviewpoint/MainActivity.kt"
     ],
     "title": "Change viewpoint"
 }

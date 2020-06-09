@@ -11,6 +11,7 @@
         "authentication",
         "security"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/integrated-windows-authentication.htm"
     ],
@@ -20,8 +21,8 @@
         "UserCredential"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/MainActivity.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/PortalItemAdapter.java"
+        "src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/PortalItemAdapter.java"
     ],
     "title": "Integrated Windows authentication"
 }

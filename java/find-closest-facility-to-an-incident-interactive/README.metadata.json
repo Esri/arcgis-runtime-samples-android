@@ -12,6 +12,7 @@
         "route",
         "search"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/find-closest-facility-to-an-incident-interactive.htm"
     ],
@@ -27,7 +28,7 @@
         "MapView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/findclosestfacilitytoanincidentinteractive/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/findclosestfacilitytoanincidentinteractive/MainActivity.java"
     ],
     "title": "Find closest facility to an incident (interactive)"
 }

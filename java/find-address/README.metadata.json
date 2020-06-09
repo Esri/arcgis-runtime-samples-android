@@ -12,6 +12,7 @@
         "locator",
         "search"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/find-address.htm"
     ],
@@ -21,7 +22,7 @@
         "LocatorTask"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/findaddress/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/findaddress/MainActivity.java"
     ],
     "title": "Find address"
 }

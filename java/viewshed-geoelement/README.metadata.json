@@ -15,6 +15,7 @@
         "viewshed",
         "visibility analysis"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/viewshed-geoelement.htm"
     ],
@@ -27,7 +28,7 @@
         "OrbitGeoElementCameraController"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/viewshedgeoelement/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/viewshedgeoelement/MainActivity.java"
     ],
     "title": "Viewshed GeoElement"
 }

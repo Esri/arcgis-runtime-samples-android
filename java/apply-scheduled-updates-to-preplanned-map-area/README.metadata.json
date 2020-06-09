@@ -13,6 +13,7 @@
         "synchronize",
         "update"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=740b663bff5e4198b9b6674af93f638a"
     ],
@@ -28,7 +29,7 @@
         "OfflineMapUpdatesInfo"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/applyscheduledupdatestopreplannedmaparea/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/applyscheduledupdatestopreplannedmaparea/MainActivity.java"
     ],
     "title": "Apply scheduled updates to preplanned map area"
 }

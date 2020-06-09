@@ -17,6 +17,7 @@
         "utility network",
         "validate consistency"
     ],
+    "language": "kotlin",
     "relevant_apis": [
         "CodedValueDomain",
         "UtilityAssetType",
@@ -42,7 +43,7 @@
         "UtilityTraversability"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/configuresubnetworktrace/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/configuresubnetworktrace/MainActivity.kt"
     ],
     "title": "Configure subnetwork trace"
 }

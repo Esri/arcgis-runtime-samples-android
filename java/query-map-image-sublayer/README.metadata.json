@@ -9,6 +9,7 @@
     "keywords": [
         "search and query"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/query-map-image-sublayer.htm"
     ],
@@ -19,7 +20,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/querymapimagesublayer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/querymapimagesublayer/MainActivity.java"
     ],
     "title": "Query map image sublayer"
 }

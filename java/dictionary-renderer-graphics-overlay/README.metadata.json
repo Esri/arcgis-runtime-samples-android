@@ -13,6 +13,7 @@
         "tactical",
         "visualization"
     ],
+    "language": "java",
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=c78b149a1d52414682c86a5feeb13d30"
     ],
@@ -28,7 +29,7 @@
         "GraphicsOverlay"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/dictionaryrenderergraphicsoverlay/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/dictionaryrenderergraphicsoverlay/MainActivity.java"
     ],
     "title": "Dictionary renderer with graphics overlay"
 }

@@ -15,12 +15,13 @@
         "open",
         "street"
     ],
+    "language": "java",
     "relevant_apis": [
         "Map",
         "MapView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/openstreetmaplayer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/openstreetmaplayer/MainActivity.java"
     ],
     "title": "OpenStreetMap layer"
 }

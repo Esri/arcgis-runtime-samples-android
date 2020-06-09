@@ -9,6 +9,7 @@
     "keywords": [
         "map"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/map-load-status.htm"
     ],
@@ -18,7 +19,7 @@
         "MapView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/maploaded/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/maploaded/MainActivity.java"
     ],
     "title": "Map load status"
 }

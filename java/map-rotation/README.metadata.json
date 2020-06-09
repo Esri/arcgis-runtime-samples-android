@@ -11,6 +11,7 @@
         "rotation",
         "viewpoint"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/map-rotation.htm"
     ],
@@ -19,7 +20,7 @@
         "MapView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/maprotation/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/maprotation/MainActivity.java"
     ],
     "title": "Map rotation"
 }

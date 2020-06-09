@@ -15,6 +15,7 @@
         "rotation",
         "visualize"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/animate-3d-graphic.htm"
     ],
@@ -32,7 +33,7 @@
         "SurfacePlacement"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/animate3dgraphic/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/animate3dgraphic/MainActivity.java"
     ],
     "title": "Animate 3D graphic"
 }

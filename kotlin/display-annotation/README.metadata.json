@@ -15,12 +15,13 @@
         "text",
         "utility"
     ],
+    "language": "kotlin",
     "relevant_apis": [
         "AnnotationLayer",
         "FeatureLayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/displayannotation/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/displayannotation/MainActivity.kt"
     ],
     "title": "Display annotation"
 }

@@ -16,6 +16,7 @@
         "popup",
         "tap"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/show-callout.htm"
     ],
@@ -25,7 +26,7 @@
         "Point"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/samples/showcallout/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/samples/showcallout/MainActivity.java"
     ],
     "title": "Show callout"
 }

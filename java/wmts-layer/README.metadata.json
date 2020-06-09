@@ -13,6 +13,7 @@
         "tiled",
         "web map tile service"
     ],
+    "language": "java",
     "relevant_apis": [
         "WmtsLayer",
         "WmtsLayerInfo",
@@ -20,7 +21,7 @@
         "WmtsServiceInfo"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/wmtslayer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/wmtslayer/MainActivity.java"
     ],
     "title": "WMTS layer"
 }

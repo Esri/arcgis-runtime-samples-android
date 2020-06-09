@@ -14,6 +14,7 @@
         "save",
         "web map"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=628e8e3521cf45e9a28a12fe10c02c4d"
     ],
@@ -30,9 +31,9 @@
         "OfflineMapTask"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/generateofflinemapwithlocalbasemap/LocalBasemapAlertDialogFragment.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/generateofflinemapwithlocalbasemap/MainActivity.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/generateofflinemapwithlocalbasemap/ProgressDialogFragment.java"
+        "src/main/java/com/esri/arcgisruntime/sample/generateofflinemapwithlocalbasemap/LocalBasemapAlertDialogFragment.java",
+        "src/main/java/com/esri/arcgisruntime/sample/generateofflinemapwithlocalbasemap/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/generateofflinemapwithlocalbasemap/ProgressDialogFragment.java"
     ],
     "title": "Generate offline map with local basemap"
 }

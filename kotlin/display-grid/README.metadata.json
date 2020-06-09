@@ -19,6 +19,7 @@
         "minutes",
         "seconds"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/display-grid.htm"
     ],
@@ -33,7 +34,7 @@
         "UtmGrid"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/displaygrid/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/displaygrid/MainActivity.kt"
     ],
     "title": "Display grid"
 }

@@ -11,6 +11,7 @@
         "renderer",
         "visualization"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/change-feature-layer-renderer.htm"
     ],
@@ -20,7 +21,7 @@
         "SimpleRenderer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/samples/changefeaturelayerrenderer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/samples/changefeaturelayerrenderer/MainActivity.java"
     ],
     "title": "Change feature layer renderer"
 }

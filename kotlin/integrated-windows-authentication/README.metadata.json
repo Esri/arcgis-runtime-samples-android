@@ -11,6 +11,7 @@
         "authentication",
         "security"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/integrated-windows-authentication.htm"
     ],
@@ -20,9 +21,9 @@
         "UserCredential"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/CredentialDialogFragment.kt",
-        "/src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/MainActivity.kt",
-        "/src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/PortalItemAdapter.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/CredentialDialogFragment.kt",
+        "src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/MainActivity.kt",
+        "src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/PortalItemAdapter.kt"
     ],
     "title": "Integrated Windows authentication"
 }

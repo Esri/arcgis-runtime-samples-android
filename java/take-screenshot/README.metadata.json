@@ -16,6 +16,7 @@
         "share",
         "shot"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/take-screenshot.htm"
     ],
@@ -24,7 +25,7 @@
         "MapView.exportImageAsync"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/takescreenshot/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/takescreenshot/MainActivity.java"
     ],
     "title": "Take screenshot"
 }

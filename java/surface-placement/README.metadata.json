@@ -18,6 +18,7 @@
         "sea level",
         "surface placement"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/surface-placement.htm"
     ],
@@ -29,7 +30,7 @@
         "Surface"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/surfaceplacement/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/surfaceplacement/MainActivity.java"
     ],
     "title": "Surface placement"
 }

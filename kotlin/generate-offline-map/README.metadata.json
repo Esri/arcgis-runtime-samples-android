@@ -12,6 +12,7 @@
         "save",
         "web map"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/generate-offline-map.htm"
     ],
@@ -23,7 +24,7 @@
         "Portal"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/generateofflinemap/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/generateofflinemap/MainActivity.kt"
     ],
     "title": "Generate offline map"
 }

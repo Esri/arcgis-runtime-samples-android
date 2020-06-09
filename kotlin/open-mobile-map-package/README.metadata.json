@@ -11,6 +11,7 @@
         "mobile map package",
         "offline"
     ],
+    "language": "kotlin",
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=e1f3a7254cb845b09450f54937c16061"
     ],
@@ -25,7 +26,7 @@
         "MobileMapPackage"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/openmobilemappackage/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/openmobilemappackage/MainActivity.kt"
     ],
     "title": "Open mobile map package"
 }

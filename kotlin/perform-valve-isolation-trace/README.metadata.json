@@ -16,6 +16,7 @@
         "trace filter",
         "utility network"
     ],
+    "language": "kotlin",
     "relevant_apis": [
         "UtilityCategory",
         "UtilityCategoryComparison",
@@ -31,7 +32,7 @@
         "UtilityTraceType"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/performvalveisolationtrace/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/performvalveisolationtrace/MainActivity.kt"
     ],
     "title": "Perform valve isolation trace"
 }

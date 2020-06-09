@@ -12,6 +12,7 @@
         "styles",
         "visualization"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/style-wms-layer.htm"
     ],
@@ -21,7 +22,7 @@
         "WmsSublayerInfo"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/stylewmslayer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/stylewmslayer/MainActivity.java"
     ],
     "title": "Style WMS layer"
 }

@@ -14,6 +14,7 @@
         "service",
         "updating"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/feature-layer-update-geometry.htm"
     ],
@@ -23,7 +24,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/samples/featurelayerupdategeometry/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/samples/featurelayerupdategeometry/MainActivity.java"
     ],
     "title": "Feature layer update geometry"
 }

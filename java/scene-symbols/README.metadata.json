@@ -22,6 +22,7 @@
         "tube",
         "visualization"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/scene-symbols.htm"
     ],
@@ -33,7 +34,7 @@
         "SimpleMarkerSceneSymbol.Style"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/scenesymbols/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/scenesymbols/MainActivity.java"
     ],
     "title": "Scene symbols"
 }

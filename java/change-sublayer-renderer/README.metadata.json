@@ -15,6 +15,7 @@
         "symbology",
         "visualization"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/change-sublayer-renderer.htm"
     ],
@@ -25,7 +26,7 @@
         "ClassBreaksRenderer.ClassBreak"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/changesublayerrenderer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/changesublayerrenderer/MainActivity.java"
     ],
     "title": "Change sublayer renderer"
 }

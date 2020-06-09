@@ -11,6 +11,7 @@
         "camera",
         "camera controller"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/choose-camera-controller.htm"
     ],
@@ -23,7 +24,7 @@
         "SceneView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/choosecameracontroller/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/choosecameracontroller/MainActivity.java"
     ],
     "title": "Choose camera controller"
 }

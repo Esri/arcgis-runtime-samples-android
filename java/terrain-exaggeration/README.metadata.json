@@ -15,6 +15,7 @@
         "surface",
         "terrain"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/terrain-exaggeration.htm"
     ],
@@ -24,7 +25,7 @@
         "Surface.setElevationExaggeration"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/terrainexaggeration/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/terrainexaggeration/MainActivity.java"
     ],
     "title": "Terrain exaggeration"
 }

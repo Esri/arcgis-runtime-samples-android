@@ -22,6 +22,7 @@
         "sum",
         "variance"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/statistical-query.htm"
     ],
@@ -35,7 +36,7 @@
         "StatisticsQueryResult"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/statisticalquery/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/statisticalquery/MainActivity.java"
     ],
     "title": "Statistical query"
 }

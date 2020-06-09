@@ -11,6 +11,7 @@
         "translation",
         "user interface"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/attribution-view-change.htm"
     ],
@@ -18,7 +19,7 @@
         "MapView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/attributionviewchange/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/attributionviewchange/MainActivity.kt"
     ],
     "title": "Attribution view change"
 }

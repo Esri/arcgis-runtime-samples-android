@@ -12,6 +12,7 @@
         "visibility",
         "visibility analysis"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/location-line-of-sight.htm"
     ],
@@ -21,7 +22,7 @@
         "SceneView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/locationlineofsight/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/locationlineofsight/MainActivity.java"
     ],
     "title": "Location line of sight"
 }

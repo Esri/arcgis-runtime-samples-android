@@ -12,6 +12,7 @@
         "related features",
         "search"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/map-image-layer-tables.htm"
     ],
@@ -27,7 +28,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/mapimagelayertables/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/mapimagelayertables/MainActivity.java"
     ],
     "title": "Map image layer tables"
 }

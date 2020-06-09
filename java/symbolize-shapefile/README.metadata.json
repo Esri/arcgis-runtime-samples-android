@@ -13,6 +13,7 @@
         "symbology",
         "visualization"
     ],
+    "language": "java",
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=d98b3e5293834c5f852f13c569930caa"
     ],
@@ -27,7 +28,7 @@
         "SimpleRenderer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/symbolizeshapefile/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/symbolizeshapefile/MainActivity.java"
     ],
     "title": "Symbolize shapefile"
 }

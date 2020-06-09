@@ -10,6 +10,7 @@
         "symbol",
         "visualization"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/simple-marker-symbol.htm"
     ],
@@ -20,7 +21,7 @@
         "SimpleMarkerSymbol"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/simplemarkersymbol/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/simplemarkersymbol/MainActivity.java"
     ],
     "title": "Simple marker symbol"
 }

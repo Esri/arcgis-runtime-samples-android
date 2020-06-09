@@ -9,6 +9,7 @@
     "keywords": [
         "Search and Query"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/feature-layer-query.htm"
     ],
@@ -19,7 +20,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/featurelayerquery/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayerquery/MainActivity.kt"
     ],
     "title": "Feature layer query"
 }

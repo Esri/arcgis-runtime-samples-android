@@ -13,6 +13,7 @@
         "geodesic",
         "geodetic"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/geodesic-operations.htm"
     ],
@@ -21,7 +22,7 @@
         "GeometryEngine.lengthGeodetic"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/geodesicoperations/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/geodesicoperations/MainActivity.kt"
     ],
     "title": "Geodesic operations"
 }

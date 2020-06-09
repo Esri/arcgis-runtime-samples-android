@@ -14,6 +14,7 @@
         "network link",
         "network link control"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/display-kml-network-links.htm"
     ],
@@ -22,7 +23,7 @@
         "KmlLayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/displaykmlnetworklinks/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/displaykmlnetworklinks/MainActivity.java"
     ],
     "title": "Display KML network links"
 }

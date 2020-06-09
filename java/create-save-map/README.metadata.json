@@ -14,12 +14,13 @@
         "share",
         "web map"
     ],
+    "language": "java",
     "relevant_apis": [
         "ArcGISMap",
         "Portal"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/createsavemap/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/createsavemap/MainActivity.java"
     ],
     "title": "Create and save map"
 }

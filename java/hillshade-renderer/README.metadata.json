@@ -14,6 +14,7 @@
         "slope",
         "visualization"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=134d60f50e184e8fa56365f44e5ce3fb"
     ],
@@ -31,8 +32,8 @@
         "RasterLayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/hillshaderenderer/MainActivity.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/hillshaderenderer/ParametersDialogFragment.java"
+        "src/main/java/com/esri/arcgisruntime/sample/hillshaderenderer/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/hillshaderenderer/ParametersDialogFragment.java"
     ],
     "title": "Hillshade renderer"
 }

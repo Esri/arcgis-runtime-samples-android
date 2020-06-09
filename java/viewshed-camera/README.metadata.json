@@ -12,6 +12,7 @@
         "viewshed",
         "visibility analysis"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/viewshed-camera.htm"
     ],
@@ -23,7 +24,7 @@
         "LocationViewshed"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/viewshedcamera/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/viewshedcamera/MainActivity.java"
     ],
     "title": "Viewshed camera"
 }

@@ -12,6 +12,7 @@
         "location",
         "zoom"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/manage-bookmarks.htm"
     ],
@@ -21,7 +22,7 @@
         "Viewpoint"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/managebookmarks/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/managebookmarks/MainActivity.java"
     ],
     "title": "Manage bookmarks"
 }

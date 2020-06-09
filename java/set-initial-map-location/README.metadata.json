@@ -22,6 +22,7 @@
         "scale",
         "zoom level"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/set-initial-map-location.htm"
     ],
@@ -31,7 +32,7 @@
         "MapView"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/setinitialmaplocation/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/setinitialmaplocation/MainActivity.java"
     ],
     "title": "Set initial map location"
 }

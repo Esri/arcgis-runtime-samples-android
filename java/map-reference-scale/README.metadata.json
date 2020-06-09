@@ -11,6 +11,7 @@
         "reference scale",
         "scene"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/map-reference-scale.htm"
     ],
@@ -19,7 +20,7 @@
         "FeatureLayer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/mapreferencescale/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/mapreferencescale/MainActivity.java"
     ],
     "title": "Map reference scale"
 }

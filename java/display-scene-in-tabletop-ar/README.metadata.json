@@ -16,6 +16,7 @@
         "table-top",
         "tabletop"
     ],
+    "language": "java",
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=7dd2f97bb007466ea939160d0de96a9d"
     ],
@@ -27,7 +28,7 @@
         "Surface.setOpacity(...)"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/displaysceneintabletopar/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/displaysceneintabletopar/MainActivity.java"
     ],
     "title": "Display scene in tabletop AR"
 }

@@ -12,6 +12,7 @@
         "layers",
         "service"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/feature-layer-feature-service.htm"
     ],
@@ -23,7 +24,7 @@
         "ServiceFeatureTable"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/featurelayerfeatureservice/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayerfeatureservice/MainActivity.java"
     ],
     "title": "Feature layer (feature service)"
 }

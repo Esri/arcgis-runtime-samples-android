@@ -14,6 +14,7 @@
         "renderer",
         "symbol"
     ],
+    "language": "kotlin",
     "redirect_from": [
         "/android/latest/sample-code/add-graphics-renderer.htm"
     ],
@@ -27,7 +28,7 @@
         "SimpleRenderer"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/addgraphicsrenderer/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/addgraphicsrenderer/MainActivity.kt"
     ],
     "title": "Add graphics renderer"
 }

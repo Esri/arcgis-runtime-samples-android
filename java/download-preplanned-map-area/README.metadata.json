@@ -12,6 +12,7 @@
         "pre-planned",
         "preplanned"
     ],
+    "language": "java",
     "relevant_apis": [
         "DownloadPreplannedOfflineMapJob",
         "DownloadPreplannedOfflineMapParameters",
@@ -20,8 +21,8 @@
         "PreplannedMapArea"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/downloadpreplannedmaparea/MainActivity.java",
-        "/src/main/java/com/esri/arcgisruntime/sample/downloadpreplannedmaparea/ProgressDialogFragment.java"
+        "src/main/java/com/esri/arcgisruntime/sample/downloadpreplannedmaparea/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/downloadpreplannedmaparea/ProgressDialogFragment.java"
     ],
     "title": "Download preplanned map area"
 }

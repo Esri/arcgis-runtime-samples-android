@@ -12,6 +12,7 @@
         "underground",
         "utilities"
     ],
+    "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/view-content-beneath-the-terrain-surface.htm"
     ],
@@ -20,7 +21,7 @@
         "Surface"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/viewcontentbeneaththeterrainsurface/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/viewcontentbeneaththeterrainsurface/MainActivity.java"
     ],
     "title": "View content beneath the terrain surface"
 }
