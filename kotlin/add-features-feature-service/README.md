@@ -1,4 +1,4 @@
-# Add features
+# Add features (feature service)
 
 Add features to a feature layer.
 

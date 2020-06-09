@@ -1,17 +1,16 @@
 {
     "category": "Visualization",
-    "description": "Displays a FeatureLayer with military symbology, using ArcGIS Runtime's DictionaryRenderer.",
+    "description": "Convert features into graphics to show them with mil2525d symbols.",
+    "formal_name": "FeatureLayerDictionaryRenderer",
     "ignore": false,
     "images": [
         "feature-layer-dictionary-renderer.png"
     ],
     "keywords": [
-        "Visualization",
-        "DictionaryRenderer",
-        "DictionarySymbolStyle",
-        "FeatureLayer",
-        "Geodatabase"
+        "military",
+        "symbol"
     ],
+    "language": "java",
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=c78b149a1d52414682c86a5feeb13d30",
         "https://www.arcgis.com/home/item.html?id=e0d41b4b409a49a5a7ba11939d8535dc"
@@ -20,15 +19,15 @@
         "/mil2525d.stylx",
         "/militaryoverlay.geodatabase"
     ],
-    "redirect_from": "/android/latest/sample-code/feature-layer-dictionary-renderer.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/feature-layer-dictionary-renderer.htm"
+    ],
     "relevant_apis": [
         "DictionaryRenderer",
-        "DictionarySymbolStyle",
-        "FeatureLayer",
-        "Geodatabase"
+        "DictionarySymbolStyle"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/featurelayerdictionaryrenderer/MainActivity.java"
     ],
-    "title": "Feature Layer Dictionary Renderer"
+    "title": "Feature layer dictionary renderer"
 }

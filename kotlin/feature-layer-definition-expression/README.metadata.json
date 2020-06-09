@@ -1,20 +1,24 @@
 {
     "category": "Search and Query",
     "description": "Limit the features displayed on a map with a definition expression.",
+    "formal_name": "FeatureLayerDefinitionExpression",
     "ignore": false,
     "images": [
         "feature-layer-definition-expression.png"
     ],
     "keywords": [
+        "SQL",
         "definition expression",
         "filter",
         "limit data",
         "query",
         "restrict data",
-        "SQL",
         "where clause"
     ],
-    "redirect_from": "/android/latest/sample-code/feature-layer-definition-expression.htm",
+    "language": "kotlin",
+    "redirect_from": [
+        "/android/latest/sample-code/feature-layer-definition-expression.htm"
+    ],
     "relevant_apis": [
         "FeatureLayer",
         "FeatureLayer.setDefinitionExpression",

@@ -1,6 +1,7 @@
 {
     "category": "Maps and Scenes",
     "description": "Display the map at an initial viewpoint representing a bounding geometry.",
+    "formal_name": "SetInitialMapArea",
     "ignore": false,
     "images": [
         "set-initial-map-area.png"
@@ -9,13 +10,16 @@
         "extent",
         "zoom"
     ],
-    "redirect_from": "/android/latest/sample-code/set-initial-map-area.htm",
+    "language": "kotlin",
+    "redirect_from": [
+        "/android/latest/sample-code/set-initial-map-area.htm"
+    ],
     "relevant_apis": [
-      "ArcGISMap",
-      "Envelope",
-      "MapView",
-      "Point",
-      "Viewpoint"
+        "ArcGISMap",
+        "Envelope",
+        "MapView",
+        "Point",
+        "Viewpoint"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/setinitialmaparea/MainActivity.kt"

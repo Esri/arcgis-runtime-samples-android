@@ -1,23 +1,32 @@
 {
     "category": "Layers",
-    "description": "Open a GeoPackage, obtain a raster from the package, and display the table as a RasterLayer.",
+    "description": "Display a raster contained in a GeoPackage.",
+    "formal_name": "RasterLayerGeopackage",
     "ignore": false,
     "images": [
         "raster-layer-geopackage.png"
     ],
     "keywords": [
-        "Layers",
-        "GeoPackage",
-        "GeoPackageRaster",
-        "RasterLayer"
+        "OGC",
+        "container",
+        "data",
+        "image",
+        "import",
+        "layer",
+        "package",
+        "raster",
+        "visualization"
     ],
+    "language": "java",
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=68ec42517cdd439e81b036210483e8e7"
     ],
     "provision_to": [
         "/AuroraCO.gpkg"
     ],
-    "redirect_from": "/android/latest/sample-code/raster-layer-geopackage.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/raster-layer-geopackage.htm"
+    ],
     "relevant_apis": [
         "GeoPackage",
         "GeoPackageRaster",
@@ -26,5 +35,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/rasterlayergeopackage/MainActivity.java"
     ],
-    "title": "Raster Layer GeoPackage"
+    "title": "Raster layer (GeoPackage)"
 }

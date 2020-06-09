@@ -1,34 +1,34 @@
 {
     "category": "Routing and Logistics",
-    "description": "Navigation is often used by field workers while traveling between two points to get live directions based on their location.",
+    "description": "Use a routing service to navigate between two points.",
+    "formal_name": "NavigateRoute",
     "ignore": false,
     "images": [
         "navigate-route.png"
     ],
     "keywords": [
-        "Directions",
-        "Manoeuvre",
-        "Navigation",
-        "Route",
+        "directions",
+        "maneuver",
+        "navigation",
+        "route",
         "turn-by-turn",
-	    "voice"
+        "voice"
     ],
-    "redirect_from": "",
+    "language": "java",
     "relevant_apis": [
         "DestinationStatus",
-        "DirectionManeuver",
         "Location",
         "LocationDataSource",
-	    "ReroutingStrategy",
-	    "Route",
-	    "RouteParameters",
-	    "RouteTask",
-	    "RouteTracker",
-	    "Stop",
-	    "VoiceGuidance"
+        "ReroutingStrategy",
+        "Route",
+        "RouteParameters",
+        "RouteTask",
+        "RouteTracker",
+        "Stop",
+        "VoiceGuidance"
     ],
     "snippets": [
-	    "src/main/java/com/esri/arcgisruntime/sample/navigateroute/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/navigateroute/MainActivity.java"
     ],
     "title": "Navigate route"
 }

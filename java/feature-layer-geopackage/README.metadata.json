@@ -1,30 +1,37 @@
 {
     "category": "Layers",
-    "description": "Open a GeoPackage and show a GeoPackage feature table in a feature layer.",
+    "description": "Display features from a local GeoPackage.",
+    "formal_name": "FeatureLayerGeopackage",
     "ignore": false,
     "images": [
         "feature-layer-geopackage.png"
     ],
     "keywords": [
-        "Layers",
-        "FeatureLayer",
-        "FeatureTable",
-        "GeoPackage"
+        "OGC",
+        "feature table",
+        "geopackage",
+        "gpkg",
+        "package",
+        "standards"
     ],
+    "language": "java",
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=68ec42517cdd439e81b036210483e8e7"
     ],
     "provision_to": [
         "/AuroraCO.gpkg"
     ],
-    "redirect_from": "/android/latest/sample-code/feature-layer-geopackage.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/feature-layer-geopackage.htm"
+    ],
     "relevant_apis": [
+        "ArcGISMap",
         "FeatureLayer",
-        "FeatureTable",
-        "GeoPackage"
+        "GeoPackage",
+        "GeoPackageFeatureTable"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/featurelayergeopackage/MainActivity.java"
     ],
-    "title": "Feature Layer (GeoPackage)"
+    "title": "Feature layer (GeoPackage)"
 }

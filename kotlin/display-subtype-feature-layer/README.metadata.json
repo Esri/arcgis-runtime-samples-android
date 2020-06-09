@@ -1,11 +1,13 @@
 {
     "category": "Layers",
     "description": "Displays a composite layer of all the subtype values in a feature class.",
+    "formal_name": "DisplaySubtypeFeatureLayer",
     "ignore": false,
     "images": [
         "display-subtype-feature-layer.png"
     ],
     "keywords": [
+        "Layers",
         "asset group",
         "feature layer",
         "labeling",
@@ -15,10 +17,10 @@
         "utility network",
         "visible scale range"
     ],
-    "redirect_from": "",
+    "language": "kotlin",
     "relevant_apis": [
-        "ArcGISMap",
-        "MapView",
+        "LabelDefinition",
+        "ServiceFeatureTable",
         "SubtypeFeatureLayer",
         "SubtypeSublayer"
     ],

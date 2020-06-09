@@ -1,35 +1,38 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Take a web map offline, but instead of downloading an online basemap, use one which is already on the device.",
+    "description": "Use the `OfflineMapTask` to take a web map offline, but instead of downloading an online basemap, use one which is already on the device.",
+    "formal_name": "GenerateOfflineMapWithLocalBasemap",
     "ignore": false,
     "images": [
         "generate-offline-map-with-local-basemap.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "OfflineMapTask",
-        "GenerateOfflineMapParameters",
-        "GenerateOfflineMapParameterOverrides",
-        "GenerateOfflineMapJob",
-        "GenerateOfflineMapResult"
+        "basemap",
+        "download",
+        "local",
+        "offline",
+        "save",
+        "web map"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=628e8e3521cf45e9a28a12fe10c02c4d"
     ],
     "provision_to": [
         "/naperville_imagery.tpk"
     ],
-    "redirect_from": "/android/latest/sample-code/generate-offline-map-with-local-basemap.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/generate-offline-map-with-local-basemap.htm"
+    ],
     "relevant_apis": [
-        "OfflineMapTask",
-        "GenerateOfflineMapParameters",
-        "GenerateOfflineMapParameterOverrides",
         "GenerateOfflineMapJob",
-        "GenerateOfflineMapResult"
+        "GenerateOfflineMapParameters",
+        "GenerateOfflineMapResult",
+        "OfflineMapTask"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/generateofflinemapwithlocalbasemap/MainActivity.java",
         "src/main/java/com/esri/arcgisruntime/sample/generateofflinemapwithlocalbasemap/LocalBasemapAlertDialogFragment.java",
+        "src/main/java/com/esri/arcgisruntime/sample/generateofflinemapwithlocalbasemap/MainActivity.java",
         "src/main/java/com/esri/arcgisruntime/sample/generateofflinemapwithlocalbasemap/ProgressDialogFragment.java"
     ],
     "title": "Generate offline map with local basemap"

@@ -1,24 +1,28 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Use a feature service with a service feature table in on-interaction-cache mode (which is the default mode for service feature tables).",
+    "description": "Display a feature layer from a service using the **on interaction cache** feature request mode.",
+    "formal_name": "ServiceFeatureTableCache",
     "ignore": false,
     "images": [
         "service-feature-table-cache.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "FeatureLayer",
-        "ServiceFeatureTable",
-        "ServiceFeatureTable.setFeatureRequestMode(...)"
+        "cache",
+        "feature request mode",
+        "performance"
     ],
-    "redirect_from": "/android/latest/sample-code/service-feature-table-cache.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/service-feature-table-cache.htm"
+    ],
     "relevant_apis": [
         "FeatureLayer",
+        "FeatureRequestMode.ON_INTERACTION_CACHE",
         "ServiceFeatureTable",
-        "ServiceFeatureTable.setFeatureRequestMode(...)"
+        "ServiceFeatureTable.setFeatureRequestMode"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/servicefeaturetablecache/MainActivity.java"
     ],
-    "title": "Service Feature Table (Cache)"
+    "title": "Service feature table (Cache)"
 }

@@ -1,36 +1,38 @@
 {
-  "category": "Utility Networks",
-  "description": "Run a filtered trace to locate operable features that will isolate an area from the flow of network resources.",
-  "ignore": false,
-  "images": [
-    "perform-valve-isolation-trace.png"
-  ],
-  "keywords": [
-    "category comparison",
-    "condition barriers",
-    "isolated features",
-    "network analysis",
-    "subnetwork trace",
-    "trace configuration",
-    "trace filter",
-    "utility network"
-  ],
-  "relevant_apis": [
-    "UtilityCategory",
-    "UtilityCategoryComparison",
-    "UtilityCategoryComparisonOperator",
-    "UtilityElement",
-    "UtilityElementTraceResult",
-    "UtilityNetwork",
-    "UtilityNetworkDefinition",
-    "UtilityTier",
-    "UtilityTraceFilter",
-    "UtilityTraceParameters",
-    "UtilityTraceResult",
-    "UtilityTraceType"
-  ],
-  "snippets": [
-    "src/main/java/com/esri/arcgisruntime/sample/performvalveisolationtrace/MainActivity.kt"
-  ],
-  "title": "Perform valve isolation trace"
+    "category": "Utility Networks",
+    "description": "Run a filtered trace to locate operable features that will isolate an area from the flow of network resources.",
+    "formal_name": "PerformValveIsolationTrace",
+    "ignore": false,
+    "images": [
+        "perform-valve-isolation-trace.png"
+    ],
+    "keywords": [
+        "category comparison",
+        "condition barriers",
+        "isolated features",
+        "network analysis",
+        "subnetwork trace",
+        "trace configuration",
+        "trace filter",
+        "utility network"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "UtilityCategory",
+        "UtilityCategoryComparison",
+        "UtilityCategoryComparisonOperator",
+        "UtilityElement",
+        "UtilityElementTraceResult",
+        "UtilityNetwork",
+        "UtilityNetworkDefinition",
+        "UtilityTier",
+        "UtilityTraceFilter",
+        "UtilityTraceParameters",
+        "UtilityTraceResult",
+        "UtilityTraceType"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/performvalveisolationtrace/MainActivity.kt"
+    ],
+    "title": "Perform valve isolation trace"
 }

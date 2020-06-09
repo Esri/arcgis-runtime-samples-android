@@ -1,6 +1,7 @@
 {
     "category": "Edit and Manage Data",
     "description": "Generate a local geodatabase from an online feature service.",
+    "formal_name": "GenerateGeodatabase",
     "ignore": false,
     "images": [
         "generate-geodatabase.png"
@@ -11,18 +12,21 @@
         "offline",
         "sync"
     ],
+    "language": "kotlin",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=72e703cd01654e7796eb1ae75af1cb53"
     ],
     "provision_to": [
         "/SanFrancisco.tpk"
     ],
-    "redirect_from": "/android/latest/sample-code/generate-geodatabase.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/generate-geodatabase.htm"
+    ],
     "relevant_apis": [
-      "GenerateGeodatabaseJob",
-      "GenerateGeodatabaseParameters",
-      "Geodatabase",
-      "GeodatabaseSyncTask"
+        "GenerateGeodatabaseJob",
+        "GenerateGeodatabaseParameters",
+        "Geodatabase",
+        "GeodatabaseSyncTask"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/generategeodatabase/MainActivity.kt"

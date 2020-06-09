@@ -1,31 +1,31 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Edit attributes of a feature in a feature layer.",
+    "description": "Update feature attributes in an online feature service.",
+    "formal_name": "FeatureLayerUpdateAttributes",
     "ignore": false,
     "images": [
         "feature-layer-update-attributes.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "FeatureLayer",
-        "ArcGISFeature",
-        "ServiceFeatureTable",
-        "Callout",
-        "FeatureEditResult",
-        "IdentifyLayerResult"
+        "attribute",
+        "coded value",
+        "coded value domain",
+        "domain",
+        "editing",
+        "value"
     ],
-    "redirect_from": "/android/latest/sample-code/feature-layer-update-attributes.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/feature-layer-update-attributes.htm"
+    ],
     "relevant_apis": [
-        "FeatureLayer",
         "ArcGISFeature",
-        "ServiceFeatureTable",
-        "Callout",
-        "FeatureEditResult",
-        "IdentifyLayerResult"
+        "FeatureLayer",
+        "ServiceFeatureTable"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/featurelayerupdateattributes/MainActivity.java",
-        "src/main/java/com/esri/arcgisruntime/sample/featurelayerupdateattributes/DamageTypesListActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayerupdateattributes/DamageTypesListActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/featurelayerupdateattributes/MainActivity.java"
     ],
-    "title": "Feature Layer Update Attributes"
+    "title": "Feature layer update attributes"
 }

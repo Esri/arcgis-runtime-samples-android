@@ -1,32 +1,32 @@
 {
     "category": "Search and Query",
     "description": "Load a WFS feature table using an XML query.",
+    "formal_name": "LoadWfsWithXmlQuery",
     "ignore": false,
     "images": [
         "wfs-xml-query.png"
     ],
     "keywords": [
-        "Search and Query",
         "OGC",
         "WFS",
-        "feature",
-        "web",
-        "service",
         "XML",
-        "FeatureLayer",
-        "WfsFeatureTable",
-        "WfsFeatureTable.setAxisOrder()",
-        "WfsFeatureTable.populateFromServiceAsync()"
+        "feature",
+        "query",
+        "service",
+        "web"
     ],
-    "redirect_from": "/android/latest/sample-code/load-wfs-with-xml-query.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/load-wfs-with-xml-query.htm"
+    ],
     "relevant_apis": [
         "FeatureLayer",
         "WfsFeatureTable",
-        "WfsFeatureTable.setAxisOrder()",
-        "WfsFeatureTable.populateFromServiceAsync()"
+        "WfsFeatureTable.populateFromServiceAsync()",
+        "WfsFeatureTable.setAxisOrder()"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/wfsxmlquery/MainActivity.java"
     ],
-    "title": "WFS XML query"
+    "title": "Load WFS with XML query"
 }

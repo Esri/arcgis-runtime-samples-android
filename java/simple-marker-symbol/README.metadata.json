@@ -1,24 +1,27 @@
 {
     "category": "Visualization",
-    "description": "Add a graphic to a graphics overlay with a symbol of a red point specified via a simple marker symbol.",
+    "description": "Show a simple marker symbol on a map.",
+    "formal_name": "SimpleMarkerSymbol",
     "ignore": false,
     "images": [
         "simple-marker-symbol.png"
     ],
     "keywords": [
-        "Visualization",
-        "Graphic",
-        "GraphicsOverlay",
-        "SimpleMarkerSymbol"
+        "symbol",
+        "visualization"
     ],
-    "redirect_from": "/android/latest/sample-code/simple-marker-symbol.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/simple-marker-symbol.htm"
+    ],
     "relevant_apis": [
         "Graphic",
         "GraphicsOverlay",
+        "Point",
         "SimpleMarkerSymbol"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/simplemarkersymbol/MainActivity.java"
     ],
-    "title": "Simple Marker Symbol"
+    "title": "Simple marker symbol"
 }

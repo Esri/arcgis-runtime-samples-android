@@ -1,24 +1,38 @@
 {
     "category": "Maps and Scenes",
-    "description": "Create a map with an initial location by passing lat, long and level of detail values.",
+    "description": "Display a basemap centered at an initial location and scale.",
+    "formal_name": "SetInitialMapLocation",
     "ignore": false,
     "images": [
         "set-initial-map-location.png"
     ],
     "keywords": [
-        "Maps and Scenes",
-        "ArcGISMap",
-        "BasemapType",
-        "MapView"
+        "LOD",
+        "basemap",
+        "center",
+        "envelope",
+        "extent",
+        "initial",
+        "lat",
+        "latitude",
+        "level of detail",
+        "location",
+        "long",
+        "longitude",
+        "scale",
+        "zoom level"
     ],
-    "redirect_from": "/android/latest/sample-code/set-initial-map-location.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/set-initial-map-location.htm"
+    ],
     "relevant_apis": [
-        "ArcGISMap",
-        "BasemapType",
+        "Basemap.Type",
+        "Map",
         "MapView"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/setinitialmaplocation/MainActivity.java"
     ],
-    "title": "Set Initial Map Location"
+    "title": "Set initial map location"
 }

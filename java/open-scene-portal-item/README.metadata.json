@@ -1,24 +1,24 @@
 {
     "category": "Maps and Scenes",
-    "description": "Open a scene from a Portal item. These scenes can be stored in ArcGIS Online or Portal.",
+    "description": "Open a web scene from a portal item.",
+    "formal_name": "OpenScenePortalItem",
     "ignore": false,
     "images": [
         "open-scene-portal-item.png"
     ],
     "keywords": [
-        "Maps and Scenes",
-        "PortalItem",
-        "Portal",
-        "ArcGISScene"
+        "portal",
+        "scene",
+        "web scene"
     ],
-    "redirect_from": "",
+    "language": "java",
     "relevant_apis": [
+        "ArcGISScene",
         "PortalItem",
-        "Portal",
-        "ArcGISScene"
+        "SceneView"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/opensceneportalitem/MainActivity.java"
     ],
-    "title": "Open scene portal item"
+    "title": "Open scene (portal item)"
 }

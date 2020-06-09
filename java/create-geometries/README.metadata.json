@@ -1,31 +1,30 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Create different types of geometries on a map.",
+    "description": "Create simple geometry types.",
+    "formal_name": "CreateGeometries",
     "ignore": false,
     "images": [
         "create-geometries.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "Envelope",
-        "Multipoint",
-        "Point",
-        "Polygon",
-        "Polyline",
-        "Graphic",
-        "GraphicsOverlay",
-        "MapView"
+        "area",
+        "boundary",
+        "line",
+        "marker",
+        "path",
+        "shape"
     ],
-    "redirect_from": "/android/latest/sample-code/create-geometries.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/create-geometries.htm"
+    ],
     "relevant_apis": [
         "Envelope",
         "Multipoint",
         "Point",
+        "PointCollection",
         "Polygon",
-        "Polyline",
-        "Graphic",
-        "GraphicsOverlay",
-        "MapView"
+        "Polyline"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/creategeometries/MainActivity.java"

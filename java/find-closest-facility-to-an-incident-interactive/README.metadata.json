@@ -1,27 +1,21 @@
 {
     "category": "Routing and Logistics",
     "description": "Find a route to the closest facility from a location.",
+    "formal_name": "FindClosestFacilityToAnIncidentInteractive",
     "ignore": false,
     "images": [
         "find-closest-facility-to-an-incident-interactive.png"
     ],
     "keywords": [
-        "Analysis",
-        "Routing and Logistics",
         "incident",
-        "network",
+        "network analysis",
         "route",
-        "search",
-        "ClosestFacilityParameters",
-        "ClosestFacilityResult",
-        "ClosestFacilityRoute",
-        "ClosestFacilityTask",
-        "Facility",
-        "Graphic",
-        "GraphicsOverlay",
-        "Incident"
+        "search"
     ],
-    "redirect_from": "/android/latest/sample-code/find-closest-facility-to-an-incident-interactive.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/find-closest-facility-to-an-incident-interactive.htm"
+    ],
     "relevant_apis": [
         "ClosestFacilityParameters",
         "ClosestFacilityResult",
@@ -30,7 +24,8 @@
         "Facility",
         "Graphic",
         "GraphicsOverlay",
-        "Incident"
+        "Incident",
+        "MapView"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/findclosestfacilitytoanincidentinteractive/MainActivity.java"

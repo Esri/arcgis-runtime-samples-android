@@ -1,33 +1,35 @@
 {
-  "category": "Maps and Scenes",
-  "description": "Set the terrain surface with elevation described by a local tile package.",
-  "ignore": false,
-  "images": [
-    "create-terrain-from-a-local-tile-package.png"
-  ],
-  "keywords": [
-    "Maps and Scenes",
-    "3D",
-    "Tile",
-    "Cache",
-    "Elevation",
-    "Surface",
-    "ArcGISTiledElevationSource",
-    "Surface"
-  ],
-  "provision_from": [
-    "https://arcgisruntime.maps.arcgis.com/home/item.html?id=cce37043eb0440c7a5c109cf8aad5500"
-  ],
-  "provision_to": [
-    "/MontereyElevation.tpk"
-  ],
-  "redirect_from": "/android/latest/sample-code/create-terrain-from-a-local-tile-package.htm",
-  "relevant_apis": [
-    "ArcGISTiledElevationSource",
-    "Surface"
-  ],
-  "snippets": [
-    "src/main/java/com/esri/arcgisruntime/samples/createterrainfromalocaltilepackage/MainActivity.kt"
-  ],
-  "title": "Create terrain from a local tile package"
+    "category": "Maps and Scenes",
+    "description": "Set the terrain surface with elevation described by a local tile package.",
+    "formal_name": "CreateTerrainFromALocalTilePackage",
+    "ignore": false,
+    "images": [
+        "create-terrain-from-a-local-tile-package.png"
+    ],
+    "keywords": [
+        "3D",
+        "LERC",
+        "elevation",
+        "surface",
+        "terrain",
+        "tile cache"
+    ],
+    "language": "kotlin",
+    "provision_from": [
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=cce37043eb0440c7a5c109cf8aad5500"
+    ],
+    "provision_to": [
+        "/MontereyElevation.tpk"
+    ],
+    "redirect_from": [
+        "/android/latest/sample-code/create-terrain-from-a-local-tile-package.htm"
+    ],
+    "relevant_apis": [
+        "ArcGISTiledElevationSource",
+        "Surface"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/samples/createterrainfromalocaltilepackage/MainActivity.kt"
+    ],
+    "title": "Create terrain from a local tile package"
 }
