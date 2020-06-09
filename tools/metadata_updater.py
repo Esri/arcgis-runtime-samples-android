@@ -244,6 +244,7 @@ class MetadataUpdater:
             data["category"] = "TODO"
         else:
             data["category"] = self.category
+
         data["description"] = self.description
         data["formal_name"] = self.formal_name
         data["ignore"] = self.ignore
