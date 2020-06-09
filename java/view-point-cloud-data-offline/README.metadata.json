@@ -20,7 +20,7 @@
         "PointCloudLayer"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/samples/viewpointclouddataoffline/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/viewpointclouddataoffline/MainActivity.java"
     ],
     "title": "View point cloud data offline"
 }

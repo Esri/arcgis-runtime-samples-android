@@ -26,7 +26,7 @@
         "MapView.setViewpointGeometryWithPaddingAsync"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/spatialoperations/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/performspatialoperations/MainActivity.java"
     ],
     "title": "Perform spatial operations"
 }
