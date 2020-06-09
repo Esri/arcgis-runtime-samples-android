@@ -110,9 +110,12 @@ class MetadataUpdater:
                 for file in filenames:
                     extension = os.path.splitext(file)[1]
                     if extension in ['.java'] or extension in ['.kt']:
+                        # get the programming language of the sample
                         self.language = 'java' if extension in ['.java'] else 'kotlin'
+                        # get the snippet path
                         snippet = os.path.join(dp, file)
                         if snippet.startswith(self.folder_path):
+                            # add 1 to remove the leading slash
                             snippet = snippet[len(self.folder_path)+1:]
                         results.append(snippet)
         if not results:
@@ -262,8 +265,7 @@ class MetadataUpdater:
 
 def update_1_sample(path: str):
     """
-    A handy helper function to fix 1 sample's metadata by running the script
-    without passing in arguments, and write to a separate json for comparison.
+    Fixes 1 sample's metadata by running the script on a single sample's directory.
     """
     single_updater = MetadataUpdater(path)
     try:
