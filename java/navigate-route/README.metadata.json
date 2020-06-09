@@ -28,8 +28,7 @@
 	    "VoiceGuidance"
     ],
     "snippets": [
-	    "src/main/java/com/esri/arcgisruntime/sample/navigateroute/MainActivity.java",
-	    "src/main/java/com/esri/arcgisruntime/sample/navigateroute/SimulatedLocationDataSource.java"
+	    "src/main/java/com/esri/arcgisruntime/sample/navigateroute/MainActivity.java"
     ],
     "title": "Navigate route"
 }
