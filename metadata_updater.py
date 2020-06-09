@@ -84,6 +84,7 @@ class MetadataUpdater:
         self.ignore = False         # Default to False.
         self.images = []            # Populate from folder paths.
         self.keywords = []          # Populate from README.
+        self.language = ''          # Populate from folder paths.
         self.provision_from = []    # Populate from json.
         self.provision_to = []      # Populate from json.
         self.redirect_from = []     # Populate from json.
@@ -107,10 +108,12 @@ class MetadataUpdater:
         for dp, dn, filenames in os.walk(self.folder_path):
             if ("/build/" not in dp):
                 for file in filenames:
-                    if os.path.splitext(file)[1] in ['.java'] or os.path.splitext(file)[1] in ['.kt']:
+                    extension = os.path.splitext(file)[1]
+                    if extension in ['.java'] or extension in ['.kt']:
+                        self.language = 'java' if extension in ['.java'] else 'kotlin'
                         snippet = os.path.join(dp, file)
                         if snippet.startswith(self.folder_path):
-                            snippet = snippet[len(self.folder_path):]
+                            snippet = snippet[len(self.folder_path)+1:]
                         results.append(snippet)
         if not results:
             raise Exception('Unable to get java/kotlin source code paths.')
@@ -240,6 +243,7 @@ class MetadataUpdater:
         data["ignore"] = self.ignore
         data["images"] = self.images
         data["keywords"] = self.keywords
+        data["language"] = self.language
         # ignore provisioning keys if they don't exist
         if self.provision_from:
              data["provision_from"] = self.provision_from
