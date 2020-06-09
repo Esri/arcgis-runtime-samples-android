@@ -1,22 +1,25 @@
 {
     "category": "Layers",
-    "description": "Create an ImageServiceRaster and add it to a RasterLayer. An ImageServiceRaster allows you to work with an image map service exposed by the ArcGIS Server Rest API.",
+    "description": "Create a raster layer from a raster image service.",
+    "formal_name": "RasterLayerService",
     "ignore": false,
     "images": [
         "raster-layer-service.png"
     ],
     "keywords": [
-        "Layers",
-        "Raster",
-        "RasterLayer"
+        "image service",
+        "raster"
     ],
-    "redirect_from": "/android/latest/sample-code/raster-layer-service.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/raster-layer-service.htm"
+    ],
     "relevant_apis": [
-        "Raster",
+        "ImageServiceRaster",
         "RasterLayer"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/rasterservicelayer/MainActivity.java"
     ],
-    "title": "Raster Layer Service"
+    "title": "Raster layer (service)"
 }

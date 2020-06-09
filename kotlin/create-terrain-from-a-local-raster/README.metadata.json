@@ -1,32 +1,34 @@
 {
-  "category": "Maps and Scenes",
-  "description": "Set the terrain surface with elevation described by a raster file.",
-  "ignore": false,
-  "images": [
-    "create-terrain-from-a-local-raster.png"
-  ],
-  "keywords": [
-    "Maps and Scenes",
-    "3D",
-    "Raster",
-    "Elevation",
-    "Surface",
-    "RasterElevationSource",
-    "Surface"
-  ],
-  "provision_from": [
-    "https://arcgisruntime.maps.arcgis.com/home/item.html?id=98092369c4ae4d549bbbd45dba993ebc"
-  ],
-  "provision_to": [
-    "/MontereyElevation.dt2"
-  ],
-  "redirect_from": "/android/latest/sample-code/create-terrain-from-a-local-raster.htm",
-  "relevant_apis": [
-    "RasterElevationSource",
-    "Surface"
-  ],
-  "snippets": [
-    "src/main/java/com/esri/arcgisruntime/samples/createterrainfromalocalraster/MainActivity.kt"
-  ],
-  "title": "Create terrain from a local raster"
+    "category": "Maps and Scenes",
+    "description": "Set the terrain surface with elevation described by a raster file.",
+    "formal_name": "CreateTerrainFromALocalRaster",
+    "ignore": false,
+    "images": [
+        "create-terrain-from-a-local-raster.png"
+    ],
+    "keywords": [
+        "3D",
+        "elevation",
+        "raster",
+        "surface",
+        "terrain"
+    ],
+    "language": "kotlin",
+    "provision_from": [
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=98092369c4ae4d549bbbd45dba993ebc"
+    ],
+    "provision_to": [
+        "/MontereyElevation.dt2"
+    ],
+    "redirect_from": [
+        "/android/latest/sample-code/create-terrain-from-a-local-raster.htm"
+    ],
+    "relevant_apis": [
+        "RasterElevationSource",
+        "Surface"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/samples/createterrainfromalocalraster/MainActivity.kt"
+    ],
+    "title": "Create terrain from a local raster"
 }

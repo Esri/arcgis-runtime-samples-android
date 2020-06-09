@@ -1,24 +1,28 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "Tap and hold on a map to get a magnifier.",
+    "description": "Tap and hold on a map to show a magnifier.",
+    "formal_name": "ShowMagnifier",
     "ignore": false,
     "images": [
         "show-magnifier.png"
     ],
     "keywords": [
-        "MapViews, SceneViews and UI",
-        "ArcGISMap",
-        "MapView",
-        "Basemap.Type"
+        "magnify",
+        "map",
+        "zoom"
     ],
-    "redirect_from": "/android/latest/sample-code/show-magnifier.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/show-magnifier.htm"
+    ],
     "relevant_apis": [
         "ArcGISMap",
         "MapView",
-        "Basemap.Type"
+        "MapView.setCanMagnifierPanMap(...)",
+        "MapView.setMagnifierEnabled(...)"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/showmagnifier/MainActivity.java"
     ],
-    "title": "Show Magnifier"
+    "title": "Show magnifier"
 }

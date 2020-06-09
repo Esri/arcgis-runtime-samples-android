@@ -1,24 +1,29 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Use a feature service in manual cache mode. This mode does not fetch features until a call to populate from service is called. From this point onwards, no additional queries are se",
+    "description": "Display a feature layer from a service using the **manual cache** feature request mode.",
+    "formal_name": "ServiceFeatureTableManualCache",
     "ignore": false,
     "images": [
         "service-feature-table-manualcache.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "FeatureLayer",
-        "ServiceFeatureTable",
-        "ServiceFeatureTable.setFeatureRequestMode(...)"
+        "cache",
+        "feature request mode",
+        "performance"
     ],
-    "redirect_from": "/android/latest/sample-code/service-feature-table-manual-cache.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/service-feature-table-manual-cache.htm"
+    ],
     "relevant_apis": [
         "FeatureLayer",
+        "FeatureRequestMode.MANUAL_CACHE",
         "ServiceFeatureTable",
-        "ServiceFeatureTable.setFeatureRequestMode(...)"
+        "ServiceFeatureTable.populateFromServiceAsync",
+        "ServiceFeatureTable.setFeatureRequestMode"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/samples/servicefeaturetablemanualcache/MainActivity.java"
     ],
-    "title": "Service Feature Table (ManualCache)"
+    "title": "Service feature table (manual cache)"
 }

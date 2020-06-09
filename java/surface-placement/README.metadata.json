@@ -1,23 +1,27 @@
 {
     "category": "Maps and Scenes",
-    "description": "Position graphics above a surface using different Surface Placements.",
+    "description": "Position graphics relative to a surface using different surface placement modes.",
+    "formal_name": "SurfacePlacement",
     "ignore": false,
     "images": [
         "surface-placement.png"
     ],
     "keywords": [
         "3D",
-        "Absolute",
-        "Altitude",
-        "Draped",
-        "Elevation",
-        "Floating",
-        "Relative",
-        "Scenes",
-        "Sea level",
-        "Surface placement"
+        "absolute",
+        "altitude",
+        "draped",
+        "elevation",
+        "floating",
+        "relative",
+        "scenes",
+        "sea level",
+        "surface placement"
     ],
-    "redirect_from": "/android/latest/sample-code/surface-placement.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/surface-placement.htm"
+    ],
     "relevant_apis": [
         "Graphic",
         "GraphicsOverlay",

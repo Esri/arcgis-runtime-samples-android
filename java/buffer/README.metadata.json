@@ -1,22 +1,26 @@
 {
     "category": "Analysis",
-    "description": "This sample demonstrates how to use GeometryEngine.Buffer to create polygons from a map location and linear distance (radius). For each input location, the sample creates two buffe",
+    "description": "Create a buffer around a map point and display the results as a `Graphic`.",
+    "formal_name": "Buffer",
     "ignore": false,
     "images": [
         "buffer.png"
     ],
     "keywords": [
-        "Analysis",
-        "Buffer",
-        "GeometryEngine",
-        "GeometryEngine.Buffer",
-        "GeometryEngine.BufferGeodetic",
-        "GraphicsOverlay"
+        "analysis",
+        "buffer",
+        "euclidean",
+        "geodesic",
+        "geometry",
+        "planar"
     ],
-    "redirect_from": "/android/latest/sample-code/buffer.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/buffer.htm"
+    ],
     "relevant_apis": [
-        "GeometryEngine.Buffer",
         "GeometryEngine.BufferGeodetic",
+        "GeometryEngine.buffer",
         "GraphicsOverlay"
     ],
     "snippets": [

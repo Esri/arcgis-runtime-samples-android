@@ -1,49 +1,28 @@
 {
-  "category": "Analysis",
-  "description": "Use the GeometryEngine to calculate a geodesic path between two points and measure its distance.",
-  "ignore": false,
-  "images": [
-    "geodesic-operations.png"
-  ],
-  "keywords": [
-    "Analysis",
-    "Geometry",
-    "Polyline",
-    "GeometryEngine",
-    "ArcGISMap",
-    "GeodeticCurveType",
-    "Geometry",
-    "GeometryEngine",
-    "Graphic",
-    "GraphicsOverlay",
-    "LinearUnit",
-    "LinearUnitId",
-    "MapView",
-    "Point",
-    "PointCollection",
-    "Polyline",
-    "SimpleLineSymbol",
-    "SimpleMarkerSymbol"
-  ],
-  "redirect_from": "/android/latest/sample-code/geodesic-operations.htm",
-  "relevant_apis": [
-    "ArcGISMap",
-    "GeodeticCurveType",
-    "Geometry",
-    "GeometryEngine",
-    "Graphic",
-    "GraphicsOverlay",
-    "LinearUnit",
-    "LinearUnitId",
-    "MapView",
-    "Point",
-    "PointCollection",
-    "Polyline",
-    "SimpleLineSymbol",
-    "SimpleMarkerSymbol"
-  ],
-  "snippets": [
-    "src/main/java/com/esri/arcgisruntime/sample/geodesicoperations/MainActivity.kt"
-  ],
-  "title": "Geodesic Operations"
+    "category": "Analysis",
+    "description": "Calculate a geodesic path between two points and measure its distance.",
+    "formal_name": "GeodesicOperations",
+    "ignore": false,
+    "images": [
+        "geodesic-operations.png"
+    ],
+    "keywords": [
+        "",
+        "densify",
+        "distance",
+        "geodesic",
+        "geodetic"
+    ],
+    "language": "kotlin",
+    "redirect_from": [
+        "/android/latest/sample-code/geodesic-operations.htm"
+    ],
+    "relevant_apis": [
+        "GeometryEngine.densifyGeodetic",
+        "GeometryEngine.lengthGeodetic"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/geodesicoperations/MainActivity.kt"
+    ],
+    "title": "Geodesic operations"
 }

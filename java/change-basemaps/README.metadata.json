@@ -1,26 +1,26 @@
 {
     "category": "Maps and Scenes",
-    "description": "Change basemaps from an Android Navigation Drawer.",
+    "description": "Change a map's basemap. A basemap is beneath all layers on an `ArcGISMap` and is used to provide visual reference for the operational layers.",
+    "formal_name": "ChangeBasemaps",
     "ignore": false,
     "images": [
         "change-basemaps.png"
     ],
     "keywords": [
-        "Maps and Scenes",
-        "ArcGISMap",
-        "Basemap",
-        "MapView",
-        "ViewPoint"
+        "basemap",
+        "map"
     ],
-    "redirect_from": "/android/latest/sample-code/change-basemaps.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/change-basemaps.htm"
+    ],
     "relevant_apis": [
         "ArcGISMap",
         "Basemap",
-        "MapView",
-        "ViewPoint"
+        "MapView"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/switchbasemaps/MainActivity.java"
     ],
-    "title": "Change Basemaps"
+    "title": "Change basemaps"
 }

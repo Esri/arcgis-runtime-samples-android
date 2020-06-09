@@ -1,6 +1,7 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Perform geometry-on-geometry spatial operations by using GeometryEngine. Two input Polygons are added as Graphics to a GraphicsOverlay and displayed in a MapView.",
+    "description": "Find the union, intersection, or difference of two geometries.",
+    "formal_name": "SpatialOperations",
     "ignore": false,
     "images": [
         "perform-spatial-operations.png"
@@ -15,7 +16,10 @@
         "polygon",
         "union"
     ],
-    "redirect_from": "/android/latest/sample-code/spatial-operations.htm",
+    "language": "kotlin",
+    "redirect_from": [
+        "/android/latest/sample-code/spatial-operations.htm"
+    ],
     "relevant_apis": [
         "Geometry",
         "GeometryEngine",
@@ -29,5 +33,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/performspatialoperations/MainActivity.kt"
     ],
-    "title": "Perform spatial operations"
+    "title": "Spatial operations"
 }

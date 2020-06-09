@@ -1,26 +1,27 @@
 {
     "category": "Visualization",
-    "description": "Override and reset a renderer of a feature layer. Use the buttons in the bottom toolbar to override or reset the renderer.",
+    "description": "Change the appearance of a feature layer with a renderer.",
+    "formal_name": "ChangeFeatureLayerRenderer",
     "ignore": false,
     "images": [
         "change-feature-layer-renderer.png"
     ],
     "keywords": [
-        "Visualization",
-        "FeatureLayer",
-        "MapView",
-        "SimpleRenderer",
-        "ServiceFeatureTable"
+        "feature layer",
+        "renderer",
+        "visualization"
     ],
-    "redirect_from": "/android/latest/sample-code/change-feature-layer-renderer.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/change-feature-layer-renderer.htm"
+    ],
     "relevant_apis": [
         "FeatureLayer",
-        "MapView",
-        "SimpleRenderer",
-        "ServiceFeatureTable"
+        "ServiceFeatureTable",
+        "SimpleRenderer"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/samples/changefeaturelayerrenderer/MainActivity.java"
     ],
-    "title": "Change Feature Layer Renderer"
+    "title": "Change feature layer renderer"
 }

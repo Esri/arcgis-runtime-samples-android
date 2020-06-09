@@ -1,32 +1,30 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Update geometry in a feature layer.",
+    "description": "Update a feature's location in an online feature service.",
+    "formal_name": "FeatureLayerUpdateGeometry",
     "ignore": false,
     "images": [
         "feature-layer-update-geometry.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "ArcGISFeature",
-        "FeatureEditResult",
-        "FeatureLayer",
-        "GeoElement",
-        "GeometryEngine",
-        "IdentifyLayerResult",
-        "ServiceFeatureTable"
+        "editing",
+        "feature layer",
+        "feature table",
+        "moving",
+        "service",
+        "updating"
     ],
-    "redirect_from": "/android/latest/sample-code/feature-layer-update-geometry.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/feature-layer-update-geometry.htm"
+    ],
     "relevant_apis": [
-        "ArcGISFeature",
-        "FeatureEditResult",
+        "Feature",
         "FeatureLayer",
-        "GeoElement",
-        "GeometryEngine",
-        "IdentifyLayerResult",
         "ServiceFeatureTable"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/samples/featurelayerupdategeometry/MainActivity.java"
     ],
-    "title": "Feature Layer Update Geometry"
+    "title": "Feature layer update geometry"
 }

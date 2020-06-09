@@ -1,26 +1,28 @@
 {
     "category": "Maps and Scenes",
-    "description": "Create a map with a specific spatial reference.",
+    "description": "Specify a map's spatial reference.",
+    "formal_name": "SetMapSpatialReference",
     "ignore": false,
     "images": [
         "set-map-spatial-reference.png"
     ],
     "keywords": [
-        "Maps and Scenes",
-        "ArcGISMap",
-        "ArcGISMapImageLayer",
-        "MapView",
-        "SpatialReference"
+        "WKID",
+        "project"
     ],
-    "redirect_from": "/android/latest/sample-code/set-map-spatial-reference.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/set-map-spatial-reference.htm"
+    ],
     "relevant_apis": [
         "ArcGISMap",
         "ArcGISMapImageLayer",
+        "Basemap",
         "MapView",
         "SpatialReference"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/mapspatialreference/MainActivity.java"
     ],
-    "title": "Set Map Spatial Reference"
+    "title": "Set map spatial reference"
 }

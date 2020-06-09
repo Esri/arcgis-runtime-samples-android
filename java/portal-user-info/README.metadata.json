@@ -1,20 +1,30 @@
 {
     "category": "Cloud and Portal",
-    "description": "Use the DefaultAuthenticationChallengeHandler class to take care of showing an authentication dialog for logging into a Portal.",
+    "description": "Retrieve a user's details via a Portal.",
+    "formal_name": "PortalUserInfo",
     "ignore": false,
     "images": [
         "portal-user-info.png"
     ],
     "keywords": [
-        "Cloud and Portal",
-        "AuthenticationManager",
-        "DefaultAuthenticationChallengeHandler",
-        "PortalInfo",
-        "PortalUser"
+        "account",
+        "avatar",
+        "bio",
+        "cloud and portal",
+        "email",
+        "login",
+        "picture",
+        "profile",
+        "user",
+        "username"
     ],
-    "redirect_from": "/android/latest/sample-code/portal-user-info.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/portal-user-info.htm"
+    ],
     "relevant_apis": [
         "AuthenticationManager",
+        "AuthenticationManager.CredentialCache",
         "DefaultAuthenticationChallengeHandler",
         "PortalInfo",
         "PortalUser"
@@ -22,5 +32,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/portaluserinfo/MainActivity.java"
     ],
-    "title": "Portal User Info"
+    "title": "Portal user info"
 }

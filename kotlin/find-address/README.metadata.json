@@ -1,17 +1,21 @@
 {
     "category": "Search and Query",
     "description": "Find the location for an address.",
+    "formal_name": "FindAddress",
     "ignore": false,
     "images": [
         "find-address.png"
     ],
     "keywords": [
-        "search",
-        "geocode",
         "address",
-        "locator"
+        "geocode",
+        "locator",
+        "search"
     ],
-    "redirect_from": "/android/latest/sample-code/find-address.htm",
+    "language": "kotlin",
+    "redirect_from": [
+        "/android/latest/sample-code/find-address.htm"
+    ],
     "relevant_apis": [
         "GeocodeParameters",
         "GeocodeResult",
@@ -20,5 +24,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/findaddress/MainActivity.kt"
     ],
-    "title": "Find Address"
+    "title": "Find address"
 }
