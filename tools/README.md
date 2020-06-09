@@ -18,7 +18,7 @@ python3 tools/metadata_updater.py -m kotlin
 python3 tools/metadata_updater.py -s kotlin/add-features-feature-service
 ```
 
-**Note:** The script cannot create a metadata file from scratch. If a sample lacks a metadata.json file at the top level of its directory, the following fields will be left blank:
+**Note:** The script cannot create a metadata file from scratch. If a sample lacks a metadata.json file at the top level of its directory, the following fields will be left as "TODO":
 * category
 * provision_from
 * provision_to
@@ -42,5 +42,5 @@ To update all sample metadata files in a directory:
   * To get the screenshot, traverse the immediate files inside the sample directory, looking for a file with the `.png` extension.
   * To get the language and snippets, search recursively through the directory for files with the extension `.java` or `.kt`, ignoring the `/build/` directory.
 6. Create a dictionary. For each of the required metadata keys, create a key with a string title and a corresponding class field as its value.
-  * For the `provision_from`, `provision_to`, and `redirect_from` keys, check if that they are not empty in the updater's fields before adding them to the dictionary.
+  * For the `category`, `provision_from`, `provision_to`, and `redirect_from` keys, check if that they are not empty in the updater's fields before adding them to the dictionary. If they are empty, set them to "TODO"
 7. Dump the dictionary to a json file.

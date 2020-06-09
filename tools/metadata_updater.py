@@ -240,20 +240,32 @@ class MetadataUpdater:
         """
         data = dict()
 
-        data["category"] = self.category
+        if not self.category:
+            data["category"] = "TODO"
+        else:
+            data["category"] = self.category
         data["description"] = self.description
         data["formal_name"] = self.formal_name
         data["ignore"] = self.ignore
         data["images"] = self.images
         data["keywords"] = self.keywords
         data["language"] = self.language
-        # ignore provisioning keys if they don't exist
+
         if self.provision_from:
              data["provision_from"] = self.provision_from
+        else:
+            data["provision_from"] = "TODO"
+
+        if self.provision_to:
              data["provision_to"] = self.provision_to
-        # ignore redirect from key if it is empty
+        else:
+            data["provision_to"] = "TODO"
+
         if self.redirect_from and self.redirect_from[0] is not '':
             data["redirect_from"] = self.redirect_from
+        else:
+            data["redirect_from"] = "TODO"
+
         data["relevant_apis"] = self.relevant_apis
         data["snippets"] = self.snippets
         data["title"] = self.title
