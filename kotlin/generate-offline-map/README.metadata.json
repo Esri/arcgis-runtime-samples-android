@@ -20,7 +20,7 @@
         "Portal"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/generateofflinemap/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/generateofflinemap/MainActivity.kt"
     ],
     "title": "Generate offline map"
 }
