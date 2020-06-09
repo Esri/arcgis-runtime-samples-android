@@ -31,7 +31,7 @@
       "SimulatedLocationDataSource"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/showlocationhisttory/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/showlocationhistory/MainActivity.kt"
     ],
     "title": "Show location history"
 }
