@@ -1,32 +1,41 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Take a web map offline with additional overrides.",
+    "description": "Take a web map offline with additional options for each layer.",
+    "formal_name": "GenerateOfflineMapOverrides",
     "ignore": false,
     "images": [
         "generate-offline-map-overrides.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "OfflineMapTask",
-        "GenerateGeodatabaseParameters",
-        "GenerateOfflineMapParameters",
-        "GenerateOfflineMapParameterOverrides",
-        "GenerateOfflineMapJob",
-        "GenerateOfflineMapResult",
-        "ExportTileCacheParameters"
+        "LOD",
+        "adjust",
+        "download",
+        "extent",
+        "filter",
+        "offline",
+        "override",
+        "parameters",
+        "reduce",
+        "scale range",
+        "setting"
     ],
-    "redirect_from": "/android/latest/sample-code/generate-offline-map-overrides.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/generate-offline-map-overrides.htm"
+    ],
     "relevant_apis": [
-        "OfflineMapTask",
+        "ExportTileCacheParameters",
         "GenerateGeodatabaseParameters",
-        "GenerateOfflineMapParameters",
-        "GenerateOfflineMapParameterOverrides",
+        "GenerateLayerOption",
         "GenerateOfflineMapJob",
+        "GenerateOfflineMapParameterOverrides",
+        "GenerateOfflineMapParameters",
         "GenerateOfflineMapResult",
-        "ExportTileCacheParameters"
+        "OfflineMapParametersKey",
+        "OfflineMapTask"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/generateofflinemapoverrides/MainActivity.java"
     ],
-    "title": "Generate Offline Map Overrides"
+    "title": "Generate offline map (overrides)"
 }

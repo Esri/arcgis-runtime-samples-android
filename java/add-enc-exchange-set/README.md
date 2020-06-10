@@ -34,8 +34,9 @@ Run the sample and view the ENC data. Pan and zoom around the map. Take note of 
 2. Extract the contents of the downloaded zip file to disk.
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 2.
 4. Push the data into the scoped storage of the sample app:
- 	* `adb push hydrography /Android/data/com.esri.arcgisruntime.sample.addencexchangeset/files/hydrography`
-	* `adb push ExchangeSetwithoutUpdates /Android/data/com.esri.arcgisruntime.sample.addencexchangeset/files/ExchangeSetwithoutUpdates`
+ 	* `adb push hydrography /Android/data/com.esri.arcgisruntime.sample.addencexchangeset/files/ENC_supplemental/hydrography`
+	* `adb push ExchangeSetwithoutUpdates /Android/data/com.esri.arcgisruntime.sample.addencexchangeset/files/ENC/ExchangeSetwithoutUpdates`
 
-#### Tags
+## Tags
+
 data, ENC, hydrographic, layers, maritime, nautical chart

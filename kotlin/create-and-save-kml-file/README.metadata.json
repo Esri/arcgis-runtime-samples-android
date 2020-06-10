@@ -1,20 +1,22 @@
 {
     "category": "Edit and Manage Data",
     "description": "Construct a KML document and save it as a KMZ file.",
+    "formal_name": "CreateAndSaveKmlFile",
     "ignore": false,
     "images": [
         "create-and-save-kml-file.png"
     ],
     "keywords": [
-        "Maps and Scenes",
-        "3D",
-        "Raster",
-        "Elevation",
-        "Surface",
-        "RasterElevationSource",
-        "Surface"
+        "Edit and Manage data",
+        "KML",
+        "KMZ",
+        "Keyhole",
+        "OGC"
     ],
-    "redirect_from": "/android/latest/sample-code/create-terrain-from-a-local-raster.htm",
+    "language": "kotlin",
+    "redirect_from": [
+        "/android/latest/sample-code/create-terrain-from-a-local-raster.htm"
+    ],
     "relevant_apis": [
         "GeometryEngine.project",
         "KmlDataset",
@@ -30,5 +32,5 @@
         "src/main/java/com/esri/arcgisruntime/sample/createandsavekmlfile/MainActivity.kt",
         "src/main/java/com/esri/arcgisruntime/sample/createandsavekmlfile/PointSymbolAdapter.kt"
     ],
-    "title": "Create and save kml file"
+    "title": "Create and save KML file"
 }

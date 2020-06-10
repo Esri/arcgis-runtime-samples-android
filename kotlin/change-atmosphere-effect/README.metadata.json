@@ -1,21 +1,27 @@
 {
-  "category": "Maps and Scenes",
-  "description": "Change the appearance of the atmosphere in a scene.",
-  "ignore": false,
-  "images": [
-    "change-atmosphere-effect.png"
-  ],
-  "keywords": [
-    "atmosphere"
-  ],
-  "redirect_from": "/android/latest/sample-code/change-atmosphere-effect.htm",
-  "relevant_apis": [
-    "ArcGISScene",
-    "AtmosphereEffect",
-    "SceneView"
-  ],
-  "snippets": [
-    "src/main/java/com/esri/arcgisruntime/sample/changeatmosphereeffect/MainActivity.kt"
-  ],
-  "title": "Change atmosphere effect"
+    "category": "Maps and Scenes",
+    "description": "Changes the appearance of the atmosphere in a scene.",
+    "formal_name": "ChangeAtmosphereEffect",
+    "ignore": false,
+    "images": [
+        "change-atmosphere-effect.png"
+    ],
+    "keywords": [
+        "atmosphere",
+        "horizon",
+        "sky"
+    ],
+    "language": "kotlin",
+    "redirect_from": [
+        "/android/latest/sample-code/change-atmosphere-effect.htm"
+    ],
+    "relevant_apis": [
+        "ArcGISScene",
+        "AtmosphereEffect",
+        "SceneView"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/changeatmosphereeffect/MainActivity.kt"
+    ],
+    "title": "Change atmosphere effect"
 }

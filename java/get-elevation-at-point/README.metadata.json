@@ -1,18 +1,20 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "Get the elevation for a given point on a surface.",
+    "description": "Get the elevation for a given point on a surface in a scene.",
+    "formal_name": "GetElevationAtPoint",
     "ignore": false,
     "images": [
         "get-elevation-at-point.png"
     ],
     "keywords": [
-        "MapViews, SceneViews and UI",
-        "ArcGISTiledElevationSource",
-        "BaseSurface",
-        "ElevationSourcesList",
-        "SceneView"
+        "MapViews SceneViews and UI",
+        "elevation",
+        "surface"
     ],
-    "redirect_from": "/android/latest/sample-code/get-elevation-at-point.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/get-elevation-at-point.htm"
+    ],
     "relevant_apis": [
         "ArcGISTiledElevationSource",
         "BaseSurface",

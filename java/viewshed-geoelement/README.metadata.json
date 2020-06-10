@@ -1,25 +1,31 @@
 {
     "category": "Analysis",
-    "description": "A viewshed shows the visible and obstructed areas from an observer's vantage point. This sample demonstrates how to attach a viewshed to a moving GeoElement.",
+    "description": "Analyze the viewshed for an object (GeoElement) in a scene.",
+    "formal_name": "ViewshedGeoelement",
     "ignore": false,
     "images": [
         "viewshed-geoelement.png"
     ],
     "keywords": [
-        "Analysis",
-        "AnalysisOverlay",
-        "ArcGISTiledElevationSource",
-        "ArcGISSceneLayer",
-        "GeoElementViewshed",
-        "SceneView"
+        "3D",
+        "analysis",
+        "buildings",
+        "model",
+        "scene",
+        "viewshed",
+        "visibility analysis"
     ],
-    "redirect_from": "/android/latest/sample-code/viewshed-geoelement.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/viewshed-geoelement.htm"
+    ],
     "relevant_apis": [
         "AnalysisOverlay",
-        "ArcGISTiledElevationSource",
-        "ArcGISSceneLayer",
         "GeoElementViewshed",
-        "SceneView"
+        "GeodeticDistanceResult",
+        "GeometryEngine.distanceGeodetic (used to animate the vehicle)",
+        "ModelSceneSymbol",
+        "OrbitGeoElementCameraController"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/viewshedgeoelement/MainActivity.java"

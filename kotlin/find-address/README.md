@@ -24,5 +24,6 @@ For simplicity, the sample comes loaded with a set of suggested addresses. Choos
 * GeocodeResult
 * LocatorTask
 
-#### Tags
+## Tags
+
 address, geocode, locator, search

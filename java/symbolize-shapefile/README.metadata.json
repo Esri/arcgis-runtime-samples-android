@@ -1,31 +1,31 @@
 {
     "category": "Visualization",
-    "description": "Override the default renderer of a shapefile when displaying with a FeatureLayer.",
+    "description": "Display a shapefile with custom symbology.",
+    "formal_name": "SymbolizeShapefile",
     "ignore": false,
     "images": [
         "symbolize-shapefile.png"
     ],
     "keywords": [
-        "Visualization",
-        "FeatureLayer",
-        "ShapefileFeatureTable",
-        "SimpleRenderer",
-        "SimpleFillSymbol",
-        "SimpleLineSymbol"
+        "package",
+        "shape file",
+        "shapefile",
+        "symbology",
+        "visualization"
     ],
+    "language": "java",
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=d98b3e5293834c5f852f13c569930caa"
     ],
     "provision_to": [
         "/Aurora_CO_shp/Subdivisions.shp"
     ],
-    "redirect_from": "",
     "relevant_apis": [
         "FeatureLayer",
         "ShapefileFeatureTable",
-        "SimpleRenderer",
         "SimpleFillSymbol",
-        "SimpleLineSymbol"
+        "SimpleLineSymbol",
+        "SimpleRenderer"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/symbolizeshapefile/MainActivity.java"
