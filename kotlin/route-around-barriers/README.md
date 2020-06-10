@@ -12,7 +12,9 @@ In some situations, it is further beneficial to find the most efficient route th
 
 ## How to use the sample
 
-Click 'Add stop' to add stops to the route. Click 'Add barrier' to add areas that can't be crossed by the route. Click 'Solve route' to find the route and display it. Check 'Allow stops to be re-ordered' to find the best sequence. Check 'Preserve first stop' if there is a known start point, and 'Preserve last stop' if there is a known final destination.
+Tap 'Route controls' to pull up a bottom sheet that contains UI to setup your route task parameters. Click 'Add stop' to add stops to the route. Click 'Add barrier' to add areas that can't be crossed by the route. Click 'Solve route' to find the route and display it. Check 'Allow stops to be re-ordered' to find the best sequence. Check 'Preserve first stop' if there is a known start point, and 'Preserve last stop' if there is a known final destination. Press the `reset` button to start again.
+
+After tapping 'solve route' the bottom sheet will show a list of directions along the route. Tap any of the directions to focus the map view on the relevant part of the route.
 
 ## How it works
 

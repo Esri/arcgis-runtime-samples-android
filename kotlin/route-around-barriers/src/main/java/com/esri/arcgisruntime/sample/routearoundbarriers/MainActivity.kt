@@ -188,6 +188,12 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Add a stop or a point to the correct graphics overlay depending on which button is currently
+   * checked.
+   *
+   * @param screenPoint at which to create a stop or point
+   */
   private fun addStopOrBarrier(screenPoint: android.graphics.Point) {
     // convert screen point to map point
     val mapPoint = mapView.screenToLocation(screenPoint)
@@ -212,7 +218,13 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  fun createAndDisplayRoute(view: View) {
+  /**
+   * Create route parameters and a route task from them. Display the route result geometry as a
+   * graphic and call showDirectionsInBottomSheet which shows directions in a list view.
+   *
+   * @param solveRoute button which calls this method
+   */
+  fun createAndDisplayRoute(solveRoute: View) {
     if (stopList.size >= 2) {
       // clear the previous route from the graphics overlay, if it exists
       routeGraphicsOverlay.graphics.clear()
@@ -265,7 +277,14 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  fun clearRouteAndGraphics(view: View) {
+  /**
+   * Clear all stops and polygon barriers from the route parameters, stop and barrier
+   * lists and all graphics overlays. Also hide the directions list view and show the control
+   * layout.
+   *
+   * @param reset button which calls this method
+   */
+  fun clearRouteAndGraphics(reset: View) {
     // clear stops from route parameters and stops list
     routeParameters?.clearStops()
     stopList.clear()
@@ -278,11 +297,20 @@ class MainActivity : AppCompatActivity() {
     mapView.graphicsOverlays.forEach { it.graphics.clear() }
     // hide the reset button and directions list
     resetButton.visibility = GONE
+    // hide the directions list
     directionsListView.visibility = GONE
     // show the controls
     controlsLayout.visibility = VISIBLE
+    // set header title to "route controls"
+    headerTitle.text = getString(R.string.route_controls)
   }
 
+  /**
+   * Create a composite symbol consisting of a pin graphic overlaid with a particular stop number.
+   *
+   * @param stopNumber to overlay the pin symbol
+   * @return a composite symbol consisting of the pin graphic overlaid with an the stop number
+   */
   private fun createCompositeStopSymbol(stopNumber: Int): CompositeSymbol {
     // determine the stop number and create a new label
     val stopTextSymbol = TextSymbol(
@@ -297,11 +325,14 @@ class MainActivity : AppCompatActivity() {
     return CompositeSymbol(listOf(pinSymbol, stopTextSymbol))
   }
 
-  /** Creates a bottom sheet to display a list of direction maneuvers.
-   *
+  /**
+   * Creates a bottom sheet to display a list of direction maneuvers.
    */
   private fun showDirectionsInBottomSheet() {
+    // show the directions list view
     directionsListView.visibility = VISIBLE
+    // set header title to "directions"
+    headerTitle.text = getString(R.string.directions)
     // create a bottom sheet behavior from the bottom sheet view in the main layout
     bottomSheetBehavior?.apply {
       // animate the arrow when the bottom sheet slides
