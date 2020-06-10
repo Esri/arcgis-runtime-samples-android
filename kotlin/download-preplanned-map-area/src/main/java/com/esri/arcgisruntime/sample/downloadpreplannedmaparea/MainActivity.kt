@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
   private val downloadedMapAreas by lazy { mutableListOf<ArcGISMap>() }
   private var dialog: Dialog? = null
 
-  private var mSelectedPreplannedMapArea: PreplannedMapArea? = null
+  private var selectedPreplannedMapArea: PreplannedMapArea? = null
   private var downloadPreplannedOfflineMapJob: DownloadPreplannedOfflineMapJob? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,9 +96,9 @@ class MainActivity : AppCompatActivity() {
     val onlineMap = ArcGISMap(portalItem)
 
     // create a red outline to mark the areas of interest of the preplanned map areas
-    val areaOfInterestRenderer = SimpleRenderer().apply {
-      symbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5.0f)
-    }
+    val areaOfInterestRenderer =
+      SimpleRenderer(SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5.0f))
+
     // create a graphics overlay to show the preplanned map areas extents (areas of interest)
     val areasOfInterestGraphicsOverlay = GraphicsOverlay().apply {
       renderer = areaOfInterestRenderer
@@ -122,100 +122,110 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Download the selected preplanned map area from the list view to a temporary directory. The download job is tracked in another list view.
+   * Download the selected preplanned map area from the list view to a temporary directory. The
+   * download job is tracked in another list view.
    */
   private fun downloadPreplannedArea(offlineMapTask: OfflineMapTask) {
-    if (mSelectedPreplannedMapArea != null) {
-      // create default download parameters from the offline map task
-      val offlineMapParametersFuture =
-        offlineMapTask.createDefaultDownloadPreplannedOfflineMapParametersAsync(
-          mSelectedPreplannedMapArea
-        )
-      offlineMapParametersFuture?.addDoneListener {
-        try {
-          // get the offline map parameters
-          val offlineMapParameters = offlineMapParametersFuture.get()
+    if (selectedPreplannedMapArea == null) {
+      return
+    }
+    // create default download parameters from the offline map task
+    val offlineMapParametersFuture =
+      offlineMapTask.createDefaultDownloadPreplannedOfflineMapParametersAsync(
+        selectedPreplannedMapArea
+      )
+    offlineMapParametersFuture.addDoneListener {
+      try {
+        // get the offline map parameters
+        val offlineMapParameters = offlineMapParametersFuture.get().apply {
           // set the update mode to not receive updates
-          offlineMapParameters.updateMode = PreplannedUpdateMode.NO_UPDATES
-          // create a job to download the preplanned offline map to a temporary directory
-          downloadPreplannedOfflineMapJob = offlineMapTask.downloadPreplannedOfflineMap(
-            offlineMapParameters,
-            offlineMapDirectory.path + File.separator + mSelectedPreplannedMapArea?.portalItem?.title
-          ).also {
-            // create and update a progress dialog for the job
-            dialog = createProgressDialog(it)
-            dialog?.show()
-            it.addProgressChangedListener {
-              dialog?.progressBar?.progress = it.progress
-              dialog?.progressTextView?.text = "${it.progress}%"
-            }
-            // start the job
-            it.start()
+          updateMode = PreplannedUpdateMode.NO_UPDATES
+        }
+        // create a job to download the preplanned offline map to a temporary directory
+        downloadPreplannedOfflineMapJob = offlineMapTask.downloadPreplannedOfflineMap(
+          offlineMapParameters,
+          offlineMapDirectory.path + File.separator + selectedPreplannedMapArea?.portalItem?.title
+        ).also {
+          // create and update a progress dialog for the job
+          dialog = createProgressDialog(it)
+          dialog?.show()
+          it.addProgressChangedListener {
+            dialog?.progressBar?.progress = it.progress
+            dialog?.progressTextView?.text = "${it.progress}%"
           }
+          // start the job
+          it.start()
+        }
 
-          // when the job finishes
-          downloadPreplannedOfflineMapJob?.addJobDoneListener {
-            // dismiss progress dialog
-            dialog?.dismiss()
-            // if there's a result from the download preplanned offline map job
-            if (downloadPreplannedOfflineMapJob?.status != Job.Status.SUCCEEDED) {
+        // when the job finishes
+        downloadPreplannedOfflineMapJob?.addJobDoneListener {
+          // dismiss progress dialog
+          dialog?.dismiss()
+          // if there's a result from the download preplanned offline map job
+          if (downloadPreplannedOfflineMapJob?.status != Job.Status.SUCCEEDED) {
+            val error =
+              "Job finished with an error: " + downloadPreplannedOfflineMapJob?.error?.message
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+            Log.e(TAG, error)
+            return@addJobDoneListener
+          }
+          downloadPreplannedOfflineMapJob?.result?.let { downloadPreplannedOfflineMapResult ->
+            if (downloadPreplannedOfflineMapResult.hasErrors()) {
+              // collect the layer and table errors into a single alert message
+              val stringBuilder = StringBuilder("Errors: ")
+              downloadPreplannedOfflineMapResult.layerErrors?.forEach { (key, value) ->
+                stringBuilder.append("Layer: ${key.name}. Exception: ${value.message}. ")
+              }
+              downloadPreplannedOfflineMapResult.tableErrors?.forEach { (key, value) ->
+                stringBuilder.append("Table: ${key.tableName}. Exception: ${value.message}. ")
+              }
               val error =
-                "Job finished with an error: " + downloadPreplannedOfflineMapJob?.error?.message
+                "One or more errors occurred with the Offline Map Result: $stringBuilder"
               Toast.makeText(this, error, Toast.LENGTH_LONG).show()
               Log.e(TAG, error)
               return@addJobDoneListener
             }
-            downloadPreplannedOfflineMapJob?.result?.let { downloadPreplannedOfflineMapResult ->
-              if (downloadPreplannedOfflineMapResult.hasErrors()) {
-                // collect the layer and table errors into a single alert message
-                val stringBuilder = StringBuilder("Errors: ")
-                downloadPreplannedOfflineMapResult.layerErrors?.forEach { (key, value) ->
-                  stringBuilder.append("Layer: ").append(key.name).append(". Exception: ")
-                    .append(value.message).append(". ")
-                }
-                downloadPreplannedOfflineMapResult.tableErrors?.forEach { (key, value) ->
-                  stringBuilder.append("Table: ").append(key.tableName).append(". Exception: ")
-                    .append(value.message).append(". ")
-                }
-                val error =
-                  "One or more errors occurred with the Offline Map Result: $stringBuilder"
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-                Log.e(TAG, error)
-                return@addJobDoneListener
+            // get the offline map
+            downloadPreplannedOfflineMapResult.offlineMap?.let { offlineMap ->
+              mapView.apply {
+                // add it to the map view
+                map = offlineMap
+                // hide the area of interest graphics
+                graphicsOverlays[0].isVisible = false
               }
-              // get the offline map
-              downloadPreplannedOfflineMapResult.offlineMap?.let { offlineMap ->
-                mapView.apply {
-                  // add it to the map view
-                  map = offlineMap
-                  // hide the area of interest graphics
-                  graphicsOverlays[0].isVisible = false
-                }
-                // add the map name to the list view of downloaded map areas
-                downloadedMapAreaNames.add(offlineMap.item.title)
-                // select the downloaded map area
-                downloadedMapAreasListView.setItemChecked(downloadedMapAreaNames.size - 1, true)
-                downloadedMapAreasAdapter?.notifyDataSetChanged()
-                // de-select the area in the preplanned areas list view
-                availableAreasListView.clearChoices()
-                preplannedMapAreasAdapter?.notifyDataSetChanged()
-                // add the offline map to a list of downloaded map areas
-                downloadedMapAreas.add(offlineMap)
-                // disable the download button
-                downloadButton.isEnabled = false
-              }
+              // add the map name to the list view of downloaded map areas
+              downloadedMapAreaNames.add(offlineMap.item.title)
+              // select the downloaded map area
+              downloadedMapAreasListView.setItemChecked(downloadedMapAreaNames.size - 1, true)
+              downloadedMapAreasAdapter?.notifyDataSetChanged()
+              // de-select the area in the preplanned areas list view
+              availableAreasListView.clearChoices()
+              preplannedMapAreasAdapter?.notifyDataSetChanged()
+              // add the offline map to a list of downloaded map areas
+              downloadedMapAreas.add(offlineMap)
+              // disable the download button
+              downloadButton.isEnabled = false
             }
           }
-        } catch (e: Exception) {
-          val error =
-            "Failed to generate default parameters for the download job: " + e.cause?.message
-          Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-          Log.e(TAG, error)
         }
+      } catch (e: Exception) {
+        val error =
+          "Failed to generate default parameters for the download job: " + e.cause?.message
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+        Log.e(TAG, error)
       }
     }
   }
 
+  /**
+   * Creates a list view showing available preplanned map areas. Graphics are drawn on the map view
+   * showing the preplanned map areas available. Tapping on a preplanned map area in the list view
+   * will set the map view's viewpoint to the area and, if a map has not yet been downloaded for
+   * this area, the download button will be enabled.
+   *
+   * @param onlineMap used as the background for showing available preplanned map areas
+   * @param offlineMapTask used to take preplanned map areas offline
+   */
   private fun createPreplannedAreasListView(onlineMap: ArcGISMap, offlineMapTask: OfflineMapTask) {
     var preplannedMapAreas: List<PreplannedMapArea>
     val preplannedMapAreaNames: MutableList<String> = ArrayList()
@@ -226,66 +236,68 @@ class MainActivity : AppCompatActivity() {
       offlineMapTask.preplannedMapAreasAsync
     preplannedMapAreasFuture.addDoneListener {
       try {
-        // get the preplanned areas and add them to the list view
-        preplannedMapAreas = preplannedMapAreasFuture.get()
-        preplannedMapAreas.forEach { preplannedMapArea ->
-          preplannedMapAreaNames.add(preplannedMapArea.portalItem.title)
-        }
-        preplannedMapAreasAdapter?.notifyDataSetChanged()
-        // load each area and show a red border around their area of interest
-        preplannedMapAreas.forEach { preplannedMapArea ->
-          preplannedMapArea.loadAsync()
-          preplannedMapArea.addDoneLoadingListener {
-            if (preplannedMapArea.loadStatus == LoadStatus.LOADED) {
-              // add the area of interest as a graphic
-              mapView.graphicsOverlays[0].graphics.add(Graphic(preplannedMapArea.areaOfInterest))
-            } else {
-              val error =
-                "Failed to load preplanned map area: " + preplannedMapArea.loadError.message
-              Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-              Log.e(TAG, error)
+        // get the preplanned areas
+        preplannedMapAreas = preplannedMapAreasFuture.get().also {
+          it.forEach { preplannedMapArea ->
+            // add the preplanned map area name to the list view
+            preplannedMapAreaNames.add(preplannedMapArea.portalItem.title)
+            // load each area and show a red border around their area of interest
+            preplannedMapArea.loadAsync()
+            preplannedMapArea.addDoneLoadingListener {
+              if (preplannedMapArea.loadStatus == LoadStatus.LOADED) {
+                // add the area of interest as a graphic
+                mapView.graphicsOverlays[0].graphics.add(Graphic(preplannedMapArea.areaOfInterest))
+              } else {
+                val error =
+                  "Failed to load preplanned map area: " + preplannedMapArea.loadError.message
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                Log.e(TAG, error)
+              }
             }
           }
         }
+        // notify the adapter that the list of preplanned map area names has changed
+        preplannedMapAreasAdapter?.notifyDataSetChanged()
         // on list view click
         availableAreasListView.onItemClickListener =
           AdapterView.OnItemClickListener { _: AdapterView<*>?, _: View?, i: Int, _: Long ->
-            mSelectedPreplannedMapArea = preplannedMapAreas[i]
-            if (mSelectedPreplannedMapArea != null) {
-              // clear the download jobs list view selection
-              downloadedMapAreasListView.clearChoices()
-              downloadedMapAreasAdapter?.notifyDataSetChanged()
-
-              val areaOfInterest =
-                GeometryEngine.buffer(mSelectedPreplannedMapArea?.areaOfInterest, 50.0).extent
-              // show the online map with the areas of interest
-              mapView.apply {
-                map = onlineMap
-                graphicsOverlays[0].isVisible = true
-                // set the viewpoint to the preplanned map area's area of interest
-                setViewpointAsync(Viewpoint(areaOfInterest), 1.5f)
-              }
-              // enable download button only for those map areas which have not been downloaded already
-              File(
-                externalCacheDir?.path + getString(R.string.preplanned_offline_map_dir)
-                    + File.separator + mSelectedPreplannedMapArea?.portalItem?.title
-              ).let {
-                downloadButton.isEnabled = !it.exists()
-              }
-            } else {
+            selectedPreplannedMapArea = preplannedMapAreas[i]
+            if (selectedPreplannedMapArea == null) {
               downloadButton.isEnabled = false
+              return@OnItemClickListener
+            }
+            // clear the download jobs list view selection
+            downloadedMapAreasListView.clearChoices()
+            downloadedMapAreasAdapter?.notifyDataSetChanged()
+
+            val areaOfInterest =
+              GeometryEngine.buffer(selectedPreplannedMapArea?.areaOfInterest, 50.0).extent
+            // show the online map with the areas of interest
+            mapView.apply {
+              map = onlineMap
+              graphicsOverlays[0].isVisible = true
+              // set the viewpoint to the preplanned map area's area of interest
+              setViewpointAsync(Viewpoint(areaOfInterest), 1.5f)
+            }
+            // enable download button only for those map areas which have not been downloaded already
+            File(externalCacheDir?.path + getString(R.string.preplanned_offline_map_dir) +
+                File.separator + selectedPreplannedMapArea?.portalItem?.title).also {
+              downloadButton.isEnabled = !it.exists()
             }
           }
       } catch (e: Exception) {
-        val error = "Failed to get the Preplanned Map Areas from the Offline Map Task."
+        val error = "Failed to get the preplanned map areas from the offline map task."
         Toast.makeText(this, error, Toast.LENGTH_LONG).show()
         Log.e(TAG, error)
       }
     }
   }
 
+  /**
+   * Create a list view which holds downloaded map areas.
+   *
+   */
   private fun createDownloadAreasListView() {
-    // create a list view which holds downloaded map areas
     downloadedMapAreasAdapter = ArrayAdapter(this, R.layout.item_map_area, downloadedMapAreaNames)
     downloadedMapAreasListView.apply {
       adapter = downloadedMapAreasAdapter
