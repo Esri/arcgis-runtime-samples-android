@@ -25,7 +25,7 @@ Run the sample and a map will appear. As you navigate the map, map tiles will be
 
 ## About the data
 
-The basemap in this sample is provided by [Stamen Design](maps.stamen.com). Stamen publishes tiled services based on OpenStreetMap data with several unique styles applied.
+The basemap in this sample is provided by [Stamen Design](http://maps.stamen.com). Stamen publishes tiled services based on OpenStreetMap data with several unique styles applied.
 
 ## Additional information
 

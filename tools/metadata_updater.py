@@ -73,7 +73,11 @@ def get_folder_name_from_path(path: str) -> str:
 
 class MetadataUpdater:
 
+<<<<<<< HEAD
     def __init__(self, folder_path: str, single_update: bool = False):
+=======
+    def __init__(self, folder_path: str):
+>>>>>>> 2c9f4ffc6ca20127fd39d78c44ace36a3722ac86
         """
         The standard format of metadata.json for Android platform. Read more at:
         https://devtopia.esri.com/runtime/common-samples/wiki/README.metadata.json
@@ -97,8 +101,11 @@ class MetadataUpdater:
         self.readme_path = os.path.join(folder_path, 'README.md')
         self.json_path = os.path.join(folder_path, 'README.metadata.json')
 
+<<<<<<< HEAD
         self.single_update = single_update
 
+=======
+>>>>>>> 2c9f4ffc6ca20127fd39d78c44ace36a3722ac86
     def get_source_code_paths(self) -> typing.List[str]:
         """
         Traverse the directory and get all filenames for source code.
@@ -242,10 +249,17 @@ class MetadataUpdater:
         """
         data = dict()
 
+<<<<<<< HEAD
         if not self.category and self.single_update:
             data["category"] = "TODO"
 
         data["category"] = self.category
+=======
+        if not self.category:
+            data["category"] = "TODO"
+        else:
+            data["category"] = self.category
+>>>>>>> 2c9f4ffc6ca20127fd39d78c44ace36a3722ac86
 
         data["description"] = self.description
         data["formal_name"] = self.formal_name
@@ -256,17 +270,29 @@ class MetadataUpdater:
 
         if self.provision_from:
              data["provision_from"] = self.provision_from
+<<<<<<< HEAD
         elif self.single_update:
+=======
+        else:
+>>>>>>> 2c9f4ffc6ca20127fd39d78c44ace36a3722ac86
             data["provision_from"] = "TODO"
 
         if self.provision_to:
              data["provision_to"] = self.provision_to
+<<<<<<< HEAD
         elif self.single_update:
+=======
+        else:
+>>>>>>> 2c9f4ffc6ca20127fd39d78c44ace36a3722ac86
             data["provision_to"] = "TODO"
 
         if self.redirect_from and self.redirect_from[0] is not '':
             data["redirect_from"] = self.redirect_from
+<<<<<<< HEAD
         elif self.single_update:
+=======
+        else:
+>>>>>>> 2c9f4ffc6ca20127fd39d78c44ace36a3722ac86
             data["redirect_from"] = "TODO"
 
         data["relevant_apis"] = self.relevant_apis
@@ -282,7 +308,11 @@ def update_1_sample(path: str):
     """
     Fixes 1 sample's metadata by running the script on a single sample's directory.
     """
+<<<<<<< HEAD
     single_updater = MetadataUpdater(path, True)
+=======
+    single_updater = MetadataUpdater(path)
+>>>>>>> 2c9f4ffc6ca20127fd39d78c44ace36a3722ac86
     try:
         single_updater.populate_from_json()
         single_updater.populate_from_readme()
