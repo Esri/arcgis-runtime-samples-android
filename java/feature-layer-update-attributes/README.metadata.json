@@ -7,11 +7,12 @@
         "feature-layer-update-attributes.png"
     ],
     "keywords": [
+        "amend",
         "attribute",
-        "coded value",
-        "coded value domain",
-        "domain",
+        "details",
+        "edit",
         "editing",
+        "information",
         "value"
     ],
     "language": "java",

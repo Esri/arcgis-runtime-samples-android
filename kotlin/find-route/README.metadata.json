@@ -1,6 +1,7 @@
 {
     "category": "Routing and Logistics",
     "description": "Display directions for a route between two points.",
+    "formal_name": "FindRoute",
     "ignore": false,
     "images": [
         "find-route.png"
@@ -16,14 +17,17 @@
         "shortest path",
         "turn-by-turn"
     ],
-    "redirect_from": "/android/latest/sample-code/find-route.htm",
+    "language": "kotlin",
+    "redirect_from": [
+        "/android/latest/sample-code/find-route.htm"
+    ],
     "relevant_apis": [
-      "DirectionManeuver",
-      "Route",
-      "RouteParameters",
-      "RouteResult",
-      "RouteTask",
-      "Stop"
+        "DirectionManeuver",
+        "Route",
+        "RouteParameters",
+        "RouteResult",
+        "RouteTask",
+        "Stop"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/findroute/MainActivity.kt"
