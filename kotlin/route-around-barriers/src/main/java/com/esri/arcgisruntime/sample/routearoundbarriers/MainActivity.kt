@@ -163,7 +163,8 @@ class MainActivity : AppCompatActivity() {
     routeTask?.loadAsync()
 
     // shrink the map view so it is not hidden under the bottom sheet header
-    val peekHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40f, resources.displayMetrics).toInt()
+    val peekHeight =
+      TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40f, resources.displayMetrics).toInt()
     (mapViewContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin = peekHeight
     bottomSheetBehavior?.peekHeight = peekHeight
 
@@ -225,55 +226,56 @@ class MainActivity : AppCompatActivity() {
    * @param solveRoute button which calls this method
    */
   fun createAndDisplayRoute(solveRoute: View) {
-    if (stopList.size >= 2) {
-      // clear the previous route from the graphics overlay, if it exists
-      routeGraphicsOverlay.graphics.clear()
-      // clear the directions list from the directions list view, if they exist
-      directionsList.clear()
-
-      routeParameters?.apply {
-        // add the existing stops and barriers to the route parameters
-        setStops(stopList)
-        setPolygonBarriers(barrierList)
-
-        // apply the requested route finding parameters
-        isFindBestSequence = reorderCheckBox.isChecked
-        isPreserveFirstStop = preserveFirstStopCheckBox.isChecked
-        isPreserveLastStop = preserveLastStopCheckBox.isChecked
-      }
-
-      // solve the route task
-      val routeResultFuture = routeTask?.solveRouteAsync(routeParameters)
-      routeResultFuture?.addDoneListener {
-        try {
-          val routeResult: RouteResult = routeResultFuture.get()
-          if (routeResult.routes.isNotEmpty()) {
-            // get the first route result
-            val firstRoute: Route = routeResult.routes[0]
-
-            // create a graphic for the route and add it to the graphics overlay
-            val routeGraphic = Graphic(firstRoute.routeGeometry)
-            routeGraphicsOverlay.graphics.add(routeGraphic)
-
-            // get the direction text for each maneuver and add them to the list to display
-            directionsList.addAll(firstRoute.directionManeuvers)
-
-            showDirectionsInBottomSheet()
-          } else {
-            Toast.makeText(this, "No routes found.", Toast.LENGTH_LONG).show()
-          }
-        } catch (e: Exception) {
-          val error = "Solve route task failed: " + e.message
-          Log.e(TAG, error)
-          Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-        }
-
-        // show the reset button
-        resetButton.visibility = VISIBLE
-      }
-    } else {
+    if (stopList.size < 2) {
       // clear the directions list since no route is displayed
       directionsList.clear()
+      return
+    }
+    
+    // clear the previous route from the graphics overlay, if it exists
+    routeGraphicsOverlay.graphics.clear()
+    // clear the directions list from the directions list view, if they exist
+    directionsList.clear()
+
+    routeParameters?.apply {
+      // add the existing stops and barriers to the route parameters
+      setStops(stopList)
+      setPolygonBarriers(barrierList)
+
+      // apply the requested route finding parameters
+      isFindBestSequence = reorderCheckBox.isChecked
+      isPreserveFirstStop = preserveFirstStopCheckBox.isChecked
+      isPreserveLastStop = preserveLastStopCheckBox.isChecked
+    }
+
+    // solve the route task
+    val routeResultFuture = routeTask?.solveRouteAsync(routeParameters)
+    routeResultFuture?.addDoneListener {
+      try {
+        val routeResult: RouteResult = routeResultFuture.get()
+        if (routeResult.routes.isNotEmpty()) {
+          // get the first route result
+          val firstRoute: Route = routeResult.routes[0]
+
+          // create a graphic for the route and add it to the graphics overlay
+          val routeGraphic = Graphic(firstRoute.routeGeometry)
+          routeGraphicsOverlay.graphics.add(routeGraphic)
+
+          // get the direction text for each maneuver and add them to the list to display
+          directionsList.addAll(firstRoute.directionManeuvers)
+
+          showDirectionsInBottomSheet()
+        } else {
+          Toast.makeText(this, "No routes found.", Toast.LENGTH_LONG).show()
+        }
+      } catch (e: Exception) {
+        val error = "Solve route task failed: " + e.message
+        Log.e(TAG, error)
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+      }
+
+      // show the reset button
+      resetButton.visibility = VISIBLE
     }
   }
 
