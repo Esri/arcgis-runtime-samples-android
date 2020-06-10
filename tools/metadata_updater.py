@@ -242,10 +242,10 @@ class MetadataUpdater:
         """
         data = dict()
 
-        if not self.category:
+        if not self.category and self.single_update:
             data["category"] = "TODO"
-        elif self.single_update:
-            data["category"] = self.category
+
+        data["category"] = self.category
 
         data["description"] = self.description
         data["formal_name"] = self.formal_name
