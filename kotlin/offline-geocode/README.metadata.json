@@ -34,7 +34,7 @@
         "ReverseGeocodeParameters"
     ],
     "snippets": [
-        "rc/main/java/com/esri/arcgisruntime/sample/offlinegeocode/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/offlinegeocode/MainActivity.kt"
     ],
     "title": "Offline geocode"
 }
