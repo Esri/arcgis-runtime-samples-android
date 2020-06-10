@@ -232,10 +232,10 @@ class MainActivity : AppCompatActivity() {
           if (syncGeodatabaseJob.status == Job.Status.SUCCEEDED) {
             // close the progress dialog
             syncDialog.dismiss()
-
-            currentEditState = EditState.READY
-            Toast.makeText(this@MainActivity, "Sync complete", Toast.LENGTH_SHORT).show()
             syncButton.isEnabled = false
+            currentEditState = EditState.READY
+            
+            Toast.makeText(this@MainActivity, "Sync complete", Toast.LENGTH_SHORT).show()
           } else {
             Log.e(TAG, "Database did not sync correctly!")
             Toast.makeText(this@MainActivity, "Database did not sync correctly!", Toast.LENGTH_LONG)
