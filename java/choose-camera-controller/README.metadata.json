@@ -1,23 +1,20 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "Control the behaviour of the camera in a scene.",
+    "description": "Control the behavior of the camera in a scene.",
+    "formal_name": "ChooseCameraController",
     "ignore": false,
     "images": [
         "choose-camera-controller.png"
     ],
     "keywords": [
-        "MapViews, SceneViews and UI",
-        "Camera",
-        "SceneView",
         "3D",
-        "ArcGISScene",
-        "Camera",
-        "GlobeCameraController",
-        "OrbitGeoElementCameraController",
-        "OrbitLocationCameraController",
-        "SceneView"
+        "camera",
+        "camera controller"
     ],
-    "redirect_from": "/android/latest/sample-code/choose-camera-controller.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/choose-camera-controller.htm"
+    ],
     "relevant_apis": [
         "ArcGISScene",
         "Camera",

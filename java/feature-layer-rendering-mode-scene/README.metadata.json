@@ -1,28 +1,32 @@
 {
     "category": "MapViews, SceneViews and UI",
-    "description": "Use load settings to set preferred rendering mode for feature layers, specifically static or dynamic rendering modes.",
+    "description": "Render features in a scene statically or dynamically by setting the feature layer rendering mode.",
+    "formal_name": "FeatureLayerRenderingModeScene",
     "ignore": false,
     "images": [
         "feature-layer-rendering-mode-scene.png"
     ],
     "keywords": [
-        "MapViews, SceneViews and UI",
-        "FeatureLayer",
-        "FeatureLayer.RenderingMode",
-        "LoadSettings",
-        "Scene",
-        "SceneView"
+        "3D",
+        "dynamic",
+        "feature layer",
+        "features",
+        "rendering",
+        "static"
     ],
-    "redirect_from": "/android/latest/sample-code/feature-layer-rendering-mode-scene.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/feature-layer-rendering-mode-scene.htm"
+    ],
     "relevant_apis": [
+        "ArcGISScene",
         "FeatureLayer",
         "FeatureLayer.RenderingMode",
         "LoadSettings",
-        "Scene",
         "SceneView"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/featurelayerrenderingmodescene/MainActivity.java"
     ],
-    "title": "Feature Layer Rendering Mode (Scene)"
+    "title": "Feature layer rendering mode (scene)"
 }

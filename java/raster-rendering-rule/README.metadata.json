@@ -1,21 +1,24 @@
 {
     "category": "Visualization",
-    "description": "Create an ImageServiceRaster, fetch the RenderingRules from the service info, and use a RenderingRule to create an ImageServiceRaster and add it to a raster layer.",
+    "description": "Display a raster on a map and apply different rendering rules to that raster.",
+    "formal_name": "RasterRenderingRule",
     "ignore": false,
     "images": [
         "raster-rendering-rule.png"
     ],
     "keywords": [
-        "Visualization",
-        "ImageServiceRaster",
-        "RenderingRule",
-        "RasterLayer"
+        "raster",
+        "rendering rules",
+        "visualization"
     ],
-    "redirect_from": "/android/latest/sample-code/raster-rendering-rule.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/raster-rendering-rule.htm"
+    ],
     "relevant_apis": [
         "ImageServiceRaster",
-        "RenderingRule",
-        "RasterLayer"
+        "RasterLayer",
+        "RenderingRule"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/rasterrenderingrule/MainActivity.java"

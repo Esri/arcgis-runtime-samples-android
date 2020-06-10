@@ -1,18 +1,26 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Being able to project between spatial references is fundamental to a GIS. An example of when you would need to re-project data is if you had data in two different spatial reference",
+    "description": "Project a point from one spatial reference to another.",
+    "formal_name": "Project",
     "ignore": false,
     "images": [
         "project.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "GeometryEngine",
-        "GeometryEngine",
-        "Point",
-        "SpatialReference"
+        "WGS 84",
+        "Web Mercator",
+        "coordinate system",
+        "coordinates",
+        "latitude",
+        "longitude",
+        "projected",
+        "projection",
+        "spatial reference"
     ],
-    "redirect_from": "/android/latest/sample-code/project.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/project.htm"
+    ],
     "relevant_apis": [
         "GeometryEngine",
         "Point",

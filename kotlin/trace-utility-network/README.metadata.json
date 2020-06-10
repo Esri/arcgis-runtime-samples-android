@@ -1,6 +1,7 @@
 {
     "category": "Utility Networks",
     "description": "Discover connected features in a utility network using connected, subnetwork, upstream, and downstream traces.",
+    "formal_name": "TraceUtilityNetwork",
     "ignore": false,
     "images": [
         "trace-utility-network.png"
@@ -16,23 +17,23 @@
         "utility network",
         "validate consistency"
     ],
-    "redirect_from": "",
+    "language": "kotlin",
     "relevant_apis": [
         "FractionAlong",
-		"UtilityAssetType",
-		"UtilityDomainNetwork",
-		"UtilityElement",
-		"UtilityElementTraceResult",
-		"UtilityNetwork",
-		"UtilityNetworkDefinition",
-		"UtilityNetworkSource",
-		"UtilityTerminal",
-		"UtilityTier",
-		"UtilityTraceConfiguration",
-		"UtilityTraceParameters",
-		"UtilityTraceResult",
-		"UtilityTraceType",
-		"UtilityTraversability"
+        "UtilityAssetType",
+        "UtilityDomainNetwork",
+        "UtilityElement",
+        "UtilityElementTraceResult",
+        "UtilityNetwork",
+        "UtilityNetworkDefinition",
+        "UtilityNetworkSource",
+        "UtilityTerminal",
+        "UtilityTier",
+        "UtilityTraceConfiguration",
+        "UtilityTraceParameters",
+        "UtilityTraceResult",
+        "UtilityTraceType",
+        "UtilityTraversability"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/traceutilitynetwork/MainActivity.kt"

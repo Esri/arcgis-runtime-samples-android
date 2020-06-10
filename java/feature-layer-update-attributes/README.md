@@ -29,4 +29,4 @@ Features in the map represent properties and are symbolized based on the type of
 
 ## Tags
 
-attribute, coded value, coded value domain, domain, editing, value
+amend, attribute, details, edit, editing, information, value

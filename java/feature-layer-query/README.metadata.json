@@ -1,24 +1,26 @@
 {
     "category": "Search and Query",
-    "description": "Query a feature layer via feature table.",
+    "description": "Find features in a feature table which match an SQL query.",
+    "formal_name": "FeatureLayerQuery",
     "ignore": false,
     "images": [
         "feature-layer-query.png"
     ],
     "keywords": [
-        "Search and Query",
-        "FeatureLayer",
-        "FeatureTable",
-        "GeoPackage"
+        "Search and Query"
     ],
-    "redirect_from": "/android/latest/sample-code/feature-layer-query.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/feature-layer-query.htm"
+    ],
     "relevant_apis": [
         "FeatureLayer",
-        "FeatureTable",
-        "GeoPackage"
+        "FeatureQueryResult",
+        "QueryParameters",
+        "ServiceFeatureTable"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/featurelayerquery/MainActivity.java"
     ],
-    "title": "Feature Layer Query"
+    "title": "Feature layer query"
 }

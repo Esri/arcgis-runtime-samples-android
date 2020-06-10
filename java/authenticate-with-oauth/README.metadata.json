@@ -1,25 +1,23 @@
 {
     "category": "Cloud and Portal",
-    "description": "This sample demonstrates how to authenticate with ArcGIS Online (or your own portal) using OAuth2 to access secured resources (such as private web maps or layers). Accessing secure",
+    "description": "Authenticate with ArcGIS Online (or your own portal) using OAuth2 to access secured resources (such as private web maps or layers).",
+    "formal_name": "AuthenticateWithOauth",
     "ignore": false,
     "images": [
         "authenticate-with-oauth.png"
     ],
     "keywords": [
-        "Cloud and Portal",
-        "Authentication",
-        "Security",
         "OAuth",
-        "Credential",
-        "AuthenticationManager",
-        "AuthenticationChallengeHandler",
-        "OAuthConfiguration",
-        "PortalItem"
+        "authentication",
+        "cloud",
+        "credential",
+        "portal",
+        "security"
     ],
-    "redirect_from": "",
+    "language": "java",
     "relevant_apis": [
-        "AuthenticationManager",
         "AuthenticationChallengeHandler",
+        "AuthenticationManager",
         "OAuthConfiguration",
         "PortalItem"
     ],

@@ -1,39 +1,45 @@
 {
     "category": "Visualization",
-    "description": "Use an RGBRenderer on a RasterLayer. An RGBRenderer is used to adjust the color bands of a multispectral image.",
+    "description": "Apply an RGB renderer to a raster layer to enhance feature visibility.",
+    "formal_name": "RgbRenderer",
     "ignore": false,
     "images": [
         "rgb-renderer.png"
     ],
     "keywords": [
-        "Visualization",
-        "ArcGISMap",
-        "Basemap",
-        "MapView",
-        "Raster",
-        "RasterLayer",
-        "StretchParameters",
-        "RGBRenderer"
+        "analysis",
+        "color",
+        "composite",
+        "imagery",
+        "multiband",
+        "multispectral",
+        "pan-sharpen",
+        "photograph",
+        "raster",
+        "spectrum",
+        "stretch",
+        "visualization"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=7c4c679ab06a4df19dc497f577f111bd"
     ],
     "provision_to": [
         "/Shasta.tif"
     ],
-    "redirect_from": "/android/latest/sample-code/rgb-renderer.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/rgb-renderer.htm"
+    ],
     "relevant_apis": [
-        "ArcGISMap",
         "Basemap",
-        "MapView",
+        "RGBRenderer",
         "Raster",
         "RasterLayer",
-        "StretchParameters",
-        "RGBRenderer"
+        "StretchParameters"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/rgbrenderer/ParametersDialogFragment.java",
-        "src/main/java/com/esri/arcgisruntime/sample/rgbrenderer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/rgbrenderer/MainActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/rgbrenderer/ParametersDialogFragment.java"
     ],
-    "title": "RGB Renderer"
+    "title": "RGB renderer"
 }
