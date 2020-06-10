@@ -1,28 +1,32 @@
 {
     "category": "Search and Query",
-    "description": "Shows related features to any feature tapped on.",
+    "description": "List features related to the selected feature.",
+    "formal_name": "ListRelatedFeatures",
     "ignore": false,
     "images": [
         "list-related-features.png"
     ],
     "keywords": [
-        "Search and Query",
-        "ArcGISFeature",
-        "ArcGISFeatureLayerInfo",
-        "ArcGISFeatureTable",
-        "RelatedFeatureQueryResult",
-        "RelatedQueryParameters"
+        "features",
+        "identify",
+        "query",
+        "related",
+        "relationship",
+        "search"
     ],
-    "redirect_from": "/android/latest/sample-code/list-related-features.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/list-related-features.htm"
+    ],
     "relevant_apis": [
         "ArcGISFeature",
-        "ArcGISFeatureLayerInfo",
         "ArcGISFeatureTable",
-        "RelatedFeatureQueryResult",
-        "RelatedQueryParameters"
+        "ArcGISFeatureTable.QueryRelatedFeatures",
+        "FeatureQueryResult",
+        "RelatedFeatureQueryResult"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/listrelatedfeatures/MainActivity.java"
     ],
-    "title": "List Related Features"
+    "title": "List related features"
 }

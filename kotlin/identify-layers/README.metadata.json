@@ -1,25 +1,28 @@
 {
-  "category": "Search and Query",
-  "description": "Identify features in all layers in a map.",
-  "ignore": false,
-  "images": [
-    "identify-layers.png"
-  ],
-  "keywords": [
-    "identify",
-    "recursion",
-    "recursive",
-    "sublayers"
-  ],
-  "redirect_from": "/android/latest/sample-code/identify-layers.htm",
-  "relevant_apis": [
-    "IdentifyLayerResult",
-    "IdentifyLayerResult.LayerContent.Name",
-    "IdentifyLayerResult.SublayerResults",
-    "MapView.IdentifyLayersAsync"
-  ],
-  "snippets": [
-    "src/main/java/com/esri/arcgisruntime/sample/identifylayers/MainActivity.kt"
-  ],
-  "title": "Identify layers"
+    "category": "Search and Query",
+    "description": "Identify features in all layers in a map.",
+    "formal_name": "IdentifyLayers",
+    "ignore": false,
+    "images": [
+        "identify-layers.png"
+    ],
+    "keywords": [
+        "identify",
+        "recursion",
+        "recursive",
+        "sublayers"
+    ],
+    "language": "kotlin",
+    "redirect_from": [
+        "/android/latest/sample-code/identify-layers.htm"
+    ],
+    "relevant_apis": [
+        "IdentifyLayerResult",
+        "IdentifyLayerResult.sublayerResults",
+        "MapView.identifyLayersAsync(...)"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/identifylayers/MainActivity.kt"
+    ],
+    "title": "Identify layers"
 }

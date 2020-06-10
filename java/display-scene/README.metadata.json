@@ -1,22 +1,22 @@
 {
     "category": "Maps and Scenes",
-    "description": "Display a scene with elevation data.",
+    "description": "Display a scene with a terrain surface and some imagery.",
+    "formal_name": "DisplayScene",
     "ignore": false,
     "images": [
         "display-scene.png"
     ],
     "keywords": [
-        "Maps and Scenes",
-        "ArcGISScene",
-        "ArcGISTiledElevationSource",
-        "Camera",
-        "SceneView"
+        "3D",
+        "basemap",
+        "elevation",
+        "scene",
+        "surface"
     ],
-    "redirect_from": "",
+    "language": "java",
     "relevant_apis": [
         "ArcGISScene",
         "ArcGISTiledElevationSource",
-        "Camera",
         "SceneView"
     ],
     "snippets": [

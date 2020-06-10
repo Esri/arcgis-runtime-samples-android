@@ -1,40 +1,32 @@
 {
     "category": "Visualization",
-    "description": "Change the renderer on a map image layer sublayer. In this example, a renderer is applied to see the different population ranges in the counties sublayer data.",
+    "description": "Apply a renderer to a sublayer.",
+    "formal_name": "ChangeSublayerRenderer",
     "ignore": false,
     "images": [
         "change-sublayer-renderer.png"
     ],
     "keywords": [
-        "Visualization",
-        "ArcGISMap",
-        "ArcGISMapImageLayer",
-        "ArcGISMapImageSublayer",
-        "Basemap",
-        "ClassBreaksRenderer",
-        "ClassBreaksRenderer.ClassBreak",
-        "LoadStatus",
-        "MapView",
-        "SimpleFillSymbol",
-        "SimpleLineSymbol",
-        "SublayerList"
+        "class breaks",
+        "dynamic layer",
+        "dynamic rendering",
+        "renderer",
+        "sublayer",
+        "symbology",
+        "visualization"
     ],
-    "redirect_from": "/android/latest/sample-code/change-sublayer-renderer.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/change-sublayer-renderer.htm"
+    ],
     "relevant_apis": [
-        "ArcGISMap",
         "ArcGISMapImageLayer",
-        "ArcGISMapImageSublayer",
-        "Basemap",
+        "ArcGISMapImageSubLayer",
         "ClassBreaksRenderer",
-        "ClassBreaksRenderer.ClassBreak",
-        "LoadStatus",
-        "MapView",
-        "SimpleFillSymbol",
-        "SimpleLineSymbol",
-        "SublayerList"
+        "ClassBreaksRenderer.ClassBreak"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/changesublayerrenderer/MainActivity.java"
     ],
-    "title": "Change Sublayer Renderer"
+    "title": "Change sublayer renderer"
 }

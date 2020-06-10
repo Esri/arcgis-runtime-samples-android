@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.generateofflinemap;
+package com.esri.arcgisruntime.sample.generateofflinemap;
 
 import java.io.File;
 

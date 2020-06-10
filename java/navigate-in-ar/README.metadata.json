@@ -1,31 +1,36 @@
 {
     "category": "Augmented Reality",
-    "description": "It can be hard to navigate using 2D maps in unfamiliar environments. You can use full-scale AR to show a route overlaid on the real-world for easier navigation.",
+    "description": "Use a route displayed in the real world to navigate.",
+    "formal_name": "NavigateInAr",
     "ignore": false,
     "images": [
         "navigate-in-ar.png"
     ],
     "keywords": [
-        "Routing and Logistics",
-        "MobileMapPackage",
-        "LocatorTask",
-        "GeoCode",
-        "Route",
-        "NetworkAnalysis",
-        "Callout"
-    ],
-    "redirect_from": "",
-    "relevant_apis": [
+        "augmented reality",
         "directions",
-        "LocatorTask",
-        "GeoCode",
-        "Route",
-        "NetworkAnalysis",
-        "Callout"
+        "full-scale",
+        "guidance",
+        "mixed reality",
+        "navigate",
+        "navigation",
+        "real-scale",
+        "route",
+        "routing",
+        "world-scale"
+    ],
+    "language": "java",
+    "relevant_apis": [
+        "ArcGISArView",
+        "LocationDataSource",
+        "RouteResult",
+        "RouteTask",
+        "RouteTracker",
+        "Surface"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/navigateinar/MainActivity.java",
-        "src/main/java/com/esri/arcgisruntime/sample/navigateinar/ARNavigateActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/navigateinar/ARNavigateActivity.java",
+        "src/main/java/com/esri/arcgisruntime/sample/navigateinar/MainActivity.java"
     ],
     "title": "Navigate in AR"
 }

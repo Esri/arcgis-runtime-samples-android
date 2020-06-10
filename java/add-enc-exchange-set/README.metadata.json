@@ -1,23 +1,20 @@
 {
     "category": "Layers",
-    "description": "Display nautical charts conforming to the ENC specification.",
+    "description": "Display nautical charts per the ENC specification.",
+    "formal_name": "AddEncExchangeSet",
     "ignore": false,
     "images": [
         "add-enc-exchange-set.png"
     ],
     "keywords": [
-        "Layers",
         "ENC",
-        "maritime",
-        "nautical",
-        "chart",
-        "hydrographic",
         "data",
-        "EncCell",
-        "EncDataset",
-        "EncExchangeSet",
-        "EncLayer"
+        "hydrographic",
+        "layers",
+        "maritime",
+        "nautical chart"
     ],
+    "language": "java",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=9d2987a825c646468b3ce7512fb76e2d",
         "https://www.arcgis.com/home/item.html?id=af74ccbb69c846ef97085e4bebd3e76a"
@@ -26,7 +23,9 @@
         "/ENC/",
         "/ENC_supplemental/"
     ],
-    "redirect_from": "/android/latest/sample-code/add-enc-exchange-set.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/add-enc-exchange-set.htm"
+    ],
     "relevant_apis": [
         "EncCell",
         "EncDataset",

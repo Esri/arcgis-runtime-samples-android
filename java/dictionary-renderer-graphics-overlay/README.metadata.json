@@ -1,23 +1,28 @@
 {
     "category": "Visualization",
-    "description": "The dictionary renderer creates graphics using a local mil2525d style file and a XML file with key, value attributes for each graphic.",
+    "description": "Create graphics using a local mil2525d style file and an XML file with key/value pairs for each graphic.",
+    "formal_name": "DictionaryRendererWithGraphicsOverlay",
     "ignore": false,
     "images": [
         "dictionary-renderer-graphics-overlay.png"
     ],
     "keywords": [
-        "Visualization",
-        "DictionaryRenderer",
-        "DictionarySymbolStyle",
-        "GraphicsOverlay"
+        "defense",
+        "military",
+        "situational awareness",
+        "tactical",
+        "visualization"
     ],
+    "language": "java",
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=c78b149a1d52414682c86a5feeb13d30"
     ],
     "provision_to": [
         "/mil2525d.stylx"
     ],
-    "redirect_from": "/android/latest/sample-code/dictionary-renderer-with-graphics-overlay.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/dictionary-renderer-with-graphics-overlay.htm"
+    ],
     "relevant_apis": [
         "DictionaryRenderer",
         "DictionarySymbolStyle",
@@ -26,5 +31,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/dictionaryrenderergraphicsoverlay/MainActivity.java"
     ],
-    "title": "Dictionary renderer graphics overlay"
+    "title": "Dictionary renderer with graphics overlay"
 }

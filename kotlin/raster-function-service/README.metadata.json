@@ -1,24 +1,31 @@
 {
-  "category": "Layers",
-  "description": "Raster functions are operations performed on a raster to apply on-the-fly processing.",
-  "ignore": false,
-  "images": [
-    "raster-function-service.png"
-  ],
-  "keywords": [
-    "Layers",
-    "ImageServiceRaster",
-    "RasterFunction",
-    "RasterLayer"
-  ],
-  "redirect_from": "/android/latest/sample-code/raster-function-service.htm",
-  "relevant_apis": [
-    "ImageServiceRaster",
-    "RasterFunction",
-    "RasterLayer"
-  ],
-  "snippets": [
-    "src/main/java/com/esri/arcgisruntime/sample/rasterfunctionservice/MainActivity.kt"
-  ],
-  "title": "Raster Function Service"
+    "category": "Layers",
+    "description": "Load a raster from a service, then apply a function to it.",
+    "formal_name": "RasterFunctionService",
+    "ignore": false,
+    "images": [
+        "raster-function-service.png"
+    ],
+    "keywords": [
+        "function",
+        "layer",
+        "raster",
+        "raster function",
+        "service"
+    ],
+    "language": "kotlin",
+    "redirect_from": [
+        "/android/latest/sample-code/raster-function-service.htm"
+    ],
+    "relevant_apis": [
+        "ImageServiceRaster",
+        "Raster",
+        "RasterFunction",
+        "RasterFunctionArguments",
+        "RasterLayer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/rasterfunctionservice/MainActivity.kt"
+    ],
+    "title": "Raster function service"
 }

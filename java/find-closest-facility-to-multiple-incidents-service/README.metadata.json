@@ -1,27 +1,21 @@
 {
     "category": "Routing and Logistics",
     "description": "Find routes from several locations to the respective closest facility.",
+    "formal_name": "FindClosestFacilityToMultipleIncidentsService",
     "ignore": false,
     "images": [
         "find-closest-facility-to-multiple-incidents-service.png"
     ],
     "keywords": [
-        "Analysis",
-        "Routing and Logistics",
         "incident",
-        "network",
+        "network analysis",
         "route",
-        "search",
-        "ClosestFacilityParameters",
-        "ClosestFacilityResult",
-        "ClosestFacilityRoute",
-        "ClosestFacilityTask",
-        "Facility",
-        "Graphic",
-        "GraphicsOverlay",
-        "Incident"
+        "search"
     ],
-    "redirect_from": "/android/latest/sample-code/find-closest-facility-to-multiple-incidents-service.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/find-closest-facility-to-multiple-incidents-service.htm"
+    ],
     "relevant_apis": [
         "ClosestFacilityParameters",
         "ClosestFacilityResult",

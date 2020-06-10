@@ -1,18 +1,18 @@
 {
     "category": "Search and Query",
-    "description": "Execute an attribute and spatial query on the sublayers of an ArcGIS map image layer.",
+    "description": "Find features in a sublayer based on attributes and location.",
+    "formal_name": "QueryMapImageSublayer",
     "ignore": false,
     "images": [
         "query-map-image-sublayer.png"
     ],
     "keywords": [
-        "Search and Query",
-        "ArcGISMapImageLayer",
-        "ArcGISMapImageSublayer",
-        "QueryParameters",
-        "ServiceFeatureTable"
+        "search and query"
     ],
-    "redirect_from": "/android/latest/sample-code/query-map-image-sublayer.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/query-map-image-sublayer.htm"
+    ],
     "relevant_apis": [
         "ArcGISMapImageLayer",
         "ArcGISMapImageSublayer",
@@ -22,5 +22,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/querymapimagesublayer/MainActivity.java"
     ],
-    "title": "Query Map Image Sublayer"
+    "title": "Query map image sublayer"
 }

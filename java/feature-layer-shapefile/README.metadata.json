@@ -1,22 +1,27 @@
 {
     "category": "Layers",
     "description": "Open a shapefile stored on the device and display it as a feature layer with default symbology.",
+    "formal_name": "FeatureLayerShapefile",
     "ignore": false,
     "images": [
         "feature-layer-shapefile.png"
     ],
     "keywords": [
         "Layers",
-        "FeatureLayer",
-        "ShapefileFeatureTable"
+        "shapefile",
+        "shp",
+        "vector"
     ],
+    "language": "java",
     "provision_from": [
         "https://www.arcgis.com/home/item.html?id=d98b3e5293834c5f852f13c569930caa"
     ],
     "provision_to": [
         "/Aurora_CO_shp/Public_Art.shp"
     ],
-    "redirect_from": "/android/latest/sample-code/feature-layer-shapefile.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/feature-layer-shapefile.htm"
+    ],
     "relevant_apis": [
         "FeatureLayer",
         "ShapefileFeatureTable"
@@ -24,5 +29,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/featurelayershapefile/MainActivity.java"
     ],
-    "title": "Feature Layer Shapefile"
+    "title": "Feature layer shapefile"
 }

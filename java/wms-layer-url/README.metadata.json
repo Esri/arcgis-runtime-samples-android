@@ -1,24 +1,27 @@
 {
     "category": "Layers",
-    "description": "Display a WMS Layer from an online URL.",
+    "description": "Display a WMS layer using a WMS service URL.",
+    "formal_name": "WmsLayerUrl",
     "ignore": false,
     "images": [
         "wms-layer-url.png"
     ],
     "keywords": [
-        "Layers",
-        "Map",
-        "MapView",
-        "WmsLayer"
+        "OGC",
+        "WMS",
+        "web map service"
     ],
-    "redirect_from": "/android/latest/sample-code/wms-layer-url.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/wms-layer-url.htm"
+    ],
     "relevant_apis": [
-        "Map",
+        "ArcGISMap",
         "MapView",
         "WmsLayer"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/wmslayerurl/MainActivity.java"
     ],
-    "title": "WMS Layer (URL)"
+    "title": "WMS layer URL"
 }

@@ -1,30 +1,27 @@
 {
     "category": "Augmented Reality",
     "description": "Use augmented reality (AR) to quickly explore a scene more naturally than you could with a touch or mouse interface.",
+    "formal_name": "ExploreScenesInFlyoverAr",
     "ignore": false,
     "images": [
         "explore-scene-in-flyover-ar.png"
     ],
     "keywords": [
-        "Augmented reality",
+        "augmented reality",
         "bird's eye",
         "birds-eye-view",
         "fly over",
         "flyover",
-	"mixed reality",
-	"translation factor"
+        "mixed reality",
+        "translation factor"
     ],
-    "redirect_from": "",
+    "language": "java",
     "relevant_apis": [
         "ArcGISARView",
-        "ArcGISARView.setOriginCamera(...)",
-
-        "ArcGISARView.setTranslationFactor(...)",
-	"Surface.setNavigationConstraint(...)",
-	"Surface.setOpacity(...)"
+        "SceneView"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/exploresceneinflyoverar/MainActivity.java"
     ],
-    "title": "Explore scene in flyover AR"
+    "title": "Explore scenes in flyover AR"
 }

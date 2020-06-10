@@ -1,6 +1,7 @@
 {
     "category": "Layers",
     "description": "Create and use a raster layer made from a local raster file.",
+    "formal_name": "RasterLayerFile",
     "ignore": false,
     "images": [
         "raster-layer-file.png"
@@ -13,13 +14,16 @@
         "raster",
         "visualization"
     ],
+    "language": "kotlin",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=7c4c679ab06a4df19dc497f577f111bd"
     ],
     "provision_to": [
         "/Shasta.tif"
     ],
-    "redirect_from": "/android/latest/sample-code/raster-layer-file.htm",
+    "redirect_from": [
+        "/android/latest/sample-code/raster-layer-file.htm"
+    ],
     "relevant_apis": [
         "Raster",
         "RasterLayer"
