@@ -213,11 +213,14 @@ class MainActivity : AppCompatActivity() {
         val syncLayerOption = SyncLayerOption(serviceLayerId)
         syncGeodatabaseParameters.layerOptions.add(syncLayerOption)
       }
+      
       val syncGeodatabaseJob: SyncGeodatabaseJob = geodatabaseSyncTask
         .syncGeodatabase(syncGeodatabaseParameters, geodatabase)
       syncGeodatabaseJob.start()
+      
       val syncDialog = createProgressDialog(syncGeodatabaseJob)
       syncDialog.show()
+      
       syncGeodatabaseJob.apply {
 
         addProgressChangedListener {
