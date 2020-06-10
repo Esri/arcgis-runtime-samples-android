@@ -244,7 +244,7 @@ class MetadataUpdater:
 
         if not self.category:
             data["category"] = "TODO"
-        else:
+        elif self.single_update:
             data["category"] = self.category
 
         data["description"] = self.description
