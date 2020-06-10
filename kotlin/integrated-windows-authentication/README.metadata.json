@@ -1,26 +1,29 @@
 {
-  "category": "Cloud and Portal",
-  "description": "Uses Windows credentials to access services hosted on a portal secured with Integrated Windows Authentication (IWA).",
-  "ignore": false,
-  "images": [
-    "integrated-windows-authentication.png"
-  ],
-  "keywords": [
-    "Cloud and Portal",
-    "AuthenticationManager",
-    "Portal",
-    "UserCredential"
-  ],
-  "redirect_from": "/android/latest/sample-code/integrated-windows-authentication.htm",
-  "relevant_apis": [
-    "AuthenticationManager",
-    "Portal",
-    "UserCredential"
-  ],
-  "snippets": [
-    "src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/CredentialDialogFragment.kt",
-    "src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/MainActivity.kt",
-    "src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/PortalItemAdapter.kt"
-  ],
-  "title": "Integrated Windows Authentication"
+    "category": "Cloud and Portal",
+    "description": "Connect to an IWA secured Portal and search for maps.",
+    "formal_name": "IntegratedWindowsAuthentication",
+    "ignore": false,
+    "images": [
+        "integrated-windows-authentication.png"
+    ],
+    "keywords": [
+        "Windows",
+        "authentication",
+        "security"
+    ],
+    "language": "kotlin",
+    "redirect_from": [
+        "/android/latest/sample-code/integrated-windows-authentication.htm"
+    ],
+    "relevant_apis": [
+        "AuthenticationManager",
+        "Portal",
+        "UserCredential"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/CredentialDialogFragment.kt",
+        "src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/MainActivity.kt",
+        "src/main/java/com/esri/arcgisruntime/sample/integratedwindowsauthentication/PortalItemAdapter.kt"
+    ],
+    "title": "Integrated Windows authentication"
 }

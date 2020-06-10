@@ -1,22 +1,20 @@
 {
     "category": "Edit and Manage Data",
     "description": "Clip a geometry with another geometry.",
+    "formal_name": "ClipGeometry",
     "ignore": false,
     "images": [
         "clip-geometry.png"
     ],
     "keywords": [
-        "Analysis",
-        "Edit and Manage Data",
+        "analysis",
         "clip",
-        "geometry",
-        "Envelope",
-        "Geometry",
-        "GeometryEngine.clip",
-        "Graphic",
-        "GraphicsOverlay"
+        "geometry"
     ],
-    "redirect_from": "/android/latest/sample-code/clip-geometry.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/clip-geometry.htm"
+    ],
     "relevant_apis": [
         "Envelope",
         "Geometry",

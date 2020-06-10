@@ -1,42 +1,44 @@
 {
-  "category": "Routing and Logistics",
-  "description": "Find a route that reaches all stops without crossing any barriers.",
-  "ignore": false,
-  "images": [
-    "route-around-barriers.png"
-  ],
-  "keywords": [
-    "barriers",
-    "best sequence",
-    "directions",
-    "maneuver",
-    "network analysis",
-    "routing",
-    "sequence",
-    "stop order",
-    "stops"
-  ],
-  "relevant_apis": [
-    "DirectionManeuver",
-    "PolygonBarrier",
-    "Route",
-    "Route.directionManeuvers",
-    "Route.RouteGeometry",
-    "RouteParameters.clearPolygonBarriers",
-    "RouteParameters.findBestSequence",
-    "RouteParameters.preserveFirstStop",
-    "RouteParameters.preserveLastStop",
-    "RouteParameters.returnDirections",
-    "RouteParameters.returnStops",
-    "RouteParameters.setPolygonBarriers",
-    "RouteResult",
-    "RouteResult.routes",
-    "RouteTask",
-    "Stop",
-    "Stop.name"
-  ],
-  "snippets": [
-    "src/main/java/com/esri/arcgisruntime/sample/routearoundbarriers/MainActivity.kt"
-  ],
-  "title": "Route around barriers"
+    "category": "Routing and Logistics",
+    "description": "Find a route that reaches all stops without crossing any barriers.",
+    "formal_name": "RouteAroundBarriers",
+    "ignore": false,
+    "images": [
+        "route-around-barriers.png"
+    ],
+    "keywords": [
+        "barriers",
+        "best sequence",
+        "directions",
+        "maneuver",
+        "network analysis",
+        "routing",
+        "sequence",
+        "stop order",
+        "stops"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "DirectionManeuver",
+        "PolygonBarrier",
+        "Route",
+        "Route.DirectionManeuver",
+        "Route.RouteGeometry",
+        "RouteParameters.ClearPolygonBarriers",
+        "RouteParameters.FindBestSequence",
+        "RouteParameters.PreserveFirstStop",
+        "RouteParameters.PreserveLastStop",
+        "RouteParameters.ReturnDirections",
+        "RouteParameters.ReturnStops",
+        "RouteParameters.SetPolygonBarriers",
+        "RouteResult",
+        "RouteResult.Routes",
+        "RouteTask",
+        "Stop",
+        "Stop.Name"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/routearoundbarriers/MainActivity.kt"
+    ],
+    "title": "Route around barriers"
 }

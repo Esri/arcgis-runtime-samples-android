@@ -1,6 +1,7 @@
 {
     "category": "Search and Query",
     "description": "Select features in a feature layer.",
+    "formal_name": "FeatureLayerSelection",
     "ignore": false,
     "images": [
         "feature-layer-selection.png"
@@ -12,7 +13,10 @@
         "selection",
         "tolerance"
     ],
-    "redirect_from": "/android/latest/sample-code/feature-layer-selection.htm",
+    "language": "kotlin",
+    "redirect_from": [
+        "/android/latest/sample-code/feature-layer-selection.htm"
+    ],
     "relevant_apis": [
         "Feature",
         "FeatureLayer",

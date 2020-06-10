@@ -19,7 +19,6 @@ Pan and zoom to see features within the current map extent.
 3. Add a `NavigationChangedListener` to the map view and listen for a `NavigationChangedEvent`. Check if it `isNavigating()` to detect when the user has stopped navigating the map.
 4. When the user is finished navigating, use `populateFromServiceAsync(...)` to load the table with data for the current visible extent.
 
-
 ## Relevant API
 
 * FeatureLayer

@@ -1,26 +1,33 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Convert a map location Point in WGS 1984 spatial reference to a number of different coordinate notations (decimal degrees; degrees, minutes, seconds; Universal Transverse Mercator ",
+    "description": "Format coordinates in a variety of common notations.",
+    "formal_name": "FormatCoordinates",
     "ignore": false,
     "images": [
         "format-coordinates.png"
     ],
     "keywords": [
-        "Edit and Manage Data",
-        "CoordinateFormatter",
-        "Point",
-        "Graphic",
-        "DefaultMapViewOnTouchListener"
+        "USNG",
+        "UTM",
+        "convert",
+        "coordinate",
+        "decimal degrees",
+        "degree minutes seconds",
+        "format",
+        "latitude",
+        "longitude"
     ],
-    "redirect_from": "/android/latest/sample-code/format-coordinates.htm",
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/format-coordinates.htm"
+    ],
     "relevant_apis": [
         "CoordinateFormatter",
-        "Point",
-        "Graphic",
-        "DefaultMapViewOnTouchListener"
+        "CoordinateFormatter.LatitudeLongitudeFormat",
+        "CoordinateFormatter.UtmConversionMode"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/formatcoordinates/MainActivity.java"
     ],
-    "title": "Format Coordinates"
+    "title": "Format coordinates"
 }

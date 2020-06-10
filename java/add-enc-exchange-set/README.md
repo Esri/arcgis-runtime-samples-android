@@ -37,5 +37,6 @@ Run the sample and view the ENC data. Pan and zoom around the map. Take note of 
  	* `adb push hydrography /Android/data/com.esri.arcgisruntime.sample.addencexchangeset/files/ENC_supplemental/hydrography`
 	* `adb push ExchangeSetwithoutUpdates /Android/data/com.esri.arcgisruntime.sample.addencexchangeset/files/ENC/ExchangeSetwithoutUpdates`
 
-#### Tags
+## Tags
+
 data, ENC, hydrographic, layers, maritime, nautical chart

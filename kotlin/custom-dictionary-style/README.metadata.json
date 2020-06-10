@@ -1,25 +1,27 @@
 {
     "category": "Visualization",
-    "description": "Set the terrain surface with elevation described by a local tile package.",
+    "description": "Use a custom dictionary style (.stylx) to symbolize features using a variety of attribute values.",
+    "formal_name": "CustomDictionaryStyle",
     "ignore": false,
     "images": [
         "custom-dictionary-style.png"
     ],
     "keywords": [
-        "Dictionary",
-        "Military",
-        "Renderer",
-        "Style",
-        "Style",
-        "Unique value"
+        "Visualization",
+        "dictionary",
+        "military",
+        "renderer",
+        "style",
+        "stylx",
+        "unique value"
     ],
+    "language": "kotlin",
     "provision_from": [
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=751138a2e0844e06853522d54103222a"
     ],
     "provision_to": [
         "/Restaurant.stylx"
     ],
-    "redirect_from": "",
     "relevant_apis": [
         "DictionaryRenderer",
         "DictionarySymbolStyle"

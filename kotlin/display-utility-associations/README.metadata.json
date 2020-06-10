@@ -1,6 +1,7 @@
 {
     "category": "Utility Networks",
     "description": "Create graphics for utility associations in a utility network.",
+    "formal_name": "DisplayUtilityAssociations",
     "ignore": false,
     "images": [
         "display-utility-associations.png"
@@ -13,7 +14,7 @@
         "containment",
         "relationships"
     ],
-    "redirect_from": "",
+    "language": "kotlin",
     "relevant_apis": [
         "GraphicsOverlay",
         "UtilityAssociation",
