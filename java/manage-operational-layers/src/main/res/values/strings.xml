@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">Manage Operational Layers</string>
-    <string name="action_settings">Settings</string>
     <string name="imagelayer_elevation_url">https://sampleserver5.arcgisonline.com/arcgis/rest/services/Elevation/WorldElevations/MapServer</string>
     <string name="imagelayer_census_url">https://sampleserver5.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
-    <string name="title_activity_operational_layers">OperationalLayers</string>
     <string name="operational_layers">Operational Layers</string>
     <string name="done">Done</string>
     <string name="added_layers"> Added layers</string>

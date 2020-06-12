@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ArcGIS tiled layer (URL)</string>
+    <string name="world_topo_service">https://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer</string>
+</resources>

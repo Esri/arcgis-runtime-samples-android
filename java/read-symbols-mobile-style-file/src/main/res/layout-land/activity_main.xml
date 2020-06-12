@@ -26,7 +26,6 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <include
-        android:id="@+id/sizeColorControls"
         layout="@layout/size_color_controls"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

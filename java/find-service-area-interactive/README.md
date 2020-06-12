@@ -1,4 +1,4 @@
-# Find service area
+# Find service area (interactive)
 
 Find the service area within a network from a given point.
 

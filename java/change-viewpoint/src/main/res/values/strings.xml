@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Change Viewpoint</string>
-    <string name="GriffithPark">Geometry GP</string>
     <string name="geometry">Geometry</string>
     <string name="center_scale">Center &amp; Scale</string>
     <string name="animate">Animate</string>

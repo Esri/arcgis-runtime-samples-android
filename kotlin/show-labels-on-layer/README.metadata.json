@@ -1,7 +1,7 @@
 {
     "category": "Visualization",
     "description": "Display custom labels on a feature layer.",
-    "formal_name": "ShowLabelsOnLayers",
+    "formal_name": "ShowLabelsOnLayer",
     "ignore": false,
     "images": [
         "show-labels-on-layer.png"
@@ -28,5 +28,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/showlabelsonlayer/MainActivity.kt"
     ],
-    "title": "Show labels on layers"
+    "title": "Show labels on layer"
 }

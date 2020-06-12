@@ -33,5 +33,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/performspatialoperations/MainActivity.kt"
     ],
-    "title": "Spatial operations"
+    "title": "Perform spatial operations"
 }

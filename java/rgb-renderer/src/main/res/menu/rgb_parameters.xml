@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/chooseParam"
         android:icon="@android:drawable/ic_menu_manage"
         android:title="@string/edit_renderer"
         app:showAsAction="ifRoom|withText"/>

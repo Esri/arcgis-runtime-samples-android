@@ -1,7 +1,7 @@
 {
     "category": "Visualization",
     "description": "Create graphics using a local mil2525d style file and an XML file with key/value pairs for each graphic.",
-    "formal_name": "DictionaryRendererWithGraphicsOverlay",
+    "formal_name": "DictionaryRendererGraphicsOverlay",
     "ignore": false,
     "images": [
         "dictionary-renderer-graphics-overlay.png"
@@ -31,5 +31,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/dictionaryrenderergraphicsoverlay/MainActivity.java"
     ],
-    "title": "Dictionary renderer with graphics overlay"
+    "title": "Dictionary renderer graphics overlay"
 }

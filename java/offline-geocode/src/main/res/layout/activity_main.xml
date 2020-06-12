@@ -1,6 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -14,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         layout="@layout/search_view"
-        android:id="@+id/floating_searchView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_margin="8dp" />

@@ -1,7 +1,7 @@
 {
     "category": "Visualization",
     "description": "Combine multiple symbols from a mobile style file into a single symbol.",
-    "formal_name": "ReadSymbolsFromAMobileStyleFile",
+    "formal_name": "ReadSymbolsMobileStyleFile",
     "ignore": false,
     "images": [
         "read-symbols-mobile-style-file.png"
@@ -30,5 +30,5 @@
         "src/main/java/com/esri/arcgisruntime/sample/readsymbolsmobilestylefile/MainActivity.java",
         "src/main/java/com/esri/arcgisruntime/sample/readsymbolsmobilestylefile/SymbolAdapter.java"
     ],
-    "title": "Read symbols from a mobile style file"
+    "title": "Read symbols mobile style file"
 }

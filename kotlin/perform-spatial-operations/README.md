@@ -1,4 +1,4 @@
-# Spatial operations
+# Perform spatial operations
 
 Find the union, intersection, or difference of two geometries.
 

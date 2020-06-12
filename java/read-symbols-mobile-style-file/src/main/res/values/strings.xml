@@ -14,7 +14,6 @@
         <item>Blue</item>
     </string-array>
 
-    <string name="error_read_permission_denied">Mobile style file could not be opened because read permission was denied</string>
     <string name="error_symbol_must_be_defined">A symbol must be defined before it can be added to the map!</string>
     <string name="error_mobile_style_file_failed_load">Mobile style file failed to load: %s</string>
     <string name="error_default_search_parameters_load_failed">Loading default symbol style search parameters failed: %s</string>

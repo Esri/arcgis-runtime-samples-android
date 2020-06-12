@@ -1,4 +1,4 @@
-# Load WFS with XML query
+# WFS XML query
 
 Load a WFS feature table using an XML query.
 

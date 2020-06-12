@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Create and save map</string>
+    <string name="basemap_selection">Choose a basemap</string>
+    <string name="layer_selection">Add operational layers</string>
+    <string name="title">Title</string>
+    <string name="tags">Tags</string>
+
+    <!-- Services -->
+    <string name="world_time_zones">https://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer</string>
+    <string name="us_census">https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
+    <!-- App messages -->
+    <string name="description">Description</string>
+    <string name="unsupported_option">Unsupported option</string>
+    <string name="cancel">Cancel</string>
+    <string name="save_map">Save Map</string>
+    <string name="enter_tags_separated_by_commas">Enter tags separated by commas</string>
+    <string name="enter_description">Enter description</string>
+    <string name="enter_title">Enter title</string>
+    <!-- Basemap choice array -->
+    <string-array name="basemap_array">
+        <item>Streets</item>
+        <item>Imagery</item>
+        <item>Topographic</item>
+        <item>Oceans</item>
+    </string-array>
+    <!-- Operational layer array -->
+    <string-array name="operational_layer_array">
+        <item>World Time Zones</item>
+        <item>Census</item>
+    </string-array>
+</resources>

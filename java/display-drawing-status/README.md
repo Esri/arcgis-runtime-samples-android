@@ -1,4 +1,4 @@
-# Display draw status
+# Display drawing status
 
 Get the draw status of your map view or scene view to know when all layers in the map or scene have finished drawing.
 
