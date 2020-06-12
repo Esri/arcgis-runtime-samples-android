@@ -1,5 +1,5 @@
 {
-    "category": "Feature layers",
+    "category": "Layers",
     "description": "Create a feature collection layer from a portal item.",
     "formal_name": "FeatureCollectionLayerPortalItem",
     "ignore": false,
