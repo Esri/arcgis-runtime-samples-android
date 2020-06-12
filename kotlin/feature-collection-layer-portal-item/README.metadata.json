@@ -26,7 +26,7 @@
         "PortalItem"
     ],
     "snippets": [
-        "rc/main/java/com/esri/arcgisruntime/sample/featurecollectionlayerportalitem/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/featurecollectionlayerportalitem/MainActivity.kt"
     ],
     "title": "Feature collection layer (Portal item)"
 }
