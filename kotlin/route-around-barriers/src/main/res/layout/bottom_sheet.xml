@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottomSheetLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/colorAccent">
+
+        <TextView
+            android:id="@+id/headerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:text="@string/route_controls"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintBottom_toBottomOf="@+id/headerTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_expand_less_black_24dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/controlsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/instructionsTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/instructions"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatToggleButton
+            android:id="@+id/addStopButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff="@string/add_stop"
+            android:textOn="@string/adding_stops"
+            app:layout_constraintEnd_toStartOf="@+id/addBarrierButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/instructionsTextView"
+            tools:text="Add stop" />
+
+        <androidx.appcompat.widget.AppCompatToggleButton
+            android:id="@+id/addBarrierButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff="@string/add_barrier"
+            android:textOn="@string/adding_barriers"
+            app:layout_constraintEnd_toStartOf="@+id/solveRouteButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/addStopButton"
+            app:layout_constraintTop_toBottomOf="@+id/instructionsTextView" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/solveRouteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="createAndDisplayRoute"
+            android:text="@string/solve_route"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/addBarrierButton"
+            app:layout_constraintTop_toBottomOf="@+id/instructionsTextView" />
+
+        <CheckBox
+            android:id="@+id/reorderCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/allow_stops_to_be_re_ordered"
+            app:layout_constraintStart_toStartOf="@+id/addStopButton"
+            app:layout_constraintTop_toBottomOf="@+id/addStopButton" />
+
+        <CheckBox
+            android:id="@+id/preserveFirstStopCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="@string/preserve_first_stop"
+            app:layout_constraintStart_toStartOf="@+id/reorderCheckBox"
+            app:layout_constraintTop_toBottomOf="@+id/reorderCheckBox" />
+
+        <CheckBox
+            android:id="@+id/preserveLastStopCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/preserve_last_stop"
+            app:layout_constraintStart_toStartOf="@+id/preserveFirstStopCheckBox"
+            app:layout_constraintTop_toBottomOf="@+id/preserveFirstStopCheckBox"
+            tools:text="Preserve last stop" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ListView
+        android:id="@+id/directionsListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white" />
+</LinearLayout>
