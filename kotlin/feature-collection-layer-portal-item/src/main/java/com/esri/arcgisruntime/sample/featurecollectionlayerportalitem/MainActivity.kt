@@ -38,12 +38,20 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a map with the oceans basemap and add it to the map view
-    mapView.map = ArcGISMap(Basemap.createOceans())
-
     // create a portal item from an ArcGIS Online portal and a feature collection item id
     val portal = Portal("https://www.arcgis.com/")
     val collectionItem = PortalItem(portal, "32798dfad17942858d5eef82ee802f0b")
+
+    // if the portal item loaded correctly, create a feature collection layer with the feature collection
+    val featureCollection = FeatureCollection(collectionItem)
+    val featureCollectionLayer = FeatureCollectionLayer(featureCollection)
+
+    // create a map with the oceans basemap and add it to the map view
+    mapView.map = ArcGISMap(Basemap.createOceans()).apply {
+      // add the new feature collection layer to the map
+      operationalLayers.add(featureCollectionLayer)
+    }
+
     // load the portal item
     collectionItem.loadAsync()
     collectionItem.addDoneLoadingListener {
@@ -61,14 +69,6 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, error, Toast.LENGTH_LONG).show()
         return@addDoneLoadingListener
       }
-
-      // if the portal item loaded correctly, create a feature collection layer with the feature collection
-      val featureCollection = FeatureCollection(collectionItem)
-      val featureCollectionLayer = FeatureCollectionLayer(featureCollection)
-
-      // clear the map's layers and add the new feature collection layer to it
-      mapView.map.operationalLayers.clear()
-      mapView.map.operationalLayers.add(featureCollectionLayer)
     }
   }
 
