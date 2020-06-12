@@ -21,7 +21,6 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.GONE
@@ -121,8 +120,6 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-
     // create a new picture marker from a pin drawable
     pinSymbol = PictureMarkerSymbol.createAsync(
       ContextCompat.getDrawable(
@@ -162,11 +159,11 @@ class MainActivity : AppCompatActivity() {
     }
     routeTask?.loadAsync()
 
+
     // shrink the map view so it is not hidden under the bottom sheet header
-    val peekHeight =
-      TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40f, resources.displayMetrics).toInt()
-    (mapViewContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin = peekHeight
-    bottomSheetBehavior?.peekHeight = peekHeight
+    bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+    (mapViewContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin =
+      (bottomSheetBehavior as BottomSheetBehavior<View>).peekHeight
 
     bottomSheet.apply {
       // expand or collapse the bottom sheet when the header is clicked
@@ -231,7 +228,7 @@ class MainActivity : AppCompatActivity() {
       directionsList.clear()
       return
     }
-    
+
     // clear the previous route from the graphics overlay, if it exists
     routeGraphicsOverlay.graphics.clear()
     // clear the directions list from the directions list view, if they exist
@@ -346,6 +343,7 @@ class MainActivity : AppCompatActivity() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
           bottomSheet.header.imageView.rotation = when (newState) {
             BottomSheetBehavior.STATE_EXPANDED -> 180f
+            BottomSheetBehavior.STATE_HALF_EXPANDED -> 90f
             else -> bottomSheet.header.imageView.rotation
           }
         }
