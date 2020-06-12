@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
     // delete any previous instances of downloaded maps
     externalCacheDir?.deleteRecursively()
 
-    // create up a temporary directory in the app's cache when required
+    // create a temporary directory in the app's cache when required
     offlineMapDirectory.also {
       when {
         it.mkdirs() -> Log.i(TAG, "Created directory for offline map in " + it.path)
@@ -352,4 +352,3 @@ class MainActivity : AppCompatActivity() {
     super.onDestroy()
   }
 }
-
