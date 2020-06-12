@@ -52,8 +52,7 @@ class MainActivity : AppCompatActivity() {
       operationalLayers.add(featureCollectionLayer)
     }
 
-    // load the portal item
-    collectionItem.loadAsync()
+    // check for loading errors using a DoneLoadingListener
     collectionItem.addDoneLoadingListener {
       // abort if the portal item fails to load
       if (collectionItem.loadStatus != LoadStatus.LOADED) {
