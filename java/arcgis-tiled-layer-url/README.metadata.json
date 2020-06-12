@@ -4,7 +4,7 @@
     "formal_name": "ArcgisTiledLayerUrl",
     "ignore": false,
     "images": [
-        "arcgis-tiledlayer-url.png"
+        "arcgis-tiled-layer-url.png"
     ],
     "keywords": [
         "basemap",
@@ -24,7 +24,7 @@
         "MapView"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/tiledlayerfromurl/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/arcgistiledlayerurl/MainActivity.java"
     ],
     "title": "ArcGIS tiled layer URL"
 }

@@ -2,7 +2,7 @@
 
 Display a feature layer from a service using the **no cache** feature request mode.
 
-![Image of service feature table no cache](service-feature-table-nocache.png)
+![Image of service feature table no cache](service-feature-table-no-cache.png)
 
 ## Use case
 

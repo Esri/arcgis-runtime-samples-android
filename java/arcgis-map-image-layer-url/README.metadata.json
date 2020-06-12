@@ -4,7 +4,7 @@
     "formal_name": "ArcgisMapImageLayerUrl",
     "ignore": false,
     "images": [
-        "arcgis-mapimagelayer-url.png"
+        "arcgis-map-image-layer-url.png"
     ],
     "keywords": [
         "display",
@@ -20,7 +20,7 @@
         "ArcGISMapImageLayer"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/mapimagelayer/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/arcgismapimagelayerurl/MainActivity.java"
     ],
     "title": "ArcGIS map image layer URL"
 }

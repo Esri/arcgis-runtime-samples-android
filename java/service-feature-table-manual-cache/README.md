@@ -2,7 +2,7 @@
 
 Display a feature layer from a service using the **manual cache** feature request mode.
 
-![Image of service feature table manual cache](service-feature-table-manualcache.png)
+![Image of service feature table manual cache](service-feature-table-manual-cache.png)
 
 ## Use case
 

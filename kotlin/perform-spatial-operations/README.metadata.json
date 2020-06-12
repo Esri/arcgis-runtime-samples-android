@@ -1,7 +1,7 @@
 {
     "category": "Edit and Manage Data",
     "description": "Find the union, intersection, or difference of two geometries.",
-    "formal_name": "SpatialOperations",
+    "formal_name": "PerformSpatialOperations",
     "ignore": false,
     "images": [
         "perform-spatial-operations.png"

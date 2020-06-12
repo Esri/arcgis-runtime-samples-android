@@ -2,7 +2,7 @@
 
 Display a layer from an ArcGIS map image layer service.
 
-![Image of an ArcGIS map image layer](arcgis-mapimagelayer-url.png)
+![Image of an ArcGIS map image layer](arcgis-map-image-layer-url.png)
 
 ## Use case
 

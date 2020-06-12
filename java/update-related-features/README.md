@@ -3,7 +3,6 @@
 Update related features in an online feature service.
 
 ![Image of update related features](update-related-features.png)
-![Image of map legend](legend.png)
 
 ## Use case
 

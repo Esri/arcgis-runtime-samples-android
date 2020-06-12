@@ -2,7 +2,7 @@
 
 Load an ArcGIS vector tiled layer from a URL.
 
-![Image of ArcGIS vector tiled layer url](arcgis-vectortiledlayer-url.png)
+![Image of ArcGIS vector tiled layer url](arcgis-vector-tiled-layer-url.png)
 
 ## Use case
 

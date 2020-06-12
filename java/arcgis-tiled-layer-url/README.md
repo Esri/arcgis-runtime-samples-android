@@ -2,7 +2,7 @@
 
 Load an ArcGIS tiled layer from a URL.
 
-![Image of ArcGIS tiled layer URL](arcgis-tiledlayer-url.png)
+![Image of ArcGIS tiled layer URL](arcgis-tiled-layer-url.png)
 
 ## Use case
 
