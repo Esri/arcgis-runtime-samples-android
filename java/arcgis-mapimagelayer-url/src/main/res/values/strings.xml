@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">ArcGIS Map Image Layer (URL)</string>
-    <string name="action_settings">Settings</string>
-
-    <!-- World Topo Map Service URL -->
-    <string name="world_elevation_service">https://sampleserver5.arcgisonline.com/arcgis/rest/services/Elevation/WorldElevations/MapServer</string>
-</resources>

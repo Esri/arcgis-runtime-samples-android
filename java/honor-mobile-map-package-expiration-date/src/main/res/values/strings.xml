@@ -2,5 +2,4 @@
     <string name="app_name">Honor mobile map package expiration date</string>
     <string name="path_to_expired_mmpk">/LothianRiversAnno.mmpk</string>
     <string name="expiration_text">%1$s \n Expired on %2$s</string>
-    <string name="read_local_storage_denied_mmpk">Read local storage permissions are required to access the MMPK.</string>
 </resources>

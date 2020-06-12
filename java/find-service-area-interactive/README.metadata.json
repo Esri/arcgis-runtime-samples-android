@@ -1,7 +1,7 @@
 {
     "category": "Routing and Logistics",
     "description": "Find the service area within a network from a given point.",
-    "formal_name": "FindServiceArea",
+    "formal_name": "FindServiceAreaInteractive",
     "ignore": false,
     "images": [
         "find-service-area-interactive.png"
@@ -28,5 +28,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/findserviceareainteractive/MainActivity.java"
     ],
-    "title": "Find service area"
+    "title": "Find service area (interactive)"
 }

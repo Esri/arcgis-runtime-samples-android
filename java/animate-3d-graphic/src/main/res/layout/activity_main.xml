@@ -40,13 +40,11 @@
         app:layout_constraintTop_toBottomOf="@+id/zoomInButton" />
 
     <include
-        android:id="@+id/missionProgress"
         layout="@layout/mission_progress"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <include
-        android:id="@+id/speedControl"
         layout="@layout/speed_control"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,7 +52,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
-        android:id="@+id/hud"
         layout="@layout/hud"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

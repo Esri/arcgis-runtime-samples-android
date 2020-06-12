@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Service feature table (manual cache)</string>
+    <string name="sample_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/SF311/FeatureServer/0</string>
+</resources>

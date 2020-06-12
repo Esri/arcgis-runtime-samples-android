@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Change Sublayer Visibility</string>
-    <string name="action_settings">Settings</string>
 
     <!-- World Topo Map Service URL -->
     <string name="world_cities_service">https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer</string>

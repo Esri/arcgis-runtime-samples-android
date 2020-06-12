@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="adapter_item_child_margin_start">12dp</dimen>
     <dimen name="adapter_item_layer_padding_vert">4dp</dimen>
     <dimen name="adapter_item_layer_padding_horz">8dp</dimen>
     <dimen name="adapter_item_layer_name_text_size">22sp</dimen>

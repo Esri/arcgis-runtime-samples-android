@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">Display Drawing Status</string>
-    <string name="progress_dialog_title">Layer Loading</string>
     <string name="service_feature_table_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
 </resources>

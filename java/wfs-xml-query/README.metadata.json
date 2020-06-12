@@ -1,7 +1,7 @@
 {
     "category": "Search and Query",
     "description": "Load a WFS feature table using an XML query.",
-    "formal_name": "LoadWfsWithXmlQuery",
+    "formal_name": "WfsXmlQuery",
     "ignore": false,
     "images": [
         "wfs-xml-query.png"
@@ -28,5 +28,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/wfsxmlquery/MainActivity.java"
     ],
-    "title": "Load WFS with XML query"
+    "title": "WFS XML query"
 }

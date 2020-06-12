@@ -2,7 +2,6 @@
     <string name="app_name">Apply scheduled updates to preplanned map area</string>
     <string name="apply_scheduled_updates_button_text">Apply scheduled updates</string>
     <string name="canyonlands_folder">/canyonlands</string>
-    <string name="canyonlands_mmpk_read_permission_denied">Read permissions required to access MMPK.</string>
     <string name="update_status">Updates: %1$s</string>
     <string name="update_size">Update size: %1$d</string>
     <string name="update_size_na">Update size: N/A</string>

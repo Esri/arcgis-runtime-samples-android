@@ -1,7 +1,7 @@
 {
     "category": "Augmented Reality",
     "description": "Use augmented reality (AR) to quickly explore a scene more naturally than you could with a touch or mouse interface.",
-    "formal_name": "ExploreScenesInFlyoverAr",
+    "formal_name": "ExploreSceneInFlyoverAr",
     "ignore": false,
     "images": [
         "explore-scene-in-flyover-ar.png"
@@ -23,5 +23,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/exploresceneinflyoverar/MainActivity.java"
     ],
-    "title": "Explore scenes in flyover AR"
+    "title": "Explore scene in flyover AR"
 }
