@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
     // create a portal to ArcGIS Online
     val portal = Portal(getString(R.string.arcgis_online_url))
     // create a portal item using the portal and the item id of a map service
-    val portalItem = PortalItem(portal, getString(R.string.naperville_water_network_url))
+    val portalItem = PortalItem(portal, getString(R.string.naperville_water_network_item_id))
     // create an offline map task from the portal item
     val offlineMapTask = OfflineMapTask(portalItem)
     // create a map with the portal item
@@ -124,6 +124,8 @@ class MainActivity : AppCompatActivity() {
   /**
    * Download the selected preplanned map area from the list view to a temporary directory. The
    * download job is tracked in another list view.
+   *
+   * @param offlineMapTask used to take preplanned map areas offline
    */
   private fun downloadPreplannedArea(offlineMapTask: OfflineMapTask) {
     if (selectedPreplannedMapArea == null) {

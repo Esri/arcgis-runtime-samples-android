@@ -4,6 +4,6 @@
     <string name="download_button_text">↓ Download ↓</string>
     <string name="downloaded_areas">Downloaded areas:</string>
     <string name="arcgis_online_url">https://www.arcgis.com/</string>
-    <string name="naperville_water_network_url">acc027394bc84c2fb04d1ed317aac674</string>
+    <string name="naperville_water_network_item_id">acc027394bc84c2fb04d1ed317aac674</string>
     <string name="preplanned_offline_map_dir">/preplanned_offline_map</string>
 </resources>
