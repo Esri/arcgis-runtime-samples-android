@@ -15,17 +15,18 @@
         "map notes",
         "portal"
     ],
-    "redirect_from": [
-        ""
-    ],
+    "language": "kotlin",
+    "provision_from": "TODO",
+    "provision_to": "TODO",
+    "redirect_from": "TODO",
     "relevant_apis": [
-      "FeatureCollection",
-      "FeatureCollectionLayer",
-      "Portal",
-      "PortalItem"
+        "FeatureCollection",
+        "FeatureCollectionLayer",
+        "Portal",
+        "PortalItem"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/featurecollectionlayerportalitem/MainActivity.kt"
+        "rc/main/java/com/esri/arcgisruntime/sample/featurecollectionlayerportalitem/MainActivity.kt"
     ],
     "title": "Feature collection layer (Portal item)"
 }
