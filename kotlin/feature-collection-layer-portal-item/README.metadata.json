@@ -15,9 +15,6 @@
         "map notes",
         "portal"
     ],
-    "redirect_from": [
-        ""
-    ],
     "relevant_apis": [
       "FeatureCollection",
       "FeatureCollectionLayer",
