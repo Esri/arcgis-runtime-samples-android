@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             // enable the map offline button only after the map is loaded
             if (!takeMapOfflineButton.isEnabled) takeMapOfflineButton.isEnabled = true
           }
-          }
+        }
       }
     }
   }

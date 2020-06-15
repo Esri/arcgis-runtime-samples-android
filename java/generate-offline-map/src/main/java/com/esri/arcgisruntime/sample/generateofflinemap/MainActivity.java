@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         if (minPoint != null && maxPoint != null) {
           Envelope envelope = new Envelope(minPoint, maxPoint);
           mDownloadArea.setGeometry(envelope);
-          // enable the map offline button only after the map is loaded
+          // enable the take map offline button only after the map is loaded
           mTakeMapOfflineButton.setEnabled(true);
         }
       }
