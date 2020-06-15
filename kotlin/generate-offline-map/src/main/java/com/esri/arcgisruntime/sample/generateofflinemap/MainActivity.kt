@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
           if (minPoint != null && maxPoint != null) {
             val envelope = Envelope(minPoint, maxPoint)
             downloadArea.geometry = envelope
-            // enable the map offline button only after the map is loaded
+            // enable the take map offline button only after the map is loaded
             if (!takeMapOfflineButton.isEnabled) takeMapOfflineButton.isEnabled = true
           }
         }
