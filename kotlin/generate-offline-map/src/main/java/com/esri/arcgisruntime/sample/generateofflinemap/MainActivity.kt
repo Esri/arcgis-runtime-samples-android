@@ -100,8 +100,6 @@ class MainActivity : AppCompatActivity() {
       // update the download area box whenever the viewpoint changes
       addViewpointChangedListener {
         if (map.loadStatus == LoadStatus.LOADED) {
-          // enable the map offline button only after the map is loaded
-          if (!takeMapOfflineButton.isEnabled) takeMapOfflineButton.isEnabled = true
           // upper left corner of the area to take offline
           val minScreenPoint = Point(200, 200)
           // lower right corner of the downloaded area
@@ -116,6 +114,8 @@ class MainActivity : AppCompatActivity() {
           if (minPoint != null && maxPoint != null) {
             val envelope = Envelope(minPoint, maxPoint)
             downloadArea.geometry = envelope
+            // enable the take map offline button only after the map is loaded
+            if (!takeMapOfflineButton.isEnabled) takeMapOfflineButton.isEnabled = true
           }
         }
       }
@@ -141,7 +141,10 @@ class MainActivity : AppCompatActivity() {
 
     val generateOfflineMapParameters = GenerateOfflineMapParameters(
       downloadArea.geometry, minScale, maxScale
-    )
+    ).apply {
+      // set job to cancel on any errors
+      isContinueOnErrors = false
+    }
     // create an offline map task with the map
     val offlineMapTask = OfflineMapTask(mapView.map)
 
@@ -174,7 +177,7 @@ class MainActivity : AppCompatActivity() {
           Toast.makeText(this@MainActivity, "Now displaying offline map.", Toast.LENGTH_LONG).show()
         } else {
           val error =
-            "Error in generate offline map job: " + offlineMapJob.error.additionalMessage
+            "Error in generate offline map job: " + offlineMapJob.error.message
           Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
           Log.e(TAG, error)
         }
@@ -196,10 +199,10 @@ class MainActivity : AppCompatActivity() {
     val builder = AlertDialog.Builder(this@MainActivity).apply {
       setTitle("Generating offline map...")
       // provide a cancel button on the dialog
-      setNeutralButton("Cancel") { _, _ ->
+      setNegativeButton("Cancel") { _, _ ->
         job.cancel()
       }
-      setCancelable(false)
+      setCancelable(true)
       setView(
         LayoutInflater.from(this@MainActivity)
           .inflate(R.layout.dialog_layout, null)
