@@ -76,10 +76,6 @@ public class MainActivity extends AppCompatActivity {
     ArcGISMap map = new ArcGISMap(portalItem);
     map.addDoneLoadingListener(() -> {
       if (map.getLoadStatus() == LoadStatus.LOADED) {
-
-        // enable the map offline button only after the map is loaded
-        mTakeMapOfflineButton.setEnabled(true);
-
         // limit the map scale to the largest layer scale
         map.setMaxScale(map.getOperationalLayers().get(6).getMaxScale());
         map.setMinScale(map.getOperationalLayers().get(6).getMinScale());
@@ -118,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
         if (minPoint != null && maxPoint != null) {
           Envelope envelope = new Envelope(minPoint, maxPoint);
           mDownloadArea.setGeometry(envelope);
+          // enable the map offline button only after the map is loaded
+          mTakeMapOfflineButton.setEnabled(true);
         }
       }
     });
@@ -147,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
       }
       GenerateOfflineMapParameters generateOfflineMapParameters = new GenerateOfflineMapParameters(
           mDownloadArea.getGeometry(), minScale, maxScale);
+      // set job to cancel on any errors
+      generateOfflineMapParameters.setContinueOnErrors(false);
 
       // create an offline map offlineMapTask with the map
       OfflineMapTask offlineMapTask = new OfflineMapTask(mMapView.getMap());
