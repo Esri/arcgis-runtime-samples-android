@@ -51,12 +51,11 @@ public class MainActivity extends AppCompatActivity {
     mShapefileFeatureTable = new ShapefileFeatureTable(
         getExternalFilesDir(null) + getString(R.string.shapefile_path));
 
-    mShapefileFeatureTable.loadAsync();
+    // create a feature layer to display the shapefile
+    FeatureLayer shapefileFeatureLayer = new FeatureLayer(mShapefileFeatureTable);
+
     mShapefileFeatureTable.addDoneLoadingListener(() -> {
       if (mShapefileFeatureTable.getLoadStatus() == LoadStatus.LOADED) {
-
-        // create a feature layer to display the shapefile
-        FeatureLayer shapefileFeatureLayer = new FeatureLayer(mShapefileFeatureTable);
 
         // add the feature layer to the map
         mMapView.getMap().getOperationalLayers().add(shapefileFeatureLayer);
