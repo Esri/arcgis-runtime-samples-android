@@ -35,6 +35,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
@@ -67,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
   private MapView mMapView;
   private RouteTask mRouteTask;
   private RouteParameters mRouteParams;
-  private Point mSourcePoint;
-  private Point mDestinationPoint;
   private Route mRoute;
   private SimpleLineSymbol mRouteSymbol;
   private GraphicsOverlay mGraphicsOverlay;
@@ -76,10 +76,6 @@ public class MainActivity extends AppCompatActivity {
   private DrawerLayout mDrawerLayout;
   private ListView mDrawerList;
   private ActionBarDrawerToggle mDrawerToggle;
-
-  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-  private PictureMarkerSymbol mPinSourceSymbol;
-  private PictureMarkerSymbol mPinDestinationSymbol;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -238,42 +234,31 @@ public class MainActivity extends AppCompatActivity {
     //Create a picture marker symbol from an app resource
     BitmapDrawable startDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_source);
     try {
-      mPinSourceSymbol = PictureMarkerSymbol.createAsync(startDrawable).get();
-      mPinSourceSymbol.loadAsync();
-      mPinSourceSymbol.addDoneLoadingListener(new Runnable() {
-        @Override
-        public void run() {
-          //add a new graphic as start point
-          mSourcePoint = new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84());
-          Graphic pinSourceGraphic = new Graphic(mSourcePoint, mPinSourceSymbol);
-          mGraphicsOverlay.getGraphics().add(pinSourceGraphic);
-        }
-      });
-      mPinSourceSymbol.setOffsetY(20);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
-      e.printStackTrace();
+      PictureMarkerSymbol pinSourceSymbol = PictureMarkerSymbol.createAsync(startDrawable).get();
+      pinSourceSymbol.setOffsetY(20);
+      //add a new graphic as start point
+      Point sourcePoint = new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84());
+      Graphic pinSourceGraphic = new Graphic(sourcePoint, pinSourceSymbol);
+      mGraphicsOverlay.getGraphics().add(pinSourceGraphic);
+    } catch (InterruptedException | ExecutionException e) {
+      String error = "Error creating picture marker symbol: " + e.getMessage();
+      Log.e(TAG, error);
+      Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
-    //[DocRef: END]
+
+      //[DocRef: END]
     BitmapDrawable endDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_destination);
     try {
-      mPinDestinationSymbol = PictureMarkerSymbol.createAsync(endDrawable).get();
-      mPinDestinationSymbol.loadAsync();
-      mPinDestinationSymbol.addDoneLoadingListener(new Runnable() {
-        @Override
-        public void run() {
-          //add a new graphic as end point
-          mDestinationPoint = new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84());
-          Graphic destinationGraphic = new Graphic(mDestinationPoint, mPinDestinationSymbol);
-          mGraphicsOverlay.getGraphics().add(destinationGraphic);
-        }
-      });
-      mPinDestinationSymbol.setOffsetY(20);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
-      e.printStackTrace();
+      PictureMarkerSymbol pinDestinationSymbol = PictureMarkerSymbol.createAsync(endDrawable).get();
+      pinDestinationSymbol.setOffsetY(20);
+      // add a new graphic as destination point
+      Point destinationPoint = new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84());
+      Graphic destinationGraphic = new Graphic(destinationPoint, pinDestinationSymbol);
+      mGraphicsOverlay.getGraphics().add(destinationGraphic);
+    } catch (InterruptedException | ExecutionException e) {
+      String error = "Error creating picture marker symbol: " + e.getMessage();
+      Log.e(TAG, error);
+      Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
     //[DocRef: END]
     mRouteSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5);
