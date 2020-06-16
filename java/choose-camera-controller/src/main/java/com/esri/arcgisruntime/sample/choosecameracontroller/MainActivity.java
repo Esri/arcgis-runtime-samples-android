@@ -55,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
   private GraphicsOverlay mSceneOverlay;
   private OrbitGeoElementCameraController mOrbitPlaneCameraController;
   private OrbitLocationCameraController mOrbitLocationCameraController;
-  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-  private ModelSceneSymbol mModelSceneSymbol;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +94,7 @@ public class MainActivity extends AppCompatActivity {
     mOrbitLocationCameraController.setCameraPitchOffset(3);
     mOrbitLocationCameraController.setCameraHeadingOffset(150);
 
-    mModelSceneSymbol = loadModel();
-    mModelSceneSymbol.addDoneLoadingListener(() -> {
+    loadModel().addDoneLoadingListener(() -> {
       // instantiate a new camera controller which orbits the plane at a set distance
       mOrbitPlaneCameraController = new OrbitGeoElementCameraController(mPlane3D, 100.0);
       mOrbitPlaneCameraController.setCameraPitchOffset(30);
@@ -138,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
     // create a graphic with a ModelSceneSymbol of a plane to add to the scene
     String pathToModel = getCacheDir() + File.separator + getString(R.string.bristol_model);
     ModelSceneSymbol plane3DSymbol = new ModelSceneSymbol(pathToModel, 1.0);
-    plane3DSymbol.loadAsync();
     plane3DSymbol.setHeading(45);
     mPlane3D = new Graphic(new Point(-109.937516, 38.456714, 5000, SpatialReferences.getWgs84()), plane3DSymbol);
     mSceneOverlay.getGraphics().add(mPlane3D);
