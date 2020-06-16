@@ -25,6 +25,7 @@ import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.Polyline
 import com.esri.arcgisruntime.geometry.PolylineBuilder
 import com.esri.arcgisruntime.geometry.SpatialReference
+import com.esri.arcgisruntime.location.LocationDataSource
 import com.esri.arcgisruntime.location.SimulatedLocationDataSource
 import com.esri.arcgisruntime.location.SimulationParameters
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -39,6 +40,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
+
+  var isTrackLocation: Boolean = false
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -78,6 +81,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     simulatedLocationDataSource.addLocationChangedListener { locationChangedEvent ->
+      // if location tracking is turned off, do not add to the polyline
+      if (!isTrackLocation) { return@addLocationChangedListener }
       // get the point from the location changed event
       val nextPoint = locationChangedEvent.location.position
       // add the new point to the polyline builder
@@ -97,16 +102,18 @@ class MainActivity : AppCompatActivity() {
       initialZoomScale = 7000.0
     }
 
-    // start and stop the simulated location data source when the button is tapped
+    // change the isTrackLocation flag and the button's icon
     button.setOnClickListener {
-      if (simulatedLocationDataSource.isStarted) {
-        simulatedLocationDataSource.stop()
+      if (isTrackLocation) {
+        isTrackLocation = false
         button.setImageResource(R.drawable.ic_my_location_white_24dp)
       } else {
-        simulatedLocationDataSource.startAsync()
+        isTrackLocation = true
         button.setImageResource(R.drawable.ic_navigation_white_24dp)
       }
     }
+    // start the simulated location data source
+    simulatedLocationDataSource.startAsync()
 
     // make sure the floating action button doesn't obscure the attribution bar
     mapView.addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
