@@ -7,6 +7,4 @@
     <string name="kml_from_url">KML from URL</string>
     <string name="kml_from_portal">KML from Portal</string>
     <string name="kml_from_external_storage">KML from External Storage</string>
-    <string name="kml_read_permission_denied">READ permission was denied. This permission is required to load a kml data
-        set from external storage.</string>
 </resources>

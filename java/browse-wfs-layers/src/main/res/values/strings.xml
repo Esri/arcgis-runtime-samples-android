@@ -8,5 +8,4 @@
     <string name="axis_checkbox_text">Swap coordinate order</string>
 
     <string name="error_wfs_service_load_failure">WFS Service failed to load: %s</string>
-    <string name="coordinate_order_checkbox_text">Swap coordinate order</string>
 </resources>

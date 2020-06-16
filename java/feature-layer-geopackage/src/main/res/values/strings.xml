@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">Feature layer GeoPackage</string>
     <string name="aurora_co_gpkg">/AuroraCO.gpkg</string>
-    <string name="geopackage_read_permission_denied">GeoPackage could not be opened because READ permission was denied.
-    </string>
 </resources>

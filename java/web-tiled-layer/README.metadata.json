@@ -1,0 +1,30 @@
+{
+    "category": "Layers",
+    "description": "Display a tiled web layer.",
+    "formal_name": "WebTiledLayer",
+    "ignore": false,
+    "images": [
+        "web-tiled-layer.png"
+    ],
+    "keywords": [
+        "OGC",
+        "Open Street Map",
+        "OpenStreetMap",
+        "layer",
+        "stamen.com",
+        "tiled",
+        "tiles"
+    ],
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/web-tiled-layer.htm"
+    ],
+    "relevant_apis": [
+        "Basemap",
+        "WebTiledLayer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/webtiledlayer/MainActivity.java"
+    ],
+    "title": "Web tiled layer"
+}

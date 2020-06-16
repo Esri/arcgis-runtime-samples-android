@@ -1,4 +1,4 @@
-# Explore scenes in flyover AR
+# Explore scene in flyover AR
 
 Use augmented reality (AR) to quickly explore a scene more naturally than you could with a touch or mouse interface.
 

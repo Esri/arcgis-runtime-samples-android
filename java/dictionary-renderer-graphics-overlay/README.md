@@ -1,4 +1,4 @@
-# Dictionary renderer with graphics overlay
+# Dictionary renderer graphics overlay
 
 Create graphics using a local mil2525d style file and an XML file with key/value pairs for each graphic.
 

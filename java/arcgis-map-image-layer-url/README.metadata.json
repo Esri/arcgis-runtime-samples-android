@@ -1,0 +1,26 @@
+{
+    "category": "Layers",
+    "description": "Display a layer from an ArcGIS map image layer service.",
+    "formal_name": "ArcgisMapImageLayerUrl",
+    "ignore": false,
+    "images": [
+        "arcgis-map-image-layer-url.png"
+    ],
+    "keywords": [
+        "display",
+        "image",
+        "layer",
+        "map"
+    ],
+    "language": "java",
+    "redirect_from": [
+        "/android/latest/sample-code/arcgis-map-image-layer-url.htm"
+    ],
+    "relevant_apis": [
+        "ArcGISMapImageLayer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/arcgismapimagelayerurl/MainActivity.java"
+    ],
+    "title": "ArcGIS map image layer URL"
+}

@@ -19,8 +19,7 @@
             android:text="@string/type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/typeTextView"
-            app:layout_constraintEnd_toEndOf="@+id/typeSpinner"
+        app:layout_constraintEnd_toEndOf="@+id/typeSpinner"
             app:layout_constraintStart_toStartOf="@+id/typeSpinner"
             app:layout_constraintTop_toTopOf="parent"/>
     <Button

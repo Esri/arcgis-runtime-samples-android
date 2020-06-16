@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">Display KML Network Links</string>
     <string name="european_air_traffic_kml_url">https://www.arcgis.com/sharing/rest/content/items/600748d4464442288f6db8a4ba27dc95/data</string>
-    <string name="kml_read_permission_denied">READ permission was denied. This permission is required to load a kml data
-        set from external storage.</string>
 </resources>

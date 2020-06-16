@@ -1,7 +1,7 @@
 {
     "category": "MapViews, SceneViews and UI",
     "description": "Get the draw status of your map view or scene view to know when all layers in the map or scene have finished drawing.",
-    "formal_name": "DisplayDrawStatus",
+    "formal_name": "DisplayDrawingStatus",
     "ignore": false,
     "images": [
         "display-drawing-status.png"
@@ -26,5 +26,5 @@
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/displaydrawingstatus/MainActivity.java"
     ],
-    "title": "Display draw status"
+    "title": "Display drawing status"
 }

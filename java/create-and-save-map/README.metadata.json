@@ -1,0 +1,26 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "Create and save a map as an ArcGIS `PortalItem` (i.e. web map).",
+    "formal_name": "CreateAndSaveMap",
+    "ignore": false,
+    "images": [
+        "create-and-save-map.png"
+    ],
+    "keywords": [
+        "ArcGIS Online",
+        "ArcGIS Pro",
+        "portal",
+        "publish",
+        "share",
+        "web map"
+    ],
+    "language": "java",
+    "relevant_apis": [
+        "ArcGISMap",
+        "Portal"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/createandsavemap/MainActivity.java"
+    ],
+    "title": "Create and save map"
+}

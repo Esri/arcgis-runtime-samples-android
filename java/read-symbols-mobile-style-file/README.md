@@ -1,4 +1,4 @@
-# Read symbols from a mobile style file
+# Read symbols mobile style file
 
 Combine multiple symbols from a mobile style file into a single symbol.
 

@@ -1,5 +1,5 @@
 {
-    "category": "Feature layers",
+    "category": "Layers",
     "description": "Create a feature collection layer from a portal item.",
     "formal_name": "FeatureCollectionLayerPortalItem",
     "ignore": false,
@@ -15,14 +15,15 @@
         "map notes",
         "portal"
     ],
+    "language": "kotlin",
     "relevant_apis": [
-      "FeatureCollection",
-      "FeatureCollectionLayer",
-      "Portal",
-      "PortalItem"
+        "FeatureCollection",
+        "FeatureCollectionLayer",
+        "Portal",
+        "PortalItem"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/featurecollectionlayerportalitem/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/featurecollectionlayerportalitem/MainActivity.kt"
     ],
     "title": "Feature collection layer (Portal item)"
 }
