@@ -36,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
-  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-  private WmsLayer mWmsLayer;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -51,34 +49,32 @@ public class MainActivity extends AppCompatActivity {
 
     // create a WMS layer
     List<String> wmsLayerNames = Collections.singletonList(getString(R.string.wms_layer_name_minnesota));
-    mWmsLayer = new WmsLayer(getString(R.string.wms_layer_url_minnesota), wmsLayerNames);
-    mWmsLayer.loadAsync();
-    mWmsLayer.addDoneLoadingListener(() -> {
-      if (mWmsLayer.getLoadStatus() == LoadStatus.LOADED) {
-        // add the layer to the map
-        map.getOperationalLayers().add(mWmsLayer);
-
+    WmsLayer wmsLayer = new WmsLayer(getString(R.string.wms_layer_url_minnesota), wmsLayerNames);
+    // add the layer to the map
+    map.getOperationalLayers().add(wmsLayer);
+    wmsLayer.addDoneLoadingListener(() -> {
+      if (wmsLayer.getLoadStatus() == LoadStatus.LOADED) {
         // zoom to the layer on the map
-        mMapView.setViewpoint(new Viewpoint(mWmsLayer.getFullExtent()));
+        mMapView.setViewpoint(new Viewpoint(wmsLayer.getFullExtent()));
 
         // get styles
-        List<String> styles = mWmsLayer.getSublayers().get(0).getSublayerInfo().getStyles();
+        List<String> styles = wmsLayer.getSublayers().get(0).getSublayerInfo().getStyles();
 
         // set the style when the button is toggled
         ToggleButton toggle = findViewById(R.id.toggleStyleButton);
         toggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
           if (isChecked) {
             // set the sublayer's current style
-            mWmsLayer.getSublayers().get(0).setCurrentStyle(styles.get(1));
+            wmsLayer.getSublayers().get(0).setCurrentStyle(styles.get(1));
           } else {
             //[DocRef: Name=Set WMS Layer Style, Category=Fundamentals, Topic=Symbols and Renderers]
             // set the sublayer's current style
-            mWmsLayer.getSublayers().get(0).setCurrentStyle(styles.get(0));
+            wmsLayer.getSublayers().get(0).setCurrentStyle(styles.get(0));
             //[DocRef: END]
           }
         });
       } else {
-        String error = "Failed to load WMS layer: " + mWmsLayer.getLoadError().getMessage();
+        String error = "Failed to load WMS layer: " + wmsLayer.getLoadError().getMessage();
         Log.e(TAG, error);
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
       }
