@@ -44,7 +44,14 @@ public class MainActivity extends AppCompatActivity {
 
     Portal portal = new Portal(getString(R.string.arcgis_online_url));
     PortalItem portalItem = new PortalItem(portal, getString(R.string.subsurface_item_id));
-
+    // catch any load errors from the portal items
+    portalItem.addDoneLoadingListener(() -> {
+      if (portalItem.getLoadStatus() != LoadStatus.LOADED) {
+        String error = "Portal item failed to load: " + portalItem.getLoadError();
+        Log.e(TAG, error);
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+      }
+    });
     // create a scene from a web scene Url and set it to the scene view
     ArcGISScene scene = new ArcGISScene(portalItem);
     // ensure the navigation constraint is set to NONE
