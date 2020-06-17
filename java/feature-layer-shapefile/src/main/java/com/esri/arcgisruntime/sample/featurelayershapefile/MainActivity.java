@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
   private final static String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
-  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-  private ShapefileFeatureTable mShapefileFeatureTable;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +46,20 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // load the shapefile with a local path
-    mShapefileFeatureTable = new ShapefileFeatureTable(
+    ShapefileFeatureTable shapefileFeatureTable = new ShapefileFeatureTable(
         getExternalFilesDir(null) + getString(R.string.shapefile_path));
 
     // create a feature layer to display the shapefile
-    FeatureLayer shapefileFeatureLayer = new FeatureLayer(mShapefileFeatureTable);
+    FeatureLayer shapefileFeatureLayer = new FeatureLayer(shapefileFeatureTable);
+    // add the feature layer to the map
+    mMapView.getMap().getOperationalLayers().add(shapefileFeatureLayer);
 
-    mShapefileFeatureTable.addDoneLoadingListener(() -> {
-      if (mShapefileFeatureTable.getLoadStatus() == LoadStatus.LOADED) {
-
-        // add the feature layer to the map
-        mMapView.getMap().getOperationalLayers().add(shapefileFeatureLayer);
-
+    shapefileFeatureTable.addDoneLoadingListener(() -> {
+      if (shapefileFeatureTable.getLoadStatus() == LoadStatus.LOADED) {
         // zoom the map to the extent of the shapefile
         mMapView.setViewpointAsync(new Viewpoint(shapefileFeatureLayer.getFullExtent()));
       } else {
-        String error = "Shapefile feature table failed to load: " + mShapefileFeatureTable.getLoadError().toString();
+        String error = "Shapefile feature table failed to load: " + shapefileFeatureTable.getLoadError().toString();
         Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
