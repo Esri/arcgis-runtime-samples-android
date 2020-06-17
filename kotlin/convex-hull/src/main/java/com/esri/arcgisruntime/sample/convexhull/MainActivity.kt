@@ -18,8 +18,9 @@
 package com.esri.arcgisruntime.sample.convexhull
 
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.esri.arcgisruntime.geometry.Geometry
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.GeometryType
 import com.esri.arcgisruntime.geometry.Multipoint
@@ -27,6 +28,7 @@ import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.PointCollection
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
@@ -57,17 +59,20 @@ class MainActivity : AppCompatActivity() {
 
     val inputPoints = arrayListOf<Point>()
 
-    mapView.setOnTouchListener { _, e ->
-      val point = android.graphics.Point(e.x.toInt(), e.y.toInt())
-      val convertedPoint = mapView.screenToLocation(point)
-      inputPoints.add(convertedPoint)
-      val multiPoint = Multipoint(PointCollection(inputPoints))
-      pointGraphic.geometry = multiPoint
-      true
+    mapView.onTouchListener = object: DefaultMapViewOnTouchListener(this, mapView) {
+      override fun onSingleTapConfirmed(e: MotionEvent): Boolean  {
+        val point = android.graphics.Point(e.x.toInt(), e.y.toInt())
+        val convertedPoint = mapView.screenToLocation(point)
+        inputPoints.add(convertedPoint)
+        val multiPoint = Multipoint(PointCollection(inputPoints))
+        pointGraphic.geometry = multiPoint
+        return super.onSingleTapConfirmed(e)
+      }
     }
 
     button.setOnClickListener {
-      val convexHull = GeometryEngine.convexHull(pointGraphic.geometry)
+      val normalizedPoints = GeometryEngine.normalizeCentralMeridian(pointGraphic.geometry)
+      val convexHull = GeometryEngine.convexHull(normalizedPoints)
       convexHullGraphic.symbol = when (convexHull.geometryType) {
         GeometryType.POINT -> simpleMarkerSymbol
         GeometryType.POLYLINE -> lineSymbol
