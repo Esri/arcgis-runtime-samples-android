@@ -11,6 +11,7 @@ include ':add-features-feature-service',
         ':change-viewpoint',
         ':choose-camera-controller',
         ':configure-subnetwork-trace',
+        ':convex-hull',
         ':create-and-save-kml-file',
         ':create-terrain-from-a-local-raster',
         ':create-terrain-from-a-local-tile-package',
@@ -67,4 +68,3 @@ include ':add-features-feature-service',
         ':viewshed-geoprocessing',
         ':viewshed-location',
         ':wmts-layer'
-include ':convex-hull'
