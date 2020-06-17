@@ -55,11 +55,6 @@ public class MainActivity extends AppCompatActivity {
   String mArcGISTempFolderPath;
   String mPinBlankOrangeFilePath;
 
-  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-  private PictureMarkerSymbol mCampsiteSymbol;
-  private PictureMarkerSymbol mPinStarBlueSymbol;
-  private PictureMarkerSymbol mPinBlankOrangeSymbol;
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -97,31 +92,26 @@ public class MainActivity extends AppCompatActivity {
     //[DocRef: END]
     // add a new graphic to the graphic overlay
     Point campsitePoint = new Point(-223560, 6552021, SpatialReferences.getWebMercator());
-    Graphic campsiteGraphic = new Graphic(campsitePoint, mCampsiteSymbol);
+    Graphic campsiteGraphic = new Graphic(campsitePoint, campsiteSymbol);
     mGraphicsOverlay.getGraphics().add(campsiteGraphic);
 
     //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from an app resource
     BitmapDrawable pinStarBlueDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin_star_blue);
-    mPinStarBlueSymbol = new PictureMarkerSymbol(pinStarBlueDrawable);
+    PictureMarkerSymbol pinStarBlueSymbol = new PictureMarkerSymbol(pinStarBlueDrawable);
     //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
     //its appearance would then differ across devices with different resolutions.
-    mPinStarBlueSymbol.setHeight(40);
-    mPinStarBlueSymbol.setWidth(40);
+    pinStarBlueSymbol.setHeight(40);
+    pinStarBlueSymbol.setWidth(40);
     //Optionally set the offset, to align the base of the symbol aligns with the point geometry
-    mPinStarBlueSymbol.setOffsetY(
+    pinStarBlueSymbol.setOffsetY(
         11); //The image used for the symbol has a transparent buffer around it, so the offset is not simply height/2
-    mPinStarBlueSymbol.loadAsync();
+    pinStarBlueSymbol.loadAsync();
     //[DocRef: END]
-    mPinStarBlueSymbol.addDoneLoadingListener(new Runnable() {
-      @Override
-      public void run() {
-        //add a new graphic with the same location as the initial viewpoint
-        Point pinStarBluePoint = new Point(-226773, 6550477, SpatialReferences.getWebMercator());
-        Graphic pinStarBlueGraphic = new Graphic(pinStarBluePoint, mPinStarBlueSymbol);
-        mGraphicsOverlay.getGraphics().add(pinStarBlueGraphic);
-      }
-    });
+    //add a new graphic with the same location as the initial viewpoint
+    Point pinStarBluePoint = new Point(-226773, 6550477, SpatialReferences.getWebMercator());
+    Graphic pinStarBlueGraphic = new Graphic(pinStarBluePoint, pinStarBlueSymbol);
+    mGraphicsOverlay.getGraphics().add(pinStarBlueGraphic);
 
     //see createPictureMarkerSymbolFromFile() method for implementation
     //first run checks for external storage and permissions,
@@ -138,24 +128,20 @@ public class MainActivity extends AppCompatActivity {
     //[DocRef: Name=Picture Marker Symbol File-android, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from a file on disk
     BitmapDrawable pinBlankOrangeDrawable = (BitmapDrawable) Drawable.createFromPath(mPinBlankOrangeFilePath);
-    mPinBlankOrangeSymbol = new PictureMarkerSymbol(pinBlankOrangeDrawable);
+    PictureMarkerSymbol pinBlankOrangeSymbol = new PictureMarkerSymbol(pinBlankOrangeDrawable);
     //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
     //its appearance would then differ across devices with different resolutions.
-    mPinBlankOrangeSymbol.setHeight(20);
-    mPinBlankOrangeSymbol.setWidth(20);
+    pinBlankOrangeSymbol.setHeight(20);
+    pinBlankOrangeSymbol.setWidth(20);
     //Optionally set the offset, to align the base of the symbol aligns with the point geometry
-    mPinBlankOrangeSymbol.setOffsetY(10); //The image used has not buffer and therefore the Y offset is height/2
-    mPinBlankOrangeSymbol.loadAsync();
+    pinBlankOrangeSymbol.setOffsetY(10); //The image used has not buffer and therefore the Y offset is height/2
+    pinBlankOrangeSymbol.loadAsync();
     //[DocRef: END]
-    mPinBlankOrangeSymbol.addDoneLoadingListener(new Runnable() {
-      @Override
-      public void run() {
-        //add a new graphic with the same location as the initial viewpoint
-        Point pinBlankOrangePoint = new Point(-228835, 6550763, SpatialReferences.getWebMercator());
-        Graphic pinBlankOrangeGraphic = new Graphic(pinBlankOrangePoint, mPinBlankOrangeSymbol);
-        mGraphicsOverlay.getGraphics().add(pinBlankOrangeGraphic);
-      }
-    });
+
+    //add a new graphic with the same location as the initial viewpoint
+    Point pinBlankOrangePoint = new Point(-228835, 6550763, SpatialReferences.getWebMercator());
+    Graphic pinBlankOrangeGraphic = new Graphic(pinBlankOrangePoint, pinBlankOrangeSymbol);
+    mGraphicsOverlay.getGraphics().add(pinBlankOrangeGraphic);
 
   }
 
