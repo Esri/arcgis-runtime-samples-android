@@ -122,7 +122,6 @@ class MainActivity : AppCompatActivity() {
     // create a graphic with a ModelSceneSymbol of a plane to add to the scene
     val pathToModel = cacheDir.toString() + File.separator + getString(R.string.file_bristol_model)
     val plane3DSymbol = ModelSceneSymbol(pathToModel, 1.0)
-    plane3DSymbol.loadAsync()
     plane3DSymbol.heading = 45.0
     plane3d =
       Graphic(Point(-109.937516, 38.456714, 5000.0, SpatialReferences.getWgs84()), plane3DSymbol)
