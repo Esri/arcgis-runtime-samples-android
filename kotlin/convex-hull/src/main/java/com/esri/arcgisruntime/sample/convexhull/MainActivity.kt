@@ -74,6 +74,11 @@ class MainActivity : AppCompatActivity() {
           val multiPoint = Multipoint(PointCollection(inputPoints))
           pointGraphic.geometry = multiPoint
 
+          if (inputPoints.isNotEmpty()) {
+            createButton.isEnabled = true
+            resetButton.isEnabled = true
+          }
+
           return super.onSingleTapConfirmed(e)
         }
       }
@@ -94,6 +99,17 @@ class MainActivity : AppCompatActivity() {
       }
       // set the convex hull graphic to display the new geometry
       convexHullGraphic.geometry = convexHull
+      // disable the button
+      createButton.isEnabled = false
+    }
+
+    // clear the points and graphics and disable the buttons when reset is tapped
+    resetButton.setOnClickListener {
+      inputPoints.clear()
+      pointGraphic.geometry = null
+      convexHullGraphic.geometry = null
+      resetButton.isEnabled = false
+      createButton.isEnabled = false
     }
   }
 
