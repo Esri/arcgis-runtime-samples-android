@@ -61,6 +61,14 @@ class MainActivity : AppCompatActivity() {
       PointCloudLayer(getExternalFilesDir(null)?.path + getString(R.string.scene_layer_package_location))
     // add the PointCloudLayer to the scene
     sceneView.scene.operationalLayers.add(pointCloudLayer)
+
+    pointCloudLayer.addDoneLoadingListener {
+      if (pointCloudLayer.loadStatus != LoadStatus.LOADED) {
+        val error = "Point cloud layer failed to load: ${pointCloudLayer.loadError.message}"
+        Log.e(TAG, error)
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+      }
+    }
   }
 
   override fun onResume() {
