@@ -49,8 +49,6 @@ class MainActivity : AppCompatActivity() {
   private lateinit var plane3d: Graphic
   private lateinit var orbitLocationCameraController: OrbitLocationCameraController
   private lateinit var orbitPlaneCameraController: OrbitGeoElementCameraController
-  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-  private val modelSceneSymbol: ModelSceneSymbol by lazy { loadModel() }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -93,7 +91,7 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    modelSceneSymbol.addDoneLoadingListener {
+    loadModel().addDoneLoadingListener {
       // instantiate a new camera controller which orbits the plane at a set distance
       orbitPlaneCameraController = OrbitGeoElementCameraController(plane3d, 100.0).apply {
         this.cameraPitchOffset = 30.0
