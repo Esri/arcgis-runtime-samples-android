@@ -24,6 +24,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Picture;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -86,24 +87,18 @@ public class MainActivity extends AppCompatActivity {
     //[DocRef: Name=Picture Marker Symbol URL, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from a URL resource
     //When using a URL, you need to call load to fetch the remote resource
-    mCampsiteSymbol = new PictureMarkerSymbol(
+    PictureMarkerSymbol campsiteSymbol = new PictureMarkerSymbol(
         "http://sampleserver6.arcgisonline"
             + ".com/arcgis/rest/services/Recreation/FeatureServer/0/images/e82f744ebb069bb35b234b3fea46deae");
     //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
     //its appearance would then differ across devices with different resolutions.
-    mCampsiteSymbol.setHeight(18);
-    mCampsiteSymbol.setWidth(18);
-    mCampsiteSymbol.loadAsync();
+    campsiteSymbol.setHeight(18);
+    campsiteSymbol.setWidth(18);
     //[DocRef: END]
-    mCampsiteSymbol.addDoneLoadingListener(new Runnable() {
-      @Override
-      public void run() {
-        //Once the symbol has loaded, add a new graphic to the graphic overlay
-        Point campsitePoint = new Point(-223560, 6552021, SpatialReferences.getWebMercator());
-        Graphic campsiteGraphic = new Graphic(campsitePoint, mCampsiteSymbol);
-        mGraphicsOverlay.getGraphics().add(campsiteGraphic);
-      }
-    });
+    // add a new graphic to the graphic overlay
+    Point campsitePoint = new Point(-223560, 6552021, SpatialReferences.getWebMercator());
+    Graphic campsiteGraphic = new Graphic(campsitePoint, mCampsiteSymbol);
+    mGraphicsOverlay.getGraphics().add(campsiteGraphic);
 
     //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from an app resource
