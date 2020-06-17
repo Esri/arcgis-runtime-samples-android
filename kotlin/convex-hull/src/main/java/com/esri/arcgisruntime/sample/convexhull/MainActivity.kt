@@ -19,7 +19,6 @@ package com.esri.arcgisruntime.sample.convexhull
 
 import android.os.Bundle
 import android.view.MotionEvent
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.GeometryType
@@ -42,59 +41,75 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    val map = ArcGISMap(Basemap.createTopographic())
-    mapView.map = map
-    mapView.graphicsOverlays.add(GraphicsOverlay())
-    val simpleMarkerSymbol = SimpleMarkerSymbol(
-      SimpleMarkerSymbol.Style.CIRCLE,
-      0xFFFF0000.toInt(), 10F
-    )
-    val pointGraphic = Graphic().apply { symbol = simpleMarkerSymbol }
-    mapView.graphicsOverlays[0].graphics.add(pointGraphic)
+    // create an array list to store points
+    val inputPoints = arrayListOf<Point>()
 
+    // create a symbol and graphic to represent single points
+    val pointSymbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000.toInt(), 10F)
+    val pointGraphic = Graphic().apply { symbol = pointSymbol }
+
+    // create a graphic for the convex hull consisting of a line and empty interior
     val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF0000FF.toInt(), 3F)
     val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.NULL, 0x00000000, lineSymbol)
     val convexHullGraphic = Graphic()
-    mapView.graphicsOverlays[0].graphics.add(convexHullGraphic)
 
-    val inputPoints = arrayListOf<Point>()
+    // create a graphics overlay and add the graphics to it
+    val graphicsOverlay = GraphicsOverlay()
+    graphicsOverlay.graphics.addAll(listOf(pointGraphic, convexHullGraphic))
 
-    mapView.onTouchListener = object: DefaultMapViewOnTouchListener(this, mapView) {
-      override fun onSingleTapConfirmed(e: MotionEvent): Boolean  {
-        val point = android.graphics.Point(e.x.toInt(), e.y.toInt())
-        val convertedPoint = mapView.screenToLocation(point)
-        inputPoints.add(convertedPoint)
-        val multiPoint = Multipoint(PointCollection(inputPoints))
-        pointGraphic.geometry = multiPoint
-        return super.onSingleTapConfirmed(e)
+    mapView.apply {
+      // set the map to a topographic basemap
+      map = ArcGISMap(Basemap.createTopographic())
+      // add the graphics overlay to the map
+      graphicsOverlays.add(graphicsOverlay)
+
+      onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+          // get the tapped point and convert it to a screen point
+          val point = android.graphics.Point(e.x.toInt(), e.y.toInt())
+          val convertedPoint = mapView.screenToLocation(point)
+
+          // add the new point to the list and recreate the graphic representing the input points
+          inputPoints.add(convertedPoint)
+          val multiPoint = Multipoint(PointCollection(inputPoints))
+          pointGraphic.geometry = multiPoint
+
+          return super.onSingleTapConfirmed(e)
+        }
       }
     }
 
-    button.setOnClickListener {
+    // create the convex hull when the button is pressed
+    createButton.setOnClickListener {
+      // normalize the points for panning beyond the meridian
       val normalizedPoints = GeometryEngine.normalizeCentralMeridian(pointGraphic.geometry)
+      // create a convex hull from the points
       val convexHull = GeometryEngine.convexHull(normalizedPoints)
+      // the convex hull's geometry may be a point or polyline if the number of points is less than 3
       convexHullGraphic.symbol = when (convexHull.geometryType) {
-        GeometryType.POINT -> simpleMarkerSymbol
+        GeometryType.POINT -> pointSymbol
         GeometryType.POLYLINE -> lineSymbol
         GeometryType.POLYGON -> fillSymbol
         else -> null
       }
+      // set the convex hull graphic to display the new geometry
       convexHullGraphic.geometry = convexHull
     }
   }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+override fun onResume() {
+  super.onResume()
+  mapView.resume()
+}
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+override fun onPause() {
+  mapView.pause()
+  super.onPause()
+}
+
+override fun onDestroy() {
+  mapView.dispose()
+  super.onDestroy()
+}
 }
