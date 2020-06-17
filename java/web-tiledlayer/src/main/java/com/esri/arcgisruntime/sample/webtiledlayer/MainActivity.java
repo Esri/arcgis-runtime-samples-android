@@ -31,8 +31,6 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-  private WebTiledLayer mWebTiledLayer;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +44,12 @@ public class MainActivity extends AppCompatActivity {
     List<String> subDomains = Arrays.asList("a", "b", "c", "d");
 
     // build the web tiled layer from stamen
-    mWebTiledLayer = new WebTiledLayer(getString(R.string.template_uri_stamen), subDomains);
-    mWebTiledLayer.loadAsync();
-    mWebTiledLayer.addDoneLoadingListener(() -> {
-      if (mWebTiledLayer.getLoadStatus() == LoadStatus.LOADED) {
-        // use web tiled layer as Basemap
-        ArcGISMap map = new ArcGISMap(new Basemap(mWebTiledLayer));
-        mMapView.setMap(map);
-        // custom attributes
-        mWebTiledLayer.setAttribution(getString(R.string.stamen_attribution));
-      }
-    });
+    WebTiledLayer webTiledLayer = new WebTiledLayer(getString(R.string.template_uri_stamen), subDomains);
+    // use web tiled layer as Basemap
+    ArcGISMap map = new ArcGISMap(new Basemap(webTiledLayer));
+    mMapView.setMap(map);
+    // custom attributes
+    webTiledLayer.setAttribution(getString(R.string.stamen_attribution));
   }
 
   @Override
