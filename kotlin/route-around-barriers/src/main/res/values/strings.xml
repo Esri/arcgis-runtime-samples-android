@@ -1,15 +1,14 @@
 <resources>
     <string name="app_name">Route around barriers</string>
-    <string name="instructions">Tap ADD STOP or ADD BARRIERS, then tap on the map to add stops and barriers.</string>
+    <string name="instructions">Tap ADD STOP or ADD BARRIERS, then tap on the map.</string>
     <string name="route_controls">Route controls</string>
-    <string name="directions">Directions</string>
     <string name="add_stop">Add stop</string>
     <string name="adding_stops">Adding stops</string>
     <string name="add_barrier">Add barrier</string>
     <string name="adding_barriers">Adding barriers</string>
-    <string name="reset">Reset</string>
     <string name="allow_stops_to_be_re_ordered">Allow stops to be re-ordered</string>
     <string name="preserve_first_stop">Preserve first stop</string>
     <string name="preserve_last_stop">Preserve last stop</string>
-    <string name="solve_route">Solve route</string>
+    <string name="directions">Directions:</string>
+    <string name="reset">Reset</string>
 </resources>
