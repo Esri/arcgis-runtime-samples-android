@@ -24,6 +24,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Picture;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -81,29 +82,23 @@ public class MainActivity extends AppCompatActivity {
     //[DocRef: Name=Picture Marker Symbol URL, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from a URL resource
     //When using a URL, you need to call load to fetch the remote resource
-    final PictureMarkerSymbol campsiteSymbol = new PictureMarkerSymbol(
+    PictureMarkerSymbol campsiteSymbol = new PictureMarkerSymbol(
         "http://sampleserver6.arcgisonline"
             + ".com/arcgis/rest/services/Recreation/FeatureServer/0/images/e82f744ebb069bb35b234b3fea46deae");
     //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
     //its appearance would then differ across devices with different resolutions.
     campsiteSymbol.setHeight(18);
     campsiteSymbol.setWidth(18);
-    campsiteSymbol.loadAsync();
     //[DocRef: END]
-    campsiteSymbol.addDoneLoadingListener(new Runnable() {
-      @Override
-      public void run() {
-        //Once the symbol has loaded, add a new graphic to the graphic overlay
-        Point campsitePoint = new Point(-223560, 6552021, SpatialReferences.getWebMercator());
-        Graphic campsiteGraphic = new Graphic(campsitePoint, campsiteSymbol);
-        mGraphicsOverlay.getGraphics().add(campsiteGraphic);
-      }
-    });
+    // add a new graphic to the graphic overlay
+    Point campsitePoint = new Point(-223560, 6552021, SpatialReferences.getWebMercator());
+    Graphic campsiteGraphic = new Graphic(campsitePoint, campsiteSymbol);
+    mGraphicsOverlay.getGraphics().add(campsiteGraphic);
 
     //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from an app resource
     BitmapDrawable pinStarBlueDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin_star_blue);
-    final PictureMarkerSymbol pinStarBlueSymbol = new PictureMarkerSymbol(pinStarBlueDrawable);
+    PictureMarkerSymbol pinStarBlueSymbol = new PictureMarkerSymbol(pinStarBlueDrawable);
     //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
     //its appearance would then differ across devices with different resolutions.
     pinStarBlueSymbol.setHeight(40);
@@ -113,15 +108,10 @@ public class MainActivity extends AppCompatActivity {
         11); //The image used for the symbol has a transparent buffer around it, so the offset is not simply height/2
     pinStarBlueSymbol.loadAsync();
     //[DocRef: END]
-    pinStarBlueSymbol.addDoneLoadingListener(new Runnable() {
-      @Override
-      public void run() {
-        //add a new graphic with the same location as the initial viewpoint
-        Point pinStarBluePoint = new Point(-226773, 6550477, SpatialReferences.getWebMercator());
-        Graphic pinStarBlueGraphic = new Graphic(pinStarBluePoint, pinStarBlueSymbol);
-        mGraphicsOverlay.getGraphics().add(pinStarBlueGraphic);
-      }
-    });
+    //add a new graphic with the same location as the initial viewpoint
+    Point pinStarBluePoint = new Point(-226773, 6550477, SpatialReferences.getWebMercator());
+    Graphic pinStarBlueGraphic = new Graphic(pinStarBluePoint, pinStarBlueSymbol);
+    mGraphicsOverlay.getGraphics().add(pinStarBlueGraphic);
 
     //see createPictureMarkerSymbolFromFile() method for implementation
     //first run checks for external storage and permissions,
@@ -138,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     //[DocRef: Name=Picture Marker Symbol File-android, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from a file on disk
     BitmapDrawable pinBlankOrangeDrawable = (BitmapDrawable) Drawable.createFromPath(mPinBlankOrangeFilePath);
-    final PictureMarkerSymbol pinBlankOrangeSymbol = new PictureMarkerSymbol(pinBlankOrangeDrawable);
+    PictureMarkerSymbol pinBlankOrangeSymbol = new PictureMarkerSymbol(pinBlankOrangeDrawable);
     //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
     //its appearance would then differ across devices with different resolutions.
     pinBlankOrangeSymbol.setHeight(20);
@@ -147,15 +137,11 @@ public class MainActivity extends AppCompatActivity {
     pinBlankOrangeSymbol.setOffsetY(10); //The image used has not buffer and therefore the Y offset is height/2
     pinBlankOrangeSymbol.loadAsync();
     //[DocRef: END]
-    pinBlankOrangeSymbol.addDoneLoadingListener(new Runnable() {
-      @Override
-      public void run() {
-        //add a new graphic with the same location as the initial viewpoint
-        Point pinBlankOrangePoint = new Point(-228835, 6550763, SpatialReferences.getWebMercator());
-        Graphic pinBlankOrangeGraphic = new Graphic(pinBlankOrangePoint, pinBlankOrangeSymbol);
-        mGraphicsOverlay.getGraphics().add(pinBlankOrangeGraphic);
-      }
-    });
+
+    //add a new graphic with the same location as the initial viewpoint
+    Point pinBlankOrangePoint = new Point(-228835, 6550763, SpatialReferences.getWebMercator());
+    Graphic pinBlankOrangeGraphic = new Graphic(pinBlankOrangePoint, pinBlankOrangeSymbol);
+    mGraphicsOverlay.getGraphics().add(pinBlankOrangeGraphic);
 
   }
 

@@ -31,6 +31,11 @@ class MainActivity : AppCompatActivity() {
   private val TAG =
     MainActivity::class.java.simpleName
 
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+  private val geodatabase: Geodatabase by lazy {
+    Geodatabase(getExternalFilesDir(null)?.path + getString(R.string.geodb_name))
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
@@ -38,8 +43,6 @@ class MainActivity : AppCompatActivity() {
     val map = ArcGISMap(Basemap.createStreets())
     mapView.map = map
 
-    val path: String = getExternalFilesDir(null)?.path + getString(R.string.geodb_name)
-    val geodatabase = Geodatabase(path)
     geodatabase.loadAsync()
     geodatabase.addDoneLoadingListener {
       if (geodatabase.loadStatus == LoadStatus.LOADED) {

@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private ListView mCommentListView;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private ArcGISFeature mServiceRequestFeature;
 
   @Override

@@ -24,6 +24,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.concurrent.Job
+import com.esri.arcgisruntime.data.Geodatabase
 import com.esri.arcgisruntime.data.TileCache
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer
 import com.esri.arcgisruntime.layers.FeatureLayer
@@ -44,6 +45,10 @@ class MainActivity : AppCompatActivity() {
 
   // define the local path where the geodatabase will be stored
   private val localGeodatabasePath: String by lazy { externalCacheDir?.path + getString(R.string.wildfire_geodatabase) }
+
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+  private val geodatabaseSyncTask: GeodatabaseSyncTask by lazy { GeodatabaseSyncTask(getString(R.string.wildfire_sync)) }
+  private lateinit var geodatabase: Geodatabase
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -68,10 +73,8 @@ class MainActivity : AppCompatActivity() {
    * @param view the button which calls this function
    */
   fun generateGeodatabase(view: View) {
-    // create a geodatabase sync task and load it
-    val geodatabaseSyncTask = GeodatabaseSyncTask(getString(R.string.wildfire_sync))
+    // load the geodatabase sync task
     geodatabaseSyncTask.loadAsync()
-
     geodatabaseSyncTask.addDoneLoadingListener {
       // draw a box around the extent
       mapView.apply {
@@ -135,7 +138,7 @@ class MainActivity : AppCompatActivity() {
       return
     }
     // if the job succeeded, load the resulting geodatabase
-    val geodatabase = generateGeodatabaseJob.result
+    geodatabase = generateGeodatabaseJob.result
     geodatabase.loadAsync()
     geodatabase.addDoneLoadingListener {
       // return if the geodatabase failed to load

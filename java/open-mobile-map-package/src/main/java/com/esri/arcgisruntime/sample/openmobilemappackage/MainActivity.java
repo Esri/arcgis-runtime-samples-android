@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
-  private MobileMapPackage mapPackage;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+  private MobileMapPackage mMapPackage;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -42,18 +43,18 @@ public class MainActivity extends AppCompatActivity {
 
     //[DocRef: Name=Open Mobile Map Package-android, Category=Work with maps, Topic=Create an offline map]
     // create the mobile map package
-    mapPackage = new MobileMapPackage(getExternalFilesDir(null) + getString(R.string.yellowstone_mmpk));
+    mMapPackage = new MobileMapPackage(getExternalFilesDir(null) + getString(R.string.yellowstone_mmpk));
     // load the mobile map package asynchronously
-    mapPackage.loadAsync();
+    mMapPackage.loadAsync();
 
     // add done listener which will invoke when mobile map package has loaded
-    mapPackage.addDoneLoadingListener(() -> {
+    mMapPackage.addDoneLoadingListener(() -> {
       // check load status and that the mobile map package has maps
-      if (mapPackage.getLoadStatus() == LoadStatus.LOADED && !mapPackage.getMaps().isEmpty()) {
+      if (mMapPackage.getLoadStatus() == LoadStatus.LOADED && !mMapPackage.getMaps().isEmpty()) {
         // add the map from the mobile map package to the MapView
-        mMapView.setMap(mapPackage.getMaps().get(0));
+        mMapView.setMap(mMapPackage.getMaps().get(0));
       } else {
-        String error = "Error loading mobile map package: " + mapPackage.getLoadError().getMessage();
+        String error = "Error loading mobile map package: " + mMapPackage.getLoadError().getMessage();
         Log.e(TAG, error);
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
       }
