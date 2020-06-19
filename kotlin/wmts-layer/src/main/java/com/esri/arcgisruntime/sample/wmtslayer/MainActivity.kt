@@ -29,6 +29,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+  private val wmtsService: WmtsService by lazy { WmtsService(getString(R.string.wmts_url)) }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
@@ -37,9 +40,8 @@ class MainActivity : AppCompatActivity() {
     val map = ArcGISMap()
     // set the map to be displayed in this view
     mapView.map = map
-    // create wmts service from url string
-    val wmtsService = WmtsService(getString(R.string.wmts_url))
-    wmtsService.addDoneLoadingListener({
+    // display wmts data on the map
+    wmtsService.addDoneLoadingListener {
       if (wmtsService.loadStatus == LoadStatus.LOADED) {
         // get service info
         val wmtsServiceInfo = wmtsService.serviceInfo
@@ -50,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         // set the basemap of the map with WMTS layer
         map.basemap = Basemap(wmtsLayer)
       }
-    })
+    }
     wmtsService.loadAsync()
   }
 

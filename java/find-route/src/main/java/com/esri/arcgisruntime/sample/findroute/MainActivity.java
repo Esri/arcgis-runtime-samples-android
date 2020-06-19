@@ -35,6 +35,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
@@ -67,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
   private MapView mMapView;
   private RouteTask mRouteTask;
   private RouteParameters mRouteParams;
-  private Point mSourcePoint;
-  private Point mDestinationPoint;
   private Route mRoute;
   private SimpleLineSymbol mRouteSymbol;
   private GraphicsOverlay mGraphicsOverlay;
@@ -233,45 +233,32 @@ public class MainActivity extends AppCompatActivity {
     //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from an app resource
     BitmapDrawable startDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_source);
-    final PictureMarkerSymbol pinSourceSymbol;
     try {
-      pinSourceSymbol = PictureMarkerSymbol.createAsync(startDrawable).get();
-      pinSourceSymbol.loadAsync();
-      pinSourceSymbol.addDoneLoadingListener(new Runnable() {
-        @Override
-        public void run() {
-          //add a new graphic as start point
-          mSourcePoint = new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84());
-          Graphic pinSourceGraphic = new Graphic(mSourcePoint, pinSourceSymbol);
-          mGraphicsOverlay.getGraphics().add(pinSourceGraphic);
-        }
-      });
+      PictureMarkerSymbol pinSourceSymbol = PictureMarkerSymbol.createAsync(startDrawable).get();
       pinSourceSymbol.setOffsetY(20);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
-      e.printStackTrace();
+      //add a new graphic as start point
+      Point sourcePoint = new Point(-117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84());
+      Graphic pinSourceGraphic = new Graphic(sourcePoint, pinSourceSymbol);
+      mGraphicsOverlay.getGraphics().add(pinSourceGraphic);
+    } catch (InterruptedException | ExecutionException e) {
+      String error = "Error creating picture marker symbol: " + e.getMessage();
+      Log.e(TAG, error);
+      Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
-    //[DocRef: END]
+
+      //[DocRef: END]
     BitmapDrawable endDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.ic_destination);
-    final PictureMarkerSymbol pinDestinationSymbol;
     try {
-      pinDestinationSymbol = PictureMarkerSymbol.createAsync(endDrawable).get();
-      pinDestinationSymbol.loadAsync();
-      pinDestinationSymbol.addDoneLoadingListener(new Runnable() {
-        @Override
-        public void run() {
-          //add a new graphic as end point
-          mDestinationPoint = new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84());
-          Graphic destinationGraphic = new Graphic(mDestinationPoint, pinDestinationSymbol);
-          mGraphicsOverlay.getGraphics().add(destinationGraphic);
-        }
-      });
+      PictureMarkerSymbol pinDestinationSymbol = PictureMarkerSymbol.createAsync(endDrawable).get();
       pinDestinationSymbol.setOffsetY(20);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
-      e.printStackTrace();
+      // add a new graphic as destination point
+      Point destinationPoint = new Point(-117.15557279683529, 32.703360305883045, SpatialReferences.getWgs84());
+      Graphic destinationGraphic = new Graphic(destinationPoint, pinDestinationSymbol);
+      mGraphicsOverlay.getGraphics().add(destinationGraphic);
+    } catch (InterruptedException | ExecutionException e) {
+      String error = "Error creating picture marker symbol: " + e.getMessage();
+      Log.e(TAG, error);
+      Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
     //[DocRef: END]
     mRouteSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5);
