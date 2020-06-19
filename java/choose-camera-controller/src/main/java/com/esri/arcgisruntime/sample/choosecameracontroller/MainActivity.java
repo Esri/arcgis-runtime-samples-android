@@ -135,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
     // create a graphic with a ModelSceneSymbol of a plane to add to the scene
     String pathToModel = getCacheDir() + File.separator + getString(R.string.bristol_model);
     ModelSceneSymbol plane3DSymbol = new ModelSceneSymbol(pathToModel, 1.0);
-    plane3DSymbol.loadAsync();
     plane3DSymbol.setHeading(45);
     mPlane3D = new Graphic(new Point(-109.937516, 38.456714, 5000, SpatialReferences.getWgs84()), plane3DSymbol);
     mSceneOverlay.getGraphics().add(mPlane3D);

@@ -49,16 +49,13 @@ public class MainActivity extends AppCompatActivity {
     ShapefileFeatureTable shapefileFeatureTable = new ShapefileFeatureTable(
         getExternalFilesDir(null) + getString(R.string.shapefile_path));
 
-    shapefileFeatureTable.loadAsync();
+    // create a feature layer to display the shapefile
+    FeatureLayer shapefileFeatureLayer = new FeatureLayer(shapefileFeatureTable);
+    // add the feature layer to the map
+    mMapView.getMap().getOperationalLayers().add(shapefileFeatureLayer);
+
     shapefileFeatureTable.addDoneLoadingListener(() -> {
       if (shapefileFeatureTable.getLoadStatus() == LoadStatus.LOADED) {
-
-        // create a feature layer to display the shapefile
-        FeatureLayer shapefileFeatureLayer = new FeatureLayer(shapefileFeatureTable);
-
-        // add the feature layer to the map
-        mMapView.getMap().getOperationalLayers().add(shapefileFeatureLayer);
-
         // zoom the map to the extent of the shapefile
         mMapView.setViewpointAsync(new Viewpoint(shapefileFeatureLayer.getFullExtent()));
       } else {

@@ -62,6 +62,8 @@ class MainActivity : AppCompatActivity() {
 
   // create a graphics overlay for the starting location and add it to the map view
   private val startingLocationGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+  private lateinit var utilityNetwork: UtilityNetwork
 
   // create and apply renderers for the starting point graphics overlay
   private val startingPointSymbol: SimpleMarkerSymbol by lazy {
@@ -129,7 +131,7 @@ class MainActivity : AppCompatActivity() {
   private fun createUtilityNetwork(
   ) {
     // create a utility network from the url and load it
-    val utilityNetwork = UtilityNetwork(getString(R.string.utility_network_url), mapView.map)
+    utilityNetwork = UtilityNetwork(getString(R.string.utility_network_url), mapView.map)
     utilityNetwork.loadAsync()
     utilityNetwork.addDoneLoadingListener {
       if (utilityNetwork.loadStatus == LoadStatus.LOADED) {

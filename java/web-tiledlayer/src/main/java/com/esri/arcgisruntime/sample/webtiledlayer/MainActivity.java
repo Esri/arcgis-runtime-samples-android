@@ -44,17 +44,12 @@ public class MainActivity extends AppCompatActivity {
     List<String> subDomains = Arrays.asList("a", "b", "c", "d");
 
     // build the web tiled layer from stamen
-    final WebTiledLayer webTiledLayer = new WebTiledLayer(getString(R.string.template_uri_stamen), subDomains);
-    webTiledLayer.loadAsync();
-    webTiledLayer.addDoneLoadingListener(() -> {
-      if (webTiledLayer.getLoadStatus() == LoadStatus.LOADED) {
-        // use web tiled layer as Basemap
-        ArcGISMap map = new ArcGISMap(new Basemap(webTiledLayer));
-        mMapView.setMap(map);
-        // custom attributes
-        webTiledLayer.setAttribution(getString(R.string.stamen_attribution));
-      }
-    });
+    WebTiledLayer webTiledLayer = new WebTiledLayer(getString(R.string.template_uri_stamen), subDomains);
+    // use web tiled layer as Basemap
+    ArcGISMap map = new ArcGISMap(new Basemap(webTiledLayer));
+    mMapView.setMap(map);
+    // custom attributes
+    webTiledLayer.setAttribution(getString(R.string.stamen_attribution));
   }
 
   @Override

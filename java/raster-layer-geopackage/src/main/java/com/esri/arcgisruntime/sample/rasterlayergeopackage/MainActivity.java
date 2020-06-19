@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+  private GeoPackage mGeoPackage;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +50,13 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(map);
 
     // open the GeoPackage
-    GeoPackage geoPackage = new GeoPackage(getExternalFilesDir(null) + getString(R.string.geopackage_path));
-    geoPackage.loadAsync();
-    geoPackage.addDoneLoadingListener(() -> {
-      if (geoPackage.getLoadStatus() == LoadStatus.LOADED) {
-        if (!geoPackage.getGeoPackageRasters().isEmpty()) {
+    mGeoPackage = new GeoPackage(getExternalFilesDir(null) + getString(R.string.geopackage_path));
+    mGeoPackage.loadAsync();
+    mGeoPackage.addDoneLoadingListener(() -> {
+      if (mGeoPackage.getLoadStatus() == LoadStatus.LOADED) {
+        if (!mGeoPackage.getGeoPackageRasters().isEmpty()) {
           // read raster images and get the first one
-          Raster geoPackageRaster = geoPackage.getGeoPackageRasters().get(0);
+          Raster geoPackageRaster = mGeoPackage.getGeoPackageRasters().get(0);
           // create a layer to show the raster
           RasterLayer geoPackageRasterLayer = new RasterLayer(geoPackageRaster);
           // add the image as a raster layer to the map (with default symbology)
