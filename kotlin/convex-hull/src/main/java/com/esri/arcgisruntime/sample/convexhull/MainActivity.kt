@@ -17,6 +17,7 @@
 
 package com.esri.arcgisruntime.sample.convexhull
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
@@ -45,12 +46,12 @@ class MainActivity : AppCompatActivity() {
     val inputPoints = arrayListOf<Point>()
 
     // create a symbol and graphic to represent single points
-    val pointSymbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000.toInt(), 10F)
+    val pointSymbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10F)
     val pointGraphic = Graphic().apply { symbol = pointSymbol }
 
     // create a graphic for the convex hull consisting of a line and empty interior
-    val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF0000FF.toInt(), 3F)
-    val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.NULL, 0x00000000, lineSymbol)
+    val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 3F)
+    val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.NULL, Color.TRANSPARENT, lineSymbol)
     val convexHullGraphic = Graphic()
 
     // create a graphics overlay and add the graphics to it
