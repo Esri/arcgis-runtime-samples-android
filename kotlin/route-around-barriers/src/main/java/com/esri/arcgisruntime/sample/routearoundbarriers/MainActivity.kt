@@ -55,8 +55,8 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.bottom_sheet.*
-import kotlinx.android.synthetic.main.bottom_sheet.view.*
+import kotlinx.android.synthetic.main.route_controls_bottom_sheet.*
+import kotlinx.android.synthetic.main.route_controls_bottom_sheet.view.*
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
