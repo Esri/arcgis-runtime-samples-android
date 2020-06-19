@@ -62,21 +62,18 @@ public class MainActivity extends AppCompatActivity {
     PointCloudLayer pointCloudLayer = new PointCloudLayer(
         getExternalFilesDir(null) + getString(R.string.scene_layer_package_location));
 
+    // add the PointCloudLayer to the operational layers of the scene
+    mSceneView.getScene().getOperationalLayers().add(pointCloudLayer);
+
     // add a listener to perform operations when the load status of the PointCloudLayer changes
     pointCloudLayer.addDoneLoadingListener(() -> {
-      if (pointCloudLayer.getLoadStatus() == LoadStatus.LOADED) {
-        // add the PointCloudLayer to the operational layers of the scene
-        mSceneView.getScene().getOperationalLayers().add(pointCloudLayer);
-      } else {
+      if (pointCloudLayer.getLoadStatus() != LoadStatus.LOADED) {
         // notify user that the PointCloudLayer has failed to load
         String error = "Point cloud layer failed to load: " + pointCloudLayer.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
     });
-
-    // load the PointCloudLayer asynchronously
-    pointCloudLayer.loadAsync();
   }
 
   @Override protected void onResume() {

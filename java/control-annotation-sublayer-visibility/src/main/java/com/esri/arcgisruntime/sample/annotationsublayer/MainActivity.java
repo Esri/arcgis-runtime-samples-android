@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+  private MobileMapPackage mMobileMapPackage;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +57,12 @@ public class MainActivity extends AppCompatActivity {
     CheckBox openCheckBox = findViewById(R.id.openCheckBox);
 
     // load the mobile map package
-    MobileMapPackage mobileMapPackage = new MobileMapPackage(
-        getExternalFilesDir(null) + getString(R.string.gas_device_anno_mmpk_path));
-    mobileMapPackage.loadAsync();
-    mobileMapPackage.addDoneLoadingListener(() -> {
-      if (mobileMapPackage.getLoadStatus() == LoadStatus.LOADED) {
+    mMobileMapPackage = new MobileMapPackage(getExternalFilesDir(null) + getString(R.string.gas_device_anno_mmpk_path));
+    mMobileMapPackage.loadAsync();
+    mMobileMapPackage.addDoneLoadingListener(() -> {
+      if (mMobileMapPackage.getLoadStatus() == LoadStatus.LOADED) {
         // set the mobile map package's map to the map view
-        mMapView.setMap(mobileMapPackage.getMaps().get(0));
+        mMapView.setMap(mMobileMapPackage.getMaps().get(0));
         // find the annotation layer within the map
         for (Layer layer : mMapView.getMap().getOperationalLayers()) {
           if (layer instanceof AnnotationLayer) {
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
           }
         }
       } else {
-        String error = "Mobile map package failed load: " + mobileMapPackage.getLoadError().getMessage();
+        String error = "Mobile map package failed load: " + mMobileMapPackage.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }

@@ -57,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
 
   private TextView mProgressTextView;
   private RelativeLayout mProgressLayout;
+  
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+  private GeodatabaseSyncTask mGeodatabaseSyncTask;
+  private Geodatabase mGeodatabase;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
     mProgressTextView = (TextView) findViewById(R.id.progressTextView);
 
     // create a geodatabase sync task
-    final GeodatabaseSyncTask geodatabaseSyncTask = new GeodatabaseSyncTask(getString(R.string.wildfire_sync));
-    geodatabaseSyncTask.loadAsync();
-    geodatabaseSyncTask.addDoneLoadingListener(() -> {
+    mGeodatabaseSyncTask = new GeodatabaseSyncTask(getString(R.string.wildfire_sync));
+    mGeodatabaseSyncTask.loadAsync();
+    mGeodatabaseSyncTask.addDoneLoadingListener(() -> {
 
       // generate the geodatabase sync task
       genGeodatabaseButton.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
           graphicsOverlay.getGraphics().add(boundary);
 
           // create generate geodatabase parameters for the current extent
-          final ListenableFuture<GenerateGeodatabaseParameters> defaultParameters = geodatabaseSyncTask
+          final ListenableFuture<GenerateGeodatabaseParameters> defaultParameters = mGeodatabaseSyncTask
               .createDefaultGenerateGeodatabaseParametersAsync(extent);
           defaultParameters.addDoneListener(new Runnable() {
             @Override public void run() {
@@ -120,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                     getCacheDir().toString() + File.separator + getString(R.string.wildfire_geodatabase);
 
                 // create and start the job
-                final GenerateGeodatabaseJob generateGeodatabaseJob = geodatabaseSyncTask
+                final GenerateGeodatabaseJob generateGeodatabaseJob = mGeodatabaseSyncTask
                     .generateGeodatabase(parameters, localGeodatabasePath);
                 generateGeodatabaseJob.start();
                 mProgressTextView.setText(getString(R.string.progress_started));
@@ -138,13 +142,13 @@ public class MainActivity extends AppCompatActivity {
                   @Override public void run() {
                     mProgressLayout.setVisibility(View.INVISIBLE);
                     if (generateGeodatabaseJob.getStatus() == Job.Status.SUCCEEDED) {
-                      final Geodatabase geodatabase = generateGeodatabaseJob.getResult();
-                      geodatabase.loadAsync();
-                      geodatabase.addDoneLoadingListener(new Runnable() {
+                      mGeodatabase = generateGeodatabaseJob.getResult();
+                      mGeodatabase.loadAsync();
+                      mGeodatabase.addDoneLoadingListener(new Runnable() {
                         @Override public void run() {
-                          if (geodatabase.getLoadStatus() == LoadStatus.LOADED) {
+                          if (mGeodatabase.getLoadStatus() == LoadStatus.LOADED) {
                             mProgressTextView.setText(getString(R.string.progress_done));
-                            for (GeodatabaseFeatureTable geodatabaseFeatureTable : geodatabase
+                            for (GeodatabaseFeatureTable geodatabaseFeatureTable : mGeodatabase
                                 .getGeodatabaseFeatureTables()) {
                               geodatabaseFeatureTable.loadAsync();
                               map.getOperationalLayers().add(new FeatureLayer(geodatabaseFeatureTable));
@@ -152,13 +156,13 @@ public class MainActivity extends AppCompatActivity {
                             genGeodatabaseButton.setVisibility(View.GONE);
                             Log.i(TAG, "Local geodatabase stored at: " + localGeodatabasePath);
                           } else {
-                            Log.e(TAG, "Error loading geodatabase: " + geodatabase.getLoadError().getMessage());
+                            Log.e(TAG, "Error loading geodatabase: " + mGeodatabase.getLoadError().getMessage());
                           }
                         }
                       });
                       // unregister since we're not syncing
-                      ListenableFuture unregisterGeodatabase = geodatabaseSyncTask
-                          .unregisterGeodatabaseAsync(geodatabase);
+                      ListenableFuture unregisterGeodatabase = mGeodatabaseSyncTask
+                          .unregisterGeodatabaseAsync(mGeodatabase);
                       unregisterGeodatabase.addDoneListener(() -> {
                         Log.i(TAG, "Geodatabase unregistered since we wont be editing it in this sample.");
                         Toast.makeText(MainActivity.this,

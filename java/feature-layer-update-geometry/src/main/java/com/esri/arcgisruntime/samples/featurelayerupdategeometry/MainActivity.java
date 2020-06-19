@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
   private MapView mMapView;
   private FeatureLayer mFeatureLayer;
   private boolean mFeatureSelected = true;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private ArcGISFeature mIdentifiedFeature;
 
   @Override

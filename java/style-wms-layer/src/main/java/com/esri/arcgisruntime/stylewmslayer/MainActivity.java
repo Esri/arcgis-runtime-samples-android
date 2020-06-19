@@ -50,12 +50,10 @@ public class MainActivity extends AppCompatActivity {
     // create a WMS layer
     List<String> wmsLayerNames = Collections.singletonList(getString(R.string.wms_layer_name_minnesota));
     WmsLayer wmsLayer = new WmsLayer(getString(R.string.wms_layer_url_minnesota), wmsLayerNames);
-    wmsLayer.loadAsync();
+    // add the layer to the map
+    map.getOperationalLayers().add(wmsLayer);
     wmsLayer.addDoneLoadingListener(() -> {
       if (wmsLayer.getLoadStatus() == LoadStatus.LOADED) {
-        // add the layer to the map
-        map.getOperationalLayers().add(wmsLayer);
-
         // zoom to the layer on the map
         mMapView.setViewpoint(new Viewpoint(wmsLayer.getFullExtent()));
 

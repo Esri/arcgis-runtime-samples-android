@@ -54,6 +54,8 @@ class MainActivity : AppCompatActivity() {
 
   private val inputGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
   private val resultGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+  private lateinit var featureCollectionTable: FeatureCollectionTable
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -124,8 +126,7 @@ class MainActivity : AppCompatActivity() {
     val field = Field.createString("observer", "", 8)
 
     // create feature collection table for point geometry
-    val featureCollectionTable =
-      FeatureCollectionTable(listOf(field), GeometryType.POINT, point.spatialReference)
+    featureCollectionTable = FeatureCollectionTable(listOf(field), GeometryType.POINT, point.spatialReference)
     featureCollectionTable.loadAsync()
 
     // create a new feature and assign the geometry

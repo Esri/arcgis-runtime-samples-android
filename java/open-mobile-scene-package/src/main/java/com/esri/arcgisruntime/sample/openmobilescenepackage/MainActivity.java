@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
   private SceneView mSceneView;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+  private MobileScenePackage mMobileScenePackage;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +54,17 @@ public class MainActivity extends AppCompatActivity {
     scene.setBaseSurface(surface);
 
     // create a mobile scene package from a path to the mspk
-    MobileScenePackage mobileScenePackage = new MobileScenePackage(
-        getExternalFilesDir(null) + getString(R.string.philadelphia_mspk));
-    mobileScenePackage.addDoneLoadingListener(() -> {
-      if (mobileScenePackage.getLoadStatus() == LoadStatus.LOADED && !mobileScenePackage.getScenes().isEmpty()) {
-        mSceneView.setScene(mobileScenePackage.getScenes().get(0));
+    mMobileScenePackage = new MobileScenePackage(getExternalFilesDir(null) + getString(R.string.philadelphia_mspk));
+    mMobileScenePackage.addDoneLoadingListener(() -> {
+      if (mMobileScenePackage.getLoadStatus() == LoadStatus.LOADED && !mMobileScenePackage.getScenes().isEmpty()) {
+        mSceneView.setScene(mMobileScenePackage.getScenes().get(0));
       } else {
-        String error = "Failed to load mobile scene package: " + mobileScenePackage.getLoadError().getMessage();
+        String error = "Failed to load mobile scene package: " + mMobileScenePackage.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
     });
-    mobileScenePackage.loadAsync();
+    mMobileScenePackage.loadAsync();
   }
 
   @Override

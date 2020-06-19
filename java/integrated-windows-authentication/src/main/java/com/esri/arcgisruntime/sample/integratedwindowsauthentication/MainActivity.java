@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
   private MapView mMapView;
 
   private UserCredential mUserCredential;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+  private Portal mPortal;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +91,8 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
     Button searchPublicButton = findViewById(R.id.searchPublicButton);
     searchPublicButton.setOnClickListener(v -> {
       // search the the public ArcGIS portal
-      searchPortal(new Portal(getString(R.string.arcgis_url)));
+      mPortal = new Portal(getString(R.string.arcgis_url));
+      searchPortal();
     });
 
     // get reference to load state UI elements
@@ -105,7 +108,8 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
       String securedPortalUrl = portalUrlEditText.getText().toString();
       if (!securedPortalUrl.isEmpty()) {
         // search an instance of the IWA-secured portal, the user may be challenged for access
-        searchPortal(new Portal(securedPortalUrl, true));
+        mPortal = new Portal(securedPortalUrl, true);
+        searchPortal();
       } else {
         String error = "Portal URL is empty. Please enter a portal URL.";
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
@@ -117,12 +121,11 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
   /**
    * Search the given portal for its portal items and display them in a recycler view. On click, call AddMap().
    *
-   * @param portal
    */
-  private void searchPortal(Portal portal) {
+  private void searchPortal() {
 
     // check if the the portal is null
-    if (portal == null) {
+    if (mPortal == null) {
       Log.e(TAG, "Portal null");
       return;
     }
@@ -132,34 +135,34 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
 
     // show portal load state
     mPortalLoadStateView.setVisibility(View.VISIBLE);
-    mLoadStateTextView.setText("Searching for web map items on the portal at " + portal.getUri());
+    mLoadStateTextView.setText("Searching for web map items on the portal at " + mPortal.getUri());
 
-    portal.loadAsync();
-    portal.addDoneLoadingListener(() -> {
-      if (portal.getLoadStatus() == LoadStatus.LOADED) {
+    mPortal.loadAsync();
+    mPortal.addDoneLoadingListener(() -> {
+      if (mPortal.getLoadStatus() == LoadStatus.LOADED) {
         try {
           // update load state in UI with the portal URI
-          mLoadStateTextView.setText("Connected to the portal on " + new URI(portal.getUri()).getHost());
+          mLoadStateTextView.setText("Connected to the portal on " + new URI(mPortal.getUri()).getHost());
         } catch (URISyntaxException e) {
           String error = "Error getting URI from portal: " + e.getMessage();
           Log.e(TAG, error);
         }
         // report the user name used for this connection.
-        if (portal.getUser() != null) {
-          mLoadStateTextView.setText("Connected as: " + portal.getUser().getUsername());
+        if (mPortal.getUser() != null) {
+          mLoadStateTextView.setText("Connected as: " + mPortal.getUser().getUsername());
         } else {
           // for a secure portal, the user should never be anonymous
           mLoadStateTextView.setText("Connected as: Anonymous");
         }
 
         // search the portal for web maps
-        ListenableFuture<PortalQueryResultSet<PortalItem>> portalItemResult = portal
+        ListenableFuture<PortalQueryResultSet<PortalItem>> portalItemResult = mPortal
             .findItemsAsync(new PortalQueryParameters("type:(\"web map\" NOT \"web mapping application\")"));
         portalItemResult.addDoneListener(() -> {
           try {
             PortalQueryResultSet<PortalItem> portalItemSet = portalItemResult.get();
             PortalItemAdapter portalItemAdapter = new PortalItemAdapter(portalItemSet.getResults(),
-                portalItem -> addMap(portal, portalItem.getItemId()));
+                portalItem -> addMap(mPortal, portalItem.getItemId()));
             mRecyclerView.setAdapter(portalItemAdapter);
             mPortalLoadStateView.setVisibility(View.GONE);
           } catch (ExecutionException | InterruptedException e) {
@@ -175,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements AuthenticationCha
         // hide load state view
         mPortalLoadStateView.setVisibility(View.GONE);
         // report error
-        ArcGISRuntimeException loadError = portal.getLoadError();
+        ArcGISRuntimeException loadError = mPortal.getLoadError();
         String error = "Portal sign in failed: " + loadError.getCause() == null ?
             loadError.getMessage() :
             loadError.getCause().getMessage();
