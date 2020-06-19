@@ -55,8 +55,8 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.bottom_sheet.*
-import kotlinx.android.synthetic.main.bottom_sheet.view.*
+import kotlinx.android.synthetic.main.route_controls_bottom_sheet.*
+import kotlinx.android.synthetic.main.route_controls_bottom_sheet.view.*
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
@@ -164,6 +164,7 @@ class MainActivity : AppCompatActivity() {
     bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
     (mapViewContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin =
       (bottomSheetBehavior as BottomSheetBehavior<View>).peekHeight
+    bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
 
     bottomSheet.apply {
       // expand or collapse the bottom sheet when the header is clicked
@@ -177,13 +178,17 @@ class MainActivity : AppCompatActivity() {
       header.imageView.rotation = 180f
     }
 
-    addStopButton.setOnClickListener {
-      addBarrierButton.isChecked = false
-    }
+    // change button toggle state on click
+    addStopButton.setOnClickListener { addBarrierButton.isChecked = false }
+    addBarrierButton.setOnClickListener { addStopButton.isChecked = false }
 
-    addBarrierButton.setOnClickListener {
-      addStopButton.isChecked = false
-    }
+    // solve route on checkbox change state
+    reorderCheckBox.setOnCheckedChangeListener { _, _ -> createAndDisplayRoute() }
+    preserveFirstStopCheckBox.setOnCheckedChangeListener { _, _ -> createAndDisplayRoute() }
+    preserveLastStopCheckBox.setOnCheckedChangeListener { _, _ -> createAndDisplayRoute() }
+
+    // start sample with add stop button true
+    addStopButton.isChecked = true
   }
 
   /**
@@ -214,15 +219,14 @@ class MainActivity : AppCompatActivity() {
       // build graphics for the barrier and add it to the graphics overlay
       barriersGraphicsOverlay.graphics.add(Graphic(bufferedBarrierPolygon, barrierSymbol))
     }
+    createAndDisplayRoute()
   }
 
   /**
    * Create route parameters and a route task from them. Display the route result geometry as a
    * graphic and call showDirectionsInBottomSheet which shows directions in a list view.
-   *
-   * @param solveRoute button which calls this method
    */
-  fun createAndDisplayRoute(solveRoute: View) {
+  private fun createAndDisplayRoute() {
     if (stopList.size < 2) {
       // clear the directions list since no route is displayed
       directionsList.clear()
@@ -296,12 +300,9 @@ class MainActivity : AppCompatActivity() {
     mapView.graphicsOverlays.forEach { it.graphics.clear() }
     // hide the reset button and directions list
     resetButton.visibility = GONE
-    // hide the directions list
+    // hide the directions
+    directionsTextView.visibility = GONE
     directionsListView.visibility = GONE
-    // show the controls
-    controlsLayout.visibility = VISIBLE
-    // set header title to "route controls"
-    headerTitle.text = getString(R.string.route_controls)
   }
 
   /**
@@ -329,9 +330,8 @@ class MainActivity : AppCompatActivity() {
    */
   private fun showDirectionsInBottomSheet() {
     // show the directions list view
+    directionsTextView.visibility = VISIBLE
     directionsListView.visibility = VISIBLE
-    // set header title to "directions"
-    headerTitle.text = getString(R.string.directions)
     // create a bottom sheet behavior from the bottom sheet view in the main layout
     bottomSheetBehavior?.apply {
       // animate the arrow when the bottom sheet slides
@@ -343,7 +343,6 @@ class MainActivity : AppCompatActivity() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
           bottomSheet.header.imageView.rotation = when (newState) {
             BottomSheetBehavior.STATE_EXPANDED -> 180f
-            BottomSheetBehavior.STATE_HALF_EXPANDED -> 90f
             else -> bottomSheet.header.imageView.rotation
           }
         }
@@ -375,11 +374,9 @@ class MainActivity : AppCompatActivity() {
           // collapse the bottom sheet
           bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         }
+      // allow the list view to scroll within bottom sheet
+      isNestedScrollingEnabled = true
     }
-    // set the initial state to half expanded to show user a directions list has been populated
-    bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-    // hide the controls
-    controlsLayout.visibility = GONE
   }
 
   override fun onPause() {
