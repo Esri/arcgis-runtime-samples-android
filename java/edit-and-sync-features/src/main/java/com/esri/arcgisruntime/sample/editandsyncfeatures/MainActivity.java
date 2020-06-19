@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private GraphicsOverlay mGraphicsOverlay;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private GeodatabaseSyncTask mGeodatabaseSyncTask;
   private Geodatabase mGeodatabase;
 

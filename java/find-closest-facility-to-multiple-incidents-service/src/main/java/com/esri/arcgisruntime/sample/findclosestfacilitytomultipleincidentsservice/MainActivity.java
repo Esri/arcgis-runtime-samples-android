@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private MapView mMapView;
+  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+  private ClosestFacilityTask mClosestFacilityTask;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     SimpleLineSymbol simpleLineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 5.0f);
 
     // create a closest facility task from a network analysis service
-    ClosestFacilityTask closestFacilityTask = new ClosestFacilityTask(this,
+    mClosestFacilityTask = new ClosestFacilityTask(this,
         getString(R.string.san_diego_network_analysis_service_url));
 
     // create a table for facilities using the feature service
@@ -165,19 +167,19 @@ public class MainActivity extends AppCompatActivity {
               // disable the 'solve routes' button and show the progress indicator
               solveRoutesButton.setEnabled(false);
               // start the routing task
-              closestFacilityTask.loadAsync();
-              closestFacilityTask.addDoneLoadingListener(() -> {
-                if (closestFacilityTask.getLoadStatus() == LoadStatus.LOADED) {
+              mClosestFacilityTask.loadAsync();
+              mClosestFacilityTask.addDoneLoadingListener(() -> {
+                if (mClosestFacilityTask.getLoadStatus() == LoadStatus.LOADED) {
                   try {
                     // create default parameters for the task and add facilities and incidents to parameters
-                    ClosestFacilityParameters closestFacilityParameters = closestFacilityTask
+                    ClosestFacilityParameters closestFacilityParameters = mClosestFacilityTask
                         .createDefaultParametersAsync().get();
                     closestFacilityParameters.setFacilities(facilities);
                     closestFacilityParameters.setIncidents(incidents);
                     // solve closest facilities
                     try {
                       // use the task to solve for the closest facility
-                      ListenableFuture<ClosestFacilityResult> closestFacilityTaskResult = closestFacilityTask
+                      ListenableFuture<ClosestFacilityResult> closestFacilityTaskResult = mClosestFacilityTask
                           .solveClosestFacilityAsync(closestFacilityParameters);
                       closestFacilityTaskResult.addDoneListener(() -> {
                         try {
@@ -210,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, error);
                   }
                 } else {
-                  String error = "Error loading route task: " + closestFacilityTask.getLoadError().getMessage();
+                  String error = "Error loading route task: " + mClosestFacilityTask.getLoadError().getMessage();
                   Toast.makeText(this, error, Toast.LENGTH_LONG).show();
                   Log.e(TAG, error);
                 }

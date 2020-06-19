@@ -43,35 +43,23 @@ public class MainActivity extends AppCompatActivity {
     mSceneView = findViewById(R.id.sceneView);
 
     Portal portal = new Portal(getString(R.string.arcgis_online_url));
-    portal.addDoneLoadingListener(() -> {
-      if (portal.getLoadStatus() == LoadStatus.LOADED) {
-        PortalItem portalItem = new PortalItem(portal, getString(R.string.subsurface_item_id));
-        portalItem.addDoneLoadingListener(() -> {
-          if (portalItem.getLoadStatus() == LoadStatus.LOADED) {
-            // create a scene from a web scene Url and set it to the scene view
-            ArcGISScene scene = new ArcGISScene(portalItem);
-            // when the scene has loaded, set navigation constraint and opacity to see below the surface
-            scene.addDoneLoadingListener(() -> {
-              // ensure the navigation constraint is set to NONE
-              scene.getBaseSurface().setNavigationConstraint(NavigationConstraint.NONE);
-              // set opacity to view content beneath the base surface
-              scene.getBaseSurface().setOpacity(0.5f);
-            });
-            mSceneView.setScene(scene);
-          } else {
-            String error = "Portal item failed to load: " + portalItem.getLoadError().getMessage();
-            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-            Log.e(TAG, error);
-          }
-        });
-        portalItem.loadAsync();
-      } else {
-        String error = "Portal failed to load: " + portal.getLoadError().getMessage();
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+    PortalItem portalItem = new PortalItem(portal, getString(R.string.subsurface_item_id));
+    // catch any load errors from the portal items
+    portalItem.addDoneLoadingListener(() -> {
+      if (portalItem.getLoadStatus() != LoadStatus.LOADED) {
+        String error = "Portal item failed to load: " + portalItem.getLoadError();
         Log.e(TAG, error);
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
       }
     });
-    portal.loadAsync();
+    // create a scene from a web scene Url and set it to the scene view
+    ArcGISScene scene = new ArcGISScene(portalItem);
+    // ensure the navigation constraint is set to NONE
+    scene.getBaseSurface().setNavigationConstraint(NavigationConstraint.NONE);
+    // set opacity to view content beneath the base surface
+    scene.getBaseSurface().setOpacity(0.5f);
+
+    mSceneView.setScene(scene);
   }
 
   @Override
