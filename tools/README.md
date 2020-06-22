@@ -18,13 +18,7 @@ python3 tools/metadata_updater.py -m kotlin
 python3 tools/metadata_updater.py -s kotlin/add-features-feature-service
 ```
 
-**Note:** The script cannot create a metadata file from scratch. You should first create a file in the sample's directory called `README.metadata.json`. The contents of the file can be
-```
-{
-}
-```
-
-When recreating single metadata files, if any of the following entries are not present or empty, they will be created and given the value "TODO". This is because they cannot be filled in by the script. Please remove the "TODO" and update with the correct info or remove the entry altogether before merging.
+**Note:** The script cannot create a metadata file from scratch. If a sample lacks a metadata.json file at the top level of its directory, the following fields will be left as "TODO":
 * category
 * provision_from
 * provision_to
