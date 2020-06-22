@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
       Point(
         -4.4610562,
         48.3902727,
-        0.0,
+        70.0,
         camera.location.spatialReference
       )
     // create point for the surface related graphics with z value of 70

@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.surfaceplacement;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.SeekBar;
 import android.widget.ToggleButton;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -64,12 +65,12 @@ public class MainActivity extends AppCompatActivity {
     scene.getOperationalLayers().add(sceneLayer);
 
     // set an initial viewpoint
-    Point initialViewPoint = new Point(-4.45968, 48.3889, 100.9922);
-    Camera camera = new Camera(initialViewPoint, 329.91, 80, 0);
+    Point initialViewPoint = new Point(-4.45968, 48.3889, 37.9922);
+    Camera camera = new Camera(initialViewPoint, 329.91, 96.6632, 0);
     mSceneView.setViewpointCamera(camera);
 
     // create point for the scene related graphic with a z value of 0
-    Point sceneRelatedPoint = new Point(-4.4610562, 48.3902727, 0, camera.getLocation().getSpatialReference());
+    Point sceneRelatedPoint = new Point(-4.4610562, 48.3902727, 70, camera.getLocation().getSpatialReference());
 
     // create point for the surface related graphics with z value of 70
     Point surfaceRelatedPoint = new Point(-4.4609257, 48.3903965 , 70, camera.getLocation().getSpatialReference());
@@ -137,6 +138,22 @@ public class MainActivity extends AppCompatActivity {
     drapedToggle.setOnClickListener(v -> {
       drapedBillboardedOverlay.setVisible(drapedToggle.isChecked());
       drapedFlatOverlay.setVisible(!drapedToggle.isChecked());
+    });
+
+    // change the z-positions of the graphics when the seek bar changes
+    SeekBar seekBar = findViewById(R.id.seekBar);
+    seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        for (GraphicsOverlay graphicsOverlay : mSceneView.getGraphicsOverlays()) {
+          for (Graphic graphic : graphicsOverlay.getGraphics()) {
+            // get the current point and change only its z position
+            Point oldPoint = (Point) graphic.getGeometry();
+            graphic.setGeometry(new Point(oldPoint.getX(), oldPoint.getY(), (double) seekBar.getProgress()));
+          }
+        }
+      }
+      @Override public void onStartTrackingTouch(SeekBar seekBar) { }
+      @Override public void onStopTrackingTouch(SeekBar seekBar) { }
     });
   }
 
