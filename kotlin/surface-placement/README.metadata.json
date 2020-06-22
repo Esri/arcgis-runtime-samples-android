@@ -1,6 +1,7 @@
 {
     "category": "Maps and Scenes",
     "description": "Position graphics relative to a surface using different surface placement modes.",
+    "formal_name": "SurfacePlacement",
     "ignore": false,
     "images": [
         "surface-placement.png"
@@ -17,6 +18,7 @@
         "sea level",
         "surface placement"
     ],
+    "language": "kotlin",
     "relevant_apis": [
         "Graphic",
         "GraphicsOverlay",
@@ -25,7 +27,7 @@
         "Surface"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/surfaceplacement/MainActivity.kt"
+        "rc/main/java/com/esri/arcgisruntime/sample/surfaceplacement/MainActivity.kt"
     ],
     "title": "Surface placement"
 }

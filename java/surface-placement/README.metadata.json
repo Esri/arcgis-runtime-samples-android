@@ -30,7 +30,7 @@
         "Surface"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/surfaceplacement/MainActivity.java"
+        "rc/main/java/com/esri/arcgisruntime/sample/surfaceplacement/MainActivity.java"
     ],
     "title": "Surface placement"
 }
