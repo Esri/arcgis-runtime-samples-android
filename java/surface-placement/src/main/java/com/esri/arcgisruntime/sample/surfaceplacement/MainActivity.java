@@ -20,8 +20,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.SeekBar;
 import android.widget.ToggleButton;
-import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     Point sceneRelatedPoint = new Point(-4.4610562, 48.3902727, 70, camera.getLocation().getSpatialReference());
 
     // create point for the surface related graphics with z value of 70
-    Point surfaceRelatedPoint = new Point(-4.4609257, 48.3903965 , 70, camera.getLocation().getSpatialReference());
+    Point surfaceRelatedPoint = new Point(-4.4609257, 48.3903965, 70, camera.getLocation().getSpatialReference());
 
     // create a red triangle symbol
     SimpleMarkerSymbol triangleSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.TRIANGLE, Color.RED, 10);
@@ -128,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
     relativeToSceneOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.RELATIVE_TO_SCENE);
     relativeToSceneOverlay.getGraphics().add(new Graphic(sceneRelatedPoint, triangleSymbol));
     // create a text symbol for elevation mode
-    TextSymbol relativeToSceneText = new TextSymbol(15, "RELATIVE TO SCENE", Color.BLUE, HorizontalAlignment.RIGHT, VerticalAlignment.TOP);
+    TextSymbol relativeToSceneText = new TextSymbol(15, "RELATIVE TO SCENE", Color.BLUE, HorizontalAlignment.RIGHT,
+        VerticalAlignment.TOP);
     relativeToSceneText.setOffsetY(20);
     relativeToSceneOverlay.getGraphics().add(new Graphic(sceneRelatedPoint, relativeToSceneText));
     mSceneView.getGraphicsOverlays().add(relativeToSceneOverlay);
@@ -152,8 +153,12 @@ public class MainActivity extends AppCompatActivity {
           }
         }
       }
-      @Override public void onStartTrackingTouch(SeekBar seekBar) { }
-      @Override public void onStopTrackingTouch(SeekBar seekBar) { }
+
+      @Override public void onStartTrackingTouch(SeekBar seekBar) {
+      }
+
+      @Override public void onStopTrackingTouch(SeekBar seekBar) {
+      }
     });
   }
 

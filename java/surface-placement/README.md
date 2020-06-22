@@ -10,7 +10,7 @@ Depending on the use case, data might be displayed at an absolute height (e.g. f
 
 ## How to use the sample
 
-The application loads a scene showing four points that use the individual surface placement rules (Absolute, Relative, Relative to Scene, and either Draped Billboarded or Draped Flat). Use the control to toggle the draped mode, then explore the scene by zooming in/out and by panning around to observe the effects of the surface placement rules.
+The application loads a scene showing four points that use individual surface placement modes (Absolute, Relative, Relative to Scene, and either Draped Billboarded or Draped Flat). Use the toggle to change the draped mode and the slider to dynamically adjust the Z value of the graphics. Explore the scene by zooming in/out and by panning around to observe the effects of the surface placement rules.
 
 ## How it works
 
