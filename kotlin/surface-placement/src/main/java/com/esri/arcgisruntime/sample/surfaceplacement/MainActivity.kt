@@ -196,9 +196,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     // change the z-positions of the graphics when the seek bar changes
-    seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+    seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
       override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-        sceneView.graphicsOverlays.forEach {graphicsOverlay ->
+        sceneView.graphicsOverlays.forEach { graphicsOverlay ->
           graphicsOverlay.graphics.forEach { graphic ->
             // get the current point and change only its z position
             val oldPoint = graphic.geometry as Point
