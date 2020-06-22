@@ -38,9 +38,8 @@ class MainActivity : AppCompatActivity() {
     mapView.map = map
 
     // create a FAB to respond to attribution bar
-    fab.setOnClickListener { view ->
-      Snackbar.make(view, resources.getString(R.string.message), Snackbar.LENGTH_LONG)
-        .setAction("Action", null).show()
+    fab.setOnClickListener {
+      Toast.makeText(this@MainActivity, "Tap the attribution bar to expand it.", Toast.LENGTH_LONG).show()
     }
 
     // set attribution bar listener
