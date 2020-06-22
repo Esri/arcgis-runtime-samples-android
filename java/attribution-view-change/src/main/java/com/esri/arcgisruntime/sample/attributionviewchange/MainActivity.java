@@ -44,14 +44,13 @@ public class MainActivity extends AppCompatActivity {
 
     // create a FAB to respond to attribution bar
     FloatingActionButton mFab = findViewById(R.id.floatingActionButton);
-    mFab.setOnClickListener(v -> Snackbar.make(v, "Button responds to attribution bar", Snackbar.LENGTH_LONG)
-        .setAction("Action", null).show());
+    mFab.setOnClickListener(v -> Toast.makeText(this, "Tap the attribution bar to expand it.", Toast.LENGTH_LONG).show());
 
     // set attribution bar listener
     mMapView.addAttributionViewLayoutChangeListener(
         (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
           int heightDelta = oldBottom - bottom;
-          mFab.animate().translationYBy(heightDelta);
+          mFab.setY(mFab.getY() + heightDelta);
           Toast.makeText(MainActivity.this, "new bounds [" + left + ',' + top + ',' + right + ',' + bottom + ']' +
               " old bounds [" + oldLeft + ',' + oldTop + ',' + oldRight + ',' + oldBottom + ']', Toast.LENGTH_SHORT)
               .show();
