@@ -124,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
                 attachmentResults.addDoneListener(() -> {
                   try {
                     attachments = attachmentResults.get();
-                    Log.d("number of attachments :", attachments.size() + "");
                     // show callout with the value for the attribute "typdamage" of the selected feature
                     mSelectedArcGISFeatureAttributeValue = (String) mSelectedArcGISFeature.getAttributes().get("typdamage");
                     if (progressDialog.isShowing()) {
@@ -163,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
     TextView calloutContent = mCalloutLayout.findViewById(R.id.calloutTextView);
     calloutContent.setText(title);
 
-    TextView calloutAttachment = mCalloutLayout.findViewById(R.id.attchTV);
+    TextView calloutAttachment = mCalloutLayout.findViewById(R.id.attachTextView);
     String attachmentText = getString(R.string.attachment_info_message) + noOfAttachments;
     calloutAttachment.setText(attachmentText);
 
@@ -190,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create attachment text view for the callout
     TextView calloutAttachment = new TextView(getApplicationContext());
-    calloutAttachment.setId(R.id.attchTV);
+    calloutAttachment.setId(R.id.attachTextView);
     calloutAttachment.setTextColor(Color.BLACK);
     calloutAttachment.setTextSize(13);
     calloutContent.setPadding(0, 20, 20, 0);

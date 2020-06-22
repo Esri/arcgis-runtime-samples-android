@@ -55,8 +55,6 @@ public class EditAttachmentActivity extends AppCompatActivity {
 
   private static final int RESULT_LOAD_IMAGE = 1;
   private CustomList adapter;
-  private final int requestCodeFolder = 2;
-  private final int requestCodeGallery = 3;
   private List<Attachment> attachments;
   private ArcGISFeature mSelectedArcGISFeature;
   private ServiceFeatureTable mServiceFeatureTable;
@@ -65,7 +63,6 @@ public class EditAttachmentActivity extends AppCompatActivity {
   private ArrayList<String> attachmentList = new ArrayList<>();
   private ProgressDialog progressDialog;
   private AlertDialog.Builder builder;
-  private int listPosition;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -107,11 +104,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
     fetchAttachmentsFromServer(s);
 
     // listener on attachment items to download the attachment
-    listView.setOnItemClickListener((parent, view, position, id) -> {
-      listPosition = position;
-        fetchAttachmentAsync(position);
-
-    });
+    listView.setOnItemClickListener((parent, view, position, id) -> fetchAttachmentAsync(position));
 
     // set on long click listener to delete the attachment
     listView.setOnItemLongClickListener((parent, view, position, id) -> {
@@ -143,8 +136,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
         Drawable d = Drawable.createFromStream(fetchDataFuture.get(), fileName);
         // create a bitmap from drawable
         Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
-        File root = getExternalFilesDir(null);
-        File fileDir = new File(root.getAbsolutePath() + "/ArcGIS/Attachments");
+        File fileDir = new File(getExternalFilesDir(null) + "/ArcGIS/Attachments");
         // create folder /ArcGIS/Attachments in external storage
         boolean isDirectoryCreated = fileDir.exists();
         if (!isDirectoryCreated) {
@@ -192,14 +184,14 @@ public class EditAttachmentActivity extends AppCompatActivity {
     deleteResult.addDoneListener(() -> {
       ListenableFuture<Void> tableResult = mServiceFeatureTable.updateFeatureAsync(mSelectedArcGISFeature);
       // apply changes back to the server
-      tableResult.addDoneListener(() -> applyServerEdits());
+      tableResult.addDoneListener(this::applyServerEdits);
     });
   }
 
   /**
-   * Asynchronously fetch the attachments to view as a list
+   * Asynchronously fetch the given feature's attachments and show them a list view.
    *
-   * @param objectID
+   * @param objectID of the feature from which to fetch attachments
    */
   private void fetchAttachmentsFromServer(String objectID) {
     attachmentList = new ArrayList<>();
@@ -209,11 +201,12 @@ public class EditAttachmentActivity extends AppCompatActivity {
     query.setWhereClause("OBJECTID = " + objectID);
 
     // query the feature table
-    final ListenableFuture<FeatureQueryResult> future = mServiceFeatureTable.queryFeaturesAsync(query);
+    final ListenableFuture<FeatureQueryResult> featureQueryResultFuture = mServiceFeatureTable
+        .queryFeaturesAsync(query);
 
-    future.addDoneListener(() -> {
+    featureQueryResultFuture.addDoneListener(() -> {
       try {
-        FeatureQueryResult result = future.get();
+        FeatureQueryResult result = featureQueryResultFuture.get();
         Feature feature = result.iterator().next();
         mSelectedArcGISFeature = (ArcGISFeature) feature;
         // get the number of attachments
@@ -236,11 +229,15 @@ public class EditAttachmentActivity extends AppCompatActivity {
               });
             }
           } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            String error = "Error getting attachment: " + e.getMessage();
+            Log.e(TAG, error);
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
           }
         });
       } catch (Exception e) {
-        Log.e(TAG, e.toString());
+        String error = "Error getting feature query result: " + e.getMessage();
+        Log.e(TAG, error);
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
       }
     });
   }
@@ -263,37 +260,29 @@ public class EditAttachmentActivity extends AppCompatActivity {
 
     if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
       Uri selectedImage = data.getData();
-      // covert file to bytes to pass to ArcGISFeature
-      byte[] imageByte = null;
-      if (selectedImage != null) {
-        try (InputStream inputStream = getContentResolver().openInputStream(selectedImage)) {
-          try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
-            int n;
-            imageByte = new byte[16384];
-            while ((n = inputStream != null ? inputStream.read(imageByte, 0, imageByte.length) : 0) != -1) {
-              buffer.write(imageByte, 0, n);
-            }
-          }
-        } catch (IOException e) {
-          String error = "Error converting image to byte array: " + e.getMessage();
-          Log.e(TAG, error);
-          Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        }
+      try {
+        InputStream imageInputStream = getContentResolver().openInputStream(selectedImage);
 
-        final String attachmentName = getString(R.string.attachment) + "_" + System.currentTimeMillis() + ".png";
+        byte[] imageBytes = bytesFromInputStream(imageInputStream);
+
+        final String attachmentName = getString(R.string.attachment) + '_' + System.currentTimeMillis() + ".png";
 
         progressDialog.setTitle(getApplication().getString(R.string.apply_edit_message));
         progressDialog.setMessage(getApplication().getString(R.string.wait));
         progressDialog.show();
 
         ListenableFuture<Attachment> addResult = mSelectedArcGISFeature
-            .addAttachmentAsync(imageByte, "image/png", attachmentName);
+            .addAttachmentAsync(imageBytes, "image/png", attachmentName);
 
         addResult.addDoneListener(() -> {
-          final ListenableFuture<Void> tableResult = mServiceFeatureTable
-              .updateFeatureAsync(mSelectedArcGISFeature);
-          tableResult.addDoneListener(() -> applyServerEdits());
+          final ListenableFuture<Void> tableResult = mServiceFeatureTable.updateFeatureAsync(mSelectedArcGISFeature);
+          tableResult.addDoneListener(this::applyServerEdits);
         });
+
+      } catch (IOException e) {
+        String error = "Error converting image to byte array: " + e.getMessage();
+        Log.e(TAG, error);
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
       }
     }
   }
@@ -334,6 +323,25 @@ public class EditAttachmentActivity extends AppCompatActivity {
       String error = "Error applying edits to server: " + e.getMessage();
       Log.e(TAG, error);
       Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
+    }
+  }
+
+  /**
+   * Converts the given input stream into a byte array.
+   *
+   * @param inputStream from an image
+   * @return an array of bytes from the input stream
+   * @throws IOException if input stream can't be read
+   */
+  private static byte[] bytesFromInputStream(InputStream inputStream) throws IOException {
+    try (ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream()) {
+      int bufferSize = 1024;
+      byte[] buffer = new byte[bufferSize];
+      int len;
+      while ((len = inputStream.read(buffer)) != -1) {
+        byteBuffer.write(buffer, 0, len);
+      }
+      return byteBuffer.toByteArray();
     }
   }
 
