@@ -17,6 +17,7 @@ package com.esri.arcgisruntime.sample.surfaceplacement
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer
@@ -52,10 +53,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     // set an initial viewpoint
-    val initialViewPoint =
-      Point(-4.45968, 48.3889, 100.9922)
-    val camera =
-      Camera(initialViewPoint, 329.91, 80.0, 0.0)
+    val initialViewPoint = Point(-4.45968, 48.3889, 37.9922)
+    val camera = Camera(initialViewPoint, 329.91, 96.6632, 0.0)
 
     sceneView.apply {
       this.scene = scene
@@ -195,6 +194,21 @@ class MainActivity : AppCompatActivity() {
       drapedBillboardedOverlay.isVisible = drapedToggle.isChecked
       drapedFlatOverlay.isVisible = !drapedToggle.isChecked
     }
+
+    // change the z-positions of the graphics when the seek bar changes
+    seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+      override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+        sceneView.graphicsOverlays.forEach {graphicsOverlay ->
+          graphicsOverlay.graphics.forEach { graphic ->
+            // get the current point and change only its z position
+            val oldPoint = graphic.geometry as Point
+            graphic.geometry = Point(oldPoint.x, oldPoint.y, seekBar.progress.toDouble())
+          }
+        }
+      }
+      override fun onStartTrackingTouch(seekBar: SeekBar) {}
+      override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+    })
   }
 
   override fun onPause() {
