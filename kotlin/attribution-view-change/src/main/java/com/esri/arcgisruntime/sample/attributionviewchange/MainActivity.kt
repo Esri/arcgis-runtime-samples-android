@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     // set attribution bar listener
     mapView.addAttributionViewLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
       val heightDelta = oldBottom - bottom
-      fab.animate().translationYBy(heightDelta.toFloat())
+      fab.y += heightDelta
       Toast.makeText(
         this@MainActivity,
         "new bounds [$left,$top,$right,$bottom] old bounds [$oldLeft,$oldTop,$oldRight,$oldBottom]",
