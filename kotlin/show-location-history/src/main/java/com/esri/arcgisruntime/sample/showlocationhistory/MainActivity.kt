@@ -107,9 +107,8 @@ class MainActivity : AppCompatActivity() {
       // if the user has panned away from the location display, turn it on again
       if (mapView.locationDisplay.autoPanMode == LocationDisplay.AutoPanMode.OFF) {
         mapView.locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.RECENTER
-        // don't change the isTrackLocation status if the button is recentering
-        return@setOnClickListener
       }
+
       if (isTrackLocation) {
         isTrackLocation = false
         button.setImageResource(R.drawable.ic_my_location_white_24dp)
