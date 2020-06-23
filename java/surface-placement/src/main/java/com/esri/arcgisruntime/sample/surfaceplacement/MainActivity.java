@@ -19,16 +19,15 @@ package com.esri.arcgisruntime.sample.surfaceplacement;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -143,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
     // change the z-positions of the graphics when the seek bar changes
     SeekBar seekBar = findViewById(R.id.seekBar);
+    TextView seekBarValue = findViewById(R.id.seekBarValue);
     seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         for (GraphicsOverlay graphicsOverlay : mSceneView.getGraphicsOverlays()) {
@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
             graphic.setGeometry(new Point(oldPoint.getX(), oldPoint.getY(), (double) seekBar.getProgress()));
           }
         }
+        seekBarValue.setText(String.valueOf(seekBar.getProgress()));
       }
 
       @Override public void onStartTrackingTouch(SeekBar seekBar) {
