@@ -203,6 +203,9 @@ class MainActivity : AppCompatActivity() {
             graphic.geometry = Point(oldPoint.x, oldPoint.y, seekBar.progress.toDouble())
           }
         }
+
+        // update the progress text view
+        seekBarValue.text = seekBar.progress.toString()
       }
 
       override fun onStartTrackingTouch(seekBar: SeekBar) {}
