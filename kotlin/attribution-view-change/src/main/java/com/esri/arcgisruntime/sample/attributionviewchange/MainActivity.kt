@@ -38,15 +38,14 @@ class MainActivity : AppCompatActivity() {
     mapView.map = map
 
     // create a FAB to respond to attribution bar
-    fab.setOnClickListener { view ->
-      Snackbar.make(view, resources.getString(R.string.message), Snackbar.LENGTH_LONG)
-        .setAction("Action", null).show()
+    fab.setOnClickListener {
+      Toast.makeText(this@MainActivity, "Tap the attribution bar to expand it.", Toast.LENGTH_LONG).show()
     }
 
     // set attribution bar listener
     mapView.addAttributionViewLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
       val heightDelta = oldBottom - bottom
-      fab.animate().translationYBy(heightDelta.toFloat())
+      fab.y += heightDelta
       Toast.makeText(
         this@MainActivity,
         "new bounds [$left,$top,$right,$bottom] old bounds [$oldLeft,$oldTop,$oldRight,$oldBottom]",
