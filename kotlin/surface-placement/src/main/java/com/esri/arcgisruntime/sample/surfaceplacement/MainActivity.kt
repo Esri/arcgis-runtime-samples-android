@@ -39,9 +39,7 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // create a scene
-    val scene = ArcGISScene().apply {
-      // add a basemap to it
-      basemap = Basemap.createImagery()
+    val scene = ArcGISScene(Basemap.Type.IMAGERY).apply {
       // add base surface for elevation data
       baseSurface.elevationSources.add(
         ArcGISTiledElevationSource(getString(R.string.elevation_image_service))
