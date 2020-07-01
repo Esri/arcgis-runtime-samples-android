@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     drapedFlatOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.DRAPED_FLAT);
     drapedFlatOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, triangleSymbol));
     // create a text symbol for elevation mode
-    TextSymbol drapedFlatText = new TextSymbol(15, "DRAPED FLAT", Color.BLUE, HorizontalAlignment.LEFT,
+    TextSymbol drapedFlatText = new TextSymbol(15, "DRAPED FLAT", Color.MAGENTA, HorizontalAlignment.LEFT,
         VerticalAlignment.TOP);
     drapedFlatText.setOffsetY(20);
     drapedFlatOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, drapedFlatText));
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     drapedBillboardedOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.DRAPED_BILLBOARDED);
     drapedBillboardedOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, triangleSymbol));
     // create a text symbol for elevation mode
-    TextSymbol drapedBillboardedText = new TextSymbol(15, "DRAPED BILLBOARDED", Color.BLUE, HorizontalAlignment.LEFT,
+    TextSymbol drapedBillboardedText = new TextSymbol(15, "DRAPED BILLBOARDED", Color.MAGENTA, HorizontalAlignment.LEFT,
         VerticalAlignment.TOP);
     drapedBillboardedText.setOffsetY(20);
     drapedBillboardedOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, drapedBillboardedText));
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     relativeOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.RELATIVE);
     relativeOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, triangleSymbol));
     // create a text symbol for elevation mode
-    TextSymbol relativeText = new TextSymbol(15, "RELATIVE", Color.BLUE, HorizontalAlignment.LEFT,
+    TextSymbol relativeText = new TextSymbol(15, "RELATIVE", Color.MAGENTA, HorizontalAlignment.LEFT,
         VerticalAlignment.TOP);
     relativeText.setOffsetY(20);
     relativeOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, relativeText));
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     absoluteOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.ABSOLUTE);
     absoluteOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, triangleSymbol));
     // create a text symbol for elevation mode
-    TextSymbol absoluteText = new TextSymbol(15, "ABSOLUTE", Color.BLUE, HorizontalAlignment.LEFT,
+    TextSymbol absoluteText = new TextSymbol(15, "ABSOLUTE", Color.MAGENTA, HorizontalAlignment.LEFT,
         VerticalAlignment.TOP);
     absoluteText.setOffsetY(20);
     absoluteOverlay.getGraphics().add(new Graphic(surfaceRelatedPoint, absoluteText));
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     relativeToSceneOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.RELATIVE_TO_SCENE);
     relativeToSceneOverlay.getGraphics().add(new Graphic(sceneRelatedPoint, triangleSymbol));
     // create a text symbol for elevation mode
-    TextSymbol relativeToSceneText = new TextSymbol(15, "RELATIVE TO SCENE", Color.BLUE, HorizontalAlignment.RIGHT,
+    TextSymbol relativeToSceneText = new TextSymbol(15, "RELATIVE TO SCENE", Color.MAGENTA, HorizontalAlignment.RIGHT,
         VerticalAlignment.TOP);
     relativeToSceneText.setOffsetY(20);
     relativeToSceneOverlay.getGraphics().add(new Graphic(sceneRelatedPoint, relativeToSceneText));
