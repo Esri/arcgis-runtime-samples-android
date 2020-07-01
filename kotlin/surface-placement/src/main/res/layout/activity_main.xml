@@ -32,14 +32,15 @@
         android:id="@+id/seekBarGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:background="@color/colorPrimaryDark"
+        android:layout_marginBottom="32dp"
+        android:background="?attr/colorBackgroundFloating"
         android:orientation="horizontal"
         android:padding="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
 
         <TextView
             android:id="@+id/seekBarText"
@@ -48,8 +49,7 @@
             android:layout_weight="1"
             android:text="Z-value"
             android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textColor="@android:color/white" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
 
         <SeekBar
             android:id="@+id/seekBar"
@@ -66,8 +66,7 @@
             android:layout_weight="1"
             android:text="70"
             android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textColor="@android:color/white" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
     </LinearLayout>
 

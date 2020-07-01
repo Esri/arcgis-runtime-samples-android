@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
     // create a text symbol for elevation mode
     val drapedFlatText = TextSymbol(
-      15F, "DRAPED FLAT", Color.BLUE, TextSymbol.HorizontalAlignment.LEFT,
+      15F, "DRAPED FLAT", Color.MAGENTA, TextSymbol.HorizontalAlignment.LEFT,
       VerticalAlignment.TOP
     ).apply {
       offsetY = 20f
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 
     // create a text symbol for elevation mode
     val drapedBillboardedText = TextSymbol(
-      15F, "DRAPED BILLBOARDED", Color.BLUE, TextSymbol.HorizontalAlignment.LEFT,
+      15F, "DRAPED BILLBOARDED", Color.MAGENTA, TextSymbol.HorizontalAlignment.LEFT,
       VerticalAlignment.TOP
     ).apply {
       offsetY = 20f
@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
 
     // create a text symbol for elevation mode
     val relativeText = TextSymbol(
-      15f, "RELATIVE", Color.BLUE, TextSymbol.HorizontalAlignment.LEFT,
+      15f, "RELATIVE", Color.MAGENTA, TextSymbol.HorizontalAlignment.LEFT,
       VerticalAlignment.TOP
     ).apply {
       offsetY = 20f
@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
 
     // create a text symbol for elevation mode
     val absoluteText = TextSymbol(
-      15f, "ABSOLUTE", Color.BLUE, TextSymbol.HorizontalAlignment.LEFT,
+      15f, "ABSOLUTE", Color.MAGENTA, TextSymbol.HorizontalAlignment.LEFT,
       VerticalAlignment.TOP
     ).apply {
       offsetY = 20f
@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
     val relativeToSceneText = TextSymbol(
       15f,
       "RELATIVE TO SCENE",
-      Color.BLUE,
+      Color.MAGENTA,
       TextSymbol.HorizontalAlignment.RIGHT,
       VerticalAlignment.TOP
     ).apply {
