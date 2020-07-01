@@ -18,19 +18,11 @@
 package com.esri.arcgisruntime.sample.displaylayerviewstate
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
-import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer
-import com.esri.arcgisruntime.layers.ArcGISTiledLayer
-import com.esri.arcgisruntime.layers.FeatureLayer
-import com.esri.arcgisruntime.layers.Layer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
@@ -47,18 +39,17 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a map with the BasemapType topographic
-    val map = ArcGISMap(Basemap.createTopographic())
-    // set the map to be displayed in this view
-    mapView.map = map
-
-    // zoom to custom ViewPoint
-    mapView.setViewpoint(
-      Viewpoint(
-        Point(-11e6, 45e5, SpatialReferences.getWebMercator()),
-        40_000_000.0
+    mapView.apply {
+      // create a map with a topographic basemap
+      map = ArcGISMap(Basemap.createTopographic())
+      // zoom to custom viewpoint
+      setViewpoint(
+        Viewpoint(
+          Point(-11e6, 45e5, SpatialReferences.getWebMercator()),
+          40_000_000.0
+        )
       )
-    )
+    }
 
     mapView.addLayerViewStateChangedListener { layerViewStateChangedEvent ->
       // get the layer which changed its state
@@ -68,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
       val layerViewStatus = layerViewStateChangedEvent.layerViewStatus
 
-      populateViewStateStrings(layerViewStatus)
+      displayViewStateText(layerViewStatus)
     }
 
     button.setOnClickListener {
@@ -80,14 +71,24 @@ class MainActivity : AppCompatActivity() {
           maxScale = minScale / 10
         }
       // add the layer on the map to load it
-      map.operationalLayers.add(imageLayer)
-      button.isEnabled = false
-      button.visibility = View.GONE
+      mapView.map.operationalLayers.add(imageLayer)
+      // hide the button
+      button.apply {
+        isEnabled = false
+        visibility = View.GONE
+      }
+      // show the view state UI
       statesContainer.visibility = View.VISIBLE
     }
   }
 
-  private fun populateViewStateStrings(layerViewStatus: EnumSet<LayerViewStatus>) {
+  /**
+   * Formats and displays the layer view status flags in a textview.
+   *
+   * @param layerViewStatus to display
+   */
+  private fun displayViewStateText(layerViewStatus: EnumSet<LayerViewStatus>) {
+    // for each view state that's active, add it to a list and display the states as a comma-separated string
     val stringList = mutableListOf<String>()
     if (layerViewStatus.contains(LayerViewStatus.ACTIVE)) { stringList.add ( getString(R.string.activeStateTextViewString) ) }
     if (layerViewStatus.contains(LayerViewStatus.ERROR)) { stringList.add( getString(R.string.errorStateTextViewString) ) }
@@ -95,7 +96,21 @@ class MainActivity : AppCompatActivity() {
     if (layerViewStatus.contains(LayerViewStatus.NOT_VISIBLE)) { stringList.add( getString(R.string.notVisibleStateTextViewString) ) }
     if (layerViewStatus.contains(LayerViewStatus.OUT_OF_SCALE)) { stringList.add( getString(R.string.outOfScaleStateTextViewString) ) }
     if (layerViewStatus.contains(LayerViewStatus.WARNING)) { stringList.add( getString(R.string.warningStateTextViewString) ) }
-    
     activeStateTextView.text = stringList.joinToString(", ")
+  }
+
+  override fun onResume() {
+    super.onResume()
+    mapView.resume()
+  }
+
+  override fun onPause() {
+    mapView.pause()
+    super.onPause()
+  }
+
+  override fun onDestroy() {
+    mapView.dispose()
+    super.onDestroy()
   }
 }
