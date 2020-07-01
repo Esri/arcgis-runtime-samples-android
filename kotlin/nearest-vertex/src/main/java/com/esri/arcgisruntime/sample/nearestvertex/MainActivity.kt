@@ -73,10 +73,14 @@ class MainActivity : AppCompatActivity() {
 
     // create a graphics overlay to show the polygon, tapped location, and nearest vertex/coordinate
     val graphicsOverlay = GraphicsOverlay().apply {
-      // add the polygon graphic
-      graphics.add(polygonGraphic)
-      // add the tapped location, and nearest vertex/coordinate graphics
-      graphics.addAll(listOf(tappedLocationGraphic, nearestCoordinateGraphic, nearestVertexGraphic))
+      graphics.addAll(
+        listOf(
+          polygonGraphic,
+          tappedLocationGraphic,
+          nearestCoordinateGraphic,
+          nearestVertexGraphic
+        )
+      )
     }
 
     mapView.apply {
@@ -102,12 +106,13 @@ class MainActivity : AppCompatActivity() {
           // show where the user clicked
           tappedLocationGraphic.geometry = normalizedMapPoint
 
-          // use the geometry engine to get the nearest coordinate and vertex
-          val nearestCoordinateResult =
-            GeometryEngine.nearestCoordinate(polygon, normalizedMapPoint)
+          // use the geometry engine to get the nearest vertex
           val nearestVertexResult = GeometryEngine.nearestVertex(polygon, normalizedMapPoint)
           // set the nearest vertex graphic's geometry to the nearest vertex
           nearestVertexGraphic.geometry = nearestVertexResult.coordinate
+          // use the geometry engine to get the nearest coordinate
+          val nearestCoordinateResult =
+            GeometryEngine.nearestCoordinate(polygon, normalizedMapPoint)
           // set the nearest coordinate graphic's geometry to the nearest coordinate
           nearestCoordinateGraphic.geometry = nearestCoordinateResult.coordinate
 
