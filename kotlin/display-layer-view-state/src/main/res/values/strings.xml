@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Display layer view state</string>
-    <string name="activeStateTextViewString">Active: %1$s</string>
-    <string name="errorStateTextViewString">Error: %1$s</string>
-    <string name="loadingStateTextViewString">Loading: %1$s</string>
-    <string name="notVisibleStateTextViewString">Not visible: %1$s</string>
-    <string name="outOfScaleStateTextViewString">Out of scale: %1$s</string>
-    <string name="warningStateTextViewString">Warning: %1$s</string>
+    <string name="activeStateTextViewString">Active   </string>
+    <string name="errorStateTextViewString">Error   </string>
+    <string name="loadingStateTextViewString">Loading   </string>
+    <string name="notVisibleStateTextViewString">Not visible   </string>
+    <string name="outOfScaleStateTextViewString">Out of scale   </string>
+    <string name="warningStateTextViewString">Warning   </string>
 
 </resources>

@@ -83,15 +83,19 @@ class MainActivity : AppCompatActivity() {
       map.operationalLayers.add(imageLayer)
       button.isEnabled = false
       button.visibility = View.GONE
+      statesContainer.visibility = View.VISIBLE
     }
   }
 
   private fun populateViewStateStrings(layerViewStatus: EnumSet<LayerViewStatus>) {
-    activeStateTextView.text = getString(R.string.activeStateTextViewString, layerViewStatus.contains(LayerViewStatus.ACTIVE).toString())
-    errorStateTextView.text = getString(R.string.errorStateTextViewString, layerViewStatus.contains(LayerViewStatus.ERROR).toString())
-    loadingStateTextView.text = getString(R.string.loadingStateTextViewString, layerViewStatus.contains(LayerViewStatus.LOADING).toString())
-    notVisibleStateTextView.text = getString(R.string.notVisibleStateTextViewString, layerViewStatus.contains(LayerViewStatus.NOT_VISIBLE).toString())
-    outOfScaleStateTextView.text = getString(R.string.outOfScaleStateTextViewString, layerViewStatus.contains(LayerViewStatus.OUT_OF_SCALE).toString())
-    warningStateTextView.text = getString(R.string.warningStateTextViewString, layerViewStatus.contains(LayerViewStatus.WARNING).toString())
+    val stringList = mutableListOf<String>()
+    if (layerViewStatus.contains(LayerViewStatus.ACTIVE)) { stringList.add ( getString(R.string.activeStateTextViewString) ) }
+    if (layerViewStatus.contains(LayerViewStatus.ERROR)) { stringList.add( getString(R.string.errorStateTextViewString) ) }
+    if (layerViewStatus.contains(LayerViewStatus.LOADING)) { stringList.add( getString(R.string.loadingStateTextViewString) ) }
+    if (layerViewStatus.contains(LayerViewStatus.NOT_VISIBLE)) { stringList.add( getString(R.string.notVisibleStateTextViewString) ) }
+    if (layerViewStatus.contains(LayerViewStatus.OUT_OF_SCALE)) { stringList.add( getString(R.string.outOfScaleStateTextViewString) ) }
+    if (layerViewStatus.contains(LayerViewStatus.WARNING)) { stringList.add( getString(R.string.warningStateTextViewString) ) }
+    
+    activeStateTextView.text = stringList.joinToString(", ")
   }
 }
