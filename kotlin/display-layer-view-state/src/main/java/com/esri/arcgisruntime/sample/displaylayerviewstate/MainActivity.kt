@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
       if (featureLayer != null) {
         return@setOnClickListener
       }
+      // load a feature layer from a portal item
       val portalItem = PortalItem(
         Portal("https://runtime.maps.arcgis.com/"),
         "b8f4033069f141729ffb298b7418b653"
