@@ -1,6 +1,5 @@
 package com.esri.arcgisruntime.sample.featurelinkedannotation
 
-import android.content.DialogInterface
 import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
@@ -30,10 +29,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    mapView.map = ArcGISMap(Basemap.createLightGrayCanvas())
+    mapView.map = ArcGISMap(Basemap.Type.LIGHT_GRAY_CANVAS, 39.0204, -77.4159, 18)
 
 
-    val geodatabase = Geodatabase(getExternalFilesDir(null)?.path + "/anno_fla_loudoun.geodatabase")
+    val geodatabase = Geodatabase(getExternalFilesDir(null)?.path + "/loudoun_anno.geodatabase")
 
     var layerList: ArrayList<Layer> = ArrayList<Layer>()
 
@@ -41,32 +40,48 @@ class MainActivity : AppCompatActivity() {
     geodatabase.addDoneLoadingListener {
 
       val geodatabaseFeatureTables = geodatabase.geodatabaseFeatureTables
-      geodatabaseFeatureTables.forEach { featureTable ->
-        val featureLayer = FeatureLayer(featureTable)
-        layerList.add(featureLayer)
 
-      }
+      geodatabaseFeatureTables.forEach { it.loadAsync() }
 
-      layerList.reverse()
-      val geodatabaseAnnotationTables = geodatabase.geodatabaseAnnotationTables
-      geodatabaseAnnotationTables.forEach { annotationTable ->
-        val annotationLayer = AnnotationLayer(annotationTable)
-        layerList.add(annotationLayer)
+      geodatabaseFeatureTables[geodatabaseFeatureTables.size - 1].addDoneLoadingListener {
 
-      }
-
-      mapView.map.operationalLayers.addAll(layerList)
-
-      mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
-        override fun onSingleTapUp(e: MotionEvent): Boolean {
-
-          val screenPoint = Point(e.x.roundToInt(), e.y.roundToInt())
-          if (selectedFeature != null) {
-            moveFeature(screenPoint)
-          } else {
-            selectFeature(screenPoint)
+        geodatabaseFeatureTables.filter { it.geometryType == GeometryType.POLYGON }
+          .forEach { featureTable ->
+            layerList.add(FeatureLayer(featureTable))
           }
-          return true
+
+        layerList.reverse()
+
+        geodatabaseFeatureTables.filter { it.geometryType == GeometryType.POLYLINE }
+          .forEach { featureTable ->
+            layerList.add(FeatureLayer(featureTable))
+          }
+
+        geodatabaseFeatureTables.filter { it.geometryType == GeometryType.POINT }
+          .forEach { featureTable ->
+            layerList.add(FeatureLayer(featureTable))
+          }
+
+        val geodatabaseAnnotationTables = geodatabase.geodatabaseAnnotationTables
+        geodatabaseAnnotationTables.forEach { annotationTable ->
+          val annotationLayer = AnnotationLayer(annotationTable)
+          layerList.add(annotationLayer)
+
+        }
+
+        mapView.map.operationalLayers.addAll(layerList)
+
+        mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
+          override fun onSingleTapUp(e: MotionEvent): Boolean {
+
+            val screenPoint = Point(e.x.roundToInt(), e.y.roundToInt())
+            if (selectedFeature != null) {
+              moveFeature(screenPoint)
+            } else {
+              selectFeature(screenPoint)
+            }
+            return true
+          }
         }
       }
     }
@@ -96,7 +111,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     val editText = EditText(this)
     AlertDialog.Builder(this).apply {
       setTitle("Edit annotation attribute:")
@@ -106,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         selectedFeature.attributes["AD_ADDRESS"] = editText.text.toString().toInt()
         selectedFeature.featureTable?.updateFeatureAsync(selectedFeature)
       }
-      setNegativeButton("Cancel") { _ , _->
+      setNegativeButton("Cancel") { _, _ ->
 
       }
     }.show()
