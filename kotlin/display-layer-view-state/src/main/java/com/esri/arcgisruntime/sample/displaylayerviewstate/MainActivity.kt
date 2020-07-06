@@ -98,7 +98,8 @@ class MainActivity : AppCompatActivity() {
    * @param layerViewStatus to display
    */
   private fun displayViewStateText(layerViewStatus: EnumSet<LayerViewStatus>) {
-    // for each view state that's active, add it to a list and display the states as a comma-separated string
+    // for each view state property that's active,
+    // add it to a list and display the states as a comma-separated string
     val stringList = mutableListOf<String>()
     if (layerViewStatus.contains(LayerViewStatus.ACTIVE)) {
       stringList.add(getString(R.string.activeStateTextViewString))
