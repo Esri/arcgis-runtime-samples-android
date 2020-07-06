@@ -22,18 +22,20 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
-import com.esri.arcgisruntime.layers.ArcGISMapImageLayer
+import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.LayerViewStatus
+import com.esri.arcgisruntime.portal.Portal
+import com.esri.arcgisruntime.portal.PortalItem
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.EnumSet
 
 
 class MainActivity : AppCompatActivity() {
 
-  private var imageLayer: ArcGISMapImageLayer? = null
+  private var featureLayer: FeatureLayer? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -55,7 +57,9 @@ class MainActivity : AppCompatActivity() {
       // get the layer which changed its state
       val layer = layerViewStateChangedEvent.layer
       // we only want to check the view state of the image layer
-      if (layer != imageLayer) { return@addLayerViewStateChangedListener }
+      if (layer != featureLayer) {
+        return@addLayerViewStateChangedListener
+      }
 
       val layerViewStatus = layerViewStateChangedEvent.layerViewStatus
 
@@ -63,15 +67,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     button.setOnClickListener {
-      if (imageLayer != null) {return@setOnClickListener}
-      imageLayer =
-        ArcGISMapImageLayer("https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer").apply {
-          // setting the scales at which this layer can be viewed
-          minScale = 40_000_000.0
-          maxScale = minScale / 10
-        }
+      if (featureLayer != null) {
+        return@setOnClickListener
+      }
+      val portalItem = PortalItem(
+        Portal("https://runtime.maps.arcgis.com/"),
+        "b8f4033069f141729ffb298b7418b653"
+      )
+      featureLayer = FeatureLayer(portalItem, 0).apply {
+        // setting the scales at which this layer can be viewed
+        minScale = 400_000_000.0
+        maxScale = minScale / 10
+      }
       // add the layer on the map to load it
-      mapView.map.operationalLayers.add(imageLayer)
+      mapView.map.operationalLayers.add(featureLayer)
       // hide the button
       button.apply {
         isEnabled = false
@@ -90,12 +99,24 @@ class MainActivity : AppCompatActivity() {
   private fun displayViewStateText(layerViewStatus: EnumSet<LayerViewStatus>) {
     // for each view state that's active, add it to a list and display the states as a comma-separated string
     val stringList = mutableListOf<String>()
-    if (layerViewStatus.contains(LayerViewStatus.ACTIVE)) { stringList.add ( getString(R.string.activeStateTextViewString) ) }
-    if (layerViewStatus.contains(LayerViewStatus.ERROR)) { stringList.add( getString(R.string.errorStateTextViewString) ) }
-    if (layerViewStatus.contains(LayerViewStatus.LOADING)) { stringList.add( getString(R.string.loadingStateTextViewString) ) }
-    if (layerViewStatus.contains(LayerViewStatus.NOT_VISIBLE)) { stringList.add( getString(R.string.notVisibleStateTextViewString) ) }
-    if (layerViewStatus.contains(LayerViewStatus.OUT_OF_SCALE)) { stringList.add( getString(R.string.outOfScaleStateTextViewString) ) }
-    if (layerViewStatus.contains(LayerViewStatus.WARNING)) { stringList.add( getString(R.string.warningStateTextViewString) ) }
+    if (layerViewStatus.contains(LayerViewStatus.ACTIVE)) {
+      stringList.add(getString(R.string.activeStateTextViewString))
+    }
+    if (layerViewStatus.contains(LayerViewStatus.ERROR)) {
+      stringList.add(getString(R.string.errorStateTextViewString))
+    }
+    if (layerViewStatus.contains(LayerViewStatus.LOADING)) {
+      stringList.add(getString(R.string.loadingStateTextViewString))
+    }
+    if (layerViewStatus.contains(LayerViewStatus.NOT_VISIBLE)) {
+      stringList.add(getString(R.string.notVisibleStateTextViewString))
+    }
+    if (layerViewStatus.contains(LayerViewStatus.OUT_OF_SCALE)) {
+      stringList.add(getString(R.string.outOfScaleStateTextViewString))
+    }
+    if (layerViewStatus.contains(LayerViewStatus.WARNING)) {
+      stringList.add(getString(R.string.warningStateTextViewString))
+    }
     activeStateTextView.text = stringList.joinToString(", ")
   }
 
