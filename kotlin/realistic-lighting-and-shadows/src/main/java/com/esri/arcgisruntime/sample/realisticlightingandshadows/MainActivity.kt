@@ -19,13 +19,11 @@ package com.esri.arcgisruntime.sample.realisticlightingandshadows
 
 import android.app.Dialog
 import android.app.TimePickerDialog
-import android.icu.util.GregorianCalendar
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.transition.Scene
 import android.view.View
 import android.widget.TimePicker
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer
 import com.esri.arcgisruntime.mapping.ArcGISScene
@@ -40,46 +38,45 @@ import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
 
-  private val calendar = Calendar.getInstance()
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+    
+    val calendar = Calendar.getInstance()
 
-    val scene = ArcGISScene().apply{
-      basemap = Basemap.createTopographic()
+    sceneView.apply {
+      setViewpointCamera(Camera(48.37, -4.50, 1000.0, 10.0, 70.0, 0.0))
+      atmosphereEffect = AtmosphereEffect.REALISTIC
+      sunTime = calendar
+      sunLighting = LightingMode.LIGHT_AND_SHADOWS
     }
-    sceneView.scene = scene
+    sceneView.scene = ArcGISScene().apply {
+      basemap = Basemap.createTopographic()
+      baseSurface = Surface().apply {
+        elevationSources.add(ArcGISTiledElevationSource("http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"))
+      }
+      operationalLayers.add(ArcGISSceneLayer("http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0"))
+    }
 
-    val surface = Surface()
-    val elevationSurface = ArcGISTiledElevationSource("http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer")
-    surface.elevationSources.add(elevationSurface)
-    sceneView.scene.baseSurface = surface
-
-    val sceneLayer = ArcGISSceneLayer("http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0")
-    scene.operationalLayers.add(sceneLayer)
-
-    val camera = Camera(48.37, -4.50, 1000.0, 10.0, 70.0, 0.0)
-    sceneView.setViewpointCamera(camera)
-
-    sceneView.atmosphereEffect = AtmosphereEffect.REALISTIC
-
-    sceneView.sunTime = calendar
-    sceneView.sunLighting = LightingMode.LIGHT_AND_SHADOWS
-
-    dateTextView.text = calendar.time.toString().substring(0,16)
+    dateTextView.text = calendar.time.toString().substring(0, 16)
   }
 
   fun showTimePickerDialog(v: View) {
     val updateSunPositionCallback = { calendar: Calendar ->
-      dateTextView.text = calendar.time.toString().substring(0,16)
-    sceneView.sunTime = calendar
+      dateTextView.text = calendar.time.toString().substring(0, 16)
+      sceneView.sunTime = calendar
     }
-    TimePickerFragment(calendar, updateSunPositionCallback).show(supportFragmentManager, "timePicker")
+    TimePickerFragment(Calendar.getInstance(), updateSunPositionCallback).show(
+      supportFragmentManager,
+      "timePicker"
+    )
   }
 }
 
-class TimePickerFragment(private val calendar: Calendar, val callback: (Calendar)->Unit) : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+class TimePickerFragment(
+  private val calendar: Calendar,
+  val updateSunPositionCallback: (Calendar) -> Unit
+) : DialogFragment(), TimePickerDialog.OnTimeSetListener {
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     // Use the current time as the default values for the picker
@@ -91,10 +88,14 @@ class TimePickerFragment(private val calendar: Calendar, val callback: (Calendar
   }
 
   override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
-    // Do something with the time chosen by the user
-    calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), hourOfDay, minute)
-    callback(calendar)
-//    dateTextView.text =
+    calendar.set(
+      calendar.get(Calendar.YEAR),
+      calendar.get(Calendar.MONTH),
+      calendar.get(Calendar.DATE),
+      hourOfDay,
+      minute
+    )
+    updateSunPositionCallback(calendar)
   }
 }
 
