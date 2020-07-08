@@ -42,18 +42,21 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // get the current calendar and set its time to midday
     val calendar = Calendar.getInstance()
     calendar.apply {
       set(Calendar.HOUR_OF_DAY, 12)
       set(Calendar.MINUTE, 0)
     }
 
+    // initialize the scene with a realistic atmosphere and light and shadows activated
     sceneView.apply {
       setViewpointCamera(Camera(48.37, -4.50, 1000.0, 10.0, 70.0, 0.0))
       atmosphereEffect = AtmosphereEffect.REALISTIC
       sunTime = calendar
       sunLighting = LightingMode.LIGHT_AND_SHADOWS
     }
+    // create a scene with a topographic basemap, a world elevation source, and a buildings layer from Brest, France
     sceneView.scene = ArcGISScene().apply {
       basemap = Basemap.createTopographic()
       baseSurface = Surface().apply {
@@ -61,18 +64,22 @@ class MainActivity : AppCompatActivity() {
       }
       operationalLayers.add(ArcGISSceneLayer("http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0"))
     }
-
+    // display the full date and time in a text view
     dateTextView.text = calendar.time.toString().substring(0, 16)
 
+    // change the time of day with the seekbar
     seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
       override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        // slider progress represents minutes in the day (0-1439)
         val hours = floor((progress / 60.0)).toInt()
         val minutes = progress % 60
         calendar.apply {
           set(Calendar.HOUR_OF_DAY, hours)
           set(Calendar.MINUTE, minutes)
         }
+        // display the full date and time in a text view
         dateTextView.text = calendar.time.toString().substring(0, 16)
+        // set the sun time on the scene to the modified calendar
         sceneView.sunTime = calendar
       }
 
@@ -102,6 +109,7 @@ class MainActivity : AppCompatActivity() {
           else -> LightingMode.LIGHT_AND_SHADOWS
         }
       }
+
       override fun onNothingSelected(parent: AdapterView<*>?) {}
       override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {}
     }
