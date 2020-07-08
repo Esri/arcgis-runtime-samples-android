@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,37 +9,100 @@
     <com.esri.arcgisruntime.mapping.view.SceneView
         android:id="@+id/sceneView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/dateTextView"
-        android:layout_width="wrap_content"
+    <com.google.android.material.circularreveal.CircularRevealFrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="07/07/07 20:20:20"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+        android:visibility="invisible"
+        app:layout_behavior="com.google.android.material.transformation.FabTransformationSheetBehavior"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="32dp">
 
-<!--    <SeekBar-->
-<!--        android:id="@+id/seekBar"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        android:layout_margin="32dp"-->
-<!--        android:backgroundTint="@android:color/background_light"/>-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/seekBarContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/background_light"
+            android:padding="8dp">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Pick time"
-        android:onClick="showTimePickerDialog"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="32dp"/>
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:max="1439"
+                android:progress="720"
+                app:layout_constraintBottom_toTopOf="@id/dateTextView"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/dateTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="07/07/07 20:20:20"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/middayText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Midday"
+                app:layout_constraintBottom_toTopOf="@id/seekBar"
+                app:layout_constraintEnd_toEndOf="@id/seekBar"
+                app:layout_constraintStart_toStartOf="@id/seekBar" />
+
+            <TextView
+                android:id="@+id/sixAMText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="4:30 am"
+                app:layout_constraintBottom_toTopOf="@id/seekBar"
+                app:layout_constraintEnd_toStartOf="@id/middayText"
+                app:layout_constraintStart_toStartOf="@id/seekBar" />
+
+            <TextView
+                android:id="@+id/sixPMText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="4:30 pm"
+                app:layout_constraintBottom_toTopOf="@id/seekBar"
+                app:layout_constraintEnd_toEndOf="@id/seekBar"
+                app:layout_constraintStart_toEndOf="@id/middayText" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/middayText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="8dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.circularreveal.CircularRevealFrameLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    android:id="@+id/fab"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|end"
+    android:layout_margin="16dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:tint="@android:color/white"
+    app:backgroundTint="@color/colorPrimary"
+    app:borderWidth="0dp"
+    app:elevation="16dp"
+    app:srcCompat="@drawable/ic_wb_sunny_black_24dp" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

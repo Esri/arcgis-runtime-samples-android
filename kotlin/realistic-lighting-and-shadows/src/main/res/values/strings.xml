@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Realistic lighting and shadows</string>
+    <string-array name="lighting_modes">
+        <item>No sun</item>
+        <item>Sun only</item>
+        <item>Sun and shadows</item>
+    </string-array>
 </resources>
