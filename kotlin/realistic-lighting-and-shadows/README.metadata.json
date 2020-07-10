@@ -1,5 +1,5 @@
 {
-    "category": "MapViews, SceneViews and UI",
+    "category": "Visualization",
     "description": "Show realistic lighting and shadows for a given time of day.",
     "formal_name": "RealisticLightingAndShadows",
     "ignore": false,
