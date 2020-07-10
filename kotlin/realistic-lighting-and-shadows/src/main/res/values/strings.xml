@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">Realistic lighting and shadows</string>
+    <string name="_4_30">4:30</string>
+    <string name="_16_30">16:30</string>
     <string-array name="lighting_modes">
-        <item>No sun</item>
-        <item>Sun only</item>
-        <item>Sun and shadows</item>
+        <item>No light</item>
+        <item>Light only</item>
+        <item>Light and shadows</item>
     </string-array>
 </resources>

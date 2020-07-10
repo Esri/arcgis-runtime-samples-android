@@ -49,12 +49,11 @@ class MainActivity : AppCompatActivity() {
       set(Calendar.MINUTE, 0)
     }
 
-    // initialize the scene with a realistic atmosphere and light and shadows activated
+    // initialize the scene with a realistic atmosphere and a set its time to the calendar
     sceneView.apply {
       setViewpointCamera(Camera(48.37, -4.50, 1000.0, 10.0, 70.0, 0.0))
       atmosphereEffect = AtmosphereEffect.REALISTIC
       sunTime = calendar
-      sunLighting = LightingMode.LIGHT_AND_SHADOWS
     }
     // create a scene with a topographic basemap, a world elevation source, and a buildings layer from Brest, France
     sceneView.scene = ArcGISScene().apply {
@@ -103,9 +102,9 @@ class MainActivity : AppCompatActivity() {
       override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         val mode = parent.getItemAtPosition(position) as String
         sceneView.sunLighting = when (mode) {
-          "No sun" -> LightingMode.NO_LIGHT
-          "Sun only" -> LightingMode.LIGHT
-          "Sun and shadows" -> LightingMode.LIGHT_AND_SHADOWS
+          "No light" -> LightingMode.NO_LIGHT
+          "Light only" -> LightingMode.LIGHT
+          "Light and shadows" -> LightingMode.LIGHT_AND_SHADOWS
           else -> LightingMode.LIGHT_AND_SHADOWS
         }
       }
@@ -113,6 +112,9 @@ class MainActivity : AppCompatActivity() {
       override fun onNothingSelected(parent: AdapterView<*>?) {}
       override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {}
     }
+
+    // select "light and shadows" option by default
+    spinner.setSelection(2)
 
     sceneView.apply {
       // make sure the fab doesn't obscure the attribution bar
