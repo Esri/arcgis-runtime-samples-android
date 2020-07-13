@@ -18,6 +18,8 @@
 package com.esri.arcgisruntime.sample.realisticlightingandshadows
 
 import android.os.Bundle
+import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -31,9 +33,11 @@ import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Surface
 import com.esri.arcgisruntime.mapping.view.AtmosphereEffect
 import com.esri.arcgisruntime.mapping.view.Camera
+import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.LightingMode
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.Calendar
+import java.util.TimeZone
 import kotlin.math.floor
 
 class MainActivity : AppCompatActivity() {
@@ -47,21 +51,25 @@ class MainActivity : AppCompatActivity() {
     calendar.apply {
       set(Calendar.HOUR_OF_DAY, 12)
       set(Calendar.MINUTE, 0)
+      timeZone = TimeZone.getTimeZone("America/Los_Angeles")
+    }
+
+    val buildingsLayer = ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_BuildingShells/SceneServer")
+
+    // create a scene with a topographic basemap, a world elevation source, and a buildings layer from Brest, France
+    sceneView.scene = ArcGISScene().apply {
+      basemap = Basemap.createImagery()
+      baseSurface = Surface().apply {
+        elevationSources.add(ArcGISTiledElevationSource("http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"))
+      }
+      operationalLayers.add(buildingsLayer)
     }
 
     // initialize the scene with a realistic atmosphere and a set its time to the calendar
     sceneView.apply {
-      setViewpointCamera(Camera(48.37, -4.50, 1000.0, 10.0, 70.0, 0.0))
+      setViewpointCamera(Camera( 45.54605153789073,-122.69033380511073, 941.0002111233771, 162.58544227544266, 60.0, 0.0))
       atmosphereEffect = AtmosphereEffect.REALISTIC
       sunTime = calendar
-    }
-    // create a scene with a topographic basemap, a world elevation source, and a buildings layer from Brest, France
-    sceneView.scene = ArcGISScene().apply {
-      basemap = Basemap.createTopographic()
-      baseSurface = Surface().apply {
-        elevationSources.add(ArcGISTiledElevationSource("http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"))
-      }
-      operationalLayers.add(ArcGISSceneLayer("http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0"))
     }
     // display the full date and time in a text view
     dateTextView.text = calendar.time.toString().substring(0, 16)
@@ -123,12 +131,14 @@ class MainActivity : AppCompatActivity() {
         layoutParams.bottomMargin += bottom - oldBottom
       }
       // close the options when the scene is tapped
-      setOnTouchListener { _, _ ->
-        if (fab.isExpanded) {
-          fab.isExpanded = false
+      setOnTouchListener(object: DefaultSceneViewOnTouchListener(sceneView) {
+        override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
+          if (fab.isExpanded) {
+            fab.isExpanded = false
+          }
+          return super.onTouch(view, motionEvent)
         }
-        true
-      }
+      })
     }
     // open and close the options with the fab
     fab.setOnClickListener { fab.isExpanded = !fab.isExpanded }
