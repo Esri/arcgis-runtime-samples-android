@@ -17,6 +17,7 @@
 
 package com.esri.arcgisruntime.sample.realisticlightingandshadows
 
+import android.icu.text.TimeZoneFormat
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -36,7 +37,10 @@ import com.esri.arcgisruntime.mapping.view.Camera
 import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.LightingMode
 import kotlinx.android.synthetic.main.activity_main.*
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import java.util.TimeZone
 import kotlin.math.floor
 
@@ -49,12 +53,12 @@ class MainActivity : AppCompatActivity() {
     // get the current calendar and set its time to midday
     val calendar = Calendar.getInstance()
     calendar.apply {
+      timeZone = TimeZone.getTimeZone("America/Los_Angeles")
       set(Calendar.HOUR_OF_DAY, 12)
       set(Calendar.MINUTE, 0)
-      timeZone = TimeZone.getTimeZone("America/Los_Angeles")
     }
 
-    val buildingsLayer = ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_BuildingShells/SceneServer")
+    val buildingsLayer = ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevB_BuildingShells/SceneServer")
 
     // create a scene with a topographic basemap, a world elevation source, and a buildings layer from Brest, France
     sceneView.scene = ArcGISScene().apply {
@@ -71,8 +75,10 @@ class MainActivity : AppCompatActivity() {
       atmosphereEffect = AtmosphereEffect.REALISTIC
       sunTime = calendar
     }
+
+    val dateFormat = SimpleDateFormat("HH:mm EEE, dd MMM yyyy").toString()
     // display the full date and time in a text view
-    dateTextView.text = calendar.time.toString().substring(0, 16)
+    dateTextView.text = calendar.time.toString()
 
     // change the time of day with the seekbar
     seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -84,8 +90,8 @@ class MainActivity : AppCompatActivity() {
           set(Calendar.HOUR_OF_DAY, hours)
           set(Calendar.MINUTE, minutes)
         }
-        // display the full date and time in a text view
-        dateTextView.text = calendar.time.toString().substring(0, 16)
+        // display the full date and time in a text view()
+        dateTextView.text = calendar.time.toString()
         // set the sun time on the scene to the modified calendar
         sceneView.sunTime = calendar
       }
