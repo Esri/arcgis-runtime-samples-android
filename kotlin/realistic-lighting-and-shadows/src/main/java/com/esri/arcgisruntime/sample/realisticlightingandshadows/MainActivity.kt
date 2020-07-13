@@ -76,9 +76,11 @@ class MainActivity : AppCompatActivity() {
       sunTime = calendar
     }
 
-    val dateFormat = SimpleDateFormat("HH:mm EEE, dd MMM yyyy").toString()
+    val dateFormat = SimpleDateFormat("HH:mm EEE, dd MMM yyyy").apply {
+      timeZone = TimeZone.getTimeZone("America/Los_Angeles")
+    }
     // display the full date and time in a text view
-    dateTextView.text = calendar.time.toString()
+    dateTextView.text = dateFormat.format(calendar.time)
 
     // change the time of day with the seekbar
     seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -91,7 +93,7 @@ class MainActivity : AppCompatActivity() {
           set(Calendar.MINUTE, minutes)
         }
         // display the full date and time in a text view()
-        dateTextView.text = calendar.time.toString()
+        dateTextView.text = dateFormat.format(calendar.time)
         // set the sun time on the scene to the modified calendar
         sceneView.sunTime = calendar
       }
