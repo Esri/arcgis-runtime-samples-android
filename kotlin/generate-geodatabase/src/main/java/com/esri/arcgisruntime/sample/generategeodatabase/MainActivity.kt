@@ -25,14 +25,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.data.Geodatabase
+import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.data.TileCache
+import com.esri.arcgisruntime.layers.AnnotationLayer
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseJob
 import com.esri.arcgisruntime.tasks.geodatabase.GeodatabaseSyncTask
@@ -47,25 +51,32 @@ class MainActivity : AppCompatActivity() {
   private val localGeodatabasePath: String by lazy { externalCacheDir?.path + getString(R.string.wildfire_geodatabase) }
 
   // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-  private val geodatabaseSyncTask: GeodatabaseSyncTask by lazy { GeodatabaseSyncTask(getString(R.string.wildfire_sync)) }
+  private val geodatabaseSyncTask: GeodatabaseSyncTask by lazy { GeodatabaseSyncTask("https://rt-server1081.esri.com/server/rest/services/Loudoun_Sample_2/FeatureServer") }
   private lateinit var geodatabase: Geodatabase
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    // use local tile package for the base map
-    val sanFrancisco =
-      TileCache(getExternalFilesDir(null).toString() + getString(R.string.san_francisco_tpk))
-    val tiledLayer = ArcGISTiledLayer(sanFrancisco)
+
+    AuthenticationManager.setTrustAllSigners(true)
 
     // add the map and graphics overlay to the map view
     mapView.apply {
       // create a map with the tile package basemap
-      map = ArcGISMap(Basemap(tiledLayer))
+      map = ArcGISMap(Basemap.createOpenStreetMap())
       // create a graphics overlay to display the boundaries
       graphicsOverlays.add(GraphicsOverlay())
     }
+
+
+    mapView.map.operationalLayers.add(AnnotationLayer(ServiceFeatureTable("https://rt-server1081.esri.com/server/rest/services/Loudoun_Sample_2/FeatureServer/0")))
+    mapView.map.operationalLayers.get(0).addDoneLoadingListener {
+      mapView.setViewpoint(Viewpoint(mapView.map.operationalLayers[0].fullExtent))
+    }
+
   }
+
+
 
   /**
    * Creates a GenerateGeodatabaseJob and runs it.
@@ -93,7 +104,7 @@ class MainActivity : AppCompatActivity() {
       // create parameters for the job with the return attachments option set to false
       val parameters = geodatabaseSyncTask
         .createDefaultGenerateGeodatabaseParametersAsync(mapView.visibleArea.extent).get()
-        .apply { isReturnAttachments = false }
+        .apply { isReturnAttachments = true }
 
       // create the generate geodatabase job
       val generateGeodatabaseJob =

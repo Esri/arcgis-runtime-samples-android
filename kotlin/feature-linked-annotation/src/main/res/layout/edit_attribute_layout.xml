@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/addressNumberTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Address number:"
+        app:layout_constraintBottom_toBottomOf="@+id/addressNumberEditText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/addressNumberEditText" />
+
+    <EditText
+        android:id="@+id/addressNumberEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="blab"
+        app:layout_constraintStart_toEndOf="@+id/addressNumberTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/streetEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="stree"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/addressNumberEditText"
+        app:layout_constraintTop_toBottomOf="@+id/addressNumberEditText" />
+
+    <TextView
+        android:id="@+id/streetTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Street:"
+        app:layout_constraintBottom_toBottomOf="@+id/streetEditText"
+        app:layout_constraintEnd_toStartOf="@+id/streetEditText"
+        app:layout_constraintTop_toTopOf="@+id/streetEditText" />
+</androidx.constraintlayout.widget.ConstraintLayout>
