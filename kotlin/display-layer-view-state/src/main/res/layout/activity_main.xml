@@ -15,12 +15,12 @@
         android:id="@+id/statesContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="32dp"
+        android:layout_margin="16dp"
         android:padding="8dp"
         android:background="@color/colorPrimaryDark"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/hideButton"
         android:visibility="gone">
 
         <TextView
@@ -53,6 +53,7 @@
         android:layout_margin="24dp"
         android:text="Load layer"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatButton
@@ -61,7 +62,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
         android:text="Hide layer"
-        app:layout_constraintBottom_toTopOf="@id/loadButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="gone"/>
 

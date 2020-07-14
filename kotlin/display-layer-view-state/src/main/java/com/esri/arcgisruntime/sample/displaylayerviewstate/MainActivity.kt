@@ -63,7 +63,8 @@ class MainActivity : AppCompatActivity() {
       }
 
       val layerViewStatus = layerViewStateChangedEvent.layerViewStatus
-      layerViewStateChangedEvent.error?.message?.let {errorMessage->
+      // if there is an error or warning, display it in a toast
+      layerViewStateChangedEvent.error?.message?.let { errorMessage ->
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
       }
 
