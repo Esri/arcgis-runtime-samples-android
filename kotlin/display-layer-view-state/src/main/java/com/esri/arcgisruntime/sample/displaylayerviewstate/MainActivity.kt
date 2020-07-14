@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.sample.displaylayerviewstate
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
@@ -62,11 +63,14 @@ class MainActivity : AppCompatActivity() {
       }
 
       val layerViewStatus = layerViewStateChangedEvent.layerViewStatus
+      layerViewStateChangedEvent.error?.message?.let {errorMessage->
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+      }
 
       displayViewStateText(layerViewStatus)
     }
 
-    button.setOnClickListener {
+    loadButton.setOnClickListener {
       if (featureLayer != null) {
         return@setOnClickListener
       }
@@ -83,12 +87,26 @@ class MainActivity : AppCompatActivity() {
       // add the layer on the map to load it
       mapView.map.operationalLayers.add(featureLayer)
       // hide the button
-      button.apply {
+      loadButton.apply {
         isEnabled = false
         visibility = View.GONE
       }
-      // show the view state UI
+      // show the view state UI and the hide layer button
       statesContainer.visibility = View.VISIBLE
+      hideButton.visibility = View.VISIBLE
+    }
+
+    hideButton.setOnClickListener {
+      featureLayer?.apply {
+        if (isVisible) {
+          hideButton.text = "Show layer"
+          isVisible = false
+        }
+        else {
+          hideButton.text = "Hide layer"
+          isVisible = true
+        }
+      }
     }
   }
 
