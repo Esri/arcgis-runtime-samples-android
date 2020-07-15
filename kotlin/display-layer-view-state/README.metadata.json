@@ -1,0 +1,28 @@
+{
+    "category": "MapViews, SceneViews and UI",
+    "description": "Determine if a layer is currently being viewed.",
+    "formal_name": "DisplayLayerViewState",
+    "ignore": false,
+    "images": [
+        "display-layer-view-state.png"
+    ],
+    "keywords": [
+        "layer",
+        "load",
+        "map",
+        "status",
+        "view",
+        "visibility"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "ArcGISMap",
+        "LayerViewStateChangedEvent",
+        "LayerViewStateChangedListener",
+        "MapView"
+    ],
+    "snippets": [
+        "rc/main/java/com/esri/arcgisruntime/sample/displaylayerviewstate/MainActivity.kt"
+    ],
+    "title": "Display layer view state"
+}
