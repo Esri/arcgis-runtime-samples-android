@@ -102,8 +102,13 @@ class MainActivity : AppCompatActivity() {
       initialZoomScale = 7000.0
     }
 
-    // change the isTrackLocation flag and the button's icon
+    // reset location display and change the isTrackLocation flag and the button's icon
     button.setOnClickListener {
+      // if the user has panned away from the location display, turn it on again
+      if (mapView.locationDisplay.autoPanMode == LocationDisplay.AutoPanMode.OFF) {
+        mapView.locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.RECENTER
+      }
+
       if (isTrackLocation) {
         isTrackLocation = false
         button.setImageResource(R.drawable.ic_my_location_white_24dp)

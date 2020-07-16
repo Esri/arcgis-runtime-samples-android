@@ -26,7 +26,7 @@
         </activity>
         <activity
             android:name=".EditAttachmentActivity"
-            android:label="@string/edit_attachments"></activity>
+            android:label="@string/edit_attachments" />
     </application>
 
 </manifest>
