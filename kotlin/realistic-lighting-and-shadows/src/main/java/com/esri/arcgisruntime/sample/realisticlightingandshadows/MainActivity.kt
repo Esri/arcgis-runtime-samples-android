@@ -17,9 +17,7 @@
 
 package com.esri.arcgisruntime.sample.realisticlightingandshadows
 
-import android.icu.text.TimeZoneFormat
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
@@ -39,8 +37,6 @@ import com.esri.arcgisruntime.mapping.view.LightingMode
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 import java.util.TimeZone
 import kotlin.math.floor
 
@@ -53,14 +49,16 @@ class MainActivity : AppCompatActivity() {
     // get the current calendar and set its time to midday
     val calendar = Calendar.getInstance()
     calendar.apply {
+      // set the time zone to the US West Coast, where this data is based
       timeZone = TimeZone.getTimeZone("America/Los_Angeles")
       set(Calendar.HOUR_OF_DAY, 12)
       set(Calendar.MINUTE, 0)
     }
 
-    val buildingsLayer = ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevB_BuildingShells/SceneServer")
+    val buildingsLayer =
+      ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevB_BuildingShells/SceneServer")
 
-    // create a scene with a topographic basemap, a world elevation source, and a buildings layer from Brest, France
+    // create a scene with a topographic basemap, a world elevation source, and a layer showing planned development in Portland, Oregon
     sceneView.scene = ArcGISScene().apply {
       basemap = Basemap.createImagery()
       baseSurface = Surface().apply {
@@ -71,7 +69,16 @@ class MainActivity : AppCompatActivity() {
 
     // initialize the scene with a realistic atmosphere and a set its time to the calendar
     sceneView.apply {
-      setViewpointCamera(Camera( 45.54605153789073,-122.69033380511073, 941.0002111233771, 162.58544227544266, 60.0, 0.0))
+      setViewpointCamera(
+        Camera(
+          45.54605,
+          -122.69033,
+          941.00021,
+          162.58544,
+          60.0,
+          0.0
+        )
+      )
       atmosphereEffect = AtmosphereEffect.REALISTIC
       sunTime = calendar
     }
@@ -139,7 +146,7 @@ class MainActivity : AppCompatActivity() {
         layoutParams.bottomMargin += bottom - oldBottom
       }
       // close the options when the scene is tapped
-      setOnTouchListener(object: DefaultSceneViewOnTouchListener(sceneView) {
+      setOnTouchListener(object : DefaultSceneViewOnTouchListener(sceneView) {
         override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
           if (fab.isExpanded) {
             fab.isExpanded = false

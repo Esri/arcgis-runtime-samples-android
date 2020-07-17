@@ -2,6 +2,7 @@
     <string name="app_name">Realistic lighting and shadows</string>
     <string name="_4_30">4:30</string>
     <string name="_16_30">16:30</string>
+    <string name="midday">Midday</string>
     <string-array name="lighting_modes">
         <item>No light</item>
         <item>Light only</item>

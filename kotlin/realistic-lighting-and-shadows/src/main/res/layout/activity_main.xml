@@ -40,7 +40,6 @@
                 android:id="@+id/dateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="07/07/07 20:20:20"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -52,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="Midday"
+                android:text="@string/midday"
                 app:layout_constraintBottom_toTopOf="@id/seekBar"
                 app:layout_constraintEnd_toEndOf="@id/seekBar"
                 app:layout_constraintStart_toStartOf="@id/seekBar" />
@@ -102,6 +101,5 @@
         app:borderWidth="0dp"
         app:elevation="16dp"
         app:srcCompat="@drawable/ic_wb_sunny_black_24dp" />
-
-
+    
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
