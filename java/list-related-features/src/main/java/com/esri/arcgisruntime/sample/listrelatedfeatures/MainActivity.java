@@ -21,11 +21,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -34,22 +33,23 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
 import com.esri.arcgisruntime.data.ArcGISFeatureTable;
 import com.esri.arcgisruntime.data.Feature;
-import com.esri.arcgisruntime.data.FeatureQueryResult;
-import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.RelatedFeatureQueryResult;
-import com.esri.arcgisruntime.geometry.Envelope;
-import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.LayerList;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
+import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
   private BottomSheetBehavior mBottomSheetBehavior = null;
   private ArrayAdapter<String> mArrayAdapter;
 
-  @Override
+  @SuppressLint("ClickableViewAccessibility") @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -105,24 +105,13 @@ public class MainActivity extends AppCompatActivity {
         // hide the bottomsheet
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         // get the point that was clicked and convert it to a point in mArcGISMap coordinates
-        Point clickPoint = mMapView.screenToLocation(new android.graphics.Point(
+        Point clickPoint = new Point(
             Math.round(e.getX()),
-            Math.round(e.getY())));
-        int tolerance = 10;
-        double mapTolerance = tolerance * mMapView.getUnitsPerDensityIndependentPixel();
-        // create objects required to do a selection with a query
-        Envelope envelope = new Envelope(
-            clickPoint.getX() - mapTolerance,
-            clickPoint.getY() - mapTolerance,
-            clickPoint.getX() + mapTolerance,
-            clickPoint.getY() + mapTolerance,
-            mArcGISMap.getSpatialReference());
-        QueryParameters queryParams = new QueryParameters();
-        queryParams.setGeometry(envelope);
+            Math.round(e.getY()));
         // get the FeatureLayer to query
         final FeatureLayer selectedLayer = mOperationalLayers.get(0);
         // get a list of related features to display
-        queryRelatedFeatures(selectedLayer, queryParams);
+        queryRelatedFeatures(selectedLayer, clickPoint);
         return super.onSingleTapConfirmed(e);
       }
     });
@@ -151,61 +140,54 @@ public class MainActivity extends AppCompatActivity {
    * Uses the selected FeatureLayer to get FeatureTable RelationshipInfos used to
    * QueryRelatedFeaturesAsync which returns a list of related features.
    *
-   * @param featureLayer    Layer selected from the Map
-   * @param queryParameters Input parameters for query
+   * @param featureLayer Layer selected from the Map
+   * @param clickPoint   Tapped location to query
    */
-  private void queryRelatedFeatures(final FeatureLayer featureLayer, QueryParameters queryParameters) {
-    final ListenableFuture<FeatureQueryResult> featureQueryResultFuture = featureLayer
-        .selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW);
+  private void queryRelatedFeatures(final FeatureLayer featureLayer, Point clickPoint) {
+
+    int tolerance = 10;
+    final ListenableFuture<IdentifyLayerResult> identifyLayerResultFuture = mMapView
+        .identifyLayerAsync(featureLayer, clickPoint, tolerance, false, 1);
     // clear previously selected layers
     featureLayer.clearSelection();
-    featureQueryResultFuture.addDoneListener(() -> {
-      // call get on the future to get the result
-      try {
-        if (featureQueryResultFuture.get().iterator().hasNext()) {
-          FeatureQueryResult result = featureQueryResultFuture.get();
 
-          // iterate over features returned
-          for (Feature feature : result) {
-            ArcGISFeature arcGISFeature = (ArcGISFeature) feature;
-            ArcGISFeatureTable selectedTable = (ArcGISFeatureTable) feature.getFeatureTable();
-            final ListenableFuture<List<RelatedFeatureQueryResult>> relatedFeatureQueryResultFuture = selectedTable
-                .queryRelatedFeaturesAsync(arcGISFeature);
-            relatedFeatureQueryResultFuture.addDoneListener(() -> {
-              try {
-                List<RelatedFeatureQueryResult> relatedFeatureQueryResultList = relatedFeatureQueryResultFuture
-                    .get();
-                // iterate over returned RelatedFeatureQueryResults
-                for (RelatedFeatureQueryResult relatedQueryResult : relatedFeatureQueryResultList) {
-                  // add Table Name to List
-                  String relatedTableName = relatedQueryResult.getRelatedTable().getTableName();
-                  mRelatedValues.add(relatedTableName);
-                  // iterate over Features returned
-                  for (Feature relatedFeature : relatedQueryResult) {
-                    // get the Display field to use as filter on related attributes
-                    ArcGISFeature agsFeature = (ArcGISFeature) relatedFeature;
-                    String displayFieldName = agsFeature.getFeatureTable().getLayerInfo().getDisplayFieldName();
-                    String displayFieldValue = agsFeature.getAttributes().get(displayFieldName).toString();
-                    mRelatedValues.add(displayFieldValue);
-                    // notify ListAdapter content has changed
-                    mArrayAdapter.notifyDataSetChanged();
-                  }
+    identifyLayerResultFuture.addDoneListener(() -> {
+      try {
+        IdentifyLayerResult identifyLayerResult = identifyLayerResultFuture.get();
+        for (GeoElement element : identifyLayerResult.getElements()) {
+          Feature feature = (Feature) element;
+          ArcGISFeature arcGISFeature = (ArcGISFeature) feature;
+          ArcGISFeatureTable selectedTable = (ArcGISFeatureTable) feature.getFeatureTable();
+          final ListenableFuture<List<RelatedFeatureQueryResult>> relatedFeatureQueryResultFuture = selectedTable
+              .queryRelatedFeaturesAsync(arcGISFeature);
+          relatedFeatureQueryResultFuture.addDoneListener(() -> {
+            try {
+              List<RelatedFeatureQueryResult> relatedFeatureQueryResultList = relatedFeatureQueryResultFuture.get();
+              // iterate over returned RelatedFeatureQueryResults
+              for (RelatedFeatureQueryResult relatedQueryResult : relatedFeatureQueryResultList) {
+                // add Table Name to List
+                String relatedTableName = relatedQueryResult.getRelatedTable().getTableName();
+                mRelatedValues.add(relatedTableName);
+                // iterate over Features returned
+                for (Feature relatedFeature : relatedQueryResult) {
+                  // get the Display field to use as filter on related attributes
+                  ArcGISFeature agsFeature = (ArcGISFeature) relatedFeature;
+                  String displayFieldName = agsFeature.getFeatureTable().getLayerInfo().getDisplayFieldName();
+                  String displayFieldValue = agsFeature.getAttributes().get(displayFieldName).toString();
+                  mRelatedValues.add(displayFieldValue);
+                  // notify ListAdapter content has changed
+                  mArrayAdapter.notifyDataSetChanged();
                 }
-              } catch (InterruptedException | ExecutionException e) {
-                String error = "Error getting related feature query result: " + e.getMessage();
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-                Log.e(TAG, error);
               }
-            });
-          }
-        } else {
-          // did not tap on a feature, display no results
-          mRelatedValues.add(getString(R.string.no_results));
-          // notify ListAdapter content has changed
-          mArrayAdapter.notifyDataSetChanged();
+            } catch (InterruptedException | ExecutionException e) {
+              String error = "Error getting related feature query result: " + e.getMessage();
+              Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+              Log.e(TAG, error);
+            }
+          });
         }
       } catch (InterruptedException | ExecutionException e) {
-        String error = "Error getting feature query result: " + e.getMessage();
+        String error = "Error getting related feature query result: " + e.getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }

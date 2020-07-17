@@ -25,6 +25,7 @@ import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
           mCallout.dismiss();
         }
         // get the point that was clicked and convert it to a point in map coordinates
-        final android.graphics.Point clickPoint = new android.graphics.Point(Math.round(e.getX()),
+        final Point clickPoint = new Point(Math.round(e.getX()),
             Math.round(e.getY()));
         // create a selection tolerance
         int tolerance = 10;
