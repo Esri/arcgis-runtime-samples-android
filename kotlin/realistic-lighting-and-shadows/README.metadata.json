@@ -24,7 +24,7 @@
         "SceneView.sunTime"
     ],
     "snippets": [
-        "rc/main/java/com/esri/arcgisruntime/sample/realisticlightingandshadows/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/realisticlightingandshadows/MainActivity.kt"
     ],
     "title": "Realistic lighting and shadows"
 }
