@@ -148,8 +148,10 @@ class MainActivity : AppCompatActivity() {
       // close the options when the scene is tapped
       setOnTouchListener(object : DefaultSceneViewOnTouchListener(sceneView) {
         override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
-          if (fab.isExpanded) {
-            fab.isExpanded = false
+          if (view == sceneView) {
+            if (fab.isExpanded) {
+              fab.isExpanded = false
+            }
           }
           return super.onTouch(view, motionEvent)
         }

@@ -17,7 +17,9 @@
         android:layout_gravity="bottom|center"
         android:layout_margin="32dp"
         android:visibility="invisible"
-        app:layout_behavior="com.google.android.material.transformation.FabTransformationSheetBehavior">
+        app:layout_behavior="com.google.android.material.transformation.FabTransformationSheetBehavior"
+        android:focusable="true"
+        android:clickable="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/seekBarContainer"
@@ -101,5 +103,5 @@
         app:borderWidth="0dp"
         app:elevation="16dp"
         app:srcCompat="@drawable/ic_wb_sunny_black_24dp" />
-    
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
