@@ -160,4 +160,19 @@ class MainActivity : AppCompatActivity() {
     // open and close the options with the fab
     fab.setOnClickListener { fab.isExpanded = !fab.isExpanded }
   }
+
+  override fun onResume() {
+    super.onResume()
+    sceneView.resume()
+  }
+
+  override fun onPause() {
+    sceneView.pause()
+    super.onPause()
+  }
+
+  override fun onDestroy() {
+    sceneView.dispose()
+    super.onDestroy()
+  }
 }
