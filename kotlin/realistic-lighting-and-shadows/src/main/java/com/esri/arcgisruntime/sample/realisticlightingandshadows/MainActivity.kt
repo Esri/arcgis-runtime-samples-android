@@ -58,7 +58,8 @@ class MainActivity : AppCompatActivity() {
     val buildingsLayer =
       ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_BuildingShells/SceneServer")
 
-    // create a scene with a vector basemap, a world elevation source, and a layer showing planned development in Portland, Oregon
+    // create a scene with a vector basemap, a world elevation source, and a layer showing planned 
+    // development in Portland, Oregon
     sceneView.scene = ArcGISScene().apply {
       basemap = Basemap.createTopographic()
       baseSurface = Surface().apply {
