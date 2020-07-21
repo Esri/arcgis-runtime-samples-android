@@ -20,7 +20,7 @@ The feature-linked annotation will update accordingly.
 2. Create `FeatureLayer`s from `GeodatabaseFeatureTable`s found in the geodatabase with `geodatabase.geodatabaseFeatureTables`.
 3. Create `AnnotationLayer`s from `GeodatabaseFeatureTable`s found in the geodatabase with `geodatabase.geodatabaseAnnotationTables`.
 4. Add the `FeatureLayer`s and `AnnotationLayer`s to the map's operational layers.
-5. Use a `DefaultMapViewOnTouchListener` to listen for taps on the map to either select address points or parcel polyline features.
+5. Use a `DefaultMapViewOnTouchListener` to listen for taps on the map to either select address points or parcel polyline features. NOTE: Selection is only enabled for points and straight (signal segment) polylines.
 6. For the address points, a dialog is opened to allow editing of the address number (AD_ADDRESS) and street name (ST_STR_NAM) attributes, which use the expression `$feature.AD_ADDRESS + " " + $feature.ST_STR_NAM` for annotation.
 7. For the parcel lines, a second tap will change one of the polyline's vertices. Note that the dimension annotation updates according to the expression `Round(Length(Geometry($feature), 'feet'), 2)`.
 

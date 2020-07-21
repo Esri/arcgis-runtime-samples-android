@@ -20,6 +20,7 @@ package com.esri.arcgisruntime.sample.editfeatureswithfeaturelinkedannotation
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.data.Feature
@@ -139,9 +140,13 @@ class MainActivity : AppCompatActivity() {
           selectedFeature = result.elements[0] as? Feature
           // if the selected feature is a polyline with more than one segment
           if ((selectedFeature?.geometry is Polyline)
-            && (selectedFeature?.geometry as Polyline).parts[0].pointCount > 2) {
+            && (selectedFeature?.geometry as Polyline).parts[0].pointCount > 2
+          ) {
             // set selected feature to null
             selectedFeature = null
+            // show message reminding user to select straight (single segment) polylines only
+            Toast.makeText(this, getString(R.string.curved_polylines_message), Toast.LENGTH_LONG)
+              .show()
             // return early, effectively disallowing selection of multi segmented polylines
             return@forEach
           }
