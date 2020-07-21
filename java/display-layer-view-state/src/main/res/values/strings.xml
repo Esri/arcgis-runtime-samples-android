@@ -1,24 +1,10 @@
 <resources>
-    <string name="app_name">Display Layer View  State</string>
-
-    <!-- Display labels -->
-    <string name="world_time_zone">World Time Zones: </string>
-    <string name="census">Census: </string>
-    <string name="facilities">Facilities: </string>
-
-    <!-- Service status -->
-    <string name="active">Active</string>
-    <string name="notVisible">Not Visible</string>
-    <string name="outOfScale">Out of Scale</string>
-    <string name="loading">Loading</string>
-    <string name="error">Error</string>
-    <string name="unknown">Unknown</string>
-
-    <!-- World Timezone Service URL -->
-    <string name="world_timezone_service_URL">https://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer</string>
-    <!-- World Census Service URL -->
-    <string name="world_census_service_URL">https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
-    <!-- World Facilities Service URL -->
-    <string name="world_facilities_service_URL">https://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0</string>
+    <string name="app_name">Display layer view state</string>
+    <string name="activeStateTextViewString">Active   </string>
+    <string name="errorStateTextViewString">Error   </string>
+    <string name="loadingStateTextViewString">Loading   </string>
+    <string name="notVisibleStateTextViewString">Not visible   </string>
+    <string name="outOfScaleStateTextViewString">Out of scale   </string>
+    <string name="warningStateTextViewString">Warning   </string>
 
 </resources>

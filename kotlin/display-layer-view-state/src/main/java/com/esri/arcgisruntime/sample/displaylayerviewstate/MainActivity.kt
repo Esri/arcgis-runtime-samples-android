@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         "b8f4033069f141729ffb298b7418b653"
       )
       featureLayer = FeatureLayer(portalItem, 0).apply {
-        // setting the scales at which this layer can be viewed
+        // set the scales at which this layer can be viewed
         minScale = 400_000_000.0
         maxScale = minScale / 10
       }

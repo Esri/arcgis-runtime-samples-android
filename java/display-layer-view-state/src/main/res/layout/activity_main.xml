@@ -1,108 +1,70 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <!-- MapView -->
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </com.esri.arcgisruntime.mapping.view.MapView>
+        android:layout_height="match_parent"/>
 
-    <RelativeLayout
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:background="#e2fdda"
-        android:focusable="false">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/statesContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:padding="8dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/hideButton"
+        android:visibility="gone">
 
         <TextView
-            android:id="@+id/worldTimeZoneView"
-            android:layout_width="125dp"
+            android:id="@+id/viewStateHeader"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:singleLine="true"
-            android:text="@string/world_time_zone"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/worldTimeZoneStatusView"
-            android:layout_width="125dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/worldTimeZoneView"
-            android:maxLines="1"
-            android:textColor="@color/colorPrimary" />
-
-        <View style="@style/Divider"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/worldTimeZoneView"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:text="Current view status:"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/censusView"
-            android:layout_width="125dp"
+            android:id="@+id/activeStateTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_margin="10dp"
-            android:text="@string/census"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold" />
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="@id/viewStateHeader"
+            app:layout_constraintEnd_toEndOf="@id/viewStateHeader"
+            app:layout_constraintTop_toBottomOf="@id/viewStateHeader"
+            tools:visibility="gone" />
 
-        <TextView
-            android:id="@+id/censusStatusView"
-            android:layout_width="125dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/censusView"
-            android:textColor="@color/colorPrimary" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/loadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:text="Load layer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/hideButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:text="Hide layer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/facilitiesView"
-            android:layout_width="125dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="10dp"
-            android:text="@string/facilities"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/facilitiesStatusView"
-            android:layout_width="125dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/facilitiesView"
-            android:textColor="@color/colorPrimary" />
-
-        <View style="@style/Divider"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/facilitiesView"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
-    </RelativeLayout>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

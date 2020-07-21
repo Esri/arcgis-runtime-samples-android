@@ -22,7 +22,7 @@
         "MapView"
     ],
     "snippets": [
-        "rc/main/java/com/esri/arcgisruntime/sample/displaylayerviewstate/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/displaylayerviewstate/MainActivity.kt"
     ],
     "title": "Display layer view state"
 }
