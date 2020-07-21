@@ -138,8 +138,9 @@ class MainActivity : AppCompatActivity() {
           // get a reference to the identified feature
           selectedFeature = result.elements[0] as? Feature
           // if the selected feature is a polyline with more than one segment
-          if ((selectedFeature?.geometry as? Polyline)?.parts?.get(0)?.pointCount!! > 2) {
-            // null reference to the selected feature
+          if ((selectedFeature?.geometry is Polyline)
+            && (selectedFeature?.geometry as Polyline).parts[0].pointCount > 2) {
+            // set selected feature to null
             selectedFeature = null
             // return early, effectively disallowing selection of multi segmented polylines
             return@forEach
