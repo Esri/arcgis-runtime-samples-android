@@ -2,5 +2,5 @@
     <string name="app_name">Edit features with feature-linked annotation</string>
     <string name="street_number_attribute">AD_ADDRESS:</string>
     <string name="street_name_attribute">ST_STR_NAM:</string>
-    <string name="curved_polylines_message">Selection of curved polylines disallowed for this sample. Please select a straint polyline.</string>
+    <string name="curved_polylines_message">Selection of curved polylines disallowed for this sample. Please select a straight polyline.</string>
 </resources>

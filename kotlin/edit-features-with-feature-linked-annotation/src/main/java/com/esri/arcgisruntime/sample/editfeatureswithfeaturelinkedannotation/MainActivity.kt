@@ -138,17 +138,18 @@ class MainActivity : AppCompatActivity() {
         (result.layerContent as? FeatureLayer)?.let { featureLayer ->
           // get a reference to the identified feature
           selectedFeature = result.elements[0] as? Feature
-          // if the selected feature is a polyline with more than one segment
-          if ((selectedFeature?.geometry is Polyline)
-            && (selectedFeature?.geometry as Polyline).parts[0].pointCount > 2
-          ) {
-            // set selected feature to null
-            selectedFeature = null
-            // show message reminding user to select straight (single segment) polylines only
-            Toast.makeText(this, getString(R.string.curved_polylines_message), Toast.LENGTH_LONG)
-              .show()
-            // return early, effectively disallowing selection of multi segmented polylines
-            return@forEach
+          // if the selected feature is a polyline with any part containing more than one segment
+          // (i.e. a curve)
+          (selectedFeature?.geometry as? Polyline)?.parts?.forEach {
+            if (it.pointCount > 2) {
+              // set selected feature to null
+              selectedFeature = null
+              // show message reminding user to select straight (single segment) polylines only
+              Toast.makeText(this, getString(R.string.curved_polylines_message), Toast.LENGTH_LONG)
+                .show()
+              // return early, effectively disallowing selection of multi segmented polylines
+              return@forEach
+            }
           }
           selectedFeature?.let {
             // select the feature
@@ -228,11 +229,11 @@ class MainActivity : AppCompatActivity() {
       GeometryEngine.project(mapPoint, polyline.spatialReference) as Point
     )
     val polylineBuilder = PolylineBuilder(polyline)
-    // get the first part of the polyline
+    // get the part of the polyline nearest to the map point
     polylineBuilder.parts[nearestVertex.partIndex.toInt()].apply {
-      // remove the last point in the polyline
+      // remove the nearest point to the map point
       removePoint(nearestVertex.pointIndex.toInt())
-      // add the map point as the new last point of the polyline
+      // add the map point as the new point on the polyline
       addPoint(GeometryEngine.project(mapPoint, spatialReference) as Point)
     }
     // set the selected feature's geometry to the new polyline
