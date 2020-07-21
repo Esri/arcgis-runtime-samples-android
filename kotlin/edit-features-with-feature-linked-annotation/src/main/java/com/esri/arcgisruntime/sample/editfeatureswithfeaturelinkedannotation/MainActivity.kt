@@ -100,17 +100,18 @@ class MainActivity : AppCompatActivity() {
    * @param screenPoint at which to move or select feature
    */
   private fun selectOrMove(screenPoint: android.graphics.Point) {
-    // if a feature has already been selected
-    if (selectedFeature != null) {
-      // covert screen point to map point
+    // if a feature hasn't been selected
+    if (selectedFeature == null) {
+      selectFeature(screenPoint)
+    } else {
+      // convert screen point to map point
       val mapPoint = mapView.screenToLocation(screenPoint)
+      // move the feature
       if (selectedFeatureIsPolyline) {
         movePolylineVertex(mapPoint)
       } else {
         movePoint(mapPoint)
       }
-    } else {
-      selectFeature(screenPoint)
     }
   }
 
@@ -143,7 +144,7 @@ class MainActivity : AppCompatActivity() {
             // return early, effectively disallowing selection of multi segmented polylines
             return@forEach
           }
-          selectedFeature?.also {
+          selectedFeature?.let {
             // select the feature
             featureLayer.selectFeature(it)
             when (it.geometry.geometryType) {
@@ -183,6 +184,7 @@ class MainActivity : AppCompatActivity() {
           editAttributeView.addressNumberEditText.text.toString().toInt()
         // set ST_STR_NAM value to the string from edit text
         selectedFeature.attributes["ST_STR_NAM"] = editAttributeView.streetEditText.text.toString()
+        // update the selected feature's feature table
         selectedFeature.featureTable?.updateFeatureAsync(selectedFeature)
       }
       setNegativeButton("Cancel") { _, _ -> }
