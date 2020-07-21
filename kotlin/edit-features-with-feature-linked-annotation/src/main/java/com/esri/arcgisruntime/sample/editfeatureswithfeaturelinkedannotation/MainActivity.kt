@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity() {
               // set selected feature to null
               selectedFeature = null
               // show message reminding user to select straight (single segment) polylines only
-              Toast.makeText(this, getString(R.string.curved_polylines_message), Toast.LENGTH_LONG)
+              Toast.makeText(this, getString(R.string.curved_polylines_message), Toast.LENGTH_SHORT)
                 .show()
               // return early, effectively disallowing selection of multi segmented polylines
               return@forEach
