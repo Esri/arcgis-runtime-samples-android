@@ -24,7 +24,6 @@ import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.data.Feature
-import com.esri.arcgisruntime.data.QueryParameters
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Envelope
 import com.esri.arcgisruntime.geometry.SpatialReferences
@@ -77,7 +76,8 @@ class MainActivity : AppCompatActivity() {
           // set a tolerance for accuracy of returned selections from point tapped
           val tolerance = 25.0
 
-          val identifyLayerResultFuture = mapView.identifyLayerAsync(featureLayer, tappedPoint, tolerance, false, -1 )
+          val identifyLayerResultFuture =
+            mapView.identifyLayerAsync(featureLayer, tappedPoint, tolerance, false, -1)
           identifyLayerResultFuture.addDoneListener {
             try {
               val identifyLayerResult = identifyLayerResultFuture.get()
@@ -88,7 +88,11 @@ class MainActivity : AppCompatActivity() {
                 featureLayer.selectFeature(feature)
               }
               // make a toast to show the number of features selected
-              Toast.makeText(applicationContext, "${features.size} features selected", Toast.LENGTH_SHORT).show()
+              Toast.makeText(
+                applicationContext,
+                "${features.size} features selected",
+                Toast.LENGTH_SHORT
+              ).show()
             } catch (e: Exception) {
               val errorMessage = "Select feature failed: " + e.message
               Log.e(TAG, errorMessage)

@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
   private ServiceFeatureTable mServiceFeatureTable;
 
-  @SuppressLint("ClickableViewAccessibility") @Override
+  @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -83,13 +83,12 @@ public class MainActivity extends AppCompatActivity {
           mCallout.dismiss();
         }
         // get the point that was clicked and convert it to a point in map coordinates
-        final Point clickPoint = new Point(Math.round(e.getX()),
-            Math.round(e.getY()));
+        final Point screenPoint = new Point(Math.round(e.getX()), Math.round(e.getY()));
         // create a selection tolerance
         int tolerance = 10;
         // use identifyLayerAsync to get tapped features
         final ListenableFuture<IdentifyLayerResult> identifyLayerResultListenableFuture = mMapView
-            .identifyLayerAsync(featureLayer, clickPoint, tolerance, false, 1);
+            .identifyLayerAsync(featureLayer, screenPoint, tolerance, false, 1);
         identifyLayerResultListenableFuture.addDoneListener(new Runnable() {
           @Override public void run() {
             try {

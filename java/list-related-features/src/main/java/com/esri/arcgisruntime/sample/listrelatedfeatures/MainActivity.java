@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
   private BottomSheetBehavior mBottomSheetBehavior = null;
   private ArrayAdapter<String> mArrayAdapter;
 
-  @SuppressLint("ClickableViewAccessibility") @Override
+  @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -105,14 +105,12 @@ public class MainActivity extends AppCompatActivity {
         // hide the bottomsheet
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         // get the point that was clicked and convert it to a point in mArcGISMap coordinates
-        Point clickPoint = new Point(
-            Math.round(e.getX()),
-            Math.round(e.getY()));
+        Point screenPoint = new Point(Math.round(e.getX()), Math.round(e.getY()));
         // get the FeatureLayer to query
         final FeatureLayer selectedLayer = mOperationalLayers.get(0);
         // get a list of related features to display
-        queryRelatedFeatures(selectedLayer, clickPoint);
-        return super.onSingleTapConfirmed(e);
+        queryRelatedFeatures(selectedLayer, screenPoint);
+        return true;
       }
     });
 

@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
 
-  @SuppressLint("ClickableViewAccessibility") @Override
+  @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -73,8 +73,7 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
         featureLayer.clearSelection();
-        Point screenPoint = new Point(Math.round(motionEvent.getX()),
-            Math.round(motionEvent.getY()));
+        Point screenPoint = new Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY()));
         int tolerance = 10;
 
         ListenableFuture<IdentifyLayerResult> identifyLayerResultFuture = mMapView.identifyLayerAsync(
