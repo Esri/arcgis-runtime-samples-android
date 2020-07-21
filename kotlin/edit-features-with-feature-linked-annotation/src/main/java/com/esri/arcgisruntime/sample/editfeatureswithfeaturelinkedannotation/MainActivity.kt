@@ -136,6 +136,13 @@ class MainActivity : AppCompatActivity() {
         (result.layerContent as? FeatureLayer)?.let { featureLayer ->
           // get a reference to the identified feature
           selectedFeature = result.elements[0] as? Feature
+          // if the selected feature is a polyline with more than one segment
+          if ((selectedFeature?.geometry as? Polyline)?.parts?.get(0)?.pointCount!! > 2) {
+            // null reference to the selected feature
+            selectedFeature = null
+            // return early, effectively disallowing selection of multi segmented polylines
+            return@forEach
+          }
           selectedFeature?.also {
             // select the feature
             featureLayer.selectFeature(it)
@@ -205,12 +212,18 @@ class MainActivity : AppCompatActivity() {
    * @param mapPoint to which the last point of the polyline should be moved to
    */
   private fun movePolylineVertex(mapPoint: Point) {
+    // get the selected feature's geometry as a polyline
     val polyline = selectedFeature?.geometry as Polyline
+    // get the nearest vertex to the map point on the selected feature polyline
+    val nearestVertex = GeometryEngine.nearestVertex(
+      polyline,
+      GeometryEngine.project(mapPoint, polyline.spatialReference) as Point
+    )
     val polylineBuilder = PolylineBuilder(polyline)
     // get the first part of the polyline
-    polylineBuilder.parts[0].apply {
+    polylineBuilder.parts[nearestVertex.partIndex.toInt()].apply {
       // remove the last point in the polyline
-      removePoint(this.size)
+      removePoint(nearestVertex.pointIndex.toInt())
       // add the map point as the new last point of the polyline
       addPoint(GeometryEngine.project(mapPoint, spatialReference) as Point)
     }
@@ -221,6 +234,7 @@ class MainActivity : AppCompatActivity() {
     // clear selection of polyline
     clearSelection()
     selectedFeatureIsPolyline = false
+    selectedFeature = null
   }
 
   /**
