@@ -17,7 +17,7 @@ Tap the *Load layer* button to create a new layer and add it to the map. As you 
 1. Create an `ArcGISMap` with some operational layers.
 2. Set the map on a `MapView`.
 3. Listen to `LayerViewStateChangedEvents` from the map view.
-4. Get the `Layer` for the event with `event.getLayer()` and the current view status with `event.getLayerViewStatus()`.
+4. Get the current view status with `event.getLayerViewStatus()`.
 
 ## Relevant API
 
