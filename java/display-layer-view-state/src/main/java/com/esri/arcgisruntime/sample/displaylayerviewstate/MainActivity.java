@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import org.w3c.dom.Text;
-
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,11 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esri.arcgisruntime.ArcGISRuntimeException;
-import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
-import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
-import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -156,22 +151,22 @@ public class MainActivity extends AppCompatActivity {
     // add it to a list and display the states as a comma-separated string
     List<String> stringList = new ArrayList<String>();
     if (layerViewStatus.contains(LayerViewStatus.ACTIVE)) {
-      stringList.add(getString(R.string.activeStateTextViewString));
+      stringList.add(getString(R.string.active_state));
     }
     if (layerViewStatus.contains(LayerViewStatus.ERROR)) {
-      stringList.add(getString(R.string.errorStateTextViewString));
+      stringList.add(getString(R.string.error_state));
     }
     if (layerViewStatus.contains(LayerViewStatus.LOADING)) {
-      stringList.add(getString(R.string.loadingStateTextViewString));
+      stringList.add(getString(R.string.loading_state));
     }
     if (layerViewStatus.contains(LayerViewStatus.NOT_VISIBLE)) {
-      stringList.add(getString(R.string.notVisibleStateTextViewString));
+      stringList.add(getString(R.string.not_visible_state));
     }
     if (layerViewStatus.contains(LayerViewStatus.OUT_OF_SCALE)) {
-      stringList.add(getString(R.string.outOfScaleStateTextViewString));
+      stringList.add(getString(R.string.out_of_scale_state));
     }
     if (layerViewStatus.contains(LayerViewStatus.WARNING)) {
-      stringList.add(getString(R.string.warningStateTextViewString));
+      stringList.add(getString(R.string.warning_state));
     }
     // join the list of strings with a common and set to display in the text view
     activeStateTextView.setText(TextUtils.join(", ", stringList));
