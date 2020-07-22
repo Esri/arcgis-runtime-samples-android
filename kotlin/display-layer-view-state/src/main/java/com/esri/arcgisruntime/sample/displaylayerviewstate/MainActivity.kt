@@ -93,19 +93,19 @@ class MainActivity : AppCompatActivity() {
 
     hideButton.setOnClickListener {
       featureLayer?.apply {
-        if (isVisible) {
-          hideButton.text = "Show layer"
-          isVisible = false
-        } else {
-          hideButton.text = "Hide layer"
-          isVisible = true
+        // toggle visibility
+        isVisible = !isVisible
+        // update button text
+        hideButton.text = when {
+          isVisible -> getString(R.string.show_layer)
+          else -> getString(R.string.hide_layer)
         }
       }
     }
   }
 
   /**
-   * Formats and displays the layer view status flags in a textview.
+   * Formats and displays the layer view status flags in a text view.
    *
    * @param layerViewStatus to display
    */
