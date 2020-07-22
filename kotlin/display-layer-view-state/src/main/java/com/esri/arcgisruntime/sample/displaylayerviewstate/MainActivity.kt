@@ -33,7 +33,6 @@ import com.esri.arcgisruntime.portal.PortalItem
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.EnumSet
 
-
 class MainActivity : AppCompatActivity() {
 
   private var featureLayer: FeatureLayer? = null
@@ -46,12 +45,7 @@ class MainActivity : AppCompatActivity() {
       // create a map with a topographic basemap
       map = ArcGISMap(Basemap.createTopographic())
       // zoom to custom viewpoint
-      setViewpoint(
-        Viewpoint(
-          Point(-11e6, 45e5, SpatialReferences.getWebMercator()),
-          40_000_000.0
-        )
-      )
+      setViewpoint(Viewpoint(Point(-11e6, 45e5, SpatialReferences.getWebMercator()), 40_000_000.0))
     }
 
     mapView.addLayerViewStateChangedListener { layerViewStateChangedEvent ->
@@ -64,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
       val layerViewStatus = layerViewStateChangedEvent.layerViewStatus
       // if there is an error or warning, display it in a toast
-      layerViewStateChangedEvent.error?.let {error ->
+      layerViewStateChangedEvent.error?.let { error ->
         val message = error.cause?.toString() ?: error.message
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
       }
@@ -102,8 +96,7 @@ class MainActivity : AppCompatActivity() {
         if (isVisible) {
           hideButton.text = "Show layer"
           isVisible = false
-        }
-        else {
+        } else {
           hideButton.text = "Hide layer"
           isVisible = true
         }

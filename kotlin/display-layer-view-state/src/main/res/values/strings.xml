@@ -6,5 +6,9 @@
     <string name="notVisibleStateTextViewString">Not visible   </string>
     <string name="outOfScaleStateTextViewString">Out of scale   </string>
     <string name="warningStateTextViewString">Warning   </string>
+    <string name="current_view_status">Current view status:</string>
+    <string name="load_layer">Load layer</string>
+    <string name="hide_layer">Hide layer</string>
+    <string name="show_layer">Show layer</string>
 
 </resources>
