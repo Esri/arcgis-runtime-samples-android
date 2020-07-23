@@ -118,7 +118,7 @@ class MetadataUpdater:
                         snippet = os.path.join(dp, file)
                         if snippet.startswith(self.folder_path):
                             # add 1 to remove the leading slash
-                            snippet = snippet[len(self.folder_path)+1:]
+                            snippet = snippet[len(self.folder_path):]
                         results.append(snippet)
         if not results:
             raise Exception('Unable to get java/kotlin source code paths.')
