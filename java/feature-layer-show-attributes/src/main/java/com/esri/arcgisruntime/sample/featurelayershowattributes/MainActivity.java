@@ -89,44 +89,42 @@ public class MainActivity extends AppCompatActivity {
         // use identifyLayerAsync to get tapped features
         final ListenableFuture<IdentifyLayerResult> identifyLayerResultListenableFuture = mMapView
             .identifyLayerAsync(featureLayer, screenPoint, tolerance, false, 1);
-        identifyLayerResultListenableFuture.addDoneListener(new Runnable() {
-          @Override public void run() {
-            try {
-              IdentifyLayerResult identifyLayerResult = identifyLayerResultListenableFuture.get();
-              // create a textview to display field values
-              TextView calloutContent = new TextView(getApplicationContext());
-              calloutContent.setTextColor(Color.BLACK);
-              calloutContent.setSingleLine(false);
-              calloutContent.setVerticalScrollBarEnabled(true);
-              calloutContent.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
-              calloutContent.setMovementMethod(new ScrollingMovementMethod());
-              calloutContent.setLines(5);
-              for (GeoElement element : identifyLayerResult.getElements()) {
-                Feature feature = (Feature) element;
-                // create a map of all available attributes as name value pairs
-                Map<String, Object> attr = feature.getAttributes();
-                Set<String> keys = attr.keySet();
-                for (String key : keys) {
-                  Object value = attr.get(key);
-                  // format observed field value as date
-                  if (value instanceof GregorianCalendar) {
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
-                    value = simpleDateFormat.format(((GregorianCalendar) value).getTime());
-                  }
-                  // append name value pairs to text view
-                  calloutContent.append(key + " | " + value + "\n");
+        identifyLayerResultListenableFuture.addDoneListener(() -> {
+          try {
+            IdentifyLayerResult identifyLayerResult = identifyLayerResultListenableFuture.get();
+            // create a textview to display field values
+            TextView calloutContent = new TextView(getApplicationContext());
+            calloutContent.setTextColor(Color.BLACK);
+            calloutContent.setSingleLine(false);
+            calloutContent.setVerticalScrollBarEnabled(true);
+            calloutContent.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
+            calloutContent.setMovementMethod(new ScrollingMovementMethod());
+            calloutContent.setLines(5);
+            for (GeoElement element : identifyLayerResult.getElements()) {
+              Feature feature = (Feature) element;
+              // create a map of all available attributes as name value pairs
+              Map<String, Object> attr = feature.getAttributes();
+              Set<String> keys = attr.keySet();
+              for (String key : keys) {
+                Object value = attr.get(key);
+                // format observed field value as date
+                if (value instanceof GregorianCalendar) {
+                  SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
+                  value = simpleDateFormat.format(((GregorianCalendar) value).getTime());
                 }
-                // center the mapview on selected feature
-                Envelope envelope = feature.getGeometry().getExtent();
-                mMapView.setViewpointGeometryAsync(envelope, 200);
-                // show callout
-                mCallout.setLocation(envelope.getCenter());
-                mCallout.setContent(calloutContent);
-                mCallout.show();
+                // append name value pairs to text view
+                calloutContent.append(key + " | " + value + "\n");
               }
-            } catch (Exception e) {
-              Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e.getMessage());
+              // center the mapview on selected feature
+              Envelope envelope = feature.getGeometry().getExtent();
+              mMapView.setViewpointGeometryAsync(envelope, 200);
+              // show callout
+              mCallout.setLocation(envelope.getCenter());
+              mCallout.setContent(calloutContent);
+              mCallout.show();
             }
+          } catch (Exception e1) {
+            Log.e(getResources().getString(R.string.app_name), "Select feature failed: " + e1.getMessage());
           }
         });
         return super.onSingleTapConfirmed(e);
