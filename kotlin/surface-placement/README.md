@@ -16,7 +16,7 @@ The application loads a scene showing four points that use individual surface pl
 
 1. Create a `GraphicsOverlay` for each placement mode, setting `LayerSceneProperties.surfacePlacement` to:
     * `ABSOLUTE`, position graphic using only its Z value.
-    * `RELATIVE`, position graphic using its Z value plus the elevation of the surface.
+    * `RELATIVE`, position graphic using its Z value plus the altitude values of the scene.
     * `DRAPED_BILLBOARDED`, position graphic upright on the surface and always facing the camera, not using its z value.
     * `DRAPED_FLAT`, position graphic flat on the surface, not using its z value.
     * `RELATIVE_TO_SCENE`, position graphic using the Z value of the scene layer.`
