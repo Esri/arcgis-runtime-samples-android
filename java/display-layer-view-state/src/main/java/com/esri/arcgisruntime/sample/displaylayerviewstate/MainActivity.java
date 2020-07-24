@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView = (MapView) findViewById(R.id.mapView);
     // create a map with the BasemapType topographic
     final ArcGISMap mMap = new ArcGISMap(Basemap.createTopographic());
-    // add the map to the mapview
+    // add the map to the map view
     mMapView.setMap(mMap);
 
     // zoom to custom ViewPoint
