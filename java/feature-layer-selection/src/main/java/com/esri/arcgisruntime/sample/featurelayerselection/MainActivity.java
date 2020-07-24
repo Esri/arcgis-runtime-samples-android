@@ -76,13 +76,8 @@ public class MainActivity extends AppCompatActivity {
         Point screenPoint = new Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY()));
         int tolerance = 10;
 
-        ListenableFuture<IdentifyLayerResult> identifyLayerResultFuture = mMapView.identifyLayerAsync(
-            featureLayer,
-            screenPoint,
-            tolerance,
-            false,
-            -1
-        );
+        ListenableFuture<IdentifyLayerResult> identifyLayerResultFuture = mMapView
+            .identifyLayerAsync(featureLayer, screenPoint, tolerance, false, -1);
 
         identifyLayerResultFuture.addDoneListener(() -> {
           try {
