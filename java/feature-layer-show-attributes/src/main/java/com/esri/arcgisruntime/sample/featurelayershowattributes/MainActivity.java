@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
                     value = simpleDateFormat.format(((GregorianCalendar) value).getTime());
                   }
-                  // append name value pairs to textview
+                  // append name value pairs to text view
                   calloutContent.append(key + " | " + value + "\n");
                 }
                 // center the mapview on selected feature
