@@ -6,6 +6,9 @@
     <string name="not_visible_state">Not visible   </string>
     <string name="out_of_scale_state">Out of scale   </string>
     <string name="warning_state">Warning   </string>
-    <string name="show_layer">Show layer</string>
+    <string name="current_view_status">Current view status:</string>
+    <string name="load_layer">Load layer</string>
     <string name="hide_layer">Hide layer</string>
+    <string name="show_layer">Show layer</string>
+
 </resources>

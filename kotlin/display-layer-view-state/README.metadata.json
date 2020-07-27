@@ -14,10 +14,7 @@
         "view",
         "visibility"
     ],
-    "language": "java",
-    "redirect_from": [
-        "/android/latest/sample-code/display-layer-view-state.htm"
-    ],
+    "language": "kotlin",
     "relevant_apis": [
         "ArcGISMap",
         "LayerViewStateChangedEvent",
@@ -25,7 +22,7 @@
         "MapView"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/displaylayerviewstate/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/displaylayerviewstate/MainActivity.kt"
     ],
     "title": "Display layer view state"
 }
