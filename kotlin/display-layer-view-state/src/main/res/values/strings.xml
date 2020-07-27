@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Display layer view state</string>
-    <string name="activeStateTextViewString">Active   </string>
-    <string name="errorStateTextViewString">Error   </string>
-    <string name="loadingStateTextViewString">Loading   </string>
-    <string name="notVisibleStateTextViewString">Not visible   </string>
-    <string name="outOfScaleStateTextViewString">Out of scale   </string>
-    <string name="warningStateTextViewString">Warning   </string>
+    <string name="active_state">Active   </string>
+    <string name="error_state">Error   </string>
+    <string name="loading_state">Loading   </string>
+    <string name="not_visible_state">Not visible   </string>
+    <string name="out_of_scale_state">Out of scale   </string>
+    <string name="warning_state">Warning   </string>
     <string name="current_view_status">Current view status:</string>
     <string name="load_layer">Load layer</string>
     <string name="hide_layer">Hide layer</string>

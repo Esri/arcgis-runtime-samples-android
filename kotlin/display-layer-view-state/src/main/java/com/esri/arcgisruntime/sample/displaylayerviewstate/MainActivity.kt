@@ -114,22 +114,22 @@ class MainActivity : AppCompatActivity() {
     // add it to a list and display the states as a comma-separated string
     val stringList = mutableListOf<String>()
     if (layerViewStatus.contains(LayerViewStatus.ACTIVE)) {
-      stringList.add(getString(R.string.activeStateTextViewString))
+      stringList.add(getString(R.string.active_state))
     }
     if (layerViewStatus.contains(LayerViewStatus.ERROR)) {
-      stringList.add(getString(R.string.errorStateTextViewString))
+      stringList.add(getString(R.string.error_state))
     }
     if (layerViewStatus.contains(LayerViewStatus.LOADING)) {
-      stringList.add(getString(R.string.loadingStateTextViewString))
+      stringList.add(getString(R.string.loading_state))
     }
     if (layerViewStatus.contains(LayerViewStatus.NOT_VISIBLE)) {
-      stringList.add(getString(R.string.notVisibleStateTextViewString))
+      stringList.add(getString(R.string.not_visible_state))
     }
     if (layerViewStatus.contains(LayerViewStatus.OUT_OF_SCALE)) {
-      stringList.add(getString(R.string.outOfScaleStateTextViewString))
+      stringList.add(getString(R.string.out_of_scale_state))
     }
     if (layerViewStatus.contains(LayerViewStatus.WARNING)) {
-      stringList.add(getString(R.string.warningStateTextViewString))
+      stringList.add(getString(R.string.warning_state))
     }
     activeStateTextView.text = stringList.joinToString(", ")
   }

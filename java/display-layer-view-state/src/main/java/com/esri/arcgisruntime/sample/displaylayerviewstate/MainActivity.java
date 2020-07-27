@@ -130,11 +130,11 @@ public class MainActivity extends AppCompatActivity {
         if (mFeatureLayer == null) return;
 
         if (mFeatureLayer.isVisible()) {
-          hideButton.setText("Show layer");
+          hideButton.setText(R.string.show_layer);
           mFeatureLayer.setVisible(false);
         }
         else {
-          hideButton.setText("Hide layer");
+          hideButton.setText(R.string.hide_layer);
           mFeatureLayer.setVisible(true);
         }
       }
