@@ -1,0 +1,26 @@
+{
+    "category": "Analysis",
+    "description": "Find the closest vertex and coordinate of a geometry to a point.",
+    "formal_name": "NearestVertex",
+    "ignore": false,
+    "images": [
+        "nearest-vertex.png"
+    ],
+    "keywords": [
+        "analysis",
+        "coordinate",
+        "geometry",
+        "nearest",
+        "proximity",
+        "vertex"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "GeometryEngine",
+        "ProximityResult"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/nearestvertex/MainActivity.kt"
+    ],
+    "title": "Nearest vertex"
+}

@@ -24,6 +24,5 @@
 
     <!-- Feature Service URL -->
     <string name="sample_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
-    <string name="storage_permission_denied">Storage permission denied</string>
 
 </resources>

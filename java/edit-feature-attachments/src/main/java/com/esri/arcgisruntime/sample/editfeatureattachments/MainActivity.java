@@ -22,8 +22,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,6 +30,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
 import com.esri.arcgisruntime.data.Attachment;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
   private FeatureLayer mFeatureLayer;
   private ArcGISFeature mSelectedArcGISFeature;
   private Callout mCallout;
-  private android.graphics.Point mClickPoint;
+  private android.graphics.Point mTapPoint;
 
   private List<Attachment> attachments;
   private String mSelectedArcGISFeatureAttributeValue;
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
     // create a map with the streets basemap
-    ArcGISMap map = new ArcGISMap(Basemap.Type.STREETS, 44.354388, -119.998245, 5);
+    ArcGISMap map = new ArcGISMap(Basemap.Type.STREETS, 40.0, -95.0, 4);
     // set the map to be displayed in the map view
     mMapView.setMap(map);
 
@@ -92,10 +92,10 @@ public class MainActivity extends AppCompatActivity {
 
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override
-      public boolean onSingleTapConfirmed(MotionEvent e) {
+      public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
 
         // get the point that was clicked and convert it to a point in map coordinates
-        mClickPoint = new android.graphics.Point((int) e.getX(), (int) e.getY());
+        mTapPoint = new android.graphics.Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY()));
 
         // clear any previous selection
         mFeatureLayer.clearSelection();
@@ -104,54 +104,49 @@ public class MainActivity extends AppCompatActivity {
 
         // identify the GeoElements in the given layer
         final ListenableFuture<IdentifyLayerResult> futureIdentifyLayer = mMapView
-            .identifyLayerAsync(mFeatureLayer, mClickPoint, 5, false, 1);
+            .identifyLayerAsync(mFeatureLayer, mTapPoint, 5, false, 1);
 
         // add done loading listener to fire when the selection returns
-        futureIdentifyLayer.addDoneListener(new Runnable() {
-          @Override
-          public void run() {
-            try {
-              // call get on the future to get the result
-              IdentifyLayerResult layerResult = futureIdentifyLayer.get();
-              List<GeoElement> resultGeoElements = layerResult.getElements();
-              if (!resultGeoElements.isEmpty()) {
-                if (resultGeoElements.get(0) instanceof ArcGISFeature) {
-                  progressDialog.show();
-                  mSelectedArcGISFeature = (ArcGISFeature) resultGeoElements.get(0);
-                  // highlight the selected feature
-                  mFeatureLayer.selectFeature(mSelectedArcGISFeature);
-                  mAttributeID = mSelectedArcGISFeature.getAttributes().get("objectid").toString();
-                  // get the number of attachments
-                  final ListenableFuture<List<Attachment>> attachmentResults = mSelectedArcGISFeature.fetchAttachmentsAsync();
-                  attachmentResults.addDoneListener(new Runnable() {
-                    @Override
-                    public void run() {
-                      try {
-                        attachments = attachmentResults.get();
-                        Log.d("number of attachments :", attachments.size() + "");
-                        // show callout with the value for the attribute "typdamage" of the selected feature
-                        mSelectedArcGISFeatureAttributeValue = (String) mSelectedArcGISFeature.getAttributes().get("typdamage");
-                        if (progressDialog.isShowing()) {
-                          progressDialog.dismiss();
-                        }
-                        showCallout(mSelectedArcGISFeatureAttributeValue, attachments.size());
-                        Toast.makeText(MainActivity.this, getApplication().getString(R.string.info_button_message), Toast.LENGTH_SHORT).show();
-                      } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
-                      }
+        futureIdentifyLayer.addDoneListener(() -> {
+          try {
+            // call get on the future to get the result
+            IdentifyLayerResult layerResult = futureIdentifyLayer.get();
+            List<GeoElement> resultGeoElements = layerResult.getElements();
+            if (!resultGeoElements.isEmpty()) {
+              if (resultGeoElements.get(0) instanceof ArcGISFeature) {
+                progressDialog.show();
+                mSelectedArcGISFeature = (ArcGISFeature) resultGeoElements.get(0);
+                // highlight the selected feature
+                mFeatureLayer.selectFeature(mSelectedArcGISFeature);
+                mAttributeID = mSelectedArcGISFeature.getAttributes().get("objectid").toString();
+                // get the number of attachments
+                final ListenableFuture<List<Attachment>> attachmentResults = mSelectedArcGISFeature.fetchAttachmentsAsync();
+                attachmentResults.addDoneListener(() -> {
+                  try {
+                    attachments = attachmentResults.get();
+                    // show callout with the value for the attribute "typdamage" of the selected feature
+                    mSelectedArcGISFeatureAttributeValue = (String) mSelectedArcGISFeature.getAttributes().get("typdamage");
+                    if (progressDialog.isShowing()) {
+                      progressDialog.dismiss();
                     }
-                  });
-                }
-              } else {
-                // none of the features on the map were selected
-                mCallout.dismiss();
+                    showCallout(mSelectedArcGISFeatureAttributeValue, attachments.size());
+                    Toast.makeText(MainActivity.this, getApplication().getString(R.string.info_button_message), Toast.LENGTH_SHORT).show();
+                  } catch (Exception e) {
+                    String error = "Error getting attachment results: " + e.getMessage();
+                    Log.e(TAG, error);
+                    Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+                  }
+                });
               }
-            } catch (Exception e) {
-              Log.e(TAG, "Select feature failed: " + e.getMessage());
+            } else {
+              // none of the features on the map were selected
+              mCallout.dismiss();
             }
+          } catch (Exception e1) {
+            Log.e(TAG, "Select feature failed: " + e1.getMessage());
           }
         });
-        return super.onSingleTapConfirmed(e);
+        return super.onSingleTapConfirmed(motionEvent);
       }
     });
   }
@@ -167,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
     TextView calloutContent = mCalloutLayout.findViewById(R.id.calloutTextView);
     calloutContent.setText(title);
 
-    TextView calloutAttachment = mCalloutLayout.findViewById(R.id.attchTV);
+    TextView calloutAttachment = mCalloutLayout.findViewById(R.id.attachTextView);
     String attachmentText = getString(R.string.attachment_info_message) + noOfAttachments;
     calloutAttachment.setText(attachmentText);
 
@@ -194,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create attachment text view for the callout
     TextView calloutAttachment = new TextView(getApplicationContext());
-    calloutAttachment.setId(R.id.attchTV);
+    calloutAttachment.setId(R.id.attachTextView);
     calloutAttachment.setTextColor(Color.BLACK);
     calloutAttachment.setTextSize(13);
     calloutContent.setPadding(0, 20, 20, 0);

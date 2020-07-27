@@ -23,7 +23,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.esri.arcgisruntime.data.QueryParameters
+import com.esri.arcgisruntime.data.Feature
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Envelope
 import com.esri.arcgisruntime.geometry.SpatialReferences
@@ -50,14 +50,17 @@ class MainActivity : AppCompatActivity() {
     // create a map with the streets base map type
     val streetsMap = ArcGISMap(Basemap.createStreets()).apply {
       // set an initial view point
-      initialViewpoint = Viewpoint(Envelope(
-        -1131596.019761, 3893114.069099, 3926705.982140, 7977912.461790,
-        SpatialReferences.getWebMercator()))
+      initialViewpoint = Viewpoint(
+        Envelope(
+          -1131596.019761, 3893114.069099, 3926705.982140, 7977912.461790,
+          SpatialReferences.getWebMercator()
+        )
+      )
       // add the feature layer to the map's operational layers
       operationalLayers.add(featureLayer)
     }
 
-    mapView.let {
+    mapView.let { it ->
       // set the map to be displayed in the layout's map view
       it.map = streetsMap
       // give any item selected on the map view a red selection halo
@@ -65,36 +68,31 @@ class MainActivity : AppCompatActivity() {
       // set an on touch listener on the map view
       it.onTouchListener = object : DefaultMapViewOnTouchListener(this, it) {
         override fun onSingleTapConfirmed(motionEvent: MotionEvent): Boolean {
+          // clear the previous selection
+          featureLayer.clearSelection()
           // get the point that was tapped and convert it to a point in map coordinates
-          val tappedPoint = it.screenToLocation(android.graphics.Point(motionEvent.x.roundToInt(),
-            motionEvent.y.roundToInt()))
+          val tappedPoint =
+            android.graphics.Point(motionEvent.x.roundToInt(), motionEvent.y.roundToInt())
           // set a tolerance for accuracy of returned selections from point tapped
-          val tolerance = 25
-          val mapTolerance = tolerance * it.unitsPerDensityIndependentPixel
-          // create objects required to do a selection with a query
-          val envelope = Envelope(tappedPoint.x - mapTolerance, tappedPoint.y - mapTolerance,
-            tappedPoint.x + mapTolerance, tappedPoint.y + mapTolerance, streetsMap.spatialReference)
-          // define query parameters for the extent tapped
-          val queryParameters = QueryParameters()
-          queryParameters.geometry = envelope
-          // call select features
-          val featureQueryResultFuture =
-            featureLayer.selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW)
-          // add done loading listener to fire when the selection returns
-          featureQueryResultFuture.addDoneListener{
+          val tolerance = 25.0
+
+          val identifyLayerResultFuture =
+            mapView.identifyLayerAsync(featureLayer, tappedPoint, tolerance, false, -1)
+          identifyLayerResultFuture.addDoneListener {
             try {
-              // call get on the future to get the result
-              val featureQueryResult = featureQueryResultFuture.get()
-              // create an Iterator
-              val iterator = featureQueryResult.iterator()
-              // cycle through selections
-              var counter = 0
-              // count the features selected
-              while (iterator.hasNext()) {
-                iterator.next()
-                counter++
+              val identifyLayerResult = identifyLayerResultFuture.get()
+              // get the elements in the selection that are features
+              val features = identifyLayerResult.elements.filterIsInstance<Feature>()
+              // select each feature
+              features.forEach { feature ->
+                featureLayer.selectFeature(feature)
               }
-              Toast.makeText(applicationContext, "$counter features selected", Toast.LENGTH_SHORT).show()
+              // make a toast to show the number of features selected
+              Toast.makeText(
+                applicationContext,
+                "${features.size} features selected",
+                Toast.LENGTH_SHORT
+              ).show()
             } catch (e: Exception) {
               val errorMessage = "Select feature failed: " + e.message
               Log.e(TAG, errorMessage)
