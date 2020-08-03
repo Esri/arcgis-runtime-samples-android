@@ -72,3 +72,4 @@ include ':add-features-feature-service',
         ':viewshed-location',
         ':wmts-layer'
 include ':display-layer-view-state'
+include ':group-layers'
