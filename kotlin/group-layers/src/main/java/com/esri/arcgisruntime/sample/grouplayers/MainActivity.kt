@@ -1,21 +1,25 @@
 package com.esri.arcgisruntime.sample.grouplayers
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.esri.arcgisruntime.data.ServiceFeatureTable
+import com.esri.arcgisruntime.layers.ArcGISSceneLayer
+import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.layers.GroupLayer
+import com.esri.arcgisruntime.layers.GroupVisibilityMode
 import com.esri.arcgisruntime.layers.Layer
 import com.esri.arcgisruntime.mapping.ArcGISScene
+import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.LayerList
-import com.esri.arcgisruntime.portal.Portal
-import com.esri.arcgisruntime.portal.PortalItem
+import com.esri.arcgisruntime.mapping.view.Camera
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,17 +27,62 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    val portal = Portal("https://www.arcgis.com/")
-    val portalItem = PortalItem(portal, "74ec7d6ca482442ba24f80b708aec67e")
-
-    val scene = ArcGISScene(portalItem)
-
+    // create a scene with an imagery basemap
+    val scene = ArcGISScene(Basemap.createImagery())
     sceneView.scene = scene
 
-    scene.operationalLayers.forEach { layer -> layer.addDoneLoadingListener { layer.isVisible = true } }
+    // create different types of layers
+    val trees =
+      ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Trees/SceneServer/layers/0").apply {
+        name = "Trees"
+      }
+    val pathways =
+      FeatureLayer(ServiceFeatureTable("https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Pathways/FeatureServer/1")).apply {
+        name = "Pathways"
+      }
+    val projectArea =
+      FeatureLayer(ServiceFeatureTable("https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/DevelopmentProjectArea/FeatureServer/0")).apply {
+        name = "Project area"
+        // set the scene's viewpoint based on this layer's extent
+        addDoneLoadingListener {
+          sceneView.setViewpointCamera(
+            Camera(
+              fullExtent.center,
+              700.0,
+              0.0,
+              60.0,
+              0.0
+            )
+          )
+        }
+      }
+    val buildingsA =
+      ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_BuildingShells/SceneServer/layers/0").apply {
+        name = "Buildings A"
+      }
+    val buildingsB =
+      ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevB_BuildingShells/SceneServer/layers/0").apply {
+        name = "Buildings B"
+      }
 
-    scene.addDoneLoadingListener {
-      setupBottomSheet(scene.operationalLayers)
+    // create a group layer from scratch by adding the trees, pathways, and project area as children
+    val projectAreaGroupLayer = GroupLayer().apply {
+      name = "Project area group"
+      layers.addAll(arrayOf(trees, pathways, projectArea))
+    }
+    // create a group layer for the buildings and set its visibility mode to exclusive
+    val buildingsGroupLayer = GroupLayer().apply {
+      name = "Buildings group"
+      layers.addAll(arrayOf(buildingsA, buildingsB))
+      visibilityMode = GroupVisibilityMode.EXCLUSIVE
+    }
+
+    // add the group layer and other layers to the scene as operational layers
+    scene.apply {
+      operationalLayers.addAll(arrayOf(projectAreaGroupLayer, buildingsGroupLayer))
+      addDoneLoadingListener {
+        setupBottomSheet(scene.operationalLayers)
+      }
     }
   }
 
@@ -77,15 +126,36 @@ class MainActivity : AppCompatActivity() {
         }
       }
 
-      recyclerView.adapter = LayerListAdapter(layers) { layer: Layer, isChecked: Boolean -> onLayerCheckedChanged(layer, isChecked)}
+      // initialize the recycler view with the group layers and set the callback for the checkboxes
+      recyclerView.adapter = LayerListAdapter(layers) { layer: Layer, isChecked: Boolean ->
+        onLayerCheckedChanged(
+          layer,
+          isChecked
+        )
+      }
       recyclerView.layoutManager = LinearLayoutManager(applicationContext)
       // rotate the arrow so it starts off in the correct rotation
       header.imageView.rotation = 180f
     }
 
-    // shrink the scene view so it is not hidden under the bottom sheet header
+    // shrink the scene view so it is not hidden under the bottom sheet header when collapsed
     (sceneView.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin =
       bottomSheet.header.height
+  }
+
+  override fun onResume() {
+    super.onResume()
+    sceneView.resume()
+  }
+
+  override fun onPause() {
+    sceneView.pause()
+    super.onPause()
+  }
+
+  override fun onDestroy() {
+    sceneView.dispose()
+    super.onDestroy()
   }
 }
 
