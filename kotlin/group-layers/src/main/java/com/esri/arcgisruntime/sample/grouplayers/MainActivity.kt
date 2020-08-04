@@ -87,7 +87,6 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun onLayerCheckedChanged(layer: Layer, isChecked: Boolean) {
-    Toast.makeText(this, "${layer.name} is now $isChecked", Toast.LENGTH_LONG).show()
     layer.isVisible = isChecked
   }
 
