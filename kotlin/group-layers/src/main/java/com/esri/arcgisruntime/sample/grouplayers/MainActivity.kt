@@ -2,7 +2,6 @@ package com.esri.arcgisruntime.sample.grouplayers
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -58,11 +57,11 @@ class MainActivity : AppCompatActivity() {
       }
     val buildingsA =
       ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_BuildingShells/SceneServer/layers/0").apply {
-        name = "Buildings A"
+        name = "Dev A"
       }
     val buildingsB =
       ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevB_BuildingShells/SceneServer/layers/0").apply {
-        name = "Buildings B"
+        name = "Dev B"
       }
 
     // create a group layer from scratch by adding the trees, pathways, and project area as children

@@ -59,9 +59,9 @@ class LayerListAdapter(
     when (holder.itemViewType) {
       TYPE_EXCLUSIVE -> (holder as ExclusiveLayerViewHolder).let { exclusiveLayerViewHolder ->
         val layer = dataSet[position]
-        exclusiveLayerViewHolder.onLayerChecked = onLayerCheckedChanged
-        exclusiveLayerViewHolder.textView.text = layer.name
         exclusiveLayerViewHolder.layer = layer
+        exclusiveLayerViewHolder.textView.text = layer.name
+        exclusiveLayerViewHolder.onLayerChecked = onLayerCheckedChanged
         exclusiveLayerViewHolder.sublayers.apply {
           clear()
           addAll((layer as GroupLayer).layers)
