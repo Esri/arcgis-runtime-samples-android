@@ -12,15 +12,17 @@ In a land development project, you might group layers according to the phase of 
 
 ## How to use the sample
 
-Display the layers in the map in a table of contents by clicking the map icon at the top right. Toggle the checkbox next to a layer's name to change its visibility. Turning a group layer's visibility off will override the visibility of its child layers.
+The layers in the map will be displayed in a table of contents. Toggle the checkbox next to a layer's name to change its visibility. Turning a group layer's visibility off will override the visibility of its child layers.
 
 ## How it works
 
-1. Add the `GroupLayer` and additional `Layer`s as operational layers in the `SceneView`.
-2. To build the table of contents:
-  * Add each layer to the table of contents.
-  * For each `Layer` in the `SceneView`, if `canShowInLegend()` returns true, add it to the table of contents.
-3. To toggle the visibility of the group, simply change the group layer's visibility property.
+1. Create an empty `GroupLayer`.
+2. Add a child layer to the group layer's layers collection.
+3. Set the group layer's `GroupVisibilityMode` to change its behavior:
+  * `GroupVisibilityMode.INDEPENDENT` allows each sublayer to change its visibility independently.
+  * `GroupVisibilityMode.EXCLUSIVE` allows only one sublayer to be visible at a time.
+  * `GroupVisibilityMode.INHERITED` treats the group layer as if it is one merged layer.
+4. To toggle the visibility of the group, simply change the group layer's visibility property.
 
 ## Relevant API
 

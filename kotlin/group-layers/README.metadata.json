@@ -1,0 +1,25 @@
+{
+    "category": "Layers",
+    "description": "Group a collection of layers together and toggle their visibility as a group.",
+    "formal_name": "GroupLayers",
+    "ignore": false,
+    "images": [
+        "group-layers.png"
+    ],
+    "keywords": [
+        "group layer",
+        "layers"
+    ],
+    "language": "kotlin",
+    "redirect_from": [
+        "/android/latest/sample-code/group-layers.htm"
+    ],
+    "relevant_apis": [
+        "GroupLayer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/grouplayers/LayerListAdapter.kt",
+        "src/main/java/com/esri/arcgisruntime/sample/grouplayers/MainActivity.kt"
+    ],
+    "title": "Group layers"
+}
