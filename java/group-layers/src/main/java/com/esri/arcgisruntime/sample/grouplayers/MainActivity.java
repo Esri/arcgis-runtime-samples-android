@@ -21,6 +21,7 @@ import java.util.List;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import com.esri.arcgisruntime.layers.GroupVisibilityMode;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -90,13 +91,19 @@ public class MainActivity extends AppCompatActivity implements OnLayerCheckedCha
     FeatureLayer projectArea = new FeatureLayer(
         new ServiceFeatureTable(getString(R.string.project_area_feature_service)));
 
-    // create a group layer from scratch by adding the layers as children
+    // create a group layer from scratch by adding the trees, pathways, and project area as children
+    GroupLayer projectAreaGroupLayer = new GroupLayer();
+    projectAreaGroupLayer.setName("Project area group");
+    projectAreaGroupLayer.getLayers().addAll(Arrays.asList(projectArea, pathways, trees));
+
+    // create a group layer for the buildings and set its visibility mode to exclusive
     GroupLayer buildingsGroupLayer = new GroupLayer();
     buildingsGroupLayer.setName("Buildings group");
     buildingsGroupLayer.getLayers().addAll(Arrays.asList(buildingsA, buildingsB));
+    buildingsGroupLayer.setVisibilityMode(GroupVisibilityMode.EXCLUSIVE);
 
     // add the group layer and other layers to the scene as operational layers
-    scene.getOperationalLayers().addAll(Arrays.asList(projectArea, buildingsGroupLayer, trees, pathways));
+    scene.getOperationalLayers().addAll(Arrays.asList(projectAreaGroupLayer, buildingsGroupLayer));
 
     // zoom to the extent of the group layer when the child layers are loaded
     ListenableList<Layer> layers = buildingsGroupLayer.getLayers();
