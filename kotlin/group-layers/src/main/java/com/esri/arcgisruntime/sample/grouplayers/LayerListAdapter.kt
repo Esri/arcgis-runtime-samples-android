@@ -75,25 +75,29 @@ class LayerListAdapter(
     when (holder.itemViewType) {
       TYPE_EXCLUSIVE -> (holder as ExclusiveLayerViewHolder).let { exclusiveLayerViewHolder ->
         val layer = dataSet[position]
-        exclusiveLayerViewHolder.layer = layer
-        exclusiveLayerViewHolder.textView.text = layer.name
-        exclusiveLayerViewHolder.onLayerChecked = onLayerCheckedChanged
-        exclusiveLayerViewHolder.sublayers.apply {
-          clear()
-          addAll((layer as GroupLayer).layers)
+        exclusiveLayerViewHolder.apply {
+          this.layer = layer
+          textView.text = layer.name
+          onLayerChecked = onLayerCheckedChanged
+          sublayers.apply {
+            clear()
+            addAll((layer as GroupLayer).layers)
+          }
+          populate()
         }
-        exclusiveLayerViewHolder.populate()
       }
       else -> (holder as DefaultLayerViewHolder).let { defaultLayerViewHolder ->
         val layer = dataSet[position]
-        defaultLayerViewHolder.layer = layer
-        defaultLayerViewHolder.textView.text = layer.name
-        defaultLayerViewHolder.onLayerChecked = onLayerCheckedChanged
-        defaultLayerViewHolder.sublayers.apply {
-          clear()
-          addAll((layer as GroupLayer).layers)
+        defaultLayerViewHolder.apply {
+          this.layer = layer
+          textView.text = layer.name
+          onLayerChecked = onLayerCheckedChanged
+          sublayers.apply {
+            clear()
+            addAll((layer as GroupLayer).layers)
+          }
+          populate()
         }
-        defaultLayerViewHolder.populate()
       }
     }
   }
@@ -115,6 +119,10 @@ class LayerListAdapter(
 
     var onLayerChecked: ((Layer, Boolean) -> Unit)? = null
 
+    /**
+     * Sets the OnCheckedChangeListener of the top-level layer
+     * and creates checkboxes for each of the layer's sublayers with a label and OnCheckedChangeListener.
+     */
     fun populate() {
       val checkBox: CheckBox = itemView.findViewById(R.id.checkbox)
       layer?.let { layer ->
@@ -147,6 +155,10 @@ class LayerListAdapter(
 
     var onLayerChecked: ((Layer, Boolean) -> Unit)? = null
 
+    /**
+     * Sets the OnCheckedChangeListener of the top-level layer
+     * and creates radio buttons for each of the layer's sublayers with a label and OnCheckedChangeListener.
+     */
     fun populate() {
       val checkBox: CheckBox = itemView.findViewById(R.id.checkbox)
       layer?.let { layer ->

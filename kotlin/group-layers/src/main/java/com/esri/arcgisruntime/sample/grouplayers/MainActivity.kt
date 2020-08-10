@@ -42,10 +42,6 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a scene with an imagery basemap
-    val scene = ArcGISScene(Basemap.createImagery())
-    sceneView.scene = scene
-
     // create different types of layers
     val trees =
       ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Trees/SceneServer/layers/0").apply {
@@ -92,13 +88,16 @@ class MainActivity : AppCompatActivity() {
       visibilityMode = GroupVisibilityMode.EXCLUSIVE
     }
 
-    // add the group layer and other layers to the scene as operational layers
-    scene.apply {
+    // create a scene with an imagery basemap
+    val scene = ArcGISScene(Basemap.createImagery()).apply {
+      // add the group layer and other layers to the scene as operational layers
       operationalLayers.addAll(arrayOf(projectAreaGroupLayer, buildingsGroupLayer))
       addDoneLoadingListener {
-        setupBottomSheet(scene.operationalLayers)
+        setupBottomSheet(operationalLayers)
       }
     }
+    // set the scene to be displayed in the scene view
+    sceneView.scene = scene
   }
 
   private fun onLayerCheckedChanged(layer: Layer, isChecked: Boolean) {
@@ -118,13 +117,13 @@ class MainActivity : AppCompatActivity() {
       // animate the arrow when the bottom sheet slides
       addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
-          bottomSheet.header.imageView.rotation = slideOffset * 180f
+          bottomSheet.header.arrowImageView.rotation = slideOffset * 180f
         }
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-          bottomSheet.header.imageView.rotation = when (newState) {
+          bottomSheet.header.arrowImageView.rotation = when (newState) {
             BottomSheetBehavior.STATE_EXPANDED -> 180f
-            else -> bottomSheet.header.imageView.rotation
+            else -> bottomSheet.header.arrowImageView.rotation
           }
         }
       })
@@ -149,7 +148,7 @@ class MainActivity : AppCompatActivity() {
       }
       recyclerView.layoutManager = LinearLayoutManager(applicationContext)
       // rotate the arrow so it starts off in the correct rotation
-      header.imageView.rotation = 180f
+      header.arrowImageView.rotation = 180f
     }
 
     // shrink the scene view so it is not hidden under the bottom sheet header when collapsed

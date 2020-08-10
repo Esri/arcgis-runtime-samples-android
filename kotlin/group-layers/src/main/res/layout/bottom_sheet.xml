@@ -27,13 +27,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/arrowImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
             app:layout_constraintBottom_toBottomOf="@+id/headerTitle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_expand_less_black_24dp" />
+            app:srcCompat="@drawable/ic_expand_less_white_24dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
