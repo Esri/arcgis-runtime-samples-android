@@ -175,10 +175,11 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
       ((LinearLayout.LayoutParams) view.getLayoutParams()).setMarginStart(
           itemView.getResources().getDimensionPixelSize(R.dimen.adapter_item_child_margin_start));
 
+      CheckBox checkBox = view.findViewById(R.id.layerCheckbox);
+
       // if this is an exclusive layer it will have a non-null mRadioGroup
       if (mRadioGroup != null) {
         // hide the checkbox that exists
-        CheckBox checkBox = view.findViewById(R.id.layerCheckbox);
         checkBox.setVisibility(View.GONE);
         // create a radio button or reuse an old one
         RadioButton radioButton = view.findViewWithTag("radioButton");
@@ -192,20 +193,23 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
         radioButton.setChecked(childLayer.isVisible());
         radioButton.setOnCheckedChangeListener(
             ((buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(childLayer, isChecked)));
-        ((TextView) view.findViewById(R.id.layerNameTextView)).setText(childLayer.getName());
+        TextView textView = (TextView) view.findViewById(R.id.layerNameTextView);
+        textView.setText(childLayer.getName());
         if (mRadioGroup.findViewWithTag(childLayer) == null) {
           // remove the view from the existing parent and add it to the radio group
           ViewGroup parent = (ViewGroup) view.getParent();
-          if (parent != null)
+          if (parent != null) {
             parent.removeView(view);
+          }
           mRadioGroup.addView(view);
         }
       } else {
-        ((CheckBox) view.findViewById(R.id.layerCheckbox)).setOnCheckedChangeListener(null);
-        ((CheckBox) view.findViewById(R.id.layerCheckbox)).setChecked(childLayer.isVisible());
-        ((CheckBox) view.findViewById(R.id.layerCheckbox)).setOnCheckedChangeListener(
+        checkBox.setOnCheckedChangeListener(null);
+        checkBox.setChecked(childLayer.isVisible());
+        checkBox.setOnCheckedChangeListener(
             (buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(childLayer, isChecked));
-        ((TextView) view.findViewById(R.id.layerNameTextView)).setText(childLayer.getName());
+        TextView textView = (TextView) view.findViewById(R.id.layerNameTextView);
+        textView.setText(childLayer.getName());
         if (mChildLayout.findViewWithTag(childLayer) == null) {
           mChildLayout.addView(view);
         }
