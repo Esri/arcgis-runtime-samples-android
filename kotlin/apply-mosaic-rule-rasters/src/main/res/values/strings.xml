@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Apply mosaic rule to rasters</string>
+    <string-array name="mosaic_rules">
+        <item>Default</item>
+        <item>Northwest</item>
+        <item>Center</item>
+        <item>By attribute</item>
+        <item>Lock raster</item>
+    </string-array>
 </resources>

@@ -9,45 +9,77 @@
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"/>
+<!--    <LinearLayout-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent">-->
 
-    </com.esri.arcgisruntime.mapping.view.MapView>
-    <LinearLayout
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/defaultButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Default" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/northwestButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Northwest rule" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/centerButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Center rule" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/byAttributeRuleButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="ByAttribute rule" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/lockRasterButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Lock raster rule" />-->
+<!--    </LinearLayout>-->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@android:color/white">
+    <TextView
+        android:id="@+id/spinnerLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/spinner"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/defaultButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Default" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/northwestButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Northwest rule" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/centerButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Center rule" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/byAttributeRuleButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ByAttribute rule" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/lockRasterButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lock raster rule" />
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/spinner"
+        android:text="Mosaic rule: "
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu"
+        android:layout_marginStart="8dp"/>
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/spinnerLabel"
+        android:background="@android:color/white"
+        android:paddingEnd="24dp"/>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/spinner"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="-8dp"
+        android:src="@drawable/ic_expand_more_black_24dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
