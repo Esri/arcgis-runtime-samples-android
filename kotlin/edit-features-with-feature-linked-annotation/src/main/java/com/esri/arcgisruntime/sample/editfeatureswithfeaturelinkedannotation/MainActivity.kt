@@ -125,7 +125,6 @@ class MainActivity : AppCompatActivity() {
   private fun selectFeature(screenPoint: android.graphics.Point) {
     // clear any previously selected features
     clearSelection()
-    selectedFeature = null
 
     // identify across all layers
     val identifyLayerResultFuture = mapView.identifyLayersAsync(screenPoint, 10.0, false)
@@ -187,14 +186,20 @@ class MainActivity : AppCompatActivity() {
       editAttributeView.streetEditText.setText(selectedFeature.attributes["ST_STR_NAM"].toString())
       setPositiveButton("OK") { _, _ ->
         // set AD_ADDRESS value to the int from the edit text
-        selectedFeature.attributes["AD_ADDRESS"] =
-          editAttributeView.addressNumberEditText.text.toString().toInt()
+        val editAttributeString = editAttributeView.addressNumberEditText.text.toString()
+        if (editAttributeString != "") {
+          selectedFeature.attributes["AD_ADDRESS"] = editAttributeString.toInt()
+        } else {
+          Toast.makeText(applicationContext, "AD_ADDRESS field must contain an integer!", Toast.LENGTH_LONG).show()
+        }
         // set ST_STR_NAM value to the string from edit text
         selectedFeature.attributes["ST_STR_NAM"] = editAttributeView.streetEditText.text.toString()
         // update the selected feature's feature table
         selectedFeature.featureTable?.updateFeatureAsync(selectedFeature)
       }
-      setNegativeButton("Cancel") { _, _ -> }
+      setNegativeButton("Cancel") { _, _ ->
+        clearSelection()
+      }
     }.show()
   }
 
@@ -211,7 +216,6 @@ class MainActivity : AppCompatActivity() {
     selectedFeature?.featureTable?.updateFeatureAsync(selectedFeature)
     // clear selection of point
     clearSelection()
-    selectedFeature = null
   }
 
   /**
@@ -243,17 +247,16 @@ class MainActivity : AppCompatActivity() {
     // clear selection of polyline
     clearSelection()
     selectedFeatureIsPolyline = false
-    selectedFeature = null
   }
 
   /**
    * Clear selection from all feature layers.
-   *
    */
   private fun clearSelection() {
     mapView.map.operationalLayers.filterIsInstance<FeatureLayer>().forEach { featureLayer ->
       featureLayer.clearSelection()
     }
+    selectedFeature = null
   }
 
   override fun onPause() {
