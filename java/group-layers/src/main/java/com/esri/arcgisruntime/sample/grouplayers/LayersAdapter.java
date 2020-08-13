@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Esri
+ * Copyright 2020 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,19 @@ package com.esri.arcgisruntime.sample.grouplayers;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import com.esri.arcgisruntime.layers.GroupLayer;
+import com.esri.arcgisruntime.layers.GroupVisibilityMode;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 
@@ -52,7 +55,8 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
     // inflate the layout for a GroupLayer
     if (getItemViewType(i) == VIEW_TYPE_PARENT) {
       return new ParentViewHolder(
-          LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_item_group_layer_parent, viewGroup, false),
+          LayoutInflater.from(viewGroup.getContext())
+              .inflate(R.layout.adapter_item_group_layer_parent, viewGroup, false),
           this);
     } else {
       // inflate the layout for a Layer
@@ -111,6 +115,7 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
     private CheckBox mParentCheckbox;
     private TextView mParentTextView;
     private final ViewGroup mChildLayout;
+    private RadioGroup mRadioGroup;
 
     ParentViewHolder(@NonNull View itemView, OnLayerCheckedChangedListener onLayerCheckedChangedListener) {
       super(itemView, onLayerCheckedChangedListener);
@@ -129,6 +134,13 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
 
       // if children can be shown in legend
       if (((GroupLayer) layer).isShowChildrenInLegend()) {
+
+        boolean isExclusive = ((GroupLayer) layer).getVisibilityMode() == GroupVisibilityMode.EXCLUSIVE;
+        if (isExclusive) {
+          mRadioGroup = new RadioGroup(mParentCheckbox.getContext());
+          mChildLayout.addView(mRadioGroup);
+        }
+
         for (Layer childLayer : ((GroupLayer) layer).getLayers()) {
           // if the layer has not been loaded
           if (childLayer.getLoadStatus() != LoadStatus.LOADED) {
@@ -151,7 +163,7 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
     private void addChildLayer(Layer childLayer) {
       View view;
 
-      // try to reuse the View if possible
+      // try to reuse the view if possible
       if (mChildLayout.findViewWithTag(childLayer) == null) {
         view = LayoutInflater.from(itemView.getContext())
             .inflate(R.layout.adapter_item_group_layer, mChildLayout, false);
@@ -162,13 +174,45 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
 
       ((LinearLayout.LayoutParams) view.getLayoutParams()).setMarginStart(
           itemView.getResources().getDimensionPixelSize(R.dimen.adapter_item_child_margin_start));
-      ((CheckBox) view.findViewById(R.id.layerCheckbox)).setOnCheckedChangeListener(null);
-      ((CheckBox) view.findViewById(R.id.layerCheckbox)).setChecked(childLayer.isVisible());
-      ((CheckBox) view.findViewById(R.id.layerCheckbox)).setOnCheckedChangeListener(
-          (buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(childLayer, isChecked));
-      ((TextView) view.findViewById(R.id.layerNameTextView)).setText(childLayer.getName());
-      if (mChildLayout.findViewWithTag(childLayer) == null) {
-        mChildLayout.addView(view);
+
+      CheckBox checkBox = view.findViewById(R.id.layerCheckbox);
+
+      // if this is an exclusive layer it will have a non-null mRadioGroup
+      if (mRadioGroup != null) {
+        // hide the checkbox that exists
+        checkBox.setVisibility(View.GONE);
+        // create a radio button or reuse an old one
+        RadioButton radioButton = view.findViewWithTag("radioButton");
+        if (radioButton == null) {
+          radioButton = new RadioButton(itemView.getContext());
+          radioButton.setTag("radioButton");
+          ((ViewGroup) view).addView(radioButton, 0);
+        }
+
+        radioButton.setOnCheckedChangeListener(null);
+        radioButton.setChecked(childLayer.isVisible());
+        radioButton.setOnCheckedChangeListener(
+            ((buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(childLayer, isChecked)));
+        TextView textView = (TextView) view.findViewById(R.id.layerNameTextView);
+        textView.setText(childLayer.getName());
+        if (mRadioGroup.findViewWithTag(childLayer) == null) {
+          // remove the view from the existing parent and add it to the radio group
+          ViewGroup parent = (ViewGroup) view.getParent();
+          if (parent != null) {
+            parent.removeView(view);
+          }
+          mRadioGroup.addView(view);
+        }
+      } else {
+        checkBox.setOnCheckedChangeListener(null);
+        checkBox.setChecked(childLayer.isVisible());
+        checkBox.setOnCheckedChangeListener(
+            (buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(childLayer, isChecked));
+        TextView textView = (TextView) view.findViewById(R.id.layerNameTextView);
+        textView.setText(childLayer.getName());
+        if (mChildLayout.findViewWithTag(childLayer) == null) {
+          mChildLayout.addView(view);
+        }
       }
     }
   }

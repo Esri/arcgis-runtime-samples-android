@@ -21,6 +21,7 @@ include ':add-features-feature-service',
         ':display-device-location',
         ':display-grid',
         ':display-kml',
+        ':display-layer-view-state'
         ':display-map',
         ':display-subtype-feature-layer',
         ':display-utility-associations',
@@ -40,6 +41,7 @@ include ':add-features-feature-service',
         ':generate-geodatabase',
         ':generate-offline-map',
         ':geodesic-operations',
+        ':group-layers'
         ':identify-layers',
         ':identify-raster-cell',
         ':integrated-mesh-layer',
@@ -71,4 +73,3 @@ include ':add-features-feature-service',
         ':viewshed-geoprocessing',
         ':viewshed-location',
         ':wmts-layer'
-include ':display-layer-view-state'
