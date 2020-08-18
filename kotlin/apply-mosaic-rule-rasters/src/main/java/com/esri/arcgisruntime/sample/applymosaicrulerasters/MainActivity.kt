@@ -37,6 +37,7 @@ import com.esri.arcgisruntime.raster.ImageServiceRaster
 import com.esri.arcgisruntime.raster.MosaicMethod
 import com.esri.arcgisruntime.raster.MosaicOperation
 import com.esri.arcgisruntime.raster.MosaicRule
+import com.esri.arcgisruntime.security.AuthenticationManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    AuthenticationManager.setTrustAllSigners(true)
 
     val rasterLayer = RasterLayer(imageServiceRaster)
     mapView.map = ArcGISMap(Basemap.createTopographicVector()).apply {
@@ -59,35 +61,19 @@ class MainActivity : AppCompatActivity() {
 
     rasterLayer.addDoneLoadingListener {
       if (rasterLayer.loadStatus != LoadStatus.LOADED) {
-        Log.e("MainActivity", "Raster layer failed to load: ${rasterLayer.loadError}")
+        rasterLayer.loadError?.let { error ->
+          Log.e("MainActivity", "Raster layer failed to load: ${error.cause}")
+        }
         return@addDoneLoadingListener
       }
 
       mapView.setViewpointAsync(Viewpoint(rasterLayer.fullExtent.center, 25000.0))
     }
 
-//    defaultButton.setOnClickListener { setMosaicRule("Default") }
-//    northwestButton.setOnClickListener { setMosaicRule("Northwest") }
-//    centerButton.setOnClickListener { setMosaicRule("Center") }
-//    byAttributeRuleButton.setOnClickListener { setMosaicRule("By attribute") }
-//    lockRasterButton.setOnClickListener { setMosaicRule("Lock raster") }
-//    spinner.adapter = object : ArrayAdapter<String> (
-//      this,
-//      android.R.layout.simple_spinner_item,
-//      listOf("Default", "Northwest", "Center", "By attribute", "Lock raster")
-//    ) {
-//      override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-//        val spinnerItem = LayoutInflater.from(this@MainActivity).inflate(android.R.layout.simple_spinner_dropdown_item, parent, false)
-//        spinnerItem..text = getItem(position) as String
-//        return spinnerItem
-//      }
-//
-//      override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View = getView(position, convertView, parent)
-//    }
     ArrayAdapter.createFromResource(
       this,
       R.array.mosaic_rules,
-      android.R.layout.simple_spinner_dropdown_item
+      android.R.layout.simple_spinner_item
     ).also { adapter ->
       adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
       spinner.adapter = adapter
@@ -101,7 +87,6 @@ class MainActivity : AppCompatActivity() {
       override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         setMosaicRule(parent.getItemAtPosition(position) as String)
       }
-
     }
   }
 

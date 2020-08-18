@@ -10,7 +10,7 @@ ext {
     andSupportLibVersion = '1.1.0'
     constraintLayoutVersion = '1.1.3'
     multidexVersion = '2.0.1'
-    arcgisVersion = '100.9.0-2872'
+    arcgisVersion = '100.9.0-2879'
     arcgisToolkitVersion = '100.8.0'
     materialVersion = '1.1.0'
     recyclerViewVersion = '1.1.0'
