@@ -22,7 +22,7 @@ To open a web scene from a portal item:
 
 ## About the data
 
-This sample uses a [Geneva, Switzerland Scene](https://www.arcgis.com/home/item.html?id=c6f90b19164c4283884361005faea852) hosted on ArcGIS Online.
+This sample uses a [Montreal, Canada Scene](https://www.arcgis.com/home/item.html?id=63a16e0c9f364d0fab9d55f40bf71771) hosted on ArcGIS Online.
 
 ## Relevant API
 
