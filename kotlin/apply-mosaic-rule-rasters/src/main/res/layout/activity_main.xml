@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
-            android:text="Mosaic rule: "
+            android:text="@string/mosaic_rule_label"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu"
             app:layout_constraintBaseline_toBaselineOf="@id/spinner"
             app:layout_constraintEnd_toStartOf="@id/spinner"

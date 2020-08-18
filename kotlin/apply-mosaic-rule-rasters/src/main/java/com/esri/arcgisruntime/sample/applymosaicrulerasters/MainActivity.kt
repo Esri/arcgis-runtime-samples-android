@@ -19,31 +19,29 @@ package com.esri.arcgisruntime.sample.applymosaicrulerasters
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.layers.RasterLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
-import com.esri.arcgisruntime.mapping.view.LayerViewStatus
 import com.esri.arcgisruntime.raster.ImageServiceRaster
 import com.esri.arcgisruntime.raster.MosaicMethod
 import com.esri.arcgisruntime.raster.MosaicOperation
 import com.esri.arcgisruntime.raster.MosaicRule
-import com.esri.arcgisruntime.security.AuthenticationManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+  private val TAG = MainActivity::class.java.simpleName
+
+  // create an image service raster from a url for an image service
   private val imageServiceRaster: ImageServiceRaster by lazy {
     ImageServiceRaster("http://rtc-100-8.esri.com/arcgis/rest/services/imageServices/amberg_germany/ImageServer").apply {
+      // set its mosaic rule
       if (mosaicRule == null) mosaicRule = MosaicRule()
     }
   }
@@ -52,17 +50,17 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    AuthenticationManager.setTrustAllSigners(true)
-
+    // create a raster layer from the image service and add it to a new map on the map view
     val rasterLayer = RasterLayer(imageServiceRaster)
     mapView.map = ArcGISMap(Basemap.createTopographicVector()).apply {
       operationalLayers.add(rasterLayer)
     }
 
+    // set the map view's viewpoint when the raster layer is loaded
     rasterLayer.addDoneLoadingListener {
       if (rasterLayer.loadStatus != LoadStatus.LOADED) {
         rasterLayer.loadError?.let { error ->
-          Log.e("MainActivity", "Raster layer failed to load: ${error.cause}")
+          Log.e(TAG, "Raster layer failed to load: ${error.cause}")
         }
         return@addDoneLoadingListener
       }
@@ -70,6 +68,7 @@ class MainActivity : AppCompatActivity() {
       mapView.setViewpointAsync(Viewpoint(rasterLayer.fullExtent.center, 25000.0))
     }
 
+    // set up the spinner with some predefined mosaic rules
     ArrayAdapter.createFromResource(
       this,
       R.array.mosaic_rules,
@@ -79,7 +78,7 @@ class MainActivity : AppCompatActivity() {
       spinner.adapter = adapter
     }
 
-    spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+    spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
       override fun onNothingSelected(parent: AdapterView<*>?) {
         setMosaicRule("Default")
       }
@@ -90,6 +89,11 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Applies one of the predefined mosaic rules to the image service raster.
+   *
+   * @param ruleName one of "Default", "Northwest", "Center", "By attribute", and "Lock raster"
+   */
   private fun setMosaicRule(ruleName: String) {
     imageServiceRaster.mosaicRule = MosaicRule().apply {
       when (ruleName) {

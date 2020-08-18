@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Apply mosaic rule to rasters</string>
+    <string name="mosaic_rule_label">Mosaic rule:</string>
     <string-array name="mosaic_rules">
         <item>Default</item>
         <item>Northwest</item>

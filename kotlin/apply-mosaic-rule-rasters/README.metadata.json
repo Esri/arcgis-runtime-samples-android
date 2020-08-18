@@ -1,0 +1,26 @@
+{
+    "category": "Visualization",
+    "description": "Apply mosaic rule to a mosaic dataset of rasters.",
+    "formal_name": "ApplyMosaicRuleToRasters",
+    "ignore": false,
+    "images": [
+        "apply-mosaic-rule-rasters.png"
+    ],
+    "keywords": [
+        "image service",
+        "mosaic method",
+        "mosaic rule",
+        "raster"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "AGSImageServiceRaster",
+        "AGSMosaicMethod",
+        "AGSMosaicOperation",
+        "AGSMosaicRule"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/applymosaicrulerasters/MainActivity.kt"
+    ],
+    "title": "Apply mosaic rule to rasters"
+}
