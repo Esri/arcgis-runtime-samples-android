@@ -2,5 +2,5 @@
     <string name="app_name">Open Scene Portal Item</string>
     <!-- arcgis online portal url -->
     <string name="arcgis_portal_url">https://www.arcgis.com/</string>
-    <string name="buildings_brest">c6f90b19164c4283884361005faea852</string>
+    <string name="buildings_montreal">63a16e0c9f364d0fab9d55f40bf71771</string>
 </resources>
