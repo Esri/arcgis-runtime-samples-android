@@ -21,7 +21,7 @@ include ':add-features-feature-service',
         ':display-device-location',
         ':display-grid',
         ':display-kml',
-        ':display-layer-view-state'
+        ':display-layer-view-state',
         ':display-map',
         ':display-subtype-feature-layer',
         ':display-utility-associations',
