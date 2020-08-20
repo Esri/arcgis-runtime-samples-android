@@ -57,15 +57,16 @@ class MainActivity : AppCompatActivity() {
       operationalLayers.add(rasterLayer)
     }
 
-    // set the map view's viewpoint when the raster layer is loaded
+    // listen for the raster layer to finish loading
     rasterLayer.addDoneLoadingListener {
+    // if the raster layer didn't load
       if (rasterLayer.loadStatus != LoadStatus.LOADED) {
         rasterLayer.loadError?.let { error ->
           Log.e(TAG, "Raster layer failed to load: ${error.cause}")
         }
         return@addDoneLoadingListener
       }
-
+     // set the map's viewpoint to the raster extent
       mapView.setViewpointAsync(Viewpoint(rasterLayer.fullExtent.center, 25000.0))
     }
 
