@@ -50,8 +50,9 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a raster layer from the image service and add it to a new map on the map view
+    // create a raster layer from the image service
     val rasterLayer = RasterLayer(imageServiceRaster)
+    // add the raster layer to a new map on the map view
     mapView.map = ArcGISMap(Basemap.createTopographicVector()).apply {
       operationalLayers.add(rasterLayer)
     }
