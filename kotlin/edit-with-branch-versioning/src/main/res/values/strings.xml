@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Edit with branch versioning</string>
+    <string-array name="version_access_array">
+        <item>PRIVATE</item>
+        <item>PROTECTED</item>
+        <item>PUBLIC</item>
+    </string-array>
+    <string-array name="feature_attribute_array">
+        <item>Affected</item>
+        <item>Destroyed</item>
+        <item>Inaccessible</item>
+        <item>Minor</item>
+        <item>Major</item>
+    </string-array>
+</resources>
