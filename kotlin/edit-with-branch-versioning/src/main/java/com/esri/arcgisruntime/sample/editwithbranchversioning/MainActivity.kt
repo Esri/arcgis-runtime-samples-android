@@ -197,9 +197,14 @@ class MainActivity : AppCompatActivity() {
 
     if (serviceGeodatabase.hasLocalEdits()) {
       serviceGeodatabase.applyEditsAsync().addDoneListener {
-        serviceGeodatabase.switchVersionAsync(versionName).addDoneListener {
-          currentVersionName = versionName
-          currentVersionNameTextView.text = currentVersionName
+        try {
+          serviceGeodatabase.switchVersionAsync(versionName).addDoneListener {
+            currentVersionName = versionName
+            currentVersionNameTextView.text = currentVersionName
+          }
+        } catch (e: Exception) {
+          val error = "Failed to switch version: ${e.message}"
+          Log.e(TAG, error)
         }
       }
     } else {
@@ -240,7 +245,9 @@ class MainActivity : AppCompatActivity() {
         }
         .setPositiveButton("Confirm") { dialog: DialogInterface, id: Int ->
           feature.attributes["TYPDAMAGE"] = featureAttributeSpinner.selectedItem.toString()
-          feature.featureTable.updateFeatureAsync(feature)
+          feature.featureTable.updateFeatureAsync(feature).addDoneListener {
+            serviceGeodatabase.applyEditsAsync()
+          }
           shouldEditLocation = true
           dialog.dismiss()
         }
@@ -251,7 +258,9 @@ class MainActivity : AppCompatActivity() {
 
   private fun editFeatureLocation(feature: Feature, screenPoint: android.graphics.Point) {
     feature.geometry = mapView.screenToLocation(screenPoint)
-    feature.featureTable.updateFeatureAsync(feature)
+    feature.featureTable.updateFeatureAsync(feature).addDoneListener {
+      serviceGeodatabase.applyEditsAsync()
+    }
     featureLayer?.clearSelection()
     shouldEditLocation = false
     selectedFeature = null
