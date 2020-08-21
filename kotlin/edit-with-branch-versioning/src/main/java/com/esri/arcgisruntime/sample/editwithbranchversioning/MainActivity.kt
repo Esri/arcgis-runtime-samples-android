@@ -40,6 +40,8 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
+import com.esri.arcgisruntime.security.AuthenticationManager
+import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
 import com.esri.arcgisruntime.security.UserCredential
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -49,7 +51,6 @@ class MainActivity : AppCompatActivity() {
 
   private val serviceGeodatabase: ServiceGeodatabase by lazy {
     ServiceGeodatabase("https://sampleserver7.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer").apply {
-      credential = UserCredential("editor01", "editor01.password")
       loadAsync()
     }
   }
@@ -67,6 +68,8 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+   AuthenticationManager.setAuthenticationChallengeHandler(DefaultAuthenticationChallengeHandler(this))
 
     mapView.map = ArcGISMap(Basemap.createStreetsVector())
 
@@ -171,7 +174,9 @@ class MainActivity : AppCompatActivity() {
       }
 
       serviceGeodatabase.createVersionAsync(serviceVersionParameters).addDoneListener {
-        createdVersionName = versionName
+//        val username = AuthenticationManager.CredentialCache.getPersistence().credentials.elementAt(0).credential.username
+        val username = serviceGeodatabase.credential.username
+        createdVersionName =  "${username}.${versionName}"
         switchVersion(null)
       }
 
@@ -205,13 +210,20 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
           val error = "Failed to switch version: ${e.message}"
           Log.e(TAG, error)
+          Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
         }
       }
     } else {
-      serviceGeodatabase.switchVersionAsync(versionName).addDoneListener {
-        currentVersionName = versionName
-        currentVersionNameTextView.text = currentVersionName
-        featureLayer?.featureTable?.loadAsync()
+      try {
+        serviceGeodatabase.switchVersionAsync(versionName).addDoneListener {
+          currentVersionName = versionName
+          currentVersionNameTextView.text = currentVersionName
+          featureLayer?.featureTable?.loadAsync()
+        }
+      } catch (e: Exception) {
+        val error = "Failed to switch version: ${e.message}"
+        Log.e(TAG, error)
+        Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
       }
     }
   }
