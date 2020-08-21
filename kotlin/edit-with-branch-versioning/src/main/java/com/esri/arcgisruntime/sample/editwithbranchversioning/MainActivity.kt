@@ -173,14 +173,11 @@ class MainActivity : AppCompatActivity() {
       setDescription(description)
     }
 
-    serviceGeodatabase.createVersionAsync(serviceVersionParameters).addDoneListener {
-
-      val serviceVersionInfoFuture = serviceGeodatabase.fetchVersionsAsync()
-      serviceVersionInfoFuture.addDoneListener {
-        val serviceVersionInfo = serviceVersionInfoFuture.get()
-        createdVersionName = serviceVersionInfo.last().name
-        switchVersion(null)
-      }
+    val serviceVersionInfoFuture = serviceGeodatabase.createVersionAsync(serviceVersionParameters)
+    serviceVersionInfoFuture.addDoneListener {
+      val serviceVersionInfo = serviceVersionInfoFuture.get()
+      createdVersionName = serviceVersionInfo.name
+      switchVersion(null)
     }
 
     createBranchButton.visibility = View.GONE
