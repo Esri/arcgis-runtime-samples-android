@@ -42,7 +42,6 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
-import com.esri.arcgisruntime.security.UserCredential
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -69,7 +68,11 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-   AuthenticationManager.setAuthenticationChallengeHandler(DefaultAuthenticationChallengeHandler(this))
+    AuthenticationManager.setAuthenticationChallengeHandler(
+      DefaultAuthenticationChallengeHandler(
+        this
+      )
+    )
 
     mapView.map = ArcGISMap(Basemap.createStreetsVector())
 
@@ -163,27 +166,27 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun createBranch(versionName: String, versionAccess: VersionAccess, description: String) {
-    val serviceVersionInfoFuture = serviceGeodatabase.fetchVersionsAsync()
-    serviceVersionInfoFuture.addDoneListener {
-      val serviceVersionInfo = serviceVersionInfoFuture.get()
 
-      val serviceVersionParameters = ServiceVersionParameters().apply {
-        name = versionName
-        access = versionAccess
-        setDescription(description)
-      }
+    val serviceVersionParameters = ServiceVersionParameters().apply {
+      name = versionName
+      access = versionAccess
+      setDescription(description)
+    }
 
-      serviceGeodatabase.createVersionAsync(serviceVersionParameters).addDoneListener {
-//        val username = AuthenticationManager.CredentialCache.getPersistence().credentials.elementAt(0).credential.username
-        val username = serviceGeodatabase.credential.username
-        createdVersionName =  "${username}.${versionName}"
+    serviceGeodatabase.createVersionAsync(serviceVersionParameters).addDoneListener {
+
+      val serviceVersionInfoFuture = serviceGeodatabase.fetchVersionsAsync()
+      serviceVersionInfoFuture.addDoneListener {
+        val serviceVersionInfo = serviceVersionInfoFuture.get()
+        createdVersionName = serviceVersionInfo.last().name
         switchVersion(null)
       }
-
-      createBranchButton.visibility = View.GONE
-      switchVersionButton.visibility = View.VISIBLE
     }
+
+    createBranchButton.visibility = View.GONE
+    switchVersionButton.visibility = View.VISIBLE
   }
+
 
   fun switchVersion(view: View?) {
     if (createdVersionName.isBlank() || defaultVersionName.isBlank()) {
@@ -197,8 +200,6 @@ class MainActivity : AppCompatActivity() {
       createdVersionName -> defaultVersionName
       else -> defaultVersionName
     }
-
-    val serviceFeatureTable = featureLayer?.featureTable as ServiceFeatureTable
 
     if (serviceGeodatabase.hasLocalEdits()) {
       serviceGeodatabase.applyEditsAsync().addDoneListener {
