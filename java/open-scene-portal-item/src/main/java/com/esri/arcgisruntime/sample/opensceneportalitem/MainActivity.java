@@ -15,9 +15,9 @@
  */
 package com.esri.arcgisruntime.sample.opensceneportalitem;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.portal.Portal;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     // get the portal url and portal item from ArcGIS online
     Portal portal = new Portal(getString(R.string.arcgis_portal_url), false);
-    PortalItem portalItem = new PortalItem(portal, getString(R.string.buildings_brest));
+    PortalItem portalItem = new PortalItem(portal, getString(R.string.buildings_netherlands));
 
     // create scene from a portal item
     ArcGISScene scene = new ArcGISScene(portalItem);
