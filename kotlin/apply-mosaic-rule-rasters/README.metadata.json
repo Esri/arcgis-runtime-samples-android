@@ -14,10 +14,10 @@
     ],
     "language": "kotlin",
     "relevant_apis": [
-        "AGSImageServiceRaster",
-        "AGSMosaicMethod",
-        "AGSMosaicOperation",
-        "AGSMosaicRule"
+        "ImageServiceRaster",
+        "MosaicMethod",
+        "MosaicOperation",
+        "MosaicRule"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/applymosaicrulerasters/MainActivity.kt"

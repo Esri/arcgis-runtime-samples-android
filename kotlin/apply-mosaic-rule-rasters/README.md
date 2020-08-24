@@ -19,17 +19,17 @@ When the rasters are loaded, choose from a list of preset mosaic rules to apply 
 
 ## How it works
 
-1. Create an `AGSImageServiceRaster` using the service's URL.
-2. Create an `AGSMosaicRule` object and set it to the `mosaicRule` property of the image service raster, if it does not specify a mosaic rule.
-3. Create an `AGSRasterLayer` from the image service raster and add it to the map.
+1. Create an `ImageServiceRaster` using the service's URL.
+2. Create a `MosaicRule` object and set it to the `mosaicRule` property of the image service raster, if it does not specify a mosaic rule.
+3. Create a `RasterLayer` from the image service raster and add it to the map.
 4. Set the `mosaicMethod`, `mosaicOperation` and other properties of the mosaic rule object accordingly to specify the rule on the raster dataset.
 
 ## Relevant API
 
-* AGSImageServiceRaster
-* AGSMosaicMethod
-* AGSMosaicOperation
-* AGSMosaicRule
+* ImageServiceRaster
+* MosaicMethod
+* MosaicOperation
+* MosaicRule
 
 ## About the data
 
