@@ -33,7 +33,7 @@ import com.esri.arcgisruntime.mapping.LayerList
 import com.esri.arcgisruntime.mapping.view.Camera
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.bottom_sheet.view.*
+import kotlinx.android.synthetic.main.group_layers_bottom_sheet.view.*
 
 
 class MainActivity : AppCompatActivity() {

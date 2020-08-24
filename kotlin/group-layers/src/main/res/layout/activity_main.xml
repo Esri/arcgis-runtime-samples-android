@@ -11,7 +11,7 @@
 
     <include
         android:id="@+id/bottomSheet"
-        layout="@layout/bottom_sheet"
+        layout="@layout/group_layers_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:behavior_hideable="false"
