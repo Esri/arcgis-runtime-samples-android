@@ -297,7 +297,7 @@ class MainActivity : AppCompatActivity() {
           featureLayer?.clearSelection()
           dialog.cancel()
         }
-        .setPositiveButton("Confirm") { dialog: DialogInterface, id: Int ->
+        .setNeutralButton("Edit location") { dialog: DialogInterface, id: Int ->
           // change the attribute
           feature.attributes["TYPDAMAGE"] = featureAttributeSpinner.selectedItem.toString()
           feature.featureTable.updateFeatureAsync(feature).addDoneListener {
@@ -305,6 +305,17 @@ class MainActivity : AppCompatActivity() {
           }
           // once the attribute has been changed, new taps should edit the selected feature's location
           shouldEditLocation = true
+          dialog.dismiss()
+        }
+        .setPositiveButton("Confirm") { dialog: DialogInterface, id: Int ->
+          // change the attribute
+          feature.attributes["TYPDAMAGE"] = featureAttributeSpinner.selectedItem.toString()
+          feature.featureTable.updateFeatureAsync(feature).addDoneListener {
+            serviceGeodatabase.applyEditsAsync()
+          }
+          // clear the selection
+          featureLayer?.clearSelection()
+          selectedFeature = null
           dialog.dismiss()
         }
         .create()
