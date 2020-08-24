@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     // get the portal url and portal item from ArcGIS online
     Portal portal = new Portal(getString(R.string.arcgis_portal_url), false);
-    PortalItem portalItem = new PortalItem(portal, getString(R.string.buildings_netherlands));
+    PortalItem portalItem = new PortalItem(portal, getString(R.string.buildings_berlin));
 
     // create scene from a portal item
     ArcGISScene scene = new ArcGISScene(portalItem);

@@ -2,5 +2,5 @@
     <string name="app_name">Open scene (portal item)</string>
     <!-- arcgis online portal url -->
     <string name="arcgis_portal_url">https://www.arcgis.com/</string>
-    <string name="buildings_netherlands">46c47340708f446ba7f112f139e8ae5e</string>
+    <string name="buildings_berlin">31874da8a16d45bfbc1273422f772270</string>
 </resources>
