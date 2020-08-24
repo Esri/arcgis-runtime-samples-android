@@ -68,51 +68,63 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // create a default authentication challenge handler because this service requires authentication
     AuthenticationManager.setAuthenticationChallengeHandler(
       DefaultAuthenticationChallengeHandler(
         this
       )
     )
 
+    // create a map with a streets vector basemap and set it to the mapview
     mapView.map = ArcGISMap(Basemap.createStreetsVector())
 
     serviceGeodatabase.addDoneLoadingListener {
+      // check if the service geodatabase failed to load
       if (serviceGeodatabase.loadStatus != LoadStatus.LOADED) {
         serviceGeodatabase.loadError?.let {
           Log.e(TAG, "Service Geodatabase failed to load: ${it.cause}")
         }
         return@addDoneLoadingListener
       }
+      // create a feature layer from the service geodatabase's service feature table
       val serviceFeatureTable = serviceGeodatabase.getTable(0)
       featureLayer = FeatureLayer(serviceFeatureTable).apply {
         addDoneLoadingListener {
+          // zoom to the layer's extent
           mapView.setViewpointAsync(Viewpoint(fullExtent))
         }
       }
+      // add the layer to the map
       mapView.map.apply {
         operationalLayers.add(featureLayer)
       }
+      // track the current and default version names and display the current name in a text view
       defaultVersionName = serviceGeodatabase.defaultVersionName
       currentVersionName = serviceGeodatabase.versionName
       currentVersionNameTextView.text = currentVersionName
 
       mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+          // ignore taps when not on a newly created version
           if (currentVersionName.isBlank() || currentVersionName == defaultVersionName) {
             val message = "This sample does not allow editing of features on the default version."
             Log.e(TAG, message)
             Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
             return true
           }
+
           val point = android.graphics.Point(e.x.toInt(), e.y.toInt())
           if (shouldEditLocation) {
+            // if the feature should be moved, move it and return early
             selectedFeature?.let { editFeatureLocation(it, point) }
             return true
           }
+          // if no feature should be moved, identify the feature at the tapped location
           try {
             val identifyFuture = mapView.identifyLayerAsync(featureLayer, point, 10.0, false)
             identifyFuture.addDoneListener {
               val identifyLayerResult = identifyFuture.get()
+              // if there is a feature at the location, select it and edit its attribute
               if (identifyLayerResult.elements.isNotEmpty()) {
                 val feature = identifyLayerResult.elements[0] as Feature
                 featureLayer?.selectFeature(feature)
@@ -131,7 +143,14 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Shows a dialog to the user which is used to create a new branch version.
+   * Calls createBranch() when the user confirms the dialog.
+   *
+   * @param view which called this method on click
+   */
   fun createBranchDialog(view: View) {
+    // inflate the view and store references to each of its components
     val dialogView = LayoutInflater.from(this).inflate(R.layout.create_branch_dialog, null)
     val createNameEditText = dialogView.findViewById<EditText>(R.id.createNameEditText)
     val createDescriptionEditText =
@@ -139,6 +158,7 @@ class MainActivity : AppCompatActivity() {
     val createAccessVersionSpinner =
       dialogView.findViewById<Spinner>(R.id.createAccessVersionSpinner)
 
+    // set up the spinner to display options for the VersionAccess parameter for creating a branch
     ArrayAdapter.createFromResource(
       this,
       R.array.version_access_array,
@@ -148,12 +168,14 @@ class MainActivity : AppCompatActivity() {
       createAccessVersionSpinner.adapter = adapter
     }
 
+    // set up the dialog
     val builder = AlertDialog.Builder(this)
     builder
       .setView(dialogView)
       .setTitle("Create a new version")
       .setNegativeButton("Cancel") { dialog: DialogInterface, _: Int -> dialog.cancel() }
       .setPositiveButton("Confirm") { dialog: DialogInterface, _: Int ->
+        // when the user confirms, create the branch using the options selected
         createBranch(
           createNameEditText.text.toString(),
           VersionAccess.valueOf(createAccessVersionSpinner.selectedItem.toString()),
@@ -165,27 +187,42 @@ class MainActivity : AppCompatActivity() {
       .show()
   }
 
+  /**
+   * Creates a new branch version for this geodatabase
+   *
+   * @param versionName the name of the new version
+   * @param versionAccess the access modifier for this branch
+   * @param description a text description of the versioin
+   */
   private fun createBranch(versionName: String, versionAccess: VersionAccess, description: String) {
-
+    // create service version parameters with the parameters passed to this method
     val serviceVersionParameters = ServiceVersionParameters().apply {
       name = versionName
       access = versionAccess
       setDescription(description)
     }
 
+    // create the version
     val serviceVersionInfoFuture = serviceGeodatabase.createVersionAsync(serviceVersionParameters)
     serviceVersionInfoFuture.addDoneListener {
+      // get the new version's name and switch to it
       val serviceVersionInfo = serviceVersionInfoFuture.get()
       createdVersionName = serviceVersionInfo.name
       switchVersion(null)
     }
 
+    // hide the create branch button and allow the user to switch branches now
     createBranchButton.visibility = View.GONE
     switchVersionButton.visibility = View.VISIBLE
   }
 
-
+  /**
+   *  Switches between the created version and the default version
+   *
+   *  @param view which called this method on click
+   */
   fun switchVersion(view: View?) {
+    // don't switch versions if the new branch has not been created yet or the names have not been stored
     if (createdVersionName.isBlank() || defaultVersionName.isBlank()) {
       val message = "Version names have not been initialized!"
       Log.e(TAG, message)
@@ -198,6 +235,7 @@ class MainActivity : AppCompatActivity() {
       else -> defaultVersionName
     }
 
+    // if the user has changed any features, apply them before switching
     if (serviceGeodatabase.hasLocalEdits()) {
       serviceGeodatabase.applyEditsAsync().addDoneListener {
         try {
@@ -226,11 +264,16 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Creates a dialog which allows the user to edit a feature's TYPDAMAGE attribute
+   */
   private fun editFeatureAttribute() {
+    // if there is a selected feature
     selectedFeature?.let { feature ->
       val dialogView =
         LayoutInflater.from(this).inflate(R.layout.edit_feature_attribute_dialog, null)
       val featureAttributeSpinner = dialogView.findViewById<Spinner>(R.id.featureAttributeSpinner)
+      // set up the spinner with acceptable TYPDAMAGE values
       ArrayAdapter.createFromResource(
         this,
         R.array.feature_attribute_array,
@@ -245,19 +288,23 @@ class MainActivity : AppCompatActivity() {
           .indexOf(feature.attributes["TYPDAMAGE"])
       )
 
+      // create the dialog
       val builder = AlertDialog.Builder(this)
       builder.setView(dialogView)
         .setTitle("Edit feature attribute")
         .setNegativeButton("Cancel") { dialog: DialogInterface, id: Int ->
+          // clear the selection
           selectedFeature = null
           featureLayer?.clearSelection()
           dialog.cancel()
         }
         .setPositiveButton("Confirm") { dialog: DialogInterface, id: Int ->
+          // change the attribute
           feature.attributes["TYPDAMAGE"] = featureAttributeSpinner.selectedItem.toString()
           feature.featureTable.updateFeatureAsync(feature).addDoneListener {
             serviceGeodatabase.applyEditsAsync()
           }
+          // once the attribute has been changed, new taps should edit the selected feature's location
           shouldEditLocation = true
           dialog.dismiss()
         }
@@ -266,8 +313,15 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Changes the location of a feature on the map
+   *
+   * @param feature to move
+   * @param screenPoint where the user tapped on the screen
+   */
   private fun editFeatureLocation(feature: Feature, screenPoint: android.graphics.Point) {
     feature.geometry = mapView.screenToLocation(screenPoint)
+    // features will not update visually until the feature table has been updated
     feature.featureTable.updateFeatureAsync(feature).addDoneListener {
       serviceGeodatabase.applyEditsAsync()
     }
@@ -275,5 +329,4 @@ class MainActivity : AppCompatActivity() {
     shouldEditLocation = false
     selectedFeature = null
   }
-
 }
