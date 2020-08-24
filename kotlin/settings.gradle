@@ -41,7 +41,7 @@ include ':add-features-feature-service',
         ':generate-geodatabase',
         ':generate-offline-map',
         ':geodesic-operations',
-        ':group-layers'
+        ':group-layers',
         ':identify-layers',
         ':identify-raster-cell',
         ':integrated-mesh-layer',
