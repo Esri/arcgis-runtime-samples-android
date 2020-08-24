@@ -32,7 +32,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.arcgisservices.ServiceVersionParameters
 import com.esri.arcgisruntime.arcgisservices.VersionAccess
 import com.esri.arcgisruntime.data.Feature
-import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.data.ServiceGeodatabase
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
@@ -328,5 +327,20 @@ class MainActivity : AppCompatActivity() {
     featureLayer?.clearSelection()
     shouldEditLocation = false
     selectedFeature = null
+  }
+
+  override fun onResume() {
+    super.onResume()
+    mapView.resume()
+  }
+
+  override fun onPause() {
+    mapView.pause()
+    super.onPause()
+  }
+
+  override fun onDestroy() {
+    mapView.dispose()
+    super.onDestroy()
   }
 }
