@@ -13,23 +13,23 @@
         android:layout_height="match_parent"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/createBranchButton"
+        android:id="@+id/createVersionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="16dp"
-        android:text="Create version"
-        android:onClick="createBranchDialog"/>
+        android:text="@string/create_version"
+        android:onClick="createVersionDialog"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/switchVersionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/createBranchButton"
+        app:layout_constraintEnd_toStartOf="@id/createVersionButton"
         android:layout_margin="16dp"
-        android:text="Switch version"
+        android:text="@string/switch_version"
         android:onClick="switchVersion"
         android:visibility="gone"/>
 
@@ -41,6 +41,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        style="@style/TextAppearance.AppCompat.Medium"/>
+        android:background="@android:color/white"
+        style="@style/TextAppearance.AppCompat.Headline"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

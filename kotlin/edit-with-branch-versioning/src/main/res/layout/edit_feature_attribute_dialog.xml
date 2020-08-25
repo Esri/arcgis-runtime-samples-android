@@ -17,7 +17,7 @@
             android:id="@+id/featureAttributeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TYPDAMAGE: " />
+            android:text="@string/typdamage" />
 
         <Spinner
             android:id="@+id/featureAttributeSpinner"

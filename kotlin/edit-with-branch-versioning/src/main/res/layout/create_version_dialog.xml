@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:hint="Enter a version name..."/>
+        android:hint="@string/enter_a_version_name"/>
 
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/createAccessVersionSpinner"
@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@id/createAccessVersionSpinner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:hint="Enter a description..."/>
+        android:hint="@string/enter_a_description"/>
 
 
 

@@ -54,14 +54,12 @@ class MainActivity : AppCompatActivity() {
   }
 
   private var featureLayer: FeatureLayer? = null
+  private var selectedFeature: Feature? = null
+  private var shouldEditLocation = false
 
   private var currentVersionName: String = ""
   private var createdVersionName: String = ""
   private var defaultVersionName: String = ""
-
-  private var shouldEditLocation = false
-
-  private var selectedFeature: Feature? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -143,21 +141,21 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Shows a dialog to the user which is used to create a new branch version.
-   * Calls createBranch() when the user confirms the dialog.
+   * Shows a dialog to the user which is used to create a new version.
+   * Calls createVersion() when the user confirms the dialog.
    *
    * @param view which called this method on click
    */
-  fun createBranchDialog(view: View) {
+  fun createVersionDialog(view: View) {
     // inflate the view and store references to each of its components
-    val dialogView = LayoutInflater.from(this).inflate(R.layout.create_branch_dialog, null)
+    val dialogView = LayoutInflater.from(this).inflate(R.layout.create_version_dialog, null)
     val createNameEditText = dialogView.findViewById<EditText>(R.id.createNameEditText)
     val createDescriptionEditText =
       dialogView.findViewById<EditText>(R.id.createDescriptionEditText)
     val createAccessVersionSpinner =
       dialogView.findViewById<Spinner>(R.id.createAccessVersionSpinner)
 
-    // set up the spinner to display options for the VersionAccess parameter for creating a branch
+    // set up the spinner to display options for the VersionAccess parameter for creating a version
     ArrayAdapter.createFromResource(
       this,
       R.array.version_access_array,
@@ -174,8 +172,8 @@ class MainActivity : AppCompatActivity() {
       .setTitle("Create a new version")
       .setNegativeButton("Cancel") { dialog: DialogInterface, _: Int -> dialog.cancel() }
       .setPositiveButton("Confirm") { dialog: DialogInterface, _: Int ->
-        // when the user confirms, create the branch using the options selected
-        createBranch(
+        // when the user confirms, create the version using the options selected
+        createVersion(
           createNameEditText.text.toString(),
           VersionAccess.valueOf(createAccessVersionSpinner.selectedItem.toString()),
           createDescriptionEditText.text.toString()
@@ -187,13 +185,13 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Creates a new branch version for this geodatabase
+   * Creates a new version for this geodatabase
    *
    * @param versionName the name of the new version
-   * @param versionAccess the access modifier for this branch
+   * @param versionAccess the access modifier for this version
    * @param description a text description of the versioin
    */
-  private fun createBranch(versionName: String, versionAccess: VersionAccess, description: String) {
+  private fun createVersion(versionName: String, versionAccess: VersionAccess, description: String) {
     // create service version parameters with the parameters passed to this method
     val serviceVersionParameters = ServiceVersionParameters().apply {
       name = versionName
@@ -210,8 +208,8 @@ class MainActivity : AppCompatActivity() {
       switchVersion(null)
     }
 
-    // hide the create branch button and allow the user to switch branches now
-    createBranchButton.visibility = View.GONE
+    // hide the create version button and allow the user to switch versions now
+    createVersionButton.visibility = View.GONE
     switchVersionButton.visibility = View.VISIBLE
   }
 
@@ -221,7 +219,7 @@ class MainActivity : AppCompatActivity() {
    *  @param view which called this method on click
    */
   fun switchVersion(view: View?) {
-    // don't switch versions if the new branch has not been created yet or the names have not been stored
+    // don't switch versions if the new version has not been created yet or the names have not been stored
     if (createdVersionName.isBlank() || defaultVersionName.isBlank()) {
       val message = "Version names have not been initialized!"
       Log.e(TAG, message)
@@ -264,7 +262,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   /**
-   * Creates a dialog which allows the user to edit a feature's TYPDAMAGE attribute
+   * Creates a dialog which allows the user to edit a feature's TYPDAMAGE attribute or go on to edit
+   * the feature's location
    */
   private fun editFeatureAttribute() {
     // if there is a selected feature
@@ -303,7 +302,7 @@ class MainActivity : AppCompatActivity() {
           feature.featureTable.updateFeatureAsync(feature).addDoneListener {
             serviceGeodatabase.applyEditsAsync()
           }
-          // once the attribute has been changed, new taps should edit the selected feature's location
+          // the next tap should edit the selected feature's location
           shouldEditLocation = true
           dialog.dismiss()
         }
