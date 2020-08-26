@@ -33,7 +33,7 @@ When the rasters are loaded, choose from a list of preset mosaic rules to apply 
 
 ## About the data
 
-This sample uses a [raster image service](https://sampleserver7.arcgisonline.com/arcgis/rest/services/amberg_germany/ImageServer) hosted on *ArcGIS Online* that shows aerial images of Amberg, Germany.
+This sample uses data from the [Amberg, Germany ImageServer](https://sampleserver7.arcgisonline.com/arcgis/rest/services/amberg_germany/ImageServer) which hosts a mosaic dataset containing several orthophoto TIFF images of Amberg, Germany.
 
 ## Additional information
 
