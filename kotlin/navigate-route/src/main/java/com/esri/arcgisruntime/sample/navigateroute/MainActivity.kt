@@ -197,7 +197,7 @@ class MainActivity : AppCompatActivity() {
       )
     }
 
-    // create a route tracker location data source to
+    // create a route tracker location data source to snap the location display to the route
     val routeTrackerLocationDataSource =
       RouteTrackerLocationDataSource(routeTracker, simulatedLocationDataSource)
     // get the map view's location display and set it up
@@ -260,7 +260,7 @@ class MainActivity : AppCompatActivity() {
         }
       }
     }
-    // start the LocationDisplay, which starts the RouteTrackerLocationDataSource
+    // start the LocationDisplay, which starts the RouteTrackerLocationDataSource and SimulatedLocationDataSource
     locationDisplay.startAsync()
     Toast.makeText(
       this,
