@@ -3,7 +3,7 @@
 
 Apply mosaic rule to a mosaic dataset of rasters.
 
-![Apply mosaic rule to rasters](apply-mosaic-rule-rasters.png)
+![Image of apply mosaic rule to rasters](apply-mosaic-rule-rasters.png)
 
 ## Use case
 
