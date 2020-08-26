@@ -188,15 +188,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     // set up a RouteTracker for navigation along the calculated route
-//    val routeTracker = RouteTracker(applicationContext, routeResult, 0).apply {
-//      enableReroutingAsync(
-//        routeTask,
-//        routeParameters,
-//        RouteTracker.ReroutingStrategy.TO_NEXT_WAYPOINT,
-//        true
-//      )
-//    }
-    // set up a RouteTracker for navigation along the calculated route
     val routeTracker = RouteTracker(this@MainActivity, routeResult, 0, true).apply {
       enableReroutingAsync(
         routeTask,
@@ -207,7 +198,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create a route tracker location data source to
-    val routeTrackerLocationDataSource = RouteTrackerLocationDataSource(routeTracker, simulatedLocationDataSource)
+    val routeTrackerLocationDataSource =
+      RouteTrackerLocationDataSource(routeTracker, simulatedLocationDataSource)
     // get the map view's location display and set it up
     val locationDisplay = mapView.locationDisplay.apply {
       // set the simulated location data source as the location data source for this app
@@ -218,58 +210,53 @@ class MainActivity : AppCompatActivity() {
     }
 
     // listen for changes in location
-    locationDisplay.addLocationChangedListener()
-    { locationChangedEvent ->
-      // track the location and update route tracking status
-      val trackLocationFuture = routeTracker.trackLocationAsync(locationChangedEvent.location)
-      trackLocationFuture.addDoneListener {
-        // get the route's tracking status
-        val trackingStatus = routeTracker.trackingStatus
-        // set geometries for the route ahead and the remaining route
-        routeAheadGraphic.geometry = trackingStatus.routeProgress.remainingGeometry
-        routeTraveledGraphic.geometry = trackingStatus.routeProgress.traversedGeometry
+    locationDisplay.addLocationChangedListener() { _ ->
+      // get the route's tracking status
+      val trackingStatus = routeTracker.trackingStatus
+      // set geometries for the route ahead and the remaining route
+      routeAheadGraphic.geometry = trackingStatus.routeProgress.remainingGeometry
+      routeTraveledGraphic.geometry = trackingStatus.routeProgress.traversedGeometry
 
-        // get remaining distance information
-        val remainingDistance: TrackingStatus.Distance =
-          trackingStatus.destinationProgress.remainingDistance
-        // covert remaining minutes to hours:minutes:seconds
-        val remainingTimeString = DateUtils
-          .formatElapsedTime((trackingStatus.destinationProgress.remainingTime * 60).toLong())
+      // get remaining distance information
+      val remainingDistance: TrackingStatus.Distance =
+        trackingStatus.destinationProgress.remainingDistance
+      // covert remaining minutes to hours:minutes:seconds
+      val remainingTimeString = DateUtils
+        .formatElapsedTime((trackingStatus.destinationProgress.remainingTime * 60).toLong())
 
-        // update text views
-        distanceRemainingTextView.text = getString(
-          R.string.distance_remaining, remainingDistance.displayText,
-          remainingDistance.displayTextUnits.pluralDisplayName
+      // update text views
+      distanceRemainingTextView.text = getString(
+        R.string.distance_remaining, remainingDistance.displayText,
+        remainingDistance.displayTextUnits.pluralDisplayName
+      )
+      timeRemainingTextView.text = getString(R.string.time_remaining, remainingTimeString)
+
+      // listen for new voice guidance events
+      routeTracker.addNewVoiceGuidanceListener { newVoiceGuidanceEvent ->
+        // use Android's text to speech to speak the voice guidance
+        speakVoiceGuidance(newVoiceGuidanceEvent.voiceGuidance.text)
+        nextDirectionTextView.text = getString(
+          R.string.next_direction,
+          newVoiceGuidanceEvent.voiceGuidance.text
         )
-        timeRemainingTextView.text = getString(R.string.time_remaining, remainingTimeString)
+      }
 
-        // listen for new voice guidance events
-        routeTracker.addNewVoiceGuidanceListener { newVoiceGuidanceEvent ->
-          // use Android's text to speech to speak the voice guidance
-          speakVoiceGuidance(newVoiceGuidanceEvent.voiceGuidance.text)
-          nextDirectionTextView.text = getString(
-            R.string.next_direction,
-            newVoiceGuidanceEvent.voiceGuidance.text
-          )
-        }
-
-        // if a destination has been reached
-        if (trackingStatus.destinationStatus == DestinationStatus.REACHED) {
-          // if there are more destinations to visit. Greater than 1 because the start point is considered a "stop"
-          if (routeTracker.trackingStatus.remainingDestinationCount > 1) {
-            // switch to the next destination
-            routeTracker.switchToNextDestinationAsync()
-            Toast.makeText(
-              this,
-              "Navigating to the second stop, the Fleet Science Center.",
-              Toast.LENGTH_LONG
-            ).show()
-          } else {
-            // the final destination has been reached, stop the simulated location data source
-            simulatedLocationDataSource.stop()
-            routeTrackerLocationDataSource.stop()
-            Toast.makeText(this, "Arrived at the final destination.", Toast.LENGTH_LONG).show()
-          }
+      // if a destination has been reached
+      if (trackingStatus.destinationStatus == DestinationStatus.REACHED) {
+        // if there are more destinations to visit. Greater than 1 because the start point is considered a "stop"
+        if (routeTracker.trackingStatus.remainingDestinationCount > 1) {
+          // switch to the next destination
+          routeTracker.switchToNextDestinationAsync()
+          Toast.makeText(
+            this,
+            "Navigating to the second stop, the Fleet Science Center.",
+            Toast.LENGTH_LONG
+          ).show()
+        } else {
+          // the final destination has been reached, stop the simulated location data source
+          simulatedLocationDataSource.stop()
+          routeTrackerLocationDataSource.stop()
+          Toast.makeText(this, "Arrived at the final destination.", Toast.LENGTH_LONG).show()
         }
       }
     }
