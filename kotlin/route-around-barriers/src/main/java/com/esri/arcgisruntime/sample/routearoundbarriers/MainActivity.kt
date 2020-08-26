@@ -80,14 +80,14 @@ class MainActivity : AppCompatActivity() {
   private val routeLineSymbol by lazy {
     SimpleLineSymbol(
       SimpleLineSymbol.Style.SOLID,
-      -0x7fffff01,
+      Color.BLUE,
       5.0f
     )
   }
   private val barrierSymbol by lazy {
     SimpleFillSymbol(
       SimpleFillSymbol.Style.DIAGONAL_CROSS,
-      -0x10000,
+      Color.RED,
       null
     )
   }
@@ -213,7 +213,7 @@ class MainActivity : AppCompatActivity() {
       stopsGraphicsOverlay.graphics.add(Graphic(mapPoint, createCompositeStopSymbol(stopList.size)))
     } else if (addBarrierButton.isChecked) {
       // create a buffered polygon around the clicked point
-      val bufferedBarrierPolygon = GeometryEngine.buffer(mapPoint, 500.0)
+      val bufferedBarrierPolygon = GeometryEngine.buffer(mapPoint, 200.0)
       // create a polygon barrier for the routing task, and add it to the list of barriers
       barrierList.add(PolygonBarrier(bufferedBarrierPolygon))
       // build graphics for the barrier and add it to the graphics overlay

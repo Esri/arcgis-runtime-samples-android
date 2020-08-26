@@ -124,7 +124,7 @@ class LayerListAdapter(
      * and creates checkboxes for each of the layer's sublayers with a label and OnCheckedChangeListener.
      */
     fun populate() {
-      val checkBox: CheckBox = itemView.findViewById(R.id.checkbox)
+      val checkBox: CheckBox = itemView.findViewById(R.id.layer_checkbox)
       layer?.let { layer ->
         checkBox.setOnCheckedChangeListener { _, isChecked ->
           onLayerChecked?.invoke(layer, isChecked)
@@ -160,7 +160,7 @@ class LayerListAdapter(
      * and creates radio buttons for each of the layer's sublayers with a label and OnCheckedChangeListener.
      */
     fun populate() {
-      val checkBox: CheckBox = itemView.findViewById(R.id.checkbox)
+      val checkBox: CheckBox = itemView.findViewById(R.id.layer_checkbox)
       layer?.let { layer ->
         checkBox.setOnCheckedChangeListener { _, isChecked ->
           onLayerChecked?.invoke(layer, isChecked)
