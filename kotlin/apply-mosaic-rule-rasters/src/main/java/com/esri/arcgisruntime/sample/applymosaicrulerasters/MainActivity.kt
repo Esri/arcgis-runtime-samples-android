@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
   // create an image service raster from a url for an image service
   private val imageServiceRaster: ImageServiceRaster by lazy {
-    ImageServiceRaster("http://rtc-100-8.esri.com/arcgis/rest/services/imageServices/amberg_germany/ImageServer").apply {
+    ImageServiceRaster("https://sampleserver7.arcgisonline.com/arcgis/rest/services/amberg_germany/ImageServer").apply {
       // set its mosaic rule
       if (mosaicRule == null) mosaicRule = MosaicRule()
     }
