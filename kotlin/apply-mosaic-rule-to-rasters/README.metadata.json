@@ -4,7 +4,7 @@
     "formal_name": "ApplyMosaicRuleToRasters",
     "ignore": false,
     "images": [
-        "apply-mosaic-rule-rasters.png"
+        "apply-mosaic-rule-to-rasters.png"
     ],
     "keywords": [
         "image service",
@@ -20,7 +20,7 @@
         "MosaicRule"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/applymosaicrulerasters/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/applymosaicruletorasters/MainActivity.kt"
     ],
     "title": "Apply mosaic rule to rasters"
 }
