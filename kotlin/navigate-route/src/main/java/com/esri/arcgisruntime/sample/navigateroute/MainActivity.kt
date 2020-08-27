@@ -210,7 +210,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // listen for changes in location
-    locationDisplay.addLocationChangedListener() { _ ->
+    locationDisplay.addLocationChangedListener {
       // get the route's tracking status
       val trackingStatus = routeTracker.trackingStatus
       // set geometries for the route ahead and the remaining route
