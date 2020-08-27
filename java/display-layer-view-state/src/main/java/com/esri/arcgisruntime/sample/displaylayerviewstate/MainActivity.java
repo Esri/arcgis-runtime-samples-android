@@ -16,15 +16,22 @@
 
 package com.esri.arcgisruntime.sample.displaylayerviewstate;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import android.widget.TextView;
 
-import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.esri.arcgisruntime.ArcGISRuntimeException;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
-import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
-import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -32,60 +39,37 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.LayerViewStateChangedEvent;
 import com.esri.arcgisruntime.mapping.view.LayerViewStateChangedListener;
+import com.esri.arcgisruntime.mapping.view.LayerViewStatus;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.portal.Portal;
+import com.esri.arcgisruntime.portal.PortalItem;
 
 public class MainActivity extends AppCompatActivity {
 
-  private static final int MIN_SCALE = 40000000;
-  private static final int TILED_LAYER = 0;
-  private static final int IMAGE_LAYER = 1;
-  private static final int FEATURE_LAYER = 2;
+  private FeatureLayer mFeatureLayer;
   private MapView mMapView;
-  private TextView timeZoneTextView;
-  private TextView worldCensusTextView;
-  private TextView recreationTextView;
+  private Button loadButton;
+  private View statesContainer;
+  private Button hideButton;
+  private TextView activeStateTextView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // create three layers to add to the map
-    final ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(
-        getApplication().getString(R.string.world_timezone_service_URL));
-    tiledLayer.setMinScale(4E8);
-
-    final ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(
-        getApplication().getString(R.string.world_census_service_URL));
-    // setting the scales at which this layer can be viewed
-    imageLayer.setMinScale(MIN_SCALE);
-    imageLayer.setMaxScale(MIN_SCALE / 10);
-
-    // creating a layer from a service feature table
-    final ServiceFeatureTable featureTable = new ServiceFeatureTable(
-        getApplication().getString(R.string.world_facilities_service_URL));
-    final FeatureLayer featureLayer = new FeatureLayer(featureTable);
-
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
     // create a map with the BasemapType topographic
     final ArcGISMap mMap = new ArcGISMap(Basemap.createTopographic());
-    // add the layers on the map
-    mMap.getOperationalLayers().add(tiledLayer);
-    mMap.getOperationalLayers().add(imageLayer);
-    mMap.getOperationalLayers().add(featureLayer);
-
-    // set the map to be displayed in this view
+    // add the map to the map view
     mMapView.setMap(mMap);
-
-    // inflate TextViews from the layout
-    timeZoneTextView = (TextView) findViewById(R.id.worldTimeZoneStatusView);
-    worldCensusTextView = (TextView) findViewById(R.id.censusStatusView);
-    recreationTextView = (TextView) findViewById(R.id.facilitiesStatusView);
 
     // zoom to custom ViewPoint
     mMapView.setViewpoint(new Viewpoint(
-        new Point(-11e6, 45e5, SpatialReferences.getWebMercator()), MIN_SCALE));
+        new Point(-11e6, 45e5, SpatialReferences.getWebMercator()),
+        40_000_000.0
+    ));
 
     // Listen to changes in the status of the Layer
     mMapView.addLayerViewStateChangedListener(new LayerViewStateChangedListener() {
@@ -94,58 +78,98 @@ public class MainActivity extends AppCompatActivity {
 
         // get the layer which changed it's state
         Layer layer = layerViewStateChangedEvent.getLayer();
-
-        // get the View Status of the layer
-        // View status will be either of ACTIVE, ERROR, LOADING, NOT_VISIBLE, OUT_OF_SCALE, UNKNOWN
-        String viewStatus = layerViewStateChangedEvent.getLayerViewStatus().iterator().next().toString();
-
-        final int layerIndex = mMap.getOperationalLayers().indexOf(layer);
-
-        // finding and updating status of the layer
-        switch (layerIndex) {
-          case TILED_LAYER:
-            timeZoneTextView.setText(viewStatusString(viewStatus));
-            break;
-          case IMAGE_LAYER:
-            worldCensusTextView.setText(viewStatusString(viewStatus));
-            break;
-          case FEATURE_LAYER:
-            recreationTextView.setText(viewStatusString(viewStatus));
-            break;
+        // we only want to check the view state of the image layer
+        if (layer != mFeatureLayer) {
+          return;
         }
+        // get the View Status of the layer
+        // View status will be either of ACTIVE, ERROR, LOADING, NOT_VISIBLE, OUT_OF_SCALE, WARNING
+        EnumSet<LayerViewStatus> layerViewStatus = layerViewStateChangedEvent.getLayerViewStatus();
+        // if there is an error or warning, display it in a toast
+        ArcGISRuntimeException error = layerViewStateChangedEvent.getError();
+        if (error != null) {
+          Throwable cause = error.getCause();
+          String message = (cause != null)? cause.toString() : error.toString();
+          Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        }
+        displayViewStateText(layerViewStatus);
+      }
+    });
 
+    loadButton = (Button) findViewById(R.id.loadButton);
+    statesContainer = findViewById(R.id.statesContainer);
+    hideButton = (Button) findViewById(R.id.hideButton);
+    activeStateTextView = (TextView) findViewById(R.id.activeStateTextView);
+
+    loadButton.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (mFeatureLayer != null) return;
+        // load a feature layer from a portal item
+        PortalItem portalItem = new PortalItem(
+            new Portal("https://runtime.maps.arcgis.com/"),
+            "b8f4033069f141729ffb298b7418b653"
+        );
+
+        mFeatureLayer = new FeatureLayer(portalItem, 0);
+        // set the scales at which this layer can be viewed
+        mFeatureLayer.setMinScale(400_000_000.0);
+        mFeatureLayer.setMaxScale(400_000_000.0 / 10);
+        // add the layer on the map to load it
+        mMap.getOperationalLayers().add(mFeatureLayer);
+        // hide the button
+        loadButton.setEnabled(false);
+        loadButton.setVisibility(View.GONE);
+        // show the view state UI and the hide layer button
+        statesContainer.setVisibility(View.VISIBLE);
+        hideButton.setVisibility(View.VISIBLE);
+      }
+    });
+
+    hideButton.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (mFeatureLayer == null) return;
+
+        if (mFeatureLayer.isVisible()) {
+          hideButton.setText(R.string.show_layer);
+          mFeatureLayer.setVisible(false);
+        }
+        else {
+          hideButton.setText(R.string.hide_layer);
+          mFeatureLayer.setVisible(true);
+        }
       }
     });
   }
 
   /**
-   * The method looks up the view status of the layer and returns a string which is displayed
+   * Formats and displays the layer view status flags in a textview.
    *
-   * @param status View Status of the layer
-   * @return String equivalent of the status
+   * @param layerViewStatus to display
    */
-  private String viewStatusString(String status) {
-
-    switch (status) {
-      case "ACTIVE":
-        return getApplication().getString(R.string.active);
-
-      case "ERROR":
-        return getApplication().getString(R.string.error);
-
-      case "LOADING":
-        return getApplication().getString(R.string.loading);
-
-      case "NOT_VISIBLE":
-        return getApplication().getString(R.string.notVisible);
-
-      case "OUT_OF_SCALE":
-        return getApplication().getString(R.string.outOfScale);
-
+  protected void displayViewStateText(EnumSet<LayerViewStatus> layerViewStatus) {
+    // for each view state property that's active,
+    // add it to a list and display the states as a comma-separated string
+    List<String> stringList = new ArrayList<String>();
+    if (layerViewStatus.contains(LayerViewStatus.ACTIVE)) {
+      stringList.add(getString(R.string.active_state));
     }
-
-    return getApplication().getString(R.string.unknown);
-
+    if (layerViewStatus.contains(LayerViewStatus.ERROR)) {
+      stringList.add(getString(R.string.error_state));
+    }
+    if (layerViewStatus.contains(LayerViewStatus.LOADING)) {
+      stringList.add(getString(R.string.loading_state));
+    }
+    if (layerViewStatus.contains(LayerViewStatus.NOT_VISIBLE)) {
+      stringList.add(getString(R.string.not_visible_state));
+    }
+    if (layerViewStatus.contains(LayerViewStatus.OUT_OF_SCALE)) {
+      stringList.add(getString(R.string.out_of_scale_state));
+    }
+    if (layerViewStatus.contains(LayerViewStatus.WARNING)) {
+      stringList.add(getString(R.string.warning_state));
+    }
+    // join the list of strings with a common and set to display in the text view
+    activeStateTextView.setText(TextUtils.join(", ", stringList));
   }
 
   @Override

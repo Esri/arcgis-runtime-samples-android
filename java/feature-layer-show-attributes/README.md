@@ -15,8 +15,8 @@ Tap on a feature to see its attributes in a callout.
 ## How it works
 
 1. Create an instance of a `ServiceFeatureTable`.
-2. Query selected features with `serviceFeatureTable.queryFeaturesAsync(...)` and pass in the parameter `ServiceFeatureTable.QueryParameters.LOAD_ALL` to get all of the attributes for that feature.
-3. Get the `FeatureQueryResult` and iterate through the results to display each attribute in a callout.
+2. Identify selected features with `mMapView.identifyLayerAsync(...)` and pass in the feature layer and tapped location to get all of the attributes for the feature at that location.
+3. Get the `IdentifyLayerResult` and iterate through the results to display each attribute in a callout.
 
 ## Relevant API
 

@@ -13,9 +13,9 @@
 
 package com.esri.arcgisruntime.sample.featurelayerselection;
 
-import java.util.Iterator;
-
+import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -24,17 +24,16 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
-import com.esri.arcgisruntime.data.FeatureQueryResult;
-import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
-import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
+import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -73,40 +72,32 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override
       public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-        // get the point that was clicked and convert it to a point in map coordinates
-        Point clickPoint = mMapView
-            .screenToLocation(new android.graphics.Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY())));
+        featureLayer.clearSelection();
+        Point screenPoint = new Point(Math.round(motionEvent.getX()), Math.round(motionEvent.getY()));
         int tolerance = 10;
-        double mapTolerance = tolerance * mMapView.getUnitsPerDensityIndependentPixel();
-        // create objects required to do a selection with a query
-        Envelope envelope = new Envelope(clickPoint.getX() - mapTolerance, clickPoint.getY() - mapTolerance,
-            clickPoint.getX() + mapTolerance, clickPoint.getY() + mapTolerance, map.getSpatialReference());
-        QueryParameters query = new QueryParameters();
-        query.setGeometry(envelope);
-        // call select features
-        final ListenableFuture<FeatureQueryResult> featureQueryResultFuture = featureLayer
-            .selectFeaturesAsync(query, FeatureLayer.SelectionMode.NEW);
-        // add done loading listener to fire when the selection returns
-        featureQueryResultFuture.addDoneListener(() -> {
+
+        ListenableFuture<IdentifyLayerResult> identifyLayerResultFuture = mMapView
+            .identifyLayerAsync(featureLayer, screenPoint, tolerance, false, -1);
+
+        identifyLayerResultFuture.addDoneListener(() -> {
           try {
-            // call get on the future to get the result
-            FeatureQueryResult featureQueryResult = featureQueryResultFuture.get();
-            // create an Iterator
-            Iterator<Feature> iterator = featureQueryResult.iterator();
-            Feature feature;
-            // cycle through selections
+            IdentifyLayerResult identifyLayerResult = identifyLayerResultFuture.get();
             int counter = 0;
-            while (iterator.hasNext()) {
-              feature = iterator.next();
-              counter++;
-              Log.d(TAG, "Selection #: " + counter + " Table name: " + feature.getFeatureTable().getTableName());
+            for (GeoElement element : identifyLayerResult.getElements()) {
+              if (element instanceof Feature) {
+                Feature feature = (Feature) element;
+                featureLayer.selectFeature(feature);
+                counter++;
+                Log.d(TAG, "Selection #: " + counter + " Table name: " + feature.getFeatureTable().getTableName());
+              }
             }
             Toast.makeText(getApplicationContext(), counter + " features selected", Toast.LENGTH_SHORT).show();
           } catch (Exception e) {
             Log.e(TAG, "Select feature failed: " + e.getMessage());
           }
         });
-        return super.onSingleTapConfirmed(motionEvent);
+
+        return true;
       }
     });
   }
