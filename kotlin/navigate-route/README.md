@@ -20,7 +20,7 @@ Tap 'Navigate Route' to simulate travelling and to receive directions from a pre
 4. Add `Stop`s to the parameters `stops` collection for each destination.
 5. Solve the route using `routeTask.solveAsync(routeParameters)` to get a `RouteResult`.
 6. Create a `RouteTracker` using the route result, and the index of the desired route to take.
-7. Use `routeTracker.trackLocationAsync(LocationDataSource.Location)` to track the location of the device and update the route tracking status.
+7. Create a `RouteTrackerLocationDataSource` with the route tracker and simulated location data source to snap the location display to the route.
 8. Add a listener to capture `TrackingStatusChangedEvent`s, and then get the `TrackingStatus` and use it to display updated route information. Tracking status includes a variety of information on the route progress, such as the remaining distance, remaining geometry or traversed geometry (represented by a `Polyline`), or the remaining time (`Double`), amongst others.
 9. Add a `NewVoiceGuidanceListener` to get the `VoiceGuidance` whenever new instructions are available. From the voice guidance, get the `String` representing the directions and use a text-to-speech engine to output the maneuver directions.
 10. You can also query the tracking status for the current `DirectionManeuver` index, retrieve that maneuver from the `Route` and get it's direction text to display in the GUI.
