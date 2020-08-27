@@ -6,7 +6,7 @@
     android:id="@+id/checkbox_parent">
 
     <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/checkbox"
+        android:id="@+id/layer_checkbox"
         android:layout_margin="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,8 +18,8 @@
         android:layout_margin="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/checkbox"
-        app:layout_constraintBaseline_toBaselineOf="@id/checkbox"
+        app:layout_constraintStart_toEndOf="@id/layer_checkbox"
+        app:layout_constraintBaseline_toBaselineOf="@id/layer_checkbox"
         android:text="layer name"/>
 
     <LinearLayout

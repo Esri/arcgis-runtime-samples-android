@@ -222,20 +222,27 @@ class MainActivity : AppCompatActivity() {
         } else {
           convertToDataType(valuesEditText.text, attribute.dataType)
         }
-
-        // NOTE: You may also create a UtilityNetworkAttributeComparison with another
-        // NetworkAttribute
-        var expression: UtilityTraceConditionalExpression = UtilityNetworkAttributeComparison(
-          attribute,
-          attributeOperator,
-          otherValue
-        )
-        (traceConfiguration.traversability.barriers as? UtilityTraceConditionalExpression)?.let { otherExpression ->
-          // NOTE: You may also combine expressions with UtilityTraceAndCondition
-          expression = UtilityTraceOrCondition(otherExpression, expression)
+        try {
+          // NOTE: You may also create a UtilityNetworkAttributeComparison with another
+          // NetworkAttribute
+          var expression: UtilityTraceConditionalExpression = UtilityNetworkAttributeComparison(
+            attribute,
+            attributeOperator,
+            otherValue
+          )
+          (traceConfiguration.traversability.barriers as? UtilityTraceConditionalExpression)?.let { otherExpression ->
+            // NOTE: You may also combine expressions with UtilityTraceAndCondition
+            expression = UtilityTraceOrCondition(otherExpression, expression)
+          }
+          traceConfiguration.traversability.barriers = expression
+          expressionTextView.text = expressionToString(expression)
+        } catch (e: Exception) {
+          val error =
+            "Error creating UtilityNetworkAttributeComparison! Did you forget to input a numeric value? ${e.message}"
+          Log.e(TAG, error)
+          Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
+          return
         }
-        traceConfiguration.traversability.barriers = expression
-        expressionTextView.text = expressionToString(expression)
       }
     }
   }
