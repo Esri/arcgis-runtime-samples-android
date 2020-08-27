@@ -15,7 +15,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.applymosaicrulerasters
+package com.esri.arcgisruntime.sample.applymosaicruletorasters
 
 import android.os.Bundle
 import android.util.Log
