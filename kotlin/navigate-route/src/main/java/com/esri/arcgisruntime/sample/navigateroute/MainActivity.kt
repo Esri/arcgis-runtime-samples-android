@@ -188,7 +188,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // set up a RouteTracker for navigation along the calculated route
-    val routeTracker = RouteTracker(this@MainActivity, routeResult, 0, true).apply {
+    val routeTracker = RouteTracker(applicationContext, routeResult, 0, true).apply {
       enableReroutingAsync(
         routeTask,
         routeParameters,
