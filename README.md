@@ -1,5 +1,5 @@
 # Overview
-ArcGIS Runtime SDK for Android v100.8.0 samples.  The `master` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [git tags](https://github.com/Esri/arcgis-runtime-samples-android/tags).  Please read our [wiki](https://github.com/Esri/arcgis-runtime-samples-android/wiki) for help with working with this repository.
+ArcGIS Runtime SDK for Android v100.9.0 samples.  The `master` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [git tags](https://github.com/Esri/arcgis-runtime-samples-android/tags).  Please read our [wiki](https://github.com/Esri/arcgis-runtime-samples-android/wiki) for help with working with this repository.
 
 # Prerequisites
 * The samples are building with `compileSdkVersion 29`
@@ -8,7 +8,7 @@ ArcGIS Runtime SDK for Android v100.8.0 samples.  The `master` branch of this re
 ## SDK Maven repo
 The SDK is available through the Bintray Maven repo, you can take a look at the repository with the link below: 
 
-[ ![Download](https://api.bintray.com/packages/esri/arcgis/arcgis-android/images/download.svg?version=100.8.0) ](https://bintray.com/esri/arcgis/arcgis-android/100.8.0/link)
+[ ![Download](https://api.bintray.com/packages/esri/arcgis/arcgis-android/images/download.svg?version=100.9.0) ](https://bintray.com/esri/arcgis/arcgis-android/100.9.0/link)
 
 ## Developer Instructions
 Please read our [developer instructions wiki page](https://github.com/Esri/arcgis-runtime-samples-android/wiki/dev-instructions) to set up your developer environment with Android Studio.  Instructions include forking and cloning the repository for those new to Git.
@@ -35,11 +35,11 @@ adb -d install path/to/sample.apk
 Built APK's are saved to **arcgis-runtime-samples-android/[module-name]/build/outputs/apk/**. More information about running apps on devices can be found [here](https://developer.android.com/studio/run/device.html).
 
 ### Run samples through the sample viewer
-The samples in this repository can also be viewed in a single sample viewer app. It can be found on the Play Store or [on ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=5fa8819b5fe840a2be921c7e3bf3b4fe). If downloading from ArcGIS Online, follow these instructions to run the app locally on your device:
-1. Download and unzip the file to get the apk **ArcGIS_Runtime_Sample_Viewer_Android_1008.apk**.
+The samples in this repository can also be viewed in a single sample viewer app. It can be found on the Play Store or [on ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=32e5e1ce88154de8b640fa0ca9a052db). If downloading from ArcGIS Online, follow these instructions to run the app locally on your device:
+1. Download and unzip the file to get the apk **ArcGIS_Runtime_Sample_Viewer_Android_1009.apk**.
 1. Install the APK with adb: 
 ```
-adb -d install path/to/ArcGIS_Runtime_Sample_Viewer_Android_1008.apk
+adb -d install path/to/ArcGIS_Runtime_Sample_Viewer_Android_1009.apk
 ```
 
 ## Issues
