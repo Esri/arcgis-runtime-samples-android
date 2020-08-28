@@ -1,5 +1,5 @@
 {
-    "category": "Cloud and Portal",
+    "category": "Edit and Manage Data",
     "description": "Create, query and edit a specific server version using service geodatabase.",
     "formal_name": "EditWithBranchVersioning",
     "ignore": false,
