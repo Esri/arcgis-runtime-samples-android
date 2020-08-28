@@ -294,12 +294,11 @@ class MainActivity : AppCompatActivity() {
       // create the dialog
       val builder = AlertDialog.Builder(this)
       builder.setView(dialogView)
-        .setTitle("Edit feature attribute")
+        .setTitle(feature.attributes["PLACENAME"].toString())
         .setNegativeButton("Cancel") { dialog: DialogInterface, id: Int ->
           // clear the selection
           selectedFeature = null
           featureLayer?.clearSelection()
-          dialog.cancel()
         }
         .setNeutralButton("Edit location") { dialog: DialogInterface, id: Int ->
           // change the attribute
@@ -307,7 +306,6 @@ class MainActivity : AppCompatActivity() {
           feature.featureTable.updateFeatureAsync(feature).addDoneListener {
             serviceGeodatabase.applyEditsAsync()
           }
-          dialog.dismiss()
         }
         .setPositiveButton("Confirm") { dialog: DialogInterface, id: Int ->
           // change the attribute
@@ -318,7 +316,11 @@ class MainActivity : AppCompatActivity() {
           // clear the selection
           featureLayer?.clearSelection()
           selectedFeature = null
-          dialog.dismiss()
+        }
+        .setOnCancelListener {
+          // clear the selection if the user taps outside the dialog
+          featureLayer?.clearSelection()
+          selectedFeature = null
         }
         .create()
         .show()
