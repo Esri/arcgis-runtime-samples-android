@@ -56,7 +56,6 @@ class MainActivity : AppCompatActivity() {
   private var featureLayer: FeatureLayer? = null
   private var selectedFeature: Feature? = null
 
-  private var currentVersionName: String = ""
   private var createdVersionName: String = ""
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,16 +92,15 @@ class MainActivity : AppCompatActivity() {
       mapView.map.apply {
         operationalLayers.add(featureLayer)
       }
-      // track the current and default version names and display the current name in a text view
-      currentVersionName = serviceGeodatabase.versionName
-      currentVersionNameTextView.text = currentVersionName
+      // display the current name in a text view
+      currentVersionNameTextView.text = serviceGeodatabase.versionName
 
       mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
           // The default version, sde.DEFAULT, is protected and the user provided
           // is not the owner so edits will not be allowed.
           // So for simplicity, if the current version is the default, prevent editing
-          if (currentVersionName.isBlank() || currentVersionName == serviceGeodatabase.defaultVersionName) {
+          if (serviceGeodatabase.versionName.isBlank() || serviceGeodatabase.versionName == serviceGeodatabase.defaultVersionName) {
             val message = "This sample does not allow editing of features on the default version."
             Log.e(TAG, message)
             Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
@@ -231,7 +229,7 @@ class MainActivity : AppCompatActivity() {
       Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
-    val versionName = when (currentVersionName) {
+    val versionName = when (serviceGeodatabase.versionName) {
       serviceGeodatabase.defaultVersionName -> createdVersionName
       createdVersionName -> serviceGeodatabase.defaultVersionName
       else -> serviceGeodatabase.defaultVersionName
@@ -242,8 +240,7 @@ class MainActivity : AppCompatActivity() {
       serviceGeodatabase.applyEditsAsync().addDoneListener {
         try {
           serviceGeodatabase.switchVersionAsync(versionName).addDoneListener {
-            currentVersionName = versionName
-            currentVersionNameTextView.text = currentVersionName
+            currentVersionNameTextView.text = serviceGeodatabase.versionName
           }
         } catch (e: Exception) {
           val error = "Failed to switch version: ${e.message}"
@@ -254,8 +251,7 @@ class MainActivity : AppCompatActivity() {
     } else {
       try {
         serviceGeodatabase.switchVersionAsync(versionName).addDoneListener {
-          currentVersionName = versionName
-          currentVersionNameTextView.text = currentVersionName
+          currentVersionNameTextView.text = serviceGeodatabase.versionName
           featureLayer?.featureTable?.loadAsync()
         }
       } catch (e: Exception) {
