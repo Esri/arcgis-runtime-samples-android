@@ -58,7 +58,6 @@ class MainActivity : AppCompatActivity() {
 
   private var currentVersionName: String = ""
   private var createdVersionName: String = ""
-  private var defaultVersionName: String = ""
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -95,14 +94,15 @@ class MainActivity : AppCompatActivity() {
         operationalLayers.add(featureLayer)
       }
       // track the current and default version names and display the current name in a text view
-      defaultVersionName = serviceGeodatabase.defaultVersionName
       currentVersionName = serviceGeodatabase.versionName
       currentVersionNameTextView.text = currentVersionName
 
       mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-          // ignore taps when not on a newly created version
-          if (currentVersionName.isBlank() || currentVersionName == defaultVersionName) {
+          // The default version, sde.DEFAULT, is protected and the user provided
+          // is not the owner so edits will not be allowed.
+          // So for simplicity, if the current version is the default, prevent editing
+          if (currentVersionName.isBlank() || currentVersionName == serviceGeodatabase.defaultVersionName) {
             val message = "This sample does not allow editing of features on the default version."
             Log.e(TAG, message)
             Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
@@ -224,17 +224,17 @@ class MainActivity : AppCompatActivity() {
    *  @param view which called this method on click
    */
   fun switchVersion(view: View?) {
-    // don't switch versions if the new version has not been created yet or the names have not been stored
-    if (createdVersionName.isBlank() || defaultVersionName.isBlank()) {
+    // don't switch versions if the new version has not been created yet or the name has not been stored
+    if (createdVersionName.isBlank()) {
       val message = "Version names have not been initialized!"
       Log.e(TAG, message)
       Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
     val versionName = when (currentVersionName) {
-      defaultVersionName -> createdVersionName
-      createdVersionName -> defaultVersionName
-      else -> defaultVersionName
+      serviceGeodatabase.defaultVersionName -> createdVersionName
+      createdVersionName -> serviceGeodatabase.defaultVersionName
+      else -> serviceGeodatabase.defaultVersionName
     }
 
     // if the user has changed any features, apply them before switching
