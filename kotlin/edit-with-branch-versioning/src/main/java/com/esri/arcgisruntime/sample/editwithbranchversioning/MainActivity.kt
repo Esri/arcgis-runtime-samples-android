@@ -186,7 +186,7 @@ class MainActivity : AppCompatActivity() {
    *
    * @param versionName the name of the new version
    * @param versionAccess the access modifier for this version
-   * @param description a text description of the versioin
+   * @param description a text description of the version
    */
   private fun createVersion(
     versionName: String,
