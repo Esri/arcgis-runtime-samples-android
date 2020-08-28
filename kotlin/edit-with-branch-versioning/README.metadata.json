@@ -1,0 +1,31 @@
+{
+    "category": "Cloud and Portal",
+    "description": "Create, query and edit a specific server version using service geodatabase.",
+    "formal_name": "EditWithBranchVersioning",
+    "ignore": false,
+    "images": [
+        "edit-with-branch-versioning.png"
+    ],
+    "keywords": [
+        "branch versioning",
+        "edit",
+        "version control",
+        "version management server"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "FeatureLayer",
+        "ServiceFeatureTable",
+        "ServiceGedodatabase",
+        "ServiceGeodatabase.applyEditsAsync()",
+        "ServiceGeodatabase.createVersionAsync()",
+        "ServiceGeodatabase.switchVersionAsync()",
+        "ServiceVersionInfo",
+        "ServiceVersionParameters",
+        "VersionAccess"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/editwithbranchversioning/MainActivity.kt"
+    ],
+    "title": "Edit with branch versioning"
+}

@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
       .setView(dialogView)
       .setTitle("Create a new version")
       .setNegativeButton("Cancel") { _: DialogInterface, _: Int -> }
-      .setPositiveButton("Confirm") { _: DialogInterface, _: Int ->
+      .setPositiveButton("Create") { _: DialogInterface, _: Int ->
         // when the user confirms, create the version using the options selected
         createVersion(
           createNameEditText.text.toString(),
