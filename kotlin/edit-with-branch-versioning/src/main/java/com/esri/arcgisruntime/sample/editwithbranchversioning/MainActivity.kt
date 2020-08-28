@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
 
   private var featureLayer: FeatureLayer? = null
   private var selectedFeature: Feature? = null
-  private var shouldEditLocation = false
 
   private var currentVersionName: String = ""
   private var createdVersionName: String = ""
@@ -111,11 +110,13 @@ class MainActivity : AppCompatActivity() {
           }
 
           val point = android.graphics.Point(e.x.toInt(), e.y.toInt())
-          if (shouldEditLocation) {
-            // if the feature should be moved, move it and return early
-            selectedFeature?.let { editFeatureLocation(it, point) }
+
+          // if selected feature is not null then it should be moved and return early
+          selectedFeature?.let {
+            editFeatureLocation(it, point)
             return true
           }
+
           // if no feature should be moved, identify the feature at the tapped location
           try {
             val identifyFuture = mapView.identifyLayerAsync(featureLayer, point, 10.0, false)
@@ -191,7 +192,11 @@ class MainActivity : AppCompatActivity() {
    * @param versionAccess the access modifier for this version
    * @param description a text description of the versioin
    */
-  private fun createVersion(versionName: String, versionAccess: VersionAccess, description: String) {
+  private fun createVersion(
+    versionName: String,
+    versionAccess: VersionAccess,
+    description: String
+  ) {
     // create service version parameters with the parameters passed to this method
     val serviceVersionParameters = ServiceVersionParameters().apply {
       name = versionName
@@ -302,8 +307,6 @@ class MainActivity : AppCompatActivity() {
           feature.featureTable.updateFeatureAsync(feature).addDoneListener {
             serviceGeodatabase.applyEditsAsync()
           }
-          // the next tap should edit the selected feature's location
-          shouldEditLocation = true
           dialog.dismiss()
         }
         .setPositiveButton("Confirm") { dialog: DialogInterface, id: Int ->
@@ -335,7 +338,6 @@ class MainActivity : AppCompatActivity() {
       serviceGeodatabase.applyEditsAsync()
     }
     featureLayer?.clearSelection()
-    shouldEditLocation = false
     selectedFeature = null
   }
 
