@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
 
   private var featureLayer: FeatureLayer? = null
   private var selectedFeature: Feature? = null
-
   private var createdVersionName: String = ""
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -169,15 +168,14 @@ class MainActivity : AppCompatActivity() {
     builder
       .setView(dialogView)
       .setTitle("Create a new version")
-      .setNegativeButton("Cancel") { dialog: DialogInterface, _: Int -> dialog.cancel() }
-      .setPositiveButton("Confirm") { dialog: DialogInterface, _: Int ->
+      .setNegativeButton("Cancel") { _: DialogInterface, _: Int -> }
+      .setPositiveButton("Confirm") { _: DialogInterface, _: Int ->
         // when the user confirms, create the version using the options selected
         createVersion(
           createNameEditText.text.toString(),
           VersionAccess.valueOf(createAccessVersionSpinner.selectedItem.toString()),
           createDescriptionEditText.text.toString()
         )
-        dialog.dismiss()
       }
       .create()
       .show()
@@ -291,19 +289,19 @@ class MainActivity : AppCompatActivity() {
       val builder = AlertDialog.Builder(this)
       builder.setView(dialogView)
         .setTitle(feature.attributes["PLACENAME"].toString())
-        .setNegativeButton("Cancel") { dialog: DialogInterface, id: Int ->
+        .setNegativeButton("Cancel") { _: DialogInterface, _: Int ->
           // clear the selection
           selectedFeature = null
           featureLayer?.clearSelection()
         }
-        .setNeutralButton("Edit location") { dialog: DialogInterface, id: Int ->
+        .setNeutralButton("Edit location") { _: DialogInterface, _: Int ->
           // change the attribute
           feature.attributes["TYPDAMAGE"] = featureAttributeSpinner.selectedItem.toString()
           feature.featureTable.updateFeatureAsync(feature).addDoneListener {
             serviceGeodatabase.applyEditsAsync()
           }
         }
-        .setPositiveButton("Confirm") { dialog: DialogInterface, id: Int ->
+        .setPositiveButton("Confirm") { _: DialogInterface, _: Int ->
           // change the attribute
           feature.attributes["TYPDAMAGE"] = featureAttributeSpinner.selectedItem.toString()
           feature.featureTable.updateFeatureAsync(feature).addDoneListener {
