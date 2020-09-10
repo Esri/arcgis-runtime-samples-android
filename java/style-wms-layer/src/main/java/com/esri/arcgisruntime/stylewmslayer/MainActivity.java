@@ -18,16 +18,17 @@ package com.esri.arcgisruntime.stylewmslayer;
 
 import java.util.Collections;
 import java.util.List;
+
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.WmsLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
@@ -42,9 +43,12 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // create a map and add it to the map view
+    // create a map with spatial reference appropriate for the service
+    ArcGISMap map = new ArcGISMap(SpatialReference.create(26915));
+    map.setMinScale(7000000.0);
+    // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
-    ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+    // set the map to the map view
     mMapView.setMap(map);
 
     // create a WMS layer
