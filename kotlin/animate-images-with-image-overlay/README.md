@@ -1,4 +1,4 @@
-# Animate images with image overlay
+# animate images with Image overlay
 
 Animate a series of images with an image overlay.
 
