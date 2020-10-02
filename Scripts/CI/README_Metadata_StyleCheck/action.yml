@@ -1,0 +1,20 @@
+# The name of the stepm just as a reference.
+name: "mdl and Python style checks"
+description: "This check will run several scripts to ensure the formatting."
+author: "tchen@esri.com"
+
+inputs:
+  FILE_PATHS:
+    description: "Files to run the checks on."
+    required: true
+
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - "-s"
+    - ${{ inputs.FILE_PATHS }}
+
+branding:
+  icon: "mic"
+  color: "purple"
