@@ -39,7 +39,7 @@ def run_style_check(dirname: str):
     #code3 = sp.call(f'python3 /description_differ.py -s "{dirname}"', shell=True)
     print("**** metadata_style_checker ****")
     code4 = sp.call(f'python3 /metadata_style_checker.py -s "{dirname}"', shell=True)
-    return code1 + code2 + code3 + code4
+    return code1 + code4
 
 
 def read_json(filenames_json_data):
