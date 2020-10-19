@@ -10,7 +10,7 @@ Workflows often progress in discrete stages, with each stage requiring the alloc
 
 ## How to use the sample
 
-Upon opening the sample, you will be prompted to enter credentials for the service(un: editor01/pwd: editor01.password). Once loaded, the map will zoom to the extent of the feature layer. The current version is indicated at the top of the map. Tap "Create Version" to open a dialog to specify the version information (name, access, and description). The version name must meet the following criteria:
+Once loaded, the map will zoom to the extent of the feature layer. The current version is indicated at the top of the map. Tap "Create Version" to open a dialog to specify the version information (name, access, and description). The version name must meet the following criteria:
 1. Must not exceed 62 characters
 2. Must not include: Period (.), Semicolon (;), Single quotation mark ('), Double quotation mark (")
 3. Must not include a space for the first character
