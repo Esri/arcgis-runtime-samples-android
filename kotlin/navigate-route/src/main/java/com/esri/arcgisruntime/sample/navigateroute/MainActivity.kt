@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
           when (e) {
             is InterruptedException, is ExecutionException -> {
-              val error = "Error getting the route result " + e.message
+              val error = "Error getting the default route parameters: " + e.message
               Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
               Log.e(TAG, error)
             }
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
       }
 
       val routeResultFuture = routeTask.solveRouteAsync(routeParameters)
-      routeParametersFuture.addDoneListener {
+      routeResultFuture.addDoneListener {
         try {
           // get the route geometry from the route result
           val routeResult = routeResultFuture.get()
@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
           when (e) {
             is InterruptedException, is ExecutionException -> {
-              val error = "Error creating default route parameters: " + e.message
+              val error = "Error creating the route result: " + e.message
               Toast.makeText(this, error, Toast.LENGTH_LONG).show()
               Log.e(TAG, error)
             }

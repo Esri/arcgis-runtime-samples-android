@@ -33,7 +33,7 @@ Pan and zoom around the map. View the data loaded from the geodatabase.
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 4. Push the data into the scoped storage of the sample app:
 `adb push LA_Trails.geodatabase /Android/data/com.esri.arcgisruntime.sample.featurelayergeodatabase/files/LA_Trails.geodatabase`
-5. 
+
 ## About the data
 
 The sample shows trailheads in the greater Los Angeles area displayed on top of a Streets basemap.
