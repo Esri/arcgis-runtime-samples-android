@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     mPinSourceSymbol.setHeight(72f);
 
     // create a LocatorTask from an online service
-    mLocatorTask = new LocatorTask("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
+    mLocatorTask = new LocatorTask("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
 
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);

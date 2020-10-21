@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Group layers</string>
 
-    <string name="elevation_source_url">http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
+    <string name="elevation_source_url">https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
 
     <string name="tree_scene_service">https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Trees/SceneServer/layers/0</string>
     <string name="pathway_feature_service">https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_Pathways/FeatureServer/1</string>

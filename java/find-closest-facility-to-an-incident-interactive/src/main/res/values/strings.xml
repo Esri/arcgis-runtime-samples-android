@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Find closest facility to an incident (interactive)</string>
-    <string name="san_diego_network_service_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/NetworkAnalysis/SanDiego/NAServer/ClosestFacility</string>
-    <string name="hospital_symbol_url">http://static.arcgis.com/images/Symbols/SafetyHealth/Hospital.png</string>
+    <string name="san_diego_network_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/NetworkAnalysis/SanDiego/NAServer/ClosestFacility</string>
+    <string name="hospital_symbol_url">https://static.arcgis.com/images/Symbols/SafetyHealth/Hospital.png</string>
 </resources>
