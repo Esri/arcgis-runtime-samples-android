@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Navigate route</string>
-    <string name="routing_service_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/NetworkAnalysis/SanDiego/NAServer/Route</string>
+    <string name="routing_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/NetworkAnalysis/SanDiego/NAServer/Route</string>
     <string name="distance_remaining">Distance remaining: %s %s</string>
     <string name="time_remaining">Time remaining: %s</string>
     <string name="next_direction">Next direction: %s</string>

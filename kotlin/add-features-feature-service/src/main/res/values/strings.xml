@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Add Features - Feature Service</string>
 
-    <string name="service_layer_url">http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
+    <string name="service_layer_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
     <string name="feature_added">Feature successfully added</string>
 
     <string name="error_cannot_add_to_feature_table">Cannot add a feature to this feature table</string>
