@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Find service area (interactive)</string>
     <string name="san_diego_service_area">https://sampleserver6.arcgisonline.com/arcgis/rest/services/NetworkAnalysis/SanDiego/NAServer/ServiceArea</string>
-    <string name="hospital_icon_url">http://static.arcgis.com/images/Symbols/SafetyHealth/Hospital.png</string>
+    <string name="hospital_icon_url">https://static.arcgis.com/images/Symbols/SafetyHealth/Hospital.png</string>
     <string name="add_facility">Add Facility</string>
     <string name="add_barrier">Add Barrier</string>
     <string name="show_service_areas">Show Service Areas</string>

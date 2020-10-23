@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     sceneView.scene = ArcGISScene().apply {
       basemap = Basemap.createTopographic()
       baseSurface = Surface().apply {
-        elevationSources.add(ArcGISTiledElevationSource("http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"))
+        elevationSources.add(ArcGISTiledElevationSource("https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"))
       }
       operationalLayers.add(buildingsLayer)
     }

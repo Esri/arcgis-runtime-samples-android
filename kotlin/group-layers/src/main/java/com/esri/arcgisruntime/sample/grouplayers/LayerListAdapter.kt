@@ -48,13 +48,13 @@ class LayerListAdapter(
     return when (viewType) {
       TYPE_EXCLUSIVE -> {
         val v = LayoutInflater.from(parent.context).inflate(
-          R.layout.radio_group, parent, false
+          R.layout.group_layers_radio_group, parent, false
         )
         ExclusiveLayerViewHolder(v) as ViewHolder
       }
       else -> {
         val v = LayoutInflater.from(parent.context).inflate(
-          R.layout.checkbox_group, parent, false
+          R.layout.group_layers_checkbox_group, parent, false
         )
         DefaultLayerViewHolder(v) as ViewHolder
       }
@@ -124,7 +124,7 @@ class LayerListAdapter(
      * and creates checkboxes for each of the layer's sublayers with a label and OnCheckedChangeListener.
      */
     fun populate() {
-      val checkBox: CheckBox = itemView.findViewById(R.id.checkbox)
+      val checkBox: CheckBox = itemView.findViewById(R.id.layer_checkbox)
       layer?.let { layer ->
         checkBox.setOnCheckedChangeListener { _, isChecked ->
           onLayerChecked?.invoke(layer, isChecked)
@@ -160,7 +160,7 @@ class LayerListAdapter(
      * and creates radio buttons for each of the layer's sublayers with a label and OnCheckedChangeListener.
      */
     fun populate() {
-      val checkBox: CheckBox = itemView.findViewById(R.id.checkbox)
+      val checkBox: CheckBox = itemView.findViewById(R.id.layer_checkbox)
       layer?.let { layer ->
         checkBox.setOnCheckedChangeListener { _, isChecked ->
           onLayerChecked?.invoke(layer, isChecked)

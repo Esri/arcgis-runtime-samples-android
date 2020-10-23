@@ -37,6 +37,7 @@ import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.Polyline;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.location.RouteTrackerLocationDataSource;
 import com.esri.arcgisruntime.location.SimulatedLocationDataSource;
 import com.esri.arcgisruntime.location.SimulationParameters;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -173,15 +174,19 @@ public class MainActivity extends AppCompatActivity {
     SimulationParameters simulationParameters = new SimulationParameters(Calendar.getInstance(), 35, 5, 5);
     mSimulatedLocationDataSource.setLocations(routeGeometry, simulationParameters);
 
-    // set the simulated location data source as the location data source for this app
-    locationDisplay.setLocationDataSource(mSimulatedLocationDataSource);
+    // set up a RouteTracker for navigation along the calculated route
+    mRouteTracker = new RouteTracker(getApplicationContext(), routeResult, 0, true);
+    mRouteTracker.enableReroutingAsync(routeTask, routeParameters,
+        RouteTracker.ReroutingStrategy.TO_NEXT_WAYPOINT, true);
+
+    // create a route tracker location data source to snap the location display to the route
+    RouteTrackerLocationDataSource routeTrackerLocationDataSource = new RouteTrackerLocationDataSource(mRouteTracker, mSimulatedLocationDataSource);
+    // set the route tracker location data source as the location data source for this app
+    locationDisplay.setLocationDataSource(routeTrackerLocationDataSource);
     locationDisplay.setAutoPanMode(LocationDisplay.AutoPanMode.NAVIGATION);
     // if the user navigates the map view away from the location display, activate the recenter button
     locationDisplay.addAutoPanModeChangedListener(autoPanModeChangedEvent -> mRecenterButton.setEnabled(true));
-    // set up a RouteTracker for navigation along the calculated route
-    mRouteTracker = new RouteTracker(getApplicationContext(), routeResult, 0);
-    mRouteTracker.enableReroutingAsync(routeTask, routeParameters,
-        RouteTracker.ReroutingStrategy.TO_NEXT_WAYPOINT, true);
+
     // get a reference to navigation text views
     TextView distanceRemainingTextView = findViewById(R.id.distanceRemainingTextView);
     TextView timeRemainingTextView = findViewById(R.id.timeRemainingTextView);
@@ -189,9 +194,6 @@ public class MainActivity extends AppCompatActivity {
 
     // listen for changes in location
     locationDisplay.addLocationChangedListener(locationChangedEvent -> {
-      // track the location and update route tracking status
-      ListenableFuture<Void> trackLocationFuture = mRouteTracker.trackLocationAsync(locationChangedEvent.getLocation());
-      trackLocationFuture.addDoneListener(() -> {
         // listen for new voice guidance events
         mRouteTracker.addNewVoiceGuidanceListener(newVoiceGuidanceEvent -> {
           // use Android's text to speech to speak the voice guidance
@@ -228,10 +230,9 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Arrived at the final destination.", Toast.LENGTH_LONG).show();
           }
         }
-      });
     });
 
-    // start the LocationDisplay, which starts the SimulatedLocationDataSource
+    // start the LocationDisplay, which starts the RouteTrackerLocationDataSource and SimulatedLocationDataSource
     locationDisplay.startAsync();
     Toast.makeText(this, "Navigating to the first stop, the USS San Diego Memorial.", Toast.LENGTH_LONG).show();
   }
