@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">Integrated mesh layer</string>
-    <string name="mesh_layer_url">https://tiles.arcgis.com/tiles/FQD0rKU8X5sAQfh8/arcgis/rest/services/VRICON_Yosemite_Sample_Integrated_Mesh_scene_layer/SceneServer</string>
-    <string name="elevation_source_url">http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
 </resources>

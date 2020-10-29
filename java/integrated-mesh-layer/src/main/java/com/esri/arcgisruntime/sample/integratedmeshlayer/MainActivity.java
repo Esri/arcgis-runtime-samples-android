@@ -18,13 +18,10 @@
 package com.esri.arcgisruntime.sample.integratedmeshlayer;
 
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
-import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.IntegratedMeshLayer;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
-import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
-import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 
@@ -39,23 +36,18 @@ public class MainActivity extends AppCompatActivity {
 
     // create a scene and add it to the scene view
     mSceneView = findViewById(R.id.sceneView);
-    ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
+    ArcGISScene scene = new ArcGISScene();
     mSceneView.setScene(scene);
 
-    // set the base surface with world elevation
-    Surface surface = new Surface();
-    surface.getElevationSources().add(new ArcGISTiledElevationSource(getString(R.string.elevation_source_url)));
-    scene.setBaseSurface(surface);
+    // create an integrated mesh layer of part of the city of girona
+    IntegratedMeshLayer gironaIntegratedMeshLayer = new IntegratedMeshLayer(
+        "https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/Girona_Spain/SceneServer");
+    scene.getOperationalLayers().add(gironaIntegratedMeshLayer);
 
-    // create IntegratedMeshLayer and add to the scene's operational layers
-    IntegratedMeshLayer integratedMeshLayer = new IntegratedMeshLayer(getString(R.string.mesh_layer_url));
-    scene.getOperationalLayers().add(integratedMeshLayer);
+    // create a camera focused on a part of the integrated mesh layer
+    Camera camera = new Camera(41.9906, 2.8259, 200.0, 190.0, 65.0, 0.0);
 
-    // create a camera and initial camera position
-    Camera camera = new Camera(new Point(-119.622075, 37.720650, 2104.901239), 315.50368761552056, 78.09465920130114,
-        0.0);
-
-    // set Viewpoint for SceneView using camera
+    // set viewpoint for the scene view using a camera
     mSceneView.setViewpointCamera(camera);
   }
 
