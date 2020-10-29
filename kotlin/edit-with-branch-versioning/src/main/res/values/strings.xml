@@ -5,8 +5,8 @@
     <string name="enter_a_version_name">Enter a version name…</string>
     <string name="enter_a_description">Enter a description…</string>
     <string name="typdamage">TYPDAMAGE:</string>
-    <string name="username">editor01</string>
-    <string name="password">editor01.password</string>
+    <string name="editor01_username">editor01</string>
+    <string name="editor01_password">editor01.password</string>
     <string-array name="version_access_array">
         <item>PRIVATE</item>
         <item>PROTECTED</item>

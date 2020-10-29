@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     // hardcode user credentials since this sample has been setup to work with this specific
     // service. Normally you'd handle authentication with the AuthenticationChallengeHandler
     serviceGeodatabase.credential =
-      UserCredential(getString(R.string.username), getString(R.string.password))
+      UserCredential(getString(R.string.editor01_username), getString(R.string.editor01_password))
     // load the service geodatabase
     serviceGeodatabase.loadAsync()
     // when the service geodatabase has loaded
