@@ -33,13 +33,13 @@ def run_mdl(readme_path: str):
 def run_style_check(dirname: str):
     print("**** README_style_checker ****")
     code1 = sp.call(f'python3 /README_style_checker.py -s "{dirname}"', shell=True)
-    print("**** title_differ ****")
-    code2 = sp.call(f'python3 /title_differ.py -s "{dirname}"', shell=True)
-    print("**** description_differ ****")
-    code3 = sp.call(f'python3 /description_differ.py -s "{dirname}"', shell=True)
+    #print("**** title_differ ****")
+    #code2 = sp.call(f'python3 /title_differ.py -s "{dirname}"', shell=True)
+    #print("**** description_differ ****")
+    #code3 = sp.call(f'python3 /description_differ.py -s "{dirname}"', shell=True)
     print("**** metadata_style_checker ****")
     code4 = sp.call(f'python3 /metadata_style_checker.py -s "{dirname}"', shell=True)
-    return code1 + code2 + code3 + code4
+    return code1 + code4
 
 
 def read_json(filenames_json_data):
@@ -89,11 +89,6 @@ def main():
         if len(path_parts) < 3:
             # A file not in samples folder, omit.
             # E.g. might be in the root folder or other unrelated folders.
-            continue
-
-        # Only run checks on folders that is within a category.
-        if path_parts[-3] not in categories:
-            # Folder name is not a category, omit.
             continue
 
         # Get filename and folder name of the changed sample.
