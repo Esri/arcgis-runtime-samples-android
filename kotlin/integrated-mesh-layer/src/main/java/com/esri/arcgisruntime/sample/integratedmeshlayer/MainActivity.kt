@@ -19,12 +19,8 @@ package com.esri.arcgisruntime.sample.integratedmeshlayer
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.IntegratedMeshLayer
 import com.esri.arcgisruntime.mapping.ArcGISScene
-import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
-import com.esri.arcgisruntime.mapping.Basemap
-import com.esri.arcgisruntime.mapping.Surface
 import com.esri.arcgisruntime.mapping.view.Camera
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -34,30 +30,22 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a scene to add the IntegratedMeshLayer to add subsequently add it to the SceneView
-    ArcGISScene(Basemap.createImagery()).let { scene ->
-      // create IntegratedMeshLayer and add to the scene's operational layers
-      with(IntegratedMeshLayer(getString(R.string.mesh_layer_url))) {
-        scene.operationalLayers.add(this)
-      }
-      sceneView.scene = scene
+    // create an integrated mesh layer of part of the city of girona
+    val gironaIntegratedMeshLayer = IntegratedMeshLayer("https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/Girona_Spain/SceneServer")
 
-      // set the base surface with world elevation
-      with(Surface()) {
-        this.elevationSources.add(ArcGISTiledElevationSource(getString(R.string.elevation_source_url)))
-        scene.baseSurface = this
-      }
+    // create a scene and add the integrated mesh layer to it
+    val gironaScene = ArcGISScene().apply {
+      operationalLayers.add(gironaIntegratedMeshLayer)
     }
 
-    // create a camera and initial camera position
-    with(
-      Camera(
-        Point(-119.622075, 37.720650, 2104.901239), 315.50368761552056, 78.09465920130114,
-        0.0
-      )
-    ) {
-      // set Viewpoint for SceneView using camera
-      sceneView.setViewpointCamera(this)
+    // create a camera focused on a part of the integrated mesh layer
+    val gironaCamera = Camera(41.9906, 2.8259, 200.0, 190.0, 65.0, 0.0)
+
+    sceneView.apply {
+      // set the scene to the scene view
+      scene = gironaScene
+      // set the viewpoint for the scene view using a camera
+      setViewpointCamera(gironaCamera)
     }
   }
 
