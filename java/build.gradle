@@ -17,7 +17,7 @@ allprojects {
     final def var = repositories {
         google()
         jcenter()
-        maven { url 'https://esri.jfrog.io/artifactory/arcgis/' }
+        maven { url 'https://esri.jfrog.io/artifactory/arcgis' }
     }
     var
 }
