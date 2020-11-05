@@ -19,13 +19,13 @@ package com.esri.arcgisruntime.sample.exploresceneinflyoverar;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.layers.IntegratedMeshLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -34,8 +34,6 @@ import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.NavigationConstraint;
 import com.esri.arcgisruntime.mapping.view.Camera;
-import com.esri.arcgisruntime.portal.Portal;
-import com.esri.arcgisruntime.portal.PortalItem;
 import com.esri.arcgisruntime.toolkit.ar.ArcGISArView;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,9 +60,8 @@ public class MainActivity extends AppCompatActivity {
     ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
 
     // create an integrated mesh layer
-    Portal portal = new Portal(getString(R.string.arcgis_portal_url));
-    PortalItem portalItem = new PortalItem(portal, getString(R.string.vricon_integrated_mesh_layer_url));
-    IntegratedMeshLayer integratedMeshLayer = new IntegratedMeshLayer(portalItem);
+    IntegratedMeshLayer integratedMeshLayer = new IntegratedMeshLayer(
+        getString(R.string.girona_integrated_mesh_layer_url));
     scene.getOperationalLayers().add(integratedMeshLayer);
 
     // create an elevation source and add it to the scene
