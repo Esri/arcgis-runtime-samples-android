@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Explore scene in flyover AR</string>
-    <string name="arcgis_portal_url">https://www.arcgis.com</string>
-    <string name="vricon_integrated_mesh_layer_url">d4fb271d1cb747e696bb80adca8487fa</string>
+    <string name="girona_integrated_mesh_layer_url">https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/Girona_Spain/SceneServer</string>
     <string name="world_terrain_service_url">https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
     <string name="error_loading_integrated_mesh_layer">Error loading integrated mesh layer:</string>
     <string name="camera_permission_required_for_ar">This app requires camera permissions to run ARCore.</string>
