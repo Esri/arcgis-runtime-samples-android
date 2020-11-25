@@ -21,6 +21,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.GeometryType
 import com.esri.arcgisruntime.geometry.Multipoint
@@ -28,6 +29,7 @@ import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.PointCollection
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
@@ -41,6 +43,8 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     // create an array list to store points
     val inputPoints = arrayListOf<Point>()
@@ -60,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
     mapView.apply {
       // set the map to a topographic basemap
-      map = ArcGISMap(Basemap.createTopographic())
+      map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
       // add the graphics overlay to the map
       graphicsOverlays.add(graphicsOverlay)
 

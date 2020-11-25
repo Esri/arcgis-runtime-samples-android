@@ -24,8 +24,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.Viewpoint
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -38,9 +41,11 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // inflate navigation drawer with all basemap types in a human readable format
     mNavigationDrawerItemTitles =
-      Basemap.Type.values().map { it.name.replace("_", " ").toLowerCase().capitalize() }
+      BasemapStyle.values().map { it.name.replace("_", " ").toLowerCase().capitalize() }
         .toTypedArray()
 
     addDrawerItems()
@@ -54,7 +59,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create a map with Topographic Basemap and set it to the map
-    mapView.map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 47.6047381, -122.3334255, 12)
+    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
+      initialViewpoint = Viewpoint(47.6047, -122.3334, 10000000.0)
+    }
   }
 
   /**
@@ -64,7 +71,7 @@ class MainActivity : AppCompatActivity() {
     ArrayAdapter(this, android.R.layout.simple_list_item_1, mNavigationDrawerItemTitles).apply {
       drawerList.adapter = this
       drawerList.onItemClickListener =
-        AdapterView.OnItemClickListener { adapterView, view, position, id -> selectBasemap(position) }
+        AdapterView.OnItemClickListener { _, _, position, _ -> selectBasemap(position) }
     }
   }
 
@@ -107,25 +114,48 @@ class MainActivity : AppCompatActivity() {
 
     // select basemap by title
     mapView.map.basemap =
-      when (Basemap.Type.valueOf(baseMapTitle.replace(" ", "_").toUpperCase())) {
-        Basemap.Type.DARK_GRAY_CANVAS_VECTOR -> Basemap.createDarkGrayCanvasVector()
-        Basemap.Type.IMAGERY -> Basemap.createImagery()
-        Basemap.Type.IMAGERY_WITH_LABELS -> Basemap.createImageryWithLabels()
-        Basemap.Type.IMAGERY_WITH_LABELS_VECTOR -> Basemap.createImageryWithLabelsVector()
-        Basemap.Type.LIGHT_GRAY_CANVAS -> Basemap.createLightGrayCanvas()
-        Basemap.Type.LIGHT_GRAY_CANVAS_VECTOR -> Basemap.createDarkGrayCanvasVector()
-        Basemap.Type.NATIONAL_GEOGRAPHIC -> Basemap.createNationalGeographic()
-        Basemap.Type.NAVIGATION_VECTOR -> Basemap.createNavigationVector()
-        Basemap.Type.OCEANS -> Basemap.createOceans()
-        Basemap.Type.OPEN_STREET_MAP -> Basemap.createOceans()
-        Basemap.Type.STREETS -> Basemap.createStreets()
-        Basemap.Type.STREETS_NIGHT_VECTOR -> Basemap.createStreetsNightVector()
-        Basemap.Type.STREETS_WITH_RELIEF_VECTOR -> Basemap.createStreetsWithReliefVector()
-        Basemap.Type.STREETS_VECTOR -> Basemap.createStreetsVector()
-        Basemap.Type.TOPOGRAPHIC -> Basemap.createTopographic()
-        Basemap.Type.TERRAIN_WITH_LABELS -> Basemap.createTerrainWithLabels()
-        Basemap.Type.TERRAIN_WITH_LABELS_VECTOR -> Basemap.createTerrainWithLabelsVector()
-        Basemap.Type.TOPOGRAPHIC_VECTOR -> Basemap.createTopographicVector()
+      when (BasemapStyle.valueOf(baseMapTitle.replace(" ", "_").toUpperCase())) {
+        BasemapStyle.ARCGIS_CHARTED_TERRITORY -> Basemap(BasemapStyle.ARCGIS_CHARTED_TERRITORY)
+        BasemapStyle.ARCGIS_COLORED_PENCIL -> Basemap(BasemapStyle.ARCGIS_COLORED_PENCIL)
+        BasemapStyle.ARCGIS_COMMUNITY -> Basemap(BasemapStyle.ARCGIS_COMMUNITY)
+        BasemapStyle.ARCGIS_DARK_GRAY -> Basemap(BasemapStyle.ARCGIS_DARK_GRAY)
+        BasemapStyle.ARCGIS_DARK_GRAY_BASE -> Basemap(BasemapStyle.ARCGIS_DARK_GRAY_BASE)
+        BasemapStyle.ARCGIS_DARK_GRAY_LABELS -> Basemap(BasemapStyle.ARCGIS_DARK_GRAY_LABELS)
+        BasemapStyle.ARCGIS_HILLSHADE_DARK -> Basemap(BasemapStyle.ARCGIS_HILLSHADE_DARK)
+        BasemapStyle.ARCGIS_HILLSHADE_LIGHT -> Basemap(BasemapStyle.ARCGIS_HILLSHADE_LIGHT)
+        BasemapStyle.ARCGIS_IMAGERY -> Basemap(BasemapStyle.ARCGIS_IMAGERY)
+        BasemapStyle.ARCGIS_IMAGERY_LABELS -> Basemap(BasemapStyle.ARCGIS_IMAGERY_LABELS)
+        BasemapStyle.ARCGIS_IMAGERY_STANDARD -> Basemap(BasemapStyle.ARCGIS_IMAGERY_STANDARD)
+        BasemapStyle.ARCGIS_LIGHT_GRAY -> Basemap(BasemapStyle.ARCGIS_LIGHT_GRAY)
+        BasemapStyle.ARCGIS_LIGHT_GRAY_BASE -> Basemap(BasemapStyle.ARCGIS_LIGHT_GRAY_BASE)
+        BasemapStyle.ARCGIS_LIGHT_GRAY_LABELS -> Basemap(BasemapStyle.ARCGIS_LIGHT_GRAY_LABELS)
+        BasemapStyle.ARCGIS_MIDCENTURY -> Basemap(BasemapStyle.ARCGIS_MIDCENTURY)
+        BasemapStyle.ARCGIS_MODERN_ANTIQUE -> Basemap(BasemapStyle.ARCGIS_MODERN_ANTIQUE)
+        BasemapStyle.ARCGIS_NAVIGATION -> Basemap(BasemapStyle.ARCGIS_NAVIGATION)
+        BasemapStyle.ARCGIS_NAVIGATION_NIGHT -> Basemap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
+        BasemapStyle.ARCGIS_NEWSPAPER -> Basemap(BasemapStyle.ARCGIS_NEWSPAPER)
+        BasemapStyle.ARCGIS_NOVA -> Basemap(BasemapStyle.ARCGIS_NOVA)
+        BasemapStyle.ARCGIS_OCEANS -> Basemap(BasemapStyle.ARCGIS_OCEANS)
+        BasemapStyle.ARCGIS_OCEANS_BASE -> Basemap(BasemapStyle.ARCGIS_OCEANS_BASE)
+        BasemapStyle.ARCGIS_OCEANS_LABELS -> Basemap(BasemapStyle.ARCGIS_OCEANS_LABELS)
+        BasemapStyle.ARCGIS_STREETS -> Basemap(BasemapStyle.ARCGIS_STREETS)
+        BasemapStyle.ARCGIS_STREETS_NIGHT -> Basemap(BasemapStyle.ARCGIS_STREETS_NIGHT)
+        BasemapStyle.ARCGIS_STREETS_RELIEF -> Basemap(BasemapStyle.ARCGIS_STREETS_RELIEF)
+        BasemapStyle.ARCGIS_TERRAIN -> Basemap(BasemapStyle.ARCGIS_TERRAIN)
+        BasemapStyle.ARCGIS_TERRAIN_BASE -> Basemap(BasemapStyle.ARCGIS_TERRAIN_BASE)
+        BasemapStyle.ARCGIS_TERRAIN_DETAIL -> Basemap(BasemapStyle.ARCGIS_TERRAIN_DETAIL)
+        BasemapStyle.ARCGIS_TOPOGRAPHIC -> Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+        BasemapStyle.OSM_DARK_GRAY -> Basemap(BasemapStyle.OSM_DARK_GRAY)
+        BasemapStyle.OSM_DARK_GRAY_BASE -> Basemap(BasemapStyle.OSM_DARK_GRAY_BASE)
+        BasemapStyle.OSM_DARK_GRAY_LABELS -> Basemap(BasemapStyle.OSM_DARK_GRAY_LABELS)
+        BasemapStyle.OSM_LIGHT_GRAY -> Basemap(BasemapStyle.OSM_LIGHT_GRAY)
+        BasemapStyle.OSM_LIGHT_GRAY_BASE -> Basemap(BasemapStyle.OSM_LIGHT_GRAY_BASE)
+        BasemapStyle.OSM_LIGHT_GRAY_LABELS -> Basemap(BasemapStyle.OSM_LIGHT_GRAY_LABELS)
+        BasemapStyle.OSM_STANDARD -> Basemap(BasemapStyle.OSM_STANDARD)
+        BasemapStyle.OSM_STANDARD_RELIEF -> Basemap(BasemapStyle.OSM_STANDARD_RELIEF)
+        BasemapStyle.OSM_STANDARD_RELIEF_BASE -> Basemap(BasemapStyle.OSM_STANDARD_RELIEF_BASE)
+        BasemapStyle.OSM_STREETS -> Basemap(BasemapStyle.OSM_STREETS)
+        BasemapStyle.OSM_STREETS_RELIEF -> Basemap(BasemapStyle.OSM_STREETS_RELIEF)
       }
   }
 

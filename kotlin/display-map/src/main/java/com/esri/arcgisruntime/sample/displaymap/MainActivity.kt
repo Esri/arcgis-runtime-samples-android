@@ -22,8 +22,10 @@ package com.esri.arcgisruntime.sample.displaymap
 //[DocRef: Name=Import kotlinx-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.Viewpoint
 import kotlinx.android.synthetic.main.activity_main.*
 
 //[DocRef: END]
@@ -34,15 +36,23 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     //[DocRef: Name=Create map-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
     // create a map with the BasemapType topographic
-    val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 16)
+    val map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
     //[DocRef: END]
+
+    map.initialViewpoint = Viewpoint(34.056295, -117.195800, 10000.0)
 
     //[DocRef: Name=Set map-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
     // set the map to be displayed in the layout's MapView
     mapView.map = map
     //[DocRef: END]
+
+    map.addDoneLoadingListener {
+      map.loadError
+    }
 
   }
 

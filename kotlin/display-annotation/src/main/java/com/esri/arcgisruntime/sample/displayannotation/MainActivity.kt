@@ -18,12 +18,13 @@ package com.esri.arcgisruntime.sample.displayannotation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.layers.AnnotationLayer
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.Viewpoint
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -32,8 +33,12 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a map with a topographic basemap
-    mapView.map = ArcGISMap(Basemap.Type.LIGHT_GRAY_CANVAS, 55.882436, -2.725610, 13).apply {
+    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY_BASE).apply {
+      // set an initial view point
+      initialViewpoint = Viewpoint( 55.882436, -2.725610, 75000.0)
       // add a feature layer from a feature service
       operationalLayers.add(
         FeatureLayer(ServiceFeatureTable(getString(R.string.river_feature_service_url)))

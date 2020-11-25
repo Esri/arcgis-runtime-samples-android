@@ -53,9 +53,7 @@ class MainActivity : AppCompatActivity() {
       )
 
       // setup AuthenticationManager to handle auth challenges
-      val defaultAuthenticationChallengeHandler = DefaultAuthenticationChallengeHandler(
-        this
-      )
+      val defaultAuthenticationChallengeHandler = DefaultAuthenticationChallengeHandler(this)
 
       // use the DefaultChallengeHandler to handle authentication challenges
       AuthenticationManager.setAuthenticationChallengeHandler(defaultAuthenticationChallengeHandler)

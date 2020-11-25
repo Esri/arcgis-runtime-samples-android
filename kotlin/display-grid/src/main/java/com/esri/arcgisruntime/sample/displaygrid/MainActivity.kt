@@ -25,10 +25,11 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Grid
 import com.esri.arcgisruntime.mapping.view.LatitudeLongitudeGrid
@@ -60,9 +61,11 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     mapView.apply {
       // create a map with imagery basemap
-      map = ArcGISMap(Basemap.createImagery())
+      map = ArcGISMap(BasemapStyle.ARCGIS_IMAGERY)
       // set the initial viewpoint of the map
       map.initialViewpoint = Viewpoint(center, 23227.0)
       // set defaults on grid

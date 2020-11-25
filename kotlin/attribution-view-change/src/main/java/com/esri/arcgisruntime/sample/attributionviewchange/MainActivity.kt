@@ -19,12 +19,11 @@ package com.esri.arcgisruntime.sample.attributionviewchange
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
-import com.google.android.material.snackbar.Snackbar
+import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.Viewpoint
 import kotlinx.android.synthetic.main.activity_main.*
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,8 +31,12 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a map with the BasemapType topographic
-    val map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 47.495052, -121.786863, 12)
+    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
+      initialViewpoint = Viewpoint(47.495052, -121.786863, 100000.0)
+    }
     // set the map to be displayed in this view
     mapView.map = map
 

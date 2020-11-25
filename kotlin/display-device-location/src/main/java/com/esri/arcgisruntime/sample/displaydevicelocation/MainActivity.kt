@@ -25,8 +25,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.LocationDisplay
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -37,8 +39,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a new map with an imagery basemap and set it to the map view
-    mapView.map = ArcGISMap(Basemap.createImagery())
+    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_IMAGERY)
     // listen to changes in the status of the location data source
     locationDisplay.addDataSourceStatusChangedListener {
       // if LocationDisplay isn't started or has an error

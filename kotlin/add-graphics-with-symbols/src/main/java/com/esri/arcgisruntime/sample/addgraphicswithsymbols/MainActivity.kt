@@ -20,13 +20,15 @@ package com.esri.arcgisruntime.sample.addgraphicswithsymbols
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.PointCollection
 import com.esri.arcgisruntime.geometry.Polygon
 import com.esri.arcgisruntime.geometry.Polyline
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
@@ -43,12 +45,16 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create the graphics overlay
     val graphicsOverlay = GraphicsOverlay()
 
     mapView.apply {
       // create a map with the BasemapType Oceans and display it in this view
-      map = ArcGISMap(Basemap.Type.OCEANS, 56.075844, -2.681572, 11)
+      map = ArcGISMap(BasemapStyle.ARCGIS_OCEANS).apply {
+        initialViewpoint = Viewpoint(56.075844, -2.681572, 100000.0)
+      }
       // add the overlay to the map view
       graphicsOverlays.add(graphicsOverlay)
     }

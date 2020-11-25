@@ -20,12 +20,13 @@ package com.esri.arcgisruntime.sample.changeviewpoint
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.PointCollection
 import com.esri.arcgisruntime.geometry.Polyline
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -37,8 +38,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a map with an imagery basemap and set it to the map view
-    mapView.map = ArcGISMap(Basemap.createImageryWithLabels())
+    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_IMAGERY)
 
     // create point for starting location
     val startPoint = Point(-14093.0, 6711377.0, SpatialReferences.getWebMercator())

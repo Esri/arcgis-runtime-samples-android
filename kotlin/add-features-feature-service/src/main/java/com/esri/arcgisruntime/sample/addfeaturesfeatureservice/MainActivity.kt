@@ -22,15 +22,16 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.ArcGISRuntimeException
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import kotlinx.android.synthetic.main.activity_main.*
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,8 +39,13 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a map with streets basemap
-    ArcGISMap(Basemap.Type.STREETS, 40.0, -95.0, 4).let { map ->
+    ArcGISMap(BasemapStyle.ARCGIS_STREETS).let { map ->
+
+      // set an initial view point
+      map.initialViewpoint = Viewpoint(40.0, -95.0, 10000000.0)
 
       // create service feature table from URL
       ServiceFeatureTable(getString(R.string.service_layer_url)).let { serviceFeatureTable ->
