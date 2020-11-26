@@ -25,13 +25,14 @@ import android.text.format.DateUtils
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.location.RouteTrackerLocationDataSource
 import com.esri.arcgisruntime.location.SimulatedLocationDataSource
 import com.esri.arcgisruntime.location.SimulationParameters
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
@@ -61,8 +62,12 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a map and set it to the map view
-    mapView.map = ArcGISMap(Basemap.createStreetsVector())
+    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_STREETS)
 
     // create a graphics overlay to hold our route graphics and clear any graphics
     mapView.graphicsOverlays.add(GraphicsOverlay())

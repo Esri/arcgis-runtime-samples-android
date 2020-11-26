@@ -22,6 +22,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.FeatureCollectionTable
@@ -30,7 +31,8 @@ import com.esri.arcgisruntime.geometry.GeometryType
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
@@ -61,6 +63,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create renderers for graphics overlays
     val fillColor = Color.argb(120, 226, 119, 40)
     val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, fillColor, null)
@@ -75,7 +81,9 @@ class MainActivity : AppCompatActivity() {
 
     mapView.apply {
       // create a map with the Basemap type topographic
-      map = ArcGISMap(Basemap.Type.TOPOGRAPHIC, 45.3790902612337, 6.84905317262762, 12)
+      map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
+        initialViewpoint = Viewpoint(45.3790902612337, 6.84905317262762, 100000.0)
+      }
       // add graphics overlays to the map view
       graphicsOverlays.addAll(listOf(resultGraphicsOverlay, inputGraphicsOverlay))
       // add onTouchListener for calculating the new viewshed

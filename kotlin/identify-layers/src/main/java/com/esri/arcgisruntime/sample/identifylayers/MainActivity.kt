@@ -23,19 +23,19 @@ import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.roundToInt
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,6 +46,10 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     // create a feature layer of damaged property data
     val featureTable = ServiceFeatureTable(getString(R.string.damage_assessment))
@@ -61,7 +65,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create a topographic map
-    val map = ArcGISMap(Basemap.createTopographic()).apply {
+    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
       // add world cities layer
       operationalLayers.add(mapImageLayer)
 

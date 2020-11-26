@@ -17,10 +17,11 @@ package com.esri.arcgisruntime.sample.setinitialmaparea
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Envelope
 import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -29,8 +30,13 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a map with a topographic basemap
-    val map = ArcGISMap(Basemap.createTopographic())
+    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
     // create an envelope around Shafer Basin
     val initialExtent =
       Envelope(
