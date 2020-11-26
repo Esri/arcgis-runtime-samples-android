@@ -21,11 +21,12 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.FeatureCollection
 import com.esri.arcgisruntime.layers.FeatureCollectionLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import kotlinx.android.synthetic.main.activity_main.*
@@ -38,6 +39,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a portal item from an ArcGIS Online portal and a feature collection item id
     val portal = Portal("https://www.arcgis.com/")
     val collectionItem = PortalItem(portal, "32798dfad17942858d5eef82ee802f0b")
@@ -47,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     val featureCollectionLayer = FeatureCollectionLayer(featureCollection)
 
     // create a map with the oceans basemap and add it to the map view
-    mapView.map = ArcGISMap(Basemap.createOceans()).apply {
+    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_OCEANS).apply {
       // add the new feature collection layer to the map
       operationalLayers.add(featureCollectionLayer)
     }

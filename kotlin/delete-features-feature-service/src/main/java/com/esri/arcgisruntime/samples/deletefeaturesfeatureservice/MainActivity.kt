@@ -50,6 +50,8 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    // authentication with an API key or named user is required to access basemaps and other 
+    // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     setContentView(R.layout.activity_main)

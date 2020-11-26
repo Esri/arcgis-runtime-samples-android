@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.featurelayerextrusion;
+package com.esri.arcgisruntime.sample.featurelayerextrusion
 
 import android.graphics.Color
 import android.os.Bundle

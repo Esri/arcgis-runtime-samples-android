@@ -14,12 +14,13 @@ package com.esri.arcgisruntime.sample.featurelayerfeatureservice
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -29,13 +30,17 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create the service feature table
     val serviceFeatureTable = ServiceFeatureTable(resources.getString(R.string.sample_service_url))
     // create the feature layer using the service feature table
     val featureLayer = FeatureLayer(serviceFeatureTable)
 
     // create a map with the terrain with labels basemap
-    ArcGISMap(Basemap.createTerrainWithLabels()).let { map ->
+    ArcGISMap(BasemapStyle.ARCGIS_TERRAIN).let { map ->
       // set an initial viewpoint
       map.initialViewpoint = Viewpoint(
         Point(

@@ -23,6 +23,7 @@ import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.Feature
 import com.esri.arcgisruntime.data.Geodatabase
 import com.esri.arcgisruntime.geometry.GeometryEngine
@@ -34,6 +35,8 @@ import com.esri.arcgisruntime.layers.AnnotationLayer
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.edit_attribute_layout.view.*
@@ -49,6 +52,10 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     // NOTE: to be a writable geodatabase, this geodatabase must be generated from a service with a
     // GeodatabaseSyncTask. See the "generate geodatabase" sample to see how to generate a
@@ -69,8 +76,10 @@ class MainActivity : AppCompatActivity() {
       val parcelLinesAnnotationLayer =
         AnnotationLayer(geodatabase.getGeodatabaseAnnotationTable("ParcelLinesAnno_1"))
 
-      // create the map with a light gray canvas basemap centered on Loudoun, Virginia
-      val map = ArcGISMap(Basemap.Type.LIGHT_GRAY_CANVAS_VECTOR, 39.0204, -77.4159, 18).apply {
+      // create the map with a light gray canvas basemap
+      val map = ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY).apply {
+        // set the initial viewpoint to Loudoun, Virginia
+        initialViewpoint = Viewpoint(39.0204, -77.4159, 2000.0)
         // add the feature layers to the map
         operationalLayers.add(parcelLinesFeatureLayer)
         operationalLayers.add(addressPointFeatureLayer)

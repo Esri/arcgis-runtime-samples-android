@@ -29,6 +29,7 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.arcgisservices.ServiceVersionParameters
 import com.esri.arcgisruntime.arcgisservices.VersionAccess
 import com.esri.arcgisruntime.data.Feature
@@ -36,7 +37,7 @@ import com.esri.arcgisruntime.data.ServiceGeodatabase
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.security.UserCredential
@@ -58,6 +59,10 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     // hardcode user credentials since this sample has been setup to work with this specific
     // service. Normally you'd handle authentication with the AuthenticationChallengeHandler
@@ -84,7 +89,7 @@ class MainActivity : AppCompatActivity() {
       }
 
       // create a map with a streets vector basemap and add the feature layer
-      val map = ArcGISMap(Basemap.createStreetsVector()).apply {
+      val map = ArcGISMap(BasemapStyle.ARCGIS_STREETS).apply {
         // add the layer to the map
         operationalLayers.add(featureLayer)
       }

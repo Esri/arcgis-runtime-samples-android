@@ -36,6 +36,8 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other 
+    // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     //[DocRef: Name=Create map-Android, Category=Get started, Topic=Develop your first map app with Kotlin]

@@ -27,6 +27,7 @@ import android.view.Menu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.FeatureQueryResult
 import com.esri.arcgisruntime.data.QueryParameters
@@ -35,7 +36,7 @@ import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
@@ -63,6 +64,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // use symbols to show U.S. states with a black outline and yellow fill
     val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1.0f)
     val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.YELLOW, lineSymbol)
@@ -75,7 +80,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create a map with the topographic basemap and add it to the basemap
-    mapView.map = ArcGISMap(Basemap.createTopographic()).apply {
+    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
       // add the feature layer to the map's operational layers
       operationalLayers.add(featureLayer)
       // zoom to a view point of the USA
@@ -88,6 +93,7 @@ class MainActivity : AppCompatActivity() {
    * Handle the search intent from the search widget.
    */
   override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
     this.intent = intent
 
     if (Intent.ACTION_SEARCH == intent.action) {
