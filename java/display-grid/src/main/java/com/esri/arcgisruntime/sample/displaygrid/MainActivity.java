@@ -16,8 +16,6 @@
 package com.esri.arcgisruntime.sample.displaygrid;
 
 import android.graphics.Color;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,12 +23,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
-
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Grid;
 import com.esri.arcgisruntime.mapping.view.LatitudeLongitudeGrid;
@@ -53,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
     // inflate views from activity_main
     mMapView = findViewById(R.id.mapView);
@@ -89,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     mLabelColorSpinner.setAdapter(labelColorAdapter);
 
     // create a map with imagery basemap
-    ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
     // set viewpoint
     final Point center = new Point(-7702852.905619, 6217972.345771, 23227, SpatialReference.create(3857));
     map.setInitialViewpoint(new Viewpoint(center, 23227));

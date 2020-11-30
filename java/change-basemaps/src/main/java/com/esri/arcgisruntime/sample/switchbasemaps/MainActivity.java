@@ -49,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate navigation drawer
     mNavigationDrawerItemTitles = getResources().getStringArray(R.array.basemap_types);
     mDrawerList = (ListView) findViewById(R.id.navList);
