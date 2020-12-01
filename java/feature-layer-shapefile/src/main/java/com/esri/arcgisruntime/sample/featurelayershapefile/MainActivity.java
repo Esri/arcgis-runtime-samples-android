@@ -40,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // create a new map to display in the map view with a streets basemap
     mMapView = findViewById(R.id.mapView);
     ArcGISMap map = new ArcGISMap(Basemap.createStreetsVector());

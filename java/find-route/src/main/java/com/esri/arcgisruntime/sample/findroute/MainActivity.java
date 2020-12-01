@@ -16,17 +16,16 @@
 
 package com.esri.arcgisruntime.sample.findroute;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +36,10 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
@@ -56,10 +59,7 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters;
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult;
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask;
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.directions_drawer);
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     // create new Vector Tiled Layer from service url
     ArcGISVectorTiledLayer mVectorTiledLayer = new ArcGISVectorTiledLayer(
         getResources().getString(R.string.navigation_vector));
@@ -100,22 +100,18 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setMap(mMap);
 
     // inflate navigation drawer
-    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-    mDrawerList = (ListView) findViewById(R.id.left_drawer);
+    mDrawerLayout = findViewById(R.id.drawer_layout);
+    mDrawerList = findViewById(R.id.left_drawer);
 
-    FloatingActionButton mDirectionFab = (FloatingActionButton) findViewById(R.id.directionFAB);
+    FloatingActionButton mDirectionFab = findViewById(R.id.directionFAB);
 
     // update UI when attribution view changes
     final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mDirectionFab.getLayoutParams();
-    mMapView.addAttributionViewLayoutChangeListener(new View.OnLayoutChangeListener() {
-      @Override
-      public void onLayoutChange(
-          View view, int left, int top, int right, int bottom,
-          int oldLeft, int oldTop, int oldRight, int oldBottom) {
-        int heightDelta = (bottom - oldBottom);
-        params.bottomMargin += heightDelta;
-      }
-    });
+    mMapView.addAttributionViewLayoutChangeListener(
+        (view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+          int heightDelta = bottom - oldBottom;
+          params.bottomMargin += heightDelta;
+        });
 
     setupDrawer();
     setupSymbols();
@@ -289,13 +285,13 @@ public class MainActivity extends AppCompatActivity {
     mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
 
       /** Called when a drawer has settled in a completely open state. */
-      public void onDrawerOpened(View drawerView) {
+      @Override public void onDrawerOpened(View drawerView) {
         super.onDrawerOpened(drawerView);
         invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
       }
 
       /** Called when a drawer has settled in a completely closed state. */
-      public void onDrawerClosed(View view) {
+      @Override public void onDrawerClosed(View view) {
         super.onDrawerClosed(view);
         invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
       }
@@ -336,6 +332,6 @@ public class MainActivity extends AppCompatActivity {
     // as you specify a parent activity in AndroidManifest.xml.
 
     // Activate the navigation drawer toggle
-    return (mDrawerToggle.onOptionsItemSelected(item)) || super.onOptionsItemSelected(item);
+    return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
   }
 }
