@@ -102,7 +102,8 @@ class MainActivity : AppCompatActivity() {
           override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
             // don't allow edits on the sde.DEFAULT version
             if (serviceGeodatabase.versionName.isBlank()
-              || serviceGeodatabase.versionName == serviceGeodatabase.defaultVersionName) {
+              || serviceGeodatabase.versionName == serviceGeodatabase.defaultVersionName
+            ) {
               val message = "This sample does not allow editing of features on the default version."
               Log.e(TAG, message)
               Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
