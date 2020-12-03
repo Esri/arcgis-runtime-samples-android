@@ -14,16 +14,17 @@
 package com.esri.arcgisruntime.samples.featurelayerdefinitionexpression;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,10 +47,10 @@ public class MainActivity extends AppCompatActivity {
     createBottomToolbar();
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
 
     // create a map with the topographic basemap
-    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
 
     // create feature layer with its service feature table
     // create the service feature table
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
   private void createBottomToolbar() {
 
-    Toolbar bottomToolbar = (Toolbar) findViewById(R.id.bottomToolbar);
+    Toolbar bottomToolbar = findViewById(R.id.bottomToolbar);
     bottomToolbar.inflateMenu(R.menu.menu_main);
 
     bottomToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -114,14 +115,12 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onPause() {
     super.onPause();
-    // pause MapView
     mMapView.pause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    // resume MapView
     mMapView.resume();
   }
 

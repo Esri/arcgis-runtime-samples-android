@@ -19,9 +19,10 @@ package com.esri.arcgisruntime.sample.featurecollectionlayerquery;
 import java.util.concurrent.ExecutionException;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.FeatureCollection;
 import com.esri.arcgisruntime.data.FeatureCollectionTable;
@@ -31,7 +32,7 @@ import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureCollectionLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,11 +51,10 @@ public class MainActivity extends AppCompatActivity {
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
 
     //initialize map with basemap
-    ArcGISMap map = new ArcGISMap();
-    map.setBasemap(Basemap.createOceans());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_OCEANS);
 
     //assign map to the map view
     mMapView.setMap(map);
@@ -70,24 +70,22 @@ public class MainActivity extends AppCompatActivity {
 
     //query feature from the table
     final ListenableFuture<FeatureQueryResult> queryResult = featureTable.queryFeaturesAsync(queryParams);
-    queryResult.addDoneListener(new Runnable() {
-      @Override public void run() {
-        try {
-          //create a feature collection table from the query results
-          FeatureCollectionTable featureCollectionTable = new FeatureCollectionTable(queryResult.get());
+    queryResult.addDoneListener(() -> {
+      try {
+        //create a feature collection table from the query results
+        FeatureCollectionTable featureCollectionTable = new FeatureCollectionTable(queryResult.get());
 
-          //create a feature collection from the above feature collection table
-          FeatureCollection featureCollection = new FeatureCollection();
-          featureCollection.getTables().add(featureCollectionTable);
+        //create a feature collection from the above feature collection table
+        FeatureCollection featureCollection = new FeatureCollection();
+        featureCollection.getTables().add(featureCollectionTable);
 
-          //create a feature collection layer
-          FeatureCollectionLayer featureCollectionLayer = new FeatureCollectionLayer(featureCollection);
+        //create a feature collection layer
+        FeatureCollectionLayer featureCollectionLayer = new FeatureCollectionLayer(featureCollection);
 
-          //add the layer to the operational layers array
-          mMapView.getMap().getOperationalLayers().add(featureCollectionLayer);
-        } catch (InterruptedException | ExecutionException e) {
-          Log.e(TAG, "Error in FeatureQueryResult: " + e.getMessage());
-        }
+        //add the layer to the operational layers array
+        mMapView.getMap().getOperationalLayers().add(featureCollectionLayer);
+      } catch (InterruptedException | ExecutionException e) {
+        Log.e(TAG, "Error in FeatureQueryResult: " + e.getMessage());
       }
     });
   }
