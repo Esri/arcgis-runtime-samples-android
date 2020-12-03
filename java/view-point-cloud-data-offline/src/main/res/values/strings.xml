@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">View point cloud data offline</string>
-    <string name="elevation_source_url">http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
+    <string name="elevation_source_url">https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
     <string name="scene_layer_package_location">/sandiego-north-balboa-pointcloud.slpk</string>
 </resources>

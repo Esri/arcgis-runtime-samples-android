@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">View Point Cloud Data Offline</string>
-    <string name="elevation_source_url">http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
+    <string name="elevation_source_url">https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer</string>
     <string name="scene_layer_package_location">/sandiego-north-balboa-pointcloud.slpk</string>
     <string name="read_permission_denied_message">Could not create Point Cloud Layer as the read permission has denied.</string>
     <string name="point_cloud_layer_load_failure_message">The PointCloudLayer has failed to load. Please ensure that the .slpk has been pushed to the device\'s storage.</string>

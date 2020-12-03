@@ -6,7 +6,7 @@ ext {
     versionCode = 109
     versionName = '100.9'
     // library versions
-    kotlinVersion = '1.4.0'
+    kotlinVersion = '1.4.10'
     appcompatVersion = '1.2.0'
     constraintLayoutVersion = '2.0.0'
     multidexVersion = '2.0.1'
