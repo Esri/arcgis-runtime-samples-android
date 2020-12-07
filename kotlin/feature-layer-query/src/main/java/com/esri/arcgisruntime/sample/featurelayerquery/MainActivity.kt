@@ -83,10 +83,9 @@ class MainActivity : AppCompatActivity() {
     mapView.map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
       // add the feature layer to the map's operational layers
       operationalLayers.add(featureLayer)
-      // zoom to a view point of the USA
-      initialViewpoint =
-        Viewpoint(Point(-11000000.0, 5000000.0, SpatialReferences.getWebMercator()), 100000000.0)
     }
+    // set an initial viewpoint over the USA
+    mapView.setViewpoint(Viewpoint(Point(-11000000.0, 5000000.0, SpatialReferences.getWebMercator()), 100000000.0))
   }
 
   /**

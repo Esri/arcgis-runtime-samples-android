@@ -64,13 +64,14 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
 
     // create a map with streets basemap
     with(ArcGISMap(BasemapStyle.ARCGIS_STREETS)) {
-      // set an initial view point
-      initialViewpoint = Viewpoint(40.0, -95.0, 10000000.0)
       // add the layer to the map
       operationalLayers.add(featureLayer)
       // set map to be displayed in map view
       mapView.map = this
     }
+
+    // set the map view's view point
+    mapView.setViewpoint(Viewpoint(40.0, -95.0, 10000000.0))
 
     mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
       override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {

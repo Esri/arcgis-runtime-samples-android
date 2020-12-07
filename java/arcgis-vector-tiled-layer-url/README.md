@@ -21,7 +21,7 @@ Tap the menu icon at the top left of the screen and select different vector tile
 ## Relevant API
 
 * ArcGISVectorTiledLayer
-* Basemap
+* BasemapStyle
 
 ## Tags
 

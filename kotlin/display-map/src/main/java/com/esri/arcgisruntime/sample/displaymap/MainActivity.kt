@@ -45,12 +45,12 @@ class MainActivity : AppCompatActivity() {
     val map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
     //[DocRef: END]
 
-    map.initialViewpoint = Viewpoint(34.056295, -117.195800, 10000.0)
-
     //[DocRef: Name=Set map-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
     // set the map to be displayed in the layout's MapView
     mapView.map = map
     //[DocRef: END]
+
+    mapView.setViewpoint(Viewpoint(34.056295, -117.195800, 10000.0))
 
     map.addDoneLoadingListener {
       map.loadError

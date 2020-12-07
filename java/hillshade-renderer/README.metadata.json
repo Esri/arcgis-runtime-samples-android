@@ -25,8 +25,7 @@
         "/android/latest/sample-code/hillshade-renderer.htm"
     ],
     "relevant_apis": [
-        "",
-        "Basemap",
+        "BasemapStyle",
         "HillshadeRenderer",
         "Raster",
         "RasterLayer"

@@ -41,20 +41,22 @@ class MainActivity : AppCompatActivity() {
 
     // create a map with the terrain with labels basemap
     ArcGISMap(BasemapStyle.ARCGIS_TERRAIN).let { map ->
-      // set an initial viewpoint
-      map.initialViewpoint = Viewpoint(
-        Point(
-          -13176752.0,
-          4090404.0,
-          SpatialReferences.getWebMercator()
-        ), 500000.0
-      )
 
       // add the feature layer to the map
       map.operationalLayers.add(featureLayer)
 
-      // set the map to be displayed in the mapview
+      // set the map to be displayed in the map view
       mapView.map = map
+      // set an initial viewpoint
+      mapView.setViewpoint(
+        Viewpoint(
+          Point(
+            -13176752.0,
+            4090404.0,
+            SpatialReferences.getWebMercator()
+          ), 500000.0
+        )
+      )
     }
   }
 

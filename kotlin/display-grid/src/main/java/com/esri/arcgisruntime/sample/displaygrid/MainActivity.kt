@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
       // create a map with imagery basemap
       map = ArcGISMap(BasemapStyle.ARCGIS_IMAGERY)
       // set the initial viewpoint of the map
-      map.initialViewpoint = Viewpoint(center, 23227.0)
+      setViewpoint(Viewpoint(center, 23227.0))
       // set defaults on grid
       grid = LatitudeLongitudeGrid()
     }

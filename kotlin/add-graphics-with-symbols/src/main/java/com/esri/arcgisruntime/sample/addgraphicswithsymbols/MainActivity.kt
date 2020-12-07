@@ -54,9 +54,8 @@ class MainActivity : AppCompatActivity() {
 
     mapView.apply {
       // create a map with the BasemapType Oceans and display it in this view
-      map = ArcGISMap(BasemapStyle.ARCGIS_OCEANS).apply {
-        initialViewpoint = Viewpoint(56.075844, -2.681572, 100000.0)
-      }
+      map = ArcGISMap(BasemapStyle.ARCGIS_OCEANS)
+      setViewpoint(Viewpoint(56.075844, -2.681572, 100000.0))
       // add the overlay to the map view
       graphicsOverlays.add(graphicsOverlay)
     }

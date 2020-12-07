@@ -45,8 +45,9 @@ class MainActivity : AppCompatActivity() {
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     // setup map with basemap and an initial viewpoint
-    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT).apply {
-      initialViewpoint = Viewpoint(
+    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT)
+    mapView.setViewpoint(
+      Viewpoint(
         Envelope(
           -9812691.11079696,
           5128687.20710657,
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity() {
           SpatialReferences.getWebMercator()
         )
       )
-    }
+    )
 
     // on any navigation on the map view
     mapView.addMapScaleChangedListener {

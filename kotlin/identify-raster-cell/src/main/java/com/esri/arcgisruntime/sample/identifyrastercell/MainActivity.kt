@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity() {
 
     // define a new map
     val rasterMap = ArcGISMap(BasemapStyle.ARCGIS_OCEANS).apply {
-      initialViewpoint = Viewpoint( -33.9, 18.6, 1000000.0)
       // add the raster layer
       operationalLayers.add(rasterLayer)
     }
@@ -62,6 +61,7 @@ class MainActivity : AppCompatActivity() {
     mapView.apply {
       // add the map to the map view
       map = rasterMap
+      setViewpoint(Viewpoint( -33.9, 18.6, 1000000.0))
 
       // set behavior for double touch drag and on single tap gestures
       onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {

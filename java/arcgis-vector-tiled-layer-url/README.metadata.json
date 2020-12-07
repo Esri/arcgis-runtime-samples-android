@@ -19,7 +19,7 @@
     ],
     "relevant_apis": [
         "ArcGISVectorTiledLayer",
-        "Basemap"
+        "BasemapStyle"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/arcgisvectortiledlayerurl/MainActivity.java"

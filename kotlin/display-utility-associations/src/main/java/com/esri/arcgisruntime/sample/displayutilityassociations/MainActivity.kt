@@ -74,10 +74,9 @@ class MainActivity : AppCompatActivity() {
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     mapView.apply {
-      // add a topographic vector map with a viewpoint at several utility network associations
-      map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
-        initialViewpoint = Viewpoint(41.8057655, -88.1489692, 50.0)
-      }
+      // add a topographic basemap with a viewpoint at several utility network associations
+      map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+      setViewpoint(Viewpoint(41.8057655, -88.1489692, 50.0))
 
       // add the a graphics overlay to hold association graphics
       graphicsOverlays.add(associationsOverlay)

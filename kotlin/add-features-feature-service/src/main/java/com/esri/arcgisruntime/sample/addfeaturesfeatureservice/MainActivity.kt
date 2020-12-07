@@ -46,9 +46,6 @@ class MainActivity : AppCompatActivity() {
     // create a map with streets basemap
     ArcGISMap(BasemapStyle.ARCGIS_STREETS).let { map ->
 
-      // set an initial view point
-      map.initialViewpoint = Viewpoint(40.0, -95.0, 10000000.0)
-
       // create service feature table from URL
       ServiceFeatureTable(getString(R.string.service_layer_url)).let { serviceFeatureTable ->
 
@@ -80,6 +77,9 @@ class MainActivity : AppCompatActivity() {
 
       // set map to be displayed in map view
       mapView.map = map
+
+      // set an initial view point
+      mapView.setViewpoint(Viewpoint(40.0, -95.0, 10000000.0))
     }
   }
 

@@ -36,11 +36,10 @@ class MainActivity : AppCompatActivity() {
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     // create a map with a topographic basemap and initial position
-    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
-      initialViewpoint = Viewpoint( 34.056295, -117.195800, 10000.0)
-    }
+    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
     // set the map to be displayed in this view
     mapView.map = map
+    mapView.setViewpoint(Viewpoint( 34.056295, -117.195800, 10000.0))
 
     rotationSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
       override fun onProgressChanged(seekBar: SeekBar, angle: Int, b: Boolean) {

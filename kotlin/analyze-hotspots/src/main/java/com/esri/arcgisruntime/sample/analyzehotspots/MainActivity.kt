@@ -58,14 +58,11 @@ class MainActivity : AppCompatActivity() {
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     // create a map with the BasemapType topographic
-    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
-      //set initial viewpoint
-      initialViewpoint =
-        Viewpoint(Point(-13671170.0, 5693633.0, SpatialReference.create(3857)), 57779.0)
-    }
+    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
 
     // set the map to the map view
     mapView.map = map
+    mapView.setViewpoint(Viewpoint(Point(-13671170.0, 5693633.0, SpatialReference.create(3857)), 57779.0))
 
     calendarButton.setOnClickListener {
       showDateRangeDialog()

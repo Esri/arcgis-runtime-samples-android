@@ -45,10 +45,10 @@ class MainActivity : AppCompatActivity() {
       )
     // create a viewpoint from the envelope
     val viewpoint = Viewpoint(initialExtent)
-    // set the map's initial viewpoint
-    map.initialViewpoint = viewpoint
     // set the map to be displayed in the map view
     mapView.map = map
+    // set the map's initial viewpoint
+    mapView.setViewpoint(viewpoint)
   }
 
   override fun onPause() {

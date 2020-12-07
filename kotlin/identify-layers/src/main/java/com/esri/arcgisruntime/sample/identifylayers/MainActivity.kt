@@ -71,17 +71,17 @@ class MainActivity : AppCompatActivity() {
 
       // add damaged property data
       operationalLayers.add(featureLayer)
-
-      // set the map's initial viewpoint
-      initialViewpoint = Viewpoint(
-        Point(-10977012.785807, 4514257.550369, SpatialReference.create(3857)),
-        68015210.0
-      )
     }
 
-    // assign the map to the map view
     mapView.apply {
+      // assign the map to the map view
       this.map = map
+
+      // set the map's initial viewpoint
+      setViewpoint(Viewpoint(
+        Point(-10977012.785807, 4514257.550369, SpatialReference.create(3857)),
+        68015210.0
+      ))
       // add a listener to detect taps on the map view
       onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, this) {
         override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {

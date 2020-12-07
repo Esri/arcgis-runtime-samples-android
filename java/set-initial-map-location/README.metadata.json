@@ -27,7 +27,7 @@
         "/android/latest/sample-code/set-initial-map-location.htm"
     ],
     "relevant_apis": [
-        "Basemap.Type",
+        "BasemapStyle",
         "Map",
         "MapView"
     ],

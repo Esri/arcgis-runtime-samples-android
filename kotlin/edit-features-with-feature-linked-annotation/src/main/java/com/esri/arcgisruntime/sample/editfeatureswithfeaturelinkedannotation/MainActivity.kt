@@ -78,8 +78,6 @@ class MainActivity : AppCompatActivity() {
 
       // create the map with a light gray canvas basemap
       val map = ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY).apply {
-        // set the initial viewpoint to Loudoun, Virginia
-        initialViewpoint = Viewpoint(39.0204, -77.4159, 2000.0)
         // add the feature layers to the map
         operationalLayers.add(parcelLinesFeatureLayer)
         operationalLayers.add(addressPointFeatureLayer)
@@ -91,6 +89,9 @@ class MainActivity : AppCompatActivity() {
       mapView.apply {
         // add the map to the map view
         this.map = map
+
+        // set the initial viewpoint to Loudoun, Virginia
+        setViewpoint(Viewpoint(39.0204, -77.4159, 2000.0))
 
         // set on tap behaviour
         onTouchListener = object : DefaultMapViewOnTouchListener(applicationContext, mapView) {

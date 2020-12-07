@@ -17,7 +17,7 @@
     "language": "java",
     "relevant_apis": [
         "ArcGISMap",
-        "Basemap",
+        "BasemapStyle",
         "MapView",
         "ViewPoint"
     ],

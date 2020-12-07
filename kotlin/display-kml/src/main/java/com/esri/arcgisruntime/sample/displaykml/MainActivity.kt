@@ -53,12 +53,10 @@ class MainActivity : AppCompatActivity() {
     progressIndicator.visibility = View.VISIBLE
 
     // create a map with the dark gray canvas basemap
-    val map = ArcGISMap(BasemapStyle.ARCGIS_DARK_GRAY).apply {
-      // set initial view point
-      initialViewpoint = Viewpoint(39.0, -98.0, 100000000.0)
-    }
+    val map = ArcGISMap(BasemapStyle.ARCGIS_DARK_GRAY)
     // set the map to the map view
     mapView.map = map
+    mapView.setViewpoint(Viewpoint(39.0, -98.0, 100000000.0))
     // prompt user to make a KML source selection when the app has loaded
     map.addDoneLoadingListener {
       if (map.loadStatus == LoadStatus.LOADED) {

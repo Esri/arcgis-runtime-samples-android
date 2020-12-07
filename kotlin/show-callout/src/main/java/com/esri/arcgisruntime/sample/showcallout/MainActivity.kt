@@ -44,12 +44,13 @@ class MainActivity : AppCompatActivity() {
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     // create a map with a topographic basemap
-    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
-      initialViewpoint = Viewpoint(34.056295, -117.195800, 100000.0)
-    }
+    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
 
     // set the map to be displayed in the layout's map view
     mapView.map = map
+
+    // set an initial viewpoint on the map view
+    mapView.setViewpoint(Viewpoint(34.056295, -117.195800, 100000.0))
 
     mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
 

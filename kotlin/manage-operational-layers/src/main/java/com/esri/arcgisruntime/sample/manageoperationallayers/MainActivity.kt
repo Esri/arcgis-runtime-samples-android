@@ -54,10 +54,11 @@ class MainActivity : AppCompatActivity() {
 
     // create a map with a topographic basemap and set it to the map view
     mapView.map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
-      initialViewpoint = Viewpoint( 34.056295, -117.195800, 50000000.0)
       // add the map image layers to the map's operational layers
       operationalLayers.addAll(listOf(imageLayerElevation, imageLayerCensus, imageLayerDamage))
     }
+
+    mapView.setViewpoint(Viewpoint( 34.056295, -117.195800, 50000000.0))
 
     // handle the floating action button and recycler view logic for this sample
     setupUI()

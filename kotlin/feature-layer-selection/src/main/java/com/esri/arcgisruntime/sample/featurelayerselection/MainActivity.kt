@@ -54,13 +54,6 @@ class MainActivity : AppCompatActivity() {
 
     // create a map with the streets base map type
     val streetsMap = ArcGISMap(BasemapStyle.ARCGIS_STREETS).apply {
-      // set an initial view point
-      initialViewpoint = Viewpoint(
-        Envelope(
-          -1131596.019761, 3893114.069099, 3926705.982140, 7977912.461790,
-          SpatialReferences.getWebMercator()
-        )
-      )
       // add the feature layer to the map's operational layers
       operationalLayers.add(featureLayer)
     }
@@ -68,6 +61,18 @@ class MainActivity : AppCompatActivity() {
     mapView.let { it ->
       // set the map to be displayed in the layout's map view
       it.map = streetsMap
+      // set an initial view point
+      it.setViewpoint(
+        Viewpoint(
+          Envelope(
+            -1131596.019761,
+            3893114.069099,
+            3926705.982140,
+            7977912.461790,
+            SpatialReferences.getWebMercator()
+          )
+        )
+      )
       // give any item selected on the map view a red selection halo
       it.selectionProperties.color = Color.RED
       // set an on touch listener on the map view

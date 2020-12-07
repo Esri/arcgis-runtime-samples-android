@@ -43,12 +43,19 @@ class MainActivity : AppCompatActivity() {
       this.minScale = 8000.0
       this.maxScale = 2000.0
 
-      // set point where the map view will focus and zoom to
-      this.initialViewpoint =
-        Viewpoint(Point(-355453.0, 7548720.0, SpatialReferences.getWebMercator()), 3000.0)
-
       // set the ArcGISMap instance to display in the MapView
       mapView.map = this
+
+      // set point where the map view will focus and zoom to
+      mapView.setViewpoint(
+        Viewpoint(
+          Point(
+            -355453.0,
+            7548720.0,
+            SpatialReferences.getWebMercator()
+          ), 3000.0
+        )
+      )
     }
   }
 

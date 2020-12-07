@@ -61,9 +61,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create a map with Topographic Basemap and set it to the map
-    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
-      initialViewpoint = Viewpoint(47.6047, -122.3334, 10000000.0)
-    }
+    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+    mapView.setViewpoint(Viewpoint(47.6047, -122.3334, 10000000.0))
   }
 
   /**

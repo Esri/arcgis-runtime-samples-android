@@ -35,12 +35,12 @@ class MainActivity : AppCompatActivity() {
     // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-    // create a map with the BasemapType topographic
-    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
-      initialViewpoint = Viewpoint(47.495052, -121.786863, 100000.0)
-    }
+    // create a map with the topographic basemap
+    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+
     // set the map to be displayed in this view
     mapView.map = map
+    mapView.setViewpoint(Viewpoint(47.495052, -121.786863, 100000.0))
 
     // create a FAB to respond to attribution bar
     fab.setOnClickListener {

@@ -37,10 +37,8 @@ class MainActivity : AppCompatActivity() {
     // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-    // create a map with a topographic basemap
+    // create a map with a light gray basemap
     mapView.map = ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY_BASE).apply {
-      // set an initial view point
-      initialViewpoint = Viewpoint( 55.882436, -2.725610, 75000.0)
       // add a feature layer from a feature service
       operationalLayers.add(
         FeatureLayer(ServiceFeatureTable(getString(R.string.river_feature_service_url)))
@@ -50,6 +48,9 @@ class MainActivity : AppCompatActivity() {
         AnnotationLayer(getString(R.string.river_annotation_feature_service_url))
       )
     }
+
+    // set the map view's initial view point
+    mapView.setViewpoint(Viewpoint( 55.882436, -2.725610, 75000.0))
   }
 
   override fun onPause() {
