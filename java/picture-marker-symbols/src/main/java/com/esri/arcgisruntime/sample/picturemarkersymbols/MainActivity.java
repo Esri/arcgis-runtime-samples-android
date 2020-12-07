@@ -24,7 +24,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Picture;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -36,11 +35,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -60,11 +60,15 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
 
     // create a map with the imagery basemap
-    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
 
     // set the map to be displayed in the mapview
     mMapView.setMap(map);
@@ -72,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     // create an initial viewpoint using an envelope (of two points, bottom left and top right)
     Envelope envelope = new Envelope(new Point(-228835, 6550763, SpatialReferences.getWebMercator()),
         new Point(-223560, 6552021, SpatialReferences.getWebMercator()));
-    //set viewpoint on mapview
+    //set viewpoint on map view
     mMapView.setViewpointGeometryAsync(envelope, 100.0);
 
     // create a new graphics overlay and add it to the mapview
@@ -83,8 +87,7 @@ public class MainActivity extends AppCompatActivity {
     //Create a picture marker symbol from a URL resource
     //When using a URL, you need to call load to fetch the remote resource
     PictureMarkerSymbol campsiteSymbol = new PictureMarkerSymbol(
-        "http://sampleserver6.arcgisonline"
-            + ".com/arcgis/rest/services/Recreation/FeatureServer/0/images/e82f744ebb069bb35b234b3fea46deae");
+        "http://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0/images/e82f744ebb069bb35b234b3fea46deae");
     //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
     //its appearance would then differ across devices with different resolutions.
     campsiteSymbol.setHeight(18);
@@ -104,8 +107,7 @@ public class MainActivity extends AppCompatActivity {
     pinStarBlueSymbol.setHeight(40);
     pinStarBlueSymbol.setWidth(40);
     //Optionally set the offset, to align the base of the symbol aligns with the point geometry
-    pinStarBlueSymbol.setOffsetY(
-        11); //The image used for the symbol has a transparent buffer around it, so the offset is not simply height/2
+    pinStarBlueSymbol.setOffsetY(11); //The image used for the symbol has a transparent buffer around it, so the offset is not simply height/2
     pinStarBlueSymbol.loadAsync();
     //[DocRef: END]
     //add a new graphic with the same location as the initial viewpoint
@@ -174,10 +176,10 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
     switch (requestCode) {
-      case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+      case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE:
         //If request is cancelled, the result arrays are empty.
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           //permission granted
@@ -185,7 +187,6 @@ public class MainActivity extends AppCompatActivity {
             createPictureMarkerSymbolFromFile();
           }
         }
-      }
     }
   }
 
@@ -195,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
     mArcGISTempFolderPath = getExternalFilesDir(null) + File.separator + getResources()
         .getString(R.string.pin_blank_orange_folder_name);
     mPinBlankOrangeFilePath =
-        mArcGISTempFolderPath + File.separator + this.getResources().getString(R.string.pin_blank_orange_file_name);
+        mArcGISTempFolderPath + File.separator + getResources().getString(R.string.pin_blank_orange_file_name);
 
     //get drawable resource
     Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.pin_blank_orange);
@@ -205,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
     if (folder.mkdirs()) {
       Log.d(TAG, "Temp folder created");
     } else {
-      Toast.makeText(MainActivity.this, "Could not create temp folder", Toast.LENGTH_LONG).show();
+      Toast.makeText(this, "Could not create temp folder", Toast.LENGTH_LONG).show();
     }
 
     //create file on disk
@@ -239,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
       if (file.delete()) {
         Log.i(TAG, "Temp folder created");
       } else {
-        Toast.makeText(MainActivity.this, "Could not create temp folder", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Could not create temp folder", Toast.LENGTH_LONG).show();
       }
 
       File tempFolder = new File(mArcGISTempFolderPath);
@@ -247,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
       if (tempFolder.delete()) {
         Log.i(TAG, "Temp folder created");
       } else {
-        Toast.makeText(MainActivity.this, "Could not create temp folder", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Could not create temp folder", Toast.LENGTH_LONG).show();
       }
 
     } catch (Exception e) {

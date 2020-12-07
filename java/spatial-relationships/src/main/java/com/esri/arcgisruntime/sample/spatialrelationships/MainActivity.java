@@ -23,12 +23,13 @@ import java.util.concurrent.ExecutionException;
 
 import android.content.Intent;
 import android.graphics.Color;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
-
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.geometry.Geometry;
@@ -40,7 +41,7 @@ import com.esri.arcgisruntime.geometry.Polygon;
 import com.esri.arcgisruntime.geometry.Polyline;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
@@ -62,12 +63,16 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
     mMapView.getSelectionProperties().setColor(Color.RED);
 
     // create a map with a topographic  basemap
-    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
 
     // create a graphics overlay
     GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
@@ -81,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     polygonPoints.add(new Point(-1563689.043184, 3714900.452072));
     polygonPoints.add(new Point(-3180355.516764, 5619889.608838));
     Polygon polygon = new Polygon(polygonPoints);
-    SimpleFillSymbol polygonSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL, 0xFF00FF00,
+    SimpleFillSymbol polygonSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL, Color.GREEN,
         new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, 0xFF00FF00, 2));
     Graphic polygonGraphic = new Graphic(polygon, polygonSymbol);
     graphicsOverlay.getGraphics().add(polygonGraphic);
@@ -93,13 +98,13 @@ public class MainActivity extends AppCompatActivity {
     polylinePoints.add(new Point(-2109442.693501, 4301843.057130));
     polylinePoints.add(new Point(-1810822.771630, 7205664.366363));
     Polyline polyline = new Polyline(polylinePoints);
-    Graphic polylineGraphic = new Graphic(polyline, new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, 0xFFFF0000,
+    Graphic polylineGraphic = new Graphic(polyline, new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.RED,
         4));
     graphicsOverlay.getGraphics().add(polylineGraphic);
 
     // create a point graphic
     Point point = new Point(-4487263.495911, 3699176.480377, SpatialReferences.getWebMercator());
-    SimpleMarkerSymbol locationMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF0000FF, 10);
+    SimpleMarkerSymbol locationMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE, 10);
     Graphic pointGraphic = new Graphic(point, locationMarker);
     graphicsOverlay.getGraphics().add(pointGraphic);
 

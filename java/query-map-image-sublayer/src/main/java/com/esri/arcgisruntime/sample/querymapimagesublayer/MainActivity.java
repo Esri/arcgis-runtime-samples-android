@@ -18,12 +18,13 @@ package com.esri.arcgisruntime.sample.querymapimagesublayer;
 
 import java.util.concurrent.ExecutionException;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
@@ -35,7 +36,7 @@ import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.ArcGISMapImageSublayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -56,13 +57,17 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate views from layout
     mMapView = findViewById(R.id.mapView);
     mQueryButton = findViewById(R.id.queryButton);
     mQueryInputBox = findViewById(R.id.queryInputBox);
 
     // create a map with a streets vector basemap and set initial viewpoint
-    ArcGISMap map = new ArcGISMap(Basemap.createStreetsVector());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
     Point initialLocation = new Point(-13171939.239529, 3923971.284048, SpatialReferences.getWebMercator());
     Viewpoint viewpoint = new Viewpoint(initialLocation, 9500000);
     map.setInitialViewpoint(viewpoint);

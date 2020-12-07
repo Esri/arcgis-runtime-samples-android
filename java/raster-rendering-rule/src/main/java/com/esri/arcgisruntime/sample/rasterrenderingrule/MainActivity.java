@@ -27,11 +27,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.arcgisservices.RenderingRuleInfo;
 import com.esri.arcgisruntime.layers.RasterLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.raster.ImageServiceRaster;
 import com.esri.arcgisruntime.raster.RenderingRule;
@@ -45,17 +46,20 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // create MapView from layout
     mMapView = findViewById(R.id.mapView);
 
     // create a Streets BaseMap
-    ArcGISMap map = new ArcGISMap(Basemap.createStreets());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
     // set the map to be displayed in this view
     mMapView.setMap(map);
 
     // create image service raster as raster layer and add to map
-    final ImageServiceRaster imageServiceRaster = new ImageServiceRaster(
-        getResources().getString(R.string.image_service_url));
+    final ImageServiceRaster imageServiceRaster = new ImageServiceRaster(getString(R.string.image_service_url));
     final RasterLayer imageRasterLayer = new RasterLayer(imageServiceRaster);
     map.getOperationalLayers().add(imageRasterLayer);
 
@@ -65,20 +69,17 @@ public class MainActivity extends AppCompatActivity {
         renderRulesList);
     spinner.setAdapter(spinnerAdapter);
     // zoom to the extent of the raster service
-    imageRasterLayer.addDoneLoadingListener(new Runnable() {
-      @Override
-      public void run() {
-        if (imageRasterLayer.getLoadStatus() == LoadStatus.LOADED) {
-          // zoom to extent of raster
-          mMapView.setViewpointGeometryAsync(imageServiceRaster.getServiceInfo().getFullExtent());
-          // get the predefined rendering rules and add to spinner
-          List<RenderingRuleInfo> renderingRuleInfos = imageServiceRaster.getServiceInfo().getRenderingRuleInfos();
-          for (RenderingRuleInfo renderRuleInfo : renderingRuleInfos) {
-            String renderingRuleName = renderRuleInfo.getName();
-            renderRulesList.add(renderingRuleName);
-            // update array adapter with list update
-            spinnerAdapter.notifyDataSetChanged();
-          }
+    imageRasterLayer.addDoneLoadingListener(() -> {
+      if (imageRasterLayer.getLoadStatus() == LoadStatus.LOADED) {
+        // zoom to extent of raster
+        mMapView.setViewpointGeometryAsync(imageServiceRaster.getServiceInfo().getFullExtent());
+        // get the predefined rendering rules and add to spinner
+        List<RenderingRuleInfo> renderingRuleInfos = imageServiceRaster.getServiceInfo().getRenderingRuleInfos();
+        for (RenderingRuleInfo renderRuleInfo : renderingRuleInfos) {
+          String renderingRuleName = renderRuleInfo.getName();
+          renderRulesList.add(renderingRuleName);
+          // update array adapter with list update
+          spinnerAdapter.notifyDataSetChanged();
         }
       }
     });

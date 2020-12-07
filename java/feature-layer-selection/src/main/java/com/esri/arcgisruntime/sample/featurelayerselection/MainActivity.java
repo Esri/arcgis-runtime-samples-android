@@ -13,7 +13,6 @@
 
 package com.esri.arcgisruntime.sample.featurelayerselection;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -22,6 +21,7 @@ import android.view.MotionEvent;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
@@ -29,7 +29,7 @@ import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.getSelectionProperties().setColor(Color.RED);
 
     // create a map with the streets basemap
-    final ArcGISMap map = new ArcGISMap(Basemap.createStreets());
+    final ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
 
     // set an initial viewpoint
     map.setInitialViewpoint(new Viewpoint(new Envelope(-1131596.019761, 3893114.069099, 3926705.982140, 7977912.461790,

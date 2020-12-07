@@ -22,9 +22,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,22 +30,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
 import com.esri.arcgisruntime.data.FeatureEditResult;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
-import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,13 +82,13 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
 
     // create a map with the streets basemap
-    final ArcGISMap map = new ArcGISMap(Basemap.createStreets());
-
-    //set an initial viewpoint
-    map.setInitialViewpoint(new Viewpoint(new Point(-100.343, 34.585, SpatialReferences.getWgs84()), 1E8));
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
 
     // set the map to be displayed in the map view
     mMapView.setMap(map);
+
+    // set an initial viewpoint
+    mMapView.setViewpoint(new Viewpoint(34.057386, -117.191455, 100000000));
 
     // get callout, set content and show
     mCallout = mMapView.getCallout();
@@ -123,32 +122,29 @@ public class MainActivity extends AppCompatActivity {
             .identifyLayerAsync(mFeatureLayer, mClickPoint, 5, false, 1);
 
         // add done loading listener to fire when the selection returns
-        identifyFuture.addDoneListener(new Runnable() {
-          @Override
-          public void run() {
-            try {
-              // call get on the future to get the result
-              IdentifyLayerResult layerResult = identifyFuture.get();
-              List<GeoElement> resultGeoElements = layerResult.getElements();
-              if (!resultGeoElements.isEmpty()) {
-                if (resultGeoElements.get(0) instanceof ArcGISFeature) {
-                  mSelectedArcGISFeature = (ArcGISFeature) resultGeoElements.get(0);
-                  // highlight the selected feature
-                  mFeatureLayer.selectFeature(mSelectedArcGISFeature);
-                  // show callout with the value for the attribute "typdamage" of the selected feature
-                  mSelectedArcGISFeatureAttributeValue = (String) mSelectedArcGISFeature.getAttributes()
-                      .get("typdamage");
-                  showCallout(mSelectedArcGISFeatureAttributeValue);
-                  Toast.makeText(MainActivity.this, "Tap on the info button to change attribute value",
-                      Toast.LENGTH_SHORT).show();
-                }
-              } else {
-                // none of the features on the map were selected
-                mCallout.dismiss();
+        identifyFuture.addDoneListener(() -> {
+          try {
+            // call get on the future to get the result
+            IdentifyLayerResult layerResult = identifyFuture.get();
+            List<GeoElement> resultGeoElements = layerResult.getElements();
+            if (!resultGeoElements.isEmpty()) {
+              if (resultGeoElements.get(0) instanceof ArcGISFeature) {
+                mSelectedArcGISFeature = (ArcGISFeature) resultGeoElements.get(0);
+                // highlight the selected feature
+                mFeatureLayer.selectFeature(mSelectedArcGISFeature);
+                // show callout with the value for the attribute "typdamage" of the selected feature
+                mSelectedArcGISFeatureAttributeValue = (String) mSelectedArcGISFeature.getAttributes()
+                    .get("typdamage");
+                showCallout(mSelectedArcGISFeatureAttributeValue);
+                Toast.makeText(MainActivity.this, "Tap on the info button to change attribute value",
+                    Toast.LENGTH_SHORT).show();
               }
-            } catch (Exception e) {
-              Log.e(TAG, "Select feature failed: " + e.getMessage());
+            } else {
+              // none of the features on the map were selected
+              mCallout.dismiss();
             }
+          } catch (Exception e1) {
+            Log.e(TAG, "Select feature failed: " + e1.getMessage());
           }
         });
         return super.onSingleTapConfirmed(e);
@@ -157,15 +153,12 @@ public class MainActivity extends AppCompatActivity {
 
     mSnackbarSuccess = Snackbar
         .make(mCoordinatorLayout, "Feature successfully updated", Snackbar.LENGTH_LONG)
-        .setAction("UNDO", new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            String snackBarText = updateAttributes(mSelectedArcGISFeatureAttributeValue) ?
-                "Feature is restored!" :
-                "Feature restore failed!";
-            Snackbar snackbar1 = Snackbar.make(mCoordinatorLayout, snackBarText, Snackbar.LENGTH_SHORT);
-            snackbar1.show();
-          }
+        .setAction("UNDO", view -> {
+          String snackBarText = updateAttributes(mSelectedArcGISFeatureAttributeValue) ?
+              "Feature is restored!" :
+              "Feature restore failed!";
+          Snackbar snackbar1 = Snackbar.make(mCoordinatorLayout, snackBarText, Snackbar.LENGTH_SHORT);
+          snackbar1.show();
         });
     mSnackbarFailure = Snackbar.make(mCoordinatorLayout, "Feature update failed", Snackbar.LENGTH_LONG);
   }
