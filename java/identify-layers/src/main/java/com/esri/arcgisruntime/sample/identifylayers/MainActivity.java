@@ -21,15 +21,14 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AlertDialog.Builder;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.FeatureTable;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
@@ -38,7 +37,7 @@ import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
@@ -56,19 +55,21 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    mMapView = (MapView) findViewById(R.id.mapView);
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
+    mMapView = findViewById(R.id.mapView);
 
     // create an instance of a map
-    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
 
     // map image layer
     mMapImageLayer = new ArcGISMapImageLayer(getString(R.string.world_cities));
-    mMapImageLayer.addDoneLoadingListener(new Runnable() {
-      @Override public void run() {
-        // hide Continent and World layers
-        mMapImageLayer.getSubLayerContents().get(1).setVisible(false);
-        mMapImageLayer.getSubLayerContents().get(2).setVisible(false);
-      }
+    mMapImageLayer.addDoneLoadingListener(() -> {
+      // hide Continent and World layers
+      mMapImageLayer.getSubLayerContents().get(1).setVisible(false);
+      mMapImageLayer.getSubLayerContents().get(2).setVisible(false);
     });
 
     map.getOperationalLayers().add(mMapImageLayer);
@@ -83,14 +84,14 @@ public class MainActivity extends AppCompatActivity {
     map.getOperationalLayers().add(featureLayer);
 
     // set initial viewpoint to a specific region
-    map.setInitialViewpoint(
+    mMapView.setViewpoint(
         new Viewpoint(new Point(-10977012.785807, 4514257.550369, SpatialReference.create(3857)), 68015210));
 
     // assign map to the map view
     mMapView.setMap(map);
 
     // add a listener to detect taps on the map view
-    mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(MainActivity.this, mMapView) {
+    mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override public boolean onSingleTapConfirmed(MotionEvent e) {
         android.graphics.Point screenPoint = new android.graphics.Point(Math.round(e.getX()),
             Math.round(e.getY()));
@@ -190,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
    * @param message contains identify results processed into a string.
    */
   private void showAlertDialog(StringBuilder message) {
-    Builder alertDialogBuilder = new Builder(this);
+    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
     // set title
     alertDialogBuilder.setTitle("Number of elements found");
@@ -199,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
     alertDialogBuilder
         .setMessage(message)
         .setCancelable(false)
-        .setPositiveButton("Ok", new OnClickListener() {
+        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
           @Override public void onClick(DialogInterface dialog, int id) {
           }
         });
