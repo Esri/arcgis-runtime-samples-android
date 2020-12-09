@@ -5,11 +5,6 @@ ArcGIS Runtime SDK for Android v100.9.0 samples.  The `master` branch of this re
 * The samples are building with `compileSdkVersion 29`
 * [Android Studio](http://developer.android.com/sdk/index.html)
 
-## SDK Maven repo
-The SDK is available through the Bintray Maven repo, you can take a look at the repository with the link below: 
-
-[ ![Download](https://api.bintray.com/packages/esri/arcgis/arcgis-android/images/download.svg?version=100.9.0) ](https://bintray.com/esri/arcgis/arcgis-android/100.9.0/link)
-
 ## Developer Instructions
 Please read our [developer instructions wiki page](https://github.com/Esri/arcgis-runtime-samples-android/wiki/dev-instructions) to set up your developer environment with Android Studio.  Instructions include forking and cloning the repository for those new to Git.
 
