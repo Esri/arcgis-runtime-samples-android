@@ -49,9 +49,9 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
     // create a map with the dark gray canvas basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_DARK_GRAY);
-    map.setInitialViewpoint(new Viewpoint(51.960403, 10.029217, 10000000));
     // set the map to the map view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(51.960403, 10.029217, 10000000));
 
     // create a kml data set from a URL
     KmlDataset kmlDataset = new KmlDataset(getString(R.string.european_air_traffic_kml_url));

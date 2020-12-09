@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
     // create a map with streets basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
-    map.setInitialViewpoint(new Viewpoint( 40.0, -95.0, 10000000.0));
 
     // create service feature table from URL
     mServiceFeatureTable = new ServiceFeatureTable(getString(R.string.service_layer_url));
@@ -90,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
     // set map to be displayed in map view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint( 40.0, -95.0, 10000000.0));
   }
 
   /**

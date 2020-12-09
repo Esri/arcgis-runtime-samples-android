@@ -50,14 +50,14 @@ public class MainActivity extends AppCompatActivity {
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
     // create MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     // create a map with the Basemap Type topographic
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
-    map.setInitialViewpoint(new Viewpoint(15.169193, 16.333479, 100000000.0));
     // add graphics overlay
     addGraphicsOverlay();
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(15.169193, 16.333479, 100000000.0));
   }
 
   private void addGraphicsOverlay() {

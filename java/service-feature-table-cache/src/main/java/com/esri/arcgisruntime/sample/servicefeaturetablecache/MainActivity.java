@@ -40,13 +40,10 @@ public class MainActivity extends AppCompatActivity {
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
 
     // create a map with the light grey canvas basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY);
-    //set an initial viewpoint
-    map.setInitialViewpoint(new Viewpoint(new Envelope(-1.30758164047166E7, 4014771.46954516, -1.30730056797177E7
-        , 4016869.78617381, SpatialReferences.getWebMercator())));
 
     // create feature layer with its service feature table
     // create the service feature table
@@ -65,6 +62,10 @@ public class MainActivity extends AppCompatActivity {
     // set the map to be displayed in the mapview
     mMapView.setMap(map);
 
+    // set an initial viewpoint
+    mMapView.setViewpoint(new Viewpoint(
+        new Envelope(-1.30758164047166E7, 4014771.46954516, -1.30730056797177E7, 4016869.78617381,
+            SpatialReferences.getWebMercator())));
   }
 
   @Override

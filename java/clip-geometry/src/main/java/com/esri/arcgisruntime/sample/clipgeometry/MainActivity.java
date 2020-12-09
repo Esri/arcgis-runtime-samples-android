@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
     // get a reference to the map view and set a topographic map to it,
     mMapView = findViewById(R.id.mapView);
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
-    map.setInitialViewpoint(new Viewpoint(40, -106, 10000000));
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(40, -106, 10000000));
 
     // create a graphics overlay to contain the geometry to clip
     GraphicsOverlay graphicsOverlay = new GraphicsOverlay();

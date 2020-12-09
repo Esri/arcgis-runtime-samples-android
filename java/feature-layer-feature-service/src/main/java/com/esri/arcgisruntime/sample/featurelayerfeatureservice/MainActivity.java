@@ -44,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     // create a map with the terrain with labels basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TERRAIN);
-    //set an initial viewpoint
-    map.setInitialViewpoint(new Viewpoint(new Point(-13176752, 4090404, SpatialReferences.getWebMercator()), 500000));
 
     // create feature layer with its service feature table
     // create the service feature table
@@ -61,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     // set the map to be displayed in the mapview
     mMapView.setMap(map);
 
+    // set an initial viewpoint
+    mMapView.setViewpoint(new Viewpoint(new Point(-13176752, 4090404, SpatialReferences.getWebMercator()), 500000));
   }
 
   @Override

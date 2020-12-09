@@ -58,9 +58,9 @@ public class MainActivity extends AppCompatActivity {
     mMapView  = findViewById(R.id.mapView);
     // create a map with a BasemapType STREETS
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
-    map.setInitialViewpoint(new Viewpoint(48.354406, -99.998267, 7500.0));
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(48.354406, -99.998267, 7500.0));
 
     // create button to apply the render
     Button renderButton = findViewById(R.id.applyRenderer);

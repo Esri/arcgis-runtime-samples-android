@@ -66,14 +66,13 @@ public class MainActivity extends AppCompatActivity {
     mQueryButton = findViewById(R.id.queryButton);
     mQueryInputBox = findViewById(R.id.queryInputBox);
 
-    // create a map with a streets vector basemap and set initial viewpoint
+    // create a map with a streets vector basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
-    Point initialLocation = new Point(-13171939.239529, 3923971.284048, SpatialReferences.getWebMercator());
-    Viewpoint viewpoint = new Viewpoint(initialLocation, 9500000);
-    map.setInitialViewpoint(viewpoint);
 
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    Point initialLocation = new Point(-13171939.239529, 3923971.284048, SpatialReferences.getWebMercator());
+    mMapView.setViewpoint(new Viewpoint(initialLocation, 9500000));
 
     // create and add a map image layer to the map
     ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(getString(R.string.usa_map));

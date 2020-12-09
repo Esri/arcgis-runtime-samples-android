@@ -111,9 +111,9 @@ public class MainActivity extends AppCompatActivity {
     // create HashMap that will hold relationships in between graphics
     HashMap<String, List<String>> relationships = new HashMap<>();
 
-    // set the initial view point and the map to be displayed in this view
-    map.setInitialViewpoint(new Viewpoint(point, 90000000));
+    // set the map to be displayed in this view and the initial view point
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(point, 90000000));
 
     // create intent to be passed to the other activity
     Intent intent = new Intent(this, ResultsActivity.class);

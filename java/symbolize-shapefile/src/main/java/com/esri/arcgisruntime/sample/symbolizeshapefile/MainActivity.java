@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     // set an initial viewpoint
     Point point = new Point(-11662054, 4818336, SpatialReference.create(3857));
     Viewpoint viewpoint = new Viewpoint(point, 200000);
-    map.setInitialViewpoint(viewpoint);
+    mMapView.setViewpoint(viewpoint);
 
     // create a shapefile feature table from the local data
     ShapefileFeatureTable shapefileFeatureTable = new ShapefileFeatureTable(

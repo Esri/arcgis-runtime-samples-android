@@ -17,7 +17,6 @@
 package com.esri.arcgisruntime.sample.displaydrawingstatus;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -52,17 +51,9 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
     // create a map with the Basemap Type topographic
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
-    // create an envelope
-    Envelope targetExtent = new Envelope(-13639984.0, 4537387.0, -13606734.0, 4558866.0,
-        SpatialReferences.getWebMercator());
-    // use envelope to set initial viewpoint
-    Viewpoint initViewpoint = new Viewpoint(targetExtent);
-    // set the initial viewpoint in the map
-    map.setInitialViewpoint(initViewpoint);
 
     // create a feature table from a service url
-    ServiceFeatureTable svcFeaturetable = new ServiceFeatureTable(
-        getResources().getString(R.string.service_feature_table_url));
+    ServiceFeatureTable svcFeaturetable = new ServiceFeatureTable(getString(R.string.service_feature_table_url));
     // create a feature layer
     FeatureLayer featureLayer = new FeatureLayer(svcFeaturetable);
     // add feature layer to map
@@ -70,12 +61,18 @@ public class MainActivity extends AppCompatActivity {
 
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    // create an envelope
+    Envelope targetExtent = new Envelope(-13639984.0, 4537387.0, -13606734.0, 4558866.0,
+        SpatialReferences.getWebMercator());
+    // use envelope to set initial viewpoint
+    Viewpoint initViewpoint = new Viewpoint(targetExtent);
+    // set the initial viewpoint in the map
+    mMapView.setViewpoint(initViewpoint);
 
     //[DocRef: Name=Monitor map drawing, Category=Work with maps, Topic=Display a map]
     mMapView.addDrawStatusChangedListener(drawStatusChangedEvent -> {
       if (drawStatusChangedEvent.getDrawStatus() == DrawStatus.IN_PROGRESS) {
         progressBar.setVisibility(View.VISIBLE);
-        Log.d("drawStatusChanged", "spinner visible");
       } else if (drawStatusChangedEvent.getDrawStatus() == DrawStatus.COMPLETED) {
         progressBar.setVisibility(View.INVISIBLE);
       }

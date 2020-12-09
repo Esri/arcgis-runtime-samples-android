@@ -116,12 +116,10 @@ public class MainActivity extends AppCompatActivity {
     // add the layer to the map
     map.getOperationalLayers().add(featureLayer);
 
-    map.setInitialViewpoint(new Viewpoint(
-        new Envelope(-13893029.0, 3573174.0, -12038972.0, 5309823.0, SpatialReferences.getWebMercator())));
-
-    // set the map to be displayed in the mapview
+    // set the map to be displayed in the map view
     mMapView.setMap(map);
-
+    mMapView.setViewpoint(new Viewpoint(
+        new Envelope(-13893029.0, 3573174.0, -12038972.0, 5309823.0, SpatialReferences.getWebMercator())));
   }
 
   @Override

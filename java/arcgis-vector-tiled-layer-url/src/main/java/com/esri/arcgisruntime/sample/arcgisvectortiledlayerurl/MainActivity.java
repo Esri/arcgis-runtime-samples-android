@@ -59,12 +59,12 @@ public class MainActivity extends AppCompatActivity {
     Basemap basemap = new Basemap(mVectorTiledLayer);
     // create a map with the basemap
     ArcGISMap map = new ArcGISMap(basemap);
-    // create a viewpoint from lat, long, scale
-    Viewpoint viewpoint = new Viewpoint(47.606726, -122.335564, 72223.819286);
-    // set initial map extent
-    map.setInitialViewpoint(viewpoint);
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    // create a viewpoint from lat, long, scale
+    Viewpoint viewpoint = new Viewpoint(47.606726, -122.335564, 72223.819286);
+    // set viewpoint
+    mMapView.setViewpoint(viewpoint);
 
     // inflate navigation drawer
     mNavigationDrawerItemTitles = getResources().getStringArray(R.array.vector_tiled_types);

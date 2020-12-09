@@ -89,13 +89,13 @@ public class MainActivity extends AppCompatActivity {
     // set tiled layer as basemap
     Basemap basemap = new Basemap(mVectorTiledLayer);
     // create a map with the basemap
-    ArcGISMap mMap = new ArcGISMap(basemap);
+    ArcGISMap map = new ArcGISMap(basemap);
+    // set the map to be displayed in this view
+    mMapView.setMap(map);
     // create a viewpoint from lat, long, scale
     Viewpoint sanDiegoPoint = new Viewpoint(32.7157, -117.1611, 200000);
     // set initial map extent
-    mMap.setInitialViewpoint(sanDiegoPoint);
-    // set the map to be displayed in this view
-    mMapView.setMap(mMap);
+    mMapView.setViewpoint(sanDiegoPoint);
 
     // inflate navigation drawer
     mDrawerLayout = findViewById(R.id.drawer_layout);

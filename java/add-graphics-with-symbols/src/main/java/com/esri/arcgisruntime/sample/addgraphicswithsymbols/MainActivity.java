@@ -53,12 +53,12 @@ public class MainActivity extends AppCompatActivity {
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     // create a map with the BasemapType topographic
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_OCEANS);
-    map.setInitialViewpoint(new Viewpoint(56.075844, -2.681572, 100000.0));
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(56.075844, -2.681572, 100000.0));
     // add graphics overlay to MapView.
     GraphicsOverlay graphicsOverlay = addGraphicsOverlay(mMapView);
     //add some buoy positions to the graphics overlay

@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
     // create a map with a web mercator basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
-    map.setInitialViewpoint(new Viewpoint(47.495052, -121.786863, 100000.0));
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(47.495052, -121.786863, 100000.0));
 
     // create a FAB to respond to attribution bar
     FloatingActionButton mFab = findViewById(R.id.floatingActionButton);

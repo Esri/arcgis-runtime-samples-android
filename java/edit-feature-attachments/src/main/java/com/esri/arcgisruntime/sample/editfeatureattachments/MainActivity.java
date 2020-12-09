@@ -78,9 +78,9 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
     // create a map with the streets basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
-    map.setInitialViewpoint(new Viewpoint(40.0, -95.0, 100000000));
     // set the map to be displayed in the map view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(40.0, -95.0, 100000000));
 
     progressDialog = new ProgressDialog(this);
     progressDialog.setTitle(getApplication().getString(R.string.fetching_no_attachments));

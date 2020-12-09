@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
     // create a map with the a topographic basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
-    map.setInitialViewpoint(new Viewpoint(34.056295, -117.195800, 10000));
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(34.056295, -117.195800, 10000));
   }
 
   @Override

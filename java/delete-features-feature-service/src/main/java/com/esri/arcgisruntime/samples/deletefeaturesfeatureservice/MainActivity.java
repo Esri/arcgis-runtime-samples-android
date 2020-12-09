@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
 
     // create a map with streets basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
-    map.setInitialViewpoint(new Viewpoint( 40, -95, 100000000));
 
     // create service feature table from URL
     mFeatureTable = new ServiceFeatureTable(getString(R.string.feature_layer_url));
@@ -108,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
 
     // set map to be displayed in map view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint( 40, -95, 100000000));
   }
 
   /**

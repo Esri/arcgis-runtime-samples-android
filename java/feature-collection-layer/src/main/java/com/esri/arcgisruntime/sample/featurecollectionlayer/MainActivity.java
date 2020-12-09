@@ -60,12 +60,12 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
 
-    //initialize map with basemap
+    // initialize map with basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_OCEANS);
-    map.setInitialViewpoint(new Viewpoint( 8.5844, -79.6597, 2000000));
 
-    //assign map to the map view
+    // assign map to the map view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint( 8.5844, -79.6597, 2000000));
 
     // create feature collection and add to the map as a layer
     FeatureCollection featureCollection = new FeatureCollection();

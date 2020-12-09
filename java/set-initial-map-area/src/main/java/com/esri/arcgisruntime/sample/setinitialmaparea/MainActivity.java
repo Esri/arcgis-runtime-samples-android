@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
     // create a map with the basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
 
+    // set the map to be displayed in this view
+    mMapView.setMap(map);
+
     // create an initial extent envelope
     Envelope initialExtent = new Envelope(-12211308.778729, 4645116.003309, -12208257.879667, 4650542.535773,
         SpatialReference.create(102100));
@@ -54,10 +57,7 @@ public class MainActivity extends AppCompatActivity {
     Viewpoint viewpoint = new Viewpoint(initialExtent);
 
     // set initial map extent
-    map.setInitialViewpoint(viewpoint);
-
-    // set the map to be displayed in this view
-    mMapView.setMap(map);
+    mMapView.setViewpoint(viewpoint);
   }
 
   @Override

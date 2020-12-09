@@ -58,12 +58,12 @@ public class MainActivity extends AppCompatActivity {
     // create a map with the streets basemap
     final ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
 
-    // set an initial viewpoint
-    map.setInitialViewpoint(new Viewpoint(new Envelope(-1131596.019761, 3893114.069099, 3926705.982140, 7977912.461790,
-        SpatialReferences.getWebMercator())));
-
     // set the map to be displayed in the MapView
     mMapView.setMap(map);
+
+    // set an initial viewpoint
+    mMapView.setViewpoint(new Viewpoint(new Envelope(-1131596.019761, 3893114.069099, 3926705.982140, 7977912.461790,
+        SpatialReferences.getWebMercator())));
 
     // create service feature table and a feature layer from it
     final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getString(R.string.gdp_per_capita_url));

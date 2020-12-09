@@ -46,11 +46,11 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
-    // create a map with the BasemapType topographic
+    // create a map with an imagery base map
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
-    map.setInitialViewpoint(new Viewpoint(new Point(-14093.0, 6711377.0, SpatialReferences.getWebMercator()), SCALE));
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(new Point(-14093.0, 6711377.0, SpatialReferences.getWebMercator()), SCALE));
   }
 
   public void onAnimateClicked(View view) {

@@ -17,12 +17,12 @@
 package com.esri.arcgisruntime.sample.featurelayerrenderingmodemap;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Point;
@@ -66,14 +66,12 @@ public class MainActivity extends AppCompatActivity {
 
     // create a map (top) and set it to render all features in static rendering mode
     ArcGISMap mapTop = new ArcGISMap();
-    mapTop.setInitialViewpoint(mZoomedOut);
     mapTop.getLoadSettings().setPreferredPointFeatureRenderingMode(FeatureLayer.RenderingMode.STATIC);
     mapTop.getLoadSettings().setPreferredPolylineFeatureRenderingMode(FeatureLayer.RenderingMode.STATIC);
     mapTop.getLoadSettings().setPreferredPolygonFeatureRenderingMode(FeatureLayer.RenderingMode.STATIC);
 
     // create a map (bottom) and set it to render all features in dynamic rendering mode
     ArcGISMap mapBottom = new ArcGISMap();
-    mapBottom.setInitialViewpoint(mZoomedOut);
     mapBottom.getLoadSettings().setPreferredPointFeatureRenderingMode(FeatureLayer.RenderingMode.DYNAMIC);
     mapBottom.getLoadSettings().setPreferredPolylineFeatureRenderingMode(FeatureLayer.RenderingMode.DYNAMIC);
     mapBottom.getLoadSettings().setPreferredPolygonFeatureRenderingMode(FeatureLayer.RenderingMode.DYNAMIC);
@@ -100,23 +98,21 @@ public class MainActivity extends AppCompatActivity {
     mapBottom.getOperationalLayers().add(outcropFeatureLayer.copy());
 
     mMapViewTop.setMap(mapTop);
+    mMapViewTop.setViewpoint(mZoomedOut);
     mMapViewBottom.setMap(mapBottom);
+    mMapViewBottom.setViewpoint(mZoomedOut);
 
-    mZoomButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        animatedZoom();
-      }
-    });
+    mZoomButton.setOnClickListener(v -> animatedZoom());
 
     // disable the top map view on touch listener
-    mMapViewTop.setOnTouchListener(new DefaultMapViewOnTouchListener(MainActivity.this, mMapViewTop) {
+    mMapViewTop.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapViewTop) {
       @Override public boolean onTouch(View v, MotionEvent event) {
         return false;
       }
     });
 
     // disable the bottom map view on touch listener
-    mMapViewBottom.setOnTouchListener(new DefaultMapViewOnTouchListener(MainActivity.this, mMapViewBottom) {
+    mMapViewBottom.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapViewBottom) {
       @Override public boolean onTouch(View v, MotionEvent event) {
         return false;
       }
@@ -129,21 +125,15 @@ public class MainActivity extends AppCompatActivity {
   private void animatedZoom() {
     mZoomButton.setClickable(false);
     mNavigatingTextView.setVisibility(View.VISIBLE);
-    zoomTo(mZoomedIn, 5).addDoneListener(new Runnable() {
-      @Override public void run() {
-        mNavigatingTextView.setVisibility(View.INVISIBLE);
-        zoomTo(mZoomedIn, 3).addDoneListener(new Runnable() {
-          @Override public void run() {
-            mNavigatingTextView.setVisibility(View.VISIBLE);
-            zoomTo(mZoomedOut, 5).addDoneListener(new Runnable() {
-              @Override public void run() {
-                mZoomButton.setClickable(true);
-                mNavigatingTextView.setVisibility(View.INVISIBLE);
-              }
-            });
-          }
+    zoomTo(mZoomedIn, 5).addDoneListener(() -> {
+      mNavigatingTextView.setVisibility(View.INVISIBLE);
+      zoomTo(mZoomedIn, 3).addDoneListener(() -> {
+        mNavigatingTextView.setVisibility(View.VISIBLE);
+        zoomTo(mZoomedOut, 5).addDoneListener(() -> {
+          mZoomButton.setClickable(true);
+          mNavigatingTextView.setVisibility(View.INVISIBLE);
         });
-      }
+      });
     });
   }
 

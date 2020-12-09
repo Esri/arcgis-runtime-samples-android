@@ -55,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
 
     // create a map with the dark gray canvas basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_DARK_GRAY);
-    map.setInitialViewpoint(new Viewpoint(39, -98, 100000000));
 
     // set the map to the map view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(39, -98, 100000000));
 
     // set the initial source to a KML layer from a URL
     changeSourceToURL();

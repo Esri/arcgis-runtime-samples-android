@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     Button mMenuButton = findViewById(R.id.menu_button);
 
     // set up a popup menu to manage grid settings
-    final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
     final View view = getLayoutInflater().inflate(R.layout.popup_menu, null);
     builder.setView(view);
     final AlertDialog dialog = builder.create();
@@ -76,30 +76,30 @@ public class MainActivity extends AppCompatActivity {
     Spinner mLabelColorSpinner = view.findViewById(R.id.label_color_spinner);
 
     // create drop-down list of different grids
-    ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item,
+    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
         getResources().getStringArray(R.array.layers_array));
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     mGridSpinner.setAdapter(adapter);
 
     // create drop-down list of different colors
-    ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item,
+    ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
         getResources().getStringArray(R.array.colors_array));
     colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     mColorsSpinner.setAdapter(colorAdapter);
 
     // create drop-down list of different label colors
-    ArrayAdapter<String> labelColorAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item,
+    ArrayAdapter<String> labelColorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
         getResources().getStringArray(R.array.colors_array));
     labelColorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     mLabelColorSpinner.setAdapter(labelColorAdapter);
 
     // create a map with imagery basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
-    // set viewpoint
-    final Point center = new Point(-7702852.905619, 6217972.345771, 23227, SpatialReference.create(3857));
-    map.setInitialViewpoint(new Viewpoint(center, 23227));
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    // set viewpoint
+    final Point center = new Point(-7702852.905619, 6217972.345771, 23227, SpatialReference.create(3857));
+    mMapView.setViewpoint(new Viewpoint(center, 23227));
 
     // set defaults on grid
     mMapView.setGrid(new LatitudeLongitudeGrid());
@@ -198,11 +198,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setLabelVisibility() {
-    if (mLabelsCheckBox.isChecked()) {
-      mMapView.getGrid().setLabelVisible(true);
-    } else {
-      mMapView.getGrid().setLabelVisible(false);
-    }
+    mMapView.getGrid().setLabelVisible(mLabelsCheckBox.isChecked());
   }
 
   private void changeGridColor(int color) {
