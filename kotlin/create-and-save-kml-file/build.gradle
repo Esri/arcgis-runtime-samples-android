@@ -11,7 +11,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
-        multiDexEnabled true
+        buildConfigField("String", "API_KEY", API_KEY)
     }
 
     buildTypes {

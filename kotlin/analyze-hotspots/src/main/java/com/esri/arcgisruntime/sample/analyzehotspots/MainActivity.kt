@@ -24,11 +24,12 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingString
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingTask
@@ -52,15 +53,16 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other 
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a map with the BasemapType topographic
-    val map = ArcGISMap(Basemap.createTopographic()).apply {
-      //set initial viewpoint
-      initialViewpoint =
-        Viewpoint(Point(-13671170.0, 5693633.0, SpatialReference.create(3857)), 57779.0)
-    }
+    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
 
     // set the map to the map view
     mapView.map = map
+    mapView.setViewpoint(Viewpoint(Point(-13671170.0, 5693633.0, SpatialReference.create(3857)), 57779.0))
 
     calendarButton.setOnClickListener {
       showDateRangeDialog()

@@ -18,15 +18,17 @@ package com.esri.arcgisruntime.sample.clipgeometry;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -42,10 +44,15 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // get a reference to the map view and set a topographic map to it,
     mMapView = findViewById(R.id.mapView);
-    ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 40, -106, 6);
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(40, -106, 10000000));
 
     // create a graphics overlay to contain the geometry to clip
     GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
@@ -55,8 +62,7 @@ public class MainActivity extends AppCompatActivity {
     Envelope colorado = new Envelope(new Point(-11362327.128340, 5012861.290274),
         new Point(-12138232.018408, 4441198.773776));
     SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID,
-        getResources().getColor(R.color.transparentDarkBlue),
-        new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 2));
+        getColor(R.color.transparentDarkBlue), new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 2));
     Graphic coloradoGraphic = new Graphic(colorado, fillSymbol);
     graphicsOverlay.getGraphics().add(coloradoGraphic);
 

@@ -18,15 +18,13 @@ package com.esri.arcgisruntime.sample.manageoperationallayers;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 
-import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReference;
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.LayerList;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -50,41 +48,36 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    ArcGISMapImageLayer imageLayerElevation, imagelayerCensus;
-    Button selectLayers;
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
 
     // inflate operational layer selection button from the layout
-    selectLayers = (Button) findViewById(R.id.operationallayer);
+    Button selectLayers = findViewById(R.id.operationallayer);
 
     // create a map with the BasemapType topographic
-    ArcGISMap mMap = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 34.056295, -117.195800, 14);
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
 
-    imageLayerElevation = new ArcGISMapImageLayer(getResources().getString(R.string.imagelayer_elevation_url));
-    imagelayerCensus = new ArcGISMapImageLayer(getResources().getString(R.string.imagelayer_census_url));
+    ArcGISMapImageLayer imageLayerElevation = new ArcGISMapImageLayer(getResources().getString(R.string.imagelayer_elevation_url));
+    ArcGISMapImageLayer imagelayerCensus = new ArcGISMapImageLayer(getResources().getString(R.string.imagelayer_census_url));
 
     // get the LayerList from the Map
-    mOperationalLayers = mMap.getOperationalLayers();
+    mOperationalLayers = map.getOperationalLayers();
     // add operational layers to the Map
     mOperationalLayers.add(imageLayerElevation);
     mOperationalLayers.add(imagelayerCensus);
 
-    // set the initial viewpoint on the map
-    mMap.setInitialViewpoint(new Viewpoint(new Point(-133e5, 45e5, SpatialReference.create(3857)), 2e7));
-
     // set the map to be displayed in this view
-    mMapView.setMap(mMap);
+    mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint( 34.056295, -117.195800, 150000000));
 
-    selectLayers.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Intent intent = new Intent(MainActivity.this, OperationalLayers.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        startActivity(intent);
-
-      }
+    selectLayers.setOnClickListener(v -> {
+      Intent intent = new Intent(this, OperationalLayers.class);
+      intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+      startActivity(intent);
     });
   }
 

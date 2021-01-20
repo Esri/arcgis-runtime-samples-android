@@ -19,10 +19,11 @@ package com.esri.arcgisruntime.sample.rasterfunctionservice
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.layers.RasterLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.raster.ImageServiceRaster
 import com.esri.arcgisruntime.raster.Raster
 import com.esri.arcgisruntime.raster.RasterFunction
@@ -34,8 +35,12 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a Dark Gray Vector BaseMap
-    val map = ArcGISMap(Basemap.createDarkGrayCanvasVector())
+    val map = ArcGISMap(BasemapStyle.ARCGIS_DARK_GRAY)
     // set the map to be displayed in this view
     mapView.map = map
     // create image service raster as raster layer

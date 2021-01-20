@@ -23,10 +23,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.layers.RasterLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.raster.ImageServiceRaster
 import com.esri.arcgisruntime.raster.RenderingRule
 import kotlinx.android.synthetic.main.activity_main.*
@@ -39,12 +40,16 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create image service raster as raster layer and add to map
     val imageServiceRaster = ImageServiceRaster(getString(R.string.image_service_url))
     val imageRasterLayer = RasterLayer(imageServiceRaster)
 
     // create a Streets BaseMap
-    val map = ArcGISMap(Basemap.createStreets()).apply {
+    val map = ArcGISMap(BasemapStyle.ARCGIS_STREETS).apply {
       operationalLayers.add(imageRasterLayer)
     }
 

@@ -17,16 +17,14 @@
 package com.esri.arcgisruntime.sample.openexistingmap;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
@@ -50,12 +48,12 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    mDrawerList = (ListView) findViewById(R.id.navList);
-    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    mDrawerList = findViewById(R.id.navList);
+    mDrawerLayout = findViewById(R.id.drawer_layout);
     mActivityTitle = getTitle().toString();
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
 
     // get the portal url for ArcGIS Online
     mPortal = new Portal(getResources().getString(R.string.portal_url));
@@ -82,34 +80,31 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, webmapTitles);
     mDrawerList.setAdapter(mAdapter);
 
-    mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(@NonNull AdapterView<?> adapterView, @NonNull View view, int position, long id) {
-        if (position == 0) {
-          mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_houses_with_mortgages_id));
-          // create a map from a PortalItem
-          mMap = new ArcGISMap(mPortalItem);
-          // set the map to be displayed in this view
-          mMapView.setMap(mMap);
-          // close the drawer
-          mDrawerLayout.closeDrawer(adapterView);
-        } else if (position == 1) {
-          mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_usa_tapestry_segmentation_id));
-          // create a map from a PortalItem
-          mMap = new ArcGISMap(mPortalItem);
-          // set the map to be displayed in this view
-          mMapView.setMap(mMap);
-          // close the drawer
-          mDrawerLayout.closeDrawer(adapterView);
-        } else if (position == 2) {
-          mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_geology_us));
-          // create a map from a PortalItem
-          mMap = new ArcGISMap(mPortalItem);
-          // set the map to be displayed in this view
-          mMapView.setMap(mMap);
-          // close the drawer
-          mDrawerLayout.closeDrawer(adapterView);
-        }
+    mDrawerList.setOnItemClickListener((adapterView, view, position, id) -> {
+      if (position == 0) {
+        mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_houses_with_mortgages_id));
+        // create a map from a PortalItem
+        mMap = new ArcGISMap(mPortalItem);
+        // set the map to be displayed in this view
+        mMapView.setMap(mMap);
+        // close the drawer
+        mDrawerLayout.closeDrawer(adapterView);
+      } else if (position == 1) {
+        mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_usa_tapestry_segmentation_id));
+        // create a map from a PortalItem
+        mMap = new ArcGISMap(mPortalItem);
+        // set the map to be displayed in this view
+        mMapView.setMap(mMap);
+        // close the drawer
+        mDrawerLayout.closeDrawer(adapterView);
+      } else if (position == 2) {
+        mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_geology_us));
+        // create a map from a PortalItem
+        mMap = new ArcGISMap(mPortalItem);
+        // set the map to be displayed in this view
+        mMapView.setMap(mMap);
+        // close the drawer
+        mDrawerLayout.closeDrawer(adapterView);
       }
     });
   }
@@ -118,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
 
       // called when drawer has settled in an open state
-      public void onDrawerOpened(View drawerView) {
+      @Override public void onDrawerOpened(View drawerView) {
         super.onDrawerOpened(drawerView);
         // change the title to the nav bar
         getSupportActionBar().setTitle(getResources().getString(R.string.navbar_title));
@@ -127,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
       }
 
       // called when drawer has settled in a closed state
-      public void onDrawerClosed(View view) {
+      @Override public void onDrawerClosed(View view) {
         super.onDrawerClosed(view);
         // set title to the app
         getSupportActionBar().setTitle(mActivityTitle);
@@ -164,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
     mDrawerToggle.syncState();
   }
   
-  public boolean onOptionsItemSelected(MenuItem item) {
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
     // activate the navigation drawer toggle
     return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 

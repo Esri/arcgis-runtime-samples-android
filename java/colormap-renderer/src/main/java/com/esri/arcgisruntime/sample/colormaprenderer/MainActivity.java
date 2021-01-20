@@ -25,10 +25,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.layers.RasterLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.raster.ColormapRenderer;
 import com.esri.arcgisruntime.raster.Raster;
@@ -49,12 +51,16 @@ public class MainActivity extends AppCompatActivity {
     // retrieve the MapView from layout
     mMapView = findViewById(R.id.mapView);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // create a raster from a local raster file
     Raster raster = new Raster(getExternalFilesDir(null) + getString(R.string.shasta_b_w));
     // create a raster layer
     final RasterLayer rasterLayer = new RasterLayer(raster);
     // create a Map with imagery basemap
-    ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
     // add the map to a map view
     mMapView.setMap(map);
     // add the raster as an operational layer

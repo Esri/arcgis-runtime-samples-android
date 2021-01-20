@@ -21,11 +21,6 @@ import java.util.Arrays;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,12 +32,20 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.portal.PortalItem;
@@ -69,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_drawer);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // set up an authentication handler to take credentials for access to arcgis.com
     AuthenticationChallengeHandler handler = new DefaultAuthenticationChallengeHandler(this);
     AuthenticationManager.setAuthenticationChallengeHandler(handler);
@@ -77,9 +84,10 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
     // create a map with Topographic Basemap
-    ArcGISMap map = new ArcGISMap(Basemap.Type.STREETS, 48.354388, -99.998245, 3);
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(48.354388, -99.998245, 100000));
 
     // inflate the Basemap and Layer list views
     mBasemapListView = findViewById(R.id.basemap_list);
@@ -162,16 +170,16 @@ public class MainActivity extends AppCompatActivity {
       mMapView.getMap().getOperationalLayers().clear();
       switch (position) {
         case 0:
-          mMapView.getMap().setBasemap(Basemap.createStreets());
+          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_STREETS));
           break;
         case 1:
-          mMapView.getMap().setBasemap(Basemap.createImagery());
+          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_IMAGERY));
           break;
         case 2:
-          mMapView.getMap().setBasemap(Basemap.createTopographic());
+          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC));
           break;
         case 3:
-          mMapView.getMap().setBasemap(Basemap.createOceans());
+          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_OCEANS));
           break;
         default:
           Toast.makeText(this, R.string.unsupported_option, Toast.LENGTH_SHORT).show();

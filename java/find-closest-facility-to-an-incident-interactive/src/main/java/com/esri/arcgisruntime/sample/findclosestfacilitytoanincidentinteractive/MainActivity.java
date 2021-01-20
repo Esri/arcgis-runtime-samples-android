@@ -23,18 +23,20 @@ import java.util.concurrent.ExecutionException;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -69,14 +71,21 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
 
-    // create a map with a streets basemap centered on San Diego
-    ArcGISMap map = new ArcGISMap(Basemap.Type.STREETS, 32.727, -117.1750, 12);
+    // create a map with a streets basemap
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
 
     // add the map to the map view
     mMapView.setMap(map);
+
+    // set the view point to center on San Diego
+    mMapView.setViewpoint(new Viewpoint( 32.727, -117.1750, 100000));
 
     mFacilityGraphicsOverlay = new GraphicsOverlay();
     mIncidentGraphicsOverlay = new GraphicsOverlay();

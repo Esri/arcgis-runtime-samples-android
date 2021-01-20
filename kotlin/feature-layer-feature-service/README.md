@@ -20,9 +20,9 @@ Run the sample and view the feature service as an operational layer on top of th
 
 ## Relevant API
 
-* Basemap
-* FeatureLayer
 * ArcGISMap
+* BasemapStyle
+* FeatureLayer
 * MapView
 * ServiceFeatureTable
 

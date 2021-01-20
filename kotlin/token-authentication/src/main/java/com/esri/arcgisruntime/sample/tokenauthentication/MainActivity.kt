@@ -16,9 +16,11 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // set up an authentication handler to take credentials for access to the protected map service
-    with(DefaultAuthenticationChallengeHandler(this)) {
-      AuthenticationManager.setAuthenticationChallengeHandler(this)
-    }
+    AuthenticationManager.setAuthenticationChallengeHandler(
+      DefaultAuthenticationChallengeHandler(
+        this
+      )
+    )
 
     // create a portal to ArcGIS Online
     Portal(getString(R.string.arcgis_online_portal_url)).let {

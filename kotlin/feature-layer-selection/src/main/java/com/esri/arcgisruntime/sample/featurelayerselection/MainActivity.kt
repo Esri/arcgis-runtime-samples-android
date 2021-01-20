@@ -23,13 +23,14 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.Feature
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Envelope
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -43,19 +44,16 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create service feature table and a feature layer from it
     val serviceFeatureTable = ServiceFeatureTable(getString(R.string.gdp_per_capita_url))
     val featureLayer = FeatureLayer(serviceFeatureTable)
 
     // create a map with the streets base map type
-    val streetsMap = ArcGISMap(Basemap.createStreets()).apply {
-      // set an initial view point
-      initialViewpoint = Viewpoint(
-        Envelope(
-          -1131596.019761, 3893114.069099, 3926705.982140, 7977912.461790,
-          SpatialReferences.getWebMercator()
-        )
-      )
+    val streetsMap = ArcGISMap(BasemapStyle.ARCGIS_STREETS).apply {
       // add the feature layer to the map's operational layers
       operationalLayers.add(featureLayer)
     }
@@ -63,6 +61,18 @@ class MainActivity : AppCompatActivity() {
     mapView.let { it ->
       // set the map to be displayed in the layout's map view
       it.map = streetsMap
+      // set an initial view point
+      it.setViewpoint(
+        Viewpoint(
+          Envelope(
+            -1131596.019761,
+            3893114.069099,
+            3926705.982140,
+            7977912.461790,
+            SpatialReferences.getWebMercator()
+          )
+        )
+      )
       // give any item selected on the map view a red selection halo
       it.selectionProperties.color = Color.RED
       // set an on touch listener on the map view

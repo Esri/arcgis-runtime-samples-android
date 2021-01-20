@@ -23,6 +23,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.ArcGISRuntimeException
 import com.esri.arcgisruntime.data.Feature
 import com.esri.arcgisruntime.data.QueryParameters
@@ -31,7 +32,9 @@ import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.GeoElement
+import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Callout
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.MapView
@@ -47,6 +50,10 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    // authentication with an API key or named user is required to access basemaps and other 
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     setContentView(R.layout.activity_main)
 
     // create service feature table from URL
@@ -56,12 +63,15 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
     featureLayer = FeatureLayer(featureTable)
 
     // create a map with streets basemap
-    with(ArcGISMap(Basemap.Type.STREETS, 40.0, -95.0, 4)) {
+    with(ArcGISMap(BasemapStyle.ARCGIS_STREETS)) {
       // add the layer to the map
       operationalLayers.add(featureLayer)
       // set map to be displayed in map view
       mapView.map = this
     }
+
+    // set the map view's view point
+    mapView.setViewpoint(Viewpoint(40.0, -95.0, 10000000.0))
 
     mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
       override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {

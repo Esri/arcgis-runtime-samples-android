@@ -31,11 +31,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
@@ -96,6 +97,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create simple renderer for routes, and set it to use the line symbol
     routeGraphicsOverlay.renderer = SimpleRenderer().apply {
       symbol = routeLineSymbol
@@ -103,7 +108,7 @@ class MainActivity : AppCompatActivity() {
 
     mapView.apply {
       // add a map with the streets basemap to the map view, centered on San Diego
-      map = ArcGISMap(Basemap.createStreets())
+      map = ArcGISMap(BasemapStyle.ARCGIS_STREETS)
       // center on San Diego
       setViewpoint(Viewpoint(32.7270, -117.1750, 40000.0))
       // add the graphics overlays to the map view

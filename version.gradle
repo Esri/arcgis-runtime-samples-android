@@ -6,13 +6,13 @@ ext {
     versionCode = 110
     versionName = '100.10'
     // library versions
-    kotlinVersion = '1.4.10'
+    kotlinVersion = '1.4.20'
     appcompatVersion = '1.2.0'
-    constraintLayoutVersion = '2.0.0'
+    constraintLayoutVersion = '2.0.4'
     multidexVersion = '2.0.1'
-    arcgisVersion = '100.10.0-2970'
-    arcgisToolkitVersion = '100.10.0-2970'
-    materialVersion = '1.1.0'
+    arcgisVersion = '100.10.0-2977'
+    arcgisToolkitVersion = '100.10.0-2977'
+    materialVersion = '1.2.1'
     recyclerViewVersion = '1.1.0'
     // plugin versions
     gradleVersion = '3.5.3'

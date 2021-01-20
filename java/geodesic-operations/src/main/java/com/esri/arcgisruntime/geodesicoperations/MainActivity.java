@@ -19,11 +19,12 @@ package com.esri.arcgisruntime.geodesicoperations;
 import java.util.Arrays;
 
 import android.graphics.Color;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.GeodeticCurveType;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
@@ -32,10 +33,9 @@ import com.esri.arcgisruntime.geometry.LinearUnitId;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polyline;
-import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
@@ -47,17 +47,19 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
-  private final SpatialReference mSrWgs84 = SpatialReferences.getWgs84();
   private final LinearUnit mUnitOfMeasurement = new LinearUnit(LinearUnitId.KILOMETERS);
-  private final String mUnits = "Kilometers";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // create a map
-    ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
 
     // set map to a map view
     mMapView = findViewById(R.id.mapView);
@@ -67,9 +69,9 @@ public class MainActivity extends AppCompatActivity {
     GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
-    // add a graphic at JFK to represent the flight start location //
-    final Point start = new Point(-73.7781, 40.6413, mSrWgs84);
-    SimpleMarkerSymbol locationMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF0000FF, 10);
+    // add a graphic at JFK to represent the flight start location
+    final Point start = new Point(-73.7781, 40.6413, SpatialReferences.getWgs84());
+    SimpleMarkerSymbol locationMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLUE, 10);
     Graphic startLocation = new Graphic(start, locationMarker);
     graphicsOverlay.getGraphics().add(startLocation);
 
@@ -80,15 +82,13 @@ public class MainActivity extends AppCompatActivity {
 
     // create graphic representing the geodesic path between the two locations
     final Graphic path = new Graphic();
-    path.setSymbol(new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, 0xFF0000FF, 5));
+    path.setSymbol(new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.BLUE, 5));
     graphicsOverlay.getGraphics().add(path);
 
-    //add onTouchListener to get the location of the user tap
+    // add onTouchListener to get the location of the user tap
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
-
       @Override
       public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-
         // get the point that was clicked and convert it to a point in the map
         android.graphics.Point clickLocation = new android.graphics.Point(Math.round(motionEvent.getX()),
             Math.round(motionEvent.getY()));
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         final Point destination = (Point) GeometryEngine.project(mapPoint, SpatialReferences.getWgs84());
         endLocation.setGeometry(destination);
         // create a straight line path between the start and end locations
-        PointCollection points = new PointCollection(Arrays.asList(start, destination), mSrWgs84);
+        PointCollection points = new PointCollection(Arrays.asList(start, destination), SpatialReferences.getWgs84());
         Polyline polyline = new Polyline(points);
         // densify the path as a geodesic curve and show it with the path graphic
         Geometry pathGeometry = GeometryEngine
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         calloutContent.setTextColor(Color.BLACK);
         calloutContent.setSingleLine();
         // format coordinates to 2 decimal places
-        calloutContent.setText("Distance: " + String.format("%.2f", distance) + mUnits);
+        calloutContent.setText("Distance: " + String.format("%.2f", distance) + " Kilometers");
         final Callout callout = mMapView.getCallout();
         callout.setLocation(mapPoint);
         callout.setContent(calloutContent);

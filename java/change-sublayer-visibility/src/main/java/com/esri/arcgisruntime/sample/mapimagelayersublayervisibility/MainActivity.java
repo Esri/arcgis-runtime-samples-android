@@ -17,15 +17,15 @@
 package com.esri.arcgisruntime.sample.mapimagelayersublayervisibility;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.SublayerList;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     // create a map with the Basemap Type topographic
-    ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 48.354406, -99.998267, 2);
+    ArcGISMap map = new ArcGISMap();
     // create a MapImageLayer with dynamically generated map images
     mMapImageLayer = new ArcGISMapImageLayer(getResources().getString(R.string.world_cities_service));
     mMapImageLayer.setOpacity(0.9f);
@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     map.getOperationalLayers().add(mMapImageLayer);
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(48.354406, -99.998267, 100000000.0));
     // get the layers from the map image layer
     mLayers = mMapImageLayer.getSublayers();
 
