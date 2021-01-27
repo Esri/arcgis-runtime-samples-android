@@ -1,12 +1,20 @@
 # Overview
-ArcGIS Runtime SDK for Android v100.9.0 samples.  The `master` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [git tags](https://github.com/Esri/arcgis-runtime-samples-android/tags).  Please read our [wiki](https://github.com/Esri/arcgis-runtime-samples-android/wiki) for help with working with this repository.
+ArcGIS Runtime SDK for Android v100.10.0 samples.  The `master` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [git tags](https://github.com/Esri/arcgis-runtime-samples-android/tags).  Please read our [wiki](https://github.com/Esri/arcgis-runtime-samples-android/wiki) for help with working with this repository.
 
 # Prerequisites
 * The samples are building with `compileSdkVersion 29`
 * [Android Studio](http://developer.android.com/sdk/index.html)
+* [An ArcGIS Developers API key](https://developers.arcgis.com/android/get-started/#3-get-an-api-key)
 
 ## Developer Instructions
 Please read our [developer instructions wiki page](https://github.com/Esri/arcgis-runtime-samples-android/wiki/dev-instructions) to set up your developer environment with Android Studio.  Instructions include forking and cloning the repository for those new to Git.
+
+## Accessing Esri location services
+Accessing Esri location services, including basemaps, routing, and geocoding, requires authentication using either an ArcGIS identity or an API Key:
+ 1. ArcGIS identity: An ArcGIS named user account that is a member of an organization in ArcGIS Online or ArcGIS Enterprise.
+ 2. API key: A permanent key that gives your application access to Esri location services. Visit your [ArcGIS Developers Dashboard](https://developers.arcgis.com/dashboard) to create a new API key or access an existing API key.
+
+NOTE: Set your API key in the `gradle.properties` file located in the `/.gradle` folder within your home directory (`/Users/<user_name>/.gradle/gradle.properties`). The API_KEY property should contain quotes around the key itself to take a form like: `API_KEY = "YOUR_API_KEY"` 
 
 ## Run a sample
 Once you have set up your developer environment you can run any sample from within Android Studio by selecting the app module from the **Edit Configurations** drop down and clicking the **Run** button from the toolbar. 
@@ -57,7 +65,7 @@ Anyone and everyone is welcome to [contribute](.github/CONTRIBUTING.md). We do a
 Please see our [guidelines for contributing doc](https://github.com/Esri/contributing/blob/master/README.md)
 
 ## Licensing
-Copyright 2020 Esri
+Copyright 2021 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
