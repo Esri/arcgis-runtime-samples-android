@@ -13,7 +13,7 @@ Please read our [developer instructions wiki page](https://github.com/Esri/arcgi
 Accessing Esri location services, including basemaps, routing, and geocoding, requires authentication using either an API Key or an ArcGIS identity:
  1. API key: A permanent key that gives your application access to Esri location services. Visit your [ArcGIS Developers Dashboard](https://developers.arcgis.com/dashboard) to create a new API key or access an existing API key.
  
-NOTE: Android samples have been setup to use an API key, set once, which will run in all samples. Set your API key in the `gradle.properties` file located in the `/.gradle` folder within your home directory (`/Users/<user_name>/.gradle/gradle.properties`). The API_KEY property should contain quotes around the key itself to take a form like: `API_KEY = "YOUR_API_KEY"`
+The Android samples in this repository have been structured to use an API key, set once, which will run in all samples. Set your API key in the `gradle.properties` file located in the `/.gradle` folder within your home directory (`/Users/<user_name>/.gradle/gradle.properties`). The API_KEY property should contain quotes around the key itself to take a form like: `API_KEY = "YOUR_API_KEY"`
 
 2. ArcGIS identity: An ArcGIS named user account that is a member of an organization in ArcGIS Online or ArcGIS Enterprise.
 
