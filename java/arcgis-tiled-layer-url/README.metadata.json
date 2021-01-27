@@ -20,7 +20,7 @@
     "relevant_apis": [
         "ArcGISMap",
         "ArcGISTiledLayer",
-        "Basemap",
+        "BasemapStyle",
         "MapView"
     ],
     "snippets": [

@@ -78,15 +78,14 @@ class MainActivity : AppCompatActivity() {
 
     // create a scene with the dark gray basemap and elevation source
     val darkGrayScene =
-      ArcGISScene(Basemap(worldDarkGrayBasemap), Surface(listOf(elevationSource))).apply {
-        // set the pacific southwest as the initial viewpoint
-        initialViewpoint = pacificSouthwestViewpoint
-      }
+      ArcGISScene(Basemap(worldDarkGrayBasemap), Surface(listOf(elevationSource)))
 
     // create the scene view
     sceneView.apply {
       // add the scene to the scene view
       scene = darkGrayScene
+      // set the view point to the pacific south west
+      setViewpoint(pacificSouthwestViewpoint)
       // create and append an image overlay to the scene view
       imageOverlays.add(ImageOverlay())
     }

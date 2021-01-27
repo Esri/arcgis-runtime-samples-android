@@ -21,16 +21,17 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.TimeExtent;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
@@ -45,11 +46,15 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
 
     // create a new map with oceans basemap
-    ArcGISMap map = new ArcGISMap(Basemap.createOceans());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_OCEANS);
 
     // create feature table for the hurricane feature service
     ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getString(R.string.hurricanes_service));

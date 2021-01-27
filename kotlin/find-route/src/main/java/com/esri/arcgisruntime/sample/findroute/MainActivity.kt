@@ -62,13 +62,13 @@ class MainActivity : AppCompatActivity() {
       basemap = Basemap(
         ArcGISVectorTiledLayer(getString(R.string.navigation_vector))
       )
-      // set initial viewpoint to San Diego
-      initialViewpoint = Viewpoint(32.7157, -117.1611, 200000.0)
     }
 
     mapView.apply {
       // set the map to be displayed in this view
       this.map = map
+      // set initial viewpoint to San Diego
+      setViewpoint(Viewpoint(32.7157, -117.1611, 200000.0))
       // ensure the floating action button moves to be above the attribution view
       addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
         val heightDelta = bottom - oldBottom

@@ -20,7 +20,7 @@ Use the navigation drawer to select the active basemap from the list of availabl
 
 ## Relevant API
 * ArcGISMap
-* Basemap
+* BasemapStyle
 * MapView
 
 ## Tags

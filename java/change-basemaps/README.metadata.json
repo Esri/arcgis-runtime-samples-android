@@ -16,7 +16,7 @@
     ],
     "relevant_apis": [
         "ArcGISMap",
-        "Basemap",
+        "BasemapStyle",
         "MapView"
     ],
     "snippets": [

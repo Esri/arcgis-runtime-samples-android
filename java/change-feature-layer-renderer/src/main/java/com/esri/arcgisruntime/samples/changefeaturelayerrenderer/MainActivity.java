@@ -17,16 +17,17 @@ package com.esri.arcgisruntime.samples.changefeaturelayerrenderer;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
@@ -34,28 +35,28 @@ import com.esri.arcgisruntime.symbology.SimpleRenderer;
 
 public class MainActivity extends AppCompatActivity {
 
-  MapView mMapView;
-  FeatureLayer mFeatureLayer;
+  private MapView mMapView;
+  private FeatureLayer mFeatureLayer;
 
-  boolean overrideActive;
+  private boolean mIsOverrideActive;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // set up the bottom toolbar
     createBottomToolbar();
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
 
     // create a map with the topographic basemap
-    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
-    //set an initial viewpoint
-    map.setInitialViewpoint(new Viewpoint(
-        new Envelope(-1.30758164047166E7, 4014771.46954516, -1.30730056797177E7, 4016869.78617381,
-            SpatialReferences.getWebMercator())));
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
 
     // create feature layer with its service feature table
     ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(
@@ -65,9 +66,13 @@ public class MainActivity extends AppCompatActivity {
     // add the layer to the map
     map.getOperationalLayers().add(mFeatureLayer);
 
-    // set the map to be displayed in the mapview
+    // set the map to be displayed in the map view
     mMapView.setMap(map);
 
+    // set an initial viewpoint
+    mMapView.setViewpoint(new Viewpoint(
+        new Envelope(-1.30758164047166E7, 4014771.46954516, -1.30730056797177E7, 4016869.78617381,
+            SpatialReferences.getWebMercator())));
   }
 
   private void overrideRenderer() {
@@ -89,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
   private void createBottomToolbar() {
 
-    Toolbar bottomToolbar = (Toolbar) findViewById(R.id.bottomToolbar);
+    Toolbar bottomToolbar = findViewById(R.id.bottomToolbar);
     bottomToolbar.inflateMenu(R.menu.menu_main);
 
     bottomToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -100,15 +105,15 @@ public class MainActivity extends AppCompatActivity {
         //if statement is used because this sample is used elsewhere as a Library module
         if (itemId == R.id.action_override_rend) {
           // check the state of the menu item
-          if (!overrideActive) {
+          if (!mIsOverrideActive) {
             overrideRenderer();
             // change the text to reset
-            overrideActive = true;
+            mIsOverrideActive = true;
             item.setTitle(R.string.action_reset);
           } else {
             resetRenderer();
             // change the text to override
-            overrideActive = false;
+            mIsOverrideActive = false;
             item.setTitle(R.string.action_override_rend);
           }
         }

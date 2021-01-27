@@ -18,12 +18,13 @@ package com.esri.arcgisruntime.sample.featurelayerdefinitionexpression
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -35,13 +36,17 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a service feature table from a URL
     val serviceFeatureTable = ServiceFeatureTable(getString(R.string.sample_service_url))
     // create a feature layer using the service feature table
     val featureLayer = FeatureLayer(serviceFeatureTable)
 
     // create a map with a topographic base map
-    val map = ArcGISMap(Basemap.createTopographic()).apply {
+    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
       // add the feature layer to the map
       operationalLayers.add(featureLayer)
     }

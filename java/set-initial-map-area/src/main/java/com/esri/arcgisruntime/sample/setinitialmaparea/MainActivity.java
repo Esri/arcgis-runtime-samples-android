@@ -17,12 +17,13 @@
 package com.esri.arcgisruntime.sample.setinitialmaparea;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
@@ -35,11 +36,18 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
 
     // create a map with the basemap
-    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
+
+    // set the map to be displayed in this view
+    mMapView.setMap(map);
 
     // create an initial extent envelope
     Envelope initialExtent = new Envelope(-12211308.778729, 4645116.003309, -12208257.879667, 4650542.535773,
@@ -49,10 +57,7 @@ public class MainActivity extends AppCompatActivity {
     Viewpoint viewpoint = new Viewpoint(initialExtent);
 
     // set initial map extent
-    map.setInitialViewpoint(viewpoint);
-
-    // set the map to be displayed in this view
-    mMapView.setMap(map);
+    mMapView.setViewpoint(viewpoint);
   }
 
   @Override

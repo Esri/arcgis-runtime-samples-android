@@ -19,16 +19,16 @@ package com.esri.arcgisruntime.samples.deletefeaturesfeatureservice;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureEditResult;
@@ -38,8 +38,9 @@ import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.GeoElement;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
@@ -59,10 +60,14 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     mMapView = findViewById(R.id.mapView);
 
     // create a map with streets basemap
-    ArcGISMap map = new ArcGISMap(Basemap.Type.STREETS, 40, -95, 4);
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
 
     // create service feature table from URL
     mFeatureTable = new ServiceFeatureTable(getString(R.string.feature_layer_url));
@@ -102,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
 
     // set map to be displayed in map view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint( 40, -95, 100000000));
   }
 
   /**

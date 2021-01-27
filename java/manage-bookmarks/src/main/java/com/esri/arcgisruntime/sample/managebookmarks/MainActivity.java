@@ -16,13 +16,11 @@
 
 package com.esri.arcgisruntime.sample.managebookmarks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,15 +28,17 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Bookmark;
 import com.esri.arcgisruntime.mapping.BookmarkList;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,28 +53,23 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    FloatingActionButton addBookmarkFab;
-
-    Spinner bookmarksSpinner;
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
 
     // create a map with the BasemapType imagery with labels
-    ArcGISMap mMap = new ArcGISMap(Basemap.createImageryWithLabels());
+    ArcGISMap mMap = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
     // set the map to be displayed in this view
     mMapView.setMap(mMap);
 
     // inflate the floating action button
-    addBookmarkFab = (FloatingActionButton) findViewById(R.id.addbookmarkFAB);
+    FloatingActionButton addBookmarkFab = findViewById(R.id.addbookmarkFAB);
 
     // show the dialog for acquiring bookmark name from the user
-    addBookmarkFab.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        showDialog(v.getContext());
-      }
-    });
+    addBookmarkFab.setOnClickListener(v -> showDialog(v.getContext()));
 
     // get the maps BookmarkList
     mBookmarks = mMap.getBookmarks();
@@ -83,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     addDefaultBookmarks();
 
     // populate the spinner list with default bookmark names
-    bookmarksSpinner = (Spinner) findViewById(R.id.bookmarksspinner);
+    Spinner bookmarksSpinner = findViewById(R.id.bookmarksspinner);
     mBookmarksSpinnerList = new ArrayList<>();
     mBookmarksSpinnerList.add(mBookmarks.get(0).getName());
     mBookmarksSpinnerList.add(mBookmarks.get(1).getName());
@@ -166,28 +161,20 @@ public class MainActivity extends AppCompatActivity {
     builder.setView(input);
 
     // Set up the buttons
-    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        // get the input from EditText
-        String bookmarkName = input.getText().toString();
-        // check if EditText is not empty & bookmark name has not been used
-        if (bookmarkName.length() > 0 && !mBookmarksSpinnerList.contains(bookmarkName)) {
-          addBookmark(bookmarkName);
-        } else {
-          // display toast explaining bookmark not set
-          Toast.makeText(getApplicationContext(), getResources().getString(R.string.bookmark_not_saved),
-              Toast.LENGTH_LONG).show();
-          dialog.cancel();
-        }
-      }
-    });
-    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(@NonNull DialogInterface dialog, int which) {
+    builder.setPositiveButton("OK", (dialog, which) -> {
+      // get the input from EditText
+      String bookmarkName = input.getText().toString();
+      // check if EditText is not empty & bookmark name has not been used
+      if (bookmarkName.length() > 0 && !mBookmarksSpinnerList.contains(bookmarkName)) {
+        addBookmark(bookmarkName);
+      } else {
+        // display toast explaining bookmark not set
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.bookmark_not_saved),
+            Toast.LENGTH_LONG).show();
         dialog.cancel();
       }
     });
+    builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
     builder.show();
 

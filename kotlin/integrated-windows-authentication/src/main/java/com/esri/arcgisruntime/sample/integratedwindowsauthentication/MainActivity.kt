@@ -24,9 +24,10 @@ import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.portal.PortalQueryParameters
@@ -66,8 +67,12 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler,
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // Create a streets base map and set the map to the map view
-    mapView.map = ArcGISMap(Basemap.createStreets())
+    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_STREETS)
 
     // Set authentication challenge handler
     AuthenticationManager.setAuthenticationChallengeHandler(this)

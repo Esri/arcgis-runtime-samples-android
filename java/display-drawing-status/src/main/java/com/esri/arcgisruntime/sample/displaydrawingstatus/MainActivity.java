@@ -17,21 +17,19 @@
 package com.esri.arcgisruntime.sample.displaydrawingstatus;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DrawStatus;
-import com.esri.arcgisruntime.mapping.view.DrawStatusChangedEvent;
-import com.esri.arcgisruntime.mapping.view.DrawStatusChangedListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,23 +41,19 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
+    final ProgressBar progressBar = findViewById(R.id.progressBar);
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     // create a map with the Basemap Type topographic
-    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
-    // create an envelope
-    Envelope targetExtent = new Envelope(-13639984.0, 4537387.0, -13606734.0, 4558866.0,
-        SpatialReferences.getWebMercator());
-    // use envelope to set initial viewpoint
-    Viewpoint initViewpoint = new Viewpoint(targetExtent);
-    // set the initial viewpoint in the map
-    map.setInitialViewpoint(initViewpoint);
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
 
     // create a feature table from a service url
-    ServiceFeatureTable svcFeaturetable = new ServiceFeatureTable(
-        getResources().getString(R.string.service_feature_table_url));
+    ServiceFeatureTable svcFeaturetable = new ServiceFeatureTable(getString(R.string.service_feature_table_url));
     // create a feature layer
     FeatureLayer featureLayer = new FeatureLayer(svcFeaturetable);
     // add feature layer to map
@@ -67,17 +61,20 @@ public class MainActivity extends AppCompatActivity {
 
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    // create an envelope
+    Envelope targetExtent = new Envelope(-13639984.0, 4537387.0, -13606734.0, 4558866.0,
+        SpatialReferences.getWebMercator());
+    // use envelope to set initial viewpoint
+    Viewpoint initViewpoint = new Viewpoint(targetExtent);
+    // set the initial viewpoint in the map
+    mMapView.setViewpoint(initViewpoint);
 
     //[DocRef: Name=Monitor map drawing, Category=Work with maps, Topic=Display a map]
-    mMapView.addDrawStatusChangedListener(new DrawStatusChangedListener() {
-      @Override
-      public void drawStatusChanged(DrawStatusChangedEvent drawStatusChangedEvent) {
-        if (drawStatusChangedEvent.getDrawStatus() == DrawStatus.IN_PROGRESS) {
-          progressBar.setVisibility(View.VISIBLE);
-          Log.d("drawStatusChanged", "spinner visible");
-        } else if (drawStatusChangedEvent.getDrawStatus() == DrawStatus.COMPLETED) {
-          progressBar.setVisibility(View.INVISIBLE);
-        }
+    mMapView.addDrawStatusChangedListener(drawStatusChangedEvent -> {
+      if (drawStatusChangedEvent.getDrawStatus() == DrawStatus.IN_PROGRESS) {
+        progressBar.setVisibility(View.VISIBLE);
+      } else if (drawStatusChangedEvent.getDrawStatus() == DrawStatus.COMPLETED) {
+        progressBar.setVisibility(View.INVISIBLE);
       }
     });
     //[DocRef: END]

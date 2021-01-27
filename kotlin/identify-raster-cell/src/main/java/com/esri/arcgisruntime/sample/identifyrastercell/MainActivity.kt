@@ -23,9 +23,11 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.layers.RasterLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.raster.Raster
 import com.esri.arcgisruntime.raster.RasterCell
@@ -39,6 +41,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // load the raster file
     val rasterFile =
       Raster(getExternalFilesDir(null)?.path + "/SA_EVI_8Day_03May20/SA_EVI_8Day_03May20.tif")
@@ -47,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     rasterLayer = RasterLayer(rasterFile)
 
     // define a new map
-    val rasterMap = ArcGISMap(Basemap.Type.OCEANS, -33.9, 18.6, 9).apply {
+    val rasterMap = ArcGISMap(BasemapStyle.ARCGIS_OCEANS).apply {
       // add the raster layer
       operationalLayers.add(rasterLayer)
     }
@@ -55,6 +61,7 @@ class MainActivity : AppCompatActivity() {
     mapView.apply {
       // add the map to the map view
       map = rasterMap
+      setViewpoint(Viewpoint( -33.9, 18.6, 1000000.0))
 
       // set behavior for double touch drag and on single tap gestures
       onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
