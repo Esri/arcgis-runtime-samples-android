@@ -17,7 +17,7 @@
     "relevant_apis": [
         "ArcGISMap",
         "ArcGISMapImageLayer",
-        "Basemap",
+        "BasemapStyle",
         "MapView",
         "SpatialReference"
     ],

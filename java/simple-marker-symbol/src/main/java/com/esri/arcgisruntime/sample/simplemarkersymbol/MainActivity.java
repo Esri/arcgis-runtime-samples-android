@@ -15,12 +15,13 @@ package com.esri.arcgisruntime.sample.simplemarkersymbol;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -36,30 +37,27 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
 
     // create a map with the imagery basemap
-    ArcGISMap map = new ArcGISMap(Basemap.createImagery());
-
-    // create an initial viewpoint with a point and scale
-    Point point = new Point(-226773, 6550477, SpatialReferences.getWebMercator());
-    Viewpoint vp = new Viewpoint(point, 7500);
-
-    // set initial map extent
-    map.setInitialViewpoint(vp);
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
 
     // set the map to be displayed in the mapview
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(new Point(-226773, 6550477, SpatialReferences.getWebMercator()), 7500));
 
-    // create a new graphics overlay and add it to the mapview
+    // create a new graphics overlay and add it to the map view
     GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
     mMapView.getGraphicsOverlays().add(graphicsOverlay);
 
     //[DocRef: Name=Point graphic with symbol, Category=Fundamentals, Topic=Symbols and Renderers]
     //create a simple marker symbol
-    SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED,
-        12); //size 12, style of circle
+    SimpleMarkerSymbol symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 12);
 
     //add a new graphic with a new point geometry
     Point graphicPoint = new Point(-226773, 6550477, SpatialReferences.getWebMercator());

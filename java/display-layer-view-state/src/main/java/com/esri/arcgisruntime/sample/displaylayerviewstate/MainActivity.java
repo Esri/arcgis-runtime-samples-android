@@ -21,24 +21,22 @@ import java.util.EnumSet;
 import java.util.List;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.ArcGISRuntimeException;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
-import com.esri.arcgisruntime.mapping.view.LayerViewStateChangedEvent;
-import com.esri.arcgisruntime.mapping.view.LayerViewStateChangedListener;
 import com.esri.arcgisruntime.mapping.view.LayerViewStatus;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
@@ -58,85 +56,77 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     // create a map with the BasemapType topographic
-    final ArcGISMap mMap = new ArcGISMap(Basemap.createTopographic());
+    final ArcGISMap mMap = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
     // add the map to the map view
     mMapView.setMap(mMap);
 
     // zoom to custom ViewPoint
-    mMapView.setViewpoint(new Viewpoint(
-        new Point(-11e6, 45e5, SpatialReferences.getWebMercator()),
-        40_000_000.0
-    ));
+    mMapView.setViewpoint(new Viewpoint(new Point(-11000000, 4500000, SpatialReferences.getWebMercator()), 40000000));
 
     // Listen to changes in the status of the Layer
-    mMapView.addLayerViewStateChangedListener(new LayerViewStateChangedListener() {
-      @Override
-      public void layerViewStateChanged(LayerViewStateChangedEvent layerViewStateChangedEvent) {
-
-        // get the layer which changed it's state
-        Layer layer = layerViewStateChangedEvent.getLayer();
-        // we only want to check the view state of the image layer
-        if (layer != mFeatureLayer) {
-          return;
-        }
-        // get the View Status of the layer
-        // View status will be either of ACTIVE, ERROR, LOADING, NOT_VISIBLE, OUT_OF_SCALE, WARNING
-        EnumSet<LayerViewStatus> layerViewStatus = layerViewStateChangedEvent.getLayerViewStatus();
-        // if there is an error or warning, display it in a toast
-        ArcGISRuntimeException error = layerViewStateChangedEvent.getError();
-        if (error != null) {
-          Throwable cause = error.getCause();
-          String message = (cause != null)? cause.toString() : error.toString();
-          Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-        }
-        displayViewStateText(layerViewStatus);
+    mMapView.addLayerViewStateChangedListener(layerViewStateChangedEvent -> {
+      // get the layer which changed it's state
+      Layer layer = layerViewStateChangedEvent.getLayer();
+      // we only want to check the view state of the image layer
+      if (!layer.equals(mFeatureLayer)) {
+        return;
       }
+      // get the View Status of the layer
+      // View status will be either of ACTIVE, ERROR, LOADING, NOT_VISIBLE, OUT_OF_SCALE, WARNING
+      EnumSet<LayerViewStatus> layerViewStatus = layerViewStateChangedEvent.getLayerViewStatus();
+      // if there is an error or warning, display it in a toast
+      ArcGISRuntimeException error = layerViewStateChangedEvent.getError();
+      if (error != null) {
+        Throwable cause = error.getCause();
+        String message = cause != null ? cause.toString() : error.toString();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+      }
+      displayViewStateText(layerViewStatus);
     });
 
-    loadButton = (Button) findViewById(R.id.loadButton);
+    loadButton = findViewById(R.id.loadButton);
     statesContainer = findViewById(R.id.statesContainer);
-    hideButton = (Button) findViewById(R.id.hideButton);
-    activeStateTextView = (TextView) findViewById(R.id.activeStateTextView);
+    hideButton = findViewById(R.id.hideButton);
+    activeStateTextView = findViewById(R.id.activeStateTextView);
 
-    loadButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (mFeatureLayer != null) return;
-        // load a feature layer from a portal item
-        PortalItem portalItem = new PortalItem(
-            new Portal("https://runtime.maps.arcgis.com/"),
-            "b8f4033069f141729ffb298b7418b653"
-        );
+    loadButton.setOnClickListener(v -> {
+      if (mFeatureLayer != null)
+        return;
+      // load a feature layer from a portal item
+      PortalItem portalItem = new PortalItem(new Portal("https://runtime.maps.arcgis.com/"),
+          "b8f4033069f141729ffb298b7418b653");
 
-        mFeatureLayer = new FeatureLayer(portalItem, 0);
-        // set the scales at which this layer can be viewed
-        mFeatureLayer.setMinScale(400_000_000.0);
-        mFeatureLayer.setMaxScale(400_000_000.0 / 10);
-        // add the layer on the map to load it
-        mMap.getOperationalLayers().add(mFeatureLayer);
-        // hide the button
-        loadButton.setEnabled(false);
-        loadButton.setVisibility(View.GONE);
-        // show the view state UI and the hide layer button
-        statesContainer.setVisibility(View.VISIBLE);
-        hideButton.setVisibility(View.VISIBLE);
-      }
+      mFeatureLayer = new FeatureLayer(portalItem, 0);
+      // set the scales at which this layer can be viewed
+      mFeatureLayer.setMinScale(400_000_000.0);
+      mFeatureLayer.setMaxScale(400_000_000.0 / 10);
+      // add the layer on the map to load it
+      mMap.getOperationalLayers().add(mFeatureLayer);
+      // hide the button
+      loadButton.setEnabled(false);
+      loadButton.setVisibility(View.GONE);
+      // show the view state UI and the hide layer button
+      statesContainer.setVisibility(View.VISIBLE);
+      hideButton.setVisibility(View.VISIBLE);
     });
 
-    hideButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (mFeatureLayer == null) return;
+    hideButton.setOnClickListener(v -> {
+      if (mFeatureLayer == null)
+        return;
 
-        if (mFeatureLayer.isVisible()) {
-          hideButton.setText(R.string.show_layer);
-          mFeatureLayer.setVisible(false);
-        }
-        else {
-          hideButton.setText(R.string.hide_layer);
-          mFeatureLayer.setVisible(true);
-        }
+      if (mFeatureLayer.isVisible()) {
+        hideButton.setText(R.string.show_layer);
+        mFeatureLayer.setVisible(false);
+      } else {
+        hideButton.setText(R.string.hide_layer);
+        mFeatureLayer.setVisible(true);
       }
     });
   }
@@ -149,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
   protected void displayViewStateText(EnumSet<LayerViewStatus> layerViewStatus) {
     // for each view state property that's active,
     // add it to a list and display the states as a comma-separated string
-    List<String> stringList = new ArrayList<String>();
+    List<String> stringList = new ArrayList<>();
     if (layerViewStatus.contains(LayerViewStatus.ACTIVE)) {
       stringList.add(getString(R.string.active_state));
     }

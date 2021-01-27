@@ -13,6 +13,7 @@
  * limitations under the License.
  *
  */
+
 package com.esri.arcgisruntime.sample.buffer
 
 import android.graphics.Color
@@ -20,13 +21,14 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.GeodeticCurveType
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.LinearUnit
 import com.esri.arcgisruntime.geometry.LinearUnitId
-import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
@@ -43,10 +45,12 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other 
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a map with a topographic basemap
-    mapView.map = ArcGISMap(SpatialReferences.getWebMercator()).apply {
-      basemap = Basemap.createTopographic()
-    }
+    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
 
     // create a fill symbol for geodesic buffer polygons
     val geodesicOutlineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 2F)

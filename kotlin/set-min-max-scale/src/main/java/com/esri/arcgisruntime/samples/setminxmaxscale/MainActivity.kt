@@ -19,10 +19,11 @@ package com.esri.arcgisruntime.samples.setminxmaxscale
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -30,21 +31,31 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a ArcGISMap with basemap streets
-    with(ArcGISMap(Basemap.createStreets())) {
+    with(ArcGISMap(BasemapStyle.ARCGIS_STREETS)) {
       // set the scale at which this layer can be viewed
       this.minScale = 8000.0
       this.maxScale = 2000.0
 
-      // set point where the map view will focus and zoom to
-      this.initialViewpoint =
-        Viewpoint(Point(-355453.0, 7548720.0, SpatialReferences.getWebMercator()), 3000.0)
-
       // set the ArcGISMap instance to display in the MapView
       mapView.map = this
+
+      // set point where the map view will focus and zoom to
+      mapView.setViewpoint(
+        Viewpoint(
+          Point(
+            -355453.0,
+            7548720.0,
+            SpatialReferences.getWebMercator()
+          ), 3000.0
+        )
+      )
     }
   }
 

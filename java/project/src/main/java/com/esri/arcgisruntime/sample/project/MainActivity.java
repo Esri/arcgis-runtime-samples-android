@@ -19,19 +19,20 @@ package com.esri.arcgisruntime.sample.project;
 import java.text.DecimalFormat;
 
 import android.graphics.Color;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
@@ -48,11 +49,15 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
     // create a map with a web mercator basemap
     ArcGISMap map = new ArcGISMap(SpatialReferences.getWebMercator());
-    map.setBasemap(Basemap.createNationalGeographic());
+    map.setBasemap(new Basemap(BasemapStyle.ARCGIS_CHARTED_TERRITORY));
 
     // set the map to be displayed in this view
     mMapView.setMap(map);

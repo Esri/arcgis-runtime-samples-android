@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.graphics.Color;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.arcgisservices.RelationshipInfo;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
@@ -107,9 +107,7 @@ public class MainActivity extends AppCompatActivity {
               commentList.add(feature.getAttributes().get("comments").toString());
             }
             // create array adapter with the queried comments
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,
-                android.R.layout.simple_list_item_1,
-                commentList);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, commentList);
             // add the adapter to the List View
             mCommentListView.setAdapter(adapter);
           } catch (InterruptedException | ExecutionException e) {
@@ -118,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         });
       } else {
         Log.e(TAG, "Service request failed to load");
-        Toast.makeText(MainActivity.this, "Service request failed to load", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Service request failed to load", Toast.LENGTH_LONG).show();
       }
     });
 
@@ -154,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
           }
           // if a valid related feature is not found, warn the user and return
           if (mServiceRequestFeature == null) {
-            Toast.makeText(MainActivity.this, "Related Feature not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Related Feature not found", Toast.LENGTH_SHORT).show();
             return;
           }
 

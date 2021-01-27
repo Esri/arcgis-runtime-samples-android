@@ -2,10 +2,12 @@ package com.esri.arcgisruntime.sample.customdictionarystyle
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.symbology.DictionaryRenderer
 import com.esri.arcgisruntime.symbology.DictionarySymbolStyle
@@ -16,6 +18,10 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+    // authentication with an API key or named user is required to access basemaps and other 
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     // create a feature layer from a service feature table
     val featureTable = ServiceFeatureTable(getString(R.string.restaurants_url))
@@ -34,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create a new map with a streets basemap and set it to the map view
-    mapView.map = ArcGISMap(Basemap.createStreetsVector()).apply {
+    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_STREETS).apply {
       // add the the feature layer to the map's operational layers
       operationalLayers.add(featureLayer)
     }

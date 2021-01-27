@@ -21,13 +21,14 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.PointCollection
 import com.esri.arcgisruntime.geometry.Polygon
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
@@ -42,6 +43,10 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     // create a graphic for the polygon
     val polygonPoints = PointCollection(SpatialReferences.getWebMercator())
@@ -85,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
     mapView.apply {
       // create a map with a basemap and add it to the map view
-      map = ArcGISMap(Basemap.createTopographic())
+      map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
 
       // add the graphics overlay to the map view
       graphicsOverlays.add(graphicsOverlay)

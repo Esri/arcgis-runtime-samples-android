@@ -24,11 +24,14 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.layers.KmlLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.loadable.Loadable
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.ogc.kml.KmlDataset
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
@@ -41,13 +44,19 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+    // authentication with an API key or named user is required to access basemaps and other 
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // show progress indicator when app starts
     progressIndicator.visibility = View.VISIBLE
 
     // create a map with the dark gray canvas basemap
-    val map = ArcGISMap(Basemap.Type.DARK_GRAY_CANVAS_VECTOR, 39.0, -98.0, 4)
+    val map = ArcGISMap(BasemapStyle.ARCGIS_DARK_GRAY)
     // set the map to the map view
     mapView.map = map
+    mapView.setViewpoint(Viewpoint(39.0, -98.0, 100000000.0))
     // prompt user to make a KML source selection when the app has loaded
     map.addDoneLoadingListener {
       if (map.loadStatus == LoadStatus.LOADED) {

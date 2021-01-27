@@ -22,11 +22,11 @@ Choose and adjust the settings to update the hillshade renderer on the raster la
 
 ## Relevant API
 
-* Basemap
+* BasemapStyle
 * HillshadeRenderer
 * Raster
 * RasterLayer
-* 
+
 ## Offline Data
 
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=134d60f50e184e8fa56365f44e5ce3fb).

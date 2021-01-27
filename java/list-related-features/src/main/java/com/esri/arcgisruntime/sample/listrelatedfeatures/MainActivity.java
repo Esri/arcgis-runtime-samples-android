@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -87,13 +86,10 @@ public class MainActivity extends AppCompatActivity {
     mArcGISMap = new ArcGISMap(getResources().getString(R.string.webmap_url));
     // set the mArcGISMap to be displayed in this view
     mMapView.setMap(mArcGISMap);
-    mArcGISMap.addDoneLoadingListener(new Runnable() {
-      @Override
-      public void run() {
-        if (mArcGISMap.getLoadStatus() == LoadStatus.LOADED) {
-          // create Features to use for listing related features
-          createFeatures(mArcGISMap);
-        }
+    mArcGISMap.addDoneLoadingListener(() -> {
+      if (mArcGISMap.getLoadStatus() == LoadStatus.LOADED) {
+        // create Features to use for listing related features
+        createFeatures(mArcGISMap);
       }
     });
 

@@ -51,8 +51,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     // set an initial viewpoint
-    val initialViewPoint = Point(-4.45968, 48.3889, 37.9922)
-    val camera = Camera(initialViewPoint, 329.91, 96.6632, 0.0)
+    val viewPoint = Point(-4.45968, 48.3889, 37.9922)
+    val camera = Camera(viewPoint, 329.91, 96.6632, 0.0)
 
     sceneView.apply {
       this.scene = scene

@@ -17,10 +17,12 @@
 package com.esri.arcgisruntime.sample.openstreetmaplayer;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,31 +34,33 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // access MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     // instantiate an ArcGISMap with OpenStreetMap Basemap
-    ArcGISMap map = new ArcGISMap(Basemap.Type.OPEN_STREET_MAP, 34.056295, -117.195800, 10);
+    ArcGISMap map = new ArcGISMap(BasemapStyle.OSM_STANDARD);
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(34.056295, -117.195800, 10000));
   }
 
   @Override
   protected void onPause() {
     super.onPause();
-    // pause MapView
     mMapView.pause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    // resume MapView
     mMapView.resume();
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    // dispose MapView
     mMapView.dispose();
   }
 }

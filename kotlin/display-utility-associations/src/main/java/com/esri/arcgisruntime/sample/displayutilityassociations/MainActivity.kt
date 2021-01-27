@@ -19,9 +19,10 @@ package com.esri.arcgisruntime.sample.displayutilityassociations
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
@@ -67,9 +68,15 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     mapView.apply {
-      // add a topographic vector map with a viewpoint at several utility network associations
-      map = ArcGISMap(Basemap.Type.TOPOGRAPHIC_VECTOR, 41.8057655, -88.1489692, 23)
+      // add a topographic basemap with a viewpoint at several utility network associations
+      map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+      setViewpoint(Viewpoint(41.8057655, -88.1489692, 50.0))
 
       // add the a graphics overlay to hold association graphics
       graphicsOverlays.add(associationsOverlay)

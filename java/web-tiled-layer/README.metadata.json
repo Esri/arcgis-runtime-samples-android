@@ -20,7 +20,7 @@
         "/android/latest/sample-code/web-tiled-layer.htm"
     ],
     "relevant_apis": [
-        "Basemap",
+        "BasemapStyle",
         "WebTiledLayer"
     ],
     "snippets": [

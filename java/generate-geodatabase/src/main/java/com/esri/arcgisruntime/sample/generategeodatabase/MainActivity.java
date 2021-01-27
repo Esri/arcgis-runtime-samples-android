@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(sanFrancisco);
 
     // create a map view and add a map
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     final ArcGISMap map = new ArcGISMap(new Basemap(tiledLayer));
     mMapView.setMap(map);
 
@@ -82,10 +82,10 @@ public class MainActivity extends AppCompatActivity {
     final SimpleLineSymbol boundarySymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 5);
 
     // inflate button and progress layout
-    final Button genGeodatabaseButton = (Button) findViewById(R.id.genGeodatabaseButton);
-    mProgressLayout = (RelativeLayout) findViewById(R.id.progressLayout);
-    final ProgressBar progressBar = (ProgressBar) findViewById(R.id.taskProgressBar);
-    mProgressTextView = (TextView) findViewById(R.id.progressTextView);
+    final Button genGeodatabaseButton = findViewById(R.id.genGeodatabaseButton);
+    mProgressLayout = findViewById(R.id.progressLayout);
+    final ProgressBar progressBar = findViewById(R.id.taskProgressBar);
+    mProgressTextView = findViewById(R.id.progressTextView);
 
     // create a geodatabase sync task
     mGeodatabaseSyncTask = new GeodatabaseSyncTask(getString(R.string.wildfire_sync));
@@ -93,95 +93,84 @@ public class MainActivity extends AppCompatActivity {
     mGeodatabaseSyncTask.addDoneLoadingListener(() -> {
 
       // generate the geodatabase sync task
-      genGeodatabaseButton.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
+      genGeodatabaseButton.setOnClickListener(v -> {
 
-          // show the progress layout
-          progressBar.setProgress(0);
-          mProgressLayout.setVisibility(View.VISIBLE);
+        // show the progress layout
+        progressBar.setProgress(0);
+        mProgressLayout.setVisibility(View.VISIBLE);
 
-          // clear any previous operational layers and graphics if button clicked more than once
-          map.getOperationalLayers().clear();
-          graphicsOverlay.getGraphics().clear();
+        // clear any previous operational layers and graphics if button clicked more than once
+        map.getOperationalLayers().clear();
+        graphicsOverlay.getGraphics().clear();
 
-          // show the extent used as a graphic
-          Envelope extent = mMapView.getVisibleArea().getExtent();
-          Graphic boundary = new Graphic(extent, boundarySymbol);
-          graphicsOverlay.getGraphics().add(boundary);
+        // show the extent used as a graphic
+        Envelope extent = mMapView.getVisibleArea().getExtent();
+        Graphic boundary = new Graphic(extent, boundarySymbol);
+        graphicsOverlay.getGraphics().add(boundary);
 
-          // create generate geodatabase parameters for the current extent
-          final ListenableFuture<GenerateGeodatabaseParameters> defaultParameters = mGeodatabaseSyncTask
-              .createDefaultGenerateGeodatabaseParametersAsync(extent);
-          defaultParameters.addDoneListener(new Runnable() {
-            @Override public void run() {
-              try {
-                // set parameters and don't include attachments
-                GenerateGeodatabaseParameters parameters = defaultParameters.get();
-                parameters.setReturnAttachments(false);
+        // create generate geodatabase parameters for the current extent
+        final ListenableFuture<GenerateGeodatabaseParameters> defaultParameters = mGeodatabaseSyncTask
+            .createDefaultGenerateGeodatabaseParametersAsync(extent);
+        defaultParameters.addDoneListener(() -> {
+          try {
+            // set parameters and don't include attachments
+            GenerateGeodatabaseParameters parameters = defaultParameters.get();
+            parameters.setReturnAttachments(false);
 
-                // define the local path where the geodatabase will be stored
-                final String localGeodatabasePath =
-                    getCacheDir().toString() + File.separator + getString(R.string.wildfire_geodatabase);
+            // define the local path where the geodatabase will be stored
+            final String localGeodatabasePath =
+                getCacheDir() + File.separator + getString(R.string.wildfire_geodatabase);
 
-                // create and start the job
-                final GenerateGeodatabaseJob generateGeodatabaseJob = mGeodatabaseSyncTask
-                    .generateGeodatabase(parameters, localGeodatabasePath);
-                generateGeodatabaseJob.start();
-                mProgressTextView.setText(getString(R.string.progress_started));
+            // create and start the job
+            final GenerateGeodatabaseJob generateGeodatabaseJob = mGeodatabaseSyncTask
+                .generateGeodatabase(parameters, localGeodatabasePath);
+            generateGeodatabaseJob.start();
+            mProgressTextView.setText(getString(R.string.progress_started));
 
-                // update progress
-                generateGeodatabaseJob.addProgressChangedListener(new Runnable() {
-                  @Override public void run() {
-                    progressBar.setProgress(generateGeodatabaseJob.getProgress());
-                    mProgressTextView.setText(getString(R.string.progress_fetching));
-                  }
-                });
+            // update progress
+            generateGeodatabaseJob.addProgressChangedListener(() -> {
+              progressBar.setProgress(generateGeodatabaseJob.getProgress());
+              mProgressTextView.setText(getString(R.string.progress_fetching));
+            });
 
-                // get geodatabase when done
-                generateGeodatabaseJob.addJobDoneListener(new Runnable() {
-                  @Override public void run() {
-                    mProgressLayout.setVisibility(View.INVISIBLE);
-                    if (generateGeodatabaseJob.getStatus() == Job.Status.SUCCEEDED) {
-                      mGeodatabase = generateGeodatabaseJob.getResult();
-                      mGeodatabase.loadAsync();
-                      mGeodatabase.addDoneLoadingListener(new Runnable() {
-                        @Override public void run() {
-                          if (mGeodatabase.getLoadStatus() == LoadStatus.LOADED) {
-                            mProgressTextView.setText(getString(R.string.progress_done));
-                            for (GeodatabaseFeatureTable geodatabaseFeatureTable : mGeodatabase
-                                .getGeodatabaseFeatureTables()) {
-                              geodatabaseFeatureTable.loadAsync();
-                              map.getOperationalLayers().add(new FeatureLayer(geodatabaseFeatureTable));
-                            }
-                            genGeodatabaseButton.setVisibility(View.GONE);
-                            Log.i(TAG, "Local geodatabase stored at: " + localGeodatabasePath);
-                          } else {
-                            Log.e(TAG, "Error loading geodatabase: " + mGeodatabase.getLoadError().getMessage());
-                          }
-                        }
-                      });
-                      // unregister since we're not syncing
-                      ListenableFuture unregisterGeodatabase = mGeodatabaseSyncTask
-                          .unregisterGeodatabaseAsync(mGeodatabase);
-                      unregisterGeodatabase.addDoneListener(() -> {
-                        Log.i(TAG, "Geodatabase unregistered since we wont be editing it in this sample.");
-                        Toast.makeText(MainActivity.this,
-                            "Geodatabase unregistered since we wont be editing it in this sample.",
-                            Toast.LENGTH_LONG).show();
-                      });
-                    } else if (generateGeodatabaseJob.getError() != null) {
-                      Log.e(TAG, "Error generating geodatabase: " + generateGeodatabaseJob.getError().getMessage());
-                    } else {
-                      Log.e(TAG, "Unknown Error generating geodatabase");
+            // get geodatabase when done
+            generateGeodatabaseJob.addJobDoneListener(() -> {
+              mProgressLayout.setVisibility(View.INVISIBLE);
+              if (generateGeodatabaseJob.getStatus() == Job.Status.SUCCEEDED) {
+                mGeodatabase = generateGeodatabaseJob.getResult();
+                mGeodatabase.loadAsync();
+                mGeodatabase.addDoneLoadingListener(() -> {
+                  if (mGeodatabase.getLoadStatus() == LoadStatus.LOADED) {
+                    mProgressTextView.setText(getString(R.string.progress_done));
+                    for (GeodatabaseFeatureTable geodatabaseFeatureTable : mGeodatabase
+                        .getGeodatabaseFeatureTables()) {
+                      geodatabaseFeatureTable.loadAsync();
+                      map.getOperationalLayers().add(new FeatureLayer(geodatabaseFeatureTable));
                     }
+                    genGeodatabaseButton.setVisibility(View.GONE);
+                    Log.i(TAG, "Local geodatabase stored at: " + localGeodatabasePath);
+                  } else {
+                    Log.e(TAG, "Error loading geodatabase: " + mGeodatabase.getLoadError().getMessage());
                   }
                 });
-              } catch (InterruptedException | ExecutionException e) {
-                Log.e(TAG, "Error generating geodatabase parameters : " + e.getMessage());
+                // unregister since we're not syncing
+                ListenableFuture unregisterGeodatabase = mGeodatabaseSyncTask.unregisterGeodatabaseAsync(mGeodatabase);
+                unregisterGeodatabase.addDoneListener(() -> {
+                  Log.i(TAG, "Geodatabase unregistered since we wont be editing it in this sample.");
+                  Toast.makeText(MainActivity.this,
+                      "Geodatabase unregistered since we wont be editing it in this sample.",
+                      Toast.LENGTH_LONG).show();
+                });
+              } else if (generateGeodatabaseJob.getError() != null) {
+                Log.e(TAG, "Error generating geodatabase: " + generateGeodatabaseJob.getError().getMessage());
+              } else {
+                Log.e(TAG, "Unknown Error generating geodatabase");
               }
-            }
-          });
-        }
+            });
+          } catch (InterruptedException | ExecutionException e) {
+            Log.e(TAG, "Error generating geodatabase parameters : " + e.getMessage());
+          }
+        });
       });
     });
   }

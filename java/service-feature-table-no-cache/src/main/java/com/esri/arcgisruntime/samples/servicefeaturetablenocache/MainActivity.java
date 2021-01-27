@@ -16,14 +16,15 @@
 package com.esri.arcgisruntime.samples.servicefeaturetablenocache;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
@@ -36,22 +37,22 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
 
     // create a map with the topographic basemap
-    ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
-    //set an initial viewpoint
-    map.setInitialViewpoint(new Viewpoint(new Envelope(-1.30758164047166E7, 4014771.46954516, -1.30730056797177E7
-        , 4016869.78617381, SpatialReferences.getWebMercator())));
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
 
     // create feature layer with its service feature table
     // create the service feature table
-    ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(
-        getResources().getString(R.string.sample_service_url));
+    ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getString(R.string.sample_service_url));
 
-    //explicitly set the mode to on interaction no cache (every interaction (pan, query etc) new features will be
-      // requested
+    // explicitly set the mode to on interaction no cache (every interaction (pan, query etc) new features will be
+    // requested
     serviceFeatureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.ON_INTERACTION_NO_CACHE);
 
     // create the feature layer using the service feature table
@@ -60,9 +61,13 @@ public class MainActivity extends AppCompatActivity {
     // add the layer to the map
     map.getOperationalLayers().add(featureLayer);
 
-    // set the map to be displayed in the mapview
+    // set the map to be displayed in the map view
     mMapView.setMap(map);
 
+    // set an initial viewpoint
+    mMapView.setViewpoint(new Viewpoint(
+        new Envelope(-1.30758164047166E7, 4014771.46954516, -1.30730056797177E7, 4016869.78617381,
+            SpatialReferences.getWebMercator())));
   }
 
   @Override

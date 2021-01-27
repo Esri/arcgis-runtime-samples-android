@@ -23,7 +23,7 @@ Launch the app to view the "World Topographic Map" tile layer as the basemap.
 
 * ArcGISMap
 * ArcGISTiledLayer
-* Basemap
+* BasemapStyle
 * MapView
 
 ## About the data

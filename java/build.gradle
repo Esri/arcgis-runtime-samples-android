@@ -44,4 +44,12 @@ subprojects {
     }
 }
 
-
+task apiKey {
+    def apiKeyFile = new File("${System.properties.getProperty("user.home")}/.gradle/gradle.properties")
+    if (!apiKeyFile.exists()) {
+        print("Go to " + new URL("https://developers.arcgis.com/dashboard/") + " to get an API key.")
+        print("Add your API Key to ${System.properties.getProperty("user.home")}\\.gradle\\gradle.properties.")
+        String apiKeyFileContents = "API_KEY = "
+        apiKeyFile.write(apiKeyFileContents)
+    }
+}

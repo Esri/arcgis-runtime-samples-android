@@ -20,7 +20,7 @@ Run the sample and a map will appear. As you navigate the map, map tiles will be
 
 ## Relevant API
 
-* Basemap
+* BasemapStyle
 * WebTiledLayer
 
 ## About the data

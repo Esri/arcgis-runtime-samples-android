@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.Polyline;
@@ -41,7 +42,7 @@ import com.esri.arcgisruntime.location.RouteTrackerLocationDataSource;
 import com.esri.arcgisruntime.location.SimulatedLocationDataSource;
 import com.esri.arcgisruntime.location.SimulationParameters;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -76,10 +77,14 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
     // create a map and set it to the map view
-    ArcGISMap map = new ArcGISMap(Basemap.createStreetsVector());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
     mMapView.setMap(map);
 
     // create a graphics overlay to hold our route graphics

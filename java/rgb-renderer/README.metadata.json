@@ -31,7 +31,7 @@
         "/android/latest/sample-code/rgb-renderer.htm"
     ],
     "relevant_apis": [
-        "Basemap",
+        "BasemapStyle",
         "RGBRenderer",
         "Raster",
         "RasterLayer",

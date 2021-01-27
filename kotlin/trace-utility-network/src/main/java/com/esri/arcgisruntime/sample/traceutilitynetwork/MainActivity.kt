@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ArcGISFeature
 import com.esri.arcgisruntime.data.QueryParameters
 import com.esri.arcgisruntime.data.ServiceFeatureTable
@@ -36,7 +37,7 @@ import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
@@ -82,6 +83,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create electrical distribution line layer
     val electricalDistributionFeatureLayer =
       FeatureLayer(ServiceFeatureTable(getString(R.string.naperville_utility_network_service) + "/115")).apply {
@@ -116,7 +121,7 @@ class MainActivity : AppCompatActivity() {
     // setup the map view
     mapView.apply {
       // add a map with streets night vector basemap
-      map = ArcGISMap(Basemap.createStreetsNightVector()).apply {
+      map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT).apply {
         operationalLayers.apply {
           add(electricalDistributionFeatureLayer)
           add(electricalDeviceFeatureLayer)
