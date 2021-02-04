@@ -6,11 +6,11 @@
 
     <string-array name="basemap_types">
         <item>Streets</item>
-        <item>Navigation Vector</item>
+        <item>Navigation</item>
         <item>Topographic</item>
-        <item>Topographic Vector</item>
+        <item>Terrain</item>
         <item>Gray Canvas</item>
-        <item>Gray Canvas Vector</item>
+        <item>OSM Gray Canvas</item>
     </string-array>
 
 </resources>
