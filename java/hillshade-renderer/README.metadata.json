@@ -19,7 +19,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=134d60f50e184e8fa56365f44e5ce3fb"
     ],
     "provision_to": [
-        "/srtm.tiff"
+        "/srtm-hillshade/srtm.tiff"
     ],
     "redirect_from": [
         "/android/latest/sample-code/hillshade-renderer.htm"

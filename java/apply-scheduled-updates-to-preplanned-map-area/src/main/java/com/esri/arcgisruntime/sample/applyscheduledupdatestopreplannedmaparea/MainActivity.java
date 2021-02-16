@@ -16,14 +16,6 @@
 
 package com.esri.arcgisruntime.sample.applyscheduledupdatestopreplannedmaparea;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.concurrent.ExecutionException;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -31,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.loadable.LoadStatus;
@@ -44,6 +37,14 @@ import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapSyncTask;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapUpdatesInfo;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineUpdateAvailability;
 import com.esri.arcgisruntime.tasks.offlinemap.PreplannedScheduledUpdatesOption;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
     mApplyScheduledUpdatesButton = findViewById(R.id.applyScheduledUpdatesButton);
 
     // this is the original mmpk, not updated by the scheduled update
-    File originalMmpk = new File(getExternalFilesDir(null) + getString(R.string.canyonlands_folder));
+    File originalMmpk = new File(getExternalFilesDir(null).getPath());
     // copy of the mmpk file which will have the update applied to it
-    mCopyOfMmpk = new File(getCacheDir() + getString(R.string.canyonlands_folder));
+    mCopyOfMmpk = new File(getCacheDir().getPath());
 
     try {
       // copy the original mmpk into the cache, overwriting any copy of the mmpk already there

@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Feature layer shapefile</string>
-    <string name="shapefile_path">/Aurora_CO_shp/Public_Art.shp</string>
+    <string name="shapefile_path">/Public_Art.shp</string>
 </resources>

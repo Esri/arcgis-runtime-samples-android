@@ -22,7 +22,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=b5f977c78ec74b3a8857ca86d1d9b318"
     ],
     "provision_to": [
-        "/SA_EVI_8Day_03May20/"
+        "/SA_EVI_8Day_03May20.tif"
     ],
     "relevant_apis": [
         "",

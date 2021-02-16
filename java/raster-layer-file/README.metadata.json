@@ -19,7 +19,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=7c4c679ab06a4df19dc497f577f111bd"
     ],
     "provision_to": [
-        "/Shasta.tif"
+        "/raster-file/Shasta.tif"
     ],
     "redirect_from": [
         "/android/latest/sample-code/raster-layer-file.htm"
