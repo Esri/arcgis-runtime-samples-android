@@ -34,7 +34,7 @@ These radar images were captured by the US National Weather Service (NWS). They 
 1. Download the data from [ArcGIS Online](https://runtime.maps.arcgis.com/home/item.html?id=9465e8c02b294c69bdb42de056a23ab1).
 2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 3. Push the data into the scoped storage of the sample app:
-`adb push PacificSouthWest /Android/data/com.esri.arcgisruntime.sample.animateimageswithimageoverlay/files/ImageFrames/PacificSouthWest`
+`adb push PacificSouthWest /Android/data/com.esri.arcgisruntime.sample.animateimageswithimageoverlay/files/PacificSouthWest`
 
 ## Additional information
 

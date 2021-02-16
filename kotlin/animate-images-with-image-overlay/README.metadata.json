@@ -21,7 +21,7 @@
         "https://runtime.maps.arcgis.com/home/item.html?id=9465e8c02b294c69bdb42de056a23ab1"
     ],
     "provision_to": [
-        "/ImageFrames/"
+        "/PacificSouthWest/"
     ],
     "relevant_apis": [
         "ImageFrame",

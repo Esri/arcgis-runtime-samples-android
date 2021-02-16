@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
     // load the raster file
     val rasterFile =
-      Raster(getExternalFilesDir(null)?.path + "/SA_EVI_8Day_03May20/SA_EVI_8Day_03May20.tif")
+      Raster(getExternalFilesDir(null)?.path + "/SA_EVI_8Day_03May20.tif")
 
     // create the layer
     rasterLayer = RasterLayer(rasterFile)

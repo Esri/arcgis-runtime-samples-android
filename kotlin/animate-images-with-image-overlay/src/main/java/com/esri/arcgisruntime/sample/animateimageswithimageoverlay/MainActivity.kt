@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // get the image files from local storage as an unordered list
-    (File(getExternalFilesDir(null).toString() + "/ImageFrames/PacificSouthWest").listFiles())?.let { imageFiles ->
+    (File(getExternalFilesDir(null).toString() + "/PacificSouthWest").listFiles())?.let { imageFiles ->
       // sort the list of image files
       Arrays.sort(imageFiles)
       imageFiles.forEach { file ->
