@@ -20,8 +20,8 @@
         "https://www.arcgis.com/home/item.html?id=af74ccbb69c846ef97085e4bebd3e76a"
     ],
     "provision_to": [
-        "/ENC/",
-        "/ENC_supplemental/"
+        "/ExchangeSetwithoutUpdates/ENC_ROOT/",
+        "/hydrography/"
     ],
     "redirect_from": [
         "/android/latest/sample-code/add-enc-exchange-set.htm"
