@@ -49,7 +49,7 @@ Tap on one or more features while 'Add starting locations' or 'Add barriers' is 
 
 ## About the data
 
-The [Naperville electrical network feature service](https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer) hosted on ArcGIS Online contains a utility network used to run the subnetwork-based trace shown in this sample.
+The [Naperville electrical network](https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer) feature service hosted on ArcGIS Online contains a utility network used to run the subnetwork-based trace shown in this sample.
 
 ## Tags
 

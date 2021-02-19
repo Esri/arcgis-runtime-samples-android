@@ -28,6 +28,7 @@ import com.esri.arcgisruntime.layers.SubtypeFeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.security.UserCredential
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,99 +37,111 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-    // authentication with an API key or named user is required to access basemaps and other 
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-    // setup map with basemap and an initial viewpoint
-    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT)
-    mapView.setViewpoint(
-      Viewpoint(
-        Envelope(
-          -9812691.11079696,
-          5128687.20710657,
-          -9812377.9447607,
-          5128865.36767282,
-          SpatialReferences.getWebMercator()
-        )
-      )
-    )
-
-    // on any navigation on the map view
-    mapView.addMapScaleChangedListener {
-      currentMapScaleTextView.text =
-        getString(R.string.current_map_scale_text, mapView.mapScale.roundToInt())
-    }
-
-    // create a subtype feature layer from a service feature table
-    val subtypeFeatureLayer =
-      SubtypeFeatureLayer(ServiceFeatureTable("https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer/100"))
-    // add it to the map
-    mapView.map.operationalLayers.add(subtypeFeatureLayer)
-
-    // once the subtype feature layer is loaded
-    subtypeFeatureLayer.addDoneLoadingListener {
-      // create a subtype sublayer
-      val subtypeSublayer = subtypeFeatureLayer.getSublayerWithSubtypeName("Street Light").apply {
-        isLabelsEnabled = true
-        labelDefinitions.add(LabelDefinition.fromJson(getString(R.string.label_json)))
-      }
-
-      // show subtype sublayer when checked, hide when unchecked
-      showSubtypeSublayerCheckBox.setOnClickListener {
-        subtypeSublayer.isVisible = showSubtypeSublayerCheckBox.isChecked
-      }
-
-      // get the original renderer of the subtype sublayer
-      val originalRenderer = subtypeSublayer.renderer
-
-      // when the selected radio button changes
-      rendererRadioGroup.setOnCheckedChangeListener { _, checkedId ->
-        // set the sublayer renderer to
-        subtypeSublayer.renderer = when (checkedId) {
-          alternativeRendererButton.id -> {
-            // use an alternative renderer
-            SimpleRenderer(
-              SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.MAGENTA, 20f)
+        // setup map with basemap and an initial viewpoint
+        mapView.apply {
+            map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT)
+            setViewpoint(
+                Viewpoint(
+                    Envelope(
+                        -9812691.11079696,
+                        5128687.20710657,
+                        -9812377.9447607,
+                        5128865.36767282,
+                        SpatialReferences.getWebMercator()
+                    )
+                )
             )
-          }
-          originalRendererButton.id -> {
-            // use the original renderer
-            originalRenderer
-          }
-          else -> {
-            error("Invalid radio button.")
-          }
+
+            // on any navigation on the map view
+            addMapScaleChangedListener {
+                currentMapScaleTextView.text =
+                    getString(R.string.current_map_scale_text, mapView.mapScale.roundToInt())
+            }
         }
-      }
 
-      // set the minimum scale of the labels for the sub layer
-      setMinScaleButton.setOnClickListener {
-        // set the subtype sublayer's min scale to be the current scale of the map view
-        subtypeSublayer.minScale = mapView.mapScale
-        // update the UI to show
-        labelingScaleTextView.text =
-          getString(R.string.subtype_sublayer_scale_text, subtypeSublayer.minScale.roundToInt())
-      }
+        // create a service feature table
+        val serviceFeatureTable =
+            ServiceFeatureTable("https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer/100").apply {
+                // set user credentials to authenticate with the service
+                credential = UserCredential("viewer01", "I68VGU^nMurF")
+            }
+
+        // create a subtype feature layer from the service feature table
+        val subtypeFeatureLayer = SubtypeFeatureLayer(serviceFeatureTable)
+        // add it to the map
+        mapView.map.operationalLayers.add(subtypeFeatureLayer)
+
+        // once the subtype feature layer is loaded
+        subtypeFeatureLayer.addDoneLoadingListener {
+            // create a subtype sublayer
+            val subtypeSublayer =
+                subtypeFeatureLayer.getSublayerWithSubtypeName("Street Light").apply {
+                    isLabelsEnabled = true
+                    labelDefinitions.add(LabelDefinition.fromJson(getString(R.string.label_json)))
+                }
+
+            // show subtype sublayer when checked, hide when unchecked
+            showSubtypeSublayerCheckBox.setOnClickListener {
+                subtypeSublayer.isVisible = showSubtypeSublayerCheckBox.isChecked
+            }
+
+            // get the original renderer of the subtype sublayer
+            val originalRenderer = subtypeSublayer.renderer
+
+            // when the selected radio button changes
+            rendererRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+                // set the sublayer renderer to
+                subtypeSublayer.renderer = when (checkedId) {
+                    alternativeRendererButton.id -> {
+                        // use an alternative renderer
+                        SimpleRenderer(
+                            SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.MAGENTA, 20f)
+                        )
+                    }
+                    originalRendererButton.id -> {
+                        // use the original renderer
+                        originalRenderer
+                    }
+                    else -> {
+                        error("Invalid radio button.")
+                    }
+                }
+            }
+
+            // set the minimum scale of the labels for the sub layer
+            setMinScaleButton.setOnClickListener {
+                // set the subtype sublayer's min scale to be the current scale of the map view
+                subtypeSublayer.minScale = mapView.mapScale
+                // update the UI to show
+                labelingScaleTextView.text =
+                    getString(
+                        R.string.subtype_sublayer_scale_text,
+                        subtypeSublayer.minScale.roundToInt()
+                    )
+            }
+        }
     }
-  }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }
