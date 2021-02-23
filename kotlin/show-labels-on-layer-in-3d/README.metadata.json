@@ -1,0 +1,32 @@
+{
+    "category": "Visualization",
+    "description": "Display custom labels on a feature layer.",
+    "formal_name": "ShowLabelsOnLayer",
+    "ignore": false,
+    "images": [
+        "show-labels-on-layer.png"
+    ],
+    "keywords": [
+        "attribute",
+        "deconfliction",
+        "label",
+        "labeling",
+        "string",
+        "symbol",
+        "text",
+        "visualization"
+    ],
+    "language": "kotlin",
+    "redirect_from": [
+        "/android/latest/sample-code/show-labels-on-layer.htm"
+    ],
+    "relevant_apis": [
+        "FeatureLayer",
+        "LabelDefinition",
+        "TextSymbol"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/showlabelsonlayer/MainActivity.kt"
+    ],
+    "title": "Show labels on layer"
+}

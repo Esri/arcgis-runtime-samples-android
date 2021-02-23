@@ -15,7 +15,7 @@ ext {
     materialVersion = '1.1.0'
     recyclerViewVersion = '1.1.0'
     // plugin versions
-    gradleVersion = '3.5.3'
+    gradleVersion = '4.1.1'
     // java version
     javaVersion = 1.8
 }
