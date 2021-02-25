@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.arcgisservices.LabelDefinition
 import com.esri.arcgisruntime.layers.FeatureLayer
+import com.esri.arcgisruntime.layers.GroupLayer
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.SceneView
@@ -59,13 +60,14 @@ class MainActivity : AppCompatActivity() {
 
         val scene = ArcGISScene(portalItem)
         scene.addDoneLoadingListener {
-            Toast.makeText(applicationContext, scene.loadStatus.name, Toast.LENGTH_LONG).show()
-            (scene.operationalLayers.filter { it.name == "Gas" } as? FeatureLayer)?.let { gasFeatureLayer ->
-                gasFeatureLayer.apply {
-                    // add the label definition to the feature layer
-                    labelDefinitions.add(makeLabelDefinition())
-                    // enable layers on the feature layer
-                    isLabelsEnabled = true
+            (scene.operationalLayers.first { it.name == "Gas" } as? GroupLayer)?.let { gasGroupLayer ->
+                (gasGroupLayer.layers[0] as FeatureLayer as? FeatureLayer)?.let { gasMainFeatureLayer ->
+                    gasMainFeatureLayer.apply {
+                        // add the label definition to the feature layer
+                        labelDefinitions.add(makeLabelDefinition())
+                        // enable layers on the feature layer
+                        isLabelsEnabled = true
+                    }
                 }
             }
         }
