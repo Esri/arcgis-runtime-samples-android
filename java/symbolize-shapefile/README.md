@@ -33,7 +33,7 @@ Pan and zoom around the map to view the symbology renderer set to the feature la
 2. Extract the contents of the downloaded zip file to disk.
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 4. Push the data into the scoped storage of the sample app:
-`adb push Aurora_CO_shp /Android/data/com.esri.arcgisruntime.sample.symbolizeshapefile/files/Aurora_CO_shp`
+`adb push Aurora_CO_shp/. /Android/data/com.esri.arcgisruntime.sample.symbolizeshapefile/files`
 
 ## About the data
 
