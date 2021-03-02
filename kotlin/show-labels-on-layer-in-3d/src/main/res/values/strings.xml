@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">Show labels on layer in 3D</string>
-    <string name="congressional_districts_url">https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_116th_Congressional_Districts/FeatureServer/0</string>
-    <string name="error_message">Error loading feature layer: </string>
 </resources>
