@@ -3,19 +3,19 @@ ext {
     compileSdkVersion = 29
     minSdkVersion = 23
     targetSdkVersion = 29
-    versionCode = 110
-    versionName = '100.10'
+    versionCode = 111
+    versionName = '100.11'
     // library versions
     kotlinVersion = '1.4.20'
     appcompatVersion = '1.2.0'
     constraintLayoutVersion = '2.0.4'
     multidexVersion = '2.0.1'
-    arcgisVersion = '100.10.0'
-    arcgisToolkitVersion = '100.10.0'
+    arcgisVersion = '100.11.0-3057'
+    arcgisToolkitVersion = '100.11.0-3057'
     materialVersion = '1.1.0'
     recyclerViewVersion = '1.1.0'
     // plugin versions
-    gradleVersion = '4.1.1'
+    gradleVersion = '3.5.3'
     // java version
     javaVersion = 1.8
 }

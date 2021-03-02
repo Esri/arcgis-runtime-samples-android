@@ -1,17 +1,20 @@
 {
     "category": "Visualization",
-    "description": "Display custom labels on a feature layer.",
-    "formal_name": "ShowLabelsOnLayer",
+    "description": "Display custom labels in a 3D scene.",
+    "formal_name": "ShowLabelsOnLayerIn3D",
     "ignore": false,
     "images": [
-        "show-labels-on-layer.png"
+        "show-labels-on-layer-in-3d.png"
     ],
     "keywords": [
+        "3D",
+        "URL",
+        "arcade",
         "attribute",
-        "deconfliction",
+        "buildings",
         "label",
-        "labeling",
-        "string",
+        "model",
+        "scene",
         "symbol",
         "text",
         "visualization"
@@ -21,12 +24,15 @@
         "/android/latest/sample-code/show-labels-on-layer.htm"
     ],
     "relevant_apis": [
+        "ArcadeLabelExpression",
         "FeatureLayer",
         "LabelDefinition",
+        "Scene",
+        "SceneView",
         "TextSymbol"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/showlabelsonlayer/MainActivity.kt"
+        "/src/main/java/com/esri/arcgisruntime/showlabelsonlayerin3d/MainActivity.kt"
     ],
-    "title": "Show labels on layer"
+    "title": "Show labels on layer in 3D"
 }

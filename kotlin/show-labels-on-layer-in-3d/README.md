@@ -1,43 +1,40 @@
-# Show labels on layer
+# Show labels on layer in 3D
 
-Display custom labels on a feature layer.
+Display custom labels in a 3D scene.
 
-![Image of show labels on layer](show-labels-on-layer.png)
+![Show labels on layer in 3D](show-labels-on-layer-3d.png)
 
 ## Use case
 
-Labeling features is useful to visually display a key piece of information or attribute of a feature on a map. For example, you may want to label rivers or streets with their names. 
+Labeling features is useful to visually display information or attributes on a scene. For example, city officials or maintenance crews may want to show installation dates of features of a gas network.
 
 ## How to use the sample
 
-Pan and zoom around the United States. Labels for US highways will be shown. 
+Pan and zoom to explore the scene. Notice the labels showing installation dates of features in the 3D gas network.
 
 ## How it works
 
-1. Create a `ServiceFeatureTable` using a feature service URL.
-2. Create a `FeatureLayer` from the service feature table.
-3. Create a `TextSymbol` to use for displaying the label text.
-4. Create a JSON string for the label definition.
-    * Set the "LabelExpressionInfo.expression" key to express what the text the label should display. You can use fields of the feature by using `$feature.field_name` in the expression.
-    * To use the text symbol, set the "symbol" key to the symbol's JSON representation using `textSymbol.toJson()`.
-5. Create a label definition from the JSON using `LabelDefinition.fromJson(jsonString)`.
-6. Add the definition to the feature layer with `featureLayer.labelDefinitions.add(labelDefinition)` .
-7. Lastly, enable labels on the layer using `featureLayer.isLabelsEnabled`.
+1. Create an `Scene` from a `PortalItem`.
+2. Add the scene to an `SceneView` and load it.
+3. After loading is complete, obtain the `FeatureLayer` from one of the `GroupLayer`s in the scene's `operationalLayers`.
+4. Create an `AGSTextSymbol` to use for displaying the label text.
+5. Create an `AGSLabelDefinition` using an  `AGSArcadeLabelExpression`.
+6. Add the definition to the feature layer's `labelDefinitions` array.
+7. Set the feature layer's `labelsEnabled` property to `true`.
 
 ## Relevant API
 
+* ArcadeLabelExpression
 * FeatureLayer
 * LabelDefinition
+* Scene
+* SceneView
 * TextSymbol
 
 ## About the data
 
-This sample uses the [US Highways](http://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer/1) feature service hosted on ArcGIS Online.
-
-## Additional information
-
-Help regarding the JSON syntax for defining the `LabelDefinition.FromJson` syntax can be found in [labeling info](https://developers.arcgis.com/web-map-specification/objects/labelingInfo/) in the *Web map specification*.
+This sample shows a [New York City infrastructure](https://www.arcgis.com/home/item.html?id=850dfee7d30f4d9da0ebca34a533c169) scene hosted on ArcGIS Online.
 
 ## Tags
 
-attribute, deconfliction, label, labeling, string, symbol, text, visualization
+3D, arcade, attribute, buildings, label, model, scene, symbol, text, URL, visualization
