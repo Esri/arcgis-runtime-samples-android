@@ -17,12 +17,18 @@
         "scene",
         "symbol",
         "text",
-        "visualization"
+        "visualization",
+        "ArcGISScene",
+        "ArcadeLabelExpression",
+        "FeatureLayer",
+        "LabelDefinition",
+        "SceneView",
+        "TextSymbol"
     ],
     "language": "kotlin",
     "relevant_apis": [
-        "ArcadeLabelExpression",
         "ArcGISScene",
+        "ArcadeLabelExpression",
         "FeatureLayer",
         "LabelDefinition",
         "SceneView",
