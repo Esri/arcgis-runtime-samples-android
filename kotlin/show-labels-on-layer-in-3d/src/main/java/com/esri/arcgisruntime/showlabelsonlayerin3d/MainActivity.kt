@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Esri
+ * Copyright 2021 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.arcgisservices.LabelDefinition
 import com.esri.arcgisruntime.arcgisservices.LabelingPlacement
 import com.esri.arcgisruntime.layers.FeatureLayer
-import com.esri.arcgisruntime.layers.GroupLayer
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.labeling.ArcadeLabelExpression
 import com.esri.arcgisruntime.portal.Portal
@@ -33,8 +32,6 @@ import com.esri.arcgisruntime.symbology.TextSymbol
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
-    private val TAG = MainActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,18 +44,16 @@ class MainActivity : AppCompatActivity() {
 
         val scene = ArcGISScene(portalItem)
         scene.addDoneLoadingListener {
-            // get the group layer called "Gas"
-            (scene.operationalLayers.first { it.name == "Gas" } as? GroupLayer)?.let { gasGroupLayer ->
-                // get the feature layer in the group layer called "Gas Main"
-                (gasGroupLayer.layers.first { it.name == "Gas Main" } as FeatureLayer as? FeatureLayer)?.let { gasMainFeatureLayer ->
-                    gasMainFeatureLayer.apply {
-                        // clear the existing label definition
-                        labelDefinitions.clear()
-                        // add the label definition defined in the makeLabelDefinition function
-                        labelDefinitions.add(makeLabelDefinition())
-                        // enable labels
-                        isLabelsEnabled = true
-                    }
+            // get "Gas Main" feature layer from the "Gas" layer
+            (scene.operationalLayers.first { it.name == "Gas" }
+                .subLayerContents.first { it.name == "Gas Main" } as? FeatureLayer)?.let { gasMainFeatureLayer ->
+                gasMainFeatureLayer.apply {
+                    // clear the existing label definition
+                    labelDefinitions.clear()
+                    // add the label definition defined in the makeLabelDefinition function
+                    labelDefinitions.add(makeLabelDefinition())
+                    // enable labels
+                    isLabelsEnabled = true
                 }
             }
         }
@@ -69,10 +64,10 @@ class MainActivity : AppCompatActivity() {
     private fun makeLabelDefinition(): LabelDefinition {
         // make and stylize the text symbol
         val textSymbol = TextSymbol().apply {
-            color = Color.RED
+            color = getColor(R.color.colorLabels)
             haloColor = Color.WHITE
             haloWidth = 2f
-            size = 14f
+            size = 16f
         }
 
         // create and return a label definition
