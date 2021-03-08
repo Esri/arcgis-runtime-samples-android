@@ -87,6 +87,14 @@ class MainActivity : AppCompatActivity() {
 
         // create unique values for the renderer and construct a symbol for each feature
         symbolNames.forEach { symbolName ->
+
+            // create a placeholder legend row
+            val loadingLegendRow = layoutInflater.inflate(R.layout.legend_row, null).apply {
+                symbolTextView.text = getString(R.string.loading)
+            }
+            // add the placeholder row to the scroll view
+            scrollViewLayout.addView(loadingLegendRow)
+
             // search for each symbol in the symbol style
             val searchResult = symbolStyle.getSymbolAsync(listOf(symbolName))
             searchResult.addDoneListener {
@@ -106,19 +114,21 @@ class MainActivity : AppCompatActivity() {
                         // add each unique value to the unique value renderer
                         uniqueValueRenderer.uniqueValues.add(uniqueValue)
                     }
-
+                    // create a swatch from symbol
                     val symbolBitmapFuture = symbol.createSwatchAsync(this, Color.WHITE)
                     symbolBitmapFuture.addDoneListener {
+                        // create a legend row
                         val legendRow = layoutInflater.inflate(R.layout.legend_row, null).apply {
+                            // set the symbol to the row's image view
                             symbolImageView.setImageBitmap(symbolBitmapFuture.get())
+                            // set the symbol name to the row's text view
                             symbolTextView.text = symbolName
                         }
-                        scrollViewLayout.addView(legendRow)
+                        // remove the loading row already at this index
+                        scrollViewLayout.removeViewAt(symbolNames.indexOf(symbolName))
+                        // add the legend row at the correct index
+                        scrollViewLayout.addView(legendRow, symbolNames.indexOf(symbolName))
                     }
-
-
-                    // create and add an image view and a label for the symbol to the legend on the UI
-
                 } catch (e: Exception) {
                     val error = "Error getting symbol: " + e.message
                     Toast.makeText(this, error, Toast.LENGTH_LONG).show()
@@ -193,8 +203,8 @@ class MainActivity : AppCompatActivity() {
             onTouchListener = object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
                 // close the options sheet when the map is tapped
                 override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
-                    if (fab.isExpanded) {
-                        fab.isExpanded = false
+                    if (legendFAB.isExpanded) {
+                        legendFAB.isExpanded = false
                     }
                     return super.onTouch(view, motionEvent)
                 }
@@ -202,13 +212,28 @@ class MainActivity : AppCompatActivity() {
             // ensure the floating action button moves to be above the attribution view
             addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
                 val heightDelta = bottom - oldBottom
-                (fab.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin += heightDelta
+                (legendFAB.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin += heightDelta
             }
         }
 
         // show the options sheet when the floating action button is clicked
-        fab.setOnClickListener {
-            fab.isExpanded = !fab.isExpanded
+        legendFAB.setOnClickListener {
+            legendFAB.isExpanded = !legendFAB.isExpanded
         }
+    }
+
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
     }
 }

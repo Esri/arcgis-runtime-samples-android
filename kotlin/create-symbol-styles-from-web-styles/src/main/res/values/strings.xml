@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Create symbol styles from web styles</string>
+    <string name="legend">Legend</string>
+    <string name="loading">Loading…</string>
+    <string name="fab_content_description">Legend floating action button</string>
+    <string name="symbol_content_description">Legend symbol</string>
 </resources>

@@ -1,0 +1,32 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "Create symbol styles from a style file hosted on a portal.",
+    "formal_name": "CreateSymbolStylesFromWebStyles",
+    "ignore": false,
+    "images": [
+        "create-symbol-styles-from-web-styles.png"
+    ],
+    "keywords": [
+        "renderer",
+        "symbol",
+        "symbology",
+        "web style",
+        "FeatureLayer",
+        "Symbol",
+        "SymbolStyle",
+        "UniqueValue",
+        "UniqueValueRenderer"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "FeatureLayer",
+        "Symbol",
+        "SymbolStyle",
+        "UniqueValue",
+        "UniqueValueRenderer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/createsymbolstylesfromwebstyles/MainActivity.kt"
+    ],
+    "title": "Create symbol styles from web styles"
+}
