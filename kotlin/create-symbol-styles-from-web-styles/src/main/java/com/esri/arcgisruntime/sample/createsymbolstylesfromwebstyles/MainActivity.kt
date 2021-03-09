@@ -68,7 +68,6 @@ class MainActivity : AppCompatActivity() {
         // setup the UI for the legend
         setupUI()
 
-
         // create a list of the required symbol names from the web style
         val symbolNames = listOf(
             "atm",
@@ -194,8 +193,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Sets up UI behaviour. Closes expandable floating action button on touching the scene view.
      * Moves floating action button on attribution view expanded. Expands floating action button on
-     * tap. Defines seek bar to control image overlay opacity. Populates and defines behaviour of the
-     * FPS (frames per second) spinner.
+     * tap.
      */
     private fun setupUI() {
         mapView.apply {
