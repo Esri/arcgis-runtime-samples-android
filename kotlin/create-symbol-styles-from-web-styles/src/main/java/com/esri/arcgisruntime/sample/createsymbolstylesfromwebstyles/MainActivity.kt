@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         // create a unique value renderer
         val uniqueValueRenderer = UniqueValueRenderer().apply {
+            // add the name of a field from the feature layer data that symbols will be mapped to
             fieldNames.add("cat2")
         }
 
