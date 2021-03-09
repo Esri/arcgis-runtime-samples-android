@@ -30,7 +30,7 @@ Pan and zoom into the desired area, making sure the area is within the red bound
 
 ## Additional information
 
-ArcGIS tiled layers do not support reprojection, query, select, identify, or editing. Visit the [ArcGiS Online Developer's portal](https://developers.arcgis.com/java/latest/guide/layer-types-described.htm#ESRI_SECTION1_30E7379BE7FE4EC2AF7D8FBFEA7BB4CC) to Learn more about the characteristics of ArcGIS tiled layers.
+ArcGIS tiled layers do not support reprojection, query, select, identify, or editing. See the [Layer types](https://developers.arcgis.com/android/layers/#layer-types) discussion in the developers guide to learn more about the characteristics of ArcGIS tiled layers.
 
 ## Tags
 
