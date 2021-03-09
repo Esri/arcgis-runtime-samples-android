@@ -16,12 +16,7 @@
 
 package com.esri.arcgisruntime.sample.distancemeasurementanalysis;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +25,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.esri.arcgisruntime.UnitSystem;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -46,6 +43,10 @@ import com.esri.arcgisruntime.mapping.view.AnalysisOverlay;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.SceneView;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -64,14 +65,14 @@ public class MainActivity extends AppCompatActivity {
 
     // create a scene and add a basemap to it
     final ArcGISScene scene = new ArcGISScene();
-    scene.setBasemap(Basemap.createImagery());
+    scene.setBasemap(Basemap.createTopographic());
 
     // inflate views from layout
     mSceneView = findViewById(R.id.sceneView);
     mDirectDistance = findViewById(R.id.totalDistance);
     mHorizontalDistance = findViewById(R.id.horizontalDistance);
     mVerticalDistance = findViewById(R.id.verticalDistance);
-    Spinner mUnitSpinner = findViewById(R.id.units_spinner);
+    Spinner unitSpinner = findViewById(R.id.units_spinner);
     // set the scene to the view
     mSceneView.setScene(scene);
 
@@ -109,10 +110,10 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item,
         unitsList);
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    mUnitSpinner.setAdapter(adapter);
-    mUnitSpinner.setSelection(1);
+    unitSpinner.setAdapter(adapter);
+    unitSpinner.setSelection(1);
 
-    mUnitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    unitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
         switch (position) {
           case 0:
