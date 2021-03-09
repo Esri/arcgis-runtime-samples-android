@@ -29,7 +29,7 @@ The layer showing a subset of [restaurants in Redlands, CA](https://services2.ar
 
 ## Additional information
 
-To learn more about how styles in dictionary renderers work, visit [Display symbols from a style with a dictionary renderer](https://developers.arcgis.com/android/latest/guide/display-military-symbols-with-a-dictionary-renderer.htm). For information about creating your own custom dictionary style, see the open source [dictionary-renderer-toolkit](https://esriurl.com/DictionaryToolkit).
+For information about creating your own custom dictionary style, see the open source [dictionary renderer toolkit](https://esriurl.com/DictionaryToolkit) on *GitHub*.
 
 ## Offline data
 
