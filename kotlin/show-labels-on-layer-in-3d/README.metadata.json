@@ -35,7 +35,7 @@
         "TextSymbol"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/showlabelsonlayerin3d/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/showlabelsonlayerin3d/MainActivity.kt"
     ],
     "title": "Show labels on layer in 3D"
 }
