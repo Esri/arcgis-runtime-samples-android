@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     surface.getElevationSources().add(elevationSource);
     scene.setBaseSurface(surface);
 
-    // add a scene layer to the scene
+    // add an integrated mesh layer to the scene
     IntegratedMeshLayer gironaMeshLayer = new IntegratedMeshLayer(
         "https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/Girona_Spain/SceneServer");
     scene.getOperationalLayers().add(gironaMeshLayer);
