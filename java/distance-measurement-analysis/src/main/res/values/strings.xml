@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Distance Measurement Analysis</string>
-    <string name="elevation_service">https://scene.arcgis.com/arcgis/rest/services/BREST_DTM_1M/ImageServer</string>
-    <string name="buildings_tile">https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0</string>
     <string name="total_distance">Total Distance:</string>
     <string name="horizontal_distance">Horizontal Distance:</string>
     <string name="vertical_distance">Vertical Distance:</string>

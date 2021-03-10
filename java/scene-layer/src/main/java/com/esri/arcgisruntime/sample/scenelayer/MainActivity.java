@@ -36,9 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
     // create a scene and add a basemap to it
     ArcGISScene scene = new ArcGISScene();
-    scene.setBasemap(Basemap.createImagery());
+    scene.setBasemap(Basemap.createTopographic());
 
-    mSceneView = (SceneView) findViewById(R.id.sceneView);
+    mSceneView = findViewById(R.id.sceneView);
     mSceneView.setScene(scene);
 
     // add a scene service to the scene for viewing buildings
@@ -52,22 +52,19 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    super.onPause();
-    // pause SceneView
     mSceneView.pause();
+    super.onPause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    // resume SceneView
     mSceneView.resume();
   }
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
-    // dispose SceneView
     mSceneView.dispose();
+    super.onDestroy();
   }
 }

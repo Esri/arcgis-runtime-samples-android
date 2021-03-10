@@ -8,9 +8,15 @@
     ],
     "keywords": [
         "3D",
+        "integrated mesh",
         "scene",
         "viewshed",
-        "visibility analysis"
+        "visibility analysis",
+        "AnalysisOverlay",
+        "ArcGISSceneLayer",
+        "ArcGISTiledElevationSource",
+        "Camera",
+        "LocationViewshed"
     ],
     "language": "java",
     "redirect_from": [
