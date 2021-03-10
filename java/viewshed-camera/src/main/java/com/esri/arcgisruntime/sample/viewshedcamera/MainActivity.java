@@ -54,9 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
     // add base surface for elevation data to the scene view
     Surface surface = new Surface();
-    ArcGISTiledElevationSource brestElevationSource = new ArcGISTiledElevationSource(
+    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
         "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer");
-    surface.getElevationSources().add(brestElevationSource);
+    surface.getElevationSources().add(elevationSource);
     scene.setBaseSurface(surface);
 
     // add a scene layer to the scene

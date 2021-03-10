@@ -48,12 +48,14 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-
 public class MainActivity extends AppCompatActivity {
 
   private SceneView mSceneView;
+
   private TextView mDirectDistance;
+
   private TextView mVerticalDistance;
+
   private TextView mHorizontalDistance;
 
   private LocationDistanceMeasurement distanceMeasurement;
@@ -78,12 +80,15 @@ public class MainActivity extends AppCompatActivity {
 
     // add base surface for elevation data
     Surface surface = new Surface();
-    surface.getElevationSources().add(new ArcGISTiledElevationSource(getResources().getString(R.string.elevation_service)));
+    surface.getElevationSources().add(new ArcGISTiledElevationSource(
+        "https://scene.arcgis.com/arcgis/rest/services/BREST_DTM_1M/ImageServer"));
     scene.setBaseSurface(surface);
 
     // add building layer
-    final String buildings = getResources().getString(R.string.buildings_tile);
-    ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(buildings);
+    ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(
+        "https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0");
+    // offset for visual purposes
+    sceneLayer.setAltitudeOffset(1);
     scene.getOperationalLayers().add(sceneLayer);
 
     // create analysis overlay and add it to scene
@@ -107,14 +112,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // set up drop-down list
-    ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item,
+    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
         unitsList);
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     unitSpinner.setAdapter(adapter);
     unitSpinner.setSelection(1);
 
     unitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+      @Override public void onItemSelected(AdapterView<?> adapterView, View view, int position,
+          long l) {
         switch (position) {
           case 0:
             distanceMeasurement.setUnitSystem(UnitSystem.IMPERIAL);
@@ -123,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             distanceMeasurement.setUnitSystem(UnitSystem.METRIC);
             break;
           default:
-            Toast.makeText(MainActivity.this,"Unsupported option", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Unsupported option", Toast.LENGTH_SHORT).show();
             break;
         }
       }
@@ -140,11 +146,14 @@ public class MainActivity extends AppCompatActivity {
       Distance horizontalDistance = distanceMeasurement.getHorizontalDistance();
 
       mDirectDistance.setText(String.format("%s %s",
-          decimalFormat.format(directDistance.getValue()), directDistance.getUnit().getAbbreviation()));
+          decimalFormat.format(directDistance.getValue()),
+          directDistance.getUnit().getAbbreviation()));
       mHorizontalDistance.setText(String.format("%s %s",
-          decimalFormat.format(horizontalDistance.getValue()), horizontalDistance.getUnit().getAbbreviation()));
+          decimalFormat.format(horizontalDistance.getValue()),
+          horizontalDistance.getUnit().getAbbreviation()));
       mVerticalDistance.setText(String.format("%s %s",
-          decimalFormat.format(verticalDistance.getValue()), verticalDistance.getUnit().getAbbreviation()));
+          decimalFormat.format(verticalDistance.getValue()),
+          verticalDistance.getUnit().getAbbreviation()));
     });
 
     // add onTouchListener to set the start point and end point with a SingleTap and a DoubleTapDrag
@@ -153,7 +162,8 @@ public class MainActivity extends AppCompatActivity {
       public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
 
         // convert from screen point to location point
-        android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
+        android.graphics.Point screenPoint = new android.graphics.Point(
+            Math.round(motionEvent.getX()),
             Math.round(motionEvent.getY()));
         ListenableFuture<Point> locationPointFuture = mSceneView.screenToLocationAsync(screenPoint);
         locationPointFuture.addDoneListener(() -> {
@@ -175,7 +185,8 @@ public class MainActivity extends AppCompatActivity {
       public boolean onDoubleTouchDrag(MotionEvent motionEvent) {
 
         // convert from screen point to location point
-        android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
+        android.graphics.Point screenPoint = new android.graphics.Point(
+            Math.round(motionEvent.getX()),
             Math.round(motionEvent.getY()));
         ListenableFuture<Point> locationPointFuture = mSceneView.screenToLocationAsync(screenPoint);
         locationPointFuture.addDoneListener(() -> {
