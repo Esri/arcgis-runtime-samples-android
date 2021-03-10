@@ -1,5 +1,5 @@
 {
-    "category": "Edit and Manage Data",
+    "category": "Visualization",
     "description": "Create symbol styles from a style file hosted on a portal.",
     "formal_name": "CreateSymbolStylesFromWebStyles",
     "ignore": false,
