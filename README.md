@@ -1,5 +1,5 @@
 # Overview
-ArcGIS Runtime SDK for Android v100.10.0 samples.  The `master` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime SDK for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [git tags](https://github.com/Esri/arcgis-runtime-samples-android/tags).  Please read our [wiki](https://github.com/Esri/arcgis-runtime-samples-android/wiki) for help with working with this repository.
+ArcGIS Runtime API for Android v100.10.0 samples.  The `master` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime API for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [git tags](https://github.com/Esri/arcgis-runtime-samples-android/tags).  Please read our [wiki](https://github.com/Esri/arcgis-runtime-samples-android/wiki) for help with working with this repository.
 
 # Prerequisites
 * The samples are building with `compileSdkVersion 29`
@@ -48,7 +48,7 @@ adb -d install path/to/ArcGIS_Runtime_Sample_Viewer_Android_1009.apk
 
 ## Issues
 
-Have a question about functionality in the ArcGIS Runtime SDK for Android? Want to ask other users for development advice, discuss a workflow, ask Esri staff and other users about bugs in the SDK? Use [GeoNet](https://geonet.esri.com/community/developers/native-app-developers/arcgis-runtime-sdk-for-android) for any general ArcGIS Runtime Android SDK questions like this, so others can learn from and contribute to the discussion.
+Have a question about functionality in the ArcGIS Runtime API for Android? Want to ask other users for development advice, discuss a workflow, ask Esri staff and other users about bugs in the API? Use [GeoNet](https://community.esri.com/t5/arcgis-runtime-sdk-for-android/bd-p/arcgis-runtime-sdk-for-android-questions) for any general questions like this, so others can learn from and contribute to the discussion.
 
 Do you have something to [contribute](.github/CONTRIBUTING.md)? Send a pull request! New Samples, bug fixes and documentation fixes are welcome.
 
