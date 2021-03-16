@@ -26,13 +26,22 @@ import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Surface
 import com.esri.arcgisruntime.mapping.view.AtmosphereEffect
 import com.esri.arcgisruntime.mapping.view.Camera
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.mapping.view.SceneView
+import com.esri.arcgisruntime.sample.changeatmosphereeffect.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val sceneView: SceneView by lazy {
+    activityMainBinding.sceneView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // create a scene and add a base map to it
     val scene = ArcGISScene(Basemap.createImagery())
