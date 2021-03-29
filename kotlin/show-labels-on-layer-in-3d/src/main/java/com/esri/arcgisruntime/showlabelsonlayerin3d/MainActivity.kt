@@ -70,12 +70,13 @@ class MainActivity : AppCompatActivity() {
             size = 16f
         }
 
+        // create a label expression to show the installation date in day, month, year format
+        val labelExpression = ArcadeLabelExpression("Text(\$feature.INSTALLATIONDATE, `DD MMM YY`)")
+
         // create and return a label definition
-        return LabelDefinition().apply {
-            expression = ArcadeLabelExpression("Text(\$feature.INSTALLATIONDATE, `DD MMM YY`)")
+        return LabelDefinition(labelExpression, textSymbol).apply {
             placement = LabelingPlacement.LINE_ABOVE_ALONG
             isUseCodedValues = true
-            setTextSymbol(textSymbol)
         }
     }
 
