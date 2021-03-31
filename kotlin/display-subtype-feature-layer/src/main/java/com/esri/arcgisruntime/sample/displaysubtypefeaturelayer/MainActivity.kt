@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
         // create a service feature table
         val serviceFeatureTable =
-            ServiceFeatureTable("https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer/100").apply {
+            ServiceFeatureTable("https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer/0").apply {
                 // set user credentials to authenticate with the service
                 credential = UserCredential("viewer01", "I68VGU^nMurF")
             }
