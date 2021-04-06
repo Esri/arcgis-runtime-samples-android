@@ -13,7 +13,7 @@ import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.symbology.DictionaryRenderer
 import com.esri.arcgisruntime.symbology.DictionarySymbolStyle
 import kotlinx.android.synthetic.main.activity_main.*
-
+import kotlinx.android.synthetic.main.style_controls_layout.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,7 +26,8 @@ class MainActivity : AppCompatActivity() {
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         // create a feature layer from a service feature table
-        val featureTable = ServiceFeatureTable(getString(R.string.restaurants_url))
+        val featureTable =
+            ServiceFeatureTable("https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/Redlands_Restaurants/FeatureServer/0")
         val featureLayer = FeatureLayer(featureTable)
 
         // create a new map with a streets basemap and set it to the map view
@@ -37,28 +38,38 @@ class MainActivity : AppCompatActivity() {
             initialViewpoint = Viewpoint(34.0574, -117.1963, 5000.0)
         }
 
-        // create a dictionary symbol style from the stylx file, and create a new dictionary
-        // renderer from it
-        val dictionarySymbolStyleFromFile = DictionarySymbolStyle.createDictionarySymbolStyleFromUrl(getExternalFilesDir(null)?.path + getString(R.string.restaurant_stylx_path))
+        // create a dictionary symbol style from the stylx file
+        val dictionarySymbolStyleFromFile =
+            DictionarySymbolStyle.createFromFile(getExternalFilesDir(null)?.path + "/Restaurant.stylx")
+        // create a new dictionary renderer from the dictionary symbol style
         val dictionaryRendererFromFile = DictionaryRenderer(dictionarySymbolStyleFromFile)
 
-        // create a portal item using the portal and the item id of the dictionary web style
+        // on style file click
+        styleFileRadioButton.setOnClickListener {
+            // set the feature layer renderer to the dictionary renderer from local stylx file
+            featureLayer.renderer = dictionaryRendererFromFile
+        }
+        // set the initial state to use the dictionary renderer from local stylx file
+        styleFileRadioButton.performClick()
+
         // create a portal item using the portal and the item id of the dictionary web style
         val portal = Portal("https://arcgisruntime.maps.arcgis.com")
         val portalItem = PortalItem(portal, "adee951477014ec68d7cf0ea0579c800")
         // map the input fields in the feature layer to the dictionary symbol style's expected fields for symbols and text
-        // map the input fields in the feature layer to the dictionary symbol style's expected fields for symbols and text
         val fieldMap: HashMap<String, String> = HashMap()
         fieldMap["healthgrade"] = "Inspection"
         // create a new dictionary symbol style from the web style in the portal item
-        // create a new dictionary symbol style from the web style in the portal item
-        dictSymbStyleFromPortal = DictionarySymbolStyle(portalItem)
-        // load the symbol dictionary
-        // load the symbol dictionary
-        dictSymbStyleFromPortal.loadAsync()
+        val dictionarySymbolStyleFromPortal = DictionarySymbolStyle(portalItem)
+        // create a new dictionary renderer from the dictionary symbol style
+        val dictionaryRendererFromPortal = DictionaryRenderer(dictionarySymbolStyleFromPortal)
 
-
+        // on web style click
+        webStyleRadioButton.setOnClickListener {
+            // set the feature layer renderer to the dictionary renderer from portal
+            featureLayer.renderer = dictionaryRendererFromPortal
+        }
     }
+
 
     override fun onPause() {
         mapView.pause()

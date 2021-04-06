@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Custom dictionary style</string>
-    <string name="restaurants_url">https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/Redlands_Restaurants/FeatureServer/0</string>
-    <string name="restaurant_stylx_path">/Restaurant.stylx</string>
+    <string name="choose_style_text">Choose a dictionary symbol style:</string>
+    <string name="web_style">Web style</string>
+    <string name="style_file">Style file</string>
 </resources>
