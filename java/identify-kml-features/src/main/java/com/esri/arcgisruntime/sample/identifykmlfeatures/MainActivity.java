@@ -16,8 +16,6 @@
 
 package com.esri.arcgisruntime.sample.identifykmlfeatures;
 
-import java.util.concurrent.ExecutionException;
-
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -26,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Envelope;
@@ -40,6 +39,8 @@ import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.ogc.kml.KmlDataset;
 import com.esri.arcgisruntime.ogc.kml.KmlPlacemark;
+
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             SpatialReferences.getWebMercator()));
 
     // create a KML dataset of weather forecasts
-    KmlDataset forecastKmlDataset = new KmlDataset("https://www.wpc.ncep.noaa.gov/kml/noaa_chart/WPC_Day1_SigWx.kml");
+    KmlDataset forecastKmlDataset = new KmlDataset("https://www.wpc.ncep.noaa.gov/kml/noaa_chart/WPC_Day1_SigWx_latest.kml");
 
     // create a KML layer and add it as an operational layer
     KmlLayer forecastKmlLayer = new KmlLayer(forecastKmlDataset);
@@ -92,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
               if (geoElement instanceof KmlPlacemark) {
                 // show a callout at the placemark with custom content using the placemark's "balloon content"
                 KmlPlacemark placemark = (KmlPlacemark) geoElement;
+                // Google Earth only displays the placemarks with description or extended data. To
+                // match its behavior, add a description placeholder if the data source is empty
+                if (placemark.getDescription().isEmpty()) {
+                  placemark.setDescription("Weather condition");
+                }
                 TextView calloutContent = new TextView(getApplicationContext());
                 calloutContent.setText(Html.fromHtml(placemark.getBalloonContent()));
 
