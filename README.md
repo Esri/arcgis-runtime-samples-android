@@ -43,7 +43,7 @@ The samples in this repository can also be viewed in a single sample viewer app.
 1. Download and unzip the file to get the apk **ArcGIS_Runtime_Sample_Viewer_Android_10010.apk**.
 1. Install the APK with adb: 
 ```
-adb -d install path/to/ArcGIS_Runtime_Sample_Viewer_Android_1009.apk
+adb -d install path/to/ArcGIS_Runtime_Sample_Viewer_Android_10010.apk
 ```
 
 ## Issues
