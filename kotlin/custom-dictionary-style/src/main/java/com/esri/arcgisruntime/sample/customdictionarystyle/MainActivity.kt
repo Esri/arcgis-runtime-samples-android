@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         val featureLayer = FeatureLayer(featureTable)
 
         // create a new map with a streets basemap and set it to the map view
-        mapView.map = ArcGISMap(BasemapStyle.ARCGIS_STREETS).apply {
+        mapView.map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
             // add the the feature layer to the map's operational layers
             operationalLayers.add(featureLayer)
             // set the initial viewpoint to the Esri Redlands campus
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         // create a new dictionary symbol style from the web style in the portal item
         val dictionarySymbolStyleFromPortal = DictionarySymbolStyle(portalItem)
         // create a new dictionary renderer from the dictionary symbol style
-        val dictionaryRendererFromPortal = DictionaryRenderer(dictionarySymbolStyleFromPortal)
+        val dictionaryRendererFromPortal = DictionaryRenderer(dictionarySymbolStyleFromPortal, fieldMap, HashMap())
 
         // on web style click
         webStyleRadioButton.setOnClickListener {
@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity() {
             featureLayer.renderer = dictionaryRendererFromPortal
         }
     }
-
 
     override fun onPause() {
         mapView.pause()
