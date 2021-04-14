@@ -42,6 +42,7 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.security.UserCredential
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.UniqueValueRenderer
@@ -59,12 +60,14 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-  private val TAG: String = MainActivity::class.java.simpleName
-
   private var mediumVoltageTier: UtilityTier? = null
   private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
   private val utilityNetwork: UtilityNetwork by lazy {
-    UtilityNetwork(getString(R.string.naperville_utility_network_service), mapView.map)
+    UtilityNetwork(getString(R.string.naperville_utility_network_service), mapView.map).apply {
+      // define user credentials for authenticating with the service
+      // NOTE: a licensed user is required to perform utility network operations
+      credential = UserCredential("viewer01", "I68VGU^nMurF")
+    }
   }
 
   // create lists for starting locations and barriers
@@ -89,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 
     // create electrical distribution line layer
     val electricalDistributionFeatureLayer =
-      FeatureLayer(ServiceFeatureTable(getString(R.string.naperville_utility_network_service) + "/115")).apply {
+      FeatureLayer(ServiceFeatureTable(getString(R.string.naperville_utility_network_service) + "/3")).apply {
         // define a solid line for medium voltage lines
         val mediumVoltageValue = UniqueValueRenderer.UniqueValue(
           "N/A",
@@ -116,7 +119,7 @@ class MainActivity : AppCompatActivity() {
 
     // create electrical device layer
     val electricalDeviceFeatureLayer =
-      FeatureLayer(ServiceFeatureTable(getString(R.string.naperville_utility_network_service) + "/100"))
+      FeatureLayer(ServiceFeatureTable(getString(R.string.naperville_utility_network_service) + "/0"))
 
     // setup the map view
     mapView.apply {

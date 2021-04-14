@@ -28,8 +28,8 @@ The sample will start with a viewshed created from the initial camera location, 
 
 ## About the data
 
-The scene shows a [buildings layer in Brest, France](https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0) with a [local elevation source image service](https://scene.arcgis.com/arcgis/rest/services/BREST_DTM_1M/ImageServer) both hosted on ArcGIS Online.
+The scene shows an integrated mesh layer of [Girona, Spain](https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/Girona_Spain/SceneServer) with the [World Elevation source image service](https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer) both hosted on ArcGIS Online.
 
 ## Tags
 
-3D, scene, viewshed, visibility analysis
+3D, integrated mesh, scene, viewshed, visibility analysis

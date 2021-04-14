@@ -26,25 +26,9 @@ Check the checkbox to order the list of transformations by suitability for the m
 * GeometryEngine.Project
 * TransformationCatalog
 
-## Offline data
-
-To download projection engine data to your device:
-1. Log in to the ArcGIS for Developers site using your Developer account.
-2. In the Dashboard page, click 'Download APIs and SDKs'.
-3. Click the download button next to 'ArcGIS_Runtime_Coordinate_System_Data' to download projection engine data to your computer.
-4. Unzip the downloaded data on your computer.
-3. Create an `ArcGIS/samples/PEData` directory on your device and copy the files to this directory.
-
-You can use the [Android Debug Bridge (adb)](https://developer.android.com/guide/developing/tools/adb.html) tool found in **<sdk-dir>/platform-tools** to copy files to your device:
-1. Open a command prompt on your computer.
-2. Execute the `adb push` command to create the `ArcGIS/samples/PEData` directory and copy the files from your computer to the device:
-	* `adb push <path to PEData directory on your computer> /sdcard/ArcGIS/samples/PEData`
-
-You should now have the following directory containing projection engine data files on your target device:
-  * `/sdcard/ArcGIS/samples/PEData`
 ## Offline Data
 
-1. To use the Projection Engine in ArcGIS Runtime, extra resources are required. Download the data [Projection Engine Data](https://developers.arcgis.com/downloads/data) from ArcGIS for Developers.
+1. To use the Projection Engine in ArcGIS Runtime, extra resources are required. Download the data [Projection Engine Data](https://developers.arcgis.com/downloads/#pedata) from ArcGIS for Developers.
 2. Extract the contents of the downloaded zip file to disk.
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 2.
 4. Push the data into the scoped storage of the sample app:

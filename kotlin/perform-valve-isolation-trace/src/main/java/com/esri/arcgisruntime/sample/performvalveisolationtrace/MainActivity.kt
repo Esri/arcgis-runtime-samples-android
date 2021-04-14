@@ -40,6 +40,7 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.security.UserCredential
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
 import com.esri.arcgisruntime.utilitynetworks.UtilityCategory
@@ -133,10 +134,13 @@ class MainActivity : AppCompatActivity() {
    * Create and load a utility network from the string resource url and initialize a starting point
    * from it.
    */
-  private fun createUtilityNetwork(
-  ) {
+  private fun createUtilityNetwork() {
     // create a utility network from the url and load it
-    utilityNetwork = UtilityNetwork(getString(R.string.utility_network_url), mapView.map)
+    utilityNetwork = UtilityNetwork(getString(R.string.utility_network_url), mapView.map).apply {
+      // set user credentials to authenticate with the service
+      // NOTE: a licensed user is required to perform utility network operations
+      credential = UserCredential("viewer01", "I68VGU^nMurF")
+    }
     utilityNetwork.loadAsync()
     utilityNetwork.addDoneLoadingListener {
       if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
