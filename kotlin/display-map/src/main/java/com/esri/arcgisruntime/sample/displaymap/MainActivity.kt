@@ -51,17 +51,12 @@ class MainActivity : AppCompatActivity() {
     //[DocRef: END]
 
     mapView.setViewpoint(Viewpoint(34.056295, -117.195800, 10000.0))
-
-    map.addDoneLoadingListener {
-      map.loadError
-    }
-
   }
 
   //[DocRef: Name=Pause and resume-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
   override fun onPause() {
-    super.onPause()
     mapView.pause()
+    super.onPause()
   }
 
   override fun onResume() {
@@ -70,8 +65,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onDestroy() {
-    super.onDestroy()
     mapView.dispose()
+    super.onDestroy()
   }
   //[DocRef: END]
 }
