@@ -198,9 +198,10 @@ class MainActivity : AppCompatActivity() {
                 reportError("Error loading utility network: " + utilityNetwork.loadError.cause?.message)
             }
         }
+        utilityNetwork.loadAsync()
 
         // add all utility trace types to the trace type spinner as strings
-        traceTypeSpinner.adapter = ArrayAdapter<String>(
+        traceTypeSpinner.adapter = ArrayAdapter(
             applicationContext,
             android.R.layout.simple_spinner_item,
             arrayOf("CONNECTED", "SUBNETWORK", "UPSTREAM", "DOWNSTREAM")
