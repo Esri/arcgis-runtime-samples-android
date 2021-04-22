@@ -128,9 +128,6 @@ class MainActivity : AppCompatActivity() {
                         "",
                         SimpleLineSymbol()
                     )
-                addDoneLoadingListener {
-                    this.loadStatus
-                }
             }
 
         // create electrical device table from a service
@@ -201,7 +198,6 @@ class MainActivity : AppCompatActivity() {
                 reportError("Error loading utility network: " + utilityNetwork.loadError.cause?.message)
             }
         }
-        utilityNetwork.loadAsync()
 
         // add all utility trace types to the trace type spinner as strings
         traceTypeSpinner.adapter = ArrayAdapter<String>(
@@ -209,8 +205,6 @@ class MainActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_item,
             arrayOf("CONNECTED", "SUBNETWORK", "UPSTREAM", "DOWNSTREAM")
         )
-
-
     }
 
     /**
