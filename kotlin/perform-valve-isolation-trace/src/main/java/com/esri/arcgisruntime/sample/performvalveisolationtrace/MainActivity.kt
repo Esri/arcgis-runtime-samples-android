@@ -40,6 +40,9 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.security.AuthenticationChallengeHandler
+import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
+import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.UserCredential
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
@@ -84,10 +87,18 @@ class MainActivity : AppCompatActivity() {
     // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
+    // set user credentials to authenticate with the service
+    // NOTE: a licensed user is required to perform utility network operations
+    val userCredential = UserCredential("viewer01", "I68VGU^nMurF")
+
     // load the utility network data from the feature service and create feature layers
-    val distributionLineFeatureTable = ServiceFeatureTable(getString(R.string.distribution_line_url))
+    val distributionLineFeatureTable = ServiceFeatureTable(getString(R.string.distribution_line_url)).apply {
+      credential = userCredential
+    }
     val distributionLineLayer = FeatureLayer(distributionLineFeatureTable)
-    val deviceFeatureTable = ServiceFeatureTable(getString(R.string.device_url))
+    val deviceFeatureTable = ServiceFeatureTable(getString(R.string.device_url)).apply {
+      credential = userCredential
+    }
     val deviceLayer = FeatureLayer(deviceFeatureTable)
 
     // create a map with the utility network distribution line and device layers
@@ -96,7 +107,7 @@ class MainActivity : AppCompatActivity() {
       operationalLayers.addAll(listOf(distributionLineLayer, deviceLayer))
       // create and load the utility network
       addDoneLoadingListener {
-        createUtilityNetwork()
+        createUtilityNetwork(userCredential)
       }
     }
 
@@ -134,12 +145,10 @@ class MainActivity : AppCompatActivity() {
    * Create and load a utility network from the string resource url and initialize a starting point
    * from it.
    */
-  private fun createUtilityNetwork() {
+  private fun createUtilityNetwork(userCredential: UserCredential) {
     // create a utility network from the url and load it
     utilityNetwork = UtilityNetwork(getString(R.string.utility_network_url), mapView.map).apply {
-      // set user credentials to authenticate with the service
-      // NOTE: a licensed user is required to perform utility network operations
-      credential = UserCredential("viewer01", "I68VGU^nMurF")
+      credential = userCredential
     }
     utilityNetwork.loadAsync()
     utilityNetwork.addDoneLoadingListener {

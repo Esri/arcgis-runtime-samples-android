@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Trace utility network</string>
-    <string name="naperville_utility_network_service">https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleGas/FeatureServer</string>
     <string name="failed_message">Trace failed.</string>
     <string name="find_connected_features_message">Finding connected features…</string>
     <string name="fraction_message">Fraction along edge: %f</string>
