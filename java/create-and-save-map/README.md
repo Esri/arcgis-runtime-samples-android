@@ -23,6 +23,10 @@ Use the navigation drawer to select the basemap and layers you'd like to add to 
 * ArcGISMap
 * Portal
 
+## Additional information
+
+In this sample, API keys are set directly on the `Basemap` rather than on the `ArcGISRuntimeEnvironment`. This is done to allow the developer to provide the app with access to a range of `BasemapStyle`s, but also allow the user to save the final map to their own ArcGISOnline account.
+
 ## Tags
 
 ArcGIS Online, ArcGIS Pro, portal, publish, share, web map

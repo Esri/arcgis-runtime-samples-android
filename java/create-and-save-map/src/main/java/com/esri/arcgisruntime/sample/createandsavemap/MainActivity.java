@@ -16,8 +16,6 @@
 
 package com.esri.arcgisruntime.sample.createandsavemap;
 
-import java.util.Arrays;
-
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -37,7 +35,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
+
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
@@ -53,17 +51,26 @@ import com.esri.arcgisruntime.security.AuthenticationChallengeHandler;
 import com.esri.arcgisruntime.security.AuthenticationManager;
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler;
 
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private static final int MIN_SCALE = 60000000;
+
   private MapView mMapView;
+
   private DrawerLayout mDrawerLayout;
+
   private ListView mBasemapListView;
+
   private ListView mLayerListView;
+
   private CharSequence mDrawerTitle;
+
   private ActionBarDrawerToggle mDrawerToggle;
+
   // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private Portal mPortal;
 
@@ -71,10 +78,6 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_drawer);
-
-    // authentication with an API key or named user is required to access basemaps and other
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
     // set up an authentication handler to take credentials for access to arcgis.com
     AuthenticationChallengeHandler handler = new DefaultAuthenticationChallengeHandler(this);
@@ -84,7 +87,10 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
     // create a map with Topographic Basemap
-    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
+    Basemap streetsBasemap = new Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
+    streetsBasemap.setApiKey(BuildConfig.API_KEY);
+
+    ArcGISMap map = new ArcGISMap(streetsBasemap);
     // set the map to be displayed in this view
     mMapView.setMap(map);
     mMapView.setViewpoint(new Viewpoint(48.354388, -99.998245, 100000));
@@ -94,8 +100,10 @@ public class MainActivity extends AppCompatActivity {
     mLayerListView = findViewById(R.id.layer_list);
     mDrawerLayout = findViewById(R.id.drawer_layout);
 
-    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(getApplication().getString(R.string.world_time_zones));
-    ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer(getApplication().getString(R.string.us_census));
+    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(
+        "https://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer");
+    ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer(
+        "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer");
     // setting the scales at which the map image layer layer can be viewed
     mapImageLayer.setMinScale(MIN_SCALE);
     mapImageLayer.setMaxScale(MIN_SCALE / 100);
@@ -103,13 +111,15 @@ public class MainActivity extends AppCompatActivity {
     // create base map array and set it to a list view adapter
     String[] basemapTiles = getResources().getStringArray(R.array.basemap_array);
     mBasemapListView
-        .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, basemapTiles));
+        .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice,
+            basemapTiles));
     mBasemapListView.setItemChecked(0, true);
 
     // create operation layers array and set it to a list view adapter
     String[] operationalLayerTiles = getResources().getStringArray(R.array.operational_layer_array);
     mLayerListView
-        .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, operationalLayerTiles));
+        .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice,
+            operationalLayerTiles));
 
     // creates a drawer to handle display of layers on the map
     createDrawer(tiledLayer, mapImageLayer);
@@ -128,7 +138,8 @@ public class MainActivity extends AppCompatActivity {
 
     ArcGISMap map = mMapView.getMap();
     // set actions for drawer state - close/open
-    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name) {
+    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name,
+        R.string.app_name) {
       // if the drawer is closed, get the checked items from LayerListView and add the checked layer
       @Override
       public void onDrawerClosed(View view) {
@@ -170,16 +181,24 @@ public class MainActivity extends AppCompatActivity {
       mMapView.getMap().getOperationalLayers().clear();
       switch (position) {
         case 0:
-          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_STREETS));
+          Basemap streetsBasemap = new Basemap(BasemapStyle.ARCGIS_STREETS);
+          streetsBasemap.setApiKey(BuildConfig.API_KEY);
+          mMapView.getMap().setBasemap(streetsBasemap);
           break;
         case 1:
-          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_IMAGERY));
+          Basemap imageryBasemap = new Basemap(BasemapStyle.ARCGIS_IMAGERY);
+          imageryBasemap.setApiKey(BuildConfig.API_KEY);
+          mMapView.getMap().setBasemap(imageryBasemap);
           break;
         case 2:
-          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC));
+          Basemap topographicBasemap = new Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
+          topographicBasemap.setApiKey(BuildConfig.API_KEY);
+          mMapView.getMap().setBasemap(topographicBasemap);
           break;
         case 3:
-          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_OCEANS));
+          Basemap oceansBasemap = new Basemap(BasemapStyle.ARCGIS_OCEANS);
+          oceansBasemap.setApiKey(BuildConfig.API_KEY);
+          mMapView.getMap().setBasemap(oceansBasemap);
           break;
         default:
           Toast.makeText(this, R.string.unsupported_option, Toast.LENGTH_SHORT).show();
@@ -244,7 +263,8 @@ public class MainActivity extends AppCompatActivity {
         // call save as async and pass portal info, as well as details of the map including title, tags and description
         ListenableFuture<PortalItem> saveAsAsyncFuture = mMapView.getMap()
             .saveAsAsync(mPortal, null, title, tags, description, null, true);
-        saveAsAsyncFuture.addDoneListener(() -> Toast.makeText(this, "Map saved to portal!", Toast.LENGTH_LONG).show());
+        saveAsAsyncFuture.addDoneListener(
+            () -> Toast.makeText(this, "Map saved to portal!", Toast.LENGTH_LONG).show());
       } else {
         String error = "Error loading portal: " + mPortal.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
