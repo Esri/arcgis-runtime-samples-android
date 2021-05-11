@@ -58,19 +58,12 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private static final int MIN_SCALE = 60000000;
-
   private MapView mMapView;
-
   private DrawerLayout mDrawerLayout;
-
   private ListView mBasemapListView;
-
   private ListView mLayerListView;
-
   private CharSequence mDrawerTitle;
-
   private ActionBarDrawerToggle mDrawerToggle;
-
   // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private Portal mPortal;
 
