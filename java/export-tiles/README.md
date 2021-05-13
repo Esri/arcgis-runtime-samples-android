@@ -19,7 +19,7 @@ Pan and zoom into the desired area, making sure the area is within the red bound
 3. Create default `ExportTileCacheParameters` for the task, specifying extent, minimum scale and maximum scale.
 4. Use the parameters and a path to create an `ExportTileCacheJob` from the task.
 5. Start the job, and when it completes successfully, get the resulting `TileCache`.
-5. Use the tile cache to create an `ArcGISTiledLayer`, and display it in the map.
+6. Use the tile cache to create an `ArcGISTiledLayer`, and display it in the map.
 
 ## Relevant API
 
