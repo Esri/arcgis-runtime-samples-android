@@ -25,7 +25,7 @@ Use the navigation drawer to select the basemap and layers you'd like to add to 
 
 ## Additional information
 
-In this sample, API keys are set directly on the `Basemap` rather than on the `ArcGISRuntimeEnvironment`. This is done to allow the developer to provide the app with access to a range of `BasemapStyle`s, but also allow the user to save the final map to their own ArcGISOnline account.
+In this sample, an API key is set directly on `Basemap` objects rather than on the whole app using the `ArcGISRuntimeEnvironment` class. This is useful in a scenario where an individual developer is part of an organisation within ArcGIS Online that uses an API key to access a range of `BasemapStyle`s. In the case that an individual member of the organisation wants to save a map locally to their account, and not that of the organisation, they can set the organization's API key on the basemap, and log in to their own account when challenged.  The individual can then save the final map to their own ArcGIS Online account.
 
 ## Tags
 
