@@ -5,9 +5,6 @@
     <string name="title">Title</string>
     <string name="tags">Tags</string>
 
-    <!-- Services -->
-    <string name="world_time_zones">https://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer</string>
-    <string name="us_census">https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer</string>
     <!-- App messages -->
     <string name="description">Description</string>
     <string name="unsupported_option">Unsupported option</string>
