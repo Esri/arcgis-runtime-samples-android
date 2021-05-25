@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -9,115 +9,37 @@
 
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/change_style_tv"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="35dp"
-        android:clickable="true"
-        android:contentDescription="Change style"
-        android:focusable="true"
-        android:tint="@android:color/white"
-        app:backgroundTint="@color/colorPrimary"
-        app:borderWidth="0dp"
-        app:elevation="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_baseline_edit_24" />
-
-
-    <com.google.android.material.circularreveal.CircularRevealFrameLayout
+    <TextView
+        android:id="@+id/change_style_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_margin="32dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="invisible"
-        app:layout_behavior="com.google.android.material.transformation.FabTransformationSheetBehavior"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:text="@string/change_style"
+        android:padding="5dp"
+        app:layout_constraintBottom_toTopOf="@id/spinner"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="10dp"
+        android:spinnerMode="dialog"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/seekBarContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/background_light"
-            android:padding="8dp">
-
-            <SeekBar
-                android:id="@+id/seekBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:max="1439"
-                android:progress="720"
-                app:layout_constraintBottom_toTopOf="@id/dateTextView"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:id="@+id/dateTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:id="@+id/middayText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="midday"
-                app:layout_constraintBottom_toTopOf="@id/seekBar"
-                app:layout_constraintEnd_toEndOf="@id/seekBar"
-                app:layout_constraintStart_toStartOf="@id/seekBar" />
-
-            <TextView
-                android:id="@+id/sixAMText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="lol"
-                app:layout_constraintBottom_toTopOf="@id/seekBar"
-                app:layout_constraintEnd_toStartOf="@id/middayText"
-                app:layout_constraintStart_toStartOf="@id/seekBar" />
-
-            <TextView
-                android:id="@+id/sixPMText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="lol"
-                app:layout_constraintBottom_toTopOf="@id/seekBar"
-                app:layout_constraintEnd_toEndOf="@id/seekBar"
-                app:layout_constraintStart_toEndOf="@id/middayText" />
-
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:layout_constraintBottom_toTopOf="@id/middayText"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.circularreveal.CircularRevealFrameLayout>
-
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
