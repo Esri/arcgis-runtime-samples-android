@@ -1,4 +1,4 @@
-package com.example.vector_tiled_layer
+package com.esri.arcgisruntime.sample.vectortiledlayercustomstyle
 
 import android.content.Context
 import android.os.Bundle
@@ -23,7 +23,7 @@ import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.tasks.vectortilecache.ExportVectorTilesTask
-import com.example.vector_tiled_layer.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.vectortiledlayercustomstyle.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
 //[DocRef: END]
@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                 val viewpoint = Viewpoint(Point(-100.01766, 37.76528, SpatialReferences.getWgs84()),10000.0)
                 setMap(layer,viewpoint)
             }else{
-                Toast.makeText(this, "Error reading cache.", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Error reading cache: " + exportVectorTilesJob.error.message, Toast.LENGTH_LONG).show()
             }
         }
         exportVectorTilesJob.start()
@@ -133,14 +133,10 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setMap(layer: ArcGISVectorTiledLayer, viewpoint: Viewpoint){
         //Reset the map to release resources
-        mapView.graphicsOverlays.clear()
         mapView.map = null
-        // Assign a new map created from the base layer.
 
-        //TODO: This sometimes throws an error: Object is already owned
-        // Online resource didn't help resolve issue:
-        //https://community.esri.com/t5/arcgis-runtime-sdk-for-net/esri-arcgisruntime-arcgisruntimeexception-object-already-owned/td-p/385354
-        val basemap = Basemap(layer)
+        // Assign a new map created from the base layer.
+        val basemap = Basemap(layer.copy())
         val map = ArcGISMap(basemap)
         mapView.map = map
         //Set viewpoint without animation.
