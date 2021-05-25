@@ -24,6 +24,10 @@ For simplicity, the sample comes loaded with a set of suggested addresses. Choos
 * GeocodeResult
 * LocatorTask
 
+## About the data
+
+This sample uses the [World Geocoding Service](https://www.arcgis.com/home/item.html?id=305f2e55e67f4389bef269669fc2e284).
+
 ## Tags
 
 address, geocode, locator, search

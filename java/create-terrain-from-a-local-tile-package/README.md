@@ -23,10 +23,6 @@ When loaded, the sample will show a scene with a terrain surface applied. Pan an
 * ArcGISTiledElevationSource
 * Surface
 
-## Additional information
-
-The tile package must be a LERC (limited error raster compression) encoded TPK. Details can be found in the topic [Share a tile package](https://pro.arcgis.com/en/pro-app/help/sharing/overview/tile-package.htm) in the *ArcGIS Pro* documentation.
-
 ## Offline data
 
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=cce37043eb0440c7a5c109cf8aad5500).
@@ -39,6 +35,10 @@ The tile package must be a LERC (limited error raster compression) encoded TPK. 
 Link | Local Location
 ---------|-------|
 |[Monterey Elevation TPK](https://arcgisruntime.maps.arcgis.com/home/item.html?id=cce37043eb0440c7a5c109cf8aad5500)|  /Android/data/com.esri.arcgisruntime.sample.createterrainfromalocaltilepackage/files/MontereyElevation.tpk |
+
+## Additional information
+
+The tile package must be a LERC (limited error raster compression) encoded TPK. Details can be found in the topic [Share a tile package](https://pro.arcgis.com/en/pro-app/help/sharing/overview/tile-package.htm) in the *ArcGIS Pro* documentation.
 
 ## Tags
 
