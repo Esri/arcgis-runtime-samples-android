@@ -111,12 +111,19 @@ class MainActivity : AppCompatActivity() {
         // Retrieve the layer from online
         val portalItem = PortalItem(Portal("https://www.arcgis.com"), itemID)
         val task = ExportVectorTilesTask(portalItem)
-        val file = File(getExternalFilesDir(null)?.path + "/style")
+
+        // Removing the cached files, avoids the error:
+        // Item resource cache directory path is not an empty directory.
+        // Hence, why we need to clear the style cached files below
+        //val file = File(getExternalFilesDir(null)?.path + "/" + portalItem.itemId)
         //file.deleteRecursively()
-        val exportVectorTilesJob = task.exportStyleResourceCache(getExternalFilesDir(null)?.path +"/style")
+
+        val exportVectorTilesJob = task.exportStyleResourceCache(getExternalFilesDir(null)?.path + "/"+portalItem.itemId)
         exportVectorTilesJob.addJobDoneListener {
             if (exportVectorTilesJob.status == Job.Status.SUCCEEDED) {
                 val result = exportVectorTilesJob.result
+
+                //Loads the vector tile layer cache.
                 val vectorTileCache = VectorTileCache(getExternalFilesDir(null)?.path + "/dodge_city.vtpk")
                 vectorTileCache.loadAsync()
                 vectorTileCache.addDoneLoadingListener{
@@ -125,8 +132,9 @@ class MainActivity : AppCompatActivity() {
                     else
                         Log.d("VectorTileCache:" , "Loaded successfully")
                 }
-                val layer = ArcGISVectorTiledLayer(vectorTileCache, result.itemResourceCache)
 
+                // Loads the layer based on the vector tile cache and the style resource.
+                val layer = ArcGISVectorTiledLayer(vectorTileCache, result.itemResourceCache)
                 layer.addDoneLoadingListener {
                     if (layer.loadError != null)
                         Log.e("VectorTiledLayer: ", layer.loadError.toString())
@@ -138,11 +146,7 @@ class MainActivity : AppCompatActivity() {
                 val viewpoint = Viewpoint(Point(-100.01766, 37.76528, SpatialReferences.getWgs84()), 10000.0)
                 setMap(layer, viewpoint)
             } else {
-                Toast.makeText(
-                    this,
-                    "Error reading cache: " + exportVectorTilesJob.error.message,
-                    Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(this, "Error reading cache: " + exportVectorTilesJob.error.message, Toast.LENGTH_LONG).show()
             }
         }
         exportVectorTilesJob.start()
@@ -155,9 +159,10 @@ class MainActivity : AppCompatActivity() {
     private fun setMap(layer: ArcGISVectorTiledLayer, viewpoint: Viewpoint){
         //Reset the map to release resources
         mapView.map = null
+        //mapView.map.basemap = null
 
         // Assign a new map created from the base layer.
-        val basemap = Basemap(layer)
+        val basemap = Basemap(layer.copy())
         val map = ArcGISMap(basemap)
         mapView.map = map
         //Set viewpoint without animation.
