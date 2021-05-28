@@ -2,6 +2,7 @@ package com.esri.arcgisruntime.sample.vectortiledlayercustomstyle
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.tasks.vectortilecache.ExportVectorTilesTask
 import com.esri.arcgisruntime.sample.vectortiledlayercustomstyle.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 
 //[DocRef: END]
 
@@ -107,21 +109,40 @@ class MainActivity : AppCompatActivity() {
     private fun loadLayerWithOfflineCustomStyle(itemID: String){
 
         // Retrieve the layer from online
-        val portalItem = PortalItem(Portal("https://www.arcgis.com"),itemID)
+        val portalItem = PortalItem(Portal("https://www.arcgis.com"), itemID)
         val task = ExportVectorTilesTask(portalItem)
-        val exportVectorTilesJob = task.exportStyleResourceCache(cacheDir.path)
+        val file = File(getExternalFilesDir(null)?.path + "/style")
+        //file.deleteRecursively()
+        val exportVectorTilesJob = task.exportStyleResourceCache(getExternalFilesDir(null)?.path +"/style")
         exportVectorTilesJob.addJobDoneListener {
-            //TODO: This job ends with an error.
-            if(exportVectorTilesJob.status == Job.Status.SUCCEEDED){
+            if (exportVectorTilesJob.status == Job.Status.SUCCEEDED) {
                 val result = exportVectorTilesJob.result
-                val vectorTileCache = VectorTileCache("dodge_city")
-                val layer = ArcGISVectorTiledLayer(vectorTileCache,result.itemResourceCache)
+                val vectorTileCache = VectorTileCache(getExternalFilesDir(null)?.path + "/dodge_city.vtpk")
+                vectorTileCache.loadAsync()
+                vectorTileCache.addDoneLoadingListener{
+                    if(vectorTileCache.loadError != null)
+                        Log.e("VectorTileCache: " , vectorTileCache.loadError.message.toString())
+                    else
+                        Log.d("VectorTileCache:" , "Loaded successfully")
+                }
+                val layer = ArcGISVectorTiledLayer(vectorTileCache, result.itemResourceCache)
+
+                layer.addDoneLoadingListener {
+                    if (layer.loadError != null)
+                        Log.e("VectorTiledLayer: ", layer.loadError.toString())
+                    else
+                        Log.d("VectorTiledLayer:" , "Loaded successfully")
+                }
 
                 // OfflineItemIDs uses WGS-84 as a spatial ref
-                val viewpoint = Viewpoint(Point(-100.01766, 37.76528, SpatialReferences.getWgs84()),10000.0)
-                setMap(layer,viewpoint)
-            }else{
-                Toast.makeText(this, "Error reading cache: " + exportVectorTilesJob.error.message, Toast.LENGTH_LONG).show()
+                val viewpoint = Viewpoint(Point(-100.01766, 37.76528, SpatialReferences.getWgs84()), 10000.0)
+                setMap(layer, viewpoint)
+            } else {
+                Toast.makeText(
+                    this,
+                    "Error reading cache: " + exportVectorTilesJob.error.message,
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
         exportVectorTilesJob.start()
@@ -136,7 +157,7 @@ class MainActivity : AppCompatActivity() {
         mapView.map = null
 
         // Assign a new map created from the base layer.
-        val basemap = Basemap(layer.copy())
+        val basemap = Basemap(layer)
         val map = ArcGISMap(basemap)
         mapView.map = map
         //Set viewpoint without animation.
