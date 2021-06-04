@@ -17,8 +17,10 @@ import com.esri.arcgisruntime.data.VectorTileCache
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer
+import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.ItemResourceCache
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
@@ -26,7 +28,6 @@ import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.tasks.vectortilecache.ExportVectorTilesTask
 import com.esri.arcgisruntime.sample.vectortiledlayercustomstyle.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.File
 
 //[DocRef: END]
 
@@ -96,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             }
             else -> {
                 // Load the layer using offline Vector Tiles
-                loadLayerWithOfflineCustomStyle(itemID)
+                checkOfflineItemCache(itemID)
                 return
             }
         }
@@ -106,35 +107,56 @@ class MainActivity : AppCompatActivity() {
         setMap(vectorTiledLayer,viewpoint)
     }
 
+    /**
+     *  Checks local cache for local cache files.
+     *  If not it calls loadLayerWithOfflineCustomStyle() to retrieve the cache files.
+     */
+    private fun checkOfflineItemCache(itemID: String) {
+
+        val portalItem = PortalItem(Portal("https://www.arcgis.com"), itemID)
+        val itemResourceCache = ItemResourceCache(getExternalFilesDir(null)?.path + "/" + portalItem.itemId)
+        itemResourceCache.addDoneLoadingListener{
+            if(itemResourceCache.loadStatus == LoadStatus.LOADED){
+                setResourceAndVectorTileCache(itemResourceCache)
+            }
+            else{
+                loadLayerWithOfflineCustomStyle(itemID)
+            }
+        }
+        itemResourceCache.loadAsync()
+    }
+
+    /**
+     * Retrieves the style resource files and caches it to the local device.
+     */
     private fun loadLayerWithOfflineCustomStyle(itemID: String){
 
         // Retrieve the layer from online
         val portalItem = PortalItem(Portal("https://www.arcgis.com"), itemID)
         val task = ExportVectorTilesTask(portalItem)
 
-        // Removing the cached files, avoids the error:
-        // Item resource cache directory path is not an empty directory.
-        // Hence, why we need to clear the style cached files below
-        //val file = File(getExternalFilesDir(null)?.path + "/" + portalItem.itemId)
-        //file.deleteRecursively()
-
         val exportVectorTilesJob = task.exportStyleResourceCache(getExternalFilesDir(null)?.path + "/"+portalItem.itemId)
         exportVectorTilesJob.addJobDoneListener {
             if (exportVectorTilesJob.status == Job.Status.SUCCEEDED) {
-                val result = exportVectorTilesJob.result
+                setResourceAndVectorTileCache(exportVectorTilesJob.result.itemResourceCache)
+            } else {
+                Toast.makeText(this, "Error reading cache: " + exportVectorTilesJob.error.message, Toast.LENGTH_LONG).show()
+            }
+        }
+        exportVectorTilesJob.start()
 
-                //Loads the vector tile layer cache.
-                val vectorTileCache = VectorTileCache(getExternalFilesDir(null)?.path + "/dodge_city.vtpk")
-                vectorTileCache.loadAsync()
-                vectorTileCache.addDoneLoadingListener{
-                    if(vectorTileCache.loadError != null)
-                        Log.e("VectorTileCache: " , vectorTileCache.loadError.message.toString())
-                    else
-                        Log.d("VectorTileCache:" , "Loaded successfully")
-                }
+    }
 
+    private fun setResourceAndVectorTileCache(itemResourceCache: ItemResourceCache){
+        //Loads the vector tile layer cache.
+        val vectorTileCache = VectorTileCache(getExternalFilesDir(null)?.path + "/dodge_city.vtpk")
+        vectorTileCache.loadAsync()
+        vectorTileCache.addDoneLoadingListener{
+            if(vectorTileCache.loadError != null)
+                Log.e("VectorTileCache: " , vectorTileCache.loadError.message.toString())
+            else {
                 // Loads the layer based on the vector tile cache and the style resource.
-                val layer = ArcGISVectorTiledLayer(vectorTileCache, result.itemResourceCache)
+                val layer = ArcGISVectorTiledLayer(vectorTileCache, itemResourceCache)
                 layer.addDoneLoadingListener {
                     if (layer.loadError != null)
                         Log.e("VectorTiledLayer: ", layer.loadError.toString())
@@ -143,14 +165,10 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 // OfflineItemIDs uses WGS-84 as a spatial ref
-                val viewpoint = Viewpoint(Point(-100.01766, 37.76528, SpatialReferences.getWgs84()), 10000.0)
+                val viewpoint = Viewpoint(Point(-100.01766, 37.76528, SpatialReferences.getWgs84()), 100000.0)
                 setMap(layer, viewpoint)
-            } else {
-                Toast.makeText(this, "Error reading cache: " + exportVectorTilesJob.error.message, Toast.LENGTH_LONG).show()
             }
         }
-        exportVectorTilesJob.start()
-
     }
 
     /**
