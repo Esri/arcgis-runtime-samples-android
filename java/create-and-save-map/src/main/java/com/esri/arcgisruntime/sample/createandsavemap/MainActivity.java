@@ -81,8 +81,14 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
     // create a map with Topographic Basemap
     Basemap streetsBasemap = new Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
-
     ArcGISMap map = new ArcGISMap(streetsBasemap);
+    map.addDoneLoadingListener(() -> {
+      if (map.getLoadStatus() != LoadStatus.LOADED) {
+        String error = "Error loading map: " + map.getLoadError().getCause().getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+        Log.e(TAG, error);
+      }
+    });
     // set the map to be displayed in this view
     mMapView.setMap(map);
     mMapView.setViewpoint(new Viewpoint(48.354388, -99.998245, 100000));
