@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
     // create a map with Topographic Basemap
     Basemap streetsBasemap = new Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
-    streetsBasemap.setApiKey(BuildConfig.API_KEY);
 
     ArcGISMap map = new ArcGISMap(streetsBasemap);
     // set the map to be displayed in this view
@@ -174,24 +173,16 @@ public class MainActivity extends AppCompatActivity {
       mMapView.getMap().getOperationalLayers().clear();
       switch (position) {
         case 0:
-          Basemap streetsBasemap = new Basemap(BasemapStyle.ARCGIS_STREETS);
-          streetsBasemap.setApiKey(BuildConfig.API_KEY);
-          mMapView.getMap().setBasemap(streetsBasemap);
+          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_STREETS));
           break;
         case 1:
-          Basemap imageryBasemap = new Basemap(BasemapStyle.ARCGIS_IMAGERY);
-          imageryBasemap.setApiKey(BuildConfig.API_KEY);
-          mMapView.getMap().setBasemap(imageryBasemap);
+          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_IMAGERY));
           break;
         case 2:
-          Basemap topographicBasemap = new Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
-          topographicBasemap.setApiKey(BuildConfig.API_KEY);
-          mMapView.getMap().setBasemap(topographicBasemap);
+          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC));
           break;
         case 3:
-          Basemap oceansBasemap = new Basemap(BasemapStyle.ARCGIS_OCEANS);
-          oceansBasemap.setApiKey(BuildConfig.API_KEY);
-          mMapView.getMap().setBasemap(oceansBasemap);
+          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_OCEANS));
           break;
         default:
           Toast.makeText(this, R.string.unsupported_option, Toast.LENGTH_SHORT).show();
