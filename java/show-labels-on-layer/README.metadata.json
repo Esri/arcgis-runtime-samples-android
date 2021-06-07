@@ -22,8 +22,6 @@
         "TextSymbol"
     ],
     "language": "java",
-    "provision_from": "TODO",
-    "provision_to": "TODO",
     "redirect_from": [
         "/android/latest/sample-code/show-labels-on-layer.htm"
     ],
