@@ -38,14 +38,16 @@ class MainActivity : AppCompatActivity() {
         "1349bfa0ed08485d8a92c442a3850b06",
         "bd8ac41667014d98b933e97713ba8377",
         "02f85ec376084c508b9c8e5a311724fa",
-        "1bf0cc4a4380468fbbff107e100f65a5")
+        "1bf0cc4a4380468fbbff107e100f65a5"
+    )
 
     // A list of portal item IDs for the layers which custom style is applied from local resources.
     private var offlineItemIds: Array<String> = arrayOf(
         // A vector tiled layer created by the local VTPK and light custom style.
         "e01262ef2a4f4d91897d9bbd3a9b1075",
         // A vector tiled layer created by the local VTPK and dark custom style.
-        "ce8a34e5d4ca4fa193a097511daa8855")
+        "ce8a34e5d4ca4fa193a097511daa8855"
+    )
 
     // The item ID of the currently showing layer.
     private var currentItemID: String = onlineItemIds[0]
@@ -79,7 +81,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Displays the layer of the given itemID.
      */
-    private fun showSelectedItem(itemID: String){
+    private fun showSelectedItem(itemID: String) {
         currentItemID = itemID
         val vectorTiledLayer: ArcGISVectorTiledLayer
 
@@ -90,7 +92,7 @@ class MainActivity : AppCompatActivity() {
             }
             onlineItemIds.contains(itemID) -> {
                 // Retrieve the layer from online
-                val portalItem = PortalItem(Portal("https://www.arcgis.com"),itemID)
+                val portalItem = PortalItem(Portal("https://www.arcgis.com"), itemID)
                 vectorTiledLayer = ArcGISVectorTiledLayer(portalItem)
                 // Adds the retrieved layer to the mutable map for cache
                 vectorTiledLayersMap[itemID] = vectorTiledLayer
@@ -103,8 +105,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         // OnlineItemIDs uses WebMercator as a spatial ref
-        val viewpoint = Viewpoint(Point(1990591.559979,794036.007991, SpatialReferences.getWebMercator()),100000000.0)
-        setMap(vectorTiledLayer,viewpoint)
+        val viewpoint = Viewpoint(
+            Point(1990591.559979, 794036.007991, SpatialReferences.getWebMercator()),
+            100000000.0
+        )
+        setMap(vectorTiledLayer, viewpoint)
     }
 
     /**
@@ -114,12 +119,12 @@ class MainActivity : AppCompatActivity() {
     private fun checkOfflineItemCache(itemID: String) {
 
         val portalItem = PortalItem(Portal("https://www.arcgis.com"), itemID)
-        val itemResourceCache = ItemResourceCache(getExternalFilesDir(null)?.path + "/" + portalItem.itemId)
-        itemResourceCache.addDoneLoadingListener{
-            if(itemResourceCache.loadStatus == LoadStatus.LOADED){
+        val itemResourceCache =
+            ItemResourceCache(getExternalFilesDir(null)?.path + "/" + portalItem.itemId)
+        itemResourceCache.addDoneLoadingListener {
+            if (itemResourceCache.loadStatus == LoadStatus.LOADED) {
                 setResourceAndVectorTileCache(itemResourceCache)
-            }
-            else{
+            } else {
                 loadLayerWithOfflineCustomStyle(itemID)
             }
         }
@@ -129,31 +134,36 @@ class MainActivity : AppCompatActivity() {
     /**
      * Retrieves the style resource files and caches it to the local device.
      */
-    private fun loadLayerWithOfflineCustomStyle(itemID: String){
+    private fun loadLayerWithOfflineCustomStyle(itemID: String) {
 
         // Retrieve the layer from online
         val portalItem = PortalItem(Portal("https://www.arcgis.com"), itemID)
         val task = ExportVectorTilesTask(portalItem)
 
-        val exportVectorTilesJob = task.exportStyleResourceCache(getExternalFilesDir(null)?.path + "/"+portalItem.itemId)
+        val exportVectorTilesJob =
+            task.exportStyleResourceCache(getExternalFilesDir(null)?.path + "/" + portalItem.itemId)
         exportVectorTilesJob.addJobDoneListener {
             if (exportVectorTilesJob.status == Job.Status.SUCCEEDED) {
                 setResourceAndVectorTileCache(exportVectorTilesJob.result.itemResourceCache)
             } else {
-                Toast.makeText(this, "Error reading cache: " + exportVectorTilesJob.error.message, Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "Error reading cache: " + exportVectorTilesJob.error.message,
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
         exportVectorTilesJob.start()
 
     }
 
-    private fun setResourceAndVectorTileCache(itemResourceCache: ItemResourceCache){
+    private fun setResourceAndVectorTileCache(itemResourceCache: ItemResourceCache) {
         //Loads the vector tile layer cache.
         val vectorTileCache = VectorTileCache(getExternalFilesDir(null)?.path + "/dodge_city.vtpk")
         vectorTileCache.loadAsync()
-        vectorTileCache.addDoneLoadingListener{
-            if(vectorTileCache.loadError != null)
-                Log.e("VectorTileCache: " , vectorTileCache.loadError.message.toString())
+        vectorTileCache.addDoneLoadingListener {
+            if (vectorTileCache.loadError != null)
+                Log.e("VectorTileCache: ", vectorTileCache.loadError.message.toString())
             else {
                 // Loads the layer based on the vector tile cache and the style resource.
                 val layer = ArcGISVectorTiledLayer(vectorTileCache, itemResourceCache)
@@ -161,11 +171,12 @@ class MainActivity : AppCompatActivity() {
                     if (layer.loadError != null)
                         Log.e("VectorTiledLayer: ", layer.loadError.toString())
                     else
-                        Log.d("VectorTiledLayer:" , "Loaded successfully")
+                        Log.d("VectorTiledLayer:", "Loaded successfully")
                 }
 
                 // OfflineItemIDs uses WGS-84 as a spatial ref
-                val viewpoint = Viewpoint(Point(-100.01766, 37.76528, SpatialReferences.getWgs84()), 100000.0)
+                val viewpoint =
+                    Viewpoint(Point(-100.01766, 37.76528, SpatialReferences.getWgs84()), 100000.0)
                 setMap(layer, viewpoint)
             }
         }
@@ -174,7 +185,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Set the map using the layer and the viewpoint.
      */
-    private fun setMap(layer: ArcGISVectorTiledLayer, viewpoint: Viewpoint){
+    private fun setMap(layer: ArcGISVectorTiledLayer, viewpoint: Viewpoint) {
         //Reset the map to release resources
         mapView.map = null
         //mapView.map.basemap = null
@@ -194,8 +205,13 @@ class MainActivity : AppCompatActivity() {
     private fun setUpSpinner() {
         val customDropDownAdapter = CustomDropDownAdapter(this)
         spinner.adapter = customDropDownAdapter
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
 
                 // Sets the selected itemID to either the Online/Custom ID.
                 currentItemID = when (position) {
@@ -242,13 +258,28 @@ class MainActivity : AppCompatActivity() {
     class CustomDropDownAdapter(private val context: Context) : BaseAdapter() {
 
         // The names of the each Vector Tiled Layer
-        private val styleNames = arrayOf("Default", "Style 1", "Style 2", "Style 3", "Offline custom style: Light", "Offline custom style: Dark")
+        private val styleNames = arrayOf(
+            "Default",
+            "Style 1",
+            "Style 2",
+            "Style 3",
+            "Offline custom style: Light",
+            "Offline custom style: Dark"
+        )
 
         // The drawable XML file names for the associated style name
-        private val styleDrawableNames = arrayOf("default_color","style1_color","style2_color","style3_color","custom1_color","custom2_color")
+        private val styleDrawableNames = arrayOf(
+            "default_color",
+            "style1_color",
+            "style2_color",
+            "style3_color",
+            "custom1_color",
+            "custom2_color"
+        )
 
         // Inflates each row of the adapter.
-        private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        private val inflater: LayoutInflater =
+            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val view: View
@@ -265,7 +296,11 @@ class MainActivity : AppCompatActivity() {
             vh.layerText.text = styleNames[position]
 
             // Gets the drawable style associated with the position.
-            val id = context.resources.getIdentifier(styleDrawableNames[position], "drawable", context.packageName)
+            val id = context.resources.getIdentifier(
+                styleDrawableNames[position],
+                "drawable",
+                context.packageName
+            )
             // Sets the retrieved drawable as the background of the colorView.
             vh.colorView.setBackgroundResource(id)
 
