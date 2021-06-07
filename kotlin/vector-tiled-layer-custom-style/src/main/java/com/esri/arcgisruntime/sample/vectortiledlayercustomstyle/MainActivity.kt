@@ -68,10 +68,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
 
-        // Authentication with an API key or named user is required to access basemaps and other location services
+        // Authentication with an API key or named user is required to access basemaps and other location services.
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // Sets up the spinner to change the selected Vector Styled Layer
+        // Sets up the spinner to change the selected Vector Styled Layer.
         setUpSpinner()
 
         // Set the currentItemID to default layer.
@@ -91,20 +91,20 @@ class MainActivity : AppCompatActivity() {
                 vectorTiledLayer = vectorTiledLayersMap.getValue(itemID)
             }
             onlineItemIds.contains(itemID) -> {
-                // Retrieve the layer from online
+                // Retrieve the layer from online.
                 val portalItem = PortalItem(Portal("https://www.arcgis.com"), itemID)
                 vectorTiledLayer = ArcGISVectorTiledLayer(portalItem)
-                // Adds the retrieved layer to the mutable map for cache
+                // Adds the retrieved layer to the mutable map for cache.
                 vectorTiledLayersMap[itemID] = vectorTiledLayer
             }
             else -> {
-                // Load the layer using offline Vector Tiles
+                // Load the layer using offline Vector Tiles.
                 checkOfflineItemCache(itemID)
                 return
             }
         }
 
-        // OnlineItemIDs uses WebMercator as a spatial ref
+        // OnlineItemIDs uses WebMercator as a spatial ref.
         val viewpoint = Viewpoint(
             Point(1990591.559979, 794036.007991, SpatialReferences.getWebMercator()),
             100000000.0
@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun loadLayerWithOfflineCustomStyle(itemID: String) {
 
-        // Retrieve the layer from online
+        // Retrieve the layer from online.
         val portalItem = PortalItem(Portal("https://www.arcgis.com"), itemID)
         val task = ExportVectorTilesTask(portalItem)
 
@@ -174,7 +174,7 @@ class MainActivity : AppCompatActivity() {
                         Log.d("VectorTiledLayer:", "Loaded successfully")
                 }
 
-                // OfflineItemIDs uses WGS-84 as a spatial ref
+                // OfflineItemIDs uses WGS-84 as a spatial ref.
                 val viewpoint =
                     Viewpoint(Point(-100.01766, 37.76528, SpatialReferences.getWgs84()), 100000.0)
                 setMap(layer, viewpoint)
@@ -257,7 +257,7 @@ class MainActivity : AppCompatActivity() {
 
     class CustomDropDownAdapter(private val context: Context) : BaseAdapter() {
 
-        // The names of the each Vector Tiled Layer
+        // The names of the each Vector Tiled Layer.
         private val styleNames = arrayOf(
             "Default",
             "Style 1",
@@ -267,7 +267,7 @@ class MainActivity : AppCompatActivity() {
             "Offline custom style: Dark"
         )
 
-        // The drawable XML file names for the associated style name
+        // The drawable XML file names for the associated style name.
         private val styleDrawableNames = arrayOf(
             "default_color",
             "style1_color",

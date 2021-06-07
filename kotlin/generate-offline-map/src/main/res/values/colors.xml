@@ -3,23 +3,4 @@
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorAccent">#4CAF50</color>
-
-
-    <color name="default_left">#D0D0D5</color>
-    <color name="default_right">#EDEDED</color>
-
-    <color name="style1_left">#0065AB</color>
-    <color name="style1_right">#77BD00</color>
-
-    <color name="style2_left">#D2E000</color>
-    <color name="style2_right">#8E02DF</color>
-
-    <color name="style3_left">#40B5F2</color>
-    <color name="style3_right">#BB0125</color>
-
-    <color name="offline1_left">#FDF0CA</color>
-    <color name="offline1_right">#3D92AF</color>
-
-    <color name="offline2_left">#A7C5D4</color>
-    <color name="offline2_right">#54779D</color>
 </resources>

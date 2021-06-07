@@ -2,37 +2,35 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="20dp">
+    android:layout_height="wrap_content">
 
-    <View
-        android:id="@+id/view_left"
-        android:layout_width="20dp"
-        android:layout_height="40dp"
-        android:background="@color/default_left"
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:indeterminate="false"
+        android:theme="@style/progressBarBlue"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/progressTextView"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/view_right"
-        android:layout_width="20dp"
-        android:layout_height="40dp"
-        app:layout_constraintStart_toEndOf="@id/view_left"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/default_right" />
-
     <TextView
-        android:id="@+id/default_tv"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/view_right"
+        android:id="@+id/progressTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/view_right"
-        android:text="Default"
-        android:gravity="center_vertical"
-        android:layout_marginStart="20dp"
         app:layout_constraintTop_toTopOf="parent" />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
