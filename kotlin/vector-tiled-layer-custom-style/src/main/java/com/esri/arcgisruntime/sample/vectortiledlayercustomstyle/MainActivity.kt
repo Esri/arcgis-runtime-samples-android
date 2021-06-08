@@ -16,6 +16,7 @@ import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
+import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.ItemResourceCache
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.MapView
@@ -66,17 +67,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
 
-        // Set the map to be displayed in the layout's MapView
         mapView.map = ArcGISMap()
 
         // Authentication with an API key or named user is required to access basemaps and other location services.
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // Set the currentItemID to default layer.
-        currentItemID = onlineItemIds[0]
-
         // Sets up the spinner to change the selected Vector Styled Layer.
         setUpSpinner()
+
+        // Set the currentItemID to default layer.
+        currentItemID = onlineItemIds[0]
     }
 
     /**
@@ -159,8 +159,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Sets up an ArcGISVectorTiledLayer using the itemResourceCache
-     * for the setMap() function.
+     * TODO: Add comment here
      */
     private fun setResourceAndVectorTileCache(itemResourceCache: ItemResourceCache) {
         //Loads the vector tile layer cache.
@@ -206,7 +205,7 @@ class MainActivity : AppCompatActivity() {
      * MapView with the selected layer.
      */
     private fun setUpSpinner() {
-        val customDropDownAdapter = CustomSpinnerAdapter(this)
+        val customDropDownAdapter = CustomDropDownAdapter(this)
         spinner.adapter = customDropDownAdapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -216,8 +215,8 @@ class MainActivity : AppCompatActivity() {
                 id: Long
             ) {
 
+                // TODO: Explain 4,5 case
                 // Sets the selected itemID to either the Online/Custom ID.
-                // Position 4 or 5 in the spinner are the custom (offline) style layers.
                 currentItemID = when (position) {
                     4 -> {
                         // Custom style 1 - Dodge City OSM - Light
@@ -257,15 +256,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Custom adapter to set and control the spinner.
+     * TODO: Add comment here
      */
-    class CustomSpinnerAdapter(private val context: Context) : BaseAdapter() {
+    class CustomDropDownAdapter(private val context: Context) : BaseAdapter() {
+
+        //TODO: Add this to strings.xml
+        // The names of the each Vector Tiled Layer.
+        private val styleNames = arrayOf(
+            "Default",
+            "Style 1",
+            "Style 2",
+            "Style 3",
+            "Offline custom style: Light",
+            "Offline custom style: Dark"
+        )
+
+        //TODO: Add this to strings.xml
+        // The drawable XML file names for the associated style name.
+        private val styleDrawableNames = arrayOf(
+            "default_color",
+            "style1_color",
+            "style2_color",
+            "style3_color",
+            "custom1_color",
+            "custom2_color"
+        )
 
         // Inflates each row of the adapter.
         private val inflater: LayoutInflater =
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-        // Retrieves the view and sets the text and drawable of the row.
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val view: View
             val itemHolder: ItemHolder
@@ -278,11 +298,11 @@ class MainActivity : AppCompatActivity() {
                 itemHolder = view.tag as ItemHolder
             }
             // Sets the TextView to the style name.
-            itemHolder.layerText.text = context.resources.getStringArray(R.array.style_names)[position]
+            itemHolder.layerText.text = styleNames[position]
 
             // Gets the drawable style associated with the position.
             val id = context.resources.getIdentifier(
-                context.resources.getStringArray(R.array.style_drawable_names)[position],
+                styleDrawableNames[position],
                 "drawable",
                 context.packageName
             )
@@ -293,11 +313,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun getItem(position: Int): Any {
-            return context.resources.getStringArray(R.array.style_names)[position]
+            return styleNames[position]
         }
 
         override fun getCount(): Int {
-            return context.resources.getStringArray(R.array.style_names).size
+            return styleNames.size
         }
 
         override fun getItemId(position: Int): Long {

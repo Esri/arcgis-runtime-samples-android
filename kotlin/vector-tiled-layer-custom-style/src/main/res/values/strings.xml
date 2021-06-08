@@ -2,23 +2,4 @@
     <string name="app_name">ArcGIS vector tiled layer (custom style)</string>
     <string name="change_style">Change Style</string>
     <string name="default_text">Default</string>
-
-    <string-array name="style_names">
-        <item>Default</item>
-        <item>Style 1</item>
-        <item>Style 2</item>
-        <item>Style 3</item>
-        <item>Offline custom style: Light</item>
-        <item>Offline custom style: Dark</item>
-    </string-array>
-
-    <string-array name="style_drawable_names">
-        <item>default_color</item>
-        <item>style1_color</item>
-        <item>style2_color</item>
-        <item>style3_color</item>
-        <item>custom1_color</item>
-        <item>custom2_color</item>
-    </string-array>
-
 </resources>
