@@ -12,20 +12,20 @@ Vector tile basemaps can be created in ArcGIS Pro and published as offline packa
 
 ## How to use the sample
 
-Pan and zoom to explore the vector tile basemap.
+Pan and zoom to explore the vector tile basemap. Select a theme to see it applied to the vector tile basemap.
 
 ## How it works
 
 1. Construct an `ArcGISVectorTiledLayer` with the URL of a custom style from AGOL.
-    * Follow these steps to create a vector tiled layer with a custom style from offline resources:  
-    i. Construct an `VectorTileCache` using the name of the local vector tile package.  
-    ii. Create an `PortalItem` using the URL of a custom style.  
-    iii. Create an `ExportVectorTilesTask` using the portal item.  
-    iv. Get the `ExportVectorTilesJob` using `ExportVectorTilesTask.exportStyleResourceCache(downloadDirectory)`.  
-    v. Start the job using  `ExportVectorTilesJob.start()`.  
+2. Alternatively, construct an `ArcGISVectorTiledLayer` by taking a portal item offline and apply it to an offline vector tile package:     
+    i. Create an `PortalItem` using the URL of a custom style.  
+    ii. Create an `ExportVectorTilesTask` using the portal item.  
+    iii. Get the `ExportVectorTilesJob` using `ExportVectorTilesTask.exportStyleResourceCache(withDownloadDirectory:)`.  
+    iv. Start the job using  `ExportVectorTilesJob.start()`.  
+    v. Construct an `VectorTileCache` using the name of the local vector tile package.  
     vi. Once the job is complete, construct an `ArcGISVectorTiledLayer` using the vector tile cache and the `ItemResourceCache` from the job's result.  
-2. Create an `Basemap` from the `ArcGISVectorTiledLayer`.
-3. Assign the `Basemap` to the map's `basemap`.
+3. Create an `Basemap` from the `ArcGISVectorTiledLayer`.
+4. Assign the `Basemap` to the map's `basemap`.
 
 ## Relevant API
 
@@ -35,6 +35,10 @@ Pan and zoom to explore the vector tile basemap.
 * Map
 * VectorTileCache
 
+## Offline data
+
+This sample uses the [Dodge City OSM](https://www.arcgis.com/home/item.html?id=f4b742a57af344988b02227e2824ca5f) vector tile package. It is downloaded from ArcGIS Online automatically.
+
 ## Tags
 
-tiles, vector, vector basemap, vector tiled layer, vector tiles
+tiles, vector, vector basemap, vector tile package, vector tiled layer, vector tiles, vtpk
