@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">vector-tiled-layer</string>
+    <string name="app_name">ArcGIS vector tiled layer (custom style)</string>
     <string name="change_style">Change Style</string>
     <string name="default_text">Default</string>
 </resources>

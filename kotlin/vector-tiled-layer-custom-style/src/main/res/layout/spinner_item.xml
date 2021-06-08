@@ -8,7 +8,7 @@
 
 
     <View
-        android:id="@+id/color_view"
+        android:id="@+id/colorView"
         android:layout_width="60dp"
         android:layout_height="30dp"
         android:layout_marginStart="15dp"
@@ -28,7 +28,7 @@
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/color_view"
+        app:layout_constraintStart_toEndOf="@+id/colorView"
         app:layout_constraintTop_toTopOf="parent" />
 
 

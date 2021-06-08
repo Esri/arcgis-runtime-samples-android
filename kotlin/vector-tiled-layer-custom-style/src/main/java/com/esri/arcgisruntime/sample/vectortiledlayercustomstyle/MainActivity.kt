@@ -6,10 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.BaseAdapter
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.concurrent.Job
@@ -25,11 +22,9 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
-import com.esri.arcgisruntime.tasks.vectortilecache.ExportVectorTilesTask
 import com.esri.arcgisruntime.sample.vectortiledlayercustomstyle.databinding.ActivityMainBinding
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.tasks.vectortilecache.ExportVectorTilesTask
 
-//[DocRef: END]
 
 class MainActivity : AppCompatActivity() {
 
@@ -64,9 +59,15 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.mapView
     }
 
+    private val spinner: Spinner by lazy {
+        activityMainBinding.spinner
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
+
+        mapView.map = ArcGISMap()
 
         // Authentication with an API key or named user is required to access basemaps and other location services.
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
@@ -157,6 +158,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * TODO: Add comment here
+     */
     private fun setResourceAndVectorTileCache(itemResourceCache: ItemResourceCache) {
         //Loads the vector tile layer cache.
         val vectorTileCache = VectorTileCache(getExternalFilesDir(null)?.path + "/dodge_city.vtpk")
@@ -186,14 +190,12 @@ class MainActivity : AppCompatActivity() {
      * Set the map using the layer and the viewpoint.
      */
     private fun setMap(layer: ArcGISVectorTiledLayer, viewpoint: Viewpoint) {
-        //Reset the map to release resources
-        mapView.map = null
-        //mapView.map.basemap = null
+        // Clears the existing basemap layer
+        mapView.map.basemap.baseLayers.clear()
 
-        // Assign a new map created from the base layer.
-        val basemap = Basemap(layer.copy())
-        val map = ArcGISMap(basemap)
-        mapView.map = map
+        // Adds the new vector tiled layer to the basemap.
+        mapView.map.basemap.baseLayers.add(layer)
+
         //Set viewpoint without animation.
         mapView.setViewpoint(viewpoint)
     }
@@ -213,6 +215,7 @@ class MainActivity : AppCompatActivity() {
                 id: Long
             ) {
 
+                // TODO: Explain 4,5 case
                 // Sets the selected itemID to either the Online/Custom ID.
                 currentItemID = when (position) {
                     4 -> {
@@ -237,7 +240,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //[DocRef: Name=Pause and resume-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
     override fun onPause() {
         mapView.pause()
         super.onPause()
@@ -253,10 +255,12 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    //[DocRef: END]
-
+    /**
+     * TODO: Add comment here
+     */
     class CustomDropDownAdapter(private val context: Context) : BaseAdapter() {
 
+        //TODO: Add this to strings.xml
         // The names of the each Vector Tiled Layer.
         private val styleNames = arrayOf(
             "Default",
@@ -267,6 +271,7 @@ class MainActivity : AppCompatActivity() {
             "Offline custom style: Dark"
         )
 
+        //TODO: Add this to strings.xml
         // The drawable XML file names for the associated style name.
         private val styleDrawableNames = arrayOf(
             "default_color",
@@ -283,17 +288,17 @@ class MainActivity : AppCompatActivity() {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val view: View
-            val vh: ItemHolder
+            val itemHolder: ItemHolder
             if (convertView == null) {
                 view = inflater.inflate(R.layout.spinner_item, parent, false)
-                vh = ItemHolder(view)
-                view?.tag = vh
+                itemHolder = ItemHolder(view)
+                view?.tag = itemHolder
             } else {
                 view = convertView
-                vh = view.tag as ItemHolder
+                itemHolder = view.tag as ItemHolder
             }
             // Sets the TextView to the style name.
-            vh.layerText.text = styleNames[position]
+            itemHolder.layerText.text = styleNames[position]
 
             // Gets the drawable style associated with the position.
             val id = context.resources.getIdentifier(
@@ -302,7 +307,7 @@ class MainActivity : AppCompatActivity() {
                 context.packageName
             )
             // Sets the retrieved drawable as the background of the colorView.
-            vh.colorView.setBackgroundResource(id)
+            itemHolder.colorView.setBackgroundResource(id)
 
             return view
         }
@@ -321,7 +326,7 @@ class MainActivity : AppCompatActivity() {
 
         private class ItemHolder(row: View?) {
             val layerText: TextView = row?.findViewById(R.id.text) as TextView
-            val colorView: View = row?.findViewById(R.id.color_view) as View
+            val colorView: View = row?.findViewById(R.id.colorView) as View
         }
 
     }
