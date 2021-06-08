@@ -2,8 +2,9 @@
 
 Load ArcGIS vector tiled layers using custom styles.
 
-![Custom styled ArcGIS vector tiled layer](vector-tiled-layer-custom-1.png)
-![Offline custom style](vector-tiled-layer-custom-2.png)
+Custom styled ArcGIS vector tiled layer             |  ArcGIS vector tiled layer list             |  Offline custom style
+:-------------------------:|:-------------------------:|:-------------------------:
+![Custom styled ArcGIS vector tiled layer](vector-tiled-layer-style.png)  |  ![ArcGIS vector tiled layer list](vector-tiled-layers-list.png)  |  ![Offline custom style](vector-tiled-layer-custom-2.png)
 
 ## Use case
 
