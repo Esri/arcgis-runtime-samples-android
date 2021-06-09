@@ -35,4 +35,4 @@ Operational layers will automatically project to this spatial reference when pos
 
 ## Tags
 
-project, SpatialReference, WKID
+project, WKID

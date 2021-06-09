@@ -10,7 +10,7 @@ An integrated mesh is used to generate a mesh over a point dataset. They are mos
 
 ## How to use the sample
 
-Run the sample and watch the integrated mesh layer load in place of the extruded imagery basemap. Navigate around the scene to visualize the high level of detail on the cliffs and valley floor.
+After launching the sample, watch the integrated mesh layer load in place. Navigate around the scene to visualize the high level of detail on the buildings.
 
 ## How it works
 
@@ -24,9 +24,7 @@ Run the sample and watch the integrated mesh layer load in place of the extruded
 
 ## About the data
 
-This data is derived from point cloud data from a lidar survey. Lidar data is often of a high enough resolution to capture 3D features as small as walls and trees, but also the irregular surfaces of geological features like cliffs. An integrated mesh made from a point cloud of lidar data will include realistic textures and elevation information.
-
-This integrated mesh depicts Little Yosemite Valley in California's Yosemite National Park, including the 3,000ft granite face of El Capitan.
+This integrated mesh depicts the city of Girona, Spain and is attributed to the Institut Cartogràfic i Geològic de Catalunya (ICGC). The data was produced from [photogrammetrically correct imagery](https://pro.arcgis.com/en/pro-app/help/data/imagery/ortho-mapping-in-arcgis-pro.htm). Areas of white space within the integrated mesh are areas that had poor overlapping coverage from photos.
 
 ## Additional information
 
