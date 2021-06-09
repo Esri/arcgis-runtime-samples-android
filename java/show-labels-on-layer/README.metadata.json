@@ -7,6 +7,7 @@
         "show-labels-on-layer.png"
     ],
     "keywords": [
+        "arcade",
         "attribute",
         "deconfliction",
         "label",
@@ -14,19 +15,24 @@
         "string",
         "symbol",
         "text",
-        "visualization"
+        "visualization",
+        "ArcadeLabelExpression",
+        "FeatureLayer",
+        "LabelDefinition",
+        "TextSymbol"
     ],
     "language": "java",
     "redirect_from": [
         "/android/latest/sample-code/show-labels-on-layer.htm"
     ],
     "relevant_apis": [
+        "ArcadeLabelExpression",
         "FeatureLayer",
         "LabelDefinition",
         "TextSymbol"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/showlabelsonlayer/MainActivity.java"
+        "/src/main/java/com/esri/arcgisruntime/showlabelsonlayer/MainActivity.java"
     ],
     "title": "Show labels on layer"
 }

@@ -16,7 +16,7 @@ The sample loads with the sublayer visible on the map. Toggle its visibility wit
 
 1. Create a `SubtypeFeatureLayer` from a `ServiceFeatureTable` that defines a subtype, and add it to the `ArcGISMap`.
 2. Get a `SubtypeSublayer` from the subtype feature using its name.
-3. Enable the sublayer's labels and define them with `LabelDefinitions`.
+3. Enable the sublayer's labels and define them with a `LabelDefinitions`.
 4. Set the visibility status using this sublayer's `isVisible` property.
 5. Change the sublayer's symbology with `.renderer`.
 6. Update the sublayer's minimum scale value with `.minScale`.
@@ -25,6 +25,7 @@ The sample loads with the sublayer visible on the map. Toggle its visibility wit
 
 * LabelDefinition
 * ServiceFeatureTable
+* SimpleLabelExpression
 * SubtypeFeatureLayer
 * SubtypeSublayer
 
@@ -33,12 +34,5 @@ The sample loads with the sublayer visible on the map. Toggle its visibility wit
 The [feature service layer](https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer/0) in this sample represents an electric network in Naperville, Illinois, which contains a utility network with asset classification for different devices.
 
 ## Tags
-Layers
-asset group
-feature layer
-labeling
-sublayer
-subtype
-symbology
-utility network
-visible scale range
+
+asset group, feature layer, labeling, sublayer, subtype, symbology, utility network, visible scale range

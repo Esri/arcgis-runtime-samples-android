@@ -21,6 +21,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.arcgisservices.LabelDefinition
+import com.esri.arcgisruntime.arcgisservices.LabelingPlacement
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Envelope
 import com.esri.arcgisruntime.geometry.SpatialReferences
@@ -28,12 +29,15 @@ import com.esri.arcgisruntime.layers.SubtypeFeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.labeling.SimpleLabelExpression
 import com.esri.arcgisruntime.security.UserCredential
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
+import com.esri.arcgisruntime.symbology.TextSymbol
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.sublayer_control_layout.*
 import kotlin.math.roundToInt
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -79,13 +83,29 @@ class MainActivity : AppCompatActivity() {
         // add it to the map
         mapView.map.operationalLayers.add(subtypeFeatureLayer)
 
+        // create a text symbol for styling the sublayer label definition
+        val textSymbol = TextSymbol().apply {
+            size = 12f
+            color = Color.BLUE
+            outlineColor = Color.WHITE
+            haloColor = Color.WHITE
+            haloWidth = 3f
+        }
+
+        // create a label definition with a simple label expression
+        val simpleLabelExpression = SimpleLabelExpression("[nominalvoltage]")
+        val labelDefinition = LabelDefinition(simpleLabelExpression, textSymbol).apply {
+            placement = LabelingPlacement.POINT_ABOVE_RIGHT
+            isUseCodedValues = true
+        }
+
         // once the subtype feature layer is loaded
         subtypeFeatureLayer.addDoneLoadingListener {
             // create a subtype sublayer
             val subtypeSublayer =
                 subtypeFeatureLayer.getSublayerWithSubtypeName("Street Light").apply {
                     isLabelsEnabled = true
-                    labelDefinitions.add(LabelDefinition.fromJson(getString(R.string.label_json)))
+                    labelDefinitions.add(labelDefinition)
                 }
 
             // show subtype sublayer when checked, hide when unchecked
