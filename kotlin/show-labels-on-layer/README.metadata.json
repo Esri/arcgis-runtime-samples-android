@@ -30,7 +30,7 @@
         "TextSymbol"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/showlabelsonlayer/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/showlabelsonlayer/MainActivity.kt"
     ],
     "title": "Show labels on layer"
 }
