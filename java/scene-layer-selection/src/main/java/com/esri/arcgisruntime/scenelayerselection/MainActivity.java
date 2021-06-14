@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     scene.setBaseSurface(surface);
 
     // add a scene layer of Brest buildings to the scene
-    final String buildings = getString(R.string.brest_buildings);
+    final String buildings = getString(R.string.scene_layer_selection_brest_buildings);
     ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(buildings);
     scene.getOperationalLayers().add(sceneLayer);
 

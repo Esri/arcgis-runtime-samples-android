@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity() {
   private fun setupAddressSearchView() {
     addressGeocodeParameters = GeocodeParameters().apply {
       // get place name and street address attributes
-      resultAttributeNames.addAll(listOf("PlaceName", "StAddr"))
+      resultAttributeNames.addAll(listOf("PlaceName", "Place_addr"))
       // return only the closest result
       maxResults = 1
 
@@ -284,8 +284,11 @@ class MainActivity : AppCompatActivity() {
     val calloutContent = TextView(applicationContext).apply {
       setTextColor(Color.BLACK)
       // get the graphic attributes for place name and street address, and display them as text in the callout
-      this.text = graphic.attributes["PlaceName"].toString() + "\n" +
-          graphic.attributes["StAddr"].toString()
+      this.text = if (graphic.attributes["PlaceName"].toString().isNotEmpty()) {
+        graphic.attributes["PlaceName"].toString() + "\n" + graphic.attributes["Place_addr"].toString()
+      } else {
+        graphic.attributes["Place_addr"].toString()
+      }
     }
     // get the center of the graphic to set the callout location
     val centerOfGraphic = graphic.geometry.extent.center
