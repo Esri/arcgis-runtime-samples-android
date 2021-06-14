@@ -30,7 +30,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.QueryParameters
-import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.data.ServiceGeodatabase
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.FeatureLayer
@@ -97,24 +96,11 @@ class MainActivity : AppCompatActivity() {
 
         loadServiceGeodatabase()
 
-        // load the utility network data from the feature service and create feature layers
-        val distributionLineFeatureTable =
-            ServiceFeatureTable(getString(R.string.distribution_lin e_url)).apply {
-                credential = userCredential
-            }
-        val distributionLineLayer = FeatureLayer(distributionLineFeatureTable)
-        val deviceFeatureTable = ServiceFeatureTable(getString(R.string.device_url)).apply {
-            credential = userCredential
-        }
-        val deviceLayer = FeatureLayer(deviceFeatureTable)
-
         // create a map with the utility network distribution line and device layers
         val map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT).apply {
-            // add the feature layers to the map
-            operationalLayers.addAll(listOf(distributionLineLayer, deviceLayer))
             // create and load the utility network
             addDoneLoadingListener {
-                utilityNetworks.add(createUtilityNetwork(userCredential))
+                utilityNetworks.add(utilityNetwork)
             }
         }
 
@@ -155,32 +141,33 @@ class MainActivity : AppCompatActivity() {
         // set user credentials to authenticate with the service
         // NOTE: a licensed user is required to perform utility network operations
         serviceGeodatabase.credential = UserCredential("viewer01", "I68VGU^nMurF")
-        serviceGeodatabase.load {
-            [weak self] error in
-            guard let self = self else { return }
-            // The  gas device layer ./0 and gas line layer ./3 are created from the service geodatabase.
-            if let gasDeviceLayerTable = self . serviceGeodatabase . table (withLayerID: 0),
-            let gasLineLayerTable = self . serviceGeodatabase . table (withLayerID: 3) {
-            self.layers = [gasLineLayerTable, gasDeviceLayerTable].map(AGSFeatureLayer.init)
-            // Add the utility network feature layers to the map for display.
-            self.mapView.map?.operationalLayers.addObjects(from: self. layers)
-            self.loadUtilityNetwork()
-        } else if let error = error {
-            self.presentAlert(error: error)
+        serviceGeodatabase.addDoneLoadingListener {
+            if (serviceGeodatabase.loadStatus == LoadStatus.LOADED) {
+                // The  gas device layer ./0 and gas line layer ./3 are created from the service geodatabase.
+                val gasDeviceLayerTable = serviceGeodatabase.getTable(0)
+                val gasLineLayerTable = serviceGeodatabase.getTable(3)
+                // load the utility network data from the feature service and create feature layers
+                val deviceLayer = FeatureLayer(gasDeviceLayerTable)
+                val distributionLineLayer = FeatureLayer(gasLineLayerTable)
+                // add the utility network feature layers to the map for display
+                mapView.map.operationalLayers.add(deviceLayer)
+                mapView.map.operationalLayers.add(distributionLineLayer)
+                loadUtilityNetwork()
+            } else {
+                val error =
+                    "Error laoding service geodatabase: " + serviceGeodatabase.loadError.cause?.message
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                Log.e(TAG, error)
+            }
         }
-        }
+        serviceGeodatabase.loadAsync()
     }
 
     /**
      * Create and load a utility network from the string resource url and initialize a starting point
      * from it.
      */
-    private fun createUtilityNetwork(userCredential: UserCredential): UtilityNetwork {
-        // create a utility network from the url and load it
-        utilityNetwork =
-            UtilityNetwork(getString(R.string.utility_network_url), mapView.map).apply {
-                credential = userCredential
-            }
+    private fun loadUtilityNetwork(): UtilityNetwork {
         utilityNetwork.loadAsync()
         utilityNetwork.addDoneLoadingListener {
             if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
