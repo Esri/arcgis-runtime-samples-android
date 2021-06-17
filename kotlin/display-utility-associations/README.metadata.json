@@ -17,6 +17,7 @@
     "language": "kotlin",
     "relevant_apis": [
         "GraphicsOverlay",
+        "ServiceGeodatabase",
         "UtilityAssociation",
         "UtilityAssociationType",
         "UtilityNetwork"

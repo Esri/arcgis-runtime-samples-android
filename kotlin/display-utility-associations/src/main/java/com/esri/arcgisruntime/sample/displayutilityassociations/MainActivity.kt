@@ -78,9 +78,14 @@ class MainActivity : AppCompatActivity() {
     // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
+    // create a new map and add the utility network to it
+    val utilityNetworkMap = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
+      utilityNetworks.add(utilityNetwork)
+    }
+
     mapView.apply {
       // add a topographic basemap with a viewpoint at several utility network associations
-      map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+      map = utilityNetworkMap
       setViewpoint(Viewpoint(41.8057655, -88.1489692, 50.0))
 
       // add the a graphics overlay to hold association graphics
