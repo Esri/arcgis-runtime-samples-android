@@ -10,7 +10,7 @@ Updating related features is a helpful workflow when you have two features with 
 
 ## How to use the sample
 
-Once you launch the app, select a national park feature. The app will then identify it, perform a related table query, and will show you the annual visitors amount for the preserve. You can then update the visitor amount by tapping the drop-down in the `Callout` and selecting a different amount.
+Once you launch the app, select a national park feature (shown in green on the map). The app will then identify it, perform a related table query, and will show you the annual visitors amount for the preserve. You can then update the visitor amount by tapping the drop-down in the `Callout` and selecting a different amount.
 
 ## How it works
 

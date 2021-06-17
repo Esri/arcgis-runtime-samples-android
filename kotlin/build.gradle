@@ -39,6 +39,9 @@ subprojects {
             defaultConfig {
                 multiDexEnabled true
             }
+            packagingOptions {
+                exclude 'META-INF/DEPENDENCIES'
+            }
         }
     }
 }
