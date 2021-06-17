@@ -15,7 +15,7 @@ When you run the sample, you will be challenged for an ArcGIS Online login. Ente
 ## How it works
 
 1. Set a `DefaultAuthenticationChallengeHandler` to the app's `AuthenticationManager`.
-2. Create a new `Portal` and load it. Once it has loaded, an authentication challenge will be issued and you'll be prompted to enter your username and password.
+2. Create a new `Portal` and load it to invoke the authentication challenge.
 3. Access the `PortalUserContent` with `portal.getUser().fetchContentAsync().get()`, to get the user's list of portal folders with `portalUserContent.getFolders()`.
 4. Create an `ArcGISMap` with a `BasemapStyle` and a few operational layers.
 5. Call `map.saveMapAsAsync()` to save a new `ArcGISMap` with the specified title, tags, and folder to the portal.
