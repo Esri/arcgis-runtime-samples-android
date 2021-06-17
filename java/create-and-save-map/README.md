@@ -1,12 +1,12 @@
 # Create and save map
 
-Create and save a map as an ArcGIS `PortalItem` (i.e. web map).
+Create and save a map as a web map item to an ArcGIS portal.
 
 ![Image of create and save map](create-and-save-map.png)
 
 ## Use case
 
-Maps can be created programmatically in code and then serialized and saved as an ArcGIS web map. A web map can be shared with others and opened in various applications and APIs throughout the platform, such as ArcGIS Pro, ArcGIS Online, the JavaScript API, Collector, and Explorer.
+Maps can be created programmatically in code and then serialized and saved as an ArcGIS portal item. In this case, the portal item is a web map which can be shared with others and opened in various applications and APIs throughout the platform, such as ArcGIS Pro, ArcGIS Online, the JavaScript API, Collector, and Explorer.
 
 ## How to use the sample
 

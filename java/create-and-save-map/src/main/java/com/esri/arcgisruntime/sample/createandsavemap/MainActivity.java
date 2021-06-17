@@ -65,15 +65,22 @@ public class MainActivity extends AppCompatActivity {
   private static final int MIN_SCALE = 60000000;
 
   private MapView mMapView;
+
   // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private Portal mPortal;
+
   private List<PortalFolder> mPortalFolders;
 
   private DrawerLayout mDrawerLayout;
+
   private ListView mBasemapListView;
+
   private ListView mLayerListView;
+
   private CharSequence mDrawerTitle;
+
   private ActionBarDrawerToggle mDrawerToggle;
+
   private Spinner mFolderSpinner;
 
   @Override
@@ -209,7 +216,8 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Inflates the save map dialog allowing the user to enter title, tags and description for their map.
+   * Shows the save map dialog allowing the user to enter title, tags, description and folder for
+   * saving of their map.
    */
   private void showSaveMapDialog() {
 
@@ -263,8 +271,9 @@ public class MainActivity extends AppCompatActivity {
       Iterable<String> tags = Arrays.asList(tagsEditText.getText().toString().split(","));
       // make sure the title edit text view has text
       if (titleEditText.getText().length() > 0) {
-        // call save map passing in title, tags and description
-        saveMap(titleEditText.getText().toString(), tags, descriptionEditText.getText().toString());
+        // call save map passing in title, tags, description and portal
+        saveMap(titleEditText.getText().toString(), tags, descriptionEditText.getText().toString(),
+            mPortalFolders.get(mFolderSpinner.getSelectedItemPosition()));
         saveMapDialog.dismiss();
       } else {
         Toast.makeText(this, "A title is required to save your map.", Toast.LENGTH_LONG).show();
@@ -277,26 +286,20 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Open a portal and save the map to that portal.
+   * Save the map to that portal.
    *
-   * @param title       of the map
-   * @param tags        related to the map
-   * @param description of the map
+   * @param title        of the map
+   * @param tags         related to the map
+   * @param description  of the map
+   * @param portalFolder where the map should be saved
    */
-  private void saveMap(String title, Iterable<String> tags, String description) {
-    mPortal.addDoneLoadingListener(() -> {
-      if (mPortal.getLoadStatus() == LoadStatus.LOADED) {
-        // call save as async and pass portal info, as well as details of the map including title, tags and description
-        ListenableFuture<PortalItem> saveAsAsyncFuture = mMapView.getMap()
-            .saveAsAsync(mPortal, mPortalFolders.get(mFolderSpinner.getSelectedItemPosition()), title, tags, description, null, true);
-        saveAsAsyncFuture.addDoneListener(
-            () -> Toast.makeText(this, "Map saved to portal!", Toast.LENGTH_LONG).show());
-      } else {
-        String error = "Can't save map, portal not loaded: " + mPortal.getLoadError().getMessage();
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        Log.e(TAG, error);
-      }
-    });
+  private void saveMap(String title, Iterable<String> tags, String description,
+      PortalFolder portalFolder) {
+    // call save as async and pass portal info, as well as details of the map including title, tags and description
+    ListenableFuture<PortalItem> saveAsAsyncFuture = mMapView.getMap()
+        .saveAsAsync(mPortal, portalFolder, title, tags, description, null, true);
+    saveAsAsyncFuture.addDoneListener(
+        () -> Toast.makeText(this, "Map saved to portal!", Toast.LENGTH_LONG).show());
   }
 
   @Override
