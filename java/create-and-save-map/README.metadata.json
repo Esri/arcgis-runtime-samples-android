@@ -1,6 +1,6 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Create and save a map as an ArcGIS `PortalItem` (i.e. web map).",
+    "description": "Create and save a map as a web map item to an ArcGIS portal.",
     "formal_name": "CreateAndSaveMap",
     "ignore": false,
     "images": [
@@ -12,7 +12,9 @@
         "portal",
         "publish",
         "share",
-        "web map"
+        "web map",
+        "ArcGISMap",
+        "Portal"
     ],
     "language": "java",
     "relevant_apis": [
