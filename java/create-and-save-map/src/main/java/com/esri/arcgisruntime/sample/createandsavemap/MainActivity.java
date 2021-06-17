@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
   private void saveMap(String title, Iterable<String> tags, String description) {
     mPortal.addDoneLoadingListener(() -> {
       if (mPortal.getLoadStatus() == LoadStatus.LOADED) {
-        // call save as async and pass portal info, as well as details of the map including title, tags and description
+        // call save as async and pass portal info, as well as details of the map including folder, title, tags and description
         ListenableFuture<PortalItem> saveAsAsyncFuture = mMapView.getMap()
             .saveAsAsync(mPortal, mPortalFolders.get(mFolderSpinner.getSelectedItemPosition()), title, tags, description, null, true);
         saveAsAsyncFuture.addDoneListener(
