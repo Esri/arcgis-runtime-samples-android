@@ -28,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -46,26 +47,41 @@ import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
+import com.esri.arcgisruntime.portal.PortalFolder;
 import com.esri.arcgisruntime.portal.PortalItem;
+import com.esri.arcgisruntime.portal.PortalUserContent;
 import com.esri.arcgisruntime.security.AuthenticationChallengeHandler;
 import com.esri.arcgisruntime.security.AuthenticationManager;
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private static final int MIN_SCALE = 60000000;
+
   private MapView mMapView;
-  private DrawerLayout mDrawerLayout;
-  private ListView mBasemapListView;
-  private ListView mLayerListView;
-  private CharSequence mDrawerTitle;
-  private ActionBarDrawerToggle mDrawerToggle;
+
   // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private Portal mPortal;
+
+  private List<PortalFolder> mPortalFolders;
+
+  private DrawerLayout mDrawerLayout;
+
+  private ListView mBasemapListView;
+
+  private ListView mLayerListView;
+
+  private CharSequence mDrawerTitle;
+
+  private ActionBarDrawerToggle mDrawerToggle;
+
+  private Spinner mFolderSpinner;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +96,15 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
     // create a map with Topographic Basemap
-    Basemap streetsBasemap = new Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
-    streetsBasemap.setApiKey(BuildConfig.API_KEY);
-
+    Basemap streetsBasemap = new Basemap(BasemapStyle.ARCGIS_STREETS);
     ArcGISMap map = new ArcGISMap(streetsBasemap);
+    map.addDoneLoadingListener(() -> {
+      if (map.getLoadStatus() != LoadStatus.LOADED) {
+        String error = "Error loading map: " + map.getLoadError().getCause().getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+        Log.e(TAG, error);
+      }
+    });
     // set the map to be displayed in this view
     mMapView.setMap(map);
     mMapView.setViewpoint(new Viewpoint(48.354388, -99.998245, 100000));
@@ -174,24 +195,16 @@ public class MainActivity extends AppCompatActivity {
       mMapView.getMap().getOperationalLayers().clear();
       switch (position) {
         case 0:
-          Basemap streetsBasemap = new Basemap(BasemapStyle.ARCGIS_STREETS);
-          streetsBasemap.setApiKey(BuildConfig.API_KEY);
-          mMapView.getMap().setBasemap(streetsBasemap);
+          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_STREETS));
           break;
         case 1:
-          Basemap imageryBasemap = new Basemap(BasemapStyle.ARCGIS_IMAGERY);
-          imageryBasemap.setApiKey(BuildConfig.API_KEY);
-          mMapView.getMap().setBasemap(imageryBasemap);
+          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_IMAGERY));
           break;
         case 2:
-          Basemap topographicBasemap = new Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
-          topographicBasemap.setApiKey(BuildConfig.API_KEY);
-          mMapView.getMap().setBasemap(topographicBasemap);
+          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC));
           break;
         case 3:
-          Basemap oceansBasemap = new Basemap(BasemapStyle.ARCGIS_OCEANS);
-          oceansBasemap.setApiKey(BuildConfig.API_KEY);
-          mMapView.getMap().setBasemap(oceansBasemap);
+          mMapView.getMap().setBasemap(new Basemap(BasemapStyle.ARCGIS_OCEANS));
           break;
         default:
           Toast.makeText(this, R.string.unsupported_option, Toast.LENGTH_SHORT).show();
@@ -203,9 +216,11 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Inflates the save map dialog allowing the user to enter title, tags and description for their map.
+   * Shows the save map dialog allowing the user to enter title, tags, description and folder for
+   * saving of their map.
    */
   private void showSaveMapDialog() {
+
     // inflate save map dialog layout
     LayoutInflater inflater = LayoutInflater.from(this);
     View saveMapDialogView = inflater.inflate(R.layout.save_map_dialog, null, false);
@@ -214,6 +229,34 @@ public class MainActivity extends AppCompatActivity {
     EditText titleEditText = saveMapDialogView.findViewById(R.id.titleEditText);
     EditText tagsEditText = saveMapDialogView.findViewById(R.id.tagsEditText);
     EditText descriptionEditText = saveMapDialogView.findViewById(R.id.descriptionEditText);
+    mFolderSpinner = saveMapDialogView.findViewById(R.id.folderSpinner);
+
+    // create a portal to arcgis
+    mPortal = new Portal("https://www.arcgis.com", true);
+    mPortal.addDoneLoadingListener(() -> {
+      if (mPortal.getLoadStatus() == LoadStatus.LOADED) {
+        try {
+          // get the users list of portal folders
+          PortalUserContent portalUserContent = mPortal.getUser().fetchContentAsync().get();
+          mPortalFolders = portalUserContent.getFolders();
+          // get a list of the user's portal folder titles
+          List<String> portalFolderTitles = new ArrayList<>();
+          for (PortalFolder portalFolder : mPortalFolders) {
+            portalFolderTitles.add(portalFolder.getTitle());
+          }
+          // add the list of portal folder titles to a spinner
+          ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+              android.R.layout.simple_spinner_item, portalFolderTitles);
+          adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+          mFolderSpinner.setAdapter(adapter);
+        } catch (Exception e) {
+          String error = "Error fetching content from portal item: " + e.getCause().getMessage();
+          Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+          Log.e(TAG, error);
+        }
+      }
+    });
+    mPortal.loadAsync();
 
     // build the dialog
     AlertDialog saveMapDialog = new AlertDialog.Builder(this)
@@ -228,8 +271,9 @@ public class MainActivity extends AppCompatActivity {
       Iterable<String> tags = Arrays.asList(tagsEditText.getText().toString().split(","));
       // make sure the title edit text view has text
       if (titleEditText.getText().length() > 0) {
-        // call save map passing in title, tags and description
-        saveMap(titleEditText.getText().toString(), tags, descriptionEditText.getText().toString());
+        // call save map passing in title, tags, description and portal
+        saveMap(titleEditText.getText().toString(), tags, descriptionEditText.getText().toString(),
+            mPortalFolders.get(mFolderSpinner.getSelectedItemPosition()));
         saveMapDialog.dismiss();
       } else {
         Toast.makeText(this, "A title is required to save your map.", Toast.LENGTH_LONG).show();
@@ -242,29 +286,20 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Open a portal and save the map to that portal.
+   * Save the map to that portal.
    *
-   * @param title       of the map
-   * @param tags        related to the map
-   * @param description of the map
+   * @param title        of the map
+   * @param tags         related to the map
+   * @param description  of the map
+   * @param portalFolder where the map should be saved
    */
-  private void saveMap(String title, Iterable<String> tags, String description) {
-    // create a portal to arcgis
-    mPortal = new Portal("https://www.arcgis.com", true);
-    mPortal.addDoneLoadingListener(() -> {
-      if (mPortal.getLoadStatus() == LoadStatus.LOADED) {
-        // call save as async and pass portal info, as well as details of the map including title, tags and description
-        ListenableFuture<PortalItem> saveAsAsyncFuture = mMapView.getMap()
-            .saveAsAsync(mPortal, null, title, tags, description, null, true);
-        saveAsAsyncFuture.addDoneListener(
-            () -> Toast.makeText(this, "Map saved to portal!", Toast.LENGTH_LONG).show());
-      } else {
-        String error = "Error loading portal: " + mPortal.getLoadError().getMessage();
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        Log.e(TAG, error);
-      }
-    });
-    mPortal.loadAsync();
+  private void saveMap(String title, Iterable<String> tags, String description,
+      PortalFolder portalFolder) {
+    // call save as async and pass portal info, as well as details of the map including title, tags and description
+    ListenableFuture<PortalItem> saveAsAsyncFuture = mMapView.getMap()
+        .saveAsAsync(mPortal, portalFolder, title, tags, description, null, true);
+    saveAsAsyncFuture.addDoneListener(
+        () -> Toast.makeText(this, "Map saved to portal!", Toast.LENGTH_LONG).show());
   }
 
   @Override
@@ -302,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * sync the state of the drawer toggle
+   * Sync the state of the drawer toggle
    */
   @Override
   protected void onPostCreate(Bundle savedInstanceState) {
