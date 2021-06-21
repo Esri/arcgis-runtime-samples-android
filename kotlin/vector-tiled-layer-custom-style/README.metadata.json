@@ -1,5 +1,5 @@
 {
-    "category": "TODO",
+    "category": "Visualization",
     "description": "Load ArcGIS vector tiled layers using custom styles.",
     "formal_name": "ArcgisVectorTiledLayerCustomStyle",
     "ignore": false,
@@ -19,17 +19,13 @@
         "ArcGISVectorTiledLayer",
         "ExportVectorTilesTask",
         "ItemResourceCache",
-        "Map",
         "VectorTileCache"
     ],
     "language": "kotlin",
     "provision_from": [
-        "TODO"
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=f4b742a57af344988b02227e2824ca5f"
     ],
     "provision_to": [
-        "TODO"
-    ],
-    "redirect_from": [
         "TODO"
     ],
     "relevant_apis": [
@@ -40,7 +36,7 @@
         "VectorTileCache"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/vectortiledlayercustomstyle/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/arcgisvectortiledlayercustomstyle/MainActivity.kt"
     ],
     "title": "ArcGIS vector tiled layer (custom style)"
 }
