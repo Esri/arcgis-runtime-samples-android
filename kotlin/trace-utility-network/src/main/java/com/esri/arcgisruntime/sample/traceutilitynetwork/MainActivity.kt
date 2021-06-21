@@ -437,11 +437,13 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         Toast.makeText(this, "No elements in trace result", Toast.LENGTH_LONG)
                             .show()
+                        progressIndicator.visibility = View.GONE
                         enableButtons()
                     }
                 }
             } catch (e: Exception) {
                 statusTextView.text = getString(R.string.failed_message)
+                progressIndicator.visibility = View.GONE
                 reportError("Error running connected trace: " + e.message)
             }
         }
