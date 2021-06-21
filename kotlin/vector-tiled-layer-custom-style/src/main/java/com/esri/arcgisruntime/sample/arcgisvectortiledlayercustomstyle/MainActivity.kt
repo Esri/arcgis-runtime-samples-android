@@ -1,4 +1,4 @@
-package com.esri.arcgisruntime.sample.vectortiledlayercustomstyle
+package com.esri.arcgisruntime.sample.arcgisvectortiledlayercustomstyle
 
 import android.content.Context
 import android.os.Bundle
@@ -21,7 +21,7 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
-import com.esri.arcgisruntime.sample.vectortiledlayercustomstyle.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.arcgisvectortiledlayercustomstyle.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.tasks.vectortilecache.ExportVectorTilesTask
 
 
