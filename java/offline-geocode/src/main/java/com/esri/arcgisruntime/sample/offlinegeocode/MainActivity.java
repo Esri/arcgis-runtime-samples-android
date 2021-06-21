@@ -16,9 +16,6 @@
 
 package com.esri.arcgisruntime.sample.offlinegeocode;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -34,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.TileCache;
 import com.esri.arcgisruntime.geometry.Point;
@@ -53,6 +51,9 @@ import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeResult;
 import com.esri.arcgisruntime.tasks.geocode.LocatorTask;
 import com.esri.arcgisruntime.tasks.geocode.ReverseGeocodeParameters;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -210,12 +211,12 @@ public class MainActivity extends AppCompatActivity {
         GeocodeResult geocode = geocodeResults.get(0);
         String detail;
         // attributes from a click-based search
-        String street = geocode.getAttributes().get("Street").toString();
+        String street = geocode.getAttributes().get("StAddr").toString();
         String city = geocode.getAttributes().get("City").toString();
-        String state = geocode.getAttributes().get("State").toString();
-        String zip = geocode.getAttributes().get("ZIP").toString();
-        detail = city + ", " + state + " " + zip;
-        String address = street + "," + detail;
+        String region = geocode.getAttributes().get("Region").toString();
+        String postCode = geocode.getAttributes().get("Postal").toString();
+        detail = city + ", " + region + ", " + postCode;
+        String address = street + ", " + detail;
         displayGeocodeResult(point, address);
       }
     } catch (ExecutionException | InterruptedException e) {
