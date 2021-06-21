@@ -2,9 +2,7 @@
 
 Load ArcGIS vector tiled layers using custom styles.
 
-Custom styled ArcGIS vector tiled layer             |  ArcGIS vector tiled layer list             |  Offline custom style
-:-------------------------:|:-------------------------:|:-------------------------:
-![Custom styled ArcGIS vector tiled layer](vector-tiled-layer-style.png)  |  ![ArcGIS vector tiled layer list](vector-tiled-layers-list.png)  |  ![Offline custom style](vector-tiled-layer-custom-2.png)
+![Image of ArcGIS vector tiled layer custom style](vector-tiled-layer-style.png)
 
 ## Use case
 
@@ -24,7 +22,7 @@ Pan and zoom to explore the vector tile basemap. Select a theme to see it applie
     iv. Start the job using  `ExportVectorTilesJob.start()`.  
     v. Construct an `VectorTileCache` using the name of the local vector tile package.  
     vi. Once the job is complete, construct an `ArcGISVectorTiledLayer` using the vector tile cache and the `ItemResourceCache` from the job's result.  
-3. Create an `Basemap` from the `ArcGISVectorTiledLayer`.
+3. Create a `Basemap` from the `ArcGISVectorTiledLayer`.
 4. Assign the `Basemap` to the map's `basemap`.
 
 ## Relevant API
@@ -32,12 +30,18 @@ Pan and zoom to explore the vector tile basemap. Select a theme to see it applie
 * ArcGISVectorTiledLayer
 * ExportVectorTilesTask
 * ItemResourceCache
-* Map
 * VectorTileCache
 
 ## Offline data
+1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=f4b742a57af344988b02227e2824ca5f).
+1. Extract the contents of the downloaded zip file to disk.
+1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+1. Execute the following command:
+`adb push dodge_city.vtpk /Android/data/com.esri.arcgisruntime.sample.arcgisvectortiledlayercustomstyle/files/dodge_city.vtpk`
 
-This sample uses the [Dodge City OSM](https://www.arcgis.com/home/item.html?id=f4b742a57af344988b02227e2824ca5f) vector tile package. It is downloaded from ArcGIS Online automatically.
+Link             |  Local Location
+:-------------------------:|:-------------------------:
+|[Dodge City VTPK](https://arcgisruntime.maps.arcgis.com/home/item.html?id=f4b742a57af344988b02227e2824ca5f)  |  `<sdcard>`/Android/data/com.esri.arcgisruntime.sample.arcgisvectortiledlayercustomstyle/files/dodge_city.vtpk
 
 ## Tags
 
