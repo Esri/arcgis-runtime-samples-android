@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.ColorUtils
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.OgcFeatureCollectionTable
 import com.esri.arcgisruntime.data.QueryParameters
@@ -14,11 +13,10 @@ import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
-import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.display_ogc_api_collection.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
-import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,20 +28,21 @@ class MainActivity : AppCompatActivity() {
 
     // create an OGC feature collection table from the service url and collection id
     // keep loadable in scope to avoid garbage collection
-    private var ogcFeatureCollectionTable: OgcFeatureCollectionTable = OgcFeatureCollectionTable(serviceUrl,collectionId)
+    private var ogcFeatureCollectionTable: OgcFeatureCollectionTable =
+        OgcFeatureCollectionTable(serviceUrl, collectionId)
 
-    /*private val activityMainBinding by lazy {
+    private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
     private val mapView: MapView by lazy {
         activityMainBinding.mapView
-    }*/
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(activityMainBinding.root)
 
         // authentication with an API key or named user is required to access basemaps and other
         // location services
@@ -57,19 +56,21 @@ class MainActivity : AppCompatActivity() {
 
         // set the feature request mode to manual (only manual is currently supported).
         // in this mode, the table must be manually populated - panning and zooming won't request features automatically
-        ogcFeatureCollectionTable.featureRequestMode = ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE
+        ogcFeatureCollectionTable.featureRequestMode =
+            ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE
 
         // load the table
-        ogcFeatureCollectionTable.loadAsync();
+        ogcFeatureCollectionTable.loadAsync()
 
         // ensure the feature collection table has loaded successfully before creating a feature layer from it to display on the map
         ogcFeatureCollectionTable.addDoneLoadingListener {
 
-            if(ogcFeatureCollectionTable.loadStatus == LoadStatus.LOADED){
+            if (ogcFeatureCollectionTable.loadStatus == LoadStatus.LOADED) {
 
                 // create a feature layer and set a renderer to it to visualize the OGC API features
                 val featureLayer = FeatureLayer(ogcFeatureCollectionTable)
-                val simpleRenderer = SimpleRenderer(SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 3F))
+                val simpleRenderer =
+                    SimpleRenderer(SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 3F))
                 featureLayer.renderer = simpleRenderer
 
                 // add the layer to the map
@@ -77,37 +78,52 @@ class MainActivity : AppCompatActivity() {
 
                 // zoom to a small area within the dataset by default
                 val datasetExtent = ogcFeatureCollectionTable.extent
-                if(datasetExtent != null && !datasetExtent.isEmpty){
-                    mapView.setViewpointGeometryAsync(Envelope(datasetExtent.center,datasetExtent.width/3,datasetExtent.height/3))
+                if (datasetExtent != null && !datasetExtent.isEmpty) {
+                    mapView.setViewpointGeometryAsync(
+                        Envelope(
+                            datasetExtent.center,
+                            datasetExtent.width / 3,
+                            datasetExtent.height / 3
+                        )
+                    )
                 }
-            }else{
+            } else {
                 // show an alert if there is a loading failure
-                Toast.makeText(applicationContext,  "Failed to load OGC Feature Collection Table", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    applicationContext,
+                    "Failed to load OGC Feature Collection Table",
+                    Toast.LENGTH_SHORT
+                ).show()
 
             }
         }
 
         // once the map view navigation has completed, query the OGC API feature table for
         // additional features within the new visible extent
-        mapView.addNavigationChangedListener{
-            if(!it.isNavigating){
+        mapView.addNavigationChangedListener {
+            if (!it.isNavigating) {
 
                 // get the current extent
-                val currentExtent = mapView.visibleArea.extent;
+                val currentExtent = mapView.visibleArea.extent
 
                 // create a query based on the current visible extent
                 val visibleExtentQuery = QueryParameters()
                 visibleExtentQuery.geometry = currentExtent
-                visibleExtentQuery.spatialRelationship = QueryParameters.SpatialRelationship.INTERSECTS
+                visibleExtentQuery.spatialRelationship =
+                    QueryParameters.SpatialRelationship.INTERSECTS
                 // set a limit of 5000 on the number of returned features per request, the default on some services
                 // could be as low as 10
                 visibleExtentQuery.maxFeatures = 5000
 
-                try{
+                try {
                     // populate the table with the query, leaving existing table entries intact
                     // setting the outfields parameter to null requests all fields
-                    ogcFeatureCollectionTable.populateFromServiceAsync(visibleExtentQuery, false, null)
-                }catch (e: Exception){
+                    ogcFeatureCollectionTable.populateFromServiceAsync(
+                        visibleExtentQuery,
+                        false,
+                        null
+                    )
+                } catch (e: Exception) {
                     e.printStackTrace()
                     Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
                 }
