@@ -22,6 +22,25 @@ import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
+    // define strings for the service URL and collection id
+    // note that the service defines the collection id which can be accessed
+    // via OgcFeatureCollectionInfo.getCollectionId().
+    private val serviceUrl = "https://demo.ldproxy.net/daraa"
+    private val collectionId = "TransportationGroundCrv"
+
+    // create an OGC feature collection table from the service url and collection id
+    // keep loadable in scope to avoid garbage collection
+    private var ogcFeatureCollectionTable: OgcFeatureCollectionTable = OgcFeatureCollectionTable(serviceUrl,collectionId)
+
+    /*private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }*/
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -35,14 +54,6 @@ class MainActivity : AppCompatActivity() {
 
         // set the map to be displayed in the layout's MapView
         mapView.map = map
-
-        // define strings for the service URL and collection id
-        // note that the service defines the collection id which can be accessed via OgcFeatureCollectionInfo.getCollectionId().
-        val serviceUrl = "https://demo.ldproxy.net/daraa"
-        val collectionId = "TransportationGroundCrv"
-
-        // create an OGC feature collection table from the service url and collection id
-        val ogcFeatureCollectionTable = OgcFeatureCollectionTable(serviceUrl,collectionId)
 
         // set the feature request mode to manual (only manual is currently supported).
         // in this mode, the table must be manually populated - panning and zooming won't request features automatically
