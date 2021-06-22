@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         // set the feature request mode to manual (only manual is currently supported).
         // in this mode, the table must be manually populated - panning and zooming won't request features automatically
-        ogcFeatureCollectionTable.featureRequestMode(ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE)
+        ogcFeatureCollectionTable.featureRequestMode = ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE
 
         // load the table
         ogcFeatureCollectionTable.loadAsync();
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
                 // create a feature layer and set a renderer to it to visualize the OGC API features
                 val featureLayer = FeatureLayer(ogcFeatureCollectionTable)
-                val simpleRenderer = SimpleRenderer(SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, ColorUtils.colorToHSL(Color.BLUE, floatArrayOf(1F,1F)).hashCode(), 3F))
+                val simpleRenderer = SimpleRenderer(SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 3F))
                 featureLayer.renderer = simpleRenderer
 
                 // add the layer to the map
@@ -114,8 +114,4 @@ class MainActivity : AppCompatActivity() {
         mapView.dispose()
         super.onDestroy()
     }
-}
-
-private fun OgcFeatureCollectionTable.featureRequestMode(manualCache: ServiceFeatureTable.FeatureRequestMode) {
-
 }
