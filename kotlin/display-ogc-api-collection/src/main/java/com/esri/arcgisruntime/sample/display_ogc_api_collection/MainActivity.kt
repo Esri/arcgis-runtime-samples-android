@@ -26,10 +26,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
+        // create a map with the BasemapType topographic
         val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
 
+        // set the map to be displayed in the layout's MapView
         mapView.map = map
 
         // define strings for the service URL and collection id
