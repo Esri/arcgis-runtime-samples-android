@@ -2,6 +2,7 @@ package com.esri.arcgisruntime.sample.displayogcapicollection
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
@@ -89,12 +90,15 @@ class MainActivity : AppCompatActivity() {
                 }
             } else {
                 // show an alert if there is a loading failure
+                Log.e(
+                    ogcFeatureCollectionTable.loadError.message,
+                    ogcFeatureCollectionTable.loadError.additionalMessage
+                )
                 Toast.makeText(
                     applicationContext,
                     "Failed to load OGC Feature Collection Table",
                     Toast.LENGTH_SHORT
                 ).show()
-
             }
         }
 
@@ -124,8 +128,11 @@ class MainActivity : AppCompatActivity() {
                         null
                     )
                 } catch (e: Exception) {
-                    e.printStackTrace()
-                    Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext,
+                        "Error populating from service: " + e.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
