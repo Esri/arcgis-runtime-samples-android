@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.esri.arcgisruntime.sample.display_ogc_api_collection">
+    package="com.esri.arcgisruntime.sample.displayogcapicollection">
 
     <uses-permission android:name="android.permission.INTERNET" />
 

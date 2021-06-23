@@ -1,4 +1,4 @@
-package com.esri.arcgisruntime.sample.display_ogc_api_collection
+package com.esri.arcgisruntime.sample.displayogcapicollection
 
 import android.graphics.Color
 import android.os.Bundle
@@ -14,7 +14,7 @@ import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.MapView
-import com.esri.arcgisruntime.sample.display_ogc_api_collection.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.displayogcapicollection.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
 
