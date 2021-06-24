@@ -2,7 +2,7 @@
 
 Display an OGC API feature collection and query features while navigating the map view.
 
-![Image of display OGC API collection](DisplayOGCAPICollection.png)
+![Image of display OGC API collection](display-ogc-api-collection.png)
 
 ## Use case
 
@@ -16,7 +16,7 @@ Pan the map and observe how new features are loaded from the OGC API feature ser
 
 1. Create an `OgcFeatureCollectionTable` using a URL to an OGC API feature service and a collection ID.
 2. Set the feature table's `FeatureRequestMode` property to `FeatureRequestMode.MANUAL_CACHE`.
-3. Call `OgcFeatureCollectionTable.LoadAsync()`.
+3. Call `OgcFeatureCollectionTable.loadAsync()`.
 4. Create a `FeatureLayer` using the feature collection table and add it to the map view.
 5. Every time the map view navigation completes:
     1. Create `QueryParameters`.
