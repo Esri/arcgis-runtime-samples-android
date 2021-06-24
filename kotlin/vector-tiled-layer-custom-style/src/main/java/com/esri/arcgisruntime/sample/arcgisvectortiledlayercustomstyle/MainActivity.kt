@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Displays the layer of the given itemID.
+     * Displays the layer of the given [itemID].
      */
     private fun showSelectedItem(itemID: String) {
         currentItemID = itemID
@@ -115,8 +115,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     *  Checks local cache for local cache files.
-     *  If not it calls loadLayerWithOfflineCustomStyle() to retrieve the cache files.
+     *  Checks local cache for local cache files using the [itemID].
+     *  If not it calls loadLayerWithOfflineCustomStyle([itemID]) to retrieve the cache files.
      */
     private fun checkOfflineItemCache(itemID: String) {
 
@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Retrieves the style resource files and caches it to the local device.
+     * Retrieves the style resource files using [itemID] and caches it to the local device.
      */
     private fun loadLayerWithOfflineCustomStyle(itemID: String) {
 
@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Sets up an ArcGISVectorTiledLayer using the itemResourceCache
+     * Sets up an ArcGISVectorTiledLayer using the [itemResourceCache]
      * for the setMap() function.
      */
     private fun setResourceAndVectorTileCache(itemResourceCache: ItemResourceCache) {
@@ -189,7 +189,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Set the map using the layer and the viewpoint.
+     * Set the map using the [layer] and the [viewpoint].
      */
     private fun setMap(layer: ArcGISVectorTiledLayer, viewpoint: Viewpoint) {
         // Clears the existing basemap layer
@@ -259,6 +259,7 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Custom adapter to set and control the spinner.
+     * [context] is used to help render the view
      */
     class CustomSpinnerAdapter(private val context: Context) : BaseAdapter() {
 
@@ -278,7 +279,8 @@ class MainActivity : AppCompatActivity() {
                 itemHolder = view.tag as ItemHolder
             }
             // Sets the TextView to the style name.
-            itemHolder.layerText.text = context.resources.getStringArray(R.array.style_names)[position]
+            itemHolder.layerText.text =
+                context.resources.getStringArray(R.array.style_names)[position]
 
             // Gets the drawable style associated with the position.
             val id = context.resources.getIdentifier(
