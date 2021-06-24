@@ -47,7 +47,7 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-// URL to the OAFeat service.
+// URL to the OAFeat service
 private const val serviceUrl = "https://demo.ldproxy.net/daraa"
 
 class MainActivity : AppCompatActivity() {
@@ -88,6 +88,7 @@ class MainActivity : AppCompatActivity() {
         // load the service
         loadService()
 
+        // set up ui behavior
         setupUI()
     }
 
@@ -102,7 +103,6 @@ class MainActivity : AppCompatActivity() {
         val service = OgcFeatureService(serviceEditText.text.toString())
 
         // load the OAFeat service
-        service.loadAsync()
         service.addDoneLoadingListener {
 
             // get the service metadata
@@ -134,11 +134,14 @@ class MainActivity : AppCompatActivity() {
             // expand the layers list
             layerFAB.isExpanded = true
         }
+        service.loadAsync()
     }
 
     /**
      * Load  and query features from the given OGC Feature Collection. Create a Feature Layer from
      * the table and add it to the map's operational layers.
+     *
+     * @param selectedCollectionInfo used to create an OgcFeatureCollectionTable
      */
     private fun loadLayer(selectedCollectionInfo: OgcFeatureCollectionInfo) {
         // create the OGC feature collection table
@@ -186,6 +189,8 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Return a simple renderer for points, lines and polygons.
+     *
+     * @param table of features to return simple renderer for
      */
     private fun getRendererForTable(table: FeatureTable): Renderer? {
         return when (table.geometryType) {
@@ -242,5 +247,20 @@ class MainActivity : AppCompatActivity() {
         layerFAB.setOnClickListener {
             layerFAB.isExpanded = !layerFAB.isExpanded
         }
+    }
+
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
     }
 }
