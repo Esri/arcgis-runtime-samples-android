@@ -1,0 +1,32 @@
+{
+    "category": "TODO",
+    "description": "Display an OGC API feature collection and query features while navigating the map view.",
+    "formal_name": "DisplayOgcApiCollection",
+    "ignore": false,
+    "images": [
+        "display-ogc-api-collection.png"
+    ],
+    "keywords": [
+        "OGC",
+        "OGC API",
+        "feature",
+        "feature layer",
+        "feature table",
+        "service",
+        "table",
+        "web",
+        "OgcFeatureCollectionTable",
+        "QueryParameters"
+    ],
+    "language": "kotlin",
+    "provision_from": "TODO",
+    "provision_to": "TODO",
+    "relevant_apis": [
+        "OgcFeatureCollectionTable",
+        "QueryParameters"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/displayogcapicollection/MainActivity.kt"
+    ],
+    "title": "Display OGC API collection"
+}
