@@ -111,12 +111,14 @@ class MainActivity : AppCompatActivity() {
                 val currentExtent = mapView.visibleArea.extent
 
                 // create a query based on the current visible extent
-                val visibleExtentQuery = QueryParameters()
-                visibleExtentQuery.geometry = currentExtent
-                visibleExtentQuery.spatialRelationship =
-                    QueryParameters.SpatialRelationship.INTERSECTS
-                // set a limit of 5000 on the number of returned features per request, the default on some services
-                // could be as low as 10
+                val visibleExtentQuery = QueryParameters().apply {
+                    geometry = currentExtent
+                    spatialRelationship =
+                        QueryParameters.SpatialRelationship.INTERSECTS
+                    // set a limit of 5000 on the number of returned features per request, the default on some services
+                    // could be as low as 10
+                    maxFeatures = 5000
+                }
                 visibleExtentQuery.maxFeatures = 5000
 
                 try {
