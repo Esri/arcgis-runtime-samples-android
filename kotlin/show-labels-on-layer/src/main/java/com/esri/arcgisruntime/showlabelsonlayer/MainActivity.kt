@@ -24,17 +24,17 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.arcgisservices.LabelDefinition
+import com.esri.arcgisruntime.arcgisservices.LabelingPlacement
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.labeling.ArcadeLabelExpression
 import com.esri.arcgisruntime.symbology.TextSymbol
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
-import com.google.gson.JsonPrimitive
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -69,57 +69,42 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    // use red text with white halo for republican district labels
-    val republicanTextSymbol = TextSymbol().apply {
-      size = 10f
-      color = Color.RED
-      haloColor = Color.WHITE
-      haloWidth = 2f
-    }
+    val republicanLabelDefinition = makeLabelDefinition("Republican", Color.RED)
+    val democratLabelDefinition = makeLabelDefinition("Democrat", Color.BLUE)
 
-    // use blue text with white halo for democrat district labels
-    val democratTextSymbol = TextSymbol().apply {
-      size = 10f
-      color = Color.BLUE
-      haloColor = Color.WHITE
-      haloWidth = 2f
-    }
-
-    // use a custom label expression combining some of the feature's fields
-    val expressionInfo = JsonObject().apply {
-      add(
-        "expression",
-        JsonPrimitive("\$feature.NAME + \" (\" + left(\$feature.PARTY,1) + \")\\nDistrict \" + \$feature.CDFIPS")
-      )
-    }
-
-    // construct the label definition json
-    val json = JsonObject().apply {
-      add("labelExpressionInfo", expressionInfo)
-      // position the label in the center of the feature
-      add("labelPlacement", JsonPrimitive("esriServerPolygonPlacementAlwaysHorizontal"))
-    }
-
-    // create a copy of the json with a custom where clause and symbol only for republican districts
-    val republicanJson = json.deepCopy().apply {
-      add("where", JsonPrimitive("PARTY = 'Republican'"))
-      add("symbol", JsonParser.parseString(republicanTextSymbol.toJson()))
-    }
-
-    // create a copy of the json with a custom where clause and symbol only for democrat districts
-    val democratJson = json.deepCopy().apply {
-      add("where", JsonPrimitive("PARTY = 'Democrat'"))
-      add("symbol", JsonParser.parseString(democratTextSymbol.toJson()))
-    }
-
-    // create label definitions from the JSON strings
-    val republicanLabelDefinition = LabelDefinition.fromJson(republicanJson.toString())
-    val democratLabelDefinition = LabelDefinition.fromJson(democratJson.toString())
     featureLayer.apply {
       // add the definitions to the feature layer
       labelDefinitions.addAll(listOf(republicanLabelDefinition, democratLabelDefinition))
       // enable labels
       isLabelsEnabled = true
+    }
+  }
+
+  /**
+   * Creates a label definition for a given party and color to populate a text symbol.
+   *
+   * @param party name to be passed into the label definition's WHERE clause
+   * @param textColor to be passed into the text symbol
+   *
+   * @return label definition created from the given arcade expression
+   */
+  private fun makeLabelDefinition(party: String, textColor: Int): LabelDefinition {
+
+    // create text symbol for styling the label
+    val textSymbol = TextSymbol().apply {
+      size = 12f
+      color = textColor
+      haloColor = Color.WHITE
+      haloWidth = 2f
+    }
+
+    // create a label definition with an Arcade expression
+    val arcadeLabelExpression =
+      ArcadeLabelExpression("\$feature.NAME + \" (\" + left(\$feature.PARTY,1) + \")\\nDistrict \" + \$feature.CDFIPS")
+
+    return LabelDefinition(arcadeLabelExpression, textSymbol).apply {
+      placement = LabelingPlacement.POLYGON_ALWAYS_HORIZONTAL
+      whereClause = String.format("PARTY = '%s'", party)
     }
   }
 

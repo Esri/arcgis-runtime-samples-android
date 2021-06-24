@@ -15,7 +15,8 @@ Tap on one or more features while 'Add starting locations' or 'Add barriers' is 
 ## How it works
 
 1.  Create a `MapView` and add a `DefaultMapViewOnTouchListener` to listen for taps on the `MapView`.
-2.  Create and load a `Map` that contains `FeatureLayer`(s) that are part of a utility network.
+2.  Create and load a `ServiceGeodatabase` with a feature service URL and get tables with their layer IDs.
+2.  Create and load an `ArcGISMap` that contains `FeatureLayer`(s) that are part of a utility network.
 3.  Create and load a `UtilityNetwork` using the utility network feature service URL and the map created in step 2.
 4.  Add a `GraphicsOverlay` with symbology that distinguishes starting locations from barriers.
 5.  Identify features on the map and add a `Graphic` that represents its purpose (starting location or barrier) at the tapped location.
@@ -32,6 +33,7 @@ Tap on one or more features while 'Add starting locations' or 'Add barriers' is 
 ## Relevant API
 
 * FractionAlong
+* ServiceGeodatabase
 * UtilityAssetType
 * UtilityDomainNetwork
 * UtilityElement
