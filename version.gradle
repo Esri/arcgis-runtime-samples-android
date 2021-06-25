@@ -7,7 +7,7 @@ ext {
     versionName = '100.11.2'
     // library versions
     kotlinVersion = '1.5.0'
-    appcompatVersion = '1.2.0'
+    appcompatVersion = '1.3.0'
     constraintLayoutVersion = '2.0.4'
     multidexVersion = '2.0.1'
     arcgisVersion = '100.11.2'
