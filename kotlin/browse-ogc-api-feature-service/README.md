@@ -18,7 +18,7 @@ Select a layer to display from the list of layers shown in an OGC API service.
 2. Obtain the `OgcFeatureServiceInfo` from `OgcFeatureService.serviceInfo`.
 3. Create a list of feature collections from the `OgcFeatureServiceInfo.featureCollectionInfos`
 4. When a feature collection is selected, create an `OgcFeatureCollectionTable` from the `OgcFeatureCollectionInfo`.
-5. Populate the `OgcFeatureCollectionTable` using `PopulateFromServiceAsync` with `QueryParameters` that contain a `maxFeatures` property.
+5. Populate the `OgcFeatureCollectionTable` using `populateFromServiceAsync(...)` with `QueryParameters` that contain a `maxFeatures` property.
 6. Create a feature layer from the feature table.
 7. Add the feature layer to the map.
 
