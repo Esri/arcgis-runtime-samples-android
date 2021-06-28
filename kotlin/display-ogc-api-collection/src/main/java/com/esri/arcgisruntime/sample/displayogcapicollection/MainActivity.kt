@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     // define strings for the service URL and collection id
     // note that the service defines the collection id which can be accessed
-    // via OgcFeatureCollectionInfo.getCollectionId().
+    // via OgcFeatureCollectionInfo.getCollectionId()
     private val serviceUrl = "https://demo.ldproxy.net/daraa"
     private val collectionId = "TransportationGroundCrv"
 
