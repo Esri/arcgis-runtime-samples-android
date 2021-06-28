@@ -1,5 +1,5 @@
 {
-    "category": "TODO",
+    "category": "Layers",
     "description": "Display an OGC API feature collection and query features while navigating the map view.",
     "formal_name": "DisplayOgcApiCollection",
     "ignore": false,
@@ -19,8 +19,6 @@
         "QueryParameters"
     ],
     "language": "kotlin",
-    "provision_from": "TODO",
-    "provision_to": "TODO",
     "relevant_apis": [
         "OgcFeatureCollectionTable",
         "QueryParameters"
