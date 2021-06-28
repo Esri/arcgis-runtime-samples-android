@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
 
     /**
      *  Checks local cache for local cache files using the [itemID].
-     *  If not it calls loadLayerWithOfflineCustomStyle([itemID]) to retrieve the cache files.
+     *  If not, it calls loadLayerWithOfflineCustomStyle([itemID]) to retrieve the cache files.
      */
     private fun checkOfflineItemCache(itemID: String) {
 
