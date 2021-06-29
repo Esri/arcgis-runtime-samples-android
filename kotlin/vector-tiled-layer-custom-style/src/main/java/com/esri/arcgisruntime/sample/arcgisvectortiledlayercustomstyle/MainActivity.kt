@@ -142,6 +142,7 @@ class MainActivity : AppCompatActivity() {
         val portalItem = PortalItem(Portal("https://www.arcgis.com"), itemID)
         val task = ExportVectorTilesTask(portalItem)
 
+        // Create job using portalItem ID and .vtpk path to retrieve the itemResourceCache
         val exportVectorTilesJob =
             task.exportStyleResourceCache(getExternalFilesDir(null)?.path + "/" + portalItem.itemId)
         exportVectorTilesJob.addJobDoneListener {
@@ -168,23 +169,29 @@ class MainActivity : AppCompatActivity() {
         val vectorTileCache = VectorTileCache(getExternalFilesDir(null)?.path + "/dodge_city.vtpk")
         vectorTileCache.loadAsync()
         vectorTileCache.addDoneLoadingListener {
-            if (vectorTileCache.loadError != null)
-                Log.e("VectorTileCache: ", vectorTileCache.loadError.message.toString())
-            else {
+            if (vectorTileCache.loadStatus == LoadStatus.LOADED) {
                 // Loads the layer based on the vector tile cache and the style resource.
                 val layer = ArcGISVectorTiledLayer(vectorTileCache, itemResourceCache)
                 layer.addDoneLoadingListener {
-                    if (layer.loadError != null)
-                        Log.e("VectorTiledLayer: ", layer.loadError.toString())
-                    else
-                        Log.d("VectorTiledLayer:", "Loaded successfully")
+                    if (layer.loadStatus != LoadStatus.LOADED) {
+                        Toast.makeText(
+                            applicationContext,
+                            layer.loadError.message + ": " + layer.loadError.additionalMessage,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
 
                 // OfflineItemIDs uses WGS-84 as a spatial ref.
                 val viewpoint =
                     Viewpoint(Point(-100.01766, 37.76528, SpatialReferences.getWgs84()), 100000.0)
                 setMap(layer, viewpoint)
-            }
+            } else
+                Toast.makeText(
+                    applicationContext,
+                    vectorTileCache.loadError.message + ": " + vectorTileCache.loadError.additionalMessage,
+                    Toast.LENGTH_SHORT
+                ).show()
         }
     }
 
