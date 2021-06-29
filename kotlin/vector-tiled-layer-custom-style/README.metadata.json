@@ -1,0 +1,42 @@
+{
+    "category": "Visualization",
+    "description": "Load ArcGIS vector tiled layers using custom styles.",
+    "formal_name": "ArcgisVectorTiledLayerCustomStyle",
+    "ignore": false,
+    "images": [
+        "vector-tiled-layer-custom-2.png",
+        "vector-tiled-layer-style.png",
+        "vector-tiled-layers-list.png"
+    ],
+    "keywords": [
+        "tiles",
+        "vector",
+        "vector basemap",
+        "vector tile package",
+        "vector tiled layer",
+        "vector tiles",
+        "vtpk",
+        "ArcGISVectorTiledLayer",
+        "ExportVectorTilesTask",
+        "ItemResourceCache",
+        "VectorTileCache"
+    ],
+    "language": "kotlin",
+    "provision_from": [
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=f4b742a57af344988b02227e2824ca5f"
+    ],
+    "provision_to": [
+        "/dodge_city.vtpk"
+    ],
+    "relevant_apis": [
+        "ArcGISVectorTiledLayer",
+        "ExportVectorTilesTask",
+        "ItemResourceCache",
+        "Map",
+        "VectorTileCache"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/arcgisvectortiledlayercustomstyle/MainActivity.kt"
+    ],
+    "title": "ArcGIS vector tiled layer (custom style)"
+}
