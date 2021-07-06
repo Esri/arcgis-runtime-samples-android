@@ -24,9 +24,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
@@ -40,9 +38,9 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.security.UserCredential
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.create_version_dialog.view.*
+import com.esri.arcgisruntime.sample.editwithbranchversioning.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -56,9 +54,29 @@ class MainActivity : AppCompatActivity() {
   private var selectedFeature: Feature? = null
   private var createdVersionName: String = ""
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val switchVersionButton: Button by lazy {
+    activityMainBinding.switchVersionButton
+  }
+
+  private val currentVersionNameTextView: TextView by lazy {
+    activityMainBinding.currentVersionNameTextView
+  }
+
+  private val createVersionButton: Button by lazy {
+    activityMainBinding.createVersionButton
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required to access basemaps and other
     // location services

@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.concurrent.Job
@@ -32,6 +33,7 @@ import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.security.AuthenticationManager
@@ -40,8 +42,7 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapJob
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapParameters
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_layout.*
+import com.esri.arcgisruntime.sample.generateofflinemap.databinding.ActivityMainBinding
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -55,6 +56,18 @@ class MainActivity : AppCompatActivity() {
   private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
 
   private val downloadArea: Graphic by lazy { Graphic() }
+
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val takeMapOfflineButton: Button by lazy {
+    activityMainBinding.takeMapOfflineButton
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

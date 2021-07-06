@@ -24,8 +24,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
@@ -40,6 +39,8 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.performvalveisolationtrace.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
 import com.esri.arcgisruntime.utilitynetworks.UtilityCategory
@@ -53,13 +54,40 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityTraceConfiguration
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceFilter
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceType
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.spinner_text_item.view.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
 
   private val TAG = MainActivity::class.java.simpleName
+
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val fab: FloatingActionButton by lazy {
+    activityMainBinding.fab
+  }
+
+  private val trace_button: Button by lazy {
+    activityMainBinding.traceButton
+  }
+
+  private val progressBar: ProgressBar by lazy {
+    activityMainBinding.progressBar
+  }
+
+  private val spinner: Spinner by lazy {
+    activityMainBinding.spinner
+  }
+
+  private val include_isolated_switch: Switch by lazy {
+    activityMainBinding.includeIsolatedSwitch
+  }
 
   // create a graphics overlay for the starting location and add it to the map view
   private val startingLocationGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }

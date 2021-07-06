@@ -21,6 +21,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -30,13 +31,22 @@ import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.Camera
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.mapping.view.SceneView
+import com.esri.arcgisruntime.samples.createterrainfromalocaltilepackage.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val sceneView: SceneView by lazy {
+    activityMainBinding.sceneView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // create a scene and add a basemap to it
     with(ArcGISScene()) {

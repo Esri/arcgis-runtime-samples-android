@@ -28,6 +28,7 @@ import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.portal.PortalQueryParameters
@@ -36,9 +37,7 @@ import com.esri.arcgisruntime.security.AuthenticationChallengeHandler
 import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.UserCredential
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.portal_info.*
-import kotlinx.android.synthetic.main.portal_load_state.*
+import com.esri.arcgisruntime.sample.integratedwindowsauthentication.databinding.ActivityMainBinding
 import java.net.URI
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutionException
@@ -63,9 +62,17 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler,
     private val MAX_AUTH_ATTEMPTS = 5
   }
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required to access basemaps and other
     // location services

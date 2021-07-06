@@ -26,20 +26,15 @@ import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.Feature
 import com.esri.arcgisruntime.data.Geodatabase
-import com.esri.arcgisruntime.geometry.GeometryEngine
-import com.esri.arcgisruntime.geometry.GeometryType
-import com.esri.arcgisruntime.geometry.Point
-import com.esri.arcgisruntime.geometry.Polyline
-import com.esri.arcgisruntime.geometry.PolylineBuilder
+import com.esri.arcgisruntime.geometry.*
 import com.esri.arcgisruntime.layers.AnnotationLayer
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.edit_attribute_layout.view.*
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.editfeatureswithfeaturelinkedannotation.databinding.ActivityMainBinding
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
@@ -49,9 +44,17 @@ class MainActivity : AppCompatActivity() {
   private var selectedFeature: Feature? = null
   private var selectedFeatureIsPolyline = false
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required to access basemaps and other
     // location services

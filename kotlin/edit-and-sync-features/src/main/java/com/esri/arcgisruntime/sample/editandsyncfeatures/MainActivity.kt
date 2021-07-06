@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -38,14 +39,14 @@ import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseJob
 import com.esri.arcgisruntime.tasks.geodatabase.GeodatabaseSyncTask
 import com.esri.arcgisruntime.tasks.geodatabase.SyncGeodatabaseJob
 import com.esri.arcgisruntime.tasks.geodatabase.SyncGeodatabaseParameters
 import com.esri.arcgisruntime.tasks.geodatabase.SyncLayerOption
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_layout.*
+import com.esri.arcgisruntime.sample.editandsyncfeatures.databinding.ActivityMainBinding
 import java.util.ArrayList
 import kotlin.math.roundToInt
 
@@ -60,9 +61,21 @@ class MainActivity : AppCompatActivity() {
   private var geodatabase: Geodatabase? = null
   private val selectedFeatures by lazy { ArrayList<Feature>() }
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val syncButton: Button by lazy {
+    activityMainBinding.syncButton
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // use local tile package for the base map
     val sanFranciscoTileCache =

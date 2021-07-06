@@ -18,25 +18,34 @@ package com.esri.arcgisruntime.sample.portaluserinfo
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.portal.Portal
+import com.esri.arcgisruntime.sample.portaluserinfo.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_profile.*
 import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
+
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val userImage: ImageView by lazy {
+    activityMainBinding.userImage
+  }
 
   // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private lateinit var portal: Portal
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // Set the DefaultAuthenticationChallengeHandler to allow authentication with the portal.
     val handler = DefaultAuthenticationChallengeHandler(this)

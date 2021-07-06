@@ -25,10 +25,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
@@ -41,6 +40,8 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.routearoundbarriers.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.CompositeSymbol
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
@@ -55,9 +56,6 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.route_controls_bottom_sheet.*
-import kotlinx.android.synthetic.main.route_controls_bottom_sheet.view.*
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
@@ -93,9 +91,65 @@ class MainActivity : AppCompatActivity() {
     )
   }
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val mapViewContainer: ConstraintLayout by lazy {
+    activityMainBinding.mapViewContainer
+  }
+
+  private val resetButton: Button by lazy {
+    activityMainBinding.resetButton
+  }
+
+  private val bottomSheet: LinearLayout by lazy {
+    activityMainBinding.bottomSheet.bottomSheetLayout
+  }
+
+  private val header: ConstraintLayout by lazy {
+    activityMainBinding.bottomSheet.header
+  }
+
+  private val imageView: ImageView by lazy {
+    activityMainBinding.bottomSheet.imageView
+  }
+
+  private val addStopButton: ToggleButton by lazy {
+    activityMainBinding.bottomSheet.addStopButton
+  }
+
+  private val addBarrierButton: ToggleButton by lazy {
+    activityMainBinding.bottomSheet.addBarrierButton
+  }
+
+  private val reorderCheckBox: CheckBox by lazy {
+    activityMainBinding.bottomSheet.reorderCheckBox
+  }
+
+  private val preserveFirstStopCheckBox: CheckBox by lazy {
+    activityMainBinding.bottomSheet.preserveFirstStopCheckBox
+  }
+
+  private val preserveLastStopCheckBox: CheckBox by lazy {
+    activityMainBinding.bottomSheet.preserveLastStopCheckBox
+  }
+
+  private val directionsTextView: TextView by lazy {
+    activityMainBinding.bottomSheet.directionsTextView
+  }
+
+  private val directionsListView: ListView by lazy {
+    activityMainBinding.bottomSheet.directionsListView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required to access basemaps and other
     // location services
@@ -180,7 +234,7 @@ class MainActivity : AppCompatActivity() {
         }
       }
       // rotate the arrow so it starts off in the correct rotation
-      header.imageView.rotation = 180f
+      imageView.rotation = 180f
     }
 
     // change button toggle state on click
@@ -342,13 +396,13 @@ class MainActivity : AppCompatActivity() {
       // animate the arrow when the bottom sheet slides
       addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
-          bottomSheet.header.imageView.rotation = slideOffset * 180f
+          imageView.rotation = slideOffset * 180f
         }
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-          bottomSheet.header.imageView.rotation = when (newState) {
+          imageView.rotation = when (newState) {
             BottomSheetBehavior.STATE_EXPANDED -> 180f
-            else -> bottomSheet.header.imageView.rotation
+            else -> imageView.rotation
           }
         }
       })

@@ -20,10 +20,12 @@ package com.esri.arcgisruntime.sample.manageoperationallayers
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer
 import com.esri.arcgisruntime.layers.Layer
@@ -31,15 +33,42 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.manageoperationallayers.databinding.ActivityMainBinding
+import com.google.android.material.circularreveal.CircularRevealFrameLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
   private val inactiveLayers = mutableListOf<Layer>()
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val fab: FloatingActionButton by lazy {
+    activityMainBinding.fab
+  }
+
+  private val activeRecyclerView: RecyclerView by lazy {
+    activityMainBinding.activeRecyclerView
+  }
+
+  private val inactiveRecyclerView: RecyclerView by lazy {
+    activityMainBinding.inactiveRecyclerView
+  }
+
+  private val progressBar: ProgressBar by lazy {
+    activityMainBinding.progressBar
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required to access basemaps and other
     // location services

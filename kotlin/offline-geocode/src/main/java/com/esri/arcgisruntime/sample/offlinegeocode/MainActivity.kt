@@ -40,17 +40,30 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters
 import com.esri.arcgisruntime.tasks.geocode.GeocodeResult
 import com.esri.arcgisruntime.tasks.geocode.LocatorTask
 import com.esri.arcgisruntime.tasks.geocode.ReverseGeocodeParameters
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.sample.offlinegeocode.databinding.ActivityMainBinding
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
   private val TAG = MainActivity::class.java.simpleName
+
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val searchView: SearchView by lazy {
+    activityMainBinding.searchView
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
 
   private val geocodeParameters: GeocodeParameters by lazy {
     GeocodeParameters().apply {
@@ -83,7 +96,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // load the tile cache from local storage
     val tileCache = TileCache(getExternalFilesDir(null)?.path + getString(R.string.san_diego_tpk))

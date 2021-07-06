@@ -21,8 +21,12 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import android.widget.Button
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.data.TileCache
 import com.esri.arcgisruntime.geometry.Envelope
@@ -35,14 +39,15 @@ import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.symbology.CompositeSymbol
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.TextSymbol
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
+import com.esri.arcgisruntime.sample.offlinerouting.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.ExecutionException
 import kotlin.math.roundToInt
 
@@ -61,9 +66,26 @@ class MainActivity : AppCompatActivity() {
 
   private val TAG: String = MainActivity::class.java.simpleName
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val clearButton: Button by lazy {
+    activityMainBinding.clearButton
+  }
+
+  private val modeSwitch: RadioGroup by lazy {
+    activityMainBinding.modeSwitch
+  }
+
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // create a tile cache from the tpk
     val tileCache = TileCache(getExternalFilesDir(null)?.path + getString(R.string.tpk_path))

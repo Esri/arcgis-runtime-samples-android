@@ -17,6 +17,7 @@
 package com.esri.arcgisruntime.sample.featurelayerdefinitionexpression
 
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
@@ -25,12 +26,25 @@ import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.featurelayerdefinitionexpression.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
   // set flag for applying expression to feature layer
   private var applyExpression: Boolean = true
+
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val applyExpressionButton: Button by lazy {
+    activityMainBinding.applyExpressionButton
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

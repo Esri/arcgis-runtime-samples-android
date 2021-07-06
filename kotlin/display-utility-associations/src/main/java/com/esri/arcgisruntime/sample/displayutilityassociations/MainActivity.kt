@@ -26,12 +26,12 @@ import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.utilitynetworks.UtilityAssociationType
 import com.esri.arcgisruntime.utilitynetworks.UtilityNetwork
 import com.esri.arcgisruntime.utilitynetworks.UtilityNetworkSource
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.utility_association_legend.*
+import com.esri.arcgisruntime.sample.displayutilityassociations.databinding.ActivityMainBinding
 import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
@@ -64,9 +64,17 @@ class MainActivity : AppCompatActivity() {
     )
   }
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
 
     // authentication with an API key or named user is required to access basemaps and other

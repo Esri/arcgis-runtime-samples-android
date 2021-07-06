@@ -31,14 +31,13 @@ import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.GeoElement
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Callout
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.MapView
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.samples.deletefeaturesfeatureservice.databinding.ActivityMainBinding
 import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonClickedListener {
@@ -47,14 +46,22 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
 
   private lateinit var featureLayer: FeatureLayer
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required to access basemaps and other 
     // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-    setContentView(R.layout.activity_main)
 
     // create service feature table from URL
     featureTable = ServiceFeatureTable(getString(R.string.feature_layer_url))

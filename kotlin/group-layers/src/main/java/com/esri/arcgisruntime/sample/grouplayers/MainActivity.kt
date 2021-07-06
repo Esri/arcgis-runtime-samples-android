@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.grouplayers
 
 import android.os.Bundle
 import android.view.View
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,16 +32,29 @@ import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.LayerList
 import com.esri.arcgisruntime.mapping.view.Camera
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.mapping.view.SceneView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.group_layers_bottom_sheet.view.*
+import com.esri.arcgisruntime.sample.grouplayers.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val sceneView: SceneView by lazy {
+    activityMainBinding.sceneView
+  }
+
+  private val bottomSheet: LinearLayout by lazy {
+    activityMainBinding.bottomSheet.bottomSheetLayout
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // create different types of layers
     val trees =

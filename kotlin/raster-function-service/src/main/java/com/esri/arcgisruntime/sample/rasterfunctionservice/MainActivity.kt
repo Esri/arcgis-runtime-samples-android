@@ -24,12 +24,21 @@ import com.esri.arcgisruntime.layers.RasterLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.raster.ImageServiceRaster
 import com.esri.arcgisruntime.raster.Raster
 import com.esri.arcgisruntime.raster.RasterFunction
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.sample.rasterfunctionservice.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

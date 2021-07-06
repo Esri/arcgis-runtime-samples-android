@@ -22,10 +22,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.TileCache
@@ -38,12 +40,12 @@ import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.exporttiles.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheJob
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheParameters
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheTask
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_layout.*
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -52,9 +54,41 @@ class MainActivity : AppCompatActivity() {
   private var exportTileCacheJob: ExportTileCacheJob? = null
   private var downloadArea: Graphic? = null
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val exportTilesButton: Button by lazy {
+    activityMainBinding.exportTilesButton
+  }
+
+  private val mapPreviewLayout: ConstraintLayout by lazy {
+    activityMainBinding.mapPreviewLayout
+  }
+
+  private val previewTextView: TextView by lazy {
+    activityMainBinding.previewTextView
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val closeButton: Button by lazy {
+    activityMainBinding.closeButton
+  }
+
+  private val previewMapView: MapView by lazy {
+    activityMainBinding.previewMapView
+  }
+
+  private val dimBackground: View by lazy {
+    activityMainBinding.dimBackground
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // create an ArcGISTiledLayer to use as the basemap
     val tiledLayer = ArcGISTiledLayer(getString(R.string.world_street_map))
