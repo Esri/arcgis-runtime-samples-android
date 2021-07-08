@@ -90,7 +90,7 @@
             app:layout_constraintEnd_toStartOf="@+id/mapView">
 
         <ListView
-                android:id="@+id/layerList"
+                android:id="@+id/featureCollectionTitleListView"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:background="@android:color/background_light"

@@ -1,12 +1,30 @@
+/*
+ *  Copyright 2021 Esri
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 package com.esri.arcgisruntime.sample.arcgisvectortiledlayercustomstyle
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.BaseAdapter
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.concurrent.Job
@@ -18,12 +36,10 @@ import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.ItemResourceCache
 import com.esri.arcgisruntime.mapping.Viewpoint
-import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
-import com.esri.arcgisruntime.sample.arcgisvectortiledlayercustomstyle.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.tasks.vectortilecache.ExportVectorTilesTask
-
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -49,22 +65,9 @@ class MainActivity : AppCompatActivity() {
     // A dictionary to cache loaded vector tiled layers.
     private var vectorTiledLayersMap: MutableMap<String, ArcGISVectorTiledLayer> = mutableMapOf()
 
-
-    private val activityMainBinding by lazy {
-        ActivityMainBinding.inflate(layoutInflater)
-    }
-
-    private val mapView: MapView by lazy {
-        activityMainBinding.mapView
-    }
-
-    private val spinner: Spinner by lazy {
-        activityMainBinding.spinner
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(activityMainBinding.root)
+        setContentView(R.layout.activity_main)
 
         // Set the map to be displayed in the layout's MapView
         mapView.map = ArcGISMap()
@@ -77,7 +80,6 @@ class MainActivity : AppCompatActivity() {
 
         // Sets up the spinner to change the selected Vector Styled Layer.
         setUpSpinner()
-
     }
 
     /**
