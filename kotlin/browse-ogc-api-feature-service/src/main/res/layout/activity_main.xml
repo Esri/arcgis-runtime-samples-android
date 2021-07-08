@@ -29,7 +29,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="@string/instructions"
+                android:text="@string/instructions_text"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="@+id/serviceEditText"
                 app:layout_constraintStart_toStartOf="@+id/serviceEditText"
