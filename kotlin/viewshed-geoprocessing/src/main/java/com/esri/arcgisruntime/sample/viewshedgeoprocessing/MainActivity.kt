@@ -36,6 +36,8 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.viewshedgeoprocessing.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
@@ -43,13 +45,20 @@ import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingFeatures
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingJob
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingParameters
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingTask
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.ExecutionException
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
   private val TAG: String = this::class.java.simpleName
+
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
 
   private val geoprocessingTask: GeoprocessingTask by lazy { GeoprocessingTask(getString(R.string.viewshed_service)) }
   private var geoprocessingJob: GeoprocessingJob? = null
@@ -61,7 +70,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required to access basemaps and other
     // location services

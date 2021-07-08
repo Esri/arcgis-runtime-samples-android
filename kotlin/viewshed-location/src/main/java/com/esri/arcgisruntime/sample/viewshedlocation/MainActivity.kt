@@ -32,12 +32,8 @@ import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Surface
-import com.esri.arcgisruntime.mapping.view.AnalysisOverlay
-import com.esri.arcgisruntime.mapping.view.Camera
-import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener
-import com.esri.arcgisruntime.mapping.view.OrbitLocationCameraController
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.viewshed_controls.*
+import com.esri.arcgisruntime.mapping.view.*
+import com.esri.arcgisruntime.sample.viewshedlocation.databinding.ActivityMainBinding
 import java.util.concurrent.ExecutionException
 import kotlin.math.roundToInt
 
@@ -61,9 +57,21 @@ class MainActivity : AppCompatActivity() {
 
   private lateinit var viewShed: LocationViewshed
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val sceneView: SceneView by lazy {
+    activityMainBinding.sceneView
+  }
+
+  private val sceneView: SceneView by lazy {
+    activityMainBinding.sceneView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // create a surface for elevation data
     val surface = Surface().apply {
