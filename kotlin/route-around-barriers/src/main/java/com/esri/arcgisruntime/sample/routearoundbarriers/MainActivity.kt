@@ -408,7 +408,7 @@ class MainActivity : AppCompatActivity() {
       })
     }
 
-    bottomSheet.directionsListView.apply {
+    directionsListView.apply {
       // Set the adapter for the list view
       adapter = ArrayAdapter(
         this@MainActivity,
