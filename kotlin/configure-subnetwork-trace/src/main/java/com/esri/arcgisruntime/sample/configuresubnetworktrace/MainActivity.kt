@@ -114,12 +114,12 @@ class MainActivity : AppCompatActivity() {
         // get a default trace configuration from a tier to update the UI
         val domainNetwork = utilityNetwork.definition.getDomainNetwork("ElectricDistribution")
         sourceTier = domainNetwork.getTier("Medium Voltage Radial")?.apply {
-          (traceConfiguration.traversability.barriers as? UtilityTraceConditionalExpression)?.let {
+          (defaultTraceConfiguration.traversability.barriers as? UtilityTraceConditionalExpression)?.let {
             expressionTextView.text = expressionToString(it)
             initialExpression = it
           }
           // set the traversability scope
-          traceConfiguration.traversability.scope = UtilityTraversabilityScope.JUNCTIONS
+          defaultTraceConfiguration.traversability.scope = UtilityTraversabilityScope.JUNCTIONS
         }
       } else {
         ("Utility network failed to load!").also {
@@ -208,7 +208,7 @@ class MainActivity : AppCompatActivity() {
    */
   fun addCondition(view: View) {
     // if source tier doesn't contain a trace configuration, create one
-    val traceConfiguration = sourceTier?.traceConfiguration ?: UtilityTraceConfiguration().apply {
+    val traceConfiguration = sourceTier?.defaultTraceConfiguration ?: UtilityTraceConfiguration().apply {
       // if the trace configuration doesn't contain traversability, create one
       traversability ?: UtilityTraversability()
     }

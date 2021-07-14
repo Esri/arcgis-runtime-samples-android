@@ -26,7 +26,7 @@ Tap on one or more features while 'Add starting locations' or 'Add barriers' is 
 9.  If an edge, set its `FractionAlongLine` property using `GeometryEngine.fractionAlongEdge`.
 10. Add this `UtilityElement` to a collection of starting locations or barriers.
 11. Create `TraceParameters` with the selected trace type along with the collected starting locations and barriers (if applicable). 
-12. Set the `TraceParameters.traceConfiguration` with the utility tier's `TraceConfiguration` property.
+12. Set the `TraceParameters.defaultTraceConfiguration` with the utility tier's `TraceConfiguration` property.
 13. Run a `UtilityNetwork.traceAsync(...)` with the specified parameters.
 14. For every `FeatureLayer` in the map, select the features using the `UtilityElement.objectId` from the filtered list of `UtilityElementTraceResult.elements`.
 
