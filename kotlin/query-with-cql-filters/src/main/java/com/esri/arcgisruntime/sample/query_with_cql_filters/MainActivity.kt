@@ -14,6 +14,8 @@ import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.OgcFeatureCollectionTable
 import com.esri.arcgisruntime.data.QueryParameters
 import com.esri.arcgisruntime.data.ServiceFeatureTable
+import com.esri.arcgisruntime.geometry.Geometry
+import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -282,23 +284,42 @@ class MainActivity : AppCompatActivity() {
 
         // Populate the table with the query, clear existing table entries
         // and set the outfields parameter to null requests all fields
-        ogcFeatureCollectionTable.populateFromServiceAsync(queryParameters, true, null)
-            .addDoneListener {
-                // Display number of features returned
-                showResultDialog()
+        val result = ogcFeatureCollectionTable.populateFromServiceAsync(
+            queryParameters,
+            true,
+            null)
+        result.addDoneListener {
+
+            // Create a new list to store returned geometries in
+            val featureGeometryList: MutableList<Geometry> = ArrayList()
+
+            // Iterate through each result to get its geometry and add it to the geometry list
+            result.get().iterator().forEach { feature ->
+                featureGeometryList.add(feature.geometry)
+                feature.geometry
             }
+
+            if (featureGeometryList.isNotEmpty()) {
+                // Zoom to the total extent of the geometries returned by the query
+                val totalExtent = GeometryEngine.combineExtents(featureGeometryList)
+                mapView.setViewpointGeometryAsync(totalExtent, 20.0)
+            }
+
+            // Display number of features returned
+            showResultDialog(ogcFeatureCollectionTable.totalFeatureCount)
+        }
     }
 
     /**
      * Function to show the number of features returned
      */
-    private fun showResultDialog() {
+    private fun showResultDialog(totalFeatureCount: Long) {
 
         // Build an alert dialog
         val dialogBuilder = AlertDialog.Builder(this)
 
         // Display message using OGC Feature Collection Table
-        dialogBuilder.setMessage("Query returned $ogcFeatureCollectionTable.totalFeatureCount features")
+        dialogBuilder.setMessage("Query returned $totalFeatureCount features")
             .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
 
         // Create dialog box
