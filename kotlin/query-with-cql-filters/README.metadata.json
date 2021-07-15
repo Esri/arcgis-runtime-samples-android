@@ -1,0 +1,35 @@
+{
+    "category": "Layers",
+    "description": "Query data from an OGC API feature service using CQL filters.",
+    "formal_name": "QueryWithCqlFilters",
+    "ignore": false,
+    "images": [
+        "QueryWithCQLFilters.png"
+    ],
+    "keywords": [
+        "CQL",
+        "OGC",
+        "OGC API",
+        "browse",
+        "catalog",
+        "common query language",
+        "feature table",
+        "filter",
+        "query",
+        "service",
+        "web",
+        "OgcFeatureCollectionTable",
+        "QueryParameters",
+        "TimeExtent"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "OgcFeatureCollectionTable",
+        "QueryParameters",
+        "TimeExtent"
+    ],
+    "snippets": [
+        "/src/main/java/com/esri/arcgisruntime/sample/query_with_cql_filters/MainActivity.kt"
+    ],
+    "title": "Query with CQL filters"
+}
