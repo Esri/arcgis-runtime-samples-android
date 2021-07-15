@@ -2,7 +2,6 @@ package com.esri.arcgisruntime.sample.query_with_cql_filters
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TextView
@@ -74,7 +73,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(activityMainBinding.root)
 
 
-        // Authentication with an API key or named user is required to access basemaps and other location services
+        // Authentication with an API key or named user is required to
+        // access basemaps and other location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         // Create a map with the BasemapType topographic
@@ -84,7 +84,8 @@ class MainActivity : AppCompatActivity() {
         mapView.map = map
 
         // Define strings for the service URL and collection id
-        // Note that the service defines the collection id which can be accessed via OgcFeatureCollectionInfo.getCollectionId().
+        // Note that the service defines the collection id which can be
+        // accessed via OgcFeatureCollectionInfo.getCollectionId().
         val serviceUrl = "https://demo.ldproxy.net/daraa"
         val collectionId = "TransportationGroundCrv"
 
@@ -92,7 +93,8 @@ class MainActivity : AppCompatActivity() {
         ogcFeatureCollectionTable = OgcFeatureCollectionTable(serviceUrl, collectionId)
 
         // Set the feature request mode to manual
-        // In this mode, the table must be manually populated - panning and zooming won't request features automatically
+        // In this mode, the table must be manually populated
+        // and panning and zooming won't request features automatically
         ogcFeatureCollectionTable.featureRequestMode =
             ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE
 
@@ -123,7 +125,8 @@ class MainActivity : AppCompatActivity() {
                 val visibleExtentQuery = QueryParameters()
                 visibleExtentQuery.geometry = datasetExtent
 
-                // Set a limit of 3000 on the number of returned features per request, the default on some services could be as low as 10
+                // Set a limit of 3000 on the number of returned features per request,
+                // the default on some services could be as low as 10
                 visibleExtentQuery.maxFeatures = maxFeatures
 
                 try {
@@ -137,14 +140,16 @@ class MainActivity : AppCompatActivity() {
                 } catch (e: Exception) {
                     Toast.makeText(
                         this,
-                        "Failed to load OGC Feature Collection Table: " + e.message,
+                        "Failed to load OGC Feature Collection Table: " +
+                                e.message,
                         Toast.LENGTH_LONG
                     ).show()
                 }
             } else {
                 Toast.makeText(
                     this,
-                    "Failed to load OGC Feature Collection Table" + ogcFeatureCollectionTable.loadError.message,
+                    "Failed to load OGC Feature Collection Table" +
+                            ogcFeatureCollectionTable.loadError.message,
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -202,15 +207,16 @@ class MainActivity : AppCompatActivity() {
         view.findViewById<EditText>(R.id.maxFeaturesEditText).setText(maxFeatures.toString())
 
         // Sets from date to Jun-13-2011 by default
-        view.findViewById<DatePicker>(R.id.fromDatePicker).updateDate(2011,5,13)
+        view.findViewById<DatePicker>(R.id.fromDatePicker).updateDate(2011, 5, 13)
         // Sets to date to Jan-7-2012 by default
-        view.findViewById<DatePicker>(R.id.toDatePicker).updateDate(2012,0,7)
+        view.findViewById<DatePicker>(R.id.toDatePicker).updateDate(2012, 0, 7)
 
         // Sets up filters for the query when Apply is clicked.
         view.findViewById<TextView>(R.id.apply_tv).setOnClickListener {
 
             // Retrieves the max features
-            val maxFeaturesText = view.findViewById<EditText>(R.id.maxFeaturesEditText).text.toString()
+            val maxFeaturesText =
+                view.findViewById<EditText>(R.id.maxFeaturesEditText).text.toString()
             maxFeatures = when {
                 maxFeaturesText == "" -> 1000
                 maxFeaturesText.toInt() <= 0 -> 1000
@@ -251,8 +257,8 @@ class MainActivity : AppCompatActivity() {
         cqlQueryListPosition = 4
         maxFeatures = 1000
         isDateFilter = false
-        fromDate.set(2011,6, 13)
-        toDate.set(2012,1,7)
+        fromDate.set(2011, 6, 13)
+        toDate.set(2012, 1, 7)
     }
 
     /**
@@ -267,17 +273,20 @@ class MainActivity : AppCompatActivity() {
         // Sets the max features to the number entered in the text field
         queryParameters.maxFeatures = maxFeatures
 
-        // If date filter is selected, retrieve the date selected from the date picker and set it to the query parameters time extent
+        // If date filter is selected, retrieve the date selected from the date picker
+        // and set it to the query parameters time extent
         if (isDateFilter) {
             // set the query parameters time extent
-            queryParameters.timeExtent = TimeExtent(fromDate,toDate)
+            queryParameters.timeExtent = TimeExtent(fromDate, toDate)
         }
 
-        // Populate the table with the query, clear existing table entries and set the outfields parameter to null requests all fields
-        ogcFeatureCollectionTable.populateFromServiceAsync(queryParameters,true,null).addDoneListener {
-            // Display number of features returned
-            showResultDialog()
-        }
+        // Populate the table with the query, clear existing table entries
+        // and set the outfields parameter to null requests all fields
+        ogcFeatureCollectionTable.populateFromServiceAsync(queryParameters, true, null)
+            .addDoneListener {
+                // Display number of features returned
+                showResultDialog()
+            }
     }
 
     /**
