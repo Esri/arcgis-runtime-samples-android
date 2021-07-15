@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -24,6 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/cql_filters"
+                android:textSize="17sp"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -36,6 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="25dp"
+                android:padding="10dp"
                 android:text="Apply"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -46,6 +47,7 @@
                 android:id="@+id/cancel_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:layout_marginStart="25dp"
                 android:text="Cancel"
                 android:textColor="@color/white"
@@ -75,10 +77,6 @@
                 android:textColor="@color/grey"
                 android:textSize="12sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/divider" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/whereClauseLayout"
@@ -202,15 +200,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/divider" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/divider" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -223,22 +213,12 @@
                 android:textColor="@color/grey"
                 android:textSize="12sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/divider" />
-
             <DatePicker
                 android:id="@+id/fromDatePicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:calendarViewShown="false"
                 android:datePickerMode="spinner" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/divider" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -251,24 +231,12 @@
                 android:textColor="@color/grey"
                 android:textSize="12sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/divider" />
-
             <DatePicker
                 android:id="@+id/toDatePicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:calendarViewShown="false"
                 android:datePickerMode="spinner" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginBottom="100dp"
-                android:background="@color/divider" />
-
 
         </LinearLayout>
 

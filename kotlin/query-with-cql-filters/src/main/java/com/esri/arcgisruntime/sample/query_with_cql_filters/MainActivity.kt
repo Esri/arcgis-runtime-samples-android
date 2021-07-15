@@ -21,13 +21,9 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.TimeExtent
 import com.esri.arcgisruntime.mapping.view.MapView
-import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.sample.query_with_cql_filters.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.security.AuthenticationManager
-import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
@@ -35,12 +31,10 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-    private lateinit var portal: Portal
-
-    // keep loadable in scope to avoid garbage collection
+    // Keep loadable in scope to avoid garbage collection
     private lateinit var ogcFeatureCollectionTable: OgcFeatureCollectionTable
 
+    // List of CQL where clauses
     private val cqlQueryList: List<String> = listOf(
         "F_CODE = 'AP010'",
         "{ \"eq\" : [ { \"property\" : \"F_CODE\" }, \"AP010\" ] }",
@@ -50,14 +44,17 @@ class MainActivity : AppCompatActivity() {
         ""
     )
 
+    // Current selected where query
     private var cqlQueryListPosition = 4
 
+    // Number of features query should return. Default is 1000
     private var maxFeatures = 1000
 
+    // When set to true, query searches between fromDate-toDate
     private var isDateFilter = false
 
+    // Defines date range in queryParameters.timeExtent
     private var fromDate = Calendar.getInstance()
-
     private var toDate = Calendar.getInstance()
 
     private val activityMainBinding by lazy {
@@ -77,39 +74,32 @@ class MainActivity : AppCompatActivity() {
         setContentView(activityMainBinding.root)
 
 
-        // authentication with an API key or named user is required to access basemaps and other
-        // location services
+        // Authentication with an API key or named user is required to access basemaps and other location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        //[DocRef: Name=Create map-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
-        // create a map with the BasemapType topographic
+        // Create a map with the BasemapType topographic
         val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
-        //[DocRef: END]
 
-        //[DocRef: Name=Set map-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
-        // set the map to be displayed in the layout's MapView
+        // Set the map to be displayed in the layout's MapView
         mapView.map = map
-        //[DocRef: END]
 
-        showCredentialDialog()
-
-        // define strings for the service URL and collection id
-        // note that the service defines the collection id which can be accessed via OgcFeatureCollectionInfo.getCollectionId().
+        // Define strings for the service URL and collection id
+        // Note that the service defines the collection id which can be accessed via OgcFeatureCollectionInfo.getCollectionId().
         val serviceUrl = "https://demo.ldproxy.net/daraa"
         val collectionId = "TransportationGroundCrv"
 
-        // create an OGC feature collection table from the service url and collection id
+        // Create an OGC feature collection table from the service url and collection ID
         ogcFeatureCollectionTable = OgcFeatureCollectionTable(serviceUrl, collectionId)
 
-        // set the feature request mode to manual
-        // in this mode, the table must be manually populated - panning and zooming won't request features automatically
+        // Set the feature request mode to manual
+        // In this mode, the table must be manually populated - panning and zooming won't request features automatically
         ogcFeatureCollectionTable.featureRequestMode =
             ServiceFeatureTable.FeatureRequestMode.MANUAL_CACHE
 
         ogcFeatureCollectionTable.addDoneLoadingListener {
             if (ogcFeatureCollectionTable.loadStatus == LoadStatus.LOADED) {
 
-                // create a feature layer and set a renderer to it to visualize the OGC API features
+                // Create a feature layer and set a renderer to it to visualize the OGC API features
                 val featureLayer = FeatureLayer(ogcFeatureCollectionTable)
                 val simpleRenderer = SimpleRenderer(
                     SimpleLineSymbol(
@@ -120,92 +110,106 @@ class MainActivity : AppCompatActivity() {
                 )
                 featureLayer.renderer = simpleRenderer
 
-                // add the layer to the map
+                // Add the layer to the map
                 map.operationalLayers.add(featureLayer)
 
-                // zoom to the dataset extent
+                // Zoom to the dataset extent
                 val datasetExtent = ogcFeatureCollectionTable.extent
                 if (datasetExtent != null && !datasetExtent.isEmpty) {
                     mapView.setViewpointGeometryAsync(datasetExtent)
                 }
 
-                // create a query based on the current visible extent
+                // Create a query based on the current visible extent
                 val visibleExtentQuery = QueryParameters()
                 visibleExtentQuery.geometry = datasetExtent
 
-                // set a limit of 3000 on the number of returned features per request, the default on some services could be as low as 10
-                visibleExtentQuery.maxFeatures = 1000
+                // Set a limit of 3000 on the number of returned features per request, the default on some services could be as low as 10
+                visibleExtentQuery.maxFeatures = maxFeatures
 
                 try {
-                    // populate the table with the query, leaving existing table entries intact
-                    // setting the outfields parameter to null requests all fields
+                    // Populate the table with the query, leaving existing table entries intact
+                    // Setting the outfields parameter to null requests all fields
                     ogcFeatureCollectionTable.populateFromServiceAsync(
                         visibleExtentQuery,
                         false,
                         null
-                    ).addDoneListener {
-                        Toast.makeText(this, "OGC Loaded", Toast.LENGTH_SHORT).show()
-                    }
+                    )
                 } catch (e: Exception) {
-                    e.printStackTrace()
-                    Toast.makeText(this, "Failed to load:" + e.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this,
+                        "Failed to load OGC Feature Collection Table: " + e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
-
-
             } else {
                 Toast.makeText(
                     this,
-                    "Failed to load OGC Feature Collection Table",
+                    "Failed to load OGC Feature Collection Table" + ogcFeatureCollectionTable.loadError.message,
                     Toast.LENGTH_LONG
                 ).show()
             }
         }
 
-        // load the table
+        // Load the table
         ogcFeatureCollectionTable.loadAsync()
 
+        // Handles CQL Filters in a Bottom Sheet View
         fab.setOnClickListener {
             openBottomSheetView()
         }
-
-
     }
 
+    /**
+     * Handles CQL Filters in a Bottom Sheet View
+     */
     private fun openBottomSheetView() {
 
-        resetBottomDialogValues()
+        // Resets views in bottomSheet to default values.
+        resetBottomSheetValues()
 
-        //Launch fragment for CQL Filters
-        // on below line we are creating a new bottom sheet dialog.
+        // Creates a new BottomSheetDialog
         val dialog = BottomSheetDialog(this)
 
-        // on below line we are inflating a layout file which we have created.
+        // Inflates layout file
         val view = layoutInflater.inflate(R.layout.cql_filters_layout, null)
 
+        // Sets the Where Clause for CQL filter
         view.findViewById<ConstraintLayout>(R.id.whereClauseLayout).setOnClickListener {
 
+            // Creates a dialog to choose a where clause
             val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this)
             alertDialog.setTitle("AlertDialog")
             val checkedItem = cqlQueryListPosition
+
             alertDialog.setSingleChoiceItems(
                 cqlQueryList.toTypedArray(), checkedItem
             ) { dialog, which ->
+
+                // Updates the selected where clause
                 cqlQueryListPosition = which
                 view.findViewById<TextView>(R.id.cqlQueryTextView).text = cqlQueryList[which]
+
+                // Dismiss dialog
                 dialog.dismiss()
             }
-            val alert: AlertDialog = alertDialog.create()
-            alert.setCanceledOnTouchOutside(false)
-            alert.show()
 
+            // Displays the where clause dialog
+            val alert: AlertDialog = alertDialog.create()
+            alert.show()
         }
 
+        // Sets the view to the default value of max features (1000)
         view.findViewById<EditText>(R.id.maxFeaturesEditText).setText(maxFeatures.toString())
 
+        // Sets from date to Jun-13-2011 by default
         view.findViewById<DatePicker>(R.id.fromDatePicker).updateDate(2011,5,13)
+        // Sets to date to Jan-7-2012 by default
         view.findViewById<DatePicker>(R.id.toDatePicker).updateDate(2012,0,7)
 
+        // Sets up filters for the query when Apply is clicked.
         view.findViewById<TextView>(R.id.apply_tv).setOnClickListener {
+
+            // Retrieves the max features
             val maxFeaturesText = view.findViewById<EditText>(R.id.maxFeaturesEditText).text.toString()
             maxFeatures = when {
                 maxFeaturesText == "" -> 1000
@@ -213,40 +217,37 @@ class MainActivity : AppCompatActivity() {
                 else -> maxFeaturesText.toInt()
             }
 
+            // Retrieves if date filter is selected
             isDateFilter = view.findViewById<SwitchCompat>(R.id.date_switch).isChecked
 
+            // Retrieves from & to dates from the DatePicker
             val fromDatePicker = view.findViewById<DatePicker>(R.id.fromDatePicker)
-            fromDate.set(fromDatePicker.year, fromDatePicker.month, fromDatePicker.dayOfMonth)
-
             val toDatePicker = view.findViewById<DatePicker>(R.id.toDatePicker)
+            fromDate.set(fromDatePicker.year, fromDatePicker.month, fromDatePicker.dayOfMonth)
             toDate.set(toDatePicker.year, toDatePicker.month, toDatePicker.dayOfMonth)
 
-            Log.e("Max", maxFeatures.toString())
-            Log.e("date", isDateFilter.toString())
-
+            // Dismiss bottom sheet view
             dialog.dismiss()
 
+            // Runs the query using the selected filters
             runQuery()
         }
-        view.findViewById<TextView>(R.id.cancel_tv).setOnClickListener { dialog.dismiss() }
 
-        // below line is use to set cancelable to avoid
-        // closing of dialog box when clicking on the screen.
+        // Dismiss bottom sheet view when cancel is clicked
+        view.findViewById<TextView>(R.id.cancel_tv).setOnClickListener { dialog.dismiss() }
         dialog.setCancelable(false)
 
-        // on below line we are setting
-        // content view to our view.
+        // Sets bottom sheet content view to layout
         dialog.setContentView(view)
 
-        // Expand the BottomSheet layout
-        BottomSheetBehavior.from(view).state = BottomSheetBehavior.STATE_EXPANDED;
-
-        // on below line we are calling
-        // a show method to display a dialog.
+        // Displays bottom sheet view
         dialog.show()
     }
 
-    private fun resetBottomDialogValues() {
+    /**
+     * Resets views in bottomSheet to default values.
+     */
+    private fun resetBottomSheetValues() {
         cqlQueryListPosition = 4
         maxFeatures = 1000
         isDateFilter = false
@@ -254,65 +255,48 @@ class MainActivity : AppCompatActivity() {
         toDate.set(2012,1,7)
     }
 
+    /**
+     * Populates features from provided query parameters, and displays the result on the map.
+     */
     private fun runQuery() {
         val queryParameters = QueryParameters()
 
-        // set the query parameter's where clause with the CQL query in the combo box
+        // Set the query parameter's where clause with the the selected query
         queryParameters.whereClause = cqlQueryList[cqlQueryListPosition]
 
-        // set the max features to the number entered in the text field
+        // Sets the max features to the number entered in the text field
         queryParameters.maxFeatures = maxFeatures
 
-        // if the time extent checkbox is selected, retrieve the date selected from the date picker and set it to the
-        // query parameters time extent
+        // If date filter is selected, retrieve the date selected from the date picker and set it to the query parameters time extent
         if (isDateFilter) {
             // set the query parameters time extent
             queryParameters.timeExtent = TimeExtent(fromDate,toDate)
         }
 
-        // populate the table with the query, clear existing table entries and set the outfields parameter to null requests all fields
+        // Populate the table with the query, clear existing table entries and set the outfields parameter to null requests all fields
         ogcFeatureCollectionTable.populateFromServiceAsync(queryParameters,true,null).addDoneListener {
-
-            // display number of features returned
-            showResultDialog(ogcFeatureCollectionTable.totalFeatureCount)
+            // Display number of features returned
+            showResultDialog()
         }
     }
 
-    private fun showCredentialDialog() {
-        // Set the DefaultAuthenticationChallengeHandler to allow authentication with the portal.
-        val handler = DefaultAuthenticationChallengeHandler(this)
-        AuthenticationManager.setAuthenticationChallengeHandler(handler)
-        // Set loginRequired to true always prompt for credential,
-        // When set to false to only login if required by the portal
-        portal = Portal("https://www.arcgis.com", true)
-        portal.addDoneLoadingListener {
-            when (portal.loadStatus) {
-                LoadStatus.LOADED -> {
-                    Toast.makeText(this, "Portal loaded", Toast.LENGTH_LONG).show()
-                }
-                LoadStatus.FAILED_TO_LOAD -> {
-                    Toast.makeText(this, "Portal failed to load", Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-        portal.loadAsync()
-    }
+    /**
+     * Function to show the number of features returned
+     */
+    private fun showResultDialog() {
 
-    private fun showResultDialog(totalFeatureCount: Long) {
-
-        // build alert dialog
+        // Build an alert dialog
         val dialogBuilder = AlertDialog.Builder(this)
 
-        // set message of alert dialog
-        dialogBuilder.setMessage("Query returned $totalFeatureCount features")
+        // Display message using OGC Feature Collection Table
+        dialogBuilder.setMessage("Query returned $ogcFeatureCollectionTable.totalFeatureCount features")
             .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
 
-        // create dialog box
+        // Create dialog box
         val alert = dialogBuilder.create()
-        // set title for alert dialog box
         alert.setTitle("Query Result")
 
-        // show alert dialog
+        // Shows alert dialog
         alert.show()
     }
 
