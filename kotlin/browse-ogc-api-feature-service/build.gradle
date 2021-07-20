@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.esri.arcgisruntime.sample.arcgisvectortiledlayercustomstyle"
+        applicationId "com.esri.arcgisruntime.sample.browseogcapifeatureservice"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
@@ -20,9 +21,6 @@ android {
         }
     }
 
-    buildFeatures {
-        viewBinding true
-    }
 }
 
 dependencies {
@@ -30,3 +28,4 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     implementation "com.google.android.material:material:$materialVersion"
 }
+

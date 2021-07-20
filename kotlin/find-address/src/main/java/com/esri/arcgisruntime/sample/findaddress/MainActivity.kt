@@ -60,7 +60,9 @@ class MainActivity : AppCompatActivity() {
   // create a picture marker symbol
   private val pinSourceSymbol: PictureMarkerSymbol? by lazy { createPinSymbol() }
   // create a locator task from an online service
-  private val locatorTask: LocatorTask by lazy { LocatorTask(getString(R.string.locator_task_uri)) }
+  private val locatorTask: LocatorTask by lazy {
+    LocatorTask("https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer")
+  }
   // create a new Graphics Overlay
   private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
 

@@ -16,10 +16,6 @@
 
 package com.esri.arcgisruntime.sample.findplace;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.database.MatrixCursor;
@@ -39,6 +35,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
+
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Envelope;
@@ -63,6 +60,10 @@ import com.esri.arcgisruntime.tasks.geocode.GeocodeResult;
 import com.esri.arcgisruntime.tasks.geocode.LocatorTask;
 import com.esri.arcgisruntime.tasks.geocode.SuggestParameters;
 import com.esri.arcgisruntime.tasks.geocode.SuggestResult;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
     mProximitySearchViewEmpty = true;
 
     // create a LocatorTask from an online service
-    mLocatorTask = new LocatorTask(getString(R.string.world_geocode_service));
+    mLocatorTask = new LocatorTask("https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer");
 
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);

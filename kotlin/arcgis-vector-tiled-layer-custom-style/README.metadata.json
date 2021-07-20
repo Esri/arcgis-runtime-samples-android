@@ -4,9 +4,7 @@
     "formal_name": "ArcgisVectorTiledLayerCustomStyle",
     "ignore": false,
     "images": [
-        "vector-tiled-layer-custom-2.png",
-        "vector-tiled-layer-style.png",
-        "vector-tiled-layers-list.png"
+        "arcgis-vector-tiled-layer-custom-style.png"
     ],
     "keywords": [
         "tiles",

@@ -22,7 +22,7 @@
     ],
     "provision_to": [
         "/streetmap_SD.tpk",
-        "/san-diego-locator.loc"
+        "/SanDiego_StreetAddress.loc"
     ],
     "redirect_from": [
         "/android/latest/sample-code/offline-geocode.htm"
