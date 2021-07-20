@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
     private val analyzeButton: Button by lazy {
         dateRangeDialogBinding.analyzeButton
     }
-
+    
     private val TAG = this::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {

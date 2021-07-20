@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // handle authentication with the portal
     AuthenticationManager.setAuthenticationChallengeHandler(

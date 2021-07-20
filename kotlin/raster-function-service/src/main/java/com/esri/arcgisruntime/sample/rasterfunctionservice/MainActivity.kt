@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required to access basemaps and other
     // location services
