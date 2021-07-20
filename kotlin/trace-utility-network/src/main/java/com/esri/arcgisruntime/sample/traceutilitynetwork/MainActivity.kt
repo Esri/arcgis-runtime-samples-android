@@ -444,6 +444,7 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 statusTextView.text = getString(R.string.failed_message)
                 progressIndicator.visibility = View.GONE
+                enableButtons()
                 reportError("Error running connected trace: " + e.message)
             }
         }
