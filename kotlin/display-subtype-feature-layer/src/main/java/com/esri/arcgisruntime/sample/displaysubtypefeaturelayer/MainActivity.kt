@@ -46,31 +46,31 @@ class MainActivity : AppCompatActivity() {
   }
 
   private val setMinScaleButton: Button by lazy {
-    activityMainBinding.setMinScaleButton
+    activityMainBinding.sublayer.setMinScaleButton
   }
 
   private val labelingScaleTextView: TextView by lazy {
-    activityMainBinding.labelingScaleTextView
+    activityMainBinding.sublayer.labelingScaleTextView
   }
 
   private val alternativeRendererButton: RadioButton by lazy {
-    activityMainBinding.alternativeRendererButton
+    activityMainBinding.sublayer.alternativeRendererButton
   }
 
   private val originalRendererButton: RadioButton by lazy {
-    activityMainBinding.originalRendererButton
+    activityMainBinding.sublayer.originalRendererButton
   }
 
   private val rendererRadioGroup: RadioGroup by lazy {
-    activityMainBinding.rendererRadioGroup
+    activityMainBinding.sublayer.rendererRadioGroup
   }
 
   private val showSubtypeSublayerCheckBox: CheckBox by lazy {
-    activityMainBinding.showSubtypeSublayerCheckBox
+    activityMainBinding.sublayer.showSubtypeSublayerCheckBox
   }
 
   private val currentMapScaleTextView: TextView by lazy {
-    activityMainBinding.currentMapScaleTextView
+    activityMainBinding.sublayer.currentMapScaleTextView
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {

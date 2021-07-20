@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.sample.displayutilityassociations
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -70,6 +71,14 @@ class MainActivity : AppCompatActivity() {
 
   private val mapView: MapView by lazy {
     activityMainBinding.mapView
+  }
+
+  private val attachmentSwatch: AppCompatImageView by lazy {
+    activityMainBinding.subLayout.attachmentSwatch
+  }
+
+  private val connectivitySwatch: AppCompatImageView by lazy {
+    activityMainBinding.subLayout.connectivitySwatch
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
