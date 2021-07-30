@@ -186,14 +186,14 @@ class MainActivity : AppCompatActivity() {
         // Load the table
         ogcFeatureCollectionTable.loadAsync()
 
-        // Handles CQL Filters in a Bottom Sheet View
+        // Handles CQL Filters in a Bottom Sheet View.
         fab.setOnClickListener {
             openBottomSheetView()
         }
     }
 
     /**
-     * Handles CQL Filters in a Bottom Sheet View
+     * Handles CQL Filters in a Bottom Sheet View.
      */
     private fun openBottomSheetView() {
 
