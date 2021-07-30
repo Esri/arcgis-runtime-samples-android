@@ -2,7 +2,7 @@
 
 Query data from an OGC API feature service using CQL filters.
 
-![Image of Query with CQL Filters](QueryWithCQLFilters.png)
+![Image of Query with CQL Filters](query-with-cql-features.png)
 
 ## Use case
 
@@ -15,9 +15,9 @@ The sample loads displaying all features within the OGC API feature service. Sel
 ## How it works
 
 1. Create an `OgcFeatureCollectionTable` object using a URL to an OGC API feature service and a collection ID.
-2. Create `QueryParameters` and set a CQL filter string to it using `queryParameters.setWhereClause()`.
-3. Set the maximum amount of features to be returned with `queryParamters.setMaxFeatures()`.
-4. Create a new `TimeExtent` from start and end date values, and set it to the `queryParameters.setTimeExtent()` method.
+2. Create `QueryParameters` and set a CQL filter string to it using `queryParameters.whereClause`.
+3. Set the maximum amount of features to be returned with `queryParamters.maxFeatures`.
+4. Create a new `TimeExtent` from start and end date values, and set it to the `queryParameters.timeExtent` method.
 5. Populate the OGC feature collection table using `.populateFromServiceAsync()` with the custom `QueryParameters` created in the previous steps.
 6. Use `mapView.setViewpointGeometryAsync()` with the OGC feature collection table extent to view the newly-queried features.
 
