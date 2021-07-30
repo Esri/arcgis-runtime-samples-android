@@ -22,9 +22,8 @@ import android.app.Dialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.concurrent.Job
@@ -61,22 +60,6 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.calendarButton
     }
 
-    private val dateRangeDialogBinding by lazy {
-        DateRangeDialogBinding.inflate(layoutInflater)
-    }
-
-    private val fromDateText: EditText by lazy {
-        dateRangeDialogBinding.fromDateText
-    }
-
-    private val toDateText: EditText by lazy {
-        dateRangeDialogBinding.toDateText
-    }
-
-    private val analyzeButton: Button by lazy {
-        dateRangeDialogBinding.analyzeButton
-    }
-    
     private val TAG = this::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,24 +96,25 @@ class MainActivity : AppCompatActivity() {
     private fun showDateRangeDialog() {
         val geoprocessingTask = GeoprocessingTask(getString(R.string.hotspot_911_calls))
 
+        val dateRangeDialogBinding = DateRangeDialogBinding.inflate(layoutInflater)
         // create custom dialog
         Dialog(this).apply {
             setContentView(dateRangeDialogBinding.root)
             setCancelable(true)
 
-            fromDateText.setOnClickListener {
-                showCalendar(this, InputCalendar.From)
+            dateRangeDialogBinding.fromDateText.setOnClickListener {
+                showCalendar(dateRangeDialogBinding, InputCalendar.From)
             }
 
-            toDateText.setOnClickListener {
-                showCalendar(this, InputCalendar.To)
+            dateRangeDialogBinding.toDateText.setOnClickListener {
+                showCalendar(dateRangeDialogBinding, InputCalendar.To)
             }
 
-            analyzeButton.setOnClickListener {
+            dateRangeDialogBinding.analyzeButton.setOnClickListener {
                 analyzeHotspots(
                   geoprocessingTask,
-                  fromDateText.text.toString(),
-                  toDateText.text.toString()
+                    dateRangeDialogBinding.fromDateText.text.toString(),
+                    dateRangeDialogBinding.toDateText.text.toString()
                 )
                 dismiss()
             }
@@ -142,7 +126,7 @@ class MainActivity : AppCompatActivity() {
      *
      * @param inputCalendar enum which specifies which editable text the chosen date should be written to
      */
-    private fun showCalendar(dialog: Dialog, inputCalendar: InputCalendar) {
+    private fun showCalendar(dateRangeDialogBinding: DateRangeDialogBinding, inputCalendar: InputCalendar) {
 
         // define the date picker dialog
         val calendar = Calendar.getInstance()
@@ -161,10 +145,10 @@ class MainActivity : AppCompatActivity() {
 
           when (inputCalendar) {
             InputCalendar.From -> {
-              fromDateText.setText(dateString)
+              dateRangeDialogBinding.fromDateText.setText(dateString)
             }
             InputCalendar.To -> {
-              toDateText.setText(dateString)
+              dateRangeDialogBinding.toDateText.setText(dateString)
             }
           }
         }, year, month, day).apply {

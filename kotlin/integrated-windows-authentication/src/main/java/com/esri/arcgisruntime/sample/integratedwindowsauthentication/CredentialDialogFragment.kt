@@ -31,8 +31,7 @@ import java.net.URI
 class CredentialDialogFragment : DialogFragment() {
 
     private var hostname: URI? = null
-    private var credentialDialogBinding: CredentialDialogBinding ? = null
-
+    private lateinit var binding: CredentialDialogBinding
 
     companion object {
         private val TAG: String = CredentialDialogFragment::class.java.simpleName
@@ -55,8 +54,9 @@ class CredentialDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val view = LayoutInflater.from(context).inflate(R.layout.credential_dialog, null)
-        view.credentialHostnameTextView.text =
+        binding = CredentialDialogBinding.inflate(LayoutInflater.from(context))
+
+        binding.credentialHostnameTextView.text =
             getString(R.string.credential_dialog_hostname, hostname)
         with(AlertDialog.Builder(context)) {
             setTitle(R.string.credential_required)
@@ -79,11 +79,11 @@ class CredentialDialogFragment : DialogFragment() {
                 hostname?.let { hostname ->
                     if (which == DialogInterface.BUTTON_POSITIVE) {
                         dialog?.let { dialog ->
-                            if (dialog.credentialUsernameEditText.text.isNotEmpty() && dialog.credentialPasswordEditText.text.isNotEmpty()) {
+                            if (binding.credentialUsernameEditText.text.isNotEmpty() && binding.credentialPasswordEditText.text.isNotEmpty()) {
                                 listener.onSignInClicked(
                                     hostname,
-                                    dialog.credentialUsernameEditText.text.toString(),
-                                    dialog.credentialPasswordEditText.text.toString()
+                                    binding.credentialUsernameEditText.text.toString(),
+                                    binding.credentialPasswordEditText.text.toString()
                                 )
                             } else {
                                 getString(R.string.credential_dialog_error_username_or_password_are_blank).let { error ->
