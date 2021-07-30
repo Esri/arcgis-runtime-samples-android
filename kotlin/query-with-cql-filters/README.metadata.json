@@ -4,7 +4,7 @@
     "formal_name": "QueryWithCqlFilters",
     "ignore": false,
     "images": [
-        "QueryWithCQLFilters.png"
+        "query-with-cql-filters.png"
     ],
     "keywords": [
         "CQL",
@@ -29,7 +29,7 @@
         "TimeExtent"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/query_with_cql_filters/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/query_with_cql_filters/MainActivity.kt"
     ],
     "title": "Query with CQL filters"
 }
