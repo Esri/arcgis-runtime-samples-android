@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.querywithcqlfilters
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TextView
@@ -39,6 +40,7 @@ import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.TimeExtent
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.querywithcqlfilters.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.querywithcqlfilters.databinding.CqlFiltersLayoutBinding
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -103,7 +105,7 @@ class MainActivity : AppCompatActivity() {
 
         // Define strings for the service URL and collection id
         // Note that the service defines the collection id which can be
-        // accessed via OgcFeatureCollectionInfo.getCollectionId().
+        // accessed via OgcFeatureCollectionInfo.getCollectionId()
         val serviceUrl = "https://demo.ldproxy.net/daraa"
         val collectionId = "TransportationGroundCrv"
 
@@ -158,10 +160,14 @@ class MainActivity : AppCompatActivity() {
                 } catch (e: Exception) {
                     Toast.makeText(
                         this,
-                        "Failed to load OGC Feature Collection Table: " +
+                        "Error populating OGC Feature Collection Table from service: " +
                                 e.message,
                         Toast.LENGTH_LONG
                     ).show()
+                    Log.e(
+                        "OGC Service error: ",
+                        e.message.toString()
+                    )
                 }
             } else {
                 Toast.makeText(
@@ -170,6 +176,10 @@ class MainActivity : AppCompatActivity() {
                             ogcFeatureCollectionTable.loadError.message,
                     Toast.LENGTH_LONG
                 ).show()
+                Log.e(
+                    "OGC Load error: ",
+                    ogcFeatureCollectionTable.loadError.message.toString()
+                )
             }
         }
 
@@ -194,10 +204,11 @@ class MainActivity : AppCompatActivity() {
         val dialog = BottomSheetDialog(this)
 
         // Inflates layout file
-        val view = layoutInflater.inflate(R.layout.cql_filters_layout, null)
+        //val view = layoutInflater.inflate(R.layout.cql_filters_layout, null)
+        val cqlFiltersLayoutBinding = CqlFiltersLayoutBinding.inflate(layoutInflater)
 
         // Sets the Where Clause for CQL filter
-        view.findViewById<ConstraintLayout>(R.id.whereClauseLayout).setOnClickListener {
+        cqlFiltersLayoutBinding.whereClauseLayout.setOnClickListener {
 
             // Creates a dialog to choose a where clause
             val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this)
@@ -210,7 +221,7 @@ class MainActivity : AppCompatActivity() {
 
                 // Updates the selected where clause
                 cqlQueryListPosition = which
-                view.findViewById<TextView>(R.id.cqlQueryTextView).text = cqlQueryList[which]
+                cqlFiltersLayoutBinding.cqlQueryTextView.text = cqlQueryList[which]
 
                 // Dismiss dialog
                 dialog.dismiss()
@@ -222,19 +233,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Sets the view to the default value of max features (1000)
-        view.findViewById<EditText>(R.id.maxFeaturesEditText).setText(maxFeatures.toString())
+        cqlFiltersLayoutBinding.maxFeaturesEditText.setText(maxFeatures.toString())
 
         // Sets from date to Jun-13-2011 by default
-        view.findViewById<DatePicker>(R.id.fromDatePicker).updateDate(2011, 5, 13)
+        cqlFiltersLayoutBinding.fromDatePicker.updateDate(2011, 5, 13)
         // Sets to date to Jan-7-2012 by default
-        view.findViewById<DatePicker>(R.id.toDatePicker).updateDate(2012, 0, 7)
+        cqlFiltersLayoutBinding.toDatePicker.updateDate(2012, 0, 7)
 
         // Sets up filters for the query when Apply is clicked.
-        view.findViewById<TextView>(R.id.apply_tv).setOnClickListener {
+        cqlFiltersLayoutBinding.applyTv.setOnClickListener {
 
             // Retrieves the max features
             val maxFeaturesText =
-                view.findViewById<EditText>(R.id.maxFeaturesEditText).text.toString()
+                cqlFiltersLayoutBinding.maxFeaturesEditText.text.toString()
             maxFeatures = when {
                 maxFeaturesText == "" -> 1000
                 maxFeaturesText.toInt() <= 0 -> 1000
@@ -242,11 +253,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             // Retrieves if date filter is selected
-            isDateFilter = view.findViewById<SwitchCompat>(R.id.date_switch).isChecked
+            isDateFilter = cqlFiltersLayoutBinding.dateSwitch.isChecked
 
             // Retrieves from & to dates from the DatePicker
-            val fromDatePicker = view.findViewById<DatePicker>(R.id.fromDatePicker)
-            val toDatePicker = view.findViewById<DatePicker>(R.id.toDatePicker)
+            val fromDatePicker = cqlFiltersLayoutBinding.fromDatePicker
+            val toDatePicker = cqlFiltersLayoutBinding.toDatePicker
             fromDate.set(fromDatePicker.year, fromDatePicker.month, fromDatePicker.dayOfMonth)
             toDate.set(toDatePicker.year, toDatePicker.month, toDatePicker.dayOfMonth)
 
@@ -258,11 +269,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Dismiss bottom sheet view when cancel is clicked
-        view.findViewById<TextView>(R.id.cancel_tv).setOnClickListener { dialog.dismiss() }
+        cqlFiltersLayoutBinding.cancelTv.setOnClickListener { dialog.dismiss() }
         dialog.setCancelable(false)
 
         // Sets bottom sheet content view to layout
-        dialog.setContentView(view)
+        dialog.setContentView(cqlFiltersLayoutBinding.root)
 
         // Displays bottom sheet view
         dialog.show()
@@ -303,7 +314,8 @@ class MainActivity : AppCompatActivity() {
         val result = ogcFeatureCollectionTable.populateFromServiceAsync(
             queryParameters,
             true,
-            null)
+            null
+        )
         result.addDoneListener {
 
             // Create a new list to store returned geometries in
