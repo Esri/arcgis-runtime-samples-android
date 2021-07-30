@@ -1,4 +1,4 @@
-package com.esri.arcgisruntime.sample.query_with_cql_filters
+package com.esri.arcgisruntime.sample.querywithcqlfilters
 
 import android.graphics.Color
 import android.os.Bundle
@@ -22,7 +22,7 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.TimeExtent
 import com.esri.arcgisruntime.mapping.view.MapView
-import com.esri.arcgisruntime.sample.query_with_cql_filters.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.querywithcqlfilters.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
 import com.google.android.material.bottomsheet.BottomSheetDialog

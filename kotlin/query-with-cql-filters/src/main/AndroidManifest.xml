@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.esri.arcgisruntime.sample.query_with_cql_filters">
+    package="com.esri.arcgisruntime.sample.querywithcqlfilters">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
