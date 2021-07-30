@@ -204,7 +204,6 @@ class MainActivity : AppCompatActivity() {
         val dialog = BottomSheetDialog(this)
 
         // Inflates layout file
-        //val view = layoutInflater.inflate(R.layout.cql_filters_layout, null)
         val cqlFiltersLayoutBinding = CqlFiltersLayoutBinding.inflate(layoutInflater)
 
         // Sets the Where Clause for CQL filter
