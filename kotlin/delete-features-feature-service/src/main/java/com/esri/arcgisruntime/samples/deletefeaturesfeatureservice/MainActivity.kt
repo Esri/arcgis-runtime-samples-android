@@ -38,6 +38,7 @@ import com.esri.arcgisruntime.mapping.view.Callout
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.samples.deletefeaturesfeatureservice.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.samples.deletefeaturesfeatureservice.databinding.ViewCalloutBinding
 import java.util.concurrent.ExecutionException
 
 class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonClickedListener {
@@ -127,19 +128,18 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
    * @return a [Callout] to display on a [MapView]
    */
   private fun inflateCallout(mapView: MapView, feature: GeoElement, point: Point): Callout {
-    with(LayoutInflater.from(this).inflate(R.layout.view_callout, null)) {
+      val viewCalloutBinding = ViewCalloutBinding.inflate(layoutInflater)
       // set OnClickListener for Callout content
-      this.findViewById<View>(R.id.calloutViewCallToAction).setOnClickListener {
+      viewCalloutBinding.calloutViewCallToAction.setOnClickListener {
         // get objectid from feature attributes and pass to function to confirm deletion
         confirmDeletion((feature.attributes["objectid"].toString()))
         // dismiss callout
         mapView.callout.dismiss()
       }
       // set callout content as inflated View
-      mapView.callout.content = this
+      mapView.callout.content = viewCalloutBinding.root
       // set callout GeoElement as feature at tap location
       mapView.callout.setGeoElement(feature, point)
-    }
     return mapView.callout
   }
 
