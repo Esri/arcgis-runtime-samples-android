@@ -74,12 +74,20 @@ class MainActivity : AppCompatActivity() {
         "https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleGas/FeatureServer"
 
     // create a graphics overlay for the starting location and add it to the map view
-    private val startingLocationGraphicsOverlay by lazy { GraphicsOverlay() }
+    private val startingLocationGraphicsOverlay by lazy {
+        GraphicsOverlay()
+    }
+
+    private val filterBarriersGraphicsOverlay by lazy {
+        GraphicsOverlay()
+    }
 
     // objects that implement Loadable must be class fields to prevent being garbage collected before loading
     private val utilityNetwork by lazy {
         UtilityNetwork(featureServiceUrl)
     }
+
+    private var utilityTraceParameters: UtilityTraceParameters? = null
 
     private val serviceGeodatabase by lazy {
         ServiceGeodatabase(featureServiceUrl)
@@ -92,12 +100,6 @@ class MainActivity : AppCompatActivity() {
             Color.GREEN,
             25f
         )
-    }
-
-    private var utilityTraceParameters: UtilityTraceParameters? = null
-
-    private val filterBarriersGraphicsOverlay by lazy {
-        GraphicsOverlay()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -181,7 +183,7 @@ class MainActivity : AppCompatActivity() {
                 loadUtilityNetwork()
             } else {
                 val error =
-                    "Error laoding service geodatabase: " + serviceGeodatabase.loadError.cause?.message
+                    "Error loading service geodatabase: " + serviceGeodatabase.loadError.cause?.message
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show()
                 Log.e(TAG, error)
             }
@@ -252,8 +254,7 @@ class MainActivity : AppCompatActivity() {
                                     fab.isExpanded = false
                                     performTrace(
                                         utilityNetwork,
-                                        traceConfiguration,
-                                        startingLocation
+                                        traceConfiguration
                                     )
                                 }
 
@@ -264,11 +265,7 @@ class MainActivity : AppCompatActivity() {
                         } else {
                             val message = "Starting location features not found."
                             Log.i(TAG, message)
-                            Toast.makeText(
-                                this,
-                                message,
-                                Toast.LENGTH_LONG
-                            ).show()
+                            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                         }
                     } catch (e: Exception) {
                         val error = "Error loading starting location feature: ${e.message}"
@@ -311,14 +308,16 @@ class MainActivity : AppCompatActivity() {
                         // create utility elements from the list of ArcGISFeature elements
                         val utilityElements = elements.map { utilityNetwork.createElement(it) }
 
-
+                        // get a reference to the closest junction if there is one
                         val junction =
                             utilityElements.firstOrNull { it.networkSource.sourceType == UtilityNetworkSource.Type.JUNCTION }
 
-                        val edge = utilityElements.firstOrNull { it.networkSource.sourceType == UtilityNetworkSource.Type.EDGE }
+                        // get a reference to the closest edge if there is one
+                        val edge =
+                            utilityElements.firstOrNull { it.networkSource.sourceType == UtilityNetworkSource.Type.EDGE }
 
+                        // preferentially select junctions, otherwise an edge
                         val utilityElement = junction ?: edge
-
 
                         // retrieve the first result and get its contents
                         if (junction != null) {
@@ -367,7 +366,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         // add the element to the list of filter barriers
-                        utilityTraceParameters!!.filterBarriers.add(utilityElement)
+                        utilityTraceParameters?.filterBarriers?.add(utilityElement)
 
                         // get the clicked map point
                         val mapPoint = mapView.screenToLocation(screenPoint)
@@ -377,12 +376,13 @@ class MainActivity : AppCompatActivity() {
                             GeometryEngine.nearestCoordinate(elements[0].geometry, mapPoint)
 
                         // create a graphic for the new utility element
-                        val traceLocationGraphic = Graphic().apply {
+                        val utilityElementGraphic = Graphic().apply {
                             // set the graphic's geometry to the coordinate on the element and add it to the graphics overlay
                             geometry = proximityResult.coordinate
                         }
 
-                        filterBarriersGraphicsOverlay.graphics.add(traceLocationGraphic)
+                        // add utility element graphic to the filter barriers graphics overlay
+                        filterBarriersGraphicsOverlay.graphics.add(utilityElementGraphic)
                     }
                 } catch (e: Exception) {
                     val error = "Error identifying tapped feature: " + e.message
@@ -434,8 +434,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun performTrace(
         utilityNetwork: UtilityNetwork,
-        traceConfiguration: UtilityTraceConfiguration,
-        startingLocation: UtilityElement
+        traceConfiguration: UtilityTraceConfiguration
     ) {
         progressBar.visibility = View.VISIBLE
         // create a category comparison for the trace
@@ -512,7 +511,7 @@ class MainActivity : AppCompatActivity() {
         mapView.map.operationalLayers.forEach { layer ->
             (layer as? FeatureLayer)?.clearSelection()
         }
-        utilityTraceParameters!!.filterBarriers.clear()
+        utilityTraceParameters?.filterBarriers?.clear()
         filterBarriersGraphicsOverlay.graphics.clear()
     }
 
