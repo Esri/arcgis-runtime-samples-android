@@ -16,13 +16,13 @@
         app:layout_constraintTop_toTopOf="@+id/geometryTextView" />
 
     <Spinner
-            android:id="@+id/pointSymbolSpinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/pointSymbolTextView"
-            app:layout_constraintEnd_toEndOf="@+id/sketchCreationModeSpinner"
-            app:layout_constraintStart_toEndOf="@+id/pointSymbolTextView"
-            app:layout_constraintTop_toTopOf="@+id/pointSymbolTextView" />
+        android:id="@+id/pointSymbolSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/pointSymbolTextView"
+        app:layout_constraintEnd_toEndOf="@+id/sketchCreationModeSpinner"
+        app:layout_constraintStart_toEndOf="@+id/pointSymbolTextView"
+        app:layout_constraintTop_toTopOf="@+id/pointSymbolTextView" />
 
     <Spinner
         android:id="@+id/colorSpinner"
@@ -54,14 +54,14 @@
         app:layout_constraintTop_toBottomOf="@+id/geometryTextView" />
 
     <TextView
-            android:id="@+id/colorTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/color"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pointSymbolTextView" />
+        android:id="@+id/colorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pointSymbolTextView" />
 
     <Button
         android:id="@+id/completeSketchButton"
