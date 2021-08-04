@@ -42,6 +42,7 @@ import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.security.UserCredential
 import com.esri.arcgisruntime.sample.editwithbranchversioning.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.sample.editwithbranchversioning.databinding.CreateVersionDialogBinding
+import com.esri.arcgisruntime.sample.editwithbranchversioning.databinding.EditFeatureAttributeDialogBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -164,7 +165,6 @@ class MainActivity : AppCompatActivity() {
     fun createVersionDialog(view: View) {
         // inflate the view and get references to each of its components
         val dialogBinding = CreateVersionDialogBinding.inflate(LayoutInflater.from(this))
-        //val dialogView = LayoutInflater.from(this).inflate(R.layout.create_version_dialog, null)
         val createNameEditText = dialogBinding.createNameEditText
         val createDescriptionEditText = dialogBinding.createDescriptionEditText
         val createAccessVersionSpinner = dialogBinding.createAccessVersionSpinner
@@ -337,10 +337,8 @@ class MainActivity : AppCompatActivity() {
     private fun editFeatureAttribute() {
         // if there is a selected feature
         selectedFeature?.let { feature ->
-            val dialogView =
-                LayoutInflater.from(this).inflate(R.layout.edit_feature_attribute_dialog, null)
-            val featureAttributeSpinner =
-                dialogView.findViewById<Spinner>(R.id.featureAttributeSpinner)
+            val editFeatureAttributeDialogBinding = EditFeatureAttributeDialogBinding.inflate(layoutInflater)
+            val featureAttributeSpinner = editFeatureAttributeDialogBinding.featureAttributeSpinner
             // set up the spinner with acceptable TYPDAMAGE values
             ArrayAdapter.createFromResource(
                 this,
@@ -358,7 +356,7 @@ class MainActivity : AppCompatActivity() {
 
             // create the dialog
             AlertDialog.Builder(this).apply {
-                setView(dialogView)
+                setView(editFeatureAttributeDialogBinding.root)
                 setTitle(feature.attributes["PLACENAME"].toString())
                 setNegativeButton("Cancel") { _: DialogInterface, _: Int ->
                     // clear the selection
