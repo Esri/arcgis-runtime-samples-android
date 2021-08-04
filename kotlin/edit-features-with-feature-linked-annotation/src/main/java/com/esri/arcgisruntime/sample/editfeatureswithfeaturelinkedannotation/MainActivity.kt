@@ -197,7 +197,6 @@ class MainActivity : AppCompatActivity() {
      */
     private fun showEditableAttributes(selectedFeature: Feature) {
         // inflate the edit attribute layout
-        //val editAttributeView = layoutInflater.inflate(R.layout.edit_attribute_layout, null)
         val editAttributeLayoutBinding = EditAttributeLayoutBinding.inflate(LayoutInflater.from(this))
         // create an alert dialog
         AlertDialog.Builder(this).apply {
