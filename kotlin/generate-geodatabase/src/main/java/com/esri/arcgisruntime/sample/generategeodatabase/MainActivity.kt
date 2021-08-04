@@ -198,10 +198,8 @@ class MainActivity : AppCompatActivity() {
                 generateGeodatabaseJob.cancel()
             }
             setCancelable(false)
-            setView(
-                LayoutInflater.from(this@MainActivity)
-                    .inflate(R.layout.dialog_layout, null)
-            )
+            val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+            setView(dialogLayoutBinding.root)
         }
         return builder.create()
     }
