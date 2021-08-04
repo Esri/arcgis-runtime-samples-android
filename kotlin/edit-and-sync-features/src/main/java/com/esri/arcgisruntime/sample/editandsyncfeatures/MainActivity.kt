@@ -292,7 +292,8 @@ class MainActivity : AppCompatActivity() {
             // provide a cancel button on the dialog
             setNegativeButton("Cancel") { _, _ -> job.cancel() }
             setCancelable(false)
-            setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_layout, null))
+            val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+            setView(dialogLayoutBinding.root)
         }
         return builder.create()
     }
