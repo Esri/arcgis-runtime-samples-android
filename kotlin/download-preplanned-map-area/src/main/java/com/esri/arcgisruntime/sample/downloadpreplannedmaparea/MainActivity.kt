@@ -367,7 +367,8 @@ class MainActivity : AppCompatActivity() {
                 downloadPreplannedOfflineMapJob.cancel()
             }
             setCancelable(false)
-            setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_layout, null))
+            val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+            setView(dialogLayoutBinding.root)
         }
         return dialogBuilder.create()
     }
