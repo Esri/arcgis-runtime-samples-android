@@ -14,14 +14,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-            android:id="@+id/gardenContentTextView"
+    <ScrollView
+            android:id="@+id/SCROLLER_ID"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="TextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gardenContentImageView" />
+            app:layout_constraintTop_toBottomOf="@+id/gardenContentImageView"
+            android:scrollbars="vertical"
+            android:fillViewport="true">
+
+        <TextView
+                android:id="@+id/gardenContentTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/gardenContentImageView" />
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

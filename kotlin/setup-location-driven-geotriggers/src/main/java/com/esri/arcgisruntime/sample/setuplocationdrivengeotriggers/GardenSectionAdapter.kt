@@ -1,4 +1,4 @@
-package com.esri.arcgisruntime.sample.usegeotriggerstoshowspatiallyrelevantinformation
+package com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers
 
 import android.content.Context
 import android.graphics.BitmapFactory

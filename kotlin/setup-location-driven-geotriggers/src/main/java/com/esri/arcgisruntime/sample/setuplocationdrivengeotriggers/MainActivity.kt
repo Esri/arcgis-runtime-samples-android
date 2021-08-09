@@ -1,4 +1,4 @@
-package com.esri.arcgisruntime.sample.usegeotriggerstoshowspatiallyrelevantinformation
+package com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.arcade.ArcadeExpression
+import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.ArcGISFeature
+import com.esri.arcgisruntime.data.Attachment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Polyline
 import com.esri.arcgisruntime.geotriggers.FeatureFenceParameters
@@ -40,18 +42,17 @@ class MainActivity : AppCompatActivity() {
 
     private var sectionsVisited: HashMap<String, GardenSection> = HashMap()
 
-    // property to prevent garbage collection
+    // make monitors properties to prevent garbage collection
     private lateinit var sectionGeotriggerMonitor: GeotriggerMonitor
     private lateinit var poiGeotriggerMonitor: GeotriggerMonitor
 
-    private lateinit var gardenSectionAdapter: GardenSectionAdapter
-    private lateinit var gardenInfoViewPager: ViewPager
+    private lateinit var attachmentsFuture: ListenableFuture<MutableList<Attachment>>
 
+    private lateinit var gardenSectionAdapter: GardenSectionAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
 
         // authentication with an API key or named user is required to access basemaps and other
         // location services
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         poiGeotriggerMonitor =
             createGeotriggerMonitor(gardenPOIs, 10.0, "POI Trigger", geotriggerFeed)
 
-        gardenInfoViewPager = findViewById(R.id.gardenInfoViewPager)
+        val gardenInfoViewPager = findViewById<ViewPager>(R.id.gardenInfoViewPager)
         val tabLayout = findViewById<TabLayout>(R.id.gardenInfoTabLayout)
         tabLayout.setupWithViewPager(gardenInfoViewPager)
 
@@ -183,7 +184,7 @@ class MainActivity : AppCompatActivity() {
             val description = fenceFeature.attributes?.getValue("description").toString()
 
             // fetch the fence feature's attachments
-            val attachmentsFuture = fenceFeature.fetchAttachmentsAsync()
+            attachmentsFuture = fenceFeature.fetchAttachmentsAsync()
             // listen for fetch attachments to complete
             attachmentsFuture.addDoneListener {
                 // get the feature attachments

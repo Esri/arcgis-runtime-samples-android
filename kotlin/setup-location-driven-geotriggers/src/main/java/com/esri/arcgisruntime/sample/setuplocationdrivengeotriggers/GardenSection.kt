@@ -1,4 +1,4 @@
-package com.esri.arcgisruntime.sample.usegeotriggerstoshowspatiallyrelevantinformation
+package com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers
 
 import com.esri.arcgisruntime.data.ArcGISFeature
 
