@@ -1,4 +1,4 @@
-/* Copyright 2017 Esri
+/* Copyright 2021 Esri
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,9 @@ package com.esri.arcgisruntime.sample.querywithcqlfilters
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.widget.DatePicker
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SwitchCompat
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.OgcFeatureCollectionTable
 import com.esri.arcgisruntime.data.QueryParameters
@@ -66,11 +61,9 @@ class MainActivity : AppCompatActivity() {
     // Current selected where query
     private var cqlQueryListPosition = 4
 
-    // Number of features query should return. Default is 1000
-    private var maxFeatures = 1000
-
-    // When set to true, query searches between fromDate-toDate
-    private var isDateFilter = false
+    // Set a limit of 3000 on the number of returned features per request,
+    // the default on some services could be as low as 10
+    private var maxFeatures = 3000
 
     // Defines date range in queryParameters.timeExtent
     private var fromDate = Calendar.getInstance()
@@ -92,12 +85,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
 
-
         // Authentication with an API key or named user is required to
         // access basemaps and other location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // Create a map with the BasemapType topographic
+        // Create a map with a topographic basemap
         val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
 
         // Set the map to be displayed in the layout's MapView
@@ -141,13 +133,14 @@ class MainActivity : AppCompatActivity() {
                     mapView.setViewpointGeometryAsync(datasetExtent)
                 }
 
-                // Create a query based on the current visible extent
-                val visibleExtentQuery = QueryParameters()
-                visibleExtentQuery.geometry = datasetExtent
+                val visibleExtentQuery = QueryParameters().apply {
+                    // Create a query based on the current visible extent
+                    geometry = datasetExtent
 
-                // Set a limit of 3000 on the number of returned features per request,
-                // the default on some services could be as low as 10
-                visibleExtentQuery.maxFeatures = maxFeatures
+                    // Set a limit of 3000 on the number of returned features per request,
+                    // the default on some services could be as low as 10
+                    maxFeatures = this@MainActivity.maxFeatures
+                }
 
                 try {
                     // Populate the table with the query, leaving existing table entries intact
@@ -158,27 +151,29 @@ class MainActivity : AppCompatActivity() {
                         null
                     )
                 } catch (e: Exception) {
+                    val errorMessage =
+                        "Error populating OGC Feature Collection Table from service: " + e.message
                     Toast.makeText(
                         this,
-                        "Error populating OGC Feature Collection Table from service: " +
-                                e.message,
+                        errorMessage,
                         Toast.LENGTH_LONG
                     ).show()
                     Log.e(
                         "OGC Service error: ",
-                        e.message.toString()
+                        errorMessage
                     )
                 }
             } else {
+                val errorMessage =
+                    "Failed to load OGC Feature Collection Table" + ogcFeatureCollectionTable.loadError.message
                 Toast.makeText(
                     this,
-                    "Failed to load OGC Feature Collection Table" +
-                            ogcFeatureCollectionTable.loadError.message,
+                    errorMessage,
                     Toast.LENGTH_LONG
                 ).show()
                 Log.e(
                     "OGC Load error: ",
-                    ogcFeatureCollectionTable.loadError.message.toString()
+                    errorMessage
                 )
             }
         }
@@ -231,44 +226,46 @@ class MainActivity : AppCompatActivity() {
             alert.show()
         }
 
-        // Sets the view to the default value of max features (1000)
-        cqlFiltersLayoutBinding.maxFeaturesEditText.setText(maxFeatures.toString())
+        cqlFiltersLayoutBinding.apply {
+            // Sets the view to the default value of max features (3000)
+            maxFeaturesEditText.setText(maxFeatures.toString())
 
-        // Sets from date to Jun-13-2011 by default
-        cqlFiltersLayoutBinding.fromDatePicker.updateDate(2011, 5, 13)
-        // Sets to date to Jan-7-2012 by default
-        cqlFiltersLayoutBinding.toDatePicker.updateDate(2012, 0, 7)
+            // Sets from date to Jun-13-2011 by default
+            fromDatePicker.updateDate(2011, 5, 13)
+            // Sets to date to Jan-7-2012 by default
+            toDatePicker.updateDate(2012, 0, 7)
 
-        // Sets up filters for the query when Apply is clicked.
-        cqlFiltersLayoutBinding.applyTv.setOnClickListener {
+            // Sets up filters for the query when Apply is clicked.
+            applyTv.setOnClickListener {
+                // Retrieves the max features
+                val maxFeaturesText =
+                    maxFeaturesEditText.text.toString()
+                maxFeatures = when {
+                    maxFeaturesText == "" -> 3000
+                    maxFeaturesText.toInt() <= 0 -> 3000
+                    else -> maxFeaturesText.toInt()
+                }
 
-            // Retrieves the max features
-            val maxFeaturesText =
-                cqlFiltersLayoutBinding.maxFeaturesEditText.text.toString()
-            maxFeatures = when {
-                maxFeaturesText == "" -> 1000
-                maxFeaturesText.toInt() <= 0 -> 1000
-                else -> maxFeaturesText.toInt()
+                // Retrieves if date filter is selected
+                val isDateFilterSelected = dateSwitch.isChecked
+
+                // Retrieves from & to dates from the DatePicker
+                val fromDatePicker = fromDatePicker
+                val toDatePicker = toDatePicker
+                fromDate.set(fromDatePicker.year, fromDatePicker.month, fromDatePicker.dayOfMonth)
+                toDate.set(toDatePicker.year, toDatePicker.month, toDatePicker.dayOfMonth)
+
+                // Dismiss bottom sheet view
+                dialog.dismiss()
+
+                // Runs the query using the selected filters
+                runQuery(isDateFilterSelected)
             }
 
-            // Retrieves if date filter is selected
-            isDateFilter = cqlFiltersLayoutBinding.dateSwitch.isChecked
-
-            // Retrieves from & to dates from the DatePicker
-            val fromDatePicker = cqlFiltersLayoutBinding.fromDatePicker
-            val toDatePicker = cqlFiltersLayoutBinding.toDatePicker
-            fromDate.set(fromDatePicker.year, fromDatePicker.month, fromDatePicker.dayOfMonth)
-            toDate.set(toDatePicker.year, toDatePicker.month, toDatePicker.dayOfMonth)
-
-            // Dismiss bottom sheet view
-            dialog.dismiss()
-
-            // Runs the query using the selected filters
-            runQuery()
+            // Dismiss bottom sheet view when cancel is clicked
+            cancelTv.setOnClickListener { dialog.dismiss() }
         }
 
-        // Dismiss bottom sheet view when cancel is clicked
-        cqlFiltersLayoutBinding.cancelTv.setOnClickListener { dialog.dismiss() }
         dialog.setCancelable(false)
 
         // Sets bottom sheet content view to layout
@@ -283,29 +280,31 @@ class MainActivity : AppCompatActivity() {
      */
     private fun resetBottomSheetValues() {
         cqlQueryListPosition = 4
-        maxFeatures = 1000
-        isDateFilter = false
-        fromDate.set(2011, 6, 13)
-        toDate.set(2012, 1, 7)
+        maxFeatures = 3000
+        fromDate.set(2011, 5, 13)
+        toDate.set(2012, 0, 7)
     }
 
     /**
      * Populates features from provided query parameters, and displays the result on the map.
+     * If [isDateFilterSelected] is true, query searches between fromDate-toDate
      */
-    private fun runQuery() {
+    private fun runQuery(isDateFilterSelected: Boolean) {
         val queryParameters = QueryParameters()
 
-        // Set the query parameter's where clause with the the selected query
-        queryParameters.whereClause = cqlQueryList[cqlQueryListPosition]
+        queryParameters.apply {
+            // Set the query parameter's where clause with the the selected query
+            whereClause = cqlQueryList[cqlQueryListPosition]
 
-        // Sets the max features to the number entered in the text field
-        queryParameters.maxFeatures = maxFeatures
+            // Sets the max features to the number entered in the text field
+            maxFeatures = this@MainActivity.maxFeatures
 
-        // If date filter is selected, retrieve the date selected from the date picker
-        // and set it to the query parameters time extent
-        if (isDateFilter) {
-            // set the query parameters time extent
-            queryParameters.timeExtent = TimeExtent(fromDate, toDate)
+            // If date filter is selected, retrieve the date selected from the date picker
+            // and set it to the query parameters time extent
+            if (isDateFilterSelected) {
+                // set the query parameters time extent
+                timeExtent = TimeExtent(fromDate, toDate)
+            }
         }
 
         // Populate the table with the query, clear existing table entries
