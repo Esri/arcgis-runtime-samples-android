@@ -1,5 +1,5 @@
 {
-    "category": "Layers",
+    "category": "Search and Query",
     "description": "Query data from an OGC API feature service using CQL filters.",
     "formal_name": "QueryWithCqlFilters",
     "ignore": false,
