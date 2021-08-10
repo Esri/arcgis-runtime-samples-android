@@ -65,7 +65,6 @@ import kotlinx.android.synthetic.main.spinner_text_item.view.*
 import java.util.*
 import kotlin.math.roundToInt
 
-
 class MainActivity : AppCompatActivity() {
 
     private val TAG = MainActivity::class.java.simpleName
@@ -430,7 +429,6 @@ class MainActivity : AppCompatActivity() {
      *
      * @param utilityNetwork the utility network to perform the trace on
      * @param traceConfiguration the trace configuration to apply to the trace
-     * @param startingLocation the utility element to begin the trace from
      */
     private fun performTrace(
         utilityNetwork: UtilityNetwork,
