@@ -272,15 +272,15 @@ public class MainActivity extends AppCompatActivity {
       // make sure the title edit text view has text
       if (titleEditText.getText().length() > 0) {
         // check if a folder was selected
-        if (mFolderSpinner.getSelectedItemPosition() != -1) {
+        if (mFolderSpinner.getSelectedItemPosition() == -1) {
+          // if no folder was selected, just pass null for portalFolder argument
+          saveMap(titleEditText.getText().toString(), tags,
+              descriptionEditText.getText().toString(), null);
+        } else {
           // call save map passing in title, tags, description and portal
           saveMap(titleEditText.getText().toString(), tags,
               descriptionEditText.getText().toString(),
               mPortalFolders.get(mFolderSpinner.getSelectedItemPosition()));
-        } else {
-          // if no folder was selected, just pass null for portalFolder argument
-          saveMap(titleEditText.getText().toString(), tags,
-              descriptionEditText.getText().toString(), null);
         }
         saveMapDialog.dismiss();
       } else {
