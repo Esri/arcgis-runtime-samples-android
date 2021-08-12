@@ -31,7 +31,6 @@ internal class GardenSectionAdapter(context: Context, gardenSections: MutableLis
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view: View = mLayoutInflater.inflate(R.layout.garden_content, container, false)
-
         val gardenContentTextView = view.findViewById<TextView>(R.id.gardenContentTextView)
         gardenContentTextView.text = Html.fromHtml(mGardenSections[position].description)
         val gardenContentImageView = view.findViewById<ImageView>(R.id.gardenContentImageView)

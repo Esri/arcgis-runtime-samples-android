@@ -3,4 +3,8 @@
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorAccent">#4CAF50</color>
+
+    <color name="gardenPrimary">#3b4e1e</color>
+    <color name="gardenSecondary">#ac901e</color>
+    <color name="white">#FFFF</color>
 </resources>
