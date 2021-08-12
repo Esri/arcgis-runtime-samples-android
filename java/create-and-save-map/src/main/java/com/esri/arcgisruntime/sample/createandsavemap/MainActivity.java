@@ -271,9 +271,17 @@ public class MainActivity extends AppCompatActivity {
       Iterable<String> tags = Arrays.asList(tagsEditText.getText().toString().split(","));
       // make sure the title edit text view has text
       if (titleEditText.getText().length() > 0) {
-        // call save map passing in title, tags, description and portal
-        saveMap(titleEditText.getText().toString(), tags, descriptionEditText.getText().toString(),
-            mPortalFolders.get(mFolderSpinner.getSelectedItemPosition()));
+        // check if a folder was selected
+        if (mFolderSpinner.getSelectedItemPosition() != -1) {
+          // call save map passing in title, tags, description and portal
+          saveMap(titleEditText.getText().toString(), tags,
+              descriptionEditText.getText().toString(),
+              mPortalFolders.get(mFolderSpinner.getSelectedItemPosition()));
+        } else {
+          // if no folder was selected, just pass null for portalFolder argument
+          saveMap(titleEditText.getText().toString(), tags,
+              descriptionEditText.getText().toString(), null);
+        }
         saveMapDialog.dismiss();
       } else {
         Toast.makeText(this, "A title is required to save your map.", Toast.LENGTH_LONG).show();
