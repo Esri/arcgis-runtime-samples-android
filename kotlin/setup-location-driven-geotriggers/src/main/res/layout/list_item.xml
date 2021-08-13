@@ -6,11 +6,12 @@
 
     <Button
         android:id="@+id/itemButton"
-        android:background="@color/gardenSecondary"
+        android:background="@drawable/rounded_button_secondary"
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
-        android:padding="8dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:layout_height="wrap_content"
         android:textAllCaps="false"
         android:text="Test"/>

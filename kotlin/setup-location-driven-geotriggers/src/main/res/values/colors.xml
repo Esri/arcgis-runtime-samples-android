@@ -7,4 +7,5 @@
     <color name="gardenPrimary">#3b4e1e</color>
     <color name="gardenSecondary">#ac901e</color>
     <color name="white">#FFFF</color>
+    <color name="divider">#2A000000</color>
 </resources>

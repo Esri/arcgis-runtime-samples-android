@@ -1,9 +1,9 @@
 package com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers
 
-import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ListView
 import android.widget.Toast
@@ -15,14 +15,7 @@ import com.esri.arcgisruntime.data.ArcGISFeature
 import com.esri.arcgisruntime.data.Attachment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Polyline
-import com.esri.arcgisruntime.geotriggers.FeatureFenceParameters
-import com.esri.arcgisruntime.geotriggers.FenceGeotrigger
-import com.esri.arcgisruntime.geotriggers.FenceGeotriggerNotificationInfo
-import com.esri.arcgisruntime.geotriggers.FenceNotificationType
-import com.esri.arcgisruntime.geotriggers.FenceRuleType
-import com.esri.arcgisruntime.geotriggers.GeotriggerMonitor
-import com.esri.arcgisruntime.geotriggers.GeotriggerNotificationInfo
-import com.esri.arcgisruntime.geotriggers.LocationGeotriggerFeed
+import com.esri.arcgisruntime.geotriggers.*
 import com.esri.arcgisruntime.location.SimulatedLocationDataSource
 import com.esri.arcgisruntime.location.SimulationParameters
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -56,8 +49,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var poiGeotriggerMonitor: GeotriggerMonitor
 
     private lateinit var attachmentsFuture: ListenableFuture<MutableList<Attachment>>
-
-    private lateinit var gardenSectionAdapter: GardenSectionAdapter
 
     private lateinit var listAdapter: ListAdapter
 
@@ -109,17 +100,8 @@ class MainActivity : AppCompatActivity() {
         poiGeotriggerMonitor =
             createGeotriggerMonitor(gardenPOIs, 10.0, POI_GEOTRIGGER, geotriggerFeed)
 
-        val gardenInfoViewPager = activityMainBinding.gardenInfoViewPager
-        val tabLayout = activityMainBinding.gardenInfoTabLayout
-        tabLayout.setupWithViewPager(gardenInfoViewPager)
-
-
-        gardenSectionAdapter = GardenSectionAdapter(applicationContext, currentSections)
-        listAdapter = ListAdapter(this,poiList)
+        listAdapter = ListAdapter(this, poiList)
         poiListView.adapter = listAdapter
-        //gardenInfoViewPager.adapter = gardenSectionAdapter
-
-
     }
 
     private fun initializeSimulatedLocationDisplay(): LocationGeotriggerFeed {
@@ -175,15 +157,16 @@ class MainActivity : AppCompatActivity() {
 
         playPauseFAB.setOnClickListener {
             geotriggerFeed.apply {
-                if(locationDataSource.isStarted) {
+                if (locationDataSource.isStarted) {
                     locationDataSource.stop()
-                    Toast.makeText(this@MainActivity,"Stopped Simulation",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Stopped Simulation", Toast.LENGTH_SHORT)
+                        .show()
                     playPauseFAB.setImageResource(R.drawable.ic_round_play_arrow_24)
-                }
-                else {
+                } else {
                     locationDataSource.startAsync()
                     mapView.locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.RECENTER
-                    Toast.makeText(this@MainActivity,"Resumed Simulation",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Resumed Simulation", Toast.LENGTH_SHORT)
+                        .show()
                     playPauseFAB.setImageResource(R.drawable.ic_round_pause_24)
                 }
             }
@@ -208,7 +191,10 @@ class MainActivity : AppCompatActivity() {
             // If the user enters a given geofence, add the feature's information to the UI and save the feature for querying.
             addFeatureInformation(fenceFeatureName, fenceGeotriggerNotificationInfo)
         } else if (fenceGeotriggerNotificationInfo.fenceNotificationType == FenceNotificationType.EXITED) {
-            removeFeatureInformation(fenceFeatureName, geotriggerNotificationInfo.geotriggerMonitor.geotrigger.name)
+            removeFeatureInformation(
+                fenceFeatureName,
+                geotriggerNotificationInfo.geotriggerMonitor.geotrigger.name
+            )
         }
     }
 
@@ -256,7 +242,11 @@ class MainActivity : AppCompatActivity() {
                                 description,
                                 attachmentImageURI
                             )
-                        populateUI(fenceFeatureName, sectionsVisited[fenceFeatureName]!!,fenceGeotriggerNotificationInfo.geotriggerMonitor.geotrigger.name)
+                        populateUI(
+                            fenceFeatureName,
+                            sectionsVisited[fenceFeatureName]!!,
+                            fenceGeotriggerNotificationInfo.geotriggerMonitor.geotrigger.name
+                        )
                     }
                 }
             }
@@ -272,40 +262,48 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun removeFeatureInformation(fenceFeatureName: String, geotriggerType: String) {
-        if(geotriggerType == SECTION_GEOTRIGGER){
+        if (geotriggerType == SECTION_GEOTRIGGER) {
             sectionButton.text = "N/A"
-        }else{
+        } else {
             poiList.remove(sectionsVisited[fenceFeatureName])
             listAdapter.notifyDataSetChanged()
+            if (poiList.size == 0) {
+                activityMainBinding.listAvailable.visibility = View.VISIBLE
+            }
         }
         currentSections.remove(sectionsVisited[fenceFeatureName])
         //gardenSectionAdapter.notifyDataSetChanged()
     }
 
 
-    private val tempList: MutableList<String> = ArrayList();
+    private val tempList: MutableList<String> = ArrayList()
     private fun populateUI(
         fenceFeatureName: String,
         gardenSection: GardenSection,
         geotriggerType: String
     ) {
 
-        if(geotriggerType == SECTION_GEOTRIGGER){
+        if (geotriggerType == SECTION_GEOTRIGGER) {
             sectionButton.text = gardenSection.title
-            sectionButton.setOnClickListener{
-                if(gardenSection.title == sectionButton.text){
-                    val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this)
+            sectionButton.setOnClickListener {
+                if (gardenSection.title == sectionButton.text) {
+/*                    val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this)
                     alertDialog.setTitle(gardenSection.title)
                     alertDialog.setMessage(gardenSection.description)
 
                     // Displays the where clause dialog
                     val alert: AlertDialog = alertDialog.create()
-                    alert.show()
+                    alert.show()*/
+                    GardenDescriptionFragment(gardenSection).show(
+                        supportFragmentManager,
+                        "GardenDescriptionFragment"
+                    )
                 }
             }
-        }else{
+        } else {
             poiList.add(gardenSection)
             listAdapter.notifyDataSetChanged()
+            activityMainBinding.listAvailable.visibility = View.GONE
         }
 
         //currentSections.add(gardenSection)

@@ -13,21 +13,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nestedScroll" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/gardenInfoTabLayout"
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/gardenInfoViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gardenInfoTabLayout" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScroll"
@@ -35,7 +20,7 @@
         android:layout_height="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gardenInfoTabLayout">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,9 +49,10 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="8dp"
                     android:layout_marginEnd="8dp"
-                    android:background="@color/gardenPrimary"
+                    android:background="@drawable/rounded_button_primary"
                     android:text="N/A"
-                    android:padding="8dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -74,6 +60,11 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:background="@color/divider"
+                android:layout_height="2px"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -87,6 +78,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical" />
+
+            <TextView
+                android:id="@+id/listAvailable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_gravity="center_horizontal"
+                android:text="N/A"
+                android:textSize="15sp" />
 
         </LinearLayout>
 
