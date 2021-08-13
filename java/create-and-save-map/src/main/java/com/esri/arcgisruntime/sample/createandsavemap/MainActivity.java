@@ -241,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
           mPortalFolders = portalUserContent.getFolders();
           // get a list of the user's portal folder titles
           List<String> portalFolderTitles = new ArrayList<>();
+          portalFolderTitles.add("No Folder");
           for (PortalFolder portalFolder : mPortalFolders) {
             portalFolderTitles.add(portalFolder.getTitle());
           }
@@ -272,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
       // make sure the title edit text view has text
       if (titleEditText.getText().length() > 0) {
         // check if a folder was selected
-        if (mFolderSpinner.getSelectedItemPosition() == -1) {
+        if (mFolderSpinner.getSelectedItemPosition() <= 0) {
           // if no folder was selected, just pass null for portalFolder argument
           saveMap(titleEditText.getText().toString(), tags,
               descriptionEditText.getText().toString(), null);
@@ -280,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
           // call save map passing in title, tags, description and portal
           saveMap(titleEditText.getText().toString(), tags,
               descriptionEditText.getText().toString(),
-              mPortalFolders.get(mFolderSpinner.getSelectedItemPosition()));
+              mPortalFolders.get(mFolderSpinner.getSelectedItemPosition() - 1));
         }
         saveMapDialog.dismiss();
       } else {
