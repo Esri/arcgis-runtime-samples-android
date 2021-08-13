@@ -1,18 +1,23 @@
 package com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers
 
-import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import androidx.fragment.app.FragmentManager
 import com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers.databinding.ListItemBinding
 
-internal class ListAdapter(context: Context, gardenSections: MutableList<GardenSection>) :
+internal class ListAdapter(
+    context: Context,
+    gardenSections: MutableList<GardenSection>,
+    supportFragmentManager: FragmentManager
+) :
     BaseAdapter() {
 
     private val mGardenSections = gardenSections
-    private val mContext = context
+    private val mSupportFragmentManager = supportFragmentManager
+
     private val mLayoutInflater: LayoutInflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -34,13 +39,10 @@ internal class ListAdapter(context: Context, gardenSections: MutableList<GardenS
         listItemBinding.apply {
             itemButton.text = mGardenSections[position].title
             itemButton.setOnClickListener {
-                val alertDialog: AlertDialog.Builder = AlertDialog.Builder(mContext)
-                alertDialog.setTitle(mGardenSections[position].title)
-                alertDialog.setMessage(mGardenSections[position].description)
-
-                // Displays the where clause dialog
-                val alert: AlertDialog = alertDialog.create()
-                alert.show()
+                GardenDescriptionFragment(mGardenSections[position]).show(
+                    mSupportFragmentManager,
+                    "GardenDescriptionFragment"
+                )
             }
         }
 

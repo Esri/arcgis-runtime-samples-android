@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
         poiGeotriggerMonitor =
             createGeotriggerMonitor(gardenPOIs, 10.0, POI_GEOTRIGGER, geotriggerFeed)
 
-        listAdapter = ListAdapter(this, poiList)
+        listAdapter = ListAdapter(this, poiList, supportFragmentManager)
         poiListView.adapter = listAdapter
     }
 
@@ -243,7 +243,6 @@ class MainActivity : AppCompatActivity() {
                                 attachmentImageURI
                             )
                         populateUI(
-                            fenceFeatureName,
                             sectionsVisited[fenceFeatureName]!!,
                             fenceGeotriggerNotificationInfo.geotriggerMonitor.geotrigger.name
                         )
@@ -254,7 +253,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             // this garden section has already been visited, show the information again
             populateUI(
-                fenceFeatureName,
                 sectionsVisited[fenceFeatureName]!!,
                 fenceGeotriggerNotificationInfo.geotriggerMonitor.geotrigger.name
             )
@@ -272,28 +270,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
         currentSections.remove(sectionsVisited[fenceFeatureName])
-        //gardenSectionAdapter.notifyDataSetChanged()
     }
 
 
-    private val tempList: MutableList<String> = ArrayList()
     private fun populateUI(
-        fenceFeatureName: String,
         gardenSection: GardenSection,
         geotriggerType: String
     ) {
-
         if (geotriggerType == SECTION_GEOTRIGGER) {
             sectionButton.text = gardenSection.title
             sectionButton.setOnClickListener {
                 if (gardenSection.title == sectionButton.text) {
-/*                    val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this)
-                    alertDialog.setTitle(gardenSection.title)
-                    alertDialog.setMessage(gardenSection.description)
-
-                    // Displays the where clause dialog
-                    val alert: AlertDialog = alertDialog.create()
-                    alert.show()*/
                     GardenDescriptionFragment(gardenSection).show(
                         supportFragmentManager,
                         "GardenDescriptionFragment"
@@ -305,9 +292,6 @@ class MainActivity : AppCompatActivity() {
             listAdapter.notifyDataSetChanged()
             activityMainBinding.listAvailable.visibility = View.GONE
         }
-
-        //currentSections.add(gardenSection)
-        //gardenSectionAdapter.notifyDataSetChanged()
     }
 
     private fun saveToInternalStorage(name: String, imageInputStream: InputStream): String {
