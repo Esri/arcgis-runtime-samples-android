@@ -29,7 +29,7 @@
         "TimeExtent"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/query_with_cql_filters/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/querywithcqlfilters/MainActivity.kt"
     ],
     "title": "Query with CQL filters"
 }
