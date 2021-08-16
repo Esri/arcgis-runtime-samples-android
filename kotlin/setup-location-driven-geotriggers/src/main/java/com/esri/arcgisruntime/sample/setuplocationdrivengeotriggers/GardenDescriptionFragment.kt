@@ -9,9 +9,12 @@ import androidx.core.text.HtmlCompat
 import androidx.fragment.app.DialogFragment
 import com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers.databinding.DialogFragmentBinding
 
+/**
+ * Class to display a dialog with the title, image and description of the [GardenSection]
+ */
 class GardenDescriptionFragment(gardenSection: GardenSection) : DialogFragment() {
 
-    //
+    // Garden section to display
     private val mGardenSection = gardenSection
 
     override fun onCreateView(
@@ -19,8 +22,10 @@ class GardenDescriptionFragment(gardenSection: GardenSection) : DialogFragment()
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Bind inflater to the layout view.
         val dialogFragmentBinding = DialogFragmentBinding.inflate(inflater)
 
+        // Set title, description and image view of the mGardenSection
         dialogFragmentBinding.apply {
             gardenContentTitle.text = mGardenSection.title
             gardenContentTextView.text =

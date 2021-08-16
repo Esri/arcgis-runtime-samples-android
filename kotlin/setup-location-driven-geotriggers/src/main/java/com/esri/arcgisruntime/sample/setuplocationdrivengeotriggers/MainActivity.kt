@@ -35,22 +35,25 @@ import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity() {
 
-    private var currentSections: MutableList<GardenSection> = ArrayList()
-
+    // List of GardenSections that are points of interest (POI)
     private var poiList: MutableList<GardenSection> = ArrayList()
 
+    // Hashmap of sections visited by the simulated data source
     private var sectionsVisited: HashMap<String, GardenSection> = HashMap()
 
-    private val POI_GEOTRIGGER = "POI Geotrigger"
-    private val SECTION_GEOTRIGGER = "Section Geotrigger"
+    // Geotrigger name for the GeotriggerMonitor
+    private val POIGeotriggerName = "POI Geotrigger"
+    private val sectionGeotriggerName = "Section Geotrigger"
 
-    // make monitors properties to prevent garbage collection
+    // Make monitors properties to prevent garbage collection
     private lateinit var sectionGeotriggerMonitor: GeotriggerMonitor
     private lateinit var poiGeotriggerMonitor: GeotriggerMonitor
 
+    // Retrieve attachments such as image URI
     private lateinit var attachmentsFuture: ListenableFuture<MutableList<Attachment>>
 
-    private lateinit var listAdapter: ListAdapter
+    // Custom list adapter for the points of interest
+    private lateinit var poiListAdapter: ListAdapter
 
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -96,14 +99,19 @@ class MainActivity : AppCompatActivity() {
 
         // Create geotriggers for each of the service feature tables
         sectionGeotriggerMonitor =
-            createGeotriggerMonitor(gardenSections, 0.0, SECTION_GEOTRIGGER, geotriggerFeed)
+            createGeotriggerMonitor(gardenSections, 0.0, sectionGeotriggerName, geotriggerFeed)
         poiGeotriggerMonitor =
-            createGeotriggerMonitor(gardenPOIs, 10.0, POI_GEOTRIGGER, geotriggerFeed)
+            createGeotriggerMonitor(gardenPOIs, 10.0, POIGeotriggerName, geotriggerFeed)
 
-        listAdapter = ListAdapter(this, poiList, supportFragmentManager)
-        poiListView.adapter = listAdapter
+        // Bind the adapter with the points of interest ListView
+        poiListAdapter = ListAdapter(this, poiList, supportFragmentManager)
+        poiListView.adapter = poiListAdapter
     }
 
+    /**
+     * Initialize a simulation using a simulated data source and then
+     * feed it to the [LocationGeotriggerFeed]
+     */
     private fun initializeSimulatedLocationDisplay(): LocationGeotriggerFeed {
         val simulatedLocationDataSource = SimulatedLocationDataSource()
 
@@ -117,6 +125,7 @@ class MainActivity : AppCompatActivity() {
             simulationParameters
         )
 
+        // Set map to simulate the location data source
         mapView.locationDisplay.apply {
             locationDataSource = simulatedLocationDataSource
             autoPanMode = LocationDisplay.AutoPanMode.RECENTER
@@ -141,7 +150,8 @@ class MainActivity : AppCompatActivity() {
         geotriggerFeed: LocationGeotriggerFeed
     ): GeotriggerMonitor {
 
-        // Initialize FeatureFenceParameters with the service feature table and a buffer of 0 meters to display the exact garden section the user has entered
+        // Initialize FeatureFenceParameters with the service feature table and a buffer of 0 meters
+        // to display the exact garden section the user has entered
         val featureFenceParameters = FeatureFenceParameters(serviceFeatureTable, bufferSize)
         val fenceGeotrigger = FenceGeotrigger(
             geotriggerFeed,
@@ -150,11 +160,15 @@ class MainActivity : AppCompatActivity() {
             ArcadeExpression("\$fenceFeature.name"),
             geotriggerName
         )
+
+        // Handles Geotrigger notification based on the FenceRuleType
+        // Hence, triggers on fence enter/exit.
         val geotriggerMonitor = GeotriggerMonitor(fenceGeotrigger)
         geotriggerMonitor.addGeotriggerMonitorNotificationEventListener {
             handleGeotriggerNotification(it.geotriggerNotificationInfo)
         }
 
+        // Play or pause the simulation data source.
         playPauseFAB.setOnClickListener {
             geotriggerFeed.apply {
                 if (locationDataSource.isStarted) {
@@ -172,12 +186,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Start must be explicitly called. It is called after the signal connection is defined to avoid a race condition in Qt.
+        // Start must be explicitly called. It is called after the signal connection is defined to avoid a race condition.
         geotriggerMonitor.startAsync()
 
         return geotriggerMonitor
     }
 
+    /**
+     * Handles the geotrigger notification based on [geotriggerNotificationInfo] depending
+     * on the fenceNotificationType
+     */
     private fun handleGeotriggerNotification(geotriggerNotificationInfo: GeotriggerNotificationInfo) {
 
         // FenceGeotriggerNotificationInfo provides access to the feature that triggered the notification
@@ -188,9 +206,10 @@ class MainActivity : AppCompatActivity() {
         val fenceFeatureName = fenceGeotriggerNotificationInfo.message
 
         if (fenceGeotriggerNotificationInfo.fenceNotificationType == FenceNotificationType.ENTERED) {
-            // If the user enters a given geofence, add the feature's information to the UI and save the feature for querying.
+            // If the user enters a given geofence, add the feature's information to the UI and save the feature for querying
             addFeatureInformation(fenceFeatureName, fenceGeotriggerNotificationInfo)
         } else if (fenceGeotriggerNotificationInfo.fenceNotificationType == FenceNotificationType.EXITED) {
+            // If the user exits a given geofence, remove the feature's information from the UI
             removeFeatureInformation(
                 fenceFeatureName,
                 geotriggerNotificationInfo.geotriggerMonitor.geotrigger.name
@@ -198,7 +217,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Creates a [GardenSection] using [fenceGeotriggerNotificationInfo] and
+     * adds the [fenceFeatureName] to the HashMap of visited sections
+     */
     private fun addFeatureInformation(
         fenceFeatureName: String,
         fenceGeotriggerNotificationInfo: FenceGeotriggerNotificationInfo
@@ -259,25 +281,31 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Removes the [fenceFeatureName] from the garden section or
+     * the points of interest list using the corresponding [geotriggerType]
+     */
     private fun removeFeatureInformation(fenceFeatureName: String, geotriggerType: String) {
-        if (geotriggerType == SECTION_GEOTRIGGER) {
+        if (geotriggerType == sectionGeotriggerName) {
             sectionButton.text = "N/A"
         } else {
             poiList.remove(sectionsVisited[fenceFeatureName])
-            listAdapter.notifyDataSetChanged()
+            poiListAdapter.notifyDataSetChanged()
             if (poiList.size == 0) {
                 activityMainBinding.listAvailable.visibility = View.VISIBLE
             }
         }
-        currentSections.remove(sectionsVisited[fenceFeatureName])
     }
 
 
+    /**
+     * Populates UI by setting [gardenSection] item based on the [geotriggerType]
+     */
     private fun populateUI(
         gardenSection: GardenSection,
         geotriggerType: String
     ) {
-        if (geotriggerType == SECTION_GEOTRIGGER) {
+        if (geotriggerType == sectionGeotriggerName) {
             sectionButton.text = gardenSection.title
             sectionButton.setOnClickListener {
                 if (gardenSection.title == sectionButton.text) {
@@ -289,11 +317,15 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             poiList.add(gardenSection)
-            listAdapter.notifyDataSetChanged()
+            poiListAdapter.notifyDataSetChanged()
             activityMainBinding.listAvailable.visibility = View.GONE
         }
     }
 
+    /**
+     * Caches the InputStream to a BitmapImage in internal storage.
+     * Returns a String of the image file's absolutePath
+     */
     private fun saveToInternalStorage(name: String, imageInputStream: InputStream): String {
 
         val imagePath = File(cacheDir, name.filter { !it.isWhitespace() })
