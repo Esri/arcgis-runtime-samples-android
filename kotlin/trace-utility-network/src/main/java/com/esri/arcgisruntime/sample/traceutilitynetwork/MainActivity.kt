@@ -396,7 +396,7 @@ class MainActivity : AppCompatActivity() {
                 // if any barriers have been created, add them to the parameters
                 barriers.addAll(utilityElementBarriers)
                 // set the trace configuration using the tier from the utility domain network
-                traceConfiguration = mediumVoltageTier?.traceConfiguration
+                traceConfiguration = mediumVoltageTier?.defaultTraceConfiguration
             }
         // run the utility trace and get the results
         val utilityTraceResultsFuture = utilityNetwork.traceAsync(traceParameters)
@@ -444,6 +444,7 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 statusTextView.text = getString(R.string.failed_message)
                 progressIndicator.visibility = View.GONE
+                enableButtons()
                 reportError("Error running connected trace: " + e.message)
             }
         }
