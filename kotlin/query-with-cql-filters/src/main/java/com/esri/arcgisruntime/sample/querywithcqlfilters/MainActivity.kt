@@ -322,7 +322,6 @@ class MainActivity : AppCompatActivity() {
             // Iterate through each result to get its geometry and add it to the geometry list
             result.get().iterator().forEach { feature ->
                 featureGeometryList.add(feature.geometry)
-                feature.geometry
             }
 
             if (featureGeometryList.isNotEmpty()) {
