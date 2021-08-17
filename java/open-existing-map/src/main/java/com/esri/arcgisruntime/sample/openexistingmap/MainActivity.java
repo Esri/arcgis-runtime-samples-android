@@ -74,15 +74,15 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void addDrawerItems() {
-    String[] webmapTitles = { getResources().getString(R.string.webmap_geology_us),
-        getResources().getString(R.string.webmap_terrestrial_ecosystems),
-        getResources().getString(R.string.webmap_hurricanes_cyclones_typhoons) };
+    String[] webmapTitles = { getString(R.string.webmap_geology_us),
+        getString(R.string.webmap_terrestrial_ecosystems),
+        getString(R.string.webmap_hurricanes_cyclones_typhoons) };
     ArrayAdapter<String> mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, webmapTitles);
     mDrawerList.setAdapter(mAdapter);
 
     mDrawerList.setOnItemClickListener((adapterView, view, position, id) -> {
       if (position == 0) {
-        mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_geology_us_id));
+        mPortalItem = new PortalItem(mPortal, "92ad152b9da94dee89b9e387dfe21acd");
         // create a map from a PortalItem
         mMap = new ArcGISMap(mPortalItem);
         // set the map to be displayed in this view
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         // close the drawer
         mDrawerLayout.closeDrawer(adapterView);
       } else if (position == 1) {
-        mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_terrestrial_ecosystems_id));
+        mPortalItem = new PortalItem(mPortal, "5be0bc3ee36c4e058f7b3cebc21c74e6");
         // create a map from a PortalItem
         mMap = new ArcGISMap(mPortalItem);
         // set the map to be displayed in this view
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         // close the drawer
         mDrawerLayout.closeDrawer(adapterView);
       } else if (position == 2) {
-        mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_hurricanes_cyclones_typhoons_id));
+        mPortalItem = new PortalItem(mPortal, "064f2e898b094a17b84e4a4cd5e5f549");
         // create a map from a PortalItem
         mMap = new ArcGISMap(mPortalItem);
         // set the map to be displayed in this view
