@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ListView
@@ -58,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     private var sectionsVisited: HashMap<String, GardenSection> = HashMap()
 
     // Geotrigger name for the GeotriggerMonitor
-    private val POIGeotriggerName = "POI Geotrigger"
+    private val poiGeotriggerName = "POI Geotrigger"
     private val sectionGeotriggerName = "Section Geotrigger"
 
     // Make monitors properties to prevent garbage collection
@@ -117,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         sectionGeotriggerMonitor =
             createGeotriggerMonitor(gardenSections, 0.0, sectionGeotriggerName, geotriggerFeed)
         poiGeotriggerMonitor =
-            createGeotriggerMonitor(gardenPOIs, 10.0, POIGeotriggerName, geotriggerFeed)
+            createGeotriggerMonitor(gardenPOIs, 10.0, poiGeotriggerName, geotriggerFeed)
 
         // Bind the adapter with the points of interest ListView
         poiListAdapter = ListAdapter(this, poiList, supportFragmentManager)
@@ -281,7 +282,7 @@ class MainActivity : AppCompatActivity() {
                                 attachmentImageURI
                             )
                         populateUI(
-                            sectionsVisited[fenceFeatureName]!!,
+                            sectionsVisited[fenceFeatureName],
                             fenceGeotriggerNotificationInfo.geotriggerMonitor.geotrigger.name
                         )
                     }
@@ -291,7 +292,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             // this garden section has already been visited, show the information again
             populateUI(
-                sectionsVisited[fenceFeatureName]!!,
+                sectionsVisited[fenceFeatureName],
                 fenceGeotriggerNotificationInfo.geotriggerMonitor.geotrigger.name
             )
         }
@@ -318,24 +319,30 @@ class MainActivity : AppCompatActivity() {
      * Populates UI by setting [gardenSection] item based on the [geotriggerType]
      */
     private fun populateUI(
-        gardenSection: GardenSection,
+        gardenSection: GardenSection?,
         geotriggerType: String
     ) {
-        if (geotriggerType == sectionGeotriggerName) {
-            sectionButton.text = gardenSection.title
-            sectionButton.setOnClickListener {
-                if (gardenSection.title == sectionButton.text) {
-                    GardenDescriptionFragment(gardenSection).show(
-                        supportFragmentManager,
-                        "GardenDescriptionFragment"
-                    )
+        if (gardenSection != null) {
+            if (geotriggerType == sectionGeotriggerName) {
+                sectionButton.text = gardenSection.title
+                sectionButton.setOnClickListener {
+                    if (gardenSection.title == sectionButton.text) {
+                        GardenDescriptionFragment(gardenSection).show(
+                            supportFragmentManager,
+                            "GardenDescriptionFragment"
+                        )
+                    }
                 }
+            } else {
+                poiList.add(gardenSection)
+                poiListAdapter.notifyDataSetChanged()
+                activityMainBinding.listAvailable.visibility = View.GONE
             }
         } else {
-            poiList.add(gardenSection)
-            poiListAdapter.notifyDataSetChanged()
-            activityMainBinding.listAvailable.visibility = View.GONE
+            Toast.makeText(this, "Garden Section is null", Toast.LENGTH_SHORT).show()
+            Log.e("NullPointerException: ", "GardenSection is null")
         }
+
     }
 
     /**
@@ -352,11 +359,13 @@ class MainActivity : AppCompatActivity() {
             val bitmapImage = BitmapFactory.decodeStream(imageInputStream)
             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
         } catch (e: Exception) {
+            Log.e("Exception: ", e.message.toString())
             e.printStackTrace()
         } finally {
             try {
                 fileOutputStream?.close()
             } catch (e: IOException) {
+                Log.e("IOException: ", e.message.toString())
                 e.printStackTrace()
             }
         }

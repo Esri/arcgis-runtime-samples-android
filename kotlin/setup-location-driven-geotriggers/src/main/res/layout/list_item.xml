@@ -12,7 +12,6 @@
         android:background="@drawable/rounded_button_secondary"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:text="Test"
         android:textAllCaps="false"
         android:textColor="@color/white" />
 

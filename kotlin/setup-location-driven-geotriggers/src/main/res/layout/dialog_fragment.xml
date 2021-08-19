@@ -20,7 +20,8 @@
         android:layout_width="190dp"
         android:layout_height="120dp"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="12dp" />
+        android:layout_margin="12dp"
+        android:contentDescription="@string/garden_section_description" />
 
     <ScrollView
         android:layout_width="match_parent"
