@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         "F_CODE LIKE 'AQ%'",
         "{\"and\":[{\"eq\":[{ \"property\" : \"F_CODE\" }, \"AP010\"]},{ \"before\":" +
                 "[{ \"property\" : \"ZI001_SDV\"},\"2013-01-01\"]}]}",
-        ""
+        "Empty Query"
     )
 
     // Current selected where query
@@ -201,12 +201,15 @@ class MainActivity : AppCompatActivity() {
         // Inflates layout file
         val cqlFiltersLayoutBinding = CqlFiltersLayoutBinding.inflate(layoutInflater)
 
+        // Set the current selection of CQL query
+        cqlFiltersLayoutBinding.cqlQueryTextView.text = cqlQueryList[cqlQueryListPosition]
+
         // Sets the Where Clause for CQL filter
         cqlFiltersLayoutBinding.whereClauseLayout.setOnClickListener {
 
             // Creates a dialog to choose a where clause
             val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this)
-            alertDialog.setTitle("AlertDialog")
+            alertDialog.setTitle("Select Query")
             val checkedItem = cqlQueryListPosition
 
             alertDialog.setSingleChoiceItems(
@@ -294,7 +297,9 @@ class MainActivity : AppCompatActivity() {
 
         queryParameters.apply {
             // Set the query parameter's where clause with the the selected query
-            whereClause = cqlQueryList[cqlQueryListPosition]
+            // If position is 4 ("Empty Query") manually set [whereClause] to empty string ("")
+            whereClause = if (cqlQueryListPosition == 4) ""
+            else cqlQueryList[cqlQueryListPosition]
 
             // Sets the max features to the number entered in the text field
             maxFeatures = this@MainActivity.maxFeatures
