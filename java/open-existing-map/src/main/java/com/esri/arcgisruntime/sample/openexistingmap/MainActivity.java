@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     // get the portal url for ArcGIS Online
     mPortal = new Portal(getResources().getString(R.string.portal_url));
     // get the pre-defined portal id and portal url
-    mPortalItem = new PortalItem(mPortal, getResources().getString(R.string.webmap_geology_us_id));
+    mPortalItem = new PortalItem(mPortal, "92ad152b9da94dee89b9e387dfe21acd");
     // create a map from a PortalItem
     mMap = new ArcGISMap(mPortalItem);
     // set the map to be displayed in this view
