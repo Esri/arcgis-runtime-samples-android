@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity() {
         val simulatedLocationDataSource = SimulatedLocationDataSource()
 
         // Create SimulationParameters starting at the current time, a velocity of 10 m/s, and a horizontal and vertical accuracy of 0.0
-        val simulationParameters = SimulationParameters(Calendar.getInstance(), 3.0, 0.0, 0.0)
+        val simulationParameters = SimulationParameters(Calendar.getInstance(), 1.5, 0.0, 0.0)
 
         // Use the polyline as defined above or from this AGOL GeoJSON to define the path. retrieved
         // from https://https://arcgisruntime.maps.arcgis.com/home/item.html?id=2a346cf1668d4564b8413382ae98a956
@@ -295,6 +295,7 @@ class MainActivity : AppCompatActivity() {
             sectionButton.text = "N/A"
         } else {
             poiList.remove(sectionsVisited[fenceFeatureName])
+            sectionsVisited[fenceFeatureName]?.title?.let { Log.e("REMOVED: ", it) }
             poiListAdapter.notifyDataSetChanged()
             if (poiList.size == 0) {
                 activityMainBinding.listAvailable.visibility = View.VISIBLE
@@ -323,6 +324,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 poiList.add(gardenSection)
                 poiListAdapter.notifyDataSetChanged()
+                Log.e("ADDED: ", gardenSection.title)
                 activityMainBinding.listAvailable.visibility = View.GONE
             }
         } else {

@@ -1,6 +1,7 @@
 package com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,6 +49,10 @@ internal class ListAdapter(
                     "GardenDescriptionFragment"
                 )
             }
+        }
+
+        for (gardenSection in gardenSections){
+            Log.d("ITEMS: ", gardenSection.title)
         }
 
         return listItemBinding.root
