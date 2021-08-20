@@ -2,7 +2,7 @@
 
 Browse an OGC API feature service for layers and add them to the map.
 
-![Image of browse OGC API feature service](browse-ogc-api-feature-service.jpg)
+![Image of browse OGC API feature service](browse-ogc-api-feature-service.png)
 
 ## Use case
 
