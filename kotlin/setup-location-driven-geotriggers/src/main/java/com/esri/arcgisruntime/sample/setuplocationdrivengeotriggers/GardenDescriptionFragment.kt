@@ -12,10 +12,11 @@ import com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers.databinding.
 /**
  * Class to display a dialog with the title, image and description of the [GardenSection]
  */
-class GardenDescriptionFragment(gardenSection: GardenSection) : DialogFragment() {
-
+class GardenDescriptionFragment(
     // Garden section to display
-    private val mGardenSection = gardenSection
+    private val gardenSection: GardenSection,
+    private val mainActivity: MainActivity
+) : DialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,11 +28,15 @@ class GardenDescriptionFragment(gardenSection: GardenSection) : DialogFragment()
 
         // Set title, description and image view of the mGardenSection
         dialogFragmentBinding.apply {
-            gardenContentTitle.text = mGardenSection.title
+            gardenContentTitle.text = gardenSection.title
             gardenContentTextView.text =
-                HtmlCompat.fromHtml(mGardenSection.description, HtmlCompat.FROM_HTML_MODE_LEGACY)
-            val bitmap = BitmapFactory.decodeFile(mGardenSection.imageURI)
-            gardenContentImageView.setImageBitmap(bitmap)
+                HtmlCompat.fromHtml(gardenSection.description, HtmlCompat.FROM_HTML_MODE_LEGACY)
+
+            // Retrieves the image using a callback from [MainActivity]
+            mainActivity.retrieveImage(gardenSection) {
+                val bitmap = BitmapFactory.decodeFile(it)
+                gardenContentImageView.setImageBitmap(bitmap)
+            }
         }
 
         return dialogFragmentBinding.root
@@ -41,6 +46,6 @@ class GardenDescriptionFragment(gardenSection: GardenSection) : DialogFragment()
         super.onStart()
         //Set the width of the Dialog Fragment
         val width = (resources.displayMetrics.widthPixels * 0.85).toInt()
-        dialog!!.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog?.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 }

@@ -12,26 +12,23 @@ import com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers.databinding.
  * Adapter to display the list of point of interests
  */
 internal class ListAdapter(
-    context: Context,
-    gardenSections: MutableList<GardenSection>,
-    supportFragmentManager: FragmentManager
+    private val context: MainActivity,
+    //List of garden sections as POIs
+    private val gardenSections: MutableList<GardenSection>,
+    // Fragment manager to display description dialog on click.
+    private val supportFragmentManager: FragmentManager
 ) :
     BaseAdapter() {
-
-    //List of garden sections as POIs
-    private val mGardenSections = gardenSections
-    // Fragment manager to display description dialog on click.
-    private val mSupportFragmentManager = supportFragmentManager
 
     private val mLayoutInflater: LayoutInflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int {
-        return mGardenSections.size
+        return gardenSections.size
     }
 
     override fun getItem(position: Int): Any {
-        return mGardenSections[position]
+        return gardenSections[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -43,11 +40,11 @@ internal class ListAdapter(
         val listItemBinding = ListItemBinding.inflate(mLayoutInflater)
 
         listItemBinding.apply {
-            itemButton.text = mGardenSections[position].title
+            itemButton.text = gardenSections[position].title
             //Display description dialog on button click
             itemButton.setOnClickListener {
-                GardenDescriptionFragment(mGardenSections[position]).show(
-                    mSupportFragmentManager,
+                GardenDescriptionFragment(gardenSections[position], context).show(
+                    supportFragmentManager,
                     "GardenDescriptionFragment"
                 )
             }

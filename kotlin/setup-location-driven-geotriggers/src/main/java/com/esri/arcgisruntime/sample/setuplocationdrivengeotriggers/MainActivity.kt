@@ -262,30 +262,18 @@ class MainActivity : AppCompatActivity() {
                 // get the feature attachments
                 val attachments = attachmentsFuture.get()
                 if (attachments.isNotEmpty()) {
-                    // get the first (and only) attachment for the feature, which is an image
-                    val imageAttachment = attachments.first()
-                    // fetch the attachment's data
-                    val attachmentDataFuture = imageAttachment.fetchDataAsync()
-                    // listen for fetch data to complete
-                    attachmentDataFuture.addDoneListener {
-                        // get the attachments data as an input stream
-                        val attachmentInputStream = attachmentDataFuture.get()
-                        // save the input stream to the device and get a reference to it's URI
-                        val attachmentImageURI =
-                            saveToInternalStorage(fenceFeatureName, attachmentInputStream)
-                        // create a new garden section data object and add it to the hash map of visited sections
-                        sectionsVisited[fenceFeatureName] =
-                            GardenSection(
-                                fenceFeature,
-                                fenceFeatureName,
-                                description,
-                                attachmentImageURI
-                            )
-                        populateUI(
-                            sectionsVisited[fenceFeatureName],
-                            fenceGeotriggerNotificationInfo.geotriggerMonitor.geotrigger.name
+                    // create a new garden section data object and add it to the hash map of visited sections
+                    sectionsVisited[fenceFeatureName] =
+                        GardenSection(
+                            fenceFeature,
+                            fenceFeatureName,
+                            description,
+                            attachments
                         )
-                    }
+                    populateUI(
+                        sectionsVisited[fenceFeatureName],
+                        fenceGeotriggerNotificationInfo.geotriggerMonitor.geotrigger.name
+                    )
                 }
             }
             // if the section has been visited before, get it from the hash map
@@ -314,7 +302,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     /**
      * Populates UI by setting [gardenSection] item based on the [geotriggerType]
      */
@@ -327,7 +314,7 @@ class MainActivity : AppCompatActivity() {
                 sectionButton.text = gardenSection.title
                 sectionButton.setOnClickListener {
                     if (gardenSection.title == sectionButton.text) {
-                        GardenDescriptionFragment(gardenSection).show(
+                        GardenDescriptionFragment(gardenSection, this).show(
                             supportFragmentManager,
                             "GardenDescriptionFragment"
                         )
@@ -343,6 +330,28 @@ class MainActivity : AppCompatActivity() {
             Log.e("NullPointerException: ", "GardenSection is null")
         }
 
+    }
+
+    /**
+     * Function to retrieve the image and generate a URI using [gardenSection]. The image URI is
+     * returned using a [callback] interface
+     */
+    fun retrieveImage(gardenSection: GardenSection?, callback: (uriResult: String?) -> Unit) {
+
+        val attachments = gardenSection?.attachments
+        // get the first (and only) attachment for the feature, which is an image
+        val imageAttachment = attachments?.first()
+        // fetch the attachment's data
+        val attachmentDataFuture = imageAttachment?.fetchDataAsync()
+        // listen for fetch data to complete
+        attachmentDataFuture?.addDoneListener {
+            // get the attachments data as an input stream
+            val attachmentInputStream = attachmentDataFuture.get()
+            // save the input stream to the device and get a reference to it's URI
+            val attachmentImageURI =
+                saveToInternalStorage(gardenSection.title.trim(), attachmentInputStream)
+            callback.invoke(attachmentImageURI)
+        }
     }
 
     /**
