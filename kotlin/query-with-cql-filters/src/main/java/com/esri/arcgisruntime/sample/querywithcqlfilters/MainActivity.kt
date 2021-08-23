@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         "F_CODE LIKE 'AQ%'",
         "{\"and\":[{\"eq\":[{ \"property\" : \"F_CODE\" }, \"AP010\"]},{ \"before\":" +
                 "[{ \"property\" : \"ZI001_SDV\"},\"2013-01-01\"]}]}",
-        "Empty Query"
+        "No Query"
     )
 
     // Current selected where query
