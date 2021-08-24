@@ -19,6 +19,8 @@ package com.esri.arcgisruntime.sample.querywithcqlfilters
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -34,12 +36,12 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.TimeExtent
 import com.esri.arcgisruntime.mapping.view.MapView
-import com.esri.arcgisruntime.sample.querywithcqlfilters.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.sample.querywithcqlfilters.databinding.CqlFiltersLayoutBinding
+import kotlinx.android.synthetic.main.activity_main.*
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.cql_filters_layout.view.*
 import java.util.*
 
 
@@ -69,21 +71,9 @@ class MainActivity : AppCompatActivity() {
     private var fromDate = Calendar.getInstance()
     private var toDate = Calendar.getInstance()
 
-    private val activityMainBinding by lazy {
-        ActivityMainBinding.inflate(layoutInflater)
-    }
-
-    private val mapView: MapView by lazy {
-        activityMainBinding.mapView
-    }
-
-    private val fab: FloatingActionButton by lazy {
-        activityMainBinding.fab
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(activityMainBinding.root)
+        setContentView(R.layout.activity_main)
 
         // Authentication with an API key or named user is required to
         // access basemaps and other location services
@@ -199,37 +189,37 @@ class MainActivity : AppCompatActivity() {
         val dialog = BottomSheetDialog(this)
 
         // Inflates layout file
-        val cqlFiltersLayoutBinding = CqlFiltersLayoutBinding.inflate(layoutInflater)
+        val bottomSheetView = LayoutInflater.from(this).inflate(R.layout.cql_filters_layout,null)
 
-        // Set the current selection of CQL query
-        cqlFiltersLayoutBinding.cqlQueryTextView.text = cqlQueryList[cqlQueryListPosition]
+        bottomSheetView.apply {
+            // Set the current selection of CQL query
+            cqlQueryTextView.text = cqlQueryList[cqlQueryListPosition]
 
-        // Sets the Where Clause for CQL filter
-        cqlFiltersLayoutBinding.whereClauseLayout.setOnClickListener {
+            // Sets the Where Clause for CQL filter
+            whereClauseLayout.setOnClickListener {
 
-            // Creates a dialog to choose a where clause
-            val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this)
-            alertDialog.setTitle("Select Query")
-            val checkedItem = cqlQueryListPosition
+                // Creates a dialog to choose a where clause
+                val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this@MainActivity)
+                alertDialog.setTitle("Select Query")
+                val checkedItem = cqlQueryListPosition
 
-            alertDialog.setSingleChoiceItems(
-                cqlQueryList.toTypedArray(), checkedItem
-            ) { dialog, which ->
+                alertDialog.setSingleChoiceItems(
+                    cqlQueryList.toTypedArray(), checkedItem
+                ) { dialog, which ->
 
-                // Updates the selected where clause
-                cqlQueryListPosition = which
-                cqlFiltersLayoutBinding.cqlQueryTextView.text = cqlQueryList[which]
+                    // Updates the selected where clause
+                    cqlQueryListPosition = which
+                    cqlQueryTextView.text = cqlQueryList[which]
 
-                // Dismiss dialog
-                dialog.dismiss()
+                    // Dismiss dialog
+                    dialog.dismiss()
+                }
+
+                // Displays the where clause dialog
+                val alert: AlertDialog = alertDialog.create()
+                alert.show()
             }
 
-            // Displays the where clause dialog
-            val alert: AlertDialog = alertDialog.create()
-            alert.show()
-        }
-
-        cqlFiltersLayoutBinding.apply {
             // Sets the view to the default value of max features (3000)
             maxFeaturesEditText.setText(maxFeatures.toString())
 
@@ -269,10 +259,11 @@ class MainActivity : AppCompatActivity() {
             cancelTv.setOnClickListener { dialog.dismiss() }
         }
 
+
         dialog.setCancelable(false)
 
         // Sets bottom sheet content view to layout
-        dialog.setContentView(cqlFiltersLayoutBinding.root)
+        dialog.setContentView(bottomSheetView)
 
         // Displays bottom sheet view
         dialog.show()
