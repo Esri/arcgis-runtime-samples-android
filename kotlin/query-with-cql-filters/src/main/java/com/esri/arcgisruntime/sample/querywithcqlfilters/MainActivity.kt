@@ -298,8 +298,12 @@ class MainActivity : AppCompatActivity() {
         queryParameters.apply {
             // Set the query parameter's where clause with the the selected query
             // If position is 4 ("Empty Query") manually set [whereClause] to empty string ("")
-            whereClause = if (cqlQueryListPosition == 4) ""
-            else cqlQueryList[cqlQueryListPosition]
+            whereClause = if (cqlQueryListPosition == 4) {
+                ""
+            }
+            else {
+                cqlQueryList[cqlQueryListPosition]
+            }
 
             // Sets the max features to the number entered in the text field
             maxFeatures = this@MainActivity.maxFeatures
