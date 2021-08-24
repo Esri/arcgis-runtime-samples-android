@@ -72,6 +72,8 @@ class MainActivity : AppCompatActivity() {
     // Custom list adapter for the points of interest
     private lateinit var poiListAdapter: ListAdapter
 
+    private val TAG: String = MainActivity::class.java.simpleName
+
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -96,14 +98,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
 
-        // authentication with an API key or named user is required to access basemaps and other
+        // Authentication with an API key or named user is required to access basemaps and other
         // location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         val portal = Portal("https://www.arcgis.com", true)
         // This sample uses a web map with a predefined tile basemap, feature styles, and labels
-        val map = ArcGISMap(PortalItem(portal, "6ab0e91dc39e478cae4f408e1a36a308"))
-        mapView.map = map
+        mapView.map = ArcGISMap(PortalItem(portal, "6ab0e91dc39e478cae4f408e1a36a308"))
         // Instantiate the service feature tables to later create GeotriggerMonitors for
         val gardenSections =
             ServiceFeatureTable(PortalItem(portal, "1ba816341ea04243832136379b8951d9"), 0)
@@ -114,7 +115,7 @@ class MainActivity : AppCompatActivity() {
         // Start the simulated location display data source and create a LocationGeotriggerFeed that will be required in createGeotriggerMonitor()
         val geotriggerFeed = initializeSimulatedLocationDisplay()
 
-        // Create geotriggers for each of the service feature tables
+        // Create Geotriggers for each of the service feature tables
         sectionGeotriggerMonitor =
             createGeotriggerMonitor(gardenSections, 0.0, sectionGeotriggerName, geotriggerFeed)
         poiGeotriggerMonitor =
@@ -135,7 +136,7 @@ class MainActivity : AppCompatActivity() {
         // Create SimulationParameters starting at the current time, a velocity of 10 m/s, and a horizontal and vertical accuracy of 0.0
         val simulationParameters = SimulationParameters(Calendar.getInstance(), 3.0, 0.0, 0.0)
 
-        // Use the polyline as defined above or from this AGOL GeoJSON to define the path. retrieved
+        // Use the polyline as defined above or from this ArcGIS Online GeoJSON to define the path. retrieved
         // from https://https://arcgisruntime.maps.arcgis.com/home/item.html?id=2a346cf1668d4564b8413382ae98a956
         simulatedLocationDataSource.setLocations(
             Polyline.fromJson(getString(R.string.polyline_json)) as Polyline,
@@ -295,7 +296,6 @@ class MainActivity : AppCompatActivity() {
             sectionButton.text = "N/A"
         } else {
             poiList.remove(sectionsVisited[fenceFeatureName])
-            sectionsVisited[fenceFeatureName]?.title?.let { Log.e("REMOVED: ", it) }
             poiListAdapter.notifyDataSetChanged()
             if (poiList.size == 0) {
                 activityMainBinding.listAvailable.visibility = View.VISIBLE
@@ -324,14 +324,12 @@ class MainActivity : AppCompatActivity() {
             } else {
                 poiList.add(gardenSection)
                 poiListAdapter.notifyDataSetChanged()
-                Log.e("ADDED: ", gardenSection.title)
                 activityMainBinding.listAvailable.visibility = View.GONE
             }
         } else {
             Toast.makeText(this, "Garden Section is null", Toast.LENGTH_SHORT).show()
-            Log.e("NullPointerException: ", "GardenSection is null")
+            Log.e(TAG, "Garden section is null")
         }
-
     }
 
     /**
@@ -370,14 +368,12 @@ class MainActivity : AppCompatActivity() {
             val bitmapImage = BitmapFactory.decodeStream(imageInputStream)
             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
         } catch (e: Exception) {
-            Log.e("Exception: ", e.message.toString())
-            e.printStackTrace()
+            Log.e(TAG, e.message.toString())
         } finally {
             try {
                 fileOutputStream?.close()
             } catch (e: IOException) {
-                Log.e("IOException: ", e.message.toString())
-                e.printStackTrace()
+                Log.e(TAG, e.message.toString())
             }
         }
         return imagePath.absolutePath
