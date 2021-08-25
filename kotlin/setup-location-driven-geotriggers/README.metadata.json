@@ -1,7 +1,7 @@
 {
-    "category": "TODO",
+    "category": "Maps and Scenes",
     "description": "Create a notification every time a given location data source has entered and/or exited a set of features or graphics.",
-    "formal_name": "SetUpLocation-DrivenGeotriggers",
+    "formal_name": "SetupLocationDrivenGeotriggers",
     "ignore": false,
     "images": [
         "setup-location-driven-geotriggers.png"
@@ -32,9 +32,6 @@
         "SimulatedLocationDataSource"
     ],
     "language": "kotlin",
-    "provision_from": "TODO",
-    "provision_to": "TODO",
-    "redirect_from": "TODO",
     "relevant_apis": [
         "ArcadeExpression",
         "FeatureFenceParameters",
@@ -55,5 +52,5 @@
         "src/main/java/com/esri/arcgisruntime/sample/setuplocationdrivengeotriggers/ListAdapter.kt",
         "src/main/java/com/esri/arcgisruntime/sample/setuplocationdrivengeotriggers/MainActivity.kt"
     ],
-    "title": "Set up location-driven Geotriggers"
+    "title": "Set up location driven Geotriggers"
 }
