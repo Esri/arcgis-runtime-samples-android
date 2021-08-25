@@ -21,8 +21,6 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
@@ -37,11 +35,9 @@ import com.esri.arcgisruntime.location.SimulatedLocationDataSource
 import com.esri.arcgisruntime.location.SimulationParameters
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.view.LocationDisplay
-import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
-import com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers.databinding.ActivityMainBinding
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -74,29 +70,9 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG: String = MainActivity::class.java.simpleName
 
-    private val activityMainBinding by lazy {
-        ActivityMainBinding.inflate(layoutInflater)
-    }
-
-    private val mapView: MapView by lazy {
-        activityMainBinding.mapView
-    }
-
-    private val sectionButton: Button by lazy {
-        activityMainBinding.currentSectionButton
-    }
-
-    private val poiListView: ListView by lazy {
-        activityMainBinding.poiList
-    }
-
-    private val playPauseFAB: FloatingActionButton by lazy {
-        activityMainBinding.playPauseFAB
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(activityMainBinding.root)
+        setContentView(R.layout.activity_main)
 
         // Authentication with an API key or named user is required to access basemaps and other
         // location services
@@ -298,7 +274,7 @@ class MainActivity : AppCompatActivity() {
             poiList.remove(sectionsVisited[fenceFeatureName])
             poiListAdapter.notifyDataSetChanged()
             if (poiList.size == 0) {
-                activityMainBinding.listAvailable.visibility = View.VISIBLE
+                listAvailable.visibility = View.VISIBLE
             }
         }
     }
@@ -324,7 +300,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 poiList.add(gardenSection)
                 poiListAdapter.notifyDataSetChanged()
-                activityMainBinding.listAvailable.visibility = View.GONE
+                listAvailable.visibility = View.GONE
             }
         } else {
             Toast.makeText(this, "Garden Section is null", Toast.LENGTH_SHORT).show()

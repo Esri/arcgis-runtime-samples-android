@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.fragment.app.FragmentManager
-import com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers.databinding.ListItemBinding
+import kotlinx.android.synthetic.main.list_item.view.*
 
 /**
  * Adapter to display the list of point of interests
  */
 internal class ListAdapter(
-    private val context: MainActivity,
+    context: MainActivity,
     //List of garden sections as POIs
     private val gardenSections: MutableList<GardenSection>,
     // Fragment manager to display description dialog on click.
@@ -37,20 +37,20 @@ internal class ListAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         // Bind the view to the layout inflater
-        val listItemBinding = ListItemBinding.inflate(mLayoutInflater)
+        val itemView = mLayoutInflater.inflate(R.layout.list_item,null,true)
 
-        listItemBinding.apply {
+        itemView.apply {
             itemButton.text = gardenSections[position].title
             //Display description dialog on button click
             itemButton.setOnClickListener {
-                GardenDescriptionFragment(gardenSections[position], context).show(
+                GardenDescriptionFragment(gardenSections[position], context as MainActivity).show(
                     supportFragmentManager,
                     "GardenDescriptionFragment"
                 )
             }
         }
 
-        return listItemBinding.root
+        return itemView
     }
 
 }
