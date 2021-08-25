@@ -23,9 +23,14 @@ Run the sample and view graphics for points, lines, and polygons, which are styl
 
 ## Relevant API
 
+* CubicBezierSegment
+* EllipticArcSegment
 * Geometry
 * Graphic
 * GraphicsOverlay
+* MutablePart
+* PolygonBuilder
+* PolylineBuilder
 * SimpleFillSymbol
 * SimpleLineSymbol
 * SimpleMarkerSymbol
@@ -37,4 +42,4 @@ To set unique symbols across a number of graphics (e.g. showing graphics of indi
 
 ## Tags
 
-display, graphics, marker, overlay, renderer, symbol
+arc, bezier, curve, display, graphics, marker, overlay, renderer, segment, symbol, true curve
