@@ -1,8 +1,8 @@
-# Setup location driven geotriggers
+# Set up location driven geotriggers
 
 Create a notification every time a given location data source has entered and/or exited a set of features or graphics.
 
-![Screenshot of set up location driven geotriggers](setup-location-driven-geotriggers.png)
+![Screenshot of set up location driven geotriggers](set-up-location-driven-geotriggers.png)
 
 ## Use case
 
