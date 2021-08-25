@@ -6,7 +6,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.esri.arcgisruntime.sample.querywithcqlfilters"
+        applicationId "com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
@@ -23,7 +23,7 @@ android {
 }
 
 dependencies {
-    // arcgis-android & appcompat lib dependencies from rootProject build.gradle
+    // lib dependencies from rootProject build.gradle
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     implementation "com.google.android.material:material:$materialVersion"
 }
