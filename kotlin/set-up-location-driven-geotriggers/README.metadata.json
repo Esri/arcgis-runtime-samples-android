@@ -52,5 +52,5 @@
         "src/main/java/com/esri/arcgisruntime/sample/setuplocationdrivengeotriggers/ListAdapter.kt",
         "src/main/java/com/esri/arcgisruntime/sample/setuplocationdrivengeotriggers/MainActivity.kt"
     ],
-    "title": "Setup location driven Geotriggers"
+    "title": "Set up location driven Geotriggers"
 }
