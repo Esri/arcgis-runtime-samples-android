@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
@@ -158,8 +159,11 @@ public class EditAttachmentActivity extends AppCompatActivity {
         }
         // open the file in gallery
         Intent i = new Intent();
+        i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.setAction(Intent.ACTION_VIEW);
-        i.setDataAndType(Uri.fromFile(file), "image/png");
+        Uri contentUri = FileProvider
+            .getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", file);
+        i.setDataAndType(contentUri, "image/png");
         startActivity(i);
 
       } catch (Exception e) {
