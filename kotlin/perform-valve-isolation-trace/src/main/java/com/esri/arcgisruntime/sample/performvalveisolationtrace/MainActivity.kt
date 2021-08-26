@@ -202,7 +202,7 @@ class MainActivity : AppCompatActivity() {
                 val networkDefinition = utilityNetwork.definition
                 val domainNetwork = networkDefinition.getDomainNetwork("Pipeline")
                 val tier = domainNetwork.getTier("Pipe Distribution System")
-                val traceConfiguration = tier.defaultTraceConfiguration
+                val traceConfiguration = tier.traceConfiguration
 
                 // create a trace filter
                 traceConfiguration.filter = UtilityTraceFilter()

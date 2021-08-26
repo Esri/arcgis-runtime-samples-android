@@ -1,0 +1,56 @@
+{
+    "category": "Maps and Scenes",
+    "description": "Create a notification every time a given location data source has entered and/or exited a set of features or graphics.",
+    "formal_name": "SetupLocationDrivenGeotriggers",
+    "ignore": false,
+    "images": [
+        "setup-location-driven-geotriggers.png"
+    ],
+    "keywords": [
+        "alert",
+        "arcade",
+        "fence",
+        "geofence",
+        "geotrigger",
+        "location",
+        "navigation",
+        "notification",
+        "notify",
+        "routing",
+        "trigger",
+        "ArcadeExpression",
+        "FeatureFenceParameters",
+        "FenceGeotrigger",
+        "FenceGeotriggerNotificationInfo",
+        "FenceRuleType",
+        "GeoElement",
+        "Geotrigger",
+        "GeotriggerFeed",
+        "GeotriggerMonitor",
+        "GeotriggerNotificationInfo",
+        "ServiceFeatureTable",
+        "SimulatedLocationDataSource"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "ArcadeExpression",
+        "FeatureFenceParameters",
+        "FenceGeotrigger",
+        "FenceGeotriggerNotificationInfo",
+        "FenceRuleType",
+        "GeoElement",
+        "Geotrigger",
+        "GeotriggerFeed",
+        "GeotriggerMonitor",
+        "GeotriggerNotificationInfo",
+        "ServiceFeatureTable",
+        "SimulatedLocationDataSource"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/setuplocationdrivengeotriggers/GardenDescriptionFragment.kt",
+        "src/main/java/com/esri/arcgisruntime/sample/setuplocationdrivengeotriggers/GardenSection.kt",
+        "src/main/java/com/esri/arcgisruntime/sample/setuplocationdrivengeotriggers/ListAdapter.kt",
+        "src/main/java/com/esri/arcgisruntime/sample/setuplocationdrivengeotriggers/MainActivity.kt"
+    ],
+    "title": "Set up location driven Geotriggers"
+}
