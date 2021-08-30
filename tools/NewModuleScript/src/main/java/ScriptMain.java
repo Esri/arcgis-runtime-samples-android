@@ -31,8 +31,10 @@ public class ScriptMain {
         sampleWithHyphen = sampleName.replace(" ", "-").toLowerCase();
         sampleWithoutSpaces = sampleName.replace(" ", "").toLowerCase();
 
-        samplesRepoPath = Paths.get("").toAbsolutePath().toString().replace("/tools/NewModuleScript","");
-        System.out.println("Using repository: "+  samplesRepoPath);
+        // Handles either if JAR file or source code is executed.
+        samplesRepoPath = Paths.get("").toAbsolutePath().toString().replace("/NewModuleScript","");
+        samplesRepoPath = samplesRepoPath.replace("/tools","");
+        System.out.println("Using repository... "+  samplesRepoPath);
 
         try{
             createFilesAndFolders();
