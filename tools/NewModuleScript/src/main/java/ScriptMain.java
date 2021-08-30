@@ -3,6 +3,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Scanner;
 
@@ -30,15 +31,17 @@ public class ScriptMain {
         sampleWithHyphen = sampleName.replace(" ", "-").toLowerCase();
         sampleWithoutSpaces = sampleName.replace(" ", "").toLowerCase();
 
-        // Get the directory of the sample repo
-        System.out.println("Enter the FULL path of the sample repo (Eg. \"C:\\Users\\arcgis-runtime-samples-android\"): ");
-        samplesRepoPath = scanner.nextLine();
+        samplesRepoPath = Paths.get("").toAbsolutePath().toString().replace("/tools/NewModuleScript","");
+        System.out.println("Using repository: "+  samplesRepoPath);
 
-        createFilesAndFolders();
-        deleteUnwantedFiles();
-        updateSampleContent();
-        updateSettingsGradle();
-
+        try{
+            createFilesAndFolders();
+            deleteUnwantedFiles();
+            updateSampleContent();
+            updateSettingsGradle();    
+        }catch (Exception e){
+            exitProgram(e);
+        }
         System.out.println("Sample Successfully Created! ");
     }
 
@@ -57,6 +60,7 @@ public class ScriptMain {
             FileUtils.deleteDirectory(displayMapKotlinFolder);
             image.delete();
         } catch (IOException e) {
+            exitProgram(e);
             e.printStackTrace();
         }
     }
@@ -76,7 +80,7 @@ public class ScriptMain {
             FileUtils.copyDirectory(sourceResDirectory, destinationResDirectory);
         } catch (IOException e) {
             e.printStackTrace();
-            exitProgram(e.getMessage());
+            exitProgram(e);
         }
 
         // Create the sample package directory in the source folder
@@ -84,7 +88,7 @@ public class ScriptMain {
         if(!packageDirectory.exists()){
             packageDirectory.mkdirs();
         }else{
-            exitProgram("Sample already exists!");
+            exitProgram(new Exception("\"Sample already exists!\""));
         }
 
         // Copy display-map MainActivity.kt to new sample
@@ -95,16 +99,18 @@ public class ScriptMain {
             FileUtils.copyFileToDirectory(sourceFile, packageDirectory);
         } catch (IOException e) {
             e.printStackTrace();
-            exitProgram(e.getMessage());
+            exitProgram(e);
         }
     }
 
     /**
      * Exits the program with error -1 if it encounters an error
-     * @param message Error message to display
+     * @param e Error message to display
      */
-    private void exitProgram(String message){
-        System.out.println(message);
+    private void exitProgram(Exception e){
+        System.out.println("Error creating the sample: " + e.getMessage());
+        System.out.println("StackTrace:");
+        e.printStackTrace();
         System.exit(-1);
     }
 
@@ -120,7 +126,7 @@ public class ScriptMain {
             FileUtils.write(file,"# " + sampleName, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
-            exitProgram(e.getMessage());
+            exitProgram(e);
         }
 
         //Update README.metadata.json
@@ -129,7 +135,7 @@ public class ScriptMain {
             FileUtils.write(file,"{\n}", StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
-            exitProgram(e.getMessage());
+            exitProgram(e);
         }
 
         //Update build.gradle
@@ -140,7 +146,7 @@ public class ScriptMain {
             FileUtils.write(file,fileContent, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
-            exitProgram(e.getMessage());
+            exitProgram(e);
         }
 
         //Update AndroidManifest.xml
@@ -151,7 +157,7 @@ public class ScriptMain {
             FileUtils.write(file,fileContent, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
-            exitProgram(e.getMessage());
+            exitProgram(e);
         }
 
         //Update activity_main.xml
@@ -162,7 +168,7 @@ public class ScriptMain {
             FileUtils.write(file,fileContent, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
-            exitProgram(e.getMessage());
+            exitProgram(e);
         }
 
         //Update strings.xml
@@ -175,7 +181,7 @@ public class ScriptMain {
             FileUtils.write(file,fileContent, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
-            exitProgram(e.getMessage());
+            exitProgram(e);
         }
 
         //Update MainActivity.kt
@@ -187,7 +193,7 @@ public class ScriptMain {
             FileUtils.write(file,fileContent, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
-            exitProgram(e.getMessage());
+            exitProgram(e);
         }
     }
 
@@ -208,7 +214,7 @@ public class ScriptMain {
             FileUtils.write(file,fileContent, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
-            exitProgram(e.getMessage());
+            exitProgram(e);
         }
     }
 
