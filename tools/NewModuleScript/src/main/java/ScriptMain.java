@@ -39,6 +39,7 @@ public class ScriptMain {
         updateSampleContent();
         updateSettingsGradle();
 
+        System.out.println("Sample Successfully Created! ");
     }
 
 
