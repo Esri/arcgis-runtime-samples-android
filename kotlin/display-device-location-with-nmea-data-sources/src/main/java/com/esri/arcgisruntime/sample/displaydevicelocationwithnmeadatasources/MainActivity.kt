@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     // location datasource listener
     private var locationDataSourceListener : LocationDataSource.StatusChangedListener? = null
     // create a timer to simulate a stream of NMEA data
-    private val timer = Timer()
+    private var timer = Timer()
 
     private var nmeaSatelliteInfoList: List<NmeaSatelliteInfo> = emptyList()
     private var count = 0
@@ -85,24 +86,26 @@ class MainActivity : AppCompatActivity() {
         mapView.interactionOptions.isPanEnabled = false
         mapView.interactionOptions.isZoomEnabled = false
 
-        startStopButton.setOnClickListener {
-            if (startStopButton.text.equals("Start")) {
+        playPauseFAB.setOnClickListener {
+            if (!nmeaLocationDataSource.isStarted) {
                 //Start location data source
                 displayDeviceLocation()
-                setButtonStatus("Stop")
+                setLocationStatus(true)
             } else {
                 // stop receiving and displaying location data
                 nmeaLocationDataSource.stop()
-                setButtonStatus("Start")
+                setLocationStatus(false)
             }
         }
     }
 
     /**
-     * Sets the button to "Start"/"Stop" based on the argument [text]
+     * Sets the FAB button to "Start"/"Stop" based on the argument [isShowingLocation]
      */
-    private fun setButtonStatus(text: String){
-        startStopButton.text = text
+    private fun setLocationStatus(isShowingLocation: Boolean) = if (isShowingLocation){
+        playPauseFAB.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_round_pause_24))
+    }else{
+        playPauseFAB.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_round_play_arrow_24))
     }
 
     /**
@@ -120,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                 val nmeaSentences: MutableList<String> = mutableListOf()
                 var line = bufferedReader.readLine()
                 while( line != null){
-                    nmeaSentences.add(line)
+                    nmeaSentences.add(line + "\n")
                     line = bufferedReader.readLine()
                 }
                 bufferedReader.close()
@@ -130,6 +133,7 @@ class MainActivity : AppCompatActivity() {
                         // add a satellite changed listener to the NMEA location data source and display satellite information on the app
                         setupSatelliteChangedListener()
 
+                        timer = Timer()
                         // push the mock data NMEA sentences into the data source every 250 ms
                         timer.schedule(timerTask {
                             nmeaLocationDataSource.pushData(nmeaSentences[count++].toByteArray(StandardCharsets.UTF_8))
@@ -138,18 +142,24 @@ class MainActivity : AppCompatActivity() {
                                 count = 0
                         }, 250, 250)
 
-                        setButtonStatus("Stop")
+                        setLocationStatus(true)
                     }
                     if(it.status == LocationDataSource.Status.STOPPED){
                         timer.cancel()
                         nmeaLocationDataSource.removeStatusChangedListener(locationDataSourceListener)
-                        setButtonStatus("Start")
+                        setLocationStatus(false)
                     }
                 }
 
                 // initialize the location data source and prepare to begin receiving location updates when data is pushed. As
                 // updates are received, they will be displayed on the map
                 nmeaLocationDataSource.addStatusChangedListener(locationDataSourceListener)
+                nmeaLocationDataSource.addLocationChangedListener {
+                    //Convert from Meters to Foot
+                    val horizontalAccuracy = it.location.horizontalAccuracy * 3.28084
+                    val verticalAccuracy = it.location.verticalAccuracy * 3.28084
+                    accuracyTV.text = "Accuracy- Horizontal: %.1fft, Vertical: %.1ft".format(horizontalAccuracy,verticalAccuracy)
+                }
                 nmeaLocationDataSource.startAsync()
 
 

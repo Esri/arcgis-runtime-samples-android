@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Display device location with NMEA data sources</string>
+    <string name="start_stop_button">Start/Stop button</string>
 </resources>
