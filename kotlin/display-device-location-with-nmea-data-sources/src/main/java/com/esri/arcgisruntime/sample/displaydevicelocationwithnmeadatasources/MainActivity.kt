@@ -38,7 +38,6 @@ import java.io.FileReader
 import java.nio.charset.StandardCharsets
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
 import kotlin.concurrent.timerTask
 
 class MainActivity : AppCompatActivity() {
@@ -48,11 +47,14 @@ class MainActivity : AppCompatActivity() {
     // Create a new NMEA location data source
     private val nmeaLocationDataSource: NmeaLocationDataSource =
         NmeaLocationDataSource(SpatialReferences.getWgs84())
+
     // Location datasource listener
-    private var locationDataSourceListener : LocationDataSource.StatusChangedListener? = null
+    private var locationDataSourceListener: LocationDataSource.StatusChangedListener? = null
+
     // Create a timer to simulate a stream of NMEA data
     private var timer = Timer()
-    // Keeps track of the timer during play/pause.
+
+    // Keeps track of the timer during play/pause
     private var count = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,16 +102,26 @@ class MainActivity : AppCompatActivity() {
     /**
      * Sets the FAB button to "Start"/"Stop" based on the argument [isShowingLocation]
      */
-    private fun setLocationStatus(isShowingLocation: Boolean) = if (isShowingLocation){
-        playPauseFAB.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_round_pause_24))
-    }else{
-        playPauseFAB.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_round_play_arrow_24))
+    private fun setLocationStatus(isShowingLocation: Boolean) = if (isShowingLocation) {
+        playPauseFAB.setImageDrawable(
+            AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_round_pause_24
+            )
+        )
+    } else {
+        playPauseFAB.setImageDrawable(
+            AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_round_play_arrow_24
+            )
+        )
     }
 
     /**
      * Initializes the location data source, reads the mock data NMEA sentences, and displays location updates from that file
      * on the location display. Data is pushed to the data source using a timeline to simulate live updates, as they would
-     * appear if using real-time data from a GPS dongle.
+     * appear if using real-time data from a GPS dongle
      */
     private fun displayDeviceLocation() {
         val simulatedNmeaDataFile = File(getExternalFilesDir(null)?.path + "/Redlands.nmea")
@@ -120,7 +132,7 @@ class MainActivity : AppCompatActivity() {
                 // Add carriage return for NMEA location data source parser
                 val nmeaSentences: MutableList<String> = mutableListOf()
                 var line = bufferedReader.readLine()
-                while( line != null){
+                while (line != null) {
                     nmeaSentences.add(line + "\n")
                     line = bufferedReader.readLine()
                 }
@@ -131,12 +143,15 @@ class MainActivity : AppCompatActivity() {
                     //Convert from Meters to Foot
                     val horizontalAccuracy = it.location.horizontalAccuracy * 3.28084
                     val verticalAccuracy = it.location.verticalAccuracy * 3.28084
-                    accuracyTV.text = "Accuracy- Horizontal: %.1fft, Vertical: %.1ft".format(horizontalAccuracy,verticalAccuracy)
+                    accuracyTV.text = "Accuracy- Horizontal: %.1fft, Vertical: %.1ft".format(
+                        horizontalAccuracy,
+                        verticalAccuracy
+                    )
                 }
 
                 // Handle when LocationDataSource status is changed
-                locationDataSourceListener = LocationDataSource.StatusChangedListener{
-                    if(it.status == LocationDataSource.Status.STARTED){
+                locationDataSourceListener = LocationDataSource.StatusChangedListener {
+                    if (it.status == LocationDataSource.Status.STARTED) {
                         // Add a satellite changed listener to the NMEA location data source and display satellite information
                         setupSatelliteChangedListener()
 
@@ -144,18 +159,24 @@ class MainActivity : AppCompatActivity() {
                         // Push the mock data NMEA sentences into the data source every 250 ms
                         timer.schedule(timerTask {
                             // Only push data when started
-                            if(it.status == LocationDataSource.Status.STARTED)
-                                nmeaLocationDataSource.pushData(nmeaSentences[count++].toByteArray(StandardCharsets.UTF_8))
+                            if (it.status == LocationDataSource.Status.STARTED)
+                                nmeaLocationDataSource.pushData(
+                                    nmeaSentences[count++].toByteArray(
+                                        StandardCharsets.UTF_8
+                                    )
+                                )
                             // Reset the count after the last data point is reached
-                            if(count == nmeaSentences.size)
+                            if (count == nmeaSentences.size)
                                 count = 0
                         }, 250, 250)
 
                         setLocationStatus(true)
                     }
-                    if(it.status == LocationDataSource.Status.STOPPED){
+                    if (it.status == LocationDataSource.Status.STOPPED) {
                         timer.cancel()
-                        nmeaLocationDataSource.removeStatusChangedListener(locationDataSourceListener)
+                        nmeaLocationDataSource.removeStatusChangedListener(
+                            locationDataSourceListener
+                        )
                         setLocationStatus(false)
                     }
                 }
@@ -167,7 +188,11 @@ class MainActivity : AppCompatActivity() {
 
 
             } catch (e: Exception) {
-                Toast.makeText(this, "Error while setting up NmeaLocationDataSource: " + e.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Error while setting up NmeaLocationDataSource: " + e.message,
+                    Toast.LENGTH_SHORT
+                ).show()
                 Log.e(TAG, "Error while setting up NmeaLocationDataSource: " + e.message.toString())
             }
         } else {
@@ -176,7 +201,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Obtains NMEA satellite information from the NMEA location data source, and displays satellite information on the app.
+     * Obtains NMEA satellite information from the NMEA location data source, and displays satellite information on the app
      */
     private fun setupSatelliteChangedListener() {
         nmeaLocationDataSource.addSatellitesChangedListener {
