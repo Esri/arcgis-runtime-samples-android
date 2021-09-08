@@ -1,2 +1,37 @@
 {
+    "category": "Maps and Scenes",
+    "description": "This sample demonstrates how to parse NMEA sentences and use the results to show device location on the map.",
+    "formal_name": "DisplayDeviceLocationWithNmeaDataSources",
+    "ignore": false,
+    "images": [
+        "display-device-location-with-nmea-data-sources.png"
+    ],
+    "keywords": [
+        "GPS",
+        "NMEA",
+        "history",
+        "navigation",
+        "real-time",
+        "trace",
+        "LocationDisplay",
+        "NmeaLocationDataSource",
+        "NmeaSatelliteInfo"
+    ],
+    "language": "kotlin",
+    "provision_from": [
+      "https://www.arcgis.com/home/item.html?id=d5bad9f4fee9483791e405880fb466da"
+    ],
+    "provision_to": [
+      "/Redlands.nmea"
+    ],
+    "redirect_from": "",
+    "relevant_apis": [
+        "LocationDisplay",
+        "NmeaLocationDataSource",
+        "NmeaSatelliteInfo"
+    ],
+    "snippets": [
+        "/src/main/java/com/esri/arcgisruntime/sample/displaydevicelocationwithnmeadatasources/MainActivity.kt"
+    ],
+    "title": "Display device location with NMEA data sources"
 }
