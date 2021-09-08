@@ -31,7 +31,7 @@
         "NmeaSatelliteInfo"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/displaydevicelocationwithnmeadatasources/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/displaydevicelocationwithnmeadatasources/MainActivity.kt"
     ],
     "title": "Display device location with NMEA data sources"
 }
