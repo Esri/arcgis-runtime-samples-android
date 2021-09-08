@@ -41,35 +41,33 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
 import kotlin.concurrent.timerTask
 
-
 class MainActivity : AppCompatActivity() {
 
     private val TAG = MainActivity::class.java.simpleName
 
-    // create a new NMEA location data source
+    // Create a new NMEA location data source
     private val nmeaLocationDataSource: NmeaLocationDataSource =
         NmeaLocationDataSource(SpatialReferences.getWgs84())
-    // location datasource listener
+    // Location datasource listener
     private var locationDataSourceListener : LocationDataSource.StatusChangedListener? = null
-    // create a timer to simulate a stream of NMEA data
+    // Create a timer to simulate a stream of NMEA data
     private var timer = Timer()
-
-    private var nmeaSatelliteInfoList: List<NmeaSatelliteInfo> = emptyList()
+    // Keeps track of the timer during play/pause.
     private var count = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // authentication with an API key or named user is required to access basemaps and other
-        // location services
+        // Authentication with an API key or named user is required
+        // to access basemaps and other location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // create a map with the Basemap style and set it to the MapView
+        // Create a map with the Basemap style and set it to the MapView
         val map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION)
         mapView.map = map
 
-        // set a viewpoint on the map view centered on Redlands, California
+        // Set a viewpoint on the map view centered on Redlands, California
         mapView.setViewpoint(
             Viewpoint(
                 Point(-117.191, 34.0306, SpatialReferences.getWgs84()),
@@ -77,22 +75,22 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-        // set the NMEA location data source onto the map view's location display
+        // Set the NMEA location data source onto the map view's location display
         val locationDisplay = mapView.locationDisplay
         locationDisplay.locationDataSource = nmeaLocationDataSource
         locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.RECENTER
 
-        // disable map view interaction, the location display will automatically center on the mock device location
+        // Disable map view interaction, the location display will automatically center on the mock device location
         mapView.interactionOptions.isPanEnabled = false
         mapView.interactionOptions.isZoomEnabled = false
 
         playPauseFAB.setOnClickListener {
             if (!nmeaLocationDataSource.isStarted) {
-                //Start location data source
+                // Start location data source
                 displayDeviceLocation()
                 setLocationStatus(true)
             } else {
-                // stop receiving and displaying location data
+                // Stop receiving and displaying location data
                 nmeaLocationDataSource.stop()
                 setLocationStatus(false)
             }
@@ -117,9 +115,9 @@ class MainActivity : AppCompatActivity() {
         val simulatedNmeaDataFile = File(getExternalFilesDir(null)?.path + "/Redlands.nmea")
         if (simulatedNmeaDataFile.exists()) {
             try {
-                // read the nmea file contents using a buffered reader and store the mock data sentences in a list
+                // Read the nmea file contents using a buffered reader and store the mock data sentences in a list
                 val bufferedReader = BufferedReader(FileReader(simulatedNmeaDataFile.path))
-                // add carriage return for NMEA location data source parser
+                // Add carriage return for NMEA location data source parser
                 val nmeaSentences: MutableList<String> = mutableListOf()
                 var line = bufferedReader.readLine()
                 while( line != null){
@@ -128,16 +126,27 @@ class MainActivity : AppCompatActivity() {
                 }
                 bufferedReader.close()
 
+                // Set up the accuracy for each location change
+                nmeaLocationDataSource.addLocationChangedListener {
+                    //Convert from Meters to Foot
+                    val horizontalAccuracy = it.location.horizontalAccuracy * 3.28084
+                    val verticalAccuracy = it.location.verticalAccuracy * 3.28084
+                    accuracyTV.text = "Accuracy- Horizontal: %.1fft, Vertical: %.1ft".format(horizontalAccuracy,verticalAccuracy)
+                }
+
+                // Handle when LocationDataSource status is changed
                 locationDataSourceListener = LocationDataSource.StatusChangedListener{
                     if(it.status == LocationDataSource.Status.STARTED){
-                        // add a satellite changed listener to the NMEA location data source and display satellite information on the app
+                        // Add a satellite changed listener to the NMEA location data source and display satellite information
                         setupSatelliteChangedListener()
 
                         timer = Timer()
-                        // push the mock data NMEA sentences into the data source every 250 ms
+                        // Push the mock data NMEA sentences into the data source every 250 ms
                         timer.schedule(timerTask {
-                            nmeaLocationDataSource.pushData(nmeaSentences[count++].toByteArray(StandardCharsets.UTF_8))
-                            // reset the count after the last data point is reached
+                            // Only push data when started
+                            if(it.status == LocationDataSource.Status.STARTED)
+                                nmeaLocationDataSource.pushData(nmeaSentences[count++].toByteArray(StandardCharsets.UTF_8))
+                            // Reset the count after the last data point is reached
                             if(count == nmeaSentences.size)
                                 count = 0
                         }, 250, 250)
@@ -151,21 +160,15 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                // initialize the location data source and prepare to begin receiving location updates when data is pushed. As
-                // updates are received, they will be displayed on the map
+                // Initialize the location data source and prepare to begin receiving location updates when data is pushed
+                // As updates are received, they will be displayed on the map
                 nmeaLocationDataSource.addStatusChangedListener(locationDataSourceListener)
-                nmeaLocationDataSource.addLocationChangedListener {
-                    //Convert from Meters to Foot
-                    val horizontalAccuracy = it.location.horizontalAccuracy * 3.28084
-                    val verticalAccuracy = it.location.verticalAccuracy * 3.28084
-                    accuracyTV.text = "Accuracy- Horizontal: %.1fft, Vertical: %.1ft".format(horizontalAccuracy,verticalAccuracy)
-                }
                 nmeaLocationDataSource.startAsync()
 
 
             } catch (e: Exception) {
-                Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
-                Log.e(TAG, e.message.toString())
+                Toast.makeText(this, "Error while setting up NmeaLocationDataSource: " + e.message, Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "Error while setting up NmeaLocationDataSource: " + e.message.toString())
             }
         } else {
             Toast.makeText(this, "NMEA File not found", Toast.LENGTH_SHORT).show()
@@ -176,24 +179,22 @@ class MainActivity : AppCompatActivity() {
      * Obtains NMEA satellite information from the NMEA location data source, and displays satellite information on the app.
      */
     private fun setupSatelliteChangedListener() {
-
-        val uniqueSatelliteIDs: HashSet<Int> = hashSetOf()
-
         nmeaLocationDataSource.addSatellitesChangedListener {
-            // get satellite information from the NMEA location data source every time the satellites change
-            nmeaSatelliteInfoList = it.satelliteInfos
-            // set the text of the satellite count label
-            satelliteCountTV.text = "Satellite count: " + nmeaSatelliteInfoList.size
+            val uniqueSatelliteIDs: HashSet<Int> = hashSetOf()
+            // Get satellite information from the NMEA location data source every time the satellites change
+            val nmeaSatelliteInfoList: List<NmeaSatelliteInfo> = it.satelliteInfos
+            // Set the text of the satellite count label
+            satelliteCountTV.text = "Satellite count- " + nmeaSatelliteInfoList.size
 
             for (satInfo in nmeaSatelliteInfoList) {
-                // collect unique satellite ids
+                // Collect unique satellite ids
                 uniqueSatelliteIDs.add(satInfo.id)
-                // sort the ids numerically
+                // Sort the ids numerically
                 val sortedIds: MutableList<Int> = ArrayList(uniqueSatelliteIDs)
                 sortedIds.sort()
-                // display the satellite system and id information
-                systemTypeTV.text = "System: " + satInfo.system
-                satelliteIDsTV.text = "Satellite IDs: $sortedIds"
+                // Display the satellite system and id information
+                systemTypeTV.text = "System- " + satInfo.system
+                satelliteIDsTV.text = "Satellite IDs- $sortedIds"
             }
         }
     }
