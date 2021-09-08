@@ -21,22 +21,27 @@ Click floating button "Play" to parse the provided NMEA sentences into a locatio
 3. Set the `NmeaLocationDataSource` to the `LocationDisplay`'s data source.
 4. Start the location display to begin receiving location and satellite updates.
 
-## Relevant API
-
-* LocationDisplay
-* NmeaLocationDataSource
-* NmeaSatelliteInfo
-
 ## About the data
 
 This sample reads lines from a local file to simulate the feed of data into the `NmeaLocationDataSource`. This simulated data source provides NMEA data periodically, and allows the sample to be used on devices without a GPS dongle that produces NMEA data.
 
 The route taken in this sample features a [one minute driving trip around Redlands, CA](https://arcgis.com/home/item.html?id=d5bad9f4fee9483791e405880fb466da).
 
-## Additional information
+## Relevant API
 
-To learn more about using the ArcGIS Runtime API for Java for retrieving NMEA sentences from a GPS dongle, see the
-Esri Community blog post [Adding GPS data to your ArcGIS Runtime API for Java App](https://community.esri.com/t5/arcgis-runtime-sdks-blog/adding-gps-data-to-your-arcgis-runtime-api-for-java-app/ba-p/1054145/jump-to/first-unread-message).
+* LocationDisplay
+* NmeaLocationDataSource
+* NmeaSatelliteInfo
+
+## Offline data
+1. Download the data from [ArcGIS Online](https://arcgis.com/home/item.html?id=d5bad9f4fee9483791e405880fb466da).
+1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+1. Execute the following command:
+`adb push Redlands.nmea /Android/data/com.esri.arcgisruntime.sample.displaydevicelocationwithnmeadatasources/files/dodge_city.vtpk`
+
+Link             |  Local Location
+:-------------------------:|:-------------------------:
+|[Redlands NMEA](https://arcgis.com/home/item.html?id=d5bad9f4fee9483791e405880fb466da)  |  `<sdcard>`/Android/data/com.esri.arcgisruntime.sample.displaydevicelocationwithnmeadatasources/files/Redlands.nmea
 
 ## Tags
 
