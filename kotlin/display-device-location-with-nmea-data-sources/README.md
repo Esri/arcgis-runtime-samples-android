@@ -37,7 +37,7 @@ The route taken in this sample features a [one minute driving trip around Redlan
 1. Download the data from [ArcGIS Online](https://arcgis.com/home/item.html?id=d5bad9f4fee9483791e405880fb466da).
 1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 1. Execute the following command:
-`adb push Redlands.nmea /Android/data/com.esri.arcgisruntime.sample.displaydevicelocationwithnmeadatasources/files/dodge_city.vtpk`
+`adb push Redlands.nmea /sdcard/Android/data/com.esri.arcgisruntime.sample.displaydevicelocationwithnmeadatasources/files/Redlands.nmea`
 
 Link             |  Local Location
 :-------------------------:|:-------------------------:
