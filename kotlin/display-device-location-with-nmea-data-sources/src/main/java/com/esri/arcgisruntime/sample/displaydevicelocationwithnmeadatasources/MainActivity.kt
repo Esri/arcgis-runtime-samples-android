@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity() {
                     //Convert from Meters to Foot
                     val horizontalAccuracy = it.location.horizontalAccuracy * 3.28084
                     val verticalAccuracy = it.location.verticalAccuracy * 3.28084
-                    accuracyTV.text = "Accuracy- Horizontal: %.1fft, Vertical: %.1ft".format(
+                    accuracyTV.text = "Accuracy- Horizontal: %.1fft, Vertical: %.1fft".format(
                         horizontalAccuracy,
                         verticalAccuracy
                     )
