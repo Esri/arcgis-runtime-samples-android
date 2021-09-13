@@ -1,8 +1,43 @@
-# Metadata updater script
+
+# Android Samples Scripts
+
+This directory consists of two scripts useful for creating new samples for Android.
+
+ -  [New module script](#new-module-script)
+	 - This script creates a new sample and configures it as a new module in Android Studio.
+ - [Metadata updater script](#metadata-updater-script)
+	 - This script updates the `README.metadata.json` files for any samples that it is given.
+
+## New Module Script
+
+This script creates a new sample and configures it as a new module in Android Studio.
+
+### How to use this script
+
+Navigate to the top-level directory of this repository (`/arcgis-runtime-samples-android/`).
+
+To run the script and create a new sample:
+
+ - `java -jar tools/NewModuleScript.jar`
+ - The `.jar` file will prompt you to type in the name of the new sample.
+
+Example:
+
+    $ java -jar tools/NewModuleScript.jar
+    Enter Name of the sample with spaces (Eg. "Display New Map"):    
+    Display New Map
+    Using repository $USER/../arcgis-runtime-samples-android
+    Sample Successfully Created!
+
+**Note:** The script will generate all the `gradle`, `src` and `res` files needed for  a new sample. You will have to reload `gradle` manually for Android Studio to implement the changes. To do this run:
+
+ - File -> Sync Project with Gradle Files
+
+## Metadata updater script
 
 This script updates the `README.metadata.json` files for any samples that it is given.
 
-## How to use this script
+### How to use this script
 
 Navigate to the top-level directory of this repository (`/arcgis-runtime-samples-android/`).
 
@@ -30,7 +65,7 @@ When recreating single metadata files, if any of the following entries are not p
 * provision_to
 * redirect_from
 
-## How it works
+### How it works
 
 To update all sample metadata files in a directory:
 
