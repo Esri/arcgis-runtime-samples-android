@@ -3,6 +3,8 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Scanner;
@@ -25,7 +27,7 @@ public class ScriptMain {
         Scanner scanner = new Scanner(System.in);
 
         // Get the name of the sample
-        System.out.println("Enter Name of the sample with spaces (Eg. \"Display Map\"): ");
+        System.out.println("Enter Name of the sample with spaces (Eg. \"Display New Map\"): ");
         sampleName = scanner.nextLine();
 
         sampleWithHyphen = sampleName.replace(" ", "-").toLowerCase();
@@ -94,11 +96,14 @@ public class ScriptMain {
         }
 
         // Copy display-map MainActivity.kt to new sample
-        File sourceFile = new File(samplesRepoPath + "/kotlin/" + sampleWithHyphen + "/src/main/java/com/esri/arcgisruntime/sample/displaymap/MainActivity.kt");
+        File sourceFile = new File(samplesRepoPath + "/tools/NewModuleScript/MainActivityTemplate.kt");
 
         // Perform copy
         try {
             FileUtils.copyFileToDirectory(sourceFile, packageDirectory);
+            Path source = Paths.get(packageDirectory+"/MainActivityTemplate.kt");
+            // Renames the file
+            Files.move(source, source.resolveSibling("MainActivity.kt"));
         } catch (IOException e) {
             e.printStackTrace();
             exitProgram(e);
