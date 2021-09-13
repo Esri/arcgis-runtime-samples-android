@@ -28,7 +28,7 @@ class PopupFragment(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {x
+    ): View {
         // Bind inflater to the layout view.
         //return inflater.inflate(R.layout.fragment_popup, container, false)
         binding = FragmentPopupBinding.inflate(LayoutInflater.from(context))
