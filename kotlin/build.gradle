@@ -2,6 +2,9 @@ apply from: '../version.gradle'
 
 buildscript {
     apply from: '../version.gradle'
+    ext {
+        kotlin_version = '1.5.30'
+    }
     repositories {
         google()
         mavenCentral()
