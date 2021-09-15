@@ -55,12 +55,12 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
     // use local tile package for the base map
     val sanFrancisco =
-      TileCache(getExternalFilesDir(null).toString() + getString(R.string.san_francisco_tpk))
+      TileCache(getExternalFilesDir(null).toString() + getString(R.string.san_francisco_tpkx))
     val tiledLayer = ArcGISTiledLayer(sanFrancisco)
 
     // add the map and graphics overlay to the map view
     mapView.apply {
-      // create a map with the tile package basemap
+      // create a map with the tile package basemap`
       map = ArcGISMap(Basemap(tiledLayer))
       // create a graphics overlay to display the boundaries
       graphicsOverlays.add(GraphicsOverlay())
