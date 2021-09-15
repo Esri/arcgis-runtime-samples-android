@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // load the tile cache from local storage
-    val tileCache = TileCache(getExternalFilesDir(null)?.path + getString(R.string.san_diego_tpk))
+    val tileCache = TileCache(getExternalFilesDir(null)?.path + getString(R.string.san_diego_tpkx))
     // use the tile cache extent to set the view point
     tileCache.addDoneLoadingListener { mapView.setViewpoint(Viewpoint(tileCache.fullExtent)) }
     // create a tiled layer from the tile cache
