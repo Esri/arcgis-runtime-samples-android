@@ -4,7 +4,6 @@
         https://sampleserver6.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer
     </string>
   <string name="tile_cache_folder">/TileCache/</string>
-  <string name="world_street_map_tpk">worldStreetMap.tpk</string>
   <string name="export_tiles_text">Export Tiles</string>
   <string name="close_button_text">Close</string>
   <string name="preview_text">Preview</string>

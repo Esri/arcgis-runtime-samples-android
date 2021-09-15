@@ -18,6 +18,7 @@
 package com.esri.arcgisruntime.sample.exporttiles
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,6 +27,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.TileCache
@@ -35,6 +37,7 @@ import com.esri.arcgisruntime.layers.ArcGISTiledLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
@@ -56,10 +59,14 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
+    // authentication with an API key or named user is required
+    // to access basemaps and other location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create an ArcGISTiledLayer to use as the basemap
-    val tiledLayer = ArcGISTiledLayer(getString(R.string.world_street_map))
+
     val map = ArcGISMap().apply {
-      basemap = Basemap(tiledLayer)
+      basemap = Basemap(BasemapStyle.ARCGIS_IMAGERY)
       minScale = 10000000.0
     }
 
@@ -72,7 +79,7 @@ class MainActivity : AppCompatActivity() {
     mapView.apply {
       // set the map to the map view
       this.map = map
-      setViewpoint(Viewpoint(51.5, 0.0, 10000000.0))
+      setViewpoint(Viewpoint(35.0, -117.0, 10000000.0))
 
       // add the graphics overlay to the map view
       graphicsOverlays.add(graphicsOverlay)
@@ -96,62 +103,69 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    // when the button is clicked, export the tiles to the temporary directory
-    exportTilesButton.setOnClickListener {
-      val exportTileCacheTask = ExportTileCacheTask(tiledLayer.uri)
-      // set up the export tile cache parameters
-      val parametersFuture: ListenableFuture<ExportTileCacheParameters> =
-        exportTileCacheTask.createDefaultExportTileCacheParametersAsync(
-          downloadArea?.geometry,
-          mapView.mapScale,
-          tiledLayer.maxScale
-        )
+    map.addDoneLoadingListener {
+        val tiledLayer: ArcGISTiledLayer = map.basemap.baseLayers[0] as ArcGISTiledLayer
+        // when the button is clicked, export the tiles to the temporary directory
+        exportTilesButton.setOnClickListener {
+            val exportTileCacheTask = ExportTileCacheTask(tiledLayer.uri)
+            // set up the export tile cache parameters
+            val parametersFuture: ListenableFuture<ExportTileCacheParameters> =
+                exportTileCacheTask.createDefaultExportTileCacheParametersAsync(
+                    downloadArea?.geometry,
+                    mapView.mapScale,
+                    tiledLayer.maxScale
+                )
 
-      parametersFuture.addDoneListener {
-        try {
-          val parameters: ExportTileCacheParameters = parametersFuture.get()
-          // create a temporary directory in the app's cache for saving exported tiles
-          val exportTilesDirectory = File(externalCacheDir, getString(R.string.tile_cache_folder))
-          // export tiles to temporary cache on device
-          exportTileCacheJob =
-            exportTileCacheTask.exportTileCache(
-              parameters,
-              exportTilesDirectory.path + "file.tpk"
-            ).apply {
-              // start the export tile cache job
-              start()
+            parametersFuture.addDoneListener {
+                try {
+                    val parameters: ExportTileCacheParameters = parametersFuture.get()
+                    // create a temporary directory in the app's cache for saving exported tiles
+                    val exportTilesDirectory = File(externalCacheDir, getString(R.string.tile_cache_folder))
 
-              // show progress of the export tile cache job on the progress bar
-              val dialog = createProgressDialog(this)
-              dialog.show()
+                    //TODO - Check if TPKX allowed
+                    Log.e("allowed: ", exportTileCacheTask.mapServiceInfo.isExportTileCacheCompactV2Allowed.toString())
 
-              // on progress change
-              addProgressChangedListener {
-                dialog.progressBar.progress = progress
-                dialog.progressTextView.text = "$progress%"
-              }
+                    // export tiles to temporary cache on device
+                    exportTileCacheJob =
+                        exportTileCacheTask.exportTileCache(
+                            parameters,
+                            exportTilesDirectory.path + "file.tpkx"
+                        ).apply {
+                            // start the export tile cache job
+                            start()
 
-              // when the job has completed, close the dialog and show the job result in the map preview
-              addJobDoneListener {
-                dialog.dismiss()
-                if (status == Job.Status.SUCCEEDED) {
-                  showMapPreview(result)
-                  downloadArea?.isVisible = false
+                            // show progress of the export tile cache job on the progress bar
+                            val dialog = createProgressDialog(this)
+                            dialog.show()
 
-                } else {
-                  ("Job did not succeed: " + error.additionalMessage).also {
-                    Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG).show()
-                    Log.e(TAG, error.additionalMessage)
-                  }
+                            // on progress change
+                            addProgressChangedListener {
+                                dialog.progressBar.progress = progress
+                                dialog.progressTextView.text = "$progress%"
+                            }
+
+                            // when the job has completed, close the dialog and show the job result in the map preview
+                            addJobDoneListener {
+                                dialog.dismiss()
+                                if (status == Job.Status.SUCCEEDED) {
+                                    showMapPreview(result)
+                                    downloadArea?.isVisible = false
+
+                                } else {
+                                    ("Job did not succeed: " + error.additionalMessage).also {
+                                        Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG).show()
+                                        Log.e(TAG, error.additionalMessage)
+                                    }
+                                }
+                            }
+                        }
+                } catch (e: Exception) {
+                    val error = "Error generating tile cache parameters: ${e.message}"
+                    Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                    Log.e(TAG, error)
                 }
-              }
             }
-        } catch (e: Exception) {
-          val error = "Error generating tile cache parameters: ${e.message}"
-          Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-          Log.e(TAG, error)
         }
-      }
     }
 
     // get correct view order set up on start
