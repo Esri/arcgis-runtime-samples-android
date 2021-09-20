@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 /**
  * This java file creates a new sample and configures it as a new module in Android Studio.
- * The Intellij project creates an .jar artifact which is used to create new samples.
+ * The IntelliJ project creates an .jar artifact which is used to create new samples.
  */
 public class ScriptMain {
 
