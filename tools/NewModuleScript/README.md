@@ -1,7 +1,7 @@
 
 # New Module Script
 
-This script creates a new sample and configures it as a new module in Android Studio. The Intellij project creates an `.jar` artifact which is used to create new samples. 
+This script creates a new sample and configures it as a new module in Android Studio. The IntelliJ project creates an `.jar` artifact which is used to create new samples. 
 
 ## How the script works
 
