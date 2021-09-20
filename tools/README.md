@@ -16,6 +16,8 @@ This script creates a new sample and configures it as a new module in Android St
 
 Navigate to the top-level directory of this repository (`/arcgis-runtime-samples-android/`).
 
+**Note:** This `.jar` file requires Java 11 installed.
+
 To run the script and create a new sample:
 
  - `java -jar tools/NewModuleScript.jar`
