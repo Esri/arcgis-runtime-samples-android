@@ -18,7 +18,6 @@
 package com.esri.arcgisruntime.sample.exporttiles
 
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,7 +25,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.concurrent.ListenableFuture
@@ -76,16 +74,89 @@ class MainActivity : AppCompatActivity() {
     val graphicsOverlay = GraphicsOverlay()
     graphicsOverlay.graphics.add(downloadArea)
 
-    mapView.apply {
-      // set the map to the map view
-      this.map = map
-      setViewpoint(Viewpoint(35.0, -117.0, 10000000.0))
+    // set the map to the map view
+    mapView.map = map
+    mapView.setViewpoint(Viewpoint(35.0, -117.0, 10000000.0))
+    // add the graphics overlay to the map view
+    mapView.graphicsOverlays.add(graphicsOverlay)
 
-      // add the graphics overlay to the map view
-      graphicsOverlays.add(graphicsOverlay)
+    mapView.addViewpointChangedListener {
+      updateDownloadAreaGeometry()
+    }
 
-      // update the box whenever the viewpoint changes
-      addViewpointChangedListener {
+    map.addDoneLoadingListener {
+
+      val tiledLayer: ArcGISTiledLayer = map.basemap.baseLayers[0] as ArcGISTiledLayer
+      // when the button is clicked, export the tiles to the temporary directory
+      exportTilesButton.setOnClickListener {
+
+        updateDownloadAreaGeometry()
+
+        val exportTileCacheTask = ExportTileCacheTask(tiledLayer.uri)
+        // set up the export tile cache parameters
+        val parametersFuture: ListenableFuture<ExportTileCacheParameters> =
+          exportTileCacheTask.createDefaultExportTileCacheParametersAsync(
+            downloadArea?.geometry,
+            mapView.mapScale,
+            mapView.mapScale * 0.1
+          )
+
+        parametersFuture.addDoneListener {
+          try {
+            val parameters: ExportTileCacheParameters = parametersFuture.get()
+            // create a temporary directory in the app's cache for saving exported tiles
+            val exportTilesDirectory = File(externalCacheDir, getString(R.string.tile_cache_folder))
+
+            // export tiles to temporary cache on device
+            exportTileCacheJob =
+              exportTileCacheTask.exportTileCache(
+                parameters,
+                exportTilesDirectory.path + "file.tpkx"
+              ).apply {
+                // start the export tile cache job
+                start()
+
+                // show progress of the export tile cache job on the progress bar
+                val dialog = createProgressDialog(this)
+                dialog.show()
+
+                // on progress change
+                addProgressChangedListener {
+                  dialog.progressBar.progress = progress
+                  dialog.progressTextView.text = "$progress%"
+                }
+
+                // when the job has completed, close the dialog and show the job result in the map preview
+                addJobDoneListener {
+                  dialog.dismiss()
+                  if (status == Job.Status.SUCCEEDED) {
+                    showMapPreview(result)
+                    downloadArea?.isVisible = false
+
+                  } else {
+                    ("Job did not succeed: " + error.additionalMessage).also {
+                      Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG).show()
+                      Log.e(TAG, error.additionalMessage)
+                    }
+                  }
+                }
+              }
+          } catch (e: Exception) {
+            val error = "Error generating tile cache parameters: ${e.message}"
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+            Log.e(TAG, error)
+          }
+        }
+      }
+    }
+
+    // get correct view order set up on start
+    clearPreview(mapView)
+  }
+
+  private fun updateDownloadAreaGeometry() {
+    try {
+      mapView.apply {
         if (mapView.map.loadStatus == LoadStatus.LOADED) {
           // upper left corner of the downloaded tile cache area
           val minScreenPoint: android.graphics.Point = android.graphics.Point(150, 175)
@@ -101,75 +172,10 @@ class MainActivity : AppCompatActivity() {
           downloadArea?.geometry = Envelope(minPoint, maxPoint)
         }
       }
+    }catch (e: java.lang.Exception){
+      Log.e("SILENTLY", "FAILED")
+      // Silently fail, since mapView has not been rendered yet.
     }
-
-    map.addDoneLoadingListener {
-        val tiledLayer: ArcGISTiledLayer = map.basemap.baseLayers[0] as ArcGISTiledLayer
-        // when the button is clicked, export the tiles to the temporary directory
-        exportTilesButton.setOnClickListener {
-            val exportTileCacheTask = ExportTileCacheTask(tiledLayer.uri)
-            // set up the export tile cache parameters
-            val parametersFuture: ListenableFuture<ExportTileCacheParameters> =
-                exportTileCacheTask.createDefaultExportTileCacheParametersAsync(
-                    downloadArea?.geometry,
-                    mapView.mapScale,
-                    tiledLayer.maxScale
-                )
-
-            parametersFuture.addDoneListener {
-                try {
-                    val parameters: ExportTileCacheParameters = parametersFuture.get()
-                    // create a temporary directory in the app's cache for saving exported tiles
-                    val exportTilesDirectory = File(externalCacheDir, getString(R.string.tile_cache_folder))
-
-                    //TODO - Check if TPKX allowed
-                    Log.e("allowed: ", exportTileCacheTask.mapServiceInfo.isExportTileCacheCompactV2Allowed.toString())
-
-                    // export tiles to temporary cache on device
-                    exportTileCacheJob =
-                        exportTileCacheTask.exportTileCache(
-                            parameters,
-                            exportTilesDirectory.path + "file.tpkx"
-                        ).apply {
-                            // start the export tile cache job
-                            start()
-
-                            // show progress of the export tile cache job on the progress bar
-                            val dialog = createProgressDialog(this)
-                            dialog.show()
-
-                            // on progress change
-                            addProgressChangedListener {
-                                dialog.progressBar.progress = progress
-                                dialog.progressTextView.text = "$progress%"
-                            }
-
-                            // when the job has completed, close the dialog and show the job result in the map preview
-                            addJobDoneListener {
-                                dialog.dismiss()
-                                if (status == Job.Status.SUCCEEDED) {
-                                    showMapPreview(result)
-                                    downloadArea?.isVisible = false
-
-                                } else {
-                                    ("Job did not succeed: " + error.additionalMessage).also {
-                                        Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG).show()
-                                        Log.e(TAG, error.additionalMessage)
-                                    }
-                                }
-                            }
-                        }
-                } catch (e: Exception) {
-                    val error = "Error generating tile cache parameters: ${e.message}"
-                    Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-                    Log.e(TAG, error)
-                }
-            }
-        }
-    }
-
-    // get correct view order set up on start
-    clearPreview(mapView)
   }
 
   /**
