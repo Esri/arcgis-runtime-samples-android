@@ -91,7 +91,6 @@ class MainActivity : AppCompatActivity() {
       exportTilesButton.setOnClickListener {
 
         updateDownloadAreaGeometry()
-
         val exportTileCacheTask = ExportTileCacheTask(tiledLayer.uri)
         // set up the export tile cache parameters
         val parametersFuture: ListenableFuture<ExportTileCacheParameters> =
@@ -154,6 +153,10 @@ class MainActivity : AppCompatActivity() {
     clearPreview(mapView)
   }
 
+  /**
+   * Updates the [downloadArea]'s geometry on ViewPoint change
+   * or when export tiles is clicked.
+   */
   private fun updateDownloadAreaGeometry() {
     try {
       mapView.apply {
@@ -173,7 +176,6 @@ class MainActivity : AppCompatActivity() {
         }
       }
     }catch (e: java.lang.Exception){
-      Log.e("SILENTLY", "FAILED")
       // Silently fail, since mapView has not been rendered yet.
     }
   }
