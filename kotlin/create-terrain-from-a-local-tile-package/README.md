@@ -34,7 +34,7 @@ When loaded, the sample will show a scene with a terrain surface applied. Pan an
 
 Link | Local Location
 ---------|-------|
-|[Monterey Elevation TPKX](https://arcgisruntime.maps.arcgis.com/home/item.html?id=cce37043eb0440c7a5c109cf8aad5500)| /Android/data/com.esri.arcgisruntime.sample.createterrainfromalocaltilepackage/files/MontereyElevation.tpkx |
+|[Monterey Elevation TPKX](https://arcgisruntime.maps.arcgis.com/home/item.html?id=52ca74b4ba8042b78b3c653696f34a9c)| /Android/data/com.esri.arcgisruntime.sample.createterrainfromalocaltilepackage/files/MontereyElevation.tpkx |
 
 ## Additional information
 
