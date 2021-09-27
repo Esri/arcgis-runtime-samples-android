@@ -23,7 +23,7 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=567e14f3420d40c5a206e5c0284cf8fc"
     ],
     "provision_to": [
-        "/streetmap_SD.tpk",
+        "/streetmap_SD.tpkx",
         "/sandiego.geodatabase",
         "/sandiego.tn/"
     ],
