@@ -276,7 +276,6 @@ class MainActivity : AppCompatActivity() {
 
   override fun onDestroy() {
     mapView.dispose()
-    previewMapView.dispose()
     super.onDestroy()
   }
 }
