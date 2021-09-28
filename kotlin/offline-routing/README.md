@@ -23,7 +23,7 @@ Tap once near a road to add a stop to the map. A number graphic will show its or
 
 ## Offline data
 
-1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=567e14f3420d40c5a206e5c0284cf8fc).
+1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=df193653ed39449195af0c9725701dca).
 2. Extract the contents of the downloaded zip file to disk.
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 4. Execute the following commands:
@@ -34,8 +34,8 @@ Tap once near a road to add a stop to the map. A number graphic will show its or
 
 Link | Local Location
 ---------|-------|
-|[San Diego streetmap TPKX](https://arcgisruntime.maps.arcgis.com/home/item.html?id=567e14f3420d40c5a206e5c0284cf8fc)| /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/streetmap_SD.tpkx |
-|[San Diego Geodatabase](https://arcgisruntime.maps.arcgis.com/home/item.html?id=567e14f3420d40c5a206e5c0284cf8fc)| /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/sandiego.geodatabase |
+|[San Diego streetmap TPKX](https://arcgisruntime.maps.arcgis.com/home/item.html?id=df193653ed39449195af0c9725701dca)| /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/streetmap_SD.tpkx |
+|[San Diego Geodatabase](https://arcgisruntime.maps.arcgis.com/home/item.html?id=df193653ed39449195af0c9725701dca)| /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/sandiego.geodatabase |
 
 ## About the data
 

@@ -20,7 +20,7 @@
     ],
     "language": "kotlin",
     "provision_from": [
-        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=567e14f3420d40c5a206e5c0284cf8fc"
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=df193653ed39449195af0c9725701dca"
     ],
     "provision_to": [
         "/streetmap_SD.tpkx",
