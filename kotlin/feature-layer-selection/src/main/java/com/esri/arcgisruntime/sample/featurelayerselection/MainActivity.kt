@@ -94,9 +94,7 @@ class MainActivity : AppCompatActivity() {
               // get the elements in the selection that are features
               val features = identifyLayerResult.elements.filterIsInstance<Feature>()
               // select each feature
-              features.forEach { feature ->
-                featureLayer.selectFeature(feature)
-              }
+              featureLayer.selectFeatures(features)
               // make a toast to show the number of features selected
               Toast.makeText(
                 applicationContext,
