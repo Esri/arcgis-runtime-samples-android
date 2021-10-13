@@ -21,7 +21,7 @@
         "http://www.arcgis.com/home/item.html?id=344e3b12368543ef84045ef9aa3c32ba"
     ],
     "provision_to": [
-        "/streetmap_SD.tpk",
+        "/streetmap_SD.tpkx",
         "/SanDiego_StreetAddress.loc"
     ],
     "redirect_from": [

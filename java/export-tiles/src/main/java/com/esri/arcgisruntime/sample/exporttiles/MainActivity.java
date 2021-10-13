@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.TileCache;
 import com.esri.arcgisruntime.geometry.Envelope;
@@ -35,6 +37,7 @@ import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheJob;
@@ -66,13 +69,17 @@ public class MainActivity extends AppCompatActivity {
     mTileCachePreview = findViewById(R.id.previewMapView);
     mMapView = findViewById(R.id.mapView);
 
-    mTiledLayer = new ArcGISTiledLayer(getString(R.string.world_street_map));
+    // authentication with an API key or named user is required
+    // to access basemaps and other location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
+    // set the basemap of the map
     ArcGISMap map = new ArcGISMap();
-    map.setBasemap(new Basemap(mTiledLayer));
+    map.setBasemap(new Basemap(BasemapStyle.ARCGIS_IMAGERY));
     // set a min scale to avoid instance of downloading a tile cache that is too big
     map.setMinScale(10000000);
     mMapView.setMap(map);
-    mMapView.setViewpoint(new Viewpoint(51.5, 0.0, 10000000));
+    mMapView.setViewpoint(new Viewpoint(35.0, -117.0, 10000000.0));
 
     mExportTilesButton = findViewById(R.id.exportTilesButton);
     mExportTilesButton.setOnClickListener(v -> initiateDownload());
@@ -133,23 +140,18 @@ public class MainActivity extends AppCompatActivity {
    * downloads a TileCache locally to the device.
    */
   private void initiateDownload() {
-    // map view's current scale as the minScale and tiled layer's max scale as maxScale
-    double minScale = mMapView.getMapScale();
-    double maxScale = mTiledLayer.getMaxScale();
-    // minScale must always be larger than maxScale
-    if (minScale <= maxScale) {
-      minScale = maxScale + 1;
-    }
+
+    mTiledLayer = (ArcGISTiledLayer) mMapView.getMap().getBasemap().getBaseLayers().get(0);
     // initialize the export task
     mExportTileCacheTask = new ExportTileCacheTask(mTiledLayer.getUri());
     final ListenableFuture<ExportTileCacheParameters> parametersFuture = mExportTileCacheTask
-        .createDefaultExportTileCacheParametersAsync(viewToExtent(), minScale, maxScale);
+        .createDefaultExportTileCacheParametersAsync(viewToExtent(), mMapView.getMapScale(), mMapView.getMapScale() * 0.1);
     parametersFuture.addDoneListener(() -> {
       try {
         // export tile cache to directory
         ExportTileCacheParameters parameters = parametersFuture.get();
         mExportTileCacheJob = mExportTileCacheTask
-            .exportTileCache(parameters, getCacheDir() + getString(R.string.world_street_map_tpk));
+            .exportTileCache(parameters, getCacheDir() + getString(R.string.file_tpkx));
       } catch (InterruptedException e) {
         Log.e(TAG, "TileCacheParameters interrupted: " + e.getMessage());
       } catch (ExecutionException e) {

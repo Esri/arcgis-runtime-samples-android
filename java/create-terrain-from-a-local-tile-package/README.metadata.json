@@ -16,10 +16,10 @@
     ],
     "language": "java",
     "provision_from": [
-        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=cce37043eb0440c7a5c109cf8aad5500"
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=e4a398afe9a945f3b0f4dca1e4faccb5"
     ],
     "provision_to": [
-        "/MontereyElevation.tpk"
+        "/MontereyElevation.tpkx"
     ],
     "redirect_from": [
         "/android/latest/sample-code/create-terrain-from-a-local-tile-package.htm"

@@ -30,7 +30,7 @@ Select an address from the drop-down list to `Geocode` the address and view the 
 2. Extract the contents of the downloaded zip file to disk.
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 4. Push the data into the scoped storage of the sample app:
- 	* `adb push streetmap_SD.tpk /Android/data/com.esri.arcgisruntime.sample.offlinegeocode/files/streetmap_SD.tpk`
+ 	* `adb push streetmap_SD.tpkx /Android/data/com.esri.arcgisruntime.sample.offlinegeocode/files/streetmap_SD.tpkx`
 	* `adb push san-diego-eagle-locator/. /Android/data/com.esri.arcgisruntime.sample.offlinegeocode/files`
 
 ## Tags

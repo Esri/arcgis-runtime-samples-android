@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
     // add the map and graphics overlay to the map view
     mapView.apply {
-      // create a map with the tile package basemap`
+      // create a map with the tile package basemap
       map = ArcGISMap(Basemap(tiledLayer))
       // create a graphics overlay to display the boundaries
       graphicsOverlays.add(GraphicsOverlay())
@@ -98,6 +98,11 @@ class MainActivity : AppCompatActivity() {
       // create the generate geodatabase job
       val generateGeodatabaseJob =
         geodatabaseSyncTask.generateGeodatabase(parameters, localGeodatabasePath)
+
+      geodatabaseSyncTask.addDoneLoadingListener {
+        val status = geodatabaseSyncTask.loadError
+        val message = geodatabaseSyncTask.loadError.message
+      }
 
       // show the job's progress in a dialog
       val dialog = createProgressDialog(generateGeodatabaseJob)
