@@ -16,78 +16,155 @@
 
 package com.esri.arcgisruntime.sample.showpopup
 
-import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
+import com.esri.arcgisruntime.data.Feature
+import com.esri.arcgisruntime.geometry.GeometryType
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.popup.Popup
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
-import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult
-import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.Exception
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.portal.Portal
+import com.esri.arcgisruntime.portal.PortalItem
+import com.esri.arcgisruntime.sample.showpopup.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.toolkit.popup.PopupViewModel
+import com.esri.arcgisruntime.toolkit.util.observeEvent
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
     private val TAG: String = MainActivity::class.java.simpleName
 
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
+    private lateinit var mapView: MapView
+    private lateinit var progressBar: ProgressBar
+    private val popupViewModel: PopupViewModel by viewModels()
+
+    private val map: ArcGISMap by lazy {
+        val portal = Portal("https://arcgisruntime.maps.arcgis.com/")
+        val portalItem = PortalItem(portal, "fb788308ea2e4d8682b9c05ef641f273")
+        val map = ArcGISMap(portalItem)
+        map
+    }
+
+    private val featureLayer: FeatureLayer?
+        get() {
+            return map.operationalLayers?.filterIsInstance<FeatureLayer>()?.filter {
+                (it.featureTable?.geometryType == GeometryType.POINT)
+                    .and(it.isVisible)
+                    .and(it.isPopupEnabled && it.popupDefinition != null)
+            }?.get(0)
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         // authentication with an API key or named user is required to access basemaps and other
         // location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // create a map with the BasemapType topographic
-        //val map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
-        val map =
-            ArcGISMap("https://arcgisruntime.maps.arcgis.com/home/item.html?id=fb788308ea2e4d8682b9c05ef641f273")
+        val binding: ActivityMainBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        // set the map to be displayed in the layout's MapView
+        binding.lifecycleOwner = this
+
+        // set up binding and UI behaviour
+        mapView = binding.mapView
         mapView.map = map
+        progressBar = binding.progressBar
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetContainer)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-        mapView.onTouchListener = object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
-            override fun onSingleTapConfirmed(motionEvent: MotionEvent): Boolean {
-                // get the point that was clicked and convert it to a point in the map
-                val screenPoint = Point(
-                    motionEvent.x.roundToInt(),
-                    motionEvent.y.roundToInt()
-                )
-                showPopup(screenPoint)
-                return true
-            }
-        }
-
-    }
-
-    private fun showPopup(mapPoint: Point) {
-        try{
-            // Get the feature layer from the map
-            val featureLayer = mapView.map.operationalLayers.first() as FeatureLayer
-            // Identify the tapped on feature
-            val resultFuture = mapView.identifyLayerAsync(featureLayer, mapPoint,12.0, true)
-
-            resultFuture.addDoneListener {
-                val identifyLayerResult: IdentifyLayerResult = resultFuture.get()
-                if(identifyLayerResult.popups.first() is Popup){
-                    val popup: Popup = identifyLayerResult.popups.first()
-                    PopupFragment(this, popup, featureLayer).show(
-                        supportFragmentManager,
-                        "PopupFragment"
-                    )
+        // reset the IdentifyResult on a sheet close
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    // Clear the selected features from the feature layer
+                    resetIdentifyResult()
                 }
             }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
 
-
-
-        }catch (e: Exception){
-            Log.e(TAG, e.message.toString())
+        popupViewModel.dismissPopupEvent.observeEvent(this) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            // Clear the selected features from the feature layer
+            resetIdentifyResult()
         }
+
+        // set the progressBar visibility
+        progressBar.visibility = View.GONE
+
+        mapView.onTouchListener =
+            object : DefaultMapViewOnTouchListener(this, mapView) {
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                    // set the progressBar visibility
+                    progressBar.visibility = View.VISIBLE
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    e.let {
+                        val screenPoint = android.graphics.Point(
+                            it.x.roundToInt(),
+                            it.y.roundToInt()
+                        )
+                        // setup identifiable layer at the given screen point.
+                        identifyLayer(screenPoint)
+                    }
+                    return true
+                }
+            }
+    }
+
+    /**
+     * Performs an identify on the feature layer at the given screen point.
+     * [screenPoint] in Android graphic coordinates.
+     */
+    private fun identifyLayer(screenPoint: android.graphics.Point) {
+
+        featureLayer?.let {
+            // clear the selected features from the feature layer
+            resetIdentifyResult()
+
+            val identifyLayerResultsFuture = mapView
+                .identifyLayerAsync(featureLayer, screenPoint, 12.0, true)
+
+            identifyLayerResultsFuture.addDoneListener {
+                try {
+                    val identifyLayerResult = identifyLayerResultsFuture.get()
+
+                    if (identifyLayerResult.popups.size > 0) {
+                        popupViewModel.setPopup(identifyLayerResult.popups[0])
+                        val featureLayer: FeatureLayer? = identifyLayerResult.layerContent as? FeatureLayer
+                        featureLayer?.selectFeature(identifyLayerResult.popups[0].geoElement as Feature)
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                    }
+                } catch (e: Exception) {
+                    val error = "Error identifying results ${e.message}"
+                    Log.e(TAG, error)
+                    Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+                }
+
+                // set the progressBar visibility
+                progressBar.visibility = View.GONE
+            }
+        }
+    }
+
+    /**
+     * Resets the Identify Result.
+     */
+    private fun resetIdentifyResult() {
+        featureLayer?.clearSelection()
+        popupViewModel.clearPopup()
     }
 
     override fun onPause() {
@@ -105,3 +182,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 }
+
+
+
+
