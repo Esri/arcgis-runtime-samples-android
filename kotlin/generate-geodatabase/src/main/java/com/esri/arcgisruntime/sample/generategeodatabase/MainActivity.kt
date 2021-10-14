@@ -99,11 +99,6 @@ class MainActivity : AppCompatActivity() {
       val generateGeodatabaseJob =
         geodatabaseSyncTask.generateGeodatabase(parameters, localGeodatabasePath)
 
-      geodatabaseSyncTask.addDoneLoadingListener {
-        val status = geodatabaseSyncTask.loadError
-        val message = geodatabaseSyncTask.loadError.message
-      }
-
       // show the job's progress in a dialog
       val dialog = createProgressDialog(generateGeodatabaseJob)
       dialog.show()
