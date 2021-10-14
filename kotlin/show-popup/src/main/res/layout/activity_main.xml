@@ -24,7 +24,7 @@
         <com.esri.arcgisruntime.mapping.view.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/bottomSheetContainer"
@@ -33,6 +33,7 @@
             android:layout_height="match_parent"
             android:background="@android:color/white"
             android:clickable="true"
+            android:focusable="true"
             app:behavior_draggable="true"
             app:behavior_fitToContents="false"
             app:behavior_halfExpandedRatio="0.5"
@@ -52,10 +53,10 @@
 
         <ProgressBar
             android:id="@+id/progressBar"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:visibility="gone" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

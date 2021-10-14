@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 ~ Copyright 2021 Esri
 ~
 ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +17,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="popupViewModel"
-            type="com.esri.arcgisruntime.toolkit.popup.PopupViewModel"/>
+            type="com.esri.arcgisruntime.toolkit.popup.PopupViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -86,7 +87,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/controlLayout"
             app:popup="@{popupViewModel.popup}"
-            app:popupManager="@{popupViewModel.popupManager}"></com.esri.arcgisruntime.toolkit.popup.PopupView>
+            app:popupManager="@{popupViewModel.popupManager}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

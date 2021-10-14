@@ -85,13 +85,15 @@ class MainActivity : AppCompatActivity() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         // reset the IdentifyResult on a sheet close
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                     // Clear the selected features from the feature layer
                     resetIdentifyResult()
                 }
             }
+
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
             }
         })
@@ -143,7 +145,8 @@ class MainActivity : AppCompatActivity() {
 
                     if (identifyLayerResult.popups.size > 0) {
                         popupViewModel.setPopup(identifyLayerResult.popups[0])
-                        val featureLayer: FeatureLayer? = identifyLayerResult.layerContent as? FeatureLayer
+                        val featureLayer: FeatureLayer? =
+                            identifyLayerResult.layerContent as? FeatureLayer
                         featureLayer?.selectFeature(identifyLayerResult.popups[0].geoElement as Feature)
                         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
                     }
