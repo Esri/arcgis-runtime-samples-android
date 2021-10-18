@@ -16,9 +16,6 @@
         "PopupViewModel"
     ],
     "language": "kotlin",
-    "provision_from": [
-        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=fb788308ea2e4d8682b9c05ef641f273"
-      ],
     "relevant_apis": [
         "ArcGISMap",
         "IdentifyLayerResult",
