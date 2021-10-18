@@ -17,9 +17,6 @@
 
 package com.esri.arcgisruntime.sample.generateofflinemapwithlocalbasemap;
 
-import java.io.File;
-import java.util.concurrent.ExecutionException;
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,16 +37,17 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.portal.PortalItem;
-import com.esri.arcgisruntime.security.AuthenticationManager;
-import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapJob;
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapParameters;
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapResult;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask;
 
+import java.io.File;
+import java.util.concurrent.ExecutionException;
+
 public class MainActivity extends AppCompatActivity
-    implements ProgressDialogFragment.OnProgressDialogDismissListener, LocalBasemapAlertDialogFragment.OnClickListener {
+        implements ProgressDialogFragment.OnProgressDialogDismissListener, LocalBasemapAlertDialogFragment.OnClickListener {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -112,23 +110,13 @@ public class MainActivity extends AppCompatActivity
 
     // update the download area box whenever the viewpoint changes
     mMapView.addViewpointChangedListener(viewpointChangedEvent -> {
-      // upper left corner of the area to take offline
-      android.graphics.Point minScreenPoint = new android.graphics.Point(200, 200);
-      // lower right corner of the downloaded area
-      android.graphics.Point maxScreenPoint = new android.graphics.Point(mMapView.getWidth() - 200,
-          mMapView.getHeight() - 200);
-      // convert screen points to map points
-      Point minPoint = mMapView.screenToLocation(minScreenPoint);
-      Point maxPoint = mMapView.screenToLocation(maxScreenPoint);
-      // use the points to define and return an envelope
-      if (minPoint != null && maxPoint != null) {
-        Envelope envelope = new Envelope(minPoint, maxPoint);
-        mDownloadArea.setGeometry(envelope);
-      }
+      updateDownloadArea();
     });
 
     // when the button is clicked, start the offline map task job
     mTakeMapOfflineButton.setOnClickListener(v -> {
+
+      updateDownloadArea();
 
       // specify the extent, min scale, and max scale as parameters
       double minScale = mMapView.getMapScale();
@@ -143,10 +131,13 @@ public class MainActivity extends AppCompatActivity
 
       // create default generate offline map parameters
       ListenableFuture<GenerateOfflineMapParameters> generateOfflineMapParametersFuture = mOfflineMapTask
-          .createDefaultGenerateOfflineMapParametersAsync(mDownloadArea.getGeometry(), minScale, maxScale);
+              .createDefaultGenerateOfflineMapParametersAsync(mDownloadArea.getGeometry(), minScale, maxScale);
       generateOfflineMapParametersFuture.addDoneListener(() -> {
         try {
           mGenerateOfflineMapParameters = generateOfflineMapParametersFuture.get();
+          // set the path to the references basemap directory
+          mGenerateOfflineMapParameters.setReferenceBasemapFilename(getString(R.string.naperville_tpkx));
+          mGenerateOfflineMapParameters.setReferenceBasemapDirectory(getExternalFilesDir(null) + getString(R.string.naperville_tpkx));
           // name of local basemap file as supplied by the map's author
           String localBasemapFileName = mGenerateOfflineMapParameters.getReferenceBasemapFilename();
           // check if the offline map parameters include reference to a basemap file
@@ -176,6 +167,26 @@ public class MainActivity extends AppCompatActivity
         }
       });
     });
+  }
+
+  /**
+   * Function to update the download area on map viewpoint change
+   * or on button click.
+   */
+  private void updateDownloadArea() {
+    // upper left corner of the area to take offline
+    android.graphics.Point minScreenPoint = new android.graphics.Point(200, 200);
+    // lower right corner of the downloaded area
+    android.graphics.Point maxScreenPoint = new android.graphics.Point(mMapView.getWidth() - 200,
+            mMapView.getHeight() - 200);
+    // convert screen points to map points
+    Point minPoint = mMapView.screenToLocation(minScreenPoint);
+    Point maxPoint = mMapView.screenToLocation(maxScreenPoint);
+    // use the points to define and return an envelope
+    if (minPoint != null && maxPoint != null) {
+      Envelope envelope = new Envelope(minPoint, maxPoint);
+      mDownloadArea.setGeometry(envelope);
+    }
   }
 
   /**
@@ -217,9 +228,9 @@ public class MainActivity extends AppCompatActivity
 
     if (findProgressDialogFragment() == null) {
       ProgressDialogFragment progressDialogFragment = ProgressDialogFragment.newInstance(
-          getString(R.string.generate_offline_map_job_title),
-          getString(R.string.taking_map_offline_message),
-          getString(R.string.cancel)
+              getString(R.string.generate_offline_map_job_title),
+              getString(R.string.taking_map_offline_message),
+              getString(R.string.cancel)
       );
       progressDialogFragment.show(getSupportFragmentManager(), ProgressDialogFragment.class.getSimpleName());
     }
@@ -239,20 +250,21 @@ public class MainActivity extends AppCompatActivity
   private void showLocalBasemapAlertDialog(String localBasemapFileName) {
     if (getSupportFragmentManager().findFragmentByTag(LocalBasemapAlertDialogFragment.class.getSimpleName()) == null) {
       LocalBasemapAlertDialogFragment localBasemapAlertFragment = LocalBasemapAlertDialogFragment.newInstance(
-          getString(R.string.local_basemap_found),
-          getString(R.string.local_basemap_found_message, localBasemapFileName),
-          getString(R.string.yes),
-          getString(R.string.no)
+              getString(R.string.local_basemap_found),
+              getString(R.string.local_basemap_found_message, localBasemapFileName),
+              getString(R.string.yes),
+              getString(R.string.no)
       );
       localBasemapAlertFragment
-          .show(getSupportFragmentManager(), LocalBasemapAlertDialogFragment.class.getSimpleName());
+              .show(getSupportFragmentManager(), LocalBasemapAlertDialogFragment.class.getSimpleName());
     }
   }
 
   /**
    * Callback from the local basemap alert dialog. Sets the reference basemap directory and calls generateOfflineMap().
    */
-  @Override public void onPositiveClick() {
+  @Override
+  public void onPositiveClick() {
     // set the directory of the local base map to the parameters
     mGenerateOfflineMapParameters.setReferenceBasemapDirectory(mLocalBasemapDirectory);
     // call generate offline map with parameters which now contain a reference basemap directory
@@ -263,7 +275,8 @@ public class MainActivity extends AppCompatActivity
    * Callback from the local basemap alert dialog. Leaves the reference basemap directory empty and calls
    * generateOfflineMap().
    */
-  @Override public void onNegativeClick() {
+  @Override
+  public void onNegativeClick() {
     // call generate offline map with parameters which contain an empty string for reference basemap directory
     generateOfflineMap();
   }
@@ -274,10 +287,11 @@ public class MainActivity extends AppCompatActivity
    */
   private ProgressDialogFragment findProgressDialogFragment() {
     return (ProgressDialogFragment) getSupportFragmentManager()
-        .findFragmentByTag(ProgressDialogFragment.class.getSimpleName());
+            .findFragmentByTag(ProgressDialogFragment.class.getSimpleName());
   }
 
-  @Override public void onProgressDialogDismiss() {
+  @Override
+  public void onProgressDialogDismiss() {
     if (mGenerateOfflineMapJob != null) {
       mGenerateOfflineMapJob.cancel();
     }
@@ -326,7 +340,6 @@ public class MainActivity extends AppCompatActivity
 
   /**
    * Recursively deletes all files in the given directory.
-   *
    * @param file to delete
    */
   private static void deleteDirectory(File file) {
