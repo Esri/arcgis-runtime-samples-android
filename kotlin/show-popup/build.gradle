@@ -37,5 +37,5 @@ dependencies {
     implementation "com.esri.arcgisruntime:arcgis-android-toolkit:$arcgisToolkitVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "com.google.android.material:material:$materialVersion"
-    implementation "androidx.fragment:fragment-ktx:$ktxExtensions"
+    implementation "androidx.fragment:fragment-ktx:$ktxFragmentsExt"
 }

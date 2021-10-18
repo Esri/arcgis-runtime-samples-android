@@ -47,22 +47,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var mapView: MapView
     private lateinit var progressBar: ProgressBar
+    private lateinit var map: ArcGISMap
     private val popupViewModel: PopupViewModel by viewModels()
 
-    private val map: ArcGISMap by lazy {
-        val portal = Portal("https://arcgisruntime.maps.arcgis.com/")
-        val portalItem = PortalItem(portal, "fb788308ea2e4d8682b9c05ef641f273")
-        val map = ArcGISMap(portalItem)
-        map
-    }
-
+    /**
+     * getter function to retrieve the first available feature layer
+     * [featureLayer] updates with every map click
+     */
     private val featureLayer: FeatureLayer?
         get() {
-            return map.operationalLayers?.filterIsInstance<FeatureLayer>()?.filter {
+            return map.operationalLayers?.filterIsInstance<FeatureLayer>()?.first {
                 (it.featureTable?.geometryType == GeometryType.POINT)
                     .and(it.isVisible)
                     .and(it.isPopupEnabled && it.popupDefinition != null)
-            }?.get(0)
+            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +74,10 @@ class MainActivity : AppCompatActivity() {
             DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.lifecycleOwner = this
+
+        val portal = Portal("https://arcgisruntime.maps.arcgis.com/")
+        val portalItem = PortalItem(portal, "fb788308ea2e4d8682b9c05ef641f273")
+        map = ArcGISMap(portalItem)
 
         // set up binding and UI behaviour
         mapView = binding.mapView
@@ -109,18 +111,16 @@ class MainActivity : AppCompatActivity() {
 
         mapView.onTouchListener =
             object : DefaultMapViewOnTouchListener(this, mapView) {
-                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
                     // set the progressBar visibility
                     progressBar.visibility = View.VISIBLE
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                    e.let {
-                        val screenPoint = android.graphics.Point(
-                            it.x.roundToInt(),
-                            it.y.roundToInt()
-                        )
-                        // setup identifiable layer at the given screen point.
-                        identifyLayer(screenPoint)
-                    }
+                    val screenPoint = android.graphics.Point(
+                        event.x.roundToInt(),
+                        event.y.roundToInt()
+                    )
+                    // setup identifiable layer at the given screen point.
+                    identifyLayer(screenPoint)
                     return true
                 }
             }
@@ -143,11 +143,11 @@ class MainActivity : AppCompatActivity() {
                 try {
                     val identifyLayerResult = identifyLayerResultsFuture.get()
 
-                    if (identifyLayerResult.popups.size > 0) {
-                        popupViewModel.setPopup(identifyLayerResult.popups[0])
+                    if (identifyLayerResult.popups.isNotEmpty()) {
+                        popupViewModel.setPopup(identifyLayerResult.popups.first())
                         val featureLayer: FeatureLayer? =
                             identifyLayerResult.layerContent as? FeatureLayer
-                        featureLayer?.selectFeature(identifyLayerResult.popups[0].geoElement as Feature)
+                        featureLayer?.selectFeature(identifyLayerResult.popups.first().geoElement as Feature)
                         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
                     }
                 } catch (e: Exception) {
@@ -185,7 +185,3 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 }
-
-
-
-

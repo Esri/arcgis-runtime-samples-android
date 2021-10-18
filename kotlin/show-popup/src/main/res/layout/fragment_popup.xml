@@ -64,7 +64,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.464"
-                app:srcCompat="@drawable/ic_round_close_24" />
+                app:srcCompat="@drawable/ic_round_close_24"
+                android:contentDescription="@string/close" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

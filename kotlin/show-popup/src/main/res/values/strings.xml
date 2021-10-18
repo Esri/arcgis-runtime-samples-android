@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Show Popup</string>
+    <string name="close">close</string>
 </resources>
