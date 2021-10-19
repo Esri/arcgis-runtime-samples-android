@@ -16,8 +16,6 @@
 
 package com.esri.arcgisruntime.sample.generateofflinemap;
 
-import java.io.File;
-
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -26,6 +24,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
@@ -36,13 +36,13 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.portal.PortalItem;
-import com.esri.arcgisruntime.security.AuthenticationManager;
-import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapJob;
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapParameters;
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapResult;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,8 +65,9 @@ public class MainActivity extends AppCompatActivity {
     mTakeMapOfflineButton = findViewById(R.id.takeMapOfflineButton);
     mTakeMapOfflineButton.setEnabled(false);
 
-    // handle authentication with the portal
-    AuthenticationManager.setAuthenticationChallengeHandler(new DefaultAuthenticationChallengeHandler(this));
+    // authentication with an API key or named user is required
+    // to access basemaps and other location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
     // create a portal item with the itemId of the web map
     Portal portal = new Portal(getString(R.string.portal_url), false);

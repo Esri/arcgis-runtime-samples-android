@@ -35,8 +35,6 @@ import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
-import com.esri.arcgisruntime.security.AuthenticationManager
-import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapJob
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapParameters
