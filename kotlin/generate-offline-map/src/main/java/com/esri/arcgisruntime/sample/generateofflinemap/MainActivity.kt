@@ -26,6 +26,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.geometry.Envelope
 import com.esri.arcgisruntime.loadable.LoadStatus
@@ -60,10 +61,9 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // handle authentication with the portal
-    AuthenticationManager.setAuthenticationChallengeHandler(
-      DefaultAuthenticationChallengeHandler(this)
-    )
+    // authentication with an API key or named user is required
+    // to access basemaps and other location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     // disable the button until the map is loaded
     takeMapOfflineButton.isEnabled = false
