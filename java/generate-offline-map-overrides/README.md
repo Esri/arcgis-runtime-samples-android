@@ -22,7 +22,7 @@ After you have set up the overrides to your liking, tap the "Generate offline ma
 
 ## How it works
 
-1. Load a web map from a `PortalItem`. Authenticate with the portal if required.
+1. Load a web map from a `PortalItem`.
 2. Create an `OfflineMapTask` with the map.
 3. Generate default task parameters using the extent area you want to download with `offlineMapTask.createDefaultGenerateOfflineMapParametersAsync(extent)`.
 4. Generate additional "override" parameters using the default parameters with `offlineMapTask.createGenerateOfflineMapParameterOverridesAsync(parameters)`.
