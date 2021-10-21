@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Export Tiles</string>
-    <string name="file.tpkx">file.tpkx</string>
     <string name="export_tiles_text">Export Tiles</string>
     <string name="close_button_text">Close</string>
     <string name="preview_text">Preview</string>

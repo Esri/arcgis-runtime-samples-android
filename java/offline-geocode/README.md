@@ -14,7 +14,7 @@ Select an address from the drop-down list to `Geocode` the address and view the 
 
 ## How it works
 
-1. Use the path of a .loc file to create a `LocatorTask` object. 
+1. Use the path of a .loc file to create a `LocatorTask` object.
 2. Set up `GeocodeParameters` and call `GeocodeAsync` to get geocode results.
 
 ## Relevant API
@@ -26,7 +26,7 @@ Select an address from the drop-down list to `Geocode` the address and view the 
 
 ## Offline Data
 
-1. Download the data [San Diego Streets Tile Package](http://www.arcgis.com/home/item.html?id=1330ab96ac9c40a49e59650557f2cd63) and [San Diego Offline Locator](https://www.arcgis.com/home/item.html?id=3424d442ebe54f3cbf34462382d3aebe) from ArcGIS Online.
+1. Download the data [San Diego Streets Tile Package](http://www.arcgis.com/home/item.html?id=22c3083d4fa74e3e9b25adfc9f8c0496) and [San Diego Offline Locator](https://www.arcgis.com/home/item.html?id=3424d442ebe54f3cbf34462382d3aebe) from ArcGIS Online.
 2. Extract the contents of the downloaded zip file to disk.
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 4. Push the data into the scoped storage of the sample app:

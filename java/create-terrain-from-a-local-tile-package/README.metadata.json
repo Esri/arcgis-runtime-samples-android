@@ -16,7 +16,7 @@
     ],
     "language": "java",
     "provision_from": [
-        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=e4a398afe9a945f3b0f4dca1e4faccb5"
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=52ca74b4ba8042b78b3c653696f34a9c"
     ],
     "provision_to": [
         "/MontereyElevation.tpkx"

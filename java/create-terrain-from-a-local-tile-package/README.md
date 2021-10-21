@@ -25,7 +25,7 @@ When loaded, the sample will show a scene with a terrain surface applied. Pan an
 
 ## Offline data
 
-1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=e4a398afe9a945f3b0f4dca1e4faccb5).
+1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=52ca74b4ba8042b78b3c653696f34a9c).
 1. Extract the contents of the downloaded zip file to disk.
 1. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 1. Execute the following command:
@@ -34,7 +34,7 @@ When loaded, the sample will show a scene with a terrain surface applied. Pan an
 
 Link | Local Location
 ---------|-------|
-|[Monterey Elevation TPKX](https://arcgisruntime.maps.arcgis.com/home/item.html?id=e4a398afe9a945f3b0f4dca1e4faccb5)|  /Android/data/com.esri.arcgisruntime.sample.createterrainfromalocaltilepackage/files/MontereyElevation.tpk |
+|[Monterey Elevation TPKX](https://arcgisruntime.maps.arcgis.com/home/item.html?id=52ca74b4ba8042b78b3c653696f34a9c)|  /Android/data/com.esri.arcgisruntime.sample.createterrainfromalocaltilepackage/files/MontereyElevation.tpk |
 
 ## Additional information
 

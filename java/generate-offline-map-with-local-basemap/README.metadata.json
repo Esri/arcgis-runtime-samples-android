@@ -16,7 +16,7 @@
     ],
     "language": "java",
     "provision_from": [
-        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=628e8e3521cf45e9a28a12fe10c02c4d"
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=85282f2aaa2844d8935cdb8722e22a93"
     ],
     "provision_to": [
         "/naperville_imagery.tpkx"

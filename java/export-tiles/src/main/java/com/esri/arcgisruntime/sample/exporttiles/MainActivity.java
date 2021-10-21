@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         // export tile cache to directory
         ExportTileCacheParameters parameters = parametersFuture.get();
         mExportTileCacheJob = mExportTileCacheTask
-            .exportTileCache(parameters, getCacheDir() + getString(R.string.file_tpkx));
+            .exportTileCache(parameters, getCacheDir() + "/file.tpkx");
       } catch (InterruptedException e) {
         Log.e(TAG, "TileCacheParameters interrupted: " + e.getMessage());
       } catch (ExecutionException e) {
