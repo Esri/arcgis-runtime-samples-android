@@ -102,21 +102,12 @@ public class MainActivity extends AppCompatActivity {
     // create a map with the portal item
     ArcGISMap map = new ArcGISMap(portalItem);
 
-    // request write permission
-    String[] reqPermission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    // for API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      map.addDoneLoadingListener(() -> {
-        if (map.getLoadStatus() == LoadStatus.LOADED) {
-          // enable offline map button only after permission is granted and map is loaded
-          mGenerateOfflineMapOverridesButton.setEnabled(true);
-        }
-      });
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
+    map.addDoneLoadingListener(() -> {
+      if (map.getLoadStatus() == LoadStatus.LOADED) {
+        // enable offline map button only after map is loaded
+        mGenerateOfflineMapOverridesButton.setEnabled(true);
+      }
+    });
 
     // set the map to the map view
     mMapView.setMap(map);
@@ -474,25 +465,6 @@ public class MainActivity extends AppCompatActivity {
 
     // dismiss dialog when job is done
     job.addJobDoneListener(progressDialog::dismiss);
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      mMapView.getMap().addDoneLoadingListener(() -> {
-        if (mMapView.getMap().getLoadStatus() == LoadStatus.LOADED) {
-          // enable offline map button only after permission is granted and map is loaded
-          mGenerateOfflineMapOverridesButton.setEnabled(true);
-        }
-      });
-      Log.d(TAG, "permission granted");
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.offline_map_write_permission_denied), Toast.LENGTH_SHORT).show();
-    }
   }
 
   @Override

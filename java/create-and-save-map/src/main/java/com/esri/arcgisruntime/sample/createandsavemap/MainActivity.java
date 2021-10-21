@@ -37,7 +37,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
@@ -89,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_drawer);
 
-    // authentication with an API key or named user is required
-    // to access basemaps and other location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+    // set up an authentication handler to take credentials for access to arcgis.com
+    AuthenticationChallengeHandler handler = new DefaultAuthenticationChallengeHandler(this);
+    AuthenticationManager.setAuthenticationChallengeHandler(handler);
 
     mDrawerTitle = getTitle();
     // inflate MapView from layout
