@@ -26,6 +26,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
@@ -65,8 +67,9 @@ public class MainActivity extends AppCompatActivity {
     mTakeMapOfflineButton = findViewById(R.id.takeMapOfflineButton);
     mTakeMapOfflineButton.setEnabled(false);
 
-    // handle authentication with the portal
-    AuthenticationManager.setAuthenticationChallengeHandler(new DefaultAuthenticationChallengeHandler(this));
+    // authentication with an API key or named user is required
+    // to access basemaps and other location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
     // create a portal item with the itemId of the web map
     Portal portal = new Portal(getString(R.string.portal_url), false);

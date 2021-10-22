@@ -10,7 +10,7 @@ When taking a web map offline, you may adjust the data (such as layers or tiles)
 
 ## How to use the sample
 
-Sign in with an ArcGIS Online organizational account when prompted for credentials (taking web maps offline requires an account) and modify the overrides parameters:
+To modify the overrides parameters:
 
 * Use the min/max scale input fields to adjust the level IDs to be taken offline for the streets basemap.
 * Use the extent buffer distance input field to set the buffer radius for the streets basemap.
@@ -22,7 +22,7 @@ After you have set up the overrides to your liking, tap the "Generate offline ma
 
 ## How it works
 
-1. Load a web map from a `PortalItem`. Authenticate with the portal if required.
+1. Load a web map from a `PortalItem`.
 2. Create an `OfflineMapTask` with the map.
 3. Generate default task parameters using the extent area you want to download with `offlineMapTask.createDefaultGenerateOfflineMapParametersAsync(extent)`.
 4. Generate additional "override" parameters using the default parameters with `offlineMapTask.createGenerateOfflineMapParameterOverridesAsync(parameters)`.
