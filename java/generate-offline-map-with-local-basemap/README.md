@@ -20,7 +20,7 @@ The author of a web map can support the use of basemaps which are already on a d
 
 ## How to use the sample
 
-Tap on "Generate Offline Map". You will be prompted to choose whether you wish to download the online basemap or use the "naperville_imagery.tpk" basemap (see Offline Data section). If you choose to download the online basemap, the offline map will be generated with the same (topographic) basemap as the online web map. To download the Esri basemap, an organizational account is required. 
+Tap on "Generate Offline Map". You will be prompted to choose whether you wish to download the online basemap or use the "naperville_imagery.tpk" basemap (see Offline Data section). If you choose to download the online basemap, the offline map will be generated with the same (topographic) basemap as the online web map. To download the Esri basemap, an API key is required. 
 
 If you choose to use the basemap from the device, the offline map will be generated with the local imagery basemap. The download will be quicker since no tiles are exported or downloaded. Since the application is not exporting online ArcGIS Online basemaps you will not need to log-in.
 
