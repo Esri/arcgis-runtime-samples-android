@@ -65,8 +65,8 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // create a tile cache from the tpk
-    val tileCache = TileCache(getExternalFilesDir(null)?.path + getString(R.string.tpk_path))
+    // create a tile cache from the tpkx
+    val tileCache = TileCache(getExternalFilesDir(null)?.path + getString(R.string.tpkx_path))
     val tiledLayer = ArcGISTiledLayer(tileCache)
     // make a basemap with the tiled layer and add it to the mapview as an ArcGISMap
     mapView.map = ArcGISMap(Basemap(tiledLayer))

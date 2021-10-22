@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
     // use local tile package for the base map
     val sanFranciscoTileCache =
-      TileCache(getExternalFilesDir(null).toString() + "/SanFrancisco.tpk")
+      TileCache(getExternalFilesDir(null).toString() + "/SanFrancisco.tpkx")
     val tiledLayer = ArcGISTiledLayer(sanFranciscoTileCache)
     val map = ArcGISMap(Basemap(tiledLayer))
 

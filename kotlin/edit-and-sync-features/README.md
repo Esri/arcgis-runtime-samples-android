@@ -36,10 +36,10 @@ Pan and zoom into the desired area, making sure the area you want to take offlin
 
 ## Offline Data
 
-1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=72e703cd01654e7796eb1ae75af1cb53).
+1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=e4a398afe9a945f3b0f4dca1e4faccb5).
 2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 3. Push the data into the scoped storage of the sample app:
-`adb push SanFrancisco.tpk /Android/data/com.esri.arcgisruntime.sample.editandsyncfeatures/files/SanFrancisco.tpk`
+`adb push SanFrancisco.tpkx /Android/data/com.esri.arcgisruntime.sample.editandsyncfeatures/files/SanFrancisco.tpkx`
 
 ## Tags
 
