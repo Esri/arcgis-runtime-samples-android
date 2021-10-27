@@ -269,8 +269,6 @@ class MainActivity : AppCompatActivity() {
   override fun onPause() {
     mapView.pause()
     previewMapView.pause()
-    // delete app cache when the app loses focus
-    cacheDir.deleteRecursively()
     super.onPause()
   }
 
