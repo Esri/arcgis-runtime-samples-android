@@ -22,8 +22,8 @@
         "PopupViewModel"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/showpopup/MainActivity.kt",
-        "/src/main/java/com/esri/arcgisruntime/sample/showpopup/PopupFragment.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/showpopup/MainActivity.kt",
+        "src/main/java/com/esri/arcgisruntime/sample/showpopup/PopupFragment.kt"
     ],
     "title": "Show popup"
 }
