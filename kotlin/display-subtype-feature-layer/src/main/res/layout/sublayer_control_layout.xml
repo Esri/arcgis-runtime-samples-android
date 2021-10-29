@@ -14,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rendererRadioGroup" />
 
-    <CheckBox
+    <android.widget.CheckBox
         android:id="@+id/showSubtypeSublayerCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <RadioGroup
+    <android.widget.RadioGroup
         android:id="@+id/rendererRadioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,20 +34,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/showSubtypeSublayerCheckBox">
 
-        <RadioButton
+        <android.widget.RadioButton
             android:id="@+id/originalRendererButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="@string/show_original_renderer" />
 
-        <RadioButton
+        <android.widget.RadioButton
             android:id="@+id/alternativeRendererButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/show_alternative_renderer" />
 
-    </RadioGroup>
+    </android.widget.RadioGroup>
 
     <View
         android:layout_width="0dp"
@@ -73,7 +73,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/currentMapScaleTextView" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/setMinScaleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -32,7 +32,7 @@
         app:layout_constraintTop_toBottomOf="@+id/referenceScaleLayout"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/matchScalesButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

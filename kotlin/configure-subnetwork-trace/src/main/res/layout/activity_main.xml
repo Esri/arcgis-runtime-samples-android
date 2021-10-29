@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <android.widget.TextView
         android:id="@+id/traceOptionsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/barriersCheckBox" />
 
-    <CheckBox
+    <android.widget.CheckBox
         android:id="@+id/barriersCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
         app:layout_constraintStart_toEndOf="@+id/traceOptionsTextView"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <CheckBox
+    <android.widget.CheckBox
         android:id="@+id/containersCheckbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
         app:layout_constraintStart_toEndOf="@+id/barriersCheckBox"
         app:layout_constraintTop_toTopOf="@+id/barriersCheckBox" />
 
-    <TextView
+    <android.widget.TextView
         android:id="@+id/defineConditionTextBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/barriersCheckBox" />
 
-    <TextView
+    <android.widget.TextView
         android:id="@+id/exampleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
         app:layout_constraintStart_toEndOf="@+id/defineConditionTextBox"
         app:layout_constraintTop_toTopOf="@+id/defineConditionTextBox" />
 
-    <RelativeLayout
+    <android.widget.RelativeLayout
         android:id="@+id/sourceBackgroundView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -72,13 +72,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/defineConditionTextBox">
 
-        <Spinner
+        <android.widget.Spinner
             android:id="@+id/sourceSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </RelativeLayout>
+    </android.widget.RelativeLayout>
 
-    <RelativeLayout
+    <android.widget.RelativeLayout
         android:id="@+id/operatorBackgroundView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -90,13 +90,13 @@
         app:layout_constraintStart_toEndOf="@+id/sourceBackgroundView"
         app:layout_constraintTop_toTopOf="@+id/sourceBackgroundView">
 
-        <Spinner
+        <android.widget.Spinner
             android:id="@+id/operatorSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </RelativeLayout>
+    </android.widget.RelativeLayout>
 
-    <RelativeLayout
+    <android.widget.RelativeLayout
         android:id="@+id/valuesBackgroundView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -109,13 +109,13 @@
         app:layout_constraintStart_toEndOf="@+id/operatorBackgroundView"
         app:layout_constraintTop_toTopOf="@+id/operatorBackgroundView">
 
-        <Spinner
+        <android.widget.Spinner
             android:id="@+id/valuesSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </RelativeLayout>
+    </android.widget.RelativeLayout>
 
-    <EditText
+    <android.widget.EditText
         android:id="@+id/valuesEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -126,7 +126,7 @@
         app:layout_constraintStart_toStartOf="@+id/valuesBackgroundView"
         app:layout_constraintTop_toTopOf="@+id/operatorBackgroundView" />
 
-    <ToggleButton
+    <android.widget.ToggleButton
         android:id="@+id/valueBooleanButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -137,7 +137,7 @@
         app:layout_constraintStart_toStartOf="@+id/valuesBackgroundView"
         app:layout_constraintTop_toTopOf="@+id/operatorBackgroundView" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/addButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -150,7 +150,7 @@
         app:layout_constraintStart_toEndOf="@+id/valuesBackgroundView"
         app:layout_constraintTop_toTopOf="@+id/sourceBackgroundView" />
 
-    <TextView
+    <android.widget.TextView
         android:id="@+id/barrierConditionsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -161,7 +161,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sourceBackgroundView" />
 
-    <TextView
+    <android.widget.TextView
         android:id="@+id/expressionTextView"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -176,7 +176,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/barrierConditionsTextView" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/traceButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -188,7 +188,7 @@
         app:layout_constraintEnd_toStartOf="@+id/resetButton"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/resetButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

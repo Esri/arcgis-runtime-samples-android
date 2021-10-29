@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         android:background="@color/toolbar_background">
 
-    <Button
+    <android.widget.Button
             android:text="@string/get_statistics"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
             android:layout_marginBottom="8dp"
             app:layout_constraintStart_toEndOf="@+id/currentExtentCheckBox"
             android:layout_marginStart="8dp"/>
-    <CheckBox
+    <android.widget.CheckBox
             android:text="@string/only_cities_in_current_extent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"
             android:textColor="@android:color/background_light" android:layout_marginLeft="8dp"/>
-    <CheckBox
+    <android.widget.CheckBox
             android:text="@string/only_cities_greater_than_5m"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -35,7 +35,7 @@
             android:orientation="horizontal"
             tools:layout_editor_absoluteY="256dp"
             tools:layout_editor_absoluteX="0dp"/>
-    <Button
+    <android.widget.Button
             android:text="@string/animated_zoom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="8dp"/>
-    <TextView
+    <android.widget.TextView
             android:text="@string/renderingmode_static"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:textStyle="bold"
             android:textColor="@android:color/background_dark"/>
-    <TextView
+    <android.widget.TextView
             android:text="@string/renderingmode_dynamic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:textStyle="bold"
             android:textColor="@android:color/background_dark"/>
-    <TextView
+    <android.widget.TextView
             android:text="@string/navigating"
             android:background="@color/colorPrimary"
             android:padding="8dp"
