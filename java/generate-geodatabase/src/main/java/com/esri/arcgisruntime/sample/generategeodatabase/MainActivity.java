@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     // use local tile package for the base map
-    TileCache sanFrancisco = new TileCache(getExternalFilesDir(null) + getString(R.string.san_francisco_tpk));
+    TileCache sanFrancisco = new TileCache(getExternalFilesDir(null) + getString(R.string.san_francisco_tpkx));
     ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(sanFrancisco);
 
     // create a map view and add a map

@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Create terrain from a local tile package</string>
-    <string name="local_tile_package_location">/MontereyElevation.tpk</string>
-    <string name="error_tiled_elevation_source_load_failure_message">The ArcGISTiledElevationSource has failed to load. Please ensure that the .tpk has been pushed to the device\'s storage.</string>
+    <string name="local_tile_package_location">/MontereyElevation.tpkx</string>
+    <string name="error_tiled_elevation_source_load_failure_message">The ArcGISTiledElevationSource has failed to load. Please ensure that the .tpkx has been pushed to the device\'s storage.</string>
 </resources>

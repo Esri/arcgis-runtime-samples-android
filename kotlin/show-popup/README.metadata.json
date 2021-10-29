@@ -1,0 +1,29 @@
+{
+    "category": "Layers",
+    "description": "Show a predefined popup from a web map.",
+    "formal_name": "ShowPopup",
+    "ignore": false,
+    "images": [
+        "show-popup.png"
+    ],
+    "keywords": [
+        "feature",
+        "feature layer",
+        "popup",
+        "web map",
+        "ArcGISMap",
+        "IdentifyLayerResult",
+        "PopupViewModel"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "ArcGISMap",
+        "IdentifyLayerResult",
+        "PopupViewModel"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/showpopup/MainActivity.kt",
+        "src/main/java/com/esri/arcgisruntime/sample/showpopup/PopupFragment.kt"
+    ],
+    "title": "Show popup"
+}
