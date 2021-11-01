@@ -42,11 +42,11 @@ class MainActivity : AppCompatActivity() {
     val scene = ArcGISScene(Basemap.Type.IMAGERY).apply {
       // add base surface for elevation data
       baseSurface.elevationSources.add(
-        ArcGISTiledElevationSource(getString(R.string.elevation_image_service))
+        ArcGISTiledElevationSource(getString(R.string.world_elevation_service))
       )
       // create a scene layer from the Brest, France scene server
       operationalLayers.add(
-        ArcGISSceneLayer(getString(R.string.scene_layer_service))
+        ArcGISSceneLayer(getString(R.string.brest_building_scene_service))
       )
     }
 
