@@ -56,11 +56,11 @@ public class MainActivity extends AppCompatActivity {
 
     // add base surface for elevation data
     ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
-        getString(R.string.elevation_image_service));
+        getString(R.string.world_elevation_service));
     scene.getBaseSurface().getElevationSources().add(elevationSource);
 
     // create a scene layer from the Brest, France scene server
-    ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(getString(R.string.scene_layer_service));
+    ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(getString(R.string.brest_building_scene_service));
     scene.getOperationalLayers().add(sceneLayer);
 
     // set an initial viewpoint

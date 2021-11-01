@@ -16,14 +16,13 @@
 
 package com.esri.arcgisruntime.sample.querymapimagesublayer;
 
-import java.util.concurrent.ExecutionException;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
@@ -45,6 +44,8 @@ import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.Symbol;
+
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -94,7 +95,9 @@ public class MainActivity extends AppCompatActivity {
 
     // wait until the layer is loaded before enabling the query button
     imageLayer.addDoneLoadingListener(() -> {
-      if (imageLayer.getLoadStatus() == LoadStatus.LOADED) {
+      if (imageLayer.getSublayers().get(0).getLoadStatus() == LoadStatus.LOADED &&
+          imageLayer.getSublayers().get(2).getLoadStatus() == LoadStatus.LOADED &&
+          imageLayer.getSublayers().get(3).getLoadStatus() == LoadStatus.LOADED) {
         mQueryButton.setEnabled(true);
 
         // get and load each sublayer to query

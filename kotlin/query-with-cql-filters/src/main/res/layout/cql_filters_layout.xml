@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
@@ -19,7 +18,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
+            <android.widget.TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/cql_filters"
@@ -31,7 +30,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <android.widget.TextView
                 android:id="@+id/applyTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,7 +42,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <android.widget.TextView
                 android:id="@+id/cancelTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -57,7 +56,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
+        <android.widget.LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -66,7 +65,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
-            <TextView
+            <android.widget.TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/light_grey"
@@ -89,7 +88,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp">
 
-                <TextView
+                <android.widget.TextView
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -100,7 +99,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
+                <android.widget.TextView
                     android:id="@+id/cqlQueryTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -115,7 +114,7 @@
                     app:layout_constraintStart_toEndOf="@+id/textView"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
+                <android.widget.ImageView
                     android:id="@+id/imageView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -143,7 +142,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp">
 
-                <TextView
+                <android.widget.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Max Features"
@@ -153,7 +152,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <EditText
+                <android.widget.EditText
                     android:id="@+id/maxFeaturesEditText"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
@@ -179,7 +178,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp">
 
-                <TextView
+                <android.widget.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Date Filter"
@@ -200,7 +199,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
+            <android.widget.TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/light_grey"
@@ -211,14 +210,14 @@
                 android:textColor="@color/grey"
                 android:textSize="12sp" />
 
-            <DatePicker
+            <android.widget.DatePicker
                 android:id="@+id/fromDatePicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:calendarViewShown="false"
                 android:datePickerMode="spinner" />
 
-            <TextView
+            <android.widget.TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/light_grey"
@@ -229,15 +228,14 @@
                 android:textColor="@color/grey"
                 android:textSize="12sp" />
 
-            <DatePicker
+            <android.widget.DatePicker
                 android:id="@+id/toDatePicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:calendarViewShown="false"
                 android:datePickerMode="spinner" />
 
-        </LinearLayout>
-
+        </android.widget.LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
