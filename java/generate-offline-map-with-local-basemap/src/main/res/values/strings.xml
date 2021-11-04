@@ -7,6 +7,7 @@
     <string name="local_basemap_found_message">The local basemap file %1$s was found on the device. Would you like to use the local file instead of an online basemap?</string>
     <string name="generate_offline_map_job_title">Generate offline map job</string>
     <string name="taking_map_offline_message">Taking map offline…</string>
+    <string name="naperville_tpkx">naperville_imagery.tpkx</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="cancel">Cancel</string>

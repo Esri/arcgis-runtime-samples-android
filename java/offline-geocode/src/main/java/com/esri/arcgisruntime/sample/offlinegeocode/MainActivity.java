@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView.setOnTouchListener(new CustomMapViewOnTouchListener(this, mMapView));
 
     // load the tile cache from local storage
-    TileCache tileCache = new TileCache(getExternalFilesDir(null) + getString(R.string.san_diego_tpk));
+    TileCache tileCache = new TileCache(getExternalFilesDir(null) + getString(R.string.san_diego_tpkx));
     // use the tile cache extent to set the view point
     tileCache.addDoneLoadingListener(() -> mMapView.setViewpoint(new Viewpoint(tileCache.getFullExtent())));
     // create a tiled layer and add it to as the base map

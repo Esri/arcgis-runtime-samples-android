@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     // use local tile package for the base map
-    TileCache sanFranciscoTileCache = new TileCache(getExternalFilesDir(null) + "/SanFrancisco.tpk");
+    TileCache sanFranciscoTileCache = new TileCache(getExternalFilesDir(null) + "/SanFrancisco.tpkx");
     ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(sanFranciscoTileCache);
     final ArcGISMap map = new ArcGISMap(new Basemap(tiledLayer));
     mMapView.setMap(map);
