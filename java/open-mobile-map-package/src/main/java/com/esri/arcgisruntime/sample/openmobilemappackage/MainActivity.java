@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
       if (mMapPackage.getLoadStatus() == LoadStatus.LOADED && !mMapPackage.getMaps().isEmpty()) {
         // add the map from the mobile map package to the MapView
         mMapView.setMap(mMapPackage.getMaps().get(0));
+        mMapView.setViewpointScaleAsync(1000000);
       } else {
         String error = "Error loading mobile map package: " + mMapPackage.getLoadError().getMessage();
         Log.e(TAG, error);
