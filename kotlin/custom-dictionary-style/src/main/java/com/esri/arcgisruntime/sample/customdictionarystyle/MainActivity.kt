@@ -15,57 +15,57 @@ import com.esri.arcgisruntime.symbology.DictionarySymbolStyle
 
 class MainActivity : AppCompatActivity() {
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val mapView: MapView by lazy {
-    activityMainBinding.mapView
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // authentication with an API key or named user is required to access basemaps and other 
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
-
-    // create a feature layer from a service feature table
-    val featureTable = ServiceFeatureTable(getString(R.string.restaurants_url))
-    val featureLayer = FeatureLayer(featureTable).apply {
-      // use a custom style to create a dictionary renderer and set it to the feature layer renderer
-      renderer = DictionaryRenderer(
-        DictionarySymbolStyle.createFromFile(
-          getExternalFilesDir(null)?.path + getString(R.string.restaurant_stylx_path)
-        )
-      )
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
 
-    // set the map view's viewpoint to the feature layer extent when loaded
-    featureLayer.addDoneLoadingListener {
-      mapView.setViewpointAsync(Viewpoint(featureLayer.fullExtent))
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
     }
 
-    // create a new map with a streets basemap and set it to the map view
-    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_STREETS).apply {
-      // add the the feature layer to the map's operational layers
-      operationalLayers.add(featureLayer)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
+
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
+        // create a feature layer from a service feature table
+        val featureTable = ServiceFeatureTable(getString(R.string.restaurants_url))
+        val featureLayer = FeatureLayer(featureTable).apply {
+            // use a custom style to create a dictionary renderer and set it to the feature layer renderer
+            renderer = DictionaryRenderer(
+                DictionarySymbolStyle.createFromFile(
+                    getExternalFilesDir(null)?.path + getString(R.string.restaurant_stylx_path)
+                )
+            )
+        }
+
+        // set the map view's viewpoint to the feature layer extent when loaded
+        featureLayer.addDoneLoadingListener {
+            mapView.setViewpointAsync(Viewpoint(featureLayer.fullExtent))
+        }
+
+        // create a new map with a streets basemap and set it to the map view
+        mapView.map = ArcGISMap(BasemapStyle.ARCGIS_STREETS).apply {
+            // add the the feature layer to the map's operational layers
+            operationalLayers.add(featureLayer)
+        }
     }
-  }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }

@@ -16,6 +16,10 @@
 
 package com.esri.arcgisruntime.sample.displaymap
 
+//[DocRef: Name=Import map types-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
+//[DocRef: END]
+
+//[DocRef: Name=Import kotlinx-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
@@ -25,46 +29,54 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.displaymap.databinding.ActivityMainBinding
 
+//[DocRef: END]
+
 class MainActivity : AppCompatActivity() {
 
-    private val activityMainBinding by lazy {
-        ActivityMainBinding.inflate(layoutInflater)
-    }
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
 
-    private val mapView: MapView by lazy {
-        activityMainBinding.mapView
-    }
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(activityMainBinding.root)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(activityMainBinding.root)
 
-        // authentication with an API key or named user is required to access basemaps and other
-        // location services
-        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // set map view properties
-        mapView.apply {
-            // create a map with the BasemapType topographic
-            map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
-            // set the map's viewpoint to the Esri campus in Redlands, CA, USA
-            setViewpoint(Viewpoint(34.056295, -117.195800, 10000.0))
-        }
-    }
+    //[DocRef: Name=Create map-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
+    // create a map with the BasemapType topographic
+    val map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
+    //[DocRef: END]
 
-    override fun onPause() {
-        mapView.pause()
-        super.onPause()
-    }
+    //[DocRef: Name=Set map-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
+    // set the map to be displayed in the layout's MapView
+    mapView.map = map
+    //[DocRef: END]
 
-    override fun onResume() {
-        super.onResume()
-        mapView.resume()
-    }
+    mapView.setViewpoint(Viewpoint(34.056295, -117.195800, 10000.0))
+  }
 
-    override fun onDestroy() {
-        mapView.dispose()
-        super.onDestroy()
-    }
+  //[DocRef: Name=Pause and resume-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
+  override fun onPause() {
+    mapView.pause()
+    super.onPause()
+  }
+
+  override fun onResume() {
+    super.onResume()
+    mapView.resume()
+  }
+
+  override fun onDestroy() {
+    mapView.dispose()
+    super.onDestroy()
+  }
+  //[DocRef: END]
 }

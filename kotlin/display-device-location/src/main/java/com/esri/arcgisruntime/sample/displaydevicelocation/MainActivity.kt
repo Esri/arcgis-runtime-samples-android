@@ -15,6 +15,7 @@
  */
 package com.esri.arcgisruntime.sample.displaydevicelocation
 
+
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -28,7 +29,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.LocationDisplay
 import com.esri.arcgisruntime.mapping.view.MapView
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     )
 
     spinner.apply {
-      adapter = SpinnerAdapter(this@MainActivity, R.layout.spinner_layout, R.id.locationTextView, list)
+      adapter = SpinnerAdapter(this@MainActivity, R.id.locationTextView, list)
       onItemSelectedListener = object : OnItemSelectedListener {
         override fun onItemSelected(
           parent: AdapterView<*>?,

@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
   // create the utility network
   private val utilityNetwork =
-    UtilityNetwork("https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer")
+    UtilityNetwork("https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer")
 
   // overlay to hold graphics for all of the associations
   private val associationsOverlay by lazy { GraphicsOverlay() }

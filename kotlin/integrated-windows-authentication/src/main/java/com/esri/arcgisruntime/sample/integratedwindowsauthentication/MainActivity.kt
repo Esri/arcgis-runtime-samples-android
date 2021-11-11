@@ -34,13 +34,8 @@ import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.portal.PortalQueryParameters
-import com.esri.arcgisruntime.security.AuthenticationChallenge
-import com.esri.arcgisruntime.security.AuthenticationChallengeHandler
-import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
-import com.esri.arcgisruntime.security.AuthenticationManager
-import com.esri.arcgisruntime.security.UserCredential
 import com.esri.arcgisruntime.sample.integratedwindowsauthentication.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.sample.integratedwindowsauthentication.databinding.PortalLoadStateBinding
+import com.esri.arcgisruntime.security.*
 import java.net.URI
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutionException

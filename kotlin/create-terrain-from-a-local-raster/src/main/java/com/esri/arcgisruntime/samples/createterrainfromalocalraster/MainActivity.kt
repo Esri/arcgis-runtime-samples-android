@@ -18,7 +18,6 @@ package com.esri.arcgisruntime.samples.createterrainfromalocalraster
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.loadable.LoadStatus
@@ -28,7 +27,7 @@ import com.esri.arcgisruntime.mapping.RasterElevationSource
 import com.esri.arcgisruntime.mapping.view.Camera
 import com.esri.arcgisruntime.mapping.view.SceneView
 import com.esri.arcgisruntime.samples.createterrainfromalocalraster.databinding.ActivityMainBinding
-import java.util.ArrayList
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
