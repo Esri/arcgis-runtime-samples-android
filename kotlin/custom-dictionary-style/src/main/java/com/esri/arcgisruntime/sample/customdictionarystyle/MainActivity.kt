@@ -1,6 +1,7 @@
 package com.esri.arcgisruntime.sample.customdictionarystyle
 
 import android.os.Bundle
+import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
@@ -23,6 +24,14 @@ class MainActivity : AppCompatActivity() {
 
     private val mapView: MapView by lazy {
         activityMainBinding.mapView
+    }
+
+    private val styleFileRadioButton: RadioButton by lazy {
+        activityMainBinding.styleControlsLayout.styleFileRadioButton
+    }
+
+    private val webStyleRadioButton: RadioButton by lazy {
+        activityMainBinding.styleControlsLayout.webStyleRadioButton
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

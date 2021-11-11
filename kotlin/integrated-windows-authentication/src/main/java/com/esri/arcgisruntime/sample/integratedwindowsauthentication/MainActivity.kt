@@ -44,16 +44,13 @@ class MainActivity : AppCompatActivity(),
 
     private lateinit var portalItemAdapter: PortalItemAdapter
 
-
-
     // objects that implement Loadable must be class fields to prevent being garbage collected before loading
     private lateinit var portal: Portal
 
 
-        private val TAG: String = MainActivity::class.java.simpleName
+    private val TAG: String = MainActivity::class.java.simpleName
 
-        private val MAX_AUTH_ATTEMPTS = 5
-    }
+    private val MAX_AUTH_ATTEMPTS = 5
 
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)

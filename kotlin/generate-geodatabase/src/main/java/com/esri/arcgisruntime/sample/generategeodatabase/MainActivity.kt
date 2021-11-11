@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(activityMainBinding.root)
         // use local tile package for the base map
         val sanFrancisco =
-            TileCache(getExternalFilesDir(null).toString() + getString(R.string.san_francisco_tpk))
+            TileCache(getExternalFilesDir(null).toString() + getString(R.string.san_francisco_tpkx))
         val tiledLayer = ArcGISTiledLayer(sanFrancisco)
 
     // add the map and graphics overlay to the map view
@@ -114,14 +114,16 @@ class MainActivity : AppCompatActivity() {
         geodatabaseSyncTask.generateGeodatabase(parameters, localGeodatabasePath)
 
       // show the job's progress in a dialog
+      val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
       val dialog = createProgressDialog(generateGeodatabaseJob)
+      dialog.setView(dialogLayoutBinding.root)
       dialog.show()
       // define progress and done behaviours and start the job
       generateGeodatabaseJob.apply {
         // update progress
         addProgressChangedListener {
-          dialog.progressBar.progress = this.progress
-          dialog.progressTextView.text = "${this.progress}%"
+          dialogLayoutBinding.progressBar.progress = this.progress
+          dialogLayoutBinding.progressTextView.text = "${this.progress}%"
         }
         // get geodatabase when done
         addJobDoneListener {

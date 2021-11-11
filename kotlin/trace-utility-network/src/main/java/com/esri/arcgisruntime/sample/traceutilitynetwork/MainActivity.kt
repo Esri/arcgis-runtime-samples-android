@@ -48,8 +48,6 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-
-
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -83,7 +81,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var mediumVoltageTier: UtilityTier? = null
-    private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }private val featureServiceUrl =
+    private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
+
+    private val featureServiceUrl =
         "https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer"
 
     private val serviceGeodatabase by lazy {
@@ -455,11 +455,13 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         Toast.makeText(this, "No elements in trace result", Toast.LENGTH_LONG)
                             .show()
-                        progressIndicator.visibility = View.GONEenableButtons()
+                        progressIndicator.visibility = View.GONE
+                      enableButtons()
                     }
                 }
             } catch (e: Exception) {
-                statusTextView.text = getString(R.string.failed_message)progressIndicator.visibility = View.GONE
+                statusTextView.text = getString(R.string.failed_message)
+                progressIndicator.visibility = View.GONE
                 enableButtons()
                 reportError("Error running connected trace: " + e.message)
             }

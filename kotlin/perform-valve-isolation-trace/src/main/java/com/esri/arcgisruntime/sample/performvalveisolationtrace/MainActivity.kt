@@ -29,6 +29,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ArcGISFeature
@@ -85,29 +86,36 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.fab
     }
 
-    private val trace_button: Button by lazy {
-        activityMainBinding.traceButton
+    private val traceControlsTextView: TextView by lazy {
+        activityMainBinding.traceControlsTextView
     }
 
     private val progressBar: ProgressBar by lazy {
         activityMainBinding.progressBar
     }
 
-    private val spinner: Spinner by lazy {
-        activityMainBinding.spinner
+    private val traceTypeSpinner: Spinner by lazy {
+        activityMainBinding.traceTypeSpinner
     }
 
-    private val include_isolated_switch: Switch by lazy {
+    private val traceButton: Button by lazy {
+      activityMainBinding.traceButton
+    }
+
+    private val resetButton: Button by lazy {
+      activityMainBinding.resetButton
+    }
+
+    private val includeIsolatedSwitch: SwitchCompat by lazy {
         activityMainBinding.includeIsolatedSwitch
     }
 
-    // create a graphics overlay for the starting location and add it to the map view
-    private val startingLocationGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
-
     // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-    private lateinit var utilityNetwork: UtilityNetwork
     private val featureServiceUrl =
         "https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleGas/FeatureServer"
+    private val utilityNetwork by lazy {
+      UtilityNetwork(featureServiceUrl)
+    }
 
     // create a graphics overlay for the starting location and add it to the map view
     private val startingLocationGraphicsOverlay by lazy {
@@ -116,11 +124,6 @@ class MainActivity : AppCompatActivity() {
 
     private val filterBarriersGraphicsOverlay by lazy {
         GraphicsOverlay()
-    }
-
-    // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-    private val utilityNetwork by lazy {
-        UtilityNetwork(featureServiceUrl)
     }
 
     private var utilityTraceParameters: UtilityTraceParameters? = null
