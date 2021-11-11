@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Query with CQL filters</string>
+    <string name="cql_filters">CQL Filters</string>
+</resources>

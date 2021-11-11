@@ -14,8 +14,8 @@ Pan and zoom around the map. Observe graphics that show utility associations bet
 
 ## How it works
 
-1. Create and load a `UtilityNetwork` with a feature service URL.
-2. Add a `FeatureLayer` to the map for every `utilityNetworkSource` of type `EDGE` or `JUNCTION`.
+1. Create an `UtilityNetwork` with a feature service URL, add it to the map's `utilityNetworks` list and load it.
+2. Add a `FeatureLayer` to the map for every `UtilityNetworkSource` of type `EDGE` or `JUNCTION`.
 3. Create a `GraphicsOverlay` for the utility associations.
 4. Add a `NavigationChangedListener` to listen for `NavigationChangedEvent`s.
 5. When the sample starts and every time the viewpoint changes:
@@ -28,13 +28,16 @@ Pan and zoom around the map. Observe graphics that show utility associations bet
 ## Relevant API
 
 * GraphicsOverlay
+* ServiceGeodatabase
 * UtilityAssociation
 * UtilityAssociationType
 * UtilityNetwork
 
 ## About the data
 
-The [feature service](https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer) in this sample represents an electric network in Naperville, Illinois, which contains a utility network used to run the subnetwork-based trace.
+The [Naperville electrical](https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer) feature service in this sample represents an electric network in Naperville, Illinois, which contains a utility network used to run the subnetwork-based trace.
+
+Using utility network on ArcGIS Enterprise 10.8 requires an ArcGIS Enterprise member account licensed with the [Utility Network user type extension](https://enterprise.arcgis.com/en/portal/latest/administer/windows/license-user-type-extensions.htm#ESRI_SECTION1_41D78AD9691B42E0A8C227C113C0C0BF). Please refer to the [utility network services documentation](https://enterprise.arcgis.com/en/server/latest/publish-services/windows/utility-network-services.htm).
 
 ## Tags
 

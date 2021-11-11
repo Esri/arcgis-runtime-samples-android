@@ -122,16 +122,16 @@ class MainActivity : AppCompatActivity() {
             imageOverlays.add(ImageOverlay())
         }
 
-        // get the image files from local storage as an unordered list
-        (File(getExternalFilesDir(null).toString() + "/ImageFrames/PacificSouthWest").listFiles())?.let { imageFiles ->
-            // sort the list of image files
-            Arrays.sort(imageFiles)
-            imageFiles.forEach { file ->
-                // create an image with the given path and use it to create an image frame
-                val imageFrame = ImageFrame(file.path, pacificSouthwestEnvelope)
-                imageFrames.add(imageFrame)
-            }
-        }
+    // get the image files from local storage as an unordered list
+    (File(getExternalFilesDir(null).toString() + "/PacificSouthWest").listFiles())?.let { imageFiles ->
+      // sort the list of image files
+      Arrays.sort(imageFiles)
+      imageFiles.forEach { file ->
+        // create an image with the given path and use it to create an image frame
+        val imageFrame = ImageFrame(file.path, pacificSouthwestEnvelope)
+        imageFrames.add(imageFrame)
+      }
+    }
 
         // setup touch and ui element behaviours
         setupUI()

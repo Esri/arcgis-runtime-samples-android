@@ -16,8 +16,6 @@
 
 package com.esri.arcgisruntime.sample.createandsavemap;
 
-import java.util.Arrays;
-
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -30,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -37,7 +36,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
+
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.ArcGISTiledLayer;
@@ -48,33 +47,46 @@ import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
+import com.esri.arcgisruntime.portal.PortalFolder;
 import com.esri.arcgisruntime.portal.PortalItem;
+import com.esri.arcgisruntime.portal.PortalUserContent;
 import com.esri.arcgisruntime.security.AuthenticationChallengeHandler;
 import com.esri.arcgisruntime.security.AuthenticationManager;
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
   private static final int MIN_SCALE = 60000000;
+
   private MapView mMapView;
-  private DrawerLayout mDrawerLayout;
-  private ListView mBasemapListView;
-  private ListView mLayerListView;
-  private CharSequence mDrawerTitle;
-  private ActionBarDrawerToggle mDrawerToggle;
+
   // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private Portal mPortal;
+
+  private List<PortalFolder> mPortalFolders;
+
+  private DrawerLayout mDrawerLayout;
+
+  private ListView mBasemapListView;
+
+  private ListView mLayerListView;
+
+  private CharSequence mDrawerTitle;
+
+  private ActionBarDrawerToggle mDrawerToggle;
+
+  private Spinner mFolderSpinner;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_drawer);
-
-    // authentication with an API key or named user is required to access basemaps and other
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
     // set up an authentication handler to take credentials for access to arcgis.com
     AuthenticationChallengeHandler handler = new DefaultAuthenticationChallengeHandler(this);
@@ -84,7 +96,15 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
     // create a map with Topographic Basemap
-    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
+    Basemap streetsBasemap = new Basemap(BasemapStyle.ARCGIS_STREETS);
+    ArcGISMap map = new ArcGISMap(streetsBasemap);
+    map.addDoneLoadingListener(() -> {
+      if (map.getLoadStatus() != LoadStatus.LOADED) {
+        String error = "Error loading map: " + map.getLoadError().getCause().getMessage();
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+        Log.e(TAG, error);
+      }
+    });
     // set the map to be displayed in this view
     mMapView.setMap(map);
     mMapView.setViewpoint(new Viewpoint(48.354388, -99.998245, 100000));
@@ -94,8 +114,10 @@ public class MainActivity extends AppCompatActivity {
     mLayerListView = findViewById(R.id.layer_list);
     mDrawerLayout = findViewById(R.id.drawer_layout);
 
-    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(getApplication().getString(R.string.world_time_zones));
-    ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer(getApplication().getString(R.string.us_census));
+    ArcGISTiledLayer tiledLayer = new ArcGISTiledLayer(
+        "https://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer");
+    ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer(
+        "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer");
     // setting the scales at which the map image layer layer can be viewed
     mapImageLayer.setMinScale(MIN_SCALE);
     mapImageLayer.setMaxScale(MIN_SCALE / 100);
@@ -103,13 +125,15 @@ public class MainActivity extends AppCompatActivity {
     // create base map array and set it to a list view adapter
     String[] basemapTiles = getResources().getStringArray(R.array.basemap_array);
     mBasemapListView
-        .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, basemapTiles));
+        .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice,
+            basemapTiles));
     mBasemapListView.setItemChecked(0, true);
 
     // create operation layers array and set it to a list view adapter
     String[] operationalLayerTiles = getResources().getStringArray(R.array.operational_layer_array);
     mLayerListView
-        .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, operationalLayerTiles));
+        .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice,
+            operationalLayerTiles));
 
     // creates a drawer to handle display of layers on the map
     createDrawer(tiledLayer, mapImageLayer);
@@ -128,7 +152,8 @@ public class MainActivity extends AppCompatActivity {
 
     ArcGISMap map = mMapView.getMap();
     // set actions for drawer state - close/open
-    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name) {
+    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name,
+        R.string.app_name) {
       // if the drawer is closed, get the checked items from LayerListView and add the checked layer
       @Override
       public void onDrawerClosed(View view) {
@@ -191,9 +216,11 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Inflates the save map dialog allowing the user to enter title, tags and description for their map.
+   * Shows the save map dialog allowing the user to enter title, tags, description and folder for
+   * saving of their map.
    */
   private void showSaveMapDialog() {
+
     // inflate save map dialog layout
     LayoutInflater inflater = LayoutInflater.from(this);
     View saveMapDialogView = inflater.inflate(R.layout.save_map_dialog, null, false);
@@ -202,6 +229,35 @@ public class MainActivity extends AppCompatActivity {
     EditText titleEditText = saveMapDialogView.findViewById(R.id.titleEditText);
     EditText tagsEditText = saveMapDialogView.findViewById(R.id.tagsEditText);
     EditText descriptionEditText = saveMapDialogView.findViewById(R.id.descriptionEditText);
+    mFolderSpinner = saveMapDialogView.findViewById(R.id.folderSpinner);
+
+    // create a portal to arcgis
+    mPortal = new Portal("https://www.arcgis.com", true);
+    mPortal.addDoneLoadingListener(() -> {
+      if (mPortal.getLoadStatus() == LoadStatus.LOADED) {
+        try {
+          // get the users list of portal folders
+          PortalUserContent portalUserContent = mPortal.getUser().fetchContentAsync().get();
+          mPortalFolders = portalUserContent.getFolders();
+          // get a list of the user's portal folder titles
+          List<String> portalFolderTitles = new ArrayList<>();
+          portalFolderTitles.add("No Folder");
+          for (PortalFolder portalFolder : mPortalFolders) {
+            portalFolderTitles.add(portalFolder.getTitle());
+          }
+          // add the list of portal folder titles to a spinner
+          ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+              android.R.layout.simple_spinner_item, portalFolderTitles);
+          adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+          mFolderSpinner.setAdapter(adapter);
+        } catch (Exception e) {
+          String error = "Error fetching content from portal item: " + e.getCause().getMessage();
+          Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+          Log.e(TAG, error);
+        }
+      }
+    });
+    mPortal.loadAsync();
 
     // build the dialog
     AlertDialog saveMapDialog = new AlertDialog.Builder(this)
@@ -216,8 +272,17 @@ public class MainActivity extends AppCompatActivity {
       Iterable<String> tags = Arrays.asList(tagsEditText.getText().toString().split(","));
       // make sure the title edit text view has text
       if (titleEditText.getText().length() > 0) {
-        // call save map passing in title, tags and description
-        saveMap(titleEditText.getText().toString(), tags, descriptionEditText.getText().toString());
+        // check if a folder was selected
+        if (mFolderSpinner.getSelectedItemPosition() <= 0) {
+          // if no folder was selected, just pass null for portalFolder argument
+          saveMap(titleEditText.getText().toString(), tags,
+              descriptionEditText.getText().toString(), null);
+        } else {
+          // call save map passing in title, tags, description and portal
+          saveMap(titleEditText.getText().toString(), tags,
+              descriptionEditText.getText().toString(),
+              mPortalFolders.get(mFolderSpinner.getSelectedItemPosition() - 1));
+        }
         saveMapDialog.dismiss();
       } else {
         Toast.makeText(this, "A title is required to save your map.", Toast.LENGTH_LONG).show();
@@ -230,28 +295,20 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Open a portal and save the map to that portal.
+   * Save the map to that portal.
    *
-   * @param title       of the map
-   * @param tags        related to the map
-   * @param description of the map
+   * @param title        of the map
+   * @param tags         related to the map
+   * @param description  of the map
+   * @param portalFolder where the map should be saved
    */
-  private void saveMap(String title, Iterable<String> tags, String description) {
-    // create a portal to arcgis
-    mPortal = new Portal("https://www.arcgis.com", true);
-    mPortal.addDoneLoadingListener(() -> {
-      if (mPortal.getLoadStatus() == LoadStatus.LOADED) {
-        // call save as async and pass portal info, as well as details of the map including title, tags and description
-        ListenableFuture<PortalItem> saveAsAsyncFuture = mMapView.getMap()
-            .saveAsAsync(mPortal, null, title, tags, description, null, true);
-        saveAsAsyncFuture.addDoneListener(() -> Toast.makeText(this, "Map saved to portal!", Toast.LENGTH_LONG).show());
-      } else {
-        String error = "Error loading portal: " + mPortal.getLoadError().getMessage();
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        Log.e(TAG, error);
-      }
-    });
-    mPortal.loadAsync();
+  private void saveMap(String title, Iterable<String> tags, String description,
+      PortalFolder portalFolder) {
+    // call save as async and pass portal info, as well as details of the map including title, tags and description
+    ListenableFuture<PortalItem> saveAsAsyncFuture = mMapView.getMap()
+        .saveAsAsync(mPortal, portalFolder, title, tags, description, null, true);
+    saveAsAsyncFuture.addDoneListener(
+        () -> Toast.makeText(this, "Map saved to portal!", Toast.LENGTH_LONG).show());
   }
 
   @Override
@@ -289,7 +346,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * sync the state of the drawer toggle
+   * Sync the state of the drawer toggle
    */
   @Override
   protected void onPostCreate(Bundle savedInstanceState) {

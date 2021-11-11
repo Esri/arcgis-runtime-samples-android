@@ -16,11 +16,6 @@
 
 package com.esri.arcgisruntime.generateofflinemapoverrides;
 
-import java.io.File;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ExecutionException;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -28,10 +23,6 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -40,6 +31,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
@@ -56,8 +53,6 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.portal.PortalItem;
-import com.esri.arcgisruntime.security.AuthenticationManager;
-import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseParameters;
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateLayerOption;
@@ -68,6 +63,11 @@ import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapResult;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapParametersKey;
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask;
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheParameters;
+
+import java.io.File;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -91,8 +91,9 @@ public class MainActivity extends AppCompatActivity {
     mGenerateOfflineMapOverridesButton = findViewById(R.id.generateOfflineMapOverridesButton);
     mGenerateOfflineMapOverridesButton.setEnabled(false);
 
-    // handle authentication with the portal
-    AuthenticationManager.setAuthenticationChallengeHandler(new DefaultAuthenticationChallengeHandler(this));
+    // authentication with an API key or named user is required
+    // to access basemaps and other location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
     // create a portal item with the itemId of the web map
     Portal portal = new Portal(getString(R.string.portal_url), false);
@@ -101,21 +102,12 @@ public class MainActivity extends AppCompatActivity {
     // create a map with the portal item
     ArcGISMap map = new ArcGISMap(portalItem);
 
-    // request write permission
-    String[] reqPermission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-    int requestCode = 2;
-    // for API level 23+ request permission at runtime
-    if (ContextCompat.checkSelfPermission(this, reqPermission[0]) == PackageManager.PERMISSION_GRANTED) {
-      map.addDoneLoadingListener(() -> {
-        if (map.getLoadStatus() == LoadStatus.LOADED) {
-          // enable offline map button only after permission is granted and map is loaded
-          mGenerateOfflineMapOverridesButton.setEnabled(true);
-        }
-      });
-    } else {
-      // request permission
-      ActivityCompat.requestPermissions(this, reqPermission, requestCode);
-    }
+    map.addDoneLoadingListener(() -> {
+      if (map.getLoadStatus() == LoadStatus.LOADED) {
+        // enable offline map button only after map is loaded
+        mGenerateOfflineMapOverridesButton.setEnabled(true);
+      }
+    });
 
     // set the map to the map view
     mMapView.setMap(map);
@@ -473,25 +465,6 @@ public class MainActivity extends AppCompatActivity {
 
     // dismiss dialog when job is done
     job.addJobDoneListener(progressDialog::dismiss);
-  }
-
-  /**
-   * Handle the permissions request response.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      mMapView.getMap().addDoneLoadingListener(() -> {
-        if (mMapView.getMap().getLoadStatus() == LoadStatus.LOADED) {
-          // enable offline map button only after permission is granted and map is loaded
-          mGenerateOfflineMapOverridesButton.setEnabled(true);
-        }
-      });
-      Log.d(TAG, "permission granted");
-    } else {
-      // report to user that permission was denied
-      Toast.makeText(this, getString(R.string.offline_map_write_permission_denied), Toast.LENGTH_SHORT).show();
-    }
   }
 
   @Override

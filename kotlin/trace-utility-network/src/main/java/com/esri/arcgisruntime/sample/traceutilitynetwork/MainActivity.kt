@@ -27,7 +27,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ArcGISFeature
 import com.esri.arcgisruntime.data.QueryParameters
-import com.esri.arcgisruntime.data.ServiceFeatureTable
+import com.esri.arcgisruntime.data.ServiceGeodatabase
 import com.esri.arcgisruntime.geometry.*
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
@@ -39,6 +39,7 @@ import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.traceutilitynetwork.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.security.UserCredential
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.UniqueValueRenderer
@@ -47,7 +48,7 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-    private val TAG: String = MainActivity::class.java.simpleName
+
 
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -82,14 +83,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var mediumVoltageTier: UtilityTier? = null
-    private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
+    private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }private val featureServiceUrl =
+        "https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer"
+
+    private val serviceGeodatabase by lazy {
+        ServiceGeodatabase(featureServiceUrl).apply {
+            // define user credentials for authenticating with the service
+            // NOTE: a licensed user is required to perform utility network operations
+            credential = UserCredential("viewer01", "I68VGU^nMurF")
+        }
+    }
     private val utilityNetwork: UtilityNetwork by lazy {
-        UtilityNetwork(getString(R.string.naperville_utility_network_service), mapView.map)
+        UtilityNetwork(featureServiceUrl).apply {
+            // define user credentials for authenticating with the service
+            // NOTE: a licensed user is required to perform utility network operations
+            credential = UserCredential("viewer01", "I68VGU^nMurF")
+        }
     }
 
     // create lists for starting locations and barriers
-    private val utilityElementStartingLocations: MutableList<UtilityElement> by lazy { ArrayList<UtilityElement>() }
-    private val utilityElementBarriers: MutableList<UtilityElement> by lazy { ArrayList<UtilityElement>() }
+    private val utilityElementStartingLocations: MutableList<UtilityElement> by lazy { ArrayList() }
+    private val utilityElementBarriers: MutableList<UtilityElement> by lazy { ArrayList() }
 
     // create symbols for the starting point and barriers
     private val startingPointSymbol: SimpleMarkerSymbol by lazy {
@@ -107,9 +121,12 @@ class MainActivity : AppCompatActivity() {
         // location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // create electrical distribution line layer
+        serviceGeodatabase.loadAsync()
+        serviceGeodatabase.addDoneLoadingListener {
+            serviceGeodatabase.loadStatus
+            // create electrical distribution line layer from the service geodatabase
         val electricalDistributionFeatureLayer =
-            FeatureLayer(ServiceFeatureTable(getString(R.string.naperville_utility_network_service) + "/115")).apply {
+            FeatureLayer(serviceGeodatabase.getTable(3)).apply {
                 // define a solid line for medium voltage lines
                 val mediumVoltageValue = UniqueValueRenderer.UniqueValue(
                     "N/A",
@@ -134,9 +151,9 @@ class MainActivity : AppCompatActivity() {
                     )
             }
 
-        // create electrical device layer
+        // create electrical device layerfrom the service geodatabase
         val electricalDeviceFeatureLayer =
-            FeatureLayer(ServiceFeatureTable(getString(R.string.naperville_utility_network_service) + "/100"))
+            FeatureLayer(serviceGeodatabase.getTable(0))
 
         // setup the map view
         mapView.apply {
@@ -146,7 +163,9 @@ class MainActivity : AppCompatActivity() {
                     add(electricalDistributionFeatureLayer)
                     add(electricalDeviceFeatureLayer)
                 }
-            }
+            // add the utility network to the map
+                    utilityNetworks.add(utilityNetwork)
+                }
 
             // set the viewpoint to a section in the southeast of the network
             setViewpointAsync(
@@ -197,10 +216,10 @@ class MainActivity : AppCompatActivity() {
                 reportError("Error loading utility network: " + utilityNetwork.loadError.cause?.message)
             }
         }
-        utilityNetwork.loadAsync()
+        utilityNetwork.loadAsync()}
 
         // add all utility trace types to the trace type spinner as strings
-        traceTypeSpinner.adapter = ArrayAdapter<String>(
+        traceTypeSpinner.adapter = ArrayAdapter(
             applicationContext,
             android.R.layout.simple_spinner_item,
             arrayOf("CONNECTED", "SUBNETWORK", "UPSTREAM", "DOWNSTREAM")
@@ -436,11 +455,12 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         Toast.makeText(this, "No elements in trace result", Toast.LENGTH_LONG)
                             .show()
-                        enableButtons()
+                        progressIndicator.visibility = View.GONEenableButtons()
                     }
                 }
             } catch (e: Exception) {
-                statusTextView.text = getString(R.string.failed_message)
+                statusTextView.text = getString(R.string.failed_message)progressIndicator.visibility = View.GONE
+                enableButtons()
                 reportError("Error running connected trace: " + e.message)
             }
         }

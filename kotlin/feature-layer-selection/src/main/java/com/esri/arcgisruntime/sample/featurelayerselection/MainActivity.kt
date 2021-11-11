@@ -102,10 +102,8 @@ class MainActivity : AppCompatActivity() {
               val identifyLayerResult = identifyLayerResultFuture.get()
               // get the elements in the selection that are features
               val features = identifyLayerResult.elements.filterIsInstance<Feature>()
-              // select each feature
-              features.forEach { feature ->
-                featureLayer.selectFeature(feature)
-              }
+              // add the features to the current feature layer selection 
+              featureLayer.selectFeatures(features)
               // make a toast to show the number of features selected
               Toast.makeText(
                 applicationContext,

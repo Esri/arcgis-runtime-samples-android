@@ -25,12 +25,18 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
+import com.esri.arcgisruntime.data.ArcGISFeature
 import com.esri.arcgisruntime.data.QueryParameters
-import com.esri.arcgisruntime.data.ServiceFeatureTable
+import com.esri.arcgisruntime.data.ServiceGeodatabase
+import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.Point
+import com.esri.arcgisruntime.geometry.Polyline
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -39,6 +45,7 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.security.UserCredential
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.performvalveisolationtrace.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.sample.performvalveisolationtrace.databinding.SpinnerTextItemBinding
@@ -51,12 +58,16 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityElement
 import com.esri.arcgisruntime.utilitynetworks.UtilityElementTraceResult
 import com.esri.arcgisruntime.utilitynetworks.UtilityNetwork
 import com.esri.arcgisruntime.utilitynetworks.UtilityNetworkDefinition
+import com.esri.arcgisruntime.utilitynetworks.UtilityNetworkSource
+import com.esri.arcgisruntime.utilitynetworks.UtilityTerminal
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceConfiguration
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceFilter
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceType
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.UUID
+import java.util.*
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -95,6 +106,28 @@ class MainActivity : AppCompatActivity() {
 
     // objects that implement Loadable must be class fields to prevent being garbage collected before loading
     private lateinit var utilityNetwork: UtilityNetwork
+    private val featureServiceUrl =
+        "https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleGas/FeatureServer"
+
+    // create a graphics overlay for the starting location and add it to the map view
+    private val startingLocationGraphicsOverlay by lazy {
+        GraphicsOverlay()
+    }
+
+    private val filterBarriersGraphicsOverlay by lazy {
+        GraphicsOverlay()
+    }
+
+    // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+    private val utilityNetwork by lazy {
+        UtilityNetwork(featureServiceUrl)
+    }
+
+    private var utilityTraceParameters: UtilityTraceParameters? = null
+
+    private val serviceGeodatabase by lazy {
+        ServiceGeodatabase(featureServiceUrl)
+    }
 
     // create and apply renderers for the starting point graphics overlay
     private val startingPointSymbol: SimpleMarkerSymbol by lazy {
@@ -113,20 +146,13 @@ class MainActivity : AppCompatActivity() {
         // location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // load the utility network data from the feature service and create feature layers
-        val distributionLineFeatureTable =
-            ServiceFeatureTable(getString(R.string.distribution_line_url))
-        val distributionLineLayer = FeatureLayer(distributionLineFeatureTable)
-        val deviceFeatureTable = ServiceFeatureTable(getString(R.string.device_url))
-        val deviceLayer = FeatureLayer(deviceFeatureTable)
+        loadServiceGeodatabase()
 
         // create a map with the utility network distribution line and device layers
         val map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT).apply {
-            // add the feature layers to the map
-            operationalLayers.addAll(listOf(distributionLineLayer, deviceLayer))
-            // create and load the utility network
+            //  create and load the utility network
             addDoneLoadingListener {
-                createUtilityNetwork()
+                utilityNetworks.add(utilityNetwork)
             }
         }
 
@@ -152,22 +178,58 @@ class MainActivity : AppCompatActivity() {
                     }
                     return super.onTouch(view, event)
                 }
-            }
-        }
+
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                    // only pass taps to identify nearest utility element once the utility network has loaded
+                    if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
+                        identifyNearestUtilityElement(
+                            android.graphics.Point(e.x.roundToInt(), e.y.roundToInt())
+                        )
+                        traceTypeSpinner.isEnabled = false
+                        return true
+                    }
+                    return false
+                }
+            }}
         // show the options sheet when the floating action button is clicked
         fab.setOnClickListener {
             fab.isExpanded = !fab.isExpanded
         }
     }
 
+    /*** Load the service geodatabase and initialize the layers.
+     */
+    private fun loadServiceGeodatabase() {
+        // set user credentials to authenticate with the service
+        // NOTE: a licensed user is required to perform utility network operations
+        serviceGeodatabase.credential = UserCredential("viewer01", "I68VGU^nMurF")
+        serviceGeodatabase.addDoneLoadingListener {
+            if (serviceGeodatabase.loadStatus == LoadStatus.LOADED) {
+                // The  gas device layer ./0 and gas line layer ./3 are created from the service geodatabase.
+                val gasDeviceLayerTable = serviceGeodatabase.getTable(0)
+                val gasLineLayerTable = serviceGeodatabase.getTable(3)
+                // load the utility network data from the feature service and create feature layers
+                val deviceLayer = FeatureLayer(gasDeviceLayerTable)
+                val distributionLineLayer = FeatureLayer(gasLineLayerTable)
+                // add the utility network feature layers to the map for display
+                mapView.map.operationalLayers.add(deviceLayer)
+                mapView.map.operationalLayers.add(distributionLineLayer)
+                loadUtilityNetwork()
+            } else {
+                val error =
+                    "Error loading service geodatabase: " + serviceGeodatabase.loadError.cause?.message
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                Log.e(TAG, error)
+            }
+        }
+        serviceGeodatabase.loadAsync()
+    }
+
     /**
      * Create and load a utility network from the string resource url and initialize a starting point
      * from it.
      */
-    private fun createUtilityNetwork(
-    ) {
-        // create a utility network from the url and load it
-        utilityNetwork = UtilityNetwork(getString(R.string.utility_network_url), mapView.map)
+    private fun loadUtilityNetwork(): UtilityNetwork {
         utilityNetwork.loadAsync()
         utilityNetwork.addDoneLoadingListener {
             if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
@@ -188,6 +250,11 @@ class MainActivity : AppCompatActivity() {
                     assetType,
                     UUID.fromString("98A06E95-70BE-43E7-91B7-E34C9D3CB9FF")
                 )
+                // create new base trace parameters
+                utilityTraceParameters = UtilityTraceParameters(
+                    UtilityTraceType.ISOLATION,
+                    Collections.singletonList(startingLocation)
+                )
 
                 // get a list of features for the starting location element
                 val elementFeaturesFuture =
@@ -204,14 +271,28 @@ class MainActivity : AppCompatActivity() {
                                     Graphic(startingLocationGeometryPoint, startingPointSymbol)
                                 startingLocationGraphicsOverlay.graphics.add(startingLocationGraphic)
 
+                                // create a graphics overlay for filter barriers and add it to the map view
+                                mapView.graphicsOverlays.add(filterBarriersGraphicsOverlay)
+
+                                // create and apply a renderer for the filter barriers graphics overlay
+                                val barrierPointSymbol = SimpleMarkerSymbol(
+                                    SimpleMarkerSymbol.Style.CROSS, Color.RED, 25f
+                                )
+                                filterBarriersGraphicsOverlay.renderer = SimpleRenderer(
+                                    barrierPointSymbol
+                                )
+
                                 populateCategorySpinner(networkDefinition)
 
-                                trace_button.setOnClickListener {
+                                traceButton.setOnClickListener {
                                     fab.isExpanded = false
                                     performTrace(
                                         utilityNetwork,
-                                        traceConfiguration,
-                                        startingLocation
+                                        traceConfiguration)
+                                }
+
+                                resetButton.setOnClickListener {
+                                    reset(
                                     )
                                 }
                             }
@@ -236,41 +317,183 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show()
             }
         }
+    return utilityNetwork
+    }
+
+    private fun identifyNearestUtilityElement(screenPoint: android.graphics.Point) {
+
+        traceControlsTextView.text = getString(R.string.add_another_filter_barrier)
+
+        // ensure the utility network is loaded before processing clicks on the map view
+        if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
+
+            // show the progress indicator
+            progressBar.visibility = View.VISIBLE
+
+            // identify the feature to be used
+            val identifyLayerResultsFuture = mapView.identifyLayersAsync(screenPoint, 10.0, false)
+            identifyLayerResultsFuture.addDoneListener {
+                try {
+                    // get the result of the query
+                    val identifyLayerResults = identifyLayerResultsFuture.get()
+
+                    // return if no features are identified
+                    if (identifyLayerResults.isNotEmpty()) {
+
+                        // retrieve the identify result elements as ArcGISFeatures
+                        val elements = identifyLayerResults.map { it.elements[0] as ArcGISFeature }
+
+                        // create utility elements from the list of ArcGISFeature elements
+                        val utilityElements = elements.map { utilityNetwork.createElement(it) }
+
+                        // get a reference to the closest junction if there is one
+                        val junction =
+                            utilityElements.firstOrNull { it.networkSource.sourceType == UtilityNetworkSource.Type.JUNCTION }
+
+                        // get a reference to the closest edge if there is one
+                        val edge =
+                            utilityElements.firstOrNull { it.networkSource.sourceType == UtilityNetworkSource.Type.EDGE }
+
+                        // preferentially select junctions, otherwise an edge
+                        val utilityElement = junction ?: edge
+
+                        // retrieve the first result and get its contents
+                        if (junction != null) {
+
+                            // check if the feature has a terminal configuration and multiple terminals
+                            if (junction.assetType.terminalConfiguration != null) {
+                                val utilityTerminalConfiguration =
+                                    junction.assetType.terminalConfiguration
+                                val terminals =
+                                    utilityTerminalConfiguration.terminals
+                                if (terminals.size > 1) {
+                                    // prompt the user to select a terminal for this feature
+                                    promptForTerminalSelection(junction, terminals)
+                                }
+                            }
+                        } else if (edge != null) {
+
+                            // get the geometry of the identified feature as a polyline, and remove the z component
+                            val polyline =
+                                GeometryEngine.removeZ(elements[0].geometry) as Polyline
+
+                            // get the clicked map point
+                            val mapPoint = mapView.screenToLocation(screenPoint)
+
+                            // compute how far the clicked location is along the edge feature
+                            val fractionAlongEdge =
+                                GeometryEngine.fractionAlong(polyline, mapPoint, -1.0)
+                            if (fractionAlongEdge.isNaN()) {
+                                Toast.makeText(
+                                    this,
+                                    "Cannot add starting location or barrier here.",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                return@addDoneListener
+                            }
+
+                            // set the fraction along edge
+                            edge.fractionAlongEdge = fractionAlongEdge
+
+                            // update the status label text
+                            Toast.makeText(
+                                this,
+                                "Fraction along edge: " + edge.fractionAlongEdge.roundToInt(),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+
+                        // add the element to the list of filter barriers
+                        utilityTraceParameters?.filterBarriers?.add(utilityElement)
+
+                        // get the clicked map point
+                        val mapPoint = mapView.screenToLocation(screenPoint)
+
+                        // find the closest coordinate on the selected element to the clicked point
+                        val proximityResult =
+                            GeometryEngine.nearestCoordinate(elements[0].geometry, mapPoint)
+
+                        // create a graphic for the new utility element
+                        val utilityElementGraphic = Graphic().apply {
+                            // set the graphic's geometry to the coordinate on the element and add it to the graphics overlay
+                            geometry = proximityResult.coordinate
+                        }
+
+                        // add utility element graphic to the filter barriers graphics overlay
+                        filterBarriersGraphicsOverlay.graphics.add(utilityElementGraphic)
+                    }
+                } catch (e: Exception) {
+                    val error = "Error identifying tapped feature: " + e.message
+                    Log.e(TAG, error)
+                    Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                } finally {
+                    progressBar.visibility = View.GONE
+                }
+            }
+        }
     }
 
     /**
-     * Performs a valve isolation trace according to the defined trace configuration and starting location, and selects the resulting features on the map.
+     * Prompts the user to select a terminal from a provided list.
+     *
+     * @param terminals a list of terminals for the user to choose from
+     * @return the user's selected terminal
+     */
+    private fun promptForTerminalSelection(
+        utilityElement: UtilityElement,
+        terminals: List<UtilityTerminal>
+    ) {
+        // get a list of terminal names from the terminals
+        val terminalNames = terminals.map { it.name }
+        AlertDialog.Builder(this).apply {
+            setTitle("Select utility terminal:")
+            setItems(terminalNames.toTypedArray()) { _, which ->
+                // apply the selected terminal
+                val terminal = terminals[which]
+                utilityElement.terminal = terminal
+                // show the terminals name in the status label
+                val terminalName = if (terminal.name != null) terminal.name else "default"
+                Toast.makeText(
+                    this@MainActivity,
+                    "Feature added at terminal: $terminalName",
+                    Toast.LENGTH_LONG
+                ).show()
+            }.show()
+        }
+    }/**
+     * Performs a valve isolation trace according to the defined trace configuration and starting* location, and selects the resulting features on the map.
      *
      * @param utilityNetwork the utility network to perform the trace on
      * @param traceConfiguration the trace configuration to apply to the trace
-     * @param startingLocation the utility element to begin the trace from
+
      */
     private fun performTrace(
         utilityNetwork: UtilityNetwork,
-        traceConfiguration: UtilityTraceConfiguration,
-        startingLocation: UtilityElement
+        traceConfiguration: UtilityTraceConfiguration
+
     ) {
         progressBar.visibility = View.VISIBLE
         // create a category comparison for the trace
         // NOTE: UtilityNetworkAttributeComparison or UtilityCategoryComparisonOperator.DOES_NOT_EXIST
         // can also be used. These conditions can be joined with either UtilityTraceOrCondition or UtilityTraceAndCondition.
-        val categoryComparison = UtilityCategoryComparison(
-            spinner.selectedItem as UtilityCategory,
+        val utilityCategoryComparison = UtilityCategoryComparison(
+            traceTypeSpinner.selectedItem as UtilityCategory,
             UtilityCategoryComparisonOperator.EXISTS
         )
         // set the category comparison to the barriers of the configuration's trace filter
-        traceConfiguration.filter.barriers = categoryComparison
+        traceConfiguration.apply {
+            filter = UtilityTraceFilter()
+            filter.barriers = utilityCategoryComparison
 
         // set the configuration to include or leave out isolated features
-        traceConfiguration.isIncludeIsolatedFeatures = include_isolated_switch.isChecked
+        isIncludeIsolatedFeatures = includeIsolatedSwitch.isChecked
+        }
 
         // build parameters for the isolation trace
-        val traceParameters =
-            UtilityTraceParameters(UtilityTraceType.ISOLATION, listOf(startingLocation))
-        traceParameters.traceConfiguration = traceConfiguration
+        utilityTraceParameters!!.traceConfiguration = traceConfiguration
 
         // run the trace and get the result
-        val utilityTraceResultsFuture = utilityNetwork.traceAsync(traceParameters)
+        val utilityTraceResultsFuture = utilityNetwork.traceAsync(utilityTraceParameters)
         utilityTraceResultsFuture.addDoneListener {
             try {
                 // get the first element of the trace result if it is not null
@@ -319,7 +542,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /**
+    private fun reset() {
+        traceControlsTextView.text = getString(R.string.choose_category_for_filter_barrier)
+        traceTypeSpinner.isEnabled = true
+        mapView.map.operationalLayers.forEach { layer ->
+            (layer as? FeatureLayer)?.clearSelection()
+        }
+        utilityTraceParameters?.filterBarriers?.clear()
+        filterBarriersGraphicsOverlay.graphics.clear()
+    }/**
      * Initialize the category selection spinner using a utility network definition.
      *
      * @param networkDefinition the utility network definition to populate the spinner
@@ -328,7 +559,7 @@ class MainActivity : AppCompatActivity() {
         networkDefinition: UtilityNetworkDefinition
     ) {
         // populate the spinner with utility categories as the data and their names as the text
-        spinner.adapter =
+        traceTypeSpinner.adapter =
             object : ArrayAdapter<UtilityCategory>(
                 this,
                 R.layout.spinner_text_item,

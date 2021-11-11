@@ -16,14 +16,12 @@
 
 package com.esri.arcgisruntime.scenelayerselection;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
@@ -39,6 +37,9 @@ import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create a scene and add a basemap to it
     ArcGISScene scene = new ArcGISScene();
-    scene.setBasemap(Basemap.createImagery());
+    scene.setBasemap(Basemap.createTopographic());
 
     // set the scene to the scene view
     mSceneView = findViewById(R.id.sceneView);
@@ -64,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
     surface.getElevationSources().add(new ArcGISTiledElevationSource(elevationService));
     scene.setBaseSurface(surface);
 
-    // add a scene layer of Harvard buildings to the scene
-    final String buildings = getString(R.string.brest_buildings);
+    // add a scene layer of Brest buildings to the scene
+    final String buildings = getString(R.string.scene_layer_selection_brest_buildings);
     ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(buildings);
     scene.getOperationalLayers().add(sceneLayer);
 

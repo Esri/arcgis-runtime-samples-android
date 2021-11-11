@@ -1,0 +1,41 @@
+{
+    "category": "Visualization",
+    "description": "Display custom labels in a 3D scene.",
+    "formal_name": "ShowLabelsOnLayerIn3D",
+    "ignore": false,
+    "images": [
+        "show-labels-on-layer-in-3d.png"
+    ],
+    "keywords": [
+        "3D",
+        "URL",
+        "arcade",
+        "attribute",
+        "buildings",
+        "label",
+        "model",
+        "scene",
+        "symbol",
+        "text",
+        "visualization",
+        "ArcGISScene",
+        "ArcadeLabelExpression",
+        "FeatureLayer",
+        "LabelDefinition",
+        "SceneView",
+        "TextSymbol"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "ArcGISScene",
+        "ArcadeLabelExpression",
+        "FeatureLayer",
+        "LabelDefinition",
+        "SceneView",
+        "TextSymbol"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/showlabelsonlayerin3d/MainActivity.kt"
+    ],
+    "title": "Show labels on layer in 3D"
+}

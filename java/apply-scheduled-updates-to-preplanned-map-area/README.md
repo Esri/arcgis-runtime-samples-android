@@ -40,7 +40,7 @@ Start the app. It will display an offline map, check for available updates, and 
 2. Extract the contents of the downloaded zip file to disk.
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 4. Push the data into the scoped storage of the sample app:
-`adb push canyonlands /Android/data/com.esri.arcgisruntime.sample.applyscheduledupdatestopreplannedmaparea/files/canyonlands`
+`adb push canyonlands/. /Android/data/com.esri.arcgisruntime.sample.applyscheduledupdatestopreplannedmaparea/files`
 
 ## About the data
 
@@ -48,7 +48,7 @@ The data in this sample shows the roads and trails in the Canyonlands National P
 
 ## Additional information
 
-**Note:** preplanned areas using the Scheduled Updates workflow are read-only. For preplanned areas that can be edited on the end-user device, see [Take a map offline - preplanned](https://developers.arcgis.com/android/latest/guide/take-map-offline-preplanned.htm).
+**Note:** preplanned areas using the Scheduled Updates workflow are read-only. For preplanned areas that can be edited on the end-user device, see the [Download preplanned map area](https://developers.arcgis.com/android/kotlin/sample-code/download-preplanned-map-area/) sample. For more information about offline workflows, see [Offline maps, scenes, and data](https://developers.arcgis.com/documentation/mapping-apis-and-location-services/offline/) in the *ArcGIS Developers* guide.
 
 ## Tags
 

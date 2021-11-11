@@ -28,12 +28,14 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.security.UserCredential
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.utilitynetworks.UtilityAssociationType
 import com.esri.arcgisruntime.utilitynetworks.UtilityNetwork
 import com.esri.arcgisruntime.utilitynetworks.UtilityNetworkSource
 import com.esri.arcgisruntime.sample.displayutilityassociations.databinding.ActivityMainBinding
 import java.util.UUID
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,7 +44,11 @@ class MainActivity : AppCompatActivity() {
 
   // create the utility network
   private val utilityNetwork =
-    UtilityNetwork("https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer")
+    UtilityNetwork("https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer").apply {
+      // set user credentials to authenticate with the service
+      // NOTE: a licensed user is required to perform utility network operations
+      credential = UserCredential("viewer01", "I68VGU^nMurF")
+    }
 
   // overlay to hold graphics for all of the associations
   private val associationsOverlay by lazy { GraphicsOverlay() }
@@ -90,9 +96,14 @@ class MainActivity : AppCompatActivity() {
     // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
+    // create a new map and add the utility network to it
+    val utilityNetworkMap = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
+      utilityNetworks.add(utilityNetwork)
+    }
+
     mapView.apply {
       // add a topographic basemap with a viewpoint at several utility network associations
-      map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+      map = utilityNetworkMap
       setViewpoint(Viewpoint(41.8057655, -88.1489692, 50.0))
 
       // add the a graphics overlay to hold association graphics

@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
     setContentView(activityMainBinding.root)
 
     // load the tile cache from local storage
-    val tileCache = TileCache(getExternalFilesDir(null)?.path + getString(R.string.san_diego_tpk))
+    val tileCache = TileCache(getExternalFilesDir(null)?.path + getString(R.string.san_diego_tpkx))
     // use the tile cache extent to set the view point
     tileCache.addDoneLoadingListener { mapView.setViewpoint(Viewpoint(tileCache.fullExtent)) }
     // create a tiled layer from the tile cache
@@ -183,12 +183,12 @@ class MainActivity : AppCompatActivity() {
       // get the top result
       val geocode = geocodeResults[0]
       // attributes from a click-based search
-      val street = geocode.attributes["Street"].toString()
+      val street = geocode.attributes["StAddr"].toString()
       val city = geocode.attributes["City"].toString()
-      val state = geocode.attributes["State"].toString()
-      val zip = geocode.attributes["ZIP"].toString()
+      val state = geocode.attributes["Region"].toString()
+      val zip = geocode.attributes["Postal"].toString()
       val detail = "$city, $state $zip"
-      val address = "$street,$detail"
+      val address = "$street, $detail"
       displayGeocodeResult(point, address)
 
     } catch (e: Exception) {

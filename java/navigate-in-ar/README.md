@@ -39,7 +39,7 @@ The sample opens with a map centered on the current location. Tap the map to add
 
 ## About the data
 
-This sample uses Esri's [world elevation service](https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer) to ensure that route lines are placed appropriately in 3D space. It uses Esri's [world routing service](https://www.arcgis.com/home/item.html?id=1feb41652c5c4bd2ba5c60df2b4ea2c4) to calculate routes. The world routing service requires authentication and does consume ArcGIS Online credits.
+This sample uses Esri's [world elevation service](https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer) to ensure that route lines are placed appropriately in 3D space. It uses Esri's [world routing service](https://www.arcgis.com/home/item.html?id=1feb41652c5c4bd2ba5c60df2b4ea2c4) to calculate routes. The world routing service requires an API key and does consume ArcGIS Online credits.
 
 ## Additional information
 
@@ -49,9 +49,11 @@ Unlike other scene samples, there's no need for a basemap while navigating, beca
 
 A digital elevation model is used to ensure that the displayed route is positioned appropriately relative to the terrain of the route. If you don't want to display the route line floating, you could show the line draped on the surface instead.
 
-**Real-scale AR** is one of three main patterns for working with geographic information in augmented reality. See [Augmented reality]() in the guide for more information.
+**Real-scale AR** is one of three main patterns for working with geographic information in augmented reality.
 
 Because most navigation scenarios involve traveling beyond the accurate range for ARCore positioning, this sample relies on **continuous location updates** from the location data source. Because the origin camera is constantly being reset by the location data source, the sample doesn't allow the user to pan to calibrate or adjust the altitude with a slider. The location data source doesn't provide a heading, so it isn't overwritten when the location refreshes.
+
+This sample uses the [ArcGIS Runtime Toolkit](https://github.com/Esri/arcgis-runtime-toolkit-android/).
 
 ## Tags
 

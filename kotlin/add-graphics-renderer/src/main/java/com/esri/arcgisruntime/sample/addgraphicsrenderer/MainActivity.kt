@@ -19,7 +19,12 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
+import com.esri.arcgisruntime.geometry.CubicBezierSegment
+import com.esri.arcgisruntime.geometry.EllipticArcSegment
+import com.esri.arcgisruntime.geometry.Geometry
+import com.esri.arcgisruntime.geometry.Part
 import com.esri.arcgisruntime.geometry.Point
+import com.esri.arcgisruntime.geometry.Polygon
 import com.esri.arcgisruntime.geometry.PolygonBuilder
 import com.esri.arcgisruntime.geometry.PolylineBuilder
 import com.esri.arcgisruntime.geometry.SpatialReferences
@@ -65,8 +70,8 @@ class MainActivity : AppCompatActivity() {
           arrayOf(
             renderedPointGraphicsOverlay(),
             renderedLineGraphicsOverlay(),
-            renderedPolygonGraphicsOverlay()
-          )
+            renderedPolygonGraphicsOverlay(),
+          renderedCurvedPolygonGraphicsOverlay())
         )
     }
 
@@ -147,7 +152,99 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onPause() {
+    /**
+     * Create a polygon, its graphic, a graphics overlay for it, and add it to the map view.
+     * */
+    private fun renderedCurvedPolygonGraphicsOverlay(): GraphicsOverlay {
+        // create a point for the center of the geometry
+        val originPoint = Point(40e5, 5e5, SpatialReferences.getWebMercator())
+        // create polygon
+        val curvedPolygonGeometry = makeHeartGeometry(originPoint, 10e5)
+        // create graphic for polygon
+        val polygonGraphic = Graphic(curvedPolygonGeometry)
+        // create a simple fill symbol with outline
+        val curvedLineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1f)
+        val curvedFillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.RED, curvedLineSymbol)
+        // create simple renderer
+        val polygonRenderer = SimpleRenderer(curvedFillSymbol)
+
+        // create graphic overlay for polygon and add it to the map view
+        return GraphicsOverlay().apply {
+            // add graphic to overlay
+            graphics.add(polygonGraphic)
+            // set the renderer on the graphics overlay to the new renderer
+            renderer = polygonRenderer
+        }
+    }
+
+    /**
+     * Create a heart-shape geometry with Bezier and elliptic arc segments from a given [center]
+     * point and [sideLength].
+     */
+    private fun makeHeartGeometry(center: Point, sideLength: Double): Geometry {
+        val spatialReference = center.spatialReference
+        // the x and y coordinates to simplify the calculation
+        val minX = center.x - 0.5 * sideLength
+        val minY = center.y - 0.5 * sideLength
+        // the radius of the arcs
+        val arcRadius = sideLength * 0.25
+
+        // bottom left curve
+        val leftCurveStart = Point(center.x, minY, spatialReference)
+        val leftCurveEnd = Point(minX, minY + 0.75 * sideLength, spatialReference)
+        val leftControlPoint1 = Point(center.x, minY + 0.25 * sideLength, spatialReference)
+        val leftControlPoint2 = Point(minX, center.y, spatialReference)
+        val leftCurve = CubicBezierSegment(
+            leftCurveStart,
+            leftControlPoint1,
+            leftControlPoint2,
+            leftCurveEnd,
+            spatialReference
+        )
+
+        // top left arc
+        val leftArcCenter =
+            Point(minX + 0.25 * sideLength, minY + 0.75 * sideLength, spatialReference)
+        val leftArc = EllipticArcSegment.createCircularEllipticArc(
+            leftArcCenter,
+            arcRadius,
+            Math.PI,
+            -Math.PI,
+            spatialReference
+        )
+
+        // top right arc
+        val rightArcCenter =
+            Point(minX + 0.75 * sideLength, minY + 0.75 * sideLength, spatialReference)
+        val rightArc = EllipticArcSegment.createCircularEllipticArc(
+            rightArcCenter,
+            arcRadius,
+            Math.PI,
+            -Math.PI,
+            spatialReference
+        )
+
+        // bottom right curve
+        val rightCurveStart = Point(minX + sideLength, minY + 0.75 * sideLength, spatialReference)
+        val rightCurveEnd = leftCurveStart
+        val rightControlPoint1 = Point(minX + sideLength, center.y, spatialReference)
+        val rightControlPoint2 = leftControlPoint1
+        val rightCurve = CubicBezierSegment(
+            rightCurveStart,
+            rightControlPoint1,
+            rightControlPoint2,
+            rightCurveEnd,
+            spatialReference
+        )
+
+        val heart = Part(spatialReference).apply {
+            add(leftCurve)
+            add(leftArc)
+            add(rightArc)
+            add(rightCurve)
+        }
+        return Polygon(heart, spatialReference)
+    }override fun onPause() {
         mapView.pause()
         super.onPause()
     }

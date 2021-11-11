@@ -14,10 +14,10 @@
     ],
     "language": "java",
     "provision_from": [
-        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=72e703cd01654e7796eb1ae75af1cb53"
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=e4a398afe9a945f3b0f4dca1e4faccb5"
     ],
     "provision_to": [
-        "/SanFrancisco.tpk"
+        "/SanFrancisco.tpkx"
     ],
     "redirect_from": [
         "/android/latest/sample-code/edit-and-sync-features.htm"

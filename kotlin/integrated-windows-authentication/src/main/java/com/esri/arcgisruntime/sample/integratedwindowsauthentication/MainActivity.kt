@@ -17,7 +17,6 @@
 
 package com.esri.arcgisruntime.sample.integratedwindowsauthentication
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
@@ -36,26 +35,21 @@ import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.portal.PortalQueryParameters
 import com.esri.arcgisruntime.sample.integratedwindowsauthentication.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.security.*
+import com.esri.arcgisruntime.security.AuthenticationManager
+import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
 import java.net.URI
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.ExecutionException
 
-class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler,
-    PortalItemAdapter.OnItemClickListener,
-    CredentialDialogFragment.OnCredentialDialogButtonClickListener,
-    DialogInterface.OnDismissListener {
+class MainActivity : AppCompatActivity(),
+    PortalItemAdapter.OnItemClickListener {
 
     private lateinit var portalItemAdapter: PortalItemAdapter
 
-    private var userCredentials: MutableMap<String, UserCredential> = HashMap()
 
-    // Instance of CountDownLatch used to block the thread that handles authentication
-    private var authLatch: CountDownLatch? = null
 
     // objects that implement Loadable must be class fields to prevent being garbage collected before loading
     private lateinit var portal: Portal
 
-    companion object {
+
         private val TAG: String = MainActivity::class.java.simpleName
 
         private val MAX_AUTH_ATTEMPTS = 5
@@ -109,7 +103,9 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler,
         mapView.map = ArcGISMap(BasemapStyle.ARCGIS_STREETS)
 
         // Set authentication challenge handler
-        AuthenticationManager.setAuthenticationChallengeHandler(this)
+        AuthenticationManager.setAuthenticationChallengeHandler(
+            DefaultAuthenticationChallengeHandler(this)
+        )
 
         // Set up recycler view for listing portal items
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
@@ -172,15 +168,8 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler,
                                 portalItemResult.get()?.results?.let { portalItemSetResults ->
                                     portalItemAdapter.updatePortalItems(portalItemSetResults)
                                 }
-                            } catch (executionException: ExecutionException) {
-                                getString(R.string.error_item_set, executionException.message).let {
-                                    Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-                                    Log.e(TAG, it)
-                                }
-                            } catch (interruptedException: InterruptedException) {
-                                getString(
-                                    R.string.error_item_set,
-                                    interruptedException.message
+                            } catch (exception: Exception) {
+                                getString(R.string.error_item_set, exception.message
                                 ).let {
                                     Toast.makeText(this, it, Toast.LENGTH_LONG).show()
                                     Log.e(TAG, it)
@@ -213,35 +202,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler,
     }
 
     /**
-     * Handle sign in button click on CredentialDialogFragment
-     *
-     * @param uri the URI requiring credentials
-     * @param username the username entered in the dialog
-     * @param password the password entered in the dialog
-     */
-    override fun onSignInClicked(uri: URI, username: String, password: String) {
-        uri.host?.let {
-            userCredentials[it] = UserCredential(username, password)
-        }
-    }
 
-    /**
-     * Handle cancel button click on CredentialDialogFragment
-     *
-     * @param uri the URI requiring credentials
-     */
-    override fun onCancelClicked(uri: URI) {
-        uri.host?.let {
-            userCredentials.remove(it)
-        }
-    }
-
-    override fun onDismiss(dialog: DialogInterface?) {
-        // Countdown auth latch to unblock thread
-        authLatch?.countDown()
-    }
-
-    /**
      * Add the given portal item to a new map and set the map to the map view.
      *
      * @param portalItem
@@ -261,71 +222,7 @@ class MainActivity : AppCompatActivity(), AuthenticationChallengeHandler,
         loadedWebMapTextView.text = getString(R.string.web_map_loaded_text, portalItem.itemId)
     }
 
-    /**
-     * When a user credential challenge is issued, pop up a dialog for user credential. When
-     * the user credential has been set, respond with a AuthenticationChallengeResponse with
-     * a continue with credential action and with the credentials as a parameter.
-     *
-     * @param authenticationChallenge
-     */
-    override fun handleChallenge(authenticationChallenge: AuthenticationChallenge?): AuthenticationChallengeResponse {
-        if (authenticationChallenge?.type == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE
-            && authenticationChallenge.remoteResource is Portal
-        ) {
-            URI(authenticationChallenge.remoteResource.uri).host?.let { remoteResourceHost ->
 
-                // If challenge has been requested by a Portal and the Portal has been loaded, cancel the challenge
-                // This is required as some layers have private portal items associated with them and we don't
-                // want to auth against them
-                if ((authenticationChallenge.remoteResource as Portal).loadStatus == LoadStatus.LOADED) {
-                    return AuthenticationChallengeResponse(
-                        AuthenticationChallengeResponse.Action.CANCEL,
-                        authenticationChallenge
-                    )
-                }
-
-                // If we have not stored credentials against this host or an invalid credential was passed,
-                // request them from the user
-                authLatch = CountDownLatch(1)
-                // Show the dialog fragment to request the user to enter their credentials
-                CredentialDialogFragment.newInstance(URI(authenticationChallenge.remoteResource.uri))
-                    .show(
-                        supportFragmentManager,
-                        CredentialDialogFragment::class.java.simpleName
-                    )
-                try {
-                    // Wait for dialog to dismiss to capture credentials
-                    authLatch?.await()
-                } catch (e: InterruptedException) {
-                    getString(R.string.error_interruption, e.message).let {
-                        runOnUiThread {
-                            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-                        }
-                        Log.e(TAG, it)
-                    }
-                }
-                // If the user has entered credentials, continue with those credentials
-                return if (userCredentials[remoteResourceHost] != null) {
-                    AuthenticationChallengeResponse(
-                        AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
-                        userCredentials[remoteResourceHost]
-                    )
-                } else {
-                    // No credentials were set, return a new auth challenge response with a cancel
-                    AuthenticationChallengeResponse(
-                        AuthenticationChallengeResponse.Action.CANCEL,
-                        authenticationChallenge
-                    )
-                }
-            }
-        }
-
-        // Return a new auth challenge response with a cancel for other challenge types or other remote resources.
-        return AuthenticationChallengeResponse(
-            AuthenticationChallengeResponse.Action.CANCEL,
-            authenticationChallenge
-        )
-    }
 
     override fun onPortalItemClick(portalItem: PortalItem) {
         addMap(portalItem)

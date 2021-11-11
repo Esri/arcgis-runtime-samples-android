@@ -7,7 +7,6 @@
         "display-subtype-feature-layer.png"
     ],
     "keywords": [
-        "Layers",
         "asset group",
         "feature layer",
         "labeling",
@@ -15,12 +14,18 @@
         "subtype",
         "symbology",
         "utility network",
-        "visible scale range"
+        "visible scale range",
+        "LabelDefinition",
+        "ServiceFeatureTable",
+        "SimpleLabelExpression",
+        "SubtypeFeatureLayer",
+        "SubtypeSublayer"
     ],
     "language": "kotlin",
     "relevant_apis": [
         "LabelDefinition",
         "ServiceFeatureTable",
+        "SimpleLabelExpression",
         "SubtypeFeatureLayer",
         "SubtypeSublayer"
     ],

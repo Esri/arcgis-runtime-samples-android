@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     // create a scene
     val brestBuildingScene = ArcGISScene().apply {
       // add a base map
-      basemap = Basemap.createImagery()
+      basemap = Basemap.createTopographic()
       // add a scene service to the scene for viewing buildings
       operationalLayers.add(sceneLayer)
     }

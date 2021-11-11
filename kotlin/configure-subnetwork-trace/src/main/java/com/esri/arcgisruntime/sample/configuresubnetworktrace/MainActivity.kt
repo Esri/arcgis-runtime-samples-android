@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.data.CodedValue
 import com.esri.arcgisruntime.data.CodedValueDomain
 import com.esri.arcgisruntime.loadable.LoadStatus
+import com.esri.arcgisruntime.security.UserCredential
 import com.esri.arcgisruntime.sample.configuresubnetworktrace.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.utilitynetworks.UtilityAttributeComparisonOperator
 import com.esri.arcgisruntime.utilitynetworks.UtilityCategoryComparison
@@ -77,7 +78,11 @@ class MainActivity : AppCompatActivity() {
   }
 
   private val utilityNetwork by lazy {
-    UtilityNetwork(getString(R.string.naperville_electric_url))
+    UtilityNetwork("https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer").apply {
+      // set user credentials to authenticate with the service
+      // NOTE: a licensed user is required to perform utility network operations
+      credential =  UserCredential("viewer01", "I68VGU^nMurF")
+    }
   }
 
   private var initialExpression: UtilityTraceConditionalExpression? = null

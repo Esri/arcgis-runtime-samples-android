@@ -22,6 +22,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.arcgisservices.LabelDefinition
+import com.esri.arcgisruntime.arcgisservices.LabelingPlacement
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Envelope
 import com.esri.arcgisruntime.geometry.SpatialReferences
@@ -29,12 +30,14 @@ import com.esri.arcgisruntime.layers.SubtypeFeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.labeling.SimpleLabelExpression
 import com.esri.arcgisruntime.mapping.view.MapView
-import com.esri.arcgisruntime.sample.displaysubtypefeaturelayer.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.security.UserCredential
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
 import kotlin.math.roundToInt
+import com.esri.arcgisruntime.sample.displaysubtypefeaturelayer.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.security.UserCredential
+import com.esri.arcgisruntime.symbology.TextSymbol
 
 class MainActivity : AppCompatActivity() {
 
@@ -78,37 +81,59 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
 
-        // authentication with an API key or named user is required to access basemaps and other
-        // location services
-        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+    // authentication with an API key or named user is required to access basemaps and other 
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         // setup map with basemap and an initial viewpoint
-        mapView.map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT)
-        mapView.setViewpoint(
-            Viewpoint(
-                Envelope(
-                    -9812691.11079696,
-                    5128687.20710657,
-                    -9812377.9447607,
-                    5128865.36767282,
-                    SpatialReferences.getWebMercator()
+        mapView.apply {
+            map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT)
+            setViewpoint(
+                Viewpoint(
+                    Envelope(
+                        -9812691.11079696,
+                        5128687.20710657,
+                        -9812377.9447607,
+                        5128865.36767282,
+                        SpatialReferences.getWebMercator()
+                    )
                 )
             )
-        )
 
-        // on any navigation on the map view
-        mapView.addMapScaleChangedListener {
-            currentMapScaleTextView.text =
-                getString(R.string.current_map_scale_text, mapView.mapScale.roundToInt())
+            // on any navigation on the map view
+            addMapScaleChangedListener {
+                currentMapScaleTextView.text =
+                    getString(R.string.current_map_scale_text, mapView.mapScale.roundToInt())
+            }
         }
 
-        // create a subtype feature layer from a service feature table
-        val subtypeFeatureLayer =
-            SubtypeFeatureLayer(ServiceFeatureTable("https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer/0").apply {
+        // create a service feature table
+        val serviceFeatureTable =
+            ServiceFeatureTable("https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer/0").apply {
+                // set user credentials to authenticate with the service
                 credential = UserCredential("viewer01", "I68VGU^nMurF")
-            })
+            }
+
+        // create a subtype feature layer from the service feature table
+        val subtypeFeatureLayer = SubtypeFeatureLayer(serviceFeatureTable)
         // add it to the map
         mapView.map.operationalLayers.add(subtypeFeatureLayer)
+
+        // create a text symbol for styling the sublayer label definition
+        val textSymbol = TextSymbol().apply {
+            size = 12f
+            color = Color.BLUE
+            outlineColor = Color.WHITE
+            haloColor = Color.WHITE
+            haloWidth = 3f
+        }
+
+        // create a label definition with a simple label expression
+        val simpleLabelExpression = SimpleLabelExpression("[nominalvoltage]")
+        val labelDefinition = LabelDefinition(simpleLabelExpression, textSymbol).apply {
+            placement = LabelingPlacement.POINT_ABOVE_RIGHT
+            isUseCodedValues = true
+        }
 
         // once the subtype feature layer is loaded
         subtypeFeatureLayer.addDoneLoadingListener {
@@ -116,7 +141,7 @@ class MainActivity : AppCompatActivity() {
             val subtypeSublayer =
                 subtypeFeatureLayer.getSublayerWithSubtypeName("Street Light").apply {
                     isLabelsEnabled = true
-                    labelDefinitions.add(LabelDefinition.fromJson(getString(R.string.label_json)))
+                    labelDefinitions.add(labelDefinition)
                 }
 
             // show subtype sublayer when checked, hide when unchecked

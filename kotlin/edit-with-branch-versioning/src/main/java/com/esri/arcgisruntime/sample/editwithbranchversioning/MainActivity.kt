@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
   private val TAG = MainActivity::class.java.simpleName
 
   private val serviceGeodatabase: ServiceGeodatabase by lazy {
-    ServiceGeodatabase("https://sampleserver7.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer")
+    ServiceGeodatabase("https://sampleserver7.arcgisonline.com/server/rest/services/DamageAssessment/FeatureServer")
   }
 
   private var featureLayer: FeatureLayer? = null

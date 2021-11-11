@@ -218,7 +218,7 @@ class MetadataUpdater:
             # This is left in from the iOS script:
             # "It combines the Tags and the Relevant APIs in the README."
             # See /runtime/common-samples/wiki/README.metadata.json#keywords
-            # self.keywords += self.relevant_apis
+            self.keywords += self.relevant_apis
         except Exception as err:
             print(f'Error parsing README - {self.readme_path} - {err}.')
             raise err

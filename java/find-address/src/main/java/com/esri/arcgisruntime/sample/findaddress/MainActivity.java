@@ -16,9 +16,6 @@
 
 package com.esri.arcgisruntime.sample.findaddress;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import android.database.MatrixCursor;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -33,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
+
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Point;
@@ -51,6 +49,9 @@ import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeResult;
 import com.esri.arcgisruntime.tasks.geocode.LocatorTask;
 import com.esri.arcgisruntime.tasks.geocode.SuggestResult;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     mPinSourceSymbol.setHeight(72f);
 
     // create a LocatorTask from an online service
-    mLocatorTask = new LocatorTask("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
+    mLocatorTask = new LocatorTask("https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer");
 
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     mAddressGeocodeParameters = new GeocodeParameters();
     // get place name and address attributes
     mAddressGeocodeParameters.getResultAttributeNames().add("PlaceName");
-    mAddressGeocodeParameters.getResultAttributeNames().add("StAddr");
+    mAddressGeocodeParameters.getResultAttributeNames().add("Place_addr");
     // return only the closest result
     mAddressGeocodeParameters.setMaxResults(1);
     mAddressSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -212,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
           IdentifyGraphicsOverlayResult identifyGraphicsOverlayResult = identifyResultsFuture.get();
           List<Graphic> graphics = identifyGraphicsOverlayResult.getGraphics();
           // if a graphic has been identified
-          if (graphics.size() > 0) {
+          if (!graphics.isEmpty()) {
             //get the first graphic identified
             Graphic identifiedGraphic = graphics.get(0);
             showCallout(identifiedGraphic);
@@ -237,8 +238,12 @@ public class MainActivity extends AppCompatActivity {
     TextView calloutContent = new TextView(getApplicationContext());
     calloutContent.setTextColor(Color.BLACK);
     // set the text of the Callout to graphic's attributes
-    calloutContent.setText(graphic.getAttributes().get("PlaceName").toString() + "\n"
-        + graphic.getAttributes().get("StAddr").toString());
+    if (graphic.getAttributes().get("PlaceName").toString().isEmpty()) {
+      calloutContent.setText(graphic.getAttributes().get("Place_addr").toString());
+    } else {
+      calloutContent.setText(graphic.getAttributes().get("PlaceName") + "\n"
+          + graphic.getAttributes().get("Place_addr"));
+    }
     // get Callout
     mCallout = mMapView.getCallout();
     // set Callout options: animateCallout: true, recenterMap: false, animateRecenter: false
