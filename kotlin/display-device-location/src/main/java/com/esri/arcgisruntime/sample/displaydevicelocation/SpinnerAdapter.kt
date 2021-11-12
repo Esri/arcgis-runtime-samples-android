@@ -22,20 +22,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.TextView
-import kotlinx.android.synthetic.main.spinner_layout.view.*
-import java.util.ArrayList
+import com.esri.arcgisruntime.sample.displaydevicelocation.databinding.SpinnerLayoutBinding
 
 /**
  * Adapter to display both a string and icon beside each other in a spinner.
  * Used here to populate the options for LocationDisplay.AutoPanMode.
  */
 class SpinnerAdapter(
-  context: Activity,
-  private val groupId: Int,
-  id: Int,
-  private val list: ArrayList<ItemData>
+    context: Activity,
+    id: Int,
+    private val list: ArrayList<ItemData>
 ) :
   ArrayAdapter<ItemData?>(context, id, list as List<ItemData?>) {
   private val inflater: LayoutInflater =
@@ -46,12 +42,12 @@ class SpinnerAdapter(
     convertView: View?,
     parent: ViewGroup
   ): View {
-    val itemView = this.inflater.inflate(groupId, parent, false)
-    val imageView = itemView.locationPointImageView
+    val spinnerLayoutBinding = SpinnerLayoutBinding.inflate(this.inflater)
+    val imageView = spinnerLayoutBinding.locationPointImageView
     imageView.setImageResource(list[position].imageId)
-    val textView = itemView.locationTextView
+    val textView = spinnerLayoutBinding.locationTextView
     textView.text = list[position].text
-    return itemView
+    return spinnerLayoutBinding.root
   }
 
   override fun getDropDownView(

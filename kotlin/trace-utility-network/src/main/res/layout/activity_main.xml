@@ -24,6 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
+        android:id="@+id/controlsLayout"
         layout="@layout/utility_network_controls_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

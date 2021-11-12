@@ -16,15 +16,11 @@
 
 package com.esri.arcgisruntime.sample.downloadpreplannedmaparea
 
-import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.concurrent.Job
@@ -34,8 +30,11 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
+import com.esri.arcgisruntime.sample.downloadpreplannedmaparea.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.downloadpreplannedmaparea.databinding.DialogLayoutBinding
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
@@ -44,11 +43,8 @@ import com.esri.arcgisruntime.tasks.offlinemap.DownloadPreplannedOfflineMapJob
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask
 import com.esri.arcgisruntime.tasks.offlinemap.PreplannedMapArea
 import com.esri.arcgisruntime.tasks.offlinemap.PreplannedUpdateMode
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_layout.*
-import kotlinx.android.synthetic.main.layout_offline_controls.*
 import java.io.File
-import java.util.ArrayList
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,14 +55,34 @@ class MainActivity : AppCompatActivity() {
   private val downloadedMapAreaNames by lazy { mutableListOf<String>() }
   private var downloadedMapAreasAdapter: ArrayAdapter<String>? = null
   private val downloadedMapAreas by lazy { mutableListOf<ArcGISMap>() }
-  private var dialog: Dialog? = null
+  private var dialog: AlertDialog? = null
 
   private var selectedPreplannedMapArea: PreplannedMapArea? = null
   private var downloadPreplannedOfflineMapJob: DownloadPreplannedOfflineMapJob? = null
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val availableAreasListView: ListView by lazy {
+    activityMainBinding.include.availableAreasListView
+  }
+
+  private val downloadedMapAreasListView: ListView by lazy {
+    activityMainBinding.include.downloadedMapAreasListView
+  }
+
+  private val downloadButton: Button by lazy {
+    activityMainBinding.include.downloadButton
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // delete any previous instances of downloaded maps
     externalCacheDir?.deleteRecursively()
@@ -149,11 +165,13 @@ class MainActivity : AppCompatActivity() {
           offlineMapDirectory.path + File.separator + selectedPreplannedMapArea?.portalItem?.title
         ).also {
           // create and update a progress dialog for the job
+          val progressDialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
           dialog = createProgressDialog(it)
+          dialog?.setView(progressDialogLayoutBinding.root)
           dialog?.show()
           it.addProgressChangedListener {
-            dialog?.progressBar?.progress = it.progress
-            dialog?.progressTextView?.text = "${it.progress}%"
+            progressDialogLayoutBinding.progressBar.progress = it.progress
+            progressDialogLayoutBinding.progressTextView.text = "${it.progress}%"
           }
           // start the job
           it.start()
@@ -198,7 +216,10 @@ class MainActivity : AppCompatActivity() {
               // add the map name to the list view of downloaded map areas
               downloadedMapAreaNames.add(offlineMap.item.title)
               // select the downloaded map area
-              downloadedMapAreasListView.setItemChecked(downloadedMapAreaNames.size - 1, true)
+              downloadedMapAreasListView.setItemChecked(
+                downloadedMapAreaNames.size - 1,
+                true
+              )
               downloadedMapAreasAdapter?.notifyDataSetChanged()
               // de-select the area in the preplanned areas list view
               availableAreasListView.clearChoices()
@@ -228,10 +249,14 @@ class MainActivity : AppCompatActivity() {
    * @param onlineMap used as the background for showing available preplanned map areas
    * @param offlineMapTask used to take preplanned map areas offline
    */
-  private fun createPreplannedAreasListView(onlineMap: ArcGISMap, offlineMapTask: OfflineMapTask) {
+  private fun createPreplannedAreasListView(
+    onlineMap: ArcGISMap,
+    offlineMapTask: OfflineMapTask
+  ) {
     var preplannedMapAreas: List<PreplannedMapArea>
     val preplannedMapAreaNames: MutableList<String> = ArrayList()
-    preplannedMapAreasAdapter = ArrayAdapter(this, R.layout.item_map_area, preplannedMapAreaNames)
+    preplannedMapAreasAdapter =
+      ArrayAdapter(this, R.layout.item_map_area, preplannedMapAreaNames)
     availableAreasListView?.adapter = preplannedMapAreasAdapter
     // get the preplanned map areas from the offline map task and show them in the list view
     val preplannedMapAreasFuture =
@@ -273,7 +298,10 @@ class MainActivity : AppCompatActivity() {
             downloadedMapAreasAdapter?.notifyDataSetChanged()
 
             val areaOfInterest =
-              GeometryEngine.buffer(selectedPreplannedMapArea?.areaOfInterest, 50.0).extent
+              GeometryEngine.buffer(
+                selectedPreplannedMapArea?.areaOfInterest,
+                50.0
+              ).extent
             // show the online map with the areas of interest
             mapView.apply {
               map = onlineMap
@@ -282,8 +310,10 @@ class MainActivity : AppCompatActivity() {
               setViewpointAsync(Viewpoint(areaOfInterest), 1.5f)
             }
             // enable download button only for those map areas which have not been downloaded already
-            File(externalCacheDir?.path + getString(R.string.preplanned_offline_map_dir) +
-                File.separator + selectedPreplannedMapArea?.portalItem?.title).also {
+            File(
+              externalCacheDir?.path + getString(R.string.preplanned_offline_map_dir) +
+                      File.separator + selectedPreplannedMapArea?.portalItem?.title
+            ).also {
               downloadButton.isEnabled = !it.exists()
             }
           }
@@ -300,7 +330,8 @@ class MainActivity : AppCompatActivity() {
    *
    */
   private fun createDownloadAreasListView() {
-    downloadedMapAreasAdapter = ArrayAdapter(this, R.layout.item_map_area, downloadedMapAreaNames)
+    downloadedMapAreasAdapter =
+      ArrayAdapter(this, R.layout.item_map_area, downloadedMapAreaNames)
     downloadedMapAreasListView.apply {
       adapter = downloadedMapAreasAdapter
       onItemClickListener =
@@ -334,7 +365,8 @@ class MainActivity : AppCompatActivity() {
         downloadPreplannedOfflineMapJob.cancel()
       }
       setCancelable(false)
-      setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_layout, null))
+      val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+      setView(dialogLayoutBinding.root)
     }
     return dialogBuilder.create()
   }

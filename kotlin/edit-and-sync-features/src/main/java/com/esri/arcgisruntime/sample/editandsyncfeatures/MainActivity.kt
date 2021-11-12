@@ -20,8 +20,8 @@ package com.esri.arcgisruntime.sample.editandsyncfeatures
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -38,15 +38,12 @@ import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.editandsyncfeatures.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.editandsyncfeatures.databinding.DialogLayoutBinding
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
-import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseJob
-import com.esri.arcgisruntime.tasks.geodatabase.GeodatabaseSyncTask
-import com.esri.arcgisruntime.tasks.geodatabase.SyncGeodatabaseJob
-import com.esri.arcgisruntime.tasks.geodatabase.SyncGeodatabaseParameters
-import com.esri.arcgisruntime.tasks.geodatabase.SyncLayerOption
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_layout.*
-import java.util.ArrayList
+import com.esri.arcgisruntime.tasks.geodatabase.*
+import java.util.*
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
@@ -60,9 +57,21 @@ class MainActivity : AppCompatActivity() {
   private var geodatabase: Geodatabase? = null
   private val selectedFeatures by lazy { ArrayList<Feature>() }
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val syncButton: Button by lazy {
+    activityMainBinding.syncButton
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // use local tile package for the base map
     val sanFranciscoTileCache =
@@ -141,14 +150,17 @@ class MainActivity : AppCompatActivity() {
         )
 
       // show the job's progress in a dialog
+      val progressDialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
       val generateGeodatabaseDialog = createProgressDialog(generateGeodatabaseJob)
+      generateGeodatabaseDialog.setView(progressDialogLayoutBinding.root)
+
       generateGeodatabaseDialog.show()
       // define progress and done behaviours and start the job
       generateGeodatabaseJob.apply {
         // update progress
         addProgressChangedListener {
-          generateGeodatabaseDialog.progressBar.progress = this.progress
-          generateGeodatabaseDialog.progressTextView.text = "${this.progress}%"
+          progressDialogLayoutBinding.progressBar.progress = this.progress
+          progressDialogLayoutBinding.progressTextView.text = "${this.progress}%"
         }
         // get geodatabase when done
         addJobDoneListener {
@@ -171,7 +183,8 @@ class MainActivity : AppCompatActivity() {
   private fun loadGeodatabase(generateGeodatabaseJob: GenerateGeodatabaseJob) {
     // return if the job failed
     if (generateGeodatabaseJob.status != Job.Status.SUCCEEDED) {
-      val error = generateGeodatabaseJob.error?.message ?: "Unknown error generating geodatabase"
+      val error =
+        generateGeodatabaseJob.error?.message ?: "Unknown error generating geodatabase"
       Log.e(TAG, error)
       Toast.makeText(this, error, Toast.LENGTH_LONG).show()
       return
@@ -191,7 +204,11 @@ class MainActivity : AppCompatActivity() {
 
         // add all of the geodatabase feature tables to the map as feature layers
         val featureLayers =
-          geodatabase.geodatabaseFeatureTables.map { featureTable -> FeatureLayer(featureTable) }
+          geodatabase.geodatabaseFeatureTables.map { featureTable ->
+            FeatureLayer(
+              featureTable
+            )
+          }
         mapView.map.operationalLayers.addAll(featureLayers)
         syncButton.isEnabled = false
       }
@@ -204,7 +221,8 @@ class MainActivity : AppCompatActivity() {
   private fun syncGeodatabase() {
     // create parameters for the sync task
     val syncGeodatabaseParameters = SyncGeodatabaseParameters()
-    syncGeodatabaseParameters.syncDirection = SyncGeodatabaseParameters.SyncDirection.BIDIRECTIONAL
+    syncGeodatabaseParameters.syncDirection =
+      SyncGeodatabaseParameters.SyncDirection.BIDIRECTIONAL
     syncGeodatabaseParameters.isRollbackOnFailure = false
     geodatabase?.let { geodatabase ->
       // get the layer ID for each feature table in the geodatabase, then add to the sync job
@@ -213,19 +231,21 @@ class MainActivity : AppCompatActivity() {
         val syncLayerOption = SyncLayerOption(serviceLayerId)
         syncGeodatabaseParameters.layerOptions.add(syncLayerOption)
       }
-      
+
       val syncGeodatabaseJob: SyncGeodatabaseJob = geodatabaseSyncTask
         .syncGeodatabase(syncGeodatabaseParameters, geodatabase)
       syncGeodatabaseJob.start()
-      
+
+      val progressDialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
       val syncDialog = createProgressDialog(syncGeodatabaseJob)
+      syncDialog.setView(progressDialogLayoutBinding.root)
       syncDialog.show()
-      
+
       syncGeodatabaseJob.apply {
 
         addProgressChangedListener {
-          syncDialog.progressBar.progress = this.progress
-          syncDialog.progressTextView.text = "${this.progress}%"
+          progressDialogLayoutBinding.progressBar.progress = this.progress
+          progressDialogLayoutBinding.progressTextView.text = "${this.progress}%"
         }
 
         addJobDoneListener {
@@ -234,11 +254,16 @@ class MainActivity : AppCompatActivity() {
             syncDialog.dismiss()
             syncButton.isEnabled = false
             currentEditState = EditState.READY
-            
-            Toast.makeText(this@MainActivity, "Sync complete", Toast.LENGTH_SHORT).show()
+
+            Toast.makeText(this@MainActivity, "Sync complete", Toast.LENGTH_SHORT)
+              .show()
           } else {
             Log.e(TAG, "Database did not sync correctly!")
-            Toast.makeText(this@MainActivity, "Database did not sync correctly!", Toast.LENGTH_LONG)
+            Toast.makeText(
+              this@MainActivity,
+              "Database did not sync correctly!",
+              Toast.LENGTH_LONG
+            )
               .show()
           }
         }
@@ -261,7 +286,8 @@ class MainActivity : AppCompatActivity() {
       // provide a cancel button on the dialog
       setNegativeButton("Cancel") { _, _ -> job.cancel() }
       setCancelable(false)
-      setView(LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_layout, null))
+      val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+      setView(dialogLayoutBinding.root)
     }
     return builder.create()
   }
@@ -323,7 +349,8 @@ class MainActivity : AppCompatActivity() {
    */
   private fun mapPointFrom(motionEvent: MotionEvent): Point {
     // get the screen point
-    val screenPoint = android.graphics.Point(motionEvent.x.roundToInt(), motionEvent.y.roundToInt())
+    val screenPoint =
+      android.graphics.Point(motionEvent.x.roundToInt(), motionEvent.y.roundToInt())
     // return the point that was clicked in map coordinates
     return mapView.screenToLocation(screenPoint)
   }

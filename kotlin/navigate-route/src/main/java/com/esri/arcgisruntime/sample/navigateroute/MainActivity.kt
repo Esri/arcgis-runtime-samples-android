@@ -23,6 +23,8 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.text.format.DateUtils
 import android.util.Log
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
@@ -37,6 +39,7 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.LocationDisplay
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.navigation.DestinationStatus
 import com.esri.arcgisruntime.navigation.RouteTracker
 import com.esri.arcgisruntime.navigation.TrackingStatus
@@ -45,8 +48,7 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.layout_navigation_controls.*
+import com.esri.arcgisruntime.sample.navigateroute.databinding.ActivityMainBinding
 import java.util.Calendar
 import java.util.concurrent.ExecutionException
 
@@ -58,9 +60,37 @@ class MainActivity : AppCompatActivity() {
 
   private var isTextToSpeechInitialized = false
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val navigateRouteButton: Button by lazy {
+    activityMainBinding.navigationControls.navigateRouteButton
+  }
+
+  private val recenterButton: Button by lazy {
+    activityMainBinding.navigationControls.recenterButton
+  }
+
+  private val distanceRemainingTextView: TextView by lazy {
+    activityMainBinding.navigationControls.distanceRemainingTextView
+  }
+
+  private val timeRemainingTextView: TextView by lazy {
+    activityMainBinding.navigationControls.timeRemainingTextView
+  }
+
+  private val nextDirectionTextView: TextView by lazy {
+    activityMainBinding.navigationControls.nextDirectionTextView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required to access basemaps and other
     // location services

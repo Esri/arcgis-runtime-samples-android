@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.sample.editfeatureswithfeaturelinkedannotation
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -26,20 +27,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.Feature
 import com.esri.arcgisruntime.data.Geodatabase
-import com.esri.arcgisruntime.geometry.GeometryEngine
-import com.esri.arcgisruntime.geometry.GeometryType
-import com.esri.arcgisruntime.geometry.Point
-import com.esri.arcgisruntime.geometry.Polyline
-import com.esri.arcgisruntime.geometry.PolylineBuilder
+import com.esri.arcgisruntime.geometry.*
 import com.esri.arcgisruntime.layers.AnnotationLayer
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.edit_attribute_layout.view.*
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.editfeatureswithfeaturelinkedannotation.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.editfeatureswithfeaturelinkedannotation.databinding.EditAttributeLayoutBinding
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
@@ -49,9 +46,17 @@ class MainActivity : AppCompatActivity() {
   private var selectedFeature: Feature? = null
   private var selectedFeatureIsPolyline = false
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required to access basemaps and other
     // location services
@@ -94,13 +99,15 @@ class MainActivity : AppCompatActivity() {
         setViewpoint(Viewpoint(39.0204, -77.4159, 2000.0))
 
         // set on tap behaviour
-        onTouchListener = object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
-          override fun onSingleTapUp(e: MotionEvent): Boolean {
-            val screenPoint = android.graphics.Point(e.x.roundToInt(), e.y.roundToInt())
-            selectOrMove(screenPoint)
-            return true
+        onTouchListener =
+          object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
+            override fun onSingleTapUp(e: MotionEvent): Boolean {
+              val screenPoint =
+                android.graphics.Point(e.x.roundToInt(), e.y.roundToInt())
+              selectOrMove(screenPoint)
+              return true
+            }
           }
-        }
       }
     }
   }
@@ -154,7 +161,11 @@ class MainActivity : AppCompatActivity() {
               // set selected feature to null
               selectedFeature = null
               // show message reminding user to select straight (single segment) polylines only
-              Toast.makeText(this, getString(R.string.curved_polylines_message), Toast.LENGTH_SHORT)
+              Toast.makeText(
+                this,
+                getString(R.string.curved_polylines_message),
+                Toast.LENGTH_SHORT
+              )
                 .show()
               // return early, effectively disallowing selection of multi segmented polylines
               return@forEach
@@ -186,24 +197,29 @@ class MainActivity : AppCompatActivity() {
    */
   private fun showEditableAttributes(selectedFeature: Feature) {
     // inflate the edit attribute layout
-    val editAttributeView = layoutInflater.inflate(R.layout.edit_attribute_layout, null)
+    val editAttributeLayoutBinding = EditAttributeLayoutBinding.inflate(LayoutInflater.from(this))
     // create an alert dialog
     AlertDialog.Builder(this).apply {
       setTitle("Edit feature attribute:")
-      setView(editAttributeView)
+      setView(editAttributeLayoutBinding.root)
       // populate edit texts with current attribute values
-      editAttributeView.addressNumberEditText.setText(selectedFeature.attributes["AD_ADDRESS"].toString())
-      editAttributeView.streetEditText.setText(selectedFeature.attributes["ST_STR_NAM"].toString())
+      editAttributeLayoutBinding.addressNumberEditText.setText(selectedFeature.attributes["AD_ADDRESS"].toString())
+      editAttributeLayoutBinding.streetEditText.setText(selectedFeature.attributes["ST_STR_NAM"].toString())
       setPositiveButton("OK") { _, _ ->
         // set AD_ADDRESS value to the int from the edit text
-        val editAttributeString = editAttributeView.addressNumberEditText.text.toString()
+        val editAttributeString = editAttributeLayoutBinding.addressNumberEditText.text.toString()
         if (editAttributeString != "") {
           selectedFeature.attributes["AD_ADDRESS"] = editAttributeString.toInt()
         } else {
-          Toast.makeText(applicationContext, "AD_ADDRESS field must contain an integer!", Toast.LENGTH_LONG).show()
+          Toast.makeText(
+            applicationContext,
+            "AD_ADDRESS field must contain an integer!",
+            Toast.LENGTH_LONG
+          ).show()
         }
         // set ST_STR_NAM value to the string from edit text
-        selectedFeature.attributes["ST_STR_NAM"] = editAttributeView.streetEditText.text.toString()
+        selectedFeature.attributes["ST_STR_NAM"] =
+          editAttributeLayoutBinding.streetEditText.text.toString()
         // update the selected feature's feature table
         selectedFeature.featureTable?.updateFeatureAsync(selectedFeature)
       }

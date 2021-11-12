@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -33,11 +34,12 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseJob
 import com.esri.arcgisruntime.tasks.geodatabase.GeodatabaseSyncTask
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_layout.*
+import com.esri.arcgisruntime.sample.generategeodatabase.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.generategeodatabase.databinding.DialogLayoutBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -50,13 +52,25 @@ class MainActivity : AppCompatActivity() {
   private val geodatabaseSyncTask: GeodatabaseSyncTask by lazy { GeodatabaseSyncTask(getString(R.string.wildfire_sync)) }
   private lateinit var geodatabase: Geodatabase
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-    // use local tile package for the base map
-    val sanFrancisco =
-      TileCache(getExternalFilesDir(null).toString() + getString(R.string.san_francisco_tpkx))
-    val tiledLayer = ArcGISTiledLayer(sanFrancisco)
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
+
+    private val genGeodatabaseButton: Button by lazy {
+        activityMainBinding.genGeodatabaseButton
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
+        // use local tile package for the base map
+        val sanFrancisco =
+            TileCache(getExternalFilesDir(null).toString() + getString(R.string.san_francisco_tpkx))
+        val tiledLayer = ArcGISTiledLayer(sanFrancisco)
 
     // add the map and graphics overlay to the map view
     mapView.apply {
@@ -100,14 +114,16 @@ class MainActivity : AppCompatActivity() {
         geodatabaseSyncTask.generateGeodatabase(parameters, localGeodatabasePath)
 
       // show the job's progress in a dialog
+      val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
       val dialog = createProgressDialog(generateGeodatabaseJob)
+      dialog.setView(dialogLayoutBinding.root)
       dialog.show()
       // define progress and done behaviours and start the job
       generateGeodatabaseJob.apply {
         // update progress
         addProgressChangedListener {
-          dialog.progressBar.progress = this.progress
-          dialog.progressTextView.text = "${this.progress}%"
+          dialogLayoutBinding.progressBar.progress = this.progress
+          dialogLayoutBinding.progressTextView.text = "${this.progress}%"
         }
         // get geodatabase when done
         addJobDoneListener {

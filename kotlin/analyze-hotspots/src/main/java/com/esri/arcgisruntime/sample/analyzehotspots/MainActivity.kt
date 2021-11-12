@@ -31,14 +31,14 @@ import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.analyzehotspots.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.analyzehotspots.databinding.DateRangeDialogBinding
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingString
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingTask
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.date_range_dialog.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 // enum to flag whether the date picker calendar shown should be for the 'from' or 'to' date
 enum class InputCalendar {
@@ -47,13 +47,25 @@ enum class InputCalendar {
 
 class MainActivity : AppCompatActivity() {
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val calendarButton: FloatingActionButton by lazy {
+    activityMainBinding.calendarButton
+  }
+
   private val TAG = this::class.java.simpleName
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
-    // authentication with an API key or named user is required to access basemaps and other 
+    // authentication with an API key or named user is required to access basemaps and other
     // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
@@ -62,7 +74,12 @@ class MainActivity : AppCompatActivity() {
 
     // set the map to the map view
     mapView.map = map
-    mapView.setViewpoint(Viewpoint(Point(-13671170.0, 5693633.0, SpatialReference.create(3857)), 57779.0))
+    mapView.setViewpoint(
+      Viewpoint(
+        Point(-13671170.0, 5693633.0, SpatialReference.create(3857)),
+        57779.0
+      )
+    )
 
     calendarButton.setOnClickListener {
       showDateRangeDialog()
@@ -78,21 +95,26 @@ class MainActivity : AppCompatActivity() {
   private fun showDateRangeDialog() {
     val geoprocessingTask = GeoprocessingTask(getString(R.string.hotspot_911_calls))
 
+    val dateRangeDialogBinding = DateRangeDialogBinding.inflate(layoutInflater)
     // create custom dialog
     Dialog(this).apply {
-      setContentView(R.layout.date_range_dialog)
+      setContentView(dateRangeDialogBinding.root)
       setCancelable(true)
 
-      fromDateText.setOnClickListener {
-        showCalendar(this, InputCalendar.From)
+      dateRangeDialogBinding.fromDateText.setOnClickListener {
+        showCalendar(dateRangeDialogBinding, InputCalendar.From)
       }
 
-      toDateText.setOnClickListener {
-        showCalendar(this, InputCalendar.To)
+      dateRangeDialogBinding.toDateText.setOnClickListener {
+        showCalendar(dateRangeDialogBinding, InputCalendar.To)
       }
 
-      analyzeButton.setOnClickListener {
-        analyzeHotspots(geoprocessingTask, fromDateText.text.toString(), toDateText.text.toString())
+      dateRangeDialogBinding.analyzeButton.setOnClickListener {
+        analyzeHotspots(
+          geoprocessingTask,
+          dateRangeDialogBinding.fromDateText.text.toString(),
+          dateRangeDialogBinding.toDateText.text.toString()
+        )
         dismiss()
       }
     }.show()
@@ -103,7 +125,10 @@ class MainActivity : AppCompatActivity() {
    *
    * @param inputCalendar enum which specifies which editable text the chosen date should be written to
    */
-  private fun showCalendar(dialog: Dialog, inputCalendar: InputCalendar) {
+  private fun showCalendar(
+    dateRangeDialogBinding: DateRangeDialogBinding,
+    inputCalendar: InputCalendar
+  ) {
 
     // define the date picker dialog
     val calendar = Calendar.getInstance()
@@ -111,7 +136,7 @@ class MainActivity : AppCompatActivity() {
     val month = calendar.get(Calendar.MONTH)
     val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-    DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+    DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
 
       val dateString = StringBuilder()
         .append(year)
@@ -122,10 +147,10 @@ class MainActivity : AppCompatActivity() {
 
       when (inputCalendar) {
         InputCalendar.From -> {
-          dialog.fromDateText.setText(dateString)
+          dateRangeDialogBinding.fromDateText.setText(dateString)
         }
         InputCalendar.To -> {
-          dialog.toDateText.setText(dateString)
+          dateRangeDialogBinding.toDateText.setText(dateString)
         }
       }
     }, year, month, day).apply {
@@ -205,7 +230,11 @@ class MainActivity : AppCompatActivity() {
                 mapView.setViewpointGeometryAsync(hotspotMapImageLayer.fullExtent)
               }
             }
-            else -> Toast.makeText(this, getString(R.string.job_failed), Toast.LENGTH_LONG).show()
+            else -> Toast.makeText(
+              this,
+              getString(R.string.job_failed),
+              Toast.LENGTH_LONG
+            ).show()
           }
         }
       } catch (e: Exception) {

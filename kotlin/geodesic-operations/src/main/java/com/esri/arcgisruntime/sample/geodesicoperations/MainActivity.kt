@@ -35,9 +35,10 @@ import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.sample.geodesicoperations.databinding.ActivityMainBinding
 import java.util.Arrays
 
 class MainActivity : AppCompatActivity() {
@@ -46,9 +47,17 @@ class MainActivity : AppCompatActivity() {
   private val unitOfMeasurement = LinearUnit(LinearUnitId.KILOMETERS)
   private val units = "Kilometers"
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required to access basemaps and other
     // location services

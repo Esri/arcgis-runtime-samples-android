@@ -20,9 +20,7 @@ package com.esri.arcgisruntime.sample.realisticlightingandshadows
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.SeekBar
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer
@@ -30,11 +28,9 @@ import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Surface
-import com.esri.arcgisruntime.mapping.view.AtmosphereEffect
-import com.esri.arcgisruntime.mapping.view.Camera
-import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener
-import com.esri.arcgisruntime.mapping.view.LightingMode
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.mapping.view.*
+import com.esri.arcgisruntime.sample.realisticlightingandshadows.databinding.ActivityMainBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.TimeZone
@@ -42,9 +38,33 @@ import kotlin.math.floor
 
 class MainActivity : AppCompatActivity() {
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val sceneView: SceneView by lazy {
+    activityMainBinding.sceneView
+  }
+
+  private val dateTextView: TextView by lazy {
+    activityMainBinding.dateTextView
+  }
+
+  private val seekBar: SeekBar by lazy {
+    activityMainBinding.seekBar
+  }
+
+  private val spinner: Spinner by lazy {
+    activityMainBinding.spinner
+  }
+
+  private val fab: FloatingActionButton by lazy {
+    activityMainBinding.fab
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // get the current calendar and set its time to midday
     val calendar = Calendar.getInstance()

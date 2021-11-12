@@ -17,18 +17,18 @@
 
 package com.esri.arcgisruntime.sample.authenticatewithoauth
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.mapping.ArcGISMap
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
+import com.esri.arcgisruntime.sample.authenticatewithoauth.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
 import com.esri.arcgisruntime.security.OAuthConfiguration
-import kotlinx.android.synthetic.main.activity_main.*
 import java.net.MalformedURLException
 
 
@@ -38,9 +38,17 @@ class MainActivity : AppCompatActivity() {
     private val TAG: String = MainActivity::class.java.simpleName
   }
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     try {
       // set up an oauth config with url to portal, a client id and a re-direct url
@@ -56,7 +64,9 @@ class MainActivity : AppCompatActivity() {
       val defaultAuthenticationChallengeHandler = DefaultAuthenticationChallengeHandler(this)
 
       // use the DefaultChallengeHandler to handle authentication challenges
-      AuthenticationManager.setAuthenticationChallengeHandler(defaultAuthenticationChallengeHandler)
+      AuthenticationManager.setAuthenticationChallengeHandler(
+        defaultAuthenticationChallengeHandler
+      )
 
       // add an OAuth configuration
       // NOTE: you must add the DefaultOAuthIntentReceiver Activity to the app's manifest to handle starting a browser

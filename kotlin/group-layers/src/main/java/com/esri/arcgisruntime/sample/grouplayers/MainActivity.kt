@@ -18,29 +18,53 @@ package com.esri.arcgisruntime.sample.grouplayers
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.esri.arcgisruntime.data.ServiceFeatureTable
-import com.esri.arcgisruntime.layers.ArcGISSceneLayer
-import com.esri.arcgisruntime.layers.FeatureLayer
-import com.esri.arcgisruntime.layers.GroupLayer
-import com.esri.arcgisruntime.layers.GroupVisibilityMode
-import com.esri.arcgisruntime.layers.Layer
+import com.esri.arcgisruntime.layers.*
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.LayerList
 import com.esri.arcgisruntime.mapping.view.Camera
+import com.esri.arcgisruntime.mapping.view.SceneView
+import com.esri.arcgisruntime.sample.grouplayers.databinding.ActivityMainBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.group_layers_bottom_sheet.view.*
 
 
 class MainActivity : AppCompatActivity() {
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val sceneView: SceneView by lazy {
+    activityMainBinding.sceneView
+  }
+
+  private val bottomSheet: LinearLayout by lazy {
+    activityMainBinding.bottomSheet.bottomSheetLayout
+  }
+
+  private val header: ConstraintLayout by lazy {
+    activityMainBinding.bottomSheet.header
+  }
+
+  private val arrowImageView: ImageView by lazy {
+    activityMainBinding.bottomSheet.arrowImageView
+  }
+
+  private val recyclerView: RecyclerView by lazy {
+    activityMainBinding.bottomSheet.recyclerView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // create different types of layers
     val trees =
@@ -113,17 +137,17 @@ class MainActivity : AppCompatActivity() {
     val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet).apply {
       // expand the bottom sheet, and ensure it is displayed on the screen when collapsed
       state = BottomSheetBehavior.STATE_EXPANDED
-      peekHeight = bottomSheet.header.height
+      peekHeight = header.height
       // animate the arrow when the bottom sheet slides
       addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
-          bottomSheet.header.arrowImageView.rotation = slideOffset * 180f
+          arrowImageView.rotation = slideOffset * 180f
         }
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-          bottomSheet.header.arrowImageView.rotation = when (newState) {
+          arrowImageView.rotation = when (newState) {
             BottomSheetBehavior.STATE_EXPANDED -> 180f
-            else -> bottomSheet.header.arrowImageView.rotation
+            else -> arrowImageView.rotation
           }
         }
       })
@@ -148,12 +172,12 @@ class MainActivity : AppCompatActivity() {
       }
       recyclerView.layoutManager = LinearLayoutManager(applicationContext)
       // rotate the arrow so it starts off in the correct rotation
-      header.arrowImageView.rotation = 180f
+      arrowImageView.rotation = 180f
     }
 
     // shrink the scene view so it is not hidden under the bottom sheet header when collapsed
     (sceneView.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin =
-      bottomSheet.header.height
+      header.height
   }
 
   override fun onResume() {

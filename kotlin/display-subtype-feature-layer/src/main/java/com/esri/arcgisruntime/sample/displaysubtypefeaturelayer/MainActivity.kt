@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.displaysubtypefeaturelayer
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.arcgisservices.LabelDefinition
@@ -30,24 +31,59 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.labeling.SimpleLabelExpression
-import com.esri.arcgisruntime.security.UserCredential
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
-import com.esri.arcgisruntime.symbology.TextSymbol
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.sublayer_control_layout.*
 import kotlin.math.roundToInt
-
+import com.esri.arcgisruntime.sample.displaysubtypefeaturelayer.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.security.UserCredential
+import com.esri.arcgisruntime.symbology.TextSymbol
 
 class MainActivity : AppCompatActivity() {
 
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
+
+    private val setMinScaleButton: Button by lazy {
+        activityMainBinding.sublayer.setMinScaleButton
+    }
+
+    private val labelingScaleTextView: TextView by lazy {
+        activityMainBinding.sublayer.labelingScaleTextView
+    }
+
+    private val alternativeRendererButton: RadioButton by lazy {
+        activityMainBinding.sublayer.alternativeRendererButton
+    }
+
+    private val originalRendererButton: RadioButton by lazy {
+        activityMainBinding.sublayer.originalRendererButton
+    }
+
+    private val rendererRadioGroup: RadioGroup by lazy {
+        activityMainBinding.sublayer.rendererRadioGroup
+    }
+
+    private val showSubtypeSublayerCheckBox: CheckBox by lazy {
+        activityMainBinding.sublayer.showSubtypeSublayerCheckBox
+    }
+
+    private val currentMapScaleTextView: TextView by lazy {
+        activityMainBinding.sublayer.currentMapScaleTextView
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(activityMainBinding.root)
 
-        // authentication with an API key or named user is required to access basemaps and other
-        // location services
-        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+    // authentication with an API key or named user is required to access basemaps and other 
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         // setup map with basemap and an initial viewpoint
         mapView.apply {
