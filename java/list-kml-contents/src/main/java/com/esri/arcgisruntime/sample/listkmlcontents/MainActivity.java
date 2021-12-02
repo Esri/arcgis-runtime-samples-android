@@ -99,6 +99,9 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
       if (kmlDataset.getLoadStatus() == LoadStatus.LOADED) {
         // for each KML node in the dataset
         for (KmlNode kmlNode : kmlDataset.getRootNodes()) {
+          if(kmlNode.getName().equals("")){
+            kmlNode.setName("Root KML Node");
+          }
           // add the parent node to the list
           mKmlNodeList.add(kmlNode);
           // add the node name to the list
