@@ -261,8 +261,9 @@ class MainActivity : AppCompatActivity() {
     val resultLocationGraphic = Graphic(resultPoint, geocodeResult.attributes, pinSourceSymbol)
     // add graphic to location layer
     graphicsOverlay.graphics.add(resultLocationGraphic)
-    mapView.setViewpointAsync(Viewpoint(geocodeResult.extent), 1f)
-    showCallout(resultLocationGraphic)
+    mapView.setViewpointAsync(Viewpoint(geocodeResult.extent), 1f).addDoneListener {
+      showCallout(resultLocationGraphic)
+    }
   }
 
   /**
