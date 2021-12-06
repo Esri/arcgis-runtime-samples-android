@@ -326,7 +326,9 @@ class MainActivity : AppCompatActivity() {
       // show callout beneath graphic
       style.leaderPosition = Callout.Style.LeaderPosition.UPPER_MIDDLE
       // show the callout
-      show()
+      if (!isShowing) {
+        show()
+      }
     }
   }
 
