@@ -72,8 +72,9 @@ class MainActivity : AppCompatActivity() {
         mapView.map.addDoneLoadingListener {
             if (map.loadStatus == LoadStatus.LOADED) {
 
-                //set floor manager
+                //set and load the floor manager
                 floorManager = mapView.map.floorManager
+                floorManager.loadAsync()
 
                 //set initial floor level to 1
                 setFloor()
@@ -115,7 +116,6 @@ class MainActivity : AppCompatActivity() {
      * and disable the other floors.
      */
     private fun setFloor() {
-        floorManager.loadAsync()
         floorManager.addDoneLoadingListener {
             if (floorManager.loadStatus == LoadStatus.LOADED) {
                 // set all the floors to invisible to reset the floorManager
