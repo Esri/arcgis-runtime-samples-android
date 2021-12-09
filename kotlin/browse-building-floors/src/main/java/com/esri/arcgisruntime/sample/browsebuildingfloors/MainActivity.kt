@@ -119,8 +119,8 @@ class MainActivity : AppCompatActivity() {
         floorManager.addDoneLoadingListener {
             if (floorManager.loadStatus == LoadStatus.LOADED) {
                 // set all the floors to invisible to reset the floorManager
-                for (i in floorManager.levels.indices) {
-                    floorManager.levels[i].isVisible = false
+                for (floorLevel in floorManager.levels) {
+                    floorLevel.isVisible = false
                 }
                 // set the currently selected floor to be visible.
                 floorManager.levels[currentFloor].isVisible = true
@@ -143,8 +143,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         mapView.dispose()
-        currentFloor
         super.onDestroy()
     }
 }
-
