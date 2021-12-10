@@ -93,7 +93,12 @@ class MainActivity : AppCompatActivity() {
       if (topographicMap.loadStatus == LoadStatus.LOADED) {
         initializeAddressFinding()
       } else {
-        Toast.makeText(applicationContext, "Map failed to load", Toast.LENGTH_LONG).show()
+                Log.e(TAG, "Map failed to load: " + topographicMap.loadError.message)
+                Toast.makeText(
+                    applicationContext,
+                    "Map failed to load: " + topographicMap.loadError.message,
+                    Toast.LENGTH_LONG
+                ).show()
       }
     }
 
