@@ -19,6 +19,8 @@ package com.esri.arcgisruntime.sample.buffer
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MotionEvent
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
@@ -32,20 +34,37 @@ import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.buffer.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val bufferInput: EditText by lazy {
+    activityMainBinding.bufferInput
+  }
+
+  private val clearButton: Button by lazy {
+    activityMainBinding.clearButton
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
-    // authentication with an API key or named user is required to access basemaps and other 
+    // authentication with an API key or named user is required to access basemaps and other
     // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
@@ -96,52 +115,53 @@ class MainActivity : AppCompatActivity() {
     )
 
     // create a buffer around the clicked location
-    mapView.onTouchListener = object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
-      override fun onSingleTapConfirmed(motionEvent: MotionEvent): Boolean {
+    mapView.onTouchListener =
+      object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
+        override fun onSingleTapConfirmed(motionEvent: MotionEvent): Boolean {
 
-        // get the point that was clicked and convert it to a point in the map
-        val screenPoint = android.graphics.Point(
-          motionEvent.x.roundToInt(),
-          motionEvent.y.roundToInt()
-        )
-        val mapPoint = mapView.screenToLocation(screenPoint)
-
-        // only draw a buffer if a value was entered
-        if (bufferInput.text.toString().isNotEmpty()) {
-          // get the buffer distance (miles) entered in the text box
-          val bufferInMiles = bufferInput.text.toString().toDouble()
-
-          // convert the input distance to meters, 1609.34 meters in one mile
-          val bufferInMeters = bufferInMiles * 1609.34
-
-          // create a planar buffer graphic around the input location at the specified distance
-          val bufferGeometryPlanar = GeometryEngine.buffer(mapPoint, bufferInMeters)
-          val planarBufferGraphic = Graphic(bufferGeometryPlanar)
-
-          // create a geodesic buffer graphic using the same location and distance
-          val bufferGeometryGeodesic = GeometryEngine.bufferGeodetic(
-            mapPoint, bufferInMeters,
-            LinearUnit(LinearUnitId.METERS), Double.NaN, GeodeticCurveType.GEODESIC
+          // get the point that was clicked and convert it to a point in the map
+          val screenPoint = android.graphics.Point(
+            motionEvent.x.roundToInt(),
+            motionEvent.y.roundToInt()
           )
-          val geodesicBufferGraphic = Graphic(bufferGeometryGeodesic)
+          val mapPoint = mapView.screenToLocation(screenPoint)
 
-          // create a graphic for the user tap location
-          val locationGraphic = Graphic(mapPoint)
+          // only draw a buffer if a value was entered
+          if (bufferInput.text.toString().isNotEmpty()) {
+            // get the buffer distance (miles) entered in the text box
+            val bufferInMiles = bufferInput.text.toString().toDouble()
 
-          // add the buffer polygons and tap location graphics to the appropriate graphic overlays
-          planarGraphicsOverlay.graphics.add(planarBufferGraphic)
-          geodesicGraphicsOverlay.graphics.add(geodesicBufferGraphic)
-          tapLocationsOverlay.graphics.add(locationGraphic)
-        } else {
-          Toast.makeText(
-            this@MainActivity,
-            "Please enter a buffer distance first.",
-            Toast.LENGTH_LONG
-          ).show()
+            // convert the input distance to meters, 1609.34 meters in one mile
+            val bufferInMeters = bufferInMiles * 1609.34
+
+            // create a planar buffer graphic around the input location at the specified distance
+            val bufferGeometryPlanar = GeometryEngine.buffer(mapPoint, bufferInMeters)
+            val planarBufferGraphic = Graphic(bufferGeometryPlanar)
+
+            // create a geodesic buffer graphic using the same location and distance
+            val bufferGeometryGeodesic = GeometryEngine.bufferGeodetic(
+              mapPoint, bufferInMeters,
+              LinearUnit(LinearUnitId.METERS), Double.NaN, GeodeticCurveType.GEODESIC
+            )
+            val geodesicBufferGraphic = Graphic(bufferGeometryGeodesic)
+
+            // create a graphic for the user tap location
+            val locationGraphic = Graphic(mapPoint)
+
+            // add the buffer polygons and tap location graphics to the appropriate graphic overlays
+            planarGraphicsOverlay.graphics.add(planarBufferGraphic)
+            geodesicGraphicsOverlay.graphics.add(geodesicBufferGraphic)
+            tapLocationsOverlay.graphics.add(locationGraphic)
+          } else {
+            Toast.makeText(
+              this@MainActivity,
+              "Please enter a buffer distance first.",
+              Toast.LENGTH_LONG
+            ).show()
+          }
+          return true
         }
-        return true
       }
-    }
 
     // clear the graphics from the graphics overlays
     clearButton.setOnClickListener {

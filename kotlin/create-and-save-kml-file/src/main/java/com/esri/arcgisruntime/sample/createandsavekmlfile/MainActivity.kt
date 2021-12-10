@@ -21,10 +21,7 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
@@ -34,46 +31,70 @@ import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.KmlLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.mapping.view.SketchCreationMode
 import com.esri.arcgisruntime.mapping.view.SketchEditor
 import com.esri.arcgisruntime.mapping.view.SketchStyle
-import com.esri.arcgisruntime.ogc.kml.KmlAltitudeMode
-import com.esri.arcgisruntime.ogc.kml.KmlDataset
-import com.esri.arcgisruntime.ogc.kml.KmlDocument
-import com.esri.arcgisruntime.ogc.kml.KmlGeometry
-import com.esri.arcgisruntime.ogc.kml.KmlIcon
-import com.esri.arcgisruntime.ogc.kml.KmlIconStyle
-import com.esri.arcgisruntime.ogc.kml.KmlLineStyle
-import com.esri.arcgisruntime.ogc.kml.KmlPlacemark
-import com.esri.arcgisruntime.ogc.kml.KmlPolygonStyle
-import com.esri.arcgisruntime.ogc.kml.KmlStyle
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.kml_geometry_controls_layout.*
+import com.esri.arcgisruntime.ogc.kml.*
+import com.esri.arcgisruntime.sample.createandsavekmlfile.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.createandsavekmlfile.databinding.KmlGeometryControlsLayoutBinding
 import java.io.File
-
-val kmlDocument by lazy { KmlDocument() }
-
-val pointSymbolUrls by lazy {
-  listOf(
-    "http://static.arcgis.com/images/Symbols/Shapes/BlueCircleLargeB.png",
-    "http://static.arcgis.com/images/Symbols/Shapes/BlueDiamondLargeB.png",
-    "http://static.arcgis.com/images/Symbols/Shapes/BluePin1LargeB.png",
-    "http://static.arcgis.com/images/Symbols/Shapes/BluePin2LargeB.png",
-    "http://static.arcgis.com/images/Symbols/Shapes/BlueSquareLargeB.png",
-    "http://static.arcgis.com/images/Symbols/Shapes/BlueStarLargeB.png"
-  )
-}
-
-// set the default color to blue
-var color: Int = Color.parseColor("Blue")
 
 class MainActivity : AppCompatActivity() {
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val kmlGeometryControlsLayoutBinding: KmlGeometryControlsLayoutBinding by lazy {
+    activityMainBinding.controls
+  }
+
+  private val pointSymbolSpinner: Spinner by lazy {
+    kmlGeometryControlsLayoutBinding.pointSymbolSpinner
+  }
+
+  private val sketchCreationModeSpinner: Spinner by lazy {
+    kmlGeometryControlsLayoutBinding.sketchCreationModeSpinner
+  }
+
+  private val pointSymbolTextView: TextView by lazy {
+    kmlGeometryControlsLayoutBinding.pointSymbolTextView
+  }
+
+  private val colorSpinner: Spinner by lazy {
+    kmlGeometryControlsLayoutBinding.colorSpinner
+  }
+
+  private val colorTextView: TextView by lazy {
+    kmlGeometryControlsLayoutBinding.colorTextView
+  }
+
+  private val kmlDocument by lazy { KmlDocument() }
+
+  private val pointSymbolUrls by lazy {
+    listOf(
+      "http://static.arcgis.com/images/Symbols/Shapes/BlueCircleLargeB.png",
+      "http://static.arcgis.com/images/Symbols/Shapes/BlueDiamondLargeB.png",
+      "http://static.arcgis.com/images/Symbols/Shapes/BluePin1LargeB.png",
+      "http://static.arcgis.com/images/Symbols/Shapes/BluePin2LargeB.png",
+      "http://static.arcgis.com/images/Symbols/Shapes/BlueSquareLargeB.png",
+      "http://static.arcgis.com/images/Symbols/Shapes/BlueStarLargeB.png"
+    )
+  }
+
+  // set the default color to blue
+  var color: Int = Color.parseColor("Blue")
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
-    // authentication with an API key or named user is required to access basemaps and other 
+    // authentication with an API key or named user is required to access basemaps and other
     // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
@@ -119,7 +140,8 @@ class MainActivity : AppCompatActivity() {
     if (mapView.sketchEditor.isSketchValid) {
       // project the sketched geometry to WGS84 to comply with the KML standard
       val sketchGeometry = mapView.sketchEditor.geometry
-      val projectedGeometry = GeometryEngine.project(sketchGeometry, SpatialReferences.getWgs84())
+      val projectedGeometry =
+        GeometryEngine.project(sketchGeometry, SpatialReferences.getWgs84())
 
       // stop the current sketch
       mapView.sketchEditor.stop()
@@ -133,7 +155,10 @@ class MainActivity : AppCompatActivity() {
       when (sketchGeometry.geometryType) {
         GeometryType.POINT -> {
           kmlStyle.iconStyle =
-            KmlIconStyle(KmlIcon(pointSymbolUrls[pointSymbolSpinner.selectedItemPosition]), 1.0)
+            KmlIconStyle(
+              KmlIcon(pointSymbolUrls[pointSymbolSpinner.selectedItemPosition]),
+              1.0
+            )
         }
         GeometryType.POLYLINE -> {
           kmlStyle.lineStyle = KmlLineStyle(color, 8.0)
@@ -145,7 +170,11 @@ class MainActivity : AppCompatActivity() {
           }
         }
         else -> {
-          Toast.makeText(this, "Geometry type not supported in this sample.", Toast.LENGTH_LONG)
+          Toast.makeText(
+            this,
+            "Geometry type not supported in this sample.",
+            Toast.LENGTH_LONG
+          )
             .show()
         }
       }

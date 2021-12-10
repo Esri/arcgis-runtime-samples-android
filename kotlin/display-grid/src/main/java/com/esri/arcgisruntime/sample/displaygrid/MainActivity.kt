@@ -22,6 +22,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -31,22 +32,30 @@ import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
-import com.esri.arcgisruntime.mapping.view.Grid
-import com.esri.arcgisruntime.mapping.view.LatitudeLongitudeGrid
-import com.esri.arcgisruntime.mapping.view.MgrsGrid
-import com.esri.arcgisruntime.mapping.view.UsngGrid
-import com.esri.arcgisruntime.mapping.view.UtmGrid
+import com.esri.arcgisruntime.mapping.view.*
+import com.esri.arcgisruntime.sample.displaygrid.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.displaygrid.databinding.PopupMenuBinding
 import com.esri.arcgisruntime.symbology.LineSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.TextSymbol
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.popup_menu.view.*
 
 class MainActivity : AppCompatActivity() {
   private var lineColor = 0
   private var labelColor = 0
   private var labelPosition = Grid.LabelPosition.ALL_SIDES
   private var isLabelVisible = true
+
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val menuButton: Button by lazy {
+    activityMainBinding.menuButton
+  }
 
   // create a point to focus the map on in Quebec province
   private val center: Point by lazy {
@@ -59,9 +68,9 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
-    // authentication with an API key or named user is required to access basemaps and other 
+    // authentication with an API key or named user is required to access basemaps and other
     // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
@@ -77,38 +86,39 @@ class MainActivity : AppCompatActivity() {
     // set up a popup menu to manage grid settings
     val builder =
       AlertDialog.Builder(this@MainActivity)
-    val popupView = layoutInflater.inflate(R.layout.popup_menu, null)
-    builder.setView(popupView)
+    val popUpMenuBinding = PopupMenuBinding.inflate(layoutInflater)
+
+    builder.setView(popUpMenuBinding.root)
     val dialog = builder.create()
 
     // set up options in popup menu
     // create drop-down list of different layer types
-    setupLayerSpinner(popupView)
+    setupLayerSpinner(popUpMenuBinding)
 
     // create drop-down list of different line colors
-    setupLineColorSpinner(popupView)
+    setupLineColorSpinner(popUpMenuBinding)
 
     // create drop-down list of different label colors
-    setupLabelColorSpinner(popupView)
+    setupLabelColorSpinner(popUpMenuBinding)
 
     // create drop-down list of different label positions
-    setupLabelPositionSpinner(popupView)
+    setupLabelPositionSpinner(popUpMenuBinding)
 
     // setup the checkbox to change the visibility of the labels
-    setupLabelsCheckbox(popupView)
+    setupLabelsCheckbox(popUpMenuBinding)
 
     // display pop-up box when button is clicked
-    menu_button.setOnClickListener { dialog.show() }
+    menuButton.setOnClickListener { dialog.show() }
   }
 
   /**
    * Sets up the spinner for selecting a grid type
    * and handles behavior for when a new grid type is selected.
    *
-   * @param popupView the popup view inflated in onCreate()
+   * @param popupMenuBinding the popup binding inflated in onCreate()
    */
-  private fun setupLayerSpinner(popupView: View) {
-    popupView.layer_spinner.apply {
+  private fun setupLayerSpinner(popupMenuBinding: PopupMenuBinding) {
+    popupMenuBinding.layerSpinner.apply {
       // create drop-down list of different grids
       adapter = ArrayAdapter(
         this@MainActivity, android.R.layout.simple_spinner_item,
@@ -119,7 +129,7 @@ class MainActivity : AppCompatActivity() {
       // change between different grids on the mapView
       onItemSelectedListener = object : OnItemSelectedListener {
         override fun onItemSelected(
-        parent: AdapterView<*>?,
+          parent: AdapterView<*>?,
           view: View,
           position: Int,
           id: Long
@@ -165,10 +175,10 @@ class MainActivity : AppCompatActivity() {
   /**
    * Sets up the spinner for selecting a line color and handles behavior for when a new line color is selected.
    *
-   * @param popupView the popup view inflated in onCreate()
+   * @param popupMenuBinding the popup binding inflated in onCreate()
    */
-  private fun setupLineColorSpinner(popupView: View) {
-    popupView.line_color_spinner.apply {
+  private fun setupLineColorSpinner(popupMenuBinding: PopupMenuBinding) {
+    popupMenuBinding.lineColorSpinner.apply {
       // create drop-down list of different line colors
       adapter = ArrayAdapter(
         this@MainActivity, android.R.layout.simple_spinner_item,
@@ -207,10 +217,10 @@ class MainActivity : AppCompatActivity() {
    * Sets up the spinner for selecting a label color
    * and handles behavior for when a new label color is selected.
    *
-   * @param popupView the popup view inflated in onCreate()
+   * @param popupMenuBinding the popup binding inflated in onCreate()
    */
-  private fun setupLabelColorSpinner(popupView: View) {
-    popupView.label_color_spinner.apply {
+  private fun setupLabelColorSpinner(popupMenuBinding: PopupMenuBinding) {
+    popupMenuBinding.labelColorSpinner.apply {
       adapter = ArrayAdapter(
         this@MainActivity, android.R.layout.simple_spinner_item,
         resources.getStringArray(R.array.colors_array)
@@ -249,10 +259,10 @@ class MainActivity : AppCompatActivity() {
    * Sets up the spinner for selecting a label position relative to the grid
    * and handles behavior for when a label position is selected.
    *
-   * @param popupView the popup view inflated in onCreate()
+   * @param popupMenuBinding the popup binding inflated in onCreate()
    */
-  private fun setupLabelPositionSpinner(popupView: View) {
-    popupView.label_position_spinner.apply {
+  private fun setupLabelPositionSpinner(popupMenuBinding: PopupMenuBinding) {
+    popupMenuBinding.labelPositionSpinner.apply {
       adapter = ArrayAdapter(
         this@MainActivity, android.R.layout.simple_spinner_item,
         resources.getStringArray(R.array.positions_array)
@@ -293,10 +303,10 @@ class MainActivity : AppCompatActivity() {
   /**
    * Sets up the spinner for the checkbox making labels visible or invisible.
    *
-   * @param popupView the popup view inflated in onCreate()
+   * @param popupMenuBinding the popup binding inflated in onCreate()
    */
-  private fun setupLabelsCheckbox(popupView: View) {
-    popupView.labels_checkBox.apply {
+  private fun setupLabelsCheckbox(popupMenuBinding: PopupMenuBinding) {
+    popupMenuBinding.labelsCheckBox.apply {
       isChecked = true
       // hide and show label visibility when the checkbox is clicked
       setOnClickListener {

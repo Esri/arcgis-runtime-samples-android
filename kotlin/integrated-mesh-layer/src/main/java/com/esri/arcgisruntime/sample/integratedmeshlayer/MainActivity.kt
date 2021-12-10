@@ -22,13 +22,23 @@ import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.layers.IntegratedMeshLayer
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.view.Camera
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.mapping.view.SceneView
+import com.esri.arcgisruntime.sample.integratedmeshlayer.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val sceneView: SceneView by lazy {
+    activityMainBinding.sceneView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // create an integrated mesh layer of part of the city of girona
     val gironaIntegratedMeshLayer = IntegratedMeshLayer("https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/Girona_Spain/SceneServer")

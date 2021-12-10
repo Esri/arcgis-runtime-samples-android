@@ -33,17 +33,26 @@ import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.addgraphicsrenderer.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(activityMainBinding.root)
 
         // authentication with an API key or named user is required to access basemaps and other
         // location services
@@ -58,12 +67,11 @@ class MainActivity : AppCompatActivity() {
 
         // add graphics overlays
         mapView.graphicsOverlays.addAll(
-            arrayOf(
-                renderedPointGraphicsOverlay(),
-                renderedLineGraphicsOverlay(),
-                renderedPolygonGraphicsOverlay(),
-                renderedCurvedPolygonGraphicsOverlay()
-            )
+          arrayOf(
+            renderedPointGraphicsOverlay(),
+            renderedLineGraphicsOverlay(),
+            renderedPolygonGraphicsOverlay(),
+          renderedCurvedPolygonGraphicsOverlay())
         )
     }
 
@@ -236,9 +244,7 @@ class MainActivity : AppCompatActivity() {
             add(rightCurve)
         }
         return Polygon(heart, spatialReference)
-    }
-
-    override fun onPause() {
+    }override fun onPause() {
         mapView.pause()
         super.onPause()
     }

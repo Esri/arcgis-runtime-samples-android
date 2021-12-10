@@ -23,7 +23,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.esri.arcgisruntime.portal.PortalItem
-import kotlinx.android.synthetic.main.portal_item_row.view.*
+import com.esri.arcgisruntime.sample.integratedwindowsauthentication.databinding.PortalItemRowBinding
 
 class PortalItemAdapter(private val onItemClickListener: OnItemClickListener) :
   RecyclerView.Adapter<PortalItemAdapter.PortalItemViewHolder>() {
@@ -32,9 +32,8 @@ class PortalItemAdapter(private val onItemClickListener: OnItemClickListener) :
   private var portalItems: MutableList<PortalItem>? = null
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PortalItemViewHolder {
-    with(LayoutInflater.from(parent.context).inflate(R.layout.portal_item_row, parent, false)) {
-      return PortalItemViewHolder(this)
-    }
+      val binding = PortalItemRowBinding.inflate(LayoutInflater.from(parent.context),parent, false)
+      return PortalItemViewHolder(binding)
   }
 
   override fun onBindViewHolder(holder: PortalItemViewHolder, position: Int) {
@@ -43,9 +42,9 @@ class PortalItemAdapter(private val onItemClickListener: OnItemClickListener) :
 
   override fun getItemCount() = portalItems?.size ?: 0
 
-  class PortalItemViewHolder(itemView: View) :
-    RecyclerView.ViewHolder(itemView) {
-    private val itemTextView = itemView.itemTextView
+  class PortalItemViewHolder(binding: PortalItemRowBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+    private val itemTextView = binding.itemTextView
 
     fun bind(portalItem: PortalItem?, onItemClickListener: OnItemClickListener) {
       portalItem?.let {

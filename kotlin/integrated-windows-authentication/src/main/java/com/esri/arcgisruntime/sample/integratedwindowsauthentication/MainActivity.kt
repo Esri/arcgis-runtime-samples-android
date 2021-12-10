@@ -21,34 +21,76 @@ import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
 import android.view.View
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.portal.PortalQueryParameters
+import com.esri.arcgisruntime.sample.integratedwindowsauthentication.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.security.*
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.portal_info.*
-import kotlinx.android.synthetic.main.portal_load_state.*
 import java.net.URI
 
-class MainActivity : AppCompatActivity(), PortalItemAdapter.OnItemClickListener {
+class MainActivity : AppCompatActivity(),
+    PortalItemAdapter.OnItemClickListener {
 
     private lateinit var portalItemAdapter: PortalItemAdapter
 
     // objects that implement Loadable must be class fields to prevent being garbage collected before loading
     private lateinit var portal: Portal
 
+
     private val TAG: String = MainActivity::class.java.simpleName
+
+    private val MAX_AUTH_ATTEMPTS = 5
+
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
+
+    private val searchPublicButton: Button by lazy {
+        activityMainBinding.portalInfo.searchPublicButton
+    }
+
+    private val searchSecureButton: Button by lazy {
+        activityMainBinding.portalInfo.searchSecureButton
+    }
+
+    private val portalUrlEditText: EditText by lazy {
+        activityMainBinding.portalInfo.portalUrlEditText
+    }
+
+    private val recyclerView: RecyclerView by lazy {
+        activityMainBinding.portalInfo.recyclerView
+    }
+
+    private val loadedWebMapTextView: TextView by lazy {
+        activityMainBinding.portalInfo.loadedWebMapTextView
+    }
+
+    private val portalLoadStateTextView: TextView by lazy {
+        activityMainBinding.portalInfo.portalLoadStateView.portalLoadStateTextView
+    }
+
+    private val portalLoadStateLayout: ConstraintLayout by lazy {
+        activityMainBinding.portalInfo.portalLoadStateView.portalLoadStateLayout
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(activityMainBinding.root)
 
         // authentication with an API key or named user is required to access basemaps and other
         // location services
@@ -97,7 +139,7 @@ class MainActivity : AppCompatActivity(), PortalItemAdapter.OnItemClickListener 
         recyclerView.visibility = View.INVISIBLE
 
         // Show portal load state during search
-        portalLoadStateView.visibility = View.VISIBLE
+        portalLoadStateLayout.visibility = View.VISIBLE
         portalLoadStateTextView.text = getString(R.string.portal_load_state_searching, portal.uri)
 
         // Add Runnable to execute when Portal has finished loading
@@ -124,13 +166,14 @@ class MainActivity : AppCompatActivity(), PortalItemAdapter.OnItemClickListener 
                                     portalItemAdapter.updatePortalItems(portalItemSetResults)
                                 }
                             } catch (exception: Exception) {
-                                getString(R.string.error_item_set, exception.message).let {
+                                getString(R.string.error_item_set, exception.message
+                                ).let {
                                     Toast.makeText(this, it, Toast.LENGTH_LONG).show()
                                     Log.e(TAG, it)
                                 }
                             }
                             // Hide portal load state
-                            portalLoadStateView.visibility = View.GONE
+                            portalLoadStateLayout.visibility = View.GONE
                             // Show portal list
                             recyclerView.visibility = View.VISIBLE
                         }
@@ -147,7 +190,7 @@ class MainActivity : AppCompatActivity(), PortalItemAdapter.OnItemClickListener 
                     }
                 }
                 // Hide portal load state
-                portalLoadStateView.visibility = View.GONE
+                portalLoadStateLayout.visibility = View.GONE
             }
         }
 
@@ -156,6 +199,7 @@ class MainActivity : AppCompatActivity(), PortalItemAdapter.OnItemClickListener 
     }
 
     /**
+
      * Add the given portal item to a new map and set the map to the map view.
      *
      * @param portalItem
@@ -174,6 +218,8 @@ class MainActivity : AppCompatActivity(), PortalItemAdapter.OnItemClickListener 
         // Show item ID in UI
         loadedWebMapTextView.text = getString(R.string.web_map_loaded_text, portalItem.itemId)
     }
+
+
 
     override fun onPortalItemClick(portalItem: PortalItem) {
         addMap(portalItem)

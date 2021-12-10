@@ -25,10 +25,7 @@ import android.provider.BaseColumns
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -39,16 +36,12 @@ import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
-import com.esri.arcgisruntime.mapping.view.Callout
-import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
-import com.esri.arcgisruntime.mapping.view.Graphic
-import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
-import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult
+import com.esri.arcgisruntime.mapping.view.*
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol
 import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters
 import com.esri.arcgisruntime.tasks.geocode.GeocodeResult
 import com.esri.arcgisruntime.tasks.geocode.LocatorTask
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.sample.findaddress.databinding.ActivityMainBinding
 import java.util.concurrent.ExecutionException
 import kotlin.math.roundToInt
 
@@ -66,9 +59,25 @@ class MainActivity : AppCompatActivity() {
   // create a new Graphics Overlay
   private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val suggestionSpinner: Spinner by lazy {
+    activityMainBinding.suggestionSpinner
+  }
+
+  private val addressSearchView: SearchView by lazy {
+    activityMainBinding.addressSearchView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required to access basemaps and other
     // location services

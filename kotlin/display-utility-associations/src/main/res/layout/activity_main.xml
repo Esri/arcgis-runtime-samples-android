@@ -12,6 +12,7 @@
         android:id="@+id/mapView" />
 
     <include
+        android:id="@+id/subLayout"
         layout="@layout/utility_association_legend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

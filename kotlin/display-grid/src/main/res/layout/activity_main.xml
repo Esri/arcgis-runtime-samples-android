@@ -16,7 +16,7 @@
 
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:text="@string/change_grid_button"
-        android:id="@+id/menu_button" android:layout_marginBottom="50dp"
+        android:id="@+id/menuButton" android:layout_marginBottom="50dp"
         app:layout_constraintBottom_toBottomOf="@+id/mapView"
         app:layout_constraintEnd_toEndOf="@id/mapView"
         app:layout_constraintStart_toStartOf="@id/mapView"/>

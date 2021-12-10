@@ -3,17 +3,26 @@ package com.esri.arcgisruntime.sample.tokenauthentication
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.mapping.ArcGISMap
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
+import com.esri.arcgisruntime.sample.tokenauthentication.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // set up an authentication handler to take credentials for access to the protected map service
     AuthenticationManager.setAuthenticationChallengeHandler(

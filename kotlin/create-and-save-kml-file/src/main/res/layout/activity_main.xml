@@ -10,6 +10,7 @@
         android:layout_height="match_parent" />
 
     <include
+        android:id="@+id/controls"
         layout="@layout/kml_geometry_controls_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

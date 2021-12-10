@@ -21,7 +21,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import android.widget.CheckBox
 import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.geoanalysis.LocationViewshed
@@ -32,12 +34,8 @@ import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Surface
-import com.esri.arcgisruntime.mapping.view.AnalysisOverlay
-import com.esri.arcgisruntime.mapping.view.Camera
-import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener
-import com.esri.arcgisruntime.mapping.view.OrbitLocationCameraController
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.viewshed_controls.*
+import com.esri.arcgisruntime.mapping.view.*
+import com.esri.arcgisruntime.sample.viewshedlocation.databinding.ActivityMainBinding
 import java.util.concurrent.ExecutionException
 import kotlin.math.roundToInt
 
@@ -61,9 +59,73 @@ class MainActivity : AppCompatActivity() {
 
   private lateinit var viewShed: LocationViewshed
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val sceneView: SceneView by lazy {
+    activityMainBinding.sceneView
+  }
+
+  private val headingSeekBar: SeekBar by lazy {
+    activityMainBinding.include.headingSeekBar
+  }
+
+  private val currHeading: TextView by lazy {
+    activityMainBinding.include.currHeading
+  }
+
+  private val currPitch: TextView by lazy {
+    activityMainBinding.include.currPitch
+  }
+
+  private val pitchSeekBar: SeekBar by lazy {
+    activityMainBinding.include.pitchSeekBar
+  }
+
+  private val currHorizontalAngle: TextView by lazy {
+    activityMainBinding.include.currHorizontalAngle
+  }
+
+  private val horizontalAngleSeekBar: SeekBar by lazy {
+    activityMainBinding.include.horizontalAngleSeekBar
+  }
+
+  private val currVerticalAngle: TextView by lazy {
+    activityMainBinding.include.currVerticalAngle
+  }
+
+  private val verticalAngleSeekBar: SeekBar by lazy {
+    activityMainBinding.include.verticalAngleSeekBar
+  }
+
+  private val currMinimumDistance: TextView by lazy {
+    activityMainBinding.include.currMinimumDistance
+  }
+
+  private val minDistanceSeekBar: SeekBar by lazy {
+    activityMainBinding.include.minDistanceSeekBar
+  }
+
+  private val currMaximumDistance: TextView by lazy {
+    activityMainBinding.include.currMaximumDistance
+  }
+
+  private val maxDistanceSeekBar: SeekBar by lazy {
+    activityMainBinding.include.maxDistanceSeekBar
+  }
+
+  private val frustumVisibilityCheckBox: CheckBox by lazy {
+    activityMainBinding.include.frustumVisibilityCheckBox
+  }
+
+  private val viewshedVisibilityCheckBox: CheckBox by lazy {
+    activityMainBinding.include.viewshedVisibilityCheckBox
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // create a surface for elevation data
     val surface = Surface().apply {
@@ -137,7 +199,8 @@ class MainActivity : AppCompatActivity() {
             val locationPoint = locationPointFuture.get()
 
             // add 50 meters to location point and set to viewshed
-            viewShed.location = Point(locationPoint.x, locationPoint.y, locationPoint.z + 50)
+            viewShed.location =
+              Point(locationPoint.x, locationPoint.y, locationPoint.z + 50)
           } catch (e: InterruptedException) {
             logError("Error converting screen point to location point: " + e.message)
           } catch (e: ExecutionException) {

@@ -22,8 +22,8 @@ import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
@@ -33,14 +33,17 @@ import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
+import com.esri.arcgisruntime.sample.generateofflinemap.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.generateofflinemap.databinding.DialogLayoutBinding
+import com.esri.arcgisruntime.security.AuthenticationManager
+import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapJob
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapParameters
 import com.esri.arcgisruntime.tasks.offlinemap.OfflineMapTask
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_layout.*
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -55,9 +58,21 @@ class MainActivity : AppCompatActivity() {
 
   private val downloadArea: Graphic by lazy { Graphic() }
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val takeMapOfflineButton: Button by lazy {
+    activityMainBinding.takeMapOfflineButton
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required
     // to access basemaps and other location services
@@ -151,14 +166,16 @@ class MainActivity : AppCompatActivity() {
       offlineMapTask.generateOfflineMap(generateOfflineMapParameters, tempDirectoryPath)
 
     // create an alert dialog to show the download progress
+    val progressDialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
     val progressDialog = createProgressDialog(offlineMapJob)
+    progressDialog.setView(progressDialogLayoutBinding.root)
     progressDialog.show()
 
     offlineMapJob.apply {
       // link the progress bar to the job's progress
       addProgressChangedListener {
-        progressDialog.progressBar.progress = progress
-        progressDialog.progressTextView.text = "${progress}%"
+        progressDialogLayoutBinding.progressBar.progress = progress
+        progressDialogLayoutBinding.progressTextView.text = "${progress}%"
       }
 
       // replace the current map with the result offline map when the job finishes
@@ -172,7 +189,11 @@ class MainActivity : AppCompatActivity() {
           takeMapOfflineButton.isEnabled = false
           takeMapOfflineButton.visibility = View.GONE
 
-          Toast.makeText(this@MainActivity, "Now displaying offline map.", Toast.LENGTH_LONG).show()
+          Toast.makeText(
+            this@MainActivity,
+            "Now displaying offline map.",
+            Toast.LENGTH_LONG
+          ).show()
         } else {
           val error =
             "Error in generate offline map job: " + offlineMapJob.error.message
@@ -201,10 +222,8 @@ class MainActivity : AppCompatActivity() {
         job.cancel()
       }
       setCancelable(true)
-      setView(
-        LayoutInflater.from(this@MainActivity)
-          .inflate(R.layout.dialog_layout, null)
-      )
+      val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+      setView(dialogLayoutBinding.root)
     }
     return builder.create()
   }
