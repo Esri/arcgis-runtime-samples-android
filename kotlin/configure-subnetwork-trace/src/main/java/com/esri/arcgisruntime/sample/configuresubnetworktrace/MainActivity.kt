@@ -7,13 +7,19 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.RelativeLayout
+import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.data.CodedValue
 import com.esri.arcgisruntime.data.CodedValueDomain
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.security.UserCredential
+import com.esri.arcgisruntime.sample.configuresubnetworktrace.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.utilitynetworks.UtilityAttributeComparisonOperator
 import com.esri.arcgisruntime.utilitynetworks.UtilityCategoryComparison
 import com.esri.arcgisruntime.utilitynetworks.UtilityElement
@@ -30,12 +36,46 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceType
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraversability
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraversabilityScope
-import kotlinx.android.synthetic.main.activity_main.*
-
 
 class MainActivity : AppCompatActivity() {
 
   private val TAG: String = MainActivity::class.java.simpleName
+
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val exampleTextView: TextView by lazy {
+    activityMainBinding.exampleTextView
+  }
+
+  private val sourceSpinner: Spinner by lazy {
+    activityMainBinding.sourceSpinner
+  }
+
+  private val operatorSpinner: Spinner by lazy {
+    activityMainBinding.operatorSpinner
+  }
+
+  private val expressionTextView: TextView by lazy {
+    activityMainBinding.expressionTextView
+  }
+
+  private val valuesSpinner: Spinner by lazy {
+    activityMainBinding.valuesSpinner
+  }
+
+  private val valuesBackgroundView: RelativeLayout by lazy {
+    activityMainBinding.valuesBackgroundView
+  }
+
+  private val valueBooleanButton: ToggleButton by lazy {
+    activityMainBinding.valueBooleanButton
+  }
+
+  private val valuesEditText: EditText by lazy {
+    activityMainBinding.valuesEditText
+  }
 
   private val utilityNetwork by lazy {
     UtilityNetwork("https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer").apply {
@@ -54,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     exampleTextView.movementMethod = ScrollingMovementMethod()
 

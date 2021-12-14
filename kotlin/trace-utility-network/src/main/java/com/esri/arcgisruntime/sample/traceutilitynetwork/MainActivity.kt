@@ -21,19 +21,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ArcGISFeature
 import com.esri.arcgisruntime.data.QueryParameters
 import com.esri.arcgisruntime.data.ServiceGeodatabase
-import com.esri.arcgisruntime.geometry.Envelope
-import com.esri.arcgisruntime.geometry.GeometryEngine
-import com.esri.arcgisruntime.geometry.Point
-import com.esri.arcgisruntime.geometry.Polyline
-import com.esri.arcgisruntime.geometry.SpatialReferences
+import com.esri.arcgisruntime.geometry.*
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -42,26 +37,50 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.traceutilitynetwork.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.security.UserCredential
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.UniqueValueRenderer
-import com.esri.arcgisruntime.utilitynetworks.UtilityElement
-import com.esri.arcgisruntime.utilitynetworks.UtilityElementTraceResult
-import com.esri.arcgisruntime.utilitynetworks.UtilityNetwork
-import com.esri.arcgisruntime.utilitynetworks.UtilityNetworkSource
-import com.esri.arcgisruntime.utilitynetworks.UtilityTerminal
-import com.esri.arcgisruntime.utilitynetworks.UtilityTier
-import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters
-import com.esri.arcgisruntime.utilitynetworks.UtilityTraceType
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.utility_network_controls_layout.*
+import com.esri.arcgisruntime.utilitynetworks.*
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-    private var mediumVoltageTier: UtilityTier? = null
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
 
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
+
+    private val progressIndicator: ProgressBar by lazy {
+        activityMainBinding.progressIndicator
+    }
+
+    private val startingLocationsRadioButton: RadioButton by lazy {
+        activityMainBinding.controlsLayout.startingLocationsRadioButton
+    }
+
+    private val statusTextView: TextView by lazy {
+        activityMainBinding.controlsLayout.statusTextView
+    }
+
+    private val resetButton: Button by lazy {
+        activityMainBinding.controlsLayout.resetButton
+    }
+
+    private val traceButton: Button by lazy {
+        activityMainBinding.controlsLayout.traceButton
+    }
+
+    private val traceTypeSpinner: Spinner by lazy {
+        activityMainBinding.controlsLayout.traceTypeSpinner
+    }
+
+    private var mediumVoltageTier: UtilityTier? = null
     private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
 
     private val featureServiceUrl =
@@ -74,7 +93,6 @@ class MainActivity : AppCompatActivity() {
             credential = UserCredential("viewer01", "I68VGU^nMurF")
         }
     }
-
     private val utilityNetwork: UtilityNetwork by lazy {
         UtilityNetwork(featureServiceUrl).apply {
             // define user credentials for authenticating with the service
@@ -97,7 +115,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(activityMainBinding.root)
 
         // authentication with an API key or named user is required to access basemaps and other
         // location services
@@ -107,100 +125,98 @@ class MainActivity : AppCompatActivity() {
         serviceGeodatabase.addDoneLoadingListener {
             serviceGeodatabase.loadStatus
             // create electrical distribution line layer from the service geodatabase
-            val electricalDistributionFeatureLayer =
-                FeatureLayer(serviceGeodatabase.getTable(3)).apply {
-                    // define a solid line for medium voltage lines
-                    val mediumVoltageValue = UniqueValueRenderer.UniqueValue(
-                        "N/A",
-                        "Medium voltage",
-                        SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.CYAN, 3f),
-                        listOf(5)
+        val electricalDistributionFeatureLayer =
+            FeatureLayer(serviceGeodatabase.getTable(3)).apply {
+                // define a solid line for medium voltage lines
+                val mediumVoltageValue = UniqueValueRenderer.UniqueValue(
+                    "N/A",
+                    "Medium voltage",
+                    SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.CYAN, 3f),
+                    listOf(5)
+                )
+                // define a dashed line for low voltage lines
+                val lowVoltageValue = UniqueValueRenderer.UniqueValue(
+                    "N/A",
+                    "Low voltage",
+                    SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.CYAN, 3f),
+                    listOf(3)
+                )
+                // create and apply a solid light gray renderer
+                renderer =
+                    UniqueValueRenderer(
+                        listOf("ASSETGROUP"),
+                        listOf(mediumVoltageValue, lowVoltageValue),
+                        "",
+                        SimpleLineSymbol()
                     )
-                    // define a dashed line for low voltage lines
-                    val lowVoltageValue = UniqueValueRenderer.UniqueValue(
-                        "N/A",
-                        "Low voltage",
-                        SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.CYAN, 3f),
-                        listOf(3)
-                    )
-                    // create and apply a solid light gray renderer
-                    renderer =
-                        UniqueValueRenderer(
-                            listOf("ASSETGROUP"),
-                            listOf(mediumVoltageValue, lowVoltageValue),
-                            "",
-                            SimpleLineSymbol()
-                        )
+            }
+
+        // create electrical device layerfrom the service geodatabase
+        val electricalDeviceFeatureLayer =
+            FeatureLayer(serviceGeodatabase.getTable(0))
+
+        // setup the map view
+        mapView.apply {
+            // add a map with streets night vector basemap
+            map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT).apply {
+                operationalLayers.apply {
+                    add(electricalDistributionFeatureLayer)
+                    add(electricalDeviceFeatureLayer)
                 }
-
-            // create electrical device layer from the service geodatabase
-            val electricalDeviceFeatureLayer = FeatureLayer(serviceGeodatabase.getTable(0))
-
-
-            // setup the map view
-            mapView.apply {
-                // add a map with streets night vector basemap
-                map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT).apply {
-                    operationalLayers.apply {
-                        add(electricalDistributionFeatureLayer)
-                        add(electricalDeviceFeatureLayer)
-                    }
-                    // add the utility network to the map
+            // add the utility network to the map
                     utilityNetworks.add(utilityNetwork)
                 }
 
-                // set the viewpoint to a section in the southeast of the network
-                setViewpointAsync(
-                    Viewpoint(
-                        Envelope(
-                            -9813547.35557238,
-                            5129980.36635111,
-                            -9813185.0602376,
-                            5130215.41254146,
-                            SpatialReferences.getWebMercator()
-                        )
+            // set the viewpoint to a section in the southeast of the network
+            setViewpointAsync(
+                Viewpoint(
+                    Envelope(
+                        -9813547.35557238,
+                        5129980.36635111,
+                        -9813185.0602376,
+                        5130215.41254146,
+                        SpatialReferences.getWebMercator()
                     )
                 )
+            )
 
-                // set the selection color for features in the map view
-                selectionProperties.color = Color.YELLOW
+            // set the selection color for features in the map view
+            selectionProperties.color = Color.YELLOW
 
-                // add a graphics overlay
-                graphicsOverlays.add(graphicsOverlay)
+            // add a graphics overlay
+            graphicsOverlays.add(graphicsOverlay)
 
-                // handle taps on the map view
-                onTouchListener =
-                    object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
-                        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                            // only pass taps to identify nearest utility element once the utility network has loaded
-                            if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
-                                identifyNearestUtilityElement(
-                                    android.graphics.Point(e.x.roundToInt(), e.y.roundToInt())
-                                )
-                                return true
-                            }
-                            return false
-                        }
+            // handle taps on the map view
+            onTouchListener = object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                    // only pass taps to identify nearest utility element once the utility network has loaded
+                    if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
+                        identifyNearestUtilityElement(
+                            android.graphics.Point(e.x.roundToInt(), e.y.roundToInt())
+                        )
+                        return true
                     }
-            }
-
-            // load the utility network
-            utilityNetwork.addDoneLoadingListener {
-                if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
-                    // update the status text
-                    statusTextView.text = getString(R.string.click_to_add_points)
-
-                    // get the utility tier used for traces in this network, in this case "Medium Voltage Radial"
-                    val domainNetwork =
-                        utilityNetwork.definition.getDomainNetwork("ElectricDistribution")
-                    mediumVoltageTier = domainNetwork.getTier("Medium Voltage Radial")
-
-                } else {
-                    reportError("Error loading utility network: " + utilityNetwork.loadError.cause?.message)
+                    return false
                 }
             }
-            utilityNetwork.loadAsync()
         }
+
+        // load the utility network
+        utilityNetwork.addDoneLoadingListener {
+            if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
+                // update the status text
+                statusTextView.text = getString(R.string.click_to_add_points)
+
+                // get the utility tier used for traces in this network, in this case "Medium Voltage Radial"
+                val domainNetwork =
+                    utilityNetwork.definition.getDomainNetwork("ElectricDistribution")
+                mediumVoltageTier = domainNetwork.getTier("Medium Voltage Radial")
+
+            } else {
+                reportError("Error loading utility network: " + utilityNetwork.loadError.cause?.message)
+            }
+        }
+        utilityNetwork.loadAsync()}
 
         // add all utility trace types to the trace type spinner as strings
         traceTypeSpinner.adapter = ArrayAdapter(
@@ -208,6 +224,8 @@ class MainActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_item,
             arrayOf("CONNECTED", "SUBNETWORK", "UPSTREAM", "DOWNSTREAM")
         )
+
+
     }
 
     /**
@@ -438,7 +456,7 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this, "No elements in trace result", Toast.LENGTH_LONG)
                             .show()
                         progressIndicator.visibility = View.GONE
-                        enableButtons()
+                      enableButtons()
                     }
                 }
             } catch (e: Exception) {

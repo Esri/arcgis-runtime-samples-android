@@ -22,7 +22,10 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.SeekBar
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.esri.arcgisruntime.geometry.Envelope
@@ -38,57 +41,86 @@ import com.esri.arcgisruntime.mapping.view.Camera
 import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.ImageFrame
 import com.esri.arcgisruntime.mapping.view.ImageOverlay
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.mapping.view.SceneView
+import com.esri.arcgisruntime.sample.animateimageswithimageoverlay.databinding.ActivityMainBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.File
-import java.util.Arrays
-import java.util.Timer
+import java.util.*
 import kotlin.concurrent.fixedRateTimer
 
 class MainActivity : AppCompatActivity() {
 
-  private val imageFrames: MutableList<ImageFrame> by lazy { mutableListOf<ImageFrame>() }
-  private var imageIndex: Int = 0
-
-  private var timer: Timer? = null
-  private var isTimerRunning = true
-  private var period: Long = 67
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-
-    // create a new tiled layer from the World Dark Gray Base REST service
-    val worldDarkGrayBasemap =
-      ArcGISTiledLayer("https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer")
-
-    // create a new elevation source from the Terrain3D REST service
-    val elevationSource =
-      ArcGISTiledElevationSource("https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer")
-
-    // create an envelope of the pacific southwest sector for displaying the image frame
-    val pointForImageFrame =
-      Point(-120.0724273439448, 35.131016955536694, SpatialReferences.getWgs84())
-    val pacificSouthwestEnvelope =
-      Envelope(pointForImageFrame, 15.09589635986124, -14.3770441522488)
-
-    // create a camera, looking at the pacific southwest sector
-    val observationPoint = Point(-116.621, 24.7773, 856977.0)
-    val camera = Camera(observationPoint, 353.994, 48.5495, 0.0)
-    val pacificSouthwestViewpoint = Viewpoint(pacificSouthwestEnvelope, camera)
-
-    // create a scene with the dark gray basemap and elevation source
-    val darkGrayScene =
-      ArcGISScene(Basemap(worldDarkGrayBasemap), Surface(listOf(elevationSource)))
-
-    // create the scene view
-    sceneView.apply {
-      // add the scene to the scene view
-      scene = darkGrayScene
-      // set the view point to the pacific south west
-      setViewpoint(pacificSouthwestViewpoint)
-      // create and append an image overlay to the scene view
-      imageOverlays.add(ImageOverlay())
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
+
+    private val sceneView: SceneView by lazy {
+        activityMainBinding.sceneView
+    }
+
+    private val startStopButton: Button by lazy {
+        activityMainBinding.startStopButton
+    }
+
+    private val fab: FloatingActionButton by lazy {
+        activityMainBinding.fab
+    }
+
+    private val opacitySeekBar: SeekBar by lazy {
+        activityMainBinding.opacitySeekBar
+    }
+
+    private val currOpacityTextView: TextView by lazy {
+        activityMainBinding.currOpacityTextView
+    }
+
+    private val fpsSpinner: Spinner by lazy {
+        activityMainBinding.fpsSpinner
+    }
+
+    private val imageFrames: MutableList<ImageFrame> by lazy { mutableListOf() }
+    private var imageIndex: Int = 0
+
+    private var timer: Timer? = null
+    private var isTimerRunning = true
+    private var period: Long = 67
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
+
+        // create a new tiled layer from the World Dark Gray Base REST service
+        val worldDarkGrayBasemap =
+            ArcGISTiledLayer("https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer")
+
+        // create a new elevation source from the Terrain3D REST service
+        val elevationSource =
+            ArcGISTiledElevationSource("https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer")
+
+        // create an envelope of the pacific southwest sector for displaying the image frame
+        val pointForImageFrame =
+            Point(-120.0724273439448, 35.131016955536694, SpatialReferences.getWgs84())
+        val pacificSouthwestEnvelope =
+            Envelope(pointForImageFrame, 15.09589635986124, -14.3770441522488)
+
+        // create a camera, looking at the pacific southwest sector
+        val observationPoint = Point(-116.621, 24.7773, 856977.0)
+        val camera = Camera(observationPoint, 353.994, 48.5495, 0.0)
+        val pacificSouthwestViewpoint = Viewpoint(pacificSouthwestEnvelope, camera)
+
+        // create a scene with the dark gray basemap and elevation source
+        val darkGrayScene =
+            ArcGISScene(Basemap(worldDarkGrayBasemap), Surface(listOf(elevationSource)))
+
+        // create the scene view
+        sceneView.apply {
+            // add the scene to the scene view
+            scene = darkGrayScene
+            // set the view point to the pacific south west
+            setViewpoint(pacificSouthwestViewpoint)
+            // create and append an image overlay to the scene view
+            imageOverlays.add(ImageOverlay())
+        }
 
     // get the image files from local storage as an unordered list
     (File(getExternalFilesDir(null).toString() + "/PacificSouthWest").listFiles())?.let { imageFiles ->
@@ -101,151 +133,151 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    // setup touch and ui element behaviours
-    setupUI()
-  }
-
-  /**
-   * Create a new image frame from the image at the current index and add it to the image overlay.
-   */
-  private fun addNextImageFrameToImageOverlay() {
-    // set image frame to image overlay
-    sceneView.imageOverlays[0].imageFrame = imageFrames[imageIndex]
-    // increment the index to keep track of which image to load next
-    imageIndex++
-    // reset index once all files have been loaded
-    if (imageIndex == imageFrames.size)
-      imageIndex = 0
-  }
-
-  /**
-   * Toggles starting and stopping the timer on button tap.
-   */
-  fun toggleAnimationTimer(view: View) {
-    isTimerRunning = when {
-      isTimerRunning -> {
-        // cancel any running timer
-        timer?.cancel()
-        // change the start/stop button to "start"
-        startStopButton.text = getString(R.string.start)
-        // set the isTimerRunning flag to false
-        false
-      }
-      else -> {
-        createNewTimer()
-        // change the start/stop button to "stop"
-        startStopButton.text = getString(R.string.stop)
-        // set the isTimerRunning flag to true
-        true
-      }
+        // setup touch and ui element behaviours
+        setupUI()
     }
-  }
 
-  /**
-   * Create a new timer for the given period which repeatedly calls animateImagesWithImageOverlay.
-   */
-  private fun createNewTimer() {
-    timer = fixedRateTimer("Image overlay timer", period = period) {
-      addNextImageFrameToImageOverlay()
+    /**
+     * Create a new image frame from the image at the current index and add it to the image overlay.
+     */
+    private fun addNextImageFrameToImageOverlay() {
+        // set image frame to image overlay
+        sceneView.imageOverlays[0].imageFrame = imageFrames[imageIndex]
+        // increment the index to keep track of which image to load next
+        imageIndex++
+        // reset index once all files have been loaded
+        if (imageIndex == imageFrames.size)
+            imageIndex = 0
     }
-  }
 
-  /**
-   * Sets up UI behaviour. Closes expandable floating action button on touching the scene view.
-   * Moves floating action button on attribution view expanded. Expands floating action button on
-   * tap. Defines seek bar to control image overlay opacity. Populates and defines behaviour of the
-   * FPS (frames per second) spinner.
-   */
-  private fun setupUI() {
-    sceneView.apply {
-      // create a touch listener
-      setOnTouchListener(object : DefaultSceneViewOnTouchListener(sceneView) {
-        // close the options sheet when the map is tapped
-        override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
-          if (fab.isExpanded) {
-            fab.isExpanded = false
-          }
-          return super.onTouch(view, motionEvent)
+    /**
+     * Toggles starting and stopping the timer on button tap.
+     */
+    fun toggleAnimationTimer(view: View) {
+        isTimerRunning = when {
+            isTimerRunning -> {
+                // cancel any running timer
+                timer?.cancel()
+                // change the start/stop button to "start"
+                startStopButton.text = getString(R.string.start)
+                // set the isTimerRunning flag to false
+                false
+            }
+            else -> {
+                createNewTimer()
+                // change the start/stop button to "stop"
+                startStopButton.text = getString(R.string.stop)
+                // set the isTimerRunning flag to true
+                true
+            }
         }
-      })
-      // ensure the floating action button moves to be above the attribution view
-      addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-        val heightDelta = bottom - oldBottom
-        (fab.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin += heightDelta
-      }
     }
 
-    // show the options sheet when the floating action button is clicked
-    fab.setOnClickListener {
-      fab.isExpanded = !fab.isExpanded
+    /**
+     * Create a new timer for the given period which repeatedly calls animateImagesWithImageOverlay.
+     */
+    private fun createNewTimer() {
+        timer = fixedRateTimer("Image overlay timer", period = period) {
+            addNextImageFrameToImageOverlay()
+        }
     }
 
-    // seek bar controls image overlay opacity
-    opacitySeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-      override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-        // convert the seekbar progress (0 - 100) to a float 0.0 - 1.0
-        val opacity: Float = progress.toFloat() / 100
-        sceneView.imageOverlays[0].opacity = opacity
-        currOpacityTextView.text = opacity.toString()
-      }
-
-      override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-      override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-    })
-
-    // spinner controls how many image overlays to display per second
-    fpsSpinner.apply {
-      // create an adapter with fps options
-      adapter = ArrayAdapter(
-        this@MainActivity,
-        android.R.layout.simple_spinner_dropdown_item,
-        arrayOf("60 fps", "30 fps", "15 fps")
-      )
-      // set period based on the fps option selected
-      onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(
-          parent: AdapterView<*>?,
-          view: View?,
-          position: Int,
-          id: Long
-        ) {
-          // get the period for the chosen fps
-          period = when (position) {
-            0 -> 17 // 1000ms/17 = 60 fps
-            1 -> 33 // 1000ms/33 = 30 fps
-            2 -> 67 // 1000ms/67 = 15 fps
-            else -> 0
-          }
-          // create a new timer for this period
-          if (isTimerRunning) {
-            timer?.cancel()
-            createNewTimer()
-          }
+    /**
+     * Sets up UI behaviour. Closes expandable floating action button on touching the scene view.
+     * Moves floating action button on attribution view expanded. Expands floating action button on
+     * tap. Defines seek bar to control image overlay opacity. Populates and defines behaviour of the
+     * FPS (frames per second) spinner.
+     */
+    private fun setupUI() {
+        sceneView.apply {
+            // create a touch listener
+            setOnTouchListener(object : DefaultSceneViewOnTouchListener(sceneView) {
+              // close the options sheet when the map is tapped
+              override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
+                if (fab.isExpanded) {
+                  fab.isExpanded = false
+                }
+                return super.onTouch(view, motionEvent)
+              }
+            })
+            // ensure the floating action button moves to be above the attribution view
+            addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+                val heightDelta = bottom - oldBottom
+                (fab.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin += heightDelta
+            }
         }
 
-        override fun onNothingSelected(parent: AdapterView<*>?) {}
-      }
-      // start at 15 fps
-      setSelection(2)
+        // show the options sheet when the floating action button is clicked
+        fab.setOnClickListener {
+            fab.isExpanded = !fab.isExpanded
+        }
+
+        // seek bar controls image overlay opacity
+        opacitySeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+          override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            // convert the seekbar progress (0 - 100) to a float 0.0 - 1.0
+            val opacity: Float = progress.toFloat() / 100
+            sceneView.imageOverlays[0].opacity = opacity
+            currOpacityTextView.text = opacity.toString()
+          }
+
+          override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+          override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        // spinner controls how many image overlays to display per second
+        fpsSpinner.apply {
+            // create an adapter with fps options
+            adapter = ArrayAdapter(
+              this@MainActivity,
+              android.R.layout.simple_spinner_dropdown_item,
+              arrayOf("60 fps", "30 fps", "15 fps")
+            )
+            // set period based on the fps option selected
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                  parent: AdapterView<*>?,
+                  view: View?,
+                  position: Int,
+                  id: Long
+                ) {
+                    // get the period for the chosen fps
+                    period = when (position) {
+                      0 -> 17 // 1000ms/17 = 60 fps
+                      1 -> 33 // 1000ms/33 = 30 fps
+                      2 -> 67 // 1000ms/67 = 15 fps
+                        else -> 0
+                    }
+                    // create a new timer for this period
+                    if (isTimerRunning) {
+                        timer?.cancel()
+                        createNewTimer()
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+            // start at 15 fps
+            setSelection(2)
+        }
     }
-  }
 
-  override fun onPause() {
-    // cancel timer if it's running
-    if (isTimerRunning) {
-      toggleAnimationTimer(startStopButton)
+    override fun onPause() {
+        // cancel timer if it's running
+        if (isTimerRunning) {
+            toggleAnimationTimer(startStopButton)
+        }
+        sceneView.pause()
+        super.onPause()
     }
-    sceneView.pause()
-    super.onPause()
-  }
 
-  override fun onResume() {
-    super.onResume()
-    sceneView.resume()
-  }
+    override fun onResume() {
+        super.onResume()
+        sceneView.resume()
+    }
 
-  override fun onDestroy() {
-    sceneView.dispose()
-    super.onDestroy()
-  }
+    override fun onDestroy() {
+        sceneView.dispose()
+        super.onDestroy()
+    }
 }

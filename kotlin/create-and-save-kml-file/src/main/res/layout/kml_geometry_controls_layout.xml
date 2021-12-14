@@ -17,7 +17,7 @@
 
     <android.widget.Spinner
         android:id="@+id/pointSymbolSpinner"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/pointSymbolTextView"
         app:layout_constraintEnd_toEndOf="@+id/sketchCreationModeSpinner"
@@ -61,7 +61,7 @@
         android:layout_marginTop="24dp"
         android:text="@string/color"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/geometryTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/pointSymbolTextView" />
 
     <android.widget.Button
         android:id="@+id/completeSketchButton"

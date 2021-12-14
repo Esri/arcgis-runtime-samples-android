@@ -18,23 +18,30 @@ package com.esri.arcgisruntime.sample.wmtslayer
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-
 import com.esri.arcgisruntime.layers.WmtsLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.ogc.wmts.WmtsService
-
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.sample.wmtslayer.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
   // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private val wmtsService: WmtsService by lazy { WmtsService(getString(R.string.wmts_url)) }
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // create a Map
     val map = ArcGISMap()

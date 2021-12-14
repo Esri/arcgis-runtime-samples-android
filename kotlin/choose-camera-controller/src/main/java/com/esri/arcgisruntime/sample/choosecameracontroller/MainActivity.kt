@@ -36,14 +36,27 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.LayerSceneProperties
 import com.esri.arcgisruntime.mapping.view.OrbitGeoElementCameraController
 import com.esri.arcgisruntime.mapping.view.OrbitLocationCameraController
+import com.esri.arcgisruntime.mapping.view.SceneView
+import com.esri.arcgisruntime.sample.choosecameracontroller.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.ModelSceneSymbol
-import kotlinx.android.synthetic.main.activity_main.*
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
+
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val sceneView: SceneView by lazy {
+    activityMainBinding.sceneView
+  }
+
+  private val toolbar: androidx.appcompat.widget.Toolbar by lazy {
+    activityMainBinding.toolbar
+  }
 
   private lateinit var sceneOverlay: GraphicsOverlay
   private lateinit var plane3d: Graphic
@@ -52,7 +65,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // load plane model and texture from assets into cache directory
     copyFilesFromAssetsToCache(resources.getStringArray(R.array.required_files_array))

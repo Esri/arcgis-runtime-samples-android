@@ -23,7 +23,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.MobileMapPackage
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.openmobilemappackage.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,9 +33,17 @@ class MainActivity : AppCompatActivity() {
 
   private lateinit var mapPackage: MobileMapPackage
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // access the mobile map package from the filesystem and load it into a MapView
     loadMobileMapPackage(getExternalFilesDir(null)?.path + getString(R.string.yellowstone_mmpk))

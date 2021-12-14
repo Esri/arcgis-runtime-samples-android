@@ -20,9 +20,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -35,6 +33,7 @@ import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.networkanalysis.DirectionManeuver
@@ -43,8 +42,8 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.bottom_sheet.view.*
+import com.esri.arcgisruntime.sample.findroute.databinding.ActivityMainBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -52,9 +51,45 @@ class MainActivity : AppCompatActivity() {
 
   private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val mainContainer: ConstraintLayout by lazy {
+    activityMainBinding.mainContainer
+  }
+
+  private val mainProgressBar: ProgressBar by lazy {
+    activityMainBinding.mainProgressBar
+  }
+
+  private val directionFab: FloatingActionButton by lazy {
+    activityMainBinding.directionFab
+  }
+
+  private val bottomSheet: LinearLayout by lazy {
+    activityMainBinding.bottomSheet.bottomSheetLayout
+  }
+
+  private val header: ConstraintLayout by lazy {
+    activityMainBinding.bottomSheet.header
+  }
+
+  private val imageView: ImageView by lazy {
+    activityMainBinding.bottomSheet.imageView
+  }
+
+  private val directionsListView: ListView by lazy {
+    activityMainBinding.bottomSheet.directionsListView
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // create a map with the basemap
     val map = ArcGISMap().apply {
@@ -208,17 +243,17 @@ class MainActivity : AppCompatActivity() {
     val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet).apply {
       // expand the bottom sheet, and ensure it is displayed on the screen when collapsed
       state = BottomSheetBehavior.STATE_EXPANDED
-      peekHeight = bottomSheet.header.height
+      peekHeight = header.height
       // animate the arrow when the bottom sheet slides
       addBottomSheetCallback(object : BottomSheetCallback() {
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
-          bottomSheet.header.imageView.rotation = slideOffset * 180f
+          imageView.rotation = slideOffset * 180f
         }
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-          bottomSheet.header.imageView.rotation = when (newState) {
+          imageView.rotation = when (newState) {
             BottomSheetBehavior.STATE_EXPANDED -> 180f
-            else -> bottomSheet.header.imageView.rotation
+            else -> imageView.rotation
           }
         }
       })
@@ -234,10 +269,10 @@ class MainActivity : AppCompatActivity() {
         }
       }
       // rotate the arrow so it starts off in the correct rotation
-      header.imageView.rotation = 180f
+      imageView.rotation = 180f
     }
 
-    bottomSheet.directionsListView.apply {
+    directionsListView.apply {
       // Set the adapter for the list view
       adapter = ArrayAdapter(
         this@MainActivity,
@@ -269,7 +304,7 @@ class MainActivity : AppCompatActivity() {
     }
     // shrink the map view so it is not hidden under the bottom sheet header
     (mainContainer.layoutParams as CoordinatorLayout.LayoutParams).bottomMargin =
-      bottomSheet.header.height
+      header.height
   }
 
   override fun onPause() {

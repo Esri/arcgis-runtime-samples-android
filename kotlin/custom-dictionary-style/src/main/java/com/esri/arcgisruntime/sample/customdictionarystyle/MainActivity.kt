@@ -1,6 +1,7 @@
 package com.esri.arcgisruntime.sample.customdictionarystyle
 
 import android.os.Bundle
+import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
@@ -8,26 +9,41 @@ import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.customdictionarystyle.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.symbology.DictionaryRenderer
 import com.esri.arcgisruntime.symbology.DictionarySymbolStyle
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.style_controls_layout.*
 
 class MainActivity : AppCompatActivity() {
 
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
+
+    private val styleFileRadioButton: RadioButton by lazy {
+        activityMainBinding.styleControlsLayout.styleFileRadioButton
+    }
+
+    private val webStyleRadioButton: RadioButton by lazy {
+        activityMainBinding.styleControlsLayout.webStyleRadioButton
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(activityMainBinding.root)
 
         // authentication with an API key or named user is required to access basemaps and other
         // location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         // create a feature layer from a service feature table
-        val featureTable =
-            ServiceFeatureTable("https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/Redlands_Restaurants/FeatureServer/0")
+        val featureTable = ServiceFeatureTable("https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/Redlands_Restaurants/FeatureServer/0")
         val featureLayer = FeatureLayer(featureTable)
 
         // create a new map with a streets basemap and set it to the map view

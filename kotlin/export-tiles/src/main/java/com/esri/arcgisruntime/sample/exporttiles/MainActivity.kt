@@ -20,11 +20,13 @@ package com.esri.arcgisruntime.sample.exporttiles
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.concurrent.ListenableFuture
@@ -39,12 +41,13 @@ import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.exporttiles.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.exporttiles.databinding.DialogLayoutBinding
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheJob
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheParameters
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheTask
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_layout.*
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -53,9 +56,41 @@ class MainActivity : AppCompatActivity() {
   private var exportTileCacheJob: ExportTileCacheJob? = null
   private var downloadArea: Graphic? = null
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val exportTilesButton: Button by lazy {
+    activityMainBinding.exportTilesButton
+  }
+
+  private val mapPreviewLayout: ConstraintLayout by lazy {
+    activityMainBinding.mapPreviewLayout
+  }
+
+  private val previewTextView: TextView by lazy {
+    activityMainBinding.previewTextView
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val closeButton: Button by lazy {
+    activityMainBinding.closeButton
+  }
+
+  private val previewMapView: MapView by lazy {
+    activityMainBinding.previewMapView
+  }
+
+  private val dimBackground: View by lazy {
+    activityMainBinding.dimBackground
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required
     // to access basemaps and other location services
@@ -104,7 +139,8 @@ class MainActivity : AppCompatActivity() {
           try {
             val parameters: ExportTileCacheParameters = parametersFuture.get()
             // create a temporary directory in the app's cache for saving exported tiles
-            val exportTilesDirectory = File(externalCacheDir, getString(R.string.tile_cache_folder))
+            val exportTilesDirectory =
+            File(externalCacheDir, getString(R.string.tile_cache_folder))
 
             // export tiles to temporary cache on device
             exportTileCacheJob =
@@ -115,14 +151,16 @@ class MainActivity : AppCompatActivity() {
                 // start the export tile cache job
                 start()
 
-                // show progress of the export tile cache job on the progress bar
-                val dialog = createProgressDialog(this)
+                val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+              // show progress of the export tile cache job on the progress bar
+              val dialog = createProgressDialog(this)
+              dialog.setView(dialogLayoutBinding.root)
                 dialog.show()
 
                 // on progress change
                 addProgressChangedListener {
-                  dialog.progressBar.progress = progress
-                  dialog.progressTextView.text = "$progress%"
+                  dialogLayoutBinding.progressBar.progress = progress
+                  dialogLayoutBinding.progressTextView.text = "$progress%"
                 }
 
                 // when the job has completed, close the dialog and show the job result in the map preview
@@ -134,7 +172,8 @@ class MainActivity : AppCompatActivity() {
 
                   } else {
                     ("Job did not succeed: " + error.additionalMessage).also {
-                      Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG).show()
+                      Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG)
+                      .show()
                       Log.e(TAG, error.additionalMessage)
                     }
                   }
@@ -230,10 +269,8 @@ class MainActivity : AppCompatActivity() {
         exportTileCacheJob.cancel()
       }
       setCancelable(false)
-      setView(
-        LayoutInflater.from(this@MainActivity)
-          .inflate(R.layout.dialog_layout, null)
-      )
+      val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+      setView(dialogLayoutBinding.root)
     }
     return builder.create()
   }

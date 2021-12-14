@@ -24,10 +24,12 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ArcGISFeature
@@ -45,6 +47,9 @@ import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.security.UserCredential
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.performvalveisolationtrace.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.performvalveisolationtrace.databinding.SpinnerTextItemBinding
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
 import com.esri.arcgisruntime.utilitynetworks.UtilityCategory
@@ -60,8 +65,8 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityTraceConfiguration
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceFilter
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceType
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.spinner_text_item.view.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.util.UUID
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -69,8 +74,48 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG = MainActivity::class.java.simpleName
 
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
+
+    private val fab: FloatingActionButton by lazy {
+        activityMainBinding.fab
+    }
+
+    private val traceControlsTextView: TextView by lazy {
+        activityMainBinding.traceControlsTextView
+    }
+
+    private val progressBar: ProgressBar by lazy {
+        activityMainBinding.progressBar
+    }
+
+    private val traceTypeSpinner: Spinner by lazy {
+        activityMainBinding.traceTypeSpinner
+    }
+
+    private val traceButton: Button by lazy {
+      activityMainBinding.traceButton
+    }
+
+    private val resetButton: Button by lazy {
+      activityMainBinding.resetButton
+    }
+
+    private val includeIsolatedSwitch: SwitchCompat by lazy {
+        activityMainBinding.includeIsolatedSwitch
+    }
+
+    // objects that implement Loadable must be class fields to prevent being garbage collected before loading
     private val featureServiceUrl =
         "https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleGas/FeatureServer"
+    private val utilityNetwork by lazy {
+      UtilityNetwork(featureServiceUrl)
+    }
 
     // create a graphics overlay for the starting location and add it to the map view
     private val startingLocationGraphicsOverlay by lazy {
@@ -79,11 +124,6 @@ class MainActivity : AppCompatActivity() {
 
     private val filterBarriersGraphicsOverlay by lazy {
         GraphicsOverlay()
-    }
-
-    // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-    private val utilityNetwork by lazy {
-        UtilityNetwork(featureServiceUrl)
     }
 
     private var utilityTraceParameters: UtilityTraceParameters? = null
@@ -103,7 +143,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(activityMainBinding.root)
 
         // authentication with an API key or named user is required to access basemaps and other
         // location services
@@ -113,7 +153,7 @@ class MainActivity : AppCompatActivity() {
 
         // create a map with the utility network distribution line and device layers
         val map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT).apply {
-            // create and load the utility network
+            //  create and load the utility network
             addDoneLoadingListener {
                 utilityNetworks.add(utilityNetwork)
             }
@@ -142,7 +182,7 @@ class MainActivity : AppCompatActivity() {
                     return super.onTouch(view, event)
                 }
 
-                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                     // only pass taps to identify nearest utility element once the utility network has loaded
                     if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
                         identifyNearestUtilityElement(
@@ -153,16 +193,14 @@ class MainActivity : AppCompatActivity() {
                     }
                     return false
                 }
-            }
-        }
+            }}
         // show the options sheet when the floating action button is clicked
         fab.setOnClickListener {
             fab.isExpanded = !fab.isExpanded
         }
     }
 
-    /**
-     * Load the service geodatabase and initialize the layers.
+    /*** Load the service geodatabase and initialize the layers.
      */
     private fun loadServiceGeodatabase() {
         // set user credentials to authenticate with the service
@@ -253,18 +291,22 @@ class MainActivity : AppCompatActivity() {
                                     fab.isExpanded = false
                                     performTrace(
                                         utilityNetwork,
-                                        traceConfiguration
-                                    )
+                                        traceConfiguration)
                                 }
 
                                 resetButton.setOnClickListener {
-                                    reset()
+                                    reset(
+                                    )
                                 }
                             }
                         } else {
                             val message = "Starting location features not found."
                             Log.i(TAG, message)
-                            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                this,
+                                message,
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     } catch (e: Exception) {
                         val error = "Error loading starting location feature: ${e.message}"
@@ -278,7 +320,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show()
             }
         }
-        return utilityNetwork
+    return utilityNetwork
     }
 
     private fun identifyNearestUtilityElement(screenPoint: android.graphics.Point) {
@@ -421,18 +463,17 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }.show()
         }
-    }
-
-    /**
-     * Performs a valve isolation trace according to the defined trace configuration and starting
-     * location, and selects the resulting features on the map.
+    }/**
+     * Performs a valve isolation trace according to the defined trace configuration and starting* location, and selects the resulting features on the map.
      *
      * @param utilityNetwork the utility network to perform the trace on
      * @param traceConfiguration the trace configuration to apply to the trace
+
      */
     private fun performTrace(
         utilityNetwork: UtilityNetwork,
         traceConfiguration: UtilityTraceConfiguration
+
     ) {
         progressBar.visibility = View.VISIBLE
         // create a category comparison for the trace
@@ -446,8 +487,9 @@ class MainActivity : AppCompatActivity() {
         traceConfiguration.apply {
             filter = UtilityTraceFilter()
             filter.barriers = utilityCategoryComparison
-            // set the configuration to include or leave out isolated features
-            isIncludeIsolatedFeatures = includeIsolatedSwitch.isChecked
+
+        // set the configuration to include or leave out isolated features
+        isIncludeIsolatedFeatures = includeIsolatedSwitch.isChecked
         }
 
         // build parameters for the isolation trace
@@ -511,9 +553,7 @@ class MainActivity : AppCompatActivity() {
         }
         utilityTraceParameters?.filterBarriers?.clear()
         filterBarriersGraphicsOverlay.graphics.clear()
-    }
-
-    /**
+    }/**
      * Initialize the category selection spinner using a utility network definition.
      *
      * @param networkDefinition the utility network definition to populate the spinner
@@ -528,15 +568,12 @@ class MainActivity : AppCompatActivity() {
                 R.layout.spinner_text_item,
                 networkDefinition.categories
             ) {
-                override fun getView(
-                    position: Int,
-                    convertView: View?,
-                    parent: ViewGroup
-                ): View {
-                    val spinnerItem = LayoutInflater.from(this@MainActivity)
-                        .inflate(R.layout.spinner_text_item, parent, false)
-                    spinnerItem.textView.text = (getItem(position) as UtilityCategory).name
-                    return spinnerItem
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val binding = SpinnerTextItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
+                    //val spinnerItem = LayoutInflater.from(this@MainActivity).inflate(R.layout.spinner_text_item, parent, false)
+                    binding.textView.text = (getItem(position) as UtilityCategory).name
+                    return binding.root
                 }
 
                 override fun getDropDownView(

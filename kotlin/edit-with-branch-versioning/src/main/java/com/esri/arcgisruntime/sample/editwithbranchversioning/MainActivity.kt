@@ -24,9 +24,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
@@ -40,9 +38,11 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.editwithbranchversioning.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.editwithbranchversioning.databinding.CreateVersionDialogBinding
+import com.esri.arcgisruntime.sample.editwithbranchversioning.databinding.EditFeatureAttributeDialogBinding
 import com.esri.arcgisruntime.security.UserCredential
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.create_version_dialog.view.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -56,9 +56,29 @@ class MainActivity : AppCompatActivity() {
   private var selectedFeature: Feature? = null
   private var createdVersionName: String = ""
 
+  private val activityMainBinding by lazy {
+    ActivityMainBinding.inflate(layoutInflater)
+  }
+
+  private val mapView: MapView by lazy {
+    activityMainBinding.mapView
+  }
+
+  private val switchVersionButton: Button by lazy {
+    activityMainBinding.switchVersionButton
+  }
+
+  private val currentVersionNameTextView: TextView by lazy {
+    activityMainBinding.currentVersionNameTextView
+  }
+
+  private val createVersionButton: Button by lazy {
+    activityMainBinding.createVersionButton
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(activityMainBinding.root)
 
     // authentication with an API key or named user is required to access basemaps and other
     // location services
@@ -67,7 +87,10 @@ class MainActivity : AppCompatActivity() {
     // hardcode user credentials since this sample has been setup to work with this specific
     // service. Normally you'd handle authentication with the AuthenticationChallengeHandler
     serviceGeodatabase.credential =
-      UserCredential(getString(R.string.editor01_username), getString(R.string.editor01_password))
+      UserCredential(
+        getString(R.string.editor01_username),
+        getString(R.string.editor01_password)
+      )
     // load the service geodatabase
     serviceGeodatabase.loadAsync()
     // when the service geodatabase has loaded
@@ -98,32 +121,34 @@ class MainActivity : AppCompatActivity() {
         // set the map to the map view
         this.map = map
         // set on touch listener for single taps
-        onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
-          override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-            // don't allow edits on the sde.DEFAULT version
-            if (serviceGeodatabase.versionName.isBlank()
-              || serviceGeodatabase.versionName == serviceGeodatabase.defaultVersionName
-            ) {
-              val message = "This sample does not allow editing of features on the default version."
-              Log.e(TAG, message)
-              Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+        onTouchListener =
+          object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+              // don't allow edits on the sde.DEFAULT version
+              if (serviceGeodatabase.versionName.isBlank()
+                || serviceGeodatabase.versionName == serviceGeodatabase.defaultVersionName
+              ) {
+                val message =
+                  "This sample does not allow editing of features on the default version."
+                Log.e(TAG, message)
+                Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+                return true
+              }
+
+              // get the screen point of the single tap
+              val screenPoint = android.graphics.Point(e.x.toInt(), e.y.toInt())
+
+              // if selected feature is not null, edit the feature location
+              selectedFeature?.let {
+                editFeatureLocation(it, screenPoint)
+                return true
+              }
+
+              // if no feature should be moved, identify the feature at the tapped location
+              identifyFeature(screenPoint)
               return true
             }
-
-            // get the screen point of the single tap
-            val screenPoint = android.graphics.Point(e.x.toInt(), e.y.toInt())
-
-            // if selected feature is not null, edit the feature location
-            selectedFeature?.let {
-              editFeatureLocation(it, screenPoint)
-              return true
-            }
-
-            // if no feature should be moved, identify the feature at the tapped location
-            identifyFeature(screenPoint)
-            return true
           }
-        }
       }
 
       // display the current name in a text view
@@ -139,10 +164,10 @@ class MainActivity : AppCompatActivity() {
    */
   fun createVersionDialog(view: View) {
     // inflate the view and get references to each of its components
-    val dialogView = LayoutInflater.from(this).inflate(R.layout.create_version_dialog, null)
-    val createNameEditText = dialogView.createNameEditText
-    val createDescriptionEditText = dialogView.createDescriptionEditText
-    val createAccessVersionSpinner = dialogView.createAccessVersionSpinner
+    val dialogBinding = CreateVersionDialogBinding.inflate(LayoutInflater.from(this))
+    val createNameEditText = dialogBinding.createNameEditText
+    val createDescriptionEditText = dialogBinding.createDescriptionEditText
+    val createAccessVersionSpinner = dialogBinding.createAccessVersionSpinner
 
     // set up the spinner to display options for the VersionAccess parameter for creating a version
     ArrayAdapter.createFromResource(
@@ -156,7 +181,7 @@ class MainActivity : AppCompatActivity() {
 
     // set up the dialog
     AlertDialog.Builder(this).apply {
-      setView(dialogView)
+      setView(dialogBinding.root)
       setTitle("Create a new version")
       setNegativeButton("Cancel") { _: DialogInterface, _: Int -> }
       setPositiveButton("Create") { _: DialogInterface, _: Int ->
@@ -169,7 +194,11 @@ class MainActivity : AppCompatActivity() {
             createDescriptionEditText.text.toString()
           )
         } else {
-          Toast.makeText(this@MainActivity, "A version name is required!", Toast.LENGTH_LONG).show()
+          Toast.makeText(
+            this@MainActivity,
+            "A version name is required!",
+            Toast.LENGTH_LONG
+          ).show()
         }
       }
     }.create().show()
@@ -195,7 +224,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create the version
-    val serviceVersionInfoFuture = serviceGeodatabase.createVersionAsync(serviceVersionParameters)
+    val serviceVersionInfoFuture =
+      serviceGeodatabase.createVersionAsync(serviceVersionParameters)
     serviceVersionInfoFuture.addDoneListener {
       // get the new version's name and switch to it
       val serviceVersionInfo = serviceVersionInfoFuture.get()
@@ -235,7 +265,8 @@ class MainActivity : AppCompatActivity() {
         try {
           // switch versions
           serviceGeodatabase.switchVersionAsync(versionName).addDoneListener {
-            currentVersionNameTextView.text = "Current version: ${serviceGeodatabase.versionName}"
+            currentVersionNameTextView.text =
+              "Current version: ${serviceGeodatabase.versionName}"
           }
         } catch (e: Exception) {
           val error = "Failed to switch version: ${e.message}"
@@ -247,7 +278,8 @@ class MainActivity : AppCompatActivity() {
       try {
         // switch versions
         serviceGeodatabase.switchVersionAsync(versionName).addDoneListener {
-          currentVersionNameTextView.text = "Current version: ${serviceGeodatabase.versionName}"
+          currentVersionNameTextView.text =
+            "Current version: ${serviceGeodatabase.versionName}"
         }
       } catch (e: Exception) {
         val error = "Failed to switch version: ${e.message}"
@@ -305,9 +337,9 @@ class MainActivity : AppCompatActivity() {
   private fun editFeatureAttribute() {
     // if there is a selected feature
     selectedFeature?.let { feature ->
-      val dialogView =
-        LayoutInflater.from(this).inflate(R.layout.edit_feature_attribute_dialog, null)
-      val featureAttributeSpinner = dialogView.findViewById<Spinner>(R.id.featureAttributeSpinner)
+      val editFeatureAttributeDialogBinding =
+        EditFeatureAttributeDialogBinding.inflate(layoutInflater)
+      val featureAttributeSpinner = editFeatureAttributeDialogBinding.featureAttributeSpinner
       // set up the spinner with acceptable TYPDAMAGE values
       ArrayAdapter.createFromResource(
         this,
@@ -325,7 +357,7 @@ class MainActivity : AppCompatActivity() {
 
       // create the dialog
       AlertDialog.Builder(this).apply {
-        setView(dialogView)
+        setView(editFeatureAttributeDialogBinding.root)
         setTitle(feature.attributes["PLACENAME"].toString())
         setNegativeButton("Cancel") { _: DialogInterface, _: Int ->
           // clear the selection
@@ -334,14 +366,16 @@ class MainActivity : AppCompatActivity() {
         }
         setNeutralButton("Edit location") { _: DialogInterface, _: Int ->
           // change the attribute
-          feature.attributes["TYPDAMAGE"] = featureAttributeSpinner.selectedItem.toString()
+          feature.attributes["TYPDAMAGE"] =
+            featureAttributeSpinner.selectedItem.toString()
           feature.featureTable.updateFeatureAsync(feature).addDoneListener {
             serviceGeodatabase.applyEditsAsync()
           }
         }
         setPositiveButton("Confirm") { _: DialogInterface, _: Int ->
           // change the attribute
-          feature.attributes["TYPDAMAGE"] = featureAttributeSpinner.selectedItem.toString()
+          feature.attributes["TYPDAMAGE"] =
+            featureAttributeSpinner.selectedItem.toString()
           feature.featureTable.updateFeatureAsync(feature).addDoneListener {
             serviceGeodatabase.applyEditsAsync()
           }
