@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
 
         mapView.map.addDoneLoadingListener {
             if (map.loadStatus == LoadStatus.LOADED) {
-                try {
+                if (map.floorDefinition != null) {
                     //set and load the floor manager
                     floorManager = map.floorManager
                     floorManager.loadAsync()
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                                 setFloor()
                             }
                         }
-                } catch (e: Exception) {
+                } else {
                     Toast.makeText(this, "Portal ID is not a floor-aware map", Toast.LENGTH_SHORT)
                         .show()
                     Log.e(TAG, "Portal ID is not a floor-aware map")
