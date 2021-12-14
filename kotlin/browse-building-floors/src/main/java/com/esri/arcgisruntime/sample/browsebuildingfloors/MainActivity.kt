@@ -24,7 +24,6 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.floor.FloorManager
@@ -97,10 +96,10 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                 } catch (e: Exception) {
-                    Toast.makeText(this, "Portal ID is not a floor-aware map", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Portal ID is not a floor-aware map", Toast.LENGTH_SHORT)
+                        .show()
                     Log.e(TAG, "Portal ID is not a floor-aware map")
                 }
-
             }
         }
 
