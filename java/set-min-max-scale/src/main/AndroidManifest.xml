@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:exported="true" android:name="com.esri.arcgisruntime.samples.setminxmaxscale.MainActivity">
+            android:exported="true" 
+            android:name="com.esri.arcgisruntime.samples.setminxmaxscale.MainActivity">
             <intent-filter>
                 <action
                     android:name="android.intent.action.MAIN"
