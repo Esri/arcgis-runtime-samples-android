@@ -1,32 +1,27 @@
 {
-    "category": "TODO",
-    "description": "Display building floors using a floor-aware web map.",
+    "category": "Maps and Scenes",
+    "description": "Display and browse through building floors from a floor-aware web map.",
     "formal_name": "BrowseBuildingFloors",
     "ignore": false,
     "images": [
         "browse-building-floors.png"
     ],
     "keywords": [
-        "ArcGISMap",
-        "FloorManager",
-        "Portal",
-        "PortalItem"
+        "building",
+        "facility",
+        "floor",
+        "floor-aware",
+        "floors",
+        "ground floor",
+        "indoor",
+        "level",
+        "site",
+        "story",
+        "FloorManager"
     ],
     "language": "kotlin",
-    "provision_from": [
-        "TODO"
-    ],
-    "provision_to": [
-        "TODO"
-    ],
-    "redirect_from": [
-        "TODO"
-    ],
     "relevant_apis": [
-        "ArcGISMap",
-        "FloorManager",
-        "Portal",
-        "PortalItem"
+        "FloorManager"
     ],
     "snippets": [
         "src/main/java/com/esri/arcgisruntime/sample/browsebuildingfloors/MainActivity.kt"
