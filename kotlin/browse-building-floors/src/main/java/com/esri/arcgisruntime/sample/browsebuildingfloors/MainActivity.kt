@@ -17,10 +17,12 @@
 package com.esri.arcgisruntime.sample.browsebuildingfloors
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.loadable.LoadStatus
@@ -41,6 +43,8 @@ class MainActivity : AppCompatActivity() {
     // keep track of the current selected floor
     private var currentFloor = 0
 
+    private val TAG: String = MainActivity::class.java.simpleName
+
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -57,10 +61,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
 
-        // authentication with an API key or named user is required to access basemaps and other
-        // location services
-        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
-
         // load the portal and add the portal item as a map to the map view
         val portal = Portal("https://www.arcgis.com/", false)
         val portalItem = PortalItem(portal, "f133a698536f44c8884ad81f80b6cfc7")
@@ -71,30 +71,36 @@ class MainActivity : AppCompatActivity() {
 
         mapView.map.addDoneLoadingListener {
             if (map.loadStatus == LoadStatus.LOADED) {
+                try {
+                    //set and load the floor manager
+                    floorManager = map.floorManager
+                    floorManager.loadAsync()
 
-                //set and load the floor manager
-                floorManager = mapView.map.floorManager
-                floorManager.loadAsync()
+                    //set initial floor level to 1
+                    setFloor()
 
-                //set initial floor level to 1
-                setFloor()
+                    levelSpinner.onItemSelectedListener =
+                        object : AdapterView.OnItemSelectedListener {
+                            override fun onNothingSelected(parent: AdapterView<*>?) {
+                                // do nothing here
+                            }
 
-                levelSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                        // do nothing here
-                    }
-
-                    override fun onItemSelected(
-                        parent: AdapterView<*>,
-                        view: View?,
-                        position: Int,
-                        id: Long
-                    ) {
-                        // update and set the map to the selected floor
-                        currentFloor = position
-                        setFloor()
-                    }
+                            override fun onItemSelected(
+                                parent: AdapterView<*>,
+                                view: View?,
+                                position: Int,
+                                id: Long
+                            ) {
+                                // update and set the map to the selected floor
+                                currentFloor = position
+                                setFloor()
+                            }
+                        }
+                } catch (e: Exception) {
+                    Toast.makeText(this, "Portal ID is not a floor-aware map", Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, "Portal ID is not a floor-aware map")
                 }
+
             }
         }
 
