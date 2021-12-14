@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:exported="true"
             android:name="com.esri.arcgisruntime.sample.statisticalquerygroupandsort.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
@@ -21,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:exported="true"
             android:name="com.esri.arcgisruntime.sample.statisticalquerygroupandsort.ResultsActivity"
             android:label="Statistical Query - results"
             android:screenOrientation="portrait" />

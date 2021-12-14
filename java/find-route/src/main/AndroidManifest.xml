@@ -11,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:exported="true"
             android:name="com.esri.arcgisruntime.sample.findroute.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
