@@ -32,15 +32,7 @@ import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.sample.browsebuildingfloors.databinding.ActivityMainBinding
 
-
 class MainActivity : AppCompatActivity() {
-
-    // manages the data displayed from the floor-aware map,
-    // allowing filtering based on floor levels.
-    private lateinit var floorManager: FloorManager
-
-    // keep track of the current selected floor
-    private var currentFloor = 0
 
     private val TAG: String = MainActivity::class.java.simpleName
 
@@ -56,11 +48,15 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.levelSpinner
     }
 
+    // keep track of the current selected floor
+    private var currentFloor = 0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
 
-        // load the portal and add the portal item as a map to the map view
+        // load the portal and create a map from the portal item
         val portal = Portal("https://www.arcgis.com/", false)
         val portalItem = PortalItem(portal, "f133a698536f44c8884ad81f80b6cfc7")
         val map = ArcGISMap(portalItem)
@@ -68,50 +64,47 @@ class MainActivity : AppCompatActivity() {
         // set the map to be displayed in the layout's MapView
         mapView.map = map
 
-        mapView.map.addDoneLoadingListener {
-            if (map.loadStatus == LoadStatus.LOADED) {
-                if (map.floorDefinition != null) {
-                    //set and load the floor manager
-                    floorManager = map.floorManager
-                    floorManager.loadAsync()
+        map.addDoneLoadingListener {
+            if (map.loadStatus == LoadStatus.LOADED && map.floorDefinition != null) {
 
-                    //set initial floor level to 1
-                    setFloor()
+                // get and load the floor manager
+                val floorManager = map.floorManager
+                floorManager.loadAsync()
 
-                    levelSpinner.onItemSelectedListener =
-                        object : AdapterView.OnItemSelectedListener {
-                            override fun onNothingSelected(parent: AdapterView<*>?) {
-                                // do nothing here
-                            }
+                // set initial floor level to currentFloor
+                setFloor(floorManager)
 
-                            override fun onItemSelected(
-                                parent: AdapterView<*>,
-                                view: View?,
-                                position: Int,
-                                id: Long
-                            ) {
-                                // update and set the map to the selected floor
-                                currentFloor = position
-                                setFloor()
-                            }
+                levelSpinner.onItemSelectedListener =
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onNothingSelected(parent: AdapterView<*>?) {
+                            // do nothing here
                         }
-                } else {
-                    Toast.makeText(this, "Portal ID is not a floor-aware map", Toast.LENGTH_SHORT)
-                        .show()
-                    Log.e(TAG, "Portal ID is not a floor-aware map")
-                }
+
+                        override fun onItemSelected(
+                            parent: AdapterView<*>,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            // update and set the map to the selected floor
+                            currentFloor = position
+                            setFloor(floorManager)
+                        }
+                    }
+            } else {
+                val error = "Error loading map or map is not floor-aware"
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                Log.e(TAG, error)
             }
         }
 
         // set the spinner adapter for the floor selection
-        ArrayAdapter.createFromResource(
+        levelSpinner.adapter = ArrayAdapter.createFromResource(
             this,
             R.array.floors,
             android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // bind the spinner to the adapter
-            levelSpinner.adapter = adapter
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
 
     }
@@ -120,29 +113,30 @@ class MainActivity : AppCompatActivity() {
      * update the [floorManager] to the currently selected floor
      * and disable the other floors.
      */
-    private fun setFloor() {
+    private fun setFloor(floorManager: FloorManager) {
         floorManager.addDoneLoadingListener {
             if (floorManager.loadStatus == LoadStatus.LOADED) {
                 // set all the floors to invisible to reset the floorManager
-                for (floorLevel in floorManager.levels) {
+                floorManager.levels.forEach { floorLevel ->
                     floorLevel.isVisible = false
                 }
-                // set the currently selected floor to be visible.
+                // set the currently selected floor to be visible
                 floorManager.levels[currentFloor].isVisible = true
+            } else {
+                val error = "Error loading floor manager: " + floorManager.loadError.message
+                Log.e(TAG, error)
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
             }
         }
     }
 
     override fun onPause() {
         mapView.pause()
-        currentFloor
         super.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        // update the spinner to the currently selected floor
-        levelSpinner.setSelection(currentFloor)
         mapView.resume()
     }
 
