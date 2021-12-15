@@ -34,9 +34,7 @@ The [world elevation service](https://elevation3d.arcgis.com/arcgis/rest/service
 
 This sample requires a device that is compatible with ARCore 1.8 on Android.
 
-**Flyover AR** is one of three main patterns for working with geographic information in augmented reality.
-
-This sample uses the [ArcGIS Runtime Toolkit](https://github.com/Esri/arcgis-runtime-toolkit-android/).
+**Flyover AR** is one of three main patterns for working with geographic information in augmented reality. Augmented reality is made possible with the ArcGIS Runtime Toolkit. See [Augmented reality](https://developers.arcgis.com/android/scenes-3d/display-scenes-in-augmented-reality/) in the guide for more information about augmented reality and adding it to your app.
 
 ## Tags
 
