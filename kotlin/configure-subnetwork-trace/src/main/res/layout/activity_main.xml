@@ -6,175 +6,211 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <android.widget.TextView
-        android:id="@+id/traceOptionsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/trace_options"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/barriersCheckBox"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/barriersCheckBox" />
-
-    <android.widget.CheckBox
-        android:id="@+id/barriersCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/include_barriers"
-        app:layout_constraintStart_toEndOf="@+id/traceOptionsTextView"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <android.widget.CheckBox
-        android:id="@+id/containersCheckbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/include_containers"
-        app:layout_constraintBottom_toBottomOf="@+id/barriersCheckBox"
-        app:layout_constraintStart_toEndOf="@+id/barriersCheckBox"
-        app:layout_constraintTop_toTopOf="@+id/barriersCheckBox" />
-
-    <android.widget.TextView
-        android:id="@+id/defineConditionTextBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/define_new_condition"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/barriersCheckBox" />
-
-    <android.widget.TextView
-        android:id="@+id/exampleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/example_barrier_condition_for_this_data_transformer_load_equal_15"
-        app:layout_constraintBottom_toBottomOf="@+id/defineConditionTextBox"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/defineConditionTextBox"
-        app:layout_constraintTop_toTopOf="@+id/defineConditionTextBox" />
-
-    <android.widget.RelativeLayout
-        android:id="@+id/sourceBackgroundView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/border"
-        android:padding="4dp"
-        app:layout_constraintEnd_toStartOf="@+id/operatorBackgroundView"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/defineConditionTextBox">
-
-        <android.widget.Spinner
-            android:id="@+id/sourceSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </android.widget.RelativeLayout>
-
-    <android.widget.RelativeLayout
-        android:id="@+id/operatorBackgroundView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:background="@drawable/border"
-        android:padding="4dp"
-        app:layout_constraintEnd_toStartOf="@+id/valuesBackgroundView"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/sourceBackgroundView"
-        app:layout_constraintTop_toTopOf="@+id/sourceBackgroundView">
-
-        <android.widget.Spinner
-            android:id="@+id/operatorSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </android.widget.RelativeLayout>
-
-    <android.widget.RelativeLayout
-        android:id="@+id/valuesBackgroundView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:background="@drawable/border"
-        android:padding="4dp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/addButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/operatorBackgroundView"
-        app:layout_constraintTop_toTopOf="@+id/operatorBackgroundView">
-
-        <android.widget.Spinner
-            android:id="@+id/valuesSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </android.widget.RelativeLayout>
-
-    <android.widget.EditText
-        android:id="@+id/valuesEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:padding="4dp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/valuesBackgroundView"
-        app:layout_constraintStart_toStartOf="@+id/valuesBackgroundView"
-        app:layout_constraintTop_toTopOf="@+id/operatorBackgroundView" />
-
-    <android.widget.ToggleButton
-        android:id="@+id/valueBooleanButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textOff="@string/falseText"
-        android:textOn="@string/trueText"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/valuesBackgroundView"
-        app:layout_constraintStart_toStartOf="@+id/valuesBackgroundView"
-        app:layout_constraintTop_toTopOf="@+id/operatorBackgroundView" />
-
-    <android.widget.Button
-        android:id="@+id/addButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:onClick="addCondition"
-        android:text="@string/add"
-        app:layout_constraintBottom_toBottomOf="@+id/sourceBackgroundView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/valuesBackgroundView"
-        app:layout_constraintTop_toTopOf="@+id/sourceBackgroundView" />
-
-    <android.widget.TextView
-        android:id="@+id/barrierConditionsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/barrier_conditions"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sourceBackgroundView" />
-
-    <android.widget.TextView
-        android:id="@+id/expressionTextView"
-        android:layout_width="0dp"
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/border"
-        android:padding="4dp"
+        android:layout_margin="20dp"
         app:layout_constraintBottom_toTopOf="@+id/traceButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/barrierConditionsTextView" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.widget.TextView
+                android:id="@+id/traceOptionsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/trace_options"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.widget.CheckBox
+                android:id="@+id/barriersCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/include_barriers"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/traceOptionsTextView" />
+
+            <android.widget.CheckBox
+                android:id="@+id/containersCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/include_containers"
+                app:layout_constraintStart_toEndOf="@+id/barriersCheckBox"
+                app:layout_constraintTop_toBottomOf="@+id/traceOptionsTextView" />
+
+            <android.widget.TextView
+                android:id="@+id/defineConditionTextBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/define_new_condition"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/barriersCheckBox" />
+
+            <android.widget.TextView
+                android:id="@+id/exampleTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/example_barrier_condition_for_this_data_transformer_load_equal_15"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/defineConditionTextBox" />
+
+            <android.widget.RelativeLayout
+                android:id="@+id/sourceBackgroundView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/border"
+                android:padding="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/exampleTextView">
+
+                <android.widget.Spinner
+                    android:id="@+id/sourceSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.widget.RelativeLayout>
+
+            <android.widget.RelativeLayout
+                android:id="@+id/operatorBackgroundView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/border"
+                android:padding="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sourceBackgroundView">
+
+                <android.widget.Spinner
+                    android:id="@+id/operatorSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.widget.RelativeLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/operatorBackgroundView">
+
+                <android.widget.RelativeLayout
+                    android:id="@+id/valuesBackgroundView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/border"
+                    android:padding="4dp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <android.widget.Spinner
+                        android:id="@+id/valuesSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </android.widget.RelativeLayout>
+
+                <android.widget.EditText
+                    android:id="@+id/valuesEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:hint="Value"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/valuesBackgroundView" />
+
+                <android.widget.ToggleButton
+                    android:id="@+id/valueBooleanButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textOff="@string/falseText"
+                    android:textOn="@string/trueText"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/valuesEditText" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <android.widget.Button
+                android:id="@+id/addButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:onClick="addCondition"
+                android:text="@string/add"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout1" />
+
+            <android.widget.TextView
+                android:id="@+id/barrierConditionsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/barrier_conditions"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addButton" />
+
+            <android.widget.TextView
+                android:id="@+id/expressionTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/border"
+                android:padding="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/barrierConditionsTextView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <android.widget.Button
         android:id="@+id/traceButton"

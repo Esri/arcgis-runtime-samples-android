@@ -35,7 +35,7 @@ The contents of the KML file are shown in a tree. Select a node to zoom to that 
 
 ## Offline Data
 
-1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=da301cb122874d5497f8a8f6c81eb36e).
+1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=cdb15cd7cb624c2e9acb4af6c83d1fdd).
 2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 3. Push the data into the scoped storage of the sample app:
 `adb push esri_test_data.kmz /Android/data/com.esri.arcgisruntime.sample.listkmlcontents/files/esri_test_data.kmz`

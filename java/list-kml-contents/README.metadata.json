@@ -15,7 +15,7 @@
     ],
     "language": "java",
     "provision_from": [
-        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=da301cb122874d5497f8a8f6c81eb36e"
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=cdb15cd7cb624c2e9acb4af6c83d1fdd"
     ],
     "provision_to": [
         "/esri_test_data.kmz"
