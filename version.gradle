@@ -12,11 +12,11 @@ ext {
     constraintLayoutVersion = '2.1.0'
     multidexVersion = '2.0.1'
     arcgisVersion = '100.13.0'
-    arcgisToolkitVersion = '100.12.0'
+    arcgisToolkitVersion = '100.13.0'
     materialVersion = '1.4.0'
     recyclerViewVersion = '1.1.0'
     // plugin versions
-    gradleVersion = '7.0.4'
+    gradleVersion = '7.0.2'
     // java version
     javaVersion = 1.11
 }
