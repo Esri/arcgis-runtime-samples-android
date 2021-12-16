@@ -137,6 +137,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        // update the spinner to the currently selected floor
+        levelSpinner.setSelection(currentFloor)
         mapView.resume()
     }
 
