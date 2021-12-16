@@ -7,6 +7,7 @@ include ':add-features-feature-service',
         ':arcgis-vector-tiled-layer-custom-style',
         ':attribution-view-change',
         ':authenticate-with-oauth',
+        ':browse-building-floors',
         ':browse-ogc-api-feature-service',
         ':buffer',
         ':change-atmosphere-effect',
@@ -85,4 +86,3 @@ include ':add-features-feature-service',
         ':viewshed-geoprocessing',
         ':viewshed-location',
         ':wmts-layer'
-
