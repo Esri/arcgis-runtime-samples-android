@@ -28,6 +28,7 @@ import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.MobileScenePackage;
 import com.esri.arcgisruntime.mapping.Surface;
+import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     mMobileScenePackage.addDoneLoadingListener(() -> {
       if (mMobileScenePackage.getLoadStatus() == LoadStatus.LOADED && !mMobileScenePackage.getScenes().isEmpty()) {
         mSceneView.setScene(mMobileScenePackage.getScenes().get(0));
+        mSceneView.setViewpointCamera(new Camera(39.962551,-75.177168,313.862355,138.654067,74.581665,0.0));
       } else {
         String error = "Failed to load mobile scene package: " + mMobileScenePackage.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();

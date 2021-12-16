@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     });
     // set the map to be displayed in this view
     mMapView.setMap(map);
-    mMapView.setViewpoint(new Viewpoint(48.354388, -99.998245, 100000));
+    mMapView.setViewpoint(new Viewpoint(48.354388, -99.998245, 100000000));
 
     // inflate the Basemap and Layer list views
     mBasemapListView = findViewById(R.id.basemap_list);

@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
               // assign an adapter to the spinner with source names
               adapter = ArrayAdapter<String>(
                 applicationContext,
-                android.R.layout.simple_spinner_item,
+                android.R.layout.simple_list_item_1,
                 sources.map { it.name })
 
               // add an on item selected listener which calls on comparison source changed
@@ -135,7 +135,7 @@ class MainActivity : AppCompatActivity() {
           // assign operator spinner an adapter of operator names
           operatorSpinner.adapter = ArrayAdapter<String>(
             applicationContext,
-            android.R.layout.simple_spinner_item,
+            android.R.layout.simple_list_item_1,
             operators.map { it.name })
         }
 
@@ -187,7 +187,7 @@ class MainActivity : AppCompatActivity() {
       // update the values spinner adapter
       valuesSpinner.adapter = ArrayAdapter<String>(
         applicationContext,
-        android.R.layout.simple_spinner_item,
+        android.R.layout.simple_list_item_1,
         // add the coded values from the coded value domain to the values spinner
         codedValueDomain.codedValues.map { it.name }
       )
@@ -225,18 +225,18 @@ class MainActivity : AppCompatActivity() {
     when (id) {
       valuesBackgroundView.id -> {
         valuesBackgroundView.visibility = View.VISIBLE
-        valueBooleanButton.visibility = View.INVISIBLE
-        valuesEditText.visibility = View.INVISIBLE
+        valueBooleanButton.visibility = View.GONE
+        valuesEditText.visibility = View.GONE
       }
       valuesEditText.id -> {
         valuesEditText.visibility = View.VISIBLE
-        valueBooleanButton.visibility = View.INVISIBLE
-        valuesBackgroundView.visibility = View.INVISIBLE
+        valueBooleanButton.visibility = View.GONE
+        valuesBackgroundView.visibility = View.GONE
       }
       valueBooleanButton.id -> {
         valueBooleanButton.visibility = View.VISIBLE
-        valuesBackgroundView.visibility = View.INVISIBLE
-        valuesEditText.visibility = View.INVISIBLE
+        valuesBackgroundView.visibility = View.GONE
+        valuesEditText.visibility = View.GONE
       }
     }
   }
