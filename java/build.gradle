@@ -5,6 +5,7 @@ buildscript {
     apply from: '../version.gradle'
     repositories {
         google()
+        mavenCentral()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradleVersion"
@@ -15,6 +16,7 @@ allprojects {
 
     final def var = repositories {
         google()
+        mavenCentral()
         maven { url 'https://esri.jfrog.io/artifactory/arcgis' }
     }
     var
