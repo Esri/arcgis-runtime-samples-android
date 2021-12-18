@@ -2,7 +2,7 @@
 ArcGIS Runtime API for Android v100.13.0 samples.  The `main` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime API for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [git tags](https://github.com/Esri/arcgis-runtime-samples-android/tags).  Please read our [wiki](https://github.com/Esri/arcgis-runtime-samples-android/wiki) for help with working with this repository.
 
 # Prerequisites
-* The samples are building with `compileSdkVersion 30`
+* The samples are building with `compileSdkVersion 31`
 * [Android Studio](http://developer.android.com/sdk/index.html)
 * [An ArcGIS Developers API key](https://developers.arcgis.com/android/get-started/#3-get-an-api-key)
 
