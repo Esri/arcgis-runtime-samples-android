@@ -227,10 +227,15 @@ class MainActivity : AppCompatActivity() {
     val serviceVersionInfoFuture =
       serviceGeodatabase.createVersionAsync(serviceVersionParameters)
     serviceVersionInfoFuture.addDoneListener {
-      // get the new version's name and switch to it
-      val serviceVersionInfo = serviceVersionInfoFuture.get()
-      createdVersionName = serviceVersionInfo.name
-      switchVersion(null)
+        try{
+            // get the new version's name and switch to it
+            val serviceVersionInfo = serviceVersionInfoFuture.get()
+            createdVersionName = serviceVersionInfo.name
+            switchVersion(null)
+            }catch (e: java.lang.Exception){
+            Log.e(TAG, e.message.toString())
+            Toast.makeText(this, e.message.toString(),Toast.LENGTH_SHORT).show()
+        }
     }
 
     // hide the create version button and allow the user to switch versions now
