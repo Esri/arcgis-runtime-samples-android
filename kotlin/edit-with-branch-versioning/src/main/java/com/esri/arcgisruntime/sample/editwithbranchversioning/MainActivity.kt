@@ -235,7 +235,7 @@ class MainActivity : AppCompatActivity() {
             // hide the create version button and allow the user to switch versions now
             createVersionButton.visibility = View.GONE
             switchVersionButton.visibility = View.VISIBLE
-            }catch (e: java.lang.Exception){
+            } catch (e: java.lang.Exception) {
             Log.e(TAG, e.message.toString())
             Toast.makeText(this, e.message.toString(),Toast.LENGTH_SHORT).show()
         }
