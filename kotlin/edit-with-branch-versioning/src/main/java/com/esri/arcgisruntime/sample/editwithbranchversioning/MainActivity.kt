@@ -227,7 +227,7 @@ class MainActivity : AppCompatActivity() {
     val serviceVersionInfoFuture =
       serviceGeodatabase.createVersionAsync(serviceVersionParameters)
     serviceVersionInfoFuture.addDoneListener {
-        try{
+        try {
             // get the new version's name and switch to it
             val serviceVersionInfo = serviceVersionInfoFuture.get()
             createdVersionName = serviceVersionInfo.name
