@@ -95,37 +95,33 @@ public class MainActivity extends AppCompatActivity {
 
     // wait until the layer is loaded before enabling the query button
     imageLayer.addDoneLoadingListener(() -> {
-      if (imageLayer.getSublayers().get(0).getLoadStatus() == LoadStatus.LOADED &&
-          imageLayer.getSublayers().get(2).getLoadStatus() == LoadStatus.LOADED &&
-          imageLayer.getSublayers().get(3).getLoadStatus() == LoadStatus.LOADED) {
-        mQueryButton.setEnabled(true);
+      mQueryButton.setEnabled(true);
 
-        // get and load each sublayer to query
-        ArcGISMapImageSublayer citiesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(0);
-        ArcGISMapImageSublayer statesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(2);
-        ArcGISMapImageSublayer countiesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(3);
-        citiesSublayer.loadAsync();
-        statesSublayer.loadAsync();
-        countiesSublayer.loadAsync();
+      // get and load each sublayer to query
+      ArcGISMapImageSublayer citiesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(0);
+      ArcGISMapImageSublayer statesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(2);
+      ArcGISMapImageSublayer countiesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(3);
+      citiesSublayer.loadAsync();
+      statesSublayer.loadAsync();
+      countiesSublayer.loadAsync();
 
-        // query the sublayers when the button is clicked
-        mQueryButton.setOnClickListener(v -> {
+      // query the sublayers when the button is clicked
+      mQueryButton.setOnClickListener(v -> {
 
-          // clear previous results
-          graphicsOverlay.getGraphics().clear();
+        // clear previous results
+        graphicsOverlay.getGraphics().clear();
 
-          // create query parameters filtering based on population and the map view's current viewpoint
-          QueryParameters populationQuery = new QueryParameters();
-          populationQuery.setWhereClause("POP2000 > " + mQueryInputBox.getText());
-          populationQuery
-              .setGeometry(mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry());
+        // create query parameters filtering based on population and the map view's current viewpoint
+        QueryParameters populationQuery = new QueryParameters();
+        populationQuery.setWhereClause("POP2000 > " + mQueryInputBox.getText());
+        populationQuery
+                .setGeometry(mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry());
 
-          QueryAndDisplayGraphics(citiesSublayer, citySymbol, populationQuery, graphicsOverlay);
-          QueryAndDisplayGraphics(statesSublayer, stateSymbol, populationQuery, graphicsOverlay);
-          QueryAndDisplayGraphics(countiesSublayer, countySymbol, populationQuery, graphicsOverlay);
+        QueryAndDisplayGraphics(citiesSublayer, citySymbol, populationQuery, graphicsOverlay);
+        QueryAndDisplayGraphics(statesSublayer, stateSymbol, populationQuery, graphicsOverlay);
+        QueryAndDisplayGraphics(countiesSublayer, countySymbol, populationQuery, graphicsOverlay);
 
-        });
-      }
+      });
     });
   }
 
