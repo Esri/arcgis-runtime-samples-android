@@ -236,8 +236,9 @@ class MainActivity : AppCompatActivity() {
             createVersionButton.visibility = View.GONE
             switchVersionButton.visibility = View.VISIBLE
             } catch (e: java.lang.Exception) {
-            Log.e(TAG, e.message.toString())
-            Toast.makeText(this, e.message.toString(),Toast.LENGTH_SHORT).show()
+            val errorMessage = "Error getting service info: " + e.message
+            Log.e(TAG, errorMessage)
+            Toast.makeText(this, errorMessage,Toast.LENGTH_SHORT).show()
         }
     }
   }
