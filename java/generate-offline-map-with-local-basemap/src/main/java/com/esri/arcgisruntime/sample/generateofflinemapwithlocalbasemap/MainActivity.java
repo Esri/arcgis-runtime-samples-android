@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity
           mGenerateOfflineMapParameters = generateOfflineMapParametersFuture.get();
           // set the path to the references basemap directory
           mGenerateOfflineMapParameters.setReferenceBasemapFilename(getString(R.string.naperville_tpkx));
-          mGenerateOfflineMapParameters.setReferenceBasemapDirectory(getExternalFilesDir(null) + getString(R.string.naperville_tpkx));
+          mGenerateOfflineMapParameters.setReferenceBasemapDirectory(getExternalFilesDir(null).getAbsolutePath());
           // name of local basemap file as supplied by the map's author
           String localBasemapFileName = mGenerateOfflineMapParameters.getReferenceBasemapFilename();
           // check if the offline map parameters include reference to a basemap file

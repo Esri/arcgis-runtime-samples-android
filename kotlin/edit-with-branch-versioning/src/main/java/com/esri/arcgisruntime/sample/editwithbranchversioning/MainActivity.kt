@@ -227,15 +227,20 @@ class MainActivity : AppCompatActivity() {
     val serviceVersionInfoFuture =
       serviceGeodatabase.createVersionAsync(serviceVersionParameters)
     serviceVersionInfoFuture.addDoneListener {
-      // get the new version's name and switch to it
-      val serviceVersionInfo = serviceVersionInfoFuture.get()
-      createdVersionName = serviceVersionInfo.name
-      switchVersion(null)
+        try {
+            // get the new version's name and switch to it
+            val serviceVersionInfo = serviceVersionInfoFuture.get()
+            createdVersionName = serviceVersionInfo.name
+            switchVersion(null)
+            // hide the create version button and allow the user to switch versions now
+            createVersionButton.visibility = View.GONE
+            switchVersionButton.visibility = View.VISIBLE
+            } catch (e: java.lang.Exception) {
+            val errorMessage = "Error getting service info: " + e.message
+            Log.e(TAG, errorMessage)
+            Toast.makeText(this, errorMessage,Toast.LENGTH_SHORT).show()
+        }
     }
-
-    // hide the create version button and allow the user to switch versions now
-    createVersionButton.visibility = View.GONE
-    switchVersionButton.visibility = View.VISIBLE
   }
 
   /**
