@@ -25,6 +25,18 @@ When the sample loads, it will automatically display the map containing dimensio
 * DimensionLayer
 * MobileMapPackage
 
+## Offline data
+
+1. Download the data from [ArcGIS Online](https://arcgis.com/home/item.html?id=f5ff6f5556a945bca87ca513b8729a1e).
+2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+3. Execute the following commands:
+
+`adb push Edinburgh_Pylon_Dimensions.mmpk /Android/data/com.esri.arcgisruntime.sample.displaydimensions/cache/Edinburgh_Pylon_Dimensions.mmpk`
+
+Link | Local Location
+---------|-------|
+|[Edinburgh_Pylon_Dimensions.mmpk](https://arcgis.com/home/item.html?id=f5ff6f5556a945bca87ca513b8729a1e)| /Android/data/com.esri.arcgisruntime.sample.displaydimensions/cache/Edinburgh_Pylon_Dimensions.mmpk |
+
 ## About the data
 
 This sample shows a subset of the Edinburgh, Scotland network of pylons, substations, and powerlines within an [Edinburgh Pylon Dimensions mobile map package](https://arcgis.com/home/item.html?id=f5ff6f5556a945bca87ca513b8729a1e), digitized from satellite imagery. Note the data is intended as illustrative of the network only.
