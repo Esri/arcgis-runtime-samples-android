@@ -23,18 +23,23 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.layers.DimensionLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
-import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.MobileMapPackage
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.displaydimensions.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.displaydimensions.databinding.DialogLayoutBinding
 import java.io.File
 
 
 class MainActivity : AppCompatActivity() {
+
+    private val TAG: String = MainActivity::class.java.simpleName
+
+    private lateinit var dimensionLayer: DimensionLayer
+    private var isDimensionLayerEnabled: Boolean = true
+    private var isDefinitionEnabled: Boolean = false
+
 
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -52,19 +57,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
 
-        // authentication with an API key or named user is required to access basemaps and other
-        // location services
-        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
-
-        // create a map with the BasemapType topographic
-        val map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
-
+        // create and load a mobile map package
         val mmpkFilePath =
             File(externalCacheDir, getString(R.string.Edinburgh_Pylon_Dimensions)).path
-
         val mobileMapPackage = MobileMapPackage(mmpkFilePath)
-
-        Log.e("now","LOADING")
 
         mobileMapPackage.addDoneLoadingListener {
             // check the mmpk has loaded successfully and that it contains a map
@@ -74,26 +70,17 @@ class MainActivity : AppCompatActivity() {
                 mapView.map.minScale = 35000.0
 
                 // find the dimension layer within the map
-                val operationLayers = mapView.map.operationalLayers
                 for (layer in mapView.map.operationalLayers) {
                     if (layer is DimensionLayer) {
-                        val dimensionLayer = layer
-                        Toast.makeText(
-                            activityMainBinding.root.context,
-                            dimensionLayer.name,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        // set the label to the name of the dimension layer
-                        //dimensionLayerName.setText(dimensionLayer.getName())
-                        // enable the vbox for dimension layer controls
-                        //controlsVBox.setDisable(false)
-                        //visibilityCheckBox.setSelected(dimensionLayer.isVisible())
+                        dimensionLayer = layer
                     }
                 }
             } else {
+                val errorMessage = "Failed to load the mobile map package"
+                Log.e(TAG, errorMessage)
                 Toast.makeText(
                     activityMainBinding.root.context,
-                    "Failed to load the mobile map package",
+                    errorMessage,
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -101,24 +88,40 @@ class MainActivity : AppCompatActivity() {
 
         mobileMapPackage.loadAsync()
 
-        // set a definition expression to show dimension lengths of greater than or equal to 450m when the checkbox is selected,
-        // or to reset the definition expression to show all dimension lengths when unselected
-        //TODO
-
         settingsButton.setOnClickListener {
-            //Inflate the dialog with custom view
-            val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_layout, null)
-            //AlertDialogBuilder
-            val mBuilder = AlertDialog.Builder(this)
-                .setView(mDialogView)
-                .setTitle("Dimension options:")
-            //show dialog
-            val  mAlertDialog = mBuilder.show()
+            // inflate the dialog layout and get references to each of its components
+            val dialogBinding = DialogLayoutBinding.inflate(LayoutInflater.from(this))
+            val dimensionLayerSwitch = dialogBinding.dimensionLayerSwitch
+            val definitionSwitch = dialogBinding.definitionSwitch
+            dimensionLayerSwitch.isChecked = isDimensionLayerEnabled
+            definitionSwitch.isChecked = isDefinitionEnabled
 
+            // set up the dialog
+            AlertDialog.Builder(this).apply {
+                setView(dialogBinding.root)
+                setTitle("Dimension options:")
+
+                dimensionLayerSwitch.setOnCheckedChangeListener { _, isEnabled ->
+                    // set the visibility of the dimension layer
+                    dimensionLayer.isVisible = isEnabled
+                    isDimensionLayerEnabled = isEnabled
+                }
+
+
+                definitionSwitch.setOnCheckedChangeListener { _, isEnabled ->
+                    // set a definition expression to show dimension lengths of
+                    // greater than or equal to 450m when the checkbox is selected,
+                    // or to reset the definition expression to show all
+                    // dimension lengths when unselected
+                    val defExpression =
+                        if (isEnabled) "DIMLENGTH >= 450" else ""
+                    dimensionLayer.definitionExpression = defExpression
+                    isDefinitionEnabled = isEnabled
+
+                }
+
+            }.show()
         }
-
-
-
     }
 
     override fun onPause() {
