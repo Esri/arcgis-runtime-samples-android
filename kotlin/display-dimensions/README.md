@@ -16,8 +16,8 @@ When the sample loads, it will automatically display the map containing dimensio
 
 1. Create a `MobileMapPackage` specifying the path to the .mmpk file.
 2. Load the mobile map package with `mobileMapPackage.loadAsync()`.
-3. After it successfully loads, get the map from the mmpk and add it to the map view: `mapView.map = mobileMapPackage.maps[0]`.
-4. Loop through the map's layers to create a `DimensionLayer`
+3. After it successfully loads, get the first map from the mmpk and set it to the map view: `mapView.map = mobileMapPackage.maps[0]`.
+4. Loop through the map's layers to create a `DimensionLayer`.
 5. Control the dimension layer's visibility with `dimensionLayer.isVisible` and set a definition expression with `dimensionLayer.definitionExpression`.
 
 ## Relevant API
@@ -31,7 +31,7 @@ When the sample loads, it will automatically display the map containing dimensio
 2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 3. Execute the following commands:
 
-`adb push Edinburgh_Pylon_Dimensions.mmpk /Android/data/com.esri.arcgisruntime.sample.displaydimensions/cache/Edinburgh_Pylon_Dimensions.mmpk`
+`adb push Edinburgh_Pylon_Dimensions.mmpk /Android/data/com.esri.arcgisruntime.sample.displaydimensions/files/Edinburgh_Pylon_Dimensions.mmpk`
 
 Link | Local Location
 ---------|-------|

@@ -58,9 +58,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(activityMainBinding.root)
 
         // create and load a mobile map package
-        val mmpkFilePath =
-            File(externalCacheDir, getString(R.string.Edinburgh_Pylon_Dimensions)).path
-        val mobileMapPackage = MobileMapPackage(mmpkFilePath)
+        val mobileMapPackage =
+            MobileMapPackage(getExternalFilesDir(null)?.path + "/Edinburgh_Pylon_Dimensions.mmpk")
 
         mobileMapPackage.addDoneLoadingListener {
             // check the mmpk has loaded successfully and that it contains a map
@@ -70,13 +69,10 @@ class MainActivity : AppCompatActivity() {
                 mapView.map.minScale = 35000.0
 
                 // find the dimension layer within the map
-                for (layer in mapView.map.operationalLayers) {
-                    if (layer is DimensionLayer) {
-                        dimensionLayer = layer
-                    }
-                }
+dimensionLayer =
+                    mapView.map.operationalLayers.firstOrNull { it is DimensionLayer } as DimensionLayer
             } else {
-                val errorMessage = "Failed to load the mobile map package"
+                val errorMessage = "Failed to load the mobile map package: " + mobileMapPackage.loadError.message
                 Log.e(TAG, errorMessage)
                 Toast.makeText(
                     activityMainBinding.root.context,
@@ -91,10 +87,12 @@ class MainActivity : AppCompatActivity() {
         settingsButton.setOnClickListener {
             // inflate the dialog layout and get references to each of its components
             val dialogBinding = DialogLayoutBinding.inflate(LayoutInflater.from(this))
-            val dimensionLayerSwitch = dialogBinding.dimensionLayerSwitch
-            val definitionSwitch = dialogBinding.definitionSwitch
-            dimensionLayerSwitch.isChecked = isDimensionLayerEnabled
-            definitionSwitch.isChecked = isDefinitionEnabled
+            val dimensionLayerSwitch = dialogBinding.dimensionLayerSwitch.apply { 
+                isChecked = isDimensionLayerEnabled
+            }
+            val definitionSwitch = dialogBinding.definitionSwitch.apply { 
+                isChecked = isDefinitionEnabled
+            }
 
             // set up the dialog
             AlertDialog.Builder(this).apply {

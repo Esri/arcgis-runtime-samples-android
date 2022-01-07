@@ -1,5 +1,5 @@
 {
-    "category": "Maps & Scenes",
+    "category": "Layers",
     "description": "Display dimension features from a mobile map package.",
     "formal_name": "DisplayDimensions",
     "ignore": false,
@@ -20,14 +20,14 @@
         "https://www.arcgis.com/home/item.html?id=f5ff6f5556a945bca87ca513b8729a1e"
     ],
     "provision_to": [
-        "Edinburgh_Pylon_Dimensions.mmpk"
+        "/Edinburgh_Pylon_Dimensions.mmpk"
     ],
     "relevant_apis": [
         "DimensionLayer",
         "MobileMapPackage"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/displaydimensions/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/displaydimensions/MainActivity.kt"
     ],
     "title": "Display dimensions"
 }
