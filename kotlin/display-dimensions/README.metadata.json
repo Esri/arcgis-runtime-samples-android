@@ -1,0 +1,33 @@
+{
+    "category": "Layers",
+    "description": "Display dimension features from a mobile map package.",
+    "formal_name": "DisplayDimensions",
+    "ignore": false,
+    "images": [
+        "display-dimensions.png"
+    ],
+    "keywords": [
+        "dimension",
+        "layer",
+        "mmpk",
+        "mobile map package",
+        "utility",
+        "DimensionLayer",
+        "MobileMapPackage"
+    ],
+    "language": "kotlin",
+    "provision_from": [
+        "https://www.arcgis.com/home/item.html?id=f5ff6f5556a945bca87ca513b8729a1e"
+    ],
+    "provision_to": [
+        "/Edinburgh_Pylon_Dimensions.mmpk"
+    ],
+    "relevant_apis": [
+        "DimensionLayer",
+        "MobileMapPackage"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/displaydimensions/MainActivity.kt"
+    ],
+    "title": "Display dimensions"
+}
