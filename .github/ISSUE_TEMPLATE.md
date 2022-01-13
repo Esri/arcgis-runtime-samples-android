@@ -1,6 +1,6 @@
 # ArcGIS Android Issue Template
 
-GitHub is **ONLY** used for issues pertaining to ArcGIS Runtime SDK Samples. Use [GeoNet](https://geonet.esri.com/community/developers/native-app-developers/arcgis-runtime-sdk-for-android) for any general ArcGIS Runtime Android SDK questions. 
+GitHub is **ONLY** used for issues pertaining to ArcGIS Runtime SDK Samples. Use [Esri Community](https://community.esri.com/t5/arcgis-runtime-sdk-for-android-questions/bd-p/arcgis-runtime-sdk-for-android-questions) for any general ArcGIS Runtime Android SDK questions. 
 
 Is this something you can [contribute](CONTRIBUTING.md)? Send a pull request! New Samples, bug fixes and documentation fixes are welcome.
 
