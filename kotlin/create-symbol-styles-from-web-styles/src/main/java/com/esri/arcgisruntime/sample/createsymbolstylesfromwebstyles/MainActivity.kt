@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -15,18 +16,37 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.createsymbolstylesfromwebstyles.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.createsymbolstylesfromwebstyles.databinding.LegendRowBinding
 import com.esri.arcgisruntime.symbology.SymbolStyle
 import com.esri.arcgisruntime.symbology.UniqueValueRenderer
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.legend_row.view.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.legend_row.*
 
 class MainActivity : AppCompatActivity() {
 
     private val TAG = this::class.java.simpleName
 
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
+
+    private val legendFAB: FloatingActionButton by lazy {
+        activityMainBinding.legendFAB
+    }
+
+    private val scrollViewLayout: LinearLayout by lazy {
+        activityMainBinding.scrollViewLayout
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(activityMainBinding.root)
 
         // authentication with an API key or named user is required to access basemaps and other
         // location services
@@ -89,11 +109,11 @@ class MainActivity : AppCompatActivity() {
         symbolNames.forEach { symbolName ->
 
             // create a placeholder legend row
-            val loadingLegendRow = layoutInflater.inflate(R.layout.legend_row, null).apply {
+            val loadingLegendRowBinding = LegendRowBinding.inflate(layoutInflater).apply {
                 symbolTextView.text = getString(R.string.loading)
             }
             // add the placeholder row to the scroll view
-            scrollViewLayout.addView(loadingLegendRow)
+            scrollViewLayout.addView(loadingLegendRowBinding.root)
 
             // search for each symbol in the symbol style
             val searchResult = symbolStyle.getSymbolAsync(listOf(symbolName))
@@ -118,7 +138,7 @@ class MainActivity : AppCompatActivity() {
                     val symbolBitmapFuture = symbol.createSwatchAsync(this, Color.WHITE)
                     symbolBitmapFuture.addDoneListener {
                         // create a legend row
-                        val legendRow = layoutInflater.inflate(R.layout.legend_row, null).apply {
+                        val legendRowBinding = LegendRowBinding.inflate(layoutInflater).apply {
                             // set the symbol to the row's image view
                             symbolImageView.setImageBitmap(symbolBitmapFuture.get())
                             // set the symbol name to the row's text view
@@ -127,7 +147,7 @@ class MainActivity : AppCompatActivity() {
                         // remove the loading row already at this index
                         scrollViewLayout.removeViewAt(symbolNames.indexOf(symbolName))
                         // add the legend row at the correct index
-                        scrollViewLayout.addView(legendRow, symbolNames.indexOf(symbolName))
+                        scrollViewLayout.addView(legendRowBinding.root, symbolNames.indexOf(symbolName))
                     }
                 } catch (e: Exception) {
                     val error = "Error getting symbol: " + e.message
