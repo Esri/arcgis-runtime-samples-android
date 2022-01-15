@@ -20,10 +20,6 @@ internal class ListAdapter(
 ) :
     BaseAdapter() {
 
-    /*private val listItemBinding by lazy {
-        ListItemBinding.inflate(LayoutInflater.from(context))
-    }*/
-
     private val mLayoutInflater: LayoutInflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
