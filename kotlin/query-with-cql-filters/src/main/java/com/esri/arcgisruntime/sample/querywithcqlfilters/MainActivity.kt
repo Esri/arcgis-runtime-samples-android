@@ -36,12 +36,13 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.TimeExtent
 import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.querywithcqlfilters.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.querywithcqlfilters.databinding.CqlFiltersLayoutBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.cql_filters_layout.view.*
 import java.util.*
 
 
@@ -71,9 +72,21 @@ class MainActivity : AppCompatActivity() {
     private var fromDate = Calendar.getInstance()
     private var toDate = Calendar.getInstance()
 
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
+
+    private val fab: FloatingActionButton by lazy {
+        activityMainBinding.fab
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(activityMainBinding.root)
 
         // Authentication with an API key or named user is required to
         // access basemaps and other location services
@@ -189,9 +202,9 @@ class MainActivity : AppCompatActivity() {
         val dialog = BottomSheetDialog(this)
 
         // Inflates layout file
-        val bottomSheetView = LayoutInflater.from(this).inflate(R.layout.cql_filters_layout,null)
+        val bottomSheetBinding = CqlFiltersLayoutBinding.inflate(layoutInflater)
 
-        bottomSheetView.apply {
+        bottomSheetBinding.apply {
             // Set the current selection of CQL query
             cqlQueryTextView.text = cqlQueryList[cqlQueryListPosition]
 
@@ -263,7 +276,7 @@ class MainActivity : AppCompatActivity() {
         dialog.setCancelable(false)
 
         // Sets bottom sheet content view to layout
-        dialog.setContentView(bottomSheetView)
+        dialog.setContentView(bottomSheetBinding.root)
 
         // Displays bottom sheet view
         dialog.show()
