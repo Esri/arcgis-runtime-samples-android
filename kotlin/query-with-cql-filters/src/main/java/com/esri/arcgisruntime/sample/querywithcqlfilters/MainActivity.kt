@@ -19,8 +19,6 @@ package com.esri.arcgisruntime.sample.querywithcqlfilters
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -38,7 +36,6 @@ import com.esri.arcgisruntime.mapping.TimeExtent
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.querywithcqlfilters.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.sample.querywithcqlfilters.databinding.CqlFiltersLayoutBinding
-import kotlinx.android.synthetic.main.activity_main.*
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
 import com.google.android.material.bottomsheet.BottomSheetDialog

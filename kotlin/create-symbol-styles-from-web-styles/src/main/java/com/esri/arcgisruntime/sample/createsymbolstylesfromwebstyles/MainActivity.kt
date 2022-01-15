@@ -22,7 +22,6 @@ import com.esri.arcgisruntime.sample.createsymbolstylesfromwebstyles.databinding
 import com.esri.arcgisruntime.symbology.SymbolStyle
 import com.esri.arcgisruntime.symbology.UniqueValueRenderer
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.legend_row.*
 
 class MainActivity : AppCompatActivity() {
 
