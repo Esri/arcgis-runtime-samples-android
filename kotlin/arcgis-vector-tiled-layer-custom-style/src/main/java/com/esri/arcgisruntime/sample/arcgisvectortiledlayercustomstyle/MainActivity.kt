@@ -21,10 +21,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.BaseAdapter
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.concurrent.Job
@@ -36,10 +33,12 @@ import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.ItemResourceCache
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
+import com.esri.arcgisruntime.sample.arcgisvectortiledlayercustomstyle.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.arcgisvectortiledlayercustomstyle.databinding.SpinnerItemBinding
 import com.esri.arcgisruntime.tasks.vectortilecache.ExportVectorTilesTask
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -65,9 +64,22 @@ class MainActivity : AppCompatActivity() {
     // A dictionary to cache loaded vector tiled layers.
     private var vectorTiledLayersMap: MutableMap<String, ArcGISVectorTiledLayer> = mutableMapOf()
 
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val spinner: Spinner by lazy {
+        activityMainBinding.spinner
+    }
+
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(activityMainBinding.root)
 
         // Set the map to be displayed in the layout's MapView
         mapView.map = ArcGISMap()
@@ -277,12 +289,13 @@ class MainActivity : AppCompatActivity() {
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+            val spinnerItemBinding = SpinnerItemBinding.inflate(inflater)
             val view: View
             val itemHolder: ItemHolder
             if (convertView == null) {
-                view = inflater.inflate(R.layout.spinner_item, parent, false)
+                view = spinnerItemBinding.root
                 itemHolder = ItemHolder(view)
-                view?.tag = itemHolder
+                view.tag = itemHolder
             } else {
                 view = convertView
                 itemHolder = view.tag as ItemHolder

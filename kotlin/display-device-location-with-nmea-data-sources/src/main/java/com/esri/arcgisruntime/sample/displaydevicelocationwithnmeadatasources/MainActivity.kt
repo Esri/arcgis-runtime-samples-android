@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.displaydevicelocationwithnmeadatasources
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
@@ -31,7 +32,9 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.LocationDisplay
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.displaydevicelocationwithnmeadatasources.databinding.ActivityMainBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
@@ -57,9 +60,37 @@ class MainActivity : AppCompatActivity() {
     // Keeps track of the timer during play/pause
     private var count = 0
 
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
+
+    private val accuracyTV: TextView by lazy {
+        activityMainBinding.accuracyTV
+    }
+
+    private val satelliteCountTV: TextView by lazy {
+        activityMainBinding.satelliteCountTV
+    }
+
+    private val satelliteIDsTV: TextView by lazy {
+        activityMainBinding.satelliteIDsTV
+    }
+
+    private val systemTypeTV: TextView by lazy {
+        activityMainBinding.systemTypeTV
+    }
+
+    private val playPauseFAB: FloatingActionButton by lazy {
+        activityMainBinding.playPauseFAB
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(activityMainBinding.root)
 
         // Authentication with an API key or named user is required
         // to access basemaps and other location services
