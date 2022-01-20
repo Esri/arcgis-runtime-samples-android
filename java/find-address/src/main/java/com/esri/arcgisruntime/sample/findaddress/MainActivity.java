@@ -101,6 +101,22 @@ public class MainActivity extends AppCompatActivity {
     mMapView = (MapView) findViewById(R.id.mapView);
     // create a map with the BasemapType topographic
     final ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
+    map.setInitialViewpoint(new Viewpoint(40,-100,100000000));
+
+    // once the map has loaded successfully, set up address finding UI
+    map.addDoneLoadingListener(() -> {
+      if (map.getLoadStatus() == LoadStatus.LOADED) {
+        setupAddressSearchView();
+      } else {
+        Log.e(TAG, "Map failed to load: " + map.getLoadError().getMessage());
+        Toast.makeText(
+                getApplicationContext(),
+                "Map failed to load: " + map.getLoadError().getMessage(),
+                Toast.LENGTH_LONG
+        ).show();
+      }
+    });
+
     // set the map to be displayed in this view
     mMapView.setMap(map);
     // set the map viewpoint to start over North America
@@ -118,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
     // define the graphics overlay
     mGraphicsOverlay = new GraphicsOverlay();
 
-    setupAddressSearchView();
   }
 
   /**
@@ -321,10 +336,10 @@ public class MainActivity extends AppCompatActivity {
     // add graphic to location layer
     mGraphicsOverlay.getGraphics().add(resultLocGraphic);
     // zoom map to result over 3 seconds
-    mMapView.setViewpointAsync(new Viewpoint(geocodeResult.getExtent()), 3);
+    mMapView.setViewpointAsync(new Viewpoint(geocodeResult.getExtent()), 3).addDoneListener(() -> showCallout(resultLocGraphic));
     // set the graphics overlay to the map
     mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
-    showCallout(resultLocGraphic);
+
   }
 
   @Override

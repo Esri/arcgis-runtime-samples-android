@@ -85,12 +85,27 @@ class MainActivity : AppCompatActivity() {
 
     // create a map with the streets vector basemap type
     val topographicMap = ArcGISMap(BasemapStyle.ARCGIS_STREETS)
+    // set the map viewpoint to start over North America
+    topographicMap.initialViewpoint = Viewpoint(40.0, -100.0, 100000000.0)
+
+    // once the map has loaded successfully, set up address finding UI
+    topographicMap.addDoneLoadingListener {
+      if (topographicMap.loadStatus == LoadStatus.LOADED) {
+        initializeAddressFinding()
+      } else {
+                Log.e(TAG, "Map failed to load: " + topographicMap.loadError.message)
+                Toast.makeText(
+                    applicationContext,
+                    "Map failed to load: " + topographicMap.loadError.message,
+                    Toast.LENGTH_LONG
+                ).show()
+      }
+    }
 
     mapView.apply {
       // set the map to be displayed in the mapview
       map = topographicMap
-      // set the map viewpoint to start over North America
-      setViewpoint(Viewpoint(40.0, -100.0, 100000000.0))
+
       // define the graphics overlay and add it to the map view
       graphicsOverlays.add(graphicsOverlay)
       // add listener to handle screen taps
@@ -101,13 +116,15 @@ class MainActivity : AppCompatActivity() {
         }
       }
     }
+  }
 
-    // create the picture marker symbol to show address location
-    createPinSymbol()
-
+  /**
+   * Populates the spinner with address suggestions and sets up the address search view.
+   */
+  private fun initializeAddressFinding() {
     // populate the spinner list of address suggestions
     val examples = arrayOf("277 N Avenida Caballeros, Palm Springs, " +
-        "CA", "380 New York St, Redlands, CA 92373", "Београд", "Москва", "北京")
+            "CA", "380 New York St, Redlands, CA 92373", "Београд", "Москва", "北京")
     // initialize an adapter for the suggestions spinner
     val suggestionAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, examples)
     suggestionSpinner.adapter = suggestionAdapter
@@ -249,8 +266,9 @@ class MainActivity : AppCompatActivity() {
     val resultLocationGraphic = Graphic(resultPoint, geocodeResult.attributes, pinSourceSymbol)
     // add graphic to location layer
     graphicsOverlay.graphics.add(resultLocationGraphic)
-    mapView.setViewpointAsync(Viewpoint(geocodeResult.extent), 1f)
-    showCallout(resultLocationGraphic)
+    mapView.setViewpointAsync(Viewpoint(geocodeResult.extent), 1f).addDoneListener {
+      showCallout(resultLocationGraphic)
+    }
   }
 
   /**
@@ -313,7 +331,9 @@ class MainActivity : AppCompatActivity() {
       // show callout beneath graphic
       style.leaderPosition = Callout.Style.LeaderPosition.UPPER_MIDDLE
       // show the callout
-      show()
+      if (!isShowing) {
+        show()
+      }
     }
   }
 
