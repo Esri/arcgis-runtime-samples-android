@@ -1,12 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.esri.arcgisruntime.sample.showpopup"
+        applicationId "com.esri.arcgisruntime.sample.browsebuildingfloors"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
@@ -22,19 +21,11 @@ android {
     }
 
     buildFeatures {
-        dataBinding true
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
+        viewBinding true
     }
 }
 
 dependencies {
     // lib dependencies from rootProject build.gradle
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    implementation "com.esri.arcgisruntime:arcgis-android-toolkit:$arcgisToolkitVersion"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    implementation "com.google.android.material:material:$materialVersion"
-    implementation "androidx.fragment:fragment-ktx:$ktxFragmentsExt"
 }

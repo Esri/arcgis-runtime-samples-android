@@ -76,7 +76,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
     int noOfAttachments = bundle.getInt(getApplication().getString(R.string.noOfAttachments));
 
     // Build a alert dialog with specified style
-    builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+    builder = new AlertDialog.Builder(this);
 
     // get a reference to the floating action button
     FloatingActionButton addAttachmentFab = findViewById(R.id.addAttachmentFAB);
