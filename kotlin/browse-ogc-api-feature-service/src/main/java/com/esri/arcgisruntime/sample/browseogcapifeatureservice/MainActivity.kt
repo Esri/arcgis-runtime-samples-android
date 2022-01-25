@@ -23,6 +23,8 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -39,12 +41,14 @@ import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.browseogcapifeatureservice.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.Renderer
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
-import kotlinx.android.synthetic.main.activity_main.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 // URL to the OAFeat service
 private const val serviceUrl = "https://demo.ldproxy.net/daraa"
@@ -53,9 +57,29 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG = this::class.java.simpleName
 
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
+
+    private val serviceEditText: EditText by lazy {
+        activityMainBinding.serviceEditText
+    }
+
+    private val featureCollectionTitleListView: ListView by lazy {
+        activityMainBinding.featureCollectionTitleListView
+    }
+
+    private val layerFAB: FloatingActionButton by lazy {
+        activityMainBinding.layerFAB
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(activityMainBinding.root)
 
         // authentication with an API key or named user is required to access basemaps and other
         // location services

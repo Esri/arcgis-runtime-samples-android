@@ -26,16 +26,25 @@ import com.esri.arcgisruntime.arcgisservices.LabelingPlacement
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.labeling.ArcadeLabelExpression
+import com.esri.arcgisruntime.mapping.view.SceneView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
+import com.esri.arcgisruntime.showlabelsonlayerin3d.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.TextSymbol
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val sceneView: SceneView by lazy {
+        activityMainBinding.sceneView
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(activityMainBinding.root)
 
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 

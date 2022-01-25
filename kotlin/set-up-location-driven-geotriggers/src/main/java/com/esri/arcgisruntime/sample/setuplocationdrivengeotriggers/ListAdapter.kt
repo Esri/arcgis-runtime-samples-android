@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.fragment.app.FragmentManager
-import kotlinx.android.synthetic.main.list_item.view.*
+import com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers.databinding.ListItemBinding
 
 /**
  * Adapter to display the list of point of interests
  */
 internal class ListAdapter(
-    context: MainActivity,
+    private val context: MainActivity,
     //List of garden sections as POIs
     private val gardenSections: MutableList<GardenSection>,
     // Fragment manager to display description dialog on click.
@@ -37,9 +37,9 @@ internal class ListAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         // Bind the view to the layout inflater
-        val itemView = mLayoutInflater.inflate(R.layout.list_item,null,true)
+        val listItemBinding = ListItemBinding.inflate(this.mLayoutInflater)
 
-        itemView.apply {
+        listItemBinding.apply {
             itemButton.text = gardenSections[position].title
             //Display description dialog on button click
             itemButton.setOnClickListener {
@@ -49,8 +49,6 @@ internal class ListAdapter(
                 )
             }
         }
-
-        return itemView
+        return listItemBinding.root
     }
-
 }

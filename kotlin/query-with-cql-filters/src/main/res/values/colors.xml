@@ -10,4 +10,7 @@
     <color name="grey">#808080</color>
     <color name="light_grey">#EFEFEF</color>
     <color name="divider">#C5C5C5</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#4CAF50</color>
 </resources>
