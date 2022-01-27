@@ -9,6 +9,11 @@ ArcGIS Runtime API for Android v100.13.0 samples.  The `main` branch of this rep
 ## Developer Instructions
 Please read our [developer instructions wiki page](https://github.com/Esri/arcgis-runtime-samples-android/wiki/dev-instructions) to set up your developer environment with Android Studio.  Instructions include forking and cloning the repository for those new to Git.
 
+Once the project is cloned to disk you can import into Android Studio:
+
+* From the toolbar select **File > Open**, or **Open** from the Welcome Quick Start.
+* Navigate to **arcgis-runtime-samples-android/java** or **arcgis-runtime-samples-android/kotlin** project folder,  directory and click **OK**
+
 ## Accessing Esri location services
 Accessing Esri location services, including basemaps, routing, and geocoding, requires authentication using either an API Key or an ArcGIS identity:
  1. API key: A permanent key that gives your application access to Esri location services. Visit your [ArcGIS Developers Dashboard](https://developers.arcgis.com/dashboard) to create a new API key or access an existing API key.
