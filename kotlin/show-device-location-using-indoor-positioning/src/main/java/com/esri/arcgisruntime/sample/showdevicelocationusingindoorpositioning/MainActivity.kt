@@ -29,20 +29,14 @@ import com.esri.arcgisruntime.data.ArcGISFeatureTable
 import com.esri.arcgisruntime.data.FeatureTable
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.layers.FeatureLayer
-import com.esri.arcgisruntime.layers.Layer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.location.IndoorsLocationDataSource
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.BasemapStyle
-import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.sample.showdevicelocationusingindoorpositioning.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.security.UserCredential
-import java.lang.Exception
-import java.util.function.Function
-import java.util.stream.Collectors
 
 
 class MainActivity : AppCompatActivity() {
@@ -101,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(activityMainBinding.root)
 
         // authentication with an API key or named user is required to access basemaps and other location services
-        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+        //ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         checkPermissions()
     }
@@ -121,30 +115,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupMap(portalItem: PortalItem) {
-        val map = ArcGISMap(portalItem)
-        mapView.map = map
+        mapView.apply {
+            map = ArcGISMap(portalItem)
 
-        map.addDoneLoadingListener {
-            val featureTables = map.tables
-            if(featureTables.isEmpty()){
-                val message = "Map does not contain feature tables"
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-                Log.e(TAG,message)
-                return@addDoneLoadingListener;
-            }
-            loadTables(featureTables, object : ResultsCallback {
-                    override fun onSuccess() {
-                        setupIndoorsLocationDataSource(featureTables, setupResultCompletionHandler)
-                    }
-
-                    override fun onError(exception: Exception?) {
-                        val message = "Failed to load feature tables"
-                        Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+            map.addDoneLoadingListener {
+                if (map.loadStatus == LoadStatus.LOADED){
+                    val featureTables = map.tables
+                    if(featureTables.isEmpty()){
+                        val message = "Map does not contain feature tables"
+                        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
                         Log.e(TAG,message)
+                        return@addDoneLoadingListener;
                     }
-                })
+                    loadTables(featureTables, object : ResultsCallback {
+                        override fun onSuccess() {
+                            setupIndoorsLocationDataSource(featureTables, setupResultCompletionHandler)
+                        }
+
+                        override fun onError(exception: Exception?) {
+                            val message = "Failed to load feature tables"
+                            Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+                            Log.e(TAG,message)
+                        }
+                    })
+                }else{
+                    val error = map.loadError
+                    Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_SHORT).show()
+                }
+
+            }
+            map.loadAsync()
         }
-        map.loadAsync()
     }
 
     private fun loadTables(featureTables: MutableList<FeatureTable>, resultsCallback: ResultsCallback) {
