@@ -85,4 +85,5 @@ include ':add-features-feature-service',
         ':view-point-cloud-data-offline',
         ':viewshed-geoprocessing',
         ':viewshed-location',
-        ':wmts-layer'
+        ':wmts-layer',
+        ':show-device-location-using-indoor-positioning'
