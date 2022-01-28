@@ -12,7 +12,7 @@ Please read our [developer instructions wiki page](https://github.com/Esri/arcgi
 Once the project is cloned to disk you can import into Android Studio:
 
 * From the Welcome to Android Studio screen, click the **Open** button. (If you're already inside a project, click **File > Open** in the menu bar instead.)
-* Navigate to **arcgis-runtime-samples-android/java** or **arcgis-runtime-samples-android/kotlin** project folder,  directory and click **OK**
+* Navigate to the **arcgis-runtime-samples-android/java** or **arcgis-runtime-samples-android/kotlin** folder and click **OK**.
 
 ## Accessing Esri location services
 Accessing Esri location services, including basemaps, routing, and geocoding, requires authentication using either an API Key or an ArcGIS identity:
