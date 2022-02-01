@@ -19,9 +19,11 @@ package com.esri.arcgisruntime.sample.syncmapandsceneviewpoints;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.GeoView;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -37,14 +39,18 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // get a reference to the map view and set a map to it
     mMapView = findViewById(R.id.mapView);
-    ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
     mMapView.setMap(map);
 
     // get a reference to the scene view and set a scene to it
     mSceneView = findViewById(R.id.sceneView);
-    ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
+    ArcGISScene scene = new ArcGISScene(BasemapStyle.ARCGIS_IMAGERY);
     mSceneView.setScene(scene);
 
     // on viewpoint change synchronize viewpoints

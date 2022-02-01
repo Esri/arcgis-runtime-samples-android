@@ -38,7 +38,7 @@ import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
     // create a map with an imagery base map and set to to the map view
-    ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
     mMapView.setMap(map);
     // get references to the views defined in the layout
     mHelpLabel = findViewById(R.id.helpLabelTextView);

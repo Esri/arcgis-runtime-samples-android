@@ -30,11 +30,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.layers.KmlLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.ogc.kml.KmlContainer;
@@ -64,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // get a reference to the scene view
     mSceneView = findViewById(R.id.sceneView);
 
@@ -72,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
     mBreadcrumbTextView = findViewById(R.id.breadcrumbTextView);
 
     // create a map and add it to the map view
-    ArcGISScene scene = new ArcGISScene(Basemap.createImageryWithLabels());
+    ArcGISScene scene = new ArcGISScene(BasemapStyle.ARCGIS_IMAGERY);
     mSceneView.setScene(scene);
 
     // initialize arrays
@@ -99,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements KmlNodeAdapter.On
       if (kmlDataset.getLoadStatus() == LoadStatus.LOADED) {
         // for each KML node in the dataset
         for (KmlNode kmlNode : kmlDataset.getRootNodes()) {
-          if(kmlNode.getName().equals("")){
+          if (kmlNode.getName().equals("")){
             kmlNode.setName("Root KML Node");
           }
           // add the parent node to the list
