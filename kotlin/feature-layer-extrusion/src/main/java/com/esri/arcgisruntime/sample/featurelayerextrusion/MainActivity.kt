@@ -20,12 +20,14 @@ import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.Camera
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.mapping.view.OrbitLocationCameraController
@@ -57,6 +59,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(activityMainBinding.root)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // get us census data as a service feature table
     val statesServiceFeatureTable =
       ServiceFeatureTable(resources.getString(R.string.us_census_feature_service))
@@ -67,7 +73,7 @@ class MainActivity : AppCompatActivity() {
     statesFeatureLayer.renderingMode = FeatureLayer.RenderingMode.DYNAMIC
 
     // create a scene and add it to the scene view
-    val scene = ArcGISScene(Basemap.createImagery())
+    val scene = ArcGISScene(BasemapStyle.ARCGIS_IMAGERY)
     sceneView.scene = scene
 
     // add the feature layer to the scene

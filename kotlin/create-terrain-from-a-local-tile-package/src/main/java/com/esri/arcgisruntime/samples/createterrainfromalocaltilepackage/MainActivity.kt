@@ -20,10 +20,12 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.Camera
 import com.esri.arcgisruntime.mapping.view.SceneView
 import com.esri.arcgisruntime.samples.createterrainfromalocaltilepackage.databinding.ActivityMainBinding
@@ -42,12 +44,12 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(activityMainBinding.root)
 
-    // create a scene and add a basemap to it
-    with(ArcGISScene()) {
-      this.basemap = Basemap.createImagery()
-      // add the scene to the sceneview
-      sceneView.scene = this
-    }
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
+    // create and add a scene with an imagery basemap
+    sceneView.scene = ArcGISScene(BasemapStyle.ARCGIS_IMAGERY)
 
     // specify the initial camera position
     sceneView.setViewpointCamera(Camera(36.525, -121.80, 300.0, 180.0, 80.0, 0.0))

@@ -23,12 +23,10 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
-import com.esri.arcgisruntime.mapping.ArcGISScene
-import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
-import com.esri.arcgisruntime.mapping.Basemap
-import com.esri.arcgisruntime.mapping.Surface
+import com.esri.arcgisruntime.mapping.*
 import com.esri.arcgisruntime.mapping.view.Camera
 import com.esri.arcgisruntime.mapping.view.GlobeCameraController
 import com.esri.arcgisruntime.mapping.view.Graphic
@@ -67,6 +65,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(activityMainBinding.root)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // load plane model and texture from assets into cache directory
     copyFilesFromAssetsToCache(resources.getStringArray(R.array.required_files_array))
 
@@ -75,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     toolbar.overflowIcon = ContextCompat.getDrawable(this, R.drawable.ic_photo_camera)
 
     // create a scene and add it to the scene view
-    sceneView.scene = ArcGISScene(Basemap.createImagery())
+    sceneView.scene = ArcGISScene(BasemapStyle.ARCGIS_IMAGERY)
 
     // add base surface for elevation data
     with(Surface()) {
