@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -36,6 +37,7 @@ import com.esri.arcgisruntime.location.IndoorsLocationDataSource
 import com.esri.arcgisruntime.location.LocationDataSource
 import com.esri.arcgisruntime.location.LocationDataSource.StatusChangedListener
 import com.esri.arcgisruntime.mapping.ArcGISMap
+import com.esri.arcgisruntime.mapping.LayerList
 import com.esri.arcgisruntime.mapping.view.LocationDisplay
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
@@ -50,6 +52,8 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
     StatusChangedListener {
 
     private val TAG = MainActivity::class.java.simpleName
+
+    private var mCurrentFloor: Int? = null
 
     // Provides an indoor or outdoor position based on device sensor data (radio, GPS, motion sensors).
     private var mIndoorsLocationDataSource: IndoorsLocationDataSource? = null
@@ -92,6 +96,10 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
 
     private val progressBar: ProgressBar by lazy {
         activityMainBinding.progressBar
+    }
+
+    private val textView: TextView by lazy {
+        activityMainBinding.textView
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -285,7 +293,14 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
                 location.additionalSourceProperties[LocationDataSource.Location.KEY_SATELLITE_COUNT].toString()
             else ""
 
+        if (mapView.map != null && mapView.map.loadStatus == LoadStatus.LOADED) {
+            val newFloor = floor.toInt()
+            setupLayers(newFloor)
+        } else {
+            Log.e(TAG, "The map is not loaded yet!")
+        }
 
+        //TODO: Debug info
         // log information about the device from the LocationDataSource
         Log.e(TAG, "Floor: $floor")
         Log.e(TAG, "Position source: $positionSource")
@@ -294,6 +309,34 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
             Log.e(TAG, "Network count: $networkCount")
         } else if (positionSource == "BLE") {
             Log.e(TAG, "Transmitter count: $transmitterCount")
+        }
+
+
+        var message = "" +
+                "Floor: $floor\n" +
+                "Position source: $positionSource\n" +
+                "Horizontal accuracy: "+ location?.let {decimalFormat.format(it.horizontalAccuracy)} + "m\n"
+        if (positionSource == LocationDataSource.Location.POSITION_SOURCE_GNSS) {
+            message += "Network count: $networkCount \n"
+        } else if (positionSource == "BLE") {
+            message += "Transmitter count: $transmitterCount \n"
+        }
+
+        textView.text = message
+    }
+
+    private fun setupLayers(floor: Int) {
+        if (mCurrentFloor == null || mCurrentFloor != floor) {
+            mCurrentFloor = floor
+        } else {
+            return
+        }
+        val layerList: LayerList = mapView.map.operationalLayers
+        for (layer in layerList) {
+            val name = layer.name
+            if (layer is FeatureLayer && (name == "Details" || name == "Units" || name == "Levels")) {
+                layer.definitionExpression = "VERTICAL_ORDER = $floor"
+            }
         }
     }
 
