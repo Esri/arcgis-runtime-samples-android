@@ -1,0 +1,1 @@
+# Dictionary renderer with graphics overlay
