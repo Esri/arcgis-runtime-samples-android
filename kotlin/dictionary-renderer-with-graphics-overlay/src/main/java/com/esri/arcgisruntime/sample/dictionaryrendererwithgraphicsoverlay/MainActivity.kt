@@ -21,10 +21,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
+import com.esri.arcgisruntime.geometry.Multipoint
+import com.esri.arcgisruntime.geometry.Point
+import com.esri.arcgisruntime.geometry.PointCollection
+import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
-import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
@@ -39,15 +42,6 @@ import org.w3c.dom.NodeList
 import java.io.File
 import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory
-import com.esri.arcgisruntime.geometry.Multipoint
-
-import com.esri.arcgisruntime.geometry.PointCollection
-
-import com.esri.arcgisruntime.geometry.SpatialReference
-
-
-
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -93,21 +87,17 @@ class MainActivity : AppCompatActivity() {
                         // and set its value to "ORDERED ANCHOR POINT"
                         dictionarySymbolStyle.configurations
                             .first { it.name.equals("model") }.value = "ORDERED ANCHOR POINT"
-
                         // create a new dictionary renderer from the dictionary symbol style to render graphics
                         // with symbol dictionary attributes and set it to the graphics overlay renderer
                         val dictionaryRenderer = DictionaryRenderer(dictionarySymbolStyle)
                         graphicsOverlay.renderer = dictionaryRenderer
-
                         // parse graphic attributes from an XML file following the mil2525d specification
                         try {
                             val messages: List<Map<String, Any>> = parseMessages()
+                            val graphics: MutableList<Graphic> = mutableListOf()
                             // create graphics with attributes and add to graphics overlay
-                            val graphics: List<Graphic> = emptyList()
-
-                            //TODO CHECK THIS
+                            messages.mapTo(graphics) { createGraphic(it) }
                             graphicsOverlay.graphics.addAll(graphics)
-
                             // set the viewpoint to the extent of the graphics overlay
                             mapView.setViewpointGeometryAsync(graphicsOverlay.extent)
                         } catch (e: Exception) {
@@ -121,9 +111,8 @@ class MainActivity : AppCompatActivity() {
                 displayError("Map failed to load: ${map.loadError.cause?.message} ")
             }
             // load the dictionary symbol style once the map has loaded
-            dictionarySymbolStyle.loadAsync();
+            dictionarySymbolStyle.loadAsync()
         }
-
         // set the map to be displayed in the layout's MapView
         mapView.map = map
     }
@@ -140,8 +129,7 @@ class MainActivity : AppCompatActivity() {
      * Parses a XML file following the mil2525d specification and creates a message for each block of attributes found.
      */
     private fun parseMessages(): List<Map<String, Any>> {
-        val mil2525dFile =
-            File(getExternalFilesDir(null).toString() + "/Mil2525DMessages.xml")
+        val mil2525dFile = File(getExternalFilesDir(null).toString() + "/Mil2525DMessages.xml")
 
         val documentBuilderFactory: DocumentBuilderFactory? = DocumentBuilderFactory.newInstance()
         val documentBuilder: DocumentBuilder? = documentBuilderFactory?.newDocumentBuilder()
@@ -149,35 +137,35 @@ class MainActivity : AppCompatActivity() {
         document?.documentElement?.normalize()
 
         val messages: MutableList<Map<String, Any>> = ArrayList()
-
-        for (i in 0 until document!!.getElementsByTagName("message").length) {
-            val message: Node = document.getElementsByTagName("message").item(i)
-            val attributes: MutableMap<String, Any> = HashMap()
-            val childNodes: NodeList = message.childNodes
-            for (j in 0 until childNodes.length) {
-                attributes[childNodes.item(j).nodeName] = childNodes.item(j).textContent
+        if (document != null) {
+            for (i in 0 until document.getElementsByTagName("message").length) {
+                val message: Node = document.getElementsByTagName("message").item(i)
+                val attributes: MutableMap<String, Any> = HashMap()
+                val childNodes: NodeList = message.childNodes
+                for (j in 0 until childNodes.length) {
+                    attributes[childNodes.item(j).nodeName] = childNodes.item(j).textContent
+                }
+                messages.add(attributes)
             }
-            messages.add(attributes)
         }
         return messages
     }
 
     /**
      * Creates a graphic using a symbol dictionary and the attributes that were passed.
-     *
-     * @param attributes tells symbol dictionary what symbol to apply to graphic
+     * [attributes] tells symbol dictionary what symbol to apply to graphic
      */
     private fun createGraphic(attributes: Map<String, Any>): Graphic {
-
         // get spatial reference
-        val wkid: Int = (attributes["_wkid"] as String).toInt ()
-        val sr = SpatialReference.create(wkid)
+        val sr = SpatialReference.create((attributes["_wkid"] as String).toInt())
         // get points from the coordinate string in the "_control_points" attribute (delimited with ';')
         val points = PointCollection(sr)
         val coordinates = (attributes["_control_points"] as String).split(";").toTypedArray()
-
-        //TODO add stream here
-
+        // split the coordinates and assign them to each point using the spatial reference
+        coordinates
+            .asSequence()
+            .map { it.split(",").toTypedArray() }
+            .mapTo(points) { Point(it[0].toDouble(), it[1].toDouble(), sr) }
         // return a graphic with multipoint geometry
         return Graphic(Multipoint(points), attributes)
     }
