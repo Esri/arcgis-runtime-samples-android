@@ -1,5 +1,0 @@
-<resources>
-    <string name="app_name">Dictionary renderer graphics overlay</string>
-    <string name="mil2525d_stylx">/mil2525d.stylx</string>
-    <string name="mil2525dmessages_xml_file">mil2525dmessages.xml</string>
-</resources>
