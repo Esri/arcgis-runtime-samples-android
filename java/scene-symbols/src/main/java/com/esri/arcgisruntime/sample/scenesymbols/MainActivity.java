@@ -20,11 +20,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.Graphic;
@@ -43,10 +45,14 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // get a reference to the scene view
     mSceneView = findViewById(R.id.sceneView);
     // create a scene and add it to the scene view
-    ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
+    ArcGISScene scene = new ArcGISScene(BasemapStyle.ARCGIS_IMAGERY);
     mSceneView.setScene(scene);
 
     // add base surface for elevation data

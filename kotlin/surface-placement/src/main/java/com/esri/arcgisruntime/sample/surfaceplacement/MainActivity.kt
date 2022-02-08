@@ -21,11 +21,13 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.*
 import com.esri.arcgisruntime.mapping.view.LayerSceneProperties.SurfacePlacement
 import com.esri.arcgisruntime.sample.surfaceplacement.databinding.ActivityMainBinding
@@ -59,8 +61,12 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(activityMainBinding.root)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a scene
-    val scene = ArcGISScene(Basemap.Type.IMAGERY).apply {
+    val scene = ArcGISScene(BasemapStyle.ARCGIS_IMAGERY).apply {
       // add base surface for elevation data
       baseSurface.elevationSources.add(
         ArcGISTiledElevationSource(getString(R.string.world_elevation_service))

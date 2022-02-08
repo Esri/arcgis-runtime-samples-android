@@ -21,12 +21,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.layers.PointCloudLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
-import com.esri.arcgisruntime.mapping.ArcGISScene
-import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
-import com.esri.arcgisruntime.mapping.Basemap
-import com.esri.arcgisruntime.mapping.Surface
+import com.esri.arcgisruntime.mapping.*
 import com.esri.arcgisruntime.mapping.view.Camera
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.mapping.view.SceneView
@@ -48,13 +46,17 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(activityMainBinding.root)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a surface with an elevation source
     val surface = Surface().apply {
       elevationSources.add(ArcGISTiledElevationSource(getString(R.string.elevation_source_url)))
     }
 
     // create a scene with the surface
-    val sceneWithSurface = ArcGISScene(Basemap.createImagery()).apply {
+    val sceneWithSurface = ArcGISScene(BasemapStyle.ARCGIS_IMAGERY).apply {
       baseSurface = surface
     }
 

@@ -23,11 +23,9 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer
-import com.esri.arcgisruntime.mapping.ArcGISScene
-import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
-import com.esri.arcgisruntime.mapping.Basemap
-import com.esri.arcgisruntime.mapping.Surface
+import com.esri.arcgisruntime.mapping.*
 import com.esri.arcgisruntime.mapping.view.*
 import com.esri.arcgisruntime.sample.realisticlightingandshadows.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -66,6 +64,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(activityMainBinding.root)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // get the current calendar and set its time to midday
     val calendar = Calendar.getInstance()
     calendar.apply {
@@ -80,11 +82,9 @@ class MainActivity : AppCompatActivity() {
 
     // create a scene with a vector basemap, a world elevation source, and a layer showing planned 
     // development in Portland, Oregon
-    sceneView.scene = ArcGISScene().apply {
-      basemap = Basemap.createTopographic()
-      baseSurface = Surface().apply {
-        elevationSources.add(ArcGISTiledElevationSource("https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"))
-      }
+    sceneView.scene = ArcGISScene(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
+      baseSurface =
+        Surface(listOf(ArcGISTiledElevationSource("https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer")))
       operationalLayers.add(buildingsLayer)
     }
 

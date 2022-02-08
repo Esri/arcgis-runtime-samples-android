@@ -25,10 +25,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.layers.*
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.LayerList
 import com.esri.arcgisruntime.mapping.view.Camera
 import com.esri.arcgisruntime.mapping.view.SceneView
@@ -65,6 +67,10 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(activityMainBinding.root)
+
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     // create different types of layers
     val trees =
@@ -113,7 +119,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // create a scene with an imagery basemap
-    val scene = ArcGISScene(Basemap.createImagery()).apply {
+    val scene = ArcGISScene(BasemapStyle.ARCGIS_IMAGERY).apply {
       // add the group layer and other layers to the scene as operational layers
       operationalLayers.addAll(arrayOf(projectAreaGroupLayer, buildingsGroupLayer))
       addDoneLoadingListener {
