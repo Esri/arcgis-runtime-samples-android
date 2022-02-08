@@ -1,2 +1,38 @@
 {
+    "category": "Visualization",
+    "description": "Create graphics from an XML file with key-value pairs for each graphic, and display the military symbols using a MIL-STD-2525D web style in 2D.",
+    "formal_name": "DictionaryRendererWithGraphicsOverlay",
+    "ignore": false,
+    "images": [
+        "dictionary-renderer-with-graphics-overlay.png"
+    ],
+    "keywords": [
+        "defense",
+        "military",
+        "situational awareness",
+        "tactical",
+        "visualization",
+        "DictionaryRenderer",
+        "DictionarySymbolStyle",
+        "GraphicsOverlay"
+    ],
+    "language": "kotlin",
+    "provision_from": [
+      "https://arcgisruntime.maps.arcgis.com/sharing/rest/content/items/623382e0113d40698538f249e3bcb1c0/data
+    ],
+    "provision_to": [
+      "/Mil2525DMessages.xml"
+    ],
+    "redirect_from": [
+      "/android/latest/sample-code/dictionary-renderer-with-graphics-overlay.htm"
+    ],
+    "relevant_apis": [
+        "DictionaryRenderer",
+        "DictionarySymbolStyle",
+        "GraphicsOverlay"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/dictionaryrendererwithgraphicsoverlay/MainActivity.kt"
+    ],
+    "title": "Dictionary renderer with graphics overlay"
 }
