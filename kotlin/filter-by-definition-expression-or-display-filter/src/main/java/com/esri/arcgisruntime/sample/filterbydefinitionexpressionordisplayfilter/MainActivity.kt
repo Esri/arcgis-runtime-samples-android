@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.QueryParameters
@@ -33,6 +34,7 @@ import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.view.DrawStatus
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.filterbydefinitionexpressionordisplayfilter.databinding.ActivityMainBinding
 
@@ -42,9 +44,9 @@ class MainActivity : AppCompatActivity() {
     private val TAG = MainActivity::class.java.simpleName
 
     private val featureServerURL =
-        "https://sampleserver6.arcgisonline.com/arcgis/rest/services/SF311/FeatureServer/0"
+        "https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/SF_311_Incidents/FeatureServer/0"
 
-    private var displayFilterDefinition: ManualDisplayFilterDefinition? = null
+    private var manualDisplayFilterDefinition: ManualDisplayFilterDefinition? = null
 
     private var featureLayer: FeatureLayer = FeatureLayer(ServiceFeatureTable(featureServerURL))
 
@@ -96,12 +98,15 @@ class MainActivity : AppCompatActivity() {
                     // req_type here is one of the published fields
                     val damagedTrees =
                         DisplayFilter("Damaged Trees", "req_type LIKE '%Tree Maintenance%'")
-                    displayFilterDefinition =
+                    manualDisplayFilterDefinition =
                         ManualDisplayFilterDefinition(damagedTrees, listOf(damagedTrees))
                 }
             }
-            addDrawStatusChangedListener {
-                countFeatures()
+
+            // run countFeatures() when MapView is finished moving
+            addNavigationChangedListener {
+                if(!isNavigating)
+                    countFeatures()
             }
         }
 
@@ -117,7 +122,7 @@ class MainActivity : AppCompatActivity() {
                 // Disable the feature layer definition expression
                 definitionExpression = ""
                 // Set the display filter definition on the layer
-                displayFilterDefinition = displayFilterDefinition
+                displayFilterDefinition = manualDisplayFilterDefinition
             }
 
             resetButton.setOnClickListener {
@@ -131,9 +136,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun countFeatures() {
         // Get the extent of the current viewpoint, return if no valid extent.
-        val extent =
-            mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).targetGeometry.extent
-                ?: return
+        val extent = mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).targetGeometry.extent ?: return
 
         // Update the UI with the count of features in the extent
         val queryParameters = QueryParameters()
@@ -142,13 +145,12 @@ class MainActivity : AppCompatActivity() {
         featureLayer.featureTable.apply {
             queryFeatureCountAsync(queryParameters).addDoneListener {
                 if (loadStatus == LoadStatus.LOADED) {
-                    featureCountTV.text =
-                        "Current feature count: ${totalFeatureCount}"
+                    Log.e("Current feature count", totalFeatureCount.toString())
+                    featureCountTV.text = "Current feature count: ${totalFeatureCount}"
                 } else {
-                    Log.e(
-                        TAG,
-                        "Error receiving total feature count: ${loadError.message}"
-                    )
+                    val errorMessage = "Error receiving total feature count: ${loadError.message}"
+                    Log.e(TAG,errorMessage)
+                    Toast.makeText(this@MainActivity,errorMessage,Toast.LENGTH_SHORT).show()
                 }
             }
         }
