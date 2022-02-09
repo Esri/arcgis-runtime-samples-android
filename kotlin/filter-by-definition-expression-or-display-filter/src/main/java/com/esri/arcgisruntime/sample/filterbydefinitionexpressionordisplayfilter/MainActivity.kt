@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             // with the BasemapType topographic
             map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
             val viewpoint = Viewpoint(
-                Point(-122.45044007080793, 37.775915492745874, SpatialReferences.getWgs84()),
+                Point(-122.44014487516885, 37.772296660953138, SpatialReferences.getWgs84()),
                 100000.0
             )
             setViewpoint(viewpoint)
