@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     private var displayFilterDefinition: ManualDisplayFilterDefinition? = null
 
-    private var featureLayer: FeatureLayer? = null
+    private var featureLayer: FeatureLayer = FeatureLayer(ServiceFeatureTable(featureServerURL))
 
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -79,57 +79,54 @@ class MainActivity : AppCompatActivity() {
         // location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // create a map with the BasemapType topographic
-        val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
-
-        // set the map to be displayed in the layout's MapView
-        mapView.map = map
-        val viewpoint = Viewpoint(
-            Point(-122.45044007080793, 37.775915492745874, SpatialReferences.getWgs84()),
-            100000.0
-        )
-        mapView.setViewpoint(viewpoint)
-
-        //add a feature layer to the map
-        val table = ServiceFeatureTable(featureServerURL)
-        featureLayer = FeatureLayer(table)
-        mapView.map.operationalLayers.add(featureLayer)
-
-        mapView.map.addDoneLoadingListener {
-            if (mapView.map.loadStatus == LoadStatus.LOADED) {
-                // create a display filter and display filter definition
-                // req_type here is one of the published fields
-                val damagedTrees =
-                    DisplayFilter("Damaged Trees", "req_type LIKE '%Tree Maintenance%'")
-                displayFilterDefinition =
-                    ManualDisplayFilterDefinition(damagedTrees, listOf(damagedTrees))
+        mapView.apply {
+            // set the map to be displayed in the layout's MapView
+            // with the BasemapType topographic
+            map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+            val viewpoint = Viewpoint(
+                Point(-122.45044007080793, 37.775915492745874, SpatialReferences.getWgs84()),
+                100000.0
+            )
+            setViewpoint(viewpoint)
+            //add a feature layer to the map
+            map.operationalLayers.add(featureLayer)
+            map.addDoneLoadingListener {
+                if (map.loadStatus == LoadStatus.LOADED) {
+                    // create a display filter and display filter definition
+                    // req_type here is one of the published fields
+                    val damagedTrees =
+                        DisplayFilter("Damaged Trees", "req_type LIKE '%Tree Maintenance%'")
+                    displayFilterDefinition =
+                        ManualDisplayFilterDefinition(damagedTrees, listOf(damagedTrees))
+                }
+            }
+            addDrawStatusChangedListener {
+                countFeatures()
             }
         }
-        mapView.addDrawStatusChangedListener {
-            countFeatures();
-        }
 
-        expressionButton.setOnClickListener {
-            // Reset the display filter definition.
-            featureLayer!!.displayFilterDefinition = null
-            // Set the definition expression to show specific features only.
-            featureLayer!!.definitionExpression = "req_Type = 'Tree Maintenance or Damage'"
-        }
+        featureLayer.apply {
+            expressionButton.setOnClickListener {
+                // Reset the display filter definition
+                displayFilterDefinition = null
+                // Set the definition expression to show specific features only
+                definitionExpression = "req_Type = 'Tree Maintenance or Damage'"
+            }
 
-        filterButton.setOnClickListener {
-            // Disable the feature layer definition expression
-            featureLayer!!.definitionExpression = ""
-            // Set the display filter definition on the layer.
-            featureLayer!!.displayFilterDefinition = displayFilterDefinition
-        }
+            filterButton.setOnClickListener {
+                // Disable the feature layer definition expression
+                definitionExpression = ""
+                // Set the display filter definition on the layer
+                displayFilterDefinition = displayFilterDefinition
+            }
 
-        resetButton.setOnClickListener {
-            // Disable the feature layer definition expression
-            featureLayer!!.definitionExpression = ""
-            // Reset the display filter definition.
-            featureLayer!!.displayFilterDefinition = null
+            resetButton.setOnClickListener {
+                // Disable the feature layer definition expression
+                definitionExpression = ""
+                // Reset the display filter definition
+                displayFilterDefinition = null
+            }
         }
-
     }
 
     private fun countFeatures() {
@@ -141,11 +138,18 @@ class MainActivity : AppCompatActivity() {
         // Update the UI with the count of features in the extent
         val queryParameters = QueryParameters()
         queryParameters.geometry = extent
-        featureLayer!!.featureTable.queryFeatureCountAsync(queryParameters).addDoneListener {
-            if (featureLayer!!.featureTable.loadStatus == LoadStatus.LOADED) {
-                featureCountTV.text = "Current feature count: ${featureLayer!!.featureTable.totalFeatureCount}"
-            }else{
-                Log.e(TAG,"Error receiving total feature count: ${featureLayer!!.featureTable.loadError.message}")
+
+        featureLayer.featureTable.apply {
+            queryFeatureCountAsync(queryParameters).addDoneListener {
+                if (loadStatus == LoadStatus.LOADED) {
+                    featureCountTV.text =
+                        "Current feature count: ${totalFeatureCount}"
+                } else {
+                    Log.e(
+                        TAG,
+                        "Error receiving total feature count: ${loadError.message}"
+                    )
+                }
             }
         }
     }
