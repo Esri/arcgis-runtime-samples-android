@@ -26,12 +26,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.layers.IntegratedMeshLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.NavigationConstraint;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.toolkit.ar.ArcGISArView;
@@ -47,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     requestCameraPermission();
   }
 
@@ -57,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     mArView.getSceneView().setOnTouchListener((view, motionEvent) -> true);
 
     // create scene with imagery basemap
-    ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
+    ArcGISScene scene = new ArcGISScene(BasemapStyle.ARCGIS_IMAGERY);
 
     // create an integrated mesh layer
     IntegratedMeshLayer integratedMeshLayer = new IntegratedMeshLayer(

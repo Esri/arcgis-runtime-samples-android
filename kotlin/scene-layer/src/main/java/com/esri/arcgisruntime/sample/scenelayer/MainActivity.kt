@@ -19,9 +19,11 @@ package com.esri.arcgisruntime.sample.scenelayer
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.Camera
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.mapping.view.SceneView
@@ -41,6 +43,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(activityMainBinding.root)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a scene layer from a url
     val sceneLayer = ArcGISSceneLayer(getString(R.string.brest_buildings))
 
@@ -48,9 +54,7 @@ class MainActivity : AppCompatActivity() {
     val camera = Camera(48.378, -4.494, 200.0, 345.0, 65.0, 0.0)
 
     // create a scene
-    val brestBuildingScene = ArcGISScene().apply {
-      // add a base map
-      basemap = Basemap.createTopographic()
+    val brestBuildingScene = ArcGISScene(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
       // add a scene service to the scene for viewing buildings
       operationalLayers.add(sceneLayer)
     }

@@ -28,6 +28,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.arcgisservices.RelationshipInfo;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
@@ -43,6 +45,7 @@ import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -64,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate views from layout
     mMapView = findViewById(R.id.mapView);
     mCommentListView = findViewById(R.id.comment_list);
@@ -73,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     // initialize a feature list that will hold the corresponding features for each comment
     List<Feature> featureList = new ArrayList<>();
     // create a map with a topographic basemap
-    ArcGISMap map = new ArcGISMap(Basemap.createStreets());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
 
     // create a new ArcGISMapImageLayer with a Service Request Map Server and load tables and layers
     ArcGISMapImageLayer serviceRequestMapImageLayer = new ArcGISMapImageLayer(getString(R.string.map_service));

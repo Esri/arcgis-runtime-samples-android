@@ -10,6 +10,7 @@ android {
         multiDexEnabled true
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
+        buildConfigField("String", "API_KEY", API_KEY)
     }
     buildTypes {
         release {

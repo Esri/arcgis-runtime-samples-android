@@ -32,6 +32,7 @@ import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geoanalysis.GeoElementLineOfSight;
 import com.esri.arcgisruntime.geoanalysis.LineOfSight;
 import com.esri.arcgisruntime.geometry.AngularUnit;
@@ -48,6 +49,7 @@ import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.AnalysisOverlay;
 import com.esri.arcgisruntime.mapping.view.Camera;
@@ -78,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // load taxi model from assets into cache directory
     copyFileFromAssetsToCache(getString(R.string.dolmus_model));
     copyFileFromAssetsToCache(getString(R.string.dolmus_back));
@@ -86,8 +92,7 @@ public class MainActivity extends AppCompatActivity {
     copyFileFromAssetsToCache(getString(R.string.tire_tread));
 
     // create a scene and add a basemap to it
-    ArcGISScene scene = new ArcGISScene();
-    scene.setBasemap(Basemap.createTopographic());
+    ArcGISScene scene = new ArcGISScene(BasemapStyle.ARCGIS_TOPOGRAPHIC);
 
     // get a reference to the scene view and set the scene to it
     mSceneView = findViewById(R.id.sceneView);

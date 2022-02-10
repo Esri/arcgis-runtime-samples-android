@@ -26,14 +26,12 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geoanalysis.LocationViewshed
 import com.esri.arcgisruntime.geoanalysis.Viewshed
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer
-import com.esri.arcgisruntime.mapping.ArcGISScene
-import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
-import com.esri.arcgisruntime.mapping.Basemap
-import com.esri.arcgisruntime.mapping.Surface
+import com.esri.arcgisruntime.mapping.*
 import com.esri.arcgisruntime.mapping.view.*
 import com.esri.arcgisruntime.sample.viewshedlocation.databinding.ActivityMainBinding
 import java.util.concurrent.ExecutionException
@@ -127,6 +125,10 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(activityMainBinding.root)
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
     // create a surface for elevation data
     val surface = Surface().apply {
       elevationSources.add(ArcGISTiledElevationSource(getString(R.string.elevation_service)))
@@ -136,8 +138,7 @@ class MainActivity : AppCompatActivity() {
     val buildingsSceneLayer = ArcGISSceneLayer(getString(R.string.buildings_layer))
 
     // create a scene and add imagery basemap, elevation surface, and buildings layer to it
-    val buildingsScene = ArcGISScene().apply {
-      basemap = Basemap.createImagery()
+    val buildingsScene = ArcGISScene(BasemapStyle.ARCGIS_IMAGERY).apply {
       baseSurface = surface
       operationalLayers.add(buildingsSceneLayer)
     }

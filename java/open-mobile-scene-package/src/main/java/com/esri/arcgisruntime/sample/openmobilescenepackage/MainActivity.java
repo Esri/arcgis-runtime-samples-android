@@ -22,12 +22,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.esri.arcgisruntime.loadable.LoadStatus;
-import com.esri.arcgisruntime.mapping.ArcGISScene;
-import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
-import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.MobileScenePackage;
-import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 
@@ -44,22 +41,16 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     mSceneView = findViewById(R.id.sceneView);
-    // create a scene and add it to the scene view
-    ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
-
-    // add base surface for elevation data
-    final Surface surface = new Surface();
-    ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(
-        getString(R.string.elevation_image_service_url));
-    surface.getElevationSources().add(elevationSource);
-    scene.setBaseSurface(surface);
 
     // create a mobile scene package from a path to the mspk
     mMobileScenePackage = new MobileScenePackage(getExternalFilesDir(null) + getString(R.string.philadelphia_mspk));
     mMobileScenePackage.addDoneLoadingListener(() -> {
+      // check if the mobile scene package loaded and has a scene
       if (mMobileScenePackage.getLoadStatus() == LoadStatus.LOADED && !mMobileScenePackage.getScenes().isEmpty()) {
+        // set the scene view's scene to the first in the mobile scene package
         mSceneView.setScene(mMobileScenePackage.getScenes().get(0));
-        mSceneView.setViewpointCamera(new Camera(39.962551,-75.177168,313.862355,138.654067,74.581665,0.0));
+        // set the scene view's camera
+        mSceneView.setViewpointCamera(new Camera(39.9625,-75.1771,310,139,75,0.0));
       } else {
         String error = "Failed to load mobile scene package: " + mMobileScenePackage.getLoadError().getMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
