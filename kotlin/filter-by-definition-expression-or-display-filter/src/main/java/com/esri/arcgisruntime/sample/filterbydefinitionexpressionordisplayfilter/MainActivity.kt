@@ -34,7 +34,6 @@ import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
-import com.esri.arcgisruntime.mapping.view.DrawStatus
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.filterbydefinitionexpressionordisplayfilter.databinding.ActivityMainBinding
 
@@ -43,8 +42,7 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG = MainActivity::class.java.simpleName
 
-    private val featureServerURL =
-        "https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/SF_311_Incidents/FeatureServer/0"
+    private val featureServerURL = "https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/SF_311_Incidents/FeatureServer/0"
 
     private var manualDisplayFilterDefinition: ManualDisplayFilterDefinition? = null
 
@@ -96,16 +94,14 @@ class MainActivity : AppCompatActivity() {
                 if (map.loadStatus == LoadStatus.LOADED) {
                     // create a display filter and display filter definition
                     // req_type here is one of the published fields
-                    val damagedTrees =
-                        DisplayFilter("Damaged Trees", "req_type LIKE '%Tree Maintenance%'")
-                    manualDisplayFilterDefinition =
-                        ManualDisplayFilterDefinition(damagedTrees, listOf(damagedTrees))
+                    val damagedTrees = DisplayFilter("Damaged Trees", "req_type LIKE '%Tree Maintenance%'")
+                    manualDisplayFilterDefinition = ManualDisplayFilterDefinition(damagedTrees, listOf(damagedTrees))
                 }
             }
 
             // run countFeatures() when MapView is finished moving
             addNavigationChangedListener {
-                if(!isNavigating)
+                if (!isNavigating)
                     countFeatures()
             }
         }
@@ -116,6 +112,7 @@ class MainActivity : AppCompatActivity() {
                 displayFilterDefinition = null
                 // Set the definition expression to show specific features only
                 definitionExpression = "req_Type = 'Tree Maintenance or Damage'"
+                countFeatures()
             }
 
             filterButton.setOnClickListener {
@@ -123,6 +120,7 @@ class MainActivity : AppCompatActivity() {
                 definitionExpression = ""
                 // Set the display filter definition on the layer
                 displayFilterDefinition = manualDisplayFilterDefinition
+                countFeatures()
             }
 
             resetButton.setOnClickListener {
@@ -130,10 +128,14 @@ class MainActivity : AppCompatActivity() {
                 definitionExpression = ""
                 // Reset the display filter definition
                 displayFilterDefinition = null
+                countFeatures()
             }
         }
     }
 
+    /**
+     * Retrieves the totalFeatureCount from the featureTable in the [mapView]'s extent
+     */
     private fun countFeatures() {
         // Get the extent of the current viewpoint, return if no valid extent.
         val extent = mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).targetGeometry.extent ?: return
@@ -143,14 +145,16 @@ class MainActivity : AppCompatActivity() {
         queryParameters.geometry = extent
 
         featureLayer.featureTable.apply {
-            queryFeatureCountAsync(queryParameters).addDoneListener {
+            val future = queryFeatureCountAsync(queryParameters)
+            future.addDoneListener {
                 if (loadStatus == LoadStatus.LOADED) {
+                    val totalFeatureCount = future.get()
                     Log.e("Current feature count", totalFeatureCount.toString())
                     featureCountTV.text = "Current feature count: ${totalFeatureCount}"
                 } else {
                     val errorMessage = "Error receiving total feature count: ${loadError.message}"
-                    Log.e(TAG,errorMessage)
-                    Toast.makeText(this@MainActivity,errorMessage,Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, errorMessage)
+                    Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_SHORT).show()
                 }
             }
         }
