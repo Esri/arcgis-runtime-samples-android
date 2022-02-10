@@ -1,2 +1,32 @@
 {
+    "category": "Search and Query",
+    "description": "Filter features displayed on a map using a definition expression or a display filter.",
+    "formal_name": "FilterByDefinitionExpressionOrDisplayFilter",
+    "ignore": false,
+    "images": [
+        "FilterByDefinitionExpressionOrDisplayFilter.png"
+    ],
+    "keywords": [
+        "SQL",
+        "definition expression",
+        "display filter",
+        "filter",
+        "limit data",
+        "query",
+        "restrict data",
+        "where clause",
+        "DefinitionExpression",
+        "FeatureLayer",
+        "ServiceFeatureTable"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "DefinitionExpression",
+        "FeatureLayer",
+        "ServiceFeatureTable"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/filterbydefinitionexpressionordisplayfilter/MainActivity.kt"
+    ],
+    "title": "Filter by definition expression or display filter"
 }

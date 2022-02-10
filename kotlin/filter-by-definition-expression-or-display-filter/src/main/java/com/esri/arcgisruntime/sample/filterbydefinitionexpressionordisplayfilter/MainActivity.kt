@@ -83,10 +83,7 @@ class MainActivity : AppCompatActivity() {
             // set the map to be displayed in the layout's MapView
             // with the BasemapType topographic
             map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
-            val viewpoint = Viewpoint(
-                Point(-122.44014487516885, 37.772296660953138, SpatialReferences.getWgs84()),
-                100000.0
-            )
+            val viewpoint = Viewpoint(Point(-122.44014487516885, 37.772296660953138, SpatialReferences.getWgs84()), 100000.0)
             setViewpoint(viewpoint)
             //add a feature layer to the map
             map.operationalLayers.add(featureLayer)
