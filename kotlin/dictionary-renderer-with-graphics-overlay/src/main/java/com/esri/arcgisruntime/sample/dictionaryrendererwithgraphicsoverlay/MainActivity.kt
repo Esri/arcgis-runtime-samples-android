@@ -49,8 +49,6 @@ class MainActivity : AppCompatActivity() {
 
     private val graphicsOverlay: GraphicsOverlay = GraphicsOverlay()
 
-    private val itemID = "d815f3bdf6e6452bb8fd153b654c94ca"
-
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -75,40 +73,41 @@ class MainActivity : AppCompatActivity() {
         mapView.graphicsOverlays.add(graphicsOverlay)
 
         // create the dictionary symbol style from the Joint Military Symbology MIL-STD-2525D portal item
-        val portalItem = PortalItem(Portal("https://www.arcgis.com/", false), itemID)
+        val portalItem = PortalItem(Portal("https://www.arcgis.com/", false), "d815f3bdf6e6452bb8fd153b654c94ca")
         val dictionarySymbolStyle = DictionarySymbolStyle(portalItem)
 
         // add done loading listeners to the map and dictionary symbol style and check they have loaded
         map.addDoneLoadingListener {
-            if (map.loadStatus == LoadStatus.LOADED) {
-                dictionarySymbolStyle.addDoneLoadingListener {
-                    if (dictionarySymbolStyle.loadStatus == LoadStatus.LOADED) {
-                        // find the first configuration setting which has the property name "model",
-                        // and set its value to "ORDERED ANCHOR POINT"
-                        dictionarySymbolStyle.configurations
-                            .first { it.name.equals("model") }.value = "ORDERED ANCHOR POINT"
-                        // create a new dictionary renderer from the dictionary symbol style to render graphics
-                        // with symbol dictionary attributes and set it to the graphics overlay renderer
-                        val dictionaryRenderer = DictionaryRenderer(dictionarySymbolStyle)
-                        graphicsOverlay.renderer = dictionaryRenderer
-                        // parse graphic attributes from an XML file following the mil2525d specification
-                        try {
-                            val messages: List<Map<String, Any>> = parseMessages()
-                            val graphics: MutableList<Graphic> = mutableListOf()
-                            // create graphics with attributes and add to graphics overlay
-                            messages.mapTo(graphics) { createGraphic(it) }
-                            graphicsOverlay.graphics.addAll(graphics)
-                            // set the viewpoint to the extent of the graphics overlay
-                            mapView.setViewpointGeometryAsync(graphicsOverlay.extent)
-                        } catch (e: Exception) {
-                            displayError("Error parsing messages: ${e.message}")
-                        }
-                    } else {
-                        displayError("Failed to load symbol style: ${dictionarySymbolStyle.loadError.cause?.message}")
+            dictionarySymbolStyle.addDoneLoadingListener {
+                if (dictionarySymbolStyle.loadStatus == LoadStatus.LOADED
+                    && map.loadStatus == LoadStatus.LOADED) {
+                    // find the first configuration setting which has the property name "model",
+                    // and set its value to "ORDERED ANCHOR POINT"
+                    dictionarySymbolStyle.configurations
+                        .first { it.name.equals("model") }.value = "ORDERED ANCHOR POINT"
+                    // create a new dictionary renderer from the dictionary symbol style to render graphics
+                    // with symbol dictionary attributes and set it to the graphics overlay renderer
+                    val dictionaryRenderer = DictionaryRenderer(dictionarySymbolStyle)
+                    graphicsOverlay.renderer = dictionaryRenderer
+                    // parse graphic attributes from an XML file following the mil2525d specification
+                    try {
+                        val messages: List<Map<String, Any>> = parseMessages()
+                        val graphics: MutableList<Graphic> = mutableListOf()
+                        // create graphics with attributes and add to graphics overlay
+                        messages.mapTo(graphics) { createGraphic(it) }
+                        graphicsOverlay.graphics.addAll(graphics)
+                        // set the viewpoint to the extent of the graphics overlay
+                        mapView.setViewpointGeometryAsync(graphicsOverlay.extent)
+                    } catch (e: Exception) {
+                        val message = "Error parsing messages: ${e.message}"
+                        Log.e(TAG, message)
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                     }
+                } else {
+                    val message = "Failed to load symbol style: ${dictionarySymbolStyle.loadError.cause?.message}"
+                    Log.e(TAG, message)
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 }
-            } else {
-                displayError("Map failed to load: ${map.loadError.cause?.message} ")
             }
             // load the dictionary symbol style once the map has loaded
             dictionarySymbolStyle.loadAsync()
@@ -118,18 +117,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Function to log the error message and display it as a toast.
-     */
-    private fun displayError(message: String) {
-        Log.e(TAG, message)
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
-    /**
      * Parses a XML file following the mil2525d specification and creates a message for each block of attributes found.
      */
     private fun parseMessages(): List<Map<String, Any>> {
-        val mil2525dFile = File(getExternalFilesDir(null).toString() + "/Mil2525DMessages.xml")
+        val mil2525dFile = File(getExternalFilesDir(null)?.path + "/Mil2525DMessages.xml")
 
         val documentBuilderFactory: DocumentBuilderFactory? = DocumentBuilderFactory.newInstance()
         val documentBuilder: DocumentBuilder? = documentBuilderFactory?.newDocumentBuilder()
