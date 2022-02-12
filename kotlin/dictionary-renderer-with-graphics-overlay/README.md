@@ -30,6 +30,14 @@ Run the sample and view the military symbols on the map.
 * DictionarySymbolStyle
 * GraphicsOverlay
 
+## Offline Data
+
+1. Download the data [Mil2525DMessages.zip](https://arcgisruntime.maps.arcgis.com/sharing/rest/content/items/623382e0113d40698538f249e3bcb1c0/data) 
+2. Extract the downloaded zip file to retrieve the file "Mil2525DMessages.xml".
+3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+4. Push the data into the scoped storage of the sample app:
+ 	* `adb push Mil2525DMessages.xml /Android/data/com.esri.arcgisruntime.sample.dictionaryrendererwithgraphicsoverlay/files/Mil2525DMessages.xml`
+
 ## About the data
 
 The dictionary symbol style in this sample is constructed from a portal item containing a [MIL-STD-2525D symbol dictionary web style](https://arcgis.com/home/item.html?id=d815f3bdf6e6452bb8fd153b654c94ca). This ArcGIS Web Style is used to build custom applications that incorporate the MIL-STD-2525D symbol dictionary. This style supports a configuration for modeling locations as ordered anchor points or full geometries.
