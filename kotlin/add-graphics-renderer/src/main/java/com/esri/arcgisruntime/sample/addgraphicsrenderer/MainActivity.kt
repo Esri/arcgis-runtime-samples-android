@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
      * */
     private fun renderedEllipseGraphicsOverlay(): GraphicsOverlay {
         // create and set all the parameters so that the ellipse has a major axis of 400 kilometres,
-        // a minor axis of 200 kilometres and is rotated at an angle of -45 degrees.
+        // a minor axis of 200 kilometres and is rotated at an angle of -45 degrees
         val parameters = GeodesicEllipseParameters()
         parameters.apply {
             center = Point(40e5, 23e5, SpatialReferences.getWebMercator())
