@@ -2,7 +2,6 @@
 
 Filter features displayed on a map using a definition expression or a display filter.
 
-
 ![Image of Filter by definition expression or display filter](filter-by-definition-expression-or-display-filter.png)
 
 ## Use case
