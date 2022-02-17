@@ -28,9 +28,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.esri.arcgisruntime.data.ArcGISFeatureTable
-import com.esri.arcgisruntime.data.FeatureTable
-import com.esri.arcgisruntime.data.ServiceFeatureTable
+import com.esri.arcgisruntime.concurrent.ListenableFuture
+import com.esri.arcgisruntime.data.*
+import com.esri.arcgisruntime.data.QueryParameters.OrderBy
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.location.IndoorsLocationDataSource
@@ -45,6 +45,7 @@ import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.sample.showdevicelocationusingindoorpositioning.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.security.UserCredential
 import java.text.DecimalFormat
+import java.util.*
 import java.util.stream.Collectors
 
 
@@ -214,6 +215,7 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
             if(featureTable.tableName.equals("ips_positioning")){
                 positioningTable = featureTable
                 // since positioning table is found, exit loop
+                //TODO Handle if positioning table is not found
                 continue
             }
         }
@@ -222,10 +224,55 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
             val serviceFeatureTable = positioningTable as ServiceFeatureTable
             // when multiple entries are available, IndoorsLocationDataSource constructor function
             // looks up the entry with the most recent date and takes this positioning data.
-            mIndoorsLocationDataSource = IndoorsLocationDataSource(this, serviceFeatureTable, getPathwaysTable())
-            resultsCallback.onSuccess()
 
+            //Custom initialization
+            val queryParameters = QueryParameters()
+            queryParameters.maxFeatures = 1
+            queryParameters.whereClause = "1 = 1"
+
+            val orderByFields = queryParameters.orderByFields
+            val dateCreatedFieldName = getDateCreatedFieldName(serviceFeatureTable.fields);
+            orderByFields.add(OrderBy(dateCreatedFieldName, QueryParameters.SortOrder.DESCENDING))
+
+            val resultFuture = serviceFeatureTable.queryFeaturesAsync(queryParameters)
+            val result = resultFuture.get()
+            val featureIterator: Iterator<Feature> = result.iterator()
+            val feature: Feature
+
+            if(featureIterator.hasNext()){
+                feature = featureIterator.next()
+            } else{
+                // positioningTable has no entries
+                resultsCallback.onError(Exception("Map does not support IPS."))
+                return
+            }
+
+            // The ID that identifies a row in the positioning table.
+
+            // The ID that identifies a row in the positioning table.
+            val globalID = Objects.requireNonNull(feature.attributes[serviceFeatureTable.globalIdField]).toString()
+            val positioningId = UUID.fromString(globalID)
+
+            // Setting up IndoorsLocationDataSource with positioning, pathways tables and positioning ID.
+            // positioningTable - the "ips_positioning" feature table from an IPS-enabled map.
+            // pathwaysTable - An ArcGISFeatureTable that contains pathways as per the ArcGIS Indoors Information Model.
+            //   Setting this property enables path snapping of locations provided by the IndoorsLocationDataSource.
+            // positioningID - an ID which identifies a specific row in the positioningTable that should be used for setting up IPS.
+            mIndoorsLocationDataSource = IndoorsLocationDataSource(this, serviceFeatureTable, getPathwaysTable(),positioningId)
+            resultsCallback.onSuccess()
         }
+    }
+
+    /**
+     * Find the exact formatting of the name "DateCreated" in the list of ServiceFeatureTable fields.
+     */
+    private fun getDateCreatedFieldName(fields: List<Field>): String? {
+        for(field in fields){
+            if(field.name.equals("DateCreated", ignoreCase = true) || field.name.equals("Date_Created", ignoreCase = true)){
+                return field.name
+            }
+        }
+        return ""
     }
 
     /**
@@ -306,8 +353,10 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
                 "Floor: $floor\n" +
                 "Position source: $positionSource\n" +
                 "Horizontal accuracy: "+ location?.let {decimalFormat.format(it.horizontalAccuracy)} + "m\n"
+
+        Log.e("IPS:", message)
         if (positionSource == LocationDataSource.Location.POSITION_SOURCE_GNSS) {
-            message += "Network count: $networkCount"
+            message += "Satellite count: $networkCount"
         } else if (positionSource == "BLE") {
             message += "Transmitter count: $transmitterCount"
         }
