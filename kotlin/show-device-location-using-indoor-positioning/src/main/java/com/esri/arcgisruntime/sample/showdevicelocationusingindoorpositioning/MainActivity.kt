@@ -58,18 +58,6 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
     // Provides an indoor or outdoor position based on device sensor data (radio, GPS, motion sensors).
     private var mIndoorsLocationDataSource: IndoorsLocationDataSource? = null
 
-    private val mPortal = Portal("https://viennardc.maps.arcgis.com/", true)
-
-    private val mCredential = UserCredential("tester_viennardc", "password.testing12345")
-
-    private val MAP_ID = "89f88764c29b48218366855d7717d266"
-
-    // Name of the positioning table saved in the feature service.
-    private val IPS_POSITIONING_TABLE_NAME = "ips_positioning"
-
-    // Name of the pathways table saved in the feature service.
-    private val PATHWAYS_TABLE_NAME = "Pathways"
-
     private val setupResultCompletionHandler: ResultsCallback =
         object : ResultsCallback{
             override fun onSuccess() {
@@ -83,7 +71,6 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
                     Log.e(TAG, exception.message.toString())
                 }
             }
-
         }
 
     private val activityMainBinding by lazy {
@@ -115,17 +102,18 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
      * Set up the connection between the device and the portal item
      */
     private fun connectToPortal() {
-        mPortal.credential = mCredential
-        mPortal.addDoneLoadingListener {
-            if(mPortal.loadStatus == LoadStatus.LOADED){
-                val portalItem = PortalItem(mPortal, MAP_ID)
+        val portal = Portal("https://viennardc.maps.arcgis.com/", true)
+        portal.credential = UserCredential("tester_viennardc", "password.testing12345")
+        portal.addDoneLoadingListener {
+            if(portal.loadStatus == LoadStatus.LOADED){
+                val portalItem = PortalItem(portal, "89f88764c29b48218366855d7717d266")
                 setupMap(portalItem)
             }else{
-                Toast.makeText(this, mPortal.loadError.message, Toast.LENGTH_SHORT).show()
-                Log.e(TAG,mPortal.loadError.message.toString())
+                Toast.makeText(this, portal.loadError.message, Toast.LENGTH_SHORT).show()
+                Log.e(TAG,portal.loadError.message.toString())
             }
         }
-        mPortal.loadAsync()
+        portal.loadAsync()
     }
 
     /**
@@ -137,35 +125,50 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
             map.addDoneLoadingListener {
                 if (map.loadStatus == LoadStatus.LOADED){
                     val featureTables = map.tables
-
                     // if the portalItem does not contain any featureTables
                     if(featureTables.isEmpty()){
                         val message = "Map does not contain feature tables"
                         Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
                         Log.e(TAG,message)
                     }else{
-                        // portalItem contains featureTables so perform load on each featureTable
-                        loadTables(featureTables, object : ResultsCallback {
-                            override fun onSuccess() {
-                                setupIndoorsLocationDataSource(featureTables, setupResultCompletionHandler)
-                            }
-
-                            override fun onError(exception: Exception?) {
-                                val message = "Failed to load feature tables"
-                                Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
-                                Log.e(TAG,message)
-                            }
-                        })
+                        setUpLoadTables(featureTables)
                     }
-
                 }else{
                     val error = map.loadError
                     Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_SHORT).show()
                 }
-
             }
             map.loadAsync()
         }
+    }
+
+    /**
+     * Set up the ResultsCallback for when all tables are loaded
+     */
+    private fun setUpLoadTables(featureTables: MutableList<FeatureTable>) {
+        // portalItem contains featureTables so perform load on each featureTable
+        loadTables(featureTables, object : ResultsCallback {
+            override fun onSuccess() {
+                setupIndoorsLocationDataSource(featureTables, object : ResultsCallback{
+                    override fun onSuccess() {
+                        // Start location display after successful setup
+                        startLocationDisplay()
+                    }
+
+                    override fun onError(exception: Exception?) {
+                        if(exception != null){
+                            Toast.makeText(this@MainActivity, exception.message, Toast.LENGTH_SHORT).show()
+                            Log.e(TAG, exception.message.toString())
+                        }
+                    }
+                })
+            }
+            override fun onError(exception: Exception?) {
+                val message = "Failed to load feature tables"
+                Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+                Log.e(TAG,message)
+            }
+        })
     }
 
     /**
@@ -188,7 +191,6 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
                         else
                             featureTables.subList(0,0)
                     }
-
                     // recursively call loadTables() with the list of featureTables to load
                     loadTables(newFeatureTables, resultsCallback)
                 } else {
@@ -209,7 +211,7 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
         // positioningTable needs to be present
         var positioningTable: FeatureTable? = null
         for(featureTable in featureTables){
-            if(featureTable.tableName.equals(IPS_POSITIONING_TABLE_NAME)){
+            if(featureTable.tableName.equals("ips_positioning")){
                 positioningTable = featureTable
                 // since positioning table is found, exit loop
                 continue
@@ -231,7 +233,7 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
      */
     private fun getPathwaysTable(): ArcGISFeatureTable? {
         for(layer in mapView.map.operationalLayers){
-            if(layer.name.equals(PATHWAYS_TABLE_NAME)){
+            if(layer.name.equals("Pathways")){
                 return (layer as FeatureLayer).featureTable as ArcGISFeatureTable
             }
         }
@@ -257,7 +259,7 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
      */
     private fun startLocationDisplay() {
         val locationDisplay: LocationDisplay = mapView.locationDisplay
-        locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.COMPASS_NAVIGATION
+        locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.NAVIGATION
         locationDisplay.locationDataSource = mIndoorsLocationDataSource
         // these listeners will receive location, heading and status updates from the location data source.
         locationDisplay.locationDataSource.addStatusChangedListener(this)
@@ -300,26 +302,14 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
             Log.e(TAG, "The map is not loaded yet!")
         }
 
-        //TODO: Debug info
-        // log information about the device from the LocationDataSource
-        Log.e(TAG, "Floor: $floor")
-        Log.e(TAG, "Position source: $positionSource")
-        Log.e(TAG,"Horizontal accuracy: "+ location?.let {decimalFormat.format(it.horizontalAccuracy)})
-        if (positionSource == LocationDataSource.Location.POSITION_SOURCE_GNSS) {
-            Log.e(TAG, "Network count: $networkCount")
-        } else if (positionSource == "BLE") {
-            Log.e(TAG, "Transmitter count: $transmitterCount")
-        }
-
-
         var message = "" +
                 "Floor: $floor\n" +
                 "Position source: $positionSource\n" +
                 "Horizontal accuracy: "+ location?.let {decimalFormat.format(it.horizontalAccuracy)} + "m\n"
         if (positionSource == LocationDataSource.Location.POSITION_SOURCE_GNSS) {
-            message += "Network count: $networkCount \n"
+            message += "Network count: $networkCount"
         } else if (positionSource == "BLE") {
-            message += "Transmitter count: $transmitterCount \n"
+            message += "Transmitter count: $transmitterCount"
         }
 
         textView.text = message

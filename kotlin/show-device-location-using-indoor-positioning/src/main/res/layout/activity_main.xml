@@ -27,6 +27,8 @@
 
     <TextView
         android:id="@+id/textView"
+        android:padding="12dp"
+        android:textSize="18sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
