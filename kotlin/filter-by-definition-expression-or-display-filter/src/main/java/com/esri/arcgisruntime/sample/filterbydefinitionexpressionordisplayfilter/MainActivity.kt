@@ -81,12 +81,6 @@ class MainActivity : AppCompatActivity() {
         val topographicMap = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
             //add a feature layer to the map
             operationalLayers.add(featureLayer)
-            addDoneLoadingListener {
-                if (loadStatus != LoadStatus.LOADED) {
-                    Log.e(TAG, "Failed to load the feature layer map")
-                    Toast.makeText(this@MainActivity, "Failed to load the feature layer map", Toast.LENGTH_SHORT).show()
-                }
-            }
         }
 
         mapView.apply {
@@ -148,7 +142,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         val featureCountFuture = featureLayer.featureTable.queryFeatureCountAsync(queryParameters)
-        featureLayer.featureTable
         featureCountFuture.addDoneListener {
             if (featureLayer.featureTable.loadStatus == LoadStatus.LOADED) {
                 val totalFeatureCount = featureCountFuture.get()
