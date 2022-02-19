@@ -151,7 +151,10 @@ class MainActivity : AppCompatActivity() {
         val sr = SpatialReference.create((attributes["_wkid"] as String).toInt())
         // get points from the coordinate string in the "_control_points" attribute (delimited with ';')
         val points = PointCollection(sr)
-        val coordinates = (attributes["_control_points"] as String).split(";").toTypedArray()
+        val coordinates = (attributes["_control_points"] as String).split(";").toMutableList()
+        // if the "_control_points" ends with ';' then a blank coordinate is created, it needs to be removed
+        if(coordinates.last().trim() == "")
+            coordinates.removeAt(coordinates.lastIndex)
         // split the coordinates and assign them to each point using the spatial reference
         coordinates
             .asSequence()
