@@ -79,8 +79,7 @@ class MainActivity : AppCompatActivity() {
         // add done loading listeners to the map and dictionary symbol style and check they have loaded
         map.addDoneLoadingListener {
             dictionarySymbolStyle.addDoneLoadingListener {
-                if (dictionarySymbolStyle.loadStatus == LoadStatus.LOADED
-                    && map.loadStatus == LoadStatus.LOADED) {
+                if (dictionarySymbolStyle.loadStatus == LoadStatus.LOADED) {
                     // find the first configuration setting which has the property name "model",
                     // and set its value to "ORDERED ANCHOR POINT"
                     dictionarySymbolStyle.configurations
