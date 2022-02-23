@@ -216,12 +216,7 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
             // pathwaysTable - An ArcGISFeatureTable that contains pathways as per the ArcGIS Indoors Information Model.
             // Setting this property enables path snapping of locations provided by the IndoorsLocationDataSource.
             // positioningID - an ID which identifies a specific row in the positioningTable that should be used for setting up IPS.
-            mIndoorsLocationDataSource = IndoorsLocationDataSource(
-                this,
-                serviceFeatureTable,
-                getPathwaysTable(),
-                positioningId
-            )
+            mIndoorsLocationDataSource = IndoorsLocationDataSource(this, serviceFeatureTable, getPathwaysTable(), positioningId)
         } else {
             val message = "Positioning Table not found in FeatureTables"
             Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -234,11 +229,7 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
      */
     private fun getDateCreatedFieldName(fields: List<Field>): String? {
         for (field in fields) {
-            if (field.name.equals(
-                    "DateCreated",
-                    ignoreCase = true
-                ) || field.name.equals("Date_Created", ignoreCase = true)
-            ) {
+            if (field.name.equals("DateCreated", ignoreCase = true) || field.name.equals("Date_Created", ignoreCase = true)) {
                 return field.name
             }
         }
@@ -382,7 +373,6 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
     private fun checkPermissions() {
         val requestCode = 1
         val requestPermissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-
         if (ContextCompat.checkSelfPermission(this, requestPermissions[0]) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, requestPermissions, requestCode)
         } else {
