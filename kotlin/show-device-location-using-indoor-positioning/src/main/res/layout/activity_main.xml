@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#00000000"
     tools:context="com.esri.arcgisruntime.sample.showdevicelocationusingindoorpositioning.MainActivity">
 
     <com.esri.arcgisruntime.mapping.view.MapView
@@ -13,7 +14,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -29,6 +30,8 @@
         android:id="@+id/textView"
         android:padding="12dp"
         android:textSize="16sp"
+        android:textColor="#CCFFFFFF"
+        android:background="#80000000"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"

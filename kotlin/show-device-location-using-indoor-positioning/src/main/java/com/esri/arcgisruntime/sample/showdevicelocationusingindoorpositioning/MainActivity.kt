@@ -320,13 +320,12 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
         }
         // set up the message with floor properties to be displayed to the textView
         var locationPropertiesMessage =
-                "Floor: $floor\n" +
-                "Position source: $positionSource\n" +
-                "Horizontal accuracy: "+ locationChangedEvent.location.let { DecimalFormat(".##").format(it.horizontalAccuracy)} + "m\n"
+                "Floor: $floor, Position-source: $positionSource, " +
+                "Horizontal-accuracy: "+ locationChangedEvent.location.let { DecimalFormat(".##").format(it.horizontalAccuracy)} + "m, "
         if (positionSource == LocationDataSource.Location.POSITION_SOURCE_GNSS) {
-            locationPropertiesMessage += "Satellite count: $networkCount"
+            locationPropertiesMessage += "Satellite-count: $networkCount"
         } else if (positionSource == "BLE") {
-            locationPropertiesMessage += "Transmitter count: $transmitterCount"
+            locationPropertiesMessage += "Transmitter-count: $transmitterCount"
         }
         textView.text = locationPropertiesMessage
     }

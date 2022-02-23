@@ -1,2 +1,47 @@
 {
+    "category": "Maps and Scenes",
+    "description": "Show your device's real-time location while inside a building by using signals from indoor positioning beacons.",
+    "formal_name": "ShowDeviceLocationUsingIndoorPositioning",
+    "ignore": false,
+    "images": [
+        "show-device-location-using-indoor-positioning.png"
+    ],
+    "keywords": [
+        "BLE",
+        "Bluetooth",
+        "GPS",
+        "IPS",
+        "beacon",
+        "blue dot",
+        "building",
+        "facility",
+        "indoor",
+        "location",
+        "map",
+        "mobile",
+        "navigation",
+        "site",
+        "transmitter",
+        "ArcGISMap",
+        "FeatureLayer",
+        "FeatureTable",
+        "IndoorsLocationDataSource",
+        "LocationDataSource",
+        "LocationDisplay",
+        "MapView"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "ArcGISMap",
+        "FeatureLayer",
+        "FeatureTable",
+        "IndoorsLocationDataSource",
+        "LocationDataSource",
+        "LocationDisplay",
+        "MapView"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/showdevicelocationusingindoorpositioning/MainActivity.kt"
+    ],
+    "title": "Show device location using indoor positioning"
 }
