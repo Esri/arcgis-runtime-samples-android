@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Style Wms Layer</string>
-    <string name="wms_layer_url_minnesota"><![CDATA[https://imageserver.gisdata.mn.gov/cgi-bin/wms?VERSION=1.3.0&SERVICE=WMS&REQUEST=GetCapabilities]]></string>
+    <string name="wms_layer_url_minnesota"><![CDATA[https://imageserver.gisdata.mn.gov/cgi-bin/mncomp?VERSION=1.3.0&SERVICE=WMS&REQUEST=GetCapabilities]]></string>
     <string name="style_0">Style 0</string>
     <string name="style_1">Style 1</string>
-    <string name="wms_layer_name_minnesota">fsa2017</string>
+    <string name="wms_layer_name_minnesota">mncomp</string>
 </resources>
