@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   // California zone 5 (ftUS) state plane coordinate system.
-  private val statePlaneCaliforniaZone5 = SpatialReference.create(2229)
+  private val statePlaneCaliforniaZone5SpatialReference = SpatialReference.create(2229)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     // create a graphic for the polygon
-    val polygonPoints = PointCollection(statePlaneCaliforniaZone5)
+    val polygonPoints = PointCollection(statePlaneCaliforniaZone5SpatialReference)
     polygonPoints.addAll(
       listOf(
         Point(6627416.41469281, 1804532.53233782),
@@ -115,10 +115,11 @@ class MainActivity : AppCompatActivity() {
     mapView.apply {
       // create a map using the PortalItem
       // and add the FeatureLayer to the map view's basemap
-      map = ArcGISMap(statePlaneCaliforniaZone5)
-
-      val portalItem = PortalItem(Portal("https://arcgisruntime.maps.arcgis.com",false),"99fd67933e754a1181cc755146be21ca")
-      val usStatesGeneralizedLayer = FeatureLayer(portalItem,0)
+      map = ArcGISMap(statePlaneCaliforniaZone5SpatialReference)
+      val portalItem = PortalItem(
+        Portal("https://arcgisruntime.maps.arcgis.com", false),
+        "99fd67933e754a1181cc755146be21ca")
+      val usStatesGeneralizedLayer = FeatureLayer(portalItem, 0)
       map.basemap.baseLayers.add(usStatesGeneralizedLayer)
 
       // add the graphics overlay to the map view
