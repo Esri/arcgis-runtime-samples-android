@@ -149,9 +149,9 @@ class MainActivity : AppCompatActivity() {
 
           // show the distances to the nearest vertex and nearest coordinate
           distanceLayout.visibility = VISIBLE
-          val vertexDistance = (nearestVertexResult.distance / 5280.0)
+          val vertexDistance = (nearestVertexResult.distance / 5280.0).toInt()
           val coordinateDistance = (nearestCoordinateResult.distance / 5280.0).toInt()
-          vertexDistanceTextView.text = getString(R.string.nearest_vertex,vertexDistance)
+          vertexDistanceTextView.text = getString(R.string.nearest_vertex, vertexDistance)
           coordinateDistanceTextView.text =
             getString(R.string.nearest_coordinate, coordinateDistance)
           return true
