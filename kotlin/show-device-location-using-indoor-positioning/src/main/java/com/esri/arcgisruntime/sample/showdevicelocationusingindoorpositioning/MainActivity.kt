@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
 
     private val TAG = MainActivity::class.java.simpleName
 
-    private var mCurrentFloor: Int? = null
+    private var currentFloor: Int? = null
 
     // Provides an indoor or outdoor position based on device sensor data (radio, GPS, motion sensors).
     private var mIndoorsLocationDataSource: IndoorsLocationDataSource? = null
@@ -87,17 +87,8 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
         val portal = Portal("https://viennardc.maps.arcgis.com/", true).apply {
             credential = UserCredential("tester_viennardc", "password.testing12345")
         }
-        // once logged in and loaded, the set the portal item to a map with a PositioningTable
-        portal.addDoneLoadingListener {
-            if (portal.loadStatus == LoadStatus.LOADED) {
-                val portalItem = PortalItem(portal, "89f88764c29b48218366855d7717d266")
-                setupMap(portalItem)
-            } else {
-                Toast.makeText(this, portal.loadError.message, Toast.LENGTH_SHORT).show()
-                Log.e(TAG, portal.loadError.message.toString())
-            }
-        }
-        portal.loadAsync()
+        val portalItem = PortalItem(portal, "89f88764c29b48218366855d7717d266")
+        setupMap(portalItem)
     }
 
     /**
@@ -109,20 +100,19 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
         map.addDoneLoadingListener {
             if (mapView.map.loadStatus == LoadStatus.LOADED) {
                 val featureTables = map.tables
-                // if the portalItem does not contain any featureTables
-                if (featureTables.isEmpty()) {
+                // check if the portalItem contains featureTables
+                if (featureTables.isNotEmpty()) {
+                    setUpLoadTables(featureTables)
+                } else {
                     val message = "Map does not contain feature tables"
                     Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
                     Log.e(TAG, message)
-                } else {
-                    setUpLoadTables(featureTables)
                 }
             } else {
                 val error = map.loadError
                 Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_SHORT).show()
             }
         }
-        map.loadAsync()
     }
 
     /**
@@ -134,8 +124,6 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
             override fun onSuccess() {
                 // set up the data source using the feature tables, then start the data source
                 setupIndoorsLocationDataSource(featureTables)
-                // start the location display (blue dot)
-                startLocationDisplay()
             }
 
             override fun onError(exception: Exception?) {
@@ -175,48 +163,49 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
      */
     private fun setupIndoorsLocationDataSource(featureTables: List<FeatureTable>) {
         // positioningTable needs to be present
-        var positioningTable: FeatureTable? = null
-        for (featureTable in featureTables) {
-            if (featureTable.tableName.equals("ips_positioning")) {
-                positioningTable = featureTable
-                // since positioning table is found, exit loop
-                continue
-            }
-        }
+        val positioningTable = featureTables.firstOrNull { it.tableName.equals("ips_positioning") }
 
         if (positioningTable != null) {
             val serviceFeatureTable = positioningTable as ServiceFeatureTable
             // when multiple entries are available, IndoorsLocationDataSource constructor function
             // looks up the entry with the most recent date and takes this positioning data
             // set up queryParameters to grab one result.
-            val queryParameters = QueryParameters().apply {
-                maxFeatures = 1
-                whereClause = "1 = 1"
-            }
-            // find and sort out the orderByFields by most recent first
-            val orderByFields = queryParameters.orderByFields
             val dateCreatedFieldName = getDateCreatedFieldName(serviceFeatureTable.fields)
-            orderByFields.add(OrderBy(dateCreatedFieldName, QueryParameters.SortOrder.DESCENDING))
-            // perform search query using the queryParameters
-            val resultFuture = serviceFeatureTable.queryFeaturesAsync(queryParameters)
-            val featureIterator: Iterator<Feature> = resultFuture.get().iterator()
-            // check if serviceFeatureTable contains positioning data
-            if(!featureIterator.hasNext()){
-                val message = "The positioning table contain no data"
+            if(dateCreatedFieldName == null){
+                val message = "The service table does not contain \"DateCreated\" fields."
                 Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
                 Log.e(TAG, message)
                 return
             }
-            // The ID that identifies a row in the positioning table.
-            val globalID = featureIterator.next().attributes[serviceFeatureTable.globalIdField].toString()
-            val positioningId = UUID.fromString(globalID)
-
-            // Setting up IndoorsLocationDataSource with positioning, pathways tables and positioning ID.
-            // positioningTable - the "ips_positioning" feature table from an IPS-enabled map.
-            // pathwaysTable - An ArcGISFeatureTable that contains pathways as per the ArcGIS Indoors Information Model.
-            // Setting this property enables path snapping of locations provided by the IndoorsLocationDataSource.
-            // positioningID - an ID which identifies a specific row in the positioningTable that should be used for setting up IPS.
-            mIndoorsLocationDataSource = IndoorsLocationDataSource(this, serviceFeatureTable, getPathwaysTable(), positioningId)
+            val queryParameters = QueryParameters().apply {
+                maxFeatures = 1
+                whereClause = "1 = 1"
+                // find and sort out the orderByFields by most recent first
+                orderByFields.add(OrderBy(dateCreatedFieldName, QueryParameters.SortOrder.DESCENDING))
+            }
+            // perform search query using the queryParameters
+            val resultFuture = serviceFeatureTable.queryFeaturesAsync(queryParameters)
+            resultFuture.addDoneListener {
+                val featureIterator: Iterator<Feature> = resultFuture.get().iterator()
+                // check if serviceFeatureTable contains positioning data
+                if (featureIterator.hasNext()) {
+                    // The ID that identifies a row in the positioning table.
+                    val globalID = featureIterator.next().attributes[serviceFeatureTable.globalIdField].toString()
+                    val positioningId = UUID.fromString(globalID)
+                    // Setting up IndoorsLocationDataSource with positioning, pathways tables and positioning ID.
+                    // positioningTable - the "ips_positioning" feature table from an IPS-enabled map.
+                    // pathwaysTable - An ArcGISFeatureTable that contains pathways as per the ArcGIS Indoors Information Model.
+                    // Setting this property enables path snapping of locations provided by the IndoorsLocationDataSource.
+                    // positioningID - an ID which identifies a specific row in the positioningTable that should be used for setting up IPS.
+                    mIndoorsLocationDataSource = IndoorsLocationDataSource(this, serviceFeatureTable, getPathwaysTable(), positioningId)
+                    // start the location display (blue dot)
+                    startLocationDisplay()
+                } else {
+                    val message = "The positioning table contain no data."
+                    Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+                    Log.e(TAG, message)
+                }
+            }
         } else {
             val message = "Positioning Table not found in FeatureTables"
             Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -228,28 +217,24 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
      * Find the exact formatting of the name "DateCreated" in the list of ServiceFeatureTable fields.
      */
     private fun getDateCreatedFieldName(fields: List<Field>): String? {
-        for (field in fields) {
-            if (field.name.equals("DateCreated", ignoreCase = true) || field.name.equals("Date_Created", ignoreCase = true)) {
-                return field.name
-            }
-        }
-        return ""
+        val field = fields.find { it.name.equals("DateCreated", ignoreCase = true) || it.name.equals("Date_Created", ignoreCase = true) }
+        return field?.name
     }
 
     /**
      * Retrieves the PathwaysTable
      */
     private fun getPathwaysTable(): ArcGISFeatureTable? {
-        for (layer in mapView.map.operationalLayers) {
-            if (layer.name.equals("Pathways")) {
-                return (layer as FeatureLayer).featureTable as ArcGISFeatureTable
-            }
+        try {
+            val pathwaysFeatureLayer = mapView.map.operationalLayers.firstOrNull { it.name.equals("Pathways") } as? FeatureLayer
+            return pathwaysFeatureLayer?.featureTable as? ArcGISFeatureTable
+        } catch (e: Exception) {
+            // if pathways table not found in map's operationalLayers
+            val message = "PathwaysTable not found"
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            Log.e(TAG, message)
+            return null
         }
-        // if pathways table not found in map's operationalLayers
-        val message = "PathwaysTable not found"
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-        Log.e(TAG, message)
-        return null
     }
 
     /**
@@ -313,8 +298,8 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
 
         // check if current floor hasn't been set or if the floor has changed
         val newFloor = floor.toInt()
-        if (mCurrentFloor == null || mCurrentFloor != newFloor) {
-            mCurrentFloor = newFloor
+        if (currentFloor == null || currentFloor != newFloor) {
+            currentFloor = newFloor
             // set up the floor layer with the newFloor
             setupLayers()
         }
@@ -336,10 +321,10 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
     private fun setupLayers() {
         // update layer's definition express with the current floor
         val layerList: LayerList = mapView.map.operationalLayers
-        for (layer in layerList) {
+        layerList.forEach { layer ->
             val name = layer.name
             if (layer is FeatureLayer && (name == "Details" || name == "Units" || name == "Levels")) {
-                layer.definitionExpression = "VERTICAL_ORDER = $mCurrentFloor"
+                layer.definitionExpression = "VERTICAL_ORDER = $currentFloor"
             }
         }
     }
@@ -392,6 +377,7 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
             val message = "Location permission is not granted"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             Log.e(TAG, message)
+            progressBar.visibility = View.GONE
         }
     }
 
