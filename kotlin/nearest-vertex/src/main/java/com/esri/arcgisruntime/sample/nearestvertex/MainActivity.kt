@@ -24,17 +24,16 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
-import com.esri.arcgisruntime.geometry.GeometryEngine
-import com.esri.arcgisruntime.geometry.Point
-import com.esri.arcgisruntime.geometry.PointCollection
-import com.esri.arcgisruntime.geometry.Polygon
-import com.esri.arcgisruntime.geometry.SpatialReferences
+import com.esri.arcgisruntime.geometry.*
+import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.portal.Portal
+import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
@@ -63,6 +62,9 @@ class MainActivity : AppCompatActivity() {
     activityMainBinding.coordinateDistanceTextView
   }
 
+  // California zone 5 (ftUS) state plane coordinate system.
+  private val statePlaneCaliforniaZone5 = SpatialReference.create(2229)
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(activityMainBinding.root)
@@ -72,14 +74,14 @@ class MainActivity : AppCompatActivity() {
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     // create a graphic for the polygon
-    val polygonPoints = PointCollection(SpatialReferences.getWebMercator())
+    val polygonPoints = PointCollection(statePlaneCaliforniaZone5)
     polygonPoints.addAll(
       listOf(
-        Point(-5991501.677830, 5599295.131468),
-        Point(-6928550.398185, 2087936.739807),
-        Point(-3149463.800709, 1840803.011362),
-        Point(-1563689.043184, 3714900.452072),
-        Point(-3180355.516764, 5619889.608838)
+        Point(6627416.41469281, 1804532.53233782),
+        Point(6669147.89779046, 2479145.16609522),
+        Point(7265673.02678292, 2484254.50442408),
+        Point(7676192.55880379, 2001458.66365744),
+        Point(7175695.94143837, 1840722.34474458)
       )
     )
     val polygon = Polygon(polygonPoints)
@@ -112,8 +114,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     mapView.apply {
-      // create a map with a basemap and add it to the map view
-      map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+      // create a map using the PortalItem
+      // and add the FeatureLayer to the map view's basemap
+      map = ArcGISMap(statePlaneCaliforniaZone5)
+
+      val portalItem = PortalItem(Portal("https://arcgisruntime.maps.arcgis.com",false),"99fd67933e754a1181cc755146be21ca")
+      val usStatesGeneralizedLayer = FeatureLayer(portalItem,0)
+      map.basemap.baseLayers.add(usStatesGeneralizedLayer)
 
       // add the graphics overlay to the map view
       graphicsOverlays.add(graphicsOverlay)
@@ -128,27 +135,23 @@ class MainActivity : AppCompatActivity() {
           val screenPoint = android.graphics.Point(e.x.roundToInt(), e.y.roundToInt())
           // create a map point from the screen point
           val mapPoint: Point = mapView.screenToLocation(screenPoint)
-          // the map point should be normalized to the central meridian when wrapping around a map,
-          // so its value stays within the coordinate system of the map view
-          val normalizedMapPoint: Point = GeometryEngine.normalizeCentralMeridian(mapPoint) as Point
           // show where the user clicked
-          tappedLocationGraphic.geometry = normalizedMapPoint
+          tappedLocationGraphic.geometry = mapPoint
 
           // use the geometry engine to get the nearest vertex
-          val nearestVertexResult = GeometryEngine.nearestVertex(polygon, normalizedMapPoint)
+          val nearestVertexResult = GeometryEngine.nearestVertex(polygon, mapPoint)
           // set the nearest vertex graphic's geometry to the nearest vertex
           nearestVertexGraphic.geometry = nearestVertexResult.coordinate
           // use the geometry engine to get the nearest coordinate
-          val nearestCoordinateResult =
-            GeometryEngine.nearestCoordinate(polygon, normalizedMapPoint)
+          val nearestCoordinateResult = GeometryEngine.nearestCoordinate(polygon, mapPoint)
           // set the nearest coordinate graphic's geometry to the nearest coordinate
           nearestCoordinateGraphic.geometry = nearestCoordinateResult.coordinate
 
           // show the distances to the nearest vertex and nearest coordinate
           distanceLayout.visibility = VISIBLE
-          val vertexDistance = (nearestVertexResult.distance / 1000.0).toInt()
-          val coordinateDistance = (nearestCoordinateResult.distance / 1000.0).toInt()
-          vertexDistanceTextView.text = getString(R.string.nearest_vertex, vertexDistance)
+          val vertexDistance = (nearestVertexResult.distance / 5280.0)
+          val coordinateDistance = (nearestCoordinateResult.distance / 5280.0).toInt()
+          vertexDistanceTextView.text = getString(R.string.nearest_vertex,vertexDistance)
           coordinateDistanceTextView.text =
             getString(R.string.nearest_coordinate, coordinateDistance)
           return true
