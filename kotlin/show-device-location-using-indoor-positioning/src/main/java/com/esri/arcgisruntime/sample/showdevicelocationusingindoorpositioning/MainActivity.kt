@@ -27,7 +27,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.esri.arcgisruntime.data.*
+import com.esri.arcgisruntime.data.FeatureTable
+import com.esri.arcgisruntime.data.ServiceFeatureTable
+import com.esri.arcgisruntime.data.QueryParameters
+import com.esri.arcgisruntime.data.Feature
+import com.esri.arcgisruntime.data.Field
+import com.esri.arcgisruntime.data.ArcGISFeatureTable
 import com.esri.arcgisruntime.data.QueryParameters.OrderBy
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
@@ -43,7 +48,7 @@ import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.sample.showdevicelocationusingindoorpositioning.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.security.UserCredential
 import java.text.DecimalFormat
-import java.util.*
+import java.util.UUID
 
 class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedListener,
     StatusChangedListener {
@@ -109,8 +114,9 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
                     Log.e(TAG, message)
                 }
             } else {
-                val error = map.loadError
-                Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_SHORT).show()
+                val message = "Error loading map: " + map.loadError.message
+                Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "Error loading map: " + map.loadError.message)
             }
         }
     }
@@ -127,7 +133,7 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
             }
 
             override fun onError(exception: Exception?) {
-                val message = "Failed to load feature tables"
+                val message = "Failed to load feature tables: " + (exception?.message ?: "")
                 Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
                 Log.e(TAG, message)
             }
@@ -137,7 +143,10 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
     /**
      * Recursively loads each [featureTables] and calls [resultsCallback] once each table is loaded
      */
-    private fun loadTables(featureTables: MutableList<FeatureTable>, resultsCallback: ResultsCallback) {
+    private fun loadTables(
+        featureTables: MutableList<FeatureTable>,
+        resultsCallback: ResultsCallback
+    ) {
         val iterator = featureTables.iterator()
         if (iterator.hasNext()) {
             val table = iterator.next()
@@ -171,7 +180,7 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
             // looks up the entry with the most recent date and takes this positioning data
             // set up queryParameters to grab one result.
             val dateCreatedFieldName = getDateCreatedFieldName(serviceFeatureTable.fields)
-            if(dateCreatedFieldName == null){
+            if (dateCreatedFieldName == null) {
                 val message = "The service table does not contain \"DateCreated\" fields."
                 Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
                 Log.e(TAG, message)
@@ -181,7 +190,12 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
                 maxFeatures = 1
                 whereClause = "1 = 1"
                 // find and sort out the orderByFields by most recent first
-                orderByFields.add(OrderBy(dateCreatedFieldName, QueryParameters.SortOrder.DESCENDING))
+                orderByFields.add(
+                    OrderBy(
+                        dateCreatedFieldName,
+                        QueryParameters.SortOrder.DESCENDING
+                    )
+                )
             }
             // perform search query using the queryParameters
             val resultFuture = serviceFeatureTable.queryFeaturesAsync(queryParameters)
@@ -190,14 +204,20 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
                 // check if serviceFeatureTable contains positioning data
                 if (featureIterator.hasNext()) {
                     // The ID that identifies a row in the positioning table.
-                    val globalID = featureIterator.next().attributes[serviceFeatureTable.globalIdField].toString()
+                    val globalID =
+                        featureIterator.next().attributes[serviceFeatureTable.globalIdField].toString()
                     val positioningId = UUID.fromString(globalID)
                     // Setting up IndoorsLocationDataSource with positioning, pathways tables and positioning ID.
                     // positioningTable - the "ips_positioning" feature table from an IPS-enabled map.
                     // pathwaysTable - An ArcGISFeatureTable that contains pathways as per the ArcGIS Indoors Information Model.
                     // Setting this property enables path snapping of locations provided by the IndoorsLocationDataSource.
                     // positioningID - an ID which identifies a specific row in the positioningTable that should be used for setting up IPS.
-                    mIndoorsLocationDataSource = IndoorsLocationDataSource(this, serviceFeatureTable, getPathwaysTable(), positioningId)
+                    mIndoorsLocationDataSource = IndoorsLocationDataSource(
+                        this,
+                        serviceFeatureTable,
+                        getPathwaysTable(),
+                        positioningId
+                    )
                     // start the location display (blue dot)
                     startLocationDisplay()
                 } else {
@@ -217,7 +237,12 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
      * Find the exact formatting of the name "DateCreated" in the list of ServiceFeatureTable fields.
      */
     private fun getDateCreatedFieldName(fields: List<Field>): String? {
-        val field = fields.find { it.name.equals("DateCreated", ignoreCase = true) || it.name.equals("Date_Created", ignoreCase = true) }
+        val field = fields.find {
+            it.name.equals(
+                "DateCreated",
+                ignoreCase = true
+            ) || it.name.equals("Date_Created", ignoreCase = true)
+        }
         return field?.name
     }
 
@@ -226,7 +251,8 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
      */
     private fun getPathwaysTable(): ArcGISFeatureTable? {
         try {
-            val pathwaysFeatureLayer = mapView.map.operationalLayers.firstOrNull { it.name.equals("Pathways") } as? FeatureLayer
+            val pathwaysFeatureLayer =
+                mapView.map.operationalLayers.firstOrNull { it.name.equals("Pathways") } as? FeatureLayer
             return pathwaysFeatureLayer?.featureTable as? ArcGISFeatureTable
         } catch (e: Exception) {
             // if pathways table not found in map's operationalLayers
@@ -273,28 +299,20 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
     override fun locationChanged(locationChangedEvent: LocationDataSource.LocationChangedEvent?) {
         // get the location properties of the LocationDataSource
         val locationProperties = locationChangedEvent?.location?.additionalSourceProperties
-        if(locationProperties == null){
-            Toast.makeText(this, "LocationDataSource does not have any property-fields", Toast.LENGTH_LONG).show()
+        if (locationProperties == null) {
+            Toast.makeText(
+                this,
+                "LocationDataSource does not have any property-fields",
+                Toast.LENGTH_LONG
+            ).show()
             Log.e(TAG, "LocationDataSource does not have any property-fields")
             return
         }
         // retrieve information about the location of the device
-        val floor =
-            if (locationProperties["floor"] != null)
-                locationProperties["floor"].toString()
-            else ""
-        val positionSource =
-            if (locationProperties[LocationDataSource.Location.KEY_POSITION_SOURCE] != null)
-                locationProperties[LocationDataSource.Location.KEY_POSITION_SOURCE].toString()
-            else ""
-        val transmitterCount =
-            if (locationProperties["transmitterCount"] != null)
-                locationProperties["transmitterCount"].toString()
-            else ""
-        val networkCount =
-            if (locationProperties[LocationDataSource.Location.KEY_SATELLITE_COUNT] != null)
-                locationProperties[LocationDataSource.Location.KEY_SATELLITE_COUNT].toString()
-            else ""
+        val floor = (locationProperties["floor"] ?: "").toString()
+        val positionSource = (locationProperties[LocationDataSource.Location.KEY_POSITION_SOURCE] ?: "").toString()
+        val transmitterCount = (locationProperties["transmitterCount"] ?: "").toString()
+        val networkCount = (locationProperties[LocationDataSource.Location.KEY_SATELLITE_COUNT] ?: "").toString()
 
         // check if current floor hasn't been set or if the floor has changed
         val newFloor = floor.toInt()
@@ -305,8 +323,12 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
         }
         // set up the message with floor properties to be displayed to the textView
         var locationPropertiesMessage =
-                "Floor: $floor, Position-source: $positionSource, " +
-                "Horizontal-accuracy: "+ locationChangedEvent.location.let { DecimalFormat(".##").format(it.horizontalAccuracy)} + "m, "
+            "Floor: $floor, Position-source: $positionSource, " +
+                    "Horizontal-accuracy: " + locationChangedEvent.location.let {
+                DecimalFormat(".##").format(
+                    it.horizontalAccuracy
+                )
+            } + "m, "
         if (positionSource == LocationDataSource.Location.POSITION_SOURCE_GNSS) {
             locationPropertiesMessage += "Satellite-count: $networkCount"
         } else if (positionSource == "BLE") {
@@ -340,13 +362,18 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
             LocationDataSource.Status.FAILED_TO_START -> {
                 progressBar.visibility = View.GONE
                 Log.e(TAG, "Failed to start IndoorsLocationDataSource")
-                Toast.makeText(this, "Failed to start IndoorsLocationDataSource", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Failed to start IndoorsLocationDataSource", Toast.LENGTH_LONG)
+                    .show()
             }
             LocationDataSource.Status.STOPPED -> {
                 progressBar.visibility = View.GONE
                 stopLocationDisplay()
                 Log.e(TAG, "IndoorsLocationDataSource stopped due to an internal error")
-                Toast.makeText(this, "IndoorsLocationDataSource stopped due to an internal error", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "IndoorsLocationDataSource stopped due to an internal error",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -357,7 +384,11 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
     private fun checkPermissions() {
         val requestCode = 1
         val requestPermissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        if (ContextCompat.checkSelfPermission(this, requestPermissions[0]) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                requestPermissions[0]
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             ActivityCompat.requestPermissions(this, requestPermissions, requestCode)
         } else {
             // permission already given, so no need to request
@@ -368,7 +399,11 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
     /**
      * Result of the user from location permissions request
      */
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // if location permissions accepted, start setting up IndoorsLocationDataSource
