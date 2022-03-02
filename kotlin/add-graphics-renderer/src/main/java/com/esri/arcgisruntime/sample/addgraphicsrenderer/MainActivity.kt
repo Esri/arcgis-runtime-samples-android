@@ -19,15 +19,22 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
-import com.esri.arcgisruntime.geometry.CubicBezierSegment
-import com.esri.arcgisruntime.geometry.EllipticArcSegment
+import com.esri.arcgisruntime.geometry.GeodesicEllipseParameters
+import com.esri.arcgisruntime.geometry.GeometryEngine
+import com.esri.arcgisruntime.geometry.GeometryType
 import com.esri.arcgisruntime.geometry.Geometry
+import com.esri.arcgisruntime.geometry.EllipticArcSegment
+import com.esri.arcgisruntime.geometry.CubicBezierSegment
 import com.esri.arcgisruntime.geometry.Part
-import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.Polygon
-import com.esri.arcgisruntime.geometry.PolygonBuilder
-import com.esri.arcgisruntime.geometry.PolylineBuilder
+import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
+import com.esri.arcgisruntime.geometry.AngularUnit
+import com.esri.arcgisruntime.geometry.AngularUnitId
+import com.esri.arcgisruntime.geometry.LinearUnit
+import com.esri.arcgisruntime.geometry.LinearUnitId
+import com.esri.arcgisruntime.geometry.PolylineBuilder
+import com.esri.arcgisruntime.geometry.PolygonBuilder
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
@@ -71,8 +78,37 @@ class MainActivity : AppCompatActivity() {
             renderedPointGraphicsOverlay(),
             renderedLineGraphicsOverlay(),
             renderedPolygonGraphicsOverlay(),
-          renderedCurvedPolygonGraphicsOverlay())
+            renderedCurvedPolygonGraphicsOverlay(),
+            renderedEllipseGraphicsOverlay())
         )
+    }
+
+    /**
+     * Create an ellipse, its graphic, a graphics overlay for it, and add it to the map view.
+     * */
+    private fun renderedEllipseGraphicsOverlay(): GraphicsOverlay {
+        // create and set all the parameters so that the ellipse has a major axis of 400 kilometres,
+        // a minor axis of 200 kilometres and is rotated at an angle of -45 degrees
+        val parameters = GeodesicEllipseParameters()
+        parameters.apply {
+            center = Point(40e5, 23e5, SpatialReferences.getWebMercator())
+            geometryType = GeometryType.POLYGON
+            semiAxis1Length = 200.0
+            semiAxis2Length = 400.0
+            axisDirection = -45.0
+            setMaxPointCount(100)
+            angularUnit = AngularUnit(AngularUnitId.DEGREES)
+            linearUnit = LinearUnit(LinearUnitId.KILOMETERS)
+            maxSegmentLength = 20.0
+        }
+        // define the ellipse parameters to a polygon geometry
+        val polygon = GeometryEngine.ellipseGeodesic(parameters)
+        // create an ellipse graphic overlay using the defined polygon
+        val ellipseGraphicOverlay = GraphicsOverlay()
+        val ellipseSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.MAGENTA, null)
+        ellipseGraphicOverlay.renderer = SimpleRenderer(ellipseSymbol)
+        ellipseGraphicOverlay.graphics.add(Graphic(polygon))
+        return ellipseGraphicOverlay
     }
 
     /**
