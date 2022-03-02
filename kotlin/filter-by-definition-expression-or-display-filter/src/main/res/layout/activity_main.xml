@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
-                android:text="Definition Expression"
+                android:text="Apply Expression"
                 android:textAllCaps="false" />
 
             <Button
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
-                android:text="Display Filter"
+                android:text="Apply Filter"
                 android:textAllCaps="false" />
 
             <Button
