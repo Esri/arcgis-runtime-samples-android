@@ -37,6 +37,7 @@ import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
 import com.esri.arcgisruntime.data.Attachment;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.ServiceGeodatabase;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.BasemapStyle;
@@ -78,9 +79,6 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
     // create a map with the streets basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
-    // set the map to be displayed in the map view
-    mMapView.setMap(map);
-    mMapView.setViewpoint(new Viewpoint(40.0, -95.0, 100000000));
 
     progressDialog = new ProgressDialog(this);
     progressDialog.setTitle(getApplication().getString(R.string.fetching_no_attachments));
@@ -88,14 +86,22 @@ public class MainActivity extends AppCompatActivity {
     createCallout();
     // get callout, set content and show
     mCallout = mMapView.getCallout();
-    // create feature layer with its service feature table and create the service feature table
-    ServiceFeatureTable mServiceFeatureTable = new ServiceFeatureTable(getString(R.string.sample_service_url));
-    mServiceFeatureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.ON_INTERACTION_CACHE);
-    // create the feature layer using the service feature table
-    mFeatureLayer = new FeatureLayer(mServiceFeatureTable);
 
-    // add the layer to the map
-    map.getOperationalLayers().add(mFeatureLayer);
+    // create and load the service geodatabase
+    ServiceGeodatabase serviceGeodatabase =  new ServiceGeodatabase(getString(R.string.sample_service_url));
+    serviceGeodatabase.loadAsync();
+    serviceGeodatabase.addDoneLoadingListener(() -> {
+      // create a feature layer using the first layer in the ServiceFeatureTable
+      ServiceFeatureTable serviceFeatureTable = serviceGeodatabase.getTable(0);
+      serviceFeatureTable.setFeatureRequestMode(ServiceFeatureTable.FeatureRequestMode.ON_INTERACTION_CACHE);
+      // create a feature layer from table
+      mFeatureLayer = new FeatureLayer(serviceFeatureTable);
+      // add the layer to the map
+      map.getOperationalLayers().add(mFeatureLayer);
+      // set the map to be displayed in the map view
+      mMapView.setMap(map);
+      mMapView.setViewpoint(new Viewpoint(40.0, -95.0, 100000000));
+    });
 
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override

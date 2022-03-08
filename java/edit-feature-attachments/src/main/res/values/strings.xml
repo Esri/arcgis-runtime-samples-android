@@ -22,6 +22,6 @@
     <string name="failure_edit_results">Server did not return edit results</string>
 
     <!-- Feature Service URL -->
-    <string name="sample_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer</string>
+    <string name="sample_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
 
 </resources>
