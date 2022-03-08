@@ -36,10 +36,11 @@ import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
 import com.esri.arcgisruntime.data.Attachment;
 import com.esri.arcgisruntime.data.Feature;
-import com.esri.arcgisruntime.data.FeatureEditResult;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
+import com.esri.arcgisruntime.data.FeatureTableEditResult;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.ServiceGeodatabase;
 import com.esri.arcgisruntime.sample.arrayadapter.CustomList;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -81,33 +82,28 @@ public class EditAttachmentActivity extends AppCompatActivity {
     // get a reference to the floating action button
     FloatingActionButton addAttachmentFab = findViewById(R.id.addAttachmentFAB);
 
+    // get a reference to the list view
+    listView = findViewById(R.id.listView);
+
+    // create and load the service geodatabase
+    ServiceGeodatabase serviceGeodatabase =  new ServiceGeodatabase(getString(R.string.sample_service_url));
+    serviceGeodatabase.loadAsync();
+    serviceGeodatabase.addDoneLoadingListener(() -> {
+      // create a feature layer using the first layer in the ServiceFeatureTable
+      mServiceFeatureTable = serviceGeodatabase.getTable(0);
+      // fetch ServiceFeatureTable's attachments
+      fetchAttachmentsFromServer(s);
+      // listener on attachment items to download the attachment
+      listView.setOnItemClickListener((parent, view, position, id) -> fetchAttachmentAsync(position));
+    });
+
     // select an image to upload as an attachment
     addAttachmentFab.setOnClickListener(v -> selectAttachment());
 
-    mServiceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
-
-    progressDialog = new ProgressDialog(this);
-
-    // display progress dialog if selected feature has attachments
-    if (noOfAttachments != 0) {
-      progressDialog.setTitle(getApplication().getString(R.string.fetching_attachments));
-      progressDialog.setMessage(getApplication().getString(R.string.wait));
-      progressDialog.show();
-    } else {
-      Toast.makeText(this, getString(R.string.empty_attachment_message), Toast.LENGTH_LONG).show();
-    }
-
-    // get a reference to the list view
-    listView = findViewById(R.id.listView);
     // create custom adapter
     adapter = new CustomList(this, attachmentList);
     // set custom adapter on the list
     listView.setAdapter(adapter);
-    fetchAttachmentsFromServer(s);
-
-    // listener on attachment items to download the attachment
-    listView.setOnItemClickListener((parent, view, position, id) -> fetchAttachmentAsync(position));
-
     // set on long click listener to delete the attachment
     listView.setOnItemLongClickListener((parent, view, position, id) -> {
       builder.setMessage(getApplication().getString(R.string.delete_query));
@@ -121,6 +117,17 @@ public class EditAttachmentActivity extends AppCompatActivity {
       alert.show();
       return true;
     });
+
+    progressDialog = new ProgressDialog(this);
+
+    // display progress dialog if selected feature has attachments
+    if (noOfAttachments != 0) {
+      progressDialog.setTitle(getApplication().getString(R.string.fetching_attachments));
+      progressDialog.setMessage(getApplication().getString(R.string.wait));
+      progressDialog.show();
+    } else {
+      Toast.makeText(this, getString(R.string.empty_attachment_message), Toast.LENGTH_LONG).show();
+    }
   }
 
   private void fetchAttachmentAsync(final int position) {
@@ -206,7 +213,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
     query.setWhereClause("OBJECTID = " + objectID);
 
     // query the feature table
-    final ListenableFuture<FeatureQueryResult> featureQueryResultFuture = mServiceFeatureTable
+    final ListenableFuture<FeatureQueryResult> featureQueryResultFuture = this.mServiceFeatureTable
         .queryFeaturesAsync(query);
 
     featureQueryResultFuture.addDoneListener(() -> {
@@ -298,10 +305,10 @@ public class EditAttachmentActivity extends AppCompatActivity {
   private void applyServerEdits() {
     try {
       // apply edits to the server
-      final ListenableFuture<List<FeatureEditResult>> updatedServerResult = mServiceFeatureTable.applyEditsAsync();
+      final ListenableFuture<List<FeatureTableEditResult>> updatedServerResult = mServiceFeatureTable.getServiceGeodatabase().applyEditsAsync();
       updatedServerResult.addDoneListener(() -> {
         try {
-          List<FeatureEditResult> edits = updatedServerResult.get();
+          List<FeatureTableEditResult> edits = updatedServerResult.get();
           // check that the feature table was successfully updated
           if (!edits.isEmpty()) {
               if (progressDialog.isShowing()) {
