@@ -34,9 +34,10 @@ import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
 import com.esri.arcgisruntime.data.Feature;
-import com.esri.arcgisruntime.data.FeatureEditResult;
+import com.esri.arcgisruntime.data.FeatureTableEditResult;
 import com.esri.arcgisruntime.data.RelatedFeatureQueryResult;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.ServiceGeodatabase;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -87,15 +88,21 @@ public class MainActivity extends AppCompatActivity {
     Callout.Style calloutStyle = new Callout.Style(this, R.xml.callout_style);
     mCallout.setStyle(calloutStyle);
 
-    // set up feature tables and layers
-    mParksFeatureTable = new ServiceFeatureTable(getString(R.string.parks_feature_table));
-    mParksFeatureLayer = new FeatureLayer(mParksFeatureTable);
-    mPreservesFeatureTable = new ServiceFeatureTable(getString(R.string.preserves_feature_table));
-    FeatureLayer preservesFeatureLayer = new FeatureLayer(mPreservesFeatureTable);
+    // create and load the service geodatabase
+    ServiceGeodatabase preservesServiceGeodatabase =  new ServiceGeodatabase(getString(R.string.feature_table));
+    preservesServiceGeodatabase.loadAsync();
+    preservesServiceGeodatabase.addDoneLoadingListener(() -> {
+      // create a feature layer using the first layer in the ServiceFeatureTable
+      mPreservesFeatureTable = preservesServiceGeodatabase.getTable(0);
+      mParksFeatureTable = preservesServiceGeodatabase.getTable(1);
+      // create a feature layer from table
+      FeatureLayer preservesFeatureLayer = new FeatureLayer(mPreservesFeatureTable);
+      mParksFeatureLayer = new FeatureLayer(mParksFeatureTable);
 
-    // add feature layers to map
-    map.getOperationalLayers().add(mParksFeatureLayer);
-    map.getOperationalLayers().add(preservesFeatureLayer);
+      // add the layers to the map
+      mMapView.getMap().getOperationalLayers().add(preservesFeatureLayer);
+      mMapView.getMap().getOperationalLayers().add(mParksFeatureLayer);
+    });
 
     // set the mArcGISMap to be displayed in this view
     mMapView.setMap(map);
@@ -239,14 +246,14 @@ public class MainActivity extends AppCompatActivity {
             .updateFeatureAsync(mSelectedRelatedFeature);
         updateFeature.addDoneListener(() -> {
           // apply update to the server
-          final ListenableFuture<List<FeatureEditResult>> serverResult = mPreservesFeatureTable
-              .applyEditsAsync();
+          final ListenableFuture<List<FeatureTableEditResult>> serverResult = mPreservesFeatureTable
+              .getServiceGeodatabase().applyEditsAsync();
           serverResult.addDoneListener(() -> {
             try {
               // check if server result successful
-              List<FeatureEditResult> edits = serverResult.get();
+              List<FeatureTableEditResult> edits = serverResult.get();
               if (!edits.isEmpty()) {
-                if (!edits.get(0).hasCompletedWithErrors()) {
+                if (!edits.get(0).getEditResult().get(0).hasCompletedWithErrors()) {
                   mParksFeatureLayer.clearSelection();
                   Toast.makeText(this, getString(R.string.update_success), Toast.LENGTH_SHORT)
                       .show();
