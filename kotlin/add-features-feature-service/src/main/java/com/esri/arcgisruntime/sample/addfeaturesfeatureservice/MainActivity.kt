@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.ArcGISRuntimeException
 import com.esri.arcgisruntime.data.ServiceFeatureTable
+import com.esri.arcgisruntime.data.ServiceGeodatabase
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -56,7 +57,15 @@ class MainActivity : AppCompatActivity() {
     ArcGISMap(BasemapStyle.ARCGIS_STREETS).let { map ->
 
       // create service feature table from URL
-      ServiceFeatureTable(getString(R.string.service_layer_url)).let { serviceFeatureTable ->
+      // create and load the service geodatabase
+      val serviceGeodatabase = ServiceGeodatabase(getString(R.string.service_layer_url))
+      serviceGeodatabase.loadAsync()
+      serviceGeodatabase.addDoneLoadingListener {
+        // create a feature layer using the first layer in the ServiceFeatureTable
+        val serviceFeatureTable = serviceGeodatabase.getTable(0)
+
+        // add the  feature layer from table to the map
+        map.operationalLayers.add(FeatureLayer(serviceFeatureTable))
 
         // add a listener to the MapView to detect when a user has performed a single tap to add a new feature to
         // the service feature table
@@ -75,18 +84,9 @@ class MainActivity : AppCompatActivity() {
             return super.onSingleTapConfirmed(motionEvent)
           }
         }
-
-        // create a feature layer from table
-        FeatureLayer(serviceFeatureTable)
-      }.let { featureLayer ->
-
-        // add the layer to the map
-        map.operationalLayers.add(featureLayer)
       }
-
       // set map to be displayed in map view
       mapView.map = map
-
       // set an initial view point
       mapView.setViewpoint(Viewpoint(40.0, -95.0, 10000000.0))
     }
@@ -128,18 +128,11 @@ class MainActivity : AppCompatActivity() {
   private fun applyEdits(featureTable: ServiceFeatureTable) {
 
     // apply the changes to the server
-    featureTable.applyEditsAsync().let { editResult ->
+    featureTable.serviceGeodatabase.applyEditsAsync().let { editResult ->
       editResult.addDoneListener {
         try {
           editResult.get()?.let { edits ->
-            // check if the server edit was successful
-            edits.firstOrNull()?.let {
-              if (!it.hasCompletedWithErrors()) {
-                logToUser(false, getString(R.string.feature_added))
-              } else {
-                it.error
-              }
-            }
+            logToUser(false, getString(R.string.feature_added))
           }
         } catch (e: ArcGISRuntimeException) {
           logToUser(true, getString(R.string.error_applying_edits, e.cause?.message))
