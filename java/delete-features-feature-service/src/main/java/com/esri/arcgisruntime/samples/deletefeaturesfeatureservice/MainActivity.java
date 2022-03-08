@@ -33,8 +33,10 @@ import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureEditResult;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
+import com.esri.arcgisruntime.data.FeatureTableEditResult;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.ServiceGeodatabase;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -69,14 +71,20 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
     // create a map with streets basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
 
-    // create service feature table from URL
-    mFeatureTable = new ServiceFeatureTable(getString(R.string.feature_layer_url));
-
-    // create a feature layer from table
-    mFeatureLayer = new FeatureLayer(mFeatureTable);
-
-    // add the layer to the map
-    map.getOperationalLayers().add(mFeatureLayer);
+    // create and load the service geodatabase
+    ServiceGeodatabase serviceGeodatabase =  new ServiceGeodatabase(getString(R.string.feature_layer_url));
+    serviceGeodatabase.loadAsync();
+    serviceGeodatabase.addDoneLoadingListener(() -> {
+      // create a feature layer using the first layer in the ServiceFeatureTable
+      mFeatureTable = serviceGeodatabase.getTable(0);
+      // create a feature layer from table
+      mFeatureLayer = new FeatureLayer(mFeatureTable);
+      // add the layer to the map
+      map.getOperationalLayers().add(mFeatureLayer);
+      // set map to be displayed in map view
+      mMapView.setMap(map);
+      mMapView.setViewpoint(new Viewpoint( 40, -95, 100000000));
+    });
 
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
       @Override public boolean onSingleTapConfirmed(MotionEvent event) {
@@ -104,10 +112,6 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
         return super.onSingleTapConfirmed(event);
       }
     });
-
-    // set map to be displayed in map view
-    mMapView.setMap(map);
-    mMapView.setViewpoint(new Viewpoint( 40, -95, 100000000));
   }
 
   /**
@@ -189,20 +193,12 @@ public class MainActivity extends AppCompatActivity implements ConfirmDeleteFeat
    */
   private void applyEdits(ServiceFeatureTable featureTable) {
     // apply the changes to the server
-    ListenableFuture<List<FeatureEditResult>> featureEditsFuture = featureTable.applyEditsAsync();
+    ListenableFuture<List<FeatureTableEditResult>> featureEditsFuture = featureTable.getServiceGeodatabase().applyEditsAsync();
     featureEditsFuture.addDoneListener(() -> {
       try {
         // check result has an edit
-        if (featureEditsFuture.get().iterator().hasNext()) {
-          // attempt to get first edit from result as it should be the only edit
-          FeatureEditResult edit = featureEditsFuture.get().iterator().next();
-          // check if the server edit was successful
-          if (!edit.hasCompletedWithErrors()) {
-            logToUser(false, getString(R.string.success_feature_deleted));
-          } else {
-            throw edit.getError();
-          }
-        }
+        if (featureEditsFuture.get().iterator().hasNext())
+          logToUser(false, getString(R.string.success_feature_deleted));
       } catch (InterruptedException | ExecutionException e) {
         logToUser(true, getString(R.string.error_applying_edits, e.getCause().getMessage()));
       }
