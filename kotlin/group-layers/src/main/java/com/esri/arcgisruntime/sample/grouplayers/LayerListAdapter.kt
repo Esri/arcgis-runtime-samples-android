@@ -43,6 +43,9 @@ class LayerListAdapter(
 ) :
   RecyclerView.Adapter<LayerListAdapter.ViewHolder>() {
 
+  private val TYPE_DEFAULT = 0
+  private val TYPE_EXCLUSIVE = 1
+
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
     // There are two view holder types, for independent and exclusive visibility modes
     return when (viewType) {
@@ -50,13 +53,13 @@ class LayerListAdapter(
         val v = LayoutInflater.from(parent.context).inflate(
           R.layout.group_layers_radio_group, parent, false
         )
-        ExclusiveLayerViewHolder(v) as ViewHolder
+        ExclusiveLayerViewHolder(v)
       }
       else -> {
         val v = LayoutInflater.from(parent.context).inflate(
           R.layout.group_layers_checkbox_group, parent, false
         )
-        DefaultLayerViewHolder(v) as ViewHolder
+        DefaultLayerViewHolder(v)
       }
     }
   }
@@ -178,7 +181,4 @@ class LayerListAdapter(
       }
     }
   }
-
-  private val TYPE_DEFAULT = 0;
-  private val TYPE_EXCLUSIVE = 1;
 }

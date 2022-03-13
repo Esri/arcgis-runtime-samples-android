@@ -24,9 +24,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.layers.PointCloudLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
-import com.esri.arcgisruntime.mapping.*
+import com.esri.arcgisruntime.mapping.ArcGISScene
+import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
+import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.Surface
 import com.esri.arcgisruntime.mapping.view.Camera
-import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.mapping.view.SceneView
 import com.esri.arcgisruntime.samples.viewpointclouddataoffline.databinding.ActivityMainBinding
 

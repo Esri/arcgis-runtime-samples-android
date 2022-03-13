@@ -29,7 +29,7 @@ import com.esri.arcgisruntime.sample.openmobilemappackage.databinding.ActivityMa
 
 class MainActivity : AppCompatActivity() {
 
-  val TAG: String = MainActivity::class.java.simpleName
+  private val TAG: String = MainActivity::class.java.simpleName
 
   private lateinit var mapPackage: MobileMapPackage
 
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // add done listener which will invoke when mobile map package has loaded
-    mapPackage.addDoneLoadingListener() {
+    mapPackage.addDoneLoadingListener {
       // check load status and that the mobile map package has maps
       if (mapPackage.loadStatus === LoadStatus.LOADED && mapPackage.maps.isNotEmpty()) {
         // add the map from the mobile map package to the MapView

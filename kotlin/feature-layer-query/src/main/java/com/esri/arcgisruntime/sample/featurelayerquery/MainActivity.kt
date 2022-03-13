@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
     val query = QueryParameters()
     // make search case insensitive
     query.whereClause =
-      ("upper(STATE_NAME) LIKE '%" + searchString.toUpperCase(Locale.US) + "%'")
+      ("upper(STATE_NAME) LIKE '%" + searchString.uppercase(Locale.US) + "%'")
     // call select features
     val future: ListenableFuture<FeatureQueryResult> = serviceFeatureTable.queryFeaturesAsync(query)
     // add done loading listener to fire when the selection returns

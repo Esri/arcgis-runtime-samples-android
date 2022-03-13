@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity() {
               }
 
               // get the screen point of the single tap
-              val screenPoint = android.graphics.Point(e.x.toInt(), e.y.toInt())
+              val screenPoint = Point(e.x.toInt(), e.y.toInt())
 
               // if selected feature is not null, edit the feature location
               selectedFeature?.let {
@@ -326,7 +326,7 @@ class MainActivity : AppCompatActivity() {
    * @param feature to move
    * @param screenPoint where the user tapped on the screen
    */
-  private fun editFeatureLocation(feature: Feature, screenPoint: android.graphics.Point) {
+  private fun editFeatureLocation(feature: Feature, screenPoint: Point) {
     feature.geometry = mapView.screenToLocation(screenPoint)
     // features will not update visually until the feature table has been updated
     feature.featureTable.updateFeatureAsync(feature).addDoneListener {

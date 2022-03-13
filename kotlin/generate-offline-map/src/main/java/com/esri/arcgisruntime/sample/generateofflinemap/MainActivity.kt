@@ -38,8 +38,6 @@ import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.sample.generateofflinemap.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.sample.generateofflinemap.databinding.DialogLayoutBinding
-import com.esri.arcgisruntime.security.AuthenticationManager
-import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapJob
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapParameters
@@ -51,7 +49,7 @@ class MainActivity : AppCompatActivity() {
   private val TAG = MainActivity::class.java.simpleName
 
   private val tempDirectoryPath: String by lazy {
-    cacheDir.toString() + "/offlineMap"
+    "$cacheDir/offlineMap"
   }
 
   private val graphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }

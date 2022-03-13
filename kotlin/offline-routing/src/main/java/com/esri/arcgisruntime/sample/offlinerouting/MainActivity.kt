@@ -22,11 +22,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Button
-import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.esri.arcgisruntime.data.TileCache
 import com.esri.arcgisruntime.geometry.Envelope
@@ -48,7 +46,6 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.sample.offlinerouting.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
-import java.util.concurrent.ExecutionException
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {

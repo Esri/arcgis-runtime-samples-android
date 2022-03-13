@@ -63,13 +63,4 @@
 
     </com.google.android.material.circularreveal.CircularRevealFrameLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminateTint="@color/colorPrimary"
-        app:layout_anchor="@+id/mapView"
-        app:layout_anchorGravity="center"
-        android:visibility="gone"/>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

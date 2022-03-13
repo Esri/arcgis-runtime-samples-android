@@ -40,6 +40,7 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.sample.geodesicoperations.databinding.ActivityMainBinding
 import java.util.Arrays
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -99,13 +100,13 @@ class MainActivity : AppCompatActivity() {
       override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
 
         // get the point that was clicked and convert it to a point in the map
-        val clickLocation = android.graphics.Point(Math.round(e.x), Math.round(e.y))
+        val clickLocation = android.graphics.Point(e.x.roundToInt(), e.y.roundToInt())
         val mapPoint = mapView.screenToLocation(clickLocation)
         val destination = GeometryEngine.project(mapPoint, SpatialReferences.getWgs84())
         endLocation.geometry = destination
 
         // create a straight line path between the start and end locations
-        val points = PointCollection(Arrays.asList<Point>(start, destination as Point), srWgs84)
+        val points = PointCollection(listOf(start, destination as Point), srWgs84)
         val polyLine = Polyline(points)
 
         // densify the path as a geodesic curve with the path graphic

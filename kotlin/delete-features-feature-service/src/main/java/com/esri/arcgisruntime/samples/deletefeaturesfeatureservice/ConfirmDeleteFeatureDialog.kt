@@ -59,7 +59,7 @@ class ConfirmDeleteFeatureDialog : DialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(context!!)
+    return AlertDialog.Builder(requireContext())
       .setMessage(getString(R.string.dialog_confirm_delete_message, featureId))
       .setPositiveButton(R.string.dialog_confirm_delete_positive, onButtonClickedListener)
       .setNegativeButton(R.string.dialog_confirm_delete_negative, onButtonClickedListener)

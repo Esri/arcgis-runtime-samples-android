@@ -250,17 +250,17 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
      * Retrieves the PathwaysTable
      */
     private fun getPathwaysTable(): ArcGISFeatureTable? {
-        try {
-            val pathwaysFeatureLayer =
-                mapView.map.operationalLayers.firstOrNull { it.name.equals("Pathways") } as? FeatureLayer
-            return pathwaysFeatureLayer?.featureTable as? ArcGISFeatureTable
-        } catch (e: Exception) {
-            // if pathways table not found in map's operationalLayers
-            val message = "PathwaysTable not found"
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-            Log.e(TAG, message)
-            return null
-        }
+      return try {
+        val pathwaysFeatureLayer =
+          mapView.map.operationalLayers.firstOrNull { it.name.equals("Pathways") } as? FeatureLayer
+        pathwaysFeatureLayer?.featureTable as? ArcGISFeatureTable
+      } catch (e: Exception) {
+        // if pathways table not found in map's operationalLayers
+        val message = "PathwaysTable not found"
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        Log.e(TAG, message)
+        null
+      }
     }
 
     /**

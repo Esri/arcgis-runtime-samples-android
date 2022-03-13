@@ -26,7 +26,6 @@ import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer
 import com.esri.arcgisruntime.mapping.ArcGISScene
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource
-import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.*
 import com.esri.arcgisruntime.mapping.view.LayerSceneProperties.SurfacePlacement

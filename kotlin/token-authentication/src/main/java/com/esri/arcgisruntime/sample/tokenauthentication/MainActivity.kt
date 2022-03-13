@@ -32,13 +32,9 @@ class MainActivity : AppCompatActivity() {
     )
 
     // create a portal to ArcGIS Online
-    Portal(getString(R.string.arcgis_online_portal_url)).let {
-      // create a portal item using the portal and the item id of a protected map service
-      PortalItem(it, getString(R.string.map_service_world_traffic_id))
-    }.let {
-      // create a map with the portal item
-      ArcGISMap(it)
-    }.let {
+    val portal = Portal(getString(R.string.arcgis_online_portal_url))
+    // create a portal item using the portal and the item id of a protected map service
+    ArcGISMap(PortalItem(portal, getString(R.string.map_service_world_traffic_id))).let {
       // set the map to be displayed in the map view
       mapView.map = it
     }

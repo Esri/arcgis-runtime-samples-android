@@ -30,8 +30,7 @@ import com.esri.arcgisruntime.mapping.view.*
 import com.esri.arcgisruntime.sample.realisticlightingandshadows.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.TimeZone
+import java.util.*
 import kotlin.math.floor
 
 class MainActivity : AppCompatActivity() {
@@ -104,7 +103,7 @@ class MainActivity : AppCompatActivity() {
       sunTime = calendar
     }
 
-    val dateFormat = SimpleDateFormat("HH:mm EEE, dd MMM yyyy").apply {
+    val dateFormat = SimpleDateFormat("HH:mm EEE, dd MMM yyyy", Locale.US).apply {
       timeZone = TimeZone.getTimeZone("America/Los_Angeles")
     }
     // display the full date and time in a text view

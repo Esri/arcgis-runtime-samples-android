@@ -26,10 +26,8 @@ import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISScene
-import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.Camera
-import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.mapping.view.OrbitLocationCameraController
 import com.esri.arcgisruntime.mapping.view.SceneView
 import com.esri.arcgisruntime.symbology.Renderer
@@ -51,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     activityMainBinding.sceneView
   }
 
-  private val toggle_button: Button by lazy {
+  private val toggleButton: Button by lazy {
     activityMainBinding.toggleButton
   }
 
@@ -98,23 +96,23 @@ class MainActivity : AppCompatActivity() {
     sceneView.setViewpointCamera(camera)
 
     // set button listener
-    toggle_button.setOnClickListener {
+    toggleButton.setOnClickListener {
       if (showTotalPopulation) {
         // divide total population by 10 to make data legible
         renderer.sceneProperties.extrusionExpression = "[POP2007] / 10"
         // change text of button to total pop
-        toggle_button.text = resources.getString(R.string.total_pop)
+        toggleButton.text = resources.getString(R.string.total_pop)
         showTotalPopulation = false
       } else {
         // multiple population density by 5000 to make data legible
         renderer.sceneProperties.extrusionExpression = "[POP07_SQMI] * 5000"
         // change text of button to pop density
-        toggle_button.text = resources.getString(R.string.density_pop)
+        toggleButton.text = resources.getString(R.string.density_pop)
         showTotalPopulation = true
       }
     }
     // click to set initial state
-    toggle_button.performClick()
+    toggleButton.performClick()
   }
 
   override fun onPause() {

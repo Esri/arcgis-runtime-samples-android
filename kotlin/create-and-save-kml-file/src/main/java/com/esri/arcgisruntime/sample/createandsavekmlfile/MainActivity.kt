@@ -243,7 +243,7 @@ class MainActivity : AppCompatActivity() {
   private fun createSpinners() {
     // create sketch create mode type spinner
     sketchCreationModeSpinner.apply {
-      adapter = ArrayAdapter<String>(
+      adapter = ArrayAdapter(
         applicationContext,
         R.layout.spinner_row,
         listOf(

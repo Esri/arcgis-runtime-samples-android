@@ -35,7 +35,6 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityNetwork
 import com.esri.arcgisruntime.utilitynetworks.UtilityNetworkSource
 import com.esri.arcgisruntime.sample.displayutilityassociations.databinding.ActivityMainBinding
 import java.util.UUID
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 

@@ -158,6 +158,7 @@ class MainActivity : AppCompatActivity() {
     permissions: Array<String>,
     grantResults: IntArray
   ) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     // if request is cancelled, the result arrays are empty
     if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       // location permission was granted; this would have been triggered in response to failing to start the

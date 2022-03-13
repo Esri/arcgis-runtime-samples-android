@@ -25,7 +25,6 @@ import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.Polyline
 import com.esri.arcgisruntime.geometry.PolylineBuilder
 import com.esri.arcgisruntime.geometry.SpatialReference
-import com.esri.arcgisruntime.location.LocationDataSource
 import com.esri.arcgisruntime.location.SimulatedLocationDataSource
 import com.esri.arcgisruntime.location.SimulationParameters
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -43,7 +42,7 @@ import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
 
-  var isTrackLocation: Boolean = false
+  private var isTrackLocation: Boolean = false
 
   private val activityMainBinding by lazy {
     ActivityMainBinding.inflate(layoutInflater)

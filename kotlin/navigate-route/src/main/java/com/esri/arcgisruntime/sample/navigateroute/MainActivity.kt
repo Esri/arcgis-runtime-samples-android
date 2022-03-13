@@ -311,11 +311,7 @@ class MainActivity : AppCompatActivity() {
    */
   private fun speakVoiceGuidance(voiceGuidanceText: String) {
     if (isTextToSpeechInitialized && textToSpeech?.isSpeaking == false) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        textToSpeech?.speak(voiceGuidanceText, TextToSpeech.QUEUE_FLUSH, null, null)
-      } else {
-        textToSpeech?.speak(voiceGuidanceText, TextToSpeech.QUEUE_FLUSH, null)
-      }
+      textToSpeech?.speak(voiceGuidanceText, TextToSpeech.QUEUE_FLUSH, null, null)
     }
   }
 

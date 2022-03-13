@@ -257,29 +257,27 @@ class MainActivity : AppCompatActivity() {
     val preplannedMapAreaNames: MutableList<String> = ArrayList()
     preplannedMapAreasAdapter =
       ArrayAdapter(this, R.layout.item_map_area, preplannedMapAreaNames)
-    availableAreasListView?.adapter = preplannedMapAreasAdapter
+    availableAreasListView.adapter = preplannedMapAreasAdapter
     // get the preplanned map areas from the offline map task and show them in the list view
     val preplannedMapAreasFuture =
       offlineMapTask.preplannedMapAreasAsync
     preplannedMapAreasFuture.addDoneListener {
       try {
         // get the preplanned areas
-        preplannedMapAreas = preplannedMapAreasFuture.get().also {
-          it.forEach { preplannedMapArea ->
-            // add the preplanned map area name to the list view
-            preplannedMapAreaNames.add(preplannedMapArea.portalItem.title)
-            // load each area and show a red border around their area of interest
-            preplannedMapArea.loadAsync()
-            preplannedMapArea.addDoneLoadingListener {
-              if (preplannedMapArea.loadStatus == LoadStatus.LOADED) {
-                // add the area of interest as a graphic
-                mapView.graphicsOverlays[0].graphics.add(Graphic(preplannedMapArea.areaOfInterest))
-              } else {
-                val error =
-                  "Failed to load preplanned map area: " + preplannedMapArea.loadError.message
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-                Log.e(TAG, error)
-              }
+        preplannedMapAreas = preplannedMapAreasFuture.get().onEach { preplannedMapArea ->
+          // add the preplanned map area name to the list view
+          preplannedMapAreaNames.add(preplannedMapArea.portalItem.title)
+          // load each area and show a red border around their area of interest
+          preplannedMapArea.loadAsync()
+          preplannedMapArea.addDoneLoadingListener {
+            if (preplannedMapArea.loadStatus == LoadStatus.LOADED) {
+              // add the area of interest as a graphic
+              mapView.graphicsOverlays[0].graphics.add(Graphic(preplannedMapArea.areaOfInterest))
+            } else {
+              val error =
+                "Failed to load preplanned map area: " + preplannedMapArea.loadError.message
+              Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+              Log.e(TAG, error)
             }
           }
         }

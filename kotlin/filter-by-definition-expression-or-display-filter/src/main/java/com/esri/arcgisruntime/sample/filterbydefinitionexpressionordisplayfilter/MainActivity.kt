@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity() {
         featureCountFuture.addDoneListener {
             if (featureLayer.featureTable.loadStatus == LoadStatus.LOADED) {
                 val totalFeatureCount = featureCountFuture.get()
-                featureCountTV.text = "Current feature count: ${totalFeatureCount}"
+                featureCountTV.text = "Current feature count: $totalFeatureCount"
             } else {
                 val errorMessage = "Error receiving total feature count: ${featureLayer.featureTable.loadError.message}"
                 Log.e(TAG, errorMessage)

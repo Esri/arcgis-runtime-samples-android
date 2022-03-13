@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
 
             sourceSpinner.apply {
               // assign an adapter to the spinner with source names
-              adapter = ArrayAdapter<String>(
+              adapter = ArrayAdapter(
                 applicationContext,
                 android.R.layout.simple_list_item_1,
                 sources.map { it.name })
@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity() {
         // create a list of utility attribute comparison operators
         operators = UtilityAttributeComparisonOperator.values().also { operators ->
           // assign operator spinner an adapter of operator names
-          operatorSpinner.adapter = ArrayAdapter<String>(
+          operatorSpinner.adapter = ArrayAdapter(
             applicationContext,
             android.R.layout.simple_list_item_1,
             operators.map { it.name })
@@ -185,7 +185,7 @@ class MainActivity : AppCompatActivity() {
       // show the values spinner
       setVisible(valuesBackgroundView.id)
       // update the values spinner adapter
-      valuesSpinner.adapter = ArrayAdapter<String>(
+      valuesSpinner.adapter = ArrayAdapter(
         applicationContext,
         android.R.layout.simple_list_item_1,
         // add the coded values from the coded value domain to the values spinner

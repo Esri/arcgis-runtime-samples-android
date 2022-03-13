@@ -18,7 +18,6 @@ package com.esri.arcgisruntime.samples.deletefeaturesfeatureservice
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
@@ -170,7 +169,7 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
           // check result has a feature
           this.get().iterator().next()?.let {
             // delete found features
-            deleteFeature(it, featureTable, Runnable {
+            deleteFeature(it, featureTable, {
               applyEdits(featureTable)
             })
           }

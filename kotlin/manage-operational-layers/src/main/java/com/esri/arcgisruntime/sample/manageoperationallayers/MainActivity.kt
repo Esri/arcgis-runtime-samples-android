@@ -20,7 +20,6 @@ package com.esri.arcgisruntime.sample.manageoperationallayers
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -35,7 +34,6 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.manageoperationallayers.databinding.ActivityMainBinding
-import com.google.android.material.circularreveal.CircularRevealFrameLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
@@ -60,10 +58,6 @@ class MainActivity : AppCompatActivity() {
 
   private val inactiveRecyclerView: RecyclerView by lazy {
     activityMainBinding.inactiveRecyclerView
-  }
-
-  private val progressBar: ProgressBar by lazy {
-    activityMainBinding.progressBar
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {

@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
       operationalLayers.add(featureLayer)
     }
 
-    mapView.let { it ->
+    mapView.let {
       // set the map to be displayed in the layout's map view
       it.map = streetsMap
       // set an initial view point

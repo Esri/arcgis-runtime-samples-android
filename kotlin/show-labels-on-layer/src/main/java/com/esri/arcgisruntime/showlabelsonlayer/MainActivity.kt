@@ -35,10 +35,6 @@ import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.showlabelsonlayer.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.mapping.labeling.ArcadeLabelExpression
 import com.esri.arcgisruntime.symbology.TextSymbol
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
-import com.google.gson.JsonPrimitive
-
 
 class MainActivity : AppCompatActivity() {
 
