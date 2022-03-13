@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity(),
 
     private val TAG: String = MainActivity::class.java.simpleName
 
-  private val activityMainBinding by lazy {
+    private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
@@ -166,7 +166,8 @@ class MainActivity : AppCompatActivity(),
                                     portalItemAdapter.updatePortalItems(portalItemSetResults)
                                 }
                             } catch (exception: Exception) {
-                                getString(R.string.error_item_set, exception.message
+                                getString(
+                                    R.string.error_item_set, exception.message
                                 ).let {
                                     Toast.makeText(this, it, Toast.LENGTH_LONG).show()
                                     Log.e(TAG, it)
@@ -218,7 +219,6 @@ class MainActivity : AppCompatActivity(),
         // Show item ID in UI
         loadedWebMapTextView.text = getString(R.string.web_map_loaded_text, portalItem.itemId)
     }
-
 
 
     override fun onPortalItemClick(portalItem: PortalItem) {

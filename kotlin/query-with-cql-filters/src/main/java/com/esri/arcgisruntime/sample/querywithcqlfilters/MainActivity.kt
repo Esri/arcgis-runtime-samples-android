@@ -301,8 +301,7 @@ class MainActivity : AppCompatActivity() {
             // If position is 4 ("Empty Query") manually set [whereClause] to empty string ("")
             whereClause = if (cqlQueryListPosition == 4) {
                 ""
-            }
-            else {
+            } else {
                 cqlQueryList[cqlQueryListPosition]
             }
 

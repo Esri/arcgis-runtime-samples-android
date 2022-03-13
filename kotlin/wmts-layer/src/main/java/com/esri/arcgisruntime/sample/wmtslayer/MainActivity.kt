@@ -28,53 +28,53 @@ import com.esri.arcgisruntime.sample.wmtslayer.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-  private val wmtsService: WmtsService by lazy { WmtsService(getString(R.string.wmts_url)) }
+    // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+    private val wmtsService: WmtsService by lazy { WmtsService(getString(R.string.wmts_url)) }
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val mapView: MapView by lazy {
-    activityMainBinding.mapView
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // create a Map
-    val map = ArcGISMap()
-    // set the map to be displayed in this view
-    mapView.map = map
-    // display wmts data on the map
-    wmtsService.addDoneLoadingListener {
-      if (wmtsService.loadStatus == LoadStatus.LOADED) {
-        // get service info
-        val wmtsServiceInfo = wmtsService.serviceInfo
-        // get the first layers id
-        val layerInfos = wmtsServiceInfo.layerInfos
-        // create WMTS layer from layer info
-        val wmtsLayer = WmtsLayer(layerInfos[0])
-        // set the basemap of the map with WMTS layer
-        map.basemap = Basemap(wmtsLayer)
-      }
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
-    wmtsService.loadAsync()
-  }
 
-  override fun onPause() {
-    super.onPause()
-    mapView.pause()
-  }
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-  override fun onDestroy() {
-    super.onDestroy()
-    mapView.dispose()
-  }
+        // create a Map
+        val map = ArcGISMap()
+        // set the map to be displayed in this view
+        mapView.map = map
+        // display wmts data on the map
+        wmtsService.addDoneLoadingListener {
+            if (wmtsService.loadStatus == LoadStatus.LOADED) {
+                // get service info
+                val wmtsServiceInfo = wmtsService.serviceInfo
+                // get the first layers id
+                val layerInfos = wmtsServiceInfo.layerInfos
+                // create WMTS layer from layer info
+                val wmtsLayer = WmtsLayer(layerInfos[0])
+                // set the basemap of the map with WMTS layer
+                map.basemap = Basemap(wmtsLayer)
+            }
+        }
+        wmtsService.loadAsync()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.dispose()
+    }
 }

@@ -30,60 +30,61 @@ import com.esri.arcgisruntime.sample.rasterlayerfile.databinding.ActivityMainBin
 
 class MainActivity : AppCompatActivity() {
 
-  private val TAG = MainActivity::class.java.simpleName
+    private val TAG = MainActivity::class.java.simpleName
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val mapView: MapView by lazy {
-    activityMainBinding.mapView
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // authentication with an API key or named user is required to access basemaps and other
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
-
-    // create a map with imagery basemap
-    val map = ArcGISMap(BasemapStyle.ARCGIS_IMAGERY)
-    // add the map to a map view
-    mapView.map = map
-    // create a raster from a local raster filepath
-    val raster = Raster(getExternalFilesDir(null)?.path + getString(R.string.raster_file_path))
-    // create a raster layer
-    val rasterLayer = RasterLayer(raster)
-    // add the raster as an operational layer
-    map.operationalLayers.add(rasterLayer)
-    // set viewpoint on the raster
-    rasterLayer.addDoneLoadingListener {
-      if (rasterLayer.loadStatus == LoadStatus.LOADED) {
-        mapView.setViewpointGeometryAsync(
-          rasterLayer.fullExtent,
-          50.0
-        )
-      } else {
-        Log.e(TAG, "Error loading raster layer: ${rasterLayer.loadError.message}")
-        Toast.makeText(this, "Failed to load raster file from storage", Toast.LENGTH_LONG).show()
-      }
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
-  }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
+        // create a map with imagery basemap
+        val map = ArcGISMap(BasemapStyle.ARCGIS_IMAGERY)
+        // add the map to a map view
+        mapView.map = map
+        // create a raster from a local raster filepath
+        val raster = Raster(getExternalFilesDir(null)?.path + getString(R.string.raster_file_path))
+        // create a raster layer
+        val rasterLayer = RasterLayer(raster)
+        // add the raster as an operational layer
+        map.operationalLayers.add(rasterLayer)
+        // set viewpoint on the raster
+        rasterLayer.addDoneLoadingListener {
+            if (rasterLayer.loadStatus == LoadStatus.LOADED) {
+                mapView.setViewpointGeometryAsync(
+                    rasterLayer.fullExtent,
+                    50.0
+                )
+            } else {
+                Log.e(TAG, "Error loading raster layer: ${rasterLayer.loadError.message}")
+                Toast.makeText(this, "Failed to load raster file from storage", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+    }
+
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }

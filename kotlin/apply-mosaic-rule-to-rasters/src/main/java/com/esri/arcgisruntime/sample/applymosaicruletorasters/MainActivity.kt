@@ -39,124 +39,129 @@ import com.esri.arcgisruntime.sample.applymosaicruletorasters.databinding.Activi
 
 class MainActivity : AppCompatActivity() {
 
-  private val TAG = MainActivity::class.java.simpleName
+    private val TAG = MainActivity::class.java.simpleName
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val mapView: MapView by lazy {
-    activityMainBinding.mapView
-  }
-
-  private val spinner: Spinner by lazy {
-    activityMainBinding.spinner
-  }
-
-  // create an image service raster from a url for an image service
-  private val imageServiceRaster: ImageServiceRaster by lazy {
-    ImageServiceRaster("https://sampleserver7.arcgisonline.com/server/rest/services/amberg_germany/ImageServer").apply {
-      // set its mosaic rule
-      if (mosaicRule == null) mosaicRule = MosaicRule()
-    }
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // authentication with an API key or named user is required to access basemaps and other 
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
-
-    // create a raster layer from the image service
-    val rasterLayer = RasterLayer(imageServiceRaster)
-    // add the raster layer to a new map on the map view
-    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
-      operationalLayers.add(rasterLayer)
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
 
-    // listen for the raster layer to finish loading
-    rasterLayer.addDoneLoadingListener {
-    // if the raster layer didn't load
-      if (rasterLayer.loadStatus != LoadStatus.LOADED) {
-        rasterLayer.loadError?.let { error ->
-          Log.e(TAG, "Raster layer failed to load: ${error.cause}")
-        }
-        return@addDoneLoadingListener
-      }
-     // set the map's viewpoint to the raster extent
-      mapView.setViewpointAsync(Viewpoint(rasterLayer.fullExtent.center, 25000.0))
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
     }
 
-    // set up the spinner with some predefined mosaic rules
-    ArrayAdapter.createFromResource(
-      this,
-      R.array.mosaic_rules,
-      android.R.layout.simple_spinner_item
-    ).also { adapter ->
-      adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-      spinner.adapter = adapter
+    private val spinner: Spinner by lazy {
+        activityMainBinding.spinner
     }
 
-    spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-      override fun onNothingSelected(parent: AdapterView<*>?) {
-        setMosaicRule("Default")
-      }
-
-      override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-        setMosaicRule(parent.getItemAtPosition(position) as String)
-      }
+    // create an image service raster from a url for an image service
+    private val imageServiceRaster: ImageServiceRaster by lazy {
+        ImageServiceRaster("https://sampleserver7.arcgisonline.com/server/rest/services/amberg_germany/ImageServer").apply {
+            // set its mosaic rule
+            if (mosaicRule == null) mosaicRule = MosaicRule()
+        }
     }
-  }
 
-  /**
-   * Applies one of the predefined mosaic rules to the image service raster.
-   *
-   * @param ruleName one of "Default", "Northwest", "Center", "By attribute", and "Lock raster"
-   */
-  private fun setMosaicRule(ruleName: String) {
-    imageServiceRaster.mosaicRule = MosaicRule().apply {
-      when (ruleName) {
-        "Default" -> {
-          mosaicMethod = MosaicMethod.NONE
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
+
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
+        // create a raster layer from the image service
+        val rasterLayer = RasterLayer(imageServiceRaster)
+        // add the raster layer to a new map on the map view
+        mapView.map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
+            operationalLayers.add(rasterLayer)
         }
-        "Northwest" -> {
-          mosaicMethod = MosaicMethod.NORTHWEST
-          mosaicOperation = MosaicOperation.FIRST
+
+        // listen for the raster layer to finish loading
+        rasterLayer.addDoneLoadingListener {
+            // if the raster layer didn't load
+            if (rasterLayer.loadStatus != LoadStatus.LOADED) {
+                rasterLayer.loadError?.let { error ->
+                    Log.e(TAG, "Raster layer failed to load: ${error.cause}")
+                }
+                return@addDoneLoadingListener
+            }
+            // set the map's viewpoint to the raster extent
+            mapView.setViewpointAsync(Viewpoint(rasterLayer.fullExtent.center, 25000.0))
         }
-        "Center" -> {
-          mosaicMethod = MosaicMethod.CENTER
-          mosaicOperation = MosaicOperation.BLEND
+
+        // set up the spinner with some predefined mosaic rules
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.mosaic_rules,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.adapter = adapter
         }
-        "By attribute" -> {
-          mosaicMethod = MosaicMethod.ATTRIBUTE
-          sortField = "OBJECTID"
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                setMosaicRule("Default")
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                setMosaicRule(parent.getItemAtPosition(position) as String)
+            }
         }
-        "Lock raster" -> {
-          mosaicMethod = MosaicMethod.LOCK_RASTER
-          lockRasterIds.clear()
-          lockRasterIds.addAll(listOf(1, 7, 12))
-        }
-        else -> {
-          mosaicMethod = MosaicMethod.NONE
-        }
-      }
     }
-  }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+    /**
+     * Applies one of the predefined mosaic rules to the image service raster.
+     *
+     * @param ruleName one of "Default", "Northwest", "Center", "By attribute", and "Lock raster"
+     */
+    private fun setMosaicRule(ruleName: String) {
+        imageServiceRaster.mosaicRule = MosaicRule().apply {
+            when (ruleName) {
+                "Default" -> {
+                    mosaicMethod = MosaicMethod.NONE
+                }
+                "Northwest" -> {
+                    mosaicMethod = MosaicMethod.NORTHWEST
+                    mosaicOperation = MosaicOperation.FIRST
+                }
+                "Center" -> {
+                    mosaicMethod = MosaicMethod.CENTER
+                    mosaicOperation = MosaicOperation.BLEND
+                }
+                "By attribute" -> {
+                    mosaicMethod = MosaicMethod.ATTRIBUTE
+                    sortField = "OBJECTID"
+                }
+                "Lock raster" -> {
+                    mosaicMethod = MosaicMethod.LOCK_RASTER
+                    lockRasterIds.clear()
+                    lockRasterIds.addAll(listOf(1, 7, 12))
+                }
+                else -> {
+                    mosaicMethod = MosaicMethod.NONE
+                }
+            }
+        }
+    }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }

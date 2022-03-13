@@ -11,20 +11,18 @@
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </com.esri.arcgisruntime.mapping.view.MapView>
+        android:layout_height="match_parent"></com.esri.arcgisruntime.mapping.view.MapView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <Spinner
             android:id="@+id/suggestionSpinner"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/listPreferredItemHeight"
-            android:background="@color/colorWhiteSemiTransparent">
-        </Spinner>
+            android:background="@color/colorWhiteSemiTransparent"></Spinner>
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/addressSearchView"
@@ -34,8 +32,7 @@
             android:queryHint="@string/address_search_hint"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp">
-        </androidx.appcompat.widget.SearchView>
+            android:layout_marginRight="5dp"></androidx.appcompat.widget.SearchView>
     </LinearLayout>
 
 </RelativeLayout>

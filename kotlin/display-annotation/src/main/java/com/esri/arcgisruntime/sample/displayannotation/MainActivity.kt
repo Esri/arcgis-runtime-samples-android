@@ -30,50 +30,50 @@ import com.esri.arcgisruntime.sample.displayannotation.databinding.ActivityMainB
 
 class MainActivity : AppCompatActivity() {
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val mapView: MapView by lazy {
-    activityMainBinding.mapView
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // authentication with an API key or named user is required to access basemaps and other 
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
-
-    // create a map with a light gray basemap
-    mapView.map = ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY_BASE).apply {
-      // add a feature layer from a feature service
-      operationalLayers.add(
-        FeatureLayer(ServiceFeatureTable(getString(R.string.river_feature_service_url)))
-      )
-      // add an annotation layer from a feature service
-      operationalLayers.add(
-        AnnotationLayer(getString(R.string.river_annotation_feature_service_url))
-      )
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
 
-    // set the map view's initial view point
-    mapView.setViewpoint(Viewpoint( 55.882436, -2.725610, 75000.0))
-  }
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+        // create a map with a light gray basemap
+        mapView.map = ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY_BASE).apply {
+            // add a feature layer from a feature service
+            operationalLayers.add(
+                FeatureLayer(ServiceFeatureTable(getString(R.string.river_feature_service_url)))
+            )
+            // add an annotation layer from a feature service
+            operationalLayers.add(
+                AnnotationLayer(getString(R.string.river_annotation_feature_service_url))
+            )
+        }
+
+        // set the map view's initial view point
+        mapView.setViewpoint(Viewpoint(55.882436, -2.725610, 75000.0))
+    }
+
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }

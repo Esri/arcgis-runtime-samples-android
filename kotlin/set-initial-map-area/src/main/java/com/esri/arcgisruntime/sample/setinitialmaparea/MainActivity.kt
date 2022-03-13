@@ -28,50 +28,50 @@ import com.esri.arcgisruntime.sample.setinitialmaparea.databinding.ActivityMainB
 
 class MainActivity : AppCompatActivity() {
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
 
-  private val mapView: MapView by lazy {
-    activityMainBinding.mapView
-  }
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-    // authentication with an API key or named user is required to access basemaps and other
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-    // create a map with a topographic basemap
-    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
-    // create an envelope around Shafer Basin
-    val initialExtent =
-      Envelope(
-        -12211308.778729, 4645116.003309, -12208257.879667, 4650542.535773,
-        SpatialReference.create(102100)
-      )
-    // create a viewpoint from the envelope
-    val viewpoint = Viewpoint(initialExtent)
-    // set the map to be displayed in the map view
-    mapView.map = map
-    // set the map's initial viewpoint
-    mapView.setViewpoint(viewpoint)
-  }
+        // create a map with a topographic basemap
+        val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+        // create an envelope around Shafer Basin
+        val initialExtent =
+            Envelope(
+                -12211308.778729, 4645116.003309, -12208257.879667, 4650542.535773,
+                SpatialReference.create(102100)
+            )
+        // create a viewpoint from the envelope
+        val viewpoint = Viewpoint(initialExtent)
+        // set the map to be displayed in the map view
+        mapView.map = map
+        // set the map's initial viewpoint
+        mapView.setViewpoint(viewpoint)
+    }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }

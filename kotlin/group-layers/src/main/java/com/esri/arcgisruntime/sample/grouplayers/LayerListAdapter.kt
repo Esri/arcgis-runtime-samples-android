@@ -38,147 +38,157 @@ import com.esri.arcgisruntime.mapping.LayerList
  * @param onLayerCheckedChanged a callback function which is invoked by each layer and sublayer's onCheckedChangedListener
  */
 class LayerListAdapter(
-  private val dataSet: LayerList,
-  private val onLayerCheckedChanged: (layer: Layer, isChecked: Boolean) -> Unit
+    private val dataSet: LayerList,
+    private val onLayerCheckedChanged: (layer: Layer, isChecked: Boolean) -> Unit
 ) :
-  RecyclerView.Adapter<LayerListAdapter.ViewHolder>() {
+    RecyclerView.Adapter<LayerListAdapter.ViewHolder>() {
 
-  private val TYPE_DEFAULT = 0
-  private val TYPE_EXCLUSIVE = 1
+    private val TYPE_DEFAULT = 0
+    private val TYPE_EXCLUSIVE = 1
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-    // There are two view holder types, for independent and exclusive visibility modes
-    return when (viewType) {
-      TYPE_EXCLUSIVE -> {
-        val v = LayoutInflater.from(parent.context).inflate(
-          R.layout.group_layers_radio_group, parent, false
-        )
-        ExclusiveLayerViewHolder(v)
-      }
-      else -> {
-        val v = LayoutInflater.from(parent.context).inflate(
-          R.layout.group_layers_checkbox_group, parent, false
-        )
-        DefaultLayerViewHolder(v)
-      }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        // There are two view holder types, for independent and exclusive visibility modes
+        return when (viewType) {
+            TYPE_EXCLUSIVE -> {
+                val v = LayoutInflater.from(parent.context).inflate(
+                    R.layout.group_layers_radio_group, parent, false
+                )
+                ExclusiveLayerViewHolder(v)
+            }
+            else -> {
+                val v = LayoutInflater.from(parent.context).inflate(
+                    R.layout.group_layers_checkbox_group, parent, false
+                )
+                DefaultLayerViewHolder(v)
+            }
+        }
     }
-  }
 
 
-  override fun getItemViewType(position: Int): Int {
-    val layer = dataSet[position]
-    return if (layer is GroupLayer && layer.visibilityMode == GroupVisibilityMode.EXCLUSIVE) {
-      TYPE_EXCLUSIVE
-    } else TYPE_DEFAULT
-  }
-
-  override fun getItemCount(): Int = dataSet.size
-
-  override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-    when (holder.itemViewType) {
-      TYPE_EXCLUSIVE -> (holder as ExclusiveLayerViewHolder).let { exclusiveLayerViewHolder ->
+    override fun getItemViewType(position: Int): Int {
         val layer = dataSet[position]
-        exclusiveLayerViewHolder.apply {
-          this.layer = layer
-          textView.text = layer.name
-          onLayerChecked = onLayerCheckedChanged
-          sublayers.apply {
-            clear()
-            addAll((layer as GroupLayer).layers)
-          }
-          populate()
-        }
-      }
-      else -> (holder as DefaultLayerViewHolder).let { defaultLayerViewHolder ->
-        val layer = dataSet[position]
-        defaultLayerViewHolder.apply {
-          this.layer = layer
-          textView.text = layer.name
-          onLayerChecked = onLayerCheckedChanged
-          sublayers.apply {
-            clear()
-            addAll((layer as GroupLayer).layers)
-          }
-          populate()
-        }
-      }
+        return if (layer is GroupLayer && layer.visibilityMode == GroupVisibilityMode.EXCLUSIVE) {
+            TYPE_EXCLUSIVE
+        } else TYPE_DEFAULT
     }
-  }
 
+    override fun getItemCount(): Int = dataSet.size
 
-  abstract class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    abstract val textView: TextView
-  }
-
-  class DefaultLayerViewHolder(itemView: View) : ViewHolder(itemView) {
-    override val textView: TextView = itemView.findViewById(
-      R.id.checkbox_grouplayer_name
-    )
-    private val sublayerLayout: LinearLayout = itemView.findViewById(
-      R.id.sublayer_layout
-    )
-    val sublayers = mutableListOf<Layer>()
-    var layer: Layer? = null
-
-    var onLayerChecked: ((Layer, Boolean) -> Unit)? = null
-
-    /**
-     * Sets the OnCheckedChangeListener of the top-level layer
-     * and creates checkboxes for each of the layer's sublayers with a label and OnCheckedChangeListener.
-     */
-    fun populate() {
-      val checkBox: CheckBox = itemView.findViewById(R.id.layer_checkbox)
-      layer?.let { layer ->
-        checkBox.setOnCheckedChangeListener { _, isChecked ->
-          onLayerChecked?.invoke(layer, isChecked)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        when (holder.itemViewType) {
+            TYPE_EXCLUSIVE -> (holder as ExclusiveLayerViewHolder).let { exclusiveLayerViewHolder ->
+                val layer = dataSet[position]
+                exclusiveLayerViewHolder.apply {
+                    this.layer = layer
+                    textView.text = layer.name
+                    onLayerChecked = onLayerCheckedChanged
+                    sublayers.apply {
+                        clear()
+                        addAll((layer as GroupLayer).layers)
+                    }
+                    populate()
+                }
+            }
+            else -> (holder as DefaultLayerViewHolder).let { defaultLayerViewHolder ->
+                val layer = dataSet[position]
+                defaultLayerViewHolder.apply {
+                    this.layer = layer
+                    textView.text = layer.name
+                    onLayerChecked = onLayerCheckedChanged
+                    sublayers.apply {
+                        clear()
+                        addAll((layer as GroupLayer).layers)
+                    }
+                    populate()
+                }
+            }
         }
-        checkBox.isChecked = layer.isVisible
-      }
-      sublayers.forEach { sublayer ->
-        CheckBox(itemView.context).apply {
-          id = View.generateViewId()
-          text = sublayer.name
-          sublayerLayout.addView(this)
-          setOnCheckedChangeListener { _, isChecked -> onLayerChecked?.invoke(sublayer, isChecked) }
-          isChecked = sublayer.isVisible
-        }
-      }
     }
-  }
 
-  class ExclusiveLayerViewHolder(itemView: View) : ViewHolder(itemView) {
-    override val textView: TextView = itemView.findViewById(
-      R.id.radio_group_layer_name
-    )
-    private val radioGroup: RadioGroup = itemView.findViewById(
-      R.id.radioGroup
-    )
-    val sublayers = mutableListOf<Layer>()
-    var layer: Layer? = null
 
-    var onLayerChecked: ((Layer, Boolean) -> Unit)? = null
-
-    /**
-     * Sets the OnCheckedChangeListener of the top-level layer
-     * and creates radio buttons for each of the layer's sublayers with a label and OnCheckedChangeListener.
-     */
-    fun populate() {
-      val checkBox: CheckBox = itemView.findViewById(R.id.layer_checkbox)
-      layer?.let { layer ->
-        checkBox.setOnCheckedChangeListener { _, isChecked ->
-          onLayerChecked?.invoke(layer, isChecked)
-        }
-        checkBox.isChecked = layer.isVisible
-      }
-      sublayers.forEach { sublayer ->
-        RadioButton(itemView.context).apply {
-          id = View.generateViewId()
-          text = sublayer.name
-          radioGroup.addView(this)
-          setOnCheckedChangeListener { _, isChecked -> onLayerChecked?.invoke(sublayer, isChecked) }
-          isChecked = sublayer.isVisible
-        }
-      }
+    abstract class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        abstract val textView: TextView
     }
-  }
+
+    class DefaultLayerViewHolder(itemView: View) : ViewHolder(itemView) {
+        override val textView: TextView = itemView.findViewById(
+            R.id.checkbox_grouplayer_name
+        )
+        private val sublayerLayout: LinearLayout = itemView.findViewById(
+            R.id.sublayer_layout
+        )
+        val sublayers = mutableListOf<Layer>()
+        var layer: Layer? = null
+
+        var onLayerChecked: ((Layer, Boolean) -> Unit)? = null
+
+        /**
+         * Sets the OnCheckedChangeListener of the top-level layer
+         * and creates checkboxes for each of the layer's sublayers with a label and OnCheckedChangeListener.
+         */
+        fun populate() {
+            val checkBox: CheckBox = itemView.findViewById(R.id.layer_checkbox)
+            layer?.let { layer ->
+                checkBox.setOnCheckedChangeListener { _, isChecked ->
+                    onLayerChecked?.invoke(layer, isChecked)
+                }
+                checkBox.isChecked = layer.isVisible
+            }
+            sublayers.forEach { sublayer ->
+                CheckBox(itemView.context).apply {
+                    id = View.generateViewId()
+                    text = sublayer.name
+                    sublayerLayout.addView(this)
+                    setOnCheckedChangeListener { _, isChecked ->
+                        onLayerChecked?.invoke(
+                            sublayer,
+                            isChecked
+                        )
+                    }
+                    isChecked = sublayer.isVisible
+                }
+            }
+        }
+    }
+
+    class ExclusiveLayerViewHolder(itemView: View) : ViewHolder(itemView) {
+        override val textView: TextView = itemView.findViewById(
+            R.id.radio_group_layer_name
+        )
+        private val radioGroup: RadioGroup = itemView.findViewById(
+            R.id.radioGroup
+        )
+        val sublayers = mutableListOf<Layer>()
+        var layer: Layer? = null
+
+        var onLayerChecked: ((Layer, Boolean) -> Unit)? = null
+
+        /**
+         * Sets the OnCheckedChangeListener of the top-level layer
+         * and creates radio buttons for each of the layer's sublayers with a label and OnCheckedChangeListener.
+         */
+        fun populate() {
+            val checkBox: CheckBox = itemView.findViewById(R.id.layer_checkbox)
+            layer?.let { layer ->
+                checkBox.setOnCheckedChangeListener { _, isChecked ->
+                    onLayerChecked?.invoke(layer, isChecked)
+                }
+                checkBox.isChecked = layer.isVisible
+            }
+            sublayers.forEach { sublayer ->
+                RadioButton(itemView.context).apply {
+                    id = View.generateViewId()
+                    text = sublayer.name
+                    radioGroup.addView(this)
+                    setOnCheckedChangeListener { _, isChecked ->
+                        onLayerChecked?.invoke(
+                            sublayer,
+                            isChecked
+                        )
+                    }
+                    isChecked = sublayer.isVisible
+                }
+            }
+        }
+    }
 }

@@ -27,49 +27,50 @@ import com.esri.arcgisruntime.sample.integratedmeshlayer.databinding.ActivityMai
 
 class MainActivity : AppCompatActivity() {
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val sceneView: SceneView by lazy {
-    activityMainBinding.sceneView
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // create an integrated mesh layer of part of the city of girona
-    val gironaIntegratedMeshLayer = IntegratedMeshLayer("https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/Girona_Spain/SceneServer")
-
-    // create a scene and add the integrated mesh layer to it
-    val gironaScene = ArcGISScene().apply {
-      operationalLayers.add(gironaIntegratedMeshLayer)
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
 
-    // create a camera focused on a part of the integrated mesh layer
-    val gironaCamera = Camera(41.9906, 2.8259, 200.0, 190.0, 65.0, 0.0)
-
-    sceneView.apply {
-      // set the scene to the scene view
-      scene = gironaScene
-      // set the viewpoint for the scene view using a camera
-      setViewpointCamera(gironaCamera)
+    private val sceneView: SceneView by lazy {
+        activityMainBinding.sceneView
     }
-  }
 
-  override fun onPause() {
-    sceneView.pause()
-    super.onPause()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-  override fun onResume() {
-    super.onResume()
-    sceneView.resume()
-  }
+        // create an integrated mesh layer of part of the city of girona
+        val gironaIntegratedMeshLayer =
+            IntegratedMeshLayer("https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/Girona_Spain/SceneServer")
 
-  override fun onDestroy() {
-    sceneView.dispose()
-    super.onDestroy()
-  }
+        // create a scene and add the integrated mesh layer to it
+        val gironaScene = ArcGISScene().apply {
+            operationalLayers.add(gironaIntegratedMeshLayer)
+        }
+
+        // create a camera focused on a part of the integrated mesh layer
+        val gironaCamera = Camera(41.9906, 2.8259, 200.0, 190.0, 65.0, 0.0)
+
+        sceneView.apply {
+            // set the scene to the scene view
+            scene = gironaScene
+            // set the viewpoint for the scene view using a camera
+            setViewpointCamera(gironaCamera)
+        }
+    }
+
+    override fun onPause() {
+        sceneView.pause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sceneView.resume()
+    }
+
+    override fun onDestroy() {
+        sceneView.dispose()
+        super.onDestroy()
+    }
 }
