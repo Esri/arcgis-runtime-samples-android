@@ -42,117 +42,120 @@ import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
 
-  private var isTrackLocation: Boolean = false
+    private var isTrackLocation: Boolean = false
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val mapView: MapView by lazy {
-    activityMainBinding.mapView
-  }
-
-  private val button: FloatingActionButton by lazy {
-    activityMainBinding.button
-  }
-
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // create a center point for the data in Redlands, California
-    val center = Point(-13185535.98, 4037766.28, SpatialReference.create(102100))
-
-    // create a graphics overlay for the points and use a red circle for the symbols
-    val locationHistoryOverlay = GraphicsOverlay()
-    val locationSymbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10f)
-    locationHistoryOverlay.renderer = SimpleRenderer(locationSymbol)
-
-    // create a graphics overlay for the lines connecting the points and use a blue line for the symbol
-    val locationHistoryLineOverlay = GraphicsOverlay()
-    val locationLineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.GREEN, 2.0f)
-    locationHistoryLineOverlay.renderer = SimpleRenderer(locationLineSymbol)
-
-    mapView.apply {
-      // set the map to a dark gray canvas basemap
-      map = ArcGISMap("https://www.arcgis.com/home/item.html?id=1970c1995b8f44749f4b9b6e81b5ba45")
-      // set the viewpoint
-      setViewpoint(Viewpoint(center, 7000.0))
-      // add the graphics overlays to the map view
-      graphicsOverlays.addAll(listOf(locationHistoryOverlay, locationHistoryLineOverlay))
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
 
-    // create a polyline builder to connect the location points
-    val polylineBuilder = PolylineBuilder(SpatialReference.create(102100))
-
-    // create a simulated location data source from json data with simulation parameters to set a consistent velocity
-    val simulatedLocationDataSource = SimulatedLocationDataSource().apply {
-      setLocations(
-        Polyline.fromJson(getString(R.string.polyline_data)) as Polyline,
-        SimulationParameters(Calendar.getInstance(), 30.0, 0.0, 0.0)
-      )
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
     }
 
-    simulatedLocationDataSource.addLocationChangedListener { locationChangedEvent ->
-      // if location tracking is turned off, do not add to the polyline
-      if (!isTrackLocation) { return@addLocationChangedListener }
-      // get the point from the location changed event
-      val nextPoint = locationChangedEvent.location.position
-      // add the new point to the polyline builder
-      polylineBuilder.addPoint(nextPoint)
-      // add the new point to the two graphics overlays and reset the line connecting the points
-      locationHistoryOverlay.graphics.add(Graphic(nextPoint))
-      locationHistoryLineOverlay.graphics.apply {
-        clear()
-        add(Graphic(polylineBuilder.toGeometry()))
-      }
+    private val button: FloatingActionButton by lazy {
+        activityMainBinding.button
     }
 
-    // configure the map view's location display to follow the simulated location data source
-    mapView.locationDisplay.apply {
-      locationDataSource = simulatedLocationDataSource
-      autoPanMode = LocationDisplay.AutoPanMode.RECENTER
-      initialZoomScale = 7000.0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
+
+        // create a center point for the data in Redlands, California
+        val center = Point(-13185535.98, 4037766.28, SpatialReference.create(102100))
+
+        // create a graphics overlay for the points and use a red circle for the symbols
+        val locationHistoryOverlay = GraphicsOverlay()
+        val locationSymbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10f)
+        locationHistoryOverlay.renderer = SimpleRenderer(locationSymbol)
+
+        // create a graphics overlay for the lines connecting the points and use a blue line for the symbol
+        val locationHistoryLineOverlay = GraphicsOverlay()
+        val locationLineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.GREEN, 2.0f)
+        locationHistoryLineOverlay.renderer = SimpleRenderer(locationLineSymbol)
+
+        mapView.apply {
+            // set the map to a dark gray canvas basemap
+            map =
+                ArcGISMap("https://www.arcgis.com/home/item.html?id=1970c1995b8f44749f4b9b6e81b5ba45")
+            // set the viewpoint
+            setViewpoint(Viewpoint(center, 7000.0))
+            // add the graphics overlays to the map view
+            graphicsOverlays.addAll(listOf(locationHistoryOverlay, locationHistoryLineOverlay))
+        }
+
+        // create a polyline builder to connect the location points
+        val polylineBuilder = PolylineBuilder(SpatialReference.create(102100))
+
+        // create a simulated location data source from json data with simulation parameters to set a consistent velocity
+        val simulatedLocationDataSource = SimulatedLocationDataSource().apply {
+            setLocations(
+                Polyline.fromJson(getString(R.string.polyline_data)) as Polyline,
+                SimulationParameters(Calendar.getInstance(), 30.0, 0.0, 0.0)
+            )
+        }
+
+        simulatedLocationDataSource.addLocationChangedListener { locationChangedEvent ->
+            // if location tracking is turned off, do not add to the polyline
+            if (!isTrackLocation) {
+                return@addLocationChangedListener
+            }
+            // get the point from the location changed event
+            val nextPoint = locationChangedEvent.location.position
+            // add the new point to the polyline builder
+            polylineBuilder.addPoint(nextPoint)
+            // add the new point to the two graphics overlays and reset the line connecting the points
+            locationHistoryOverlay.graphics.add(Graphic(nextPoint))
+            locationHistoryLineOverlay.graphics.apply {
+                clear()
+                add(Graphic(polylineBuilder.toGeometry()))
+            }
+        }
+
+        // configure the map view's location display to follow the simulated location data source
+        mapView.locationDisplay.apply {
+            locationDataSource = simulatedLocationDataSource
+            autoPanMode = LocationDisplay.AutoPanMode.RECENTER
+            initialZoomScale = 7000.0
+        }
+
+        // reset location display and change the isTrackLocation flag and the button's icon
+        button.setOnClickListener {
+            // if the user has panned away from the location display, turn it on again
+            if (mapView.locationDisplay.autoPanMode == LocationDisplay.AutoPanMode.OFF) {
+                mapView.locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.RECENTER
+            }
+
+            if (isTrackLocation) {
+                isTrackLocation = false
+                button.setImageResource(R.drawable.ic_my_location_white_24dp)
+            } else {
+                isTrackLocation = true
+                button.setImageResource(R.drawable.ic_navigation_white_24dp)
+            }
+        }
+        // start the simulated location data source
+        simulatedLocationDataSource.startAsync()
+
+        // make sure the floating action button doesn't obscure the attribution bar
+        mapView.addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+            val layoutParams = button.layoutParams as CoordinatorLayout.LayoutParams
+            layoutParams.bottomMargin += bottom - oldBottom
+        }
     }
 
-    // reset location display and change the isTrackLocation flag and the button's icon
-    button.setOnClickListener {
-      // if the user has panned away from the location display, turn it on again
-      if (mapView.locationDisplay.autoPanMode == LocationDisplay.AutoPanMode.OFF) {
-        mapView.locationDisplay.autoPanMode = LocationDisplay.AutoPanMode.RECENTER
-      }
-
-      if (isTrackLocation) {
-        isTrackLocation = false
-        button.setImageResource(R.drawable.ic_my_location_white_24dp)
-      } else {
-        isTrackLocation = true
-        button.setImageResource(R.drawable.ic_navigation_white_24dp)
-      }
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
     }
-    // start the simulated location data source
-    simulatedLocationDataSource.startAsync()
 
-    // make sure the floating action button doesn't obscure the attribution bar
-    mapView.addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-      val layoutParams = button.layoutParams as CoordinatorLayout.LayoutParams
-      layoutParams.bottomMargin += bottom - oldBottom
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
     }
-  }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
-
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
-
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }

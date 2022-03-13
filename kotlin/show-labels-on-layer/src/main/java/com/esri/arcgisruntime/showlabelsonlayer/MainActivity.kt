@@ -38,96 +38,97 @@ import com.esri.arcgisruntime.symbology.TextSymbol
 
 class MainActivity : AppCompatActivity() {
 
-  private val TAG = MainActivity::class.java.simpleName
+    private val TAG = MainActivity::class.java.simpleName
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val mapView: MapView by lazy {
-    activityMainBinding.mapView
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // authentication with an API key or named user is required to access basemaps and other
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
-
-    // create a map view and set a map
-    val map = ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY)
-    mapView.map = map
-
-    // create a feature layer from an online feature service of US Congressional Districts
-    val serviceFeatureTable = ServiceFeatureTable(getString(R.string.congressional_districts_url))
-    val featureLayer = FeatureLayer(serviceFeatureTable)
-    map.operationalLayers.add(featureLayer)
-
-    // zoom to the layer when it's done loading
-    featureLayer.addDoneLoadingListener {
-      if (featureLayer.loadStatus == LoadStatus.LOADED) {
-        // set viewpoint to feature layer extent
-        mapView.setViewpointAsync(Viewpoint(featureLayer.fullExtent))
-      } else {
-        val error = "Error loading feature layer :" + featureLayer.loadError.cause
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-        Log.e(TAG, error)
-      }
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
 
-    val republicanLabelDefinition = makeLabelDefinition("Republican", Color.RED)
-    val democratLabelDefinition = makeLabelDefinition("Democrat", Color.BLUE)
-
-    featureLayer.apply {
-      // add the definitions to the feature layer
-      labelDefinitions.addAll(listOf(republicanLabelDefinition, democratLabelDefinition))
-      // enable labels
-      isLabelsEnabled = true
-    }
-  }
-
-  /**
-   * Creates a label definition for a given party and color to populate a text symbol.
-   *
-   * @param party name to be passed into the label definition's WHERE clause
-   * @param textColor to be passed into the text symbol
-   *
-   * @return label definition created from the given arcade expression
-   */
-  private fun makeLabelDefinition(party: String, textColor: Int): LabelDefinition {
-
-    // create text symbol for styling the label
-    val textSymbol = TextSymbol().apply {
-      size = 12f
-      color = textColor
-      haloColor = Color.WHITE
-      haloWidth = 2f
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
     }
 
-    // create a label definition with an Arcade expression
-    val arcadeLabelExpression =
-      ArcadeLabelExpression("\$feature.NAME + \" (\" + left(\$feature.PARTY,1) + \")\\nDistrict \" + \$feature.CDFIPS")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-    return LabelDefinition(arcadeLabelExpression, textSymbol).apply {
-      placement = LabelingPlacement.POLYGON_ALWAYS_HORIZONTAL
-      whereClause = String.format("PARTY = '%s'", party)
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
+        // create a map view and set a map
+        val map = ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY)
+        mapView.map = map
+
+        // create a feature layer from an online feature service of US Congressional Districts
+        val serviceFeatureTable =
+            ServiceFeatureTable(getString(R.string.congressional_districts_url))
+        val featureLayer = FeatureLayer(serviceFeatureTable)
+        map.operationalLayers.add(featureLayer)
+
+        // zoom to the layer when it's done loading
+        featureLayer.addDoneLoadingListener {
+            if (featureLayer.loadStatus == LoadStatus.LOADED) {
+                // set viewpoint to feature layer extent
+                mapView.setViewpointAsync(Viewpoint(featureLayer.fullExtent))
+            } else {
+                val error = "Error loading feature layer :" + featureLayer.loadError.cause
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                Log.e(TAG, error)
+            }
+        }
+
+        val republicanLabelDefinition = makeLabelDefinition("Republican", Color.RED)
+        val democratLabelDefinition = makeLabelDefinition("Democrat", Color.BLUE)
+
+        featureLayer.apply {
+            // add the definitions to the feature layer
+            labelDefinitions.addAll(listOf(republicanLabelDefinition, democratLabelDefinition))
+            // enable labels
+            isLabelsEnabled = true
+        }
     }
-  }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+    /**
+     * Creates a label definition for a given party and color to populate a text symbol.
+     *
+     * @param party name to be passed into the label definition's WHERE clause
+     * @param textColor to be passed into the text symbol
+     *
+     * @return label definition created from the given arcade expression
+     */
+    private fun makeLabelDefinition(party: String, textColor: Int): LabelDefinition {
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+        // create text symbol for styling the label
+        val textSymbol = TextSymbol().apply {
+            size = 12f
+            color = textColor
+            haloColor = Color.WHITE
+            haloWidth = 2f
+        }
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+        // create a label definition with an Arcade expression
+        val arcadeLabelExpression =
+            ArcadeLabelExpression("\$feature.NAME + \" (\" + left(\$feature.PARTY,1) + \")\\nDistrict \" + \$feature.CDFIPS")
+
+        return LabelDefinition(arcadeLabelExpression, textSymbol).apply {
+            placement = LabelingPlacement.POLYGON_ALWAYS_HORIZONTAL
+            whereClause = String.format("PARTY = '%s'", party)
+        }
+    }
+
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }
