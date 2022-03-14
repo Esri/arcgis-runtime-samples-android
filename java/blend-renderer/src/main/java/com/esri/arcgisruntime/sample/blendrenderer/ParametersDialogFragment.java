@@ -88,8 +88,8 @@ public class ParametersDialogFragment extends DialogFragment {
       }
     });
 
-    mCurrAltitudeTextView = (TextView) dialogView.findViewById(R.id.curr_altitude_text);
-    SeekBar altitudeSeekBar = (SeekBar) dialogView.findViewById(R.id.altitude_seek_bar);
+    mCurrAltitudeTextView = dialogView.findViewById(R.id.curr_altitude_text);
+    SeekBar altitudeSeekBar = dialogView.findViewById(R.id.altitude_seek_bar);
     altitudeSeekBar.setMax(90); //altitude is restricted to 0 - 90
     //set initial altitude value
     updateAltitudeSeekBar(altitudeSeekBar);
@@ -109,8 +109,8 @@ public class ParametersDialogFragment extends DialogFragment {
       }
     });
 
-    mCurrAzimuthTextView = (TextView) dialogView.findViewById(R.id.curr_azimuth_text);
-    SeekBar azimuthSeekBar = (SeekBar) dialogView.findViewById(R.id.azimuth_seek_bar);
+    mCurrAzimuthTextView = dialogView.findViewById(R.id.curr_azimuth_text);
+    SeekBar azimuthSeekBar = dialogView.findViewById(R.id.azimuth_seek_bar);
     azimuthSeekBar.setMax(360); //azimuth measured in degrees 0 - 360
     //set initial azimuth value
     updateAzimuthSeekBar(azimuthSeekBar);
@@ -141,7 +141,7 @@ public class ParametersDialogFragment extends DialogFragment {
         R.layout.spinner_text_view,
         slopeTypeArray);
 
-    Spinner slopeTypeSpinner = (Spinner) dialogView.findViewById(R.id.slope_type_spinner);
+    Spinner slopeTypeSpinner = dialogView.findViewById(R.id.slope_type_spinner);
     slopeTypeSpinner.setAdapter(slopeTypeSpinnerAdapter);
     slopeTypeSpinner.setSelection(mSlopeType.ordinal());
     slopeTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -179,7 +179,7 @@ public class ParametersDialogFragment extends DialogFragment {
         R.layout.spinner_text_view,
         colorRampTypeArray);
 
-    Spinner colorRampSpinner = (Spinner) dialogView.findViewById(R.id.color_ramp_spinner);
+    Spinner colorRampSpinner = dialogView.findViewById(R.id.color_ramp_spinner);
     colorRampSpinner.setAdapter(colorRampSpinnerAdapter);
     colorRampSpinner.setSelection(mColorRampType.ordinal());
     colorRampSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

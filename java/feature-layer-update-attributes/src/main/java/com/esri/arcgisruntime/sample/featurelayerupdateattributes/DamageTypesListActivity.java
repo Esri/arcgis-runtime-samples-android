@@ -35,7 +35,7 @@ public class DamageTypesListActivity extends AppCompatActivity {
     setContentView(R.layout.damage_types_listview);
     final String[] damageTypes = getResources().getStringArray(R.array.damage_types);
 
-    ListView listView = (ListView) findViewById(R.id.listview);
+    ListView listView = findViewById(R.id.listview);
 
     listView.setAdapter(new ArrayAdapter<>(this, R.layout.damage_types, damageTypes));
 

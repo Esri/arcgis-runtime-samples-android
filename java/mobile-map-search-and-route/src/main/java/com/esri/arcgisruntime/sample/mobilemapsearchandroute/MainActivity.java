@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
   private GraphicsOverlay mRouteGraphicsOverlay;
   private RouteTask mRouteTask;
   private RouteParameters mRouteParameters;
-  private ArrayList<MapPreview> mMapPreviews = new ArrayList<>();
+  private final ArrayList<MapPreview> mMapPreviews = new ArrayList<>();
   private MobileMapPackage mMobileMapPackage;
   private MapView mMapView;
   private String mMMPkTitle;
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     mReverseGeocodeParameters.setMaxResults(1);
     mReverseGeocodeParameters.getResultAttributeNames().add("*");
     // retrieve the MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     // add route and marker overlays to map view
     mMarkerGraphicsOverlay = new GraphicsOverlay();
     mRouteGraphicsOverlay = new GraphicsOverlay();

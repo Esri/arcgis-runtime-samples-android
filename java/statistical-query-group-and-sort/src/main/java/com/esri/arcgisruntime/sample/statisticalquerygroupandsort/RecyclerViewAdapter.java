@@ -37,7 +37,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   private final LayoutInflater mInflater;
   private final boolean mHasCheckbox;
   private final boolean[] mCheckedList;
-  private List<String> mFields;
+  private final List<String> mFields;
   private int mSelectedPosition = 0;
 
   public RecyclerViewAdapter(Context context, List<String> fields, boolean hasCheckbox) {

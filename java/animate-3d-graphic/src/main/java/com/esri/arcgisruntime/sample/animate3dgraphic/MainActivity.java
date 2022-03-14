@@ -391,9 +391,9 @@ public class MainActivity extends AppCompatActivity {
     // update the HUD
     runOnUiThread(() -> {
       mCurrAltitude.setText(String.format("%.2f", position.getZ()));
-      mCurrHeading.setText(String.format("%.2f", (float) datum.get("HEADING")));
-      mCurrPitch.setText(String.format("%.2f", (float) datum.get("PITCH")));
-      mCurrRoll.setText(String.format("%.2f", (float) datum.get("ROLL")));
+      mCurrHeading.setText(String.format("%.2f", datum.get("HEADING")));
+      mCurrPitch.setText(String.format("%.2f", datum.get("PITCH")));
+      mCurrRoll.setText(String.format("%.2f", datum.get("ROLL")));
     });
 
     // update mission progress seek bar

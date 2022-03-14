@@ -39,7 +39,7 @@ public class OperationalLayers extends AppCompatActivity {
 
     private ArrayList<String> mAddedLayerList, mRemovedLayerList;
     private LayerList mMapOperationalLayers;
-    private ArrayList<Layer> mRemovedLayers = new ArrayList<>();
+    private final ArrayList<Layer> mRemovedLayers = new ArrayList<>();
     private StableArrayAdapter mOperationalLayerAdapter;
     private ArrayAdapter<String> mRemovedLayerAdapter;
     private int mOperationalLayersListViewId;
@@ -52,7 +52,7 @@ public class OperationalLayers extends AppCompatActivity {
         setContentView(R.layout.activity_operational_layers);
 
         // inflate Button from the layout
-        Button doneButton = (Button) findViewById(R.id.donebutton);
+        Button doneButton = findViewById(R.id.donebutton);
 
         // listviewids to reuse one dialogbox between the two listview onItemClickListeners
         mOperationalLayersListViewId = getResources().getIdentifier("dynamiclistview", "id", this.getPackageName());
@@ -74,7 +74,7 @@ public class OperationalLayers extends AppCompatActivity {
         // initialize the adapter for the list of layer added to the Map
         mOperationalLayerAdapter = new StableArrayAdapter(this, R.layout.text_view, mAddedLayerList);
         // inflate the operationalLayers listview
-        DynamicListView operationalLayersListView = (DynamicListView) findViewById(R.id.dynamiclistview);
+        DynamicListView operationalLayersListView = findViewById(R.id.dynamiclistview);
 
         operationalLayersListView.setLayerList(mAddedLayerList);
         operationalLayersListView.setAdapter(mOperationalLayerAdapter);
@@ -84,7 +84,7 @@ public class OperationalLayers extends AppCompatActivity {
         mRemovedLayerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mRemovedLayerList);
 
         // inflate the removedlayers listview
-        ListView removedLayerListView = (ListView) findViewById(R.id.listView);
+        ListView removedLayerListView = findViewById(R.id.listView);
         removedLayerListView.setAdapter(mRemovedLayerAdapter);
 
         doneButton.setOnClickListener(new View.OnClickListener() {
