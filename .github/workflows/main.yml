@@ -1,0 +1,62 @@
+# The name of the job, which will be displayed for the status check in PR.
+name: README and metadata formatting
+
+# Controls when the action will run.
+# Below triggers the workflow on pull requests to the specified branches.
+on:
+  pull_request:
+    branches:
+      - main
+      - v.next
+
+# A workflow run is made up of one or more jobs that can run sequentially or
+# in parallel.
+jobs:
+  # This workflow contains a single job called "readme-metadata-stylecheck"
+  readme-metadata-stylecheck:
+    name: Check README and metadata format for changed files
+
+    # Comment out the line below if the job is only running for certain labels.
+    # i.e. only run the job on PRs with label "new-sample"
+
+    # if: contains(github.event.pull_request.labels.*.name, 'new-sample')
+
+    # The type of runner that the job will run on
+    # supported VMs are here: https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners#supported-runners-and-hardware-resources
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that got executed as part of the job.
+    steps:
+
+      # This step gets the paths to all changed files and returns an array
+      # such as ['xxx/README.md', 'xxx/README.metadata.json', 'xxx/1.png']
+      # https://github.com/trilom/file-changes-action
+      - id: file_changes
+        name: Detect changed file paths
+        uses: trilom/file-changes-action@master
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so the workflow can
+      # access the files.
+      # https://github.com/actions/checkout
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      # Print out changed file paths for debugging purposes. 'files' outputs all modified/added/removed files.
+      - name: Print changed file paths
+        run: |
+          echo 'Below shows a list of changed file paths'
+          echo '${{ steps.file_changes.outputs.files }}'
+      #    echo '${{ steps.file_changes.outputs.files_modified }}'
+      #    echo '${{ steps.file_changes.outputs.files_added }}'
+      #    echo '${{ steps.file_changes.outputs.files_removed }}'
+
+      # Run the style checks using the scripts in the './.github/scripts/ci/readme_metadata_style_check' directory
+      # The scripts will run on any detected changed files from the 'file_changes' step
+      - name: Run style checks
+        uses: ./.github/scripts/ci/readme_metadata_style_check
+        with:
+          FILE_PATHS: ${{ steps.file_changes.outputs.files }}
+
+      # Runs a single command using the runners shell
+      # - name: Run a script with Python
+      #   run: python ./.github/scripts/README-formatter.py
