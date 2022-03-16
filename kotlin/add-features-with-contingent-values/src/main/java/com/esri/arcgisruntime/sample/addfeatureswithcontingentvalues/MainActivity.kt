@@ -19,24 +19,30 @@ package com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
+import android.view.MotionEvent
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.*
 import com.esri.arcgisruntime.geometry.GeometryEngine
+import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues.databinding.AddFeatureLayoutBinding
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
-import java.lang.Exception
+import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 class MainActivity : AppCompatActivity() {
@@ -69,6 +75,21 @@ class MainActivity : AppCompatActivity() {
             ArcGISVectorTiledLayer(getExternalFilesDir(null)?.path + getString(R.string.topographic_map))
         mapView.map = ArcGISMap(Basemap(fillmoreVectorTiledLayer))
         mapView.graphicsOverlays.add(graphicsOverlay)
+
+        // add a listener to the MapView to detect when a user has performed a single tap to add a new feature
+        mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
+            override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {
+                motionEvent?.let { event ->
+                    // create a point from where the user clicked
+                    android.graphics.Point(event.x.toInt(), event.y.toInt()).let { point ->
+                        // create a map point and add a new feature to the service feature table
+                        openBottomSheetView(mapView.screenToLocation(point))
+                    }
+                }
+                mapView.performClick()
+                return super.onSingleTapConfirmed(motionEvent)
+            }
+        }
 
         val geoDatabase =
             Geodatabase(getExternalFilesDir(null)?.path + getString(R.string.bird_nests))
@@ -109,15 +130,14 @@ class MainActivity : AppCompatActivity() {
         val queryFeaturesFuture = featureTable.queryFeaturesAsync(queryParameters)
         queryFeaturesFuture.addDoneListener {
             try {
+                // clear the existing graphics
+                graphicsOverlay.graphics.clear()
                 // call get on the future to get the result
                 val result = queryFeaturesFuture.get()
-                val featureResults = mutableListOf<Feature>()
-                // check there are some results
                 val resultIterator = result.iterator()
                 if (resultIterator.hasNext()) {
-                    resultIterator.next().run {
-                        graphics.add(createGraphic(this))
-                    }
+                    while (resultIterator.hasNext())
+                        graphics.add(createGraphic(resultIterator.next()))
                 } else {
                     "No features found with BufferSize > 0".also {
                         Toast.makeText(this, it, Toast.LENGTH_LONG).show()
@@ -125,21 +145,23 @@ class MainActivity : AppCompatActivity() {
                         return@addDoneListener
                     }
                 }
+                // Add the graphics to the graphics overlay
+                graphicsOverlay.graphics.addAll(graphics)
             } catch (e: Exception) {
+                e.printStackTrace()
                 val message = "Error querying features: " + e.message
                 Log.e(TAG, message)
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 
     // Create a graphic for the given feature
     private fun createGraphic(feature: Feature): Graphic {
         // Get the feature's buffer size
-        val bufferSize = feature.attributes["BufferSize"] as Double
+        val bufferSize = feature.attributes["BufferSize"] as Int
         // Get a polygon using the feature's buffer size and geometry
-        val polygon = GeometryEngine.buffer(feature.geometry, bufferSize)
+        val polygon = GeometryEngine.buffer(feature.geometry, bufferSize.toDouble())
         // Create the outline for the buffers
         val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 2F)
         // Create the buffer symbol
@@ -147,6 +169,48 @@ class MainActivity : AppCompatActivity() {
             SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL, Color.RED, lineSymbol)
         // Create an a graphic and add it to the array.
         return Graphic(polygon, bufferSymbol)
+    }
+
+    // Add a single feature to the map
+    private fun openBottomSheetView(mapPoint: Point) {
+        // Create a symbol to represent a bird's nest
+        val symbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLACK, 11F)
+        // Add the graphic to the graphics overlay
+        graphicsOverlay.graphics.add(Graphic(mapPoint, symbol))
+        // Creates a new BottomSheetDialog
+        val dialog = BottomSheetDialog(this)
+
+        // Inflates layout file
+        val bottomSheetBinding = AddFeatureLayoutBinding.inflate(layoutInflater)
+
+        bottomSheetBinding.apply {
+            
+            protectionView.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            bufferSizeView.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            applyTv.setOnClickListener { dialog.dismiss() }
+            cancelTv.setOnClickListener { dialog.dismiss() }
+        }
+
+        dialog.setCancelable(false)
+        // Sets bottom sheet content view to layout
+        dialog.setContentView(bottomSheetBinding.root)
+        // Displays bottom sheet view
+        dialog.show()
+    }
+
+    fun Spinner.selected(action: (position:Int) -> Unit) {
+        this.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                action(position)
+            }
+        }
     }
 
     override fun onPause() {
