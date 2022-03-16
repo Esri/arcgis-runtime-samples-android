@@ -16,25 +16,27 @@
 
 package com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
-import com.esri.arcgisruntime.data.FeatureTable
-import com.esri.arcgisruntime.data.Geodatabase
-import com.esri.arcgisruntime.data.QueryParameters
-import com.esri.arcgisruntime.data.TileCache
+import com.esri.arcgisruntime.data.*
+import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
-import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.symbology.SimpleFillSymbol
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol
+import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity() {
@@ -52,6 +54,8 @@ class MainActivity : AppCompatActivity() {
 
     private val graphicsOverlay = GraphicsOverlay()
 
+    private lateinit var featureTable: FeatureTable
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
@@ -61,16 +65,18 @@ class MainActivity : AppCompatActivity() {
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         // Use the vector tiled layer as a basemap
-        val fillmoreVectorTiledLayer = ArcGISVectorTiledLayer(getExternalFilesDir(null)?.path + getString(R.string.topographic_map))
+        val fillmoreVectorTiledLayer =
+            ArcGISVectorTiledLayer(getExternalFilesDir(null)?.path + getString(R.string.topographic_map))
         mapView.map = ArcGISMap(Basemap(fillmoreVectorTiledLayer))
         mapView.graphicsOverlays.add(graphicsOverlay)
 
-        val geoDatabase = Geodatabase(getExternalFilesDir(null)?.path + getString(R.string.bird_nests))
+        val geoDatabase =
+            Geodatabase(getExternalFilesDir(null)?.path + getString(R.string.bird_nests))
         geoDatabase.loadAsync()
         geoDatabase.addDoneLoadingListener {
-            if(geoDatabase.loadStatus == LoadStatus.LOADED){
+            if (geoDatabase.loadStatus == LoadStatus.LOADED) {
                 // Get and load the first feature table in the geodatabase
-                val featureTable = geoDatabase.geodatabaseFeatureTables[0] as FeatureTable
+                featureTable = geoDatabase.geodatabaseFeatureTables[0] as FeatureTable
                 featureTable.loadAsync()
                 featureTable.addDoneLoadingListener {
                     // Create and load the feature layer from the feature table
@@ -84,10 +90,10 @@ class MainActivity : AppCompatActivity() {
                     queryFeatures()
                 }
 
-            }else{
+            } else {
                 val error = "Error loading GeoDatabase: " + geoDatabase.loadError.message
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
-                Log.e(TAG,error)
+                Log.e(TAG, error)
             }
         }
     }
@@ -99,7 +105,48 @@ class MainActivity : AppCompatActivity() {
         // Set the where clause to filter for buffer sizes greater than 0
         queryParameters.whereClause = "BufferSize > 0"
         // Create an array of graphics to add to the graphics overlay
+        val graphics = mutableListOf<Graphic>()
+        val queryFeaturesFuture = featureTable.queryFeaturesAsync(queryParameters)
+        queryFeaturesFuture.addDoneListener {
+            try {
+                // call get on the future to get the result
+                val result = queryFeaturesFuture.get()
+                val featureResults = mutableListOf<Feature>()
+                // check there are some results
+                val resultIterator = result.iterator()
+                if (resultIterator.hasNext()) {
+                    resultIterator.next().run {
+                        graphics.add(createGraphic(this))
+                    }
+                } else {
+                    "No features found with BufferSize > 0".also {
+                        Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                        Log.d(TAG, it)
+                        return@addDoneListener
+                    }
+                }
+            } catch (e: Exception) {
+                val message = "Error querying features: " + e.message
+                Log.e(TAG, message)
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            }
+        }
 
+    }
+
+    // Create a graphic for the given feature
+    private fun createGraphic(feature: Feature): Graphic {
+        // Get the feature's buffer size
+        val bufferSize = feature.attributes["BufferSize"] as Double
+        // Get a polygon using the feature's buffer size and geometry
+        val polygon = GeometryEngine.buffer(feature.geometry, bufferSize)
+        // Create the outline for the buffers
+        val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 2F)
+        // Create the buffer symbol
+        val bufferSymbol =
+            SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL, Color.RED, lineSymbol)
+        // Create an a graphic and add it to the array.
+        return Graphic(polygon, bufferSymbol)
     }
 
     override fun onPause() {
