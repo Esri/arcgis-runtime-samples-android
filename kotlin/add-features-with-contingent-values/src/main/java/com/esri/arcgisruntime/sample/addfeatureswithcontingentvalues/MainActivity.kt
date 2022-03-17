@@ -16,12 +16,14 @@
 
 package com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.*
@@ -47,7 +49,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class MainActivity : AppCompatActivity() {
 
-
     private val TAG: String = MainActivity::class.java.simpleName
 
     private val activityMainBinding by lazy {
@@ -60,7 +61,14 @@ class MainActivity : AppCompatActivity() {
 
     private val graphicsOverlay = GraphicsOverlay()
 
-    private lateinit var featureTable: FeatureTable
+    private var statusCodedValues: MutableList<CodedValue>? = null
+    private var protectionGroupContingentValues: ContingentValue? = null
+
+    private var selectedStatusPosition: Int = 0
+    private var selectedProtectionPosition: Int = 0
+
+    private lateinit var feature: ArcGISFeature
+    private lateinit var featureTable: ArcGISFeatureTable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,7 +105,7 @@ class MainActivity : AppCompatActivity() {
         geoDatabase.addDoneLoadingListener {
             if (geoDatabase.loadStatus == LoadStatus.LOADED) {
                 // Get and load the first feature table in the geodatabase
-                featureTable = geoDatabase.geodatabaseFeatureTables[0] as FeatureTable
+                featureTable = geoDatabase.geodatabaseFeatureTables[0] as ArcGISFeatureTable
                 featureTable.loadAsync()
                 featureTable.addDoneLoadingListener {
                     // Create and load the feature layer from the feature table
@@ -184,9 +192,30 @@ class MainActivity : AppCompatActivity() {
         val bottomSheetBinding = AddFeatureLayoutBinding.inflate(layoutInflater)
 
         bottomSheetBinding.apply {
-            
-            protectionView.setOnClickListener {
-                dialog.dismiss()
+            statusLayout.setOnClickListener {
+                val items = getStatusOptions()
+                AlertDialog.Builder(root.context).apply {
+                    setTitle("Set the attributes")
+                    setSingleChoiceItems(items, selectedStatusPosition) { dialog, i ->
+                        selectedStatusPosition = i
+                        selectedStatus.text = items[i]
+                        createFeature(statusCodedValues?.get(selectedStatusPosition)!!)
+                        dialog.dismiss()
+                    }
+                }.show()
+            }
+
+
+            protectionLayout.setOnClickListener {
+                val items = getProtectionOptions()
+                AlertDialog.Builder(root.context).apply {
+                    setTitle("Set the attributes")
+                    setSingleChoiceItems(items, selectedStatusPosition) { dialog, i ->
+                        selectedProtectionPosition = i
+                        selectedStatus.text = items[i]
+                        dialog.dismiss()
+                    }
+                }.show()
             }
 
             bufferSizeView.setOnClickListener {
@@ -204,13 +233,41 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    fun Spinner.selected(action: (position:Int) -> Unit) {
-        this.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                action(position)
-            }
+    private fun createFeature(codedValue: CodedValue) {
+        // Get the contingent values definition from the feature table
+        val contingentValueDefinition = featureTable.contingentValuesDefinition
+        // Load the contingent values definition
+        contingentValueDefinition.loadAsync()
+        contingentValueDefinition.addDoneLoadingListener {
+            feature = featureTable.createFeature() as ArcGISFeature
+            feature.attributes["Status"] = codedValue.code
         }
+    }
+
+    // Use the contingent values definition to generate the possible values for the protection field
+    private fun getProtectionOptions(): Array<String> {
+        // Get the contingent value results with the feature for the protection field
+        val contingentValuesResult = featureTable.getContingentValues(feature, "Protection")
+        // Get contingent coded values by field group
+        val protectionGroupContingentValues = contingentValuesResult.contingentValuesByFieldGroup["ProtectionFieldGroup"]
+        val protectionNames = mutableListOf<String>()
+
+        return protectionNames.toTypedArray()
+    }
+
+    private fun getStatusOptions(): Array<String> {
+        // Get the first field by name
+        val statusField = featureTable.fields.find { field -> field.name.equals("Status") }
+        // Get the field's domains as coded value domain
+        val codedValueDomain = statusField?.domain as CodedValueDomain
+        // Get the coded value domain's coded values
+        statusCodedValues = codedValueDomain.codedValues
+        // Get the selected index if applicable
+        val statusNames = mutableListOf<String>()
+        for (statusCodedValue in statusCodedValues!!) {
+            statusNames.add(statusCodedValue.name)
+        }
+        return statusNames.toTypedArray()
     }
 
     override fun onPause() {
