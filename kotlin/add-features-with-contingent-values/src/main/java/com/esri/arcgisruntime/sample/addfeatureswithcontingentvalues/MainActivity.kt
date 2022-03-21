@@ -212,14 +212,24 @@ class MainActivity : AppCompatActivity() {
                     setTitle("Set the attributes")
                     setSingleChoiceItems(items, selectedStatusPosition) { dialog, i ->
                         selectedProtectionPosition = i
-                        selectedStatus.text = items[i]
+                        selectedProtection.text = items[i]
                         dialog.dismiss()
                     }
                 }.show()
             }
 
-            bufferSizeView.setOnClickListener {
-                dialog.dismiss()
+
+
+            bufferLayout.setOnClickListener {
+                val items = getBufferOptions()
+                AlertDialog.Builder(root.context).apply {
+                    setTitle("Set the attributes")
+                    setSingleChoiceItems(items, selectedStatusPosition) { dialog, i ->
+                        selectedProtectionPosition = i
+                        selectedProtection.text = items[i]
+                        dialog.dismiss()
+                    }
+                }.show()
             }
 
             applyTv.setOnClickListener { dialog.dismiss() }
@@ -244,6 +254,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Get the minimum and maximum values of the possible buffer sizes.
+    private fun getBufferOptions(): Array<String> {
+        // Get the contingent value results using the feature and field
+        val contingentValueResult = featureTable.getContingentValues(feature,"BufferSize")
+        val bufferSizeGroupContingentValues = contingentValueResult.contingentValuesByFieldGroup["BufferSizeFieldGroup"] as ContingentRangeValue
+        // Set the minimum and maximum possible buffer sizes
+        val minValue = bufferSizeGroupContingentValues.minValue as Int
+        val maxValue = bufferSizeGroupContingentValues.maxValue as Int
+        return arrayOf("1")
+    }
+
     // Use the contingent values definition to generate the possible values for the protection field
     private fun getProtectionOptions(): Array<String> {
         // Get the contingent value results with the feature for the protection field
@@ -251,7 +272,11 @@ class MainActivity : AppCompatActivity() {
         // Get contingent coded values by field group
         val protectionGroupContingentValues = contingentValuesResult.contingentValuesByFieldGroup["ProtectionFieldGroup"]
         val protectionNames = mutableListOf<String>()
-
+        var i = 0
+        while(i < protectionGroupContingentValues?.size!!){
+            protectionNames.add((protectionGroupContingentValues[i] as ContingentCodedValue).codedValue.name)
+            i++
+        }
         return protectionNames.toTypedArray()
     }
 
