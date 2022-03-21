@@ -28,6 +28,7 @@ import com.esri.arcgisruntime.ArcGISRuntimeException
 import com.esri.arcgisruntime.data.Feature
 import com.esri.arcgisruntime.data.QueryParameters
 import com.esri.arcgisruntime.data.ServiceFeatureTable
+import com.esri.arcgisruntime.data.ServiceGeodatabase
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -63,23 +64,26 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
     // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-
-    // create service feature table from URL
-    featureTable = ServiceFeatureTable(getString(R.string.feature_layer_url))
-
-    // create a feature layer from table
-    featureLayer = FeatureLayer(featureTable)
-
     // create a map with streets basemap
     with(ArcGISMap(BasemapStyle.ARCGIS_STREETS)) {
-      // add the layer to the map
-      operationalLayers.add(featureLayer)
       // set map to be displayed in map view
       mapView.map = this
     }
 
     // set the map view's view point
     mapView.setViewpoint(Viewpoint(40.0, -95.0, 10000000.0))
+
+    // create and load the service geodatabase
+    val serviceGeodatabase = ServiceGeodatabase(getString(R.string.feature_layer_url))
+    serviceGeodatabase.loadAsync()
+    serviceGeodatabase.addDoneLoadingListener {
+      // create a feature layer using the first layer in the ServiceFeatureTable
+      featureTable = serviceGeodatabase.getTable(0)
+      // create a feature layer from table
+      featureLayer = FeatureLayer(featureTable)
+      // add the layer to the map
+      mapView.map.operationalLayers.add(featureLayer)
+    }
 
     mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
       override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {
@@ -206,17 +210,12 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
    */
   private fun applyEdits(featureTable: ServiceFeatureTable) {
     // apply the changes to the server
-    with(featureTable.applyEditsAsync()) {
+    with(featureTable.serviceGeodatabase.applyEditsAsync()) {
       this.addDoneListener {
         try {
           // check result has an edit
           this.get().iterator().next()?.let {
-            // check if the server edit was successful
-            if (!it.hasCompletedWithErrors()) {
-              logToUser(false, getString(R.string.success_feature_deleted))
-            } else {
-              throw it.error
-            }
+            logToUser(false, getString(R.string.success_feature_deleted))
           }
         } catch (e: ArcGISRuntimeException) {
           logToUser(true, getString(R.string.error_applying_edits, e.cause?.message))
