@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     ServiceGeodatabase preservesServiceGeodatabase =  new ServiceGeodatabase(getString(R.string.feature_table));
     preservesServiceGeodatabase.loadAsync();
     preservesServiceGeodatabase.addDoneLoadingListener(() -> {
-      // create a feature layer using the first layer in the ServiceFeatureTable
+      // create a feature layer using the first two layers in the ServiceFeatureTable
       mPreservesFeatureTable = preservesServiceGeodatabase.getTable(0);
       mParksFeatureTable = preservesServiceGeodatabase.getTable(1);
       // create a feature layer from table
