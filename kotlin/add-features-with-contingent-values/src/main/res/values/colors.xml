@@ -5,4 +5,5 @@
     <color name="colorAccent">#4CAF50</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

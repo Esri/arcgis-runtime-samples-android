@@ -16,7 +16,6 @@
 
 package com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues
 
-import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -61,11 +60,8 @@ class MainActivity : AppCompatActivity() {
 
     private val graphicsOverlay = GraphicsOverlay()
 
-    private var statusCodedValues: MutableList<CodedValue>? = null
-    private var protectionGroupContingentValues: ContingentValue? = null
-
-    private var selectedStatusPosition: Int = 0
-    private var selectedProtectionPosition: Int = 0
+    private var selectedStatusPosition: Int = -1
+    private var selectedProtectionPosition: Int = -1
 
     private lateinit var feature: ArcGISFeature
     private lateinit var featureTable: ArcGISFeatureTable
@@ -118,7 +114,6 @@ class MainActivity : AppCompatActivity() {
                     // Add buffer graphics for the feature layer
                     queryFeatures()
                 }
-
             } else {
                 val error = "Error loading GeoDatabase: " + geoDatabase.loadError.message
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
@@ -133,19 +128,21 @@ class MainActivity : AppCompatActivity() {
         val queryParameters = QueryParameters()
         // Set the where clause to filter for buffer sizes greater than 0
         queryParameters.whereClause = "BufferSize > 0"
-        // Create an array of graphics to add to the graphics overlay
-        val graphics = mutableListOf<Graphic>()
         val queryFeaturesFuture = featureTable.queryFeaturesAsync(queryParameters)
         queryFeaturesFuture.addDoneListener {
             try {
                 // clear the existing graphics
                 graphicsOverlay.graphics.clear()
                 // call get on the future to get the result
-                val result = queryFeaturesFuture.get()
-                val resultIterator = result.iterator()
+                val resultIterator = queryFeaturesFuture.get().iterator()
                 if (resultIterator.hasNext()) {
+                    // Create an array of graphics to add to the graphics overlay
+                    val graphics = mutableListOf<Graphic>()
+                    // Create graphic for each query result
                     while (resultIterator.hasNext())
                         graphics.add(createGraphic(resultIterator.next()))
+                    // Add the graphics to the graphics overlay
+                    graphicsOverlay.graphics.addAll(graphics)
                 } else {
                     "No features found with BufferSize > 0".also {
                         Toast.makeText(this, it, Toast.LENGTH_LONG).show()
@@ -153,8 +150,6 @@ class MainActivity : AppCompatActivity() {
                         return@addDoneListener
                     }
                 }
-                // Add the graphics to the graphics overlay
-                graphicsOverlay.graphics.addAll(graphics)
             } catch (e: Exception) {
                 e.printStackTrace()
                 val message = "Error querying features: " + e.message
@@ -173,66 +168,33 @@ class MainActivity : AppCompatActivity() {
         // Create the outline for the buffers
         val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 2F)
         // Create the buffer symbol
-        val bufferSymbol =
-            SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL, Color.RED, lineSymbol)
+        val bufferSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL, Color.RED, lineSymbol)
         // Create an a graphic and add it to the array.
         return Graphic(polygon, bufferSymbol)
     }
 
     // Add a single feature to the map
     private fun openBottomSheetView(mapPoint: Point) {
-        // Create a symbol to represent a bird's nest
-        val symbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLACK, 11F)
-        // Add the graphic to the graphics overlay
-        graphicsOverlay.graphics.add(Graphic(mapPoint, symbol))
         // Creates a new BottomSheetDialog
         val dialog = BottomSheetDialog(this)
-
         // Inflates layout file
         val bottomSheetBinding = AddFeatureLayoutBinding.inflate(layoutInflater)
 
         bottomSheetBinding.apply {
-            statusLayout.setOnClickListener {
-                val items = getStatusOptions()
-                AlertDialog.Builder(root.context).apply {
-                    setTitle("Set the attributes")
-                    setSingleChoiceItems(items, selectedStatusPosition) { dialog, i ->
-                        selectedStatusPosition = i
-                        selectedStatus.text = items[i]
-                        createFeature(statusCodedValues?.get(selectedStatusPosition)!!)
-                        dialog.dismiss()
-                    }
-                }.show()
+
+            protectionLayout.disable(selectedProtection)
+            bufferLayout.disable(selectedBuffer)
+
+            statusLayout.setOnClickListener(setStatusListener(this))
+            protectionLayout.setOnClickListener(setProtectionListener(this))
+
+            applyTv.setOnClickListener {
+                // Create a symbol to represent a bird's nest
+                val symbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLACK, 11F)
+                // Add the graphic to the graphics overlay
+                graphicsOverlay.graphics.add(Graphic(mapPoint, symbol))
+                dialog.dismiss()
             }
-
-
-            protectionLayout.setOnClickListener {
-                val items = getProtectionOptions()
-                AlertDialog.Builder(root.context).apply {
-                    setTitle("Set the attributes")
-                    setSingleChoiceItems(items, selectedStatusPosition) { dialog, i ->
-                        selectedProtectionPosition = i
-                        selectedProtection.text = items[i]
-                        dialog.dismiss()
-                    }
-                }.show()
-            }
-
-
-
-            bufferLayout.setOnClickListener {
-                val items = getBufferOptions()
-                AlertDialog.Builder(root.context).apply {
-                    setTitle("Set the attributes")
-                    setSingleChoiceItems(items, selectedStatusPosition) { dialog, i ->
-                        selectedProtectionPosition = i
-                        selectedProtection.text = items[i]
-                        dialog.dismiss()
-                    }
-                }.show()
-            }
-
-            applyTv.setOnClickListener { dialog.dismiss() }
             cancelTv.setOnClickListener { dialog.dismiss() }
         }
 
@@ -243,56 +205,112 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    private fun setProtectionListener(binding: AddFeatureLayoutBinding): View.OnClickListener {
+        binding.apply {
+            return View.OnClickListener {
+                // Get the contingent value results with the feature for the protection field
+                val contingentValuesResult = featureTable.getContingentValues(feature, "Protection")
+                // Get contingent coded values by field group
+                val protectionGroupContingentValues =
+                    contingentValuesResult.contingentValuesByFieldGroup["ProtectionFieldGroup"]
+                val protectionCodedValues = mutableListOf<CodedValue>()
+                protectionGroupContingentValues?.forEach { contingentValue ->
+                    val codedValue = (contingentValue as ContingentCodedValue).codedValue
+                    protectionCodedValues.add(codedValue)
+                }
+                val items = mutableListOf<String>()
+                protectionCodedValues.forEach {
+                    items.add(it.name)
+                }
+                AlertDialog.Builder(root.context).apply {
+                    setTitle("Set the protection attribute")
+                    setSingleChoiceItems(
+                        items.toTypedArray(),
+                        selectedStatusPosition
+                    ) { dialog, i ->
+                        selectedProtectionPosition = i
+                        selectedProtection.text = items[i]
+                        feature.attributes["Protection"] = protectionCodedValues[selectedProtectionPosition].code
+                        bufferLayout.enable(selectedBuffer)
+                        showBufferSeekbar(binding)
+                        dialog.dismiss()
+                    }
+                }.show()
+            }
+        }
+    }
+
+    private fun showBufferSeekbar(binding: AddFeatureLayoutBinding) {
+        // Get the contingent value results using the feature and field
+        val contingentValueResult = featureTable.getContingentValues(feature, "BufferSize")
+        val bufferSizeGroupContingentValues =
+            (contingentValueResult.contingentValuesByFieldGroup["BufferSizeFieldGroup"]?.get(0) as ContingentRangeValue)
+        // Set the minimum and maximum possible buffer sizes
+        val minValue = bufferSizeGroupContingentValues.minValue as Int
+        val maxValue = bufferSizeGroupContingentValues.maxValue as Int
+        if(maxValue > 0){
+            val bufferSeekBar = binding.bufferSeekBar
+            bufferSeekBar.valueFrom = minValue.toFloat()
+            bufferSeekBar.valueTo = maxValue.toFloat()
+            bufferSeekBar.value = bufferSeekBar.valueFrom
+            bufferSeekBar.addOnChangeListener { slider, value, fromUser ->
+                binding.selectedBuffer.text = value.toString()
+            }
+        }
+    }
+
+    private fun setStatusListener(binding: AddFeatureLayoutBinding): View.OnClickListener {
+        binding.apply {
+            return View.OnClickListener {
+                // Get the first field by name
+                val statusField = featureTable.fields.find { field -> field.name.equals("Status") }
+                // Get the field's domains as coded value domain
+                val codedValueDomain = statusField?.domain as CodedValueDomain
+                // Get the coded value domain's coded values
+                val statusCodedValues = codedValueDomain.codedValues
+                // Get the selected index if applicable
+                val statusNames = mutableListOf<String>()
+                for (statusCodedValue in statusCodedValues!!) {
+                    statusNames.add(statusCodedValue.name)
+                }
+                val items = statusNames.toTypedArray()
+                AlertDialog.Builder(binding.root.context).apply {
+                    setTitle("Set the status attribute")
+                    setSingleChoiceItems(items, selectedStatusPosition) { dialog, position ->
+                        selectedStatusPosition = position
+                        selectedStatus.text = items[position]
+                        createFeature(statusCodedValues[selectedStatusPosition]!!)
+                        protectionLayout.enable(selectedProtection)
+                        bufferLayout.disable(selectedBuffer)
+                        dialog.dismiss()
+                    }
+                }.show()
+            }
+        }
+    }
+
     private fun createFeature(codedValue: CodedValue) {
         // Get the contingent values definition from the feature table
         val contingentValueDefinition = featureTable.contingentValuesDefinition
         // Load the contingent values definition
         contingentValueDefinition.loadAsync()
         contingentValueDefinition.addDoneLoadingListener {
+            // Create a feature from the feature table and set the initial attribute
             feature = featureTable.createFeature() as ArcGISFeature
             feature.attributes["Status"] = codedValue.code
         }
     }
 
-    // Get the minimum and maximum values of the possible buffer sizes.
-    private fun getBufferOptions(): Array<String> {
-        // Get the contingent value results using the feature and field
-        val contingentValueResult = featureTable.getContingentValues(feature,"BufferSize")
-        val bufferSizeGroupContingentValues = contingentValueResult.contingentValuesByFieldGroup["BufferSizeFieldGroup"] as ContingentRangeValue
-        // Set the minimum and maximum possible buffer sizes
-        val minValue = bufferSizeGroupContingentValues.minValue as Int
-        val maxValue = bufferSizeGroupContingentValues.maxValue as Int
-        return arrayOf("1")
+    private fun View.disable(textView: TextView) {
+        //background.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(Color.GRAY, BlendModeCompat.SRC_ATOP)
+        isClickable = false
+        textView.text = ""
     }
 
-    // Use the contingent values definition to generate the possible values for the protection field
-    private fun getProtectionOptions(): Array<String> {
-        // Get the contingent value results with the feature for the protection field
-        val contingentValuesResult = featureTable.getContingentValues(feature, "Protection")
-        // Get contingent coded values by field group
-        val protectionGroupContingentValues = contingentValuesResult.contingentValuesByFieldGroup["ProtectionFieldGroup"]
-        val protectionNames = mutableListOf<String>()
-        var i = 0
-        while(i < protectionGroupContingentValues?.size!!){
-            protectionNames.add((protectionGroupContingentValues[i] as ContingentCodedValue).codedValue.name)
-            i++
-        }
-        return protectionNames.toTypedArray()
-    }
-
-    private fun getStatusOptions(): Array<String> {
-        // Get the first field by name
-        val statusField = featureTable.fields.find { field -> field.name.equals("Status") }
-        // Get the field's domains as coded value domain
-        val codedValueDomain = statusField?.domain as CodedValueDomain
-        // Get the coded value domain's coded values
-        statusCodedValues = codedValueDomain.codedValues
-        // Get the selected index if applicable
-        val statusNames = mutableListOf<String>()
-        for (statusCodedValue in statusCodedValues!!) {
-            statusNames.add(statusCodedValue.name)
-        }
-        return statusNames.toTypedArray()
+    private fun View.enable(textView: TextView) {
+        //background.clearColorFilter()
+        isClickable = true
+        textView.text = ""
     }
 
     override fun onPause() {
