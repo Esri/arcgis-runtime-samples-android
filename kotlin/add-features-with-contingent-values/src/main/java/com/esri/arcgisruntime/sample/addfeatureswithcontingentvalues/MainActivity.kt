@@ -21,9 +21,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.*
 import com.esri.arcgisruntime.geometry.GeometryEngine
@@ -40,6 +42,7 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues.databinding.AddFeatureLayoutBinding
+import com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues.databinding.ListItemBinding
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
@@ -54,15 +57,15 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
+    private val bottomSheetBinding by lazy {
+        AddFeatureLayoutBinding.inflate(layoutInflater)
+    }
+
     private val mapView: MapView by lazy {
         activityMainBinding.mapView
     }
 
     private val graphicsOverlay = GraphicsOverlay()
-
-    private var selectedStatusPosition: Int = -1
-    private var selectedProtectionPosition: Int = -1
-
     private lateinit var feature: ArcGISFeature
     private lateinit var featureTable: ArcGISFeatureTable
 
@@ -177,16 +180,17 @@ class MainActivity : AppCompatActivity() {
     private fun openBottomSheetView(mapPoint: Point) {
         // Creates a new BottomSheetDialog
         val dialog = BottomSheetDialog(this)
-        // Inflates layout file
-        val bottomSheetBinding = AddFeatureLayoutBinding.inflate(layoutInflater)
+
+        setUpStatusAttributes()
 
         bottomSheetBinding.apply {
 
-            protectionLayout.disable(selectedProtection)
-            bufferLayout.disable(selectedBuffer)
-
-            statusLayout.setOnClickListener(setStatusListener(this))
-            protectionLayout.setOnClickListener(setProtectionListener(this))
+            // Reset bottom sheet values
+            statusInputLayout.editText?.setText("")
+            protectionInputLayout.editText?.setText("")
+            selectedBuffer.text = ""
+            protectionInputLayout.isEnabled = false
+            bufferSeekBar.isEnabled = false
 
             applyTv.setOnClickListener {
                 // Create a symbol to represent a bird's nest
@@ -195,52 +199,78 @@ class MainActivity : AppCompatActivity() {
                 graphicsOverlay.graphics.add(Graphic(mapPoint, symbol))
                 dialog.dismiss()
             }
+
             cancelTv.setOnClickListener { dialog.dismiss() }
         }
-
         dialog.setCancelable(false)
-        // Sets bottom sheet content view to layout
+        // Clear and set bottom sheet content view to layout
+        if(bottomSheetBinding.root.parent != null){
+            (bottomSheetBinding.root.parent as ViewGroup).removeAllViews()
+        }
         dialog.setContentView(bottomSheetBinding.root)
         // Displays bottom sheet view
         dialog.show()
     }
 
-    private fun setProtectionListener(binding: AddFeatureLayoutBinding): View.OnClickListener {
-        binding.apply {
-            return View.OnClickListener {
-                // Get the contingent value results with the feature for the protection field
-                val contingentValuesResult = featureTable.getContingentValues(feature, "Protection")
-                // Get contingent coded values by field group
-                val protectionGroupContingentValues =
-                    contingentValuesResult.contingentValuesByFieldGroup["ProtectionFieldGroup"]
-                val protectionCodedValues = mutableListOf<CodedValue>()
-                protectionGroupContingentValues?.forEach { contingentValue ->
-                    val codedValue = (contingentValue as ContingentCodedValue).codedValue
-                    protectionCodedValues.add(codedValue)
-                }
-                val items = mutableListOf<String>()
-                protectionCodedValues.forEach {
-                    items.add(it.name)
-                }
-                AlertDialog.Builder(root.context).apply {
-                    setTitle("Set the protection attribute")
-                    setSingleChoiceItems(
-                        items.toTypedArray(),
-                        selectedStatusPosition
-                    ) { dialog, i ->
-                        selectedProtectionPosition = i
-                        selectedProtection.text = items[i]
-                        feature.attributes["Protection"] = protectionCodedValues[selectedProtectionPosition].code
-                        bufferLayout.enable(selectedBuffer)
-                        showBufferSeekbar(binding)
-                        dialog.dismiss()
-                    }
-                }.show()
-            }
+    private fun setUpStatusAttributes() {
+        // Get the first field by name
+        val statusField = featureTable.fields.find { field -> field.name.equals("Status") }
+        // Get the field's domains as coded value domain
+        val codedValueDomain = statusField?.domain as CodedValueDomain
+        // Get the coded value domain's coded values
+        val statusCodedValues = codedValueDomain.codedValues
+        // Get the selected index if applicable
+        val statusNames = mutableListOf<String>()
+        for (statusCodedValue in statusCodedValues!!) {
+            statusNames.add(statusCodedValue.name)
+        }
+        val items = statusNames.toTypedArray()
+        val adapter = ArrayAdapter(bottomSheetBinding.root.context, R.layout.list_item, items)
+        val spinner = (bottomSheetBinding.statusInputLayout.editText as? AutoCompleteTextView)
+        spinner?.setAdapter(adapter)
+        spinner?.setOnItemClickListener { _, _, position, _ ->
+            createFeature(statusCodedValues[position])
         }
     }
 
-    private fun showBufferSeekbar(binding: AddFeatureLayoutBinding) {
+    private fun setUpProtectionAttributes() {
+
+        bottomSheetBinding.apply {
+            protectionInputLayout.isEnabled = true
+            bufferSeekBar.isEnabled = false
+            protectionInputLayout.editText?.setText("")
+            selectedBuffer.text = ""
+        }
+
+        // Get the contingent value results with the feature for the protection field
+        val contingentValuesResult = featureTable.getContingentValues(feature, "Protection")
+        // Get contingent coded values by field group
+        val protectionGroupContingentValues = contingentValuesResult.contingentValuesByFieldGroup["ProtectionFieldGroup"]
+        val protectionCodedValues = mutableListOf<CodedValue>()
+        protectionGroupContingentValues?.forEach { contingentValue ->
+            val codedValue = (contingentValue as ContingentCodedValue).codedValue
+            protectionCodedValues.add(codedValue)
+        }
+        val items = mutableListOf<String>()
+        protectionCodedValues.forEach {
+            items.add(it.name)
+        }
+        val adapter = ArrayAdapter(bottomSheetBinding.root.context, R.layout.list_item, items)
+        val spinner = (bottomSheetBinding.protectionInputLayout.editText as? AutoCompleteTextView)
+        spinner?.setAdapter(adapter)
+        spinner?.setOnItemClickListener { _, _, i, _ ->
+            feature.attributes["Protection"] = protectionCodedValues[i].code
+            showBufferSeekbar()
+        }
+    }
+
+    private fun showBufferSeekbar() {
+
+        bottomSheetBinding.apply {
+            bufferSeekBar.isEnabled = true
+            selectedBuffer.text = ""
+        }
+
         // Get the contingent value results using the feature and field
         val contingentValueResult = featureTable.getContingentValues(feature, "BufferSize")
         val bufferSizeGroupContingentValues =
@@ -249,46 +279,20 @@ class MainActivity : AppCompatActivity() {
         val minValue = bufferSizeGroupContingentValues.minValue as Int
         val maxValue = bufferSizeGroupContingentValues.maxValue as Int
         if(maxValue > 0){
-            val bufferSeekBar = binding.bufferSeekBar
+            val bufferSeekBar = bottomSheetBinding.bufferSeekBar
             bufferSeekBar.valueFrom = minValue.toFloat()
             bufferSeekBar.valueTo = maxValue.toFloat()
             bufferSeekBar.value = bufferSeekBar.valueFrom
-            bufferSeekBar.addOnChangeListener { slider, value, fromUser ->
-                binding.selectedBuffer.text = value.toString()
+            bufferSeekBar.addOnChangeListener { _, value, _ ->
+                bottomSheetBinding.selectedBuffer.text = value.toString()
+            }
+        }else{
+            bottomSheetBinding.apply {
+                bufferSeekBar.isEnabled = false
+                selectedBuffer.text = "0"
             }
         }
     }
-
-    private fun setStatusListener(binding: AddFeatureLayoutBinding): View.OnClickListener {
-        binding.apply {
-            return View.OnClickListener {
-                // Get the first field by name
-                val statusField = featureTable.fields.find { field -> field.name.equals("Status") }
-                // Get the field's domains as coded value domain
-                val codedValueDomain = statusField?.domain as CodedValueDomain
-                // Get the coded value domain's coded values
-                val statusCodedValues = codedValueDomain.codedValues
-                // Get the selected index if applicable
-                val statusNames = mutableListOf<String>()
-                for (statusCodedValue in statusCodedValues!!) {
-                    statusNames.add(statusCodedValue.name)
-                }
-                val items = statusNames.toTypedArray()
-                AlertDialog.Builder(binding.root.context).apply {
-                    setTitle("Set the status attribute")
-                    setSingleChoiceItems(items, selectedStatusPosition) { dialog, position ->
-                        selectedStatusPosition = position
-                        selectedStatus.text = items[position]
-                        createFeature(statusCodedValues[selectedStatusPosition]!!)
-                        protectionLayout.enable(selectedProtection)
-                        bufferLayout.disable(selectedBuffer)
-                        dialog.dismiss()
-                    }
-                }.show()
-            }
-        }
-    }
-
     private fun createFeature(codedValue: CodedValue) {
         // Get the contingent values definition from the feature table
         val contingentValueDefinition = featureTable.contingentValuesDefinition
@@ -298,19 +302,8 @@ class MainActivity : AppCompatActivity() {
             // Create a feature from the feature table and set the initial attribute
             feature = featureTable.createFeature() as ArcGISFeature
             feature.attributes["Status"] = codedValue.code
+            setUpProtectionAttributes()
         }
-    }
-
-    private fun View.disable(textView: TextView) {
-        //background.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(Color.GRAY, BlendModeCompat.SRC_ATOP)
-        isClickable = false
-        textView.text = ""
-    }
-
-    private fun View.enable(textView: TextView) {
-        //background.clearColorFilter()
-        isClickable = true
-        textView.text = ""
     }
 
     override fun onPause() {
