@@ -20,12 +20,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.*
 import com.esri.arcgisruntime.geometry.GeometryEngine
@@ -42,7 +39,6 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues.databinding.AddFeatureLayoutBinding
-import com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues.databinding.ListItemBinding
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
@@ -193,10 +189,8 @@ class MainActivity : AppCompatActivity() {
             bufferSeekBar.isEnabled = false
 
             applyTv.setOnClickListener {
-                // Create a symbol to represent a bird's nest
-                val symbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLACK, 11F)
-                // Add the graphic to the graphics overlay
-                graphicsOverlay.graphics.add(Graphic(mapPoint, symbol))
+                // Validate the contingency
+                validateContingency(mapPoint)
                 dialog.dismiss()
             }
 
@@ -284,12 +278,14 @@ class MainActivity : AppCompatActivity() {
             bufferSeekBar.valueTo = maxValue.toFloat()
             bufferSeekBar.value = bufferSeekBar.valueFrom
             bufferSeekBar.addOnChangeListener { _, value, _ ->
+                feature.attributes["BufferSize"] = value.toInt()
                 bottomSheetBinding.selectedBuffer.text = value.toString()
             }
         }else{
             bottomSheetBinding.apply {
                 bufferSeekBar.isEnabled = false
                 selectedBuffer.text = "0"
+                feature.attributes["BufferSize"] = 0
             }
         }
     }
@@ -303,6 +299,32 @@ class MainActivity : AppCompatActivity() {
             feature = featureTable.createFeature() as ArcGISFeature
             feature.attributes["Status"] = codedValue.code
             setUpProtectionAttributes()
+        }
+    }
+
+    // Ensure that the selected values are a valid combination
+    private fun validateContingency(mapPoint: Point) {
+        // Validate the feature's contingencies
+        val contingencyViolations = featureTable.validateContingencyConstraints(feature)
+        if(contingencyViolations.isEmpty()){
+            // If there are no contingency violations in the array,
+            // the feature is valid and ready to add to the feature table
+            // Create a symbol to represent a bird's nest
+            val symbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLACK, 11F)
+            // Add the graphic to the graphics overlay
+            graphicsOverlay.graphics.add(Graphic(mapPoint, symbol))
+            feature.geometry = mapPoint
+            val graphic = createGraphic(feature)
+            // Add the feature to the feature table
+            featureTable.addFeatureAsync(feature)
+            featureTable.addDoneLoadingListener {
+                // Add the graphic to the graphics overlay
+                graphicsOverlay.graphics.add(graphic)
+            }
+        }else{
+            val message = "Invalid contingent values: " + contingencyViolations.size + " violations found."
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            Log.e(TAG, message)
         }
     }
 
