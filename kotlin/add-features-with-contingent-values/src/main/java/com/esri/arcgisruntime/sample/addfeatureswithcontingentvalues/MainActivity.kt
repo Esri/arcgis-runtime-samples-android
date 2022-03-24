@@ -74,8 +74,7 @@ class MainActivity : AppCompatActivity() {
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         // Use the vector tiled layer as a basemap
-        val fillmoreVectorTiledLayer =
-            ArcGISVectorTiledLayer(getExternalFilesDir(null)?.path + getString(R.string.topographic_map))
+        val fillmoreVectorTiledLayer = ArcGISVectorTiledLayer(getExternalFilesDir(null)?.path + getString(R.string.topographic_map))
         mapView.map = ArcGISMap(Basemap(fillmoreVectorTiledLayer))
         mapView.graphicsOverlays.add(graphicsOverlay)
 
@@ -94,8 +93,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val geoDatabase =
-            Geodatabase(getExternalFilesDir(null)?.path + getString(R.string.bird_nests))
+        val geoDatabase = Geodatabase(getExternalFilesDir(null)?.path + getString(R.string.bird_nests))
         geoDatabase.loadAsync()
         geoDatabase.addDoneLoadingListener {
             if (geoDatabase.loadStatus == LoadStatus.LOADED) {
@@ -198,7 +196,7 @@ class MainActivity : AppCompatActivity() {
         }
         dialog.setCancelable(false)
         // Clear and set bottom sheet content view to layout
-        if(bottomSheetBinding.root.parent != null){
+        if (bottomSheetBinding.root.parent != null) {
             (bottomSheetBinding.root.parent as ViewGroup).removeAllViews()
         }
         dialog.setContentView(bottomSheetBinding.root)
@@ -267,21 +265,20 @@ class MainActivity : AppCompatActivity() {
 
         // Get the contingent value results using the feature and field
         val contingentValueResult = featureTable.getContingentValues(feature, "BufferSize")
-        val bufferSizeGroupContingentValues =
-            (contingentValueResult.contingentValuesByFieldGroup["BufferSizeFieldGroup"]?.get(0) as ContingentRangeValue)
+        val bufferSizeGroupContingentValues = (contingentValueResult.contingentValuesByFieldGroup["BufferSizeFieldGroup"]?.get(0) as ContingentRangeValue)
         // Set the minimum and maximum possible buffer sizes
         val minValue = bufferSizeGroupContingentValues.minValue as Int
         val maxValue = bufferSizeGroupContingentValues.maxValue as Int
-        if(maxValue > 0){
+        if (maxValue > 0) {
             val bufferSeekBar = bottomSheetBinding.bufferSeekBar
             bufferSeekBar.valueFrom = minValue.toFloat()
             bufferSeekBar.valueTo = maxValue.toFloat()
             bufferSeekBar.value = bufferSeekBar.valueFrom
             bufferSeekBar.addOnChangeListener { _, value, _ ->
                 feature.attributes["BufferSize"] = value.toInt()
-                bottomSheetBinding.selectedBuffer.text = value.toString()
+                bottomSheetBinding.selectedBuffer.text = value.toInt().toString()
             }
-        }else{
+        } else {
             bottomSheetBinding.apply {
                 bufferSeekBar.isEnabled = false
                 selectedBuffer.text = "0"
@@ -289,6 +286,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun createFeature(codedValue: CodedValue) {
         // Get the contingent values definition from the feature table
         val contingentValueDefinition = featureTable.contingentValuesDefinition
@@ -306,7 +304,7 @@ class MainActivity : AppCompatActivity() {
     private fun validateContingency(mapPoint: Point) {
         // Validate the feature's contingencies
         val contingencyViolations = featureTable.validateContingencyConstraints(feature)
-        if(contingencyViolations.isEmpty()){
+        if (contingencyViolations.isEmpty()) {
             // If there are no contingency violations in the array,
             // the feature is valid and ready to add to the feature table
             // Create a symbol to represent a bird's nest
@@ -321,7 +319,7 @@ class MainActivity : AppCompatActivity() {
                 // Add the graphic to the graphics overlay
                 graphicsOverlay.graphics.add(graphic)
             }
-        }else{
+        } else {
             val message = "Invalid contingent values: " + contingencyViolations.size + " violations found."
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             Log.e(TAG, message)
