@@ -42,8 +42,9 @@ import com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues.databinding
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val graphicsOverlay = GraphicsOverlay()
+    private lateinit var geoDatabase: Geodatabase
     private lateinit var feature: ArcGISFeature
     private lateinit var featureTable: ArcGISFeatureTable
 
@@ -93,7 +95,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val geoDatabase = Geodatabase(getExternalFilesDir(null)?.path + getString(R.string.bird_nests))
+        //removeGeodatabaseFiles()
+
+        geoDatabase = Geodatabase(cacheDir.path + getString(R.string.bird_nests))
         geoDatabase.loadAsync()
         geoDatabase.addDoneLoadingListener {
             if (geoDatabase.loadStatus == LoadStatus.LOADED) {
@@ -115,6 +119,21 @@ class MainActivity : AppCompatActivity() {
                 val error = "Error loading GeoDatabase: " + geoDatabase.loadError.message
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
                 Log.e(TAG, error)
+            }
+        }
+    }
+
+    /**
+     * Geodatabase creates and uses various temporary files while processing a database,
+     * which will need to be cleared before looking up the [geoDatabase] again
+     * Find and delete temp files: ".geodatabase-shm", ".geodatabase-wal" and ".geodatabase-journal"
+     */
+    private fun removeGeodatabaseFiles() {
+        File(cacheDir.path).walkTopDown().forEach { file ->
+            if(file.name.contains(".geodatabase-shm") ||
+                file.name.contains(".geodatabase-wal") ||
+                file.name.contains(".geodatabase-journal")){
+                file.delete()
             }
         }
     }
@@ -174,6 +193,7 @@ class MainActivity : AppCompatActivity() {
     private fun openBottomSheetView(mapPoint: Point) {
         // Creates a new BottomSheetDialog
         val dialog = BottomSheetDialog(this)
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
         setUpStatusAttributes()
 
@@ -185,6 +205,8 @@ class MainActivity : AppCompatActivity() {
             selectedBuffer.text = ""
             protectionInputLayout.isEnabled = false
             bufferSeekBar.isEnabled = false
+            bufferSeekBar.value = bufferSeekBar.valueFrom
+
 
             applyTv.setOnClickListener {
                 // Validate the contingency
@@ -230,6 +252,7 @@ class MainActivity : AppCompatActivity() {
         bottomSheetBinding.apply {
             protectionInputLayout.isEnabled = true
             bufferSeekBar.isEnabled = false
+            bufferSeekBar.value = bufferSeekBar.valueFrom
             protectionInputLayout.editText?.setText("")
             selectedBuffer.text = ""
         }
@@ -302,25 +325,39 @@ class MainActivity : AppCompatActivity() {
 
     // Ensure that the selected values are a valid combination
     private fun validateContingency(mapPoint: Point) {
-        // Validate the feature's contingencies
-        val contingencyViolations = featureTable.validateContingencyConstraints(feature)
-        if (contingencyViolations.isEmpty()) {
-            // If there are no contingency violations in the array,
-            // the feature is valid and ready to add to the feature table
-            // Create a symbol to represent a bird's nest
-            val symbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLACK, 11F)
-            // Add the graphic to the graphics overlay
-            graphicsOverlay.graphics.add(Graphic(mapPoint, symbol))
-            feature.geometry = mapPoint
-            val graphic = createGraphic(feature)
-            // Add the feature to the feature table
-            featureTable.addFeatureAsync(feature)
-            featureTable.addDoneLoadingListener {
+        // check if all the features have been set
+        if(!this::featureTable.isInitialized){
+            val message = "Input all values to add a feature to the map"
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            Log.e(TAG, message)
+            return
+        }
+
+        try{
+            // Validate the feature's contingencies
+            val contingencyViolations = featureTable.validateContingencyConstraints(feature)
+            if (contingencyViolations.isEmpty()) {
+                // If there are no contingency violations in the array,
+                // the feature is valid and ready to add to the feature table
+                // Create a symbol to represent a bird's nest
+                val symbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLACK, 11F)
                 // Add the graphic to the graphics overlay
-                graphicsOverlay.graphics.add(graphic)
+                graphicsOverlay.graphics.add(Graphic(mapPoint, symbol))
+                feature.geometry = mapPoint
+                val graphic = createGraphic(feature)
+                // Add the feature to the feature table
+                featureTable.addFeatureAsync(feature)
+                featureTable.addDoneLoadingListener {
+                    // Add the graphic to the graphics overlay
+                    graphicsOverlay.graphics.add(graphic)
+                }
+            } else {
+                val message = "Invalid contingent values: " + contingencyViolations.size + " violations found."
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                Log.e(TAG, message)
             }
-        } else {
-            val message = "Invalid contingent values: " + contingencyViolations.size + " violations found."
+        }catch (e : Exception){
+            val message = "Invalid contingent values: " + e.message
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             Log.e(TAG, message)
         }
@@ -338,6 +375,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         mapView.dispose()
+        geoDatabase.close()
         super.onDestroy()
     }
 }
