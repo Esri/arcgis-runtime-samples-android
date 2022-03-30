@@ -1,3 +1,46 @@
 {
-    
+    "category": "Edit & Manage Data",
+    "description": "Create and add features whose attribute values satisfy a predefined set of contingencies.",
+    "formal_name": "AddFeaturesWithContingentValues",
+    "ignore": false,
+    "images": [
+        "add-features-with-contingent-values.png"
+    ],
+    "keywords": [
+        "coded values",
+        "contingent values",
+        "feature table",
+        "geodatabase",
+        "ArcGISFeatureTable",
+        "CodedValue",
+        "CodedValueDomain",
+        "ContingencyConstraintViolation",
+        "ContingentCodedValue",
+        "ContingentRangeValue",
+        "ContingentValuesDefinition",
+        "ContingentValuesResult"
+    ],
+    "language": "kotlin",
+    "provision_from": [
+        "https://www.arcgis.com/home/item.html?id=e12b54ea799f4606a2712157cf9f6e41",
+        "https://www.arcgis.com/home/item.html?id=b5106355f1634b8996e634c04b6a930a"
+    ],
+    "provision_to": [
+        "/ContingentValuesBirdNests.geodatabase",
+        "/FillmoreTopographicMap.vtpk"
+    ],
+    "relevant_apis": [
+        "ArcGISFeatureTable",
+        "CodedValue",
+        "CodedValueDomain",
+        "ContingencyConstraintViolation",
+        "ContingentCodedValue",
+        "ContingentRangeValue",
+        "ContingentValuesDefinition",
+        "ContingentValuesResult"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/addfeatureswithcontingentvalues/MainActivity.kt"
+    ],
+    "title": "Add features with contingent values"
 }
