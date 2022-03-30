@@ -17,11 +17,11 @@ Tap on the map to add a feature symbolizing a bird's nest. Then choose values de
 
 ## How it works
 
-1. Create and load the `AGSGeodatabase` from the mobile geodatabase location on file.
-2. Load the first `AGSGeodatabaseFeatureTable` as an `AGSArcGISFeatureTable`.
-3. Load the `AGSContingentValuesDefinition` from the feature table.
-4. Create a new `AGSFeatureLayer` from the feature table and add it to the map.
-5. Create a new `AGSFeature` using `AGSFeatureTable.createFeature()`
+1. Create and load the `Geodatabase` from the mobile geodatabase location on file.
+2. Load the first `geodatabaseFeatureTables` as an `ArcGISFeatureTable`.
+3. Load the `ContingentValuesDefinition` from the feature table.
+4. Create a new `FeatureLayer` from the feature table and add it to the map.
+5. Create a new `ArcGISFeature` using `ArcGISFeature.createFeature()`
 6. Get the first field by name using `AGSFeatureTable.field(forName:)`.
 7. Then get the `AGSField.domain` as an `AGSCodedValueDomain`.
 8. Get the coded value domain's `codedValues` to get an array of `AGSCodedValue`s.

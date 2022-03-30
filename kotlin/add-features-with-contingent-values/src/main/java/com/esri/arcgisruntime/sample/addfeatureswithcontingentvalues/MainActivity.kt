@@ -75,6 +75,9 @@ class MainActivity : AppCompatActivity() {
         // location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
+        // create a temporary directory to use the geodatabase file
+        createGeodatabaseCacheDirectory()
+
         // Use the vector tiled layer as a basemap
         val fillmoreVectorTiledLayer = ArcGISVectorTiledLayer(getExternalFilesDir(null)?.path + getString(R.string.topographic_map))
         mapView.map = ArcGISMap(Basemap(fillmoreVectorTiledLayer))
@@ -94,8 +97,6 @@ class MainActivity : AppCompatActivity() {
                 return super.onSingleTapConfirmed(motionEvent)
             }
         }
-
-        //removeGeodatabaseFiles()
 
         geoDatabase = Geodatabase(cacheDir.path + getString(R.string.bird_nests))
         geoDatabase.loadAsync()
@@ -125,17 +126,15 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Geodatabase creates and uses various temporary files while processing a database,
-     * which will need to be cleared before looking up the [geoDatabase] again
-     * Find and delete temp files: ".geodatabase-shm", ".geodatabase-wal" and ".geodatabase-journal"
+     * which will need to be cleared before looking up the [geoDatabase] again. A copy of the original geodatabase
+     * file is created in the cache folder.
      */
-    private fun removeGeodatabaseFiles() {
-        File(cacheDir.path).walkTopDown().forEach { file ->
-            if(file.name.contains(".geodatabase-shm") ||
-                file.name.contains(".geodatabase-wal") ||
-                file.name.contains(".geodatabase-journal")){
-                file.delete()
-            }
-        }
+    private fun createGeodatabaseCacheDirectory() {
+        // Clear cache directory
+        File(cacheDir.path).deleteRecursively()
+        // Copy over the original Geodatabase file to be used in the temp cache directory
+        File(getExternalFilesDir(null)?.path + getString(R.string.bird_nests))
+            .copyTo(File(cacheDir.path + getString(R.string.bird_nests)))
     }
 
     // Create buffer graphics for the features
