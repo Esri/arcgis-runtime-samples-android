@@ -4,6 +4,8 @@ Create and add features whose attribute values satisfy a predefined set of conti
 
 ![Add features with contingent values](add-features-with-contingent-values.png)
 
+![Add contingent feature](add-contingent-feature.png)
+
 ## Use case
 
 Contingent values are a data design feature that allow you to make values in one field dependent on values in another field. Your choice for a value on one field further constrains the domain values that can be placed on another field. In this way, contingent values enforce data integrity by applying additional constraints to reduce the number of valid field inputs. 
