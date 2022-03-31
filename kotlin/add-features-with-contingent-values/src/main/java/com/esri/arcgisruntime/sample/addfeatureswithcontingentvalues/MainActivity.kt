@@ -21,10 +21,20 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
-import com.esri.arcgisruntime.data.*
+import com.esri.arcgisruntime.data.ArcGISFeature
+import com.esri.arcgisruntime.data.ArcGISFeatureTable
+import com.esri.arcgisruntime.data.CodedValue
+import com.esri.arcgisruntime.data.CodedValueDomain
+import com.esri.arcgisruntime.data.ContingentCodedValue
+import com.esri.arcgisruntime.data.ContingentRangeValue
+import com.esri.arcgisruntime.data.Feature
+import com.esri.arcgisruntime.data.Geodatabase
+import com.esri.arcgisruntime.data.QueryParameters
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer
@@ -79,7 +89,11 @@ class MainActivity : AppCompatActivity() {
         createGeodatabaseCacheDirectory()
 
         // Use the vector tiled layer as a basemap
-        val fillmoreVectorTiledLayer = ArcGISVectorTiledLayer(getExternalFilesDir(null)?.path + getString(R.string.topographic_map))
+        val fillmoreVectorTiledLayer = ArcGISVectorTiledLayer(
+            getExternalFilesDir(null)?.path + getString(
+                R.string.topographic_map
+            )
+        )
         mapView.map = ArcGISMap(Basemap(fillmoreVectorTiledLayer))
         mapView.graphicsOverlays.add(graphicsOverlay)
 
@@ -133,8 +147,13 @@ class MainActivity : AppCompatActivity() {
         // Clear cache directory
         File(cacheDir.path).deleteRecursively()
         // Copy over the original Geodatabase file to be used in the temp cache directory
-        File(getExternalFilesDir(null)?.path + getString(R.string.bird_nests))
-            .copyTo(File(cacheDir.path + getString(R.string.bird_nests)))
+        File(getExternalFilesDir(null)?.path + getString(R.string.bird_nests)).copyTo(
+                File(
+                    cacheDir.path + getString(
+                        R.string.bird_nests
+                    )
+                )
+            )
     }
 
     // Create buffer graphics for the features
@@ -154,8 +173,7 @@ class MainActivity : AppCompatActivity() {
                     // Create an array of graphics to add to the graphics overlay
                     val graphics = mutableListOf<Graphic>()
                     // Create graphic for each query result
-                    while (resultIterator.hasNext())
-                        graphics.add(createGraphic(resultIterator.next()))
+                    while (resultIterator.hasNext()) graphics.add(createGraphic(resultIterator.next()))
                     // Add the graphics to the graphics overlay
                     graphicsOverlay.graphics.addAll(graphics)
                 } else {
@@ -183,7 +201,11 @@ class MainActivity : AppCompatActivity() {
         // Create the outline for the buffers
         val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 2F)
         // Create the buffer symbol
-        val bufferSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.FORWARD_DIAGONAL, Color.RED, lineSymbol)
+        val bufferSymbol = SimpleFillSymbol(
+            SimpleFillSymbol.Style.FORWARD_DIAGONAL,
+            Color.RED,
+            lineSymbol
+        )
         // Create an a graphic and add it to the array.
         return Graphic(polygon, bufferSymbol)
     }
@@ -287,7 +309,9 @@ class MainActivity : AppCompatActivity() {
 
         // Get the contingent value results using the feature and field
         val contingentValueResult = featureTable.getContingentValues(feature, "BufferSize")
-        val bufferSizeGroupContingentValues = (contingentValueResult.contingentValuesByFieldGroup["BufferSizeFieldGroup"]?.get(0) as ContingentRangeValue)
+        val bufferSizeGroupContingentValues = (contingentValueResult.contingentValuesByFieldGroup["BufferSizeFieldGroup"]?.get(
+            0
+        ) as ContingentRangeValue)
         // Set the minimum and maximum possible buffer sizes
         val minValue = bufferSizeGroupContingentValues.minValue as Int
         val maxValue = bufferSizeGroupContingentValues.maxValue as Int
@@ -325,14 +349,14 @@ class MainActivity : AppCompatActivity() {
     // Ensure that the selected values are a valid combination
     private fun validateContingency(mapPoint: Point) {
         // check if all the features have been set
-        if(!this::featureTable.isInitialized){
+        if (!this::featureTable.isInitialized) {
             val message = "Input all values to add a feature to the map"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             Log.e(TAG, message)
             return
         }
 
-        try{
+        try {
             // Validate the feature's contingencies
             val contingencyViolations = featureTable.validateContingencyConstraints(feature)
             if (contingencyViolations.isEmpty()) {
@@ -355,7 +379,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 Log.e(TAG, message)
             }
-        }catch (e : Exception){
+        } catch (e: Exception) {
             val message = "Invalid contingent values: " + e.message
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             Log.e(TAG, message)
