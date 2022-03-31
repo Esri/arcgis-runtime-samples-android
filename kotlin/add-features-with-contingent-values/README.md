@@ -23,7 +23,7 @@ Tap on the map to add a feature symbolizing a bird's nest. Then choose values de
 5. Create a new `ArcGISFeature` using `ArcGISFeature.createFeature()`
 6. Get the first field by name using `ArcGISFeatureTable.fields.find{ }`.
 7. Then get the `Field.domain` as an `CodedValueDomain`.
-8. Get the coded value domain's `codedValues` to get an array of `CodedValue`s.
+8. Get the coded value domain's `codedValues` to get an array of `CodedValue`'s.
 9. After selecting a value from the initial coded values for the first field, retrieve the remaining valid contingent values for each field as you select the values for the attributes.  
     i. Get the `ContingentValueResult`s by using `ArcGISFeatureTable.getContingentValues(ArcGISFeature, "field_name")` with the feature and the target field by name.  
     ii. Get an array of valid `ContingentValues` from `ContingentValuesResult.contingentValuesByFieldGroup` dictionary with the name of the relevant field group.  
@@ -44,6 +44,20 @@ Tap on the map to add a feature symbolizing a bird's nest. Then choose values de
 ## Offline data
 
 This sample uses the [Contingent values birds nests](https://arcgis.com/home/item.html?id=e12b54ea799f4606a2712157cf9f6e41) mobile geodatabase and the [Fillmore topographic map](https://arcgis.com/home/item.html?id=b5106355f1634b8996e634c04b6a930a) vector tile package for the basemap.
+
+1. Download the mobile geodatabase from [ArcGIS Online](https://arcgis.com/home/item.html?id=e12b54ea799f4606a2712157cf9f6e41).
+2. Download the vector tile package from [ArcGIS Online](https://arcgis.com/home/item.html?id=b5106355f1634b8996e634c04b6a930a).
+3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+4. Execute the following command:
+`adb push FillmoreTopographicMap.vtpk /Android/data/com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues/files/FillmoreTopographicMap.vtpk`
+5. Execute the following command:
+`adb push ContingentValuesBirdNests.geodatabase /Android/data/com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues/files/ContingentValuesBirdNests.geodatabase`
+
+Link             |  Local Location
+:-------------------------:|:-------------------------:
+|[FillmoreTopographicMap.vtpk](https://arcgisruntime.maps.arcgis.com/home/item.html?id=e12b54ea799f4606a2712157cf9f6e41)  |  `<sdcard>`/Android/data/com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues/files/FillmoreTopographicMap.vtpk
+|[ContingentValuesBirdNests.geodatabase](https://arcgisruntime.maps.arcgis.com/home/item.html?id=b5106355f1634b8996e634c04b6a930a)  |  `<sdcard>`/Android/data/com.esri.arcgisruntime.sample.addfeatureswithcontingentvalues/files/ContingentValuesBirdNests.geodatabase
+
 
 ## About the data
 
