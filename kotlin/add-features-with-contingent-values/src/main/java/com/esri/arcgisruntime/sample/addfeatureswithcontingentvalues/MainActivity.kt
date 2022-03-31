@@ -74,10 +74,13 @@ class MainActivity : AppCompatActivity() {
 
     // graphic overlay instance to add the feature graphic to the map
     private val graphicsOverlay = GraphicsOverlay()
+
     // mobile database containing offline feature data. GeoDatabase is closed on app exit
     private lateinit var geoDatabase: Geodatabase
+
     // instance of the contingent feature to be added to the map
     private lateinit var feature: ArcGISFeature
+
     // instance of the feature table retrieved from the GeoDatabase, updates when new feature is added
     private lateinit var featureTable: ArcGISFeatureTable
 
@@ -153,12 +156,12 @@ class MainActivity : AppCompatActivity() {
         File(cacheDir.path).deleteRecursively()
         // copy over the original Geodatabase file to be used in the temp cache directory
         File(getExternalFilesDir(null)?.path + getString(R.string.bird_nests)).copyTo(
-                File(
-                    cacheDir.path + getString(
-                        R.string.bird_nests
-                    )
+            File(
+                cacheDir.path + getString(
+                    R.string.bird_nests
                 )
             )
+        )
     }
 
     /**
@@ -182,8 +185,7 @@ class MainActivity : AppCompatActivity() {
                     // create an array of graphics to add to the graphics overlay
                     val graphics = mutableListOf<Graphic>()
                     // create graphic for each query result by calling createGraphic(feature)
-                    while (resultIterator.hasNext())
-                        graphics.add(createGraphic(resultIterator.next()))
+                    while (resultIterator.hasNext()) graphics.add(createGraphic(resultIterator.next()))
                     // add the graphics to the graphics overlay
                     graphicsOverlay.graphics.addAll(graphics)
                 } else {
@@ -211,9 +213,7 @@ class MainActivity : AppCompatActivity() {
         val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 2F)
         // create the buffer symbol
         val bufferSymbol = SimpleFillSymbol(
-            SimpleFillSymbol.Style.FORWARD_DIAGONAL,
-            Color.RED,
-            lineSymbol
+            SimpleFillSymbol.Style.FORWARD_DIAGONAL, Color.RED, lineSymbol
         )
         // create an a graphic and add it to the array.
         return Graphic(polygon, bufferSymbol)
@@ -312,7 +312,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         // set the items to be added to the spinner adapter
-        val adapter = ArrayAdapter(bottomSheetBinding.root.context, R.layout.list_item, protectionCodedValues.map { it.name })
+        val adapter = ArrayAdapter(
+            bottomSheetBinding.root.context,
+            R.layout.list_item,
+            protectionCodedValues.map { it.name })
         val spinner = (bottomSheetBinding.protectionInputLayout.editText as? AutoCompleteTextView)
         spinner?.setAdapter(adapter)
         spinner?.setOnItemClickListener { _, _, position, _ ->
@@ -335,7 +338,8 @@ class MainActivity : AppCompatActivity() {
 
         // get the contingent value results using the feature and field
         val contingentValueResult = featureTable.getContingentValues(feature, "BufferSize")
-        val bufferSizeGroupContingentValues = (contingentValueResult.contingentValuesByFieldGroup["BufferSizeFieldGroup"]?.get(0) as ContingentRangeValue)
+        val bufferSizeGroupContingentValues =
+            (contingentValueResult.contingentValuesByFieldGroup["BufferSizeFieldGroup"]?.get(0) as ContingentRangeValue)
         // set the minimum and maximum possible buffer sizes
         val minValue = bufferSizeGroupContingentValues.minValue as Int
         val maxValue = bufferSizeGroupContingentValues.maxValue as Int
