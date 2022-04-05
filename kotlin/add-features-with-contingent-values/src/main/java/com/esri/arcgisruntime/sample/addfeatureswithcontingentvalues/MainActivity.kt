@@ -126,19 +126,20 @@ class MainActivity : AppCompatActivity() {
             if (geoDatabase?.loadStatus == LoadStatus.LOADED) {
                 (geoDatabase?.geodatabaseFeatureTables?.first() as? ArcGISFeatureTable)?.let { featureTable ->
                     this.featureTable = featureTable
+                    featureTable.loadAsync()
+                    featureTable.addDoneLoadingListener {
+                        // create and load the feature layer from the feature table
+                        val featureLayer = FeatureLayer(featureTable)
+                        // add the feature layer to the map
+                        mapView.map.operationalLayers.add(featureLayer)
+                        // set the map's viewpoint to the feature layer's full extent
+                        val extent = featureLayer.fullExtent
+                        mapView.setViewpoint(Viewpoint(extent))
+                        // add buffer graphics for the feature layer
+                        queryFeatures()
+                    }
                 }
-                featureTable?.loadAsync()
-                featureTable?.addDoneLoadingListener {
-                    // create and load the feature layer from the feature table
-                    val featureLayer = FeatureLayer(featureTable)
-                    // add the feature layer to the map
-                    mapView.map.operationalLayers.add(featureLayer)
-                    // set the map's viewpoint to the feature layer's full extent
-                    val extent = featureLayer.fullExtent
-                    mapView.setViewpoint(Viewpoint(extent))
-                    // add buffer graphics for the feature layer
-                    queryFeatures()
-                }
+
             } else {
                 val error = "Error loading GeoDatabase: " + geoDatabase?.loadError?.message
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
@@ -274,8 +275,8 @@ class MainActivity : AppCompatActivity() {
         val statusCodedValues = codedValueDomain.codedValues
         // get the selected index if applicable
         val statusNames = mutableListOf<String>()
-        for (statusCodedValue in statusCodedValues!!) {
-            statusNames.add(statusCodedValue.name)
+        statusCodedValues.forEach {
+            statusNames.add(it.name)
         }
         // get the items to be added to the spinner adapter
         val adapter = ArrayAdapter(bottomSheetBinding.root.context, R.layout.list_item, statusNames)
@@ -357,6 +358,9 @@ class MainActivity : AppCompatActivity() {
                 valueFrom = minValue.toFloat()
                 valueTo = maxValue.toFloat()
                 value = valueFrom
+                // set the initial attribute and the text to the min of the ContingentRangeValue
+                feature?.attributes?.set("BufferSize", value.toInt())
+                bottomSheetBinding.selectedBuffer.text = value.toInt().toString()
                 // set the change listener to update the attribute value and the displayed value to the SeekBar position
                 addOnChangeListener { _, value, _ ->
                     feature?.attributes?.set("BufferSize", value.toInt())
