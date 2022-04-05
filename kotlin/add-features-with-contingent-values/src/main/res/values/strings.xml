@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">Add features with contingent values</string>
-    <string name="bird_nests">/ContingentValuesBirdNests.geodatabase</string>
-    <string name="topographic_map">/FillmoreTopographicMap.vtpk</string>
     <string name="contingent_note">The options will vary depending on which values are selected</string>
 </resources>

@@ -76,13 +76,13 @@ class MainActivity : AppCompatActivity() {
     private val graphicsOverlay = GraphicsOverlay()
 
     // mobile database containing offline feature data. GeoDatabase is closed on app exit
-    private lateinit var geoDatabase: Geodatabase
+    private var geoDatabase: Geodatabase? = null
 
     // instance of the contingent feature to be added to the map
-    private lateinit var feature: ArcGISFeature
+    private var feature: ArcGISFeature? = null
 
     // instance of the feature table retrieved from the GeoDatabase, updates when new feature is added
-    private lateinit var featureTable: ArcGISFeatureTable
+    private var featureTable: ArcGISFeatureTable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,38 +96,39 @@ class MainActivity : AppCompatActivity() {
 
         // use the offline vector tiled layer as a basemap
         val fillmoreVectorTiledLayer = ArcGISVectorTiledLayer(
-            getExternalFilesDir(null)?.path + getString(
-                R.string.topographic_map
-            )
+            getExternalFilesDir(null)?.path + "/FillmoreTopographicMap.vtpk"
         )
-        // set the basemap layer and the graphic overlay to the MapView
-        mapView.map = ArcGISMap(Basemap(fillmoreVectorTiledLayer))
-        mapView.graphicsOverlays.add(graphicsOverlay)
+        mapView.apply {
+            // set the basemap layer and the graphic overlay to the MapView
+            map = ArcGISMap(Basemap(fillmoreVectorTiledLayer))
+            graphicsOverlays.add(graphicsOverlay)
 
-        // add a listener to the MapView to detect when a user has performed a single tap to add a new feature
-        mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
-            override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {
-                motionEvent?.let { event ->
-                    // create a point from where the user clicked
-                    android.graphics.Point(event.x.toInt(), event.y.toInt()).let { point ->
-                        // create a map point and add a new feature to the service feature table
-                        openBottomSheetView(mapView.screenToLocation(point))
+            // add a listener to the MapView to detect when a user has performed a single tap to add a new feature
+            onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, this) {
+                override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {
+                    motionEvent?.let { event ->
+                        // create a point from where the user clicked
+                        android.graphics.Point(event.x.toInt(), event.y.toInt()).let { point ->
+                            // create a map point and add a new feature to the service feature table
+                            openBottomSheetView(screenToLocation(point))
+                        }
                     }
+                    performClick()
+                    return super.onSingleTapConfirmed(motionEvent)
                 }
-                mapView.performClick()
-                return super.onSingleTapConfirmed(motionEvent)
             }
         }
 
         // retrieve and load the offline mobile GeoDatabase file from the cache directory
-        geoDatabase = Geodatabase(cacheDir.path + getString(R.string.bird_nests))
-        geoDatabase.loadAsync()
-        geoDatabase.addDoneLoadingListener {
-            if (geoDatabase.loadStatus == LoadStatus.LOADED) {
-                // get and load the first feature table in the geodatabase
-                featureTable = geoDatabase.geodatabaseFeatureTables[0] as ArcGISFeatureTable
-                featureTable.loadAsync()
-                featureTable.addDoneLoadingListener {
+        geoDatabase = Geodatabase(cacheDir.path + "/ContingentValuesBirdNests.geodatabase")
+        geoDatabase?.loadAsync()
+        geoDatabase?.addDoneLoadingListener {
+            if (geoDatabase?.loadStatus == LoadStatus.LOADED) {
+                (geoDatabase?.geodatabaseFeatureTables?.first() as? ArcGISFeatureTable)?.let { featureTable ->
+                    this.featureTable = featureTable
+                }
+                featureTable?.loadAsync()
+                featureTable?.addDoneLoadingListener {
                     // create and load the feature layer from the feature table
                     val featureLayer = FeatureLayer(featureTable)
                     // add the feature layer to the map
@@ -139,7 +140,7 @@ class MainActivity : AppCompatActivity() {
                     queryFeatures()
                 }
             } else {
-                val error = "Error loading GeoDatabase: " + geoDatabase.loadError.message
+                val error = "Error loading GeoDatabase: " + geoDatabase?.loadError?.message
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
                 Log.e(TAG, error)
             }
@@ -155,12 +156,8 @@ class MainActivity : AppCompatActivity() {
         // clear cache directory
         File(cacheDir.path).deleteRecursively()
         // copy over the original Geodatabase file to be used in the temp cache directory
-        File(getExternalFilesDir(null)?.path + getString(R.string.bird_nests)).copyTo(
-            File(
-                cacheDir.path + getString(
-                    R.string.bird_nests
-                )
-            )
+        File(getExternalFilesDir(null)?.path + "/ContingentValuesBirdNests.geodatabase").copyTo(
+            File(cacheDir.path + "/ContingentValuesBirdNests.geodatabase")
         )
     }
 
@@ -170,12 +167,13 @@ class MainActivity : AppCompatActivity() {
      */
     private fun queryFeatures() {
         // create buffer graphics for the features
-        val queryParameters = QueryParameters()
-        // set the where clause to filter for buffer sizes greater than 0
-        queryParameters.whereClause = "BufferSize > 0"
+        val queryParameters = QueryParameters().apply {
+            // set the where clause to filter for buffer sizes greater than 0
+            whereClause = "BufferSize > 0"
+        }
         // query the features using the queryParameters on the featureTable
-        val queryFeaturesFuture = featureTable.queryFeaturesAsync(queryParameters)
-        queryFeaturesFuture.addDoneListener {
+        val queryFeaturesFuture = featureTable?.queryFeaturesAsync(queryParameters)
+        queryFeaturesFuture?.addDoneListener {
             try {
                 // clear the existing graphics
                 graphicsOverlay.graphics.clear()
@@ -185,7 +183,10 @@ class MainActivity : AppCompatActivity() {
                     // create an array of graphics to add to the graphics overlay
                     val graphics = mutableListOf<Graphic>()
                     // create graphic for each query result by calling createGraphic(feature)
-                    while (resultIterator.hasNext()) graphics.add(createGraphic(resultIterator.next()))
+                    //while (resultIterator.hasNext()) graphics.add(createGraphic(resultIterator.next()))
+                    queryFeaturesFuture.get().iterator().forEach {
+                        graphics.add(createGraphic(it))
+                    }
                     // add the graphics to the graphics overlay
                     graphicsOverlay.graphics.addAll(graphics)
                 } else {
@@ -266,7 +267,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setUpStatusAttributes() {
         // get the first field by name
-        val statusField = featureTable.fields.find { field -> field.name.equals("Status") }
+        val statusField = featureTable?.fields?.find { field -> field.name.equals("Status") }
         // get the field's domains as coded value domain
         val codedValueDomain = statusField?.domain as CodedValueDomain
         // get the coded value domain's coded values
@@ -278,11 +279,12 @@ class MainActivity : AppCompatActivity() {
         }
         // get the items to be added to the spinner adapter
         val adapter = ArrayAdapter(bottomSheetBinding.root.context, R.layout.list_item, statusNames)
-        val spinner = (bottomSheetBinding.statusInputLayout.editText as? AutoCompleteTextView)
-        spinner?.setAdapter(adapter)
-        spinner?.setOnItemClickListener { _, _, position, _ ->
-            // get the CodedValue of the item selected, and create a feature needed for feature attributes
-            createFeature(statusCodedValues[position])
+        (bottomSheetBinding.statusInputLayout.editText as? AutoCompleteTextView)?.apply {
+            setAdapter(adapter)
+            setOnItemClickListener { _, _, position, _ ->
+                // get the CodedValue of the item selected, and create a feature needed for feature attributes
+                createFeature(statusCodedValues[position])
+            }
         }
     }
 
@@ -301,27 +303,31 @@ class MainActivity : AppCompatActivity() {
         }
 
         // get the contingent value results with the feature for the protection field
-        val contingentValuesResult = featureTable.getContingentValues(feature, "Protection")
-        // get contingent coded values by field group
-        val protectionGroupContingentValues = contingentValuesResult.contingentValuesByFieldGroup["ProtectionFieldGroup"]
-        // convert the list of ContingentValues to a list of CodedValue
-        val protectionCodedValues = mutableListOf<CodedValue>()
-        protectionGroupContingentValues?.forEach { contingentValue ->
-            val codedValue = (contingentValue as ContingentCodedValue).codedValue
-            protectionCodedValues.add(codedValue)
-        }
-
-        // set the items to be added to the spinner adapter
-        val adapter = ArrayAdapter(
-            bottomSheetBinding.root.context,
-            R.layout.list_item,
-            protectionCodedValues.map { it.name })
-        val spinner = (bottomSheetBinding.protectionInputLayout.editText as? AutoCompleteTextView)
-        spinner?.setAdapter(adapter)
-        spinner?.setOnItemClickListener { _, _, position, _ ->
-            // set the protection CodedValue of the item selected, and then enable buffer seekbar
-            feature.attributes["Protection"] = protectionCodedValues[position].code
-            showBufferSeekbar()
+        val contingentValuesResult = featureTable?.getContingentValues(feature, "Protection")
+        if (contingentValuesResult != null) {
+            // get contingent coded values by field group
+            // convert the list of ContingentValues to a list of CodedValue
+            val protectionCodedValues = mutableListOf<CodedValue>()
+            contingentValuesResult.contingentValuesByFieldGroup["ProtectionFieldGroup"]?.forEach { contingentValue ->
+                protectionCodedValues.add((contingentValue as ContingentCodedValue).codedValue)
+            }
+            // set the items to be added to the spinner adapter
+            val adapter = ArrayAdapter(
+                bottomSheetBinding.root.context,
+                R.layout.list_item,
+                protectionCodedValues.map { it.name })
+            (bottomSheetBinding.protectionInputLayout.editText as? AutoCompleteTextView)?.apply {
+                setAdapter(adapter)
+                setOnItemClickListener { _, _, position, _ ->
+                    // set the protection CodedValue of the item selected, and then enable buffer seekbar
+                    feature?.attributes?.set("Protection", protectionCodedValues[position].code)
+                    showBufferSeekbar()
+                }
+            }
+        } else {
+            val message = "Error loading ContingentValuesResult from the FeatureTable"
+            Log.e(TAG, message)
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -337,24 +343,25 @@ class MainActivity : AppCompatActivity() {
         }
 
         // get the contingent value results using the feature and field
-        val contingentValueResult = featureTable.getContingentValues(feature, "BufferSize")
+        val contingentValueResult = featureTable?.getContingentValues(feature, "BufferSize")
         val bufferSizeGroupContingentValues =
-            (contingentValueResult.contingentValuesByFieldGroup["BufferSizeFieldGroup"]?.get(0) as ContingentRangeValue)
+            (contingentValueResult?.contingentValuesByFieldGroup?.get("BufferSizeFieldGroup")?.get(0) as ContingentRangeValue)
         // set the minimum and maximum possible buffer sizes
         val minValue = bufferSizeGroupContingentValues.minValue as Int
         val maxValue = bufferSizeGroupContingentValues.maxValue as Int
         // check if there can be a max value, if not disable SeekBar & set value to attribute size to 0
         if (maxValue > 0) {
             // get SeekBar instance from the binding layout
-            val bufferSeekBar = bottomSheetBinding.bufferSeekBar
-            // set the min, max and current value of the SeekBar
-            bufferSeekBar.valueFrom = minValue.toFloat()
-            bufferSeekBar.valueTo = maxValue.toFloat()
-            bufferSeekBar.value = bufferSeekBar.valueFrom
-            // set the change listener to update the attribute value and the displayed value to the SeekBar position
-            bufferSeekBar.addOnChangeListener { _, value, _ ->
-                feature.attributes["BufferSize"] = value.toInt()
-                bottomSheetBinding.selectedBuffer.text = value.toInt().toString()
+            bottomSheetBinding.bufferSeekBar.apply {
+                // set the min, max and current value of the SeekBar
+                valueFrom = minValue.toFloat()
+                valueTo = maxValue.toFloat()
+                value = valueFrom
+                // set the change listener to update the attribute value and the displayed value to the SeekBar position
+                addOnChangeListener { _, value, _ ->
+                    feature?.attributes?.set("BufferSize", value.toInt())
+                    bottomSheetBinding.selectedBuffer.text = value.toInt().toString()
+                }
             }
         } else {
             // max value is 0, so disable seekbar and update the attribute value accordingly
@@ -362,7 +369,7 @@ class MainActivity : AppCompatActivity() {
                 bufferSeekBar.isEnabled = false
                 selectedBuffer.text = "0"
             }
-            feature.attributes["BufferSize"] = 0
+            feature?.attributes?.set("BufferSize", 0)
         }
     }
 
@@ -373,14 +380,20 @@ class MainActivity : AppCompatActivity() {
      */
     private fun createFeature(codedValue: CodedValue) {
         // get the contingent values definition from the feature table
-        val contingentValueDefinition = featureTable.contingentValuesDefinition
-        // load the contingent values definition
-        contingentValueDefinition.loadAsync()
-        contingentValueDefinition.addDoneLoadingListener {
-            // create a feature from the feature table and set the initial attribute
-            feature = featureTable.createFeature() as ArcGISFeature
-            feature.attributes["Status"] = codedValue.code
-            setUpProtectionAttributes()
+        val contingentValueDefinition = featureTable?.contingentValuesDefinition
+        if (contingentValueDefinition != null) {
+            // load the contingent values definition
+            contingentValueDefinition.loadAsync()
+            contingentValueDefinition.addDoneLoadingListener {
+                // create a feature from the feature table and set the initial attribute
+                feature = featureTable?.createFeature() as ArcGISFeature
+                feature?.attributes?.set("Status", codedValue.code)
+                setUpProtectionAttributes()
+            }
+        } else {
+            val message = "Error retrieving ContingentValuesDefinition from the FeatureTable"
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            Log.e(TAG, message)
         }
     }
 
@@ -390,7 +403,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun validateContingency(mapPoint: Point) {
         // check if all the features have been set
-        if (!this::featureTable.isInitialized) {
+        if (featureTable == null) {
             val message = "Input all values to add a feature to the map"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             Log.e(TAG, message)
@@ -399,24 +412,24 @@ class MainActivity : AppCompatActivity() {
 
         try {
             // validate the feature's contingencies
-            val contingencyViolations = featureTable.validateContingencyConstraints(feature)
-            if (contingencyViolations.isEmpty()) {
+            val contingencyViolations = featureTable?.validateContingencyConstraints(feature)
+            if (contingencyViolations?.isEmpty() == true) {
                 // if there are no contingency violations in the array,
                 // the feature is valid and ready to add to the feature table
                 // create a symbol to represent a bird's nest
                 val symbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.BLACK, 11F)
                 // add the graphic to the graphics overlay
                 graphicsOverlay.graphics.add(Graphic(mapPoint, symbol))
-                feature.geometry = mapPoint
-                val graphic = createGraphic(feature)
+                feature?.geometry = mapPoint
+                val graphic = feature?.let { createGraphic(it) }
                 // add the feature to the feature table
-                featureTable.addFeatureAsync(feature)
-                featureTable.addDoneLoadingListener {
+                featureTable?.addFeatureAsync(feature)
+                featureTable?.addDoneLoadingListener {
                     // add the graphic to the graphics overlay
                     graphicsOverlay.graphics.add(graphic)
                 }
             } else {
-                val message = "Invalid contingent values: " + contingencyViolations.size + " violations found."
+                val message = "Invalid contingent values: " + (contingencyViolations?.size?: 0) + " violations found."
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 Log.e(TAG, message)
             }
@@ -441,7 +454,7 @@ class MainActivity : AppCompatActivity() {
         mapView.dispose()
         // closing the GeoDatabase will commit the transactions made to the temporary ".geodatabase" file
         // then removes the temporary ".geodatabase-wal" and ".geodatabase-shm" files from the cache dir
-        geoDatabase.close()
+        geoDatabase?.close()
         super.onDestroy()
     }
 }
