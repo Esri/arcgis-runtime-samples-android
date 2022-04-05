@@ -310,7 +310,7 @@ class MainActivity : AppCompatActivity() {
                         // enable download button only for those map areas which have not been downloaded already
                         File(
                             externalCacheDir?.path + getString(R.string.preplanned_offline_map_dir) +
-                                    File.separator + selectedPreplannedMapArea?.portalItem?.title
+                                File.separator + selectedPreplannedMapArea?.portalItem?.title
                         ).also {
                             downloadButton.isEnabled = !it.exists()
                         }

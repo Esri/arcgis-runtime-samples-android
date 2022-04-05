@@ -131,11 +131,11 @@ class MainActivity : AppCompatActivity() {
         // fine location permission
         val permissionCheckFineLocation =
             ContextCompat.checkSelfPermission(this@MainActivity, reqPermissions[0]) ==
-                    PackageManager.PERMISSION_GRANTED
+                PackageManager.PERMISSION_GRANTED
         // coarse location permission
         val permissionCheckCoarseLocation =
             ContextCompat.checkSelfPermission(this@MainActivity, reqPermissions[1]) ==
-                    PackageManager.PERMISSION_GRANTED
+                PackageManager.PERMISSION_GRANTED
         if (!(permissionCheckFineLocation && permissionCheckCoarseLocation)) { // if permissions are not already granted, request permission from the user
             ActivityCompat.requestPermissions(this@MainActivity, reqPermissions, requestCode)
         } else {

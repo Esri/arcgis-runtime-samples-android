@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         // populate the spinner list of address suggestions
         val examples = arrayOf(
             "277 N Avenida Caballeros, Palm Springs, " +
-                    "CA", "380 New York St, Redlands, CA 92373", "Београд", "Москва", "北京"
+                "CA", "380 New York St, Redlands, CA 92373", "Београд", "Москва", "北京"
         )
         // initialize an adapter for the suggestions spinner
         val suggestionAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, examples)

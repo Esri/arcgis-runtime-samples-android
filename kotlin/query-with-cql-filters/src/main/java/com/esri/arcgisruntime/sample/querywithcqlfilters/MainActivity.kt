@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         "{ \"eq\" : [ { \"property\" : \"F_CODE\" }, \"AP010\" ] }",
         "F_CODE LIKE 'AQ%'",
         "{\"and\":[{\"eq\":[{ \"property\" : \"F_CODE\" }, \"AP010\"]},{ \"before\":" +
-                "[{ \"property\" : \"ZI001_SDV\"},\"2013-01-01\"]}]}",
+            "[{ \"property\" : \"ZI001_SDV\"},\"2013-01-01\"]}]}",
         "No Query"
     )
 

@@ -366,10 +366,10 @@ class MainActivity : AppCompatActivity() {
                     // if there's a coded value domain name
                     val codedValueDomainName = codedValueDomain.codedValues.first {
                         convertToDataType(it.code, expression.networkAttribute.dataType) ==
-                                convertToDataType(
-                                    expression.value,
-                                    expression.networkAttribute.dataType
-                                )
+                            convertToDataType(
+                                expression.value,
+                                expression.networkAttribute.dataType
+                            )
                     }.name
                     return networkAttributeNameAndOperator + codedValueDomainName
                 }

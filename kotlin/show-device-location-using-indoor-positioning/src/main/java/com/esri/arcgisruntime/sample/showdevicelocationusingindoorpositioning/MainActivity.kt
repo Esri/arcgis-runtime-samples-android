@@ -326,7 +326,7 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
         // set up the message with floor properties to be displayed to the textView
         var locationPropertiesMessage =
             "Floor: $floor, Position-source: $positionSource, " +
-                    "Horizontal-accuracy: " + locationChangedEvent.location.let {
+                "Horizontal-accuracy: " + locationChangedEvent.location.let {
                 DecimalFormat(".##").format(
                     it.horizontalAccuracy
                 )
