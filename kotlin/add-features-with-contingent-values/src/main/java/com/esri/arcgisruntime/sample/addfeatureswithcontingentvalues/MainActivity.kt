@@ -290,6 +290,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
+     * Set up the [feature] using the status attribute's coded value
+     * by loading the [featureTable]'s Contingent Value Definition.
+     * This function calls setUpProtectionAttributes() once the [feature] has been set
+     */
+    private fun createFeature(codedValue: CodedValue) {
+        // get the contingent values definition from the feature table
+        val contingentValueDefinition = featureTable?.contingentValuesDefinition
+        if (contingentValueDefinition != null) {
+            // load the contingent values definition
+            contingentValueDefinition.loadAsync()
+            contingentValueDefinition.addDoneLoadingListener {
+                // create a feature from the feature table and set the initial attribute
+                feature = featureTable?.createFeature() as ArcGISFeature
+                feature?.attributes?.set("Status", codedValue.code)
+                setUpProtectionAttributes()
+            }
+        } else {
+            val message = "Error retrieving ContingentValuesDefinition from the FeatureTable"
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            Log.e(TAG, message)
+        }
+    }
+
+    /**
      *  Retrieve the protection attribute fields, add the fields to a ContingentCodedValue, and set the values to the spinner
      *  When status attribute selected, showBufferSeekbar() is called.
      */
@@ -374,30 +398,6 @@ class MainActivity : AppCompatActivity() {
                 selectedBuffer.text = "0"
             }
             feature?.attributes?.set("BufferSize", 0)
-        }
-    }
-
-    /**
-     * Set up the [feature] using the status attribute's coded value
-     * by loading the [featureTable]'s Contingent Value Definition.
-     * This function calls setUpProtectionAttributes() once the [feature] has been set
-     */
-    private fun createFeature(codedValue: CodedValue) {
-        // get the contingent values definition from the feature table
-        val contingentValueDefinition = featureTable?.contingentValuesDefinition
-        if (contingentValueDefinition != null) {
-            // load the contingent values definition
-            contingentValueDefinition.loadAsync()
-            contingentValueDefinition.addDoneLoadingListener {
-                // create a feature from the feature table and set the initial attribute
-                feature = featureTable?.createFeature() as ArcGISFeature
-                feature?.attributes?.set("Status", codedValue.code)
-                setUpProtectionAttributes()
-            }
-        } else {
-            val message = "Error retrieving ContingentValuesDefinition from the FeatureTable"
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-            Log.e(TAG, message)
         }
     }
 
