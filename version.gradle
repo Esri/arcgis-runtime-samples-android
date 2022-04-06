@@ -13,7 +13,7 @@ ext {
     multidexVersion = '2.0.1'
     arcgisVersion = '100.14.0-3365'
     arcgisToolkitVersion = '100.13.0'
-    materialVersion = '1.4.0'
+    materialVersion = '1.5.0'
     recyclerViewVersion = '1.1.0'
     // plugin versions
     gradleVersion = '7.0.2'
