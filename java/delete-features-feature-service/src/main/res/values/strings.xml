@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Delete Features - Feature Service</string>
 
-    <string name="feature_layer_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
+    <string name="feature_layer_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer</string>
 
     <string name="dialog_confirm_delete_message">Are you sure you wish to delete feature %s?</string>
     <string name="dialog_confirm_delete_positive">Delete</string>

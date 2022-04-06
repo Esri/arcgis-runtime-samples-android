@@ -24,8 +24,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
-import com.esri.arcgisruntime.data.FeatureEditResult;
+import com.esri.arcgisruntime.data.FeatureTableEditResult;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.ServiceGeodatabase;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -68,12 +69,17 @@ public class MainActivity extends AppCompatActivity {
     // set an initial viewpoint
     mMapView.setViewpoint(new Viewpoint(34.057386, -117.191455, 100000000));
 
-    // create feature layer with its service feature table
-    final ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable(getString(R.string.sample_service_url));
-    mFeatureLayer = new FeatureLayer(serviceFeatureTable);
-
-    // add the layer to the map
-    map.getOperationalLayers().add(mFeatureLayer);
+    // create and load the service geodatabase
+    ServiceGeodatabase serviceGeodatabase =  new ServiceGeodatabase(getString(R.string.sample_service_url));
+    serviceGeodatabase.loadAsync();
+    serviceGeodatabase.addDoneLoadingListener(() -> {
+      // create a feature layer using the first layer in the ServiceFeatureTable
+      ServiceFeatureTable serviceFeatureTable = serviceGeodatabase.getTable(0);
+      // create a feature layer from table
+      mFeatureLayer = new FeatureLayer(serviceFeatureTable);
+      // add the layer to the map
+      mMapView.getMap().getOperationalLayers().add(mFeatureLayer);
+    });
 
     Toast.makeText(getApplicationContext(), "Tap on a feature to select it.", Toast.LENGTH_LONG).show();
 
@@ -147,17 +153,15 @@ public class MainActivity extends AppCompatActivity {
    * Applies edits to the FeatureService
    */
   private void applyEditsToServer() {
-    final ListenableFuture<List<FeatureEditResult>> applyEditsFuture = ((ServiceFeatureTable) mFeatureLayer
-        .getFeatureTable()).applyEditsAsync();
+    final ListenableFuture<List<FeatureTableEditResult>> applyEditsFuture = ((ServiceFeatureTable) mFeatureLayer
+        .getFeatureTable()).getServiceGeodatabase().applyEditsAsync();
     applyEditsFuture.addDoneListener(() -> {
       try {
         // get results of edit
-        List<FeatureEditResult> featureEditResultsList = applyEditsFuture.get();
-        if (!featureEditResultsList.get(0).hasCompletedWithErrors()) {
-          Toast.makeText(this,
-              "Applied Geometry Edits to Server. ObjectID: " + featureEditResultsList.get(0).getObjectId(),
-              Toast.LENGTH_SHORT).show();
-        }
+        List<FeatureTableEditResult> featureEditResultsList = applyEditsFuture.get();
+        Toast.makeText(this,
+                "Applied Geometry Edits to Server. ObjectID: " + featureEditResultsList.get(0).getEditResult().get(0).getObjectId(),
+                Toast.LENGTH_SHORT).show();
       } catch (InterruptedException | ExecutionException e) {
         Log.e(TAG, "Update feature failed: " + e.getMessage());
       }

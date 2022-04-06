@@ -16,8 +16,6 @@
 
 package com.esri.arcgisruntime.sample.featurelayerupdateattributes;
 
-import java.util.List;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -32,11 +30,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
-import com.esri.arcgisruntime.data.FeatureEditResult;
+import com.esri.arcgisruntime.data.FeatureTableEditResult;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.ServiceGeodatabase;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -48,6 +48,8 @@ import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -97,12 +99,17 @@ public class MainActivity extends AppCompatActivity {
     mProgressDialog.setTitle(getResources().getString(R.string.progress_title));
     mProgressDialog.setMessage(getResources().getString(R.string.progress_message));
 
-    // create feature layer with from the service feature table
-    mServiceFeatureTable = new ServiceFeatureTable(getResources().getString(R.string.sample_service_url));
-    mFeatureLayer = new FeatureLayer(mServiceFeatureTable);
-
-    // add the layer to the map
-    map.getOperationalLayers().add(mFeatureLayer);
+    // create and load the service geodatabase
+    ServiceGeodatabase serviceGeodatabase =  new ServiceGeodatabase(getString(R.string.sample_service_url));
+    serviceGeodatabase.loadAsync();
+    serviceGeodatabase.addDoneLoadingListener(() -> {
+      // create a feature layer using the first layer in the ServiceFeatureTable
+      mServiceFeatureTable = serviceGeodatabase.getTable(0);
+      // create a feature layer from table
+      mFeatureLayer = new FeatureLayer(mServiceFeatureTable);
+      // add the layer to the map
+      map.getOperationalLayers().add(mFeatureLayer);
+    });
 
     // set an on touch listener to listen for click events
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
@@ -203,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
               // apply change to the server
-              final ListenableFuture<List<FeatureEditResult>> serverResult = mServiceFeatureTable.applyEditsAsync();
+              final ListenableFuture<List<FeatureTableEditResult>> serverResult = mServiceFeatureTable.getServiceGeodatabase().applyEditsAsync();
 
               serverResult.addDoneListener(new Runnable() {
                 @Override
@@ -211,13 +218,11 @@ public class MainActivity extends AppCompatActivity {
                   try {
 
                     // check if server result successful
-                    List<FeatureEditResult> edits = serverResult.get();
+                    List<FeatureTableEditResult> edits = serverResult.get();
                     if (!edits.isEmpty()) {
-                      if (!edits.get(0).hasCompletedWithErrors()) {
-                        Log.e(TAG, "Feature successfully updated");
-                        mSnackbarSuccess.show();
-                        mFeatureUpdated = true;
-                      }
+                      Log.e(TAG, "Feature successfully updated");
+                      mSnackbarSuccess.show();
+                      mFeatureUpdated = true;
                     } else {
                       Log.e(TAG, "The attribute type was not changed");
                       mSnackbarFailure.show();
