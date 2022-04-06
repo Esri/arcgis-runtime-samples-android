@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
   private MapView mMapView;
   private MapView mTileCachePreview;
-    private ExportTileCacheJob mExportTileCacheJob;
+  private ExportTileCacheJob mExportTileCacheJob;
   private ExportTileCacheTask mExportTileCacheTask;
 
   @Override
@@ -140,9 +140,9 @@ public class MainActivity extends AppCompatActivity {
    */
   private void initiateDownload() {
 
-      ArcGISTiledLayer mTiledLayer = (ArcGISTiledLayer) mMapView.getMap().getBasemap().getBaseLayers().get(0);
+    ArcGISTiledLayer tiledLayer = (ArcGISTiledLayer) mMapView.getMap().getBasemap().getBaseLayers().get(0);
     // initialize the export task
-    mExportTileCacheTask = new ExportTileCacheTask(mTiledLayer.getUri());
+    mExportTileCacheTask = new ExportTileCacheTask(tiledLayer.getUri());
     final ListenableFuture<ExportTileCacheParameters> parametersFuture = mExportTileCacheTask
         .createDefaultExportTileCacheParametersAsync(viewToExtent(), mMapView.getMapScale(), mMapView.getMapScale() * 0.1);
     parametersFuture.addDoneListener(() -> {

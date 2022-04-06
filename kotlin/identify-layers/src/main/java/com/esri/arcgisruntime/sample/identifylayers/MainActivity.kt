@@ -48,10 +48,6 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.mapView
     }
 
-    private companion object {
-        private val TAG: String = MainActivity::class.java.simpleName
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
@@ -227,4 +223,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private companion object {
+        private val TAG: String = MainActivity::class.java.simpleName
+    }
 }

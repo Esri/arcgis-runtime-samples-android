@@ -36,20 +36,6 @@ class ConfirmDeleteFeatureDialog : DialogFragment() {
         }
     }
 
-    companion object {
-
-        private val ARG_FEATURE_ID =
-            ConfirmDeleteFeatureDialog::class.java.simpleName + "_feature_id"
-
-        fun newInstance(featureId: String): ConfirmDeleteFeatureDialog {
-            val fragment = ConfirmDeleteFeatureDialog()
-            val args = Bundle()
-            args.putString(ARG_FEATURE_ID, featureId)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -71,4 +57,17 @@ class ConfirmDeleteFeatureDialog : DialogFragment() {
         fun onDeleteFeatureClicked(featureId: String)
     }
 
+    companion object {
+
+        private val ARG_FEATURE_ID =
+            ConfirmDeleteFeatureDialog::class.java.simpleName + "_feature_id"
+
+        fun newInstance(featureId: String): ConfirmDeleteFeatureDialog {
+            val fragment = ConfirmDeleteFeatureDialog()
+            val args = Bundle()
+            args.putString(ARG_FEATURE_ID, featureId)
+            fragment.arguments = args
+            return fragment
+        }
+    }
 }

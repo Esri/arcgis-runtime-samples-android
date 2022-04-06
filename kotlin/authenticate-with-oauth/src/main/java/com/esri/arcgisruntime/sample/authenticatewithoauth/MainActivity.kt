@@ -34,10 +34,6 @@ import java.net.MalformedURLException
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-        private val TAG: String = MainActivity::class.java.simpleName
-    }
-
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -112,5 +108,9 @@ class MainActivity : AppCompatActivity() {
             Log.e(TAG, message)
             Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         }
+    }
+
+    companion object {
+        private val TAG: String = MainActivity::class.java.simpleName
     }
 }

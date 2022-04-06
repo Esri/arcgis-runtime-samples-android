@@ -55,10 +55,6 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.mapView
     }
 
-    companion object {
-        private val TAG: String = MainActivity::class.java.simpleName
-    }
-
     // create a service feature table and a feature layer from it
     private val serviceFeatureTable: ServiceFeatureTable by lazy {
         ServiceFeatureTable(getString(R.string.us_daytime_population_url))
@@ -195,5 +191,9 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         mapView.dispose()
         super.onDestroy()
+    }
+
+    companion object {
+        private val TAG: String = MainActivity::class.java.simpleName
     }
 }

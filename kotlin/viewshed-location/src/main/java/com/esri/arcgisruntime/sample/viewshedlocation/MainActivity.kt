@@ -40,10 +40,6 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-        private val TAG: String = MainActivity::class.java.simpleName
-    }
-
     // initialize location viewshed parameters
     private val initHeading = 0
     private val initPitch = 60
@@ -427,5 +423,9 @@ class MainActivity : AppCompatActivity() {
             Log.e(TAG, message)
             Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         }
+    }
+
+    companion object {
+        private val TAG: String = MainActivity::class.java.simpleName
     }
 }
