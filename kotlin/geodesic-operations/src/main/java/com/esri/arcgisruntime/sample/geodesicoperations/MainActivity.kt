@@ -39,7 +39,6 @@ import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.sample.geodesicoperations.databinding.ActivityMainBinding
-import java.util.Arrays
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {

@@ -175,9 +175,9 @@ class MainActivity : AppCompatActivity(), ConfirmDeleteFeatureDialog.OnButtonCli
                     // check result has a feature
                     this.get().iterator().next()?.let {
                         // delete found features
-                        deleteFeature(it, featureTable, {
+                        deleteFeature(it, featureTable) {
                             applyEdits(featureTable)
-                        })
+                        }
                     }
                 } catch (e: InterruptedException) {
                     logToUser(true, getString(R.string.error_feature_deletion, e.cause?.message))

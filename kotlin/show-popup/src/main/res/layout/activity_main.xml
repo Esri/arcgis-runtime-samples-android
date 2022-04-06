@@ -43,7 +43,7 @@
             app:cardElevation="50dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-            <androidx.fragment.app.FragmentContainerView
+            <fragment
                 android:id="@+id/bottomSheetPopupFragment"
                 android:name="com.esri.arcgisruntime.sample.showpopup.PopupFragment"
                 android:layout_width="match_parent"

@@ -301,7 +301,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         colorSpinner.apply {
-            adapter = ArrayAdapter<String>(
+            adapter = ArrayAdapter(
                 applicationContext, R.layout.spinner_row, listOf(
                     "BLUE", "GREEN", "CYAN", "RED", "MAGENTA", "YELLOW"
                 )

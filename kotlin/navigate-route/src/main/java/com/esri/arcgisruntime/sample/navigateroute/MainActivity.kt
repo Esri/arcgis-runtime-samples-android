@@ -18,7 +18,6 @@ package com.esri.arcgisruntime.sample.navigateroute
 
 import android.content.res.Resources
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.text.format.DateUtils

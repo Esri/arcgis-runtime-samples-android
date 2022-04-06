@@ -30,6 +30,6 @@
         android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/checkbox_grouplayer_name"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/checkbox_grouplayer_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
