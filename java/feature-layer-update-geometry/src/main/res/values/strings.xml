@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Feature Layer Update Geometry</string>
     <!-- Sample Strings -->
-    <string name="sample_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0</string>
+    <string name="sample_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer</string>
 </resources>
