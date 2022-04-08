@@ -37,8 +37,7 @@ import com.esri.arcgisruntime.mapping.view.DrawStatus
 import com.esri.arcgisruntime.mapping.view.DrawStatusChangedEvent
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.togglebetweenfeaturerequestmodes.databinding.ActivityMainBinding
-import com.google.android.material.progressindicator.CircularProgressIndicator
-import java.util.*
+import java.util.Collections
 import java.util.concurrent.atomic.AtomicInteger
 
 
@@ -72,9 +71,7 @@ class MainActivity : AppCompatActivity() {
 
     private var featureLayer: FeatureLayer? = null
     private var featureTable: ServiceFeatureTable? = null
-    // TODO change this to enum
     private var featureModeSelected: Int = 0
-    private val ServiceFeatureURL = "https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/Trees_of_Portland/FeatureServer/0"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,37 +91,43 @@ class MainActivity : AppCompatActivity() {
                 // true if DrawStatus is in progress
                 val drawStatusInProgress = e.drawStatus == DrawStatus.IN_PROGRESS
                 // show ProgressBar if MapView is drawing and lock modeTV
-                progressBar.visibility = if(drawStatusInProgress) View.VISIBLE else View.GONE
+                progressBar.visibility = if (drawStatusInProgress) View.VISIBLE else View.GONE
                 modeTV.isEnabled = !drawStatusInProgress
             }
         }
 
         // create service feature table from a url
-        featureTable = ServiceFeatureTable(ServiceFeatureURL);
+        featureTable =
+            ServiceFeatureTable("https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/Trees_of_Portland/FeatureServer/0")
         // create a feature layer from the service feature table
-        featureLayer = FeatureLayer(featureTable);
-        // set up the control panel for switching between request modes
-        setUpUi();
+        featureLayer = FeatureLayer(featureTable)
+        // set up the UI for switching between request modes
+        setUpUi()
     }
 
+    /**
+     * Sets up the listeners for the UI when Mode or Populate views are clicked
+     */
     private fun setUpUi() {
+        // display feature mode options when the mode view is clicked
         modeTV.setOnClickListener {
-            // Creates a dialog to choose a where clause
+            // create an alert dialog and set up the options
             val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this@MainActivity)
             alertDialog.setTitle("Choose a feature request mode")
-            val array = arrayListOf("Cache","No cache","Manual cache")
+            val array = arrayListOf("Cache", "No cache", "Manual cache")
 
             alertDialog.setSingleChoiceItems(
-                array.toTypedArray(), featureModeSelected) { dialog, which ->
-                // Dismiss dialog
+                array.toTypedArray(), featureModeSelected
+            ) { dialog, which ->
                 dialog.dismiss()
+                // update and set the current feature mode selected
                 featureModeSelected = which
-                populateTV.isEnabled = featureModeSelected == 2
                 setUpFeatureMode()
             }
 
             // Displays the where clause dialog
             val alert: AlertDialog = alertDialog.create()
+            alert.setCancelable(false)
             alert.show()
         }
         // fetch cache manually when the populate button is clicked
@@ -134,11 +137,15 @@ class MainActivity : AppCompatActivity() {
         labelTV.text = "Select a feature request mode"
     }
 
+    /**
+     * Sets up the [featureLayer] to the [mapView] and updates the layer
+     * to the selected feature request mode
+     */
     private fun setUpFeatureMode() {
         // check if the feature layer has already been added to the map's operational layers, and if not, add it
         mapView.apply {
-            if (map.operationalLayers.size == 0){
-                map.operationalLayers.add(featureLayer);
+            if (map.operationalLayers.size == 0) {
+                map.operationalLayers.add(featureLayer)
             }
         }
         // check the feature layer has loaded before setting the request mode of the feature table, selected from
@@ -159,6 +166,8 @@ class MainActivity : AppCompatActivity() {
      * Fetches the cache from a Service Feature Table manually.
      */
     private fun fetchCacheManually() {
+        // show loading progressbar when fetching manually
+        progressBar.visibility = View.VISIBLE
         // create query to select all tree features
         val queryParams = QueryParameters()
         // query for all tree conditions except "dead" with coded value '4' within the visible extent
@@ -177,14 +186,26 @@ class MainActivity : AppCompatActivity() {
                 tableResult.get().forEach { _ -> featuresReturned.getAndIncrement() }
                 // display number of returned features to the user
                 // note the service has a maximum record count of 2000
-                Log.e("TAG", "Populated $featuresReturned features.")
-            }catch (e: Exception){
-                e.printStackTrace()
+                labelTV.text = "Populated $featuresReturned features."
+                // hide the loading ProgressBar
+                progressBar.visibility = View.GONE
+            } catch (e: Exception) {
+                val error = "PopulateFromServiceAsync failed to load" + e.message
+                Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+                Log.e(TAG, error)
+                // hide the loading ProgressBar
+                progressBar.visibility = View.GONE
             }
         }
     }
 
-    private fun getSelectedMode(): FeatureRequestMode{
+    /**
+     * Updates the [labelTV] text and returns the selected
+     * FeatureRequestMode using [featureModeSelected]
+     */
+    private fun getSelectedMode(): FeatureRequestMode {
+        // enable populate view if request mode is manual cache
+        populateTV.isEnabled = featureModeSelected == 2
         when (featureModeSelected) {
             0 -> {
                 labelTV.text = "Cache enabled"
@@ -199,7 +220,7 @@ class MainActivity : AppCompatActivity() {
                 return FeatureRequestMode.MANUAL_CACHE
             }
         }
-        return FeatureRequestMode.ON_INTERACTION_CACHE
+        return FeatureRequestMode.MANUAL_CACHE
     }
 
     override fun onPause() {
