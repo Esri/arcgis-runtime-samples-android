@@ -1,2 +1,29 @@
 {
+    "category": "Edit and Manage Data",
+    "description": "Use different feature request modes to populate the map from a service feature table.",
+    "formal_name": "ToggleBetweenFeatureRequestModes",
+    "ignore": false,
+    "images": [
+        "toggle-between-feature-request-modes.png"
+    ],
+    "keywords": [
+        "cache",
+        "data",
+        "feature",
+        "feature request mode",
+        "performance",
+        "FeatureLayer",
+        "ServiceFeatureTable",
+        "ServiceFeatureTable.FeatureRequestMode"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "FeatureLayer",
+        "ServiceFeatureTable",
+        "ServiceFeatureTable.FeatureRequestMode"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/togglebetweenfeaturerequestmodes/MainActivity.kt"
+    ],
+    "title": "Toggle between feature request modes"
 }
