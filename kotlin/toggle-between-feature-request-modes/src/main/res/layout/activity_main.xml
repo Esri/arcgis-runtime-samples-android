@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:enabled="false"
             android:padding="20dp"
-            android:text="Popuplate"
+            android:text="Populate"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

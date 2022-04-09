@@ -69,9 +69,15 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.labelText
     }
 
+    // instance of the FeatureLayer to be used by the map
     private var featureLayer: FeatureLayer? = null
-    private var featureTable: ServiceFeatureTable? = null
+
+    // currently selected feature mode: 0.Cache, 1.No cache, 2.Manual cache
     private var featureModeSelected: Int = 0
+
+    // instance of the service feature table of street trees in Portland
+    private var featureTable: ServiceFeatureTable? =
+        ServiceFeatureTable("https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/Trees_of_Portland/FeatureServer/0")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,10 +101,6 @@ class MainActivity : AppCompatActivity() {
                 modeTV.isEnabled = !drawStatusInProgress
             }
         }
-
-        // create service feature table from a url
-        featureTable =
-            ServiceFeatureTable("https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/Trees_of_Portland/FeatureServer/0")
         // create a feature layer from the service feature table
         featureLayer = FeatureLayer(featureTable)
         // set up the UI for switching between request modes
@@ -111,21 +113,20 @@ class MainActivity : AppCompatActivity() {
     private fun setUpUi() {
         // display feature mode options when the mode view is clicked
         modeTV.setOnClickListener {
+            val featureModeChoices = arrayOf("Cache", "No cache", "Manual cache")
             // create an alert dialog and set up the options
-            val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this@MainActivity)
-            alertDialog.setTitle("Choose a feature request mode")
-            val array = arrayListOf("Cache", "No cache", "Manual cache")
-
-            alertDialog.setSingleChoiceItems(
-                array.toTypedArray(), featureModeSelected
-            ) { dialog, which ->
-                dialog.dismiss()
-                // update and set the current feature mode selected
-                featureModeSelected = which
-                setUpFeatureMode()
+            val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this@MainActivity).apply {
+                setTitle("Choose a feature request mode")
+                setSingleChoiceItems(
+                    featureModeChoices, featureModeSelected
+                ) { dialog, which ->
+                    dialog.dismiss()
+                    // update and set the current feature mode selected
+                    featureModeSelected = which
+                    setUpFeatureMode()
+                }
             }
-
-            // Displays the where clause dialog
+            // Displays the dialog
             val alert: AlertDialog = alertDialog.create()
             alert.setCancelable(false)
             alert.show()
@@ -134,6 +135,7 @@ class MainActivity : AppCompatActivity() {
         populateTV.setOnClickListener {
             fetchCacheManually()
         }
+        // set label text on app launch
         labelTV.text = "Select a feature request mode"
     }
 
@@ -143,9 +145,9 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setUpFeatureMode() {
         // check if the feature layer has already been added to the map's operational layers, and if not, add it
-        mapView.apply {
-            if (map.operationalLayers.size == 0) {
-                map.operationalLayers.add(featureLayer)
+        mapView.map.apply {
+            if (operationalLayers.size == 0) {
+                operationalLayers.add(featureLayer)
             }
         }
         // check the feature layer has loaded before setting the request mode of the feature table, selected from
@@ -166,7 +168,7 @@ class MainActivity : AppCompatActivity() {
      * Fetches the cache from a Service Feature Table manually.
      */
     private fun fetchCacheManually() {
-        // show loading progressbar when fetching manually
+        // show loading ProgressBar when fetching manually
         progressBar.visibility = View.VISIBLE
         // create query to select all tree features
         val queryParams = QueryParameters()
