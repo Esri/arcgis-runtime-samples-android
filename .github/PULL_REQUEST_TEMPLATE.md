@@ -4,7 +4,7 @@ PR to add a new Kotlion sample _"SAMPLE_NAME"_ in `SAMPLE_CATEGORY` category.
 -->
 ## Links and Data
 <!--
-Sample Epic: `runtime/common-samples/issues/ISSUE`
+Sample Epic: `runtime/common-samples/issues/ISSUE_NUMBER`
 -->
 ## What To Review
 <!--
