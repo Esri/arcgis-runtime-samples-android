@@ -17,10 +17,10 @@ Sample Epic: `runtime/common-samples/issues/ISSUE_NUMBER`
 Run the sample on the sample viewer or the repo.
 -->
 
-<!--
+<!-- OPTIONAL
 ## To Discuss
 -->
 
-<!--
+<!-- OPTIONAL
 ## Screenshots
 -->
