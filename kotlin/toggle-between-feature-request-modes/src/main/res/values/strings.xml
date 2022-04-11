@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Toggle between feature request modes</string>
+    <string name="populate">Populate</string>
+    <string name="mode">Mode</string>
+    <string name="labelDefaultText">Select a feature request mode</string>
+    <string name="cacheEnabled">Cache enabled</string>
+    <string name="noCacheEnabled">No cache enabled</string>
+    <string name="manualCacheEnabled">Click populate to view results</string>
 </resources>

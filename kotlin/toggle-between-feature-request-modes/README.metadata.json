@@ -17,6 +17,11 @@
         "ServiceFeatureTable.FeatureRequestMode"
     ],
     "language": "kotlin",
+    "redirect_from": [
+        "/android/java/sample-code/service-feature-table-no-cache/",
+        "/android/java/sample-code/service-feature-table-manual-cache/",
+        "/android/java/sample-code/service-feature-table-cache/"
+    ],
     "relevant_apis": [
         "FeatureLayer",
         "ServiceFeatureTable",

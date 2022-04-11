@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.sample.togglebetweenfeaturerequestmodes
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -53,12 +54,12 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.mapView
     }
 
-    private val modeTV: TextView by lazy {
-        activityMainBinding.modeTV
+    private val modeButton: Button by lazy {
+        activityMainBinding.mode
     }
 
-    private val populateTV: TextView by lazy {
-        activityMainBinding.populateTV
+    private val populateButton: Button by lazy {
+        activityMainBinding.populate
     }
 
     private val progressBar: ProgressBar by lazy {
@@ -89,16 +90,16 @@ class MainActivity : AppCompatActivity() {
 
         mapView.apply {
             // set the map to be displayed in the layout's MapView
-            this.map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+            map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
             // set the starting viewpoint for the map view
             setViewpoint(Viewpoint(45.5266, -122.6219, 6000.0))
             // show a progress indicator when the map view is drawing (e.g. when fetching caches)
             addDrawStatusChangedListener { e: DrawStatusChangedEvent ->
                 // true if DrawStatus is in progress
-                val drawStatusInProgress = e.drawStatus == DrawStatus.IN_PROGRESS
+                //val drawStatusInProgress = e.drawStatus == DrawStatus.IN_PROGRESS
                 // show ProgressBar if MapView is drawing and lock modeTV
-                progressBar.visibility = if (drawStatusInProgress) View.VISIBLE else View.GONE
-                modeTV.isEnabled = !drawStatusInProgress
+                //progressBar.visibility = if (drawStatusInProgress) View.VISIBLE else View.GONE
+                //modeButton.isEnabled = !drawStatusInProgress
             }
         }
         // create a feature layer from the service feature table
@@ -112,7 +113,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setUpUi() {
         // display feature mode options when the mode view is clicked
-        modeTV.setOnClickListener {
+        modeButton.setOnClickListener {
             val featureModeChoices = arrayOf("Cache", "No cache", "Manual cache")
             // create an alert dialog and set up the options
             val alertDialog: AlertDialog.Builder = AlertDialog.Builder(this@MainActivity).apply {
@@ -132,11 +133,11 @@ class MainActivity : AppCompatActivity() {
             alert.show()
         }
         // fetch cache manually when the populate button is clicked
-        populateTV.setOnClickListener {
+        populateButton.setOnClickListener {
             fetchCacheManually()
         }
         // set label text on app launch
-        labelTV.text = "Select a feature request mode"
+        labelTV.text = getString(R.string.labelDefaultText)
     }
 
     /**
@@ -171,10 +172,11 @@ class MainActivity : AppCompatActivity() {
         // show loading ProgressBar when fetching manually
         progressBar.visibility = View.VISIBLE
         // create query to select all tree features
-        val queryParams = QueryParameters()
-        // query for all tree conditions except "dead" with coded value '4' within the visible extent
-        queryParams.whereClause = "Condition < '4'"
-        queryParams.geometry = mapView.visibleArea.extent
+        val queryParams = QueryParameters().apply {
+            // query for all tree conditions except "dead" with coded value '4' within the visible extent
+            whereClause = "Condition < '4'"
+            geometry = mapView.visibleArea.extent
+        }
 
         // * means all features
         val outfields: List<String> = Collections.singletonList("*")
@@ -207,18 +209,18 @@ class MainActivity : AppCompatActivity() {
      */
     private fun getSelectedMode(): FeatureRequestMode {
         // enable populate view if request mode is manual cache
-        populateTV.isEnabled = featureModeSelected == 2
+        populateButton.isEnabled = featureModeSelected == 2
         when (featureModeSelected) {
             0 -> {
-                labelTV.text = "Cache enabled"
+                labelTV.text = getString(R.string.cacheEnabled)
                 return FeatureRequestMode.ON_INTERACTION_CACHE
             }
             1 -> {
-                labelTV.text = "No cache enabled"
+                labelTV.text = getString(R.string.noCacheEnabled)
                 return FeatureRequestMode.ON_INTERACTION_NO_CACHE
             }
             2 -> {
-                labelTV.text = "Click populate to view results"
+                labelTV.text = getString(R.string.manualCacheEnabled)
                 return FeatureRequestMode.MANUAL_CACHE
             }
         }
