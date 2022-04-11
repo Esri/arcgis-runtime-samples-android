@@ -1,6 +1,6 @@
 ## Description
 <!--
-PR to add a new Kotlion sample _"SAMPLE_NAME"_ in `SAMPLE_CATEGORY` category.
+PR to add a new Kotlin sample _"SAMPLE_NAME"_ in `SAMPLE_CATEGORY` category.
 -->
 ## Links and Data
 <!--
