@@ -93,14 +93,6 @@ class MainActivity : AppCompatActivity() {
             map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
             // set the starting viewpoint for the map view
             setViewpoint(Viewpoint(45.5266, -122.6219, 6000.0))
-            // show a progress indicator when the map view is drawing (e.g. when fetching caches)
-            addDrawStatusChangedListener { e: DrawStatusChangedEvent ->
-                // true if DrawStatus is in progress
-                //val drawStatusInProgress = e.drawStatus == DrawStatus.IN_PROGRESS
-                // show ProgressBar if MapView is drawing and lock modeTV
-                //progressBar.visibility = if (drawStatusInProgress) View.VISIBLE else View.GONE
-                //modeButton.isEnabled = !drawStatusInProgress
-            }
         }
         // create a feature layer from the service feature table
         featureLayer = FeatureLayer(featureTable)
