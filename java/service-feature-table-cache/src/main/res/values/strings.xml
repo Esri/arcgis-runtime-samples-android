@@ -1,4 +1,0 @@
-<resources>
-    <string name="app_name">Service Feature Table (Cache)</string>
-    <string name="sample_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/PoolPermits/FeatureServer/0</string>
-</resources>
