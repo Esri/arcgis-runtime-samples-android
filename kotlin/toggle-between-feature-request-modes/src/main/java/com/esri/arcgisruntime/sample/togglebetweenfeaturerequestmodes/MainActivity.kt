@@ -34,8 +34,6 @@ import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
-import com.esri.arcgisruntime.mapping.view.DrawStatus
-import com.esri.arcgisruntime.mapping.view.DrawStatusChangedEvent
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.togglebetweenfeaturerequestmodes.databinding.ActivityMainBinding
 import java.util.Collections
@@ -139,7 +137,7 @@ class MainActivity : AppCompatActivity() {
     private fun setUpFeatureMode() {
         // check if the feature layer has already been added to the map's operational layers, and if not, add it
         mapView.map.apply {
-            if (operationalLayers.size == 0) {
+            if (operationalLayers.isEmpty()) {
                 operationalLayers.add(featureLayer)
             }
         }
