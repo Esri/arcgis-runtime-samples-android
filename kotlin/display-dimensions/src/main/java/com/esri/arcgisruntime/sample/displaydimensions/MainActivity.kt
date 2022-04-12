@@ -81,41 +81,44 @@ class MainActivity : AppCompatActivity() {
 
         mobileMapPackage.loadAsync()
 
+
+        // inflate the dialog layout and get references to each of its components
+        val dialogBinding = DialogLayoutBinding.inflate(LayoutInflater.from(this)).apply {
+            dimensionLayerSwitch.setOnCheckedChangeListener { _, isEnabled ->
+                // set the visibility of the dimension layer
+                dimensionLayer.isVisible = isEnabled
+                isDimensionLayerEnabled = isEnabled
+            }
+
+
+            definitionSwitch.setOnCheckedChangeListener { _, isEnabled ->
+                // set a definition expression to show dimension lengths of
+                // greater than or equal to 450m when the checkbox is selected,
+                // or to reset the definition expression to show all
+                // dimension lengths when unselected
+                val defExpression =
+                    if (isEnabled) "DIMLENGTH >= 450" else ""
+                dimensionLayer.definitionExpression = defExpression
+                isDefinitionEnabled = isEnabled
+
+            }
+        }
+        val builder = AlertDialog.Builder(this).apply {
+            setView(dialogBinding.root)
+            setTitle("Dimension options:")
+        }
+        val dialog = builder.create()
+
         settingsButton.setOnClickListener {
-            // inflate the dialog layout and get references to each of its components
-            val dialogBinding = DialogLayoutBinding.inflate(LayoutInflater.from(this))
-            val dimensionLayerSwitch = dialogBinding.dimensionLayerSwitch.apply {
-                isChecked = isDimensionLayerEnabled
-            }
-            val definitionSwitch = dialogBinding.definitionSwitch.apply {
-                isChecked = isDefinitionEnabled
-            }
-
-            // set up the dialog
-            AlertDialog.Builder(this).apply {
-                setView(dialogBinding.root)
-                setTitle("Dimension options:")
-
-                dimensionLayerSwitch.setOnCheckedChangeListener { _, isEnabled ->
-                    // set the visibility of the dimension layer
-                    dimensionLayer.isVisible = isEnabled
-                    isDimensionLayerEnabled = isEnabled
+            dialogBinding.apply {
+                dimensionLayerSwitch.apply {
+                    isChecked = isDimensionLayerEnabled
                 }
-
-
-                definitionSwitch.setOnCheckedChangeListener { _, isEnabled ->
-                    // set a definition expression to show dimension lengths of
-                    // greater than or equal to 450m when the checkbox is selected,
-                    // or to reset the definition expression to show all
-                    // dimension lengths when unselected
-                    val defExpression =
-                        if (isEnabled) "DIMLENGTH >= 450" else ""
-                    dimensionLayer.definitionExpression = defExpression
-                    isDefinitionEnabled = isEnabled
-
+                definitionSwitch.apply {
+                    isChecked = isDefinitionEnabled
                 }
-
-            }.show()
+            }
+            dialog.show()
         }
     }
 
