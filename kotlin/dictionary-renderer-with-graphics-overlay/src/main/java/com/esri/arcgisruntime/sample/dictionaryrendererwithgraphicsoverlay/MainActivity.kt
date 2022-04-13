@@ -81,9 +81,9 @@ class MainActivity : AppCompatActivity() {
             dictionarySymbolStyle.addDoneLoadingListener {
                 if (dictionarySymbolStyle.loadStatus == LoadStatus.LOADED) {
                     // find the first configuration setting which has the property name "model",
-                    // and set its value to "ORDERED ANCHOR POINT"
+                    // and set its value to "ORDERED ANCHOR POINTS"
                     dictionarySymbolStyle.configurations
-                        .first { it.name.equals("model") }.value = "ORDERED ANCHOR POINT"
+                        .first { it.name.equals("model") }.value = "ORDERED ANCHOR POINTS"
                     // create a new dictionary renderer from the dictionary symbol style to render graphics
                     // with symbol dictionary attributes and set it to the graphics overlay renderer
                     val dictionaryRenderer = DictionaryRenderer(dictionarySymbolStyle)
