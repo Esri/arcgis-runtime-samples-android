@@ -28,7 +28,7 @@ import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.MobileMapPackage
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.displaydimensions.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.sample.displaydimensions.databinding.DialogLayoutBinding
+import com.esri.arcgisruntime.sample.displaydimensions.databinding.DimensionsDialogLayoutBinding
 
 
 class MainActivity : AppCompatActivity() {
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
         settingsButton.setOnClickListener {
             // inflate the dialog layout and get references to each of its components
-            val dialogBinding = DialogLayoutBinding.inflate(LayoutInflater.from(this))
+            val dialogBinding = DimensionsDialogLayoutBinding.inflate(LayoutInflater.from(this))
             val dimensionLayerSwitch = dialogBinding.dimensionLayerSwitch.apply {
                 isChecked = isDimensionLayerEnabled
             }
