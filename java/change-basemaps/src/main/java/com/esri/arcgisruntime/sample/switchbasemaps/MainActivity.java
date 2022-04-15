@@ -31,6 +31,7 @@ import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.BasemapStyle;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -75,9 +76,11 @@ public class MainActivity extends AppCompatActivity {
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
     // create a map with Topographic Basemap
-    mMap = new ArcGISMap(new Basemap(BasemapStyle.ARCGIS_TOPOGRAPHIC), 47.6047381, -122.3334255, 12);
+    mMap = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
     // set the map to be displayed in this view
     mMapView.setMap(mMap);
+    // set a viewpoint around Seattle
+    mMapView.setViewpoint(new Viewpoint( 47.6047381, -122.3334255, 100000));
   }
 
   /**
