@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
     //[DocRef: Name=Create map-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
-    // create a map with the BasemapType topographic
+    // create a map with the BasemapStyle navigation
     val map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
     //[DocRef: END]
 

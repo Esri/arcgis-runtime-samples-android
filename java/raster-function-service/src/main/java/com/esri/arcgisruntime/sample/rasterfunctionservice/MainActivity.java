@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
     mRasterFunctionButton = findViewById(R.id.rasterButton);
     mRasterFunctionButton.setEnabled(false);
-    // create a map with the BasemapType topographic
+    // create a map with the Basemap Style topographic
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_DARK_GRAY);
     final ImageServiceRaster imageServiceRaster = new ImageServiceRaster(getString(R.string.image_service_raster_url));
     final RasterLayer imageRasterLayer = new RasterLayer(imageServiceRaster);

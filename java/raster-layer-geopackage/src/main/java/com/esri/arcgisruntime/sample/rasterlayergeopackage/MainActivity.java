@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
-    // create a map with the BasemapType light gray canvas
+    // create a map with the Basemap Style light gray canvas
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY);
     // set the map to be displayed in this view
     mMapView.setMap(map);

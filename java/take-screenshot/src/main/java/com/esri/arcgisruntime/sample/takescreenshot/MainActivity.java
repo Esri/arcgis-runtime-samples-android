@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
-    // create a map with the BasemapType Imagery with Labels
+    // create a map with the Basemap Style Imagery with Labels
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
     // set the map to be displayed in this view
     mMapView.setMap(map);

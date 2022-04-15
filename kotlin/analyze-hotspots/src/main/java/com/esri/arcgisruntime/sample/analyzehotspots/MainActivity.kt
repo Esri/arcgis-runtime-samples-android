@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
     // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-    // create a map with the BasemapType topographic
+    // create a map with the BasemapStyle topographic
     val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
 
     // set the map to the map view
