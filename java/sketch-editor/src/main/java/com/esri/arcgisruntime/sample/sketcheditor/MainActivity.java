@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate map view from layout
     mMapView = findViewById(R.id.mapView);
-    // create a map with the Basemap Type topographic
+    // create a map with the Basemap Style topographic
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY);
     // set the map to be displayed in this view
     mMapView.setMap(map);

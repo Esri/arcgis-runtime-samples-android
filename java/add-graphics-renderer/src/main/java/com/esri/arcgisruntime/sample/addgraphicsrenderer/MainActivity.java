@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     // create MapView from layout
     mMapView = findViewById(R.id.mapView);
-    // create a map with the Basemap Type topographic
+    // create a map with the Basemap Style topographic
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
     // add graphics overlay
     addGraphicsOverlay();

@@ -25,6 +25,7 @@ import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     mSceneView = findViewById(R.id.sceneView);
 
     // create a scene with an imagery basemap
-    ArcGISScene scene = new ArcGISScene(Basemap.Type.IMAGERY);
+    ArcGISScene scene = new ArcGISScene(BasemapStyle.ARCGIS_IMAGERY);
 
     // add the SceneView to the stack pane
     mSceneView.setScene(scene);

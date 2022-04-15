@@ -23,6 +23,7 @@ import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     mSceneView = findViewById(R.id.sceneView);
 
     // create a scene with a basemap and add it to the scene view
-    ArcGISScene scene = new ArcGISScene(Basemap.Type.IMAGERY);
+    ArcGISScene scene = new ArcGISScene(BasemapStyle.ARCGIS_IMAGERY);
     mSceneView.setScene(scene);
 
     // set the base surface with world elevation

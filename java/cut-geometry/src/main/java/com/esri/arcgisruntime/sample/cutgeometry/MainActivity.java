@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
     Button cutButton = findViewById(R.id.cutButton);
 
-    // create a map with the BasemapType topographic
+    // create a map with the Basemap Style topographic
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
 
     // set the map to be displayed in this view

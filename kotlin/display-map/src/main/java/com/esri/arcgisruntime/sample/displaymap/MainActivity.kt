@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         //[DocRef: Name=Create map-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
-        // create a map with the BasemapType topographic
+        // create a map with the BasemapStyle navigation
         val map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
         //[DocRef: END]
 
@@ -59,24 +59,4 @@ class MainActivity : AppCompatActivity() {
         // set the map to be displayed in the layout's MapView
         mapView.map = map
         //[DocRef: END]
-
-        mapView.setViewpoint(Viewpoint(34.056295, -117.195800, 10000.0))
     }
-
-    //[DocRef: Name=Pause and resume-Android, Category=Get started, Topic=Develop your first map app with Kotlin]
-    override fun onPause() {
-        mapView.pause()
-        super.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mapView.resume()
-    }
-
-    override fun onDestroy() {
-        mapView.dispose()
-        super.onDestroy()
-    }
-    //[DocRef: END]
-}

@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
-    // create a map with the BasemapType topographic
+    // create a map with the Basemap Style topographic
     final ArcGISMap mMap = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
     // add the map to the map view
     mMapView.setMap(mMap);

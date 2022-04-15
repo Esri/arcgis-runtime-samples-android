@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
-    // create a map with the BasemapType topographic
+    // create a map with the Basemap Style topographic
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_OCEANS);
     // set the map to be displayed in this view
     mMapView.setMap(map);

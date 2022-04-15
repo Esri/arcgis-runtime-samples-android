@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     // inflate operational layer selection button from the layout
     Button selectLayers = findViewById(R.id.operationallayer);
 
-    // create a map with the BasemapType topographic
+    // create a map with the Basemap Style topographic
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
 
     ArcGISMapImageLayer imageLayerElevation = new ArcGISMapImageLayer(getResources().getString(R.string.imagelayer_elevation_url));
