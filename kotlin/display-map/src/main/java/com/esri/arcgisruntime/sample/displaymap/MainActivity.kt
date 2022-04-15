@@ -60,3 +60,4 @@ class MainActivity : AppCompatActivity() {
         mapView.map = map
         //[DocRef: END]
     }
+}
