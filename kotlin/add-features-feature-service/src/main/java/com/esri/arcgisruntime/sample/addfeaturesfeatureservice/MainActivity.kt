@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.ArcGISRuntimeException
 import com.esri.arcgisruntime.data.ServiceFeatureTable
+import com.esri.arcgisruntime.data.ServiceGeodatabase
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -54,35 +55,37 @@ class MainActivity : AppCompatActivity() {
 
         // create a map with streets basemap
         ArcGISMap(BasemapStyle.ARCGIS_STREETS).let { map ->
-
-            // create service feature table from URL
-            ServiceFeatureTable(getString(R.string.service_layer_url)).let { serviceFeatureTable ->
-                // add a listener to the MapView to detect when a user has performed a single tap to add a new feature to
-                // the service feature table
-                mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this, mapView) {
-                    override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {
-                        motionEvent?.let { event ->
-                            // create a point from where the user clicked
-                            android.graphics.Point(event.x.toInt(), event.y.toInt()).let { point ->
-                                // create a map point from a point
-                                mapView.screenToLocation(point)
-                            }.let { mapPoint ->
-                                // add a new feature to the service feature table
-                                addFeature(mapPoint, serviceFeatureTable)
+            // create and load the service geodatabase
+            ServiceGeodatabase(getString(R.string.service_layer_url)).apply {
+                loadAsync()
+                addDoneLoadingListener {
+                    // create a feature layer using the first layer in the geodatabase
+                    val serviceFeatureTable = getTable(0)
+                    // add a listener to the MapView to detect when a user has performed a single tap to add a new feature to
+                    // the service feature table
+                    mapView.onTouchListener =
+                        object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
+                            override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {
+                                motionEvent?.let { event ->
+                                    // create a point from where the user clicked
+                                    android.graphics.Point(event.x.toInt(), event.y.toInt())
+                                        .let { point ->
+                                            // create a map point from a point
+                                            mapView.screenToLocation(point)
+                                        }.let { mapPoint ->
+                                            // add a new feature to the service feature table
+                                            addFeature(mapPoint, serviceFeatureTable)
+                                        }
+                                }
+                                return super.onSingleTapConfirmed(motionEvent)
                             }
                         }
-                        return super.onSingleTapConfirmed(motionEvent)
-                    }
+                    // create a feature layer from table
+                    val featureLayer = FeatureLayer(serviceFeatureTable)
+                    // add the layer to the map
+                    map.operationalLayers.add(featureLayer)
                 }
-
-                // create a feature layer from table
-                FeatureLayer(serviceFeatureTable)
-            }.let { featureLayer ->
-
-                // add the layer to the map
-                map.operationalLayers.add(featureLayer)
             }
-
             // set map to be displayed in map view
             mapView.map = map
 
@@ -126,16 +129,16 @@ class MainActivity : AppCompatActivity() {
     private fun applyEdits(featureTable: ServiceFeatureTable) {
 
         // apply the changes to the server
-        featureTable.applyEditsAsync().let { editResult ->
+        featureTable.serviceGeodatabase.applyEditsAsync().let { editResult ->
             editResult.addDoneListener {
                 try {
                     editResult.get()?.let { edits ->
                         // check if the server edit was successful
                         edits.firstOrNull()?.let {
-                            if (!it.hasCompletedWithErrors()) {
+                            if (!it.editResult[0].hasCompletedWithErrors()) {
                                 logToUser(false, getString(R.string.feature_added))
                             } else {
-                                it.error
+                                it.editResult[0].error
                             }
                         }
                     }
