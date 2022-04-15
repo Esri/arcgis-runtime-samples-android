@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         val featureLayer = FeatureLayer(ServiceFeatureTable("https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/SF_311_Incidents/FeatureServer/0"))
 
         // set the map to be displayed in the layout's MapView
-        // with the BasemapType topographic
+        // with the BasemapStyle topographic
         val topographicMap = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
             //add a feature layer to the map
             operationalLayers.add(featureLayer)

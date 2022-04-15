@@ -14,7 +14,7 @@ When the sample opens, it will automatically display the map with the OpenStreet
 
 ## How it works
 
-1. Instantiate an `ArcGISMap` with a `Basemap.Type.OPEN_STREET_MAP`
+1. Instantiate an `ArcGISMap` with a `BasemapStyle.OSM_STANDARD`
 2. Show the map in a map view using `MapView.setMap(map)`.
 
 ## Relevant API

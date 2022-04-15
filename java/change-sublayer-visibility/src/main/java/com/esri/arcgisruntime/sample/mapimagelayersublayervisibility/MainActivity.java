@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
-    // create a map with the Basemap Type topographic
+    // create a map
     ArcGISMap map = new ArcGISMap();
     // create a MapImageLayer with dynamically generated map images
     mMapImageLayer = new ArcGISMapImageLayer(getResources().getString(R.string.world_cities_service));

@@ -4,7 +4,7 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
-    <string-array name="basemap_types">
+    <string-array name="basemap_styles">
         <item>Streets</item>
         <item>Navigation</item>
         <item>Topographic</item>

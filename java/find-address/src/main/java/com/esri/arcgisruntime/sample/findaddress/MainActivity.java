@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate MapView from layout
     mMapView = (MapView) findViewById(R.id.mapView);
-    // create a map with the BasemapType topographic
+    // create a map with the Basemap Style topographic
     final ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
     map.setInitialViewpoint(new Viewpoint(40,-100,100000000));
 

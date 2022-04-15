@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     //clear the current map load status of the TextView
     mMapLoadStatusTextView.setText("");
-    // create a map with the BasemapType National Geographic
+    // create a map with the Basemap Style Light Gray
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY);
 
     // Listener on change in map load status

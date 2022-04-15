@@ -25,6 +25,7 @@ import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SceneView;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     // get a reference to the scene view
     mSceneView = findViewById(R.id.sceneView);
     // create a scene and add it to the scene view
-    ArcGISScene scene = new ArcGISScene(Basemap.Type.NATIONAL_GEOGRAPHIC);
+    ArcGISScene scene = new ArcGISScene(BasemapStyle.ARCGIS_TOPOGRAPHIC);
     mSceneView.setScene(scene);
 
     // add base surface for elevation data
