@@ -9,7 +9,7 @@
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button"
@@ -19,6 +19,6 @@
         android:src="@drawable/ic_my_location_white_24dp"
         android:backgroundTint="@color/colorPrimary"
         android:layout_margin="16dp"
-        app:rippleColor="@color/colorPrimaryDark"/>
+        app:rippleColor="@color/colorPrimaryDark" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

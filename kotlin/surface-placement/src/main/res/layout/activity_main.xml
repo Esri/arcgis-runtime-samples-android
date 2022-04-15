@@ -49,7 +49,7 @@
             android:layout_weight="1"
             android:text="Z-value"
             android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
         <SeekBar
             android:id="@+id/seekBar"

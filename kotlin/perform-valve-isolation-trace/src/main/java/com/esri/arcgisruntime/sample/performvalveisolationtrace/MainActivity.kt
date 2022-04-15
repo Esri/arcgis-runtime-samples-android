@@ -99,11 +99,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val traceButton: Button by lazy {
-      activityMainBinding.traceButton
+        activityMainBinding.traceButton
     }
 
     private val resetButton: Button by lazy {
-      activityMainBinding.resetButton
+        activityMainBinding.resetButton
     }
 
     private val includeIsolatedSwitch: SwitchCompat by lazy {
@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
     private val featureServiceUrl =
         "https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleGas/FeatureServer"
     private val utilityNetwork by lazy {
-      UtilityNetwork(featureServiceUrl)
+        UtilityNetwork(featureServiceUrl)
     }
 
     // create a graphics overlay for the starting location and add it to the map view
@@ -182,7 +182,7 @@ class MainActivity : AppCompatActivity() {
                     return super.onTouch(view, event)
                 }
 
-        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                     // only pass taps to identify nearest utility element once the utility network has loaded
                     if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
                         identifyNearestUtilityElement(
@@ -193,7 +193,8 @@ class MainActivity : AppCompatActivity() {
                     }
                     return false
                 }
-            }}
+            }
+        }
         // show the options sheet when the floating action button is clicked
         fab.setOnClickListener {
             fab.isExpanded = !fab.isExpanded
@@ -291,7 +292,8 @@ class MainActivity : AppCompatActivity() {
                                     fab.isExpanded = false
                                     performTrace(
                                         utilityNetwork,
-                                        traceConfiguration)
+                                        traceConfiguration
+                                    )
                                 }
 
                                 resetButton.setOnClickListener {
@@ -320,7 +322,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show()
             }
         }
-    return utilityNetwork
+        return utilityNetwork
     }
 
     private fun identifyNearestUtilityElement(screenPoint: android.graphics.Point) {
@@ -463,7 +465,9 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }.show()
         }
-    }/**
+    }
+
+    /**
      * Performs a valve isolation trace according to the defined trace configuration and starting* location, and selects the resulting features on the map.
      *
      * @param utilityNetwork the utility network to perform the trace on
@@ -488,8 +492,8 @@ class MainActivity : AppCompatActivity() {
             filter = UtilityTraceFilter()
             filter.barriers = utilityCategoryComparison
 
-        // set the configuration to include or leave out isolated features
-        isIncludeIsolatedFeatures = includeIsolatedSwitch.isChecked
+            // set the configuration to include or leave out isolated features
+            isIncludeIsolatedFeatures = includeIsolatedSwitch.isChecked
         }
 
         // build parameters for the isolation trace
@@ -553,7 +557,9 @@ class MainActivity : AppCompatActivity() {
         }
         utilityTraceParameters?.filterBarriers?.clear()
         filterBarriersGraphicsOverlay.graphics.clear()
-    }/**
+    }
+
+    /**
      * Initialize the category selection spinner using a utility network definition.
      *
      * @param networkDefinition the utility network definition to populate the spinner
@@ -569,7 +575,11 @@ class MainActivity : AppCompatActivity() {
                 networkDefinition.categories
             ) {
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                    val binding = SpinnerTextItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                    val binding = SpinnerTextItemBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
 
                     //val spinnerItem = LayoutInflater.from(this@MainActivity).inflate(R.layout.spinner_text_item, parent, false)
                     binding.textView.text = (getItem(position) as UtilityCategory).name

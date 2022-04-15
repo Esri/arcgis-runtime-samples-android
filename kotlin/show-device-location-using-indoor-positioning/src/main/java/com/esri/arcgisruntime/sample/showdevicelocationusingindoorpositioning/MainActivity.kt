@@ -250,16 +250,16 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
      * Retrieves the PathwaysTable
      */
     private fun getPathwaysTable(): ArcGISFeatureTable? {
-        try {
+        return try {
             val pathwaysFeatureLayer =
                 mapView.map.operationalLayers.firstOrNull { it.name.equals("Pathways") } as? FeatureLayer
-            return pathwaysFeatureLayer?.featureTable as? ArcGISFeatureTable
+            pathwaysFeatureLayer?.featureTable as? ArcGISFeatureTable
         } catch (e: Exception) {
             // if pathways table not found in map's operationalLayers
             val message = "PathwaysTable not found"
             Toast.makeText(this, message, Toast.LENGTH_LONG).show()
             Log.e(TAG, message)
-            return null
+            null
         }
     }
 
@@ -310,9 +310,11 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
         }
         // retrieve information about the location of the device
         val floor = (locationProperties["floor"] ?: "").toString()
-        val positionSource = (locationProperties[LocationDataSource.Location.KEY_POSITION_SOURCE] ?: "").toString()
+        val positionSource =
+            (locationProperties[LocationDataSource.Location.KEY_POSITION_SOURCE] ?: "").toString()
         val transmitterCount = (locationProperties["transmitterCount"] ?: "").toString()
-        val networkCount = (locationProperties[LocationDataSource.Location.KEY_SATELLITE_COUNT] ?: "").toString()
+        val networkCount =
+            (locationProperties[LocationDataSource.Location.KEY_SATELLITE_COUNT] ?: "").toString()
 
         // check if current floor hasn't been set or if the floor has changed
         val newFloor = floor.toInt()
@@ -324,7 +326,7 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
         // set up the message with floor properties to be displayed to the textView
         var locationPropertiesMessage =
             "Floor: $floor, Position-source: $positionSource, " +
-                    "Horizontal-accuracy: " + locationChangedEvent.location.let {
+                "Horizontal-accuracy: " + locationChangedEvent.location.let {
                 DecimalFormat(".##").format(
                     it.horizontalAccuracy
                 )

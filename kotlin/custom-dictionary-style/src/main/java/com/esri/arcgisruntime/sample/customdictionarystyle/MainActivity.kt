@@ -43,7 +43,8 @@ class MainActivity : AppCompatActivity() {
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         // create a feature layer from a service feature table
-        val featureTable = ServiceFeatureTable("https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/Redlands_Restaurants/FeatureServer/0")
+        val featureTable =
+            ServiceFeatureTable("https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/Redlands_Restaurants/FeatureServer/0")
         val featureLayer = FeatureLayer(featureTable)
 
         // create a new map with a streets basemap and set it to the map view
@@ -77,7 +78,8 @@ class MainActivity : AppCompatActivity() {
         // create a new dictionary symbol style from the web style in the portal item
         val dictionarySymbolStyleFromPortal = DictionarySymbolStyle(portalItem)
         // create a new dictionary renderer from the dictionary symbol style
-        val dictionaryRendererFromPortal = DictionaryRenderer(dictionarySymbolStyleFromPortal, fieldMap, HashMap())
+        val dictionaryRendererFromPortal =
+            DictionaryRenderer(dictionarySymbolStyleFromPortal, fieldMap, HashMap())
 
         // on web style click
         webStyleRadioButton.setOnClickListener {

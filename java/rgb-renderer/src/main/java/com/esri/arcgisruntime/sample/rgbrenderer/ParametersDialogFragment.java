@@ -127,30 +127,30 @@ public class ParametersDialogFragment extends DialogFragment {
       }
     });
     // min max ui elements
-    mMinRedTextView = (TextView) dialogView.findViewById(R.id.min_red_value_text_view);
-    mMaxRedTextView = (TextView) dialogView.findViewById(R.id.max_red_value_text_view);
-    mMinGreenTextView = (TextView) dialogView.findViewById(R.id.min_green_value_text_view);
-    mMaxGreenTextView = (TextView) dialogView.findViewById(R.id.max_green_value_text_view);
-    mMinBlueTextView = (TextView) dialogView.findViewById(R.id.min_blue_value_text_view);
-    mMaxBlueTextView = (TextView) dialogView.findViewById(R.id.max_blue_value_text_view);
-    mMinRedSeekBar = (SeekBar) dialogView.findViewById(R.id.min_red_seek_bar);
-    mMaxRedSeekBar = (SeekBar) dialogView.findViewById(R.id.max_red_seek_bar);
-    mMinGreenSeekBar = (SeekBar) dialogView.findViewById(R.id.min_green_seek_bar);
-    mMaxGreenSeekBar = (SeekBar) dialogView.findViewById(R.id.max_green_seek_bar);
-    mMinBlueSeekBar = (SeekBar) dialogView.findViewById(R.id.min_blue_seek_bar);
-    mMaxBlueSeekBar = (SeekBar) dialogView.findViewById(R.id.max_blue_seek_bar);
+    mMinRedTextView = dialogView.findViewById(R.id.min_red_value_text_view);
+    mMaxRedTextView = dialogView.findViewById(R.id.max_red_value_text_view);
+    mMinGreenTextView = dialogView.findViewById(R.id.min_green_value_text_view);
+    mMaxGreenTextView = dialogView.findViewById(R.id.max_green_value_text_view);
+    mMinBlueTextView = dialogView.findViewById(R.id.min_blue_value_text_view);
+    mMaxBlueTextView = dialogView.findViewById(R.id.max_blue_value_text_view);
+    mMinRedSeekBar = dialogView.findViewById(R.id.min_red_seek_bar);
+    mMaxRedSeekBar = dialogView.findViewById(R.id.max_red_seek_bar);
+    mMinGreenSeekBar = dialogView.findViewById(R.id.min_green_seek_bar);
+    mMaxGreenSeekBar = dialogView.findViewById(R.id.max_green_seek_bar);
+    mMinBlueSeekBar = dialogView.findViewById(R.id.min_blue_seek_bar);
+    mMaxBlueSeekBar = dialogView.findViewById(R.id.max_blue_seek_bar);
     mMinRedSeekBar.setMax(255);
     mMaxRedSeekBar.setMax(255);
     mMinGreenSeekBar.setMax(255);
     mMaxGreenSeekBar.setMax(255);
     mMinBlueSeekBar.setMax(255);
     mMaxBlueSeekBar.setMax(255);
-    mCurrMinRedTextView = (TextView) dialogView.findViewById(R.id.curr_min_red_text_view);
-    mCurrMaxRedTextView = (TextView) dialogView.findViewById(R.id.curr_max_red_text_view);
-    mCurrMinGreenTextView = (TextView) dialogView.findViewById(R.id.curr_min_green_text_view);
-    mCurrMaxGreenTextView = (TextView) dialogView.findViewById(R.id.curr_max_green_text_view);
-    mCurrMinBlueTextView = (TextView) dialogView.findViewById(R.id.curr_min_blue_text_view);
-    mCurrMaxBlueTextView = (TextView) dialogView.findViewById(R.id.curr_max_blue_text_view);
+    mCurrMinRedTextView = dialogView.findViewById(R.id.curr_min_red_text_view);
+    mCurrMaxRedTextView = dialogView.findViewById(R.id.curr_max_red_text_view);
+    mCurrMinGreenTextView = dialogView.findViewById(R.id.curr_min_green_text_view);
+    mCurrMaxGreenTextView = dialogView.findViewById(R.id.curr_max_green_text_view);
+    mCurrMinBlueTextView = dialogView.findViewById(R.id.curr_min_blue_text_view);
+    mCurrMaxBlueTextView = dialogView.findViewById(R.id.curr_max_blue_text_view);
     //update seek bar positions with current mMinMax values
     updateSeekBar(mMinRedSeekBar, mMinR, mCurrMinRedTextView);
     updateSeekBar(mMaxRedSeekBar, mMaxR, mCurrMaxRedTextView);
@@ -159,22 +159,22 @@ public class ParametersDialogFragment extends DialogFragment {
     updateSeekBar(mMinBlueSeekBar, mMinB, mCurrMinBlueTextView);
     updateSeekBar(mMaxBlueSeekBar, mMaxB, mCurrMaxBlueTextView);
     // percent clip ui elements
-    mPercentClipMinTextView = (TextView) dialogView.findViewById(R.id.percent_clip_min_value_text_view);
-    mPercentClipMaxTextView = (TextView) dialogView.findViewById(R.id.percent_clip_max_value_text_view);
-    mPercentClipMinSeekBar = (SeekBar) dialogView.findViewById(R.id.percent_clip_min_seek_bar);
-    mPercentClipMaxSeekBar = (SeekBar) dialogView.findViewById(R.id.percent_clip_max_seek_bar);
+    mPercentClipMinTextView = dialogView.findViewById(R.id.percent_clip_min_value_text_view);
+    mPercentClipMaxTextView = dialogView.findViewById(R.id.percent_clip_max_value_text_view);
+    mPercentClipMinSeekBar = dialogView.findViewById(R.id.percent_clip_min_seek_bar);
+    mPercentClipMaxSeekBar = dialogView.findViewById(R.id.percent_clip_max_seek_bar);
     mPercentClipMinSeekBar.setMax(99);
     mPercentClipMaxSeekBar.setMax(99);
-    mCurrPercentClipMinTextView = (TextView) dialogView.findViewById(R.id.curr_percent_clip_min_text_view);
-    mCurrPercentClipMaxTextView = (TextView) dialogView.findViewById(R.id.curr_percent_clip_max_text_view);
+    mCurrPercentClipMinTextView = dialogView.findViewById(R.id.curr_percent_clip_min_text_view);
+    mCurrPercentClipMaxTextView = dialogView.findViewById(R.id.curr_percent_clip_max_text_view);
     //update seek bar positions with current PercentClip
     updateSeekBar(mPercentClipMinSeekBar, mPercentClipMin, mCurrPercentClipMinTextView);
     updateSeekBar(mPercentClipMaxSeekBar, mPercentClipMax, mCurrPercentClipMaxTextView);
     // standard deviation ui elements
-    mStdDevTextView = (TextView) dialogView.findViewById(R.id.std_dev_text_view);
-    mStdDevSeekBar = (SeekBar) dialogView.findViewById(R.id.std_dev_seek_bar);
+    mStdDevTextView = dialogView.findViewById(R.id.std_dev_text_view);
+    mStdDevSeekBar = dialogView.findViewById(R.id.std_dev_seek_bar);
     mStdDevSeekBar.setMax(3);
-    mCurrStdDevTextView = (TextView) dialogView.findViewById(R.id.curr_std_dev_text_view);
+    mCurrStdDevTextView = dialogView.findViewById(R.id.curr_std_dev_text_view);
     //update seek bar position with current StandardDeviation
     updateSeekBar(mStdDevSeekBar, mStdDevFactor, mCurrStdDevTextView);
 
@@ -359,7 +359,7 @@ public class ParametersDialogFragment extends DialogFragment {
     stretchTypeArray.add(MainActivity.StretchType.STANDARD_DEVIATION.toString()); //2
     ArrayAdapter<String> stretchTypeSpinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.rgb_spinner_text_view,
         stretchTypeArray);
-    Spinner stretchTypeSpinner = (Spinner) dialogView.findViewById(R.id.stretch_type_spinner);
+    Spinner stretchTypeSpinner = dialogView.findViewById(R.id.stretch_type_spinner);
     stretchTypeSpinner.setAdapter(stretchTypeSpinnerAdapter);
     stretchTypeSpinner.setSelection(mStretchType.ordinal());
     stretchTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

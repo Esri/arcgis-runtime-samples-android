@@ -50,186 +50,189 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-  private val TAG: String = this::class.java.simpleName
+    private val TAG: String = this::class.java.simpleName
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val mapView: MapView by lazy {
-    activityMainBinding.mapView
-  }
-
-  private val geoprocessingTask: GeoprocessingTask by lazy { GeoprocessingTask(getString(R.string.viewshed_service)) }
-  private var geoprocessingJob: GeoprocessingJob? = null
-
-  private val inputGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
-  private val resultGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
-  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-  private lateinit var featureCollectionTable: FeatureCollectionTable
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // authentication with an API key or named user is required to access basemaps and other
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
-
-    // create renderers for graphics overlays
-    val fillColor = Color.argb(120, 226, 119, 40)
-    val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, fillColor, null)
-    resultGraphicsOverlay.renderer = SimpleRenderer(fillSymbol)
-
-    val pointSymbol = SimpleMarkerSymbol(
-      SimpleMarkerSymbol.Style.CIRCLE,
-      Color.RED,
-      10F
-    )
-    inputGraphicsOverlay.renderer = SimpleRenderer(pointSymbol)
-
-    mapView.apply {
-      // create a map with the Basemap type topographic
-      map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
-      // set the viewpoint
-      setViewpoint(Viewpoint(45.3790902612337, 6.84905317262762, 100000.0))
-      // add graphics overlays to the map view
-      graphicsOverlays.addAll(listOf(resultGraphicsOverlay, inputGraphicsOverlay))
-      // add onTouchListener for calculating the new viewshed
-      onTouchListener = object : DefaultMapViewOnTouchListener(
-        applicationContext,
-        mapView
-      ) {
-        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-          val screenPoint = android.graphics.Point(
-            e.x.roundToInt(),
-            e.y.roundToInt()
-          )
-          val mapPoint = mMapView.screenToLocation(screenPoint)
-          addGraphicForPoint(mapPoint)
-          calculateViewshedFrom(mapPoint)
-          return super.onSingleTapConfirmed(e)
-        }
-      }
-    }
-  }
-
-  /**
-   * Adds a graphic at the chosen mapPoint.
-   *
-   * @param point in MapView coordinates.
-   */
-  private fun addGraphicForPoint(point: Point) {
-    // remove existing graphics
-    inputGraphicsOverlay.graphics.clear()
-
-    // add new graphic to the graphics overlay
-    inputGraphicsOverlay.graphics.add(Graphic(point))
-  }
-
-  /**
-   * Uses the given point to create a FeatureCollectionTable which is passed to performGeoprocessing.
-   *
-   * @param point in MapView coordinates.
-   */
-  private fun calculateViewshedFrom(point: Point) {
-    // remove previous graphics
-    resultGraphicsOverlay.graphics.clear()
-
-    // cancel any previous job
-    geoprocessingJob?.cancel()
-
-    // create field with same alias as name
-    val field = Field.createString("observer", "", 8)
-
-    // create feature collection table for point geometry
-    featureCollectionTable = FeatureCollectionTable(listOf(field), GeometryType.POINT, point.spatialReference)
-    featureCollectionTable.loadAsync()
-
-    // create a new feature and assign the geometry
-    val newFeature = featureCollectionTable.createFeature().apply {
-      geometry = point
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
 
-    // add newFeature and call perform Geoprocessing on done loading
-    featureCollectionTable.addFeatureAsync(newFeature)
-    featureCollectionTable.addDoneLoadingListener {
-      if (featureCollectionTable.loadStatus == LoadStatus.LOADED) {
-        performGeoprocessing(featureCollectionTable)
-      }
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
     }
-  }
 
-  /**
-   * Creates a GeoprocessingJob from the GeoprocessingTask. Displays the resulting viewshed on the map.
-   *
-   * @param featureCollectionTable the feature collection table containing the observation point.
-   */
-  private fun performGeoprocessing(featureCollectionTable: FeatureCollectionTable) {
+    private val geoprocessingTask: GeoprocessingTask by lazy { GeoprocessingTask(getString(R.string.viewshed_service)) }
+    private var geoprocessingJob: GeoprocessingJob? = null
 
-    // geoprocessing parameters
-    val parameterFuture: ListenableFuture<GeoprocessingParameters> =
-      geoprocessingTask.createDefaultParametersAsync()
-    parameterFuture.addDoneListener {
-      try {
-        val parameters = parameterFuture.get().apply {
-          processSpatialReference = featureCollectionTable.spatialReference
-          outputSpatialReference = featureCollectionTable.spatialReference
+    private val inputGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
+    private val resultGraphicsOverlay: GraphicsOverlay by lazy { GraphicsOverlay() }
 
-          // use the feature collection table to create the required GeoprocessingFeatures input
-          inputs["Input_Observation_Point"] = GeoprocessingFeatures(featureCollectionTable)
-        }
+    // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+    private lateinit var featureCollectionTable: FeatureCollectionTable
 
-        // initialize job from geoprocessingTask
-        geoprocessingJob = geoprocessingTask.createJob(parameters)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-        // start the job
-        geoprocessingJob?.start()
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // listen for job success
-        geoprocessingJob?.addJobDoneListener {
-          if (geoprocessingJob?.status == Job.Status.SUCCEEDED) {
-            // get the viewshed from geoprocessingResult
-            (geoprocessingJob?.result?.outputs?.get("Viewshed_Result") as? GeoprocessingFeatures)?.let { viewshedResult ->
-              // for each feature in the result
-              for (feature in viewshedResult.features) {
-                // add the feature as a graphic
-                resultGraphicsOverlay.graphics.add(Graphic(feature.geometry))
-              }
+        // create renderers for graphics overlays
+        val fillColor = Color.argb(120, 226, 119, 40)
+        val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, fillColor, null)
+        resultGraphicsOverlay.renderer = SimpleRenderer(fillSymbol)
+
+        val pointSymbol = SimpleMarkerSymbol(
+            SimpleMarkerSymbol.Style.CIRCLE,
+            Color.RED,
+            10F
+        )
+        inputGraphicsOverlay.renderer = SimpleRenderer(pointSymbol)
+
+        mapView.apply {
+            // create a map with the Basemap type topographic
+            map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+            // set the viewpoint
+            setViewpoint(Viewpoint(45.3790902612337, 6.84905317262762, 100000.0))
+            // add graphics overlays to the map view
+            graphicsOverlays.addAll(listOf(resultGraphicsOverlay, inputGraphicsOverlay))
+            // add onTouchListener for calculating the new viewshed
+            onTouchListener = object : DefaultMapViewOnTouchListener(
+                applicationContext,
+                mapView
+            ) {
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                    val screenPoint = android.graphics.Point(
+                        e.x.roundToInt(),
+                        e.y.roundToInt()
+                    )
+                    val mapPoint = mMapView.screenToLocation(screenPoint)
+                    addGraphicForPoint(mapPoint)
+                    calculateViewshedFrom(mapPoint)
+                    return super.onSingleTapConfirmed(e)
+                }
             }
-          } else {
-            Toast.makeText(
-              applicationContext,
-              "Geoprocessing result failed!",
-              Toast.LENGTH_LONG
-            ).show()
-            Log.e(TAG, geoprocessingJob?.error?.cause.toString())
-          }
         }
-      } catch (e: Exception) {
-        when (e) {
-          is InterruptedException, is ExecutionException -> ("Error getting geoprocessing result: " + e.message).also {
-            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-            Log.e(TAG, it)
-          }
-          else -> throw e
-        }
-      }
     }
-  }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+    /**
+     * Adds a graphic at the chosen mapPoint.
+     *
+     * @param point in MapView coordinates.
+     */
+    private fun addGraphicForPoint(point: Point) {
+        // remove existing graphics
+        inputGraphicsOverlay.graphics.clear()
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+        // add new graphic to the graphics overlay
+        inputGraphicsOverlay.graphics.add(Graphic(point))
+    }
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+    /**
+     * Uses the given point to create a FeatureCollectionTable which is passed to performGeoprocessing.
+     *
+     * @param point in MapView coordinates.
+     */
+    private fun calculateViewshedFrom(point: Point) {
+        // remove previous graphics
+        resultGraphicsOverlay.graphics.clear()
+
+        // cancel any previous job
+        geoprocessingJob?.cancel()
+
+        // create field with same alias as name
+        val field = Field.createString("observer", "", 8)
+
+        // create feature collection table for point geometry
+        featureCollectionTable =
+            FeatureCollectionTable(listOf(field), GeometryType.POINT, point.spatialReference)
+        featureCollectionTable.loadAsync()
+
+        // create a new feature and assign the geometry
+        val newFeature = featureCollectionTable.createFeature().apply {
+            geometry = point
+        }
+
+        // add newFeature and call perform Geoprocessing on done loading
+        featureCollectionTable.addFeatureAsync(newFeature)
+        featureCollectionTable.addDoneLoadingListener {
+            if (featureCollectionTable.loadStatus == LoadStatus.LOADED) {
+                performGeoprocessing(featureCollectionTable)
+            }
+        }
+    }
+
+    /**
+     * Creates a GeoprocessingJob from the GeoprocessingTask. Displays the resulting viewshed on the map.
+     *
+     * @param featureCollectionTable the feature collection table containing the observation point.
+     */
+    private fun performGeoprocessing(featureCollectionTable: FeatureCollectionTable) {
+
+        // geoprocessing parameters
+        val parameterFuture: ListenableFuture<GeoprocessingParameters> =
+            geoprocessingTask.createDefaultParametersAsync()
+        parameterFuture.addDoneListener {
+            try {
+                val parameters = parameterFuture.get().apply {
+                    processSpatialReference = featureCollectionTable.spatialReference
+                    outputSpatialReference = featureCollectionTable.spatialReference
+
+                    // use the feature collection table to create the required GeoprocessingFeatures input
+                    inputs["Input_Observation_Point"] =
+                        GeoprocessingFeatures(featureCollectionTable)
+                }
+
+                // initialize job from geoprocessingTask
+                geoprocessingJob = geoprocessingTask.createJob(parameters)
+
+                // start the job
+                geoprocessingJob?.start()
+
+                // listen for job success
+                geoprocessingJob?.addJobDoneListener {
+                    if (geoprocessingJob?.status == Job.Status.SUCCEEDED) {
+                        // get the viewshed from geoprocessingResult
+                        (geoprocessingJob?.result?.outputs?.get("Viewshed_Result") as? GeoprocessingFeatures)?.let { viewshedResult ->
+                            // for each feature in the result
+                            for (feature in viewshedResult.features) {
+                                // add the feature as a graphic
+                                resultGraphicsOverlay.graphics.add(Graphic(feature.geometry))
+                            }
+                        }
+                    } else {
+                        Toast.makeText(
+                            applicationContext,
+                            "Geoprocessing result failed!",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        Log.e(TAG, geoprocessingJob?.error?.cause.toString())
+                    }
+                }
+            } catch (e: Exception) {
+                when (e) {
+                    is InterruptedException, is ExecutionException -> ("Error getting geoprocessing result: " + e.message).also {
+                        Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                        Log.e(TAG, it)
+                    }
+                    else -> throw e
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }

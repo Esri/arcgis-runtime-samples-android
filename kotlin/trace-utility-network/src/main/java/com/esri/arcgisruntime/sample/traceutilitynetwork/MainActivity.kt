@@ -125,98 +125,100 @@ class MainActivity : AppCompatActivity() {
         serviceGeodatabase.addDoneLoadingListener {
             serviceGeodatabase.loadStatus
             // create electrical distribution line layer from the service geodatabase
-        val electricalDistributionFeatureLayer =
-            FeatureLayer(serviceGeodatabase.getTable(3)).apply {
-                // define a solid line for medium voltage lines
-                val mediumVoltageValue = UniqueValueRenderer.UniqueValue(
-                    "N/A",
-                    "Medium voltage",
-                    SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.CYAN, 3f),
-                    listOf(5)
-                )
-                // define a dashed line for low voltage lines
-                val lowVoltageValue = UniqueValueRenderer.UniqueValue(
-                    "N/A",
-                    "Low voltage",
-                    SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.CYAN, 3f),
-                    listOf(3)
-                )
-                // create and apply a solid light gray renderer
-                renderer =
-                    UniqueValueRenderer(
-                        listOf("ASSETGROUP"),
-                        listOf(mediumVoltageValue, lowVoltageValue),
-                        "",
-                        SimpleLineSymbol()
+            val electricalDistributionFeatureLayer =
+                FeatureLayer(serviceGeodatabase.getTable(3)).apply {
+                    // define a solid line for medium voltage lines
+                    val mediumVoltageValue = UniqueValueRenderer.UniqueValue(
+                        "N/A",
+                        "Medium voltage",
+                        SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.CYAN, 3f),
+                        listOf(5)
                     )
-            }
-
-        // create electrical device layerfrom the service geodatabase
-        val electricalDeviceFeatureLayer =
-            FeatureLayer(serviceGeodatabase.getTable(0))
-
-        // setup the map view
-        mapView.apply {
-            // add a map with streets night vector basemap
-            map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT).apply {
-                operationalLayers.apply {
-                    add(electricalDistributionFeatureLayer)
-                    add(electricalDeviceFeatureLayer)
+                    // define a dashed line for low voltage lines
+                    val lowVoltageValue = UniqueValueRenderer.UniqueValue(
+                        "N/A",
+                        "Low voltage",
+                        SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.CYAN, 3f),
+                        listOf(3)
+                    )
+                    // create and apply a solid light gray renderer
+                    renderer =
+                        UniqueValueRenderer(
+                            listOf("ASSETGROUP"),
+                            listOf(mediumVoltageValue, lowVoltageValue),
+                            "",
+                            SimpleLineSymbol()
+                        )
                 }
-            // add the utility network to the map
+
+            // create electrical device layerfrom the service geodatabase
+            val electricalDeviceFeatureLayer =
+                FeatureLayer(serviceGeodatabase.getTable(0))
+
+            // setup the map view
+            mapView.apply {
+                // add a map with streets night vector basemap
+                map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT).apply {
+                    operationalLayers.apply {
+                        add(electricalDistributionFeatureLayer)
+                        add(electricalDeviceFeatureLayer)
+                    }
+                    // add the utility network to the map
                     utilityNetworks.add(utilityNetwork)
                 }
 
-            // set the viewpoint to a section in the southeast of the network
-            setViewpointAsync(
-                Viewpoint(
-                    Envelope(
-                        -9813547.35557238,
-                        5129980.36635111,
-                        -9813185.0602376,
-                        5130215.41254146,
-                        SpatialReferences.getWebMercator()
+                // set the viewpoint to a section in the southeast of the network
+                setViewpointAsync(
+                    Viewpoint(
+                        Envelope(
+                            -9813547.35557238,
+                            5129980.36635111,
+                            -9813185.0602376,
+                            5130215.41254146,
+                            SpatialReferences.getWebMercator()
+                        )
                     )
                 )
-            )
 
-            // set the selection color for features in the map view
-            selectionProperties.color = Color.YELLOW
+                // set the selection color for features in the map view
+                selectionProperties.color = Color.YELLOW
 
-            // add a graphics overlay
-            graphicsOverlays.add(graphicsOverlay)
+                // add a graphics overlay
+                graphicsOverlays.add(graphicsOverlay)
 
-            // handle taps on the map view
-            onTouchListener = object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
-                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                    // only pass taps to identify nearest utility element once the utility network has loaded
-                    if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
-                        identifyNearestUtilityElement(
-                            android.graphics.Point(e.x.roundToInt(), e.y.roundToInt())
-                        )
-                        return true
+                // handle taps on the map view
+                onTouchListener =
+                    object : DefaultMapViewOnTouchListener(applicationContext, mapView) {
+                        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                            // only pass taps to identify nearest utility element once the utility network has loaded
+                            if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
+                                identifyNearestUtilityElement(
+                                    android.graphics.Point(e.x.roundToInt(), e.y.roundToInt())
+                                )
+                                return true
+                            }
+                            return false
+                        }
                     }
-                    return false
+            }
+
+            // load the utility network
+            utilityNetwork.addDoneLoadingListener {
+                if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
+                    // update the status text
+                    statusTextView.text = getString(R.string.click_to_add_points)
+
+                    // get the utility tier used for traces in this network, in this case "Medium Voltage Radial"
+                    val domainNetwork =
+                        utilityNetwork.definition.getDomainNetwork("ElectricDistribution")
+                    mediumVoltageTier = domainNetwork.getTier("Medium Voltage Radial")
+
+                } else {
+                    reportError("Error loading utility network: " + utilityNetwork.loadError.cause?.message)
                 }
             }
+            utilityNetwork.loadAsync()
         }
-
-        // load the utility network
-        utilityNetwork.addDoneLoadingListener {
-            if (utilityNetwork.loadStatus == LoadStatus.LOADED) {
-                // update the status text
-                statusTextView.text = getString(R.string.click_to_add_points)
-
-                // get the utility tier used for traces in this network, in this case "Medium Voltage Radial"
-                val domainNetwork =
-                    utilityNetwork.definition.getDomainNetwork("ElectricDistribution")
-                mediumVoltageTier = domainNetwork.getTier("Medium Voltage Radial")
-
-            } else {
-                reportError("Error loading utility network: " + utilityNetwork.loadError.cause?.message)
-            }
-        }
-        utilityNetwork.loadAsync()}
 
         // add all utility trace types to the trace type spinner as strings
         traceTypeSpinner.adapter = ArrayAdapter(
@@ -456,7 +458,7 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this, "No elements in trace result", Toast.LENGTH_LONG)
                             .show()
                         progressIndicator.visibility = View.GONE
-                      enableButtons()
+                        enableButtons()
                     }
                 }
             } catch (e: Exception) {

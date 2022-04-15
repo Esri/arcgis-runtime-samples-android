@@ -2,7 +2,7 @@
 
 Create a feature collection layer from a portal item.
 
-![Image of feature collection layer portal item](feature-collection-layer-portal-item.jpg)
+![Image of feature collection layer portal item](feature-collection-layer-portal-item.png)
 
 ## Use case
 

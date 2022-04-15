@@ -37,7 +37,7 @@ public class WfsLayerInfoAdapter extends RecyclerView.Adapter<WfsLayerInfoAdapte
 
   private final OnItemSelectedListener mOnItemSelectedListener;
 
-  private List<WfsLayerInfo> mWfsLayerInfos = new ArrayList<>();
+  private final List<WfsLayerInfo> mWfsLayerInfos = new ArrayList<>();
   private WfsLayerInfo mSelectedWfsLayerInfo;
 
   WfsLayerInfoAdapter(OnItemSelectedListener onItemSelectedListener) {
@@ -85,7 +85,7 @@ public class WfsLayerInfoAdapter extends RecyclerView.Adapter<WfsLayerInfoAdapte
    */
   class ViewHolder extends RecyclerView.ViewHolder {
 
-    private TextView mTextView;
+    private final TextView mTextView;
 
     ViewHolder(@NonNull View itemView) {
       super(itemView);

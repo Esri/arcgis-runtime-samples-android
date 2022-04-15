@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         "{ \"eq\" : [ { \"property\" : \"F_CODE\" }, \"AP010\" ] }",
         "F_CODE LIKE 'AQ%'",
         "{\"and\":[{\"eq\":[{ \"property\" : \"F_CODE\" }, \"AP010\"]},{ \"before\":" +
-                "[{ \"property\" : \"ZI001_SDV\"},\"2013-01-01\"]}]}",
+            "[{ \"property\" : \"ZI001_SDV\"},\"2013-01-01\"]}]}",
         "No Query"
     )
 
@@ -301,8 +301,7 @@ class MainActivity : AppCompatActivity() {
             // If position is 4 ("Empty Query") manually set [whereClause] to empty string ("")
             whereClause = if (cqlQueryListPosition == 4) {
                 ""
-            }
-            else {
+            } else {
                 cqlQueryList[cqlQueryListPosition]
             }
 

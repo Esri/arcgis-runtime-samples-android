@@ -154,12 +154,18 @@ class MainActivity : AppCompatActivity() {
      * file is created in the cache folder.
      */
     private fun createGeodatabaseCacheDirectory() {
-        // clear cache directory
-        File(cacheDir.path).deleteRecursively()
-        // copy over the original Geodatabase file to be used in the temp cache directory
-        File(getExternalFilesDir(null)?.path + "/ContingentValuesBirdNests.geodatabase").copyTo(
-            File(cacheDir.path + "/ContingentValuesBirdNests.geodatabase")
-        )
+        try{
+            // clear cache directory
+            File(cacheDir.path).deleteRecursively()
+            // copy over the original Geodatabase file to be used in the temp cache directory
+            File(getExternalFilesDir(null)?.path + "/ContingentValuesBirdNests.geodatabase").copyTo(
+                File(cacheDir.path + "/ContingentValuesBirdNests.geodatabase")
+            )
+        }catch (e: Exception){
+            val message = "Error setting .geodatabase file: " + e.message
+            Log.e(TAG, message)
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     /**

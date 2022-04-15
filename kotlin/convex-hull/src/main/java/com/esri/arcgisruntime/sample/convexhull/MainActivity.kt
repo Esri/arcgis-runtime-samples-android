@@ -41,114 +41,115 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 
 class MainActivity : AppCompatActivity() {
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
 
-  private val mapView: MapView by lazy {
-    activityMainBinding.mapView
-  }
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
 
-  private val createButton: Button by lazy {
-    activityMainBinding.createButton
-  }
+    private val createButton: Button by lazy {
+        activityMainBinding.createButton
+    }
 
-  private val resetButton: Button by lazy {
-    activityMainBinding.resetButton
-  }
+    private val resetButton: Button by lazy {
+        activityMainBinding.resetButton
+    }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-    // authentication with an API key or named user is required to access basemaps and other 
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-    // create an array list to store points
-    val inputPoints = arrayListOf<Point>()
+        // create an array list to store points
+        val inputPoints = arrayListOf<Point>()
 
-    // create a symbol and graphic to represent single points
-    val pointSymbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10F)
-    val pointGraphic = Graphic().apply { symbol = pointSymbol }
+        // create a symbol and graphic to represent single points
+        val pointSymbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10F)
+        val pointGraphic = Graphic().apply { symbol = pointSymbol }
 
-    // create a graphic for the convex hull consisting of a line and empty interior
-    val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 3F)
-    val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.NULL, Color.TRANSPARENT, lineSymbol)
-    val convexHullGraphic = Graphic()
+        // create a graphic for the convex hull consisting of a line and empty interior
+        val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLUE, 3F)
+        val fillSymbol =
+            SimpleFillSymbol(SimpleFillSymbol.Style.NULL, Color.TRANSPARENT, lineSymbol)
+        val convexHullGraphic = Graphic()
 
-    // create a graphics overlay and add the graphics to it
-    val graphicsOverlay = GraphicsOverlay()
-    graphicsOverlay.graphics.addAll(listOf(pointGraphic, convexHullGraphic))
+        // create a graphics overlay and add the graphics to it
+        val graphicsOverlay = GraphicsOverlay()
+        graphicsOverlay.graphics.addAll(listOf(pointGraphic, convexHullGraphic))
 
-    mapView.apply {
-      // set the map to a topographic basemap
-      map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
-      // add the graphics overlay to the map
-      graphicsOverlays.add(graphicsOverlay)
+        mapView.apply {
+            // set the map to a topographic basemap
+            map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+            // add the graphics overlay to the map
+            graphicsOverlays.add(graphicsOverlay)
 
-      onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
-        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-          // get the tapped point and convert it to a screen point
-          val point = android.graphics.Point(e.x.toInt(), e.y.toInt())
-          val convertedPoint = mapView.screenToLocation(point)
+            onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                    // get the tapped point and convert it to a screen point
+                    val point = android.graphics.Point(e.x.toInt(), e.y.toInt())
+                    val convertedPoint = mapView.screenToLocation(point)
 
-          // add the new point to the list and recreate the graphic representing the input points
-          inputPoints.add(convertedPoint)
-          val multiPoint = Multipoint(PointCollection(inputPoints))
-          pointGraphic.geometry = multiPoint
+                    // add the new point to the list and recreate the graphic representing the input points
+                    inputPoints.add(convertedPoint)
+                    val multiPoint = Multipoint(PointCollection(inputPoints))
+                    pointGraphic.geometry = multiPoint
 
-          if (inputPoints.isNotEmpty()) {
-            createButton.isEnabled = true
-            resetButton.isEnabled = true
-          }
+                    if (inputPoints.isNotEmpty()) {
+                        createButton.isEnabled = true
+                        resetButton.isEnabled = true
+                    }
 
-          return super.onSingleTapConfirmed(e)
+                    return super.onSingleTapConfirmed(e)
+                }
+            }
         }
-      }
+
+        // create the convex hull when the button is pressed
+        createButton.setOnClickListener {
+            // normalize the points for panning beyond the meridian
+            val normalizedPoints = GeometryEngine.normalizeCentralMeridian(pointGraphic.geometry)
+            // create a convex hull from the points
+            val convexHull = GeometryEngine.convexHull(normalizedPoints)
+            // the convex hull's geometry may be a point or polyline if the number of points is less than 3
+            convexHullGraphic.symbol = when (convexHull.geometryType) {
+                GeometryType.POINT -> pointSymbol
+                GeometryType.POLYLINE -> lineSymbol
+                GeometryType.POLYGON -> fillSymbol
+                else -> null
+            }
+            // set the convex hull graphic to display the new geometry
+            convexHullGraphic.geometry = convexHull
+            // disable the button
+            createButton.isEnabled = false
+        }
+
+        // clear the points and graphics and disable the buttons when reset is tapped
+        resetButton.setOnClickListener {
+            inputPoints.clear()
+            pointGraphic.geometry = null
+            convexHullGraphic.geometry = null
+            resetButton.isEnabled = false
+            createButton.isEnabled = false
+        }
     }
 
-    // create the convex hull when the button is pressed
-    createButton.setOnClickListener {
-      // normalize the points for panning beyond the meridian
-      val normalizedPoints = GeometryEngine.normalizeCentralMeridian(pointGraphic.geometry)
-      // create a convex hull from the points
-      val convexHull = GeometryEngine.convexHull(normalizedPoints)
-      // the convex hull's geometry may be a point or polyline if the number of points is less than 3
-      convexHullGraphic.symbol = when (convexHull.geometryType) {
-        GeometryType.POINT -> pointSymbol
-        GeometryType.POLYLINE -> lineSymbol
-        GeometryType.POLYGON -> fillSymbol
-        else -> null
-      }
-      // set the convex hull graphic to display the new geometry
-      convexHullGraphic.geometry = convexHull
-      // disable the button
-      createButton.isEnabled = false
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
     }
 
-    // clear the points and graphics and disable the buttons when reset is tapped
-    resetButton.setOnClickListener {
-      inputPoints.clear()
-      pointGraphic.geometry = null
-      convexHullGraphic.geometry = null
-      resetButton.isEnabled = false
-      createButton.isEnabled = false
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
     }
-  }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
-
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
-
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }

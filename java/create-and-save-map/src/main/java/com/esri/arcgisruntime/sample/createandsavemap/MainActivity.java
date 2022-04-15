@@ -331,11 +331,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     // if nav drawer is opened, hide the action items
-    if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-      menu.findItem(R.id.action_save).setVisible(false);
-    } else {
-      menu.findItem(R.id.action_save).setVisible(true);
-    }
+    menu.findItem(R.id.action_save).setVisible(!mDrawerLayout.isDrawerOpen(GravityCompat.START));
 
     return super.onPrepareOptionsMenu(menu);
   }

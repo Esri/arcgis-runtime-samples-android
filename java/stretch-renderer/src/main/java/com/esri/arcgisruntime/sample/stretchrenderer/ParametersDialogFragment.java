@@ -104,32 +104,32 @@ public class ParametersDialogFragment extends DialogFragment {
       }
     });
     // min max ui elements
-    mMinTextView = (TextView) dialogView.findViewById(R.id.min_value_text_view);
-    mMaxTextView = (TextView) dialogView.findViewById(R.id.max_value_text_view);
-    mMinSeekBar = (SeekBar) dialogView.findViewById(R.id.min_seek_bar);
-    mMaxSeekBar = (SeekBar) dialogView.findViewById(R.id.max_seek_bar);
+    mMinTextView = dialogView.findViewById(R.id.min_value_text_view);
+    mMaxTextView = dialogView.findViewById(R.id.max_value_text_view);
+    mMinSeekBar = dialogView.findViewById(R.id.min_seek_bar);
+    mMaxSeekBar = dialogView.findViewById(R.id.max_seek_bar);
     mMinSeekBar.setMax(255);
     mMaxSeekBar.setMax(255);
-    mCurrMinTextView = (TextView) dialogView.findViewById(R.id.curr_min_text_view);
-    mCurrMaxTextView = (TextView) dialogView.findViewById(R.id.curr_max_text_view);
+    mCurrMinTextView = dialogView.findViewById(R.id.curr_min_text_view);
+    mCurrMaxTextView = dialogView.findViewById(R.id.curr_max_text_view);
     updateSeekBar(mMinSeekBar, mMin, mCurrMinTextView);
     updateSeekBar(mMaxSeekBar, mMax, mCurrMaxTextView);
     // percent clip ui elements
-    mPercentClipMinTextView = (TextView) dialogView.findViewById(R.id.percent_clip_min_value_text_view);
-    mPercentClipMaxTextView = (TextView) dialogView.findViewById(R.id.percent_clip_max_value_text_view);
-    mPercentClipMinSeekBar = (SeekBar) dialogView.findViewById(R.id.percent_clip_min_seek_bar);
-    mPercentClipMaxSeekBar = (SeekBar) dialogView.findViewById(R.id.percent_clip_max_seek_bar);
+    mPercentClipMinTextView = dialogView.findViewById(R.id.percent_clip_min_value_text_view);
+    mPercentClipMaxTextView = dialogView.findViewById(R.id.percent_clip_max_value_text_view);
+    mPercentClipMinSeekBar = dialogView.findViewById(R.id.percent_clip_min_seek_bar);
+    mPercentClipMaxSeekBar = dialogView.findViewById(R.id.percent_clip_max_seek_bar);
     mPercentClipMinSeekBar.setMax(99);
     mPercentClipMaxSeekBar.setMax(99);
-    mCurrPercentClipMinTextView = (TextView) dialogView.findViewById(R.id.curr_percent_clip_min_text_view);
-    mCurrPercentClipMaxTextView = (TextView) dialogView.findViewById(R.id.curr_percent_clip_max_text_view);
+    mCurrPercentClipMinTextView = dialogView.findViewById(R.id.curr_percent_clip_min_text_view);
+    mCurrPercentClipMaxTextView = dialogView.findViewById(R.id.curr_percent_clip_max_text_view);
     updateSeekBar(mPercentClipMinSeekBar, mPercentClipMin, mCurrPercentClipMinTextView);
     updateSeekBar(mPercentClipMaxSeekBar, mPercentClipMax, mCurrPercentClipMaxTextView);
     // standard deviation ui elements
-    mStdDevTextView = (TextView) dialogView.findViewById(R.id.std_dev_text_view);
-    mStdDevSeekBar = (SeekBar) dialogView.findViewById(R.id.std_dev_seek_bar);
+    mStdDevTextView = dialogView.findViewById(R.id.std_dev_text_view);
+    mStdDevSeekBar = dialogView.findViewById(R.id.std_dev_seek_bar);
     mStdDevSeekBar.setMax(3);
-    mCurrStdDevTextView = (TextView) dialogView.findViewById(R.id.curr_std_dev_text_view);
+    mCurrStdDevTextView = dialogView.findViewById(R.id.curr_std_dev_text_view);
     updateSeekBar(mStdDevSeekBar, mStdDevFactor, mCurrStdDevTextView);
     // set ui to previous selection
     if (mStretchType == MainActivity.StretchType.MIN_MAX) {
@@ -240,7 +240,7 @@ public class ParametersDialogFragment extends DialogFragment {
     stretchTypeArray.add(MainActivity.StretchType.STANDARD_DEVIATION.toString()); //2
     ArrayAdapter<String> stretchTypeSpinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.stretch_spinner_text_view,
         stretchTypeArray);
-    Spinner stretchTypeSpinner = (Spinner) dialogView.findViewById(R.id.stretch_type_spinner);
+    Spinner stretchTypeSpinner = dialogView.findViewById(R.id.stretch_type_spinner);
     stretchTypeSpinner.setAdapter(stretchTypeSpinnerAdapter);
     stretchTypeSpinner.setSelection(mStretchType.ordinal());
     stretchTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

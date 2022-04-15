@@ -29,66 +29,66 @@ import com.esri.arcgisruntime.sample.changeatmosphereeffect.databinding.Activity
 
 class MainActivity : AppCompatActivity() {
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val sceneView: SceneView by lazy {
-    activityMainBinding.sceneView
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // authentication with an API key or named user is required to access basemaps and other
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
-
-    // create a scene and add a base map to it
-    val scene = ArcGISScene(BasemapStyle.ARCGIS_IMAGERY)
-    sceneView.scene = scene
-
-    // add base surface for elevation data
-    sceneView.scene.baseSurface = Surface().apply {
-      elevationSources.add(
-        ArcGISTiledElevationSource(getString(R.string.elevation_image_service))
-      )
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
 
-    // create a camera and set it as the viewpoint for when the scene loads
-    val camera = Camera(64.416919, -14.483728, 100.0, 318.0, 105.0, 0.0)
-    sceneView.setViewpointCamera(camera)
-  }
-
-  override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-    menuInflater.inflate(R.menu.change_atmosphere_effect_menu, menu)
-    return super.onCreateOptionsMenu(menu)
-  }
-
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    // set different atmosphere effects on the scene view
-    sceneView.atmosphereEffect = when (item.itemId) {
-      R.id.action_no_atmosphere_effect -> AtmosphereEffect.NONE
-      R.id.action_realistic_atmosphere_effect -> AtmosphereEffect.REALISTIC
-      R.id.action_horizon_atmosphere_effect -> AtmosphereEffect.HORIZON_ONLY
-      else -> return super.onOptionsItemSelected(item)
+    private val sceneView: SceneView by lazy {
+        activityMainBinding.sceneView
     }
-    return true
-  }
 
-  override fun onResume() {
-    super.onResume()
-    sceneView.resume()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-  override fun onPause() {
-    sceneView.pause()
-    super.onPause()
-  }
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-  override fun onDestroy() {
-    sceneView.dispose()
-    super.onDestroy()
-  }
+        // create a scene and add a base map to it
+        val scene = ArcGISScene(BasemapStyle.ARCGIS_IMAGERY)
+        sceneView.scene = scene
+
+        // add base surface for elevation data
+        sceneView.scene.baseSurface = Surface().apply {
+            elevationSources.add(
+                ArcGISTiledElevationSource(getString(R.string.elevation_image_service))
+            )
+        }
+
+        // create a camera and set it as the viewpoint for when the scene loads
+        val camera = Camera(64.416919, -14.483728, 100.0, 318.0, 105.0, 0.0)
+        sceneView.setViewpointCamera(camera)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.change_atmosphere_effect_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // set different atmosphere effects on the scene view
+        sceneView.atmosphereEffect = when (item.itemId) {
+            R.id.action_no_atmosphere_effect -> AtmosphereEffect.NONE
+            R.id.action_realistic_atmosphere_effect -> AtmosphereEffect.REALISTIC
+            R.id.action_horizon_atmosphere_effect -> AtmosphereEffect.HORIZON_ONLY
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sceneView.resume()
+    }
+
+    override fun onPause() {
+        sceneView.pause()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        sceneView.dispose()
+        super.onDestroy()
+    }
 }

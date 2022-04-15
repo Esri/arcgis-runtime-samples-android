@@ -22,65 +22,63 @@ import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer
 import com.esri.arcgisruntime.mapping.ArcGISScene
-import com.esri.arcgisruntime.mapping.Basemap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.Camera
-import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.mapping.view.SceneView
 import com.esri.arcgisruntime.sample.scenelayer.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val sceneView: SceneView by lazy {
-    activityMainBinding.sceneView
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // authentication with an API key or named user is required to access basemaps and other
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
-
-    // create a scene layer from a url
-    val sceneLayer = ArcGISSceneLayer(getString(R.string.brest_buildings))
-
-    // create a camera with initial camera position
-    val camera = Camera(48.378, -4.494, 200.0, 345.0, 65.0, 0.0)
-
-    // create a scene
-    val brestBuildingScene = ArcGISScene(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
-      // add a scene service to the scene for viewing buildings
-      operationalLayers.add(sceneLayer)
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
 
-    // create a scene view
-    sceneView.apply {
-      // add the scene to the scene view
-      scene = brestBuildingScene
-      // set initial camera position
-      setViewpointCamera(camera)
+    private val sceneView: SceneView by lazy {
+        activityMainBinding.sceneView
     }
-  }
 
-  override fun onPause() {
-    super.onPause()
-    sceneView.pause()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-  override fun onResume() {
-    sceneView.resume()
-    super.onResume()
-  }
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-  override fun onDestroy() {
-    super.onDestroy()
-    sceneView.dispose()
-  }
+        // create a scene layer from a url
+        val sceneLayer = ArcGISSceneLayer(getString(R.string.brest_buildings))
+
+        // create a camera with initial camera position
+        val camera = Camera(48.378, -4.494, 200.0, 345.0, 65.0, 0.0)
+
+        // create a scene
+        val brestBuildingScene = ArcGISScene(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
+            // add a scene service to the scene for viewing buildings
+            operationalLayers.add(sceneLayer)
+        }
+
+        // create a scene view
+        sceneView.apply {
+            // add the scene to the scene view
+            scene = brestBuildingScene
+            // set initial camera position
+            setViewpointCamera(camera)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sceneView.pause()
+    }
+
+    override fun onResume() {
+        sceneView.resume()
+        super.onResume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sceneView.dispose()
+    }
 }
 

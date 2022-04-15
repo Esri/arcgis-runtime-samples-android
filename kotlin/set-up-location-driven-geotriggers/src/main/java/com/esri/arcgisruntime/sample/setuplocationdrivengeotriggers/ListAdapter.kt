@@ -43,7 +43,7 @@ internal class ListAdapter(
             itemButton.text = gardenSections[position].title
             //Display description dialog on button click
             itemButton.setOnClickListener {
-                GardenDescriptionFragment(gardenSections[position], context as MainActivity).show(
+                GardenDescriptionFragment(gardenSections[position], context).show(
                     supportFragmentManager,
                     "GardenDescriptionFragment"
                 )

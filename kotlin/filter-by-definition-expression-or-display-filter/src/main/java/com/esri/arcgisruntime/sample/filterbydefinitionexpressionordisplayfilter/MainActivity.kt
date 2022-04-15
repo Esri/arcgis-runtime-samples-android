@@ -74,7 +74,8 @@ class MainActivity : AppCompatActivity() {
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         // set the FeatureLayer using FeatureTable created from the URL to an ArcGIS feature service
-        val featureLayer = FeatureLayer(ServiceFeatureTable("https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/SF_311_Incidents/FeatureServer/0"))
+        val featureLayer =
+            FeatureLayer(ServiceFeatureTable("https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/SF_311_Incidents/FeatureServer/0"))
 
         // set the map to be displayed in the layout's MapView
         // with the BasemapStyle topographic
@@ -85,7 +86,8 @@ class MainActivity : AppCompatActivity() {
 
         mapView.apply {
             map = topographicMap
-            val viewpoint = Viewpoint(Point(-122.4401, 37.7722, SpatialReferences.getWgs84()), 100000.0)
+            val viewpoint =
+                Viewpoint(Point(-122.4401, 37.7722, SpatialReferences.getWgs84()), 100000.0)
             setViewpoint(viewpoint)
             // run countFeatures() when MapView is finished moving
             addNavigationChangedListener {
@@ -110,9 +112,11 @@ class MainActivity : AppCompatActivity() {
                 definitionExpression = ""
                 // create a display filter and display filter definition
                 // req_type here is one of the published fields
-                val damagedTrees = DisplayFilter("Damaged Trees", "req_type LIKE '%Tree Maintenance%'")
+                val damagedTrees =
+                    DisplayFilter("Damaged Trees", "req_type LIKE '%Tree Maintenance%'")
                 // Set the display filter definition on the layer
-                displayFilterDefinition = ManualDisplayFilterDefinition(damagedTrees, listOf(damagedTrees))
+                displayFilterDefinition =
+                    ManualDisplayFilterDefinition(damagedTrees, listOf(damagedTrees))
             }
             countFeatures(featureLayer)
         }
@@ -134,7 +138,9 @@ class MainActivity : AppCompatActivity() {
      */
     private fun countFeatures(featureLayer: FeatureLayer) {
         // Get the extent of the current viewpoint, return if no valid extent.
-        val extent = mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).targetGeometry.extent ?: return
+        val extent =
+            mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).targetGeometry.extent
+                ?: return
 
         // Update the UI with the count of features in the extent
         val queryParameters = QueryParameters().apply {
@@ -145,9 +151,10 @@ class MainActivity : AppCompatActivity() {
         featureCountFuture.addDoneListener {
             if (featureLayer.featureTable.loadStatus == LoadStatus.LOADED) {
                 val totalFeatureCount = featureCountFuture.get()
-                featureCountTV.text = "Current feature count: ${totalFeatureCount}"
+                featureCountTV.text = "Current feature count: $totalFeatureCount"
             } else {
-                val errorMessage = "Error receiving total feature count: ${featureLayer.featureTable.loadError.message}"
+                val errorMessage =
+                    "Error receiving total feature count: ${featureLayer.featureTable.loadError.message}"
                 Log.e(TAG, errorMessage)
                 Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_SHORT).show()
             }

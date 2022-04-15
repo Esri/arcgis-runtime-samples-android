@@ -74,12 +74,13 @@ class MainActivity : AppCompatActivity() {
 
         // add graphics overlays
         mapView.graphicsOverlays.addAll(
-          arrayOf(
-            renderedPointGraphicsOverlay(),
-            renderedLineGraphicsOverlay(),
-            renderedPolygonGraphicsOverlay(),
-            renderedCurvedPolygonGraphicsOverlay(),
-            renderedEllipseGraphicsOverlay())
+            arrayOf(
+                renderedPointGraphicsOverlay(),
+                renderedLineGraphicsOverlay(),
+                renderedPolygonGraphicsOverlay(),
+                renderedCurvedPolygonGraphicsOverlay(),
+                renderedEllipseGraphicsOverlay()
+            )
         )
     }
 
@@ -200,7 +201,8 @@ class MainActivity : AppCompatActivity() {
         val polygonGraphic = Graphic(curvedPolygonGeometry)
         // create a simple fill symbol with outline
         val curvedLineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1f)
-        val curvedFillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.RED, curvedLineSymbol)
+        val curvedFillSymbol =
+            SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.RED, curvedLineSymbol)
         // create simple renderer
         val polygonRenderer = SimpleRenderer(curvedFillSymbol)
 
@@ -280,7 +282,9 @@ class MainActivity : AppCompatActivity() {
             add(rightCurve)
         }
         return Polygon(heart, spatialReference)
-    }override fun onPause() {
+    }
+
+    override fun onPause() {
         mapView.pause()
         super.onPause()
     }

@@ -57,7 +57,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(activityMainBinding.root)
 
         // create and load a mobile map package
-        val mobileMapPackage = MobileMapPackage(getExternalFilesDir(null)?.path + "/Edinburgh_Pylon_Dimensions.mmpk")
+        val mobileMapPackage =
+            MobileMapPackage(getExternalFilesDir(null)?.path + "/Edinburgh_Pylon_Dimensions.mmpk")
 
         mobileMapPackage.addDoneLoadingListener {
             // check the mmpk has loaded successfully and that it contains a map
@@ -67,9 +68,11 @@ class MainActivity : AppCompatActivity() {
                 mapView.map.minScale = 35000.0
 
                 // find the dimension layer within the map
-                dimensionLayer = mapView.map.operationalLayers.firstOrNull { it is DimensionLayer } as DimensionLayer
+                dimensionLayer =
+                    mapView.map.operationalLayers.firstOrNull { it is DimensionLayer } as DimensionLayer
             } else {
-                val errorMessage = "Failed to load the mobile map package: " + mobileMapPackage.loadError.message
+                val errorMessage =
+                    "Failed to load the mobile map package: " + mobileMapPackage.loadError.message
                 Log.e(TAG, errorMessage)
                 Toast.makeText(
                     this,

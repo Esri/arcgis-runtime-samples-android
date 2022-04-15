@@ -98,8 +98,8 @@ public class MainActivity extends AppCompatActivity {
     mLocatorTask = new LocatorTask("https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer");
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
-    // create a map with the Basemap Style topographic
+    mMapView = findViewById(R.id.mapView);
+    // create a map with the BasemapType topographic
     final ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
     map.setInitialViewpoint(new Viewpoint(40,-100,100000000));
 

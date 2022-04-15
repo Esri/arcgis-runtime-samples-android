@@ -2,7 +2,7 @@
 
 Display custom labels in a 3D scene.
 
-![Show labels on layer in 3D](show-labels-on-layer-3d.png)
+![Show labels on layer in 3D](show-labels-on-layer-in-3d.png)
 
 ## Use case
 

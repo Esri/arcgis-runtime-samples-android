@@ -27,60 +27,61 @@ import com.esri.arcgisruntime.sample.featurelayerfeatureservice.databinding.Acti
 
 class MainActivity : AppCompatActivity() {
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val mapView: MapView by lazy {
-    activityMainBinding.mapView
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // authentication with an API key or named user is required to access basemaps and other
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
-
-    // create the service feature table
-    val serviceFeatureTable = ServiceFeatureTable(resources.getString(R.string.sample_service_url))
-    // create the feature layer using the service feature table
-    val featureLayer = FeatureLayer(serviceFeatureTable)
-
-    // create a map with the terrain with labels basemap
-    ArcGISMap(BasemapStyle.ARCGIS_TERRAIN).let { map ->
-
-      // add the feature layer to the map
-      map.operationalLayers.add(featureLayer)
-
-      // set the map to be displayed in the map view
-      mapView.map = map
-      // set an initial viewpoint
-      mapView.setViewpoint(
-        Viewpoint(
-          Point(
-            -13176752.0,
-            4090404.0,
-            SpatialReferences.getWebMercator()
-          ), 500000.0
-        )
-      )
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
-  }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
+        // create the service feature table
+        val serviceFeatureTable =
+            ServiceFeatureTable(resources.getString(R.string.sample_service_url))
+        // create the feature layer using the service feature table
+        val featureLayer = FeatureLayer(serviceFeatureTable)
+
+        // create a map with the terrain with labels basemap
+        ArcGISMap(BasemapStyle.ARCGIS_TERRAIN).let { map ->
+
+            // add the feature layer to the map
+            map.operationalLayers.add(featureLayer)
+
+            // set the map to be displayed in the map view
+            mapView.map = map
+            // set an initial viewpoint
+            mapView.setViewpoint(
+                Viewpoint(
+                    Point(
+                        -13176752.0,
+                        4090404.0,
+                        SpatialReferences.getWebMercator()
+                    ), 500000.0
+                )
+            )
+        }
+    }
+
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }

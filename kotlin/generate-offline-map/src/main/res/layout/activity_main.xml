@@ -9,7 +9,7 @@
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <android.widget.Button
         android:id="@+id/takeMapOfflineButton"
@@ -24,6 +24,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:onClick="generateOfflineMap"/>
+        android:onClick="generateOfflineMap" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

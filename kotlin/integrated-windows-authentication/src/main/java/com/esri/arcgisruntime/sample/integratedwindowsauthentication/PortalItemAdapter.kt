@@ -18,7 +18,6 @@
 package com.esri.arcgisruntime.sample.integratedwindowsauthentication
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -26,66 +25,67 @@ import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.sample.integratedwindowsauthentication.databinding.PortalItemRowBinding
 
 class PortalItemAdapter(private val onItemClickListener: OnItemClickListener) :
-  RecyclerView.Adapter<PortalItemAdapter.PortalItemViewHolder>() {
+    RecyclerView.Adapter<PortalItemAdapter.PortalItemViewHolder>() {
 
-  // list of PortalItems to display
-  private var portalItems: MutableList<PortalItem>? = null
+    // list of PortalItems to display
+    private var portalItems: MutableList<PortalItem>? = null
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PortalItemViewHolder {
-      val binding = PortalItemRowBinding.inflate(LayoutInflater.from(parent.context),parent, false)
-      return PortalItemViewHolder(binding)
-  }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PortalItemViewHolder {
+        val binding =
+            PortalItemRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return PortalItemViewHolder(binding)
+    }
 
-  override fun onBindViewHolder(holder: PortalItemViewHolder, position: Int) {
-    holder.bind(portalItems?.get(position), onItemClickListener)
-  }
+    override fun onBindViewHolder(holder: PortalItemViewHolder, position: Int) {
+        holder.bind(portalItems?.get(position), onItemClickListener)
+    }
 
-  override fun getItemCount() = portalItems?.size ?: 0
+    override fun getItemCount() = portalItems?.size ?: 0
 
-  class PortalItemViewHolder(binding: PortalItemRowBinding) :
-    RecyclerView.ViewHolder(binding.root) {
-    private val itemTextView = binding.itemTextView
+    class PortalItemViewHolder(binding: PortalItemRowBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        private val itemTextView = binding.itemTextView
 
-    fun bind(portalItem: PortalItem?, onItemClickListener: OnItemClickListener) {
-      portalItem?.let {
-        itemTextView.text = it.title
-        itemView.setOnClickListener { _ ->
-          onItemClickListener.onPortalItemClick(it)
+        fun bind(portalItem: PortalItem?, onItemClickListener: OnItemClickListener) {
+            portalItem?.let {
+                itemTextView.text = it.title
+                itemView.setOnClickListener { _ ->
+                    onItemClickListener.onPortalItemClick(it)
+                }
+            }
         }
-      }
-    }
-  }
-
-  fun updatePortalItems(portalItems: List<PortalItem>) {
-    if (this.portalItems == null) {
-      this.portalItems = ArrayList()
     }
 
-    DiffUtil.calculateDiff(PortalItemsDiffUtilCallback(this.portalItems, portalItems)).let {
-      this.portalItems?.clear()
-      this.portalItems?.addAll(portalItems)
-      it.dispatchUpdatesTo(this)
-    }
-  }
+    fun updatePortalItems(portalItems: List<PortalItem>) {
+        if (this.portalItems == null) {
+            this.portalItems = ArrayList()
+        }
 
-  interface OnItemClickListener {
-    fun onPortalItemClick(portalItem: PortalItem)
-  }
+        DiffUtil.calculateDiff(PortalItemsDiffUtilCallback(this.portalItems, portalItems)).let {
+            this.portalItems?.clear()
+            this.portalItems?.addAll(portalItems)
+            it.dispatchUpdatesTo(this)
+        }
+    }
+
+    interface OnItemClickListener {
+        fun onPortalItemClick(portalItem: PortalItem)
+    }
 }
 
 class PortalItemsDiffUtilCallback(
-  private val oldPortalItems: List<PortalItem>?,
-  private val newPortalItems: List<PortalItem>
+    private val oldPortalItems: List<PortalItem>?,
+    private val newPortalItems: List<PortalItem>
 ) : DiffUtil.Callback() {
 
-  override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-    oldPortalItems?.get(oldItemPosition)?.itemId == newPortalItems[newItemPosition].itemId
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+        oldPortalItems?.get(oldItemPosition)?.itemId == newPortalItems[newItemPosition].itemId
 
-  override fun getOldListSize() = oldPortalItems?.size ?: 0
+    override fun getOldListSize() = oldPortalItems?.size ?: 0
 
-  override fun getNewListSize() = newPortalItems.size
+    override fun getNewListSize() = newPortalItems.size
 
-  override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-    oldPortalItems?.get(oldItemPosition) == newPortalItems[newItemPosition]
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+        oldPortalItems?.get(oldItemPosition) == newPortalItems[newItemPosition]
 
 }
