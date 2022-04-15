@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     // get a reference to the map view
     mMapView = findViewById(R.id.mapView);
     // create a MapImageLayer with dynamically generated map images
-    ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer(getString(R.string.world_elevation_service));
+    ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer("https://sampleserver5.arcgisonline.com/arcgis/rest/services/Elevation/WorldElevations/MapServer");
     // create an empty map instance
     ArcGISMap map = new ArcGISMap();
     // add map image layer as operational layer

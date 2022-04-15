@@ -18,7 +18,7 @@
     ],
     "language": "kotlin",
     "provision_from": [
-      "https://www.arcgis.com/home/item.html?id=623382e0113d40698538f249e3bcb1c0"
+      "https://www.arcgis.com/home/item.html?id=8776cfc26eed4485a03de6316826384c"
     ],
     "provision_to": [
       "/Mil2525DMessages.xml"
