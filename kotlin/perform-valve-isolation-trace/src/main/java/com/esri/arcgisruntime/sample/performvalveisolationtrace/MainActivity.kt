@@ -581,7 +581,6 @@ class MainActivity : AppCompatActivity() {
                         false
                     )
 
-                    //val spinnerItem = LayoutInflater.from(this@MainActivity).inflate(R.layout.spinner_text_item, parent, false)
                     binding.textView.text = (getItem(position) as UtilityCategory).name
                     return binding.root
                 }
