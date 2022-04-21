@@ -20,9 +20,7 @@
         "Envelope"
     ],
     "snippets": [
-        "\\build\\generated\\data_binding_base_class_source_out\\debug\\out\\com\\esri\\arcgisruntime\\sample\\setmaxextent\\databinding\\ActivityMainBinding.java",
-        "\\build\\generated\\source\\buildConfig\\debug\\com\\esri\\arcgisruntime\\sample\\setmaxextent\\BuildConfig.java",
-        "\\src\\main\\java\\com\\esri\\arcgisruntime\\sample\\setmaxextent\\MainActivity.kt"
+        "/src/main/java/com/esri/arcgisruntime/sample/setmaxextent/MainActivity.kt"
     ],
     "title": "Set max extent"
 }
