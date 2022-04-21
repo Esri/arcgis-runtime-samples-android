@@ -1,0 +1,28 @@
+{
+    "category": "Maps and scenes",
+    "description": "Limit the view of a map to a particular area.",
+    "formal_name": "SetMaxExtent",
+    "ignore": false,
+    "images": [
+        "set-max-extent.png"
+    ],
+    "keywords": [
+        "extent",
+        "limit panning",
+        "max extent",
+        "zoom",
+        "ArcGISMap",
+        "Envelope"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "ArcGISMap",
+        "Envelope"
+    ],
+    "snippets": [
+        "\\build\\generated\\data_binding_base_class_source_out\\debug\\out\\com\\esri\\arcgisruntime\\sample\\setmaxextent\\databinding\\ActivityMainBinding.java",
+        "\\build\\generated\\source\\buildConfig\\debug\\com\\esri\\arcgisruntime\\sample\\setmaxextent\\BuildConfig.java",
+        "\\src\\main\\java\\com\\esri\\arcgisruntime\\sample\\setmaxextent\\MainActivity.kt"
+    ],
+    "title": "Set max extent"
+}
