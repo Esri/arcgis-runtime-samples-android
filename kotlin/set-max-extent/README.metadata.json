@@ -1,5 +1,5 @@
 {
-    "category": "Maps and scenes",
+    "category": "Maps and Scenes",
     "description": "Limit the view of a map to a particular area.",
     "formal_name": "SetMaxExtent",
     "ignore": false,
@@ -20,7 +20,7 @@
         "Envelope"
     ],
     "snippets": [
-        "/src/main/java/com/esri/arcgisruntime/sample/setmaxextent/MainActivity.kt"
+        "src/main/java/com/esri/arcgisruntime/sample/setmaxextent/MainActivity.kt"
     ],
     "title": "Set max extent"
 }

@@ -16,6 +16,7 @@
 
 package com.esri.arcgisruntime.sample.setmaxextent
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
@@ -23,8 +24,12 @@ import com.esri.arcgisruntime.geometry.Envelope
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.view.Graphic
+import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.setmaxextent.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol
+import com.esri.arcgisruntime.symbology.SimpleRenderer
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,15 +49,27 @@ class MainActivity : AppCompatActivity() {
         // location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // create a map with the BasemapStyle streets
-        val map = ArcGISMap(BasemapStyle.ARCGIS_STREETS).apply {
+        // create a map with the BasemapStyle streets focused on Colorado
+        val coloradoMap = ArcGISMap(BasemapStyle.ARCGIS_STREETS).apply {
             // set the map's max extent to an envelope of Colorado's northwest and southeast corners
             maxExtent =
                 Envelope(Point(-12139393.2109, 5012444.0468), Point(-11359277.5124, 4438148.7816))
         }
 
-        // set the map to be displayed in the layout's MapView
-        mapView.map = map
+        // create a graphics overlay of the map's max extent
+        val coloradoGraphicsOverlay = GraphicsOverlay().apply {
+            // set the graphic's geometry to the max extent of the map
+            graphics.add(Graphic(coloradoMap.maxExtent))
+            // create a simple red dashed line renderer
+            renderer = SimpleRenderer(SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.RED, 5f))
+        }
+
+        mapView.apply {
+            // set the map to the map view
+            map = coloradoMap
+            // set the graphics overlay to the map view
+            graphicsOverlays.add(coloradoGraphicsOverlay)
+        }
     }
 
     override fun onPause() {
