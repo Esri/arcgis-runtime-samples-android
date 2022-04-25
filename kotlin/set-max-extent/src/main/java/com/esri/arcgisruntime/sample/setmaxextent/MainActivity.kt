@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
             newEnvelope.expand(1.5)
             // update the graphic overlay with the newEnvelope's geometry
             coloradoGraphicsOverlay.graphics[0].geometry = newEnvelope.toGeometry()
-            // enable update mao button
+            // enable update map button
             updateMapButton.isEnabled = true
         }
 
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             newEnvelope.expand(0.5)
             // update the graphic overlay with the newEnvelope's geometry
             coloradoGraphicsOverlay.graphics[0].geometry = newEnvelope.toGeometry()
-            // enable update mao button
+            // enable update map button
             updateMapButton.isEnabled = true
         }
 
