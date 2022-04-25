@@ -16,10 +16,13 @@
 
 package com.esri.arcgisruntime.sample.setmaxextent
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.widget.SeekBar
+import android.util.Log
+import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Envelope
@@ -33,6 +36,8 @@ import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.setmaxextent.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
+import com.google.android.material.slider.Slider
+import kotlin.math.round
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,15 +49,20 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.mapView
     }
 
-    private val factorSeekBar: SeekBar by lazy {
-        activityMainBinding.factorSeekBar
+    private val increaseButton: Button by lazy {
+        activityMainBinding.increaseButton
     }
 
-    private val factorTextView: TextView by lazy {
-        activityMainBinding.factorTextView
+    private val decreaseButton: Button by lazy {
+        activityMainBinding.decreaseButton
     }
 
-    private val extentEnvelope = Envelope(Point(-12139393.2109, 5012444.0468), Point(-11359277.5124, 4438148.7816))
+    private val updateMapButton: Button by lazy {
+        activityMainBinding.updateMap
+    }
+
+    private val extentEnvelope =
+        Envelope(Point(-12139393.2109, 5012444.0468), Point(-11359277.5124, 4438148.7816))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,30 +86,43 @@ class MainActivity : AppCompatActivity() {
             renderer = SimpleRenderer(SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.RED, 5f))
         }
 
+        // envelop to update the map with a new maxExtent
         val newEnvelope = EnvelopeBuilder(extentEnvelope)
 
-        factorSeekBar.apply {
-            setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(
-                    seekBar: SeekBar?,
-                    progress: Int,
-                    fromUser: Boolean
-                ) {
+        // a factor of greater than 1.0 expands the envelope
+        increaseButton.setOnClickListener {
+            // update the envelop by a factor of 1.5
+            newEnvelope.expand(1.5)
+            // update the graphic overlay with the newEnvelope's geometry
+            coloradoGraphicsOverlay.graphics[0].geometry = newEnvelope.toGeometry()
+            // enable update mao button
+            updateMapButton.isEnabled = true
+        }
 
-                    val factorDouble = progress/100.0+.5
-                    factorTextView.text = factorDouble.toString()
-                    newEnvelope.expand(factorDouble)
-                    coloradoGraphicsOverlay.graphics[0].geometry = newEnvelope.toGeometry()
-                }
+        // a factor of less than 1.0 shrinks the envelope
+        decreaseButton.setOnClickListener {
+            // update the envelop by a factor of 0.5
+            newEnvelope.expand(0.5)
+            // update the graphic overlay with the newEnvelope's geometry
+            coloradoGraphicsOverlay.graphics[0].geometry = newEnvelope.toGeometry()
+            // enable update mao button
+            updateMapButton.isEnabled = true
+        }
 
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                    mapView.map.maxExtent = newEnvelope.toGeometry()
-
-                }
-
-            })
+        updateMapButton.setOnClickListener {
+            // calculate the total factor changed by new width / old width and round to two decimal places
+            val factorChanged =
+                (newEnvelope.toGeometry().width / mapView.map.maxExtent.width).round(2)
+            // display the total envelop factor updated
+            Toast.makeText(
+                this,
+                "MaxExtent updated by a factor of $factorChanged",
+                Toast.LENGTH_SHORT
+            ).show()
+            // update the max extent of the mapview to the new extent
+            mapView.map.maxExtent = newEnvelope.toGeometry()
+            // disable the button since map has been updated
+            updateMapButton.isEnabled = false
         }
 
         mapView.apply {
@@ -108,6 +131,15 @@ class MainActivity : AppCompatActivity() {
             // set the graphics overlay to the map view
             graphicsOverlays.add(coloradoGraphicsOverlay)
         }
+    }
+
+    /**
+     * Kotlin extension function to round double to n [decimals] places
+     */
+    private fun Double.round(decimals: Int): Double {
+        var multiplier = 1.0
+        repeat(decimals) { multiplier *= 10 }
+        return round(this * multiplier) / multiplier
     }
 
     override fun onPause() {
