@@ -18,9 +18,12 @@ package com.esri.arcgisruntime.sample.setmaxextent
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.SeekBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Envelope
+import com.esri.arcgisruntime.geometry.EnvelopeBuilder
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
@@ -41,6 +44,16 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.mapView
     }
 
+    private val factorSeekBar: SeekBar by lazy {
+        activityMainBinding.factorSeekBar
+    }
+
+    private val factorTextView: TextView by lazy {
+        activityMainBinding.factorTextView
+    }
+
+    private val extentEnvelope = Envelope(Point(-12139393.2109, 5012444.0468), Point(-11359277.5124, 4438148.7816))
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
@@ -52,8 +65,7 @@ class MainActivity : AppCompatActivity() {
         // create a map with the BasemapStyle streets focused on Colorado
         val coloradoMap = ArcGISMap(BasemapStyle.ARCGIS_STREETS).apply {
             // set the map's max extent to an envelope of Colorado's northwest and southeast corners
-            maxExtent =
-                Envelope(Point(-12139393.2109, 5012444.0468), Point(-11359277.5124, 4438148.7816))
+            maxExtent = extentEnvelope
         }
 
         // create a graphics overlay of the map's max extent
@@ -62,6 +74,32 @@ class MainActivity : AppCompatActivity() {
             graphics.add(Graphic(coloradoMap.maxExtent))
             // create a simple red dashed line renderer
             renderer = SimpleRenderer(SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.RED, 5f))
+        }
+
+        val newEnvelope = EnvelopeBuilder(extentEnvelope)
+
+        factorSeekBar.apply {
+            setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+
+                    val factorDouble = progress/100.0+.5
+                    factorTextView.text = factorDouble.toString()
+                    newEnvelope.expand(factorDouble)
+                    coloradoGraphicsOverlay.graphics[0].geometry = newEnvelope.toGeometry()
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    mapView.map.maxExtent = newEnvelope.toGeometry()
+
+                }
+
+            })
         }
 
         mapView.apply {
