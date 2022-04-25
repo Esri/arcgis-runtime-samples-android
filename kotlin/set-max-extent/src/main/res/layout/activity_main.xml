@@ -37,7 +37,7 @@
                 android:id="@+id/increaseButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+"
+                android:text="@string/increase"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -48,7 +48,7 @@
                 android:id="@+id/decreaseButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-"
+                android:text="@string/decrease"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/factor"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="Modify extent by a factor of 5 times"
+                android:text="@string/factorText"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/increaseButton"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Update Map" />
+            android:text="@string/updateMap" />
 
     </LinearLayout>
 
