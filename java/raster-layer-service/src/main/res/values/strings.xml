@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Raster Layer Service</string>
-    <string name="image_service_url">https://gis.ngdc.noaa.gov/arcgis/rest/services/bag_hillshades/ImageServer</string>
+    <string name="image_service_url">https://gis.ngdc.noaa.gov/arcgis/rest/services/bag_hillshades_subsets/ImageServer</string>
 </resources>
