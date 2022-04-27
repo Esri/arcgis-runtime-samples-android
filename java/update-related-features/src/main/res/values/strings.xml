@@ -16,7 +16,7 @@
     </string-array>
 
     <!-- feature service url -->
-    <string name="feature_table">
+    <string name="alaska_parks_feature_service">
         https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/ArcGIS/rest/services/AlaskaNationalParksPreserves_Update/FeatureServer
     </string>
 </resources>

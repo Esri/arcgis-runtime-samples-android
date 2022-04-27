@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     mCallout.setStyle(calloutStyle);
 
     // create and load the service geodatabase
-    ServiceGeodatabase preservesServiceGeodatabase =  new ServiceGeodatabase(getString(R.string.feature_table));
+    ServiceGeodatabase preservesServiceGeodatabase =  new ServiceGeodatabase(getString(R.string.alaska_parks_feature_service));
     preservesServiceGeodatabase.loadAsync();
     preservesServiceGeodatabase.addDoneLoadingListener(() -> {
       // create a feature layer using the first two layers in the ServiceFeatureTable
