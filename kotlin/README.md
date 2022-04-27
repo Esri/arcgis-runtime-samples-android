@@ -1,8 +1,8 @@
 # ArcGIS Android Kotlin Samples
 
 ## Requirements 
-- [Android Plugin for Gradle 3.0.0](https://developer.android.com/studio/build/gradle-plugin-3-0-0.html)
-- [Kotlin 1.2-M2](https://blog.jetbrains.com/kotlin/2017/08/kotlin-1-2-m2-is-out/)
+- [Android Plugin for Gradle 7.0.2](https://developer.android.com/studio/releases/gradle-plugin#7-0-0)
+- [Kotlin 1.5.20](https://blog.jetbrains.com/kotlin/2021/06/kotlin-1-5-20-released/)
 
 ## Import Kotlin Samples into Android Studio
 

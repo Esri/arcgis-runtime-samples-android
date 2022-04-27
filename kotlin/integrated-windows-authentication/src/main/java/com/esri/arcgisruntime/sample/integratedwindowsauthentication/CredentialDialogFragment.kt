@@ -33,20 +33,6 @@ class CredentialDialogFragment : DialogFragment() {
     private var hostname: URI? = null
     private lateinit var binding: CredentialDialogBinding
 
-    companion object {
-        private val TAG: String = CredentialDialogFragment::class.java.simpleName
-
-        private val ARG_HOSTNAME = "${CredentialDialogFragment::class.java.simpleName}_ARG_HOSTNAME"
-
-        fun newInstance(hostname: URI): CredentialDialogFragment {
-            val fragment = CredentialDialogFragment()
-            val args = Bundle()
-            args.putSerializable(ARG_HOSTNAME, hostname)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isCancelable = false
@@ -109,4 +95,17 @@ class CredentialDialogFragment : DialogFragment() {
         fun onCancelClicked(uri: URI)
     }
 
+    companion object {
+        private val TAG: String = CredentialDialogFragment::class.java.simpleName
+
+        private val ARG_HOSTNAME = "${CredentialDialogFragment::class.java.simpleName}_ARG_HOSTNAME"
+
+        fun newInstance(hostname: URI): CredentialDialogFragment {
+            val fragment = CredentialDialogFragment()
+            val args = Bundle()
+            args.putSerializable(ARG_HOSTNAME, hostname)
+            fragment.arguments = args
+            return fragment
+        }
+    }
 }

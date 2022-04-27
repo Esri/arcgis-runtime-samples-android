@@ -81,9 +81,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
 
-    // authentication with an API key or named user is required to access basemaps and other 
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         // setup map with basemap and an initial viewpoint
         mapView.apply {

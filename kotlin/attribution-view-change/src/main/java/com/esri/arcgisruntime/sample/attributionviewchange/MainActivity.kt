@@ -29,62 +29,66 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val mapView: MapView by lazy {
-    activityMainBinding.mapView
-  }
-
-  private val fab: FloatingActionButton by lazy {
-    activityMainBinding.fab
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // authentication with an API key or named user is required to access basemaps and other 
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
-
-    // create a map with the topographic basemap
-    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
-
-    // set the map to be displayed in this view
-    mapView.map = map
-    mapView.setViewpoint(Viewpoint(47.495052, -121.786863, 100000.0))
-
-    // create a FAB to respond to attribution bar
-    fab.setOnClickListener {
-      Toast.makeText(this@MainActivity, "Tap the attribution bar to expand it.", Toast.LENGTH_LONG).show()
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
 
-    // set attribution bar listener
-    mapView.addAttributionViewLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-      val heightDelta = oldBottom - bottom
-      fab.y += heightDelta
-      Toast.makeText(
-        this@MainActivity,
-        "new bounds [$left,$top,$right,$bottom] old bounds [$oldLeft,$oldTop,$oldRight,$oldBottom]",
-        Toast.LENGTH_SHORT
-      ).show()
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
     }
-  }
 
-  override fun onPause() {
-    super.onPause()
-    mapView.pause()
-  }
+    private val fab: FloatingActionButton by lazy {
+        activityMainBinding.fab
+    }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-  override fun onDestroy() {
-    super.onDestroy()
-    mapView.dispose()
-  }
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
+        // create a map with the topographic basemap
+        val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+
+        // set the map to be displayed in this view
+        mapView.map = map
+        mapView.setViewpoint(Viewpoint(47.495052, -121.786863, 100000.0))
+
+        // create a FAB to respond to attribution bar
+        fab.setOnClickListener {
+            Toast.makeText(
+                this@MainActivity,
+                "Tap the attribution bar to expand it.",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        // set attribution bar listener
+        mapView.addAttributionViewLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            val heightDelta = oldBottom - bottom
+            fab.y += heightDelta
+            Toast.makeText(
+                this@MainActivity,
+                "new bounds [$left,$top,$right,$bottom] old bounds [$oldLeft,$oldTop,$oldRight,$oldBottom]",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.dispose()
+    }
 }

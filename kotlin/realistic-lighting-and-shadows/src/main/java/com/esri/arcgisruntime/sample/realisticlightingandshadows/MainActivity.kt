@@ -30,170 +30,180 @@ import com.esri.arcgisruntime.mapping.view.*
 import com.esri.arcgisruntime.sample.realisticlightingandshadows.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.TimeZone
+import java.util.*
 import kotlin.math.floor
 
 class MainActivity : AppCompatActivity() {
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val sceneView: SceneView by lazy {
-    activityMainBinding.sceneView
-  }
-
-  private val dateTextView: TextView by lazy {
-    activityMainBinding.dateTextView
-  }
-
-  private val seekBar: SeekBar by lazy {
-    activityMainBinding.seekBar
-  }
-
-  private val spinner: Spinner by lazy {
-    activityMainBinding.spinner
-  }
-
-  private val fab: FloatingActionButton by lazy {
-    activityMainBinding.fab
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // authentication with an API key or named user is required to access basemaps and other
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
-
-    // get the current calendar and set its time to midday
-    val calendar = Calendar.getInstance()
-    calendar.apply {
-      // set the time zone to the US West Coast, where this data is based
-      timeZone = TimeZone.getTimeZone("America/Los_Angeles")
-      set(Calendar.HOUR_OF_DAY, 12)
-      set(Calendar.MINUTE, 0)
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
 
-    val buildingsLayer =
-      ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_BuildingShells/SceneServer")
-
-    // create a scene with a vector basemap, a world elevation source, and a layer showing planned 
-    // development in Portland, Oregon
-    sceneView.scene = ArcGISScene(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
-      baseSurface =
-        Surface(listOf(ArcGISTiledElevationSource("https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer")))
-      operationalLayers.add(buildingsLayer)
+    private val sceneView: SceneView by lazy {
+        activityMainBinding.sceneView
     }
 
-    // initialize the scene with a realistic atmosphere and a set its time to the calendar
-    sceneView.apply {
-      setViewpointCamera(
-        Camera(
-          45.54605,
-          -122.69033,
-          941.00021,
-          162.58544,
-          60.0,
-          0.0
-        )
-      )
-      atmosphereEffect = AtmosphereEffect.REALISTIC
-      sunTime = calendar
+    private val dateTextView: TextView by lazy {
+        activityMainBinding.dateTextView
     }
 
-    val dateFormat = SimpleDateFormat("HH:mm EEE, dd MMM yyyy").apply {
-      timeZone = TimeZone.getTimeZone("America/Los_Angeles")
+    private val seekBar: SeekBar by lazy {
+        activityMainBinding.seekBar
     }
-    // display the full date and time in a text view
-    dateTextView.text = dateFormat.format(calendar.time)
 
-    // change the time of day with the seekbar
-    seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-      override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-        // slider progress represents minutes in the day (0-1439)
-        val hours = floor((progress / 60.0)).toInt()
-        val minutes = progress % 60
+    private val spinner: Spinner by lazy {
+        activityMainBinding.spinner
+    }
+
+    private val fab: FloatingActionButton by lazy {
+        activityMainBinding.fab
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
+
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
+        // get the current calendar and set its time to midday
+        val calendar = Calendar.getInstance()
         calendar.apply {
-          set(Calendar.HOUR_OF_DAY, hours)
-          set(Calendar.MINUTE, minutes)
+            // set the time zone to the US West Coast, where this data is based
+            timeZone = TimeZone.getTimeZone("America/Los_Angeles")
+            set(Calendar.HOUR_OF_DAY, 12)
+            set(Calendar.MINUTE, 0)
         }
-        // display the full date and time in a text view()
+
+        val buildingsLayer =
+            ArcGISSceneLayer("https://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/DevA_BuildingShells/SceneServer")
+
+        // create a scene with a vector basemap, a world elevation source, and a layer showing planned
+        // development in Portland, Oregon
+        sceneView.scene = ArcGISScene(BasemapStyle.ARCGIS_TOPOGRAPHIC).apply {
+            baseSurface =
+                Surface(listOf(ArcGISTiledElevationSource("https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer")))
+            operationalLayers.add(buildingsLayer)
+        }
+
+        // initialize the scene with a realistic atmosphere and a set its time to the calendar
+        sceneView.apply {
+            setViewpointCamera(
+                Camera(
+                    45.54605,
+                    -122.69033,
+                    941.00021,
+                    162.58544,
+                    60.0,
+                    0.0
+                )
+            )
+            atmosphereEffect = AtmosphereEffect.REALISTIC
+            sunTime = calendar
+        }
+
+        val dateFormat = SimpleDateFormat("HH:mm EEE, dd MMM yyyy", Locale.US).apply {
+            timeZone = TimeZone.getTimeZone("America/Los_Angeles")
+        }
+        // display the full date and time in a text view
         dateTextView.text = dateFormat.format(calendar.time)
-        // set the sun time on the scene to the modified calendar
-        sceneView.sunTime = calendar
-      }
 
-      override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-      override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-    })
-
-    // create a spinner adapter to select lighting modes
-    ArrayAdapter.createFromResource(
-      this,
-      R.array.lighting_modes,
-      android.R.layout.simple_spinner_item
-    ).also { adapter ->
-      adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-      spinner.adapter = adapter
-    }
-
-    // change the lighting mode when a spinner item is selected
-    spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener,
-      AdapterView.OnItemClickListener {
-      override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-        val mode = parent.getItemAtPosition(position) as String
-        sceneView.sunLighting = when (mode) {
-          "No light" -> LightingMode.NO_LIGHT
-          "Light only" -> LightingMode.LIGHT
-          "Light and shadows" -> LightingMode.LIGHT_AND_SHADOWS
-          else -> LightingMode.LIGHT_AND_SHADOWS
-        }
-      }
-
-      override fun onNothingSelected(parent: AdapterView<*>?) {}
-      override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {}
-    }
-
-    // select "light and shadows" option by default
-    spinner.setSelection(2)
-
-    sceneView.apply {
-      // make sure the fab doesn't obscure the attribution bar
-      addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-        val layoutParams = fab.layoutParams as CoordinatorLayout.LayoutParams
-        layoutParams.bottomMargin += bottom - oldBottom
-      }
-      // close the options when the scene is tapped
-      setOnTouchListener(object : DefaultSceneViewOnTouchListener(sceneView) {
-        override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
-          if (view == sceneView) {
-            if (fab.isExpanded) {
-              fab.isExpanded = false
+        // change the time of day with the seekbar
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                // slider progress represents minutes in the day (0-1439)
+                val hours = floor((progress / 60.0)).toInt()
+                val minutes = progress % 60
+                calendar.apply {
+                    set(Calendar.HOUR_OF_DAY, hours)
+                    set(Calendar.MINUTE, minutes)
+                }
+                // display the full date and time in a text view()
+                dateTextView.text = dateFormat.format(calendar.time)
+                // set the sun time on the scene to the modified calendar
+                sceneView.sunTime = calendar
             }
-          }
-          return super.onTouch(view, motionEvent)
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        // create a spinner adapter to select lighting modes
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.lighting_modes,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.adapter = adapter
         }
-      })
+
+        // change the lighting mode when a spinner item is selected
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener,
+            AdapterView.OnItemClickListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val mode = parent.getItemAtPosition(position) as String
+                sceneView.sunLighting = when (mode) {
+                    "No light" -> LightingMode.NO_LIGHT
+                    "Light only" -> LightingMode.LIGHT
+                    "Light and shadows" -> LightingMode.LIGHT_AND_SHADOWS
+                    else -> LightingMode.LIGHT_AND_SHADOWS
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onItemClick(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+            }
+        }
+
+        // select "light and shadows" option by default
+        spinner.setSelection(2)
+
+        sceneView.apply {
+            // make sure the fab doesn't obscure the attribution bar
+            addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+                val layoutParams = fab.layoutParams as CoordinatorLayout.LayoutParams
+                layoutParams.bottomMargin += bottom - oldBottom
+            }
+            // close the options when the scene is tapped
+            setOnTouchListener(object : DefaultSceneViewOnTouchListener(sceneView) {
+                override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
+                    if (view == sceneView) {
+                        if (fab.isExpanded) {
+                            fab.isExpanded = false
+                        }
+                    }
+                    return super.onTouch(view, motionEvent)
+                }
+            })
+        }
+        // open and close the options with the fab
+        fab.setOnClickListener { fab.isExpanded = !fab.isExpanded }
     }
-    // open and close the options with the fab
-    fab.setOnClickListener { fab.isExpanded = !fab.isExpanded }
-  }
 
-  override fun onResume() {
-    super.onResume()
-    sceneView.resume()
-  }
+    override fun onResume() {
+        super.onResume()
+        sceneView.resume()
+    }
 
-  override fun onPause() {
-    sceneView.pause()
-    super.onPause()
-  }
+    override fun onPause() {
+        sceneView.pause()
+        super.onPause()
+    }
 
-  override fun onDestroy() {
-    sceneView.dispose()
-    super.onDestroy()
-  }
+    override fun onDestroy() {
+        sceneView.dispose()
+        super.onDestroy()
+    }
 }

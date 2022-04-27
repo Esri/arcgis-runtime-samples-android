@@ -44,9 +44,9 @@ public class SpinnerAdapter extends ArrayAdapter<ItemData> {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         View itemView = inflater.inflate(groupid, parent, false);
-        ImageView imageView = (ImageView) itemView.findViewById(R.id.img);
+        ImageView imageView = itemView.findViewById(R.id.img);
         imageView.setImageResource(list.get(position).getImageId());
-        TextView textView = (TextView) itemView.findViewById(R.id.txt);
+        TextView textView = itemView.findViewById(R.id.txt);
         textView.setText(list.get(position).getText());
         return itemView;
     }

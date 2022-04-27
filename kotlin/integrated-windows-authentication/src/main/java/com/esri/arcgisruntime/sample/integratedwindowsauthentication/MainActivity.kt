@@ -21,7 +21,10 @@ import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -34,7 +37,6 @@ import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.portal.PortalQueryParameters
 import com.esri.arcgisruntime.sample.integratedwindowsauthentication.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.security.*
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
 import java.net.URI
@@ -49,8 +51,6 @@ class MainActivity : AppCompatActivity(),
 
 
     private val TAG: String = MainActivity::class.java.simpleName
-
-    private val MAX_AUTH_ATTEMPTS = 5
 
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -166,7 +166,8 @@ class MainActivity : AppCompatActivity(),
                                     portalItemAdapter.updatePortalItems(portalItemSetResults)
                                 }
                             } catch (exception: Exception) {
-                                getString(R.string.error_item_set, exception.message
+                                getString(
+                                    R.string.error_item_set, exception.message
                                 ).let {
                                     Toast.makeText(this, it, Toast.LENGTH_LONG).show()
                                     Log.e(TAG, it)
@@ -218,7 +219,6 @@ class MainActivity : AppCompatActivity(),
         // Show item ID in UI
         loadedWebMapTextView.text = getString(R.string.web_map_loaded_text, portalItem.itemId)
     }
-
 
 
     override fun onPortalItemClick(portalItem: PortalItem) {

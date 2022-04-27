@@ -146,7 +146,10 @@ class MainActivity : AppCompatActivity() {
                         // remove the loading row already at this index
                         scrollViewLayout.removeViewAt(symbolNames.indexOf(symbolName))
                         // add the legend row at the correct index
-                        scrollViewLayout.addView(legendRowBinding.root, symbolNames.indexOf(symbolName))
+                        scrollViewLayout.addView(
+                            legendRowBinding.root,
+                            symbolNames.indexOf(symbolName)
+                        )
                     }
                 } catch (e: Exception) {
                     val error = "Error getting symbol: " + e.message

@@ -15,11 +15,8 @@
         <item>500,000+</item>
     </string-array>
 
-    <!-- feature service urls -->
-    <string name="parks_feature_table">
-        https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/ArcGIS/rest/services/AlaskaNationalParksPreserves_Update/FeatureServer/1
-    </string>
-    <string name="preserves_feature_table">
-        https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/ArcGIS/rest/services/AlaskaNationalParksPreserves_Update/FeatureServer/0
+    <!-- feature service url -->
+    <string name="alaska_parks_feature_service">
+        https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/ArcGIS/rest/services/AlaskaNationalParksPreserves_Update/FeatureServer
     </string>
 </resources>

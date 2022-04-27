@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     // Get the Spinner from layout
     mSpinner = findViewById(R.id.spinner);
 
-    // Get the MapView from layout and set a map with the BasemapType Imagery
+    // Get the MapView from layout and set a map with the Basemap Style Imagery
     mMapView = findViewById(R.id.mapView);
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
     mMapView.setMap(map);

@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         // location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // create a map with the BasemapType topographic
+        // create a map with the BasemapStyle topographic
         val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
 
         // graphics no longer show after zooming passed this scale
@@ -73,7 +73,8 @@ class MainActivity : AppCompatActivity() {
         mapView.graphicsOverlays.add(graphicsOverlay)
 
         // create the dictionary symbol style from the Joint Military Symbology MIL-STD-2525D portal item
-        val portalItem = PortalItem(Portal("https://www.arcgis.com/", false), "d815f3bdf6e6452bb8fd153b654c94ca")
+        val portalItem =
+            PortalItem(Portal("https://www.arcgis.com/", false), "d815f3bdf6e6452bb8fd153b654c94ca")
         val dictionarySymbolStyle = DictionarySymbolStyle(portalItem)
 
         // add done loading listeners to the map and dictionary symbol style and check they have loaded
@@ -81,9 +82,9 @@ class MainActivity : AppCompatActivity() {
             dictionarySymbolStyle.addDoneLoadingListener {
                 if (dictionarySymbolStyle.loadStatus == LoadStatus.LOADED) {
                     // find the first configuration setting which has the property name "model",
-                    // and set its value to "ORDERED ANCHOR POINT"
+                    // and set its value to "ORDERED ANCHOR POINTS"
                     dictionarySymbolStyle.configurations
-                        .first { it.name.equals("model") }.value = "ORDERED ANCHOR POINT"
+                        .first { it.name.equals("model") }.value = "ORDERED ANCHOR POINTS"
                     // create a new dictionary renderer from the dictionary symbol style to render graphics
                     // with symbol dictionary attributes and set it to the graphics overlay renderer
                     val dictionaryRenderer = DictionaryRenderer(dictionarySymbolStyle)
@@ -103,7 +104,8 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    val message = "Failed to load symbol style: ${dictionarySymbolStyle.loadError.cause?.message}"
+                    val message =
+                        "Failed to load symbol style: ${dictionarySymbolStyle.loadError.cause?.message}"
                     Log.e(TAG, message)
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 }
@@ -152,7 +154,7 @@ class MainActivity : AppCompatActivity() {
         val points = PointCollection(sr)
         val coordinates = (attributes["_control_points"] as String).split(";").toMutableList()
         // if the "_control_points" ends with ';' then a blank coordinate is created, it needs to be removed
-        if(coordinates.last().trim() == "")
+        if (coordinates.last().trim() == "")
             coordinates.removeAt(coordinates.lastIndex)
         // split the coordinates and assign them to each point using the spatial reference
         coordinates

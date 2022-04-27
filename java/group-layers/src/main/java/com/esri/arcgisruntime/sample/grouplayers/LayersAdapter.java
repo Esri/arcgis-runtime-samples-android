@@ -44,8 +44,8 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
   private static final int VIEW_TYPE_PARENT = 0;
   private static final int VIEW_TYPE_LAYER = 1;
 
-  private List<Layer> mLayers = new ArrayList<>();
-  private OnLayerCheckedChangedListener mOnLayerCheckedChangedListener;
+  private final List<Layer> mLayers = new ArrayList<>();
+  private final OnLayerCheckedChangedListener mOnLayerCheckedChangedListener;
 
   LayersAdapter(OnLayerCheckedChangedListener onLayerCheckedChangedListener) {
     mOnLayerCheckedChangedListener = onLayerCheckedChangedListener;
@@ -112,8 +112,8 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
    */
   class ParentViewHolder extends ViewHolder {
 
-    private CheckBox mParentCheckbox;
-    private TextView mParentTextView;
+    private final CheckBox mParentCheckbox;
+    private final TextView mParentTextView;
     private final ViewGroup mChildLayout;
     private RadioGroup mRadioGroup;
 
@@ -193,7 +193,7 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
         radioButton.setChecked(childLayer.isVisible());
         radioButton.setOnCheckedChangeListener(
             ((buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(childLayer, isChecked)));
-        TextView textView = (TextView) view.findViewById(R.id.layerNameTextView);
+        TextView textView = view.findViewById(R.id.layerNameTextView);
         textView.setText(childLayer.getName());
         if (mRadioGroup.findViewWithTag(childLayer) == null) {
           // remove the view from the existing parent and add it to the radio group
@@ -208,7 +208,7 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
         checkBox.setChecked(childLayer.isVisible());
         checkBox.setOnCheckedChangeListener(
             (buttonView, isChecked) -> mOnLayerCheckedChangedListener.layerCheckedChanged(childLayer, isChecked));
-        TextView textView = (TextView) view.findViewById(R.id.layerNameTextView);
+        TextView textView = view.findViewById(R.id.layerNameTextView);
         textView.setText(childLayer.getName());
         if (mChildLayout.findViewWithTag(childLayer) == null) {
           mChildLayout.addView(view);
@@ -222,8 +222,8 @@ public class LayersAdapter extends RecyclerView.Adapter<LayersAdapter.ViewHolder
    */
   class LayerViewHolder extends ViewHolder {
 
-    private CheckBox mCheckbox;
-    private TextView mTextView;
+    private final CheckBox mCheckbox;
+    private final TextView mTextView;
 
     LayerViewHolder(@NonNull View itemView, OnLayerCheckedChangedListener onLayerCheckedChangedListener) {
       super(itemView, onLayerCheckedChangedListener);

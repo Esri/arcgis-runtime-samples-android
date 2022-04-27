@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements ParametersDialogF
     mPixelSizePower = 1;
     mOutputBitDepth = 8;
     // retrieve the MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     mFragmentManager = getSupportFragmentManager();
 
     // create raster files

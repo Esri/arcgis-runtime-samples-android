@@ -7,7 +7,7 @@
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <Spinner
         android:layout_width="wrap_content"
@@ -17,6 +17,6 @@
         android:layout_alignParentEnd="true"
         android:background="#00000000"
         android:popupBackground="#00000000"
-        android:overlapAnchor="false"/>
+        android:overlapAnchor="false" />
 
 </RelativeLayout>

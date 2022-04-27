@@ -1,7 +1,7 @@
 <resources>
-  <string name="app_name">Export tiles</string>
-  <string name="tile_cache_folder">/TileCache/</string>
-  <string name="export_tiles_text">Export Tiles</string>
-  <string name="close_button_text">Close</string>
-  <string name="preview_text">Preview</string>
+    <string name="app_name">Export tiles</string>
+    <string name="tile_cache_folder">/TileCache/</string>
+    <string name="export_tiles_text">Export Tiles</string>
+    <string name="close_button_text">Close</string>
+    <string name="preview_text">Preview</string>
 </resources>

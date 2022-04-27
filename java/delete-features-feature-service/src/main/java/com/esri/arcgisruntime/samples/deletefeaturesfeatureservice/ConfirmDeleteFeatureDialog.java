@@ -30,7 +30,7 @@ public class ConfirmDeleteFeatureDialog extends DialogFragment {
 
   private String featureId;
 
-  private DialogInterface.OnClickListener mOnClickListener = (dialog, which) -> {
+  private final DialogInterface.OnClickListener mOnClickListener = (dialog, which) -> {
     if (getContext() instanceof OnButtonClickedListener) {
       if (which == DialogInterface.BUTTON_POSITIVE) {
         ((OnButtonClickedListener) getContext()).onDeleteFeatureClicked(featureId);

@@ -32,7 +32,7 @@ Run the sample and view the military symbols on the map.
 
 ## Offline Data
 
-1. Download the data [Mil2525DMessages.zip](https://www.arcgis.com/home/item.html?id=623382e0113d40698538f249e3bcb1c0) 
+1. Download the data [Mil2525DMessages.zip](https://www.arcgis.com/home/item.html?id=8776cfc26eed4485a03de6316826384c)
 2. Extract the downloaded zip file to retrieve the file "Mil2525DMessages.xml".
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 4. Push the data into the scoped storage of the sample app:

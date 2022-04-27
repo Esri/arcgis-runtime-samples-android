@@ -30,61 +30,61 @@ import com.esri.arcgisruntime.sample.maprotation.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
 
-  private val mapView: MapView by lazy {
-    activityMainBinding.mapView
-  }
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
 
-  private val rotationSeekBar: SeekBar by lazy {
-    activityMainBinding.rotationSeekBar
-  }
+    private val rotationSeekBar: SeekBar by lazy {
+        activityMainBinding.rotationSeekBar
+    }
 
-  private val rotationValueText: TextView by lazy {
-    activityMainBinding.rotationValueText
-  }
+    private val rotationValueText: TextView by lazy {
+        activityMainBinding.rotationValueText
+    }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-    // authentication with an API key or named user is required to access basemaps and other
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-    // create a map with a topographic basemap and initial position
-    val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
-    // set the map to be displayed in this view
-    mapView.map = map
-    mapView.setViewpoint(Viewpoint( 34.056295, -117.195800, 10000.0))
+        // create a map with a topographic basemap and initial position
+        val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+        // set the map to be displayed in this view
+        mapView.map = map
+        mapView.setViewpoint(Viewpoint(34.056295, -117.195800, 10000.0))
 
-    rotationSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-      override fun onProgressChanged(seekBar: SeekBar, angle: Int, b: Boolean) {
-        // set the text to the value
-        rotationValueText.text = angle.toString()
-        // rotate map view to the progress angle
-        mapView.setViewpointRotationAsync(angle.toDouble())
-      }
+        rotationSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, angle: Int, b: Boolean) {
+                // set the text to the value
+                rotationValueText.text = angle.toString()
+                // rotate map view to the progress angle
+                mapView.setViewpointRotationAsync(angle.toDouble())
+            }
 
-      override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-      override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-    })
-  }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+    }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }

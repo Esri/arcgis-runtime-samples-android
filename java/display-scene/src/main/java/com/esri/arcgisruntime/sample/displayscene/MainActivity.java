@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     //[DocRef: Name=Display Scene-android, Category=Work with 3D, Topic=Display a scene]
     // create SceneView from layout
-    mSceneView = (SceneView) findViewById(R.id.sceneView);
+    mSceneView = findViewById(R.id.sceneView);
     mSceneView.setScene(scene);
     //[DocRef: END]
 

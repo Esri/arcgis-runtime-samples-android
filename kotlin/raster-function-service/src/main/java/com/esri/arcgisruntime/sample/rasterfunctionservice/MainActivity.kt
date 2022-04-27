@@ -32,77 +32,78 @@ import com.esri.arcgisruntime.sample.rasterfunctionservice.databinding.ActivityM
 
 class MainActivity : AppCompatActivity() {
 
-  private val activityMainBinding by lazy {
-    ActivityMainBinding.inflate(layoutInflater)
-  }
-
-  private val mapView: MapView by lazy {
-    activityMainBinding.mapView
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(activityMainBinding.root)
-
-    // authentication with an API key or named user is required to access basemaps and other
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
-
-    // create a Dark Gray Vector BaseMap
-    val map = ArcGISMap(BasemapStyle.ARCGIS_DARK_GRAY)
-    // set the map to be displayed in this view
-    mapView.map = map
-    // create image service raster as raster layer
-    val imageServiceRaster = ImageServiceRaster(
-      resources.getString(R.string.image_service_raster_url)
-    )
-    val imageRasterLayer = RasterLayer(imageServiceRaster)
-    map.operationalLayers.add(imageRasterLayer)
-    // zoom to the extent of the raster service
-    imageRasterLayer.addDoneLoadingListener {
-      if (imageRasterLayer.loadStatus == LoadStatus.LOADED) {
-        // zoom to extent of raster
-        val centerPnt = imageServiceRaster.serviceInfo.fullExtent.center
-        mapView.setViewpointCenterAsync(centerPnt, 55000000.0)
-        // update raster with simplified hillshade
-        applyRasterFunction(imageServiceRaster)
-      }
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
-  }
 
-  /**
-   * Apply a raster function on the given Raster
-   *
-   * @param raster Input raster to apply function
-   */
-  private fun applyRasterFunction(raster: Raster) {
-    // create raster function from json string
-    val rasterFunction = RasterFunction.fromJson(resources.getString(R.string.hillshade_simplified))
-    // get parameter name value pairs used by hillshade
-    val rasterFunctionArguments = rasterFunction.arguments
-    // get list of raster names associated with raster function
-    val rasterName = rasterFunctionArguments.rasterNames
-    // set raster to the raster name
-    rasterFunctionArguments.setRaster(rasterName[0], raster)
-    // create raster as raster layer
-    val raster = Raster(rasterFunction)
-    val hillshadeLayer = RasterLayer(raster)
-    // add hillshade raster
-    mapView.map.operationalLayers.add(hillshadeLayer)
-  }
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
 
-  override fun onPause() {
-    super.onPause()
-    mapView.pause()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-  override fun onDestroy() {
-    super.onDestroy()
-    mapView.dispose()
-  }
+        // create a Dark Gray Vector BaseMap
+        val map = ArcGISMap(BasemapStyle.ARCGIS_DARK_GRAY)
+        // set the map to be displayed in this view
+        mapView.map = map
+        // create image service raster as raster layer
+        val imageServiceRaster = ImageServiceRaster(
+            resources.getString(R.string.image_service_raster_url)
+        )
+        val imageRasterLayer = RasterLayer(imageServiceRaster)
+        map.operationalLayers.add(imageRasterLayer)
+        // zoom to the extent of the raster service
+        imageRasterLayer.addDoneLoadingListener {
+            if (imageRasterLayer.loadStatus == LoadStatus.LOADED) {
+                // zoom to extent of raster
+                val centerPnt = imageServiceRaster.serviceInfo.fullExtent.center
+                mapView.setViewpointCenterAsync(centerPnt, 55000000.0)
+                // update raster with simplified hillshade
+                applyRasterFunction(imageServiceRaster)
+            }
+        }
+    }
+
+    /**
+     * Apply a raster function on the given Raster
+     *
+     * @param raster Input raster to apply function
+     */
+    private fun applyRasterFunction(raster: Raster) {
+        // create raster function from json string
+        val rasterFunction =
+            RasterFunction.fromJson(resources.getString(R.string.hillshade_simplified))
+        // get parameter name value pairs used by hillshade
+        val rasterFunctionArguments = rasterFunction.arguments
+        // get list of raster names associated with raster function
+        val rasterName = rasterFunctionArguments.rasterNames
+        // set raster to the raster name
+        rasterFunctionArguments.setRaster(rasterName[0], raster)
+        // create raster as raster layer
+        val raster = Raster(rasterFunction)
+        val hillshadeLayer = RasterLayer(raster)
+        // add hillshade raster
+        mapView.map.operationalLayers.add(hillshadeLayer)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.dispose()
+    }
 }

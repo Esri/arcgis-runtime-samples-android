@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     // inflate mapView from layout
     mMapView  = findViewById(R.id.mapView);
-    // create a map with a BasemapType STREETS
+    // create a map with a Basemap Style STREETS
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
     // set the map to be displayed in this view
     mMapView.setMap(map);

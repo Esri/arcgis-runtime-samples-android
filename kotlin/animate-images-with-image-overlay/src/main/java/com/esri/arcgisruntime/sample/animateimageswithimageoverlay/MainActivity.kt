@@ -122,16 +122,16 @@ class MainActivity : AppCompatActivity() {
             imageOverlays.add(ImageOverlay())
         }
 
-    // get the image files from local storage as an unordered list
-    (File(getExternalFilesDir(null).toString() + "/PacificSouthWest").listFiles())?.let { imageFiles ->
-      // sort the list of image files
-      Arrays.sort(imageFiles)
-      imageFiles.forEach { file ->
-        // create an image with the given path and use it to create an image frame
-        val imageFrame = ImageFrame(file.path, pacificSouthwestEnvelope)
-        imageFrames.add(imageFrame)
-      }
-    }
+        // get the image files from local storage as an unordered list
+        (File(getExternalFilesDir(null).toString() + "/PacificSouthWest").listFiles())?.let { imageFiles ->
+            // sort the list of image files
+            Arrays.sort(imageFiles)
+            imageFiles.forEach { file ->
+                // create an image with the given path and use it to create an image frame
+                val imageFrame = ImageFrame(file.path, pacificSouthwestEnvelope)
+                imageFrames.add(imageFrame)
+            }
+        }
 
         // setup touch and ui element behaviours
         setupUI()
@@ -192,13 +192,13 @@ class MainActivity : AppCompatActivity() {
         sceneView.apply {
             // create a touch listener
             setOnTouchListener(object : DefaultSceneViewOnTouchListener(sceneView) {
-              // close the options sheet when the map is tapped
-              override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
-                if (fab.isExpanded) {
-                  fab.isExpanded = false
+                // close the options sheet when the map is tapped
+                override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
+                    if (fab.isExpanded) {
+                        fab.isExpanded = false
+                    }
+                    return super.onTouch(view, motionEvent)
                 }
-                return super.onTouch(view, motionEvent)
-              }
             })
             // ensure the floating action button moves to be above the attribution view
             addAttributionViewLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
@@ -214,38 +214,38 @@ class MainActivity : AppCompatActivity() {
 
         // seek bar controls image overlay opacity
         opacitySeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-          override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-            // convert the seekbar progress (0 - 100) to a float 0.0 - 1.0
-            val opacity: Float = progress.toFloat() / 100
-            sceneView.imageOverlays[0].opacity = opacity
-            currOpacityTextView.text = opacity.toString()
-          }
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                // convert the seekbar progress (0 - 100) to a float 0.0 - 1.0
+                val opacity: Float = progress.toFloat() / 100
+                sceneView.imageOverlays[0].opacity = opacity
+                currOpacityTextView.text = opacity.toString()
+            }
 
-          override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-          override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
         // spinner controls how many image overlays to display per second
         fpsSpinner.apply {
             // create an adapter with fps options
             adapter = ArrayAdapter(
-              this@MainActivity,
-              android.R.layout.simple_spinner_dropdown_item,
-              arrayOf("60 fps", "30 fps", "15 fps")
+                this@MainActivity,
+                android.R.layout.simple_spinner_dropdown_item,
+                arrayOf("60 fps", "30 fps", "15 fps")
             )
             // set period based on the fps option selected
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
-                  parent: AdapterView<*>?,
-                  view: View?,
-                  position: Int,
-                  id: Long
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
                 ) {
                     // get the period for the chosen fps
                     period = when (position) {
-                      0 -> 17 // 1000ms/17 = 60 fps
-                      1 -> 33 // 1000ms/33 = 30 fps
-                      2 -> 67 // 1000ms/67 = 15 fps
+                        0 -> 17 // 1000ms/17 = 60 fps
+                        1 -> 33 // 1000ms/33 = 30 fps
+                        2 -> 67 // 1000ms/67 = 15 fps
                         else -> 0
                     }
                     // create a new timer for this period
