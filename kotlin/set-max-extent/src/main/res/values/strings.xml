@@ -4,4 +4,5 @@
     <string name="decrease">-</string>
     <string name="increase">+</string>
     <string name="updateMap">Update Map</string>
+    <string name="extentText">Enable/Disable the maximum extent</string>
 </resources>

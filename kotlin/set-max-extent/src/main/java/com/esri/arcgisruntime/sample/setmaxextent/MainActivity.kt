@@ -18,12 +18,10 @@ package com.esri.arcgisruntime.sample.setmaxextent
 
 import android.graphics.Color
 import android.os.Bundle
-import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Envelope
-import com.esri.arcgisruntime.geometry.EnvelopeBuilder
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
@@ -33,7 +31,6 @@ import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.setmaxextent.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
-import kotlin.math.round
 
 class MainActivity : AppCompatActivity() {
 
@@ -45,16 +42,8 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.mapView
     }
 
-    private val increaseButton: Button by lazy {
-        activityMainBinding.increaseButton
-    }
-
-    private val decreaseButton: Button by lazy {
-        activityMainBinding.decreaseButton
-    }
-
-    private val updateMapButton: Button by lazy {
-        activityMainBinding.updateMap
+    private val extentSwitch: SwitchCompat by lazy {
+        activityMainBinding.extentSwitch
     }
 
     private val extentEnvelope =
@@ -82,43 +71,13 @@ class MainActivity : AppCompatActivity() {
             renderer = SimpleRenderer(SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.RED, 5f))
         }
 
-        // envelop to update the map with a new maxExtent
-        val newEnvelope = EnvelopeBuilder(extentEnvelope)
-
-        // a factor of greater than 1.0 expands the envelope
-        increaseButton.setOnClickListener {
-            // update the envelop by a factor of 1.5
-            newEnvelope.expand(1.5)
-            // update the graphic overlay with the newEnvelope's geometry
-            coloradoGraphicsOverlay.graphics[0].geometry = newEnvelope.toGeometry()
-            // enable update map button
-            updateMapButton.isEnabled = true
-        }
-
-        // a factor of less than 1.0 shrinks the envelope
-        decreaseButton.setOnClickListener {
-            // update the envelop by a factor of 0.5
-            newEnvelope.expand(0.5)
-            // update the graphic overlay with the newEnvelope's geometry
-            coloradoGraphicsOverlay.graphics[0].geometry = newEnvelope.toGeometry()
-            // enable update map button
-            updateMapButton.isEnabled = true
-        }
-
-        updateMapButton.setOnClickListener {
-            // calculate the total factor changed by new width / old width and round to two decimal places
-            val factorChanged =
-                (newEnvelope.toGeometry().width / mapView.map.maxExtent.width).round(2)
-            // display the total envelop factor updated
-            Toast.makeText(
-                this,
-                "MaxExtent updated by a factor of $factorChanged",
-                Toast.LENGTH_SHORT
-            ).show()
-            // update the max extent of the mapview to the new extent
-            mapView.map.maxExtent = newEnvelope.toGeometry()
-            // disable the button since map has been updated
-            updateMapButton.isEnabled = false
+        extentSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
+                // set max extent to the state of Colorado
+                coloradoMap.maxExtent = extentEnvelope
+            else
+                // disable the max extent of the map, map is free to pan around
+                coloradoMap.maxExtent = null
         }
 
         mapView.apply {
@@ -127,15 +86,6 @@ class MainActivity : AppCompatActivity() {
             // set the graphics overlay to the map view
             graphicsOverlays.add(coloradoGraphicsOverlay)
         }
-    }
-
-    /**
-     * Kotlin extension function to round double to n [decimals] places
-     */
-    private fun Double.round(decimals: Int): Double {
-        var multiplier = 1.0
-        repeat(decimals) { multiplier *= 10 }
-        return round(this * multiplier) / multiplier
     }
 
     override fun onPause() {
