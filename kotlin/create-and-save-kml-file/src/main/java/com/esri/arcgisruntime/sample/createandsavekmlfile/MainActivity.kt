@@ -267,14 +267,14 @@ class MainActivity : AppCompatActivity() {
                             this -> {
                                 pointSymbolSpinner.visibility = View.VISIBLE
                                 pointSymbolTextView.visibility = View.VISIBLE
-                                colorSpinner.visibility = View.INVISIBLE
-                                colorTextView.visibility = View.INVISIBLE
+                                colorSpinner.visibility = View.GONE
+                                colorTextView.visibility = View.GONE
                             }
                             else -> {
                                 colorSpinner.visibility = View.VISIBLE
                                 colorTextView.visibility = View.VISIBLE
-                                pointSymbolSpinner.visibility = View.INVISIBLE
-                                pointSymbolTextView.visibility = View.INVISIBLE
+                                pointSymbolSpinner.visibility = View.GONE
+                                pointSymbolTextView.visibility = View.GONE
                             }
                         }
                     }
