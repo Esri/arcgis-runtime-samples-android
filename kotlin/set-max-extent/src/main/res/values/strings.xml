@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">Set max extent</string>
-    <string name="factorText">Modify extent by a factor of 0.5</string>
-    <string name="decrease">-</string>
-    <string name="increase">+</string>
-    <string name="updateMap">Update Map</string>
-    <string name="extentText">Enable/Disable the maximum extent</string>
+    <string name="extentEnable">Enable the maximum extent</string>
+    <string name="extentDisable">Disable the maximum extent</string>
 </resources>

@@ -18,6 +18,7 @@ package com.esri.arcgisruntime.sample.setmaxextent
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
@@ -46,6 +47,10 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.extentSwitch
     }
 
+    private val extentTextView: TextView by lazy {
+        activityMainBinding.extentText
+    }
+
     private val extentEnvelope =
         Envelope(Point(-12139393.2109, 5012444.0468), Point(-11359277.5124, 4438148.7816))
 
@@ -72,12 +77,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         extentSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked)
+            if (isChecked) {
                 // set max extent to the state of Colorado
                 coloradoMap.maxExtent = extentEnvelope
-            else
+                extentTextView.text = getString(R.string.extentDisable)
+            } else {
                 // disable the max extent of the map, map is free to pan around
                 coloradoMap.maxExtent = null
+                extentTextView.text = getString(R.string.extentEnable)
+            }
         }
 
         mapView.apply {
