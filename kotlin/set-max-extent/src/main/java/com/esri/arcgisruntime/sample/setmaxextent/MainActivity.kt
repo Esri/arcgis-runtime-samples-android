@@ -80,11 +80,11 @@ class MainActivity : AppCompatActivity() {
             if (isChecked) {
                 // set max extent to the state of Colorado
                 coloradoMap.maxExtent = extentEnvelope
-                extentTextView.text = getString(R.string.extentDisable)
+                extentTextView.text = getString(R.string.extentEnable)
             } else {
                 // disable the max extent of the map, map is free to pan around
                 coloradoMap.maxExtent = null
-                extentTextView.text = getString(R.string.extentEnable)
+                extentTextView.text = getString(R.string.extentDisable)
             }
         }
 
