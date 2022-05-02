@@ -51,7 +51,7 @@ import com.esri.arcgisruntime.symbology.SimpleRenderer
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 // URL to the OAFeat service
-private const val serviceUrl = "https://demo.ldproxy.net/daraa"
+private const val serviceUrl = "https://services.interactive-instruments.de/t15/daraa"
 
 class MainActivity : AppCompatActivity() {
 

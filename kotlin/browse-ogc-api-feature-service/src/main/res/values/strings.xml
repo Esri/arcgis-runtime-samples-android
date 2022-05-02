@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Browse OGC API feature service</string>
     <string name="load_service">Load service</string>
-    <string name="daraa_url">https://demo.ldproxy.net/daraa</string>
+    <string name="daraa_url">https://services.interactive-instruments.de/t15/daraa</string>
     <string name="instructions_text">Load the service, then select a layer for display.</string>
     <string name="layers_floating_action_button">layers floating action button</string>
     <string name="url_hint">Enter a URL</string>

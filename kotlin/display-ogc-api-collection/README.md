@@ -32,7 +32,7 @@ Pan the map and observe how new features are loaded from the OGC API feature ser
 
 ## About the data
 
-The [Daraa, Syria test data](https://demo.ldproxy.net/daraa) is OpenStreetMap data converted to the Topographic Data Store schema of NGA.
+The [Daraa, Syria test data](https://services.interactive-instruments.de/t15/daraa) is OpenStreetMap data converted to the Topographic Data Store schema of NGA.
 
 ## Additional information
 

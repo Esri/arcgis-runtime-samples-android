@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         // Define strings for the service URL and collection id
         // Note that the service defines the collection id which can be
         // accessed via OgcFeatureCollectionInfo.getCollectionId()
-        val serviceUrl = "https://demo.ldproxy.net/daraa"
+        val serviceUrl = "https://services.interactive-instruments.de/t15/daraa"
         val collectionId = "TransportationGroundCrv"
 
         // Create an OGC feature collection table from the service url and collection ID
