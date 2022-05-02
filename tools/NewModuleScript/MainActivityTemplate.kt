@@ -28,6 +28,8 @@ import com.esri.arcgisruntime.sample.displaymap.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    private val TAG = MainActivity::class.java.simpleName
+
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
