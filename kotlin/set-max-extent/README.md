@@ -18,9 +18,10 @@ by the max extent. Use the toggle switch to disable the max extent to freely pan
 ## How it works
 
 1. Create an `ArcGISMap` object.
-2. Set the maximum extent of the map with `map.maxExtent = envelope`.
-3. Set the map to a `MapView` object.
-4. Set `map.maxExtent = null` to disable the maximum extent of the map 
+2. Create an envelop of the extent using `Envelope(Point(x, y), Point(x, y))`
+3. Set the maximum extent of the map with `map.maxExtent = envelope`.
+4. Set the map to a `MapView` object.
+5. Set `map.maxExtent = null` to disable the maximum extent of the map 
 
 ## Relevant API
 
@@ -29,4 +30,4 @@ by the max extent. Use the toggle switch to disable the max extent to freely pan
 
 ## Tags
 
-extent, limit panning, max extent, zoom
+extent, limit panning, map, mapview, max extent, zoom
