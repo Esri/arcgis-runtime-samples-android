@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Display content of utility network container</string>
+    <string name="utility_legend">View Legend</string>
+    <string name="exit_container_view">Exit container view</string>
 </resources>
