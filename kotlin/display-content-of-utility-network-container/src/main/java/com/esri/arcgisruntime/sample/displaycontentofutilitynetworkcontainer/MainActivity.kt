@@ -20,22 +20,28 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.data.ArcGISFeature
+import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Geometry
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.Point
+import com.esri.arcgisruntime.layers.FeatureLayer
+import com.esri.arcgisruntime.layers.LegendInfo
 import com.esri.arcgisruntime.layers.SubtypeFeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.*
 import com.esri.arcgisruntime.sample.displaycontentofutilitynetworkcontainer.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.displaycontentofutilitynetworkcontainer.databinding.UtilityLegendDialogBinding
 import com.esri.arcgisruntime.security.AuthenticationChallengeHandler
 import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
 import com.esri.arcgisruntime.security.AuthenticationManager
@@ -71,33 +77,32 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.exitButton
     }
 
-    private lateinit var selectedContainerFeature: ArcGISFeature
-    private lateinit var graphicsOverlay: GraphicsOverlay
-    private lateinit var boundingBoxSymbol: SimpleLineSymbol
-    private lateinit var attachmentSymbol: SimpleLineSymbol
-    private lateinit var connectivitySymbol: SimpleLineSymbol
-    private lateinit var utilityNetwork: UtilityNetwork
-    private lateinit var previousViewpoint: Viewpoint
+    private var selectedContainerFeature: ArcGISFeature? = null
+    private val graphicsOverlay: GraphicsOverlay = GraphicsOverlay()
+
+    // create three new simple line symbols for displaying container view features
+    private val boundingBoxSymbol: SimpleLineSymbol =
+        SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.YELLOW, 3F)
+    private val attachmentSymbol: SimpleLineSymbol =
+        SimpleLineSymbol(SimpleLineSymbol.Style.DOT, Color.BLUE, 3F)
+    private val connectivitySymbol: SimpleLineSymbol =
+        SimpleLineSymbol(SimpleLineSymbol.Style.DOT, Color.RED, 3F)
+
+    // the feature service url contains a utility network used to find associations shown in this sample
+    private val featureServiceURL =
+        "https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer"
+    private val utilityNetwork: UtilityNetwork =
+        UtilityNetwork(featureServiceURL)
+    private var previousViewpoint: Viewpoint? = null
+    private val legendInfoList = mutableListOf<LegendInfo>()
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
 
-        // create a new graphics overlay to display container view contents
-        graphicsOverlay = GraphicsOverlay()
+        // add graphics overlay to display container view contents
         mapView.graphicsOverlays.add(graphicsOverlay)
-
-        // create three new simple line symbols for displaying container view features
-        boundingBoxSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.DASH, Color.YELLOW, 3F)
-        attachmentSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.DOT, Color.BLUE, 3F)
-        connectivitySymbol = SimpleLineSymbol(SimpleLineSymbol.Style.DOT, Color.RED, 3F)
-
-        //TODO
-        // set image views for the association and bounding box symbols to display them in the legend
-        //attachmentImageView.setImage(attachmentSymbol);
-        //connectivityImageView.setImage(connectivitySymbol);
-        //boundingBoxImageView.setImage(boundingBoxSymbol);
 
         // set user credentials to authenticate with the feature service and webmap url
         // NOTE: a licensed user is required to perform utility network operations
@@ -115,12 +120,8 @@ class MainActivity : AppCompatActivity() {
         // create a new map from the web map URL (includes ArcGIS Pro subtype group layers with only container features visible)
         val map =
             ArcGISMap("https://sampleserver7.arcgisonline.com/portal/home/item.html?id=813eda749a9444e4a9d833a4db19e1c8")
-        // the feature service url contains a utility network used to find associations shown in this sample
-        val featureServiceURL =
-            "https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer"
 
-        // create a utility network, add it to the map's collection of utility networks, and load it
-        utilityNetwork = UtilityNetwork(featureServiceURL)
+        // add the utility network to the map's collection of utility networks, and load it
         map.utilityNetworks.add(utilityNetwork)
         utilityNetwork.addDoneLoadingListener {
             // show an error if the utility network did not load
@@ -158,14 +159,37 @@ class MainActivity : AppCompatActivity() {
             }
 
         exitButton.setOnClickListener {
-            //TODO vBox.setVisible(false)
             graphicsOverlay.graphics.clear()
-            mapView.isEnabled = true
             mapView.setViewpointAsync(previousViewpoint)
             mapView.map.operationalLayers.forEach { layer ->
                 layer.isVisible = true
             }
+            // disable button to since not in container view
+            exitButton.isEnabled = false
+            // enable map interactions
+            mapView.interactionOptions.isPanEnabled = true
+            mapView.interactionOptions.isZoomEnabled = true
         }
+
+        legendButton.setOnClickListener {
+            displayLegendInfo()
+        }
+
+        // Get the legends from the feature service.
+        fetchLegendInfo()
+    }
+
+    private fun displayLegendInfo() {
+        // inflate the dialog layout and get references to each of its components
+        val dialogBinding = UtilityLegendDialogBinding.inflate(LayoutInflater.from(this))
+        // set up the dialog
+        AlertDialog.Builder(this).apply {
+            setView(dialogBinding.root)
+            setTitle("Dimension options:")
+        }
+
+        val temp = legendInfoList
+        println("lol")
     }
 
     private fun handleMapViewClicked(mapPoint: android.graphics.Point) {
@@ -198,6 +222,12 @@ class MainActivity : AppCompatActivity() {
                             containerElement,
                             UtilityAssociationType.CONTAINMENT
                         )
+
+                        // enable container view vbox and disable interaction with the map view to avoid navigating away from container view
+                        mapView.interactionOptions.isPanEnabled = false
+                        mapView.interactionOptions.isZoomEnabled = false
+                        //TODO vBox.setVisible(true);
+
                         containmentAssociationsFuture.addDoneListener {
                             try {
                                 // get and store a list of elements from the result of the query
@@ -219,10 +249,6 @@ class MainActivity : AppCompatActivity() {
                                     mapView.map.operationalLayers.forEach { layer ->
                                         layer.isVisible = false
                                     }
-
-                                    // enable container view vbox and disable interaction with the map view to avoid navigating away from container view
-                                    mapView.isEnabled = false
-                                    //TODO vBox.setVisible(true);
 
                                     // fetch the features from the elements
                                     val fetchFeaturesFuture =
@@ -306,8 +332,32 @@ class MainActivity : AppCompatActivity() {
                         else connectivitySymbol
                     graphicsOverlay.graphics.add(Graphic(association.geometry, symbol))
                 }
+                // enable button to exit out of the container view
+                exitButton.isEnabled = true
             } catch (e: Exception) {
                 logError("Error getting extent associations")
+            }
+        }
+    }
+
+    /**
+     * Get the legend information provided by the
+     * feature layers used in the utility network.
+     */
+    private fun fetchLegendInfo() {
+        // create feature tables from URLs
+        val electricDistributionTable = ServiceFeatureTable("$featureServiceURL/1")
+        val structureJunctionTable = ServiceFeatureTable("$featureServiceURL/5")
+
+        val combinedFeatureLayers = listOf(FeatureLayer(structureJunctionTable),FeatureLayer(electricDistributionTable))
+        combinedFeatureLayers.forEach { featureLayer ->
+            featureLayer.loadAsync()
+            featureLayer.addDoneLoadingListener {
+                val legendInfo = featureLayer.fetchLegendInfosAsync()
+                legendInfo.addDoneListener {
+                    legendInfoList.addAll(legendInfo.get())
+                    Log.e(TAG, legendInfoList.size.toString())
+                }
             }
         }
     }
