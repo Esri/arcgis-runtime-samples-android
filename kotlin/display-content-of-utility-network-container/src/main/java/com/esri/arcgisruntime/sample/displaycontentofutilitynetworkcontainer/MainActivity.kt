@@ -23,14 +23,12 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.data.ArcGISFeature
 import com.esri.arcgisruntime.geometry.Geometry
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.Point
-import com.esri.arcgisruntime.layers.LegendInfo
 import com.esri.arcgisruntime.layers.SubtypeFeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -46,7 +44,6 @@ import com.esri.arcgisruntime.symbology.Symbol
 import com.esri.arcgisruntime.utilitynetworks.UtilityAssociationType
 import com.esri.arcgisruntime.utilitynetworks.UtilityElement
 import com.esri.arcgisruntime.utilitynetworks.UtilityNetwork
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -148,12 +145,32 @@ class MainActivity : AppCompatActivity() {
             }
 
         exitButton.setOnClickListener {
-            graphicsOverlay.graphics.clear()
-            mapView.setViewpointAsync(previousViewpoint)
+            handleExitButtonClick()
+        }
+
+        setUpLegendView()
+    }
+
+    private fun handleExitButtonClick() {
+        graphicsOverlay.graphics.clear()
+        mapView.setViewpointAsync(previousViewpoint)
+        mapView.map.operationalLayers.forEach { layer ->
+            layer.isVisible = true
+        }
+        handleContainerView(false)
+
+    }
+
+    private fun handleContainerView(isVisible : Boolean ){
+        if(isVisible){
+            legendLayout.visibility = View.VISIBLE
+            // disable button to since not in container view
+            exitButton.visibility = View.VISIBLE
+            // enable map interactions
+            mapView.interactionOptions.isPanEnabled = false
+            mapView.interactionOptions.isZoomEnabled = false
+        }else{
             legendLayout.visibility = View.GONE
-            mapView.map.operationalLayers.forEach { layer ->
-                layer.isVisible = true
-            }
             // disable button to since not in container view
             exitButton.visibility = View.GONE
             // enable map interactions
@@ -161,10 +178,9 @@ class MainActivity : AppCompatActivity() {
             mapView.interactionOptions.isZoomEnabled = true
         }
 
-        displayLegendInfo()
     }
 
-    private fun displayLegendInfo() {
+    private fun setUpLegendView() {
         activityMainBinding.legendLayout.attachmentImageView.setImageBitmap(
             attachmentSymbol.createSwatchAsync(
                 0x00000000,
@@ -216,12 +232,6 @@ class MainActivity : AppCompatActivity() {
                             containerElement,
                             UtilityAssociationType.CONTAINMENT
                         )
-
-                        // enable container view vbox and disable interaction with the map view to avoid navigating away from container view
-                        mapView.interactionOptions.isPanEnabled = false
-                        mapView.interactionOptions.isZoomEnabled = false
-                        //TODO vBox.setVisible(true);
-
                         containmentAssociationsFuture.addDoneListener {
                             try {
                                 // get and store a list of elements from the result of the query
@@ -276,7 +286,7 @@ class MainActivity : AppCompatActivity() {
                                                     val boundingBox =
                                                         mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).targetGeometry
                                                     identifyAssociationsWithExtent(boundingBox)
-                                                    legendLayout.visibility = View.VISIBLE
+                                                    handleContainerView(true)
                                                     logError("This feature has no associations")
                                                 }
                                             } else {
@@ -315,7 +325,7 @@ class MainActivity : AppCompatActivity() {
         // adds a graphic representing the bounding box of the associations identified and zooms to its extent
         graphicsOverlay.graphics.add(Graphic(boundingBox, boundingBoxSymbol))
         mapView.setViewpointGeometryAsync(GeometryEngine.buffer(graphicsOverlay.extent, 0.05))
-        legendLayout.visibility = View.VISIBLE
+        handleContainerView(true)
         // get the associations for this extent to display how content features are attached or connected.
         val extentAssociations = utilityNetwork.getAssociationsAsync(graphicsOverlay.extent)
         extentAssociations.addDoneListener {
@@ -327,8 +337,6 @@ class MainActivity : AppCompatActivity() {
                         else connectivitySymbol
                     graphicsOverlay.graphics.add(Graphic(association.geometry, symbol))
                 }
-                // enable button to exit out of the container view
-                exitButton.visibility = View.VISIBLE
             } catch (e: Exception) {
                 logError("Error getting extent associations")
             }
