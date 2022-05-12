@@ -20,20 +20,16 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.data.ArcGISFeature
-import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Geometry
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.geometry.Point
-import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.layers.LegendInfo
 import com.esri.arcgisruntime.layers.SubtypeFeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
@@ -41,7 +37,6 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.*
 import com.esri.arcgisruntime.sample.displaycontentofutilitynetworkcontainer.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.sample.displaycontentofutilitynetworkcontainer.databinding.UtilityLegendDialogBinding
 import com.esri.arcgisruntime.security.AuthenticationChallengeHandler
 import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
 import com.esri.arcgisruntime.security.AuthenticationManager
@@ -65,19 +60,14 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.mapView
     }
 
-    private val legendButton: Button by lazy {
-        activityMainBinding.legendButton
-    }
-
-    private val progressBar: ProgressBar by lazy {
-        activityMainBinding.progressBar
-    }
-
     private val exitButton: Button by lazy {
         activityMainBinding.exitButton
     }
 
-    private var selectedContainerFeature: ArcGISFeature? = null
+    private val legendLayout: View by lazy {
+        activityMainBinding.legendLayout.layout
+    }
+
     private val graphicsOverlay: GraphicsOverlay = GraphicsOverlay()
 
     // create three new simple line symbols for displaying container view features
@@ -94,7 +84,6 @@ class MainActivity : AppCompatActivity() {
     private val utilityNetwork: UtilityNetwork =
         UtilityNetwork(featureServiceURL)
     private var previousViewpoint: Viewpoint? = null
-    private val legendInfoList = mutableListOf<LegendInfo>()
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,7 +123,7 @@ class MainActivity : AppCompatActivity() {
         // hide the progress indicator once the map view draw status has completed
         mapView.addDrawStatusChangedListener { listener: DrawStatusChangedEvent ->
             if (listener.drawStatus == DrawStatus.COMPLETED) {
-                progressBar.visibility = View.GONE
+                activityMainBinding.progressBar.visibility = View.GONE
             }
         }
 
@@ -161,35 +150,39 @@ class MainActivity : AppCompatActivity() {
         exitButton.setOnClickListener {
             graphicsOverlay.graphics.clear()
             mapView.setViewpointAsync(previousViewpoint)
+            legendLayout.visibility = View.GONE
             mapView.map.operationalLayers.forEach { layer ->
                 layer.isVisible = true
             }
             // disable button to since not in container view
-            exitButton.isEnabled = false
+            exitButton.visibility = View.GONE
             // enable map interactions
             mapView.interactionOptions.isPanEnabled = true
             mapView.interactionOptions.isZoomEnabled = true
         }
 
-        legendButton.setOnClickListener {
-            displayLegendInfo()
-        }
-
-        // Get the legends from the feature service.
-        fetchLegendInfo()
+        displayLegendInfo()
     }
 
     private fun displayLegendInfo() {
-        // inflate the dialog layout and get references to each of its components
-        val dialogBinding = UtilityLegendDialogBinding.inflate(LayoutInflater.from(this))
-        // set up the dialog
-        AlertDialog.Builder(this).apply {
-            setView(dialogBinding.root)
-            setTitle("Dimension options:")
-        }
-
-        val temp = legendInfoList
-        println("lol")
+        activityMainBinding.legendLayout.attachmentImageView.setImageBitmap(
+            attachmentSymbol.createSwatchAsync(
+                0x00000000,
+                1F
+            ).get()
+        )
+        activityMainBinding.legendLayout.connectivityImageView.setImageBitmap(
+            connectivitySymbol.createSwatchAsync(
+                0x00000000,
+                1F
+            ).get()
+        )
+        activityMainBinding.legendLayout.boundingImageView.setImageBitmap(
+            boundingBoxSymbol.createSwatchAsync(
+                0x00000000,
+                1F
+            ).get()
+        )
     }
 
     private fun handleMapViewClicked(mapPoint: android.graphics.Point) {
@@ -197,6 +190,7 @@ class MainActivity : AppCompatActivity() {
         val identifyLayerResultsFuture = mapView.identifyLayersAsync(mapPoint, 10.0, false)
         identifyLayerResultsFuture.addDoneListener {
             try {
+                var selectedContainerFeature: ArcGISFeature? = null
                 // get the result of the query
                 val identifyLayerResults = identifyLayerResultsFuture.get()
                 // check that results have been returned
@@ -282,6 +276,7 @@ class MainActivity : AppCompatActivity() {
                                                     val boundingBox =
                                                         mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).targetGeometry
                                                     identifyAssociationsWithExtent(boundingBox)
+                                                    legendLayout.visibility = View.VISIBLE
                                                     logError("This feature has no associations")
                                                 }
                                             } else {
@@ -320,7 +315,7 @@ class MainActivity : AppCompatActivity() {
         // adds a graphic representing the bounding box of the associations identified and zooms to its extent
         graphicsOverlay.graphics.add(Graphic(boundingBox, boundingBoxSymbol))
         mapView.setViewpointGeometryAsync(GeometryEngine.buffer(graphicsOverlay.extent, 0.05))
-
+        legendLayout.visibility = View.VISIBLE
         // get the associations for this extent to display how content features are attached or connected.
         val extentAssociations = utilityNetwork.getAssociationsAsync(graphicsOverlay.extent)
         extentAssociations.addDoneListener {
@@ -333,31 +328,9 @@ class MainActivity : AppCompatActivity() {
                     graphicsOverlay.graphics.add(Graphic(association.geometry, symbol))
                 }
                 // enable button to exit out of the container view
-                exitButton.isEnabled = true
+                exitButton.visibility = View.VISIBLE
             } catch (e: Exception) {
                 logError("Error getting extent associations")
-            }
-        }
-    }
-
-    /**
-     * Get the legend information provided by the
-     * feature layers used in the utility network.
-     */
-    private fun fetchLegendInfo() {
-        // create feature tables from URLs
-        val electricDistributionTable = ServiceFeatureTable("$featureServiceURL/1")
-        val structureJunctionTable = ServiceFeatureTable("$featureServiceURL/5")
-
-        val combinedFeatureLayers = listOf(FeatureLayer(structureJunctionTable),FeatureLayer(electricDistributionTable))
-        combinedFeatureLayers.forEach { featureLayer ->
-            featureLayer.loadAsync()
-            featureLayer.addDoneLoadingListener {
-                val legendInfo = featureLayer.fetchLegendInfosAsync()
-                legendInfo.addDoneListener {
-                    legendInfoList.addAll(legendInfo.get())
-                    Log.e(TAG, legendInfoList.size.toString())
-                }
             }
         }
     }

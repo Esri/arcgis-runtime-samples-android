@@ -2,4 +2,7 @@
     <string name="app_name">Display content of utility network container</string>
     <string name="utility_legend">View Legend</string>
     <string name="exit_container_view">Exit container view</string>
+    <string name="attachment">Attachment</string>
+    <string name="connectivity">Connectivity</string>
+    <string name="bounding">Bounding Box</string>
 </resources>
