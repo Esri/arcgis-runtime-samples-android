@@ -189,16 +189,20 @@ class MainActivity : AppCompatActivity() {
             // enable button
             exitButton.visibility = View.VISIBLE
             // disable map interactions
-            mapView.interactionOptions.isPanEnabled = false
-            mapView.interactionOptions.isZoomEnabled = false
+            mapView.interactionOptions.apply {
+                isPanEnabled = false
+                isZoomEnabled = false
+            }
         } else {
             // hide legend
             legendLayout.visibility = View.GONE
             // disable button
             exitButton.visibility = View.GONE
             // enable map interactions
-            mapView.interactionOptions.isPanEnabled = true
-            mapView.interactionOptions.isZoomEnabled = true
+            mapView.interactionOptions.apply {
+                isPanEnabled = true
+                isZoomEnabled = true
+            }
         }
     }
 
@@ -209,22 +213,13 @@ class MainActivity : AppCompatActivity() {
     private fun setUpLegendView() {
         activityMainBinding.legendLayout.apply {
             attachmentImageView.setImageBitmap(
-                attachmentSymbol.createSwatchAsync(
-                    0x00000000,
-                    1F
-                ).get()
+                attachmentSymbol.createSwatchAsync(0x00000000, 1F).get()
             )
             connectivityImageView.setImageBitmap(
-                connectivitySymbol.createSwatchAsync(
-                    0x00000000,
-                    1F
-                ).get()
+                connectivitySymbol.createSwatchAsync(0x00000000, 1F).get()
             )
             boundingImageView.setImageBitmap(
-                boundingBoxSymbol.createSwatchAsync(
-                    0x00000000,
-                    1F
-                ).get()
+                boundingBoxSymbol.createSwatchAsync(0x00000000, 1F).get()
             )
         }
     }
@@ -240,10 +235,12 @@ class MainActivity : AppCompatActivity() {
                 //
                 val layerResult =
                     identifyLayerResults.find { layerResult -> layerResult.layerContent is SubtypeFeatureLayer }
-                //
+                    // user clicked on an empty space on map with no feature
+                        ?: return@addDoneListener
+
                 val selectedContainerFeature =
-                    layerResult?.sublayerResults?.first()?.elements?.filterIsInstance<ArcGISFeature>()
-                        ?.first()
+                    layerResult.sublayerResults.first().elements.filterIsInstance<ArcGISFeature>()
+                        .first()
                 // create a container element using the selected feature
                 val containerElement = utilityNetwork.createElement(selectedContainerFeature)
                 // get the containment associations from this element to display its content
@@ -267,78 +264,45 @@ class MainActivity : AppCompatActivity() {
         containmentAssociationsFuture: ListenableFuture<MutableList<UtilityAssociation>>,
         containerElement: UtilityElement
     ) {
-        try {
-            // get and store a list of elements from the result of the query
-            val contentElements: MutableList<UtilityElement> = mutableListOf()
-            // get the list of containment associations and loop through them to get their elements
-            val containmentAssociations = containmentAssociationsFuture.get()
-            containmentAssociations.forEach { association ->
-                val utilityElement =
-                    if (association.fromElement.objectId == containerElement.objectId) association.toElement
-                    else association.fromElement
-                contentElements.add(utilityElement)
+        // get and store a list of elements from the result of the query
+        val contentElements: MutableList<UtilityElement> = mutableListOf()
+        // get the list of containment associations and loop through them to get their elements
+        containmentAssociationsFuture.get().forEach { association ->
+            val utilityElement =
+                if (association.fromElement.objectId == containerElement.objectId) association.toElement
+                else association.fromElement
+            contentElements.add(utilityElement)
+        }
+
+        previousViewpoint = mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY)
+        mapView.map.operationalLayers.forEach { layer -> layer.isVisible = false }
+
+        // fetch the features from the elements
+        val fetchFeaturesFuture = utilityNetwork.fetchFeaturesForElementsAsync(contentElements)
+        fetchFeaturesFuture.addDoneListener {
+            // get the content features and give them each a symbol, and add them as a graphic to the graphics overlay
+            fetchFeaturesFuture.get().forEach { content ->
+                val symbol: Symbol = content.featureTable.layerInfo.drawingInfo.renderer.getSymbol(content)
+                graphicsOverlay.graphics.add(Graphic(content.geometry, symbol))
             }
-
-            // check the list of elements isn't empty, and store the current viewpoint (this will be used later
-            // when exiting the container view
-            if (contentElements.isNotEmpty()) {
-                previousViewpoint =
-                    mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY)
-                mapView.map.operationalLayers.forEach { layer ->
-                    layer.isVisible = false
-                }
-
-                // fetch the features from the elements
-                val fetchFeaturesFuture =
-                    utilityNetwork.fetchFeaturesForElementsAsync(contentElements)
-                fetchFeaturesFuture.addDoneListener {
-                    try {
-                        // get the content features and give them each a symbol, and add them as a graphic to the graphics overlay
-                        val contentFeatures = fetchFeaturesFuture.get()
-                        contentFeatures.forEach { content ->
-                            val symbol: Symbol =
-                                content.featureTable.layerInfo.drawingInfo.renderer.getSymbol(
-                                    content
-                                )
-                            graphicsOverlay.graphics.add(
-                                Graphic(
-                                    content.geometry,
-                                    symbol
-                                )
-                            )
-                        }
-                        val firstGraphic = graphicsOverlay.graphics[0].geometry
-                        val containerViewScale =
-                            containerElement.assetType.containerViewScale
-                        if (graphicsOverlay.graphics.size == 1 && firstGraphic is Point) {
-                            mapView.setViewpointCenterAsync(
-                                firstGraphic,
-                                containerViewScale
-                            ).addDoneListener {
-                                // the bounding box, which defines the container view, may be computed using the extent of the features
-                                // it contains or centered around its geometry at the container's view scale
-                                val boundingBox =
-                                    mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).targetGeometry
-                                identifyAssociationsWithExtent(boundingBox)
-                                handleContainerView(true)
-                                logError("This feature has no associations")
-                            }
-                        } else {
-                            val boundingBox: Geometry = GeometryEngine.buffer(
-                                graphicsOverlay.extent,
-                                0.05
-                            )
-                            identifyAssociationsWithExtent(boundingBox)
-                        }
-                    } catch (e: Exception) {
-                        logError("Error fetching features for elements")
+            val firstGraphic = graphicsOverlay.graphics[0].geometry
+            val containerViewScale = containerElement.assetType.containerViewScale
+            if (graphicsOverlay.graphics.size == 1 && firstGraphic is Point) {
+                mapView.setViewpointCenterAsync(firstGraphic, containerViewScale)
+                    .addDoneListener {
+                        // the bounding box, which defines the container view, may be computed using the extent of the features
+                        // it contains or centered around its geometry at the container's view scale
+                        val boundingBox =
+                            mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).targetGeometry
+                        identifyAssociationsWithExtent(boundingBox)
+                        handleContainerView(true)
+                        logError("This feature has no associations")
                     }
-                }
             } else {
-                logError("No content elements found")
+                val boundingBox: Geometry =
+                    GeometryEngine.buffer(graphicsOverlay.extent, 0.05)
+                identifyAssociationsWithExtent(boundingBox)
             }
-        } catch (e: Exception) {
-            logError("Error getting containment associations")
         }
     }
 
