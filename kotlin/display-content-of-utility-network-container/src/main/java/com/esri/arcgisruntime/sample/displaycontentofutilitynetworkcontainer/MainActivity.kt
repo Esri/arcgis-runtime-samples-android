@@ -20,13 +20,14 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.ArcGISFeature
 import com.esri.arcgisruntime.geometry.Geometry
 import com.esri.arcgisruntime.geometry.GeometryEngine
@@ -37,6 +38,7 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.*
 import com.esri.arcgisruntime.sample.displaycontentofutilitynetworkcontainer.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.displaycontentofutilitynetworkcontainer.databinding.UtilityNetworkLegendBinding
 import com.esri.arcgisruntime.security.AuthenticationChallengeHandler
 import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
 import com.esri.arcgisruntime.security.AuthenticationManager
@@ -64,15 +66,19 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.exitButton
     }
 
-    private val legendLayout: View by lazy {
-        activityMainBinding.legendLayout.layout
+    private val legendButton: Button by lazy {
+        activityMainBinding.legendButton
     }
 
     private val progressBar: ProgressBar by lazy {
         activityMainBinding.progressBar
     }
 
+    // create graphic overlay to display the utility network associations
     private val graphicsOverlay: GraphicsOverlay = GraphicsOverlay()
+
+    // instance of the legend alert dialog
+    private var legendDialog: AlertDialog? = null
 
     // create three new simple line symbols for displaying container view features
     private val boundingBoxSymbol: SimpleLineSymbol =
@@ -85,6 +91,8 @@ class MainActivity : AppCompatActivity() {
     // the feature service url contains a utility network used to find associations shown in this sample
     private val utilityNetwork: UtilityNetwork =
         UtilityNetwork("https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer")
+
+    // use the previous viewpoint when exiting the container view
     private var previousViewpoint: Viewpoint? = null
 
     // needed to avoid the DefaultMapViewOnTouchListener accessibility warning
@@ -146,22 +154,24 @@ class MainActivity : AppCompatActivity() {
                         // create a point from where the user clicked
                         android.graphics.Point(event.x.toInt(), event.y.toInt())
                             .let { screenPoint ->
-                                // add a new feature to the service feature table
+                                // identify and handle the feature of the clicked at point
                                 handleMapViewClicked(screenPoint)
                             }
                     }
                     return super.onSingleTapConfirmed(motionEvent)
                 }
             }
-
+        // set up the attachmentSymbol, connectivitySymbol and
+        // the boundingBoxSymbol bitmaps for the legend view
+        setUpLegendView()
         // sets the viewpoint, layers, and the graphics when user exits the container view
         exitButton.setOnClickListener {
             handleExitButtonClick()
         }
-
-        // set up the attachmentSymbol, connectivitySymbol and
-        // the boundingBoxSymbol bitmaps for the legend view
-        setUpLegendView()
+        // display the legend alert dialog when the button is clicked
+        legendButton.setOnClickListener {
+            legendDialog?.show()
+        }
     }
 
     /**
@@ -175,6 +185,7 @@ class MainActivity : AppCompatActivity() {
         mapView.map.operationalLayers.forEach { layer ->
             layer.isVisible = true
         }
+        // exits from the container view
         handleContainerView(false)
     }
 
@@ -184,20 +195,18 @@ class MainActivity : AppCompatActivity() {
      */
     private fun handleContainerView(isVisible: Boolean) {
         if (isVisible) {
-            // show legend
-            legendLayout.visibility = View.VISIBLE
-            // enable button
-            exitButton.visibility = View.VISIBLE
+            // enable buttons
+            exitButton.isEnabled = true
+            legendButton.isEnabled = true
             // disable map interactions
             mapView.interactionOptions.apply {
                 isPanEnabled = false
                 isZoomEnabled = false
             }
         } else {
-            // hide legend
-            legendLayout.visibility = View.GONE
             // disable button
-            exitButton.visibility = View.GONE
+            exitButton.isEnabled = false
+            legendButton.isEnabled = false
             // enable map interactions
             mapView.interactionOptions.apply {
                 isPanEnabled = true
@@ -211,7 +220,10 @@ class MainActivity : AppCompatActivity() {
      * the boundingBoxSymbol bitmaps for the legend view
      */
     private fun setUpLegendView() {
-        activityMainBinding.legendLayout.apply {
+        // inflate the layout and get references to each of its components
+        val dialogBinding = UtilityNetworkLegendBinding.inflate(LayoutInflater.from(this))
+        // set the image bitmaps using the line symbols to the ImageViews
+        dialogBinding.apply {
             attachmentImageView.setImageBitmap(
                 attachmentSymbol.createSwatchAsync(0x00000000, 1F).get()
             )
@@ -222,22 +234,34 @@ class MainActivity : AppCompatActivity() {
                 boundingBoxSymbol.createSwatchAsync(0x00000000, 1F).get()
             )
         }
+
+        // create the alert dialog and bind it to the inflated layout
+        legendDialog = AlertDialog.Builder(this).apply {
+            setView(dialogBinding.root)
+            setTitle("Legend")
+        }.create()
     }
 
+    /**
+     * Identifies the feature of the clicked [mapPoint], gets the selected feature's sublayerResults
+     * and retrieves the utility network associations of the selected ArcGISFeature
+     */
     private fun handleMapViewClicked(mapPoint: android.graphics.Point) {
-        // identify the feature clicked on
-        val identifyLayerResultsFuture = mapView.identifyLayersAsync(mapPoint, 10.0, false)
-        identifyLayerResultsFuture.addDoneListener {
-            try {
+        try {
+            // identify the feature clicked on
+            val identifyLayerResultsFuture = mapView.identifyLayersAsync(mapPoint, 10.0, false)
+            identifyLayerResultsFuture.addDoneListener {
                 // get the result of the query
                 val identifyLayerResults = identifyLayerResultsFuture.get()
-                progressBar.visibility = View.VISIBLE
-                //
+                // if no layer identified then return, else show progressBar
+                if (identifyLayerResults.isEmpty()) return@addDoneListener
+                else progressBar.visibility = View.VISIBLE
+                // finds the first layer where the LayerContent is a SubtypeFeatureLayer
                 val layerResult =
                     identifyLayerResults.find { layerResult -> layerResult.layerContent is SubtypeFeatureLayer }
                     // user clicked on an empty space on map with no feature
                         ?: return@addDoneListener
-
+                // filter the sublayer result's elements to find the first one which is an ArcGIS feature
                 val selectedContainerFeature =
                     layerResult.sublayerResults.first().elements.filterIsInstance<ArcGISFeature>()
                         .first()
@@ -249,31 +273,36 @@ class MainActivity : AppCompatActivity() {
                     UtilityAssociationType.CONTAINMENT
                 )
                 containmentAssociationsFuture.addDoneListener {
+                    //
                     handleContainmentAssociations(
-                        containmentAssociationsFuture,
+                        containmentAssociationsFuture.get(),
                         containerElement
                     )
                 }
-            } catch (e: Exception) {
-                logError("Error getting result of the query")
             }
+        } catch (e: Exception) {
+            logError("Error getting result: ${e.message}")
         }
     }
 
+    /**
+     * Displays the features, symbols and the container element's associations
+     */
     private fun handleContainmentAssociations(
-        containmentAssociationsFuture: ListenableFuture<MutableList<UtilityAssociation>>,
+        containmentAssociations: MutableList<UtilityAssociation>,
         containerElement: UtilityElement
     ) {
         // get and store a list of elements from the result of the query
         val contentElements: MutableList<UtilityElement> = mutableListOf()
         // get the list of containment associations and loop through them to get their elements
-        containmentAssociationsFuture.get().forEach { association ->
+        containmentAssociations.forEach { association ->
             val utilityElement =
                 if (association.fromElement.objectId == containerElement.objectId) association.toElement
                 else association.fromElement
             contentElements.add(utilityElement)
         }
 
+        // save the viewpoint and hide the current operationalLayers
         previousViewpoint = mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY)
         mapView.map.operationalLayers.forEach { layer -> layer.isVisible = false }
 
@@ -282,7 +311,8 @@ class MainActivity : AppCompatActivity() {
         fetchFeaturesFuture.addDoneListener {
             // get the content features and give them each a symbol, and add them as a graphic to the graphics overlay
             fetchFeaturesFuture.get().forEach { content ->
-                val symbol: Symbol = content.featureTable.layerInfo.drawingInfo.renderer.getSymbol(content)
+                val symbol: Symbol =
+                    content.featureTable.layerInfo.drawingInfo.renderer.getSymbol(content)
                 graphicsOverlay.graphics.add(Graphic(content.geometry, symbol))
             }
             val firstGraphic = graphicsOverlay.graphics[0].geometry
@@ -294,13 +324,18 @@ class MainActivity : AppCompatActivity() {
                         // it contains or centered around its geometry at the container's view scale
                         val boundingBox =
                             mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).targetGeometry
+                        // identifies and displays associations for the specified geometry
                         identifyAssociationsWithExtent(boundingBox)
+                        // show container buttons in container view
                         handleContainerView(true)
+                        // since size is 1, no associations found
                         logError("This feature has no associations")
                     }
             } else {
+                // associations found, set the bounding box to the extent
                 val boundingBox: Geometry =
                     GeometryEngine.buffer(graphicsOverlay.extent, 0.05)
+                // get associations for the specified geometry and display its associations
                 identifyAssociationsWithExtent(boundingBox)
             }
         }
@@ -311,11 +346,12 @@ class MainActivity : AppCompatActivity() {
      * using [boundingBox] the geometry from which to get associations.
      */
     private fun identifyAssociationsWithExtent(boundingBox: Geometry?) {
+        // display container view and hide progressBar
+        handleContainerView(true)
+        progressBar.visibility = View.GONE
         // adds a graphic representing the bounding box of the associations identified and zooms to its extent
         graphicsOverlay.graphics.add(Graphic(boundingBox, boundingBoxSymbol))
         mapView.setViewpointGeometryAsync(GeometryEngine.buffer(graphicsOverlay.extent, 0.05))
-        handleContainerView(true)
-        progressBar.visibility = View.GONE
         // get the associations for this extent to display how content features are attached or connected.
         val extentAssociations = utilityNetwork.getAssociationsAsync(graphicsOverlay.extent)
         extentAssociations.addDoneListener {
@@ -325,6 +361,7 @@ class MainActivity : AppCompatActivity() {
                     val symbol: Symbol =
                         if (association.associationType === UtilityAssociationType.ATTACHMENT) attachmentSymbol
                         else connectivitySymbol
+                    // add the symbol for each association in the container
                     graphicsOverlay.graphics.add(Graphic(association.geometry, symbol))
                 }
             } catch (e: Exception) {

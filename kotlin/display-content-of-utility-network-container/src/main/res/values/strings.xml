@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Display content of utility network container</string>
-    <string name="legend">View Legend</string>
     <string name="exit_container">Exit container view</string>
     <string name="attachment">Attachment</string>
     <string name="connectivity">Connectivity</string>
     <string name="bounding">Bounding Box</string>
+    <string name="view_legend">View associations legend</string>
 </resources>
