@@ -17,11 +17,11 @@ Tap on a container feature to show all features inside the container. The contai
 1. Load a web map that includes ArcGIS Pro [Subtype Group Layers](https://pro.arcgis.com/en/pro-app/help/mapping/layer-properties/subtype-layers.htm) with only container features visible (i.e. fuse bank, switch bank, transformer bank, hand hole and junction box).
 2. Add a `GraphicsOverlay` for displaying a container view.
 3. Create and load a `UtilityNetwork` with the same feature service URL as the layers in the `Map`.
-4. Add an event handler for the `GeoViewTapped` event of the `MapView`.
+4. Add an event handler for the `onTouchListener` listener of the `MapView`.
 5. Identify a feature and create a `UtilityElement` from it.
-6. Get the associations for this element using `GetAssociationsAsync(UtilityElement, UtilityAssociationType.Containment)`.
+6. Get the associations for this element using `GetAssociationsAsync(UtilityElement, UtilityAssociationType.CONTAINMENT)`.
 7. Turn-off the visibility of all `OperationalLayers`.
-8. Get the features for the `UtilityElement`(s) from the associations using `GetFeaturesForElementsAsync(IEnumerable<UtilityElement>)`
+8. Get the features for the `UtilityElement`(s) from the associations using `fetchFeaturesForElementsAsync(List<UtilityElement>)`
 9. Add a `Graphic` with the same geometry and symbol as these features.
 10. Add another `Graphic` that represents this extent and zoom to this extent with some buffer.
 11. Get associations for this extent using `GetAssociationsAsync(Envelope)`
@@ -35,7 +35,6 @@ Tap on a container feature to show all features inside the container. The contai
 * UtilityAssociationType
 * UtilityElement
 * UtilityNetwork
-* UtilityNetworkDefinition
 
 ## About the data
 
