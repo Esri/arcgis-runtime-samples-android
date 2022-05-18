@@ -79,11 +79,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * update the [floorManager] to the currently selected floor
+     * Load and update the [floorManager] to the currently selected floor
      * and disable the other floors.
      */
     private fun setFloor(floorManager: FloorManager) {
-        //
         floorManager.addDoneLoadingListener {
             if (floorManager.loadStatus == LoadStatus.LOADED) {
                 levelSpinner.apply {
