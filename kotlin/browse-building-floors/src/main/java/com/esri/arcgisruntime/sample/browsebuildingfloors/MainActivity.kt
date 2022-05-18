@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             if (map.loadStatus == LoadStatus.LOADED && map.floorDefinition != null) {
                 // get and load the floor manager
                 val floorManager = map.floorManager.apply { loadAsync() }
-                // set initial floor level to currentFloor
+                // set initial floor level to ground floor
                 setFloor(floorManager)
 
             } else {
