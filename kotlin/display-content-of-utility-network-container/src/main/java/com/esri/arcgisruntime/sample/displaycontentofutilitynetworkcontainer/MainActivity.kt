@@ -124,22 +124,26 @@ class MainActivity : AppCompatActivity() {
         // loads the features elements and the associations of the utility network
         utilityNetwork.apply {
             addDoneLoadingListener {
-                // show an error if the utility network did not load
+                // handle error if the utility network did not load
                 if (utilityNetwork.loadStatus != LoadStatus.LOADED) {
-                    logError("Error loading the utility network. Check URL used")
+                    onError("Error loading the utility network. Check URL used")
                 }
             }
             loadAsync()
         }
 
         mapView.apply {
-            // set the map to the mapview and set the map view's viewpoint
+            // set the map to the MapView and set the MapView's viewpoint
             this.map = map
             setViewpoint(Viewpoint(41.801504, -88.163718, 4e3))
             // hide the progress indicator once the map view is done loading
             map.addDoneLoadingListener {
                 if (map.loadStatus == LoadStatus.LOADED) {
                     progressBar.visibility = View.GONE
+                } else if (map.loadStatus == LoadStatus.FAILED_TO_LOAD) {
+                    progressBar.visibility = View.GONE
+                    // handle error if map failed to load
+                    map.loadError.message?.let { onError("Map failed to load: $it") }
                 }
             }
             // add graphics overlay to display container view contents
@@ -149,16 +153,14 @@ class MainActivity : AppCompatActivity() {
         // handle when map is clicked by retrieving the point
         mapView.onTouchListener =
             object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
-                override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {
-                    motionEvent?.let { event ->
+                override fun onSingleTapConfirmed(event: MotionEvent?): Boolean {
+                    if (event != null) {
                         // create a point from where the user clicked
-                        android.graphics.Point(event.x.toInt(), event.y.toInt())
-                            .let { screenPoint ->
-                                // identify and handle the feature of the clicked at point
-                                handleMapViewClicked(screenPoint)
-                            }
+                        val screenPoint = android.graphics.Point(event.x.toInt(), event.y.toInt())
+                        // identify and handle the feature of the clicked at point
+                        handleMapViewClicked(screenPoint)
                     }
-                    return super.onSingleTapConfirmed(motionEvent)
+                    return super.onSingleTapConfirmed(event)
                 }
             }
         // set up the attachmentSymbol, connectivitySymbol and
@@ -175,8 +177,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Called when the user exits the container view,
-     * clears graphics, resets the viewpoint
+     * Called when the user exits the container view.
+     * Clears graphics, resets the viewpoint
      * and displays the operationalLayers
      */
     private fun handleExitButtonClick() {
@@ -190,7 +192,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Show legend, exit button and disable interaction
+     * Display legend, exit button and disable interaction
      * when container view [isVisible]
      */
     private fun handleContainerView(isVisible: Boolean) {
@@ -202,6 +204,7 @@ class MainActivity : AppCompatActivity() {
             mapView.interactionOptions.apply {
                 isPanEnabled = false
                 isZoomEnabled = false
+                isRotateEnabled = false
             }
         } else {
             // disable button
@@ -211,6 +214,7 @@ class MainActivity : AppCompatActivity() {
             mapView.interactionOptions.apply {
                 isPanEnabled = true
                 isZoomEnabled = true
+                isRotateEnabled = true
             }
         }
     }
@@ -236,10 +240,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         // create the alert dialog and bind it to the inflated layout
-        legendDialog = AlertDialog.Builder(this).apply {
-            setView(dialogBinding.root)
-            setTitle("Legend")
-        }.create()
+        legendDialog = AlertDialog.Builder(this)
+            .setView(dialogBinding.root)
+            .setTitle("Legend")
+            .create()
     }
 
     /**
@@ -253,9 +257,9 @@ class MainActivity : AppCompatActivity() {
             identifyLayerResultsFuture.addDoneListener {
                 // get the result of the query
                 val identifyLayerResults = identifyLayerResultsFuture.get()
-                // if no layer identified then return, else show progressBar
+                // if no layer identified then return, else display progressBar
                 if (identifyLayerResults.isEmpty()) return@addDoneListener
-                else progressBar.visibility = View.VISIBLE
+                progressBar.visibility = View.VISIBLE
                 // finds the first layer where the LayerContent is a SubtypeFeatureLayer
                 val layerResult =
                     identifyLayerResults.find { layerResult -> layerResult.layerContent is SubtypeFeatureLayer }
@@ -273,7 +277,7 @@ class MainActivity : AppCompatActivity() {
                     UtilityAssociationType.CONTAINMENT
                 )
                 containmentAssociationsFuture.addDoneListener {
-                    //
+                    // displays the features, symbols and the container element's associations
                     handleContainmentAssociations(
                         containmentAssociationsFuture.get(),
                         containerElement
@@ -281,7 +285,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } catch (e: Exception) {
-            logError("Error getting result: ${e.message}")
+            onError("Error getting result: ${e.message}")
         }
     }
 
@@ -289,7 +293,7 @@ class MainActivity : AppCompatActivity() {
      * Displays the features, symbols and the container element's associations
      */
     private fun handleContainmentAssociations(
-        containmentAssociations: MutableList<UtilityAssociation>,
+        containmentAssociations: List<UtilityAssociation>,
         containerElement: UtilityElement
     ) {
         // get and store a list of elements from the result of the query
@@ -326,13 +330,12 @@ class MainActivity : AppCompatActivity() {
                             mapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).targetGeometry
                         // identifies and displays associations for the specified geometry
                         identifyAssociationsWithExtent(boundingBox)
-                        // show container buttons in container view
-                        handleContainerView(true)
                         // since size is 1, no associations found
-                        logError("This feature has no associations")
+                        Toast.makeText(this, "This feature has no associations", Toast.LENGTH_SHORT)
+                            .show()
                     }
             } else {
-                // associations found, set the bounding box to the extent
+                // associations found, create a bounding box around them
                 val boundingBox: Geometry =
                     GeometryEngine.buffer(graphicsOverlay.extent, 0.05)
                 // get associations for the specified geometry and display its associations
@@ -365,12 +368,12 @@ class MainActivity : AppCompatActivity() {
                     graphicsOverlay.graphics.add(Graphic(association.geometry, symbol))
                 }
             } catch (e: Exception) {
-                logError("Error getting extent associations")
+                onError("Error getting extent associations")
             }
         }
     }
 
-    private fun logError(message: String) {
+    private fun onError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         Log.e(TAG, message)
         progressBar.visibility = View.GONE
