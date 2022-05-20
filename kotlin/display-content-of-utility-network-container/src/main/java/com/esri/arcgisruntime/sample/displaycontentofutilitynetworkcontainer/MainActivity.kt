@@ -155,10 +155,16 @@ class MainActivity : AppCompatActivity() {
             object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
                 override fun onSingleTapConfirmed(event: MotionEvent?): Boolean {
                     if (event != null) {
-                        // create a point from where the user clicked
-                        val screenPoint = android.graphics.Point(event.x.toInt(), event.y.toInt())
-                        // identify and handle the feature of the clicked at point
-                        handleMapViewClicked(screenPoint)
+                        // handle map click only if progressBar is not loading
+                        if (progressBar.visibility == View.GONE) {
+                            // display the progressBar
+                            progressBar.visibility = View.VISIBLE
+                            // create a point from where the user clicked
+                            val screenPoint =
+                                android.graphics.Point(event.x.toInt(), event.y.toInt())
+                            // identify and handle the feature of the clicked at point
+                            handleMapViewClicked(screenPoint)
+                        }
                     }
                     return super.onSingleTapConfirmed(event)
                 }
@@ -257,9 +263,11 @@ class MainActivity : AppCompatActivity() {
             identifyLayerResultsFuture.addDoneListener {
                 // get the result of the query
                 val identifyLayerResults = identifyLayerResultsFuture.get()
-                // if no layer identified then return, else display progressBar
-                if (identifyLayerResults.isEmpty()) return@addDoneListener
-                progressBar.visibility = View.VISIBLE
+                // if no layer identified then return
+                if (identifyLayerResults.isEmpty()) {
+                    progressBar.visibility = View.GONE
+                    return@addDoneListener
+                }
                 // finds the first layer where the LayerContent is a SubtypeFeatureLayer
                 val layerResult =
                     identifyLayerResults.find { layerResult -> layerResult.layerContent is SubtypeFeatureLayer }
