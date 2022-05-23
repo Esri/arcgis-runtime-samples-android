@@ -269,10 +269,12 @@ class MainActivity : AppCompatActivity() {
                     return@addDoneListener
                 }
                 // finds the first layer where the LayerContent is a SubtypeFeatureLayer
-                val layerResult =
-                    identifyLayerResults.find { layerResult -> layerResult.layerContent is SubtypeFeatureLayer }
-                    // user clicked on an empty space on map with no feature
-                        ?: return@addDoneListener
+                val layerResult = identifyLayerResults.find { layerResult -> layerResult.layerContent is SubtypeFeatureLayer }
+                // user clicked on an empty space on map with no feature
+                if(layerResult == null){
+                    progressBar.visibility = View.GONE
+                    return@addDoneListener
+                }
                 // filter the sublayer result's elements to find the first one which is an ArcGIS feature
                 val selectedContainerFeature =
                     layerResult.sublayerResults.first().elements.filterIsInstance<ArcGISFeature>()
