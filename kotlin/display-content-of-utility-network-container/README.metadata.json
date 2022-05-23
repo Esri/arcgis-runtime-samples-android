@@ -1,0 +1,36 @@
+{
+    "category": "Utility Networks",
+    "description": "A utility network container allows a dense collection of features to be represented by a single feature, which can be used to reduce map clutter.",
+    "formal_name": "DisplayContentOfUtilityNetworkContainer",
+    "ignore": false,
+    "images": [
+        "display-content-of-utility-network-container.png"
+    ],
+    "keywords": [
+        "associations",
+        "connectivity association",
+        "containment association",
+        "structural attachment associations",
+        "utility network",
+        "SubtypeFeatureLayer",
+        "UtilityAssociation",
+        "UtilityAssociationType",
+        "UtilityElement",
+        "UtilityNetwork",
+        "UtilityNetworkDefinition"
+    ],
+    "language": "kotlin",
+    "redirect_from": "",
+    "relevant_apis": [
+        "SubtypeFeatureLayer",
+        "UtilityAssociation",
+        "UtilityAssociationType",
+        "UtilityElement",
+        "UtilityNetwork",
+        "UtilityNetworkDefinition"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/displaycontentofutilitynetworkcontainer/MainActivity.kt"
+    ],
+    "title": "Display content of utility network container"
+}
