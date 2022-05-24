@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutionException;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
   private GraphicsOverlay mResultGraphicsOverlay;
   // objects that implement Loadable must be class fields to prevent being garbage collected before loading
   private FeatureCollectionTable mFeatureCollectionTable;
+  private View mLoadingView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
+    mLoadingView = findViewById(R.id.loadingView);
     mInputGraphicsOverlay = new GraphicsOverlay();
     mResultGraphicsOverlay = new GraphicsOverlay();
 
@@ -132,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
    * @param point in MapView coordinates.
    */
   private void calculateViewshedAt(Point point) {
+    mLoadingView.setVisibility(View.VISIBLE);
+
     // remove previous graphics
     mResultGraphicsOverlay.getGraphics().clear();
 
@@ -158,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
     mFeatureCollectionTable.addDoneLoadingListener(() -> {
       if (mFeatureCollectionTable.getLoadStatus() == LoadStatus.LOADED) {
         performGeoprocessing(mFeatureCollectionTable);
+        mLoadingView.setVisibility(View.GONE);
       }
     });
 
