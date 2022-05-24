@@ -163,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
     mFeatureCollectionTable.addDoneLoadingListener(() -> {
       if (mFeatureCollectionTable.getLoadStatus() == LoadStatus.LOADED) {
         performGeoprocessing(mFeatureCollectionTable);
-        mLoadingView.setVisibility(View.GONE);
       }
     });
 
@@ -195,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
         // listen for job success
         mGeoprocessingJob.addJobDoneListener(new Runnable() {
           @Override public void run() {
+            mLoadingView.setVisibility(View.GONE);
             if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
               GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
               // get the viewshed from geoprocessingResult
