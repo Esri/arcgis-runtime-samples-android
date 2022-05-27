@@ -1,4 +1,45 @@
-<com.esri.arcgisruntime.mapping.view.MapView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mapView"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp"
+    tools:context=".MainActivity">
+
+
+    <com.esri.arcgisruntime.mapping.view.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.esri.arcgisruntime.mapping.view.MapView>
+
+    <RelativeLayout
+        android:id="@+id/loadingView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/loadingViewBg"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/loadingSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/loadingSpinner"
+            android:gravity="center"
+            android:text="Calculating Viewshed..."
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

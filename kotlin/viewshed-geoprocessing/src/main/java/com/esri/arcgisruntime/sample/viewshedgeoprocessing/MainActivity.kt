@@ -20,6 +20,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
@@ -58,6 +59,10 @@ class MainActivity : AppCompatActivity() {
 
     private val mapView: MapView by lazy {
         activityMainBinding.mapView
+    }
+
+    private val loadingView: View by lazy {
+        activityMainBinding.loadingView
     }
 
     private val geoprocessingTask: GeoprocessingTask by lazy { GeoprocessingTask(getString(R.string.viewshed_service)) }
@@ -134,6 +139,9 @@ class MainActivity : AppCompatActivity() {
      * @param point in MapView coordinates.
      */
     private fun calculateViewshedFrom(point: Point) {
+        // display the LoadingView while calculating the Viewshed
+        loadingView!!.visibility = View.VISIBLE
+
         // remove previous graphics
         resultGraphicsOverlay.graphics.clear()
 
@@ -191,6 +199,9 @@ class MainActivity : AppCompatActivity() {
 
                 // listen for job success
                 geoprocessingJob?.addJobDoneListener {
+                    // hide the LoadingView when the geoprocessing job is done
+                    loadingView!!.visibility = View.GONE
+
                     if (geoprocessingJob?.status == Job.Status.SUCCEEDED) {
                         // get the viewshed from geoprocessingResult
                         (geoprocessingJob?.result?.outputs?.get("Viewshed_Result") as? GeoprocessingFeatures)?.let { viewshedResult ->
