@@ -75,12 +75,12 @@ public class MainActivity extends AppCompatActivity {
     // location services
     ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
-    mLoadingView = findViewById(R.id.loadingView);
     mInputGraphicsOverlay = new GraphicsOverlay();
     mResultGraphicsOverlay = new GraphicsOverlay();
 
-    // inflate MapView from layout
+    // inflate MapView and the LoadingView from layout
     mMapView = findViewById(R.id.mapView);
+    mLoadingView = findViewById(R.id.loadingView);
     // create a map with a topographic basemap
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
     // set the map to be displayed in this view
@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
    * @param point in MapView coordinates.
    */
   private void calculateViewshedAt(Point point) {
+    // display the LoadingView while calculating the Viewshed
     mLoadingView.setVisibility(View.VISIBLE);
 
     // remove previous graphics
@@ -194,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
         // listen for job success
         mGeoprocessingJob.addJobDoneListener(new Runnable() {
           @Override public void run() {
+            // hide the LoadingView when the geoprocessing job is done
             mLoadingView.setVisibility(View.GONE);
             if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
               GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
