@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 mGeoprocessingJob.addJobDoneListener(new Runnable() {
                     @Override
                     public void run() {
-                        // hide the LoadingView when the geoprocessing job is done
+                        // hide the LoadingView when job is done loading
                         mLoadingView.setVisibility(View.GONE);
                         if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
                             GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();

@@ -199,7 +199,7 @@ class MainActivity : AppCompatActivity() {
 
                 // listen for job success
                 geoprocessingJob?.addJobDoneListener {
-                    // hide the LoadingView when the geoprocessing job is done
+                    // hide the LoadingView when job is done loading
                     loadingView!!.visibility = View.GONE
 
                     if (geoprocessingJob?.status == Job.Status.SUCCEEDED) {
