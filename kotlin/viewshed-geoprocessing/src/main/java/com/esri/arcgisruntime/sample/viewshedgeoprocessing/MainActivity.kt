@@ -140,7 +140,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun calculateViewshedFrom(point: Point) {
         // display the LoadingView while calculating the Viewshed
-        loadingView!!.visibility = View.VISIBLE
+        loadingView.visibility = View.VISIBLE
 
         // remove previous graphics
         resultGraphicsOverlay.graphics.clear()
