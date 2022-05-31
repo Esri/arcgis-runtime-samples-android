@@ -66,10 +66,18 @@ class MainActivity : AppCompatActivity() {
         map.addDoneLoadingListener {
             if (map.loadStatus == LoadStatus.LOADED && map.floorDefinition != null) {
                 // get and load the floor manager
-                val floorManager = map.floorManager.apply { loadAsync() }
-                // set initial floor level to ground floor
-                setFloor(floorManager)
-
+                val floorManager = map.floorManager
+                floorManager.loadAsync()
+                floorManager.addDoneLoadingListener {
+                    if (floorManager.loadStatus == LoadStatus.LOADED) {
+                        // set up spinner and initial floor level to ground floor
+                        initializeFloorSpinner(floorManager)
+                    } else {
+                        val error = "Error loading floor manager: " + floorManager.loadError.message
+                        Log.e(TAG, error)
+                        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                    }
+                }
             } else {
                 val error = "Error loading map or map is not floor-aware"
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show()
@@ -79,49 +87,42 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Load and update the [floorManager] to the currently selected floor
-     * and disable the other floors.
+     * Set and update the floor spinner. Shows the currently selected floor
+     * and hides the other floors using [floorManager].
      */
-    private fun setFloor(floorManager: FloorManager) {
-        floorManager.addDoneLoadingListener {
-            if (floorManager.loadStatus == LoadStatus.LOADED) {
-                levelSpinner.apply {
-                    // set the spinner adapter for the floor selection
-                    adapter = FloorsAdapter(this@MainActivity, floorManager.levels)
-                    // handle on spinner item selected
-                    onItemSelectedListener =
-                        object : AdapterView.OnItemSelectedListener {
-                            override fun onItemSelected(
-                                parentView: AdapterView<*>?,
-                                selectedItemView: View?,
-                                position: Int,
-                                id: Long
-                            ) {
-                                // set all the floors to invisible to reset the floorManager
-                                floorManager.levels.forEach { floorLevel ->
-                                    floorLevel.isVisible = false
-                                }
-                                // set the currently selected floor to be visible
-                                floorManager.levels[position].isVisible = true
-                            }
-
-                            // ignore if nothing is selected
-                            override fun onNothingSelected(parentView: AdapterView<*>?) {}
+    private fun initializeFloorSpinner(floorManager: FloorManager) {
+        levelSpinner.apply {
+            // set the spinner adapter for the floor selection
+            adapter = FloorsAdapter(this@MainActivity, floorManager.levels)
+            // handle on spinner item selected
+            onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parentView: AdapterView<*>?,
+                        selectedItemView: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        // set all the floors to invisible to reset the floorManager
+                        floorManager.levels.forEach { floorLevel ->
+                            floorLevel.isVisible = false
                         }
-                    // select the ground floor using `verticalOrder`.
-                    // in the case of buildings with basements, they can have negative
-                    // vertical orders; ground floor is expected to be 0.
-                    // you can also use level ID, number or name to locate a floor.
-                    setSelection(floorManager.levels.indexOf(
-                        floorManager.levels.first { it.verticalOrder == 0 }
-                    ))
-                }
+                        // set the currently selected floor to be visible
+                        floorManager.levels[position].isVisible = true
+                    }
 
-            } else {
-                val error = "Error loading floor manager: " + floorManager.loadError.message
-                Log.e(TAG, error)
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-            }
+                    // ignore if nothing is selected
+                    override fun onNothingSelected(parentView: AdapterView<*>?) {}
+                }
+            // Select the ground floor using `verticalOrder`.
+            // The floor at index 0 might not have a vertical order of 0 if,
+            // for example, the building starts with basements.
+            // To select the ground floor, we can search for a level with a
+            // `verticalOrder` of 0. You can also use level ID, number or name
+            // to locate a floor.
+            setSelection(floorManager.levels.indexOf(
+                floorManager.levels.first { it.verticalOrder == 0 }
+            ))
         }
     }
 
