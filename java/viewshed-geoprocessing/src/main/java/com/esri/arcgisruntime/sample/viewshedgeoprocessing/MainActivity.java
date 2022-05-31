@@ -195,23 +195,18 @@ public class MainActivity extends AppCompatActivity {
                 mGeoprocessingJob.start();
 
                 // listen for job success
-                mGeoprocessingJob.addJobDoneListener(new Runnable() {
-                    @Override
-                    public void run() {
-                        // hide the LoadingView when job is done loading
-                        mLoadingView.setVisibility(View.GONE);
-                        if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
-                            GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
-                            // get the viewshed from geoprocessingResult
-                            GeoprocessingFeatures resultFeatures = (GeoprocessingFeatures) geoprocessingResult.getOutputs()
-                                    .get("Viewshed_Result");
-                            FeatureSet featureSet = resultFeatures.getFeatures();
-                            for (Feature feature : featureSet) {
-                                Graphic graphic = new Graphic(feature.getGeometry());
-                                mResultGraphicsOverlay.getGraphics().add(graphic);
-                            }
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Geoprocessing result failed!", Toast.LENGTH_LONG).show();
+                mGeoprocessingJob.addJobDoneListener(() -> {
+                    // hide the LoadingView when job is done loading
+                    mLoadingView.setVisibility(View.GONE);
+                    if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
+                        GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
+                        // get the viewshed from geoprocessingResult
+                        GeoprocessingFeatures resultFeatures = (GeoprocessingFeatures) geoprocessingResult.getOutputs()
+                                .get("Viewshed_Result");
+                        FeatureSet featureSet = resultFeatures.getFeatures();
+                        for (Feature feature : featureSet) {
+                            Graphic graphic = new Graphic(feature.getGeometry());
+                            mResultGraphicsOverlay.getGraphics().add(graphic);
                         }
                     }
                 });
