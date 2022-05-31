@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+                String error = "Error getting geoprocessing result: " + e.getMessage();
                 Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
                 Log.e(TAG, error);
             }
