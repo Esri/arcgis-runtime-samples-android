@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
         // set the map to be displayed in this view
         mMapView.setMap(map);
-        mMapView.setViewpoint(new Viewpoint(45.3790902612337, 6.84905317262762, 100000));
+        mMapView.setViewpoint(new Viewpoint(45.3790, 6.8490, 100000));
 
         // renderer for graphics overlays
         SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10);

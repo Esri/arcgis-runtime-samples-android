@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             // create a map with the Basemap type topographic
             map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
             // set the viewpoint
-            setViewpoint(Viewpoint(45.3790902612337, 6.84905317262762, 100000.0))
+            setViewpoint(Viewpoint(45.3790, 6.8490, 100000.0))
             // add graphics overlays to the map view
             graphicsOverlays.addAll(listOf(resultGraphicsOverlay, inputGraphicsOverlay))
             // add onTouchListener for calculating the new viewshed
