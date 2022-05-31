@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -56,6 +57,8 @@ import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingResult;
 import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingTask;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private MapView mMapView;
     private GeoprocessingTask mGeoprocessingTask;
@@ -208,10 +211,16 @@ public class MainActivity extends AppCompatActivity {
                             Graphic graphic = new Graphic(feature.getGeometry());
                             mResultGraphicsOverlay.getGraphics().add(graphic);
                         }
+                    } else {
+                        String error = "Geoprocessing result failed: " + mGeoprocessingJob.getError().getCause().getMessage();
+                        Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+                        Log.e(TAG, error);
                     }
                 });
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
+                Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+                Log.e(TAG, error);
             }
         });
     }
