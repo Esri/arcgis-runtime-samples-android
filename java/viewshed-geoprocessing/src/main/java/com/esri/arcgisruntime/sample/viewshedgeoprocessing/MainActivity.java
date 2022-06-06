@@ -22,10 +22,13 @@ import java.util.concurrent.ExecutionException;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.Job;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
@@ -55,176 +58,188 @@ import com.esri.arcgisruntime.tasks.geoprocessing.GeoprocessingTask;
 
 public class MainActivity extends AppCompatActivity {
 
-  private MapView mMapView;
-  private GeoprocessingTask mGeoprocessingTask;
-  private GeoprocessingJob mGeoprocessingJob;
+    private static final String TAG = MainActivity.class.getSimpleName();
 
-  private GraphicsOverlay mInputGraphicsOverlay;
-  private GraphicsOverlay mResultGraphicsOverlay;
-  // objects that implement Loadable must be class fields to prevent being garbage collected before loading
-  private FeatureCollectionTable mFeatureCollectionTable;
+    private MapView mMapView;
+    private GeoprocessingTask mGeoprocessingTask;
+    private GeoprocessingJob mGeoprocessingJob;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+    private GraphicsOverlay mInputGraphicsOverlay;
+    private GraphicsOverlay mResultGraphicsOverlay;
+    // objects that implement Loadable must be class fields to prevent being garbage collected before loading
+    private FeatureCollectionTable mFeatureCollectionTable;
+    private View mLoadingView;
 
-    // authentication with an API key or named user is required to access basemaps and other
-    // location services
-    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-    mInputGraphicsOverlay = new GraphicsOverlay();
-    mResultGraphicsOverlay = new GraphicsOverlay();
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
-    // inflate MapView from layout
-    mMapView = findViewById(R.id.mapView);
-    // create a map with a topographic basemap
-    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
-    // set the map to be displayed in this view
-    mMapView.setMap(map);
-    mMapView.setViewpoint(new Viewpoint( 45.3790902612337, 6.84905317262762, 100000));
+        mInputGraphicsOverlay = new GraphicsOverlay();
+        mResultGraphicsOverlay = new GraphicsOverlay();
 
-    // renderer for graphics overlays
-    SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10);
-    SimpleRenderer renderer = new SimpleRenderer(pointSymbol);
-    mInputGraphicsOverlay.setRenderer(renderer);
+        // inflate MapView and the LoadingView from layout
+        mMapView = findViewById(R.id.mapView);
+        mLoadingView = findViewById(R.id.loadingView);
+        // create a map with a topographic basemap
+        ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
+        // set the map to be displayed in this view
+        mMapView.setMap(map);
+        mMapView.setViewpoint(new Viewpoint(45.3790, 6.8490, 100000));
 
-    int fillColor = Color.argb(120, 226, 119, 40);
-    FillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, fillColor, null);
-    mResultGraphicsOverlay.setRenderer(new SimpleRenderer(fillSymbol));
+        // renderer for graphics overlays
+        SimpleMarkerSymbol pointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, Color.RED, 10);
+        SimpleRenderer renderer = new SimpleRenderer(pointSymbol);
+        mInputGraphicsOverlay.setRenderer(renderer);
 
-    // add graphics overlays to the map view
-    mMapView.getGraphicsOverlays().add(mResultGraphicsOverlay);
-    mMapView.getGraphicsOverlays().add(mInputGraphicsOverlay);
+        int fillColor = Color.argb(120, 226, 119, 40);
+        FillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, fillColor, null);
+        mResultGraphicsOverlay.setRenderer(new SimpleRenderer(fillSymbol));
 
-    mGeoprocessingTask = new GeoprocessingTask(getString(R.string.viewshed_service));
+        // add graphics overlays to the map view
+        mMapView.getGraphicsOverlays().add(mResultGraphicsOverlay);
+        mMapView.getGraphicsOverlays().add(mInputGraphicsOverlay);
 
-    mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(getApplicationContext(), mMapView) {
-      @Override public boolean onSingleTapConfirmed(MotionEvent e) {
-        android.graphics.Point screenPoint = new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY()));
-        Point mapPoint = mMapView.screenToLocation(screenPoint);
-        addGraphicForPoint(mapPoint);
-        calculateViewshedAt(mapPoint);
-        return super.onSingleTapConfirmed(e);
-      }
-    });
-  }
+        mGeoprocessingTask = new GeoprocessingTask(getString(R.string.viewshed_service));
 
-  /**
-   * Adds a graphic at the chosen mapPoint.
-   *
-   * @param point in MapView coordinates.
-   */
-  private void addGraphicForPoint(Point point) {
-    // remove existing graphics
-    mInputGraphicsOverlay.getGraphics().clear();
-
-    // new graphic
-    Graphic graphic = new Graphic(point);
-
-    // add new graphic to the graphics overlay
-    mInputGraphicsOverlay.getGraphics().add(graphic);
-  }
-
-  /**
-   * Uses the given point to create a FeatureCollectionTable which is passed to performGeoprocessing.
-   *
-   * @param point in MapView coordinates.
-   */
-  private void calculateViewshedAt(Point point) {
-    // remove previous graphics
-    mResultGraphicsOverlay.getGraphics().clear();
-
-    // cancel any previous job
-    if (mGeoprocessingJob != null) {
-      mGeoprocessingJob.cancel();
+        mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(getApplicationContext(), mMapView) {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                android.graphics.Point screenPoint = new android.graphics.Point(Math.round(e.getX()), Math.round(e.getY()));
+                Point mapPoint = mMapView.screenToLocation(screenPoint);
+                addGraphicForPoint(mapPoint);
+                calculateViewshedAt(mapPoint);
+                return super.onSingleTapConfirmed(e);
+            }
+        });
     }
 
-    List<Field> fields = new ArrayList<>(1);
-    // create field with same alias as name
-    Field field = Field.createString("observer", "", 8);
-    fields.add(field);
+    /**
+     * Adds a graphic at the chosen mapPoint.
+     *
+     * @param point in MapView coordinates.
+     */
+    private void addGraphicForPoint(Point point) {
+        // remove existing graphics
+        mInputGraphicsOverlay.getGraphics().clear();
 
-    // create feature collection table for point geometry
-    mFeatureCollectionTable = new FeatureCollectionTable(fields, GeometryType.POINT, point.getSpatialReference());
-    mFeatureCollectionTable.loadAsync();
+        // new graphic
+        Graphic graphic = new Graphic(point);
 
-    // create a new feature and assign the geometry
-    Feature newFeature = mFeatureCollectionTable.createFeature();
-    newFeature.setGeometry(point);
+        // add new graphic to the graphics overlay
+        mInputGraphicsOverlay.getGraphics().add(graphic);
+    }
 
-    // add newFeature and call performGeoprocessing on done loading
-    mFeatureCollectionTable.addFeatureAsync(newFeature);
-    mFeatureCollectionTable.addDoneLoadingListener(() -> {
-      if (mFeatureCollectionTable.getLoadStatus() == LoadStatus.LOADED) {
-        performGeoprocessing(mFeatureCollectionTable);
-      }
-    });
+    /**
+     * Uses the given point to create a FeatureCollectionTable which is passed to performGeoprocessing.
+     *
+     * @param point in MapView coordinates.
+     */
+    private void calculateViewshedAt(Point point) {
+        // display the LoadingView while calculating the Viewshed
+        mLoadingView.setVisibility(View.VISIBLE);
 
-  }
+        // remove previous graphics
+        mResultGraphicsOverlay.getGraphics().clear();
 
-  /**
-   * Creates a GeoprocessingJob from the GeoprocessingTask. Displays the resulting viewshed on the map.
-   *
-   * @param featureCollectionTable containing the observation point.
-   */
-  private void performGeoprocessing(final FeatureCollectionTable featureCollectionTable) {
-    // geoprocessing parameters
-    final ListenableFuture<GeoprocessingParameters> parameterFuture = mGeoprocessingTask.createDefaultParametersAsync();
-    parameterFuture.addDoneListener(() -> {
-      try {
-        GeoprocessingParameters parameters = parameterFuture.get();
-        parameters.setProcessSpatialReference(featureCollectionTable.getSpatialReference());
-        parameters.setOutputSpatialReference(featureCollectionTable.getSpatialReference());
+        // cancel any previous job
+        if (mGeoprocessingJob != null) {
+            mGeoprocessingJob.cancel();
+        }
 
-        // use the feature collection table to create the required GeoprocessingFeatures input
-        parameters.getInputs().put("Input_Observation_Point", new GeoprocessingFeatures(featureCollectionTable));
+        List<Field> fields = new ArrayList<>(1);
+        // create field with same alias as name
+        Field field = Field.createString("observer", "", 8);
+        fields.add(field);
 
-        // initialize job from mGeoprocessingTask
-        mGeoprocessingJob = mGeoprocessingTask.createJob(parameters);
+        // create feature collection table for point geometry
+        mFeatureCollectionTable = new FeatureCollectionTable(fields, GeometryType.POINT, point.getSpatialReference());
+        mFeatureCollectionTable.loadAsync();
 
-        // start the job
-        mGeoprocessingJob.start();
+        // create a new feature and assign the geometry
+        Feature newFeature = mFeatureCollectionTable.createFeature();
+        newFeature.setGeometry(point);
 
-        // listen for job success
-        mGeoprocessingJob.addJobDoneListener(new Runnable() {
-          @Override public void run() {
-            if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
-              GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
-              // get the viewshed from geoprocessingResult
-              GeoprocessingFeatures resultFeatures = (GeoprocessingFeatures) geoprocessingResult.getOutputs()
-                  .get("Viewshed_Result");
-              FeatureSet featureSet = resultFeatures.getFeatures();
-              for (Feature feature : featureSet) {
-                Graphic graphic = new Graphic(feature.getGeometry());
-                mResultGraphicsOverlay.getGraphics().add(graphic);
-              }
-            } else {
-              Toast.makeText(getApplicationContext(), "Geoprocessing result failed!", Toast.LENGTH_LONG).show();
+        // add newFeature and call performGeoprocessing on done loading
+        mFeatureCollectionTable.addFeatureAsync(newFeature);
+        mFeatureCollectionTable.addDoneLoadingListener(() -> {
+            if (mFeatureCollectionTable.getLoadStatus() == LoadStatus.LOADED) {
+                performGeoprocessing(mFeatureCollectionTable);
             }
-          }
         });
-      } catch (InterruptedException | ExecutionException e) {
-        e.printStackTrace();
-      }
-    });
-  }
 
-  @Override
-  protected void onPause() {
-    super.onPause();
-    mMapView.pause();
-  }
+    }
 
-  @Override
-  protected void onResume() {
-    super.onResume();
-    mMapView.resume();
-  }
+    /**
+     * Creates a GeoprocessingJob from the GeoprocessingTask. Displays the resulting viewshed on the map.
+     *
+     * @param featureCollectionTable containing the observation point.
+     */
+    private void performGeoprocessing(final FeatureCollectionTable featureCollectionTable) {
+        // geoprocessing parameters
+        final ListenableFuture<GeoprocessingParameters> parameterFuture = mGeoprocessingTask.createDefaultParametersAsync();
+        parameterFuture.addDoneListener(() -> {
+            try {
+                GeoprocessingParameters parameters = parameterFuture.get();
+                parameters.setProcessSpatialReference(featureCollectionTable.getSpatialReference());
+                parameters.setOutputSpatialReference(featureCollectionTable.getSpatialReference());
 
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    mMapView.dispose();
-  }
+                // use the feature collection table to create the required GeoprocessingFeatures input
+                parameters.getInputs().put("Input_Observation_Point", new GeoprocessingFeatures(featureCollectionTable));
+
+                // initialize job from mGeoprocessingTask
+                mGeoprocessingJob = mGeoprocessingTask.createJob(parameters);
+
+                // start the job
+                mGeoprocessingJob.start();
+
+                // listen for job success
+                mGeoprocessingJob.addJobDoneListener(() -> {
+                    // hide the LoadingView when job is done loading
+                    mLoadingView.setVisibility(View.GONE);
+                    if (mGeoprocessingJob.getStatus() == Job.Status.SUCCEEDED) {
+                        GeoprocessingResult geoprocessingResult = mGeoprocessingJob.getResult();
+                        // get the viewshed from geoprocessingResult
+                        GeoprocessingFeatures resultFeatures = (GeoprocessingFeatures) geoprocessingResult.getOutputs()
+                                .get("Viewshed_Result");
+                        FeatureSet featureSet = resultFeatures.getFeatures();
+                        for (Feature feature : featureSet) {
+                            Graphic graphic = new Graphic(feature.getGeometry());
+                            mResultGraphicsOverlay.getGraphics().add(graphic);
+                        }
+                    } else {
+                        String error = "Geoprocessing result failed: " + mGeoprocessingJob.getError().getCause().getMessage();
+                        Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+                        Log.e(TAG, error);
+                    }
+                });
+            } catch (InterruptedException | ExecutionException e) {
+                String error = "Error getting geoprocessing result: " + e.getMessage();
+                Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+                Log.e(TAG, error);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMapView.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMapView.pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMapView.dispose();
+    }
 }

@@ -20,6 +20,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
@@ -60,6 +61,10 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.mapView
     }
 
+    private val loadingView: View by lazy {
+        activityMainBinding.loadingView
+    }
+
     private val geoprocessingTask: GeoprocessingTask by lazy { GeoprocessingTask(getString(R.string.viewshed_service)) }
     private var geoprocessingJob: GeoprocessingJob? = null
 
@@ -93,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             // create a map with the Basemap type topographic
             map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
             // set the viewpoint
-            setViewpoint(Viewpoint(45.3790902612337, 6.84905317262762, 100000.0))
+            setViewpoint(Viewpoint(45.3790, 6.8490, 100000.0))
             // add graphics overlays to the map view
             graphicsOverlays.addAll(listOf(resultGraphicsOverlay, inputGraphicsOverlay))
             // add onTouchListener for calculating the new viewshed
@@ -134,6 +139,9 @@ class MainActivity : AppCompatActivity() {
      * @param point in MapView coordinates.
      */
     private fun calculateViewshedFrom(point: Point) {
+        // display the LoadingView while calculating the Viewshed
+        loadingView.visibility = View.VISIBLE
+
         // remove previous graphics
         resultGraphicsOverlay.graphics.clear()
 
@@ -191,6 +199,9 @@ class MainActivity : AppCompatActivity() {
 
                 // listen for job success
                 geoprocessingJob?.addJobDoneListener {
+                    // hide the LoadingView when job is done loading
+                    loadingView.visibility = View.GONE
+
                     if (geoprocessingJob?.status == Job.Status.SUCCEEDED) {
                         // get the viewshed from geoprocessingResult
                         (geoprocessingJob?.result?.outputs?.get("Viewshed_Result") as? GeoprocessingFeatures)?.let { viewshedResult ->
