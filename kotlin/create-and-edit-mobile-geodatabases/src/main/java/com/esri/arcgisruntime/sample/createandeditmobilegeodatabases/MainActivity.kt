@@ -17,15 +17,19 @@
 package com.esri.arcgisruntime.sample.createandeditmobilegeodatabases
 
 import android.annotation.SuppressLint
-import android.graphics.Point
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
+import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.*
 import com.esri.arcgisruntime.geometry.GeometryType
+import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
@@ -35,9 +39,7 @@ import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.createandeditmobilegeodatabases.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.symbology.DictionarySymbolStyle
 import java.io.File
-import java.time.LocalDateTime
 import java.util.*
 
 
@@ -53,10 +55,13 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.mapView
     }
 
+    private val createButton: Button by lazy {
+        activityMainBinding.createButton
+    }
+
     private var featureTable: FeatureTable? = null
     private var geodatabase: Geodatabase? = null
-    private var sequence = 1
-
+    private var sequence = 0
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,38 +73,53 @@ class MainActivity : AppCompatActivity() {
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         // create a map with the BasemapType topographic
-        val map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
+        val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
 
         // set the map to be displayed in the layout's MapView
         mapView.map = map
 
         mapView.setViewpoint(Viewpoint(34.056295, -117.195800, 10000.0))
-
         // handle when map is clicked by retrieving the point
         mapView.onTouchListener =
             object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
-                override fun onSingleTapConfirmed(event: MotionEvent?): Boolean {
-                    if (event != null) {
-                        Log.e(TAG, "Event")
+                override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {
+                    motionEvent?.let { event ->
                         // create a point from where the user clicked
-                        val screenPoint = Point(event.x.toInt(), event.y.toInt())
-                        createGeodatabase()
+                        android.graphics.Point(event.x.toInt(), event.y.toInt()).let { point ->
+                            addFeature(mapView.screenToLocation(point))
+                        }
                     }
-                    return super.onSingleTapConfirmed(event)
+                    return super.onSingleTapConfirmed(motionEvent)
                 }
             }
+
+        mapView.map.addDoneLoadingListener {
+            createGeodatabase()
+        }
+
+        createButton.setOnClickListener {
+            geodatabase?.close()
+            val sharingIntent = Intent(Intent.ACTION_SEND)
+            sharingIntent.type = "*/*"
+            sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(geodatabase?.path))
+            startActivity(Intent.createChooser(sharingIntent, "Share using"))
+        }
     }
 
     private fun createGeodatabase() {
         // define the name of the geodatabase file
         val file = File(getExternalFilesDir(null)?.path + "/locationHistory.geodatabase")
+        if (file.exists()) file.delete()
         // create the geodatabase file
         val geodatabaseFuture = Geodatabase.createAsync(file.path)
         geodatabaseFuture.addDoneListener {
+            Log.e(TAG, "Geodatabase created")
+            geodatabase = geodatabaseFuture.get()
+
             // construct a table description
             val tableDescription =
                 TableDescription(
-                    "Location History",
+                    "LocationHistory",
                     SpatialReferences.getWgs84(),
                     GeometryType.POINT
                 )
@@ -118,45 +138,40 @@ class MainActivity : AppCompatActivity() {
             tableDescription.setHasM(false)
             tableDescription.setHasZ(false)
 
-            val geodatabase = geodatabaseFuture.get()
-            geodatabase.createTableAsync(tableDescription)
-            setupMapFromGeodatabase(geodatabase)
+            val tableFuture = geodatabaseFuture.get().createTableAsync(tableDescription)
+            setupMapFromGeodatabase(tableFuture)
         }
     }
 
-    private fun setupMapFromGeodatabase(geodatabase: Geodatabase) {
-        geodatabase.addDoneLoadingListener {
-            if (geodatabase.loadStatus == LoadStatus.LOADED) {
-                Log.e(TAG, "Geodatabase created")
-                val table =
-                    geodatabase.geodatabaseFeatureTables.first { (it.tableName == "LocationHistory") }
-                val featureLayer = FeatureLayer(table)
-                mapView.map.operationalLayers.add(featureLayer)
-                this.featureTable = table
-                this.geodatabase = geodatabase
-
-            } else {
-                val message = "Geodatabase failed to load"
-                Log.e(TAG, message)
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    private fun setupMapFromGeodatabase(tableFuture: ListenableFuture<GeodatabaseFeatureTable>) {
+        tableFuture.addDoneListener {
+            val table = geodatabase?.geodatabaseFeatureTables?.first {
+                it.tableName == "LocationHistory"
             }
+            val featureLayer = FeatureLayer(table)
+            mapView.map.operationalLayers.add(featureLayer)
+            this.featureTable = table
         }
     }
 
-    private fun addFeature(point: com.esri.arcgisruntime.geometry.Point) {
-        val featureAttributes = mapOf<String, Any>(
-            "name" to "Shubham's location",
-            "sequence" to sequence,
-            "collection_timestamp" to Date()
-        )
+    /**
+     * Adds a feature to the feature table on map click
+     */
+    private fun addFeature(mapPoint: Point) {
+        // set up the feature attributes
+        val featureAttributes = mutableMapOf<String, Any>()
+        featureAttributes["name"] = "User's location"
+        featureAttributes["sequence"] = sequence
+        featureAttributes["collection_timestamp"] = Date().time
+
         // create a new feature
-        val feature = featureTable?.createFeature(featureAttributes,point)
+        val feature = featureTable?.createFeature(featureAttributes, mapPoint)
         // add the feature to the feature table
-        featureTable?.addFeatureAsync(feature)
-        featureTable?.addDoneLoadingListener {
-            // Feature done loading
+        featureTable?.addFeatureAsync(feature)?.addDoneListener {
+            // feature added to the table
+            Log.e(TAG, "Added feature to table, size = ${featureTable!!.totalFeatureCount}")
+            sequence++
         }
-        sequence++
     }
 
     override fun onPause() {
