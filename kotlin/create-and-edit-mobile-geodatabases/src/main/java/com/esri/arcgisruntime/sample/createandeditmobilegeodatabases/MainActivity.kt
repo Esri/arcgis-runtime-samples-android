@@ -16,18 +16,14 @@
 
 package com.esri.arcgisruntime.sample.createandeditmobilegeodatabases
 
-import android.R
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Message
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.Button
-import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -75,7 +71,10 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.featureCount
     }
 
-    private var featureTable: FeatureTable? = null
+    // feature table created using mobile geodatabase and added to the MapView
+    private var featureTable: GeodatabaseFeatureTable? = null
+
+    // mobile geodatabase used to create and store the feature attributes (LocationHistory.geodatabase)
     private var geodatabase: Geodatabase? = null
 
     @SuppressLint("ClickableViewAccessibility")
@@ -83,35 +82,50 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
 
-        // authentication with an API key or named user is required to access basemaps and other
-        // location services
+        // authentication with an API key or named user is
+        // required to access basemaps and other location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         // create a map with the BasemapType topographic
         val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
 
-        // set the map to be displayed in the layout's MapView
-        mapView.map = map
-
-        mapView.setViewpoint(Viewpoint(34.056295, -117.195800, 10000.0))
-        // handle when map is clicked by retrieving the point
-        mapView.onTouchListener =
-            object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
-                override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {
-                    motionEvent?.let { event ->
-                        // create a point from where the user clicked
-                        android.graphics.Point(event.x.toInt(), event.y.toInt()).let { point ->
-                            addFeature(mapView.screenToLocation(point))
+        mapView.apply {
+            // set the map and viewpoint to be displayed in the layout's MapView
+            this.map = map
+            setViewpoint(Viewpoint(34.056295, -117.195800, 10000.0))
+            // handle when map is clicked by retrieving the point
+            onTouchListener =
+                object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
+                    override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {
+                        motionEvent?.let { event ->
+                            val mapPoint = mapView.screenToLocation(
+                                android.graphics.Point(
+                                    event.x.toInt(),
+                                    event.y.toInt()
+                                )
+                            )
+                            // create a point from where the user clicked
+                            addFeature(mapPoint)
                         }
+                        return super.onSingleTapConfirmed(motionEvent)
                     }
-                    return super.onSingleTapConfirmed(motionEvent)
                 }
-            }
-
-        mapView.map.addDoneLoadingListener {
-            createGeodatabase()
         }
 
+        mapView.map.addDoneLoadingListener {
+            if (mapView.map.loadStatus == LoadStatus.LOADED)
+            // create the geodatabase file to add features into the feature table
+                createGeodatabase()
+            else
+                showError("Error loading MapView: ${mapView.map.loadError.message}")
+        }
+
+        viewTableButton.setOnClickListener {
+            // displays table dialog with the values in the feature table
+            displayTable()
+        }
+
+        // opens a share-sheet with the "LocationHistory.geodatabase" file
         createButton.setOnClickListener {
             try {
                 val sharingIntent = Intent(Intent.ACTION_SEND).apply {
@@ -119,66 +133,37 @@ class MainActivity : AppCompatActivity() {
                     putExtra(Intent.EXTRA_STREAM, Uri.parse(geodatabase?.path))
                 }
                 startActivity(Intent.createChooser(sharingIntent, "Share using"))
-                //createGeodatabase()
-
             } catch (e: Exception) {
-                showError(e.message)
+                showError("Error sharing file: ${e.message}")
             }
         }
 
-        viewTableButton.setOnClickListener {
-            displayTable()
-        }
     }
 
-    private fun displayTable() {
-        val queryResultFuture = featureTable?.queryFeaturesAsync(QueryParameters())
-        queryResultFuture?.addDoneListener {
-            val queryResults = queryResultFuture.get()
-
-            val tableLayoutBinding = TableLayoutBinding.inflate(layoutInflater)
-            // create custom dialog
-            Dialog(this).apply {
-                setContentView(tableLayoutBinding.root)
-                setCancelable(true)
-
-                val table = tableLayoutBinding.tableLayout
-                queryResults.forEach { feature ->
-                    val tableRowBinding = TableRowBinding.inflate(layoutInflater)
-                    tableRowBinding.oid.text = feature.attributes["oid"].toString()
-                    tableRowBinding.collectionTimestamp.text =
-                        (feature.attributes["collection_timestamp"] as Calendar).time.toString()
-                    table.addView(tableRowBinding.root)
-                }
-                table.requestLayout()
-
-            }.show()
-        }
-    }
-
-    private fun showError(message: String?) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        Log.e(TAG, message.toString())
-    }
-
+    /**
+     * Create and load a new geodatabase file with TableDescription fields
+     */
     private fun createGeodatabase() {
         // define the name of the geodatabase file
-        val file = File(getExternalFilesDir(null)?.path + "/locationHistory.geodatabase")
+        val file = File(getExternalFilesDir(null)?.path + "/LocationHistory.geodatabase")
         if (file.exists()) file.delete()
-        // create the geodatabase file
+
+        // create a geodatabase file at the file path
         val geodatabaseFuture = Geodatabase.createAsync(file.path)
         geodatabaseFuture.addDoneListener {
-            Log.e(TAG, "Geodatabase created")
+            // get the instance of the mobile geodatabase
             geodatabase = geodatabaseFuture.get()
-
-            // construct a table description
+            // construct a table description which stores features as points on map
             val tableDescription =
                 TableDescription(
                     "LocationHistory",
                     SpatialReferences.getWgs84(),
                     GeometryType.POINT
                 )
-            // add fields to the table
+            // set up the fields to the table,
+            // Field.Type.OID is the primary key of the SQLite
+            // Field.Type.DATE is a date column used to store a Calendar date
+            // FieldDescriptions can be a SHORT, INTEGER, GUID, FLOAT, DOUBLE, DATE, TEXT, OID, GLOBALID, BLOB, GEOMETRY, RASTER, or XML.
             tableDescription.fieldDescriptions.addAll(
                 listOf(
                     FieldDescription("oid", Field.Type.OID),
@@ -186,58 +171,112 @@ class MainActivity : AppCompatActivity() {
                 )
             )
 
-            // set some table properties
-            tableDescription.setHasAttachments(false)
-            tableDescription.setHasM(false)
-            tableDescription.setHasZ(false)
+            // set some table properties as not needed for this sample
+            tableDescription.apply {
+                setHasAttachments(false)
+                setHasM(false)
+                setHasZ(false)
+            }
 
-            val tableFuture = geodatabaseFuture.get().createTableAsync(tableDescription)
-            setupMapFromGeodatabase(tableFuture)
+            // add the tableDescriptions to the geodatabase by creating a new table
+            val tableFuture = geodatabase?.createTableAsync(tableDescription)
+            if (tableFuture != null) {
+                setupMapFromGeodatabase(tableFuture)
+            } else{
+                showError("Error adding FieldDescriptions to the mobile geodatabase")
+            }
         }
     }
 
     @SuppressLint("SetTextI18n")
+    /**
+     * Set up the MapView to display the Feature layer
+     * using the loaded [tableFuture] GeodatabaseFeatureTable
+     */
     private fun setupMapFromGeodatabase(tableFuture: ListenableFuture<GeodatabaseFeatureTable>) {
         tableFuture.addDoneListener {
+            // find the table with the table name "LocationHistory"
             val table = geodatabase?.geodatabaseFeatureTables?.first {
                 it.tableName == "LocationHistory"
             }
+            // create a feature layer for the map using the GeodatabaseFeatureTable
             val featureLayer = FeatureLayer(table)
             mapView.map.operationalLayers.add(featureLayer)
             this.featureTable = table
+
+            // display the current count of features in the FeatureTable
             featureCount.text = "Number of features added: " + (featureTable?.totalFeatureCount)
         }
     }
 
     /**
-     * Adds a feature to the feature table on map click
+     * Create a feature with attributes on map click and it to the [featureTable]
+     * Also, updates the TotalFeatureCount on the screen
      */
     @SuppressLint("SetTextI18n")
     private fun addFeature(mapPoint: Point) {
         // set up the feature attributes
         val featureAttributes = mutableMapOf<String, Any>()
         featureAttributes["collection_timestamp"] = Calendar.getInstance()
-        // create a new feature
+
+        // create a new feature at the mapPoint
         val feature = featureTable?.createFeature(featureAttributes, mapPoint)
         // add the feature to the feature table
         val task = featureTable?.addFeatureAsync(feature)
         task?.addDoneListener {
             if (featureTable?.loadStatus == LoadStatus.LOADED) {
                 try {
+                    // if feature wasn't added successfully "task.get()" will throw an exception
                     task.get()
-                    featureCount.text =
-                        "Number of features added: " + (featureTable?.totalFeatureCount)
+                    // feature added successfully, update count
+                    featureCount.text = "Number of features added: " + (featureTable?.totalFeatureCount)
+                    // enable table button since at least 1 feature loaded on the GeodatabaseFeatureTable
                     viewTableButton.isEnabled = true
                 } catch (e: Exception) {
-                    Log.e(TAG, e.message.toString())
+                    showError(e.message.toString())
                 }
             } else {
                 // error loading the featureTable
-                Log.e(TAG, "Error adding feature to table, ${featureTable?.loadError?.message}")
+                showError("Error adding feature to table, ${featureTable?.loadError?.message}")
             }
-
-
         }
+    }
+
+    /**
+     * Displays a dialog with the table of features
+     * added to the GeodatabaseFeatureTable [featureTable]
+     */
+    private fun displayTable() {
+        // query all the features loaded to the table
+        val queryResultFuture = featureTable?.queryFeaturesAsync(QueryParameters())
+        queryResultFuture?.addDoneListener {
+            val queryResults = queryResultFuture.get()
+            // inflate the table layout
+            val tableLayoutBinding = TableLayoutBinding.inflate(layoutInflater)
+            // set up a dialog to be displayed
+            Dialog(this).apply {
+                setContentView(tableLayoutBinding.root)
+                setCancelable(true)
+                // grab the instance of the TableLayout
+                val table = tableLayoutBinding.tableLayout
+                // iterate through each feature to add to the TableLayout
+                queryResults.forEach { feature ->
+                    // prepare the table row
+                    val tableRowBinding = TableRowBinding.inflate(layoutInflater).apply {
+                        oid.text = feature.attributes["oid"].toString()
+                        collectionTimestamp.text = (feature.attributes["collection_timestamp"] as Calendar).time.toString()
+                    }
+
+                    // add the row to the TableLayout
+                    table.addView(tableRowBinding.root)
+                }
+            }.show()
+        }
+    }
+
+    private fun showError(message: String?) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        Log.e(TAG, message.toString())
     }
 
     override fun onPause() {
