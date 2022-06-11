@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.createandeditmobilegeodatabases
+package com.esri.arcgisruntime.sample.createmobilegeodatabases
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -40,9 +40,9 @@ import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener
 import com.esri.arcgisruntime.mapping.view.MapView
-import com.esri.arcgisruntime.sample.createandeditmobilegeodatabases.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.sample.createandeditmobilegeodatabases.databinding.TableLayoutBinding
-import com.esri.arcgisruntime.sample.createandeditmobilegeodatabases.databinding.TableRowBinding
+import com.esri.arcgisruntime.sample.createmobilegeodatabases.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.createmobilegeodatabases.databinding.TableLayoutBinding
+import com.esri.arcgisruntime.sample.createmobilegeodatabases.databinding.TableRowBinding
 import java.io.File
 import java.util.*
 
