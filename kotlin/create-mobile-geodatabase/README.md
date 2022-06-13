@@ -1,8 +1,8 @@
-# Create and edit mobile geodatabases
+# Create mobile geodatabase
 
 Create and share a mobile geodatabase.
 
-![Create mobile geodatabase](create-mobile-geodatabase.png)
+![Create mobile geodatabase](create-mobile-geodatabase.png) ![View geodatabase table](view-geodatabase-table.png)
 
 ## Use case
 
@@ -26,8 +26,8 @@ Tap on the map to add a feature symbolizing the user's location. Click on "View 
 
 ## Relevant API
 
-* GeodatabaseFeatureTable
 * FeatureLayer
+* GeodatabaseFeatureTable
 * SpatialReferences
 
 ## Additional information
@@ -36,4 +36,4 @@ Learn more about mobile geodatabases and how to utilize them on the [ArcGIS Pro 
 
 ## Tags
 
-mobile geodatabases, mobile geodatabase, geodatabase, feature table, feature
+feature, feature table, geodatabase, mobile geodatabase
