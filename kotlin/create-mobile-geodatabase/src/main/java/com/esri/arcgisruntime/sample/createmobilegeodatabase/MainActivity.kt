@@ -27,6 +27,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.concurrent.ListenableFuture
 import com.esri.arcgisruntime.data.*
@@ -122,12 +123,19 @@ class MainActivity : AppCompatActivity() {
             try {
                 // close the mobile geodatabase before sharing
                 geodatabase?.close()
-                val sharingIntent = Intent(Intent.ACTION_SEND).apply {
+                // get the URI of the geodatabase file using FileProvider
+                val geodatabaseURI = FileProvider.getUriForFile(
+                    this, getString(R.string.file_provider_package), File(
+                        geodatabase?.path.toString()
+                    )
+                )
+                // set up the sharing intent with the geodatabase URI
+                val geodatabaseIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "*/*"
-                    putExtra(Intent.EXTRA_STREAM, Uri.parse(geodatabase?.path))
+                    putExtra(Intent.EXTRA_STREAM, geodatabaseURI)
                 }
-                // open the Android share sheet with the mobile .geodatabase file
-                startActivity(Intent.createChooser(sharingIntent, "Share using"))
+                // open the Android share sheet
+                startActivity(geodatabaseIntent)
             } catch (e: Exception) {
                 showError("Error sharing file: ${e.message}")
             }

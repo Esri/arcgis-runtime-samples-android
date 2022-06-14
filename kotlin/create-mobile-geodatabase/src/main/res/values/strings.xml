@@ -4,4 +4,5 @@
     <string name="share_mobile_geodatabase">Create and share mobile geodatabase</string>
     <string name="view_table">View Table</string>
     <string name="attribut_table_hint">Attribute table loaded from the Mobile Geodatabase file. File can be loaded on ArcGIS Pro</string>
+    <string name="file_provider_package">com.esri.arcgisruntime.fileprovider</string>
 </resources>
