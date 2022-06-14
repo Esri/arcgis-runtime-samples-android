@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.esri.arcgisruntime.sample.createmobilegeodatabases.MainActivity">
+    tools:context="com.esri.arcgisruntime.sample.createmobilegeodatabase.MainActivity">
 
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
@@ -13,9 +13,7 @@
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </com.esri.arcgisruntime.mapping.view.MapView>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"

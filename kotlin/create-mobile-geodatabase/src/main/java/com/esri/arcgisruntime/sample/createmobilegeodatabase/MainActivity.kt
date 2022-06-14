@@ -16,10 +16,8 @@
 
 package com.esri.arcgisruntime.sample.createmobilegeodatabase
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -78,7 +76,6 @@ class MainActivity : AppCompatActivity() {
     // mobile geodatabase used to create and store the feature attributes (LocationHistory.geodatabase)
     private var geodatabase: Geodatabase? = null
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
@@ -87,18 +84,16 @@ class MainActivity : AppCompatActivity() {
         // required to access basemaps and other location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // create a map with topographic base map style
-        val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
-
         mapView.apply {
-            // set the map and viewpoint to be displayed in the layout's MapView
-            this.map = map
+            //  create a map with a topographic basemap and set the map to the mapview
+            this.map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
             setViewpoint(Viewpoint(34.056295, -117.195800, 10000.0))
-            // handle when map is clicked by retrieving the point
+            // listen for single taps on the map
             onTouchListener =
                 object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
                     override fun onSingleTapConfirmed(motionEvent: MotionEvent?): Boolean {
                         motionEvent?.let { event ->
+                            // get the map point from the screen point
                             val mapPoint = mapView.screenToLocation(
                                 android.graphics.Point(
                                     event.x.toInt(),
@@ -151,7 +146,9 @@ class MainActivity : AppCompatActivity() {
         // note: the path defined must be non-empty, available,
         // allow read/write access, and end in ".geodatabase"
         val file = File(getExternalFilesDir(null)?.path + "/LocationHistory.geodatabase")
-        if (file.exists()) file.delete()
+        if (file.exists()) {
+            file.delete()
+        }
 
         // create a geodatabase file at the file path
         val geodatabaseFuture = Geodatabase.createAsync(file.path)
@@ -193,7 +190,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     /**
      * Set up the MapView to display the Feature layer
      * using the loaded [tableFuture] GeodatabaseFeatureTable
@@ -207,10 +203,10 @@ class MainActivity : AppCompatActivity() {
             // create a feature layer for the map using the GeodatabaseFeatureTable
             val featureLayer = FeatureLayer(table)
             mapView.map.operationalLayers.add(featureLayer)
-            this.featureTable = table
+            featureTable = table
 
             // display the current count of features in the FeatureTable
-            featureCount.text = "Number of features added: " + (featureTable?.totalFeatureCount)
+            featureCount.text = "Number of features added: $featureTable?.totalFeatureCount"
         }
     }
 
@@ -218,7 +214,6 @@ class MainActivity : AppCompatActivity() {
      * Create a feature with attributes on map click and it to the [featureTable]
      * Also, updates the TotalFeatureCount on the screen
      */
-    @SuppressLint("SetTextI18n")
     private fun addFeature(mapPoint: Point) {
         // set up the feature attributes
         val featureAttributes = mutableMapOf<String, Any>()
@@ -227,14 +222,14 @@ class MainActivity : AppCompatActivity() {
         // create a new feature at the mapPoint
         val feature = featureTable?.createFeature(featureAttributes, mapPoint)
         // add the feature to the feature table
-        val task = featureTable?.addFeatureAsync(feature)
-        task?.addDoneListener {
+        val addFeatureFuture = featureTable?.addFeatureAsync(feature)
+        addFeatureFuture?.addDoneListener {
             if (featureTable?.loadStatus == LoadStatus.LOADED) {
                 try {
                     // if feature wasn't added successfully "task.get()" will throw an exception
-                    task.get()
+                    addFeatureFuture.get()
                     // feature added successfully, update count
-                    featureCount.text = "Number of features added: " + (featureTable?.totalFeatureCount)
+                    featureCount.text = "Number of features added: $featureTable?.totalFeatureCount"
                     // enable table button since at least 1 feature loaded on the GeodatabaseFeatureTable
                     viewTableButton.isEnabled = true
                 } catch (e: Exception) {

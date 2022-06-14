@@ -12,7 +12,7 @@ For example, a user would like to track the location of their device at various 
 
 ## How to use the sample
 
-Tap on the map to add a feature symbolizing the user's location. Tap "View table" to view the contents of the geodatabase feature table. Once you have added the location points to the map, click on "Create and share mobile geodatabase" to retrieve the `.geodatabase` file which can then be imported into ArcGIS Pro.
+Tap on the map to add a feature symbolizing the user's location. Tap "View table" to view the contents of the geodatabase feature table. Once you have added the location points to the map, click on "Create and share mobile geodatabase" to retrieve the `.geodatabase` file which can then be imported into ArcGIS Pro or opened in an ArcGIS Runtime application.
 
 ## How it works
 

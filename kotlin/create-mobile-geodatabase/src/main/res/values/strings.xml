@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Create geodatabase</string>
+    <string name="app_name">Create mobile geodatabase</string>
     <string name="number_of_features_added">Number of features added: </string>
     <string name="share_mobile_geodatabase">Create and share mobile geodatabase</string>
     <string name="view_table">View Table</string>
