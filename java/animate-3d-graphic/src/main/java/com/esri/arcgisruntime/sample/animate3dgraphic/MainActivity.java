@@ -134,8 +134,6 @@ public class MainActivity extends AppCompatActivity {
     mMapView = findViewById(R.id.mapView);
     ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
     mMapView.setMap(map);
-    // make sure the map view renders on top of the scene view
-    mMapView.setZOrderMediaOverlay(true);
 
     // create a graphics overlay for route
     GraphicsOverlay routeOverlay = new GraphicsOverlay();

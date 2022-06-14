@@ -19,6 +19,7 @@ package com.esri.arcgisruntime.sample.picturemarkersymbols;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.concurrent.ExecutionException;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -36,6 +37,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
+import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
@@ -101,23 +103,36 @@ public class MainActivity extends AppCompatActivity {
     //[DocRef: Name=Picture Marker Symbol Drawable-android, Category=Fundamentals, Topic=Symbols and Renderers]
     //Create a picture marker symbol from an app resource
     BitmapDrawable pinStarBlueDrawable = (BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.pin_star_blue);
-    PictureMarkerSymbol pinStarBlueSymbol = new PictureMarkerSymbol(pinStarBlueDrawable);
-    //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
-    //its appearance would then differ across devices with different resolutions.
-    pinStarBlueSymbol.setHeight(40);
-    pinStarBlueSymbol.setWidth(40);
-    //Optionally set the offset, to align the base of the symbol aligns with the point geometry
-    pinStarBlueSymbol.setOffsetY(11); //The image used for the symbol has a transparent buffer around it, so the offset is not simply height/2
-    pinStarBlueSymbol.loadAsync();
-    //[DocRef: END]
-    //add a new graphic with the same location as the initial viewpoint
-    Point pinStarBluePoint = new Point(-226773, 6550477, SpatialReferences.getWebMercator());
-    Graphic pinStarBlueGraphic = new Graphic(pinStarBluePoint, pinStarBlueSymbol);
-    mGraphicsOverlay.getGraphics().add(pinStarBlueGraphic);
+    ListenableFuture<PictureMarkerSymbol> pinStarBlueSymbolFuture = PictureMarkerSymbol.createAsync(pinStarBlueDrawable);
 
-    //see createPictureMarkerSymbolFromFile() method for implementation
-    //first run checks for external storage and permissions,
-    checkSaveResourceToExternalStorage();
+    pinStarBlueSymbolFuture.addDoneListener(() -> {
+
+      try {
+      PictureMarkerSymbol pinStarBlueSymbol = pinStarBlueSymbolFuture.get();
+
+      //Optionally set the size, if not set the image will be auto sized based on its size in pixels,
+      //its appearance would then differ across devices with different resolutions.
+      pinStarBlueSymbol.setHeight(40);
+      pinStarBlueSymbol.setWidth(40);
+      //Optionally set the offset, to align the base of the symbol aligns with the point geometry
+      pinStarBlueSymbol.setOffsetY(11); //The image used for the symbol has a transparent buffer around it, so the offset is not simply height/2
+      pinStarBlueSymbol.loadAsync();
+      //[DocRef: END]
+      //add a new graphic with the same location as the initial viewpoint
+      Point pinStarBluePoint = new Point(-226773, 6550477, SpatialReferences.getWebMercator());
+      Graphic pinStarBlueGraphic = new Graphic(pinStarBluePoint, pinStarBlueSymbol);
+      mGraphicsOverlay.getGraphics().add(pinStarBlueGraphic);
+
+    createPictureMarkerSymbolFromFile();
+
+      } catch (Exception e) {
+        String error = "Error loading picture marker symbol: " + e.getMessage();
+        Log.e(TAG, error);
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+      }
+    });
+
+
 
   }
 
@@ -145,49 +160,6 @@ public class MainActivity extends AppCompatActivity {
     Graphic pinBlankOrangeGraphic = new Graphic(pinBlankOrangePoint, pinBlankOrangeSymbol);
     mGraphicsOverlay.getGraphics().add(pinBlankOrangeGraphic);
 
-  }
-
-  /**
-   * Helper method to save an image which is within this sample as a drawable resource to the sdcard so that it can be
-   * used as the basis of a PictureMarkerSymbol created from a file on disc
-   */
-  private void checkSaveResourceToExternalStorage() {
-
-    //first, check if there is no sdcard
-    if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-      // no mounted disc, cannot proceed
-      return;
-    }
-
-    //Check for required permission of saving to disc, for devices < android 6 this is set in the manifest and should
-    // be granted
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        != PackageManager.PERMISSION_GRANTED) {
-      //no permission, need to task, onRequestPermissionsResult will handle the result
-      ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
-          MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-    } else {
-      //permission granted, proceed
-      //save the orange marker app resource to disk
-      if (saveFileToExternalStorage()) {
-        createPictureMarkerSymbolFromFile();
-      }
-    }
-  }
-
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-    switch (requestCode) {
-      case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE:
-        //If request is cancelled, the result arrays are empty.
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          //permission granted
-          if (saveFileToExternalStorage()) {
-            createPictureMarkerSymbolFromFile();
-          }
-        }
-    }
   }
 
   private boolean saveFileToExternalStorage() {

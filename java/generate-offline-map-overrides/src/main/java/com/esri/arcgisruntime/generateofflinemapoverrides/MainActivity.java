@@ -54,6 +54,8 @@ import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.portal.PortalItem;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
+import com.esri.arcgisruntime.tasks.JobMessageAddedEvent;
+import com.esri.arcgisruntime.tasks.JobMessageAddedListener;
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseParameters;
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateLayerOption;
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapJob;
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
   private GraphicsOverlay mGraphicsOverlay;
   private Graphic mDownloadArea;
   private GenerateOfflineMapParameterOverrides mParameterOverrides;
+  private GenerateOfflineMapJob mGenerateOfflineMapJob;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -316,14 +319,14 @@ public class MainActivity extends AppCompatActivity {
     String tempDirectoryPath = getCacheDir() + File.separator + "offlineMap";
     deleteDirectory(new File(tempDirectoryPath));
     // create an offline map job with the download directory path and parameters and start the job
-    GenerateOfflineMapJob job = offlineMapTask
+    mGenerateOfflineMapJob = offlineMapTask
         .generateOfflineMap(generateOfflineMapParameters, tempDirectoryPath, mParameterOverrides);
     // show the job's progress in a progress dialog
-    showProgressDialog(job);
+    showProgressDialog(mGenerateOfflineMapJob);
     // replace the current map with the result offline map when the job finishes
-    job.addJobDoneListener(() -> {
-      if (job.getStatus() == Job.Status.SUCCEEDED) {
-        GenerateOfflineMapResult result = job.getResult();
+    mGenerateOfflineMapJob.addJobDoneListener(() -> {
+      if (mGenerateOfflineMapJob.getStatus() == Job.Status.SUCCEEDED) {
+        GenerateOfflineMapResult result = mGenerateOfflineMapJob.getResult();
         mMapView.setMap(result.getOfflineMap());
         mGraphicsOverlay.getGraphics().clear();
         mGenerateOfflineMapOverridesButton.setEnabled(false);
@@ -334,8 +337,12 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, error);
       }
     });
+
+    // show job messages in the log
+    mGenerateOfflineMapJob.addJobMessageAddedListener(jobMessageAddedEvent -> Log.i(TAG, jobMessageAddedEvent.getMessage().getMessage()));
+
     // start the job
-    job.start();
+    mGenerateOfflineMapJob.start();
   }
 
   /**
@@ -457,7 +464,7 @@ public class MainActivity extends AppCompatActivity {
     progressDialog.setIndeterminate(false);
     progressDialog.setProgress(0);
     progressDialog.setCanceledOnTouchOutside(false);
-    progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", (dialog, which) -> job.cancel());
+    progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", (dialog, which) -> job.cancelAsync());
     progressDialog.show();
 
     // show the job's progress with the progress dialog
