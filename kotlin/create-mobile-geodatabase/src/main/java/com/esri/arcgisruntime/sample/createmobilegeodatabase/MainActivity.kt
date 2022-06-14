@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         // required to access basemaps and other location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // create a map with the BasemapType topographic
+        // create a map with topographic base map style
         val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
 
         mapView.apply {
@@ -112,14 +112,6 @@ class MainActivity : AppCompatActivity() {
                 }
         }
 
-        mapView.map.addDoneLoadingListener {
-            if (mapView.map.loadStatus == LoadStatus.LOADED)
-            // create the geodatabase file to add features into the feature table
-                createGeodatabase()
-            else
-                showError("Error loading MapView: ${mapView.map.loadError.message}")
-        }
-
         viewTableButton.setOnClickListener {
             // displays table dialog with the values in the feature table
             displayTable()
@@ -128,10 +120,13 @@ class MainActivity : AppCompatActivity() {
         // opens a share-sheet with the "LocationHistory.geodatabase" file
         createButton.setOnClickListener {
             try {
+                // close the mobile geodatabase before sharing
+                geodatabase?.close()
                 val sharingIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "*/*"
                     putExtra(Intent.EXTRA_STREAM, Uri.parse(geodatabase?.path))
                 }
+                // open the Android share sheet with the mobile .geodatabase file
                 startActivity(Intent.createChooser(sharingIntent, "Share using"))
             } catch (e: Exception) {
                 showError("Error sharing file: ${e.message}")
@@ -144,7 +139,9 @@ class MainActivity : AppCompatActivity() {
      * Create and load a new geodatabase file with TableDescription fields
      */
     private fun createGeodatabase() {
-        // define the name of the geodatabase file
+        // define the path and name of the geodatabase file
+        // note: the path defined must be non-empty, available,
+        // allow read/write access, and end in ".geodatabase"
         val file = File(getExternalFilesDir(null)?.path + "/LocationHistory.geodatabase")
         if (file.exists()) file.delete()
 
@@ -171,7 +168,7 @@ class MainActivity : AppCompatActivity() {
                 )
             )
 
-            // set some table properties as not needed for this sample
+            // set any properties not needed to false
             tableDescription.apply {
                 setHasAttachments(false)
                 setHasM(false)
@@ -182,7 +179,7 @@ class MainActivity : AppCompatActivity() {
             val tableFuture = geodatabase?.createTableAsync(tableDescription)
             if (tableFuture != null) {
                 setupMapFromGeodatabase(tableFuture)
-            } else{
+            } else {
                 showError("Error adding FieldDescriptions to the mobile geodatabase")
             }
         }
@@ -287,6 +284,19 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mapView.resume()
+
+        // called on app launch or when Android share sheet is closed
+        mapView.map.addDoneLoadingListener {
+            if (mapView.map.loadStatus == LoadStatus.LOADED) {
+                // clear any feature layers displayed on the map
+                mapView.map.operationalLayers.clear()
+                // create a new geodatabase file to add features into the feature table
+                createGeodatabase()
+            } else {
+                showError("Error loading MapView: ${mapView.map.loadError.message}")
+            }
+        }
+
     }
 
     override fun onDestroy() {
