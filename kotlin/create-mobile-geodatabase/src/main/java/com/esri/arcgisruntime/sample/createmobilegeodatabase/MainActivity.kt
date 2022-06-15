@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity() {
                     GeometryType.POINT
                 )
             // set up the fields to the table,
-            // Field.Type.OID is the primary key of the SQLite
+            // Field.Type.OID is the primary key of the SQLite table
             // Field.Type.DATE is a date column used to store a Calendar date
             // FieldDescriptions can be a SHORT, INTEGER, GUID, FLOAT, DOUBLE, DATE, TEXT, OID, GLOBALID, BLOB, GEOMETRY, RASTER, or XML.
             tableDescription.fieldDescriptions.addAll(
@@ -180,7 +180,7 @@ class MainActivity : AppCompatActivity() {
                 setHasZ(false)
             }
 
-            // add the tableDescriptions to the geodatabase by creating a new table
+            // add a new table to the geodatabase by creating one from the tableDescription
             val tableFuture = geodatabase?.createTableAsync(tableDescription)
             if (tableFuture != null) {
                 setupMapFromGeodatabase(tableFuture)
@@ -196,17 +196,13 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setupMapFromGeodatabase(tableFuture: ListenableFuture<GeodatabaseFeatureTable>) {
         tableFuture.addDoneListener {
-            // find the table with the table name "LocationHistory"
-            val table = geodatabase?.geodatabaseFeatureTables?.first {
-                it.tableName == "LocationHistory"
-            }
+            // get the result of the loaded "LocationHistory" table
+            featureTable = tableFuture.get()
             // create a feature layer for the map using the GeodatabaseFeatureTable
-            val featureLayer = FeatureLayer(table)
+            val featureLayer = FeatureLayer(featureTable)
             mapView.map.operationalLayers.add(featureLayer)
-            featureTable = table
-
             // display the current count of features in the FeatureTable
-            featureCount.text = "Number of features added: $featureTable?.totalFeatureCount"
+            featureCount.text = "Number of features added: ${featureTable?.totalFeatureCount}"
         }
     }
 
@@ -224,20 +220,15 @@ class MainActivity : AppCompatActivity() {
         // add the feature to the feature table
         val addFeatureFuture = featureTable?.addFeatureAsync(feature)
         addFeatureFuture?.addDoneListener {
-            if (featureTable?.loadStatus == LoadStatus.LOADED) {
-                try {
-                    // if feature wasn't added successfully "task.get()" will throw an exception
-                    addFeatureFuture.get()
-                    // feature added successfully, update count
-                    featureCount.text = "Number of features added: $featureTable?.totalFeatureCount"
-                    // enable table button since at least 1 feature loaded on the GeodatabaseFeatureTable
-                    viewTableButton.isEnabled = true
-                } catch (e: Exception) {
-                    showError(e.message.toString())
-                }
-            } else {
-                // error loading the featureTable
-                showError("Error adding feature to table, ${featureTable?.loadError?.message}")
+            try {
+                // if feature wasn't added successfully "addFeatureFuture.get()" will throw an exception
+                addFeatureFuture.get()
+                // feature added successfully, update count
+                featureCount.text = "Number of features added: ${featureTable?.totalFeatureCount}"
+                // enable table button since at least 1 feature loaded on the GeodatabaseFeatureTable
+                viewTableButton.isEnabled = true
+            } catch (e: Exception) {
+                showError(e.message.toString())
             }
         }
     }
@@ -293,6 +284,8 @@ class MainActivity : AppCompatActivity() {
             if (mapView.map.loadStatus == LoadStatus.LOADED) {
                 // clear any feature layers displayed on the map
                 mapView.map.operationalLayers.clear()
+                // disable the button since no features are displayed
+                viewTableButton.isEnabled = false
                 // create a new geodatabase file to add features into the feature table
                 createGeodatabase()
             } else {
