@@ -2,7 +2,7 @@
 
 Create and share a mobile geodatabase.
 
-![Create mobile geodatabase](create-mobile-geodatabase.png) ![View geodatabase table](view-geodatabase-table.png)
+![Create mobile geodatabase](create-mobile-geodatabase.png)
 
 ## Use case
 
