@@ -217,7 +217,7 @@ class MainActivity : AppCompatActivity() {
             setTitle("Generating offline map...")
             // provide a cancel button on the dialog
             setNegativeButton("Cancel") { _, _ ->
-                job.cancel()
+                job.cancelAsync()
             }
             setCancelable(true)
             val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)

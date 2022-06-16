@@ -146,7 +146,7 @@ class MainActivity : AppCompatActivity() {
         resultGraphicsOverlay.graphics.clear()
 
         // cancel any previous job
-        geoprocessingJob?.cancel()
+        geoprocessingJob?.cancelAsync()
 
         // create field with same alias as name
         val field = Field.createString("observer", "", 8)
