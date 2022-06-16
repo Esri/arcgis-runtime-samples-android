@@ -16,25 +16,12 @@
 
 package com.esri.arcgisruntime.sample.picturemarkersymbols;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.concurrent.ExecutionException;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
@@ -52,11 +39,8 @@ import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private final static int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 101;
     MapView mMapView;
     GraphicsOverlay mGraphicsOverlay;
-    String mArcGISTempFolderPath;
-    String mPinBlankOrangeFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
