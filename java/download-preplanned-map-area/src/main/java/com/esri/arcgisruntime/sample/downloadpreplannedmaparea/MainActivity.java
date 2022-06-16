@@ -344,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
    */
   @Override public void onProgressDialogDismiss() {
     if (mDownloadPreplannedOfflineMapJob != null) {
-      mDownloadPreplannedOfflineMapJob.cancelAsync();
+      mDownloadPreplannedOfflineMapJob.cancel();
     }
   }
 

@@ -183,7 +183,7 @@ public class ARNavigateActivity extends AppCompatActivity {
         mHelpLabel.setText(newGuidanceText);
         // read out directions
         mTextToSpeech.stop();
-        mTextToSpeech.speak(newGuidanceText, TextToSpeech.QUEUE_FLUSH, null, newVoiceGuidanceEvent.getSource().toString());
+        mTextToSpeech.speak(newGuidanceText, TextToSpeech.QUEUE_FLUSH, null);
       });
       mRouteTracker
           .addTrackingStatusChangedListener((RouteTracker.TrackingStatusChangedEvent trackingStatusChangedEvent) -> {
