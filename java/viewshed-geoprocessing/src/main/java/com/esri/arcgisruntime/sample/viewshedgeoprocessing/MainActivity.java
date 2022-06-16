@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
     // cancel any previous job
     if (mGeoprocessingJob != null) {
-      mGeoprocessingJob.cancel();
+      mGeoprocessingJob.cancelAsync();
     }
 
     List<Field> fields = new ArrayList<>(1);
