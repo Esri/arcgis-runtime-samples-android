@@ -27,7 +27,6 @@ import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.geometry.GeometryEngine
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.MobileMapPackage
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
@@ -207,7 +206,7 @@ class MainActivity : AppCompatActivity() {
                             return@addJobDoneListener
                         }
                         // get the offline map
-                        downloadPreplannedOfflineMapResult.mobi?.let { offlineMap ->
+                        downloadPreplannedOfflineMapResult.offlineMap?.let { offlineMap ->
                             mapView.apply {
                                 // add it to the map view
                                 map = offlineMap
@@ -239,7 +238,6 @@ class MainActivity : AppCompatActivity() {
                 Log.e(TAG, error)
             }
         }
-        val map = MobileMapPackage()
     }
 
     /**
