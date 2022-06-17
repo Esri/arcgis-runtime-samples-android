@@ -135,10 +135,6 @@ public class MainActivity extends AppCompatActivity {
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     adapter.addAll(getResources().getStringArray(R.array.suggestion_items));
     Spinner spinner = findViewById(R.id.spinner);
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-      // set vertical offset to spinner dropdown for API less than 21
-      spinner.setDropDownVerticalOffset(80);
-    }
     // Apply the adapter to the spinner
     spinner.setAdapter(adapter);
     spinner.setSelection(adapter.getCount());
