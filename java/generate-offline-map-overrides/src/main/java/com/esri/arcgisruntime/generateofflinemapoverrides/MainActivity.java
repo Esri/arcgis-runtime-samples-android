@@ -332,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
         mGenerateOfflineMapOverridesButton.setEnabled(false);
         Toast.makeText(this, "Now displaying offline map.", Toast.LENGTH_LONG).show();
       } else {
-        String error = "Error in generate offline map job: " + job.getError().getAdditionalMessage();
+        String error = "Error in generate offline map job: " + mGenerateOfflineMapJob.getError().getAdditionalMessage();
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         Log.e(TAG, error);
       }
