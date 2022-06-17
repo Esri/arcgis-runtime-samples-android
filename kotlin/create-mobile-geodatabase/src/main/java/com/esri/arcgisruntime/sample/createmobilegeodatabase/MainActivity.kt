@@ -149,7 +149,8 @@ class MainActivity : AppCompatActivity() {
         if (file.exists()) {
             file.delete()
         }
-
+        // close the existing geodatabase
+        geodatabase?.close()
         // create a geodatabase file at the file path
         val geodatabaseFuture = Geodatabase.createAsync(file.path)
         geodatabaseFuture.addDoneListener {
