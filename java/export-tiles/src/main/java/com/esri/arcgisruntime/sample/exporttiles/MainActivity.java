@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
     progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     progressDialog.setCanceledOnTouchOutside(false);
     progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel",
-        (dialogInterface, i) -> exportTileCacheJob.cancel());
+        (dialogInterface, i) -> exportTileCacheJob.cancelAsync());
     progressDialog.show();
 
     exportTileCacheJob.addProgressChangedListener(() -> progressDialog.setProgress(exportTileCacheJob.getProgress()));

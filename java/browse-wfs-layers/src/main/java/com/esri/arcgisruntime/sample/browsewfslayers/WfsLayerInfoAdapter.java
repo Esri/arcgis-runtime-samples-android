@@ -96,7 +96,7 @@ public class WfsLayerInfoAdapter extends RecyclerView.Adapter<WfsLayerInfoAdapte
       mTextView.setText(wfsLayerInfo.getTitle());
 
       itemView.setBackgroundColor(selected ?
-          itemView.getResources().getColor(R.color.adapter_item_Selected_bg) :
+          itemView.getContext().getColor(R.color.adapter_item_Selected_bg) :
           Color.WHITE
       );
 

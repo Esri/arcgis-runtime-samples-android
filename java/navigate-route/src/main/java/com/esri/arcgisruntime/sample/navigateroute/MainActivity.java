@@ -49,6 +49,7 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.LocationDisplay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.navigation.DestinationStatus;
+import com.esri.arcgisruntime.navigation.ReroutingParameters;
 import com.esri.arcgisruntime.navigation.RouteTracker;
 import com.esri.arcgisruntime.navigation.TrackingStatus;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
@@ -181,8 +182,8 @@ public class MainActivity extends AppCompatActivity {
 
     // set up a RouteTracker for navigation along the calculated route
     mRouteTracker = new RouteTracker(getApplicationContext(), routeResult, 0, true);
-    mRouteTracker.enableReroutingAsync(routeTask, routeParameters,
-        RouteTracker.ReroutingStrategy.TO_NEXT_WAYPOINT, true);
+    ReroutingParameters reroutingParameters = new ReroutingParameters(routeTask, routeParameters);
+    mRouteTracker.enableReroutingAsync(reroutingParameters);
 
     // create a route tracker location data source to snap the location display to the route
     RouteTrackerLocationDataSource routeTrackerLocationDataSource = new RouteTrackerLocationDataSource(mRouteTracker, mSimulatedLocationDataSource);
@@ -247,11 +248,7 @@ public class MainActivity extends AppCompatActivity {
    */
   private void speakVoiceGuidance(String voiceGuidanceText) {
     if (mIsTextToSpeechInitialized && !mTextToSpeech.isSpeaking()) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        mTextToSpeech.speak(voiceGuidanceText, TextToSpeech.QUEUE_FLUSH, null, null);
-      } else {
         mTextToSpeech.speak(voiceGuidanceText, TextToSpeech.QUEUE_FLUSH, null);
-      }
     }
   }
 

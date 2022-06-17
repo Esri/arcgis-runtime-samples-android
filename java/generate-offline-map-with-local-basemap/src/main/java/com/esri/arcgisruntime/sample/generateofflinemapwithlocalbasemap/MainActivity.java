@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity
 
     // cancel previous job request
     if (mGenerateOfflineMapJob != null) {
-      mGenerateOfflineMapJob.cancel();
+      mGenerateOfflineMapJob.cancelAsync();
     }
 
     mTakeMapOfflineButton.setEnabled(false);
@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity
   @Override
   public void onProgressDialogDismiss() {
     if (mGenerateOfflineMapJob != null) {
-      mGenerateOfflineMapJob.cancel();
+      mGenerateOfflineMapJob.cancelAsync();
     }
   }
 

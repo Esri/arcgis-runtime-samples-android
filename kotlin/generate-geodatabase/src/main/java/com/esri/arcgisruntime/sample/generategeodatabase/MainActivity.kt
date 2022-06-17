@@ -195,7 +195,7 @@ class MainActivity : AppCompatActivity() {
             setTitle(getString(R.string.progress_fetching))
             // provide a cancel button on the dialog
             setNeutralButton("Cancel") { _, _ ->
-                generateGeodatabaseJob.cancel()
+                generateGeodatabaseJob.cancelAsync()
             }
             setCancelable(false)
             setView(

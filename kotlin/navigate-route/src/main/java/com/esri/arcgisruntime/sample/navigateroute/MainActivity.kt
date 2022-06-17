@@ -40,6 +40,7 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.LocationDisplay
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.navigation.DestinationStatus
+import com.esri.arcgisruntime.navigation.ReroutingParameters
 import com.esri.arcgisruntime.navigation.RouteTracker
 import com.esri.arcgisruntime.navigation.TrackingStatus
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
@@ -222,13 +223,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         // set up a RouteTracker for navigation along the calculated route
+        val reroutingParameters = ReroutingParameters(routeTask, routeParameters)
         val routeTracker = RouteTracker(applicationContext, routeResult, 0, true).apply {
-            enableReroutingAsync(
-                routeTask,
-                routeParameters,
-                RouteTracker.ReroutingStrategy.TO_NEXT_WAYPOINT,
-                true
-            )
+            enableReroutingAsync(reroutingParameters)
         }
 
         // create a route tracker location data source to snap the location display to the route
