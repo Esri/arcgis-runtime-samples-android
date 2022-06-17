@@ -265,6 +265,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Called on app launch or when Android share sheet is closed
+     */
+    private fun resetMap() {
+        mapView.map.addDoneLoadingListener {
+            if (mapView.map.loadStatus == LoadStatus.LOADED) {
+                // clear any feature layers displayed on the map
+                mapView.map.operationalLayers.clear()
+                // disable the button since no features are displayed
+                viewTableButton.isEnabled = false
+                // create a new geodatabase file to add features into the feature table
+                createGeodatabase()
+            } else {
+                showError("Error loading MapView: ${mapView.map.loadError.message}")
+            }
+        }
+    }
+
     private fun showError(message: String?) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         Log.e(TAG, message.toString())
@@ -278,21 +296,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mapView.resume()
-
-        // called on app launch or when Android share sheet is closed
-        mapView.map.addDoneLoadingListener {
-            if (mapView.map.loadStatus == LoadStatus.LOADED) {
-                // clear any feature layers displayed on the map
-                mapView.map.operationalLayers.clear()
-                // disable the button since no features are displayed
-                viewTableButton.isEnabled = false
-                // create a new geodatabase file to add features into the feature table
-                createGeodatabase()
-            } else {
-                showError("Error loading MapView: ${mapView.map.loadError.message}")
-            }
-        }
-
+        resetMap()
     }
 
     override fun onDestroy() {
