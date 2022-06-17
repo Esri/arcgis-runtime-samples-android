@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
         mapView.apply {
             //  create a map with a topographic basemap and set the map to the mapview
-            this.map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+            map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
             setViewpoint(Viewpoint(34.056295, -117.195800, 10000.0))
             // listen for single taps on the map
             onTouchListener =
