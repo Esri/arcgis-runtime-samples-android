@@ -284,7 +284,7 @@ class MainActivity : AppCompatActivity() {
                 is SyncGeodatabaseJob -> setTitle("Syncing geodatabase")
             }
             // provide a cancel button on the dialog
-            setNegativeButton("Cancel") { _, _ -> job.cancel() }
+            setNegativeButton("Cancel") { _, _ -> job.cancelAsync() }
             setCancelable(false)
             val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
             setView(dialogLayoutBinding.root)

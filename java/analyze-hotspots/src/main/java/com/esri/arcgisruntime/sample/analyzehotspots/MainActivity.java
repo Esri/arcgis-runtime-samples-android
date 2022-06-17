@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
   private void analyzeHotspots(final String from, final String to) {
     // cancel previous job request
     if (mGeoprocessingJob != null) {
-      mGeoprocessingJob.cancel();
+      mGeoprocessingJob.cancelAsync();
     }
 
     // a map image layer is generated as a result. Remove any layer previously added to the map
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
           dialog.dismiss();
           // set canceled flag to true
           mIsCanceled = true;
-          mGeoprocessingJob.cancel();
+          mGeoprocessingJob.cancelAsync();
         });
         progressDialog.show();
 

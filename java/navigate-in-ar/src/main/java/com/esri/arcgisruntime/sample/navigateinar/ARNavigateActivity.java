@@ -169,7 +169,7 @@ public class ARNavigateActivity extends AppCompatActivity {
     // start turn-by-turn when the user is ready
     navigateButton.setOnClickListener(v -> {
       // create a route tracker with the route result
-      mRouteTracker = new RouteTracker(this, sRouteResult, 0);
+      mRouteTracker = new RouteTracker(this, sRouteResult, 0, true);
       // initialize text-to-speech to play navigation voice guidance
       mTextToSpeech = new TextToSpeech(this, status -> {
         if (status != TextToSpeech.ERROR) {

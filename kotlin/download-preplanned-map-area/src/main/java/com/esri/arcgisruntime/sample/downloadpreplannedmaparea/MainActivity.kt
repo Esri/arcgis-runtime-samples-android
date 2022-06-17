@@ -360,7 +360,7 @@ class MainActivity : AppCompatActivity() {
             setTitle("Download preplanned offline map")
             // provide a cancel button on the dialog
             setNegativeButton("Cancel") { _, _ ->
-                downloadPreplannedOfflineMapJob.cancel()
+                downloadPreplannedOfflineMapJob.cancelAsync()
             }
             setCancelable(false)
             val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)

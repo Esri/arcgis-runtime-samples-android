@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/cell_shape">
+
+    <TextView
+        android:id="@+id/oid"
+        android:padding="10dp"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/collectionTimestamp"
+        android:padding="10dp"
+        android:textSize="15sp" />
+</TableRow>

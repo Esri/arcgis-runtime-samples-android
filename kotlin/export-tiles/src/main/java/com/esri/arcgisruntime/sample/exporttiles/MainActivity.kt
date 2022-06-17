@@ -267,7 +267,7 @@ class MainActivity : AppCompatActivity() {
             setTitle("Exporting tiles...")
             // provide a cancel button on the dialog
             setNeutralButton("Cancel") { _, _ ->
-                exportTileCacheJob.cancel()
+                exportTileCacheJob.cancelAsync()
             }
             setCancelable(false)
             val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)

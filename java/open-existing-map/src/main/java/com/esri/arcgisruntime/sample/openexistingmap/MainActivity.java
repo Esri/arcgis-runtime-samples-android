@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     // enable draw indicator
     mDrawerToggle.setDrawerIndicatorEnabled(true);
     // attach toggle to drawer layout
-    mDrawerLayout.setDrawerListener(mDrawerToggle);
+    mDrawerLayout.addDrawerListener(mDrawerToggle);
   }
 
   @Override

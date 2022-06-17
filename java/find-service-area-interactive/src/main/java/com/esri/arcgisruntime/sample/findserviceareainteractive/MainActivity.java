@@ -112,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
 
     SimpleLineSymbol barrierLine = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 3.0f);
     ArrayList<SimpleFillSymbol> fillSymbols = new ArrayList<>();
-    fillSymbols.add(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, getResources().getColor(R.color.colorTransparentRed), null));
-    fillSymbols.add(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, getResources().getColor(R.color.colorTransparentOrange), null));
+    fillSymbols.add(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, getColor(R.color.colorTransparentRed), null));
+    fillSymbols.add(new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, getColor(R.color.colorTransparentOrange), null));
 
     // icon used to display facilities to map view
     PictureMarkerSymbol facilitySymbol = new PictureMarkerSymbol(getString(R.string.hospital_icon_url));
