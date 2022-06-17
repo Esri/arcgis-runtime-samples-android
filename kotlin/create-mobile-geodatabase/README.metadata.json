@@ -1,0 +1,39 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "Create and share a mobile geodatabase.",
+    "formal_name": "CreateMobileGeodatabase",
+    "ignore": false,
+    "images": [
+        "create-mobile-geodatabase.png"
+    ],
+    "keywords": [
+        "arcgis pro",
+        "database",
+        "feature",
+        "feature table",
+        "geodatabase",
+        "mobile geodatabase",
+        "sqlite",
+        "ArcGISFeature",
+        "FeatureLayer",
+        "FeatureTable",
+        "FieldDescription",
+        "Geodatabase",
+        "GeodatabaseFeatureTable",
+        "TableDescription"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "ArcGISFeature",
+        "FeatureLayer",
+        "FeatureTable",
+        "FieldDescription",
+        "Geodatabase",
+        "GeodatabaseFeatureTable",
+        "TableDescription"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/createmobilegeodatabase/MainActivity.kt"
+    ],
+    "title": "Create mobile geodatabase"
+}

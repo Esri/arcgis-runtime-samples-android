@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Create mobile geodatabase</string>
+    <string name="number_of_features_added">Number of features added: </string>
+    <string name="share_mobile_geodatabase">Create and share mobile geodatabase</string>
+    <string name="view_table">View table</string>
+    <string name="attribut_table_hint">Attribute table loaded from the Mobile Geodatabase file. File can be loaded on ArcGIS Pro or ArcGIS Runtime</string>
+    <string name="file_provider_package">com.esri.arcgisruntime.fileprovider</string>
+</resources>
