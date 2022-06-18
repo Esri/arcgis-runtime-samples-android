@@ -3,7 +3,7 @@ ext {
     compileSdkVersion = 31
     minSdkVersion = 23
     targetSdkVersion = 31
-    versionCode = 1001411
+    versionCode = 10014110
     versionName = '100.14.1.1'
     // library versions
     kotlinVersion = '1.5.20'
