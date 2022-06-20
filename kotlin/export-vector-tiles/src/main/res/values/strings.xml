@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Export vector tiles</string>
+    <string name="export_vector_tiles">Export Vector Tiles</string>
+    <string name="vector_tile_cache_folder">/TileCache/</string>
+</resources>
