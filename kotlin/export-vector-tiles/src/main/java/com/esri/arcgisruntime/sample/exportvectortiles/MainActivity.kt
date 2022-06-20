@@ -18,12 +18,10 @@ package com.esri.arcgisruntime.sample.exportvectortiles
 
 import android.app.AlertDialog
 import android.graphics.Color
-import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -31,10 +29,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.geometry.Envelope
-import com.esri.arcgisruntime.layers.ArcGISTiledLayer
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
-import com.esri.arcgisruntime.mapping.*
+import com.esri.arcgisruntime.mapping.ArcGISMap
+import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
@@ -96,63 +96,77 @@ class MainActivity : AppCompatActivity() {
         // location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // create a map with the BasemapType topographic
-        val map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
 
-        // create a graphic to show a red outline square around the tiles to be downloaded
-        downloadArea = Graphic()
-        downloadArea?.symbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2F)
-        val graphicsOverlay = GraphicsOverlay()
-        graphicsOverlay.graphics.add(downloadArea)
-
-        // set the map to be displayed in the layout's MapView
-        mapView.map = map
-        mapView.setViewpoint(Viewpoint(34.056295, -117.195800, 10000.0))
-        // add the graphics overlay to the MapView
-        mapView.graphicsOverlays.add(graphicsOverlay)
-
-        // update the square whenever the viewpoint changes
-        mapView.addViewpointChangedListener {
-            updateDownloadAreaGeometry()
+        // create a graphic to show a red outline square around the vector tiles to be downloaded
+        downloadArea = Graphic().apply {
+            symbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2F)
+        }
+        // create a graphic overlay and add the downloadArea graphic
+        val graphicsOverlay = GraphicsOverlay().apply {
+            graphics.add(downloadArea)
         }
 
-        // when the map has loaded, create a vector tiled layer from it and export tiles
-        mapView.map.addDoneLoadingListener {
-            if (map.loadStatus == LoadStatus.LOADED) {
-                // check that the layer from the basemap is a vector tiled layer
-                val vectorTiledLayer = map.basemap.baseLayers[0] as ArcGISVectorTiledLayer
-                // when the button is clicked, export the tiles to a temporary file
-                exportVectorTilesButton.setOnClickListener {
-                    updateDownloadAreaGeometry()
-                    // create a new export vector tiles task
-                    val exportVectorTilesTask = ExportVectorTilesTask(vectorTiledLayer.uri)
-                    // the max scale parameter is set to 10% of the map's scale to limit the
-                    // number of tiles exported to within the vector tiled layer's max tile export limit
-                    val exportVectorTilesParametersFuture = exportVectorTilesTask
-                        .createDefaultExportVectorTilesParametersAsync(
-                            downloadArea?.geometry,
-                            mapView.mapScale * 0.1
-                        )
+        mapView.apply {
+            // set the map to BasemapType navigation night
+            map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
+            // set the viewpoint of the sample to ESRI Redlands, CA campus
+            setViewpoint(Viewpoint(34.056295, -117.195800, 100000.0))
+            // add the graphics overlay to the MapView
+            graphicsOverlays.add(graphicsOverlay)
 
-                    exportVectorTilesParametersFuture.addDoneListener {
-                        try {
-                            val exportVectorTilesParameters =
-                                exportVectorTilesParametersFuture.get()
+            // update the square whenever the viewpoint changes
+            addViewpointChangedListener {
+                updateDownloadAreaGeometry()
+            }
 
-                            handleExportVectorTiles(
-                                exportVectorTilesParameters,
-                                exportVectorTilesTask
-                            )
-                        } catch (e: Exception) {
-
-                        }
-                    }
+            // when the map has loaded, create a vector tiled layer from it and export tiles
+            map.addDoneLoadingListener {
+                if (map.loadStatus == LoadStatus.LOADED) {
+                    // check that the layer from the basemap is a vector tiled layer
+                    val vectorTiledLayer = map.basemap.baseLayers[0] as ArcGISVectorTiledLayer
+                    handleExportButton(vectorTiledLayer)
+                } else{
+                    showError(map.loadError.message.toString())
                 }
             }
         }
     }
 
-    private fun handleExportVectorTiles(
+    /**
+     * Sets up the ExportVectorTilesTask using the [vectorTiledLayer]
+     * on export button click. Then call handleExportVectorTilesJob()
+     */
+    private fun handleExportButton(vectorTiledLayer: ArcGISVectorTiledLayer) {
+        exportVectorTilesButton.setOnClickListener {
+            // update the download area's geometry using current viewpoint
+            updateDownloadAreaGeometry()
+            // create a new export vector tiles task
+            val exportVectorTilesTask = ExportVectorTilesTask(vectorTiledLayer.uri)
+            // the max scale parameter is set to 10% of the map's scale to limit the
+            // number of tiles exported to within the vector tiled layer's max tile export limit
+            val exportVectorTilesParametersFuture = exportVectorTilesTask
+                .createDefaultExportVectorTilesParametersAsync(
+                    downloadArea?.geometry,
+                    mapView.mapScale * 0.1
+                )
+
+            exportVectorTilesParametersFuture.addDoneListener {
+                try {
+                    val exportVectorTilesParameters =
+                        exportVectorTilesParametersFuture.get()
+
+                    handleExportVectorTilesJob(
+                        exportVectorTilesParameters,
+                        exportVectorTilesTask
+                    )
+                } catch (e: Exception) {
+                    showError(e.message.toString())
+                }
+            }
+        }
+    }
+
+    private fun handleExportVectorTilesJob(
         exportVectorTilesParameters: ExportVectorTilesParameters,
         exportVectorTilesTask: ExportVectorTilesTask
     ) {
@@ -279,6 +293,11 @@ class MainActivity : AppCompatActivity() {
         downloadArea?.isVisible = true
         // required for some Android devices running older OS (combats Z-ordering bug in Android API)
         mapView.bringToFront()
+    }
+
+    private fun showError(message: String){
+        Log.e(TAG,message)
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onPause() {
