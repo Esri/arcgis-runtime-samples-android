@@ -16,26 +16,34 @@
 
 package com.esri.arcgisruntime.sample.exportvectortiles
 
+import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
+import com.esri.arcgisruntime.concurrent.Job
 import com.esri.arcgisruntime.geometry.Envelope
+import com.esri.arcgisruntime.layers.ArcGISTiledLayer
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
-import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.BasemapStyle
-import com.esri.arcgisruntime.mapping.ItemResourceCache
-import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.*
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.exportvectortiles.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.exportvectortiles.databinding.ProgressDialogLayoutBinding
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
+import com.esri.arcgisruntime.tasks.vectortilecache.ExportVectorTilesJob
+import com.esri.arcgisruntime.tasks.vectortilecache.ExportVectorTilesParameters
+import com.esri.arcgisruntime.tasks.vectortilecache.ExportVectorTilesResult
 import com.esri.arcgisruntime.tasks.vectortilecache.ExportVectorTilesTask
 import java.io.File
 
@@ -43,6 +51,10 @@ import java.io.File
 class MainActivity : AppCompatActivity() {
 
     private val TAG = MainActivity::class.java.simpleName
+
+    private var downloadArea: Graphic? = null
+    private var exportVectorTilesJob: ExportVectorTilesJob? = null
+    private var dialog: AlertDialog? = null
 
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -52,12 +64,28 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.mapView
     }
 
+    private val mapPreviewLayout: ConstraintLayout by lazy {
+        activityMainBinding.mapPreviewLayout
+    }
+
     private val exportVectorTilesButton: Button by lazy {
         activityMainBinding.exportVectorTilesButton
     }
 
-    private val progressBar: ProgressBar by lazy {
-        activityMainBinding.progressBar
+    private val previewMapView: MapView by lazy {
+        activityMainBinding.previewMapView
+    }
+
+    private val dimBackground: View by lazy {
+        activityMainBinding.dimBackground
+    }
+
+    private val closeButton: Button by lazy {
+        activityMainBinding.closeButton
+    }
+
+    private val previewTextView: TextView by lazy {
+        activityMainBinding.previewTextView
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,105 +99,186 @@ class MainActivity : AppCompatActivity() {
         // create a map with the BasemapType topographic
         val map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
 
+        // create a graphic to show a red outline square around the tiles to be downloaded
+        downloadArea = Graphic()
+        downloadArea?.symbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2F)
+        val graphicsOverlay = GraphicsOverlay()
+        graphicsOverlay.graphics.add(downloadArea)
+
         // set the map to be displayed in the layout's MapView
         mapView.map = map
-
         mapView.setViewpoint(Viewpoint(34.056295, -117.195800, 10000.0))
-
-        // create a graphics overlay for the map view
-        val graphicsOverlay = GraphicsOverlay()
+        // add the graphics overlay to the MapView
         mapView.graphicsOverlays.add(graphicsOverlay)
-
-        // create a graphic to show a red outline square around the tiles to be downloaded
-        val downloadArea = Graphic()
-        graphicsOverlay.graphics.add(downloadArea)
-        val simpleLineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2F)
-        downloadArea.symbol = simpleLineSymbol
 
         // update the square whenever the viewpoint changes
         mapView.addViewpointChangedListener {
-            if (map.loadStatus == LoadStatus.LOADED) {
-                // upper left corner of the downloaded tile cache area
-                val minScreenPoint = Point(50, 50)
-                // lower right corner of the downloaded tile cache area
-                val maxScreenPoint = Point(mapView.width - 100, mapView.height - 100)
-                // convert screen points to map points
-                val minPoint = mapView.screenToLocation(minScreenPoint)
-                val maxPoint = mapView.screenToLocation(maxScreenPoint)
-                // use the points to define and return an envelope
-                if (minPoint != null && maxPoint != null) {
-                    val envelope = Envelope(minPoint, maxPoint)
-                    downloadArea.geometry = envelope
-                }
-            }
+            updateDownloadAreaGeometry()
         }
 
         // when the map has loaded, create a vector tiled layer from it and export tiles
         mapView.map.addDoneLoadingListener {
             if (map.loadStatus == LoadStatus.LOADED) {
-                // enable the export tiles button
-                exportVectorTilesButton.isEnabled = true
                 // check that the layer from the basemap is a vector tiled layer
-                val layer = map.basemap.baseLayers[0]
-                if (layer is ArcGISVectorTiledLayer) {
-                    val vectorTiledLayer: ArcGISVectorTiledLayer = layer
+                val vectorTiledLayer = map.basemap.baseLayers[0] as ArcGISVectorTiledLayer
+                // when the button is clicked, export the tiles to a temporary file
+                exportVectorTilesButton.setOnClickListener {
+                    updateDownloadAreaGeometry()
+                    // create a new export vector tiles task
+                    val exportVectorTilesTask = ExportVectorTilesTask(vectorTiledLayer.uri)
+                    // the max scale parameter is set to 10% of the map's scale to limit the
+                    // number of tiles exported to within the vector tiled layer's max tile export limit
+                    val exportVectorTilesParametersFuture = exportVectorTilesTask
+                        .createDefaultExportVectorTilesParametersAsync(
+                            downloadArea?.geometry,
+                            mapView.mapScale * 0.1
+                        )
 
-                    // when the button is clicked, export the tiles to a temporary file
-                    exportVectorTilesButton.setOnClickListener {
-                        exportVectorTilesButton.isEnabled = false
-                        progressBar.visibility = View.VISIBLE
+                    exportVectorTilesParametersFuture.addDoneListener {
+                        try {
+                            val exportVectorTilesParameters =
+                                exportVectorTilesParametersFuture.get()
 
-                        // create a new export vector tiles task
-                        val exportVectorTilesTask = ExportVectorTilesTask(vectorTiledLayer.uri)
-                        // the max scale parameter is set to 10% of the map's scale to limit the
-                        // number of tiles exported to within the vector tiled layer's max tile export limit
-                        val exportVectorTilesParametersFuture = exportVectorTilesTask
-                            .createDefaultExportVectorTilesParametersAsync(
-                                downloadArea.geometry,
-                                mapView.mapScale * 0.1
+                            handleExportVectorTiles(
+                                exportVectorTilesParameters,
+                                exportVectorTilesTask
                             )
+                        } catch (e: Exception) {
 
-                        exportVectorTilesParametersFuture.addDoneListener {
-                            try {
-                                val exportVectorTilesParameters =
-                                    exportVectorTilesParametersFuture.get()
-                                // create a temporary directory in the app's cache for saving exported tiles
-                                val exportTilesDirectory =
-                                    File(
-                                        externalCacheDir,
-                                        getString(R.string.vector_tile_cache_folder)
-                                    )
-                                // create a job with the parameters
-                                val exportVectorTilesJob = exportVectorTilesTask.exportVectorTiles(
-                                    exportVectorTilesParameters,
-                                    exportTilesDirectory.path + "file.vtpk"
-                                ).apply {
-                                    // start the export vector tile cache job
-                                    start()
-                                    addProgressChangedListener {
-                                        progressBar.progress = progress
-                                    }
-                                    addJobDoneListener {
-                                        // show preview of exported tiles in alert
-                                        val tileCache = result.vectorTileCache
-                                        val resourceCache: ItemResourceCache =
-                                            result.itemResourceCache
-
-                                        // reset the UI
-                                        progressBar.visibility = View.GONE
-                                        progressBar.progress = 0
-                                        exportVectorTilesButton.isEnabled = false
-                                    }
-
-                                }
-                            } catch (e: Exception) {
-
-                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun handleExportVectorTiles(
+        exportVectorTilesParameters: ExportVectorTilesParameters,
+        exportVectorTilesTask: ExportVectorTilesTask
+    ) {
+        // create a temporary directory in the app's cache for saving exported tiles
+        val exportTilesDirectory =
+            File(
+                externalCacheDir,
+                getString(R.string.vector_tile_cache_folder)
+            )
+        // create a job with the parameters
+        exportVectorTilesJob = exportVectorTilesTask.exportVectorTiles(
+            exportVectorTilesParameters,
+            exportTilesDirectory.path + "file.vtpk"
+        ).apply {
+            val dialogLayoutBinding = createProgressDialog()
+            // start the export vector tile cache job
+            start()
+            dialog?.show()
+
+            addProgressChangedListener {
+                dialogLayoutBinding.progressBar.progress = progress
+                dialogLayoutBinding.progressTextView.text = "$progress% completed"
+            }
+
+            addJobDoneListener {
+                dialog?.dismiss()
+                if (status == Job.Status.SUCCEEDED) {
+                    showMapPreview(result)
+                } else {
+                    Toast.makeText(this@MainActivity, error.additionalMessage, Toast.LENGTH_LONG)
+                        .show()
+                    Log.e(TAG, error.additionalMessage)
+                }
+            }
+        }
+    }
+
+    /**
+     * Updates the [downloadArea]'s geometry on ViewPoint change
+     * or when export tiles is clicked.
+     */
+    private fun updateDownloadAreaGeometry() {
+        try {
+            mapView.apply {
+                if (mapView.map.loadStatus == LoadStatus.LOADED) {
+                    // upper left corner of the downloaded tile cache area
+                    val minScreenPoint: android.graphics.Point = android.graphics.Point(150, 175)
+                    // lower right corner of the downloaded tile cache area
+                    val maxScreenPoint: android.graphics.Point = android.graphics.Point(
+                        mapView.width - 150,
+                        mapView.height - 250
+                    )
+                    // convert screen points to map points
+                    val minPoint: com.esri.arcgisruntime.geometry.Point =
+                        mapView.screenToLocation(minScreenPoint)
+                    val maxPoint: com.esri.arcgisruntime.geometry.Point =
+                        mapView.screenToLocation(maxScreenPoint)
+                    // use the points to define and return an envelope
+                    downloadArea?.geometry = Envelope(minPoint, maxPoint)
+                }
+            }
+        } catch (e: Exception) {
+            // Silently fail, since mapView has not been rendered yet.
+        }
+    }
+
+    private fun showMapPreview(vectorTilesResult: ExportVectorTilesResult?) {
+        // set up the preview map view
+        previewMapView.apply {
+            map = ArcGISMap(Basemap(ArcGISVectorTiledLayer(vectorTilesResult?.vectorTileCache)))
+            setViewpoint(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE))
+        }
+        // control UI visibility
+        previewMapView.getChildAt(0).visibility = View.VISIBLE
+        show(closeButton, dimBackground, previewTextView, previewMapView)
+        exportVectorTilesButton.visibility = View.GONE
+
+        // required for some Android devices running older OS (combats Z-ordering bug in Android API)
+        mapPreviewLayout.bringToFront()
+    }
+
+    /**
+     * Create a progress dialog to track the progress of the [exportVectorTilesJob]
+     */
+    private fun createProgressDialog(): ProgressDialogLayoutBinding {
+        val dialogLayoutBinding = ProgressDialogLayoutBinding.inflate(layoutInflater)
+        val dialogBuilder = AlertDialog.Builder(this@MainActivity).apply {
+            setTitle("Exporting vector tiles")
+            setNegativeButton("Cancel job") { _, _ ->
+                exportVectorTilesJob?.cancelAsync()
+            }
+            setCancelable(false)
+            setView(dialogLayoutBinding.root)
+        }
+        dialog = dialogBuilder.create()
+        return dialogLayoutBinding
+    }
+
+    /**
+     * Makes the given views in the UI visible.
+     * @param views the views to be made visible
+     */
+    private fun show(vararg views: View) {
+        for (view in views) {
+            view.visibility = View.VISIBLE
+        }
+    }
+
+    /**
+     * Makes the given views in the UI visible.
+     * @param views the views to be made visible
+     */
+    private fun hide(vararg views: View) {
+        for (view in views) {
+            view.visibility = View.INVISIBLE
+        }
+    }
+
+    fun clearPreview(view: View) {
+        previewMapView.getChildAt(0).visibility = View.INVISIBLE
+        hide(closeButton, dimBackground, previewTextView, previewMapView)
+        // control UI visibility
+        show(exportVectorTilesButton, mapView)
+        downloadArea?.isVisible = true
+        // required for some Android devices running older OS (combats Z-ordering bug in Android API)
+        mapView.bringToFront()
     }
 
     override fun onPause() {

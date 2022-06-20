@@ -2,4 +2,6 @@
     <string name="app_name">Export vector tiles</string>
     <string name="export_vector_tiles">Export Vector Tiles</string>
     <string name="vector_tile_cache_folder">/TileCache/</string>
+    <string name="preview_text">Preview</string>
+    <string name="close_button_text">Close</string>
 </resources>
