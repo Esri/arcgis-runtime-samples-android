@@ -152,9 +152,11 @@ class MainActivity : AppCompatActivity() {
 
             exportVectorTilesParametersFuture.addDoneListener {
                 try {
+                    // get the loaded export vector tile parameters
                     val exportVectorTilesParameters =
                         exportVectorTilesParametersFuture.get()
 
+                    // create a job to export vector tiles
                     handleExportVectorTilesJob(
                         exportVectorTilesParameters,
                         exportVectorTilesTask
@@ -166,6 +168,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Start the export vector tiles job using [exportVectorTilesTask] and the
+     * [exportVectorTilesParameters]. The vector tile package is exported as "file.vtpk"
+     */
     private fun handleExportVectorTilesJob(
         exportVectorTilesParameters: ExportVectorTilesParameters,
         exportVectorTilesTask: ExportVectorTilesTask
@@ -177,28 +183,30 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.vector_tile_cache_folder)
             )
         // create a job with the parameters
+        // and exports the vector tile package as "file.vtpk"
         exportVectorTilesJob = exportVectorTilesTask.exportVectorTiles(
             exportVectorTilesParameters,
             exportTilesDirectory.path + "file.vtpk"
         ).apply {
+            // inflate the progress dialog
             val dialogLayoutBinding = createProgressDialog()
             // start the export vector tile cache job
             start()
+            // display the progress dialog
             dialog?.show()
-
+            // update the dialog using the progress of the job
             addProgressChangedListener {
                 dialogLayoutBinding.progressBar.progress = progress
                 dialogLayoutBinding.progressTextView.text = "$progress% completed"
             }
-
+            // on job done loading
             addJobDoneListener {
                 dialog?.dismiss()
                 if (status == Job.Status.SUCCEEDED) {
+                    // display the map preview using the result from the completed job
                     showMapPreview(result)
                 } else {
-                    Toast.makeText(this@MainActivity, error.additionalMessage, Toast.LENGTH_LONG)
-                        .show()
-                    Log.e(TAG, error.additionalMessage)
+                    showError(error.message.toString())
                 }
             }
         }
@@ -233,8 +241,30 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Create a progress dialog to track the progress of the [exportVectorTilesJob]
+     */
+    private fun createProgressDialog(): ProgressDialogLayoutBinding {
+        val dialogLayoutBinding = ProgressDialogLayoutBinding.inflate(layoutInflater)
+        val dialogBuilder = AlertDialog.Builder(this@MainActivity).apply {
+            setTitle("Exporting vector tiles")
+            setNegativeButton("Cancel job") { _, _ ->
+                // cancels the export job asynchronously
+                exportVectorTilesJob?.cancelAsync()
+            }
+            setCancelable(false)
+            setView(dialogLayoutBinding.root)
+        }
+        dialog = dialogBuilder.create()
+        return dialogLayoutBinding
+    }
+
+    /**
+     * Display the preview of the exported map using the
+     * [vectorTilesResult] from the completed job
+     */
     private fun showMapPreview(vectorTilesResult: ExportVectorTilesResult?) {
-        // set up the preview map view
+        // set up the preview MapView
         previewMapView.apply {
             map = ArcGISMap(Basemap(ArcGISVectorTiledLayer(vectorTilesResult?.vectorTileCache)))
             setViewpoint(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE))
@@ -246,23 +276,6 @@ class MainActivity : AppCompatActivity() {
 
         // required for some Android devices running older OS (combats Z-ordering bug in Android API)
         mapPreviewLayout.bringToFront()
-    }
-
-    /**
-     * Create a progress dialog to track the progress of the [exportVectorTilesJob]
-     */
-    private fun createProgressDialog(): ProgressDialogLayoutBinding {
-        val dialogLayoutBinding = ProgressDialogLayoutBinding.inflate(layoutInflater)
-        val dialogBuilder = AlertDialog.Builder(this@MainActivity).apply {
-            setTitle("Exporting vector tiles")
-            setNegativeButton("Cancel job") { _, _ ->
-                exportVectorTilesJob?.cancelAsync()
-            }
-            setCancelable(false)
-            setView(dialogLayoutBinding.root)
-        }
-        dialog = dialogBuilder.create()
-        return dialogLayoutBinding
     }
 
     /**
@@ -285,10 +298,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Called when close preview MapView is clicked
+     */
     fun clearPreview(view: View) {
-        previewMapView.getChildAt(0).visibility = View.INVISIBLE
-        hide(closeButton, dimBackground, previewTextView, previewMapView)
         // control UI visibility
+        hide(closeButton, dimBackground, previewTextView, previewMapView)
         show(exportVectorTilesButton, mapView)
         downloadArea?.isVisible = true
         // required for some Android devices running older OS (combats Z-ordering bug in Android API)
