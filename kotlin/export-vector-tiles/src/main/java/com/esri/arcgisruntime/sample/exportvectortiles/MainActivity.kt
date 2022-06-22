@@ -109,6 +109,8 @@ class MainActivity : AppCompatActivity() {
         mapView.apply {
             // set the map to BasemapType navigation night
             map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
+            // disable rotation
+            rotation = 0F
             // set the viewpoint of the sample to ESRI Redlands, CA campus
             setViewpoint(Viewpoint(34.056295, -117.195800, 100000.0))
             // add the graphics overlay to the MapView
@@ -125,7 +127,7 @@ class MainActivity : AppCompatActivity() {
                     // check that the layer from the basemap is a vector tiled layer
                     val vectorTiledLayer = map.basemap.baseLayers[0] as ArcGISVectorTiledLayer
                     handleExportButton(vectorTiledLayer)
-                } else{
+                } else {
                     showError(map.loadError.message.toString())
                 }
             }
@@ -176,17 +178,17 @@ class MainActivity : AppCompatActivity() {
         exportVectorTilesParameters: ExportVectorTilesParameters,
         exportVectorTilesTask: ExportVectorTilesTask
     ) {
-        // create a temporary directory in the app's cache for saving exported tiles
-        val exportTilesDirectory =
-            File(
-                externalCacheDir,
-                getString(R.string.vector_tile_cache_folder)
-            )
+        // create a .vtpk and directory in the app's cache for saving exported tiles
+        val vtpkFile = File(externalCacheDir, "/myVectorTiles.vtpk")
+        val resDir = File(externalCacheDir, "/StyleItemResources")
+        vtpkFile.deleteOnExit()
+        resDir.deleteOnExit()
+
         // create a job with the parameters
         // and exports the vector tile package as "file.vtpk"
         exportVectorTilesJob = exportVectorTilesTask.exportVectorTiles(
             exportVectorTilesParameters,
-            exportTilesDirectory.path + "file.vtpk"
+            vtpkFile.absolutePath, resDir.absolutePath
         ).apply {
             // inflate the progress dialog
             val dialogLayoutBinding = createProgressDialog()
@@ -264,9 +266,14 @@ class MainActivity : AppCompatActivity() {
      * [vectorTilesResult] from the completed job
      */
     private fun showMapPreview(vectorTilesResult: ExportVectorTilesResult?) {
+        // get the layer exported for the preview MapView
+        val vectorTiledLayer = ArcGISVectorTiledLayer(
+            vectorTilesResult?.vectorTileCache,
+            vectorTilesResult?.itemResourceCache
+        )
         // set up the preview MapView
         previewMapView.apply {
-            map = ArcGISMap(Basemap(ArcGISVectorTiledLayer(vectorTilesResult?.vectorTileCache)))
+            map = ArcGISMap(Basemap(vectorTiledLayer))
             setViewpoint(mapView.getCurrentViewpoint(Viewpoint.Type.CENTER_AND_SCALE))
         }
         // control UI visibility
@@ -310,8 +317,8 @@ class MainActivity : AppCompatActivity() {
         mapView.bringToFront()
     }
 
-    private fun showError(message: String){
-        Log.e(TAG,message)
+    private fun showError(message: String) {
+        Log.e(TAG, message)
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
