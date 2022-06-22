@@ -2,7 +2,7 @@
 
 Export tiles from an online vector tile service.
 
-![Image of export vector tiles](ExportVectorTiles.png)
+![Image of export vector tiles](export-vector-tiles.png)
 
 ## Use case
 
