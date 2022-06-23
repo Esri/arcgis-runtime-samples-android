@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
 
         mapView.apply {
             // set the map to BasemapType navigation night
-            map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION_NIGHT)
+            map = ArcGISMap(BasemapStyle.ARCGIS_STREETS_NIGHT)
             // disable rotation
             rotation = 0F
             // set the viewpoint of the sample to ESRI Redlands, CA campus
@@ -179,10 +179,10 @@ class MainActivity : AppCompatActivity() {
         exportVectorTilesTask: ExportVectorTilesTask
     ) {
         // create a .vtpk and directory in the app's cache for saving exported tiles
-        val vtpkFile = File(externalCacheDir, "/myVectorTiles.vtpk")
+        val vtpkFile = File(externalCacheDir, "/StyleItemResources/myVectorTiles.vtpk")
         val resDir = File(externalCacheDir, "/StyleItemResources")
-        vtpkFile.deleteOnExit()
-        resDir.deleteOnExit()
+        resDir.deleteRecursively()
+        resDir.mkdir()
 
         // create a job with the parameters
         // and exports the vector tile package as "file.vtpk"
