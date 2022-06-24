@@ -140,11 +140,12 @@ class MainActivity : AppCompatActivity() {
                 resultFuture.addDoneListener {
                     // get the result as an ArcadeEvaluationResult
                     val arcadeEvaluationResult = resultFuture.get() as ArcadeEvaluationResult
+                    val crimesCount = (arcadeEvaluationResult.result as Double).toInt()
                     // set the callout content on the map using the arcade evaluation result
                     val calloutContent = TextView(applicationContext).apply {
                         setTextColor(Color.BLACK)
                         setSingleLine()
-                        text = "Crimes in the last 60 days: ${arcadeEvaluationResult.result}"
+                        text = "Crimes in the last 60 days: $crimesCount"
                     }
                     // convert the screen point to a map point
                     val mapPoint = mapView.screenToLocation(tappedPoint)
