@@ -16,12 +16,14 @@
 
 package com.esri.arcgisruntime.sample.queryfeatureswitharcadeexpression
 
+import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.arcade.ArcadeEvaluationResult
@@ -43,10 +45,12 @@ import kotlin.math.roundToInt
 class MainActivity : AppCompatActivity() {
 
     private val TAG = MainActivity::class.java.simpleName
+
     // hold a reference to the layer for use in event handlers
     private var layer: Layer? = null
+
     // hold a reference to the feature for use in event handlers
-    private var previousFeature: ArcGISFeature?= null
+    private var previousFeature: ArcGISFeature? = null
 
 
     private val activityMainBinding by lazy {
@@ -68,71 +72,102 @@ class MainActivity : AppCompatActivity() {
         // load the portal and create a map from the portal item
         val portal = Portal("https://www.arcgis.com/", false)
         val portalItem = PortalItem(portal, "14562fced3474190b52d315bc19127f6")
-        val map = ArcGISMap(portalItem)
 
-
-        // set the map to be displayed in the layout's MapView
-        mapView.map = map
-
-        mapView.map.addDoneLoadingListener {
-            if(mapView.map.loadStatus == LoadStatus.LOADED){
-                // Set the visibility of all but the RDT Beats layer to false to avoid cluttering the UI
-                mapView.map.operationalLayers.forEach { layer ->
-                    layer.isVisible = layer.name == "RPD Beats  - City_Beats_Border_1128-4500"
+        mapView.apply {
+            // set the map to be displayed in the layout's MapView
+            map = ArcGISMap(portalItem)
+            // set the RPD Beats layer to be visible when map is loaded
+            map.addDoneLoadingListener {
+                if (map.loadStatus == LoadStatus.LOADED) {
+                    // set the visibility of all but the RDT Beats layer to false to avoid cluttering the UI
+                    map.operationalLayers.forEach { layer ->
+                        layer.isVisible = layer.name == "RPD Beats  - City_Beats_Border_1128-4500"
+                    }
+                    // find the instance of the RPD Beats layer
+                    layer = map.operationalLayers.find { it.name.equals("RPD Beats  - City_Beats_Border_1128-4500") }
+                } else {
+                    showError(map.loadError.message.toString())
                 }
-                layer = map.operationalLayers.find { it.name.equals("RPD Beats  - City_Beats_Border_1128-4500") }
+            }
+            // add a listener on map tapped
+            onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                    // get the screen point of the tapped map
+                    val screenPoint = Point(e.x.roundToInt(), e.y.toInt())
+                    // evaluate an arcade expression on the point
+                    evaluateArcadeExpression(screenPoint)
+                    return true
+                }
             }
         }
-        mapView.onTouchListener = object : DefaultMapViewOnTouchListener(this@MainActivity, mapView) {
-            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                val screenPoint = Point(e.x.roundToInt(), e.y.toInt())
-                evaluateArcadeExpression(screenPoint)
-                return true
-            }
-        }
+
     }
 
+    /**
+     * Evaluate Arcade expression at the [tappedPoint] and use the result
+     * to show callout with the crime in the last 60 days
+     */
     private fun evaluateArcadeExpression(tappedPoint: Point) {
         // get the layer based on the position tapped on the MapView.
-        val identifyLayerResultFuture = mapView.identifyLayerAsync(layer,tappedPoint,12.0,false)
+        val identifyLayerResultFuture = mapView.identifyLayerAsync(layer, tappedPoint, 12.0, false)
         identifyLayerResultFuture.addDoneListener {
             val identifyLayerResult = identifyLayerResultFuture.get()
-            if(identifyLayerResult == null || !identifyLayerResult.elements.any()){
+            // if layer is not identified, then return
+            if (identifyLayerResult == null || !identifyLayerResult.elements.any()) {
                 return@addDoneListener
             }
 
             // get the tapped GeoElement as an ArcGISFeature
-            val element = identifyLayerResult.elements.first()
-            val feature = element as ArcGISFeature
+            val feature = identifyLayerResult.elements.first() as ArcGISFeature
 
             // if the previously clicked feature is null or the previous feature ID does not match the current feature ID
             // run the arcade expression query to get the crime count for a given feature
-            if(previousFeature == null || !(feature.attributes["ID"]?.equals(previousFeature?.attributes?.get("ID")))!!){
+            if (previousFeature == null || (feature.attributes["ID"]?.equals(previousFeature?.attributes?.get("ID")) == false)) {
                 // show the loading indicator as the arcade evaluator evaluation call can take time to complete
                 progressBar.visibility = View.VISIBLE
-
                 // instantiate a string containing the arcade expression
                 val expressionValue =
                     "var crimes = FeatureSetByName(\$map, 'Crime in the last 60 days');\n" +
-                    "return Count(Intersects(\$feature, crimes));"
+                        "return Count(Intersects(\$feature, crimes));"
                 // create an ArcadeExpression using the string expression
                 val arcadeExpression = ArcadeExpression(expressionValue)
-                // create an ArcadeEvaluator with the ArcadeExpression and an ArcadeProfile enum
-                val evaluator = ArcadeEvaluator(arcadeExpression,ArcadeProfile.FORM_CALCULATION)
-
+                // create an ArcadeEvaluator with the ArcadeExpression and an ArcadeProfile
+                val evaluator = ArcadeEvaluator(arcadeExpression, ArcadeProfile.FORM_CALCULATION)
                 // instantiate a list of profile variable key value pairs
                 val profileVariables = mapOf<String, Any>("\$feature" to feature, "\$map" to mapView.map)
-
-                // get the arcade evaluation result given the previously set profile variables
+                // get the arcade evaluation result future given the previously set profile variables
                 val resultFuture = evaluator.evaluateAsync(profileVariables)
                 resultFuture.addDoneListener {
+                    // get the result as an ArcadeEvaluationResult
                     val arcadeEvaluationResult = resultFuture.get() as ArcadeEvaluationResult
-                    Toast.makeText(this, "Crimes in the last 60 days: ${arcadeEvaluationResult.result}", Toast.LENGTH_SHORT).show()
+                    // set the callout content on the map using the arcade evaluation result
+                    val calloutContent = TextView(applicationContext).apply {
+                        setTextColor(Color.BLACK)
+                        setSingleLine()
+                        text = "Crimes in the last 60 days: ${arcadeEvaluationResult.result}"
+                    }
+                    // convert the screen point to a map point
+                    val mapPoint = mapView.screenToLocation(tappedPoint)
+                    // display the callout on the tapped location
+                    mapView.callout.apply {
+                        location = mapPoint
+                        content = calloutContent
+                        show()
+                    }
+                    // center the map to the tapped mapPoint
+                    mapView.setViewpointCenterAsync(mapPoint)
+                    // hide the progress bar
                     progressBar.visibility = View.GONE
+                    // set the current feature as the previous feature for the next click detection.
+                    previousFeature = feature
                 }
             }
         }
+    }
 
+    private fun showError(message: String) {
+        Log.e(TAG, message)
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onPause() {
