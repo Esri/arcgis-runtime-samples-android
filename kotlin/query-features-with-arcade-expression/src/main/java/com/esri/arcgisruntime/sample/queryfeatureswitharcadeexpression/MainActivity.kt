@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                     // get the screen point of the tapped map
                     val screenPoint = Point(e.x.roundToInt(), e.y.toInt())
-                    // evaluate an arcade expression on the point
+                    // evaluate an Arcade expression on the point
                     evaluateArcadeExpression(screenPoint)
                     return true
                 }
@@ -121,11 +121,11 @@ class MainActivity : AppCompatActivity() {
             val feature = identifyLayerResult.elements.first() as ArcGISFeature
 
             // if the previously clicked feature is null or the previous feature ID does not match the current feature ID
-            // run the arcade expression query to get the crime count for a given feature
+            // run the Arcade expression query to get the crime count for a given feature
             if (previousFeature == null || (feature.attributes["ID"]?.equals(previousFeature?.attributes?.get("ID")) == false)) {
-                // show the loading indicator as the arcade evaluator evaluation call can take time to complete
+                // show the loading indicator as the Arcade evaluator evaluation call can take time to complete
                 progressBar.visibility = View.VISIBLE
-                // instantiate a string containing the arcade expression
+                // instantiate a string containing the Arcade expression
                 val expressionValue =
                     "var crimes = FeatureSetByName(\$map, 'Crime in the last 60 days');\n" +
                         "return Count(Intersects(\$feature, crimes));"
@@ -135,13 +135,13 @@ class MainActivity : AppCompatActivity() {
                 val evaluator = ArcadeEvaluator(arcadeExpression, ArcadeProfile.FORM_CALCULATION)
                 // instantiate a list of profile variable key value pairs
                 val profileVariables = mapOf<String, Any>("\$feature" to feature, "\$map" to mapView.map)
-                // get the arcade evaluation result future given the previously set profile variables
+                // get the Arcade evaluation result future given the previously set profile variables
                 val resultFuture = evaluator.evaluateAsync(profileVariables)
                 resultFuture.addDoneListener {
                     // get the result as an ArcadeEvaluationResult
                     val arcadeEvaluationResult = resultFuture.get() as ArcadeEvaluationResult
                     val crimesCount = (arcadeEvaluationResult.result as Double).toInt()
-                    // set the callout content on the map using the arcade evaluation result
+                    // set the callout content on the map using the Arcade evaluation result
                     val calloutContent = TextView(applicationContext).apply {
                         setTextColor(Color.BLACK)
                         setSingleLine()
