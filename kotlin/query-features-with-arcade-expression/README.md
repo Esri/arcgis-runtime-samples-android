@@ -10,14 +10,14 @@ Arcade is a portable, lightweight, and secure expression language used to create
 
 ## How to use the sample
 
-Click on any neighborhood to see the number of crimes in the last 60 days in a callout.
+Tap on any neighborhood to see the number of crimes in the last 60 days in a callout.
 
 ## How it works
 
 1. Create a `PortalItem` using the URL and ID.
 2. Create a `Map` using the portal item.
 3. Set the visibility of all the layers to false, except for the layer named "RPD Beats  - City_Beats_Border_1128-4500".
-4. Set up a listener for clicks on the map.
+4. Set up a listener for taps on the map.
 5. Identify the visible layer where it is tapped using `mapView.identifyLayerAsync()` and get the feature.
 6. Create the following `ArcadeExpression`:
 ```kotlin		
