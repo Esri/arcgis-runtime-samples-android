@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
             // get the tapped GeoElement as an ArcGISFeature
             val feature = identifyLayerResult.elements.first() as ArcGISFeature
 
-            // if the previously clicked feature is null or the previous feature ID does not match the current feature ID
+            // if the previously tapped feature is null or the previous feature ID does not match the current feature ID
             // run the Arcade expression query to get the crime count for a given feature
             if (previousFeature == null || (feature.attributes["ID"]?.equals(previousFeature?.attributes?.get("ID")) == false)) {
                 // show the loading indicator as the Arcade evaluator evaluation call can take time to complete
@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
                     mapView.setViewpointCenterAsync(mapPoint)
                     // hide the progress bar
                     progressBar.visibility = View.GONE
-                    // set the current feature as the previous feature for the next click detection.
+                    // set the current feature as the previous feature for the next tap detection.
                     previousFeature = feature
                 }
             }
