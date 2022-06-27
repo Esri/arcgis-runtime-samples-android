@@ -22,7 +22,7 @@ Tap the button on the bottom menu to add feature layers, from different sources,
    ii. Create a `FeatureLayer` with the feature table.
 3. Load a feature layer with a portal item.  
    i. Create a `PortalItem` with the portal and item ID.  
-   ii. Create a `FeatureLayer` with the portal item and layer ID.
+   ii. Create a `FeatureLayer` with the portal item and with or without the layer ID.
 4. Load a feature layer with a geodatabase.  
    i. Instantiate and load a `Geodatabase` using the file name.  
    ii. Get the feature table from the geodatabase with the feature table's name.  

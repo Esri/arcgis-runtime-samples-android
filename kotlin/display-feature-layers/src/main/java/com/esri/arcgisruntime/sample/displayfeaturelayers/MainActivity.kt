@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity() {
         val portal = Portal("https://www.arcgis.com", false)
         // create the portal item with the item ID for the Portland tree service data
         val portalItem = PortalItem(portal, "1759fd3e8a324358a0c58d9a687a8578")
-        // create the feature layer with the item and layer ID
+        // create the feature layer with the item
         val featureLayer = FeatureLayer(portalItem)
         // set the viewpoint to Portland, Oregon
         val viewpoint = Viewpoint(45.5266, -122.6219, 6000.0)
