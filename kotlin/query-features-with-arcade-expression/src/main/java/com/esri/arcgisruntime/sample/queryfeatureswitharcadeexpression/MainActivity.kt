@@ -155,13 +155,21 @@ class MainActivity : AppCompatActivity() {
                         content = calloutContent
                         show()
                     }
-                    // center the map to the tapped mapPoint
+                    // center the map to the tapped map point
                     mapView.setViewpointCenterAsync(mapPoint)
                     // hide the progress bar
                     progressBar.visibility = View.GONE
                     // set the current feature as the previous feature for the next tap detection.
                     previousFeature = feature
                 }
+            } else {
+                // same feature selected, so just update the ViewPoint and callout location
+                // convert the screen point to a map point
+                val mapPoint = mapView.screenToLocation(tappedPoint)
+                // center the map to the tapped map point
+                mapView.setViewpointCenterAsync(mapPoint)
+                // update the location of the callout
+                mapView.callout.location = mapPoint
             }
         }
     }
