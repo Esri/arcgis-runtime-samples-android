@@ -2,7 +2,7 @@
 
 Display feature layers from various data sources.
 
-![Display feature layers](display-feature-layers.jpg)
+![Display feature layers](display-feature-layers.png)
 
 ## Use case
 
@@ -12,7 +12,7 @@ Feature services are useful for sharing vector GIS data with clients so that ind
 
 ## How to use the sample
 
-Tap the button on the toolbar to add feature layers, from different sources, to the map. Pan and zoom the map to view the feature layers.
+Tap the button on the bottom menu to add feature layers, from different sources, to the map. Pan and zoom the map to view the feature layers.
 
 ## How it works
 
@@ -29,7 +29,7 @@ Tap the button on the toolbar to add feature layers, from different sources, to 
    iii. Create a `FeatureLayer` from the feature table.
 5. Load a feature layer with a geopackage.  
    i. Instantiate and load a geopackage using its file name.  
-   ii. Get the first `GeoPackageFeatureTable` from the `geoPackageFeatureTables` array.  
+   ii. Get the first `GeoPackageFeatureTable` from the `GeoPackage.geoPackageFeatureTables` array.  
    iii. Create an `FeatureLayer` from the feature table.
 6. Load a feature layer with a shapefile.  
    i. Create a `ShapefileFeatureTable` using the shapefile name.  
