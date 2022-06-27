@@ -80,7 +80,10 @@ class MainActivity : AppCompatActivity() {
         val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
         // set the map to be displayed in the layout's MapView
         mapView.map = map
+        setUpBottomUI()
+    }
 
+    private fun setUpBottomUI() {
         // create an adapter with the types of feature layer
         // sources to be displayed in menu
         val adapter = ArrayAdapter(
@@ -88,7 +91,6 @@ class MainActivity : AppCompatActivity() {
             android.R.layout.simple_list_item_1,
             resources.getStringArray(R.array.feature_layer_sources)
         )
-
         bottomListItems.apply {
             // populate the bottom list with the feature layer sources
             setAdapter(adapter)
@@ -250,6 +252,8 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mapView.resume()
+        // update UI if screen rotates or resumes
+        setUpBottomUI()
     }
 
     override fun onDestroy() {
