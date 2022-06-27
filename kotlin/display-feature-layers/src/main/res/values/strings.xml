@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Display feature layers</string>
+    <string name="hint">Select a feature layer source</string>
+    <string name="sample_service_url">https://sampleserver7.arcgisonline.com/server/rest/services/DamageAssessment/FeatureServer/0</string>
+    <string-array name="feature_layer_items">
+        <item>Service Feature Table</item>
+        <item>Portal Item</item>
+        <item>Geodatabase</item>
+        <item>Geopackage</item>
+        <item>Shapefile</item>
+    </string-array>
 </resources>
