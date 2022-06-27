@@ -210,7 +210,7 @@ class MainActivity : AppCompatActivity() {
             // locate the shape file in device
             val file = File(
                 getExternalFilesDir(null),
-                "/ScottishWildlifeTrust_reserves/ScottishWildlifeTrust_ReserveBoundaries_20201102.shp"
+                "/ScottishWildlifeTrust_ReserveBoundaries_20201102.shp"
             )
             // create a shapefile feature table from a named bundle resource
             val shapeFileTable = ShapefileFeatureTable(file.path)
