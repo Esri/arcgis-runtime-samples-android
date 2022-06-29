@@ -18,6 +18,8 @@ package com.esri.arcgisruntime.sample.applyuniquevalueswithalternatesymbols
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
@@ -27,12 +29,14 @@ import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.view.AnimationCurve
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.applyuniquevalueswithalternatesymbols.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
 import com.esri.arcgisruntime.symbology.Symbol
 import com.esri.arcgisruntime.symbology.SymbolReferenceProperties
 import com.esri.arcgisruntime.symbology.UniqueValueRenderer
+import kotlin.math.roundToInt
 
 
 class MainActivity : AppCompatActivity() {
@@ -41,8 +45,10 @@ class MainActivity : AppCompatActivity() {
 
     // create feature table using the feature service URL
     private val featureTable = ServiceFeatureTable("https://sampleserver6.arcgisonline.com/arcgis/rest/services/SF311/FeatureServer/0")
+
     // create a feature layer using the feature table
     private val featureLayer = FeatureLayer(featureTable)
+
     // create a center map point in San Francisco, CA
     private val centerPoint = Point(-13631205.660131, 4546829.846004, SpatialReferences.getWebMercator())
 
@@ -52,6 +58,14 @@ class MainActivity : AppCompatActivity() {
 
     private val mapView: MapView by lazy {
         activityMainBinding.mapView
+    }
+
+    private val scaleText: TextView by lazy {
+        activityMainBinding.scaleText
+    }
+
+    private val resetViewpointButton: Button by lazy {
+        activityMainBinding.resetViewpointButton
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +86,17 @@ class MainActivity : AppCompatActivity() {
             map.operationalLayers.add(featureLayer)
             // set the viewpoint to be centered at San Francisco, CA
             setViewpoint(Viewpoint(centerPoint, 25000.0))
+            // update the scale text view as the view point changes
+            addViewpointChangedListener { updateScaleLabel() }
+        }
+
+        // resets the view point using a ease in out animation
+        resetViewpointButton.setOnClickListener {
+            mapView.setViewpointAsync(
+                Viewpoint(centerPoint, 25000.0),
+                5F,
+                AnimationCurve.EASE_IN_OUT_SINE
+            )
         }
     }
 
@@ -137,6 +162,16 @@ class MainActivity : AppCompatActivity() {
         }
         // return both alternate symbols
         return listOf(alternateSymbolMultilayer1, alternateSymbolMultilayer2)
+    }
+
+    /**
+     * Update the label to display the current scale
+     */
+    private fun updateScaleLabel() {
+        // formats numbers using comma
+        val formattedScale = "%,d".format(mapView.mapScale.roundToInt())
+        // updates the text view with the current scale
+        scaleText.text = "Current scale: 1:$formattedScale"
     }
 
     override fun onPause() {

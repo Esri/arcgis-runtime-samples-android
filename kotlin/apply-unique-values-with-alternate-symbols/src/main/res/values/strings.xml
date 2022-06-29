@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Apply unique values with alternate symbols</string>
+    <string name="reset_viewpoint">Reset Viewpoint</string>
 </resources>
