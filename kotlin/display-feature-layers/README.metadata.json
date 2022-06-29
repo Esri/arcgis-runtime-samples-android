@@ -32,7 +32,12 @@
         "/AuroraCO.gpkg",
         "/ScottishWildlifeTrust_reserves/"
     ],
-    "redirect_from": "TODO",
+    "redirect_from": [
+        "/android/latest/sample-code/feature-layer-feature-service.htm",
+        "/android/latest/sample-code/feature-layer-geodatabase.htm",
+        "/android/latest/sample-code/feature-layer-geopackage.htm",
+        "/android/latest/sample-code/feature-layer-shapefile.htm"
+    ],
     "relevant_apis": [
         "FeatureLayer",
         "GeoPackageFeatureTable",
