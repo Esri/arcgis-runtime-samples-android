@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         downloadArea = Graphic().apply {
             symbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 2F)
         }
-        // create a graphic overlay and add the downloadArea graphic
+        // create a graphics overlay and add the downloadArea graphic
         val graphicsOverlay = GraphicsOverlay().apply {
             graphics.add(downloadArea)
         }
@@ -116,12 +116,12 @@ class MainActivity : AppCompatActivity() {
             // add the graphics overlay to the MapView
             graphicsOverlays.add(graphicsOverlay)
 
-            // update the square whenever the viewpoint changes
+            // update the red square whenever the viewpoint changes
             addViewpointChangedListener {
                 updateDownloadAreaGeometry()
             }
 
-            // when the map has loaded, create a vector tiled layer from it and export tiles
+            // when the map has loaded, create a vector tiled layer from the basemap and export the tiles
             map.addDoneLoadingListener {
                 if (map.loadStatus == LoadStatus.LOADED) {
                     // check that the layer from the basemap is a vector tiled layer
@@ -140,12 +140,12 @@ class MainActivity : AppCompatActivity() {
      */
     private fun handleExportButton(vectorTiledLayer: ArcGISVectorTiledLayer) {
         exportVectorTilesButton.setOnClickListener {
-            // update the download area's geometry using current viewpoint
+            // update the download area's geometry using the current viewpoint
             updateDownloadAreaGeometry()
             // create a new export vector tiles task
             val exportVectorTilesTask = ExportVectorTilesTask(vectorTiledLayer.uri)
-            // the max scale parameter is set to 10% of the map's scale to limit the
-            // number of tiles exported to within the vector tiled layer's max tile export limit
+            // the max scale parameter is set to 10% of the map's scale so the
+            // number of tiles exported are within the vector tiled layer's max tile export limit
             val exportVectorTilesParametersFuture = exportVectorTilesTask
                 .createDefaultExportVectorTilesParametersAsync(
                     downloadArea?.geometry,
@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity() {
         resDir.deleteRecursively()
         resDir.mkdir()
 
-        // create a job with the parameters
+        // create a job with the export vector tile parameters
         // and exports the vector tile package as "file.vtpk"
         exportVectorTilesJob = exportVectorTilesTask.exportVectorTiles(
             exportVectorTilesParameters,
@@ -216,7 +216,7 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Updates the [downloadArea]'s geometry on ViewPoint change
-     * or when export tiles is clicked.
+     * or when export tiles button is clicked.
      */
     private fun updateDownloadAreaGeometry() {
         try {
