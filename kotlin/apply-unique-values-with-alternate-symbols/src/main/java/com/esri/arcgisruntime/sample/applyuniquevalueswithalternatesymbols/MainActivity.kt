@@ -39,6 +39,13 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG = MainActivity::class.java.simpleName
 
+    // create feature table using the feature service URL
+    private val featureTable = ServiceFeatureTable("https://sampleserver6.arcgisonline.com/arcgis/rest/services/SF311/FeatureServer/0")
+    // create a feature layer using the feature table
+    private val featureLayer = FeatureLayer(featureTable)
+    // create a center map point in San Francisco, CA
+    private val centerPoint = Point(-13631205.660131, 4546829.846004, SpatialReferences.getWebMercator())
+
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -51,85 +58,85 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
 
-        // authentication with an API key or named user is required to access basemaps and other
-        // location services
+        // authentication with an API key or named user is
+        // required to access basemaps and other location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // create a feature layer using the feature table
-        val featureTable =
-            ServiceFeatureTable("https://sampleserver6.arcgisonline.com/arcgis/rest/services/SF311/FeatureServer/0")
-        val featureLayer = FeatureLayer(featureTable)
+        // set the unique value renderer on the feature layer
+        featureLayer.renderer = makeUniqueValueRenderer()
 
-        // create a symbol for a specific scale range
-        val triangleMultilayerSymbol = SimpleMarkerSymbol(
+        mapView.apply {
+            // create a map with the BasemapType topographic to be displayed in the layout's MapView
+            map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+            // add the feature layer to the map view's map
+            map.operationalLayers.add(featureLayer)
+            // set the viewpoint to be centered at San Francisco, CA
+            setViewpoint(Viewpoint(centerPoint, 25000.0))
+        }
+    }
+
+    /**
+     * Create the unique values renderer for the feature layer
+     */
+    private fun makeUniqueValueRenderer(): UniqueValueRenderer {
+        // create the default symbol
+        val symbol = SimpleMarkerSymbol(
             SimpleMarkerSymbol.Style.TRIANGLE,
             Color.RED,
             30F
-        ).toMultilayerSymbol().apply {
+        )
+        // convert the symbol to a multi layer symbol
+        val multilayerSymbol = symbol.toMultilayerSymbol().apply {
             referenceProperties = SymbolReferenceProperties(5000.0, 0.0)
         }
-
-        // create alternate symbols for use at different scale ranges
-        val blueAlternateSymbol = SimpleMarkerSymbol(
-            SimpleMarkerSymbol.Style.SQUARE,
-            Color.BLUE,
-            30F
-        ).toMultilayerSymbol().apply {
-            referenceProperties = SymbolReferenceProperties(10000.0, 5000.0)
-        }
-
-        val yellowAlternateSymbol = SimpleMarkerSymbol(
-            SimpleMarkerSymbol.Style.DIAMOND,
-            Color.YELLOW,
-            30F
-        ).toMultilayerSymbol().apply {
-            referenceProperties = SymbolReferenceProperties(20000.0, 10000.0)
-        }
-
-        val alternateSymbols = listOf<Symbol>(blueAlternateSymbol, yellowAlternateSymbol)
-
-        // create a unique value with the triangle symbol and the alternate symbols
+        // create alternate symbols for the unique value
+        val alternateSymbols = createAlternateSymbols()
+        // create a unique value with alternate symbols
         val uniqueValue = UniqueValueRenderer.UniqueValue(
-            "unique value",
             "unique values based on request type",
-            triangleMultilayerSymbol,
+            "unique value",
+            multilayerSymbol,
             listOf("Damaged Property"),
             alternateSymbols
         )
-
         // create a unique value renderer
         val uniqueValueRenderer = UniqueValueRenderer().apply {
+            // add the unique value
             uniqueValues.add(uniqueValue)
+            // set the field name
             fieldNames.add("req_type")
         }
-
+        // create and set the default symbol
+        val defaultSymbol = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.MAGENTA, 15F)
         // set a default symbol for the unique value renderer.
         // This will be use for features that aren't "Damaged Property"
         // or when out of range of the UniqueValue symbols.
-        uniqueValueRenderer.defaultSymbol = SimpleMarkerSymbol(
-            SimpleMarkerSymbol.Style.DIAMOND,
-            Color.MAGENTA,
-            15F
-        ).toMultilayerSymbol()
+        uniqueValueRenderer.defaultSymbol = defaultSymbol.toMultilayerSymbol()
 
         // set the unique value renderer on the feature layer
-        featureLayer.renderer = uniqueValueRenderer
+        return uniqueValueRenderer
+    }
 
-        // create a map with the BasemapType topographic
-        val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
-
-        // set the map to be displayed in the layout's MapView
-        mapView.map = map
-
-        val centerPoint = Point(
-            -13631205.660131,
-            4546829.846004,
-            SpatialReferences.getWebMercator()
-        )
-        mapView.setViewpoint(
-            Viewpoint(centerPoint, 25000.0)
-        )
-        mapView.map.operationalLayers.add(featureLayer)
+    /**
+     * Create alternate symbols for the unique value renderer
+     */
+    private fun createAlternateSymbols(): List<Symbol> {
+        // create the alternate symbol for the mid range scale
+        val alternateSymbol1 = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.SQUARE, Color.BLUE, 30F)
+        // convert the symbol to a multilayer symbol
+        val alternateSymbolMultilayer1 = alternateSymbol1.toMultilayerSymbol().apply {
+            // set the reference properties
+            referenceProperties = SymbolReferenceProperties(10000.0, 5000.0)
+        }
+        // create the alternate symbol for the high range scale
+        val alternateSymbol2 = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.YELLOW, 30F)
+        // convert the symbol to a multilayer symbol
+        val alternateSymbolMultilayer2 = alternateSymbol2.toMultilayerSymbol().apply {
+            // set the reference properties
+            referenceProperties = SymbolReferenceProperties(20000.0, 10000.0)
+        }
+        // return both alternate symbols
+        return listOf(alternateSymbolMultilayer1, alternateSymbolMultilayer2)
     }
 
     override fun onPause() {
