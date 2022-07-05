@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
                     map.operationalLayers.forEach { layer ->
                         layer.isVisible = layer.name == "RPD Beats  - City_Beats_Border_1128-4500"
                     }
-                    // find the instance of the RPD Beats layer
+                    // find the RPD Beats layer from the map's operational layers
                     layer = map.operationalLayers.find { it.name.equals("RPD Beats  - City_Beats_Border_1128-4500") }
                 } else {
                     showError(map.loadError.message.toString())
@@ -104,8 +104,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Evaluate Arcade expression at the [tappedPoint] and use the result
-     * to show callout with the crime in the last 60 days
+     * Evaluate the Arcade expression at the [tappedPoint] and use the result
+     * to show a callout with the crime in the last 60 days
      */
     private fun evaluateArcadeExpression(tappedPoint: Point) {
         // get the layer based on the position tapped on the MapView.
@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
             val feature = identifyLayerResult.elements.first() as ArcGISFeature
 
             // if the previously tapped feature is null or the previous feature ID does not match the current feature ID
-            // run the Arcade expression query to get the crime count for a given feature
+            // run the Arcade expression query to get the crime count for the tapped feature
             if (previousFeature == null || (feature.attributes["ID"]?.equals(previousFeature?.attributes?.get("ID")) == false)) {
                 // show the loading indicator as the Arcade evaluator evaluation call can take time to complete
                 progressBar.visibility = View.VISIBLE
@@ -149,24 +149,24 @@ class MainActivity : AppCompatActivity() {
                     }
                     // convert the screen point to a map point
                     val mapPoint = mapView.screenToLocation(tappedPoint)
-                    // display the callout on the tapped location
+                    // display the callout at the tapped location
                     mapView.callout.apply {
                         location = mapPoint
                         content = calloutContent
                         show()
                     }
-                    // center the map to the tapped map point
+                    // center the map on the tapped map point
                     mapView.setViewpointCenterAsync(mapPoint)
                     // hide the progress bar
                     progressBar.visibility = View.GONE
-                    // set the current feature as the previous feature for the next tap detection.
+                    // set the current feature as the previous feature for the next tap detection
                     previousFeature = feature
                 }
             } else {
                 // same feature selected, so just update the ViewPoint and callout location
                 // convert the screen point to a map point
                 val mapPoint = mapView.screenToLocation(tappedPoint)
-                // center the map to the tapped map point
+                // center the map on the tapped map point
                 mapView.setViewpointCenterAsync(mapPoint)
                 // update the location of the callout
                 mapView.callout.location = mapPoint

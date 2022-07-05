@@ -1,5 +1,5 @@
 {
-    "category": "Edit and Manage Data",
+    "category": "Search and query",
     "description": "Query features on a map using an Arcade expression.",
     "formal_name": "QueryFeaturesWithArcadeExpression",
     "ignore": false,

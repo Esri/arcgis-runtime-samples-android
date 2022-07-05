@@ -15,7 +15,7 @@ Tap on any neighborhood to see the number of crimes in the last 60 days in a cal
 ## How it works
 
 1. Create a `PortalItem` using the URL and ID.
-2. Create a `Map` using the portal item.
+2. Create a `ArcGISMap` using the portal item.
 3. Set the visibility of all the layers to false, except for the layer named "RPD Beats  - City_Beats_Border_1128-4500".
 4. Set up a listener for taps on the map.
 5. Identify the visible layer where it is tapped using `mapView.identifyLayerAsync()` and get the feature.
@@ -32,7 +32,7 @@ mapOf<String, Any>("\$feature" to feature, "\$map" to mapView.map)
 ```
 	 
 9. Call `ArcadeEvaluator.evaluateAsync()` on the Arcade evaluator object and pass the profile variables map.
-10. Call `ArcadeEvaluationResult.result` to get the result
+10. Get the `ArcadeEvaluationResult.result`.
 11. Convert the result to a numerical value (integer) and populate the callout with the crime count.
 
 ## Relevant API
