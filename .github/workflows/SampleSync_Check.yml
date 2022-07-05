@@ -1,0 +1,83 @@
+# The name of the job, which will be displayed for the status check in PR.
+name: Sample sync check
+
+# Controls when the action will run.
+# Below triggers the workflow on pull requests to `main` or `v.next` branch.
+on:
+  pull_request:
+    branches:
+      - main
+      - v.next
+
+# A workflow run is made up of one or more jobs that can run sequentially or
+# in parallel.
+jobs:
+  # This workflow contains a single job called "changes"
+  changes:
+    name: Check sample sync output for changed files.
+    
+    # Comment out the line below if the job is only running for certain labels.
+    # i.e. only run the job on PRs with label "new-sample"
+
+    # if: contains(github.event.pull_request.labels.*.name, 'new-sample')
+    
+    # The type of runner that the job will run on
+    # supported VMs are here: https://docs.github.com/en/free-pro-team@latest/actions/reference/specifications-for-github-hosted-runners#supported-runners-and-hardware-resources
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that got executed as part of the job.
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run sample sync check
+        uses: ./tools/CI/README_Metadata_SampleSyncCheck
+
+      # - name: Change text file
+      #   run: |
+      #     echo "Modified" > new.txt
+
+      # - name: Change file in directory
+      #   run: |
+      #     echo "Changed" > test_directory/new.txt
+
+      - name: Verify readme
+        uses: tj-actions/verify-changed-files@v10
+        id: verify-readme
+        with:
+          files: |
+             **/*.md
+
+      - name: Verify metadata
+        uses: tj-actions/verify-changed-files@v10
+        id: verify-metadata
+        with:
+          files: |
+             **/*.metadata.json
+
+      - name: Verify sample code
+        uses: tj-actions/verify-changed-files@v10
+        id: verify-sample-code
+        with:
+          files: |
+             **/*.xaml.cs
+             **/*.cs
+
+      - name: Run step only when readme changes.
+        if: steps.verify-readme.outputs.files_changed == 'true'
+        run: |
+          echo "Changed readme: ${{ steps.verify-readme.outputs.changed_files }}"
+          exit 1
+
+      - name: Run step only when metadata changes.
+        if: steps.verify-metadata.outputs.files_changed == 'true'
+        run: |
+          echo "Changed metadata: ${{ steps.verify-metatada.outputs.changed_files }}"
+          exit 1
+
+      - name: Run step only when sample code.
+        if: steps.verify-sample-code.outputs.files_changed == 'true'
+        run: |
+          echo "Changed sample: ${{ steps.verify-sample-code.outputs.changed_files }}"
+          exit 1
+
+        # Outputs: "Changed files: new.txt test_directory/new.txt"
