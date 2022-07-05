@@ -1,0 +1,16 @@
+# The name of the stepm just as a reference.
+name: "sample_sync check"
+description: "This check will run the sample_sync script to ensure no files are changed."
+author: "hduff@esri.com"
+
+inputs:
+  FILE_PATHS:
+    description: "Files to run the checks on."
+    required: true
+
+runs:
+  using: "docker"
+  image: "Dockerfile.dockerfile"
+  # args:
+  #   - "--string"
+  #   - ${{ inputs.FILE_PATHS }}
