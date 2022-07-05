@@ -13,7 +13,7 @@
     "language": "kotlin",
     "relevant_apis": [
         "ArcGISMap",
-        "Basemap",
+        "BasemapStyle",
         "MapView"
     ],
     "snippets": [

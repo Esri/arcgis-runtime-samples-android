@@ -17,7 +17,7 @@
         "https://www.arcgis.com/home/item.html?id=d98b3e5293834c5f852f13c569930caa"
     ],
     "provision_to": [
-        "/Aurora_CO_shp/Public_Art.shp"
+        "/Public_Art.shp"
     ],
     "redirect_from": [
         "/android/latest/sample-code/feature-layer-shapefile.htm"

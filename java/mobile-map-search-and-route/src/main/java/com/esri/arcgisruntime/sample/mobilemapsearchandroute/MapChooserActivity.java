@@ -52,7 +52,7 @@ public class MapChooserActivity extends AppCompatActivity {
             mMapPreviews = (List<MapPreview>) intentExtras.get("map_previews");
             mMMPkTitle = (String) intentExtras.get("MMPk_title");
         }
-        TextView nameMMPkView = (TextView) findViewById(R.id.MMPk_title);
+        TextView nameMMPkView = findViewById(R.id.MMPk_title);
         nameMMPkView.setText(mMMPkTitle);
     }
 
@@ -60,7 +60,7 @@ public class MapChooserActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //setup recycler view
-        mMapPreviewRecyclerView = (RecyclerView) findViewById(R.id.map_preview_list);
+        mMapPreviewRecyclerView = findViewById(R.id.map_preview_list);
         mMapPreviewRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         loadMapPreviews();
     }
@@ -95,11 +95,11 @@ public class MapChooserActivity extends AppCompatActivity {
         private MapPreviewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.map_preview, parent, false));
             itemView.setOnClickListener(this);
-            mTitleTextView = (TextView) itemView.findViewById(R.id.mapTitle);
-            mTransportView = (TextView) itemView.findViewById(R.id.mapTransportNetwork);
-            mGeotaggingView = (TextView) itemView.findViewById(R.id.mapGeotagging);
-            mDescTextView = (TextView) itemView.findViewById(R.id.mapDesc);
-            mThumbnailImageView = (ImageView) itemView.findViewById(R.id.mapThumbnail);
+            mTitleTextView = itemView.findViewById(R.id.mapTitle);
+            mTransportView = itemView.findViewById(R.id.mapTransportNetwork);
+            mGeotaggingView = itemView.findViewById(R.id.mapGeotagging);
+            mDescTextView = itemView.findViewById(R.id.mapDesc);
+            mThumbnailImageView = itemView.findViewById(R.id.mapThumbnail);
         }
 
         /**

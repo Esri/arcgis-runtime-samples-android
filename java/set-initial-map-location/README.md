@@ -14,12 +14,12 @@ When the map loads, note the specific location and scale of the initial map view
 
 ## How it works
 
-1. Create an `ArcGISMap`, specifying a basemap type, latitude and longitude in WGS84, and a level of detail.
+1. Create an `ArcGISMap`, specifying a basemap style, latitude and longitude in WGS84, and a level of detail.
 2. Display the map in a map view with `MapView.setMap(map)`.
 
 ## Relevant API
 
-* Basemap.Type
+* BasemapStyle
 * Map
 * MapView
 

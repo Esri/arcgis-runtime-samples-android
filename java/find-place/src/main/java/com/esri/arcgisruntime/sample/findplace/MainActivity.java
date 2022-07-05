@@ -16,10 +16,6 @@
 
 package com.esri.arcgisruntime.sample.findplace;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.database.MatrixCursor;
@@ -39,6 +35,8 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
+
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Geometry;
@@ -46,7 +44,7 @@ import com.esri.arcgisruntime.geometry.Multipoint;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
@@ -55,8 +53,6 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.IdentifyGraphicsOverlayResult;
 import com.esri.arcgisruntime.mapping.view.LocationDisplay;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.mapping.view.ViewpointChangedEvent;
-import com.esri.arcgisruntime.mapping.view.ViewpointChangedListener;
 import com.esri.arcgisruntime.mapping.view.WrapAroundMode;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters;
@@ -64,6 +60,10 @@ import com.esri.arcgisruntime.tasks.geocode.GeocodeResult;
 import com.esri.arcgisruntime.tasks.geocode.LocatorTask;
 import com.esri.arcgisruntime.tasks.geocode.SuggestParameters;
 import com.esri.arcgisruntime.tasks.geocode.SuggestResult;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -98,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
     // if permissions are not already granted, request permission from the user
     if (!(ContextCompat.checkSelfPermission(this, reqPermissions[0]) == PackageManager.PERMISSION_GRANTED
@@ -138,22 +142,20 @@ public class MainActivity extends AppCompatActivity {
     mProximitySearchViewEmpty = true;
 
     // create a LocatorTask from an online service
-    mLocatorTask = new LocatorTask(getString(R.string.world_geocode_service));
+    mLocatorTask = new LocatorTask("https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer");
 
     // inflate MapView from layout
     mMapView = findViewById(R.id.mapView);
     // disable map wraparound
     mMapView.setWrapAroundMode(WrapAroundMode.DISABLED);
-    // create a map with the BasemapType topographic
-    final ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
+    // create a map with the Basemap Style topographic
+    final ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC);
     // set the map to be displayed in this view
     mMapView.setMap(map);
     // add listener to update extent when viewpoint has changed
-    mMapView.addViewpointChangedListener(new ViewpointChangedListener() {
-      @Override public void viewpointChanged(ViewpointChangedEvent viewpointChangedEvent) {
-        // get the current map extent
-        mCurrentExtentGeometry = mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry();
-      }
+    mMapView.addViewpointChangedListener(viewpointChangedEvent -> {
+      // get the current map extent
+      mCurrentExtentGeometry = mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry();
     });
     // add listener to handle callouts
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
@@ -296,82 +298,73 @@ public class MainActivity extends AppCompatActivity {
           mProximitySearchViewEmpty = false;
           final ListenableFuture<List<SuggestResult>> suggestionsFuture = mLocatorTask
               .suggestAsync(newText, mProximitySuggestParameters);
-          suggestionsFuture.addDoneListener(new Runnable() {
-
-            @Override public void run() {
-              try {
-                // get the list of suggestions
-                List<SuggestResult> suggestResults = suggestionsFuture.get();
-                MatrixCursor suggestionsCursor = new MatrixCursor(mColumnNames);
-                int key = 0;
-                // add each SuggestResult to a new row
-                for (SuggestResult result : suggestResults) {
-                  suggestionsCursor.addRow(new Object[] { key++, result.getLabel() });
-                }
-                // define SimpleCursorAdapter
-                String[] cols = { COLUMN_NAME_ADDRESS };
-                int[] to = { R.id.suggestion_address };
-                final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
-                    R.layout.suggestion, suggestionsCursor, cols, to, 0);
-                mProximitySearchView.setSuggestionsAdapter(suggestionAdapter);
-                mProximitySearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-                  @Override public boolean onSuggestionSelect(int position) {
-                    return false;
-                  }
-
-                  @Override public boolean onSuggestionClick(int position) {
-                    // get the selected row
-                    MatrixCursor selectedRow = (MatrixCursor) suggestionAdapter.getItem(position);
-                    // get the row's index
-                    int selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS);
-                    // get the string from the row at index
-                    final String address = selectedRow.getString(selectedCursorIndex);
-                    mLocatorTask.addDoneLoadingListener(new Runnable() {
-                      @Override
-                      public void run() {
-                        if (mLocatorTask.getLoadStatus() == LoadStatus.LOADED) {
-                          // geocode the selected address to get location of address
-                          final ListenableFuture<List<GeocodeResult>> geocodeFuture = mLocatorTask
-                              .geocodeAsync(address, mProximityGeocodeParameters);
-                          geocodeFuture.addDoneListener(new Runnable() {
-                            @Override
-                            public void run() {
-                              try {
-                                // Get the results of the async operation
-                                List<GeocodeResult> geocodeResults = geocodeFuture.get();
-                                if (!geocodeResults.isEmpty()) {
-                                  // use geocodeResult to focus search area
-                                  GeocodeResult geocodeResult = geocodeResults.get(0);
-                                  // update preferred search area to the geocode result
-                                  mPreferredSearchProximity = geocodeResult.getDisplayLocation();
-                                  mPoiGeocodeParameters.setSearchArea(mPreferredSearchProximity);
-                                  // set the address string to the SearchView, but don't submit as a query
-                                  mProximitySearchView.setQuery(address, false);
-                                  // call POI search query
-                                  mPoiSearchView.setQuery(mPoiAddress, true);
-                                  // clear focus from search views
-                                  mProximitySearchView.clearFocus();
-                                  mPoiSearchView.clearFocus();
-                                } else {
-                                  Toast.makeText(getApplicationContext(),
-                                      getString(R.string.location_not_found) + address, Toast.LENGTH_LONG).show();
-                                }
-                              } catch (InterruptedException | ExecutionException e) {
-                                Log.e(TAG, "Geocode error: " + e.getMessage());
-                                Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error),
-                                    Toast.LENGTH_LONG).show();
-                              }
-                            }
-                          });
-                        }
-                      }
-                    });
-                    return true;
-                  }
-                });
-              } catch (Exception e) {
-                Log.e(TAG, "Geocode suggestion error: " + e.getMessage());
+          suggestionsFuture.addDoneListener(() -> {
+            try {
+              // get the list of suggestions
+              List<SuggestResult> suggestResults = suggestionsFuture.get();
+              MatrixCursor suggestionsCursor = new MatrixCursor(mColumnNames);
+              int key = 0;
+              // add each SuggestResult to a new row
+              for (SuggestResult result : suggestResults) {
+                suggestionsCursor.addRow(new Object[] { key++, result.getLabel() });
               }
+              // define SimpleCursorAdapter
+              String[] cols = { COLUMN_NAME_ADDRESS };
+              int[] to = { R.id.suggestion_address };
+              final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
+                  R.layout.suggestion, suggestionsCursor, cols, to, 0);
+              mProximitySearchView.setSuggestionsAdapter(suggestionAdapter);
+              mProximitySearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                @Override public boolean onSuggestionSelect(int position) {
+                  return false;
+                }
+
+                @Override public boolean onSuggestionClick(int position) {
+                  // get the selected row
+                  MatrixCursor selectedRow = (MatrixCursor) suggestionAdapter.getItem(position);
+                  // get the row's index
+                  int selectedCursorIndex = selectedRow.getColumnIndex(COLUMN_NAME_ADDRESS);
+                  // get the string from the row at index
+                  final String address = selectedRow.getString(selectedCursorIndex);
+                  mLocatorTask.addDoneLoadingListener(() -> {
+                    if (mLocatorTask.getLoadStatus() == LoadStatus.LOADED) {
+                      // geocode the selected address to get location of address
+                      final ListenableFuture<List<GeocodeResult>> geocodeFuture = mLocatorTask
+                          .geocodeAsync(address, mProximityGeocodeParameters);
+                      geocodeFuture.addDoneListener(() -> {
+                        try {
+                          // Get the results of the async operation
+                          List<GeocodeResult> geocodeResults = geocodeFuture.get();
+                          if (!geocodeResults.isEmpty()) {
+                            // use geocodeResult to focus search area
+                            GeocodeResult geocodeResult = geocodeResults.get(0);
+                            // update preferred search area to the geocode result
+                            mPreferredSearchProximity = geocodeResult.getDisplayLocation();
+                            mPoiGeocodeParameters.setSearchArea(mPreferredSearchProximity);
+                            // set the address string to the SearchView, but don't submit as a query
+                            mProximitySearchView.setQuery(address, false);
+                            // call POI search query
+                            mPoiSearchView.setQuery(mPoiAddress, true);
+                            // clear focus from search views
+                            mProximitySearchView.clearFocus();
+                            mPoiSearchView.clearFocus();
+                          } else {
+                            Toast.makeText(getApplicationContext(),
+                                getString(R.string.location_not_found) + address, Toast.LENGTH_LONG).show();
+                          }
+                        } catch (InterruptedException | ExecutionException e) {
+                          Log.e(TAG, "Geocode error: " + e.getMessage());
+                          Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error),
+                              Toast.LENGTH_LONG).show();
+                        }
+                      });
+                    }
+                  });
+                  return true;
+                }
+              });
+            } catch (Exception e) {
+              Log.e(TAG, "Geocode suggestion error: " + e.getMessage());
             }
           });
           // if search view is empty, set flag
@@ -410,34 +403,32 @@ public class MainActivity extends AppCompatActivity {
     // from the graphics overlay, get graphics near the tapped location
     final ListenableFuture<IdentifyGraphicsOverlayResult> identifyResultsFuture = mMapView
         .identifyGraphicsOverlayAsync(mGraphicsOverlay, screenPoint, 10, false);
-    identifyResultsFuture.addDoneListener(new Runnable() {
-      @Override public void run() {
-        try {
-          IdentifyGraphicsOverlayResult identifyGraphicsOverlayResult = identifyResultsFuture.get();
-          List<Graphic> graphics = identifyGraphicsOverlayResult.getGraphics();
-          // if a graphic has been identified
-          if (graphics.size() > 0) {
-            //get the first graphic identified
-            Graphic identifiedGraphic = graphics.get(0);
-            // create a TextView for the Callout
-            TextView calloutContent = new TextView(getApplicationContext());
-            calloutContent.setTextColor(Color.BLACK);
-            // set the text of the Callout to graphic's attributes
-            calloutContent.setText(identifiedGraphic.getAttributes().get("PlaceName") + "\n"
-                + identifiedGraphic.getAttributes().get("StAddr"));
-            // get Callout and set its options: animateCallout: true, recenterMap: false, animateRecenter: false
-            mCallout = mMapView.getCallout();
-            mCallout.setShowOptions(new Callout.ShowOptions(true, false, false));
-            // set the leader position and show the callout
-            mCallout.setLocation(identifiedGraphic.computeCalloutLocation(mapPoint, mMapView));
-            mCallout.setContent(calloutContent);
-            mCallout.show();
-          } else {
-            mCallout.dismiss();
-          }
-        } catch (Exception e) {
-          Log.e(TAG, "Identify error: " + e.getMessage());
+    identifyResultsFuture.addDoneListener(() -> {
+      try {
+        IdentifyGraphicsOverlayResult identifyGraphicsOverlayResult = identifyResultsFuture.get();
+        List<Graphic> graphics = identifyGraphicsOverlayResult.getGraphics();
+        // if a graphic has been identified
+        if (!graphics.isEmpty()) {
+          //get the first graphic identified
+          Graphic identifiedGraphic = graphics.get(0);
+          // create a TextView for the Callout
+          TextView calloutContent = new TextView(getApplicationContext());
+          calloutContent.setTextColor(Color.BLACK);
+          // set the text of the Callout to graphic's attributes
+          calloutContent.setText(identifiedGraphic.getAttributes().get("PlaceName") + "\n"
+              + identifiedGraphic.getAttributes().get("StAddr"));
+          // get Callout and set its options: animateCallout: true, recenterMap: false, animateRecenter: false
+          mCallout = mMapView.getCallout();
+          mCallout.setShowOptions(new Callout.ShowOptions(true, false, false));
+          // set the leader position and show the callout
+          mCallout.setLocation(identifiedGraphic.computeCalloutLocation(mapPoint, mMapView));
+          mCallout.setContent(calloutContent);
+          mCallout.show();
+        } else {
+          mCallout.dismiss();
         }
+      } catch (Exception e) {
+        Log.e(TAG, "Identify error: " + e.getMessage());
       }
     });
   }
@@ -454,36 +445,30 @@ public class MainActivity extends AppCompatActivity {
       mPoiGeocodeParameters.setPreferredSearchLocation(mPreferredSearchProximity);
       mPoiGeocodeParameters.setSearchArea(mPreferredSearchProximity);
       // Execute async task to find the address
-      mLocatorTask.addDoneLoadingListener(new Runnable() {
-        @Override
-        public void run() {
-          if (mLocatorTask.getLoadStatus() == LoadStatus.LOADED) {
-            // Call geocodeAsync passing in an address
-            final ListenableFuture<List<GeocodeResult>> geocodeResultListenableFuture = mLocatorTask
-                .geocodeAsync(address, mPoiGeocodeParameters);
-            geocodeResultListenableFuture.addDoneListener(new Runnable() {
-              @Override
-              public void run() {
-                try {
-                  // Get the results of the async operation
-                  List<GeocodeResult> geocodeResults = geocodeResultListenableFuture.get();
-                  if (!geocodeResults.isEmpty()) {
-                    displaySearchResult(geocodeResults);
-                  } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.location_not_found) + address,
-                        Toast.LENGTH_LONG).show();
-                  }
-                } catch (InterruptedException | ExecutionException e) {
-                  Log.e(TAG, "Geocode error: " + e.getMessage());
-                  Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error), Toast.LENGTH_LONG)
-                      .show();
-                }
+      mLocatorTask.addDoneLoadingListener(() -> {
+        if (mLocatorTask.getLoadStatus() == LoadStatus.LOADED) {
+          // Call geocodeAsync passing in an address
+          final ListenableFuture<List<GeocodeResult>> geocodeResultListenableFuture = mLocatorTask
+              .geocodeAsync(address, mPoiGeocodeParameters);
+          geocodeResultListenableFuture.addDoneListener(() -> {
+            try {
+              // Get the results of the async operation
+              List<GeocodeResult> geocodeResults = geocodeResultListenableFuture.get();
+              if (!geocodeResults.isEmpty()) {
+                displaySearchResult(geocodeResults);
+              } else {
+                Toast.makeText(getApplicationContext(), getString(R.string.location_not_found) + address,
+                    Toast.LENGTH_LONG).show();
               }
-            });
-          } else {
-            Log.i(TAG, "Trying to reload locator task");
-            mLocatorTask.retryLoadAsync();
-          }
+            } catch (InterruptedException | ExecutionException e) {
+              Log.e(TAG, "Geocode error: " + e.getMessage());
+              Toast.makeText(getApplicationContext(), getString(R.string.geo_locate_error), Toast.LENGTH_LONG)
+                  .show();
+            }
+          });
+        } else {
+          Log.i(TAG, "Trying to reload locator task");
+          mLocatorTask.retryLoadAsync();
         }
       });
       mLocatorTask.loadAsync();

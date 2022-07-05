@@ -37,16 +37,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
   private final int requestCode = 2;
-  private final String[] permission = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+  private final String[] permission = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
   private MapView mMapView;
 
   @Override
@@ -54,12 +55,16 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
-    // create a map with the BasemapType Imagery with Labels
-    ArcGISMap mMap = new ArcGISMap(Basemap.createImageryWithLabels());
+    mMapView = findViewById(R.id.mapView);
+    // create a map with the Basemap Style Imagery with Labels
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
     // set the map to be displayed in this view
-    mMapView.setMap(mMap);
+    mMapView.setMap(map);
   }
 
   @Override
@@ -76,12 +81,12 @@ public class MainActivity extends AppCompatActivity {
     int itemId = item.getItemId();
     if (itemId == R.id.CaptureMap) {
       // Check permissions to see if failure may be due to lack of permissions.
-      boolean permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this, permission[0]) ==
+      boolean permissionCheck = ContextCompat.checkSelfPermission(this, permission[0]) ==
           PackageManager.PERMISSION_GRANTED;
 
       if (!permissionCheck) {
         // If permissions are not already granted, request permission from the user.
-        ActivityCompat.requestPermissions(MainActivity.this, permission, requestCode);
+        ActivityCompat.requestPermissions(this, permission, requestCode);
       } else {
         captureScreenshotAsync();
       }
@@ -97,24 +102,21 @@ public class MainActivity extends AppCompatActivity {
 
     // export the image from the mMapView
     final ListenableFuture<Bitmap> export = mMapView.exportImageAsync();
-    export.addDoneListener(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          Bitmap currentMapImage = export.get();
-          // play the camera shutter sound
-          MediaActionSound sound = new MediaActionSound();
-          sound.play(MediaActionSound.SHUTTER_CLICK);
-          Log.d(TAG, "Captured the image!!");
-          // save the exported bitmap to an image file
-          SaveImageTask saveImageTask = new SaveImageTask();
-          saveImageTask.execute(currentMapImage);
-        } catch (Exception e) {
-          Toast
-              .makeText(getApplicationContext(), getResources().getString(R.string.map_export_failure) + e.getMessage(),
-                  Toast.LENGTH_SHORT).show();
-          Log.e(TAG, getResources().getString(R.string.map_export_failure) + e.getMessage());
-        }
+    export.addDoneListener(() -> {
+      try {
+        Bitmap currentMapImage = export.get();
+        // play the camera shutter sound
+        MediaActionSound sound = new MediaActionSound();
+        sound.play(MediaActionSound.SHUTTER_CLICK);
+        Log.d(TAG, "Captured the image!!");
+        // save the exported bitmap to an image file
+        SaveImageTask saveImageTask = new SaveImageTask();
+        saveImageTask.execute(currentMapImage);
+      } catch (Exception e) {
+        Toast
+            .makeText(getApplicationContext(), getResources().getString(R.string.map_export_failure) + e.getMessage(),
+                Toast.LENGTH_SHORT).show();
+        Log.e(TAG, getResources().getString(R.string.map_export_failure) + e.getMessage());
       }
     });
   }
@@ -162,9 +164,7 @@ public class MainActivity extends AppCompatActivity {
       // If permission was denied, show toast to inform user what was chosen. If LocationDisplay is started again,
       // request permission UX will be shown again, option should be shown to allow never showing the UX again.
       // Alternative would be to disable functionality so request is not shown again.
-      Toast.makeText(MainActivity.this, getResources().getString(R.string.storage_permission_denied), Toast
-          .LENGTH_SHORT).show();
-
+      Toast.makeText(this, getString(R.string.storage_permission_denied), Toast.LENGTH_SHORT).show();
     }
   }
 

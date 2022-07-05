@@ -25,7 +25,7 @@ The ArcGIS map image layer will now use the spatial reference set to the ArcGIS 
 
 * ArcGISMap
 * ArcGISMapImageLayer
-* Basemap
+* BasemapStyle
 * MapView
 * SpatialReference
 
@@ -35,4 +35,4 @@ Operational layers will automatically project to this spatial reference when pos
 
 ## Tags
 
-project, SpatialReference, WKID
+project, WKID

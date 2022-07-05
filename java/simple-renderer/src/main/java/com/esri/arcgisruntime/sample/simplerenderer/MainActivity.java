@@ -18,13 +18,14 @@ package com.esri.arcgisruntime.sample.simplerenderer;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -40,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     //Create points to add graphics to the map to allow a renderer to style them
     //These are in WGS84 coordinates (Long, Lat)
     Point oldFaithfullPoint = new Point(-110.828140, 44.460458, SpatialReferences.getWgs84());
@@ -49,9 +54,9 @@ public class MainActivity extends AppCompatActivity {
     Envelope initialEnvelope = new Envelope(oldFaithfullPoint, plumeGeyserPoint);
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     // create a map with the imagery basemap. This will set the map to have a WebMercator spatial reference
-    ArcGISMap map = new ArcGISMap(Basemap.createImageryWithLabels());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
     // set the map to be displayed in the mapview
     mMapView.setMap(map);
 

@@ -19,17 +19,19 @@ package com.esri.arcgisruntime.sample.changesublayerrenderer;
 import java.util.Arrays;
 
 import android.graphics.Color;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.ArcGISMapImageSublayer;
 import com.esri.arcgisruntime.layers.SublayerList;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.ClassBreaksRenderer;
 import com.esri.arcgisruntime.symbology.ClassBreaksRenderer.ClassBreak;
@@ -48,12 +50,17 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate mapView from layout
     mMapView  = findViewById(R.id.mapView);
-    // create a map with a BasemapType STREETS
-    ArcGISMap map = new ArcGISMap(Basemap.Type.STREETS, 48.354406, -99.998267, 2);
+    // create a map with a Basemap Style STREETS
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(48.354406, -99.998267, 7500.0));
 
     // create button to apply the render
     Button renderButton = findViewById(R.id.applyRenderer);

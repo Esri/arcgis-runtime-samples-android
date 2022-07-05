@@ -34,7 +34,7 @@ Tap or double tap drag an area of the raster to identify it and see the raster c
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=b5f977c78ec74b3a8857ca86d1d9b318).
 2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 3. Push the data into the scoped storage of the sample app:
-`adb push SA_EVI_8Day_03May20 /Android/data/com.esri.arcgisruntime.sample.identifyrastercell/files/SA_EVI_8Day_03May20`
+`adb push SA_EVI_8Day_03May20/. /Android/data/com.esri.arcgisruntime.sample.identifyrastercell/files`
 
 ## About the data
 

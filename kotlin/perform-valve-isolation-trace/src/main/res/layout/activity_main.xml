@@ -33,46 +33,80 @@
         android:visibility="invisible"
         app:layout_behavior="com.google.android.material.transformation.FabTransformationSheetBehavior">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/traceControlsLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/spinner_header"
-                android:layout_width="wrap_content"
+                android:id="@+id/traceControlsTextView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/choose_category_for_filter_barrier"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="16dp" />
-
-            <Switch
-                android:id="@+id/include_isolated_switch"
+                android:id="@+id/traceTypeSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/traceControlsTextView"
+                app:layout_constraintStart_toStartOf="@+id/traceControlsTextView"
+                app:layout_constraintTop_toBottomOf="@+id/traceControlsTextView" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/includeIsolatedSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="@string/include_isolated_features"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/traceButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/traceTypeSpinner" />
 
             <Button
-                android:id="@+id/trace_button"
+                android:id="@+id/traceButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/trace"
-                android:textColor="@android:color/white"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:background="@color/colorPrimary"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"/>
-        </LinearLayout>
+                android:text="@string/trace"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/resetButton"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/includeIsolatedSwitch" />
+
+            <Button
+                android:id="@+id/resetButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimary"
+                android:text="@string/reset"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/traceButton"
+                app:layout_constraintTop_toBottomOf="@+id/includeIsolatedSwitch" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </com.google.android.material.circularreveal.CircularRevealFrameLayout>
 
     <ProgressBar
@@ -82,6 +116,6 @@
         android:indeterminateTint="@color/colorPrimary"
         app:layout_anchor="@+id/mapView"
         app:layout_anchorGravity="center"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

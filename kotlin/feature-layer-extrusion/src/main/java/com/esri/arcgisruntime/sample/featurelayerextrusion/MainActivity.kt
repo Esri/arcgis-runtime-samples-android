@@ -14,100 +14,119 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.featurelayerextrusion;
+package com.esri.arcgisruntime.sample.featurelayerextrusion
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISScene
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.view.Camera
 import com.esri.arcgisruntime.mapping.view.OrbitLocationCameraController
+import com.esri.arcgisruntime.mapping.view.SceneView
 import com.esri.arcgisruntime.symbology.Renderer
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleRenderer
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.sample.featurelayerextrusion.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-  // set flag for showing total population or population density
-  private var showTotalPopulation = true
+    // set flag for showing total population or population density
+    private var showTotalPopulation = true
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-
-    // get us census data as a service feature table
-    val statesServiceFeatureTable =
-      ServiceFeatureTable(resources.getString(R.string.us_census_feature_service))
-
-    // add the service feature table to a feature layer
-    val statesFeatureLayer = FeatureLayer(statesServiceFeatureTable)
-    // set the feature layer to render dynamically to allow extrusion
-    statesFeatureLayer.renderingMode = FeatureLayer.RenderingMode.DYNAMIC
-
-    // create a scene and add it to the scene view
-    val scene = ArcGISScene(Basemap.createImagery())
-    sceneView.scene = scene
-
-    // add the feature layer to the scene
-    scene.operationalLayers.add(statesFeatureLayer)
-
-    // define line and fill symbols for a simple renderer
-    val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1.0f)
-    val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLUE, lineSymbol)
-    val renderer = SimpleRenderer(fillSymbol)
-    // set renderer extrusion mode to base height, which includes base height of each vertex in calculating z values
-    renderer.sceneProperties.extrusionMode = Renderer.SceneProperties.ExtrusionMode.BASE_HEIGHT
-
-    // set the simple renderer to the feature layer
-    statesFeatureLayer.renderer = renderer
-
-    // define a look at point for the camera at geographical center of the continental US
-    val lookAtPoint = Point(-10974490.0, 4814376.0, 0.0, SpatialReferences.getWebMercator())
-    // add a camera and set it to orbit the look at point
-    val camera = Camera(lookAtPoint, 20000000.0, 0.0, 55.0, 0.0)
-    val orbitCamera = OrbitLocationCameraController(lookAtPoint, 20000000.0)
-    sceneView.cameraController = orbitCamera
-    sceneView.setViewpointCamera(camera)
-
-    // set button listener
-    toggle_button.setOnClickListener {
-      if (showTotalPopulation) {
-        // divide total population by 10 to make data legible
-        renderer.sceneProperties.extrusionExpression = "[POP2007] / 10"
-        // change text of button to total pop
-        toggle_button.text = resources.getString(R.string.total_pop)
-        showTotalPopulation = false
-      } else {
-        // multiple population density by 5000 to make data legible
-        renderer.sceneProperties.extrusionExpression = "[POP07_SQMI] * 5000"
-        // change text of button to pop density
-        toggle_button.text = resources.getString(R.string.density_pop)
-        showTotalPopulation = true
-      }
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
-    // click to set initial state
-    toggle_button.performClick()
-  }
 
-  override fun onPause() {
-    super.onPause()
-    sceneView.pause()
-  }
+    private val sceneView: SceneView by lazy {
+        activityMainBinding.sceneView
+    }
 
-  override fun onResume() {
-    super.onResume()
-    sceneView.resume()
-  }
+    private val toggleButton: Button by lazy {
+        activityMainBinding.toggleButton
+    }
 
-  override fun onDestroy() {
-    super.onDestroy()
-    sceneView.dispose()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
+
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
+        // get us census data as a service feature table
+        val statesServiceFeatureTable =
+            ServiceFeatureTable(resources.getString(R.string.us_census_feature_service))
+
+        // add the service feature table to a feature layer
+        val statesFeatureLayer = FeatureLayer(statesServiceFeatureTable)
+        // set the feature layer to render dynamically to allow extrusion
+        statesFeatureLayer.renderingMode = FeatureLayer.RenderingMode.DYNAMIC
+
+        // create a scene and add it to the scene view
+        val scene = ArcGISScene(BasemapStyle.ARCGIS_IMAGERY)
+        sceneView.scene = scene
+
+        // add the feature layer to the scene
+        scene.operationalLayers.add(statesFeatureLayer)
+
+        // define line and fill symbols for a simple renderer
+        val lineSymbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 1.0f)
+        val fillSymbol = SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, Color.BLUE, lineSymbol)
+        val renderer = SimpleRenderer(fillSymbol)
+        // set renderer extrusion mode to base height, which includes base height of each vertex in calculating z values
+        renderer.sceneProperties.extrusionMode = Renderer.SceneProperties.ExtrusionMode.BASE_HEIGHT
+
+        // set the simple renderer to the feature layer
+        statesFeatureLayer.renderer = renderer
+
+        // define a look at point for the camera at geographical center of the continental US
+        val lookAtPoint = Point(-10974490.0, 4814376.0, 0.0, SpatialReferences.getWebMercator())
+        // add a camera and set it to orbit the look at point
+        val camera = Camera(lookAtPoint, 20000000.0, 0.0, 55.0, 0.0)
+        val orbitCamera = OrbitLocationCameraController(lookAtPoint, 20000000.0)
+        sceneView.cameraController = orbitCamera
+        sceneView.setViewpointCamera(camera)
+
+        // set button listener
+        toggleButton.setOnClickListener {
+            if (showTotalPopulation) {
+                // divide total population by 10 to make data legible
+                renderer.sceneProperties.extrusionExpression = "[POP2007] / 10"
+                // change text of button to total pop
+                toggleButton.text = resources.getString(R.string.total_pop)
+                showTotalPopulation = false
+            } else {
+                // multiple population density by 5000 to make data legible
+                renderer.sceneProperties.extrusionExpression = "[POP07_SQMI] * 5000"
+                // change text of button to pop density
+                toggleButton.text = resources.getString(R.string.density_pop)
+                showTotalPopulation = true
+            }
+        }
+        // click to set initial state
+        toggleButton.performClick()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sceneView.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sceneView.resume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sceneView.dispose()
+    }
 }

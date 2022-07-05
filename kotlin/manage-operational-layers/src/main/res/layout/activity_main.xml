@@ -37,39 +37,34 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            android:textStyle="bold"
-            android:layout_margin="8dp"
-            android:text="@string/active_layers"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/activeRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            android:textStyle="bold"
-            android:layout_margin="8dp"
-            android:text="@string/inactive_layers"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/inactiveRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textStyle="bold"
+                android:layout_margin="8dp"
+                android:text="@string/active_layers" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/activeRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textStyle="bold"
+                android:layout_margin="8dp"
+                android:text="@string/inactive_layers" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/inactiveRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </com.google.android.material.circularreveal.CircularRevealFrameLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminateTint="@color/colorPrimary"
-        app:layout_anchor="@+id/mapView"
-        app:layout_anchorGravity="center"
-        android:visibility="gone"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

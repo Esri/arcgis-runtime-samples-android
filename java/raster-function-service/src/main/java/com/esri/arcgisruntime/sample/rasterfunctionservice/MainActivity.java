@@ -18,17 +18,18 @@ package com.esri.arcgisruntime.sample.rasterfunctionservice;
 
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.RasterLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.raster.ImageServiceRaster;
 import com.esri.arcgisruntime.raster.Raster;
@@ -46,12 +47,16 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate views from layout
     mMapView = findViewById(R.id.mapView);
     mRasterFunctionButton = findViewById(R.id.rasterButton);
     mRasterFunctionButton.setEnabled(false);
-    // create a map with the BasemapType topographic
-    ArcGISMap map = new ArcGISMap(Basemap.createDarkGrayCanvasVector());
+    // create a map with the Basemap Style topographic
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_DARK_GRAY);
     final ImageServiceRaster imageServiceRaster = new ImageServiceRaster(getString(R.string.image_service_raster_url));
     final RasterLayer imageRasterLayer = new RasterLayer(imageServiceRaster);
     map.getOperationalLayers().add(imageRasterLayer);

@@ -3,4 +3,5 @@
     <string name="viewshed_service">
         https://sampleserver6.arcgisonline.com/arcgis/rest/services/Elevation/ESRI_Elevation_World/GPServer/Viewshed
     </string>
+    <string name="loading_text">Calculating Viewshed...</string>
 </resources>

@@ -31,4 +31,4 @@ The scene shows a [buildings layer in Brest, France](https://tiles.arcgis.com/ti
 
 ## Tags
 
-3D, frustum, LocationViewshed, scene, viewshed, visibility analysis
+3D, frustum, scene, viewshed, visibility analysis

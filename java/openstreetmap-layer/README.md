@@ -14,7 +14,7 @@ When the sample opens, it will automatically display the map with the OpenStreet
 
 ## How it works
 
-1. Instantiate an `ArcGISMap` with a `Basemap.Type.OPEN_STREET_MAP`
+1. Instantiate an `ArcGISMap` with a `BasemapStyle.OSM_STANDARD`
 2. Show the map in a map view using `MapView.setMap(map)`.
 
 ## Relevant API
@@ -26,7 +26,7 @@ When the sample opens, it will automatically display the map with the OpenStreet
 
 The attribution text will be set to the required OpenStreetMap attribution automatically. 
 
-Apps that expect to make many requests to OpenStreetMap should consider using an alternative tile server via the `WebTiledLayer` class. See [layer types described](https://developers.arcgis.com/android/latest/guide/layer-types-described.htm#ESRI_SECTION1_B995CCAB20584F91890B3614CF16CF43) in the *ArcGIS Runtime SDK for Android* documentation for more information on OpenStreetMap usage restrictions and alternatives.
+Apps that expect to make many requests to OpenStreetMap should consider using an alternative tile server via the `WebTiledLayer` class.
 
 Esri now hosts an [OpenStreetMap vector layer on ArcGIS Online](http://www.arcgis.com/home/item.html?id=3e1a00aeae81496587988075fe529f71) that uses recent OpenStreetMap data in conjunction with a style matching the default OpenStreetMap style. This layer is not subject to the tile access restrictions that apply to tiles fetched from OpenStreetMap.org.
 

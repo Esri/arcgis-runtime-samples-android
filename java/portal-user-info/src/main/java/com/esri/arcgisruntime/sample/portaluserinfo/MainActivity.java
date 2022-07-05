@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         // Get the portal information
         PortalInfo portalInformation = mPortal.getPortalInfo();
         String portalName = portalInformation.getPortalName();
-        mPortalNameText = (TextView) findViewById(R.id.portal);
+        mPortalNameText = findViewById(R.id.portal);
         mPortalNameText.setText(portalName);
 
         // this portal does not require authentication, if null send toast message
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap itemThumbnail = BitmapFactory
                     .decodeByteArray(itemThumbnailData, 0, itemThumbnailData.length);
                 // set the Bitmap onto the ImageView
-                mUserImage = (ImageView) findViewById(R.id.userImage);
+                mUserImage = findViewById(R.id.userImage);
                 mUserImage.setImageBitmap(itemThumbnail);
               }
             } catch (InterruptedException | ExecutionException e) {

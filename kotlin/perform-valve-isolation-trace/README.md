@@ -14,14 +14,15 @@ Create and set the configuration's filter barriers by selecting a category. Togg
 
 ## How it works
 
-1.  Create a `MapView`.
-2.  Create and load a `UtilityNetwork` with a feature service URL.
-3.  Add `FeatureLayer`(s) that are part of this utility network to a new `Map`.
-4.  Create a default starting location from a given asset type and global id.
-5.  Add a `GraphicsOverlay` with a `Graphic` that represents this starting location.
-6.  Populate the choice list for the 'Filter Barrier: Category exists' from `UtilityNetworkDefinition.categories`.
-7.  Get a default `UtilityTraceConfiguration` from a given tier in a domain network. Set it's `Filter` with a new `UtilityTraceFilter`.
-8.  When 'Trace' is clicked,
+1. Create a `MapView`.
+2. Create and load a `ServiceGeodatabase` with a feature service URL and get tables with their layer IDs.
+3. Create an `ArcGISMap` object that contains `FeatureLayer`(s) created from the service geodatabase's tables.
+4. Create and load an `UtilityNetwork` with the same feature service URL and map.
+5. Create a default starting location from a given asset type and global ID.
+6. Add a `GraphicsOverlay` with an `Graphic` that represents this starting location.
+7. Populate the choice list for the filter barriers from the `categories` property of `UtilityNetworkDefinition`.
+8. Get a default `UtilityTraceConfiguration` from a given tier in a domain network. Set its `filter` property with an `UtilityTraceFilter` object.
+9. When "Trace" is tapped,
     * Create a new `UtilityCategoryComparison` with the selected category and `UtilityCategoryComparisonOperator.EXISTS`.
     * Assign this condition to `traceConfiguration.filter.barriers` from the default configuration from step 7. Update this configuration's `isIncludeIsolatedFeatures` property.
     * Create a `UtilityTraceParameters` with `UtilityTraceType.ISOLATION` and the default starting location from step 4.
@@ -30,6 +31,7 @@ Create and set the configuration's filter barriers by selecting a category. Togg
 
 ## Relevant API
 
+* ServiceGeodatabase
 * UtilityCategory
 * UtilityCategoryComparison
 * UtilityCategoryComparisonOperator
@@ -45,7 +47,7 @@ Create and set the configuration's filter barriers by selecting a category. Togg
 
 ## About the data
 
-The [Naperville gas network feature service](https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleGas/FeatureServer), hosted on ArcGIS Online, contains a utility network used to run the isolation trace shown in this sample.
+The [Naperville gas network](https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleGas/FeatureServer) feature service, hosted on ArcGIS Online, contains a utility network used to run the isolation trace shown in this sample.
 
 
 ## Tags

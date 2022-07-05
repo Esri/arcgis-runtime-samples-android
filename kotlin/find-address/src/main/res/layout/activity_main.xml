@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
@@ -12,20 +11,18 @@
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </com.esri.arcgisruntime.mapping.view.MapView>
+        android:layout_height="match_parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <Spinner
             android:id="@+id/suggestionSpinner"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/listPreferredItemHeight"
-            android:background="@color/colorWhiteSemiTransparent">
-        </Spinner>
+            android:background="@color/colorWhiteSemiTransparent" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/addressSearchView"
@@ -33,11 +30,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:queryHint="@string/address_search_hint"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp">
-        </androidx.appcompat.widget.SearchView>
+            android:layout_marginRight="5dp" />
     </LinearLayout>
 
 </RelativeLayout>

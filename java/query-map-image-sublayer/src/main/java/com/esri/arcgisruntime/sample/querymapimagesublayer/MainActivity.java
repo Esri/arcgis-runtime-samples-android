@@ -16,14 +16,14 @@
 
 package com.esri.arcgisruntime.sample.querymapimagesublayer;
 
-import java.util.concurrent.ExecutionException;
-
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
@@ -35,7 +35,7 @@ import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
 import com.esri.arcgisruntime.layers.ArcGISMapImageSublayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -44,6 +44,8 @@ import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.Symbol;
+
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,19 +58,22 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate views from layout
     mMapView = findViewById(R.id.mapView);
     mQueryButton = findViewById(R.id.queryButton);
     mQueryInputBox = findViewById(R.id.queryInputBox);
 
-    // create a map with a streets vector basemap and set initial viewpoint
-    ArcGISMap map = new ArcGISMap(Basemap.createStreetsVector());
-    Point initialLocation = new Point(-13171939.239529, 3923971.284048, SpatialReferences.getWebMercator());
-    Viewpoint viewpoint = new Viewpoint(initialLocation, 9500000);
-    map.setInitialViewpoint(viewpoint);
+    // create a map with a streets vector basemap
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
 
     // set the map to be displayed in this view
     mMapView.setMap(map);
+    Point initialLocation = new Point(-13171939.239529, 3923971.284048, SpatialReferences.getWebMercator());
+    mMapView.setViewpoint(new Viewpoint(initialLocation, 9500000));
 
     // create and add a map image layer to the map
     ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(getString(R.string.usa_map));
@@ -90,35 +95,33 @@ public class MainActivity extends AppCompatActivity {
 
     // wait until the layer is loaded before enabling the query button
     imageLayer.addDoneLoadingListener(() -> {
-      if (imageLayer.getLoadStatus() == LoadStatus.LOADED) {
-        mQueryButton.setEnabled(true);
+      mQueryButton.setEnabled(true);
 
-        // get and load each sublayer to query
-        ArcGISMapImageSublayer citiesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(0);
-        ArcGISMapImageSublayer statesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(2);
-        ArcGISMapImageSublayer countiesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(3);
-        citiesSublayer.loadAsync();
-        statesSublayer.loadAsync();
-        countiesSublayer.loadAsync();
+      // get and load each sublayer to query
+      ArcGISMapImageSublayer citiesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(0);
+      ArcGISMapImageSublayer statesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(2);
+      ArcGISMapImageSublayer countiesSublayer = (ArcGISMapImageSublayer) imageLayer.getSublayers().get(3);
+      citiesSublayer.loadAsync();
+      statesSublayer.loadAsync();
+      countiesSublayer.loadAsync();
 
-        // query the sublayers when the button is clicked
-        mQueryButton.setOnClickListener(v -> {
+      // query the sublayers when the button is clicked
+      mQueryButton.setOnClickListener(v -> {
 
-          // clear previous results
-          graphicsOverlay.getGraphics().clear();
+        // clear previous results
+        graphicsOverlay.getGraphics().clear();
 
-          // create query parameters filtering based on population and the map view's current viewpoint
-          QueryParameters populationQuery = new QueryParameters();
-          populationQuery.setWhereClause("POP2000 > " + mQueryInputBox.getText());
-          populationQuery
-              .setGeometry(mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry());
+        // create query parameters filtering based on population and the map view's current viewpoint
+        QueryParameters populationQuery = new QueryParameters();
+        populationQuery.setWhereClause("POP2000 > " + mQueryInputBox.getText());
+        populationQuery
+                .setGeometry(mMapView.getCurrentViewpoint(Viewpoint.Type.BOUNDING_GEOMETRY).getTargetGeometry());
 
-          QueryAndDisplayGraphics(citiesSublayer, citySymbol, populationQuery, graphicsOverlay);
-          QueryAndDisplayGraphics(statesSublayer, stateSymbol, populationQuery, graphicsOverlay);
-          QueryAndDisplayGraphics(countiesSublayer, countySymbol, populationQuery, graphicsOverlay);
+        QueryAndDisplayGraphics(citiesSublayer, citySymbol, populationQuery, graphicsOverlay);
+        QueryAndDisplayGraphics(statesSublayer, stateSymbol, populationQuery, graphicsOverlay);
+        QueryAndDisplayGraphics(countiesSublayer, countySymbol, populationQuery, graphicsOverlay);
 
-        });
-      }
+      });
     });
   }
 

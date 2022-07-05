@@ -19,47 +19,67 @@ package com.esri.arcgisruntime.samples.setminxmaxscale
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.samples.setminxmaxscale.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
-    setContentView(R.layout.activity_main)
-
-    // create a ArcGISMap with basemap streets
-    with(ArcGISMap(Basemap.createStreets())) {
-      // set the scale at which this layer can be viewed
-      this.minScale = 8000.0
-      this.maxScale = 2000.0
-
-      // set point where the map view will focus and zoom to
-      this.initialViewpoint =
-        Viewpoint(Point(-355453.0, 7548720.0, SpatialReferences.getWebMercator()), 3000.0)
-
-      // set the ArcGISMap instance to display in the MapView
-      mapView.map = this
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
-  }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
+        // create a ArcGISMap with basemap streets
+        with(ArcGISMap(BasemapStyle.ARCGIS_STREETS)) {
+            // set the scale at which this layer can be viewed
+            this.minScale = 8000.0
+            this.maxScale = 2000.0
+
+            // set the ArcGISMap instance to display in the MapView
+            mapView.map = this
+
+            // set point where the map view will focus and zoom to
+            mapView.setViewpoint(
+                Viewpoint(
+                    Point(
+                        -355453.0,
+                        7548720.0,
+                        SpatialReferences.getWebMercator()
+                    ), 3000.0
+                )
+            )
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }

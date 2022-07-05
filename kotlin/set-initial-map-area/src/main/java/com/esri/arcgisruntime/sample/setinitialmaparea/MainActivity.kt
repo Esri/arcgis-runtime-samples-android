@@ -17,46 +17,61 @@ package com.esri.arcgisruntime.sample.setinitialmaparea
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Envelope
 import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.setinitialmaparea.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-    // create a map with a topographic basemap
-    val map = ArcGISMap(Basemap.createTopographic())
-    // create an envelope around Shafer Basin
-    val initialExtent =
-      Envelope(
-        -12211308.778729, 4645116.003309, -12208257.879667, 4650542.535773,
-        SpatialReference.create(102100)
-      )
-    // create a viewpoint from the envelope
-    val viewpoint = Viewpoint(initialExtent)
-    // set the map's initial viewpoint
-    map.initialViewpoint = viewpoint
-    // set the map to be displayed in the map view
-    mapView.map = map
-  }
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
+        // create a map with a topographic basemap
+        val map = ArcGISMap(BasemapStyle.ARCGIS_TOPOGRAPHIC)
+        // create an envelope around Shafer Basin
+        val initialExtent =
+            Envelope(
+                -12211308.778729, 4645116.003309, -12208257.879667, 4650542.535773,
+                SpatialReference.create(102100)
+            )
+        // create a viewpoint from the envelope
+        val viewpoint = Viewpoint(initialExtent)
+        // set the map to be displayed in the map view
+        mapView.map = map
+        // set the map's initial viewpoint
+        mapView.setViewpoint(viewpoint)
+    }
+
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }

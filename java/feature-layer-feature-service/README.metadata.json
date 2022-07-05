@@ -18,7 +18,7 @@
     ],
     "relevant_apis": [
         "ArcGISMap",
-        "Basemap",
+        "BasemapStyle",
         "FeatureLayer",
         "MapView",
         "ServiceFeatureTable"

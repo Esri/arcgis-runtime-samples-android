@@ -5,7 +5,7 @@ buildscript {
     apply from: '../version.gradle'
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradleVersion"
@@ -16,8 +16,8 @@ allprojects {
 
     final def var = repositories {
         google()
-        jcenter()
-        maven { url 'https://esri.bintray.com/arcgis' }
+        mavenCentral()
+        maven { url 'https://esri.jfrog.io/artifactory/arcgis' }
     }
     var
 }
@@ -40,8 +40,19 @@ subprojects {
             defaultConfig {
                 multiDexEnabled true
             }
+            packagingOptions {
+                exclude 'META-INF/DEPENDENCIES'
+            }
         }
     }
 }
 
-
+task apiKey {
+    def apiKeyFile = new File("${System.properties.getProperty("user.home")}/.gradle/gradle.properties")
+    if (!apiKeyFile.exists()) {
+        print("Go to " + new URL("https://developers.arcgis.com/dashboard/") + " to get an API key.")
+        print("Add your API Key to ${System.properties.getProperty("user.home")}\\.gradle\\gradle.properties.")
+        String apiKeyFileContents = "API_KEY = "
+        apiKeyFile.write(apiKeyFileContents)
+    }
+}

@@ -18,45 +18,62 @@ package com.esri.arcgisruntime.sample.displayannotation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.layers.AnnotationLayer
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.mapping.BasemapStyle
+import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.displayannotation.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-
-    // create a map with a topographic basemap
-    mapView.map = ArcGISMap(Basemap.Type.LIGHT_GRAY_CANVAS, 55.882436, -2.725610, 13).apply {
-      // add a feature layer from a feature service
-      operationalLayers.add(
-        FeatureLayer(ServiceFeatureTable(getString(R.string.river_feature_service_url)))
-      )
-      // add an annotation layer from a feature service
-      operationalLayers.add(
-        AnnotationLayer(getString(R.string.river_annotation_feature_service_url))
-      )
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
-  }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
+        // create a map with a light gray basemap
+        mapView.map = ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY_BASE).apply {
+            // add a feature layer from a feature service
+            operationalLayers.add(
+                FeatureLayer(ServiceFeatureTable(getString(R.string.river_feature_service_url)))
+            )
+            // add an annotation layer from a feature service
+            operationalLayers.add(
+                AnnotationLayer(getString(R.string.river_annotation_feature_service_url))
+            )
+        }
+
+        // set the map view's initial view point
+        mapView.setViewpoint(Viewpoint(55.882436, -2.725610, 75000.0))
+    }
+
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }

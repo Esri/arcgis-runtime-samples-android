@@ -16,148 +16,70 @@
 
 package com.esri.arcgisruntime.sample.changeviewpoint;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import android.graphics.Color;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
-import com.esri.arcgisruntime.geometry.Geometry;
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReference;
+import com.esri.arcgisruntime.geometry.PointCollection;
+import com.esri.arcgisruntime.geometry.Polyline;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
-import com.esri.arcgisruntime.mapping.view.Graphic;
-import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
-import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 
 public class MainActivity extends AppCompatActivity {
 
-  private static final int SCALE = 7000;
-  private static final String TAG = "ChangeViewPoint";
-  ArcGISMap mMap;
+  private static final int SCALE = 5000;
   private MapView mMapView;
-  private SpatialReference spatialReference;
-  private Button mGeometryButton, mCenterScaleButton, mAnimateButton;
-  private int mDuration = 10;
-  private boolean isGeometryButtonClicked = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
-    // create a map with the BasemapType topographic
-    mMap = new ArcGISMap(Basemap.createImageryWithLabels());
+    mMapView = findViewById(R.id.mapView);
+    // create a map with an imagery base map
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
     // set the map to be displayed in this view
-    mMapView.setMap(mMap);
-    // create spatial reference for all points
-    spatialReference = SpatialReference.create(2229);
-    // create point for starting location - London
-    Point startPoint = new Point(28677947.756181, 22987445.6186465, spatialReference);
+    mMapView.setMap(map);
+    mMapView.setViewpoint(new Viewpoint(new Point(-14093.0, 6711377.0, SpatialReferences.getWebMercator()), SCALE));
+  }
 
-    //set viewpoint of map view to starting point and scaled
-    mMapView.setViewpointCenterAsync(startPoint, SCALE);
+  public void onAnimateClicked(View view) {
+    // create the London location point
+    Point londonPoint = new Point(-14093.0, 6711377.0, SpatialReferences.getWebMercator());
+    // create the viewpoint with the London point and scale
+    Viewpoint viewpoint = new Viewpoint(londonPoint, SCALE);
+    // set the map view's viewpoint to London with a seven second animation duration
+    mMapView.setViewpointAsync(viewpoint, 7f);
+  }
 
-    // inflate the Buttons from the layout
-    mGeometryButton = (Button) findViewById(R.id.geometryButton);
-    mCenterScaleButton = (Button) findViewById(R.id.centerScaleButton);
-    mAnimateButton = (Button) findViewById(R.id.animateButton);
+  public void onCenterClicked(View view) {
+    // create the Waterloo location point
+    Point waterlooPoint = new Point(-12153.0, 6710527.0, SpatialReferences.getWebMercator());
+    // set the map view's viewpoint centered on Waterloo and scaled
+    mMapView.setViewpointCenterAsync(waterlooPoint, SCALE);
+  }
 
-    // create geometry of Griffith Park from JSON raw file, add graphics and set viewpoint of the map view to
-    // Griffith Park
-    mGeometryButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        // create an input stream for the raw text file containing JSON of Griffith Park
-        InputStream ins = getResources().openRawResource(
-            getResources().getIdentifier("griffithparkjson",
-                "raw", getPackageName()));
+  public void onGeometryClicked(View view) {
+    // create a collection of points around Westminster
+    PointCollection westminsterPoints = new PointCollection(SpatialReferences.getWebMercator());
+    westminsterPoints.add(new Point(-13823.0, 6710390.0));
+    westminsterPoints.add(new Point(-13823.0, 6710150.0));
+    westminsterPoints.add(new Point(-14680.0, 6710390.0));
+    westminsterPoints.add(new Point(-14680.0, 6710150.0));
+    Polyline geometry = new Polyline(westminsterPoints);
 
-        InputStreamReader inputReader = new InputStreamReader(ins);
-
-        BufferedReader bufferReader = new BufferedReader(inputReader);
-        String line;
-        StringBuilder text = new StringBuilder();
-
-        // read the text file
-        try {
-          while ((line = bufferReader.readLine()) != null) {
-            text.append(line);
-          }
-        } catch (IOException e) {
-          Log.d(TAG, e.toString());
-        }
-        String JsonString = text.toString();
-
-        // create Geometry from JSON
-        Geometry geometry = Geometry.fromJson(JsonString, spatialReference);
-        GraphicsOverlay overlay = new GraphicsOverlay();
-        // add graphics overlay on map view
-        mMapView.getGraphicsOverlays().add(overlay);
-        SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.DIAGONAL_CROSS, Color.GREEN, null);
-        // add graphic of Griffith Park
-        overlay.getGraphics().add(new Graphic(geometry, fillSymbol));
-
-        // set viewpoint of map view to Geometry - Griffith Park
-        mMapView.setViewpointGeometryAsync(geometry);
-
-        mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
-        mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-        mCenterScaleButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-
-        isGeometryButtonClicked = true;
-      }
-    });
-
-    mAnimateButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        int scale;
-        if (isGeometryButtonClicked) {
-          scale = SCALE * SCALE;
-          isGeometryButtonClicked = false;
-        } else {
-          scale = SCALE;
-        }
-        // create the London location point
-        Point londonPoint = new Point(28677947.756181, 22987445.6186465, spatialReference);
-        // create the viewpoint with the London point and scale
-        Viewpoint viewpoint = new Viewpoint(londonPoint, scale);
-        // set the map views's viewpoint to London with a ten second duration
-        mMapView.setViewpointAsync(viewpoint, mDuration);
-
-        mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-        mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
-        mCenterScaleButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-      }
-    });
-
-    mCenterScaleButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        // create the Waterloo location point
-        Point waterlooPoint = new Point(28681235.9843606, 22990575.7224154, spatialReference);
-        // set the map views's viewpoint centered on Waterloo and scaled
-        mMapView.setViewpointCenterAsync(waterlooPoint, SCALE);
-
-        mGeometryButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-        mAnimateButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-        mCenterScaleButton
-            .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
-      }
-    });
+    // set the map view's viewpoint to Westminster
+    mMapView.setViewpointGeometryAsync(geometry);
   }
 
   @Override

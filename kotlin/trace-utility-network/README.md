@@ -15,7 +15,8 @@ Tap on one or more features while 'Add starting locations' or 'Add barriers' is 
 ## How it works
 
 1.  Create a `MapView` and add a `DefaultMapViewOnTouchListener` to listen for taps on the `MapView`.
-2.  Create and load a `Map` that contains `FeatureLayer`(s) that are part of a utility network.
+2.  Create and load a `ServiceGeodatabase` with a feature service URL and get tables with their layer IDs.
+2.  Create and load an `ArcGISMap` that contains `FeatureLayer`(s) that are part of a utility network.
 3.  Create and load a `UtilityNetwork` using the utility network feature service URL and the map created in step 2.
 4.  Add a `GraphicsOverlay` with symbology that distinguishes starting locations from barriers.
 5.  Identify features on the map and add a `Graphic` that represents its purpose (starting location or barrier) at the tapped location.
@@ -32,6 +33,7 @@ Tap on one or more features while 'Add starting locations' or 'Add barriers' is 
 ## Relevant API
 
 * FractionAlong
+* ServiceGeodatabase
 * UtilityAssetType
 * UtilityDomainNetwork
 * UtilityElement
@@ -49,7 +51,11 @@ Tap on one or more features while 'Add starting locations' or 'Add barriers' is 
 
 ## About the data
 
-The [Naperville electrical network feature service](https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer) hosted on ArcGIS Online contains a utility network used to run the subnetwork-based trace shown in this sample.
+The [Naperville electrical network](https://sampleserver7.arcgisonline.com/server/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer) feature service hosted on ArcGIS Online contains a utility network used to run the subnetwork-based trace shown in this sample.
+
+## Additional information
+
+Using utility network on ArcGIS Enterprise 10.8 requires an ArcGIS Enterprise member account licensed with the [Utility Network user type extension](https://enterprise.arcgis.com/en/portal/latest/administer/windows/license-user-type-extensions.htm#ESRI_SECTION1_41D78AD9691B42E0A8C227C113C0C0BF). Please refer to the [utility network services documentation](https://enterprise.arcgis.com/en/server/latest/publish-services/windows/utility-network-services.htm).
 
 ## Tags
 

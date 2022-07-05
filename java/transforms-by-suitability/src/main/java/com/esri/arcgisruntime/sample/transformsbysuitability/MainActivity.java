@@ -29,6 +29,7 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.ArcGISRuntimeException;
 import com.esri.arcgisruntime.geometry.DatumTransformation;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
@@ -37,7 +38,7 @@ import com.esri.arcgisruntime.geometry.SpatialReference;
 import com.esri.arcgisruntime.geometry.TransformationCatalog;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -60,6 +61,10 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
     // Set up the list of transformations
     final ListView tableList = findViewById(R.id.transforms_list);
@@ -110,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Get MapView from layout and set a map into this view
     mMapView = findViewById(R.id.mapView);
-    mArcGISMap = new ArcGISMap(Basemap.createLightGrayCanvas());
+    mArcGISMap = new ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY);
     mMapView.setMap(mArcGISMap);
 
     // Create a geometry located in the Greenwich observatory courtyard in London, UK, the location of the

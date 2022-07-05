@@ -11,5 +11,4 @@
     <string name="barrier_conditions">Barrier conditions:</string>
     <string name="trace">Trace</string>
     <string name="reset">Reset</string>
-    <string name="naperville_electric_url">https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer</string>
 </resources>

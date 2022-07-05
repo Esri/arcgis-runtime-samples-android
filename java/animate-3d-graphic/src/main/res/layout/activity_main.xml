@@ -19,7 +19,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/zoomInButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         android:minHeight="40dip"
         android:minWidth="35dip"/>
 
-    <Button
+    <android.widget.Button
         android:id="@+id/zoomOutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

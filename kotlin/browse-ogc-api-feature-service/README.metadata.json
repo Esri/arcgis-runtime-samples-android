@@ -1,0 +1,34 @@
+{
+    "category": "Layers",
+    "description": "Browse an OGC API feature service for layers and add them to the map.",
+    "formal_name": "BrowseOgcApiFeatureService",
+    "ignore": false,
+    "images": [
+        "browse-ogc-api-feature-service.png"
+    ],
+    "keywords": [
+        "OGC",
+        "OGC API",
+        "browse",
+        "catalog",
+        "feature",
+        "layers",
+        "service",
+        "web",
+        "OgcFeatureCollectionInfo",
+        "OgcFeatureCollectionTable",
+        "OgcFeatureService",
+        "OgcFeatureServiceInfo"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "OgcFeatureCollectionInfo",
+        "OgcFeatureCollectionTable",
+        "OgcFeatureService",
+        "OgcFeatureServiceInfo"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/browseogcapifeatureservice/MainActivity.kt"
+    ],
+    "title": "Browse OGC API feature service"
+}

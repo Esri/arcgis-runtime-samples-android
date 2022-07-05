@@ -22,114 +22,113 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.arcgisservices.LabelDefinition
+import com.esri.arcgisruntime.arcgisservices.LabelingPlacement
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.layers.FeatureLayer
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.showlabelsonlayer.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.mapping.labeling.ArcadeLabelExpression
 import com.esri.arcgisruntime.symbology.TextSymbol
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
-import com.google.gson.JsonPrimitive
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-  private val TAG = MainActivity::class.java.simpleName
+    private val TAG = MainActivity::class.java.simpleName
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-
-    // create a map view and set a map
-    val map = ArcGISMap(Basemap.createLightGrayCanvas())
-    mapView.map = map
-
-    // create a feature layer from an online feature service of US Congressional Districts
-    val serviceFeatureTable = ServiceFeatureTable(getString(R.string.congressional_districts_url))
-    val featureLayer = FeatureLayer(serviceFeatureTable)
-    map.operationalLayers.add(featureLayer)
-
-    // zoom to the layer when it's done loading
-    featureLayer.addDoneLoadingListener {
-      if (featureLayer.loadStatus == LoadStatus.LOADED) {
-        // set viewpoint to feature layer extent
-        mapView.setViewpointAsync(Viewpoint(featureLayer.fullExtent))
-      } else {
-        val error = "Error loading feature layer :" + featureLayer.loadError.cause
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-        Log.e(TAG, error)
-      }
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
     }
 
-    // use red text with white halo for republican district labels
-    val republicanTextSymbol = TextSymbol().apply {
-      size = 10f
-      color = Color.RED
-      haloColor = Color.WHITE
-      haloWidth = 2f
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
     }
 
-    // use blue text with white halo for democrat district labels
-    val democratTextSymbol = TextSymbol().apply {
-      size = 10f
-      color = Color.BLUE
-      haloColor = Color.WHITE
-      haloWidth = 2f
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
+
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
+
+        // create a map view and set a map
+        val map = ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY)
+        mapView.map = map
+
+        // create a feature layer from an online feature service of US Congressional Districts
+        val serviceFeatureTable =
+            ServiceFeatureTable(getString(R.string.congressional_districts_url))
+        val featureLayer = FeatureLayer(serviceFeatureTable)
+        map.operationalLayers.add(featureLayer)
+
+        // zoom to the layer when it's done loading
+        featureLayer.addDoneLoadingListener {
+            if (featureLayer.loadStatus == LoadStatus.LOADED) {
+                // set viewpoint to feature layer extent
+                mapView.setViewpointAsync(Viewpoint(featureLayer.fullExtent))
+            } else {
+                val error = "Error loading feature layer :" + featureLayer.loadError.cause
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                Log.e(TAG, error)
+            }
+        }
+
+        val republicanLabelDefinition = makeLabelDefinition("Republican", Color.RED)
+        val democratLabelDefinition = makeLabelDefinition("Democrat", Color.BLUE)
+
+        featureLayer.apply {
+            // add the definitions to the feature layer
+            labelDefinitions.addAll(listOf(republicanLabelDefinition, democratLabelDefinition))
+            // enable labels
+            isLabelsEnabled = true
+        }
     }
 
-    // use a custom label expression combining some of the feature's fields
-    val expressionInfo = JsonObject().apply {
-      add(
-        "expression",
-        JsonPrimitive("\$feature.NAME + \" (\" + left(\$feature.PARTY,1) + \")\\nDistrict \" + \$feature.CDFIPS")
-      )
+    /**
+     * Creates a label definition for a given party and color to populate a text symbol.
+     *
+     * @param party name to be passed into the label definition's WHERE clause
+     * @param textColor to be passed into the text symbol
+     *
+     * @return label definition created from the given arcade expression
+     */
+    private fun makeLabelDefinition(party: String, textColor: Int): LabelDefinition {
+
+        // create text symbol for styling the label
+        val textSymbol = TextSymbol().apply {
+            size = 12f
+            color = textColor
+            haloColor = Color.WHITE
+            haloWidth = 2f
+        }
+
+        // create a label definition with an Arcade expression
+        val arcadeLabelExpression =
+            ArcadeLabelExpression("\$feature.NAME + \" (\" + left(\$feature.PARTY,1) + \")\\nDistrict \" + \$feature.CDFIPS")
+
+        return LabelDefinition(arcadeLabelExpression, textSymbol).apply {
+            placement = LabelingPlacement.POLYGON_ALWAYS_HORIZONTAL
+            whereClause = String.format("PARTY = '%s'", party)
+        }
     }
 
-    // construct the label definition json
-    val json = JsonObject().apply {
-      add("labelExpressionInfo", expressionInfo)
-      // position the label in the center of the feature
-      add("labelPlacement", JsonPrimitive("esriServerPolygonPlacementAlwaysHorizontal"))
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
     }
 
-    // create a copy of the json with a custom where clause and symbol only for republican districts
-    val republicanJson = json.deepCopy().apply {
-      add("where", JsonPrimitive("PARTY = 'Republican'"))
-      add("symbol", JsonParser.parseString(republicanTextSymbol.toJson()))
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
     }
 
-    // create a copy of the json with a custom where clause and symbol only for democrat districts
-    val democratJson = json.deepCopy().apply {
-      add("where", JsonPrimitive("PARTY = 'Democrat'"))
-      add("symbol", JsonParser.parseString(democratTextSymbol.toJson()))
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
     }
-
-    // create label definitions from the JSON strings
-    val republicanLabelDefinition = LabelDefinition.fromJson(republicanJson.toString())
-    val democratLabelDefinition = LabelDefinition.fromJson(democratJson.toString())
-    featureLayer.apply {
-      // add the definitions to the feature layer
-      labelDefinitions.addAll(listOf(republicanLabelDefinition, democratLabelDefinition))
-      // enable labels
-      isLabelsEnabled = true
-    }
-  }
-
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
-
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
-
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
 }

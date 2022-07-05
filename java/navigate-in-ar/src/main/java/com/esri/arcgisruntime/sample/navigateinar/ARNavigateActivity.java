@@ -35,11 +35,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.location.AndroidLocationDataSource;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.NavigationConstraint;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.Camera;
@@ -98,7 +100,7 @@ public class ARNavigateActivity extends AppCompatActivity {
     // disable touch interactions with the scene view
     mArView.getSceneView().setOnTouchListener((view, motionEvent) -> true);
     // create a scene and add it to the scene view
-    mScene = new ArcGISScene(Basemap.createImagery());
+    mScene = new ArcGISScene(BasemapStyle.ARCGIS_IMAGERY);
     mArView.getSceneView().setScene(mScene);
     // create and add an elevation surface to the scene
     ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource(getString(R.string.elevation_url));
@@ -167,7 +169,7 @@ public class ARNavigateActivity extends AppCompatActivity {
     // start turn-by-turn when the user is ready
     navigateButton.setOnClickListener(v -> {
       // create a route tracker with the route result
-      mRouteTracker = new RouteTracker(this, sRouteResult, 0);
+      mRouteTracker = new RouteTracker(this, sRouteResult, 0, true);
       // initialize text-to-speech to play navigation voice guidance
       mTextToSpeech = new TextToSpeech(this, status -> {
         if (status != TextToSpeech.ERROR) {

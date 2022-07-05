@@ -16,15 +16,14 @@
 
 package com.esri.arcgisruntime.scenelayerselection;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
@@ -32,12 +31,16 @@ import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.DefaultSceneViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.SceneView;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,9 +53,12 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // create a scene and add a basemap to it
-    ArcGISScene scene = new ArcGISScene();
-    scene.setBasemap(Basemap.createImagery());
+    ArcGISScene scene = new ArcGISScene(BasemapStyle.ARCGIS_TOPOGRAPHIC);
 
     // set the scene to the scene view
     mSceneView = findViewById(R.id.sceneView);
@@ -64,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
     surface.getElevationSources().add(new ArcGISTiledElevationSource(elevationService));
     scene.setBaseSurface(surface);
 
-    // add a scene layer of Harvard buildings to the scene
-    final String buildings = getString(R.string.brest_buildings);
+    // add a scene layer of Brest buildings to the scene
+    final String buildings = getString(R.string.scene_layer_selection_brest_buildings);
     ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(buildings);
     scene.getOperationalLayers().add(sceneLayer);
 

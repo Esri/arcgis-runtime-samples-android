@@ -19,7 +19,6 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="success_message">Feature edited successfully</string>
-    <string name="failure_message">Server Error: Failed updating feature attachment to the server.</string>
     <string name="failure_edit_results">Server did not return edit results</string>
 
     <!-- Feature Service URL -->

@@ -22,20 +22,24 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.Feature;
 import com.esri.arcgisruntime.data.FeatureEditResult;
+import com.esri.arcgisruntime.data.FeatureTableEditResult;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
+import com.esri.arcgisruntime.data.ServiceGeodatabase;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
@@ -51,20 +55,29 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     mMapView = findViewById(R.id.mapView);
 
     // create a map with streets basemap
-    ArcGISMap map = new ArcGISMap(Basemap.Type.STREETS, 40.0, -95.0, 4);
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
 
-    // create service feature table from URL
-    mServiceFeatureTable = new ServiceFeatureTable(getString(R.string.service_layer_url));
-
-    // create a feature layer from table
-    FeatureLayer featureLayer = new FeatureLayer(mServiceFeatureTable);
-
-    // add the layer to the map
-    map.getOperationalLayers().add(featureLayer);
-
+    // create and load the service geodatabase
+    ServiceGeodatabase serviceGeodatabase =  new ServiceGeodatabase(getString(R.string.service_layer_url));
+    serviceGeodatabase.loadAsync();
+    serviceGeodatabase.addDoneLoadingListener(() -> {
+      // create a feature layer using the first layer in the ServiceFeatureTable
+      mServiceFeatureTable = serviceGeodatabase.getTable(0);
+      // create a feature layer from table
+      FeatureLayer featureLayer = new FeatureLayer(mServiceFeatureTable);
+      // add the layer to the map
+      map.getOperationalLayers().add(featureLayer);
+      // set map to be displayed in map view
+      mMapView.setMap(map);
+      mMapView.setViewpoint(new Viewpoint( 40.0, -95.0, 10000000.0));
+    });
     // add a listener to the MapView to detect when a user has performed a single tap to add a new feature to
     // the service feature table
     mMapView.setOnTouchListener(new DefaultMapViewOnTouchListener(this, mMapView) {
@@ -80,9 +93,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onSingleTapConfirmed(event);
       }
     });
-
-    // set map to be displayed in map view
-    mMapView.setMap(map);
   }
 
   /**
@@ -119,17 +129,13 @@ public class MainActivity extends AppCompatActivity {
   private void applyEdits(ServiceFeatureTable featureTable) {
 
     // apply the changes to the server
-    final ListenableFuture<List<FeatureEditResult>> editResult = featureTable.applyEditsAsync();
+    final ListenableFuture<List<FeatureTableEditResult>> editResult = featureTable.getServiceGeodatabase().applyEditsAsync();
     editResult.addDoneListener(() -> {
       try {
-        List<FeatureEditResult> editResults = editResult.get();
+        List<FeatureTableEditResult> editResults = editResult.get();
         // check if the server edit was successful
         if (editResults != null && !editResults.isEmpty()) {
-          if (!editResults.get(0).hasCompletedWithErrors()) {
-            runOnUiThread(() -> logToUser(false, getString(R.string.feature_added)));
-          } else {
-            throw editResults.get(0).getError();
-          }
+          runOnUiThread(() -> logToUser(false, getString(R.string.feature_added)));
         }
       } catch (InterruptedException | ExecutionException e) {
         runOnUiThread(() -> logToUser(true, getString(R.string.error_applying_edits, e.getCause().getMessage())));

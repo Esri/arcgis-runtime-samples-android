@@ -7,6 +7,7 @@
         "show-labels-on-layer.png"
     ],
     "keywords": [
+        "arcade",
         "attribute",
         "deconfliction",
         "label",
@@ -14,7 +15,10 @@
         "string",
         "symbol",
         "text",
-        "visualization"
+        "visualization",
+        "FeatureLayer",
+        "LabelDefinition",
+        "TextSymbol"
     ],
     "language": "kotlin",
     "redirect_from": [

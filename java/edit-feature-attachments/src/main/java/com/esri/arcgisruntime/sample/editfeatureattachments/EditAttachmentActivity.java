@@ -16,14 +16,6 @@
 
 package com.esri.arcgisruntime.sample.editfeatureattachments;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -38,6 +30,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
 import com.esri.arcgisruntime.data.Attachment;
@@ -48,6 +42,14 @@ import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.sample.arrayadapter.CustomList;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditAttachmentActivity extends AppCompatActivity {
 
@@ -74,7 +76,7 @@ public class EditAttachmentActivity extends AppCompatActivity {
     int noOfAttachments = bundle.getInt(getApplication().getString(R.string.noOfAttachments));
 
     // Build a alert dialog with specified style
-    builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+    builder = new AlertDialog.Builder(this);
 
     // get a reference to the floating action button
     FloatingActionButton addAttachmentFab = findViewById(R.id.addAttachmentFAB);
@@ -157,8 +159,11 @@ public class EditAttachmentActivity extends AppCompatActivity {
         }
         // open the file in gallery
         Intent i = new Intent();
+        i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         i.setAction(Intent.ACTION_VIEW);
-        i.setDataAndType(Uri.fromFile(file), "image/png");
+        Uri contentUri = FileProvider
+            .getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", file);
+        i.setDataAndType(contentUri, "image/png");
         startActivity(i);
 
       } catch (Exception e) {
@@ -299,7 +304,6 @@ public class EditAttachmentActivity extends AppCompatActivity {
           List<FeatureEditResult> edits = updatedServerResult.get();
           // check that the feature table was successfully updated
           if (!edits.isEmpty()) {
-            if (!edits.get(0).hasCompletedWithErrors()) {
               if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
               }
@@ -307,9 +311,6 @@ public class EditAttachmentActivity extends AppCompatActivity {
               fetchAttachmentsFromServer(mAttributeID);
               // update the attachment list view on the control panel
               Toast.makeText(this, getString(R.string.success_message), Toast.LENGTH_SHORT).show();
-            } else {
-              Toast.makeText(this, getString(R.string.failure_message), Toast.LENGTH_SHORT).show();
-            }
           } else {
             Toast.makeText(this, getString(R.string.failure_edit_results), Toast.LENGTH_SHORT).show();
           }

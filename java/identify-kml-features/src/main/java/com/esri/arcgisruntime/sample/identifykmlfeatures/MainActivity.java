@@ -16,22 +16,22 @@
 
 package com.esri.arcgisruntime.sample.identifykmlfeatures;
 
-import java.util.concurrent.ExecutionException;
-
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.KmlLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.GeoElement;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
@@ -39,6 +39,8 @@ import com.esri.arcgisruntime.mapping.view.IdentifyLayerResult;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.ogc.kml.KmlDataset;
 import com.esri.arcgisruntime.ogc.kml.KmlPlacemark;
+
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,8 +53,12 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // create a map and add it to the map view
-    ArcGISMap map = new ArcGISMap(Basemap.createDarkGrayCanvasVector());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_DARK_GRAY);
     mMapView = findViewById(R.id.mapView);
     mMapView.setMap(map);
 
@@ -62,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             SpatialReferences.getWebMercator()));
 
     // create a KML dataset of weather forecasts
-    KmlDataset forecastKmlDataset = new KmlDataset("https://www.wpc.ncep.noaa.gov/kml/noaa_chart/WPC_Day1_SigWx.kml");
+    KmlDataset forecastKmlDataset = new KmlDataset("https://www.wpc.ncep.noaa.gov/kml/noaa_chart/WPC_Day1_SigWx_latest.kml");
 
     // create a KML layer and add it as an operational layer
     KmlLayer forecastKmlLayer = new KmlLayer(forecastKmlDataset);
@@ -87,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
               if (geoElement instanceof KmlPlacemark) {
                 // show a callout at the placemark with custom content using the placemark's "balloon content"
                 KmlPlacemark placemark = (KmlPlacemark) geoElement;
+                // Google Earth only displays the placemarks with description or extended data. To
+                // match its behavior, add a description placeholder if the data source is empty
+                if (placemark.getDescription().isEmpty()) {
+                  placemark.setDescription("Weather condition");
+                }
                 TextView calloutContent = new TextView(getApplicationContext());
                 calloutContent.setText(Html.fromHtml(placemark.getBalloonContent()));
 

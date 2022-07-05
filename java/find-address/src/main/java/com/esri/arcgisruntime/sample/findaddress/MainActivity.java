@@ -16,27 +16,27 @@
 
 package com.esri.arcgisruntime.sample.findaddress;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 import android.database.MatrixCursor;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import androidx.core.content.ContextCompat;
-import androidx.cursoradapter.widget.SimpleCursorAdapter;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
+import androidx.cursoradapter.widget.SimpleCursorAdapter;
+
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Callout;
 import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
@@ -49,6 +49,9 @@ import com.esri.arcgisruntime.tasks.geocode.GeocodeParameters;
 import com.esri.arcgisruntime.tasks.geocode.GeocodeResult;
 import com.esri.arcgisruntime.tasks.geocode.LocatorTask;
 import com.esri.arcgisruntime.tasks.geocode.SuggestResult;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,8 +72,12 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate address search view
-    mAddressSearchView = (SearchView) findViewById(R.id.addressSearchView);
+    mAddressSearchView = findViewById(R.id.addressSearchView);
     mAddressSearchView.setIconified(false);
     mAddressSearchView.setFocusable(false);
     mAddressSearchView.setQueryHint(getResources().getString(R.string.address_search_hint));
@@ -88,12 +95,28 @@ public class MainActivity extends AppCompatActivity {
     mPinSourceSymbol.setHeight(72f);
 
     // create a LocatorTask from an online service
-    mLocatorTask = new LocatorTask("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
+    mLocatorTask = new LocatorTask("https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer");
 
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     // create a map with the BasemapType topographic
-    final ArcGISMap map = new ArcGISMap(Basemap.createStreetsVector());
+    final ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_STREETS);
+    map.setInitialViewpoint(new Viewpoint(40,-100,100000000));
+
+    // once the map has loaded successfully, set up address finding UI
+    map.addDoneLoadingListener(() -> {
+      if (map.getLoadStatus() == LoadStatus.LOADED) {
+        setupAddressSearchView();
+      } else {
+        Log.e(TAG, "Map failed to load: " + map.getLoadError().getMessage());
+        Toast.makeText(
+                getApplicationContext(),
+                "Map failed to load: " + map.getLoadError().getMessage(),
+                Toast.LENGTH_LONG
+        ).show();
+      }
+    });
+
     // set the map to be displayed in this view
     mMapView.setMap(map);
     // set the map viewpoint to start over North America
@@ -111,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
     // define the graphics overlay
     mGraphicsOverlay = new GraphicsOverlay();
 
-    setupAddressSearchView();
   }
 
   /**
@@ -122,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     mAddressGeocodeParameters = new GeocodeParameters();
     // get place name and address attributes
     mAddressGeocodeParameters.getResultAttributeNames().add("PlaceName");
-    mAddressGeocodeParameters.getResultAttributeNames().add("StAddr");
+    mAddressGeocodeParameters.getResultAttributeNames().add("Place_addr");
     // return only the closest result
     mAddressGeocodeParameters.setMaxResults(1);
     mAddressSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -206,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
           IdentifyGraphicsOverlayResult identifyGraphicsOverlayResult = identifyResultsFuture.get();
           List<Graphic> graphics = identifyGraphicsOverlayResult.getGraphics();
           // if a graphic has been identified
-          if (graphics.size() > 0) {
+          if (!graphics.isEmpty()) {
             //get the first graphic identified
             Graphic identifiedGraphic = graphics.get(0);
             showCallout(identifiedGraphic);
@@ -231,8 +253,12 @@ public class MainActivity extends AppCompatActivity {
     TextView calloutContent = new TextView(getApplicationContext());
     calloutContent.setTextColor(Color.BLACK);
     // set the text of the Callout to graphic's attributes
-    calloutContent.setText(graphic.getAttributes().get("PlaceName").toString() + "\n"
-        + graphic.getAttributes().get("StAddr").toString());
+    if (graphic.getAttributes().get("PlaceName").toString().isEmpty()) {
+      calloutContent.setText(graphic.getAttributes().get("Place_addr").toString());
+    } else {
+      calloutContent.setText(graphic.getAttributes().get("PlaceName") + "\n"
+          + graphic.getAttributes().get("Place_addr"));
+    }
     // get Callout
     mCallout = mMapView.getCallout();
     // set Callout options: animateCallout: true, recenterMap: false, animateRecenter: false
@@ -310,10 +336,10 @@ public class MainActivity extends AppCompatActivity {
     // add graphic to location layer
     mGraphicsOverlay.getGraphics().add(resultLocGraphic);
     // zoom map to result over 3 seconds
-    mMapView.setViewpointAsync(new Viewpoint(geocodeResult.getExtent()), 3);
+    mMapView.setViewpointAsync(new Viewpoint(geocodeResult.getExtent()), 3).addDoneListener(() -> showCallout(resultLocGraphic));
     // set the graphics overlay to the map
     mMapView.getGraphicsOverlays().add(mGraphicsOverlay);
-    showCallout(resultLocGraphic);
+
   }
 
   @Override

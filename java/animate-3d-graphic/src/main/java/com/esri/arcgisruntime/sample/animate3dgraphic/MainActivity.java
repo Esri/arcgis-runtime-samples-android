@@ -43,6 +43,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polyline;
@@ -51,6 +52,7 @@ import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.GlobeCameraController;
@@ -97,13 +99,17 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // load tank model from assets into cache directory
     copyFileFromAssetsToCache(getString(R.string.bristol_model));
     copyFileFromAssetsToCache(getString(R.string.bristol_skin));
 
     // create a scene and add it to the scene view
     mSceneView = findViewById(R.id.sceneView);
-    ArcGISScene scene = new ArcGISScene(Basemap.createImagery());
+    ArcGISScene scene = new ArcGISScene(BasemapStyle.ARCGIS_IMAGERY);
     mSceneView.setScene(scene);
 
     // add elevation data
@@ -126,10 +132,8 @@ public class MainActivity extends AppCompatActivity {
 
     // set up mini map
     mMapView = findViewById(R.id.mapView);
-    ArcGISMap map = new ArcGISMap(Basemap.createImagery());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_IMAGERY);
     mMapView.setMap(map);
-    // make sure the map view renders on top of the scene view
-    mMapView.setZOrderMediaOverlay(true);
 
     // create a graphics overlay for route
     GraphicsOverlay routeOverlay = new GraphicsOverlay();
@@ -385,9 +389,9 @@ public class MainActivity extends AppCompatActivity {
     // update the HUD
     runOnUiThread(() -> {
       mCurrAltitude.setText(String.format("%.2f", position.getZ()));
-      mCurrHeading.setText(String.format("%.2f", (float) datum.get("HEADING")));
-      mCurrPitch.setText(String.format("%.2f", (float) datum.get("PITCH")));
-      mCurrRoll.setText(String.format("%.2f", (float) datum.get("ROLL")));
+      mCurrHeading.setText(String.format("%.2f", datum.get("HEADING")));
+      mCurrPitch.setText(String.format("%.2f", datum.get("PITCH")));
+      mCurrRoll.setText(String.format("%.2f", datum.get("ROLL")));
     });
 
     // update mission progress seek bar

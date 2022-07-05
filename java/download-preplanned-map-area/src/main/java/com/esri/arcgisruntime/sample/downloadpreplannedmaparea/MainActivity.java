@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
   private ListView mDownloadedMapAreasListView;
   private List<String> mDownloadedMapAreaNames;
   private ArrayAdapter<String> mDownloadedMapAreasAdapter;
-  private List<ArcGISMap> mDownloadedMapAreas = new ArrayList<>();
+  private final List<ArcGISMap> mDownloadedMapAreas = new ArrayList<>();
   private Button mDownloadButton;
 
   private PreplannedMapArea mSelectedPreplannedMapArea;
@@ -265,12 +265,8 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
                 .getExtent();
             mMapView.setViewpointAsync(new Viewpoint(areaOfInterest), 1.5f);
             // enable download button only for those map areas which have not been downloaded already
-            if (new File(getCacheDir() + getString(R.string.preplanned_offline_map_dir) + File.separator
-                + mSelectedPreplannedMapArea.getPortalItem().getTitle()).exists()) {
-              mDownloadButton.setEnabled(false);
-            } else {
-              mDownloadButton.setEnabled(true);
-            }
+            mDownloadButton.setEnabled(!new File(getCacheDir() + getString(R.string.preplanned_offline_map_dir) + File.separator
+                    + mSelectedPreplannedMapArea.getPortalItem().getTitle()).exists());
           } else {
             mDownloadButton.setEnabled(false);
           }
@@ -348,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements ProgressDialogFra
    */
   @Override public void onProgressDialogDismiss() {
     if (mDownloadPreplannedOfflineMapJob != null) {
-      mDownloadPreplannedOfflineMapJob.cancel();
+      mDownloadPreplannedOfflineMapJob.cancelAsync();
     }
   }
 

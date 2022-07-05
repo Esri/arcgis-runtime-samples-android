@@ -20,74 +20,88 @@ package com.esri.arcgisruntime.sample.changeviewpoint
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.PointCollection
 import com.esri.arcgisruntime.geometry.Polyline
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.mapping.ArcGISMap
-import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.sample.changeviewpoint.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-  private val scale = 5000.0
+    private val activityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    private val mapView: MapView by lazy {
+        activityMainBinding.mapView
+    }
 
-    // create a map with an imagery basemap and set it to the map view
-    mapView.map = ArcGISMap(Basemap.createImageryWithLabels())
+    private val scale = 5000.0
 
-    // create point for starting location
-    val startPoint = Point(-14093.0, 6711377.0, SpatialReferences.getWebMercator())
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(activityMainBinding.root)
 
-    // set viewpoint of map view to starting point and scale
-    mapView.setViewpointCenterAsync(startPoint, scale)
-  }
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-  fun onAnimateClicked(view: View) {
-    // create the London location point
-    val londonPoint = Point(-14093.0, 6711377.0, SpatialReferences.getWebMercator())
-    // create the viewpoint with the London point and scale
-    val viewpoint = Viewpoint(londonPoint, scale)
-    // set the map view's viewpoint to London with a seven second animation duration
-    mapView.setViewpointAsync(viewpoint, 7f)
-  }
+        // create a map with an imagery basemap and set it to the map view
+        mapView.map = ArcGISMap(BasemapStyle.ARCGIS_IMAGERY)
 
-  fun onCenterClicked(view: View) {
-    // create the Waterloo location point
-    val waterlooPoint = Point(-12153.0, 6710527.0, SpatialReferences.getWebMercator())
-    // set the map view's viewpoint centered on Waterloo and scaled
-    mapView.setViewpointCenterAsync(waterlooPoint, scale)
-  }
+        // create point for starting location
+        val startPoint = Point(-14093.0, 6711377.0, SpatialReferences.getWebMercator())
 
-  fun onGeometryClicked(view: View) {
-    // create a collection of points around Westminster
-    val westminsterPoints = PointCollection(SpatialReferences.getWebMercator())
-    westminsterPoints.add(Point(-13823.0, 6710390.0))
-    westminsterPoints.add(Point(-13823.0, 6710150.0))
-    westminsterPoints.add(Point(-14680.0, 6710390.0))
-    westminsterPoints.add(Point(-14680.0, 6710150.0))
-    val geometry = Polyline(westminsterPoints)
+        // set viewpoint of map view to starting point and scale
+        mapView.setViewpointCenterAsync(startPoint, scale)
+    }
 
-    // set the map view's viewpoint to Westminster
-    mapView.setViewpointGeometryAsync(geometry)
-  }
+    fun onAnimateClicked(view: View) {
+        // create the London location point
+        val londonPoint = Point(-14093.0, 6711377.0, SpatialReferences.getWebMercator())
+        // create the viewpoint with the London point and scale
+        val viewpoint = Viewpoint(londonPoint, scale)
+        // set the map view's viewpoint to London with a seven second animation duration
+        mapView.setViewpointAsync(viewpoint, 7f)
+    }
 
-  override fun onPause() {
-    mapView.pause()
-    super.onPause()
-  }
+    fun onCenterClicked(view: View) {
+        // create the Waterloo location point
+        val waterlooPoint = Point(-12153.0, 6710527.0, SpatialReferences.getWebMercator())
+        // set the map view's viewpoint centered on Waterloo and scaled
+        mapView.setViewpointCenterAsync(waterlooPoint, scale)
+    }
 
-  override fun onResume() {
-    super.onResume()
-    mapView.resume()
-  }
+    fun onGeometryClicked(view: View) {
+        // create a collection of points around Westminster
+        val westminsterPoints = PointCollection(SpatialReferences.getWebMercator())
+        westminsterPoints.add(Point(-13823.0, 6710390.0))
+        westminsterPoints.add(Point(-13823.0, 6710150.0))
+        westminsterPoints.add(Point(-14680.0, 6710390.0))
+        westminsterPoints.add(Point(-14680.0, 6710150.0))
+        val geometry = Polyline(westminsterPoints)
 
-  override fun onDestroy() {
-    mapView.dispose()
-    super.onDestroy()
-  }
+        // set the map view's viewpoint to Westminster
+        mapView.setViewpointGeometryAsync(geometry)
+    }
+
+    override fun onPause() {
+        mapView.pause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.resume()
+    }
+
+    override fun onDestroy() {
+        mapView.dispose()
+        super.onDestroy()
+    }
 }

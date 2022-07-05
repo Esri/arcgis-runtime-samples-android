@@ -19,8 +19,9 @@ Use the navigation drawer to select the active basemap from the list of availabl
 3. Choose a new basemap type and set it on the map.
 
 ## Relevant API
+
 * ArcGISMap
-* Basemap
+* BasemapStyle
 * MapView
 
 ## Tags

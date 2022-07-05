@@ -37,7 +37,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mapView">
 
-        <TextView
+        <android.widget.TextView
             android:layout_column="0"
             android:layout_gravity="end|top"
             android:layout_margin="@dimen/coordinate_text_margin"
@@ -45,7 +45,7 @@
             android:text="@string/latlong_dd_label"
             android:textAlignment="textEnd"/>
 
-        <TextView
+        <android.widget.TextView
             android:layout_column="0"
             android:layout_gravity="end|top"
             android:layout_margin="@dimen/coordinate_text_margin"
@@ -53,7 +53,7 @@
             android:text="@string/latlong_dms_label"
             android:textAlignment="textEnd"/>
 
-        <TextView
+        <android.widget.TextView
             android:layout_column="0"
             android:layout_gravity="end|top"
             android:layout_margin="@dimen/coordinate_text_margin"
@@ -61,7 +61,7 @@
             android:text="@string/utm_label"
             android:textAlignment="textEnd"/>
 
-        <TextView
+        <android.widget.TextView
             android:layout_column="0"
             android:layout_gravity="end|top"
             android:layout_margin="@dimen/coordinate_text_margin"
@@ -69,7 +69,7 @@
             android:text="@string/usng_label"
             android:textAlignment="textEnd"/>
 
-        <TextView
+        <android.widget.TextView
             android:id="@+id/latLongDDNotation"
             android:layout_column="1"
             android:layout_gravity="start|top"
@@ -79,7 +79,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             />
 
-        <TextView
+        <android.widget.TextView
             android:id="@+id/latLongDMSNotation"
             android:layout_column="1"
             android:layout_gravity="start|top"
@@ -89,7 +89,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             />
 
-        <TextView
+        <android.widget.TextView
             android:id="@+id/utmNotation"
             android:layout_column="1"
             android:layout_gravity="start|top"
@@ -99,7 +99,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             />
 
-        <TextView
+        <android.widget.TextView
             android:id="@+id/usngNotation"
             android:layout_column="1"
             android:layout_gravity="start|top"

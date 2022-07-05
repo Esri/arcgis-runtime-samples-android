@@ -6,7 +6,7 @@
         <item>1:250,000</item>
         <item>1:500,000</item>
     </string-array>
-    <string name="runtime_portal_url">http://runtime.maps.arcgis.com</string>
+    <string name="runtime_portal_url">https://runtime.maps.arcgis.com</string>
     <string name="isle_of_wight_portal_item">3953413f3bd34e53a42bf70f2937a408</string>
     <string name="set_map_scale_to_reference_scale">Set Map Scale to Reference Scale</string>
     <string name="current_map_scale">Current Map Scale</string>

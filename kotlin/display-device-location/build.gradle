@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -11,6 +10,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
+        buildConfigField("String", "API_KEY", API_KEY)
     }
 
     buildTypes {
@@ -20,7 +20,11 @@ android {
         }
     }
 
-    dependencies {
-        // arcgis-android & appcompat lib dependencies from rootProject build.gradle
+    buildFeatures {
+        viewBinding true
     }
+}
+
+dependencies {
+    // arcgis-android & appcompat lib dependencies from rootProject build.gradle
 }

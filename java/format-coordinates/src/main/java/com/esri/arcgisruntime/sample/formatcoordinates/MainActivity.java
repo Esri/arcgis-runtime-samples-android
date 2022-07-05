@@ -17,11 +17,7 @@
 package com.esri.arcgisruntime.sample.formatcoordinates;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -30,6 +26,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import com.esri.arcgisruntime.ArcGISRuntimeException;
 import com.esri.arcgisruntime.geometry.CoordinateFormatter;
 import com.esri.arcgisruntime.geometry.Point;
@@ -42,6 +40,8 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
    * @param newLocation Point to convert to coordinate notations
    */
   private void toCoordinateNotationFromPoint(Point newLocation) {
-    if ((newLocation != null) && (! newLocation.isEmpty())) {
+    if (newLocation != null && ! newLocation.isEmpty()) {
       coordinateLocation.setGeometry(newLocation);
 
       try {
@@ -92,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
       }
       catch (ArcGISRuntimeException convertException) {
         String message = String.format("%s Point at '%s'\n%s", getString(R.string.failed_convert),
-            newLocation.toString(), convertException.getMessage());
-        Snackbar.make(mMapView, message, Snackbar.LENGTH_SHORT).show();
+            newLocation, convertException.getMessage());
+        Snackbar.make(mMapView, message, BaseTransientBottomBar.LENGTH_SHORT).show();
       }
     }
   }
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
    * @param type the given coordinate notation type
    * @param coordinateNotation a string containing the coordinate notation to convert to a point
    */
-  private void fromCoordinateNotationToPoint(NotationType type, String coordinateNotation) {
+  private void fromCoordinateNotationToPoint(MainActivity.NotationType type, String coordinateNotation) {
     // ignore empty input coordinate notation strings, do not update UI
     if (TextUtils.isEmpty(coordinateNotation)) return;
 
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
           convertedPoint = CoordinateFormatter.fromUsng(coordinateNotation, null);
           break;
         default:
-          Snackbar.make(mMapView, getString(R.string.unsupported_message), Snackbar.LENGTH_SHORT).show();
+          Snackbar.make(mMapView, getString(R.string.unsupported_message), BaseTransientBottomBar.LENGTH_SHORT).show();
           break;
       }
 
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     catch (ArcGISRuntimeException convertException) {
       String message = String.format("%s '%s'\n%s", getString(R.string.failed_convert), coordinateNotation,
           convertException.getMessage());
-      Snackbar.make(mMapView, message, Snackbar.LENGTH_SHORT).show();
+      Snackbar.make(mMapView, message, BaseTransientBottomBar.LENGTH_SHORT).show();
     }
   }
 
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
    * @param type indicates the type of coordinate notation to be entered into the editable text box in the dialog
    * @param currentValue existing value of the coordinate, shown as default in the text box
    */
-  private void showEnterCoordinateDialog(final NotationType type, final String currentValue) {
+  private void showEnterCoordinateDialog(final MainActivity.NotationType type, final String currentValue) {
     String title = "";
     switch (type) {
       case DMS:
@@ -161,25 +161,22 @@ public class MainActivity extends AppCompatActivity {
         title = getString(R.string.enter_usng_message);
         break;
       default:
-        Snackbar.make(mMapView, getString(R.string.unsupported_message), Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mMapView, getString(R.string.unsupported_message), BaseTransientBottomBar.LENGTH_SHORT).show();
         break;
     }
 
     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 
-    LayoutInflater inflater = this.getLayoutInflater();
+    LayoutInflater inflater = getLayoutInflater();
     final View dialogView = inflater.inflate(R.layout.dialog_coordinate, null);
     dialogBuilder.setView(dialogView);
-    final EditText coordinateEditText = (EditText) dialogView.findViewById(R.id.coordinateNotation);
+    final EditText coordinateEditText = dialogView.findViewById(R.id.coordinateNotation);
     coordinateEditText.setText(currentValue);
 
     dialogBuilder.setTitle(title)
         .setCancelable(true)
-        .setPositiveButton(R.string.set_location, new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int id) {
-            fromCoordinateNotationToPoint(type, coordinateEditText.getText().toString());
-          }
-        });
+        .setPositiveButton(R.string.set_location,
+            (dialog, id) -> fromCoordinateNotationToPoint(type, coordinateEditText.getText().toString()));
 
     // create and show the dialog.
     dialogBuilder.create().show();
@@ -193,41 +190,29 @@ public class MainActivity extends AppCompatActivity {
 
     // retrieve coordinate label views from the layout; set each to allow a user to enter a new coordinate string when
     // the View is tapped
-    mLatLongDDValue = (TextView)findViewById(R.id.latLongDDNotation);
-    mLatLongDDValue.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        TextView currentValue = (TextView)view;
-        showEnterCoordinateDialog(NotationType.DD, currentValue.getText().toString());
-      }
+    mLatLongDDValue = findViewById(R.id.latLongDDNotation);
+    mLatLongDDValue.setOnClickListener(view -> {
+      TextView currentValue = (TextView)view;
+      showEnterCoordinateDialog(NotationType.DD, currentValue.getText().toString());
     });
-    mLatLongDMSValue = (TextView)findViewById(R.id.latLongDMSNotation);
-    mLatLongDMSValue.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        TextView currentValue = (TextView)view;
-        showEnterCoordinateDialog(NotationType.DMS, currentValue.getText().toString());
-      }
+    mLatLongDMSValue = findViewById(R.id.latLongDMSNotation);
+    mLatLongDMSValue.setOnClickListener(view -> {
+      TextView currentValue = (TextView)view;
+      showEnterCoordinateDialog(NotationType.DMS, currentValue.getText().toString());
     });
-    mUtmValue = (TextView)findViewById(R.id.utmNotation);
-    mUtmValue.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        TextView currentValue = (TextView)view;
-        showEnterCoordinateDialog(NotationType.UTM, currentValue.getText().toString());
-      }
+    mUtmValue = findViewById(R.id.utmNotation);
+    mUtmValue.setOnClickListener(view -> {
+      TextView currentValue = (TextView)view;
+      showEnterCoordinateDialog(NotationType.UTM, currentValue.getText().toString());
     });
-    mUSNGValue = (TextView)findViewById(R.id.usngNotation);
-    mUSNGValue.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        TextView currentValue = (TextView)view;
-        showEnterCoordinateDialog(NotationType.USNG, currentValue.getText().toString());
-      }
+    mUSNGValue = findViewById(R.id.usngNotation);
+    mUSNGValue.setOnClickListener(view -> {
+      TextView currentValue = (TextView)view;
+      showEnterCoordinateDialog(NotationType.USNG, currentValue.getText().toString());
     });
 
     // retrieve the MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
 
     // create a map that has the WGS 84 coordinate system and set this into the map
     ArcGISTiledLayer basemapLayer = new ArcGISTiledLayer(getString(R.string.basemap_url));

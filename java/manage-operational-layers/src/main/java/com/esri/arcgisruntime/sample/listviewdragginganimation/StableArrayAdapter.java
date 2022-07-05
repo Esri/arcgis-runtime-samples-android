@@ -52,7 +52,7 @@ public class StableArrayAdapter extends ArrayAdapter<String> {
 
     @Override
     public boolean hasStableIds() {
-        return android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
+        return false;
     }
 
 

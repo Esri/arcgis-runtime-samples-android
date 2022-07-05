@@ -9,7 +9,7 @@
     <com.esri.arcgisruntime.mapping.view.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
     </com.esri.arcgisruntime.mapping.view.MapView>
 
@@ -24,6 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
+        android:id="@+id/controlsLayout"
         layout="@layout/utility_network_controls_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

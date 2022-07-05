@@ -18,16 +18,15 @@ package com.esri.arcgisruntime.sample.maploaded;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.esri.arcgisruntime.loadable.LoadStatusChangedEvent;
-import com.esri.arcgisruntime.loadable.LoadStatusChangedListener;
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,10 +40,14 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     // inflate MapView from layout
-    mMapView = (MapView) findViewById(R.id.mapView);
+    mMapView = findViewById(R.id.mapView);
     // inflate TextView of the map load status from the layout
-    mMapLoadStatusTextView = (TextView) findViewById(R.id.mapLoadStatusResult);
+    mMapLoadStatusTextView = findViewById(R.id.mapLoadStatusResult);
     loadMap();
 
   }
@@ -76,46 +79,43 @@ public class MainActivity extends AppCompatActivity {
 
     //clear the current map load status of the TextView
     mMapLoadStatusTextView.setText("");
-    // create a map with the BasemapType National Geographic
-    ArcGISMap map = new ArcGISMap(Basemap.createLightGrayCanvas());
+    // create a map with the Basemap Style Light Gray
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY);
 
     // Listener on change in map load status
-    map.addLoadStatusChangedListener(new LoadStatusChangedListener() {
-      @Override
-      public void loadStatusChanged(LoadStatusChangedEvent loadStatusChangedEvent) {
-        String mapLoadStatus;
-        mapLoadStatus = loadStatusChangedEvent.getNewLoadStatus().name();
-        // map load status can be any of LOADING, FAILED_TO_LOAD, NOT_LOADED or LOADED
-        // set the status in the TextView accordingly
-        switch (mapLoadStatus) {
-          case "LOADING":
-            mMapLoadStatusTextView.setText(R.string.status_loading);
-            mMapLoadStatusTextView.setTextColor(Color.BLUE);
-            break;
+    map.addLoadStatusChangedListener(loadStatusChangedEvent -> {
+      String mapLoadStatus;
+      mapLoadStatus = loadStatusChangedEvent.getNewLoadStatus().name();
+      // map load status can be any of LOADING, FAILED_TO_LOAD, NOT_LOADED or LOADED
+      // set the status in the TextView accordingly
+      switch (mapLoadStatus) {
+        case "LOADING":
+          mMapLoadStatusTextView.setText(R.string.status_loading);
+          mMapLoadStatusTextView.setTextColor(Color.BLUE);
+          break;
 
-          case "FAILED_TO_LOAD":
-            mMapLoadStatusTextView.setText(R.string.status_loadFail);
-            mMapLoadStatusTextView.setTextColor(Color.RED);
-            break;
+        case "FAILED_TO_LOAD":
+          mMapLoadStatusTextView.setText(R.string.status_loadFail);
+          mMapLoadStatusTextView.setTextColor(Color.RED);
+          break;
 
-          case "NOT_LOADED":
-            mMapLoadStatusTextView.setText(R.string.status_notLoaded);
-            mMapLoadStatusTextView.setTextColor(Color.GRAY);
-            break;
+        case "NOT_LOADED":
+          mMapLoadStatusTextView.setText(R.string.status_notLoaded);
+          mMapLoadStatusTextView.setTextColor(Color.GRAY);
+          break;
 
-          case "LOADED":
-            mMapLoadStatusTextView.setText(R.string.status_loaded);
-            mMapLoadStatusTextView.setTextColor(Color.GREEN);
-            break;
+        case "LOADED":
+          mMapLoadStatusTextView.setText(R.string.status_loaded);
+          mMapLoadStatusTextView.setTextColor(Color.GREEN);
+          break;
 
-          default:
-            mMapLoadStatusTextView.setText(R.string.status_loadError);
-            mMapLoadStatusTextView.setTextColor(Color.WHITE);
-            break;
-        }
-
-        Log.d(TAG, mapLoadStatus);
+        default:
+          mMapLoadStatusTextView.setText(R.string.status_loadError);
+          mMapLoadStatusTextView.setTextColor(Color.WHITE);
+          break;
       }
+
+      Log.d(TAG, mapLoadStatus);
     });
     // set the map to be displayed in this view
     mMapView.setMap(map);

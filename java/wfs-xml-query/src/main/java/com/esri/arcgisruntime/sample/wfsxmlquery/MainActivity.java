@@ -21,17 +21,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.FeatureQueryResult;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.ogc.wfs.OgcAxisOrder;
 import com.esri.arcgisruntime.ogc.wfs.WfsFeatureTable;
@@ -46,10 +47,14 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
+
     mMapView = findViewById(R.id.mapView);
 
     // create a map and set the map to display in the map view
-    ArcGISMap map = new ArcGISMap(Basemap.createNavigationVector());
+    ArcGISMap map = new ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION);
     mMapView.setMap(map);
 
     // create the WFS feature table from URL and name

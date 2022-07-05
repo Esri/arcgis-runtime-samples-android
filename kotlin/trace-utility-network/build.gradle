@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -10,7 +10,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
-        multiDexEnabled true
+        buildConfigField("String", "API_KEY", API_KEY)
     }
 
     buildTypes {
@@ -20,6 +20,9 @@ android {
         }
     }
 
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {

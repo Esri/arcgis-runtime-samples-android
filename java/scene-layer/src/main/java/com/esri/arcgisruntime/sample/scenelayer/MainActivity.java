@@ -19,9 +19,11 @@ package com.esri.arcgisruntime.sample.scenelayer;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 
@@ -34,11 +36,14 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // create a scene and add a basemap to it
-    ArcGISScene scene = new ArcGISScene();
-    scene.setBasemap(Basemap.createImagery());
+    // authentication with an API key or named user is required to access basemaps and other
+    // location services
+    ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY);
 
-    mSceneView = (SceneView) findViewById(R.id.sceneView);
+    // create a scene and add a basemap to it
+    ArcGISScene scene = new ArcGISScene(BasemapStyle.ARCGIS_TOPOGRAPHIC);
+
+    mSceneView = findViewById(R.id.sceneView);
     mSceneView.setScene(scene);
 
     // add a scene service to the scene for viewing buildings
@@ -52,22 +57,19 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onPause() {
-    super.onPause();
-    // pause SceneView
     mSceneView.pause();
+    super.onPause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    // resume SceneView
     mSceneView.resume();
   }
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
-    // dispose SceneView
     mSceneView.dispose();
+    super.onDestroy();
   }
 }

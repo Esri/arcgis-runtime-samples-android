@@ -14,7 +14,7 @@ When loaded, the sample will display a scene. Pan and zoom to explore the scene.
 
 ## How it works
 
-1. Create an `ArcGISScene` object with the `Basemap.createImagery()` basemap.
+1. Create an `ArcGISScene` object with the `BasemapStyle.ARCGIS_IMAGERY` basemap.
 2. Create an `ArcGISTiledElevationSource` object and add it to the scene's base surface.
 3. Create a `SceneView` object to display the map.
 4. Set the scene to the scene view.

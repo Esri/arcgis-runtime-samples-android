@@ -16,11 +16,11 @@ Use the navigation drawer to select the active basemap from the list of availabl
 
 1. Create an `ArcGISMap` object.
 2. Set the map to the `MapView` object.
-3. Choose a new basemap type and set it on the map.
+3. Choose a new basemap style and set it on the map.
 
 ## Relevant API
 * ArcGISMap
-* Basemap
+* BasemapStyle
 * MapView
 
 ## Tags

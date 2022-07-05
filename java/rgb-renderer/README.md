@@ -22,7 +22,7 @@ Choose one of the stretch parameter types. The other options will adjust based o
 
 ## Relevant API
 
-* Basemap
+* BasemapStyle
 * Raster
 * RasterLayer
 * RGBRenderer
