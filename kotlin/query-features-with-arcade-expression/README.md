@@ -21,8 +21,8 @@ Tap on any neighborhood to see the number of crimes in the last 60 days in a cal
 5. Identify the visible layer where it is tapped using `mapView.identifyLayerAsync()` and get the feature.
 6. Create the following `ArcadeExpression`:
 ```kotlin		
- 	expressionValue = "var crimes = FeatureSetByName($map, 'Crime in the last 60 days');\n"
-			   "return Count(Intersects($feature, crimes));"
+expressionValue = "var crimes = FeatureSetByName(\$map, 'Crime in the last 60 days');\n"
+                "return Count(Intersects(\$feature, crimes));"
 ```
             
 7. Create an `ArcadeEvaluator` using the Arcade expression and `ArcadeProfile.FORM_CALCULATION`.
