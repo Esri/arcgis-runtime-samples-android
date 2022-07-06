@@ -213,8 +213,13 @@ class MainActivity : AppCompatActivity() {
         val future = geotriggerMonitor.startAsync()
         // check to see if the GeotriggerMonitor failed to start
         future.addDoneListener {
-            if(geotriggerMonitor.status == GeotriggerMonitorStatus.FAILED_TO_START){
-                Log.e(TAG, "GeotriggerMonitor failed to load" + geotriggerMonitor.warning.message.toString())
+            if (geotriggerMonitor.status == GeotriggerMonitorStatus.FAILED_TO_START) {
+                Log.e(
+                    TAG,
+                    "GeotriggerMonitor failed to load: " +
+                        geotriggerMonitor.warning.message +
+                        geotriggerMonitor.warning.additionalMessage
+                )
             }
         }
 
