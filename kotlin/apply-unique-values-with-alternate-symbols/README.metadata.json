@@ -1,5 +1,5 @@
 {
-    "category": "Layers",
+    "category": "Visualization",
     "description": "Apply a unique value with alternate symbols at different scales.",
     "formal_name": "ApplyUniqueValuesWithAlternateSymbols",
     "ignore": false,

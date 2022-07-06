@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         // set the unique value renderer on the feature layer
-        featureLayer.renderer = makeUniqueValueRenderer()
+        featureLayer.renderer = createUniqueValueRenderer()
 
         mapView.apply {
             // create a map with the BasemapType topographic to be displayed in the layout's MapView
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Create the unique values renderer for the feature layer
      */
-    private fun makeUniqueValueRenderer(): UniqueValueRenderer {
+    private fun createUniqueValueRenderer(): UniqueValueRenderer {
         // create the default symbol
         val symbol = SimpleMarkerSymbol(
             SimpleMarkerSymbol.Style.TRIANGLE,
