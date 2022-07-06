@@ -83,6 +83,141 @@ class MainActivity : AppCompatActivity() {
         setUpBottomUI()
     }
 
+    /**
+     * Load a feature layer with a URL
+     */
+    private fun loadFeatureServiceURL() {
+        // initialize the service feature table using a URL
+        val serviceFeatureTable =
+            ServiceFeatureTable(resources.getString(R.string.sample_service_url)).apply {
+                // set user credentials to authenticate with the service
+                credential = UserCredential("viewer01", "I68VGU^nMurF")
+                // NOTE: Never hardcode login information in a production application
+                // This is done solely for the sake of the sample
+            }
+        // create a feature layer with the feature table
+        val featureLayer = FeatureLayer(serviceFeatureTable)
+        val viewpoint = Viewpoint(41.773519, -88.143104, 4000.0)
+        // set the feature layer on the map
+        setFeatureLayer(featureLayer, viewpoint)
+    }
+
+    /**
+     * Load a feature layer with a portal item
+     */
+    private fun loadPortalItem() {
+        // set the portal
+        val portal = Portal("https://www.arcgis.com", false)
+        // create the portal item with the item ID for the Portland tree service data
+        val portalItem = PortalItem(portal, "1759fd3e8a324358a0c58d9a687a8578")
+        portalItem.addDoneLoadingListener {
+            if(portalItem.loadStatus == LoadStatus.LOADED){
+                // create the feature layer with the item
+                val featureLayer = FeatureLayer(portalItem)
+                // set the viewpoint to Portland, Oregon
+                val viewpoint = Viewpoint(45.5266, -122.6219, 6000.0)
+                // set the feature layer on the map
+                setFeatureLayer(featureLayer, viewpoint)
+            }else{
+                showError("Error loading portal item: ${portalItem.loadError.message}")
+            }
+        }
+        portalItem.loadAsync()
+    }
+
+    /**
+     * Load a feature layer with a local geodatabase file
+     */
+    private fun loadGeodatabase() {
+        // locate the .geodatabase file in the device
+        val geodatabaseFile = File(getExternalFilesDir(null), "/LA_Trails.geodatabase")
+        // instantiate the geodatabase with the file path
+        val geodatabase = Geodatabase(geodatabaseFile.path)
+        // load the geodatabase
+        geodatabase.loadAsync()
+        geodatabase.addDoneLoadingListener {
+            if (geodatabase.loadStatus == LoadStatus.LOADED) {
+                // get the feature table with the name
+                val geodatabaseFeatureTable = geodatabase.getGeodatabaseFeatureTable("Trailheads")
+                // create a feature layer with the feature table
+                val featureLayer = FeatureLayer(geodatabaseFeatureTable)
+                // set the viewpoint to Malibu, California
+                val viewpoint = Viewpoint(34.0772, -118.7989, 600000.0)
+                // set the feature layer on the map
+                setFeatureLayer(featureLayer, viewpoint)
+            } else {
+                showError("Error loading geodatabase: ${geodatabase.loadError.message}")
+            }
+        }
+    }
+
+    /**
+     * Load a feature layer with a local geopackage file
+     */
+    private fun loadGeopackage() {
+        // locate the .gpkg file in the device
+        val geopackageFile = File(getExternalFilesDir(null), "/AuroraCO.gpkg")
+        // instantiate the geopackage with the file path
+        val geoPackage = GeoPackage(geopackageFile.path)
+        // load the geopackage
+        geoPackage.loadAsync()
+        geoPackage.addDoneLoadingListener {
+            if (geoPackage.loadStatus == LoadStatus.LOADED) {
+                // get the first feature table in the geopackage
+                val geoPackageFeatureTable = geoPackage.geoPackageFeatureTables.first()
+                // create a feature layer with the feature table
+                val featureLayer = FeatureLayer(geoPackageFeatureTable)
+                // set the viewpoint to Denver, CO
+                val viewpoint = Viewpoint(39.7294, -104.8319, 500000.0)
+                // set the feature layer on the map
+                setFeatureLayer(featureLayer, viewpoint)
+            } else {
+                showError("Error loading geopackage: ${geoPackage.loadError.message}")
+            }
+        }
+    }
+
+    /**
+     * Load a feature layer with a local shapefile file
+     */
+    private fun loadShapefile() {
+        try {
+            // locate the shape file in device
+            val file = File(
+                getExternalFilesDir(null),
+                "/ScottishWildlifeTrust_ReserveBoundaries_20201102.shp"
+            )
+            // create a shapefile feature table from a named bundle resource
+            val shapeFileTable = ShapefileFeatureTable(file.path)
+            // create a feature layer for the shapefile feature table
+            val featureLayer = FeatureLayer(shapeFileTable)
+            // set the viewpoint to Scotland
+            val viewpoint = Viewpoint(56.641344, -3.889066, 6000000.0)
+            // set the feature layer on the map
+            setFeatureLayer(featureLayer, viewpoint)
+        } catch (e: Exception) {
+            showError("Error loading shapefile: ${e.message}")
+        }
+    }
+
+    /**
+     * Sets the map using the loaded [layer] at the given [viewpoint]
+     */
+    private fun setFeatureLayer(layer: FeatureLayer, viewpoint: Viewpoint) {
+        // clears the existing layer on the map
+        mapView.map.operationalLayers.clear()
+        // adds the new layer to the map
+        mapView.map.operationalLayers.add(layer)
+        // updates the viewpoint to the given viewpoint
+        mapView.setViewpoint(viewpoint)
+    }
+
+    private fun showError(message: String?) {
+        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+        Log.e(TAG, message.toString())
+    }
+
+
     private fun setUpBottomUI() {
         // create an adapter with the types of feature layer
         // sources to be displayed in menu
@@ -117,132 +252,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Load a feature layer with a URL
-     */
-    private fun loadFeatureServiceURL() {
-        // initialize the service feature table using a URL
-        val serviceFeatureTable =
-            ServiceFeatureTable(resources.getString(R.string.sample_service_url)).apply {
-                // set user credentials to authenticate with the service
-                credential = UserCredential("viewer01", "I68VGU^nMurF")
-                // NOTE: Never hardcode login information in a production application
-                // This is done solely for the sake of the sample
-            }
-        // create a feature layer with the feature table
-        val featureLayer = FeatureLayer(serviceFeatureTable)
-        val viewpoint = Viewpoint(41.773519, -88.143104, 4000.0)
-        // set the feature layer on the map
-        setFeatureLayer(featureLayer, viewpoint)
-    }
-
-    /**
-     * Load a feature layer with a portal item
-     */
-    private fun loadPortalItem() {
-        // set the portal
-        val portal = Portal("https://www.arcgis.com", false)
-        // create the portal item with the item ID for the Portland tree service data
-        val portalItem = PortalItem(portal, "1759fd3e8a324358a0c58d9a687a8578")
-        // create the feature layer with the item
-        val featureLayer = FeatureLayer(portalItem)
-        // set the viewpoint to Portland, Oregon
-        val viewpoint = Viewpoint(45.5266, -122.6219, 6000.0)
-        // set the feature layer on the map
-        setFeatureLayer(featureLayer, viewpoint)
-    }
-
-    /**
-     * Load a feature layer with a local geodatabase file
-     */
-    private fun loadGeodatabase() {
-        // locate the .geodatabase file in the device
-        val geodatabaseFile = File(getExternalFilesDir(null), "/LA_Trails.geodatabase")
-        // instantiate the geodatabase with the file path
-        val geodatabase = Geodatabase(geodatabaseFile.path)
-        // load the geodatabase
-        geodatabase.loadAsync()
-        geodatabase.addDoneLoadingListener {
-            if (geodatabase.loadStatus == LoadStatus.LOADED) {
-                // get the feature table with the name
-                val geodatabaseFeatureTable = geodatabase.getGeodatabaseFeatureTable("Trailheads")
-                // create a feature layer with the feature table
-                val featureLayer = FeatureLayer(geodatabaseFeatureTable)
-                // set the viewpoint to Malibu, California
-                val viewpoint = Viewpoint(34.0772, -118.7989, 600000.0)
-                // set the feature layer on the map
-                setFeatureLayer(featureLayer, viewpoint)
-            } else {
-                showError(geodatabase.loadError.message)
-            }
-        }
-    }
-
-    /**
-     * Load a feature layer with a local geopackage file
-     */
-    private fun loadGeopackage() {
-        // locate the .gpkg file in the device
-        val geopackageFile = File(getExternalFilesDir(null), "/AuroraCO.gpkg")
-        // instantiate the geopackage with the file path
-        val geoPackage = GeoPackage(geopackageFile.path)
-        // load the geopackage
-        geoPackage.loadAsync()
-        geoPackage.addDoneLoadingListener {
-            if (geoPackage.loadStatus == LoadStatus.LOADED) {
-                // get the first feature table in the geopackage
-                val geoPackageFeatureTable = geoPackage.geoPackageFeatureTables.first()
-                // create a feature layer with the feature table
-                val featureLayer = FeatureLayer(geoPackageFeatureTable)
-                // set the viewpoint to Denver, CO
-                val viewpoint = Viewpoint(39.7294, -104.8319, 500000.0)
-                // set the feature layer on the map
-                setFeatureLayer(featureLayer, viewpoint)
-            } else {
-                showError(geoPackage.loadError.message)
-            }
-        }
-    }
-
-    /**
-     * Load a feature layer with a local shapefile file
-     */
-    private fun loadShapefile() {
-        try {
-            // locate the shape file in device
-            val file = File(
-                getExternalFilesDir(null),
-                "/ScottishWildlifeTrust_ReserveBoundaries_20201102.shp"
-            )
-            // create a shapefile feature table from a named bundle resource
-            val shapeFileTable = ShapefileFeatureTable(file.path)
-            // create a feature layer for the shapefile feature table
-            val featureLayer = FeatureLayer(shapeFileTable)
-            // set the viewpoint to Scotland
-            val viewpoint = Viewpoint(56.641344, -3.889066, 6000000.0)
-            // set the feature layer on the map
-            setFeatureLayer(featureLayer, viewpoint)
-        } catch (e: Exception) {
-            showError(e.message)
-        }
-    }
-
-    /**
-     * Sets the map using the loaded [layer] at the given [viewpoint]
-     */
-    private fun setFeatureLayer(layer: FeatureLayer, viewpoint: Viewpoint) {
-        // clears the existing layer on the map
-        mapView.map.operationalLayers.clear()
-        // adds the new layer to the map
-        mapView.map.operationalLayers.add(layer)
-        // updates the viewpoint to the given viewpoint
-        mapView.setViewpoint(viewpoint)
-    }
-
-    private fun showError(message: String?) {
-        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-        Log.e(TAG, message.toString())
-    }
 
     override fun onPause() {
         mapView.pause()
