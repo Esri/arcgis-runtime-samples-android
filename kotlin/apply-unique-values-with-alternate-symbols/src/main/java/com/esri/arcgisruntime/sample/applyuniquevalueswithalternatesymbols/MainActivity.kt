@@ -147,21 +147,21 @@ class MainActivity : AppCompatActivity() {
      */
     private fun createAlternateSymbols(): List<Symbol> {
         // create the alternate symbol for the mid range scale
-        val alternateSymbol1 = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.SQUARE, Color.BLUE, 30F)
+        val alternateSymbolBlue = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.SQUARE, Color.BLUE, 30F)
         // convert the symbol to a multilayer symbol
-        val alternateSymbolMultilayer1 = alternateSymbol1.toMultilayerSymbol().apply {
+        val alternateSymbolMultilayerBlue = alternateSymbolBlue.toMultilayerSymbol().apply {
             // set the reference properties
             referenceProperties = SymbolReferenceProperties(10000.0, 5000.0)
         }
         // create the alternate symbol for the high range scale
-        val alternateSymbol2 = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.YELLOW, 30F)
+        val alternateSymbolYellow = SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.YELLOW, 30F)
         // convert the symbol to a multilayer symbol
-        val alternateSymbolMultilayer2 = alternateSymbol2.toMultilayerSymbol().apply {
+        val alternateSymbolMultilayerYellow = alternateSymbolYellow.toMultilayerSymbol().apply {
             // set the reference properties
             referenceProperties = SymbolReferenceProperties(20000.0, 10000.0)
         }
         // return both alternate symbols
-        return listOf(alternateSymbolMultilayer1, alternateSymbolMultilayer2)
+        return listOf(alternateSymbolMultilayerBlue, alternateSymbolMultilayerYellow)
     }
 
     /**
