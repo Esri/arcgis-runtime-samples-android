@@ -59,8 +59,8 @@ jobs:
         id: verify-sample-code
         with:
           files: |
-             **/*.xaml.cs
-             **/*.cs
+             **/*.kotlin
+             **/*.java
 
       - name: Run step only when readme changes.
         if: steps.verify-readme.outputs.files_changed == 'true'

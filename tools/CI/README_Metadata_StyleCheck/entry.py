@@ -88,6 +88,7 @@ def main():
             continue
 
         path_parts = os.path.normpath(f).split(os.path.sep)
+        print(path_parts)
         if len(path_parts) < 7:
             # A file not in samples folder, omit.
             # E.g. might be in the root folder or other unrelated folders.
