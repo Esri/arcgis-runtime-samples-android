@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
                 // create the feature layer with the item
                 val featureLayer = FeatureLayer(portalItem)
                 // set the viewpoint to Portland, Oregon
-                val viewpoint = Viewpoint(45.5266, -122.6219, 6000.0)
+                val viewpoint = Viewpoint(45.5266, -122.6219, 2500.0)
                 // set the feature layer on the map
                 setFeatureLayer(featureLayer, viewpoint)
             }else{
@@ -201,7 +201,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Sets the map using the loaded [layer] at the given [viewpoint]
+     * Sets the map using the [layer] at the given [viewpoint]
      */
     private fun setFeatureLayer(layer: FeatureLayer, viewpoint: Viewpoint) {
         // clears the existing layer on the map
@@ -217,7 +217,10 @@ class MainActivity : AppCompatActivity() {
         Log.e(TAG, message.toString())
     }
 
-
+    /**
+     * Sets up the bottom UI selector to switch between
+     * different ways to load a feature layers
+     */
     private fun setUpBottomUI() {
         // create an adapter with the types of feature layer
         // sources to be displayed in menu
