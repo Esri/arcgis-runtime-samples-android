@@ -288,19 +288,17 @@ def all_samples(path: str):
     for root, dirs, files in os.walk(path):
         # Get parent folder name.
         parent_folder_name = get_folder_name_from_path(root)
-        # If parent folder name is a valid category name.
-        if parent_folder_name in categories:
-            for dir_name in dirs:
-                sample_path = os.path.join(root, dir_name)
-                # Omit empty folders - they are omitted by Git.
-                if len([f for f in os.listdir(sample_path)
-                        if not f.startswith('.DS_Store')]) == 0:
-                    continue
-                try:
-                    compare_one_metadata(sample_path)
-                except Exception as err:
-                    exception_count += 1
-                    print(f'{exception_count}. {err}')
+        for dir_name in dirs:
+            sample_path = os.path.join(root, dir_name)
+            # Omit empty folders - they are omitted by Git.
+            if len([f for f in os.listdir(sample_path)
+                    if not f.startswith('.DS_Store')]) == 0:
+                continue
+            try:
+                compare_one_metadata(sample_path)
+            except Exception as err:
+                exception_count += 1
+                print(f'{exception_count}. {err}')
 
     # Throw once if there are exceptions.
     if exception_count > 0:

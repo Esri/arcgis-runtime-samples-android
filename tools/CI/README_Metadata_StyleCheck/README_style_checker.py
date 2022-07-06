@@ -391,8 +391,6 @@ def all_designs(path: str):
     for root, dirs, files in os.walk(path):
         # Get parent folder name.
         parent_folder_name = get_folder_name_from_path(root)
-        # If parent folder name is a valid category name.
-        #if parent_folder_name in categories:
         for dir_name in dirs:
             sample_path = os.path.join(root, dir_name)
             # Omit empty folders - they are omitted by Git.

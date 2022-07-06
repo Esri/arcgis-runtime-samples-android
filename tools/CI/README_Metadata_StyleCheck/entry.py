@@ -92,11 +92,6 @@ def main():
             # A file not in samples folder, omit.
             # E.g. might be in the root folder or other unrelated folders.
             continue
-
-        # Only run checks on folders that is within a category.
-        if path_parts[-3] not in categories:
-            # Folder name is not a category, omit.
-            continue
         
         # Get filename and folder name of the changed sample.
         filename = os.path.basename(f)
