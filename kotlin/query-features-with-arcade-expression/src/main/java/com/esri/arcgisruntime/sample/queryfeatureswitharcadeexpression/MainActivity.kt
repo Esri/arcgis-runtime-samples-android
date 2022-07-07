@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
         // load the portal and create a map from the portal item
         val portal = Portal("https://www.arcgis.com/", false)
-        val portalItem = PortalItem(portal, "14562fced3474190b52d315bc19127f6")
+        val portalItem = PortalItem(portal, "539d93de54c7422f88f69bfac2aebf7d")
 
         mapView.apply {
             // set the map to be displayed in the layout's MapView
@@ -79,10 +79,6 @@ class MainActivity : AppCompatActivity() {
             // set the RPD Beats layer to be visible when map is loaded
             map.addDoneLoadingListener {
                 if (map.loadStatus == LoadStatus.LOADED) {
-                    // set the visibility of all but the RDT Beats layer to false to avoid cluttering the UI
-                    map.operationalLayers.forEach { layer ->
-                        layer.isVisible = layer.name == "RPD Beats  - City_Beats_Border_1128-4500"
-                    }
                     // find the RPD Beats layer from the map's operational layers
                     layer = map.operationalLayers.find { it.name.equals("RPD Beats  - City_Beats_Border_1128-4500") }
                 } else {
