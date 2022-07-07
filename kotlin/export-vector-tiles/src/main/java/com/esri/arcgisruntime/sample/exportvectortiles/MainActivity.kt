@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     private var downloadArea: Graphic? = null
     private var exportVectorTilesJob: ExportVectorTilesJob? = null
     private var dialog: AlertDialog? = null
+    private var isJobFinished: Boolean = true
 
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -157,12 +158,16 @@ class MainActivity : AppCompatActivity() {
                     // get the loaded export vector tile parameters
                     val exportVectorTilesParameters =
                         exportVectorTilesParametersFuture.get()
-
-                    // create a job to export vector tiles
-                    handleExportVectorTilesJob(
-                        exportVectorTilesParameters,
-                        exportVectorTilesTask
-                    )
+                    // only start a new job, if the previous job has finished cancelling
+                    if(isJobFinished){
+                        // create a job to export vector tiles
+                        handleExportVectorTilesJob(
+                            exportVectorTilesParameters,
+                            exportVectorTilesTask
+                        )
+                    } else {
+                        showError("Previous job is cancelling asynchronously")
+                    }
                 } catch (e: Exception) {
                     showError(e.message.toString())
                 }
@@ -194,6 +199,9 @@ class MainActivity : AppCompatActivity() {
             val dialogLayoutBinding = createProgressDialog()
             // start the export vector tile cache job
             start()
+            // since job is now started, set to false
+            isJobFinished = false
+
             // display the progress dialog
             dialog?.show()
             // update the dialog using the progress of the job
@@ -209,6 +217,7 @@ class MainActivity : AppCompatActivity() {
                     showMapPreview(result)
                 } else {
                     showError(error.message.toString())
+                    isJobFinished = true
                 }
             }
         }
@@ -252,7 +261,11 @@ class MainActivity : AppCompatActivity() {
             setTitle("Exporting vector tiles")
             setNegativeButton("Cancel job") { _, _ ->
                 // cancels the export job asynchronously
-                exportVectorTilesJob?.cancelAsync()
+                val future = exportVectorTilesJob?.cancelAsync()
+                future?.addDoneListener {
+                    // cancel is completed, so set to true
+                    isJobFinished = true
+                }
             }
             setCancelable(false)
             setView(dialogLayoutBinding.root)
