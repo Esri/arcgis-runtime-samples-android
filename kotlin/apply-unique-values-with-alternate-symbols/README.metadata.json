@@ -1,0 +1,36 @@
+{
+    "category": "Visualization",
+    "description": "Apply a unique value with alternate symbols at different scales.",
+    "formal_name": "ApplyUniqueValuesWithAlternateSymbols",
+    "ignore": false,
+    "images": [
+        "apply-unique-values-with-alternate-symbols.png"
+    ],
+    "keywords": [
+        "alternate symbols",
+        "multilayer symbol",
+        "scale based rendering",
+        "simple marker symbol",
+        "symbol reference properties",
+        "symbology",
+        "unique value",
+        "unique value renderer",
+        "MultilayerPointSymbol",
+        "SimpleMarkerSymbol",
+        "SymbolReferenceProperties",
+        "UniqueValue",
+        "UniqueValueRenderer"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "MultilayerPointSymbol",
+        "SimpleMarkerSymbol",
+        "SymbolReferenceProperties",
+        "UniqueValue",
+        "UniqueValueRenderer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/applyuniquevalueswithalternatesymbols/MainActivity.kt"
+    ],
+    "title": "Apply unique values with alternate symbols"
+}
