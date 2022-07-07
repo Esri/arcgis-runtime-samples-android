@@ -1,0 +1,53 @@
+{
+    "category": "Layers",
+    "description": "Display feature layers from various data sources.",
+    "formal_name": "DisplayFeatureLayers",
+    "ignore": false,
+    "images": [
+        "display-feature-layers.png"
+    ],
+    "keywords": [
+        "feature",
+        "geodatabase",
+        "geopackage",
+        "layers",
+        "service",
+        "shapefile",
+        "table",
+        "FeatureLayer",
+        "GeoPackageFeatureTable",
+        "Geodatabase",
+        "PortalItem",
+        "ServiceFeatureTable",
+        "ShapefileFeatureTable"
+    ],
+    "language": "kotlin",
+    "provision_from": [
+        "https://www.arcgis.com/home/item.html?id=2b0f9e17105847809dfeb04e3cad69e0",
+        "https://www.arcgis.com/home/item.html?id=68ec42517cdd439e81b036210483e8e7",
+        "https://www.arcgis.com/home/item.html?id=15a7cbd3af1e47cfa5d2c6b93dc44fc2"
+    ],
+    "provision_to": [
+        "/LA_Trails.geodatabase",
+        "/AuroraCO.gpkg",
+        "/ScottishWildlifeTrust_reserves/"
+    ],
+    "redirect_from": [
+        "/android/latest/sample-code/feature-layer-feature-service.htm",
+        "/android/latest/sample-code/feature-layer-geodatabase.htm",
+        "/android/latest/sample-code/feature-layer-geopackage.htm",
+        "/android/latest/sample-code/feature-layer-shapefile.htm"
+    ],
+    "relevant_apis": [
+        "FeatureLayer",
+        "GeoPackageFeatureTable",
+        "Geodatabase",
+        "PortalItem",
+        "ServiceFeatureTable",
+        "ShapefileFeatureTable"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/displayfeaturelayers/MainActivity.kt"
+    ],
+    "title": "Display feature layers"
+}

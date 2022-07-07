@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">Feature layer (feature service)</string>
-    <string name="action_settings">Settings</string>
-
-    <!-- Sample Strings -->
-    <string name="sample_service_url">https://sampleserver6.arcgisonline.com/arcgis/rest/services/Energy/Geology/FeatureServer/9</string>
-</resources>
