@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG = MainActivity::class.java.simpleName
 
-    // hold a reference to the layer for use in event handlers
-    private var layer: Layer? = null
+    // hold a reference to the police beats layer for use in event handlers
+    private var policeBeatsLayer: Layer? = null
 
     // hold a reference to the feature for use in event handlers
     private var previousFeature: ArcGISFeature? = null
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
             map.addDoneLoadingListener {
                 if (map.loadStatus == LoadStatus.LOADED) {
                     // find the RPD Beats layer from the map's operational layers
-                    layer = map.operationalLayers.find { it.name.equals("RPD Beats  - City_Beats_Border_1128-4500") }
+                    policeBeatsLayer = map.operationalLayers.find { it.name.equals("RPD Beats  - City_Beats_Border_1128-4500") }
                 } else {
                     showError(map.loadError.message.toString())
                 }
@@ -96,7 +96,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
 
     /**
@@ -105,7 +104,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun evaluateArcadeExpression(tappedPoint: Point) {
         // get the layer based on the position tapped on the MapView.
-        val identifyLayerResultFuture = mapView.identifyLayerAsync(layer, tappedPoint, 12.0, false)
+        val identifyLayerResultFuture = mapView.identifyLayerAsync(policeBeatsLayer, tappedPoint, 12.0, false)
         identifyLayerResultFuture.addDoneListener {
             val identifyLayerResult = identifyLayerResultFuture.get()
             // if layer is not identified, then return
@@ -135,7 +134,7 @@ class MainActivity : AppCompatActivity() {
                 val resultFuture = evaluator.evaluateAsync(profileVariables)
                 resultFuture.addDoneListener {
                     // get the result as an ArcadeEvaluationResult
-                    val arcadeEvaluationResult = resultFuture.get() as ArcadeEvaluationResult
+                    val arcadeEvaluationResult = resultFuture.get()
                     val crimesCount = (arcadeEvaluationResult.result as Double).toInt()
                     // set the callout content on the map using the Arcade evaluation result
                     val calloutContent = TextView(applicationContext).apply {
