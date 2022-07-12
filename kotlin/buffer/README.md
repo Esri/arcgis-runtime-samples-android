@@ -1,4 +1,4 @@
-# Buffer
+# Buffer YO
 
 Create a buffer around a map point and display the results as a `Graphic`.
 
