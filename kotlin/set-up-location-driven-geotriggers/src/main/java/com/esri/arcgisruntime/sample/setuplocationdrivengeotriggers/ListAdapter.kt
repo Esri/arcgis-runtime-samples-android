@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.fragment.app.FragmentManager
-import com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers.databinding.ListItemBinding
+import com.esri.arcgisruntime.sample.setuplocationdrivengeotriggers.databinding.GardenListItemBinding
 
 /**
  * Adapter to display the list of point of interests
@@ -37,7 +37,7 @@ internal class ListAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         // Bind the view to the layout inflater
-        val listItemBinding = ListItemBinding.inflate(this.mLayoutInflater)
+        val listItemBinding = GardenListItemBinding.inflate(this.mLayoutInflater)
 
         listItemBinding.apply {
             itemButton.text = gardenSections[position].title
