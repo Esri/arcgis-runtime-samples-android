@@ -1,3 +1,19 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://esri.jfrog.io/artifactory/arcgis' }
+        maven { url 'https://olympus.esri.com/artifactory/arcgisruntime-repo/' }
+    }
+}
 include ':add-enc-exchange-set',
         ':add-features-feature-service',
         ':add-graphics-renderer',
