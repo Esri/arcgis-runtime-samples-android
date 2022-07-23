@@ -1,8 +1,8 @@
-# Display map
+# Display test map
 
 Display a map with an imagery basemap.
 
-![Image of display map](display-map.png)
+![Image of display map](display-test-map.png)
 
 ## Use case
 
