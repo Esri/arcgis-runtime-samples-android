@@ -17,7 +17,7 @@
     "MapView"
   ],
   "snippets": [
-    "src/main/java/com/esri/arcgisruntime/sample/displaymap/MainActivity.kt"
+    "src/main/java/com/esri/arcgisruntime/sample/displaytestmap/MainActivity.kt"
   ],
   "title": "Display map"
 }
