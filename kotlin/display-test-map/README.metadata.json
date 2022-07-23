@@ -1,2 +1,23 @@
 {
+  "category": "Maps and Scenes",
+  "description": "Display a map with an imagery basemap.",
+  "formal_name": "DisplayMap",
+  "ignore": false,
+  "images": [
+    "display-map.png"
+  ],
+  "keywords": [
+    "basemap",
+    "map"
+  ],
+  "language": "kotlin",
+  "relevant_apis": [
+    "ArcGISMap",
+    "BasemapStyle",
+    "MapView"
+  ],
+  "snippets": [
+    "src/main/java/com/esri/arcgisruntime/sample/displaymap/MainActivity.kt"
+  ],
+  "title": "Display map"
 }
