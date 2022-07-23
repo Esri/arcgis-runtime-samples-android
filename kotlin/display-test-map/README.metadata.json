@@ -1,7 +1,7 @@
 {
   "category": "Maps and Scenes",
   "description": "Display a map with an imagery basemap.",
-  "formal_name": "DisplayMap",
+  "formal_name": "DisplayTestMap",
   "ignore": false,
   "images": [
     "display-map.png"
@@ -19,5 +19,5 @@
   "snippets": [
     "src/main/java/com/esri/arcgisruntime/sample/display-test-map/MainActivity.kt"
   ],
-  "title": "Display map"
+  "title": "Display test map"
 }
