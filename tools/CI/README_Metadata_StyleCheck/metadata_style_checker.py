@@ -143,7 +143,7 @@ class MetadataCreator:
         for path in paths:
             results.append(os.path.relpath(path, self.folder_path))
 
-        paths = Path(self.folder_path).glob('**/*.kotlin')
+        paths = Path(self.folder_path).glob('**/*.kt')
         for path in paths:
             results.append(os.path.relpath(path, self.folder_path))
 
