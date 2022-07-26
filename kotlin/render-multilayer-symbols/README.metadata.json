@@ -23,6 +23,7 @@
         "VectorMarkerSymbolLayer"
     ],
     "language": "kotlin",
+    "redirect_from": "",
     "relevant_apis": [
         "Graphic",
         "GraphicsOverlay",
