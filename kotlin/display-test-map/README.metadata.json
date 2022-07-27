@@ -4,13 +4,19 @@
   "formal_name": "DisplayTestMap",
   "ignore": false,
   "images": [
-    "display-map.png"
+    "display-test-map.png"
   ],
   "keywords": [
     "basemap",
-    "map"
+    "map",
+    "ArcGISMap",
+    "BasemapStyle",
+    "MapView"
   ],
   "language": "kotlin",
+  "provision_from": "",
+  "provision_to": "",
+  "redirect_from": "",
   "relevant_apis": [
     "ArcGISMap",
     "BasemapStyle",
