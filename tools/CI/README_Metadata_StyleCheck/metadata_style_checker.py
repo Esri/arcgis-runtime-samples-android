@@ -92,6 +92,8 @@ def parse_offline_data(offline_data_string: str) -> typing.List[str]:
     print(regex)
     print(re)
     matches = re.findall(regex, offline_data_string)
+    print(matches)
+    print(dict.fromkeys(matches))
 
     return list(dict.fromkeys(matches))
 
