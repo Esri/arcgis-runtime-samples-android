@@ -14,6 +14,12 @@
     "MapView"
   ],
   "language": "kotlin",
+  "provision_from": [
+      "https://www.arcgis.com/home/item.html?id=e1f3a7254cb845b09450f54937c16061"
+  ],
+  "provision_to": [
+      "Yellowstone.mmpk"
+  ],
   "redirect_from": "",
   "relevant_apis": [
     "ArcGISMap",
