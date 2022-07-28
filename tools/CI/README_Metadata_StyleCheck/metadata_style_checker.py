@@ -89,11 +89,9 @@ def parse_offline_data(offline_data_string: str) -> typing.List[str]:
 
     # extract any guids - these are AGOL items
     regex = re.compile('[0-9a-f]{8}[0-9a-f]{4}[1-5][0-9a-f]{3}[89ab][0-9a-f]{3}[0-9a-f]{12}', re.I)
-    print(regex)
-    print(re)
     matches = re.findall(regex, offline_data_string)
-    for match in matches:
-        match = "https://www.arcgis.com/home/item.html?id=" + match
+    for i, match in enumerate(matches):
+        matches[i] = "https://www.arcgis.com/home/item.html?id=" + match
         print(match)
 
     return list(dict.fromkeys(matches))
