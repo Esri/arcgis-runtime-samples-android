@@ -88,10 +88,10 @@ def parse_tags(tags_string: str) -> typing.List[str]:
 def parse_offline_data(offline_data_string: str) -> typing.List[str]:
 
     # extract any guids - these are AGOL items
-    regex = re.compile("https://www.arcgis.com/home/item.html?id=" + '[0-9a-f]{8}[0-9a-f]{4}[1-5][0-9a-f]{3}[89ab][0-9a-f]{3}[0-9a-f]{12}', re.I)
+    regex = re.compile('[0-9a-f]{8}[0-9a-f]{4}[1-5][0-9a-f]{3}[89ab][0-9a-f]{3}[0-9a-f]{12}', re.I)
     matches = re.findall(regex, offline_data_string)
 
-    return list(dict.fromkeys(matches))
+    return list(dict.fromkeys("https://www.arcgis.com/home/item.html?id=" + matches))
 
 
 def get_folder_name_from_path(path: str, index: int = -1) -> str:
