@@ -88,7 +88,7 @@ def parse_tags(tags_string: str) -> typing.List[str]:
 def parse_offline_data(offline_data_string: str) -> typing.List[str]:
 
     # extract any guids - these are AGOL items
-    regex = re.compile("https://www.arcgis.com/home/item.html?id=" +'[0-9a-f]{8}[0-9a-f]{4}[1-5][0-9a-f]{3}[89ab][0-9a-f]{3}[0-9a-f]{12}', re.I)
+    regex = re.compile("https://www.arcgis.com/home/item.html?id=" + '[0-9a-f]{8}[0-9a-f]{4}[1-5][0-9a-f]{3}[89ab][0-9a-f]{3}[0-9a-f]{12}', re.I)
     matches = re.findall(regex, offline_data_string)
 
     return list(dict.fromkeys(matches))
@@ -114,17 +114,18 @@ class MetadataCreator:
         The standard format of metadata.json for Android platform. Read more at:
         /common-samples/wiki/README.metadata.json
         """
-        self.category = ''          # Populate from path.
-        self.description = ''       # Populate from README.
-        self.ignore = False         # Default to False.
-        self.images = []            # Populate from paths.
-        self.keywords = []          # Populate from README.
-        self.language = ''          # Populate from metadata.
-        self.offline_data = False   # Default to False.
-        self.redirect_from = []     # Default to empty list.
-        self.relevant_apis = []     # Populate from README.
-        self.snippets = []          # Populate from paths.
-        self.title = ''             # Populate from README.
+        self.category = ''           # Populate from path.
+        self.description = ''        # Populate from README.
+        self.ignore = False          # Default to False.
+        self.images = []             # Populate from paths.
+        self.keywords = []           # Populate from README.
+        self.language = ''           # Populate from metadata.
+        self.provision_from = False  # Default to False.
+        self.provision_to = False    # Default to False.
+        self.redirect_from = []      # Default to empty list.
+        self.relevant_apis = []      # Populate from README.
+        self.snippets = []           # Populate from paths.
+        self.title = ''              # Populate from README.
 
         self.folder_path = folder_path
         self.folder_name = get_folder_name_from_path(folder_path)
@@ -205,7 +206,7 @@ class MetadataCreator:
             self.keywords += self.relevant_apis
             if readme_parts.__contains__('Offline data'):
                 offline_data_section_index = readme_parts.index('Offline data') + 1
-                self.offline_data = parse_offline_data(readme_parts[offline_data_section_index])
+                self.provision_from = parse_offline_data(readme_parts[offline_data_section_index])
 
         except Exception as err:
             print(f'Error parsing README - {self.readme_path} - {err}.')
@@ -235,8 +236,9 @@ class MetadataCreator:
         data["ignore"] = self.ignore
         data["images"] = self.images
         data["keywords"] = self.keywords
-        if (self.offline_data != False):
-            data["offline_data"] = self.offline_data
+        if self.provision_from != False:
+            data["provision_from"] = self.provision_from
+            data["provision_to"] = self.provision_to
         data["language"] = self.language
         data["redirect_from"] = self.redirect_from
         data["relevant_apis"] = self.relevant_apis
@@ -331,20 +333,20 @@ def all_samples(path: str):
         raise Exception('Error(s) occurred during checking all samples.')
 
 def splitall(path):
-        ## Credits: taken verbatim from https://www.oreilly.com/library/view/python-cookbook/0596001673/ch04s16.html
-        allparts = []
-        while 1:
-            parts = os.path.split(path)
-            if parts[0] == path:  # sentinel for absolute paths
-                allparts.insert(0, parts[0])
-                break
-            elif parts[1] == path: # sentinel for relative paths
-                allparts.insert(0, parts[1])
-                break
-            else:
-                path = parts[0]
-                allparts.insert(0, parts[1])
-        return allparts
+    ## Credits: taken verbatim from https://www.oreilly.com/library/view/python-cookbook/0596001673/ch04s16.html
+    allparts = []
+    while 1:
+        parts = os.path.split(path)
+        if parts[0] == path:  # sentinel for absolute paths
+            allparts.insert(0, parts[0])
+            break
+        elif parts[1] == path: # sentinel for relative paths
+            allparts.insert(0, parts[1])
+            break
+        else:
+            path = parts[0]
+            allparts.insert(0, parts[1])
+    return allparts
 
 def main():
     # Initialize parser.
