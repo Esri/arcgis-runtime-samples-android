@@ -23,7 +23,7 @@ Run the sample to view the map. Pan and zoom to navigate the map.
 * BasemapStyle
 * MapView
 
-## Offline Data
+## Offline data
 
 1. Download the data from [ArcGIS Online](https://www.arcgis.com/home/item.html?id=e1f3a7254cb845b09450f54937c16061).
 2. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
