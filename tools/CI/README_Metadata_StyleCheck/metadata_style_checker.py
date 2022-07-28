@@ -92,7 +92,6 @@ def parse_provision_from(offline_data_string: str) -> typing.List[str]:
     matches = re.findall(regex, offline_data_string)
     for i, match in enumerate(matches):
         matches[i] = "https://www.arcgis.com/home/item.html?id=" + match
-        print(match)
 
     return list(dict.fromkeys(matches))
 
@@ -222,7 +221,7 @@ class MetadataCreator:
                 offline_data_section_index = readme_parts.index('Offline data') + 1
                 print(readme_parts.index('Offline data') + 1)
                 self.provision_from = parse_provision_from(readme_parts[offline_data_section_index])
-                self.provision_to = parse_provision_to()
+                #self.provision_to = parse_provision_to()
 
         except Exception as err:
             print(f'Error parsing README - {self.readme_path} - {err}.')
