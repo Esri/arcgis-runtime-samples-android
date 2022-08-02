@@ -62,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = MainActivity.class.getSimpleName();
 
-  private static final int MIN_SCALE = 60000000;
-
   private MapView mMapView;
 
   // objects that implement Loadable must be class fields to prevent being garbage collected before loading
@@ -118,9 +116,6 @@ public class MainActivity extends AppCompatActivity {
         "https://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer");
     ArcGISMapImageLayer mapImageLayer = new ArcGISMapImageLayer(
         "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer");
-    // setting the scales at which the map image layer layer can be viewed
-    mapImageLayer.setMinScale(MIN_SCALE);
-    mapImageLayer.setMaxScale(MIN_SCALE / 100);
 
     // create base map array and set it to a list view adapter
     String[] basemapTiles = getResources().getStringArray(R.array.basemap_array);
