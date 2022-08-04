@@ -213,7 +213,7 @@ class MainActivity : AppCompatActivity() {
     private fun addImageGraphics() {
         // URI of image to display
         val bluePinImageURI =
-            "http://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0/images/e82f744ebb069bb35b234b3fea46deae"
+            "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0/images/e82f744ebb069bb35b234b3fea46deae/blue_pin.png"
         // load the PictureMarkerSymbolLayer using the image URI
         val pictureMarkerFromUri = PictureMarkerSymbolLayer(bluePinImageURI)
         pictureMarkerFromUri.addDoneLoadingListener {
@@ -226,7 +226,7 @@ class MainActivity : AppCompatActivity() {
         }
         pictureMarkerFromUri.loadAsync()
 
-        val localCachePath = cacheDir.toString() + File.separator + "blue_pin.png"
+        val localCachePath = cacheDir.toString() + File.separator + getString(R.string.blue_pin)
         // load blue pin from assets into cache directory
         copyFileFromAssetsToCache(localCachePath)
         // load the PictureMarkerSymbolLayer using the image using local cache
