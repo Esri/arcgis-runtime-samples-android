@@ -63,12 +63,16 @@ class MainActivity : AppCompatActivity() {
         // create a map with the BasemapType topographic
         val map = ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY)
 
-        // set the map to be displayed in the layout's map view
-        mapView.map = map
 
-        // create a graphics overlay and add it to the map view
+        // create a graphics overlay
         graphicsOverlay = GraphicsOverlay()
-        mapView.graphicsOverlays.add(graphicsOverlay)
+
+        mapView.apply {
+            // set the map to be displayed in the layout's map view
+            mapView.map = map
+            // add the graphic overlay to the map view
+            graphicsOverlays.add(graphicsOverlay)
+        }
 
         // create labels to go above each category of graphic
         addTextGraphics()
@@ -188,11 +192,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * @return the TextSymbol with the [text] to be displayed on the mao
+     * @return the TextSymbol with the [text] to be displayed on the map.
      */
     private fun getTextSymbol(text: String): TextSymbol {
         val textSymbol = TextSymbol(
-            20F,
+            10F,
             text,
             Color.BLACK,
             TextSymbol.HorizontalAlignment.CENTER,
@@ -204,12 +208,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Create picture marker symbols from URI or bitmap
+     * Create picture marker symbols from URI or bitmap.
      */
     private fun addImageGraphics() {
         // URI of image to display
         val bluePinImageURI =
-            "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0/images/e82f744ebb069bb35b234b3fea46deae/blue_pin.png"
+            "http://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0/images/e82f744ebb069bb35b234b3fea46deae"
         // load the PictureMarkerSymbolLayer using the image URI
         val pictureMarkerFromUri =
             PictureMarkerSymbolLayer(bluePinImageURI)
@@ -222,30 +226,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
         pictureMarkerFromUri.loadAsync()
-
-        // new thread to make network request to retrieve bitmap of the same image
-        Thread {
-            val bitmap =
-                BitmapFactory.decodeStream(URL(bluePinImageURI).openConnection().getInputStream())
-            runOnUiThread {
-                // load the PictureMarkerSymbolLayer using the BitmapDrawable
-                val listenableFuture =
-                    PictureMarkerSymbolLayer.createAsync(BitmapDrawable(this.resources, bitmap))
-                listenableFuture.addDoneListener {
-                    // add the loaded layer to the map
-                    val pictureMarkerSymbolLayer = listenableFuture.get()
-                    addGraphicFromPictureMarkerSymbolLayer(pictureMarkerSymbolLayer, offset)
-                }
-            }
-        }.start()
     }
 
     /**
      * Loads a picture marker symbol layer and after it has loaded, creates a new multilayer point symbol from it.
      * A graphic is created from the multilayer point symbol and added to the graphics overlay.
      *
-     * The [pictureMarkerSymbolLayer] to be loaded
-     * The [offset] value used to keep a consistent distance between symbols in the same column
+     * The [pictureMarkerSymbolLayer] to be loaded.
+     * The [offset] value used to keep a consistent distance between symbols in the same column.
      *
      */
     private fun addGraphicFromPictureMarkerSymbolLayer(
@@ -276,9 +264,9 @@ class MainActivity : AppCompatActivity() {
     /**
      * Adds new graphics constructed from multilayer point symbols.
      *
-     * The [multilayerSymbol] to construct the vector marker symbol element with
-     * The input [geometry] for the vector marker symbol element
-     * [offset] the value used to keep a consistent distance between symbols in the same column
+     * The [multilayerSymbol] to construct the vector marker symbol element with.
+     * The input [geometry] for the vector marker symbol element.
+     * [offset] the value used to keep a consistent distance between symbols in the same column.
      */
     private fun addGraphicsWithVectorMarkerSymbolElements(
         multilayerSymbol: MultilayerSymbol,
@@ -299,8 +287,8 @@ class MainActivity : AppCompatActivity() {
     /**
      * Adds new graphics constructed from multilayer polyline symbols.
      *
-     * the pattern of [dashSpacing] dots/dashes used by the line
-     * [offset] the value used to keep a consistent distance between symbols in the same column
+     * The pattern of [dashSpacing] dots/dashes used by the line and
+     * [offset] the value used to keep a consistent distance between symbols in the same column.
      */
     private fun addLineGraphicsWithMarkerSymbols(dashSpacing: List<Double>, offset: Double) {
         // create a dash effect from the provided values
@@ -332,8 +320,8 @@ class MainActivity : AppCompatActivity() {
     /**
      * Adds new graphics constructed from multilayer polygon symbols.
      *
-     * A list containing the [angles] at which to draw fill lines within the polygon
-     * [offset] the value used to keep a consistent distance between symbols in the same column
+     * A list containing the [angles] at which to draw fill lines within the polygon and
+     * [offset] the value used to keep a consistent distance between symbols in the same column.
      */
     private fun addPolygonGraphicsWithMarkerSymbols(angles: List<Double>, offset: Double) {
         val polygonBuilder = PolygonBuilder(SpatialReferences.getWgs84()).apply {
@@ -375,8 +363,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Creates a complex point from multiple symbol layers and a provided geometry
-     * @param complexPointGeometry a base geometry upon which other symbol layers are drawn
+     * Creates a complex point from multiple symbol layers and a provided geometry.
+     * @param complexPointGeometry a base geometry upon which other symbol layers are drawn.
      */
     private fun addComplexPoint(complexPointGeometry: Geometry) {
         // create marker layers for complex point
@@ -424,11 +412,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Creates a symbol layer for use in the composition of a complex point
+     * Creates a symbol layer for use in the composition of a complex point.
      * [fillColor] of the symbol
      * [outlineColor] of the symbol
      * [size] of the symbol
-     * @return the vector marker symbol layer
+     * @return the vector marker symbol layer.
      */
     private fun getLayerForComplexPoint(
         fillColor: Int,
@@ -461,7 +449,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Adds a complex polygon generated with multiple symbol layers
+     * Adds a complex polygon generated with multiple symbol layers.
      */
     private fun addComplexPolygon() {
         // create the multilayer polygon symbol
@@ -484,7 +472,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Adds a complex polyline generated with multiple symbol layers
+     * Adds a complex polyline generated with multiple symbol layers.
      */
     private fun addComplexPolyline() {
         // create the multilayer polyline symbol
@@ -504,8 +492,8 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Generates and returns the symbol layers used by the addComplexPolygon and addComplexPolyline methods.
-     * [includeRedFill] indicates whether to include the red fill needed by the complex polygon
-     * @return a list of symbol layers including the necessary effects
+     * [includeRedFill] indicates whether to include the red fill needed by the complex polygon.
+     * @return a list of symbol layers including the necessary effects.
      */
     private fun getLayersForComplexPolys(includeRedFill: Boolean): List<SymbolLayer> {
         // create a black dash effect
