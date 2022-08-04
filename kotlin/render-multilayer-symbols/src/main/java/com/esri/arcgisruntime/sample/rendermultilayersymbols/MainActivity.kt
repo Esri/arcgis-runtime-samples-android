@@ -16,9 +16,7 @@
 
 package com.esri.arcgisruntime.sample.rendermultilayersymbols
 
-import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -33,7 +31,9 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.rendermultilayersymbols.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.*
-import java.net.URL
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 
 
 class MainActivity : AppCompatActivity() {
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         // create labels to go above each category of graphic
         addTextGraphics()
 
-        // create picture marker symbols, from URI or bitmap
+        // create picture marker symbols, from URI or local cache
         addImageGraphics()
 
         // add graphics with simple vector marker symbol elements (MultilayerPoint Simple Markers on app UI)
@@ -208,15 +208,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Create picture marker symbols from URI or bitmap.
+     * Create picture marker symbols from online URI or local cache.
      */
     private fun addImageGraphics() {
         // URI of image to display
         val bluePinImageURI =
             "http://sampleserver6.arcgisonline.com/arcgis/rest/services/Recreation/FeatureServer/0/images/e82f744ebb069bb35b234b3fea46deae"
         // load the PictureMarkerSymbolLayer using the image URI
-        val pictureMarkerFromUri =
-            PictureMarkerSymbolLayer(bluePinImageURI)
+        val pictureMarkerFromUri = PictureMarkerSymbolLayer(bluePinImageURI)
         pictureMarkerFromUri.addDoneLoadingListener {
             if (pictureMarkerFromUri.loadStatus == LoadStatus.LOADED) {
                 // add loaded layer to the map
@@ -226,6 +225,47 @@ class MainActivity : AppCompatActivity() {
             }
         }
         pictureMarkerFromUri.loadAsync()
+
+        val localCachePath = cacheDir.toString() + File.separator + "blue_pin.png"
+        // load blue pin from assets into cache directory
+        copyFileFromAssetsToCache(localCachePath)
+        // load the PictureMarkerSymbolLayer using the image using local cache
+        val pictureMarkerFromCache = PictureMarkerSymbolLayer(localCachePath)
+        pictureMarkerFromCache.addDoneLoadingListener {
+            if(pictureMarkerFromCache.loadStatus == LoadStatus.LOADED){
+                // add loaded layer to the map
+                addGraphicFromPictureMarkerSymbolLayer(pictureMarkerFromCache, 20.0)
+            } else {
+                showError("Picture marker symbol layer failed to load from cache: ${pictureMarkerFromCache.loadError.message}")
+            }
+        }
+        pictureMarkerFromCache.loadAsync()
+    }
+
+    /**
+     * Copy the given file from the app's assets folder to the app's cache directory.
+     * @param localCachePath as String.
+     */
+    private fun copyFileFromAssetsToCache(localCachePath: String) {
+        val assetManager = applicationContext.assets
+        val file = File(localCachePath)
+        if (!file.exists()) {
+            try {
+                val `in` = assetManager.open(getString(R.string.blue_pin))
+                val out: OutputStream =
+                    FileOutputStream(localCachePath)
+                val buffer = ByteArray(1024)
+                var read = `in`.read(buffer)
+                while (read != -1) {
+                    out.write(buffer, 0, read)
+                    read = `in`.read(buffer)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error writing to cache. " + e.message)
+            }
+        } else {
+            Log.i(TAG, "File already in cache.")
+        }
     }
 
     /**
