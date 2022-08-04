@@ -13,7 +13,7 @@
  * limitations under the License.
  *
  */
-package com.esri.arcgisruntime.sample.generategeodatabase
+package com.esri.arcgisruntime.sample.generategeodatabasereplicafromfeatureservice
 
 import android.graphics.Color
 import android.os.Bundle
@@ -38,8 +38,8 @@ import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.geodatabase.GenerateGeodatabaseJob
 import com.esri.arcgisruntime.tasks.geodatabase.GeodatabaseSyncTask
-import com.esri.arcgisruntime.sample.generategeodatabase.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.sample.generategeodatabase.databinding.DialogLayoutBinding
+import com.esri.arcgisruntime.sample.generategeodatabasereplicafromfeatureservice.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.sample.generategeodatabasereplicafromfeatureservice.databinding.DialogLayoutBinding
 
 class MainActivity : AppCompatActivity() {
 
