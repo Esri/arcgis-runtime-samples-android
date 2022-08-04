@@ -129,7 +129,10 @@ class MainActivity : AppCompatActivity() {
     private fun solveRoute() {
         // create a route task instance
         val routeTask =
-            RouteTask(this, "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World")
+            RouteTask(
+                this,
+                "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World"
+            )
 
         // show the progress bar
         mainProgressBar.visibility = View.VISIBLE
@@ -141,20 +144,8 @@ class MainActivity : AppCompatActivity() {
                     val routeParams = listenableFuture.get()
                     // create stops
                     val stops = arrayListOf(
-                        Stop(
-                            Point(
-                                -117.1508,
-                                32.7411,
-                                SpatialReferences.getWgs84()
-                            )
-                        ),
-                        Stop(
-                            Point(
-                                -117.1555,
-                                32.7033,
-                                SpatialReferences.getWgs84()
-                            )
-                        )
+                        Stop(Point(-117.1508, 32.7411, SpatialReferences.getWgs84())),
+                        Stop(Point(-117.1555, 32.7033, SpatialReferences.getWgs84()))
                     )
                     routeParams.apply {
                         setStops(stops)
