@@ -223,11 +223,7 @@ class MainActivity : AppCompatActivity() {
                         offsetY = 20f
                     }
                 // create a point for the new graphic
-                val destinationPoint = Point(
-                    -117.1555,
-                    32.7033,
-                    SpatialReferences.getWgs84()
-                )
+                val destinationPoint = Point(-117.1555, 32.7033, SpatialReferences.getWgs84())
                 // create a graphic and add it to the graphics overlay
                 graphicsOverlay.graphics.add(Graphic(destinationPoint, pinDestinationSymbol))
             }
