@@ -24,6 +24,6 @@
         android:contentDescription="@string/cql_filters"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_round_filter_list_24" />
+        android:src="@drawable/ic_round_filter_list_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
