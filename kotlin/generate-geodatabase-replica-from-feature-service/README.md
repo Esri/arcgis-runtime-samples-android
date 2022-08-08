@@ -27,7 +27,7 @@ Zoom to any extent. Then tap the generate button to generate a geodatabase of fe
 * Geodatabase
 * GeodatabaseSyncTask
 
-## Offline Data
+## Offline data
 
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=e4a398afe9a945f3b0f4dca1e4faccb5).
 2. Extract the contents of the downloaded zip file to disk.
