@@ -87,8 +87,8 @@ def parse_tags(tags_string: str) -> typing.List[str]:
 
 def parse_provision_from(offline_data_string: str) -> typing.List[str]:
 
-    # extract any inline links
-    regex = re.compile(r'\[([^\]]+)\]\(([^)]+)\)')
+    # extract any inline link URLs
+    regex = re.compile(r'\[(\d+)\]:\s+(\S+)')
     from_matches = re.findall(regex, offline_data_string)
 
     return list(dict.fromkeys(from_matches))
