@@ -22,9 +22,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Point
-import com.esri.arcgisruntime.geometry.SpatialReference
 import com.esri.arcgisruntime.geometry.SpatialReferences
-import com.esri.arcgisruntime.location.AndroidLocationDataSource
 import com.esri.arcgisruntime.location.LocationDataSource
 import com.esri.arcgisruntime.location.RouteTrackerLocationDataSource
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -201,7 +199,7 @@ class MainActivity : AppCompatActivity() {
 
         val gpxRoutePath = getExternalFilesDir(null)?.path + "/navigate_a_route_detour.gpx"
         // The location data source provided by a local GPX file
-        val gpxDataSource: LocationDataSource? = LocationDataSource()
+        val gpxDataSource: LocationDataSource = GpxProvider(gpxRoutePath)
 
         // add a data source for the location display
         mapView.locationDisplay.locationDataSource =
