@@ -89,13 +89,13 @@ def parse_provision_from(offline_data_string: str) -> typing.List[str]:
 
     # extract any guids - these are AGOL items
     regex = re.compile('[0-9a-f]{8}[0-9a-f]{4}[1-5][0-9a-f]{3}[89ab][0-9a-f]{3}[0-9a-f]{12}', re.I)
-    matches = re.findall("]((.*)).", offline_data_string)
+    matches = re.findall("](.*).", offline_data_string)
 
     return list(dict.fromkeys(matches))
 
 def parse_provision_to(offline_data_string: str) -> typing.List[str]:
 
-    return re.findall("`adb push (.*) /Android", offline_data_string)
+    return "/" + re.findall("`adb push (.*) /Android", offline_data_string)
 
 def get_folder_name_from_path(path: str, index: int = -1) -> str:
     """
@@ -210,7 +210,7 @@ class MetadataCreator:
             if readme_parts.__contains__('Offline data'):
                 offline_data_section_index = readme_parts.index('Offline data') + 1
                 self.provision_from = parse_provision_from(readme_parts[offline_data_section_index])
-                self.provision_to = parse_provision_to("/" + readme_parts[offline_data_section_index])
+                self.provision_to = parse_provision_to(readme_parts[offline_data_section_index])
                 print(self.provision_to)
 
         except Exception as err:
