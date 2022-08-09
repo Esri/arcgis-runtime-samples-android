@@ -89,7 +89,8 @@ def parse_provision_from(offline_data_string: str) -> typing.List[str]:
 
     from_matches = re.findall("]((.*)).", offline_data_string)
     for i, match in enumerate(from_matches):
-        from_matches[i] = match.replace("(", "").replace(")", "")
+        from_matches[i] = match.replace("(", "")
+        from_matches[i] = match.replace(")", "")
 
     return list(dict.fromkeys(from_matches))
 
