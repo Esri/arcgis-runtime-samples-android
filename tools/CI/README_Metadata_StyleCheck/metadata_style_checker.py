@@ -87,9 +87,7 @@ def parse_tags(tags_string: str) -> typing.List[str]:
 
 def parse_provision_from(offline_data_string: str) -> typing.List[str]:
 
-    # extract any guids - these are AGOL items
-    regex = re.compile('[0-9a-f]{8}[0-9a-f]{4}[1-5][0-9a-f]{3}[89ab][0-9a-f]{3}[0-9a-f]{12}', re.I)
-    matches = re.findall("](.*).", offline_data_string)
+    matches = re.findall("]((.*)).", offline_data_string)
 
     return list(dict.fromkeys(matches))
 
