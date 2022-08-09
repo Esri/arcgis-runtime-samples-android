@@ -87,15 +87,15 @@ def parse_tags(tags_string: str) -> typing.List[str]:
 
 def parse_provision_from(offline_data_string: str) -> typing.List[str]:
 
-    matches = re.findall("]((.*)).", offline_data_string)
+    from_matches = re.findall("](.*).", offline_data_string)
 
-    return list(dict.fromkeys(matches))
+    return list(dict.fromkeys(from_matches))
 
 def parse_provision_to(offline_data_string: str) -> typing.List[str]:
 
-    matches = re.findall("`adb push (.*) /Android", offline_data_string)
-    for i, match in enumerate(matches):
-        matches[i] = "/" + match
+    to_matches = re.findall("`adb push (.*) /Android", offline_data_string)
+    for i, match in enumerate(to_matches):
+        to_matches[i] = "/" + match
 
     return list(dict.fromkeys(matches))
 
