@@ -97,7 +97,7 @@ def parse_provision_to(offline_data_string: str) -> typing.List[str]:
     for i, match in enumerate(to_matches):
         to_matches[i] = "/" + match
 
-    return list(dict.fromkeys(matches))
+    return list(dict.fromkeys(to_matches))
 
 def get_folder_name_from_path(path: str, index: int = -1) -> str:
     """
