@@ -17,22 +17,9 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/distanceTV"
+            android:id="@+id/statusMessageTV"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/distance_remaining" />
-
-        <TextView
-            android:id="@+id/timeTV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/time_remaining" />
-
-        <TextView
-            android:id="@+id/nextDirectionTV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/next_direction" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
@@ -73,6 +60,7 @@
             android:id="@+id/recenterButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="@string/recenter"
             android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"

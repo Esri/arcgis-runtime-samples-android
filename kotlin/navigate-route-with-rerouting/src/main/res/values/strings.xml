@@ -3,7 +3,4 @@
     <string name="navigate">Navigate</string>
     <string name="recenter">Recenter</string>
     <string name="reset">Reset</string>
-    <string name="next_direction">Next direction:</string>
-    <string name="time_remaining">Time remaining:</string>
-    <string name="distance_remaining">Distance remaining:</string>
 </resources>
