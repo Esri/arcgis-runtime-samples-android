@@ -95,7 +95,11 @@ def parse_provision_from(offline_data_string: str) -> typing.List[str]:
 
 def parse_provision_to(offline_data_string: str) -> typing.List[str]:
 
-    return "/" + re.findall("`adb push (.*) /Android", offline_data_string)
+    matches = re.findall("`adb push (.*) /Android", offline_data_string)
+    for i, match in enumerate(matches):
+        matches[i] = "/" + match
+
+    return list(dict.fromkeys(matches))
 
 def get_folder_name_from_path(path: str, index: int = -1) -> str:
     """
