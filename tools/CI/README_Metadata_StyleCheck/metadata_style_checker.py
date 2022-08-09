@@ -87,7 +87,7 @@ def parse_tags(tags_string: str) -> typing.List[str]:
 
 def parse_provision_from(offline_data_string: str) -> typing.List[str]:
 
-    from_matches = re.findall(r'"](.*)."', offline_data_string)
+    from_matches = re.findall(r'"]((.*))."', offline_data_string)
 
     return list(dict.fromkeys(from_matches))
 
