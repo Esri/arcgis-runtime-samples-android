@@ -22,7 +22,23 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
-import com.esri.arcgisruntime.geometry.*
+import com.esri.arcgisruntime.geometry.Geometry
+import com.esri.arcgisruntime.symbology.TextSymbol
+import com.esri.arcgisruntime.symbology.PictureMarkerSymbolLayer
+import com.esri.arcgisruntime.symbology.MultilayerPolylineSymbol
+import com.esri.arcgisruntime.symbology.MultilayerPointSymbol
+import com.esri.arcgisruntime.symbology.MultilayerSymbol
+import com.esri.arcgisruntime.symbology.VectorMarkerSymbolElement
+import com.esri.arcgisruntime.symbology.StrokeSymbolLayer
+import com.esri.arcgisruntime.symbology.VectorMarkerSymbolLayer
+import com.esri.arcgisruntime.symbology.SymbolAnchor
+import com.esri.arcgisruntime.symbology.HatchFillSymbolLayer
+import com.esri.arcgisruntime.symbology.SymbolLayer
+import com.esri.arcgisruntime.geometry.Point
+import com.esri.arcgisruntime.geometry.PolylineBuilder
+import com.esri.arcgisruntime.geometry.SpatialReferences
+import com.esri.arcgisruntime.geometry.PolygonBuilder
+import com.esri.arcgisruntime.geometry.Envelope
 import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
@@ -30,7 +46,10 @@ import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.rendermultilayersymbols.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.symbology.*
+import com.esri.arcgisruntime.symbology.DashGeometricEffect
+import com.esri.arcgisruntime.symbology.MultilayerPolygonSymbol
+import com.esri.arcgisruntime.symbology.SolidFillSymbolLayer
+import com.esri.arcgisruntime.symbology.SolidStrokeSymbolLayer
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -232,7 +251,7 @@ class MainActivity : AppCompatActivity() {
         // load the PictureMarkerSymbolLayer using the image using local cache
         val pictureMarkerFromCache = PictureMarkerSymbolLayer(localCachePath)
         pictureMarkerFromCache.addDoneLoadingListener {
-            if(pictureMarkerFromCache.loadStatus == LoadStatus.LOADED){
+            if (pictureMarkerFromCache.loadStatus == LoadStatus.LOADED) {
                 // add loaded layer to the map
                 addGraphicFromPictureMarkerSymbolLayer(pictureMarkerFromCache, 20.0)
             } else {
