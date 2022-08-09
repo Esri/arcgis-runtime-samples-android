@@ -79,9 +79,8 @@ class MainActivity : AppCompatActivity() {
         // to access basemaps and other location services
         ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
-        // create a map with the BasemapType topographic
+        // create a map with the BasemapType
         val map = ArcGISMap(BasemapStyle.ARCGIS_LIGHT_GRAY)
-
 
         // create a graphics overlay
         graphicsOverlay = GraphicsOverlay()
@@ -270,14 +269,14 @@ class MainActivity : AppCompatActivity() {
         val file = File(localCachePath)
         if (!file.exists()) {
             try {
-                val `in` = assetManager.open(getString(R.string.blue_pin))
-                val out: OutputStream =
+                val fileIn  = assetManager.open(getString(R.string.blue_pin))
+                val fileOut: OutputStream =
                     FileOutputStream(localCachePath)
                 val buffer = ByteArray(1024)
-                var read = `in`.read(buffer)
+                var read = fileIn.read(buffer)
                 while (read != -1) {
-                    out.write(buffer, 0, read)
-                    read = `in`.read(buffer)
+                    fileOut.write(buffer, 0, read)
+                    read = fileIn.read(buffer)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error writing to cache. " + e.message)
