@@ -91,7 +91,7 @@ def parse_provision_from(offline_data_string: str) -> typing.List[str]:
     regex = re.compile(r'\[([^\]]+)\]\(([^)]+)\)')
     from_matches = re.findall(regex, offline_data_string)
 
-    return list(dict.fromkeys(from_matches[1]))
+    return list(dict.fromkeys(from_matches))
 
 def parse_provision_to(offline_data_string: str) -> typing.List[str]:
 
