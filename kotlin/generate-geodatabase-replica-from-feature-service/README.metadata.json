@@ -12,7 +12,6 @@
         "offline",
         "replica",
         "sync",
-        "GenerateGeodatabaseJob",
         "GenerateGeodatabaseParameters",
         "Geodatabase",
         "GeodatabaseSyncTask"
