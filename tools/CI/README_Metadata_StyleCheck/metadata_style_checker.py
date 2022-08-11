@@ -309,10 +309,13 @@ def compare_one_metadata(folder_path: str):
         single_updater.snippets = json_data['snippets']
 
     new = single_updater.flush_to_json_string()
-    print(new)
     original = json.dumps(json_data, indent=4, sort_keys=True)
-    print(original)
     if new != original:
+        print("Original metadata.json:")
+        print(original)
+        print("------------------------------------------------------------------")
+        print("Expected metadata.json:")
+        print(new)
         raise Exception(f'Error inconsistent metadata - {folder_path}')
 
 
