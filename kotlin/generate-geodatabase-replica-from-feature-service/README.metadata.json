@@ -11,7 +11,11 @@
         "local geodatabase",
         "offline",
         "replica",
-        "sync"
+        "sync",
+        "GenerateGeodatabaseJob",
+        "GenerateGeodatabaseParameters",
+        "Geodatabase",
+        "GeodatabaseSyncTask"
     ],
     "language": "kotlin",
     "provision_from": [
