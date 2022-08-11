@@ -32,8 +32,7 @@ Zoom to any extent. Then tap the generate button to generate a geodatabase of fe
 1. Download the data from [ArcGIS Online](https://arcgisruntime.maps.arcgis.com/home/item.html?id=e4a398afe9a945f3b0f4dca1e4faccb5).
 2. Extract the contents of the downloaded zip file to disk.
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
-4. Push the data into the scoped storage of the sample app:
-`adb push SanFrancisco.tpkx /Android/data/com.esri.arcgisruntime.sample.generategeodatabase/files/SanFrancisco.tpkx`
+4. Push the data into the scoped storage of the sample app: `adb push SanFrancisco.tpkx /Android/data/com.esri.arcgisruntime.sample.generategeodatabase/files/SanFrancisco.tpkx`
 
 ## Tags
 
