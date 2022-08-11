@@ -215,7 +215,6 @@ class MetadataCreator:
                 offline_data_section_index = readme_parts.index('Offline data') + 1
                 self.provision_from = parse_provision_from(readme_parts[offline_data_section_index])
                 self.provision_to = parse_provision_to(readme_parts[offline_data_section_index])
-                print(self.provision_to)
 
         except Exception as err:
             print(f'Error parsing README - {self.readme_path} - {err}.')
