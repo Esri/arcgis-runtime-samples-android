@@ -14,7 +14,7 @@
  *
  */
 
-package com.esri.arcgisruntime.sample.generategeodatabase;
+package com.esri.arcgisruntime.sample.generategeodatabasereplicafromfeatureservice;
 
 import java.io.File;
 import java.util.concurrent.ExecutionException;

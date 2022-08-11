@@ -1,16 +1,21 @@
 {
     "category": "Edit and Manage Data",
-    "description": "Generate a local geodatabase from an online feature service.",
-    "formal_name": "GenerateGeodatabase",
+    "description": "Generate a local geodatabase replica from an online feature service.",
+    "formal_name": "GenerateGeodatabaseReplicaFromFeatureService",
     "ignore": false,
     "images": [
-        "generate-geodatabase.png"
+        "generate-geodatabase-replica-from-feature-service.png"
     ],
     "keywords": [
         "disconnected",
         "local geodatabase",
         "offline",
-        "sync"
+        "replica",
+        "sync",
+        "GenerateGeodatabaseJob",
+        "GenerateGeodatabaseParameters",
+        "Geodatabase",
+        "GeodatabaseSyncTask"
     ],
     "language": "java",
     "provision_from": [
@@ -29,7 +34,7 @@
         "GeodatabaseSyncTask"
     ],
     "snippets": [
-        "src/main/java/com/esri/arcgisruntime/sample/generategeodatabase/MainActivity.java"
+        "src/main/java/com/esri/arcgisruntime/sample/generategeodatabasereplicafromfeatureservice/MainActivity.java"
     ],
-    "title": "Generate geodatabase"
+    "title": "Generate geodatabase replica from feature service"
 }
