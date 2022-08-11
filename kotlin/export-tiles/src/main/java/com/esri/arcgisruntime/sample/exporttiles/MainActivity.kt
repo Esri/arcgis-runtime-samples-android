@@ -43,7 +43,7 @@ import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.exporttiles.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.sample.exporttiles.databinding.DialogLayoutBinding
+import com.esri.arcgisruntime.sample.exporttiles.databinding.ExportTilesDialogLayoutBinding
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheJob
 import com.esri.arcgisruntime.tasks.tilecache.ExportTileCacheParameters
@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity() {
                                 start()
 
                                 val dialogLayoutBinding =
-                                    DialogLayoutBinding.inflate(layoutInflater)
+                                    ExportTilesDialogLayoutBinding.inflate(layoutInflater)
                                 // show progress of the export tile cache job on the progress bar
                                 val dialog = createProgressDialog(this)
                                 dialog.setView(dialogLayoutBinding.root)
@@ -270,7 +270,7 @@ class MainActivity : AppCompatActivity() {
                 exportTileCacheJob.cancelAsync()
             }
             setCancelable(false)
-            val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+            val dialogLayoutBinding = ExportTilesDialogLayoutBinding.inflate(layoutInflater)
             setView(dialogLayoutBinding.root)
         }
         return builder.create()
