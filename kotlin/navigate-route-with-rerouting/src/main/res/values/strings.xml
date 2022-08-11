@@ -3,4 +3,5 @@
     <string name="navigate">Navigate</string>
     <string name="recenter">Recenter</string>
     <string name="reset">Reset</string>
+    <string name="route_status">Route Status:</string>
 </resources>
