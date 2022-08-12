@@ -48,7 +48,8 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
-import java.util.*
+import java.util.Locale
+import java.util.Calendar
 import kotlin.math.roundToInt
 
 
@@ -334,12 +335,14 @@ class MainActivity : AppCompatActivity() {
             updateTrackingStatus(it.trackingStatus)
         }
 
+    /**
+     * Plays the speech guidance on route update
+     */
     private val speakDirectionListener: RouteTracker.NewVoiceGuidanceListener =
         RouteTracker.NewVoiceGuidanceListener {
             // stop if TTS is running
             textToSpeech?.stop()
-            Log.e(TAG, "Speaking: ${it.voiceGuidance.text}")
-            // Say the direction
+            // say the direction
             textToSpeech?.speak(it.voiceGuidance.text, TextToSpeech.QUEUE_FLUSH, null,it.voiceGuidance.text )
         }
 
