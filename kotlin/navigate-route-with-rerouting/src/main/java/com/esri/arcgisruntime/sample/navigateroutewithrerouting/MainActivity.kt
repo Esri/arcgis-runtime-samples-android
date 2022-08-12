@@ -22,12 +22,14 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Geometry
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.Polyline
 import com.esri.arcgisruntime.geometry.SpatialReferences
+import com.esri.arcgisruntime.loadable.LoadStatus
 import com.esri.arcgisruntime.location.SimulatedLocationDataSource
 import com.esri.arcgisruntime.location.SimulationParameters
 import com.esri.arcgisruntime.mapping.ArcGISMap
@@ -54,6 +56,8 @@ import kotlin.math.roundToInt
 
 
 class MainActivity : AppCompatActivity() {
+
+    private val TAG = MainActivity::class.java.simpleName
 
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -170,67 +174,73 @@ class MainActivity : AppCompatActivity() {
             getExternalFilesDir(null)?.path + "/sandiego.geodatabase",
             "Streets_ND"
         )
+
         // load the route task
         routeTask.loadAsync()
         routeTask.addDoneLoadingListener {
-            // load default route parameters
-            val routeParametersFuture = routeTask.createDefaultParametersAsync()
-            routeParametersFuture.addDoneListener {
-                // get the loaded default route parameters
-                routeParameters = routeParametersFuture.get().apply {
-                    // explicitly set values for the route parameters
-                    isReturnDirections = true
-                    isReturnStops = true
-                    isReturnRoutes = true
-                    outputSpatialReference = SpatialReferences.getWgs84()
-                }
-                // starting location point: San Diego Convention Center
-                val conventionCenter = Point(-117.160386727, 32.706608, SpatialReferences.getWgs84())
-                // create starting stop
-                val startingStop = Stop(conventionCenter).apply {
-                    name = "San Diego Convention Center"
-                }
-                // destination location point: Fleet Science Center
-                val aerospaceMuseum = Point(-117.146679, 32.730351, SpatialReferences.getWgs84())
-                // create destination stop
-                val destinationStop = Stop(aerospaceMuseum).apply {
-                    name = "RH Fleet Aerospace Museum"
-                }
-                // assign the stops to the route parameters
-                routeParameters?.setStops(mutableListOf(startingStop, destinationStop))
-                // get the route results future
-                val routeResultFuture = routeTask.solveRouteAsync(routeParameters)
-                routeResultFuture.addDoneListener {
-                    // get the loaded route result
-                    routeResult = routeResultFuture.get()
-                    // keep an instance of the loaded route
-                    route = routeResult?.routes?.get(0)
-                    // set start and stop points to a blue diamond symbol
-                    val stopSymbol =
-                        SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.BLUE, 20F)
-                    // the graphic to represent the route ahead
-                    routeAheadGraphic = Graphic(
-                        route?.routeGeometry,
-                        SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.MAGENTA, 5F)
-                    )
-                    // the graphic to represent the route that's been traveled (initially empty)
-                    routeTraveledGraphic = Graphic().apply {
-                        symbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 3F)
+            if(routeTask.loadStatus == LoadStatus.LOADED){
+                // load default route parameters
+                val routeParametersFuture = routeTask.createDefaultParametersAsync()
+                routeParametersFuture.addDoneListener {
+                    // get the loaded default route parameters
+                    routeParameters = routeParametersFuture.get().apply {
+                        // explicitly set values for the route parameters
+                        isReturnDirections = true
+                        isReturnStops = true
+                        isReturnRoutes = true
+                        outputSpatialReference = SpatialReferences.getWgs84()
                     }
-                    // add the graphics to the map view
-                    mapView.graphicsOverlays[0].graphics.addAll(
-                        listOf(
-                            Graphic(conventionCenter, stopSymbol),
-                            Graphic(aerospaceMuseum, stopSymbol),
-                            routeAheadGraphic,
-                            routeTraveledGraphic
+                    // starting location point: San Diego Convention Center
+                    val conventionCenter = Point(-117.160386727, 32.706608, SpatialReferences.getWgs84())
+                    // create starting stop
+                    val startingStop = Stop(conventionCenter).apply {
+                        name = "San Diego Convention Center"
+                    }
+                    // destination location point: Fleet Science Center
+                    val aerospaceMuseum = Point(-117.146679, 32.730351, SpatialReferences.getWgs84())
+                    // create destination stop
+                    val destinationStop = Stop(aerospaceMuseum).apply {
+                        name = "RH Fleet Aerospace Museum"
+                    }
+                    // assign the stops to the route parameters
+                    routeParameters?.setStops(mutableListOf(startingStop, destinationStop))
+                    // get the route results future
+                    val routeResultFuture = routeTask.solveRouteAsync(routeParameters)
+                    routeResultFuture.addDoneListener {
+                        // get the loaded route result
+                        routeResult = routeResultFuture.get()
+                        // keep an instance of the loaded route
+                        route = routeResult?.routes?.get(0)
+                        // set start and stop points to a blue diamond symbol
+                        val stopSymbol =
+                            SimpleMarkerSymbol(SimpleMarkerSymbol.Style.DIAMOND, Color.BLUE, 20F)
+                        // the graphic to represent the route ahead
+                        routeAheadGraphic = Graphic(
+                            route?.routeGeometry,
+                            SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.MAGENTA, 5F)
                         )
-                    )
-                    // set the viewpoint of the route overview to the route's geometry
-                    mapView.setViewpointGeometryAsync(route?.routeGeometry, 25.0)
-                    // enable navigation
-                    navigateButton.isEnabled = true
+                        // the graphic to represent the route that's been traveled (initially empty)
+                        routeTraveledGraphic = Graphic().apply {
+                            symbol = SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.BLACK, 3F)
+                        }
+                        // add the graphics to the map view
+                        mapView.graphicsOverlays[0].graphics.addAll(
+                            listOf(
+                                Graphic(conventionCenter, stopSymbol),
+                                Graphic(aerospaceMuseum, stopSymbol),
+                                routeAheadGraphic,
+                                routeTraveledGraphic
+                            )
+                        )
+                        // set the viewpoint of the route overview to the route's geometry
+                        mapView.setViewpointGeometryAsync(route?.routeGeometry, 25.0)
+                        // enable navigation
+                        navigateButton.isEnabled = true
+                    }
                 }
+            } else {
+                val errorMessage = "Failed to load route task: ${routeTask.loadError.message}"
+                showError(errorMessage)
             }
         }
     }
@@ -389,6 +399,11 @@ class MainActivity : AppCompatActivity() {
         statusMessage.setLength(statusMessage.length - 1)
         // display the status message to the text view
         statusMessageTV.text = statusMessage
+    }
+
+    private fun showError(errorMessage: String) {
+        Log.e(TAG,errorMessage)
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
     override fun onPause() {
