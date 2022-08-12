@@ -32,7 +32,6 @@
         "https://arcgisruntime.maps.arcgis.com/home/item.html?id=df193653ed39449195af0c9725701dca"
     ],
     "provision_to": [
-        "/streetmap_SD.tpkx",
         "/sandiego.geodatabase"
     ],
     "redirect_from": [
