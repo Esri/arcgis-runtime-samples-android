@@ -49,7 +49,7 @@ Tap "Navigate" to simulate traveling and to receive directions from a preset sta
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 4. Execute the following commands:
 
-`adb push sandiego.geodatabase /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/san_diego/sandiego.geodatabase`
+`adb push sandiego.geodatabase /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/sandiego.geodatabase`
 
 Link | Local Location
 ---------|-------|
