@@ -79,9 +79,6 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.statusMessageTV
     }
 
-    // a list to keep track of directions solved by the route task
-    private val directionManeuvers = mutableListOf<DirectionManeuver>()
-
     // the route task to solve the route between stops, using the online routing service
     private lateinit var routeTask: RouteTask
 
@@ -180,14 +177,13 @@ class MainActivity : AppCompatActivity() {
                     outputSpatialReference = SpatialReferences.getWgs84()
                 }
                 // starting location point: San Diego Convention Center
-                val conventionCenter =
-                    Point(-117.160386727, 32.706608, SpatialReferences.getWgs84())
-                // destination location point: Fleet Science Center
-                val aerospaceMuseum = Point(-117.146679, 32.730351, SpatialReferences.getWgs84())
+                val conventionCenter = Point(-117.160386727, 32.706608, SpatialReferences.getWgs84())
                 // create starting stop
                 val startingStop = Stop(conventionCenter).apply {
                     name = "San Diego Convention Center"
                 }
+                // destination location point: Fleet Science Center
+                val aerospaceMuseum = Point(-117.146679, 32.730351, SpatialReferences.getWgs84())
                 // create destination stop
                 val destinationStop = Stop(aerospaceMuseum).apply {
                     name = "RH Fleet Aerospace Museum"
@@ -233,7 +229,7 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Starts the route navigation using a simulated datasource
-     * and sets up re-routing functionalities
+     * and sets up re-routing functionalities.
      */
     private fun startNavigation() {
 
@@ -242,9 +238,6 @@ class MainActivity : AppCompatActivity() {
 
         // disable the start navigation button
         navigateButton.isEnabled = false
-
-        // keep a list of all the direction maneuvers
-        route?.directionManeuvers?.let { directionManeuvers.addAll(it) }
 
         // create a route tracker using the route result
         routeTracker = RouteTracker(this, routeResult, 0, true)
@@ -301,7 +294,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Removes the current route tracking status listener if new route loading has started
+     * Removes the current route tracking status listener if new route loading has started.
      */
     private val routeStartedListener: RouteTracker.RerouteStartedListener =
         RouteTracker.RerouteStartedListener {
@@ -310,22 +303,18 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Removes the route tracking status listener if re-route loading has completed,
-     * sets up new direction maneuvers and adds a new route tracking listener
+     * sets up new direction maneuvers and adds a new route tracking listener.
      */
     private val routeCompletedListener: RouteTracker.RerouteCompletedListener =
         RouteTracker.RerouteCompletedListener {
             routeTracker?.removeTrackingStatusChangedListener(trackingStatusListener)
-            // clear current direction maneuvers
-            directionManeuvers.clear()
-            // adds new direction maneuvers to the list
-            directionManeuvers.addAll(it.trackingStatus.routeResult.routes[0].directionManeuvers)
             // re-add the event listeners for tracking status changes
             routeTracker?.addTrackingStatusChangedListener(trackingStatusListener)
         }
 
 
     /**
-     * Calls updateTrackingStatus() on every route tacking status changed
+     * Calls updateTrackingStatus() on every route tacking status changed.
      */
     private val trackingStatusListener: RouteTracker.TrackingStatusChangedListener =
         RouteTracker.TrackingStatusChangedListener {
@@ -334,10 +323,10 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Displays the route status descriptions and update route graphics as the
-     * the datasource updates on the map
+     * the datasource updates on the map.
      */
     private fun updateTrackingStatus(status: TrackingStatus) {
-        val statusMessage: StringBuilder = StringBuilder("")
+        val statusMessage: StringBuilder = StringBuilder()
         // check if navigation is on route
         if (status.isOnRoute && !status.isRouteCalculating) {
             // check the destination status if it's still en-route
@@ -351,10 +340,10 @@ class MainActivity : AppCompatActivity() {
                 // get the time remaining in minutes
                 statusMessage.appendLine("Time remaining: ${status.routeProgress.remainingTime.roundToInt()} mins")
                 // if there are additional maneuvers, append next direction maneuvers
-                if (status.currentManeuverIndex + 1 < directionManeuvers.size) {
+                if (status.currentManeuverIndex + 1 < (route?.directionManeuvers?.size ?: 0)) {
                     statusMessage.appendLine(
                         "Next direction: " +
-                            directionManeuvers[status.currentManeuverIndex + 1].directionText
+                            route?.directionManeuvers?.get(status.currentManeuverIndex + 1)?.directionText
                     )
                 }
                 // set geometries for progress and the remaining route
