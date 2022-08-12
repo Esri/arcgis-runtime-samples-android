@@ -43,7 +43,6 @@ import com.esri.arcgisruntime.navigation.TrackingStatus
 import com.esri.arcgisruntime.sample.navigateroutewithrerouting.databinding.ActivityMainBinding
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol
-import com.esri.arcgisruntime.tasks.networkanalysis.DirectionManeuver
 import com.esri.arcgisruntime.tasks.networkanalysis.Route
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult
@@ -54,8 +53,6 @@ import kotlin.math.roundToInt
 
 
 class MainActivity : AppCompatActivity() {
-
-    private val TAG = MainActivity::class.java.simpleName
 
     private val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
