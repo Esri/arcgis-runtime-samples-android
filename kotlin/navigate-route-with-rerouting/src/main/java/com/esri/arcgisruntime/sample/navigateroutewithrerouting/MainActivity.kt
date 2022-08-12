@@ -333,21 +333,24 @@ class MainActivity : AppCompatActivity() {
         }
 
     /**
-     * Displays the route status and displays
+     * Displays the route status descriptions and update route graphics as the
+     * the datasource updates on the map
      */
     private fun updateTrackingStatus(status: TrackingStatus) {
         val statusMessage: StringBuilder = StringBuilder("")
         // check if navigation is on route
         if (status.isOnRoute && !status.isRouteCalculating) {
-            // check the destination status
+            // check the destination status if it's still en-route
             if (status.destinationStatus == DestinationStatus.NOT_REACHED ||
                 status.destinationStatus == DestinationStatus.APPROACHING) {
+                // get the distance remaining in kilometers
                 statusMessage.appendLine(
                     "Distance remaining: ${status.routeProgress.remainingDistance.displayText} " +
                         status.routeProgress.remainingDistance.displayTextUnits.pluralDisplayName.lowercase()
                 )
+                // get the time remaining in minutes
                 statusMessage.appendLine("Time remaining: ${status.routeProgress.remainingTime.roundToInt()} mins")
-
+                // if there are additional maneuvers, append next direction maneuvers
                 if (status.currentManeuverIndex + 1 < directionManeuvers.size) {
                     statusMessage.appendLine(
                         "Next direction: " +
@@ -358,6 +361,7 @@ class MainActivity : AppCompatActivity() {
                 routeAheadGraphic?.geometry = status.routeProgress.remainingGeometry
                 routeTraveledGraphic?.geometry = status.routeProgress.traversedGeometry
             } else if (status.destinationStatus == DestinationStatus.REACHED) {
+                // update the status message
                 statusMessage.appendLine("Destination reached")
                 // set the route geometries to reflect the completed route
                 routeAheadGraphic?.geometry = null
@@ -367,9 +371,9 @@ class MainActivity : AppCompatActivity() {
             statusMessage.appendLine("Off route, rerouting...")
         }
 
-        // remove the trailing new line
+        // remove the trailing new line at the end of a message
         statusMessage.setLength(statusMessage.length - 1)
-        // display the
+        // display the status message to the text view
         statusMessageTV.text = statusMessage
     }
 
