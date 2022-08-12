@@ -49,13 +49,10 @@ Tap "Navigate" to simulate traveling and to receive directions from a preset sta
 3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
 4. Execute the following commands:
 
-`adb push streetmap_SD.tpkx /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/san_diego/streetmap_SD.tpkx`
-
 `adb push sandiego.geodatabase /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/san_diego/sandiego.geodatabase`
 
 Link | Local Location
 ---------|-------|
-|[San Diego streetmap TPKX](https://arcgisruntime.maps.arcgis.com/home/item.html?id=df193653ed39449195af0c9725701dca)| /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/streetmap_SD.tpkx |
 |[San Diego Geodatabase](https://arcgisruntime.maps.arcgis.com/home/item.html?id=df193653ed39449195af0c9725701dca)| /Android/data/com.esri.arcgisruntime.sample.offlinerouting/files/sandiego.geodatabase |
 
 ## About the data
