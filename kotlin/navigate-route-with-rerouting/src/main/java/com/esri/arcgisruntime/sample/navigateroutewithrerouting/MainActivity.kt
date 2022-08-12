@@ -18,6 +18,8 @@ package com.esri.arcgisruntime.sample.navigateroutewithrerouting
 
 import android.graphics.Color
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -47,7 +49,7 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
-import java.util.Calendar
+import java.util.*
 import kotlin.math.roundToInt
 
 
@@ -99,6 +101,8 @@ class MainActivity : AppCompatActivity() {
 
     // the route traveled denoted with a black color line
     private var routeTraveledGraphic: Graphic? = null
+
+    private var textToSpeech: TextToSpeech? = null
 
     // the JSON of polylines of the path for the simulated data source
     private val polylineJSON =
@@ -156,6 +160,12 @@ class MainActivity : AppCompatActivity() {
     private fun setUpMapRoute() {
         // display the route overview status message
         statusMessageTV.text = getString(R.string.route_overview)
+
+        // set up Android text to speech engine
+        textToSpeech = TextToSpeech(this) {
+            textToSpeech?.language = Locale.ENGLISH
+        }
+
         // create a route task using the San Diego geodatabase file
         routeTask = RouteTask(
             this,
@@ -242,6 +252,9 @@ class MainActivity : AppCompatActivity() {
         // create a route tracker using the route result
         routeTracker = RouteTracker(this, routeResult, 0, true)
 
+        // add the voice guidance listener to the route tracker
+        routeTracker?.addNewVoiceGuidanceListener(speakDirectionListener)
+
         // handle route tracking status changes
         routeTracker?.addTrackingStatusChangedListener(trackingStatusListener)
 
@@ -298,7 +311,9 @@ class MainActivity : AppCompatActivity() {
      */
     private val routeStartedListener: RouteTracker.RerouteStartedListener =
         RouteTracker.RerouteStartedListener {
+            // remove current route tracker event listeners when calculating a new route
             routeTracker?.removeTrackingStatusChangedListener(trackingStatusListener)
+            routeTracker?.removeNewVoiceGuidanceListener(speakDirectionListener)
         }
 
     /**
@@ -308,8 +323,9 @@ class MainActivity : AppCompatActivity() {
     private val routeCompletedListener: RouteTracker.RerouteCompletedListener =
         RouteTracker.RerouteCompletedListener {
             routeTracker?.removeTrackingStatusChangedListener(trackingStatusListener)
-            // re-add the event listeners for tracking status changes
+            // re-add the event listeners for when new route has been calculated
             routeTracker?.addTrackingStatusChangedListener(trackingStatusListener)
+            routeTracker?.addNewVoiceGuidanceListener(speakDirectionListener)
         }
 
 
@@ -319,6 +335,15 @@ class MainActivity : AppCompatActivity() {
     private val trackingStatusListener: RouteTracker.TrackingStatusChangedListener =
         RouteTracker.TrackingStatusChangedListener {
             updateTrackingStatus(it.trackingStatus)
+        }
+
+    private val speakDirectionListener: RouteTracker.NewVoiceGuidanceListener =
+        RouteTracker.NewVoiceGuidanceListener {
+            // stop if TTS is running
+            textToSpeech?.stop()
+            Log.e(TAG, "Speaking: ${it.voiceGuidance.text}")
+            // Say the direction
+            textToSpeech?.speak(it.voiceGuidance.text, TextToSpeech.QUEUE_FLUSH, null,it.voiceGuidance.text )
         }
 
     /**
