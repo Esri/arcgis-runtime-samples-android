@@ -56,13 +56,13 @@ Tap the button on the bottom menu to add feature layers, from different sources,
 4. Load the downloaded files using `adb push` to the app. 
     - `adb push LA_Trails.geodatabase /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/LA_Trails.geodatabase`
     - `adb push AuroraCO.gpkg /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/AuroraCO.gpkg`
-    - `adb push ScottishWildlifeTrust_ReserveBoundaries_20201102.shp /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/ScottishWildlifeTrust_ReserveBoundaries_20201102.shp`
+    - `adb push ScottishWildlifeTrust_ReserveBoundaries_20201102.shp /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/ScottishWildlifeTrust_reserves/`
 
 Link | Local Location
 ---------|-------|
 |[LA trails geodatabase](https://www.arcgis.com/home/item.html?id=2b0f9e17105847809dfeb04e3cad69e0)| /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/LA_Trails.geodatabase |
 |[Aurora Colorado geopackage](https://www.arcgis.com/home/item.html?id=68ec42517cdd439e81b036210483e8e7)| /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/AuroraCO.gpkg |
-|[Scottish Wildlife Trust reserve shapefile](https://www.arcgis.com/home/item.html?id=15a7cbd3af1e47cfa5d2c6b93dc44fc2)| /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/ScottishWildlifeTrust_ReserveBoundaries_20201102.shp |
+|[Scottish Wildlife Trust reserve shapefile](https://www.arcgis.com/home/item.html?id=15a7cbd3af1e47cfa5d2c6b93dc44fc2)| /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/ScottishWildlifeTrust_reserves/ |
 
 ## About the data
 
