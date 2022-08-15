@@ -50,6 +50,7 @@ import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult
 import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask
 import com.esri.arcgisruntime.tasks.networkanalysis.Stop
+import com.esri.arcgisruntime.tasks.networkanalysis.DirectionManeuver
 import java.util.Locale
 import java.util.Calendar
 import kotlin.math.roundToInt
@@ -82,6 +83,9 @@ class MainActivity : AppCompatActivity() {
     private val statusMessageTV: TextView by lazy {
         activityMainBinding.statusMessageTV
     }
+
+    // a list to keep track of directions solved by the route task
+    private val directionManeuvers = mutableListOf<DirectionManeuver>()
 
     // the route task to solve the route between stops, using the online routing service
     private lateinit var routeTask: RouteTask
@@ -257,6 +261,9 @@ class MainActivity : AppCompatActivity() {
         // disable the start navigation button
         navigateButton.isEnabled = false
 
+        // keep a list of all the direction maneuvers
+        route?.directionManeuvers?.let { directionManeuvers.addAll(it) }
+
         // create a route tracker using the route result
         routeTracker = RouteTracker(this, routeResult, 0, true)
 
@@ -331,6 +338,10 @@ class MainActivity : AppCompatActivity() {
     private val routeCompletedListener: RouteTracker.RerouteCompletedListener =
         RouteTracker.RerouteCompletedListener {
             routeTracker?.removeTrackingStatusChangedListener(trackingStatusListener)
+            // clear current direction maneuvers
+            directionManeuvers.clear()
+            // adds new direction maneuvers to the list
+            directionManeuvers.addAll(it.trackingStatus.routeResult.routes[0].directionManeuvers)
             // re-add the event listeners for when new route has been calculated
             routeTracker?.addTrackingStatusChangedListener(trackingStatusListener)
             routeTracker?.addNewVoiceGuidanceListener(speakDirectionListener)
@@ -375,10 +386,10 @@ class MainActivity : AppCompatActivity() {
                 // get the time remaining in minutes
                 statusMessage.appendLine("Time remaining: ${status.routeProgress.remainingTime.roundToInt()} mins")
                 // if there are additional maneuvers, append next direction maneuvers
-                if (status.currentManeuverIndex + 1 < (route?.directionManeuvers?.size ?: 0)) {
+                if (status.currentManeuverIndex + 1 < directionManeuvers.size) {
                     statusMessage.appendLine(
                         "Next direction: " +
-                            route?.directionManeuvers?.get(status.currentManeuverIndex + 1)?.directionText
+                            directionManeuvers[status.currentManeuverIndex + 1].directionText
                     )
                 }
                 // set geometries for progress and the remaining route
