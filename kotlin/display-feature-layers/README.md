@@ -56,7 +56,7 @@ Tap the button on the bottom menu to add feature layers, from different sources,
 4. Load the downloaded files using `adb push` to the app. 
     - `adb push LA_Trails.geodatabase /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/LA_Trails.geodatabase`
     - `adb push AuroraCO.gpkg /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/AuroraCO.gpkg`
-    - `adb push ScottishWildlifeTrust_ReserveBoundaries_20201102.shp /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/ScottishWildlifeTrust_reserves/`
+    - `adb push ScottishWildlifeTrust_reserves/ /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/ScottishWildlifeTrust_reserves/`
 
 Link | Local Location
 ---------|-------|
