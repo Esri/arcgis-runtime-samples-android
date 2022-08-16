@@ -14,7 +14,7 @@ Tap "Navigate" to simulate traveling and to receive directions from a preset sta
 
 ## How it works
 
-1. Create an `RouteTask` using local network data.
+1. Create a `RouteTask` using local network data.
 2. Generate default `RouteParameters` using `RouteTask.createDefaultParametersAsync()`.
 3. Set `isReturnRoutes`, `isReturnStops`, and `isReturnDirections` on the parameters to `true`.
 4. Add `Stop`s to the parameters' array of `stops` using `RouteParameters.setStops()`.

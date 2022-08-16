@@ -182,7 +182,7 @@ class MainActivity : AppCompatActivity() {
         // load the route task
         routeTask.loadAsync()
         routeTask.addDoneLoadingListener {
-            if(routeTask.loadStatus == LoadStatus.LOADED){
+            if (routeTask.loadStatus == LoadStatus.LOADED){
                 // load default route parameters
                 val routeParametersFuture = routeTask.createDefaultParametersAsync()
                 routeParametersFuture.addDoneListener {
