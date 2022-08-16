@@ -1,0 +1,59 @@
+{
+    "category": "Routing and Logistics",
+    "description": "Navigate between two points and dynamically recalculate an alternate route when the original route is unavailable.",
+    "formal_name": "NavigateRouteWithRerouting",
+    "ignore": false,
+    "images": [
+        "navigate-route-with-rerouting.png"
+    ],
+    "keywords": [
+        "directions",
+        "maneuver",
+        "navigation",
+        "route",
+        "turn-by-turn",
+        "voice",
+        "DestinationStatus",
+        "DirectionManeuver",
+        "Location",
+        "LocationDataSource",
+        "ReroutingStrategy",
+        "Route",
+        "RouteParameters",
+        "RouteTask",
+        "RouteTracker",
+        "RouteTrackerLocationDataSource",
+        "SimulatedLocationDataSource",
+        "Stop",
+        "VoiceGuidance"
+    ],
+    "language": "kotlin",
+    "provision_from": [
+        "https://arcgisruntime.maps.arcgis.com/home/item.html?id=df193653ed39449195af0c9725701dca"
+    ],
+    "provision_to": [
+        "/sandiego.geodatabase"
+    ],
+    "redirect_from": [
+        "/android/latest/sample-code/navigate-route-with-rerouting.htm"
+    ],
+    "relevant_apis": [
+        "DestinationStatus",
+        "DirectionManeuver",
+        "Location",
+        "LocationDataSource",
+        "ReroutingStrategy",
+        "Route",
+        "RouteParameters",
+        "RouteTask",
+        "RouteTracker",
+        "RouteTrackerLocationDataSource",
+        "SimulatedLocationDataSource",
+        "Stop",
+        "VoiceGuidance"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/navigateroutewithrerouting/MainActivity.kt"
+    ],
+    "title": "Navigate route with rerouting"
+}
