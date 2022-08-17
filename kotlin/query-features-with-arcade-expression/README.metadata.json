@@ -1,0 +1,36 @@
+{
+    "category": "Search and query",
+    "description": "Query features on a map using an Arcade expression.",
+    "formal_name": "QueryFeaturesWithArcadeExpression",
+    "ignore": false,
+    "images": [
+        "query-features-with-arcade-expression.png"
+    ],
+    "keywords": [
+        "Arcade evaluator",
+        "Arcade expression",
+        "identify layers",
+        "portal",
+        "portal item",
+        "query",
+        "ArcadeEvaluationResult",
+        "ArcadeEvaluator",
+        "ArcadeExpression",
+        "ArcadeProfile",
+        "Portal",
+        "PortalItem"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "ArcadeEvaluationResult",
+        "ArcadeEvaluator",
+        "ArcadeExpression",
+        "ArcadeProfile",
+        "Portal",
+        "PortalItem"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/queryfeatureswitharcadeexpression/MainActivity.kt"
+    ],
+    "title": "Query features with Arcade expression"
+}

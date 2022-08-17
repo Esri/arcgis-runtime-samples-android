@@ -37,7 +37,7 @@ import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.sample.generateofflinemap.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.sample.generateofflinemap.databinding.DialogLayoutBinding
+import com.esri.arcgisruntime.sample.generateofflinemap.databinding.GenerateOfflineMapDialogLayoutBinding
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapJob
 import com.esri.arcgisruntime.tasks.offlinemap.GenerateOfflineMapParameters
@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
             offlineMapTask.generateOfflineMap(generateOfflineMapParameters, tempDirectoryPath)
 
         // create an alert dialog to show the download progress
-        val progressDialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+        val progressDialogLayoutBinding = GenerateOfflineMapDialogLayoutBinding.inflate(layoutInflater)
         val progressDialog = createProgressDialog(offlineMapJob)
         progressDialog.setView(progressDialogLayoutBinding.root)
         progressDialog.show()
@@ -220,7 +220,7 @@ class MainActivity : AppCompatActivity() {
                 job.cancelAsync()
             }
             setCancelable(true)
-            val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+            val dialogLayoutBinding = GenerateOfflineMapDialogLayoutBinding.inflate(layoutInflater)
             setView(dialogLayoutBinding.root)
         }
         return builder.create()

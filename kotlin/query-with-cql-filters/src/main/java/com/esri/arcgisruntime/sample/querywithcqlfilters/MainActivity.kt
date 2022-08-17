@@ -51,10 +51,11 @@ class MainActivity : AppCompatActivity() {
     // List of CQL where clauses
     private val cqlQueryList: List<String> = listOf(
         "F_CODE = 'AP010'",
-        "{ \"eq\" : [ { \"property\" : \"F_CODE\" }, \"AP010\" ] }",
+        "{ \"op\": \"=\", \"args\": [ { \"property\": \"F_CODE\" }, \"AP010\" ] }",
         "F_CODE LIKE 'AQ%'",
-        "{\"and\":[{\"eq\":[{ \"property\" : \"F_CODE\" }, \"AP010\"]},{ \"before\":" +
-            "[{ \"property\" : \"ZI001_SDV\"},\"2013-01-01\"]}]}",
+        "{\"op\": \"and\", \"args\":[" +
+                "{ \"op\": \"=\", \"args\":[{ \"property\" : \"F_CODE\" }, \"AP010\"]}, " +
+                "{ \"op\": \"t_before\", \"args\":[{ \"property\" : \"ZI001_SDV\"},\"2013-01-01\"]}]}",
         "No Query"
     )
 

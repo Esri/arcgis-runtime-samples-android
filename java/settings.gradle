@@ -1,3 +1,18 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://esri.jfrog.io/artifactory/arcgis' }
+    }
+}
 include ':add-enc-exchange-set',
         ':add-features-feature-service',
         ':add-graphics-renderer',
@@ -54,14 +69,10 @@ include ':add-enc-exchange-set',
         ':feature-layer-definition-expression',
         ':feature-layer-dictionary-renderer',
         ':feature-layer-extrusion',
-        ':feature-layer-feature-service',
-        ':feature-layer-geodatabase',
-        ':feature-layer-geopackage',
         ':feature-layer-query',
         ':feature-layer-rendering-mode-map',
         ':feature-layer-rendering-mode-scene',
         ':feature-layer-selection',
-        ':feature-layer-shapefile',
         ':feature-layer-show-attributes',
         ':feature-layer-update-attributes',
         ':feature-layer-update-geometry',
@@ -72,7 +83,7 @@ include ':add-enc-exchange-set',
         ':find-route',
         ':find-service-area-interactive',
         ':format-coordinates',
-        ':generate-geodatabase',
+        ':generate-geodatabase-replica-from-feature-service',
         ':generate-offline-map',
         ':generate-offline-map-overrides',
         ':generate-offline-map-with-local-basemap',

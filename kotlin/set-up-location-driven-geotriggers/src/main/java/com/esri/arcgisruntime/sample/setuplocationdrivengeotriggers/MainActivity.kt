@@ -210,7 +210,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Start must be explicitly called. It is called after the signal connection is defined to avoid a race condition.
-        geotriggerMonitor.startAsync()
+        val future = geotriggerMonitor.startAsync()
+        // check to see if the GeotriggerMonitor failed to start
+        future.addDoneListener {
+            if (geotriggerMonitor.status == GeotriggerMonitorStatus.FAILED_TO_START) {
+                val message = "GeotriggerMonitor failed to load: " +
+                    geotriggerMonitor.warning.message +
+                    geotriggerMonitor.warning.additionalMessage
+                Log.e(TAG, message)
+                Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+            }
+        }
 
         return geotriggerMonitor
     }

@@ -34,7 +34,7 @@ import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.portal.Portal
 import com.esri.arcgisruntime.portal.PortalItem
 import com.esri.arcgisruntime.sample.downloadpreplannedmaparea.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.sample.downloadpreplannedmaparea.databinding.DialogLayoutBinding
+import com.esri.arcgisruntime.sample.downloadpreplannedmaparea.databinding.DownloadPreplannedMapDialogLayoutBinding
 import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.DefaultAuthenticationChallengeHandler
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity() {
                     offlineMapDirectory.path + File.separator + selectedPreplannedMapArea?.portalItem?.title
                 ).also {
                     // create and update a progress dialog for the job
-                    val progressDialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+                    val progressDialogLayoutBinding = DownloadPreplannedMapDialogLayoutBinding.inflate(layoutInflater)
                     dialog = createProgressDialog(it)
                     dialog?.setView(progressDialogLayoutBinding.root)
                     dialog?.show()
@@ -363,7 +363,7 @@ class MainActivity : AppCompatActivity() {
                 downloadPreplannedOfflineMapJob.cancelAsync()
             }
             setCancelable(false)
-            val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+            val dialogLayoutBinding = DownloadPreplannedMapDialogLayoutBinding.inflate(layoutInflater)
             setView(dialogLayoutBinding.root)
         }
         return dialogBuilder.create()

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Navigate route with rerouting</string>
+    <string name="navigate">Navigate</string>
+    <string name="recenter">Recenter</string>
+    <string name="reset">Reset</string>
+    <string name="route_status">Route Status:</string>
+    <string name="route_overview">Route overview</string>
+</resources>

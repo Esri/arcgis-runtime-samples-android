@@ -1,0 +1,34 @@
+{
+    "category": "Edit and Manage Data",
+    "description": "Export tiles from an online vector tile service.",
+    "formal_name": "ExportVectorTiles",
+    "ignore": false,
+    "images": [
+        "export-vector-tiles.png"
+    ],
+    "keywords": [
+        "cache",
+        "download",
+        "offline",
+        "vector",
+        "ArcGISVectorTiledLayer",
+        "ExportVectorTilesJob",
+        "ExportVectorTilesParameters",
+        "ExportVectorTilesResult",
+        "ExportVectorTilesTask",
+        "VectorTileCache"
+    ],
+    "language": "kotlin",
+    "relevant_apis": [
+        "ArcGISVectorTiledLayer",
+        "ExportVectorTilesJob",
+        "ExportVectorTilesParameters",
+        "ExportVectorTilesResult",
+        "ExportVectorTilesTask",
+        "VectorTileCache"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/exportvectortiles/MainActivity.kt"
+    ],
+    "title": "Export vector tiles"
+}

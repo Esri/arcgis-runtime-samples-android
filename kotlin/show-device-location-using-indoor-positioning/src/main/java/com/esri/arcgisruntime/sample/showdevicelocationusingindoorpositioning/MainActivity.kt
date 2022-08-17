@@ -88,11 +88,9 @@ class MainActivity : AppCompatActivity(), LocationDataSource.LocationChangedList
      * Set up the connection between the device and the portal item
      */
     private fun connectToPortal() {
-        // set the portal url and the credentials needed
-        val portal = Portal("https://viennardc.maps.arcgis.com/", true).apply {
-            credential = UserCredential("tester_viennardc", "password.testing12345")
-        }
-        val portalItem = PortalItem(portal, "89f88764c29b48218366855d7717d266")
+        // load the portal and create a map from the portal item
+        val portal = Portal("https://www.arcgis.com/", false)
+        val portalItem = PortalItem(portal, "8fa941613b4b4b2b8a34ad4cdc3e4bba")
         setupMap(portalItem)
     }
 

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Generate geodatabase replica from feature service</string>
+    <string name="san_francisco_tpkx">/SanFrancisco.tpkx</string>
+    <string name="wildfire_sync">https://sampleserver6.arcgisonline.com/arcgis/rest/services/Sync/WildfireSync/FeatureServer</string>
+    <string name="wildfire_geodatabase">/wildfire.geodatabase</string>
+    <string name="gen_geodatabase_button_text">Generate</string>
+    <string name="progress_fetching">Fetching result</string>
+</resources>

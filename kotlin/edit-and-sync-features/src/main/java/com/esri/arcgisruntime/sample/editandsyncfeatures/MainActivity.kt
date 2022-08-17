@@ -40,7 +40,7 @@ import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
 import com.esri.arcgisruntime.mapping.view.MapView
 import com.esri.arcgisruntime.sample.editandsyncfeatures.databinding.ActivityMainBinding
-import com.esri.arcgisruntime.sample.editandsyncfeatures.databinding.DialogLayoutBinding
+import com.esri.arcgisruntime.sample.editandsyncfeatures.databinding.EditAndSyncDialogLayoutBinding
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol
 import com.esri.arcgisruntime.tasks.geodatabase.*
 import java.util.*
@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity() {
                 )
 
             // show the job's progress in a dialog
-            val progressDialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+            val progressDialogLayoutBinding = EditAndSyncDialogLayoutBinding.inflate(layoutInflater)
             val generateGeodatabaseDialog = createProgressDialog(generateGeodatabaseJob)
             generateGeodatabaseDialog.setView(progressDialogLayoutBinding.root)
 
@@ -236,7 +236,7 @@ class MainActivity : AppCompatActivity() {
                 .syncGeodatabase(syncGeodatabaseParameters, geodatabase)
             syncGeodatabaseJob.start()
 
-            val progressDialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+            val progressDialogLayoutBinding = EditAndSyncDialogLayoutBinding.inflate(layoutInflater)
             val syncDialog = createProgressDialog(syncGeodatabaseJob)
             syncDialog.setView(progressDialogLayoutBinding.root)
             syncDialog.show()
@@ -286,7 +286,7 @@ class MainActivity : AppCompatActivity() {
             // provide a cancel button on the dialog
             setNegativeButton("Cancel") { _, _ -> job.cancelAsync() }
             setCancelable(false)
-            val dialogLayoutBinding = DialogLayoutBinding.inflate(layoutInflater)
+            val dialogLayoutBinding = EditAndSyncDialogLayoutBinding.inflate(layoutInflater)
             setView(dialogLayoutBinding.root)
         }
         return builder.create()

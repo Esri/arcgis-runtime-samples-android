@@ -25,11 +25,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.geometry.Point
 import com.esri.arcgisruntime.geometry.SpatialReferences
 import com.esri.arcgisruntime.layers.ArcGISVectorTiledLayer
 import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.Basemap
+import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.Viewpoint
 import com.esri.arcgisruntime.mapping.view.Graphic
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay
@@ -43,6 +45,7 @@ import com.esri.arcgisruntime.tasks.networkanalysis.Stop
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.esri.arcgisruntime.sample.findroute.databinding.ActivityMainBinding
+import com.esri.arcgisruntime.security.AuthenticationManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
@@ -91,17 +94,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(activityMainBinding.root)
 
-        // create a map with the basemap
-        val map = ArcGISMap().apply {
-            // set the basemap with the vector tiled layer from a service URL
-            basemap = Basemap(
-                ArcGISVectorTiledLayer(getString(R.string.navigation_vector))
-            )
-        }
+        // authentication with an API key or named user is required to access basemaps and other
+        // location services
+        ArcGISRuntimeEnvironment.setApiKey(BuildConfig.API_KEY)
 
         mapView.apply {
-            // set the map to be displayed in this view
-            this.map = map
+            // set the map to a new map with the navigation base map
+            this.map = ArcGISMap(BasemapStyle.ARCGIS_NAVIGATION)
             // set initial viewpoint to San Diego
             setViewpoint(Viewpoint(32.7157, -117.1611, 200000.0))
             // ensure the floating action button moves to be above the attribution view
@@ -129,7 +128,11 @@ class MainActivity : AppCompatActivity() {
      */
     private fun solveRoute() {
         // create a route task instance
-        val routeTask = RouteTask(this, getString(R.string.routing_service))
+        val routeTask =
+            RouteTask(
+                this,
+                "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World"
+            )
 
         // show the progress bar
         mainProgressBar.visibility = View.VISIBLE
@@ -141,20 +144,8 @@ class MainActivity : AppCompatActivity() {
                     val routeParams = listenableFuture.get()
                     // create stops
                     val stops = arrayListOf(
-                        Stop(
-                            Point(
-                                -117.15083257944445,
-                                32.741123367963446,
-                                SpatialReferences.getWgs84()
-                            )
-                        ),
-                        Stop(
-                            Point(
-                                -117.15557279683529,
-                                32.703360305883045,
-                                SpatialReferences.getWgs84()
-                            )
-                        )
+                        Stop(Point(-117.1508, 32.7411, SpatialReferences.getWgs84())),
+                        Stop(Point(-117.1555, 32.7033, SpatialReferences.getWgs84()))
                     )
                     routeParams.apply {
                         setStops(stops)
@@ -209,7 +200,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 // create a point for the new graphic
                 val sourcePoint = Point(
-                    -117.15083257944445, 32.741123367963446, SpatialReferences.getWgs84()
+                    -117.1508, 32.7411, SpatialReferences.getWgs84()
                 )
                 // create a graphic and it to the graphics overlay
                 graphicsOverlay.graphics.add(Graphic(sourcePoint, pinSourceSymbol))
@@ -232,11 +223,7 @@ class MainActivity : AppCompatActivity() {
                         offsetY = 20f
                     }
                 // create a point for the new graphic
-                val destinationPoint = Point(
-                    -117.15557279683529,
-                    32.703360305883045,
-                    SpatialReferences.getWgs84()
-                )
+                val destinationPoint = Point(-117.1555, 32.7033, SpatialReferences.getWgs84())
                 // create a graphic and add it to the graphics overlay
                 graphicsOverlay.graphics.add(Graphic(destinationPoint, pinDestinationSymbol))
             }

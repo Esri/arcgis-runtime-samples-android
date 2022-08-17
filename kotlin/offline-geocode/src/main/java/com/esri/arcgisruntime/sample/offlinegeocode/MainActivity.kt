@@ -257,7 +257,7 @@ class MainActivity : AppCompatActivity() {
         searchView.apply {
             suggestionsAdapter = SimpleCursorAdapter(
                 this@MainActivity,
-                R.layout.suggestion,
+                R.layout.offline_geocode_suggestion,
                 suggestionsCursor,
                 arrayOf("address"),
                 intArrayOf(R.id.suggestion_address),

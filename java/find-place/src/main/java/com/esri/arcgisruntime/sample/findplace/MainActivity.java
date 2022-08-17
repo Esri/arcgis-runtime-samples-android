@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                   String[] cols = { COLUMN_NAME_ADDRESS };
                   int[] to = { R.id.suggestion_address };
                   final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
-                      R.layout.suggestion, suggestionsCursor, cols, to, 0);
+                      R.layout.find_place_suggestion, suggestionsCursor, cols, to, 0);
                   mPoiSearchView.setSuggestionsAdapter(suggestionAdapter);
                   // handle a poi_suggestion being chosen
                   mPoiSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
               String[] cols = { COLUMN_NAME_ADDRESS };
               int[] to = { R.id.suggestion_address };
               final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
-                  R.layout.suggestion, suggestionsCursor, cols, to, 0);
+                  R.layout.find_place_suggestion, suggestionsCursor, cols, to, 0);
               mProximitySearchView.setSuggestionsAdapter(suggestionAdapter);
               mProximitySearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
                 @Override public boolean onSuggestionSelect(int position) {

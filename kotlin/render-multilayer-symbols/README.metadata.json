@@ -1,0 +1,42 @@
+{
+    "category": "Visualization",
+    "description": "Show different kinds of multilayer symbols on a map.",
+    "formal_name": "RenderMultilayerSymbols",
+    "ignore": false,
+    "images": [
+        "render-multilayer-symbols.png"
+    ],
+    "keywords": [
+        "graphic",
+        "marker",
+        "multilayer",
+        "picture",
+        "symbol",
+        "Graphic",
+        "GraphicsOverlay",
+        "MultilayerPointSymbol",
+        "MultilayerPolygonSymbol",
+        "MultilayerPolylineSymbol",
+        "PictureMarkerSymbolLayer",
+        "SolidFillSymbolLayer",
+        "SolidStrokeSymbolLayer",
+        "VectorMarkerSymbolLayer"
+    ],
+    "language": "kotlin",
+    "redirect_from": "",
+    "relevant_apis": [
+        "Graphic",
+        "GraphicsOverlay",
+        "MultilayerPointSymbol",
+        "MultilayerPolygonSymbol",
+        "MultilayerPolylineSymbol",
+        "PictureMarkerSymbolLayer",
+        "SolidFillSymbolLayer",
+        "SolidStrokeSymbolLayer",
+        "VectorMarkerSymbolLayer"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/arcgisruntime/sample/rendermultilayersymbols/MainActivity.kt"
+    ],
+    "title": "Render multilayer symbols"
+}

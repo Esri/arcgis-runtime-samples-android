@@ -1,3 +1,18 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://esri.jfrog.io/artifactory/arcgis' }
+    }
+}
 include ':add-features-feature-service',
         ':add-features-with-contingent-values',
         ':add-graphics-renderer',
@@ -5,6 +20,7 @@ include ':add-features-feature-service',
         ':analyze-hotspots',
         ':animate-images-with-image-overlay',
         ':apply-mosaic-rule-to-rasters',
+        ':apply-unique-values-with-alternate-symbols',
         ':arcgis-vector-tiled-layer-custom-style',
         ':attribution-view-change',
         ':authenticate-with-oauth',
@@ -30,6 +46,7 @@ include ':add-features-feature-service',
         ':display-device-location',
         ':display-device-location-with-nmea-data-sources',
         ':display-dimensions',
+        ':display-feature-layers',
         ':display-grid',
         ':display-kml',
         ':display-layer-view-state',
@@ -42,17 +59,16 @@ include ':add-features-feature-service',
         ':edit-features-with-feature-linked-annotation',
         ':edit-with-branch-versioning',
         ':export-tiles',
+        ':export-vector-tiles',
         ':feature-collection-layer-portal-item',
         ':feature-layer-definition-expression',
         ':feature-layer-extrusion',
-        ':feature-layer-feature-service',
-        ':feature-layer-geodatabase',
         ':feature-layer-selection',
         ':feature-layer-query',
         ':filter-by-definition-expression-or-display-filter',
         ':find-address',
         ':find-route',
-        ':generate-geodatabase',
+        ':generate-geodatabase-replica-from-feature-service',
         ':generate-offline-map',
         ':geodesic-operations',
         ':group-layers',
@@ -63,6 +79,7 @@ include ':add-features-feature-service',
         ':manage-operational-layers',
         ':map-rotation',
         ':navigate-route',
+        ':navigate-route-with-rerouting',
         ':nearest-vertex',
         ':offline-geocode',
         ':offline-routing',
@@ -70,11 +87,13 @@ include ':add-features-feature-service',
         ':perform-spatial-operations',
         ':perform-valve-isolation-trace',
         ':portal-user-info',
+        ':query-features-with-arcade-expression',
         ':query-with-cql-filters',
         ':raster-function-service',
         ':raster-layer-file',
         ':raster-rendering-rule',
         ':realistic-lighting-and-shadows',
+        ':render-multilayer-symbols',
         ':route-around-barriers',
         ':scene-layer',
         ':set-initial-map-area',

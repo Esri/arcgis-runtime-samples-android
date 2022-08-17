@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                 String[] cols = new String[] { COLUMN_NAME_ADDRESS };
                 int[] to = new int[] { R.id.suggestion_address };
                 final SimpleCursorAdapter suggestionAdapter = new SimpleCursorAdapter(MainActivity.this,
-                    R.layout.suggestion, suggestionsCursor, cols, to, 0);
+                    R.layout.find_address_suggestion, suggestionsCursor, cols, to, 0);
                 mAddressSearchView.setSuggestionsAdapter(suggestionAdapter);
                 // handle an address suggestion being chosen
                 mAddressSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
