@@ -45,6 +45,25 @@ Tap the button on the bottom menu to add feature layers, from different sources,
 * ServiceFeatureTable
 * ShapefileFeatureTable
 
+## Offline data
+
+1. Download the data from ArcGIS Online.
+    1. [LA trails geodatabase](https://www.arcgis.com/home/item.html?id=2b0f9e17105847809dfeb04e3cad69e0)
+    2. [Aurora Colorado geopackage](https://www.arcgis.com/home/item.html?id=68ec42517cdd439e81b036210483e8e7)
+    3. [Scottish Wildlife Trust reserve shapefile](https://www.arcgis.com/home/item.html?id=15a7cbd3af1e47cfa5d2c6b93dc44fc2)
+2. Extract the contents of the downloaded zip file to disk.
+3. Open your command prompt and navigate to the folder where you extracted the contents of the data from step 1.
+4. Load the downloaded files using `adb push` to the app.
+    1. `adb push LA_Trails.geodatabase /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/LA_Trails.geodatabase`
+    2. `adb push AuroraCO.gpkg /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/AuroraCO.gpkg`
+    3. `adb push ScottishWildlifeTrust_reserves/ /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/ScottishWildlifeTrust_reserves/`
+
+Link | Local Location
+---------|-------|
+|[LA trails geodatabase](https://www.arcgis.com/home/item.html?id=2b0f9e17105847809dfeb04e3cad69e0)| /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/LA_Trails.geodatabase |
+|[Aurora Colorado geopackage](https://www.arcgis.com/home/item.html?id=68ec42517cdd439e81b036210483e8e7)| /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/AuroraCO.gpkg |
+|[Scottish Wildlife Trust reserve shapefile](https://www.arcgis.com/home/item.html?id=15a7cbd3af1e47cfa5d2c6b93dc44fc2)| /Android/data/com.esri.arcgisruntime.sample.displayfeaturelayers/files/ScottishWildlifeTrust_reserves/ |
+
 ## About the data
 
 This sample uses the [Naperville damage assessment service](https://sampleserver7.arcgisonline.com/server/rest/services/DamageAssessment/FeatureServer/0), [Trees of Portland portal item](https://www.arcgis.com/home/item.html?id=1759fd3e8a324358a0c58d9a687a8578), [Los Angeles Trailheads geodatabase](https://www.arcgis.com/home/item.html?id=2b0f9e17105847809dfeb04e3cad69e0), [Aurora, Colorado GeoPackage](https://www.arcgis.com/home/item.html?id=68ec42517cdd439e81b036210483e8e7), and [Scottish Wildlife Trust Reserves Shapefile](https://www.arcgis.com/home/item.html?id=15a7cbd3af1e47cfa5d2c6b93dc44fc2).
