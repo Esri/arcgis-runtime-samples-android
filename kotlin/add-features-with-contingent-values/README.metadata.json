@@ -1,5 +1,5 @@
 {
-    "category": "Edit & Manage Data",
+    "category": "Edit and Manage Data",
     "description": "Create and add features whose attribute values satisfy a predefined set of contingencies.",
     "formal_name": "AddFeaturesWithContingentValues",
     "ignore": false,
