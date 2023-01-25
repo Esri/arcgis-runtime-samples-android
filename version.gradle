@@ -11,7 +11,7 @@ ext {
     appcompatVersion = '1.3.0'
     constraintLayoutVersion = '2.1.0'
     multidexVersion = '2.0.1'
-    arcgisVersion = '100.15.1-3758'
+    arcgisVersion = '100.15.1'
     arcgisToolkitVersion = '100.15.0'
     materialVersion = '1.5.0'
     recyclerViewVersion = '1.1.0'
