@@ -1,5 +1,11 @@
 # Overview
-ArcGIS Runtime API for Android v100.15.0 samples.  The `main` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime API for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [git tags](https://github.com/Esri/arcgis-runtime-samples-android/tags).  Please read our [wiki](https://github.com/Esri/arcgis-runtime-samples-android/wiki) for help with working with this repository.
+ArcGIS Runtime API for Android v100.15.1 samples.  The `main` branch of this repository contains sample app modules for the latest available version of the [ArcGIS Runtime API for Android](https://developers.arcgis.com/android/). Samples released under older versions can be found through the [git tags](https://github.com/Esri/arcgis-runtime-samples-android/tags).  Please read our [wiki](https://github.com/Esri/arcgis-runtime-samples-android/wiki) for help with working with this repository.
+
+> :exclamation: **Try [ArcGIS Maps SDK for Kotlin version 200](https://github.com/Esri/arcgis-maps-sdk-kotlin-samples/)**
+>
+>ArcGIS Runtime SDK for Android version 100.15 is a long-term support release focused exclusively on bug fixes and minor updates. 
+>
+>ArcGIS Maps SDK for Kotlin version 200 builds on the proven architecture of 100.15, and provides a new API designed exclusively for developing Android apps using Kotlin a modern, powerful, and intuitive programming language.
 
 # Prerequisites
 * The samples are building with `compileSdkVersion 31`
